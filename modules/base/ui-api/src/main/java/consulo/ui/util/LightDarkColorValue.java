@@ -21,18 +21,19 @@ import consulo.ui.style.StyleManager;
 
 /**
  * @author VISTALL
- * @since 11/29/2020
+ * @since 2020-11-29
  */
 public class LightDarkColorValue implements ColorValue {
-  private final ColorValue myLightColorValue;
-  private final ColorValue myDarkColorValue;
+    private final ColorValue myLightColorValue;
+    private final ColorValue myDarkColorValue;
 
-  public LightDarkColorValue(ColorValue lightColorValue, ColorValue darkColorValue) {
-    myLightColorValue = lightColorValue;
-    myDarkColorValue = darkColorValue;
-  }
-  @Override
-  public RGBColor toRGB() {
-    return StyleManager.get().getCurrentStyle().isDark() ? myDarkColorValue.toRGB() : myLightColorValue.toRGB();
-  }
+    public LightDarkColorValue(ColorValue lightColorValue, ColorValue darkColorValue) {
+        myLightColorValue = lightColorValue;
+        myDarkColorValue = darkColorValue;
+    }
+
+    @Override
+    public RGBColor toRGB() {
+        return StyleManager.get().getCurrentStyle().isDark() ? myDarkColorValue.toRGB() : myLightColorValue.toRGB();
+    }
 }

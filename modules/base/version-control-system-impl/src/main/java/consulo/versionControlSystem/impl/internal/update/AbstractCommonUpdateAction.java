@@ -33,8 +33,8 @@ import consulo.project.StoreReloadManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.errorTreeView.HotfixData;
@@ -81,12 +81,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         myAlwaysVisible = alwaysVisible;
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     private String getCompleteActionName(VcsContext dataContext) {
         return myActionInfo.getActionName(myScopeInfo.getScopeName(dataContext, myActionInfo));
     }
@@ -125,15 +119,24 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                 }
 
                 Application application = project.getApplication();
+
+                Runnable runUpdate = () -> {
+                    Task.Backgroundable task = new Updater(project, roots, vcsToVirtualFiles);
+                    if (application.isUnitTestMode()) {
+                        task.run(new EmptyProgressIndicator());
+                    }
+                    else {
+                        ProgressManager.getInstance().run(task);
+                    }
+                };
+
                 if (application.isDispatchThread()) {
-                    application.saveAll();
-                }
-                Task.Backgroundable task = new Updater(project, roots, vcsToVirtualFiles);
-                if (application.isUnitTestMode()) {
-                    task.run(new EmptyProgressIndicator());
+                    // wait for the asynchronous save to finish, then run the update on the UI thread
+                    UIAccess uiAccess = UIAccess.current();
+                    application.saveAllWithProgress(uiAccess).whenComplete((result, throwable) -> uiAccess.give(runUpdate));
                 }
                 else {
-                    ProgressManager.getInstance().run(task);
+                    runUpdate.run();
                 }
             }
             catch (ProcessCanceledException ignored) {

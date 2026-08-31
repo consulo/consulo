@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -53,7 +53,7 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 if (addScheme) {
-                    manager.getSchemeManager().addNewScheme(keymap, false);
+                    manager.addKeyMap(keymap, false);
                 }
                 manager.setActiveKeymap(keymap);
             }

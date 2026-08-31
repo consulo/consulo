@@ -107,7 +107,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
 
     @Override
     public int getVersion() {
-        int version = 10;
+        int version = 11;
         FileType[] types = myFileTypeManager.getRegisteredFileTypes();
         Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getId(), o2.getId()));
 
@@ -175,8 +175,4 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
         return myInputFilter;
     }
 
-    @Override
-    public boolean hasSnapshotMapping() {
-        return true;
-    }
 }

@@ -40,7 +40,6 @@ public abstract class FileIndexFacade {
     return project.getInstance(FileIndexFacade.class);
   }
 
-  
   public abstract ModificationTracker getRootModificationTracker();
 
   public abstract boolean isInContent(VirtualFile file);
@@ -52,6 +51,13 @@ public abstract class FileIndexFacade {
   public abstract boolean isInLibraryClasses(VirtualFile file);
 
   public abstract boolean isInLibrarySource(VirtualFile file);
+
+  /**
+   * Returns {@code true} if {@code file} is located under library classes or library sources.
+   */
+  public boolean isInLibrary(VirtualFile file) {
+    return isInLibraryClasses(file) || isInLibrarySource(file);
+  }
 
   public abstract boolean isExcludedFile(VirtualFile file);
 
@@ -70,6 +76,7 @@ public abstract class FileIndexFacade {
   public abstract boolean isValidAncestor(VirtualFile baseDir, VirtualFile child);
 
   public boolean shouldBeFound(GlobalSearchScope scope, VirtualFile virtualFile) {
-    return (scope.isSearchOutsideRootModel() || isInContent(virtualFile) || isInLibrarySource(virtualFile)) && !virtualFile.getFileType().isBinary();
+    return (scope.isSearchOutsideRootModel() || isInContent(virtualFile) || isInLibrarySource(virtualFile))
+      && !virtualFile.getFileType().isBinary();
   }
 }

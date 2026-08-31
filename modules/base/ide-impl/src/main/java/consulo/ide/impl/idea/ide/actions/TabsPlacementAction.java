@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.application.ui.UISettings;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.style.StyleManager;
 
 /**
  * @author Konstantin Bulenkov
@@ -42,7 +42,8 @@ public abstract class TabsPlacementAction extends ToggleAction implements DumbAw
     @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
         UISettings.getInstance().EDITOR_TAB_PLACEMENT = getPlace();
-        LafManager.getInstance().repaintUI();
+
+        StyleManager.get().forceRepaintAll();
         UISettings.getInstance().fireUISettingsChanged();
     }
 }

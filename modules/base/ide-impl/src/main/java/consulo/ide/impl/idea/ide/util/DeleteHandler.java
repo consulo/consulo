@@ -63,6 +63,8 @@ public class DeleteHandler {
     }
 
     public static class DefaultDeleteProvider implements DeleteProvider {
+        public static final DefaultDeleteProvider INSTANCE = new DefaultDeleteProvider();
+
         @Override
         public boolean canDeleteElement(DataContext dataContext) {
             if (!dataContext.hasData(Project.KEY)) {

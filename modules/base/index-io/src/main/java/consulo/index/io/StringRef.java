@@ -15,8 +15,8 @@
  */
 package consulo.index.io;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.index.io.data.DataInputOutputUtil;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.io.DataInput;

@@ -17,9 +17,10 @@ package consulo.ide.impl.welcomeScreen;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awt.AWTTitlelessDecorator;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
@@ -35,8 +36,12 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
     @RequiredUIAccess
     public BaseWelcomeScreenPanel(Disposable parentDisposable, TitlelessDecorator titlelessDecorator) {
         super(new BorderLayout());
+
         myLeftComponent = createLeftComponent(parentDisposable);
-        titlelessDecorator.makeLeftComponentLower(myLeftComponent);
+
+        if (titlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.makeLeftComponentLower(myLeftComponent);
+        }
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), JBUI.insetsRight(1)));
@@ -46,7 +51,11 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
         add(leftPanel, BorderLayout.WEST);
 
         JComponent rightComponent = createRightComponent();
-        add(titlelessDecorator.modifyRightComponent(this, rightComponent), BorderLayout.CENTER);
+        if (titlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            add(awtTitlelessDecorator.modifyRightComponent(this, rightComponent), BorderLayout.CENTER);
+        } else {
+            add(rightComponent, BorderLayout.CENTER);
+        }
     }
 
     protected int getLeftComponentWidth() {
@@ -58,10 +67,8 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
         return myLeftComponent;
     }
 
-    
     protected abstract JComponent createLeftComponent(Disposable parentDisposable);
 
-    
     @RequiredUIAccess
     protected abstract JComponent createRightComponent();
 }

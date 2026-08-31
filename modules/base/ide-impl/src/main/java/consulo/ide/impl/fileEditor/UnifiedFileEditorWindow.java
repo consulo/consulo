@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.EditorTabPresentationUtil;
 import consulo.fileEditor.FileEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
@@ -25,17 +28,27 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.FileEditorsSplittersBase;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.Tab;
+import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +56,7 @@ import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -53,13 +67,26 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         private String myText = "";
         private Image myImage;
 
+        // what the platform answers for the file - the status colour of the text, the fill a
+        // EditorTabColorProvider gives the tab
+        private ColorValue myForeground;
+        private ColorValue myBackground;
+
         private final Tab myTab;
 
         private TabInfo(Tab tab) {
             myTab = tab;
 
             myTab.setRenderer((t, p) -> {
-                p.append(myText);
+                p.withBackgroundColor(myBackground);
+
+                if (myForeground == null) {
+                    p.append(myText);
+                }
+                else {
+                    p.append(myText, new TextAttribute(consulo.ui.font.Font.PLAIN, myForeground, null));
+                }
+
                 if (myImage != null) {
                     p.withIcon(myImage);
                 }
@@ -83,6 +110,8 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     private Map<FileEditorWithProviderComposite, TabInfo> myEditors = new LinkedHashMap<>();
 
+    private @Nullable FileEditorWithProviderComposite mySelectedEditor;
+
     @RequiredUIAccess
     public UnifiedFileEditorWindow(
         Project project,
@@ -92,6 +121,22 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         myProject = project;
         myManager = manager;
         myOwner = owner;
+
+        // the tab actions and the tab popup group work on the window the tab belongs to, and the tab has no data of
+        // its own - the layout above the editors is the only place the window can be published from
+        myTabbedLayout.putUserData(UiDataProvider.KEY, sink -> {
+            sink.set(Project.KEY, myProject);
+            sink.set(FileEditorWindow.DATA_KEY, this);
+        });
+
+        myTabbedLayout.addSelectListener(event -> {
+            for (Map.Entry<FileEditorWithProviderComposite, TabInfo> entry : myEditors.entrySet()) {
+                if (entry.getValue().myTab == event.getTab()) {
+                    mySelectedEditor = entry.getKey();
+                    return;
+                }
+            }
+        });
 
         myOwner.addWindow(this);
         if (myOwner.getCurrentWindow() == null) {
@@ -125,6 +170,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setBackgroundColorAt(int index, Color color) {
+        TabInfo tab = getTabAt(index);
+        tab.myBackground = TargetAWT.from(color);
+        tab.update();
     }
 
     @Override
@@ -133,6 +181,18 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setForegroundAt(int index, Color color) {
+        TabInfo tab = getTabAt(index);
+
+        // a file with no status of its own is answered with the swing label foreground, which is the colour of
+        // the awt laf - a frontend without one does not follow it, and a tab written in it stays dark on a dark
+        // theme. it says nothing about the file, so the tab carries no colour of its own and the style decides
+        ColorValue foreground = color == null || color.equals(UIUtil.getLabelForeground()) ? null : TargetAWT.from(color);
+        if (Objects.equals(tab.myForeground, foreground)) {
+            return;
+        }
+
+        tab.myForeground = foreground;
+        tab.update();
     }
 
     @Override
@@ -141,6 +201,13 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setIconAt(int index, Image icon) {
+        TabInfo tab = getTabAt(index);
+        tab.myImage = icon;
+        tab.update();
+    }
+
+    private TabInfo getTabAt(int index) {
+        return myEditors.get(getEditorAt(index));
     }
 
     @Override
@@ -179,6 +246,10 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public @Nullable FileEditorWithProviderComposite getSelectedEditor() {
+        if (mySelectedEditor != null && myEditors.containsKey(mySelectedEditor)) {
+            return mySelectedEditor;
+        }
+
         if (myEditors.isEmpty()) {
             return null;
         }
@@ -264,6 +335,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                     if (editor != null) {
                         TabInfo tab = myEditors.remove(editor);
                         if (tab != null) {
+                            // dropping the map entry alone left the tab and its editor on screen
+                            myTabbedLayout.removeTab(tab.myTab);
+
                             editorManager.disposeComposite(editor);
                         }
                     }
@@ -311,6 +385,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     @Override
     public void clear() {
         myEditors.clear();
+        mySelectedEditor = null;
     }
 
     @Override
@@ -358,24 +433,77 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 tabInfo.myText = editor.getFile().getName();
                 tabInfo.myImage = VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject());
 
-                myTabbedLayout.addTab(tab, editor.getUIComponent());
-                tab.setCloseHandler((thisTab, component) -> {
-                    DataContext dataContext = DataManager.getInstance().getDataContext();
-                    new CloseTab(myTabbedLayout, myProject, editor.getFile(), this).actionPerformed(AnActionEvent.createFromInputEvent(
-                        null,
-                        "Test",
-                        null,
-                        dataContext
-                    ));
-                });
+                // the handler has to be known before the tab is rendered, the close affordance is part of the tab
+                tab.setCloseHandler((thisTab, component) -> performCloseTab(editor.getFile(), component));
+
+                tab.setPopupGroup(IdeActions.GROUP_EDITOR_TAB_POPUP, ActionPlaces.EDITOR_TAB_POPUP);
+
+                Component content = editor.getUIComponent();
+                content.putUserData(UiDataProvider.KEY, sink -> sink.set(VirtualFile.KEY, editor.getFile()));
+
+                myTabbedLayout.addTab(tab, content);
                 myEditors.put(editor, tabInfo);
+
+                // a file opened into a tab which was already there comes to the front, and one opening a tab of
+                // its own has no more reason to stay behind whatever was selected before it
+                if (selectEditor) {
+                    mySelectedEditor = editor;
+                    tabInfo.select();
+                }
+
+                // a fresh tab carries nothing but the name and the icon, and the colours the platform assigns a
+                // file - the vcs status of the text, the fill a EditorTabColorProvider gives - only ever arrived
+                // with a later update. the awt container asks for both the moment the tab is inserted
+                VirtualFile file = editor.getFile();
+                myOwner.updateFileColor(file);
+                updateFileBackgroundColorAsync(file);
             }
             else {
                 TabInfo tab = myEditors.get(fileComposite);
                 assert tab != null;
+                if (selectEditor) {
+                    mySelectedEditor = fileComposite;
+                }
                 tab.select();
             }
         }
+    }
+
+    /**
+     * The provider reads the file scopes to answer, so the colour is computed under a read lock off the ui
+     * thread and only applied back on it.
+     */
+    private void updateFileBackgroundColorAsync(VirtualFile file) {
+        CoroutineScope.launchAsync(
+            myProject.coroutineContext(),
+            () -> Coroutine
+                .first(ReadLock.<Void, ColorValue>apply(ignored ->
+                    EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, this)))
+                .then(UIAction.<ColorValue, Void>apply(color -> {
+                    // the tab may be gone by the time the answer arrives
+                    int index = findEditorIndex(findFileComposite(file));
+                    if (index != -1) {
+                        setBackgroundColorAt(index, TargetAWT.to(color));
+                    }
+                    return null;
+                }))
+        );
+    }
+
+    @RequiredUIAccess
+    private void performCloseTab(VirtualFile file, @Nullable Component component) {
+        DataContext dataContext = DataContext.builder()
+            .parent(component == null ? null : DataManager.getInstance().getDataContext(component))
+            .add(Project.KEY, myProject)
+            .add(VirtualFile.KEY, file)
+            .add(FileEditorWindow.DATA_KEY, this)
+            .build();
+
+        CloseTab closeTab = new CloseTab(component, myProject, file, this);
+
+        AnActionEvent event = AnActionEvent.createFromAnAction(closeTab, null, ActionPlaces.EDITOR_TAB, dataContext);
+
+        ActionImplUtil.performActionDumbAwareWithCallbacks(closeTab, event, dataContext);
     }
 
     @Override

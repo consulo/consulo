@@ -56,7 +56,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         return ChangeUtil.copyElement(this, table);
     }
 
-    public PsiManager getManager() {
+    public @Nullable PsiManager getManager() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null) {
             return PsiManager.getInstance(project);

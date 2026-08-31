@@ -16,6 +16,7 @@
 
 package consulo.language.inject.advanced.impl.internal;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.ProjectConfigurable;
@@ -138,7 +139,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         });
 
         DefaultActionGroup group = new DefaultActionGroup();
-        AnAction addAction = new AnAction(CommonLocalize.buttonAdd(), CommonLocalize.buttonAdd(), PlatformIconGroup.generalAdd()) {
+        AnAction addAction = new LegacyAnAction(CommonLocalize.buttonAdd(), CommonLocalize.buttonAdd(), PlatformIconGroup.generalAdd()) {
             @Override
             public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(!myAddActions.isEmpty());
@@ -150,7 +151,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 performAdd(e);
             }
         };
-        AnAction removeAction = new AnAction(
+        AnAction removeAction = new LegacyAnAction(
             CommonLocalize.buttonRemove(),
             CommonLocalize.buttonRemove(),
             PlatformIconGroup.generalRemove()
@@ -174,7 +175,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             }
         };
 
-        AnAction editAction = new AnAction(
+        AnAction editAction = new LegacyAnAction(
             CommonLocalize.buttonEdit(),
             CommonLocalize.buttonEdit(),
             PlatformIconGroup.actionsEdit()
@@ -184,7 +185,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 AnAction action = getEditAction();
                 e.getPresentation().setEnabled(action != null);
                 if (action != null) {
-                    action.update(e);
+                    ActionUpdateInvoker.updateSync(action, e);
                 }
             }
 
@@ -194,7 +195,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 performEditAction(e);
             }
         };
-        AnAction copyAction = new AnAction(
+        AnAction copyAction = new LegacyAnAction(
             LocalizeValue.localizeTODO("Duplicate"),
             LocalizeValue.localizeTODO("Duplicate"),
             PlatformIconGroup.actionsCopy()
@@ -204,7 +205,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 AnAction action = getEditAction();
                 e.getPresentation().setEnabled(action != null);
                 if (action != null) {
-                    action.update(e);
+                    ActionUpdateInvoker.updateSync(action, e);
                 }
             }
 
@@ -253,7 +254,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
         if (myInfos.length > 1) {
             group.addSeparator();
-            AnAction shareAction = new AnAction(
+            AnAction shareAction = new LegacyAnAction(
                 LocalizeValue.localizeTODO("Make Global"),
                 LocalizeValue.empty(),
                 PlatformIconGroup.actionsImport()
@@ -286,7 +287,6 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                     CfgInfo cfg = getTargetCfgInfo(getSelectedInjections());
                     e.getPresentation().setEnabled(cfg != null);
                     e.getPresentation().setText(cfg == getDefaultCfgInfo() ? "Make Global" : "Move to Project");
-                    super.update(e);
                 }
 
                 private @Nullable CfgInfo getTargetCfgInfo(List<InjInfo> injections) {
@@ -329,7 +329,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 updateCountLabel();
             }
         });
-        group.add(new AnAction(
+        group.add(new LegacyAnAction(
             LocalizeValue.localizeTODO("Export"),
             LocalizeValue.localizeTODO("Export"),
             PlatformIconGroup.actionsExport()

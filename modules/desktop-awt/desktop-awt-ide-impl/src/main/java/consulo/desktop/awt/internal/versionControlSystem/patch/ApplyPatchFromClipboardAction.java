@@ -8,9 +8,15 @@ import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
@@ -23,7 +29,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 
 @ActionImpl(id = "ChangesView.ApplyPatchFromClipboard")
-public class ApplyPatchFromClipboardAction extends DumbAwareAction {
+public class ApplyPatchFromClipboardAction extends LegacyDumbAwareAction implements AnActionWithAsyncUpdate {
     public ApplyPatchFromClipboardAction() {
         super(
             ActionLocalize.actionChangesviewApplypatchfromclipboardText(),
@@ -31,12 +37,27 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
         );
     }
 
+    /**
+     * The clipboard answers as a future on a frontend which keeps it in a browser, so the update awaits it
+     * rather than reading it in place.
+     */
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
-        String text = ClipboardUtil.getTextInClipboard();
-        // allow to apply from clipboard even if we do not detect it as a patch, because during applying we parse content more precisely
-        e.getPresentation().setEnabled(project != null && text != null && ChangeListManager.getInstance(project).isFreezed() == null);
+
+        if (project == null || ChangeListManager.getInstance(project).isFreezed() != null) {
+            presentation.setEnabled(false);
+            return Coroutine.first(CodeExecution.apply(input -> null));
+        }
+
+        return Coroutine.first(CompletableFutureStep.<Object, String>await(input -> ClipboardUtil.getTextInClipboard()))
+            // allow to apply from clipboard even if we do not detect it as a patch, because during applying we
+            // parse content more precisely
+            .then(CodeExecution.<String, Void>apply(text -> {
+                presentation.setEnabled(text != null);
+                return null;
+            }));
     }
 
     @Override
@@ -48,9 +69,12 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
         }
         FileDocumentManager.getInstance().saveAllDocuments();
 
-        String clipboardText = ClipboardUtil.getTextInClipboard();
-        assert clipboardText != null;
-        new MyApplyPatchFromClipboardDialog(project, clipboardText).show();
+        UIAccess uiAccess = UIAccess.current();
+        ClipboardUtil.getTextInClipboard().whenCompleteAsync((clipboardText, throwable) -> {
+            if (throwable == null && clipboardText != null) {
+                new MyApplyPatchFromClipboardDialog(project, clipboardText).show();
+            }
+        }, uiAccess);
     }
 
     public static class MyApplyPatchFromClipboardDialog extends ApplyPatchDifferentiatedDialog {

@@ -26,22 +26,27 @@ import java.net.URL;
  * @since 15-Sep-17
  */
 public class WebPlatformImpl extends PlatformBase {
-  public WebPlatformImpl() {
-    super(LOCAL, LOCAL, getSystemJvmProperties());
-  }
+    public WebPlatformImpl() {
+        super(LOCAL, LOCAL, getSystemJvmProperties());
+    }
 
-  @Override
-  public void openInBrowser(URL url) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public boolean isInBrowser() {
+        return true;
+    }
 
-  @Override
-  public void openFileInFileManager(File file, UIAccess uiAccess) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void openInBrowser(URL url) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public void openDirectoryInFileManager(File file, UIAccess uiAccess) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void openFileInFileManager(File file, UIAccess uiAccess) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void openDirectoryInFileManager(File file, UIAccess uiAccess) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -17,15 +17,14 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -40,7 +39,7 @@ import java.util.ArrayList;
  * @author Vladimir Kondratyev
  */
 @ActionImpl(id = "ToggleReadOnlyAttribute")
-public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware {
+public class ToggleReadOnlyAttributeAction extends LegacyDumbAwareAction {
     
     private final Application myApplication;
 

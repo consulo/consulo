@@ -35,6 +35,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.Messages;
@@ -93,7 +94,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         }
     };
 
-    private class CopySdkAction extends AnAction {
+    private class CopySdkAction extends LegacyAnAction {
         private CopySdkAction() {
             super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
         }

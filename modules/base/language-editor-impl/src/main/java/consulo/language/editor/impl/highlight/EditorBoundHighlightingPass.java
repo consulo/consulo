@@ -24,18 +24,15 @@ import consulo.language.psi.PsiFile;
  *
  * Ordinary {@link TextEditorHighlightingPass} is document-bound,
  * i.e. after the pass finishes the markup is stored in the document.
- * For example, there is no point to recalculate syntax errors for each splitted editor of the same document.
+ * For example, there is no point to recalculate syntax errors for each split editor of the same document.
  * This pass however is for editor-specific markup, e.g. code folding.
  */
 public abstract class EditorBoundHighlightingPass extends TextEditorHighlightingPass {
-  
   protected final Editor myEditor;
   
   protected final PsiFile myFile;
 
-  protected EditorBoundHighlightingPass(Editor editor,
-                                        PsiFile psiFile,
-                                        boolean runIntentionPassAfter) {
+  protected EditorBoundHighlightingPass(Editor editor, PsiFile psiFile, boolean runIntentionPassAfter) {
     super(psiFile.getProject(), editor.getDocument(), runIntentionPassAfter);
     myEditor = editor;
     myFile = psiFile;

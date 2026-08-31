@@ -21,6 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -32,26 +33,32 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.web.internal.ui.WebRootPaneImpl;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 2017-09-11
  */
 class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
-    private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
+    private final VaadinRootLayout myRouterLayout;
 
-    private Font myFont = FontManager.get().createFont("?", 12);
+    private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
     private boolean myDisposed;
 
     @RequiredUIAccess
     public UIWindowOverRouterLayout(VaadinRootLayout routerLayout) {
-        routerLayout.add(TargetVaddin.to(myRootPanel.getComponent()));
+        myRouterLayout = routerLayout;
+        routerLayout.add(TargetVaadin.to(myRootPanel.getComponent()));
+    }
+
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        return myRouterLayout.getUI().map(VaadinComponentDelegate::getUIAccess).orElse(null);
     }
 
     @Override
@@ -102,33 +109,14 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     }
 
-    
-    @Override
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        throw new UnsupportedOperationException();
-    }
-
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         throw new UnsupportedOperationException();
-    }
-
-    
-    @Override
-    public Font getFont() {
-        return myFont;
-    }
-
-    @Override
-    public void setFont(Font font) {
-        myFont = font;
     }
 
     @RequiredUIAccess

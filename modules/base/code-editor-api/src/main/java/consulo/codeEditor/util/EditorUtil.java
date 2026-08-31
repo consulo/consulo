@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.util;
 
-import consulo.application.ReadAction;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryAdapter;
@@ -37,16 +37,28 @@ import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class EditorUtil {
     private static final Logger LOG = Logger.getInstance(EditorUtil.class);
 
     public static int calcRelativeCaretPosition(Editor editor) {
-        int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
-        int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
-        return caretY - viewAreaPosition;
+        return CodeEditorAssertion.compute(() -> {
+            int caretY = editor.visualLineToY(editor.getCaretModel().getVisualPosition().line);
+            int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
+            return caretY - viewAreaPosition;
+        });
+    }
+
+    public static void setRelativeCaretPosition(Editor editor, int position) {
+        CodeEditorAssertion.run(() -> {
+            int caretY = editor.visualLineToY(editor.getCaretModel().getVisualPosition().line);
+            editor.getScrollingModel().scrollVertically(caretY - position);
+        });
     }
 
     public static boolean isAtLineEnd(Editor editor, int offset) {
@@ -84,7 +96,7 @@ public class EditorUtil {
      * @see Inlay#isRelatedToPrecedingText()
      */
     public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Editor e = editor;
             LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
             if (e instanceof InjectedEditor) {
@@ -113,7 +125,8 @@ public class EditorUtil {
     }
 
     public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
-        return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
+        return attributes == TextAttributes.ERASE_MARKER
+            || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
     }
 
     public static int getTabSize(Editor editor) {
@@ -180,9 +193,7 @@ public class EditorUtil {
      * @see #getNotFoldedLineEndOffset(Editor, int)
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
-    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor,
-                                                                              VisualPosition start,
-                                                                              VisualPosition end) {
+    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor, VisualPosition start, VisualPosition end) {
         Document document = editor.getDocument();
         FoldingModel foldingModel = editor.getFoldingModel();
 
@@ -261,14 +272,19 @@ public class EditorUtil {
         return document.getLineEndOffset(lineNumber);
     }
 
-    public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+    public static int getNotFoldedLineStartOffset(
+        Document document,
+        FoldingModel foldingModel,
+        int startOffset,
+        boolean stopAtInvisibleFoldRegions
+    ) {
         int offset = startOffset;
         while (true) {
             offset = DocumentUtil.getLineStartOffset(offset, document);
             FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset - 1);
-            if (foldRegion == null ||
-                stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty() ||
-                foldRegion.getStartOffset() >= offset) {
+            if (foldRegion == null
+                || stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty()
+                || foldRegion.getStartOffset() >= offset) {
                 break;
             }
             offset = foldRegion.getStartOffset();
@@ -313,18 +329,11 @@ public class EditorUtil {
         return line;
     }
 
-    public static int calcColumnNumber(Editor editor,
-                                       CharSequence text,
-                                       int start,
-                                       int offset) {
+    public static int calcColumnNumber(Editor editor, CharSequence text, int start, int offset) {
         return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
     }
 
-    public static int calcColumnNumber(@Nullable Editor editor,
-                                       CharSequence text,
-                                       int start,
-                                       int offset,
-                                       int tabSize) {
+    public static int calcColumnNumber(@Nullable Editor editor, CharSequence text, int start, int offset, int tabSize) {
         if (editor instanceof TextComponentEditor) {
             return offset - start;
         }
@@ -399,7 +408,7 @@ public class EditorUtil {
      * Tells whether maximum allowed number of carets is reached in editor. If it's the case, notification is shown
      */
     public static boolean checkMaxCarets(Editor editor) {
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             CaretModel caretModel = editor.getCaretModel();
             if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
                 notifyMaxCarets(editor);
@@ -501,5 +510,61 @@ public class EditorUtil {
                 }
             }
         }, disposable);
+    }
+
+    @RequiredUIAccess
+    public static void runWhenViewportReady(EditorEx editor, Runnable scrollLambda) {
+        runWhenViewportReady(editor, scrollLambda, () -> {
+            Disposable disposable = Disposable.newDisposable();
+            disposeWithEditor(editor, disposable);
+            return disposable;
+        });
+    }
+
+    @RequiredUIAccess
+    private static void runWhenViewportReady(EditorEx editor, Runnable scrollLambda, Supplier<Disposable> lazyDisposable) {
+        UIAccess.assertIsUIThread();
+        JViewport viewport = editor.getScrollPane().getViewport();
+        if (isReady(viewport)) {
+            scrollLambda.run();
+        }
+        else {
+            Disposable disposable = lazyDisposable.get();
+            ViewportReadyAwaiter awaiter = new ViewportReadyAwaiter(editor.getComponent(), viewport, scrollLambda);
+            Disposer.register(disposable, awaiter);
+        }
+    }
+
+    private static boolean isReady(JViewport viewport) {
+        if (!viewport.isShowing()) {
+            return false;
+        }
+        Dimension extentSize = viewport.getExtentSize();
+        return extentSize.getWidth() != 0 && extentSize.getHeight() != 0;
+    }
+
+    private record ViewportReadyAwaiter(
+        JComponent editorComponent,
+        JViewport viewport,
+        Runnable onReady
+    ) implements ChangeListener, Disposable {
+
+        ViewportReadyAwaiter {
+            viewport.addChangeListener(this);
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (isReady(viewport)) {
+                Disposer.dispose(this);
+                editorComponent.validate(); // ensure scrollbar is ready. Otherwise, incorrect scrolling may occur
+                onReady.run();
+            }
+        }
+
+        @Override
+        public void dispose() {
+            viewport.removeChangeListener(this);
+        }
     }
 }

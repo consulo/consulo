@@ -4,7 +4,6 @@ package consulo.application.util;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.HtmlChunk.Element;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ public final class HtmlBuilder {
      * @param chunk chunk to append
      * @return this builder
      */
-    @Contract("_ -> this")
     public HtmlBuilder append(HtmlChunk chunk) {
         if (!chunk.isEmpty()) {
             myChunks.add(chunk);
@@ -29,7 +27,6 @@ public final class HtmlBuilder {
         return this;
     }
 
-    @Contract("_ -> this")
     public HtmlBuilder append(HtmlBuilder builder) {
         if (this == builder) {
             throw new IllegalArgumentException("Cannot add builder to itself");
@@ -45,7 +42,6 @@ public final class HtmlBuilder {
      *             All {@code '\n'} characters will be converted to {@code <br/>}
      * @return this builder
      */
-    @Contract("_ -> this")
     public HtmlBuilder append(String text) {
         return append(HtmlChunk.text(text));
     }
@@ -57,7 +53,6 @@ public final class HtmlBuilder {
      *             All {@code '\n'} characters will be converted to {@code <br/>}
      * @return this builder
      */
-    @Contract("_ -> this")
     public HtmlBuilder append(LocalizeValue text) {
         return append(HtmlChunk.text(text));
     }
@@ -70,7 +65,6 @@ public final class HtmlBuilder {
      * @param rawHtml localized raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
      * @return this builder
      */
-    @Contract("_ -> this")
     public HtmlBuilder appendRaw(LocalizeValue rawHtml) {
         return append(HtmlChunk.raw(rawHtml));
     }
@@ -83,7 +77,6 @@ public final class HtmlBuilder {
      * @param rawHtml raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
      * @return this builder
      */
-    @Contract("_ -> this")
     public HtmlBuilder appendRaw(String rawHtml) {
         return append(HtmlChunk.raw(rawHtml));
     }
@@ -95,7 +88,6 @@ public final class HtmlBuilder {
      * @param text   localized link text
      * @return this builder
      */
-    @Contract("_, _ -> this")
     public HtmlBuilder appendLink(String target, LocalizeValue text) {
         return append(HtmlChunk.link(target, text));
     }
@@ -107,7 +99,6 @@ public final class HtmlBuilder {
      * @param text   link text
      * @return this builder
      */
-    @Contract("_, _ -> this")
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @SuppressWarnings("deprecation")
@@ -122,7 +113,6 @@ public final class HtmlBuilder {
      * @param children  chunks to append
      * @return this builder
      */
-    @Contract("_, _ -> this")
     public HtmlBuilder appendWithSeparators(HtmlChunk separator, Iterable<HtmlChunk> children) {
         boolean first = true;
         for (HtmlChunk child : children) {
@@ -140,7 +130,6 @@ public final class HtmlBuilder {
      *
      * @return this builder
      */
-    @Contract(" -> this")
     public HtmlBuilder nbsp() {
         return append(HtmlChunk.nbsp());
     }
@@ -151,7 +140,6 @@ public final class HtmlBuilder {
      * @param count number of non-breaking spaces to append
      * @return this builder
      */
-    @Contract("_ -> this")
     public HtmlBuilder nbsp(int count) {
         return append(HtmlChunk.nbsp(count));
     }
@@ -161,7 +149,6 @@ public final class HtmlBuilder {
      *
      * @return this builder
      */
-    @Contract(" -> this")
     public HtmlBuilder br() {
         return append(HtmlChunk.br());
     }
@@ -171,7 +158,6 @@ public final class HtmlBuilder {
      *
      * @return this builder
      */
-    @Contract(" -> this")
     public HtmlBuilder hr() {
         return append(HtmlChunk.hr());
     }
@@ -182,7 +168,6 @@ public final class HtmlBuilder {
      * @param tag name of the tag to wrap with
      * @return a new Element object that contains chunks from this builder
      */
-    @Contract(pure = true)
     public Element wrapWith(String tag) {
         return HtmlChunk.tag(tag).children(myChunks.toArray(new HtmlChunk[0]));
     }
@@ -193,7 +178,6 @@ public final class HtmlBuilder {
      * @param element name of the tag to wrap with
      * @return a new Element object that contains chunks from this builder
      */
-    @Contract(pure = true)
     public Element wrapWith(HtmlChunk.Element element) {
         return element.children(myChunks.toArray(new HtmlChunk[0]));
     }
@@ -204,7 +188,6 @@ public final class HtmlBuilder {
      * @return a new HTML Element object that wraps BODY Element that contains
      * chunks from this builder
      */
-    @Contract(pure = true)
     public Element wrapWithHtmlBody() {
         return wrapWith("body").wrapWith("html");
     }
@@ -212,7 +195,6 @@ public final class HtmlBuilder {
     /**
      * @return true if no elements were added to this builder
      */
-    @Contract(pure = true)
     public boolean isEmpty() {
         return myChunks.isEmpty();
     }
@@ -234,7 +216,6 @@ public final class HtmlBuilder {
      * @return a rendered HTML representation of all the chunks in this builder.
      */
     @Override
-    @Contract(pure = true)
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (HtmlChunk chunk : myChunks) {

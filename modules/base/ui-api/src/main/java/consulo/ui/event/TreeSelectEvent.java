@@ -18,6 +18,7 @@ package consulo.ui.event;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,10 +29,10 @@ public final class TreeSelectEvent<V> extends ComponentEvent<Tree<V>> {
     private final @Nullable TreeNode<V> myValue;
 
     public TreeSelectEvent(Tree<V> component, @Nullable TreeNode<V> value) {
-        this(component, value, null);
+        this(component, value, ProgrammaticInputDetails.INSTANCE);
     }
 
-    public TreeSelectEvent(Tree<V> component, @Nullable TreeNode<V> value, @Nullable InputDetails inputDetails) {
+    public TreeSelectEvent(Tree<V> component, @Nullable TreeNode<V> value, InputDetails inputDetails) {
         super(component, inputDetails);
         myValue = value;
     }

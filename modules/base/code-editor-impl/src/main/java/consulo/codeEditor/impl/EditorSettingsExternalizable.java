@@ -18,8 +18,10 @@ package consulo.codeEditor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.BidiTextDirection;
+import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.TabCharacterPaintMode;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -43,6 +45,8 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public static final UINumericRange BLINKING_RANGE = new UINumericRange(500, 10, 1500);
     public static final UINumericRange TOOLTIPS_DELAY_RANGE = new UINumericRange(500, 1, 5000);
 
+    public static final String PROP_ENABLE_RENDERED_DOC = "docCommentRenderingEnabled";
+
     //Q: make it interface?
     public static final class OptionSet {
         public String LINE_SEPARATOR;
@@ -56,8 +60,12 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SHOW_QUICK_DOC_ON_MOUSE_OVER_ELEMENT = true;
         public int TOOLTIPS_DELAY_MS = TOOLTIPS_DELAY_RANGE.initial;
         public boolean SHOW_INTENTION_BULB = true;
+        public boolean ENABLE_RENDERED_DOC = false;
         public boolean IS_CARET_BLINKING = true;
         public int CARET_BLINKING_PERIOD = BLINKING_RANGE.initial;
+        public boolean IS_ANIMATED_CARET = true;
+        public boolean IS_SMOOTH_CARET_BLINKING = true;
+        public EditorSettings.CaretEasing CARET_EASING = EditorSettings.CaretEasing.NINJA;
         public boolean IS_RIGHT_MARGIN_SHOWN = true;
         public boolean ARE_LINE_NUMBERS_SHOWN = true;
         public boolean ARE_GUTTER_ICONS_SHOWN = true;
@@ -71,10 +79,14 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SMART_HOME = true;
 
         public boolean IS_BLOCK_CURSOR = false;
+        public boolean IS_FULL_LINE_HEIGHT_CURSOR = false;
+        public boolean SHOWING_SPECIAL_CHARS = false;
+        public TabCharacterPaintMode TAB_CHARACTER_PAINT_MODE = TabCharacterPaintMode.HORIZONTAL_LINE;
         public boolean IS_WHITESPACES_SHOWN = false;
         public boolean IS_LEADING_WHITESPACES_SHOWN = true;
         public boolean IS_INNER_WHITESPACES_SHOWN = true;
         public boolean IS_TRAILING_WHITESPACES_SHOWN = true;
+        public boolean IS_SELECTION_WHITESPACES_SHOWN = true;
         @SuppressWarnings("SpellCheckingInspection")
         public boolean IS_ALL_SOFTWRAPS_SHOWN = false;
         public boolean IS_INDENT_GUIDES_SHOWN = true;
@@ -475,6 +487,36 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
 
     @Override
+    public boolean isAnimatedCaret() {
+        return myOptions.IS_ANIMATED_CARET;
+    }
+
+    @Override
+    public void setAnimatedCaret(boolean val) {
+        myOptions.IS_ANIMATED_CARET = val;
+    }
+
+    @Override
+    public boolean isSmoothCaretBlinking() {
+        return myOptions.IS_SMOOTH_CARET_BLINKING;
+    }
+
+    @Override
+    public void setSmoothCaretBlinking(boolean val) {
+        myOptions.IS_SMOOTH_CARET_BLINKING = val;
+    }
+
+    @Override
+    public EditorSettings.CaretEasing getCaretEasing() {
+        return myOptions.CARET_EASING;
+    }
+
+    @Override
+    public void setCaretEasing(EditorSettings.CaretEasing val) {
+        myOptions.CARET_EASING = val;
+    }
+
+    @Override
     public boolean isEnsureNewLineAtEOF() {
         return myOptions.IS_ENSURE_NEWLINE_AT_EOF;
     }
@@ -540,6 +582,18 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         myOptions.SHOW_INTENTION_BULB = show;
     }
 
+    public boolean isDocCommentRenderingEnabled() {
+        return myOptions.ENABLE_RENDERED_DOC;
+    }
+
+    public void setDocCommentRenderingEnabled(boolean value) {
+        boolean oldValue = myOptions.ENABLE_RENDERED_DOC;
+        myOptions.ENABLE_RENDERED_DOC = value;
+        if (oldValue != value) {
+            myPropertyChangeSupport.firePropertyChange(PROP_ENABLE_RENDERED_DOC, oldValue, value);
+        }
+    }
+
     @Override
     public boolean isRefrainFromScrolling() {
         return myOptions.REFRAIN_FROM_SCROLLING;
@@ -588,6 +642,46 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setTrailingWhitespacesShown(boolean val) {
         myOptions.IS_TRAILING_WHITESPACES_SHOWN = val;
+    }
+
+    @Override
+    public boolean isSelectionWhitespacesShown() {
+        return myOptions.IS_SELECTION_WHITESPACES_SHOWN;
+    }
+
+    @Override
+    public void setSelectionWhitespacesShown(boolean val) {
+        myOptions.IS_SELECTION_WHITESPACES_SHOWN = val;
+    }
+
+    @Override
+    public boolean isFullLineHeightCursor() {
+        return myOptions.IS_FULL_LINE_HEIGHT_CURSOR;
+    }
+
+    @Override
+    public void setFullLineHeightCursor(boolean val) {
+        myOptions.IS_FULL_LINE_HEIGHT_CURSOR = val;
+    }
+
+    @Override
+    public boolean isShowingSpecialChars() {
+        return myOptions.SHOWING_SPECIAL_CHARS;
+    }
+
+    @Override
+    public void setShowingSpecialChars(boolean val) {
+        myOptions.SHOWING_SPECIAL_CHARS = val;
+    }
+
+    @Override
+    public TabCharacterPaintMode getTabCharacterPaintMode() {
+        return myOptions.TAB_CHARACTER_PAINT_MODE;
+    }
+
+    @Override
+    public void setTabCharacterPaintMode(TabCharacterPaintMode mode) {
+        myOptions.TAB_CHARACTER_PAINT_MODE = mode;
     }
 
     @Override

@@ -78,19 +78,21 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
     private static final Logger LOG = Logger.getInstance(OrderRootsEnumeratorImpl.class);
     private final OrderEnumeratorBase myOrderEnumerator;
-    private final @Nullable OrderRootType myRootType;
-    private final @Nullable Function<OrderEntry, OrderRootType> myRootTypeProvider;
+    private final @Nullable String myRootType;
+    private final @Nullable Function<OrderEntry, String> myRootTypeProvider;
     private boolean myUsingCache;
     private @Nullable Function<OrderEntry, VirtualFile[]> myCustomRootProvider;
     private boolean myWithoutSelfModuleOutput;
 
-    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, OrderRootType rootType) {
+    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator,
+                                    String rootType) {
         myOrderEnumerator = orderEnumerator;
         myRootType = rootType;
         myRootTypeProvider = null;
     }
 
-    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, Function<OrderEntry, OrderRootType> rootTypeProvider) {
+    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator,
+                                    Function<OrderEntry, String> rootTypeProvider) {
         myOrderEnumerator = orderEnumerator;
         myRootTypeProvider = rootTypeProvider;
         myRootType = null;
@@ -146,11 +148,11 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     private Collection<VirtualFile> computeRoots() {
         Collection<VirtualFile> result = new LinkedHashSet<>();
         myOrderEnumerator.forEach(orderEntry -> {
-            OrderRootType type = getRootType(orderEntry);
+            String orderRootTypeId = getRootType(orderEntry);
 
             if (orderEntry instanceof ModuleSourceOrderEntry moduleSourceOrderEntry) {
                 collectRoots(
-                    type,
+                    orderRootTypeId,
                     moduleSourceOrderEntry.getRootModel(),
                     result,
                     true,
@@ -167,7 +169,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                     boolean includeTests = !myOrderEnumerator.isProductionOnly()
                         && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath()
                         || productionOnTests;
-                    collectRoots(type, rootModel, result, !productionOnTests, includeTests, SOURCES_TO_FILE_FUNC, RUNTIME_TO_FILE_FUNC);
+                    collectRoots(orderRootTypeId, rootModel, result, !productionOnTests, includeTests, SOURCES_TO_FILE_FUNC, RUNTIME_TO_FILE_FUNC);
                 }
             }
             else {
@@ -175,7 +177,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                     Collections.addAll(result, myCustomRootProvider.apply(orderEntry));
                     return true;
                 }
-                Collections.addAll(result, orderEntry.getFiles(type));
+                Collections.addAll(result, orderEntry.getFiles(orderRootTypeId));
             }
             return true;
         });
@@ -185,7 +187,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     private Collection<String> computeRootsUrls() {
         Collection<String> result = new LinkedHashSet<>();
         myOrderEnumerator.forEach(orderEntry -> {
-            OrderRootType type = getRootType(orderEntry);
+            String type = getRootType(orderEntry);
 
             if (orderEntry instanceof ModuleSourceOrderEntry moduleSourceOrderEntry) {
                 collectRootUrls(
@@ -248,7 +250,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     }
 
     private void collectRoots(
-        OrderRootType type,
+        String type,
         ModuleRootModel rootModel,
         Collection<VirtualFile> result,
         boolean includeProduction,
@@ -257,7 +259,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForRuntime
     ) {
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(rootModel);
-        if (type.equals(SourcesOrderRootType.getInstance())) {
+        if (SourcesOrderRootType.ID.equals(type)) {
             if (includeProduction) {
                 Predicate<ContentFolderTypeProvider> predicate =
                     includeTests ? productionAndTestFolderFilter() : productionFolderFilter();
@@ -283,7 +285,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                 }
             }
         }
-        else if (type.equals(BinariesOrderRootType.getInstance())) {
+        else if (BinariesOrderRootType.ID.equals(type)) {
             if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
                 if (includeTests && includeProduction) {
                     Collections.addAll(result, funForRuntime.apply(rootModel, productionAndTestFolderFilter()));
@@ -302,7 +304,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     }
 
     private void collectRootUrls(
-        OrderRootType type,
+        String type,
         ModuleRootModel rootModel,
         Collection<String> result,
         boolean includeProduction,
@@ -311,7 +313,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> funForRuntime
     ) {
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(rootModel);
-        if (type.equals(SourcesOrderRootType.getInstance())) {
+        if (SourcesOrderRootType.ID.equals(type)) {
             if (includeProduction) {
                 Predicate<ContentFolderTypeProvider> predicate = includeTests ? productionAndTestFolderFilter() : productionFolderFilter();
                 if (rootsProcessor != null) {
@@ -336,7 +338,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                 }
             }
         }
-        else if (type.equals(BinariesOrderRootType.getInstance())) {
+        else if (BinariesOrderRootType.ID.equals(type)) {
             if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
                 if (includeTests && includeProduction) {
                     Collections.addAll(result, funForRuntime.apply(rootModel, productionAndTestFolderFilter()));
@@ -354,7 +356,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
     }
 
-    private OrderRootType getRootType(OrderEntry e) {
+    private String getRootType(OrderEntry e) {
         return myRootType != null ? myRootType : Objects.requireNonNull(myRootTypeProvider).apply(e);
     }
 

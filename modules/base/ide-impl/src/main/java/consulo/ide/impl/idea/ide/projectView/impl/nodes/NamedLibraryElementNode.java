@@ -91,7 +91,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         if (!orderEntry.isValid()) {
             return false;
         }
-        VirtualFile[] files = orderEntry.getFiles(orderType);
+        VirtualFile[] files = orderEntry.getFiles(orderType.getId());
         for (VirtualFile virtualFile : files) {
             boolean ancestor = VirtualFileUtil.isAncestor(virtualFile, file, false);
             if (ancestor) {

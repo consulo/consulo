@@ -31,7 +31,9 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.ui.tree.BreakpointItemNode;
 import consulo.execution.debug.impl.internal.breakpoint.ui.tree.BreakpointItemsTreeController;
 import consulo.execution.debug.impl.internal.breakpoint.ui.tree.BreakpointsCheckboxTree;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.editor.ui.awt.DetailViewImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Size2D;
@@ -49,7 +51,6 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 
 public class BreakpointsDialog extends WholeWestDialogWrapper {
-    
     private Project myProject;
 
     private Object myInitialBreakpoint;
@@ -96,23 +97,23 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
         collectItems();
 
-        setTitle("Breakpoints");
+        setTitle(XDebuggerLocalize.xbreakpointsDialogTitle());
         setModal(false);
         init();
-        setOKButtonText("Done");
+        setOKButtonText(XDebuggerLocalize.doneActionText());
 
-        myTitlelessDecorator.install(getWindow());
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.install(getWindow());
+        }
     }
 
-    
     @Override
     public String getSplitterKey() {
         return getDimensionServiceKey() + ".splitter";
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         return Couple.of(createMasterView(), createDetailView());
     }
@@ -151,7 +152,6 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         return new Size2D(910, 400);
     }
 
-    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getHelpAction()};
@@ -161,7 +161,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         private XBreakpointGroupingRule myRule;
 
         public ToggleBreakpointGroupingRuleEnabledAction(XBreakpointGroupingRule rule) {
-            super(rule.getPresentableName(), null, rule.getIcon());
+            super(rule.getPresentableName(), LocalizeValue.empty(), rule.getIcon());
             myRule = rule;
             getTemplatePresentation().setText(rule.getPresentableName());
         }
@@ -172,6 +172,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             if (state) {
                 myRulesEnabled.add(myRule);
@@ -187,13 +188,14 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         myTreeController = new BreakpointItemsTreeController(myRulesEnabled) {
             @Override
             public void nodeStateWillChangeImpl(CheckedTreeNode node) {
-                if (node instanceof BreakpointItemNode) {
-                    ((BreakpointItemNode) node).getBreakpointItem().saveState();
+                if (node instanceof BreakpointItemNode breakpointItemNode) {
+                    breakpointItemNode.getBreakpointItem().saveState();
                 }
                 super.nodeStateWillChangeImpl(node);
             }
 
             @Override
+            @RequiredUIAccess
             public void nodeStateDidChangeImpl(CheckedTreeNode node) {
                 super.nodeStateDidChangeImpl(node);
                 if (node instanceof BreakpointItemNode) {
@@ -245,8 +247,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         );
 
         new AnAction("BreakpointDialog.GoToSource") {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 navigate(true);
                 close(OK_EXIT_CODE);
@@ -254,8 +256,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), tree);
 
         new AnAction("BreakpointDialog.ShowSource") {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 navigate(true);
                 close(OK_EXIT_CODE);
@@ -269,16 +271,19 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
             }
         }
 
-        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(tree).
-            setAddAction((b, e) -> JBPopupFactory.getInstance().createActionGroupPopup(
-                null,
-                breakpointTypes,
-                e.getDataContext(),
-                JBPopupFactory.ActionSelectionAid.NUMBERING,
-                false
-            ).show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT))).
-            setRemoveAction(button -> myTreeController.removeSelectedBreakpoints(myProject)).
-            setRemoveActionUpdater(e -> {
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(tree)
+            .setAddAction(
+                (b, e) -> JBPopupFactory.getInstance().createActionGroupPopup(
+                        null,
+                        breakpointTypes,
+                        e.getDataContext(),
+                        JBPopupFactory.ActionSelectionAid.NUMBERING,
+                        false
+                    )
+                    .show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT))
+            )
+            .setRemoveAction(button -> myTreeController.removeSelectedBreakpoints(myProject))
+            .setRemoveActionUpdater(e -> {
                 boolean enabled = false;
                 ItemWrapper[] items = myMasterController.getSelectedItems();
                 for (ItemWrapper item : items) {
@@ -287,10 +292,10 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
                     }
                 }
                 return enabled;
-            }).
-            setToolbarPosition(ActionToolbarPosition.TOP).
-            setToolbarBackgroundColor(UIUtil.getPanelBackground()).
-            setToolbarBorder(IdeBorderFactory.createEmptyBorder());
+            })
+            .setToolbarPosition(ActionToolbarPosition.TOP)
+            .setToolbarBackgroundColor(UIUtil.getPanelBackground())
+            .setToolbarBorder(IdeBorderFactory.createEmptyBorder());
 
         tree.setBorder(JBUI.Borders.empty());
 
@@ -328,6 +333,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public @Nullable JComponent getPreferredFocusedComponent() {
         return myTreeController.getTreeView();
     }
@@ -339,7 +345,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         Collections.sort(myRulesAvailable, XBreakpointGroupingRule.PRIORITY_COMPARATOR);
 
         myRulesEnabled.clear();
-        XBreakpointsDialogState settings = (getBreakpointManager()).getBreakpointsDialogSettings();
+        XBreakpointsDialogState settings = getBreakpointManager().getBreakpointsDialogSettings();
 
         for (XBreakpointGroupingRule rule : myRulesAvailable) {
             if (rule.isAlwaysEnabled() || (settings != null && settings.getSelectedGroupingRules().contains(rule.getId()))) {
@@ -358,7 +364,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         XBreakpointsDialogState dialogState = new XBreakpointsDialogState();
         List<XBreakpointGroupingRule> rulesEnabled = ContainerUtil.filter(myRulesEnabled, rule -> !rule.isAlwaysEnabled());
 
-        dialogState.setSelectedGroupingRules(new HashSet<>(ContainerUtil.map(rulesEnabled, rule -> rule.getId())));
+        dialogState.setSelectedGroupingRules(new HashSet<>(ContainerUtil.map(rulesEnabled, XBreakpointGroupingRule::getId)));
         getBreakpointManager().setBreakpointsDialogSettings(dialogState);
     }
 
@@ -383,9 +389,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }
 
     private void saveCurrentItem() {
-        ItemWrapper item = myDetailController.getSelectedItem();
-        if (item instanceof BreakpointItem) {
-            ((BreakpointItem) item).saveState();
+        if (myDetailController.getSelectedItem() instanceof BreakpointItem breakpointItem) {
+            breakpointItem.saveState();
         }
     }
 
@@ -398,8 +403,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
             getTemplatePresentation().setText(type.getTitle());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             saveCurrentItem();
             XBreakpoint<?> breakpoint = myType.addBreakpoint(myProject, null);
@@ -423,32 +428,35 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         private final String myGroup;
         private final boolean myNewGroup;
 
-        private MoveToGroupAction(String group) {
-            super(group == null ? "<no group>" : group);
+        private MoveToGroupAction(@Nullable String group) {
+            super(LocalizeValue.ofNullable(group).orIfEmpty(XDebuggerLocalize.breakpointsDialogNoGroup()));
             myGroup = group;
             myNewGroup = false;
         }
 
         private MoveToGroupAction() {
-            super("Create new...");
+            super(XDebuggerLocalize.breakpointsDialogCreateNewGroup());
             myNewGroup = true;
             myGroup = null;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             String groupName = myGroup;
             if (myNewGroup) {
-                groupName = Messages.showInputDialog("New group name", "New Group", PlatformIconGroup.actionsNewfolder());
+                groupName = Messages.showInputDialog(
+                    XDebuggerLocalize.breakpointsDialogNewGroupName().get(),
+                    XDebuggerLocalize.breakpointsDialogNewGroup().get(),
+                    PlatformIconGroup.actionsNewfolder()
+                );
                 if (groupName == null) {
                     return;
                 }
             }
             for (BreakpointItem item : myTreeController.getSelectedBreakpoints(true)) {
-                Object breakpoint = item.getBreakpoint();
-                if (item.allowedToRemove() && breakpoint instanceof XBreakpointBase) {
-                    ((XBreakpointBase) breakpoint).setGroup(groupName);
+                if (item.allowedToRemove() && item.getBreakpoint() instanceof XBreakpointBase breakpointBase) {
+                    breakpointBase.setGroup(groupName);
                 }
             }
             myTreeController.rebuildTree(myBreakpointItems);

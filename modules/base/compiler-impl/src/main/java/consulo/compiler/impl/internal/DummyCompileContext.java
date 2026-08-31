@@ -22,14 +22,13 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.Supplier;
+import java.nio.file.Path;
 
 public class DummyCompileContext implements CompileContext {
     protected DummyCompileContext() {
@@ -42,23 +41,22 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return new AbstractCompileMessageBuilder(category, message) {
+            @Override
+            public MessageBuilder url(String url) {
+                return this;
+            }
+
+            @Override
+            public void add() {
+            }
+        };
+    }
+
+    @Override
     public Project getProject() {
         return null;
-    }
-
-    @Override
-    public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
-    }
-
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        @Nullable String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
     }
 
     @Override
@@ -77,44 +75,41 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
-    public void requestRebuildNextTime(String message) {
+    public void requestRebuildNextTime(LocalizeValue message) {
     }
 
     @Override
-    public Module getModuleByFile(VirtualFile file) {
+    public Module getModuleByFile(Path file) {
         return null;
     }
 
     @Override
-    public VirtualFile[] getSourceRoots(Module module) {
-        return VirtualFile.EMPTY_ARRAY;
+    public Path[] getSourceRoots(Module module) {
+        return new Path[0];
     }
 
     @Override
-    public VirtualFile[] getAllOutputDirectories() {
-        return VirtualFile.EMPTY_ARRAY;
+    public Path[] getAllOutputDirectories() {
+        return new Path[0];
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectory(Module module) {
-        return module.getApplication().runReadAction(
-            (Supplier<VirtualFile>) () -> ModuleCompilerPathsManager.getInstance(module)
-                .getCompilerOutput(ProductionContentFolderTypeProvider.getInstance())
-        );
+    public Path getModuleOutputDirectory(Module module) {
+        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPath(ProductionContentFolderTypeProvider.getInstance());
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectoryForTests(Module module) {
+    public Path getModuleOutputDirectoryForTests(Module module) {
         return null;
     }
 
     @Override
-    public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
+    public Path getOutputForFile(Module module, Path file) {
         return null;
     }
 
     @Override
-    public @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable Path getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
         return null;
     }
 

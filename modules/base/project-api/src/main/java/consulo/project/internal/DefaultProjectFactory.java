@@ -23,7 +23,7 @@ import consulo.project.Project;
 /**
  * @author yole
  */
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION)
 public abstract class DefaultProjectFactory {
   
   public static DefaultProjectFactory getInstance() {

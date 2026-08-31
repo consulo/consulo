@@ -1,0 +1,149 @@
+/*
+ * Copyright 2013-2018 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.desktop.awt.ui.impl.image;
+
+import consulo.desktop.awt.ui.impl.facade.ToSwingIconWrapper;
+import consulo.ui.ex.awt.JBImageIcon;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.RetinaImage;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.style.StyleManager;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RGBImageFilter;
+
+/**
+ * <p>If image is from library - use method from library class.</p>
+ *
+ * <p>In other ways, we will return not cached image.</p>
+ *
+ * @author VISTALL
+ * @since 2018-06-22
+ */
+public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, DesktopAWTImage {
+    public static DesktopAWTImage of(Image original) {
+        return new DesktopDisabledImageImpl(original);
+    }
+
+    private final Image myOriginal;
+
+    private final Icon myDisabledIcon;
+
+    private DesktopDisabledImageImpl(Image original) {
+        myOriginal = original;
+        myDisabledIcon = getDisabledIcon(TargetAWT.to(original));
+    }
+
+    /**
+     * Gets (creates if necessary) disabled icon based on the passed one.
+     *
+     * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
+     */
+    public @Nullable Icon getDisabledIcon(@Nullable Icon icon) {
+        if (icon instanceof DesktopLazyImageImpl) {
+            icon = ((DesktopLazyImageImpl) icon).getOrComputeIcon();
+        }
+        if (icon == null) {
+            return null;
+        }
+
+        return filterIcon(icon, UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()), null);
+    }
+
+    /**
+     * Creates new icon with the filter applied.
+     */
+    @SuppressWarnings("UndesirableClassUsage")
+    public static Icon filterIcon(Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
+        if (icon instanceof DesktopLazyImageImpl) {
+            icon = ((DesktopLazyImageImpl) icon).getOrComputeIcon();
+        }
+
+        float scale;
+        if (icon instanceof JBUI.ScaleContextAware) {
+            scale = (float) ((JBUI.ScaleContextAware) icon).getScale(JBUI.ScaleType.SYS_SCALE);
+        }
+        else {
+            scale = UIUtil.isJreHiDPI() ? JBUI.sysScale(ancestor) : 1f;
+        }
+        BufferedImage image =
+            new BufferedImage((int) (scale * icon.getIconWidth()), (int) (scale * icon.getIconHeight()), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+
+        graphics.setColor(UIUtil.TRANSPARENT_COLOR);
+        graphics.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
+        graphics.scale(scale, scale);
+        icon.paintIcon(LabelHolder.ourFakeComponent, graphics, 0, 0);
+
+        graphics.dispose();
+
+        java.awt.Image img = ImageUtil.filter(image, filter);
+        if (UIUtil.isJreHiDPI()) {
+            img = RetinaImage.createFrom(img, scale, null);
+        }
+
+        icon = new JBImageIcon(img);
+        return icon;
+    }
+
+    private static class LabelHolder {
+        /**
+         * To get disabled icon with paint it into the image. Some icons require
+         * not null component to paint.
+         */
+        private static final JComponent ourFakeComponent = new JLabel();
+    }
+
+    
+    @Override
+    public Icon toSwingIcon() {
+        return myDisabledIcon;
+    }
+
+    @Override
+    public int getHeight() {
+        return myOriginal.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return myOriginal.getWidth();
+    }
+
+    
+    @Override
+    public DesktopAWTImage copyWithNewSize(int width, int height) {
+        if (myOriginal instanceof DesktopAWTImage desktopAWTImage) {
+            return of(desktopAWTImage.copyWithNewSize(width, height));
+        }
+        return this;
+    }
+
+    
+    @Override
+    public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+        if (myOriginal instanceof DesktopAWTImage desktopAWTImage) {
+            return of(desktopAWTImage.copyWithForceLibraryId(libraryId));
+        }
+        return this;
+    }
+}

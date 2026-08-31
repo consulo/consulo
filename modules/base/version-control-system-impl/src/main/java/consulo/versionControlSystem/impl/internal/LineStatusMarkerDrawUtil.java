@@ -33,11 +33,10 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
- * Static drawing utilities for VCS line-status gutter markers.
+ * Colour lookups and gutter hit-testing for VCS line-status markers.
  * <p>
- * Equivalent to JetBrains' {@code LineStatusMarkerDrawUtil}.
- * Called by {@link LineStatusGutterMarkerRenderer} (document-level) and by
- * {@link LineStatusMarkerRenderer} (per-range popup renderer).
+ * The drawing itself moved to the platform painters once markers became declarative; what is left
+ * is the scheme mapping shared by every platform, plus the mouse-area test.
  */
 public final class LineStatusMarkerDrawUtil {
 
@@ -47,115 +46,6 @@ public final class LineStatusMarkerDrawUtil {
     // -------------------------------------------------------------------------
     // Public API
     // -------------------------------------------------------------------------
-
-    /**
-     * Paints a single VCS range marker in the gutter.
-     * Handles DEFAULT mode (solid bar / deletion triangle) and SMART mode (inner ranges).
-     *
-     * <p>The hover state is per-range: only the marker whose line range contains the hovered
-     * logical line gets the extra-width treatment (equivalent to JB's per-block isHovered logic
-     * in {@code LineStatusMarkerDrawUtil.paintDefault}).
-     */
-    public static void paintRange(VcsRange range, Editor editor, Graphics g, Rectangle r) {
-        ColorValue gutterColor = getGutterColor(range, editor);
-        ColorValue borderColor = getGutterBorderColor(editor);
-
-        EditorGutterComponentEx gutter = ((EditorEx) editor).getGutterComponentEx();
-        // RIGHT_FREE_PAINTERS_AREA is placed LAST in the Consulo gutter layout (after folding),
-        // matching JB's EXTRA_RIGHT_FREE_PAINTERS_AREA position (adjacent to editor content).
-        // Layout: [...folding][RIGHT_FREE(9px)][3px gap][editor content]
-        //
-        // Bar width: getRightFreePaintersAreaWidth() = scale(4) + scale(5) = 9px.
-        // The 4px is the actual bar; the 5px is the hover-expansion margin (to the left of the bar).
-        // The bar is RIGHT-aligned within the area.
-        //
-        // Equivalent to JB's getGutterArea() new-UI logic:
-        //   x = extraOffset+3, endX = extraOffset+7  →  4px bar
-        //   hovered: x1 = x - getHoveredMarkerExtraWidth() = x - 3  →  7px wide
-        // Consulo mapping (bar right-aligned within 9px area):
-        //   non-hovered: [r.x+5, r.x+9] = 4px
-        //   hovered:     [r.x+2, r.x+9] = 7px
-        int barWidth = JBUI.scale(JBUI.getInt("Gutter.VcsChanges.width", 4));
-        int hoverExtra = JBUI.scale(3);  // matches JB's getHoveredMarkerExtraWidth()
-        int endX = r.x + r.width;        // right edge (adjacent to line numbers)
-        int xBar = endX - barWidth;       // non-hovered left edge of bar
-        int y = DiffImplUtil.lineToY(editor, range.getLine1());
-        int endY = DiffImplUtil.lineToY(editor, range.getLine2());
-
-        Graphics2D g2 = (Graphics2D) g;
-
-        // Hover: expand left by hoverExtra (endX stays fixed — same as JB's paintChangedLines).
-        boolean isHovered = isRangeHovered(range, gutter);
-        int xPaint = isHovered ? xBar - hoverExtra : xBar;
-
-        if (range.getInnerRanges() == null) {          // Mode.DEFAULT
-            if (y != endY) {
-                paintRect(g2, gutterColor, null, xPaint, y, endX, endY);
-                if (borderColor != null) {
-                    paintRect(g2, null, borderColor, xPaint, y, endX, endY);
-                }
-            }
-            else {
-                paintTriangle(g2, editor, gutterColor, borderColor, xPaint, endX, y);
-            }
-        }
-        else if (y == endY) {
-            paintTriangle(g2, editor, gutterColor, borderColor, xPaint, endX, y);
-        }
-        else {                                           // Mode.SMART – inner ranges
-            List<VcsRange.InnerRange> innerRanges = range.getInnerRanges();
-
-            for (VcsRange.InnerRange inner : innerRanges) {
-                if (inner.getType() == VcsRange.DELETED) continue;
-                int start = DiffImplUtil.lineToY(editor, inner.getLine1());
-                int end = DiffImplUtil.lineToY(editor, inner.getLine2());
-                paintRect(g2, getGutterColor(inner, editor), null, xPaint, start, endX, end);
-            }
-
-            paintRect(g2, null, borderColor, xPaint, y, endX, endY);
-
-            for (VcsRange.InnerRange inner : innerRanges) {
-                if (inner.getType() != VcsRange.DELETED) continue;
-                int start = DiffImplUtil.lineToY(editor, inner.getLine1());
-                paintTriangle(g2, editor, getGutterColor(inner, editor), borderColor, xPaint, endX, start);
-            }
-        }
-    }
-
-    /**
-     * Returns true if the mouse is currently hovering over the gutter area that belongs to
-     * {@code range}. Equivalent to JB's {@code isBlockUnderY} check.
-     *
-     * <p>For deleted ranges (line1==line2, rendered as a triangle) we extend the hover zone
-     * by one extra line in each direction so the small triangle is easy to click.
-     */
-    private static boolean isRangeHovered(VcsRange range, EditorGutterComponentEx gutter) {
-        int hoveredLine = gutter.getHoveredFreeMarkersLine();
-        if (hoveredLine < 0) return false;
-
-        int line1 = range.getLine1();
-        int line2 = range.getLine2();
-        if (line1 == line2) {
-            // Deleted-lines triangle: allow hovering on the adjacent lines too.
-            return hoveredLine >= line1 - 1 && hoveredLine <= line1;
-        }
-        return hoveredLine >= line1 && hoveredLine < line2;
-    }
-
-    /**
-     * Returns the pixel rectangle inside the gutter where a range marker should be drawn.
-     * The {@code r} rectangle is the area assigned by the gutter framework to the renderer
-     * (for {@link consulo.codeEditor.markup.LineMarkerRenderer.Position#RIGHT} this starts
-     * at {@link EditorGutterComponentEx#getLineMarkerFreePaintersAreaOffset()}).
-     */
-    public static Rectangle getMarkerArea(Editor editor, Rectangle r, int line1, int line2) {
-        int barWidth = JBUI.scale(JBUI.getInt("Gutter.VcsChanges.width", 4));
-        int endX = r.x + r.width;   // right edge (adjacent to line numbers)
-        int x = endX - barWidth;     // bar left edge (right-aligned, same as non-hovered paintRange)
-        int y = DiffImplUtil.lineToY(editor, line1);
-        int endY = DiffImplUtil.lineToY(editor, line2);
-        return new Rectangle(x, y, endX - x, endY - y);
-    }
 
     public static boolean isInsideMarkerArea(MouseEvent e) {
         EditorGutterComponentEx gutter = (EditorGutterComponentEx) e.getComponent();
@@ -205,45 +95,4 @@ public final class LineStatusMarkerDrawUtil {
         return editor != null ? editor.getColorsScheme() : EditorColorsManager.getInstance().getGlobalScheme();
     }
 
-    // -------------------------------------------------------------------------
-    // Low-level shape painters
-    // -------------------------------------------------------------------------
-
-    public static void paintRect(Graphics2D g, @Nullable ColorValue color, @Nullable ColorValue borderColor,
-                                  int x1, int y1, int x2, int y2) {
-        if (color != null) {
-            g.setColor(TargetAWT.to(color));
-            double w = x2 - x1;
-            RectanglePainter2D.FILL.paint(g, x1, y1 + 1, w, y2 - y1 - 2, w);
-        }
-        else if (borderColor != null) {
-            g.setColor(TargetAWT.to(borderColor));
-            double w = x2 - x1;
-            RectanglePainter2D.DRAW.paint(g, x1, y1 + 1, w, y2 - y1 - 2, w);
-        }
-    }
-
-    public static void paintTriangle(Graphics2D g, Editor editor,
-                                      @Nullable ColorValue color, @Nullable ColorValue borderColor,
-                                      int x1, int x2, int y) {
-        // JB uses 5 in new UI (getTriangleHeight: unscaled = isNewUI ? 5 : 4).
-        // Consulo always uses new UI.
-        int size = (int) JBUIScale.scale(5 * getEditorScale(editor));
-        if (y < size) y = size;
-
-        if (color != null) {
-            g.setColor(TargetAWT.to(color));
-            double w = x2 - x1;
-            RectanglePainter2D.FILL.paint(g, x1, y - size + 1, w, 2 * size - 2, w);
-        }
-        else if (borderColor != null) {
-            g.setColor(TargetAWT.to(borderColor));
-            double w = x2 - x1;
-            RectanglePainter2D.DRAW.paint(g, x1, y - size + 1, w, 2 * size - 2, w);
-        }
-    }
-
-    private static float getEditorScale(Editor editor) {
-        return editor instanceof RealEditor ? ((RealEditor) editor).getScale() : 1.0f;
-    }
 }

@@ -20,126 +20,130 @@ import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * Project interface class.
  */
 public interface Project extends ComponentManager, WindowOwner, CoroutineContextOwner {
-  String DIRECTORY_STORE_FOLDER = ".consulo";
+    String DIRECTORY_STORE_FOLDER = ".consulo";
 
-  Key<Project> KEY = Key.create(Project.class);
-  Key<VirtualFile> PROJECT_FILE_DIRECTORY = Key.create("context.ProjectFileDirectory");
+    Key<Project> KEY = Key.create(Project.class);
+    Key<VirtualFile> PROJECT_FILE_DIRECTORY = Key.create("context.ProjectFileDirectory");
 
-  /**
-   * @return project annotation
-   */
-  Application getApplication();
+    /**
+     * @return project annotation
+     */
+    Application getApplication();
 
-  /**
-   * Returns a name ot the project. For a directory-based project it's an arbitrary string specified by user at project creation
-   * or later in a project settings. For a file-based project it's a name of a project file without extension.
-   *
-   * @return project name
-   */
-  String getName();
+    /**
+     * Returns a name ot the project. For a directory-based project it's an arbitrary string specified by user at project creation
+     * or later in a project settings. For a file-based project it's a name of a project file without extension.
+     *
+     * @return project name
+     */
+    String getName();
 
-  /**
-   * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.consulo</code> directory.<br/>
-   * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.consulo</code> directory.<br/>
-   * Returns <code>null</code> for default project.
-   *
-   * @return project base directory, or <code>null</code> for default project
-   */
-  @Nullable VirtualFile getBaseDir();
+    /**
+     * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.consulo</code> directory.<br/>
+     * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.consulo</code> directory.<br/>
+     * Returns <code>null</code> for default project.
+     *
+     * @return project base directory, or <code>null</code> for default project
+     */
+    @Nullable VirtualFile getBaseDir();
 
-  /**
-   * Returns a system-dependent path to a project base directory (see {@linkplain #getBaseDir()}).<br/>
-   * Returns <code>null</code> for default project.
-   *
-   * @return a path to a project base directory, or <code>null</code> for default project
-   */
-  String getBasePath();
+    /**
+     * Returns a system-dependent path to a project base directory (see {@linkplain #getBaseDir()}).<br/>
+     * Returns <code>null</code> for default project.
+     *
+     * @return a path to a project base directory, or <code>null</code> for default project
+     */
+    @Nullable String getBasePath();
 
-  /**
-   * Returns project descriptor file:
-   * <ul>
-   * <li><code>path/to/project/project.ipr</code> - for file-based projects</li>
-   * <li><code>path/to/project/.consulo/misc.xml</code> - for directory-based projects</li>
-   * </ul>
-   * Returns <code>null</code> for default project.
-   *
-   * @return project descriptor file, or null for default project
-   */
-  @Nullable VirtualFile getProjectFile();
+    /**
+     * Returns project descriptor file:
+     * <ul>
+     * <li><code>path/to/project/project.ipr</code> - for file-based projects</li>
+     * <li><code>path/to/project/.consulo/misc.xml</code> - for directory-based projects</li>
+     * </ul>
+     * Returns <code>null</code> for default project.
+     *
+     * @return project descriptor file, or null for default project
+     */
+    @Nullable VirtualFile getProjectFile();
 
-  /**
-   * Returns a system-dependent path to project descriptor file (see {@linkplain #getProjectFile()}).<br/>
-   * Returns empty string (<code>""</code>) for default project.
-   *
-   * @return project descriptor file, or empty string for default project
-   */
-  String getProjectFilePath();
+    /**
+     * Returns a system-dependent path to project descriptor file (see {@linkplain #getProjectFile()}).<br/>
+     * Returns empty string (<code>""</code>) for default project.
+     *
+     * @return project descriptor file, or empty string for default project
+     */
+    String getProjectFilePath();
 
-  /**
-   * Returns presentable project path:
-   * {@linkplain #getProjectFilePath()} for file-based projects, {@linkplain #getBasePath()} for directory-based ones.<br/>
-   * * Returns <code>null</code> for default project.
-   * <b>Note:</b> the word "presentable" here implies file system presentation, not a UI one.
-   *
-   * @return presentable project path
-   */
-  @Nullable String getPresentableUrl();
+    /**
+     * Returns presentable project path:
+     * {@linkplain #getProjectFilePath()} for file-based projects, {@linkplain #getBasePath()} for directory-based ones.<br/>
+     * * Returns <code>null</code> for default project.
+     * <b>Note:</b> the word "presentable" here implies file system presentation, not a UI one.
+     *
+     * @return presentable project path
+     */
+    @Nullable String getPresentableUrl();
 
-  /**
-   * <p>Returns a workspace file:
-   * <ul>
-   * <li><code>path/to/project/project.iws</code> - for file-based projects</li>
-   * <li><code>path/to/project/.consulo/workspace.xml</code> - for directory-based ones</li>
-   * </ul>
-   * Returns <code>null</code> for default project.
-   *
-   * @return workspace file, or null for default project
-   */
-  @Nullable VirtualFile getWorkspaceFile();
+    /**
+     * <p>Returns a workspace file:
+     * <ul>
+     * <li><code>path/to/project/project.iws</code> - for file-based projects</li>
+     * <li><code>path/to/project/.consulo/workspace.xml</code> - for directory-based ones</li>
+     * </ul>
+     * Returns <code>null</code> for default project.
+     *
+     * @return workspace file, or null for default project
+     */
+    @Nullable VirtualFile getWorkspaceFile();
 
-  
-  String getLocationHash();
+    String getLocationHash();
 
-  void save();
+    default Coroutine<Object, Object> saveAsync(UIAccess uiAccess) {
+        return Coroutine.empty();
+    }
 
-  
-  default CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
-    return CompletableFuture.completedFuture(null);
-  }
+    boolean isOpen();
 
-  boolean isOpen();
+    boolean isInitialized();
 
-  boolean isInitialized();
+    @Deprecated
+    default boolean isModulesReady() {
+        return true;
+    }
 
-  default boolean isModulesReady() {
-    return true;
-  }
+    default boolean isDefault() {
+        return false;
+    }
 
-  default boolean isDefault() {
-    return false;
-  }
+    /**
+     * @return window which is associated with current project
+     */
+    @Override
+    default @Nullable Window getWindow() {
+        return null;
+    }
 
-  /**
-   * @return window which is associated with current project
-   */
-  @Override
-  default @Nullable Window getWindow() {
-    return null;
-  }
+    /**
+     * The ui the project is shown in. Asking the application instead resolves whatever ui the calling thread
+     * happens to be on, which is nothing at all on a pooled thread of a frontend serving several uis at once.
+     * <p/>
+     * Falls back to the application while no ui is attached - the default project, the tests and a headless run
+     * never get one.
+     */
+    default UIAccess getUIAccess() {
+        UIAccess uiAccess = getUserData(UIAccess.KEY);
 
-  
-  default UIAccess getUIAccess() {
-    return getApplication().getLastUIAccess();
-  }
+        return uiAccess == null || !uiAccess.isValid() ? getApplication().getLastUIAccess() : uiAccess;
+    }
 }

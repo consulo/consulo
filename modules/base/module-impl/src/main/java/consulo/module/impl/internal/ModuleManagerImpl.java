@@ -40,7 +40,6 @@ import consulo.module.content.internal.ModuleIconService;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
-import consulo.module.internal.DebugStackTrace;
 import consulo.module.internal.ModuleManagerInternal;
 import consulo.module.localize.ModuleLocalize;
 import consulo.module.macro.ModulePathMacroManager;
@@ -153,10 +152,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private List<ModuleLoadItem> myModuleLoadItems = Collections.emptyList();
 
-    private boolean myFirstLoad = true;
-
-    protected boolean myReady = false;
-
     public static final String ELEMENT_MODULES = "modules";
     public static final String ELEMENT_MODULE = "module";
 
@@ -177,15 +172,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     public ModuleManagerImpl(Project project) {
         myProject = project;
         myMessageBus = project.getMessageBus();
-    }
-
-    public void setReady(boolean ready) {
-        myReady = ready;
-    }
-
-    @Override
-    public boolean isReady() {
-        return myReady;
     }
 
     @Override
@@ -234,30 +220,25 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @Override
     @RequiredUIAccess
-    public void afterLoadState() {
-        boolean firstLoad = myFirstLoad;
-        if (firstLoad) {
-            myFirstLoad = false;
+    public void afterLoad(boolean first) {
+        if (first) {
+            doFirstModulesLoad();
+            return;
         }
 
         // if file changed, load changes
-        if (!firstLoad) {
-            ModuleModelImpl model = new ModuleModelImpl(myModuleModel);
-            // dispose not exists module
-            for (Module module : model.getModules()) {
-                ModuleLoadItem item = findModuleByUrl(module.getName(), module.getModuleDirUrl());
-                if (item == null) {
-                    WriteAction.run(() -> model.disposeModule(module));
-                }
+        ModuleModelImpl model = new ModuleModelImpl(myModuleModel);
+        // dispose not exists module
+        for (Module module : model.getModules()) {
+            ModuleLoadItem item = findModuleByUrl(module.getName(), module.getModuleDirUrl());
+            if (item == null) {
+                WriteAction.run(() -> model.disposeModule(module));
             }
-
-            loadModules(model, null, false);
-
-            WriteAction.run(model::commit);
         }
-        else {
-            doFirstModulesLoad();
-        }
+
+        loadModules(model, null, false);
+
+        WriteAction.run(model::commit);
     }
 
     @RequiredUIAccess
@@ -484,17 +465,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     
     @Override
     public Module[] getModules() {
-        if (!myReady) {
-            Exception trace = DebugStackTrace.getTrace();
-            if (trace != null) {
-                LOG.error("Modules not initialized at current moment", trace);
-            }
-            else {
-                LOG.error("Modules not initialized at current moment");
-            }
-            return Module.EMPTY_ARRAY;
-        }
-
         if (myModuleModel.myIsWritable) {
             myProject.getApplication().assertReadAccessAllowed();
         }
@@ -507,11 +477,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module[] getSortedModules() {
-        if (!myReady) {
-            LOG.error("Modules not initialized at current moment");
-            return Module.EMPTY_ARRAY;
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         deliverPendingEvents();
         if (myCachedSortedModules == null) {
@@ -523,10 +488,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module findModuleByName(String name) {
-        if (!myReady) {
-            throw new IllegalArgumentException("Modules not initialized at current moment");
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.findModuleByName(name);
     }
@@ -742,7 +703,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return toRemove;
         }
 
-        
         @RequiredUIAccess
         private Module loadModuleInternal(ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
@@ -767,9 +727,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
             String dirUrl = item.getDirUrl();
             if (dirUrl != null) {
-                SimpleReference<VirtualFile> ref = SimpleReference.create();
-                myProject.getApplication().invokeAndWait(() -> ref.set(VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl)));
-                VirtualFile moduleDir = ref.get();
+                VirtualFile moduleDir = VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl);
 
                 if (moduleDir == null || !moduleDir.exists() || !moduleDir.isDirectory()) {
                     throw new ModuleDirIsNotExistsException(ProjectLocalize.moduleDirDoesNotExistError(
@@ -787,7 +745,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 collapseOrExpandMacros(oldModule, item.getElement(), false);
 
                 ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(oldModule);
-                myProject.getApplication().runReadAction(() -> moduleRootManager.loadState(item.getElement(), progressIndicator));
+
+                moduleRootManager.loadState(item.getElement(), progressIndicator);
             }
             return oldModule;
         }

@@ -18,13 +18,14 @@ package consulo.versionControlSystem.action;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import org.jspecify.annotations.Nullable;
 
-public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware {
+public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public abstract @Nullable AbstractVcs getVcs(Project project);
 
     @Override

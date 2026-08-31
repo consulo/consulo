@@ -19,18 +19,20 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.util.IdeView;
-import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
-import consulo.ui.ex.awt.internal.LinuxDragAndDropSupport;
 import consulo.language.editor.refactoring.copy.CopyFilesOrDirectoriesHandler;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesHandler;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.language.editor.FilePasteProvider;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.UIAccess;
+import org.jspecify.annotations.Nullable;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.ClipboardFeature;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,16 +43,24 @@ import java.util.List;
 @ExtensionImpl(id = "fileList")
 public class FileListPasteProvider implements FilePasteProvider {
   @Override
+  @RequiredUIAccess
   public void performPaste(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     IdeView ideView = dataContext.getData(IdeView.KEY);
     if (project == null || ideView == null) return;
 
-    if (!FileCopyPasteUtil.isFileListFlavorAvailable()) return;
+    UIAccess uiAccess = UIAccess.current();
+    CopyPasteManager.getInstance()
+      .getContentsAsync(DataTransferType.FILE_LIST)
+      .whenCompleteAsync((fileList, throwable) -> {
+        if (throwable == null) {
+          pasteFiles(project, ideView, fileList);
+        }
+      }, uiAccess);
+  }
 
-    Transferable contents = CopyPasteManager.getInstance().getContents();
-    if (contents == null) return;
-    List<File> fileList = FileCopyPasteUtil.getFileList(contents);
+  @RequiredUIAccess
+  private void pasteFiles(Project project, IdeView ideView, @Nullable List<File> fileList) {
     if (fileList == null) return;
 
     List<PsiElement> elements = new ArrayList<>();
@@ -68,7 +78,8 @@ public class FileListPasteProvider implements FilePasteProvider {
     if (elements.size() > 0) {
       PsiDirectory dir = ideView.getOrChooseDirectory();
       if (dir != null) {
-        boolean move = LinuxDragAndDropSupport.isMoveOperation(contents);
+        PsiCopyPasteManagerImpl.MyData psiData = CopyPasteManager.getInstance().getLocalContents().get(PsiCopyPasteManagerImpl.PSI_DATA);
+        boolean move = psiData != null && !psiData.isCopied();
         if (move) {
           new MoveFilesOrDirectoriesHandler().doMove(PsiUtilCore.toPsiElementArray(elements), dir);
         }
@@ -86,6 +97,8 @@ public class FileListPasteProvider implements FilePasteProvider {
 
   @Override
   public boolean isPasteEnabled(DataContext dataContext) {
-    return dataContext.hasData(IdeView.KEY) && FileCopyPasteUtil.isFileListFlavorAvailable();
+    return dataContext.hasData(IdeView.KEY)
+      && (CopyPasteManager.getInstance().getLocalContents().contains(DataTransferType.FILE_LIST)
+          || UIAccess.current().getClipboard().isSupported(ClipboardFeature.UNRESTRICTED_READ));
   }
 }

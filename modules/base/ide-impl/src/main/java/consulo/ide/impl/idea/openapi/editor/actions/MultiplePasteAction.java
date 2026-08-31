@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.ide.CopyPasteManagerEx;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
+import consulo.ui.ex.internal.CopyPasteManagerInternal;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.localize.UILocalize;
@@ -33,20 +34,14 @@ import consulo.ui.ex.localize.UILocalize;
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author max
  */
 @ActionImpl(id = "PasteMultiple")
-public class MultiplePasteAction extends AnAction implements DumbAware {
+public class MultiplePasteAction extends LegacyDumbAwareAction {
     public MultiplePasteAction() {
         super(ActionLocalize.actionPastemultipleText(), ActionLocalize.actionPastemultipleDescription());
         setEnabledInModalContext(true);
@@ -63,30 +58,24 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
             return;
         }
 
-        final CopyPasteManagerEx copyPasteManager = CopyPasteManagerEx.getInstanceEx();
-        ContentChooser<Transferable> chooser =
+        final CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
+        final CopyPasteManagerInternal history = (CopyPasteManagerInternal) copyPasteManager;
+        ContentChooser<DataTransfer> chooser =
             new ContentChooser<>(project, UILocalize.chooseContentToPasteDialogTitle().get(), true, true) {
                 @Override
-                protected String getStringRepresentationFor(Transferable content) {
-                    try {
-                        return (String) content.getTransferData(DataFlavor.stringFlavor);
-                    }
-                    catch (UnsupportedFlavorException e1) {
-                        return "";
-                    }
-                    catch (IOException e1) {
-                        return "";
-                    }
+                protected String getStringRepresentationFor(DataTransfer content) {
+                    String text = content.get(DataTransferType.TEXT);
+                    return text == null ? "" : text;
                 }
 
                 @Override
-                protected List<Transferable> getContents() {
-                    return Arrays.asList(CopyPasteManager.getInstance().getAllContents());
+                protected List<DataTransfer> getContents() {
+                    return history.getHistory();
                 }
 
                 @Override
-                protected void removeContentAt(Transferable content) {
-                    copyPasteManager.removeContent(content);
+                protected void removeContentAt(DataTransfer content) {
+                    history.removeFromHistory(content);
                 }
             };
 
@@ -100,10 +89,12 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
         if (chooser.isOK()) {
             int[] selectedIndices = chooser.getSelectedIndices();
             if (selectedIndices.length == 1) {
-                copyPasteManager.moveContentToStackTop(chooser.getAllContents().get(selectedIndices[0]));
+                // writing it again moves it to the top of the history and refreshes the local payload,
+                // so the paste which follows picks exactly this entry
+                copyPasteManager.setContents(chooser.getAllContents().get(selectedIndices[0]));
             }
             else {
-                copyPasteManager.setContents(new StringSelection(chooser.getSelectedText()));
+                copyPasteManager.setText(chooser.getSelectedText());
             }
 
             if (editor != null) {

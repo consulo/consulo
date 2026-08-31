@@ -6,6 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -42,9 +43,21 @@ public abstract class IntentionsUI {
     hide();
   }
 
-  public abstract Object getLastIntentionHint();
-
   public abstract void update(CachedIntentions cachedIntentions, boolean actionsChanged);
 
   public abstract void hide();
+
+  /**
+   * The hint of the intentions - one button in the editor, which shows them when it is pressed. Only offers them;
+   * what it is made of is the frontend's own.
+   */
+  @RequiredUIAccess
+  public abstract void showHint(PsiFile file, Editor editor, CachedIntentions cachedIntentions);
+
+  /**
+   * The intentions themselves, listed for the user to choose from - what the hint opens, and what asking for them
+   * shows straight away.
+   */
+  @RequiredUIAccess
+  public abstract void showPopup(PsiFile file, Editor editor, CachedIntentions cachedIntentions);
 }

@@ -22,6 +22,7 @@ import consulo.component.macro.PathMacroProtocolProvider;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
  * @since 27-Jun-22
  */
 @ServiceImpl
+@Singleton
 public class PathMacroProtocolProviderImpl implements PathMacroProtocolProvider {
   private static final ExtensionPointCacheKey<VirtualFileSystem, List<String>> PROTOCOLS = ExtensionPointCacheKey.create("vfsMacroProtocols", walker -> {
     List<String> protocols = new ArrayList<>();

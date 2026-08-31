@@ -25,13 +25,23 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.*;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;
 
-public class ProjectViewProjectNode extends AbstractProjectNode {
+public class ProjectViewProjectNode extends AbstractProjectNode implements PathElementIdProvider {
     public ProjectViewProjectNode(Project project, ViewSettings viewSettings) {
         super(project, project, viewSettings);
+    }
+
+    /**
+     * Provides a fast, stable ID for tree-state serialization: the project root node always uses
+     * a fixed ID, avoiding any value resolution (read action) on the EDT during save.
+     */
+    @Override
+    public String getPathElementId() {
+        return "ROOT";
     }
 
     
@@ -61,11 +71,19 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
             return nodes;
         }
 
-        for (VirtualFile file : baseDir.getRequiredChildren()) {
-            if (ModuleContentUtil.findModuleForFile(file, project) == null && !file.isDirectory()) {
-                PsiFile psiFile = psiManager.findFile(file);
-                if (psiFile != null) {
-                    nodes.add(new PsiFileNode(project, psiFile, getSettings()));
+        if (nodes.isEmpty()) {
+            PsiDirectory psiDirectory = psiManager.findDirectory(baseDir);
+            if (psiDirectory != null) {
+                nodes.add(new PsiDirectoryNode(project, psiDirectory, getSettings()));
+            }
+        }
+        else {
+            for (VirtualFile file : baseDir.getRequiredChildren()) {
+                if (ModuleContentUtil.findModuleForFile(file, project) == null && !file.isDirectory()) {
+                    PsiFile psiFile = psiManager.findFile(file);
+                    if (psiFile != null) {
+                        nodes.add(new PsiFileNode(project, psiFile, getSettings()));
+                    }
                 }
             }
         }

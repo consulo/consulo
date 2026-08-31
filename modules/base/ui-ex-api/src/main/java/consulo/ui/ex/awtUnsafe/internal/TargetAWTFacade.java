@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awtUnsafe.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
@@ -22,10 +23,10 @@ import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,10 +36,8 @@ import java.awt.*;
  * @since 2019-02-16
  */
 public interface TargetAWTFacade {
-   
     Dimension to(Size2D size);
 
-   
     Color to(RGBColor color);
 
     @Contract("null -> null")
@@ -53,8 +52,15 @@ public interface TargetAWTFacade {
     @Contract("null -> null")
     Component from(java.awt.@Nullable Component component);
 
-   
     default Component wrap(java.awt.Component component) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * The unified form of an awt mouse event, for the code that still receives one from a swing listener but
+     * hands it to an api that speaks {@link ComponentEvent}.
+     */
+    default ComponentEvent<?> from(java.awt.event.MouseEvent event) {
         throw new UnsupportedOperationException();
     }
 
@@ -76,7 +82,6 @@ public interface TargetAWTFacade {
     @Contract("null -> null")
     Image from(@Nullable Icon icon);
 
-   
     java.awt.Font to(Font font);
 
     default java.awt.Image toAWTImage(Image image) {

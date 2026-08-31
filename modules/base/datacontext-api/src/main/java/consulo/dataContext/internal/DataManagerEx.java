@@ -17,13 +17,14 @@ package consulo.dataContext.internal;
 
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12.05.2024
  */
 public interface DataManagerEx extends DataManager {
-  default DataProvider getDataProviderEx(java.awt.Component component) {
+  default @Nullable DataProvider getDataProviderEx(java.awt.Component component) {
     throw new UnsupportedOperationException();
   }
 }

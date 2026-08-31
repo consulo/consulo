@@ -65,6 +65,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.QuickSearchComponent;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -140,6 +141,8 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     private WeakReference<Component> myFocusedBeforePopup;
 
     private boolean myCloseOnSneeze;
+
+    private RelativePoint myPopupAnchor;
     private String myPrecalculatedDocumentation;
 
     private ActionCallback myLastAction;
@@ -298,6 +301,20 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         if (hasActiveDockedDocWindow()) {
             updateComponent();
         }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showJavaDocInfo(Editor editor, PsiElement element, PsiElement original, @Nullable RelativePoint popupAnchor) {
+        myPopupAnchor = popupAnchor;
+        showJavaDocInfo(editor, element, original, null, null, false, true);
+    }
+
+    @Nullable
+    RelativePoint consumePopupAnchor() {
+        RelativePoint anchor = myPopupAnchor;
+        myPopupAnchor = null;
+        return anchor;
     }
 
     @Override

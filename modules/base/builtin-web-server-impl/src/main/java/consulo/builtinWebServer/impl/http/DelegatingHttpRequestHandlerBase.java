@@ -27,6 +27,8 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 06-May-17
@@ -40,10 +42,18 @@ public abstract class DelegatingHttpRequestHandlerBase extends SimpleChannelInbo
     if (httpResponse == null) {
       Responses.send(HttpResponseStatus.NOT_FOUND, context.channel(), request);
     }
+    else if (httpResponse.getStreamingBody() != null) {
+      StreamingResponses.send(context.channel(), httpResponse);
+    }
     else {
       byte[] content = httpResponse.getContent();
 
-      FullHttpResponse response = Responses.response(httpResponse.getContentType(), content == null ? null : Unpooled.copiedBuffer(content));
+      FullHttpResponse response = Responses.response(HttpResponseStatus.valueOf(httpResponse.getCode()),
+                                                     httpResponse.getContentType(),
+                                                     content == null ? null : Unpooled.copiedBuffer(content));
+      for (Map.Entry<String, String> header : httpResponse.getHeaders().entrySet()) {
+        response.headers().set(header.getKey(), header.getValue());
+      }
       Responses.send(response, context.channel(), request);
     }
   }

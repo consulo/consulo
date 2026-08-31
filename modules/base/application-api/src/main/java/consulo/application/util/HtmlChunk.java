@@ -6,7 +6,7 @@ import consulo.localize.LocalizeValue;
 import consulo.util.collection.UnmodifiableHashMap;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collector;
@@ -142,7 +142,6 @@ public interface HtmlChunk {
          * @param value attribute value
          * @return a new element that is like this element but has the specified attribute added or replaced
          */
-        @Contract(pure = true)
         public Element attr(String name, String value) {
             return new Element(myTagName, myAttributes.with(name, value), myChildren);
         }
@@ -152,7 +151,6 @@ public interface HtmlChunk {
          * @param value attribute value
          * @return a new element that is like this element but has the specified attribute added or replaced
          */
-        @Contract(pure = true)
         public Element attr(String name, int value) {
             return new Element(myTagName, myAttributes.with(name, Integer.toString(value)), myChildren);
         }
@@ -163,7 +161,6 @@ public interface HtmlChunk {
          * @param name attribute name
          * @return a new element that is like this element but has the specified attribute added or replaced
          */
-        @Contract(pure = true)
         public Element attr(String name) {
             return new Element(myTagName, myAttributes.with(name, null), myChildren);
         }
@@ -172,7 +169,6 @@ public interface HtmlChunk {
          * @param style CSS style specification
          * @return a new element that is like this element but has the specified style added or replaced
          */
-        @Contract(pure = true)
         public Element style(String style) {
             return attr("style", style);
         }
@@ -181,7 +177,6 @@ public interface HtmlChunk {
          * @param className name of style class
          * @return a new element that is like this element but has the specified class name
          */
-        @Contract(pure = true)
         public Element setClass(String className) {
             return attr("class", className);
         }
@@ -190,7 +185,6 @@ public interface HtmlChunk {
          * @param text localized text to add to the list of children (should not be escaped)
          * @return a new element that is like this element but has an extra text child
          */
-        @Contract(pure = true)
         public Element addText(LocalizeValue text) {
             return child(HtmlChunk.text(text));
         }
@@ -201,7 +195,6 @@ public interface HtmlChunk {
          */
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        @Contract(pure = true)
         public Element addText(String text) {
             return child(HtmlChunk.text(text));
         }
@@ -210,7 +203,6 @@ public interface HtmlChunk {
          * @param rawHtml text to add to the list of children (should not be escaped)
          * @return a new element that is like this element but has an extra text child
          */
-        @Contract(pure = true)
         public Element addRaw(LocalizeValue rawHtml) {
             return child(HtmlChunk.raw(rawHtml));
         }
@@ -219,7 +211,6 @@ public interface HtmlChunk {
          * @param rawHtml text to add to the list of children (should not be escaped)
          * @return a new element that is like this element but has an extra text child
          */
-        @Contract(pure = true)
         public Element addRaw(String rawHtml) {
             return child(HtmlChunk.raw(rawHtml));
         }
@@ -228,7 +219,6 @@ public interface HtmlChunk {
          * @param chunks chunks to add to the list of children
          * @return a new element that is like this element but has extra children
          */
-        @Contract(pure = true)
         public Element children(HtmlChunk... chunks) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, Arrays.asList(chunks));
@@ -243,7 +233,6 @@ public interface HtmlChunk {
          * @param chunks chunks to add to the list of children
          * @return a new element that is like this element but has extra children
          */
-        @Contract(pure = true)
         public Element children(List<HtmlChunk> chunks) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, new ArrayList<>(chunks));
@@ -258,7 +247,6 @@ public interface HtmlChunk {
          * @param chunk a chunk to add to the list of children
          * @return a new element that is like this element but has an extra child
          */
-        @Contract(pure = true)
         public Element child(HtmlChunk chunk) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, Collections.singletonList(chunk));
@@ -270,7 +258,7 @@ public interface HtmlChunk {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -291,7 +279,6 @@ public interface HtmlChunk {
             return 31 * result + Objects.hashCode(myChildren);
         }
 
-        @Contract(pure = true)
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -306,7 +293,6 @@ public interface HtmlChunk {
      * @param tagName name of the tag to wrap with
      * @return an element that wraps this element
      */
-    @Contract(pure = true)
     default Element wrapWith(String tagName) {
         return new Element(tagName, UnmodifiableHashMap.empty(), Collections.singletonList(this));
     }
@@ -315,7 +301,6 @@ public interface HtmlChunk {
      * @param element element to wrap with
      * @return an element that wraps this element
      */
-    @Contract(pure = true)
     default Element wrapWith(Element element) {
         return element.child(this);
     }
@@ -323,7 +308,6 @@ public interface HtmlChunk {
     /**
      * @return a CODE element that wraps this element
      */
-    @Contract(pure = true)
     default Element code() {
         return wrapWith("code");
     }
@@ -331,7 +315,6 @@ public interface HtmlChunk {
     /**
      * @return a B element that wraps this element
      */
-    @Contract(pure = true)
     default Element bold() {
         return wrapWith("b");
     }
@@ -339,7 +322,6 @@ public interface HtmlChunk {
     /**
      * @return an I element that wraps this element
      */
-    @Contract(pure = true)
     default Element italic() {
         return wrapWith("i");
     }
@@ -347,7 +329,6 @@ public interface HtmlChunk {
     /**
      * @return an S element that wraps this element
      */
-    @Contract(pure = true)
     default Element strikethrough() {
         return wrapWith("s");
     }
@@ -356,7 +337,6 @@ public interface HtmlChunk {
      * @param tagName name of the tag
      * @return an empty tag
      */
-    @Contract(pure = true)
     static Element tag(String tagName) {
         return new Element(tagName, UnmodifiableHashMap.empty(), Collections.emptyList());
     }
@@ -364,7 +344,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;div&gt; element
      */
-    @Contract(pure = true)
     static Element div() {
         return Element.DIV;
     }
@@ -372,7 +351,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;div&gt; element with a specified style.
      */
-    @Contract(pure = true)
     static Element div(String style) {
         return Element.DIV.style(style);
     }
@@ -380,7 +358,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;span&gt; element.
      */
-    @Contract(pure = true)
     static Element span() {
         return Element.SPAN;
     }
@@ -388,7 +365,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;span&gt; element with a specified style.
      */
-    @Contract(pure = true)
     static Element span(String style) {
         return Element.SPAN.style(style);
     }
@@ -396,7 +372,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;br&gt; element.
      */
-    @Contract(pure = true)
     static Element br() {
         return Element.BR;
     }
@@ -404,7 +379,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;li&gt; element.
      */
-    @Contract(pure = true)
     static Element li() {
         return Element.LI;
     }
@@ -412,7 +386,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;ul&gt; element.
      */
-    @Contract(pure = true)
     static Element ul() {
         return Element.UL;
     }
@@ -420,7 +393,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;hr&gt; element.
      */
-    @Contract(pure = true)
     static Element hr() {
         return Element.HR;
     }
@@ -428,7 +400,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;p&gt; element.
      */
-    @Contract(pure = true)
     static Element p() {
         return Element.P;
     }
@@ -436,7 +407,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;body&gt; element.
      */
-    @Contract(pure = true)
     static Element head() {
         return Element.HEAD;
     }
@@ -456,7 +426,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;body&gt; element.
      */
-    @Contract(pure = true)
     static Element body() {
         return Element.BODY;
     }
@@ -464,7 +433,6 @@ public interface HtmlChunk {
     /**
      * @return a &lt;html&gt; element.
      */
-    @Contract(pure = true)
     static Element html() {
         return Element.HTML;
     }
@@ -474,7 +442,6 @@ public interface HtmlChunk {
      *
      * @return HtmlChunk that represents a sequence of non-breaking spaces
      */
-    @Contract(pure = true)
     static HtmlChunk nbsp() {
         return NBSP;
     }
@@ -485,7 +452,6 @@ public interface HtmlChunk {
      * @param count number of non-breaking spaces
      * @return HtmlChunk that represents a sequence of non-breaking spaces
      */
-    @Contract(pure = true)
     static HtmlChunk nbsp(int count) {
         if (count <= 0) {
             throw new IllegalArgumentException(count + " is less than 0");
@@ -500,7 +466,6 @@ public interface HtmlChunk {
      *             All {@code '\n'} characters will be converted to {@code <br/>}
      * @return HtmlChunk that represents a HTML text node.
      */
-    @Contract(pure = true)
     static HtmlChunk text(LocalizeValue text) {
         return text == LocalizeValue.empty() ? empty() : new LocalizedRaw(text.map(HtmlChunk::textToRaw));
     }
@@ -512,7 +477,6 @@ public interface HtmlChunk {
      *             All {@code '\n'} characters will be converted to {@code <br/>}
      * @return HtmlChunk that represents a HTML text node.
      */
-    @Contract(pure = true)
     static HtmlChunk text(String text) {
         return text.isEmpty() ? empty() : new Raw(textToRaw(text));
     }
@@ -520,7 +484,6 @@ public interface HtmlChunk {
     /**
      * @return an empty HtmlChunk
      */
-    @Contract(pure = true)
     static HtmlChunk empty() {
         return Empty.INSTANCE;
     }
@@ -533,7 +496,6 @@ public interface HtmlChunk {
      * @param rawHtml raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
      * @return the HtmlChunk that represents the supplied content.
      */
-    @Contract(pure = true)
     static HtmlChunk raw(LocalizeValue rawHtml) {
         return rawHtml == LocalizeValue.empty() ? empty() : new LocalizedRaw(rawHtml);
     }
@@ -546,7 +508,6 @@ public interface HtmlChunk {
      * @param rawHtml raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
      * @return the HtmlChunk that represents the supplied content.
      */
-    @Contract(pure = true)
     static HtmlChunk raw(String rawHtml) {
         return rawHtml.isEmpty() ? empty() : new Raw(rawHtml);
     }
@@ -558,7 +519,6 @@ public interface HtmlChunk {
      * @param text   localized link text
      * @return the Element that represents a link
      */
-    @Contract(pure = true)
     static Element link(String target, LocalizeValue text) {
         return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
     }
@@ -572,7 +532,6 @@ public interface HtmlChunk {
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Contract(pure = true)
     static Element link(String target, String text) {
         return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
     }
@@ -584,7 +543,6 @@ public interface HtmlChunk {
      * @param text   link text chunk
      * @return the Element that represents a link
      */
-    @Contract(pure = true)
     static Element link(String target, HtmlChunk text) {
         return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text));
     }
@@ -595,7 +553,6 @@ public interface HtmlChunk {
      * @param htmlEntity entity
      * @return the HtmlChunk that represents the html entity
      */
-    @Contract(pure = true)
     static HtmlChunk htmlEntity(String htmlEntity) {
         if (!htmlEntity.startsWith("&") && !htmlEntity.endsWith(";")) {
             throw new IllegalArgumentException("Not an entity: " + htmlEntity);
@@ -606,7 +563,6 @@ public interface HtmlChunk {
     /**
      * @return true if this chunk is empty (doesn't produce any text)
      */
-    @Contract(pure = true)
     default boolean isEmpty() {
         return false;
     }
@@ -621,7 +577,6 @@ public interface HtmlChunk {
     /**
      * @return the HtmlChunk that represents the fragment chunk
      */
-    @Contract(pure = true)
     public static HtmlChunk fragment(HtmlChunk... chunks) {
         if (chunks.length == 0) {
             return empty();
@@ -632,7 +587,6 @@ public interface HtmlChunk {
     /**
      * @return the collector that collects a stream of HtmlChunks to the fragment chunk.
      */
-    @Contract(pure = true)
     static Collector<HtmlChunk, ?, HtmlChunk> toFragment() {
         return FRAGMENT_COLLECTOR;
     }
@@ -641,7 +595,6 @@ public interface HtmlChunk {
      * @param separator a chunk that should be used as a delimiter
      * @return the collector that collects a stream of HtmlChunks to the fragment chunk.
      */
-    @Contract(pure = true)
     static Collector<HtmlChunk, ?, HtmlChunk> toFragment(HtmlChunk separator) {
         return Collector.of(
             HtmlBuilder::new,

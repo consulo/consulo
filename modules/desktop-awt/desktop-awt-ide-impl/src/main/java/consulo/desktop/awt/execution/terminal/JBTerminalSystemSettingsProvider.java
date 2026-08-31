@@ -42,7 +42,9 @@ import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.colorScheme.*;
 import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.impl.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.colorScheme.internal.FontPreferencesManager;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.execution.ui.console.ConsoleViewContentType;
@@ -54,13 +56,14 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.font.FontManager;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 import static com.jediterm.terminal.ui.AwtTransformers.fromAwtToTerminalColor;
 
@@ -247,7 +250,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
     }
 
     private static MyColorSchemeDelegate createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
-        return new MyColorSchemeDelegate(customGlobalScheme);
+        return new MyColorSchemeDelegate(customGlobalScheme, Application.get().getInstance(FontPreferencesManager.class));
     }
 
     @Override
@@ -256,16 +259,17 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
     }
 
     private static class MyColorSchemeDelegate implements EditorColorsScheme {
-        private final ModifiableFontPreferences myFontPreferences = new FontPreferencesImpl();
+        private final ModifiableFontPreferences myFontPreferences;
         private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<>();
         private final Map<EditorColorKey, ColorValue> myOwnColors = new HashMap<>();
-        private Map<EditorFontType, Font> myFontsMap = null;
+        private Map<EditorFontType, consulo.ui.font.Font> myFontsMap = null;
         private String myFaceName = null;
         private EditorColorsScheme myGlobalScheme;
 
         private int myConsoleFontSize = -1;
 
-        private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme) {
+        private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme, FontPreferencesManager fontPreferencesManager) {
+            myFontPreferences = fontPreferencesManager.newFontPreferences();
             updateGlobalScheme(globalScheme);
             initFonts();
         }
@@ -287,10 +291,12 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
 
             myFontsMap = new EnumMap<>(EditorFontType.class);
 
-            Font plainFont = new Font(consoleFontName, Font.PLAIN, consoleFontSize);
-            Font boldFont = new Font(consoleFontName, Font.BOLD, consoleFontSize);
-            Font italicFont = new Font(consoleFontName, Font.ITALIC, consoleFontSize);
-            Font boldItalicFont = new Font(consoleFontName, Font.BOLD | Font.ITALIC, consoleFontSize);
+            FontManager fontManager = FontManager.get();
+
+            consulo.ui.font.Font plainFont = fontManager.createFont(consoleFontName, consoleFontSize, Font.PLAIN);
+            consulo.ui.font.Font boldFont = fontManager.createFont(consoleFontName, consoleFontSize, Font.BOLD);
+            consulo.ui.font.Font italicFont = fontManager.createFont(consoleFontName, consoleFontSize, Font.ITALIC);
+            consulo.ui.font.Font boldItalicFont = fontManager.createFont(consoleFontName, consoleFontSize, Font.BOLD | Font.ITALIC);
 
             myFontsMap.put(EditorFontType.PLAIN, plainFont);
             myFontsMap.put(EditorFontType.BOLD, boldFont);
@@ -387,9 +393,9 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
         }
 
         @Override
-        public Font getFont(EditorFontType key) {
+        public consulo.ui.font.Font getFont(EditorFontType key) {
             if (myFontsMap != null) {
-                Font font = myFontsMap.get(key);
+                consulo.ui.font.Font font = myFontsMap.get(key);
                 if (font != null) {
                     return font;
                 }
@@ -398,7 +404,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
         }
 
         @Override
-        public void setFont(EditorFontType key, Font font) {
+        public void setFont(EditorFontType key, consulo.ui.font.Font font) {
             if (myFontsMap == null) {
                 initFonts();
             }
@@ -413,6 +419,16 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
         @Override
         public void setLineSpacing(float lineSpacing) {
             getGlobal().setLineSpacing(lineSpacing);
+        }
+
+        @Override
+        public boolean isUseLigatures() {
+            return getGlobal().isUseLigatures();
+        }
+
+        @Override
+        public void setUseLigatures(boolean useLigatures) {
+            getGlobal().setUseLigatures(useLigatures);
         }
 
         @Override

@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
  */
 @SuppressWarnings("ExceptionClassNameDoesntEndWithException")
 public class RuntimeExceptionWithAttachments extends RuntimeException implements ExceptionWithAttachments {
-  private final String myUserMessage;
+  private final @Nullable String myUserMessage;
   private final Attachment[] myAttachments;
 
   public RuntimeExceptionWithAttachments(String message, Attachment... attachments) {
@@ -39,12 +39,10 @@ public class RuntimeExceptionWithAttachments extends RuntimeException implements
     myAttachments = attachments;
   }
 
-  
-  public String getUserMessage() {
+  public @Nullable String getUserMessage() {
     return myUserMessage;
   }
 
-  
   @Override
   public Attachment[] getAttachments() {
     return myAttachments;

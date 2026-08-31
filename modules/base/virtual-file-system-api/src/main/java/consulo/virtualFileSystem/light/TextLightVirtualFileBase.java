@@ -56,7 +56,6 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   }
 
   @Override
-  
   public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
     return VirtualFileUtil.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
@@ -75,14 +74,12 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   }
 
   @Override
-  
   public byte[] contentsToByteArray() throws IOException {
     Charset charset = getCharset();
     String s = getContent().toString();
     return s.getBytes(charset.name());
   }
 
-  
   public CharSequence getContent() {
     return myContent;
   }

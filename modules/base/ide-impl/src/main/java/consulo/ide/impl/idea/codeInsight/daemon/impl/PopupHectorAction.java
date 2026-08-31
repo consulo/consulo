@@ -19,8 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 
 /**
@@ -28,7 +28,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
  * @since 2008-11-07
  */
 @ActionImpl(id = "PopupHector")
-public class PopupHectorAction extends AnAction {
+public class PopupHectorAction extends LegacyAnAction {
     public PopupHectorAction() {
         super(ActionLocalize.actionPopuphectorText(), ActionLocalize.actionPopuphectorDescription());
     }

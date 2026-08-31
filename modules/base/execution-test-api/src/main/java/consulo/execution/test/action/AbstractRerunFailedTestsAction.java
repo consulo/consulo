@@ -39,7 +39,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -61,7 +61,7 @@ import java.util.function.Supplier;
  * @author anna
  * @since 2008-12-24
  */
-public class AbstractRerunFailedTestsAction extends AnAction {
+public class AbstractRerunFailedTestsAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(AbstractRerunFailedTestsAction.class);
 
     private TestFrameworkRunningModel myModel;

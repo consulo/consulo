@@ -34,7 +34,6 @@ public class SandStubElementTypeHolder extends StubElementTypeHolder<SandStubTok
     return "sand";
   }
 
-  
   @Override
   public List<ObjectStubSerializerProvider> loadSerializers() {
     return allFromStaticFields(SandStubTokenType.class, Field::get);

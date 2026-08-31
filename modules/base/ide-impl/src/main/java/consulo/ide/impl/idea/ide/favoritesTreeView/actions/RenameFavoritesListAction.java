@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author anna
  * @since 2005-02-23
  */
-public class RenameFavoritesListAction extends AnAction implements DumbAware {
+public class RenameFavoritesListAction extends LegacyDumbAwareAction {
     public RenameFavoritesListAction() {
         super(IdeLocalize.actionRenameFavoritesList(), IdeLocalize.actionRenameFavoritesList());
     }

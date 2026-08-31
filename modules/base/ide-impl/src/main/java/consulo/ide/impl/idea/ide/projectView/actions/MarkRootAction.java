@@ -27,7 +27,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
@@ -39,7 +39,7 @@ import java.util.Objects;
 /**
  * @author yole
  */
-public class MarkRootAction extends DumbAwareAction {
+public class MarkRootAction extends LegacyDumbAwareAction {
     private final @Nullable ContentFolderTypeProvider myContentFolderType;
 
     public MarkRootAction(

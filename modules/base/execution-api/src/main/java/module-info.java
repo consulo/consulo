@@ -57,14 +57,14 @@ module consulo.execution.api {
         consulo.execution.impl,
         consulo.execution.debug.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.internal to consulo.ide.impl,
         consulo.execution.impl,
         consulo.compiler.impl,
         consulo.execution.debug.impl,
         consulo.execution.test.sm.api,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.execution.test.api,
         consulo.execution.debug.api;
 
@@ -72,7 +72,7 @@ module consulo.execution.api {
         consulo.execution.impl,
         consulo.execution.debug.impl,
         consulo.execution.test.sm.api,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.execution.test.api;
 
     opens consulo.execution.internal.action to consulo.component.impl;

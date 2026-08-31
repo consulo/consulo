@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
-
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
+
 import java.lang.ref.Reference;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
@@ -92,17 +92,17 @@ public class ObjectUtil {
     }
   }
 
-  @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
+  @Contract("!null, _ -> !null; _, !null -> !null; null, null -> null")
   public static @Nullable <T> T chooseNotNull(@Nullable T t1, @Nullable T t2) {
     return t1 == null ? t2 : t1;
   }
 
-  @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
+  @Contract("!null, _ -> !null; _, !null -> !null; null, null -> null")
   public static @Nullable <T> T coalesce(@Nullable T t1, @Nullable T t2) {
     return chooseNotNull(t1, t2);
   }
 
-  @Contract(value = "!null, _, _ -> !null; _, !null, _ -> !null; _, _, !null -> !null; null,null,null -> null", pure = true)
+  @Contract("!null, _, _ -> !null; _, !null, _ -> !null; _, _, !null -> !null; null,null,null -> null")
   public static @Nullable <T> T coalesce(@Nullable T t1, @Nullable T t2, @Nullable T t3) {
     return t1 != null ? t1 : t2 != null ? t2 : t3;
   }
@@ -110,7 +110,7 @@ public class ObjectUtil {
   /**
    * Performs binary search on the range [fromIndex, toIndex)
    *
-   * @param indexComparator a comparator which receives a middle index and returns the result of comparision of the value at this index and the goal value
+   * @param indexComparator a comparator which receives a middle index and returns the result of comparison of the value at this index and the goal value
    *                        (e.g 0 if found, -1 if the value[middleIndex] < goal, or 1 if value[middleIndex] > goal)
    * @return index for which {@code indexComparator} returned 0 or {@code -insertionIndex-1} if wasn't found
    * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)
@@ -142,7 +142,6 @@ public class ObjectUtil {
     return Objects.requireNonNull(value);
   }
 
-  @Contract(pure = true)
   public static <T> T notNull(@Nullable T value, T defaultValue) {
     return value == null ? defaultValue : value;
   }
@@ -151,7 +150,7 @@ public class ObjectUtil {
     return value == null ? defaultValue.get() : value;
   }
 
-  @Contract(value = "null, _ -> null", pure = true)
+  @Contract("null, _ -> null")
   public static @Nullable <T> T tryCast(@Nullable Object obj, Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       return clazz.cast(obj);
@@ -159,10 +158,10 @@ public class ObjectUtil {
     return null;
   }
 
-  public static @Nullable <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> convertor) {
+  public static @Nullable <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> converter) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
-      return convertor.apply((T)obj);
+      return converter.apply((T)obj);
     }
     return null;
   }
@@ -204,7 +203,8 @@ public class ObjectUtil {
   /**
    * Performs binary search on the range [fromIndex, toIndex)
    *
-   * @param indexComparator a comparator which receives a middle index and returns the result of comparision of the value at this index and the goal value
+   * @param indexComparator a comparator which receives a middle index and returns the result of comparison
+   *                        of the value at this index and the goal value
    *                        (e.g 0 if found, -1 if the value[middleIndex] < goal, or 1 if value[middleIndex] > goal)
    * @return index for which {@code indexComparator} returned 0 or {@code -insertionIndex-1} if wasn't found
    * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)

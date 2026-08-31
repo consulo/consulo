@@ -213,7 +213,11 @@ final class BrowserSettingsPanel {
 
                 ShowConfigurableService service = Application.get().getInstance(ShowConfigurableService.class);
                 service.editConfigurable(browsersTable, settings.createConfigurable())
-                    .doWhenDone(() -> mutator.apply(browser).setSpecificSettings(settings));
+                    .whenComplete((value, error) -> {
+                        if (error == null) {
+                            mutator.apply(browser).setSpecificSettings(settings);
+                        }
+                    });
             }
 
             private @Nullable BrowserSpecificSettings cloneSettings(ConfigurableWebBrowser browser) {

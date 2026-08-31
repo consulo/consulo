@@ -23,7 +23,7 @@ import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.externalService.impl.internal.plugin.ui.PluginsPanel;
-import consulo.externalService.impl.internal.update.PlatformOrPluginDialog;
+import consulo.externalService.impl.internal.update.awt.PlatformOrPluginDialog;
 import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;

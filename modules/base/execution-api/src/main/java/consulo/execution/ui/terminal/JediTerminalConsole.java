@@ -17,8 +17,7 @@ package consulo.execution.ui.terminal;
 
 import com.jediterm.terminal.Terminal;
 import com.jediterm.terminal.model.TerminalTextBuffer;
-
-import javax.swing.*;
+import consulo.ui.model.RangeModel;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public interface JediTerminalConsole extends TerminalConsole {
 
     TerminalTextBuffer getTerminalTextBuffer();
 
-    BoundedRangeModel getTerminalVerticalScrollModel();
+    RangeModel getTerminalVerticalScrollModel();
 
     boolean isShowing();
 }

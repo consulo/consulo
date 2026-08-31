@@ -21,6 +21,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
@@ -36,6 +37,19 @@ import java.util.function.BiConsumer;
  * and all drawing primitives are in {@link LineStatusMarkerDrawUtil}.
  */
 public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
+    public static final Key<MarkerData> TOOLTIP_KEY = Key.create("LineStatusMarkerRenderer.Tooltip.Id");
+
+    public static class MarkerData {
+        private final byte myType;
+
+        public MarkerData(byte type) {
+            myType = type;
+        }
+
+        public byte getType() {
+            return myType;
+        }
+    }
 
     protected final VcsRange myRange;
 
@@ -73,53 +87,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         highlighter.setGreedyToLeft(true);
         highlighter.setGreedyToRight(true);
         highlighter.setErrorStripeTooltip(getTooltipText(range));
+        highlighter.putUserData(TOOLTIP_KEY, new MarkerData(range.getType()));
         return highlighter;
-    }
-
-    /** Creates a simple colored-bar renderer for a line range (used by external callers). */
-    public static LineMarkerRenderer createRenderer(
-        int line1,
-        int line2,
-        ColorValue color,
-        LocalizeValue tooltip,
-        @Nullable BiConsumer<Editor, MouseEvent> action
-    ) {
-        return new ActiveGutterRenderer() {
-            @Override
-            public void paint(Editor editor, Graphics g, Rectangle r) {
-                Rectangle area = LineStatusMarkerDrawUtil.getMarkerArea(editor, r, line1, line2);
-                ColorValue borderColor = LineStatusMarkerDrawUtil.getGutterBorderColor(editor);
-                if (area.height != 0) {
-                    LineStatusMarkerDrawUtil.paintRect(
-                        (Graphics2D) g, color, borderColor,
-                        area.x, area.y, area.x + area.width, area.y + area.height
-                    );
-                }
-                else {
-                    LineStatusMarkerDrawUtil.paintTriangle(
-                        (Graphics2D) g, editor, color, borderColor,
-                        area.x, area.x + area.width, area.y
-                    );
-                }
-            }
-
-            @Override
-            public LocalizeValue getTooltipValue() {
-                return tooltip;
-            }
-
-            @Override
-            public boolean canDoAction(MouseEvent e) {
-                return LineStatusMarkerDrawUtil.isInsideMarkerArea(e);
-            }
-
-            @Override
-            public void doAction(Editor editor, MouseEvent e) {
-                if (action != null) {
-                    action.accept(editor, e);
-                }
-            }
-        };
     }
 
     // -------------------------------------------------------------------------
@@ -147,15 +116,6 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         else {
             return VcsLocalize.tooltipTextLinesChanged(range.getLine1() + 1, range.getLine2());
         }
-    }
-
-    // -------------------------------------------------------------------------
-    // Gutter painting — delegates to LineStatusMarkerDrawUtil
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void paint(Editor editor, Graphics g, Rectangle r) {
-        LineStatusMarkerDrawUtil.paintRange(myRange, editor, g, r);
     }
 
     // -------------------------------------------------------------------------

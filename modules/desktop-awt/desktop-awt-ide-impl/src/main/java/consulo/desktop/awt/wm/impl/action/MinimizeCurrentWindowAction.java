@@ -19,14 +19,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
-import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.desktop.awt.wm.impl.MacMainFrameDecorator;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -41,7 +40,7 @@ import java.awt.*;
     id = "MinimizeCurrentWindow",
     parents = @ActionParentRef(value = @ActionRef(id = "WindowMenu"), anchor = ActionRefAnchor.FIRST)
 )
-public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
+public class MinimizeCurrentWindowAction extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

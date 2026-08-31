@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.change.shelf;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
@@ -35,6 +34,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -69,7 +69,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @ActionImpl(id = "ShelvedChanges.Diff", shortcutFrom = @ActionRef(id = "Diff.ShowDiff"))
-public class DiffShelvedChangesAction extends AnAction implements DumbAware {
+public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
     public DiffShelvedChangesAction() {
         super(
             ActionLocalize.actionShelvedchangesDiffText(),

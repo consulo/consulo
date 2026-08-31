@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.action.QuickList;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionStubBase;

@@ -17,13 +17,13 @@ package consulo.compiler.impl.internal;
 
 import consulo.application.ReadAction;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.FileOrDirectoryCopyPackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -31,15 +31,14 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
-import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -52,29 +51,28 @@ import java.util.zip.ZipFile;
  * @author nik
  */
 public class ArtifactCompilerUtil {
+    public record ArchiveEntryData(InputStream stream, long size, long timestamp) {
+    }
+
     private static final Logger LOG = Logger.getInstance(ArtifactCompilerUtil.class);
 
     private ArtifactCompilerUtil() {
     }
 
-    
-    public static Pair<InputStream, Long> getArchiveEntryInputStream(VirtualFile sourceFile, CompileContext context) throws IOException {
-        String fullPath = sourceFile.getPath();
-        int jarEnd = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
-        LOG.assertTrue(jarEnd != -1, fullPath);
-        String pathInJar = fullPath.substring(jarEnd + URLUtil.ARCHIVE_SEPARATOR.length());
-        String jarPath = fullPath.substring(0, jarEnd);
-        final ZipFile jarFile = new ZipFile(new File(FileUtil.toSystemDependentName(jarPath)));
-        final ZipEntry entry = jarFile.getEntry(pathInJar);
+    public static @Nullable ArchiveEntryData getArchiveEntry(String sourceFilePath, CompileContext context) throws IOException {
+        int jarEnd = sourceFilePath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+        LOG.assertTrue(jarEnd != -1, sourceFilePath);
+        String pathInJar = sourceFilePath.substring(jarEnd + URLUtil.ARCHIVE_SEPARATOR.length());
+        String jarPath = sourceFilePath.substring(0, jarEnd);
+        File jarIoFile = new File(FileUtil.toSystemDependentName(jarPath));
+        ZipFile jarFile = new ZipFile(jarIoFile);
+        ZipEntry entry = jarFile.getEntry(pathInJar);
         if (entry == null) {
-            context.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found",
-                null,
-                -1,
-                -1
-            );
-            return Pair.empty();
+            jarFile.close();
+            context.newError(
+                LocalizeValue.localizeTODO("Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found")
+            ).add();
+            return null;
         }
 
         BufferedInputStream bufferedInputStream = new BufferedInputStream(jarFile.getInputStream(entry)) {
@@ -84,40 +82,35 @@ public class ArtifactCompilerUtil {
                 jarFile.close();
             }
         };
-        return Pair.<InputStream, Long>create(bufferedInputStream, entry.getSize());
+        long timestamp = entry.getTime() >= 0 ? entry.getTime() : jarIoFile.lastModified();
+        return new ArchiveEntryData(bufferedInputStream, entry.getSize(), timestamp);
     }
 
-    public static File getArchiveFile(VirtualFile file) {
-        String fullPath = file.getPath();
-        return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR))));
-    }
-
-    
-    public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(Project project) {
-        List<VirtualFile> allOutputs = new ArrayList<>();
+    public static Set<Path> getArtifactOutputsContainingSourceFiles(Project project) {
+        List<Path> allOutputs = new ArrayList<>();
         for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
-            ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());
+            String outputFilePath = artifact.getOutputFilePath();
+            if (!StringUtil.isEmpty(outputFilePath)) {
+                allOutputs.add(Path.of(FileUtil.toSystemDependentName(outputFilePath)));
+            }
         }
 
-        Set<VirtualFile> roots = new HashSet<>();
+        Set<Path> roots = new HashSet<>();
         PackagingElementResolvingContext context = ArtifactManager.getInstance(project).getResolvingContext();
         for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
             Predicate<PackagingElement<?>> processor = element -> {
                 if (element instanceof FileOrDirectoryCopyPackagingElement fileOrDirectoryCopyPackagingElement) {
-                    VirtualFile file = fileOrDirectoryCopyPackagingElement.findFile();
-                    if (file != null) {
-                        roots.add(file);
-                    }
+                    ContainerUtil.addIfNotNull(roots, fileOrDirectoryCopyPackagingElement.getNioPath());
                 }
                 return true;
             };
             ArtifactUtil.processRecursivelySkippingIncludedArtifacts(artifact, processor, context);
         }
 
-        Set<VirtualFile> affectedOutputPaths = new HashSet<>();
-        for (VirtualFile output : allOutputs) {
-            for (VirtualFile root : roots) {
-                if (VirtualFileUtil.isAncestor(output, root, false)) {
+        Set<Path> affectedOutputPaths = new HashSet<>();
+        for (Path output : allOutputs) {
+            for (Path root : roots) {
+                if (FileUtil.isAncestor(output.toFile(), root.toFile(), false)) {
                     affectedOutputPaths.add(output);
                 }
             }

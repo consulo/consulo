@@ -21,10 +21,10 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.action.ExecutorAction;
 import consulo.execution.impl.internal.action.RunContextAction;
 import consulo.execution.impl.internal.action.RunCurrentFileService;
-import consulo.execution.internal.ExecutorRegistryEx;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
@@ -40,7 +40,7 @@ import java.util.*;
 
 @Singleton
 @ServiceImpl
-public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposable {
+public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
     private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
     public static final String RUNNERS_GROUP = IdeActions.GROUP_RUNNER_ACTIONS;
@@ -98,8 +98,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         });
     }
 
-    @Override
-    public void initExecuteActions() {
+    public void initExecuteActions(ActionManager actionManager) {
         myApplication.getExtensionPoint(Executor.class).forEachExtensionSafe(this::initExecutor);
     }
 

@@ -35,6 +35,5 @@ public interface EditorColorSchemeExtender {
 
     void extend(Builder builder);
 
-    
     String getColorSchemeId();
 }

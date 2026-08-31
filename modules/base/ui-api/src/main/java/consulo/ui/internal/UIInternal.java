@@ -26,9 +26,8 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
@@ -38,27 +37,43 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.ServiceLoader;
+import consulo.ui.event.ComponentEvent;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public abstract class UIInternal {
     private static UIInternal ourInstance = PlatformServiceLoader.findImplementation(UIInternal.class, ServiceLoader::load);
+
     public static UIInternal get() {
         return ourInstance;
     }
 
     public abstract CheckBox _Components_checkBox();
 
+    public TriStateCheckBox _Components_triStateCheckBox() {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract DockLayout _Layouts_dock(int gapInPixels);
 
     public abstract WrappedLayout _Layouts_wrapped();
 
     public abstract VerticalLayout _Layouts_vertical(int vGap);
+
+    /**
+     * A backend which cannot place children at a side of the layout still has to answer a layout.
+     */
+    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+        return _Layouts_vertical(vGap);
+    }
 
     public abstract SwipeLayout _Layouts_swipe();
 
@@ -78,13 +93,13 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
+    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixels);
 
     public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
 
     public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions);
 
-    public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
+    public abstract <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model);
 
     public abstract TextBox _Components_textBox(String text);
 
@@ -93,13 +108,15 @@ public abstract class UIInternal {
     }
 
     public abstract ProgressBar _Components_progressBar();
+
     public abstract IntBox _Components_intBox(int value);
 
     public IntSlider _Components_intSlider(int min, int max, int value) {
         throw new UnsupportedOperationException();
     }
 
-    public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
+    public abstract <E> ListBox<E> _Components_listBox(FlatDataModel<E> model);
+
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         throw new UnsupportedOperationException();
     }
@@ -108,7 +125,15 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
+
     public Hyperlink _Components_hyperlink(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Separator _Separator_create(SeparatorStyle style) {
         throw new UnsupportedOperationException();
     }
 
@@ -116,7 +141,7 @@ public abstract class UIInternal {
 
     public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
-    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
+    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         throw new UnsupportedOperationException();
     }
 
@@ -181,9 +206,20 @@ public abstract class UIInternal {
     public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 
     public abstract MenuBar _MenuItems_menuBar();
+
     public abstract StyleManager _StyleManager_get();
+
     public abstract FontManager _FontManager_get();
+
     public abstract Window _Window_create(String title, WindowOptions options);
+
+    public LightPopup _LightPopup_create(PopupOptions options) {
+        throw new UnsupportedOperationException();
+    }
+
+    public HeavyPopup _HeavyPopup_create(PopupOptions options) {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract @Nullable Window _Window_getActiveWindow();
 
@@ -193,37 +229,62 @@ public abstract class UIInternal {
 
     public abstract <T> Alert<T> _Alerts_create();
 
-    public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
+    public abstract <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list);
 
-    public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
-        throw new UnsupportedOperationException();
+    public <T> MutableFlatDataModel<T> _FlatDataModel_createLazy(Collection<? extends T> list) {
+        return _FlatDataModel_create(list);
     }
 
-    public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
+    /**
+     * A frontend which has somewhere to draw a busy indicator overrides this and draws one at the anchor
+     * until it is stopped. Having nowhere to draw it is not an error - the work runs either way.
+     */
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
+        return () -> {
+        };
+    }
 
     @RequiredUIAccess
     public abstract UIAccess _UIAccess_get();
 
     public abstract boolean _UIAccess_isUIThread();
 
-    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(@Nullable Image editButtonImage,
-                                                                                String dialogTitle,
-                                                                                Function<String, List<String>> parser,
-                                                                                Function<List<String>, String> joiner);
+    /**
+     * Backs {@link UIAccess#supportsMultipleUI()}. A frontend answers true only when it can show several uis of the
+     * same application at once, which makes every access - and everything kept on one - a per ui thing.
+     */
+    public boolean _UIAccess_supportsMultipleUI() {
+        return false;
+    }
+
+    /**
+     * Backs {@link UIAccess#listAll()}. A frontend with a single window answers with the one access it has, one
+     * which shows several answers with the access of each of them, and one without a ui answers with nothing.
+     */
+    public Collection<UIAccess> _UIAccess_all() {
+        return List.of();
+    }
+
+    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(
+        @Nullable Image editButtonImage,
+        String dialogTitle,
+        Function<String, List<String>> parser,
+        Function<List<String>, String> joiner
+    );
 
     public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(@Nullable String text);
 
     public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
+
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         throw new UnsupportedOperationException();
     }
 
-    public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
-        throw new UnsupportedOperationException();
-    }
     public IconLibraryManager _IconLibraryManager_get() {
         throw new UnsupportedOperationException();
     }
+
     public TaskBar _TaskBar_get() {
         throw new UnsupportedOperationException();
     }
@@ -232,13 +293,14 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
+    public <T> Table<T> _Table_create(FlatDataModel<T> model) {
         throw new UnsupportedOperationException();
     }
 
     public ToggleSwitch _Components_toggleSwitch(boolean selected) {
         throw new UnsupportedOperationException();
     }
+
     public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
         throw new UnsupportedOperationException();
     }
@@ -246,12 +308,15 @@ public abstract class UIInternal {
     public void _ShowNotifier_once(Component component, @RequiredUIAccess Runnable action) {
         throw new UnsupportedOperationException();
     }
+
     public PopupMenu _PopupMenu_create(Component target) {
         throw new UnsupportedOperationException();
     }
+
     public AdvancedLabel _Components_advancedLabel() {
         throw new UnsupportedOperationException();
     }
+
     public HtmlView _Components_htmlView() {
         throw new UnsupportedOperationException();
     }
@@ -259,16 +324,24 @@ public abstract class UIInternal {
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         throw new UnsupportedOperationException();
     }
+
     public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
         throw new UnsupportedOperationException();
     }
+
     public ModalityState _ModalityState_any() {
         throw new UnsupportedOperationException();
     }
+
     public ModalityState _ModalityState_nonModal() {
         throw new UnsupportedOperationException();
     }
+
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
+        throw new UnsupportedOperationException();
+    }
+
+    public ColorPickerBuilder _ColorPicker_create() {
         throw new UnsupportedOperationException();
     }
 }

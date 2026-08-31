@@ -19,7 +19,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.Stack;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
@@ -37,20 +36,14 @@ import java.util.function.Function;
 public class ContainerUtilRt {
     private static final int ARRAY_COPY_THRESHOLD = 20;
 
-    
-    @Contract(pure = true)
     public static <K, V> HashMap<K, V> newHashMap() {
         return new HashMap<>();
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> HashMap<K, V> newHashMap(Map<? extends K, ? extends V> map) {
         return new HashMap<>(map);
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(List<K> keys, List<V> values) {
         if (keys.size() != values.size()) {
             throw new IllegalArgumentException(keys + " should have same length as " + values);
@@ -63,8 +56,6 @@ public class ContainerUtilRt {
         return map;
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <K, V> Map<K, V> newHashMap(Pair<K, ? extends V> first, Pair<K, ? extends V>... entries) {
         Map<K, V> map = newHashMap(entries.length + 1);
@@ -75,44 +66,30 @@ public class ContainerUtilRt {
         return map;
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
         return new HashMap<>(initialCapacity);
     }
 
-    
-    @Contract(pure = true)
     public static <K extends Comparable, V> TreeMap<K, V> newTreeMap() {
         return new TreeMap<>();
     }
 
-    
-    @Contract(pure = true)
     public static <K extends Comparable, V> TreeMap<K, V> newTreeMap(Map<K, V> map) {
         return new TreeMap<>(map);
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
         return new LinkedHashMap<>();
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int capacity) {
         return new LinkedHashMap<>(capacity);
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Map<K, V> map) {
         return new LinkedHashMap<>(map);
     }
 
-    
-    @Contract(pure = true)
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Pair<K, V> first, Pair<K, V>[] entries) {
         LinkedHashMap<K, V> map = newLinkedHashMap();
         map.put(first.getFirst(), first.getSecond());
@@ -122,14 +99,10 @@ public class ContainerUtilRt {
         return map;
     }
 
-    
-    @Contract(pure = true)
     public static <T> LinkedList<T> newLinkedList() {
         return new LinkedList<>();
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> LinkedList<T> newLinkedList(T... elements) {
         LinkedList<T> list = newLinkedList();
@@ -137,20 +110,14 @@ public class ContainerUtilRt {
         return list;
     }
 
-    
-    @Contract(pure = true)
     public static <T> LinkedList<T> newLinkedList(Iterable<? extends T> elements) {
         return copy(ContainerUtilRt.<T>newLinkedList(), elements);
     }
 
-    
-    @Contract(pure = true)
     public static <T> ArrayList<T> newArrayList() {
         return new ArrayList<>();
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> ArrayList<T> newArrayList(T... elements) {
         ArrayList<T> list = newArrayListWithCapacity(elements.length);
@@ -158,8 +125,6 @@ public class ContainerUtilRt {
         return list;
     }
 
-    
-    @Contract(pure = true)
     public static <T> ArrayList<T> newArrayList(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -168,13 +133,10 @@ public class ContainerUtilRt {
         return copy(ContainerUtilRt.<T>newArrayList(), elements);
     }
 
-    
-    @Contract(pure = true)
     public static <T> ArrayList<T> newArrayListWithCapacity(int size) {
         return new ArrayList<>(size);
     }
 
-    
     private static <T, C extends Collection<T>> C copy(C collection, Iterable<? extends T> elements) {
         for (T element : elements) {
             collection.add(element);
@@ -182,27 +144,19 @@ public class ContainerUtilRt {
         return collection;
     }
 
-    
-    @Contract(pure = true)
     public static <T> HashSet<T> newHashSet() {
         return new HashSet<>();
     }
 
-    
-    @Contract(pure = true)
     public static <T> HashSet<T> newHashSet(int initialCapacity) {
         return new HashSet<>(initialCapacity);
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> HashSet<T> newHashSet(T... elements) {
         return new HashSet<>(Arrays.asList(elements));
     }
 
-    
-    @Contract(pure = true)
     public static <T> HashSet<T> newHashSet(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -211,29 +165,21 @@ public class ContainerUtilRt {
         return newHashSet(elements.iterator());
     }
 
-    
-    @Contract(pure = true)
     public static <T> HashSet<T> newHashSet(Iterator<? extends T> iterator) {
         HashSet<T> set = newHashSet();
         while (iterator.hasNext()) set.add(iterator.next());
         return set;
     }
 
-    
-    @Contract(pure = true)
     public static <T> LinkedHashSet<T> newLinkedHashSet() {
         return new LinkedHashSet<>();
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> LinkedHashSet<T> newLinkedHashSet(T... elements) {
         return newLinkedHashSet(Arrays.asList(elements));
     }
 
-    
-    @Contract(pure = true)
     public static <T> LinkedHashSet<T> newLinkedHashSet(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -242,14 +188,10 @@ public class ContainerUtilRt {
         return copy(new LinkedHashSet<T>(), elements);
     }
 
-    
-    @Contract(pure = true)
     public static <T> TreeSet<T> newTreeSet() {
         return new TreeSet<>();
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> TreeSet<T> newTreeSet(T... elements) {
         TreeSet<T> set = newTreeSet();
@@ -257,32 +199,22 @@ public class ContainerUtilRt {
         return set;
     }
 
-    
-    @Contract(pure = true)
     public static <T> TreeSet<T> newTreeSet(Iterable<? extends T> elements) {
         return copy(ContainerUtilRt.<T>newTreeSet(), elements);
     }
 
-    
-    @Contract(pure = true)
     public static <T> TreeSet<T> newTreeSet(@Nullable Comparator<? super T> comparator) {
         return new TreeSet<>(comparator);
     }
 
-    
-    @Contract(pure = true)
     public static <T> consulo.util.collection.Stack<T> newStack() {
         return new consulo.util.collection.Stack<>();
     }
 
-    
-    @Contract(pure = true)
     public static <T> consulo.util.collection.Stack<T> newStack(Collection<T> elements) {
         return new consulo.util.collection.Stack<>(elements);
     }
 
-    
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> consulo.util.collection.Stack<T> newStack(T... initial) {
         return new Stack<>(Arrays.asList(initial));
@@ -312,13 +244,11 @@ public class ContainerUtilRt {
             throw new IndexOutOfBoundsException("Index: " + index);
         }
 
-        
         @Override
         public Object[] toArray() {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
 
-        
         @Override
         public <E> E[] toArray(E[] a) {
             if (a.length != 0) {
@@ -327,22 +257,17 @@ public class ContainerUtilRt {
             return a;
         }
 
-        
         @Override
         public Iterator<T> iterator() {
             return EmptyIterator.getInstance();
         }
     }
 
-    
-    @Contract(pure = true)
     public static <T> List<T> emptyList() {
         //noinspection unchecked
         return (List<T>)EmptyList.INSTANCE;
     }
 
-    
-    @Contract(pure = true)
     public static <T> CopyOnWriteArrayList<T> createEmptyCOWList() {
         // does not create garbage new Object[0]
         return new CopyOnWriteArrayList<>(ContainerUtilRt.<T>emptyList());
@@ -367,7 +292,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from array converted by mapper
      */
-    @Contract(pure = true)
     public static <T, V> List<V> map2List(T[] array, Function<T, V> mapper) {
         return map2List(Arrays.asList(array), mapper);
     }
@@ -375,7 +299,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from collection converted by mapper
      */
-    @Contract(pure = true)
     public static <T, V> List<V> map2List(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
             return emptyList();
@@ -390,7 +313,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only set consisting of the elements from collection converted by mapper
      */
-    @Contract(pure = true)
     public static <T, V> Set<V> map2Set(T[] collection, Function<T, V> mapper) {
         return map2Set(Arrays.asList(collection), mapper);
     }
@@ -398,7 +320,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only set consisting of the elements from collection converted by mapper
      */
-    @Contract(pure = true)
     public static <T, V> Set<V> map2Set(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
             return Collections.emptySet();
@@ -410,7 +331,6 @@ public class ContainerUtilRt {
         return set;
     }
 
-    
     public static <T> T[] toArray(List<T> collection, T[] array) {
         int length = array.length;
         if (length < ARRAY_COPY_THRESHOLD && array.length >= collection.size()) {

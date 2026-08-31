@@ -16,13 +16,17 @@
 package consulo.ui.ex.util;
 
 import consulo.disposer.Disposable;
+import consulo.ui.TreeExecutor;
 import consulo.util.concurrent.CancellablePromise;
 
 /**
  * @author VISTALL
  * @since 24-Feb-22
+ * @deprecated use {@link TreeExecutor} - the promise-based surface and the thread bookkeeping here are legacy
+ * of the swing tree models, and {@link TreeExecutor#execute} is the one method a tree needs
  */
-public interface Invoker extends Disposable {
+@Deprecated
+public interface Invoker extends Disposable, TreeExecutor {
   CancellablePromise<?> runOrInvokeLater(Runnable task);
 
   /**

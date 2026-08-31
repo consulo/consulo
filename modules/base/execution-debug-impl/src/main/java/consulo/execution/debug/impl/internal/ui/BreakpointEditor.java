@@ -71,10 +71,9 @@ public class BreakpointEditor {
     public BreakpointEditor() {
         myDoneButton.addActionListener(actionEvent -> done());
 
-        AnAction doneAction = new AnAction() {
+        AnAction doneAction = new LegacyAnAction() {
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 boolean lookup = LookupManager.getInstance(e.getRequiredData(Project.KEY)).getActiveLookup() != null;
                 Editor editor = e.getData(Editor.KEY);
                 e.getPresentation()

@@ -25,7 +25,6 @@ import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
-import consulo.util.collection.Lists;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
@@ -40,7 +39,6 @@ import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,13 +51,11 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =
         Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
     private final Project myProject;
-    private final List<FileStatusListener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private FileStatusFacade myFileStatusProvider;
 
     private static class FileStatusNull implements FileStatus {
         private static final FileStatus INSTANCE = new FileStatusNull();
 
-        
         @Override
         public LocalizeValue getText() {
             throw new AssertionError("Should not be called");
@@ -70,13 +66,13 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
             throw new AssertionError("Should not be called");
         }
 
-        
+
         @Override
         public EditorColorKey getColorKey() {
             throw new AssertionError("Should not be called");
         }
 
-        
+
         @Override
         public String getId() {
             throw new AssertionError("Should not be called");
@@ -108,7 +104,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    
     public FileStatus getDefaultStatus(VirtualFile file) {
         return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
     }
@@ -119,14 +114,8 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    public void addFileStatusListener(FileStatusListener listener) {
-        myListeners.add(listener);
-    }
-
-    @Override
     public void addFileStatusListener(FileStatusListener listener, Disposable parentDisposable) {
-        addFileStatusListener(listener);
-        Disposer.register(parentDisposable, () -> removeFileStatusListener(listener));
+        myProject.getMessageBus().connect(parentDisposable).subscribe(FileStatusListener.class, listener);
     }
 
     @Override
@@ -144,9 +133,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         myCachedStatuses.clear();
         myWhetherExactlyParentToChanged.clear();
 
-        for (FileStatusListener listener : myListeners) {
-            listener.fileStatusesChanged();
-        }
+        myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusesChanged();
     }
 
     private void cacheChangedFileStatus(VirtualFile virtualFile, FileStatus fs) {
@@ -190,9 +177,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         }
         cacheChangedFileStatus(file, newStatus);
 
-        for (FileStatusListener listener : myListeners) {
-            listener.fileStatusChanged(file);
-        }
+        myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusChanged(file);
     }
 
     @Override
@@ -215,17 +200,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         return myCachedStatuses.get(file);
     }
 
-    @Override
-    public void removeFileStatusListener(FileStatusListener listener) {
-        myListeners.remove(listener);
-    }
-
-    @Override
-    public ColorValue getNotChangedDirectoryColor(VirtualFile file) {
-        return getRecursiveStatus(file).getColor();
-    }
-
-    
     @Override
     public FileStatus getRecursiveStatus(VirtualFile file) {
         FileStatus status = FileStatusManagerInternal.super.getRecursiveStatus(file);

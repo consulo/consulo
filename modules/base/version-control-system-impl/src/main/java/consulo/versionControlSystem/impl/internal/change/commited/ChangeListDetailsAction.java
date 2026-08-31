@@ -16,15 +16,14 @@
 package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
@@ -47,7 +46,7 @@ import javax.swing.*;
  * @author yole
  */
 @ActionImpl(id = "CommittedChanges.Details")
-public class ChangeListDetailsAction extends AnAction implements DumbAware {
+public class ChangeListDetailsAction extends LegacyDumbAwareAction {
     public ChangeListDetailsAction() {
         super(
             ActionLocalize.actionCommittedchangesDetailsText(),

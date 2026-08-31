@@ -19,11 +19,11 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Locale;
 
 /**
@@ -49,10 +49,10 @@ public abstract class ModuleCompilerPathsManager {
 
     public abstract @Nullable String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
 
-    public abstract @Nullable VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
-
-    
-    public abstract VirtualFilePointer getCompilerOutputPointer(ContentFolderTypeProvider contentFolderType);
+    public @Nullable Path getCompilerOutputPath(ContentFolderTypeProvider contentFolderType) {
+        String url = getCompilerOutputUrl(contentFolderType);
+        return url == null ? null : Path.of(VirtualFileUtil.urlToPath(url));
+    }
 
     
     public static String getRelativePathForProvider(ContentFolderTypeProvider contentFolderType, Module module) {

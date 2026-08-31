@@ -16,11 +16,10 @@
 package consulo.project.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.internal.ComponentBinding;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.disposer.Disposable;
@@ -29,11 +28,14 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.DefaultProjectFactory;
+import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
 
@@ -43,7 +45,7 @@ import java.io.IOException;
 @State(name = "ProjectManager", storages = @Storage("project.default.xml"))
 @Singleton
 @ServiceImpl
-public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements PersistentStateComponent<Element>, Disposable {
+public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements PersistentStateComponentWithAsyncGet<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DefaultProjectFactoryImpl.class);
 
   private DefaultProjectImpl myDefaultProject;
@@ -58,36 +60,32 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
     myDefaultProject.setInitialized();
   }
 
-  @TestOnly
-  public boolean isDefaultProjectInitialized() {
-    return myDefaultProject != null;
-  }
-
   @Override
-  
   public Project getDefaultProject() {
     LOG.assertTrue(!myDefaultProjectWasDisposed, "Default project has been already disposed!");
     return myDefaultProject;
   }
 
-  @RequiredWriteAction
   @Override
-  public @Nullable Element getState() {
+  public Coroutine<?, Element> getStateAsync() {
     assert myDefaultProject != null;
 
-    myDefaultProject.save();
+    UIAccess uiAccess = myDefaultProject.getApplication().getLastUIAccess();
 
-    Element stateElement = myDefaultProject.getStateElement();
+    // Save the default project as a subroutine (its save session populates the state element)
+    return Coroutine.<Object, Object>first(CallSubroutine.call(myDefaultProject.saveAsync(uiAccess)))
+      .then(CodeExecution.<Object, Element>apply(input -> {
+        Element stateElement = myDefaultProject.getStateElement();
 
-    if (stateElement == null) {
-      // we are not ready to save
-      return null;
-    }
+        if (stateElement == null) {
+          // we are not ready to save
+          return null;
+        }
 
-    Element element = new Element("state");
-    stateElement.detach();
-    element.addContent(stateElement);
-    return element;
+        Element element = new Element("state");
+        element.addContent(stateElement.clone());
+        return element;
+      }));
   }
 
   @RequiredReadAction
@@ -102,7 +100,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   }
 
   @Override
-  public void afterLoadState() {
+  public void afterLoad(boolean first) {
     try {
       myDefaultProject.getStateStore().load();
     }

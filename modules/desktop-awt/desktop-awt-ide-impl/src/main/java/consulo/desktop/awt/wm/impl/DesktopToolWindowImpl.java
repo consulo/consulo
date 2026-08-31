@@ -49,9 +49,16 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     }
   };
 
-  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable JComponent component, boolean avaliable) {
-    super(toolWindowManager, id, displayName, canCloseContent, component, avaliable);
-  }
+    protected DesktopToolWindowImpl(
+        DesktopToolWindowManagerImpl toolWindowManager,
+        String id,
+        LocalizeValue displayName,
+        boolean canCloseContent,
+        @Nullable JComponent component,
+        boolean available
+    ) {
+        super(toolWindowManager, id, displayName, canCloseContent, component, available);
+    }
 
   @RequiredUIAccess
   @Override

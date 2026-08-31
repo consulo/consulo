@@ -22,13 +22,13 @@ import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.concurrent.ResultConsumer;
 import consulo.util.lang.Pair;
 
 public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,String>> {
-  
   private final Project myProject;
   private final XDebuggerEditorsProvider myProvider;
   private final XSourcePosition myPosition;
@@ -42,15 +42,13 @@ public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,Str
     myMarkers = markers;
   }
 
-  
   @Override
   public Tree createTree(Pair<XValue, String> descriptor) {
     XDebuggerTree tree = new XDebuggerTree(myProject, myProvider, myPosition, XDebuggerActions.INSPECT_TREE_POPUP_GROUP, myMarkers);
-    tree.setRoot(new XValueNodeImpl(tree, null, descriptor.getSecond(), descriptor.getFirst()), true);
+    tree.setRoot(new XValueNodeImpl(tree, null, LocalizeValue.localizeTODO(descriptor.getSecond()), descriptor.getFirst()), true);
     return tree;
   }
 
-  
   @Override
   public String getTitle(Pair<XValue, String> descriptor) {
     return descriptor.getSecond();
@@ -60,7 +58,7 @@ public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,Str
   public void createDescriptorByNode(Object node, ResultConsumer<Pair<XValue, String>> resultConsumer) {
     if (node instanceof XValueNodeImpl) {
       XValueNodeImpl valueNode = (XValueNodeImpl)node;
-      resultConsumer.onSuccess(Pair.create(valueNode.getValueContainer(), valueNode.getName()));
+      resultConsumer.onSuccess(Pair.create(valueNode.getValueContainer(), valueNode.getName().getNullIfEmpty()));
     }
   }
 }

@@ -15,22 +15,21 @@
  */
 package consulo.execution.debug.frame;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a group of values in a debugger tree.
  */
 public abstract class XValueGroup extends XValueContainer {
-  private final String myName;
+  private final LocalizeValue myName;
 
-  protected XValueGroup(String name) {
+  protected XValueGroup(LocalizeValue name) {
     myName = name;
   }
 
-  
-  public String getName() {
+  public LocalizeValue getName() {
     return myName;
   }
 

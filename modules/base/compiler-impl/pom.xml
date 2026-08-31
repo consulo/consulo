@@ -34,6 +34,11 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-mcp-server-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-compiler-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -71,6 +76,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-build-ui-impl</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

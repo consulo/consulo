@@ -5,6 +5,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -21,6 +22,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -80,7 +82,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             true
         );
         myProject = project;
-        DataManager.registerDataProvider(getList(), dataId -> BranchListPopup.POPUP_MODEL == dataId ? getListModel() : null);
+        DataManager.registerUiDataProvider(getList(), sink -> {
+            sink.set(BranchListPopup.POPUP_MODEL, getListModel());
+        });
         myKey = dimensionKey;
         if (myKey != null) {
             Size2D storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
@@ -92,6 +96,11 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             createTitlePanelToolbar(myKey);
         }
         setSpeedSearchAlwaysShown();
+    }
+
+    @Override
+    protected void onItemsSet(List<ActionPopupItem> items) {
+        super.onItemsSet(items);
         myMeanRowHeight = getList().getCellBounds(0, 0).height + UIUtil.getListCellVPadding() * 2;
     }
 
@@ -103,7 +112,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
                 return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
             }
         };
-        AnAction restoreSizeButton = new AnAction(
+        AnAction restoreSizeButton = new LegacyAnAction(
             DistributedVcsLocalize.actionBranchactiongrouppopupAnonymousTextRestoreSize(),
             LocalizeValue.empty(),
             PlatformIconGroup.generalCollapsecomponent()
@@ -150,7 +159,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         super(aParent, aStep, DataContext.EMPTY_CONTEXT, parentValue);
         // don't store children popup userSize;
         myKey = null;
-        DataManager.registerDataProvider(getList(), dataId -> BranchListPopup.POPUP_MODEL == dataId ? getListModel() : null);
+        DataManager.registerUiDataProvider(getList(), sink -> {
+            sink.set(BranchListPopup.POPUP_MODEL, getListModel());
+        });
     }
 
     private void trackDimensions(@Nullable String dimensionKey) {
@@ -167,7 +178,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             }
         };
         popupWindow.addComponentListener(windowListener);
-        addListener(new JBPopupAdapter() {
+        addListener(new JBPopupListener() {
             @Override
             public void onClosed(LightweightWindowEvent event) {
                 popupWindow.removeComponentListener(windowListener);

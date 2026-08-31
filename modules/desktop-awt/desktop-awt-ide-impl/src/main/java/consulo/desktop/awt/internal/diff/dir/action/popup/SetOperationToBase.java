@@ -21,8 +21,8 @@ import consulo.diff.dir.DirDiffElement;
 import consulo.diff.dir.DirDiffOperation;
 import consulo.diff.impl.internal.dir.DirDiffElementImpl;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 import javax.swing.*;
 import org.jspecify.annotations.Nullable;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class SetOperationToBase extends AnAction {
+public abstract class SetOperationToBase extends LegacyAnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {

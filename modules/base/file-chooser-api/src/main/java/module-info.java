@@ -17,6 +17,7 @@ module consulo.file.chooser.api {
   requires consulo.base.icon.library;
 
   exports consulo.fileChooser;
+  exports consulo.fileChooser.localize;
   exports consulo.fileChooser.provider;
   exports consulo.fileChooser.node;
   exports consulo.fileChooser.util;

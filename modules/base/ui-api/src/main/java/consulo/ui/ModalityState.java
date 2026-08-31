@@ -20,17 +20,18 @@ import consulo.util.dataholder.Key;
 
 /**
  * @author VISTALL
- * @since 29/12/2021
+ * @since 2021-12-29
  */
 public interface ModalityState {
-  static ModalityState any() {
-    return UIInternal.get()._ModalityState_any();
-  }
-  static ModalityState nonModal() {
-    return UIInternal.get()._ModalityState_nonModal();
-  }
+    static ModalityState any() {
+        return UIInternal.get()._ModalityState_any();
+    }
 
-  Key<ModalityState> KEY = Key.create(ModalityState.class);
+    static ModalityState nonModal() {
+        return UIInternal.get()._ModalityState_nonModal();
+    }
 
-  boolean dominates(ModalityState anotherState);
+    Key<ModalityState> KEY = Key.create(ModalityState.class);
+
+    boolean dominates(ModalityState anotherState);
 }

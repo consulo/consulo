@@ -59,10 +59,21 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
     @Override
     public String getLineText(int line, Editor editor) {
         String value = isAvailable() ? myAspect.getValue(line) : "";
-        return myAspect.getId() == LineAnnotationAspect.AUTHOR ? ShortNameType.shorten(value, ShowShortenNames.getType()) : value;
+        if (LineAnnotationAspect.AUTHOR.equals(myAspect.getId())) {
+            return ShortNameType.shorten(value, ShowShortenNames.getType());
+        }
+        else {
+            return value;
+        }
     }
 
-    
+    @Override
+    public boolean useTabularNumsFont(int line, Editor editor) {
+        return false;
+        // disabled due strange padding
+        //return LineAnnotationAspect.DATE.equals(myAspect.getId());
+    }
+
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         return isAvailable()

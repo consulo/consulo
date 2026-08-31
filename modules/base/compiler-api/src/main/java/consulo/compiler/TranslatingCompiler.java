@@ -15,11 +15,12 @@
  */
 package consulo.compiler;
 
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
+import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 /**
@@ -32,30 +33,20 @@ import java.util.Collection;
 public interface TranslatingCompiler extends Compiler {
     /**
      * Defines a single file compiled by the compiler.
+     *
+     * @param outputPath absolute path of the output file ('/' slashes used), null if no output file was produced (e.g. package-info)
+     * @param sourceFile the source file that was compiled
      */
-    interface OutputItem {
-        /**
-         * Returns the path to the output file.
-         *
-         * @return absolute path of the output file ('/' slashes used)
-         */
-        String getOutputPath();
-
-        /**
-         * Returns the path to the source file.
-         *
-         * @return the source file to be compiled
-         */
-        VirtualFile getSourceFile();
+    record OutputItem(@Nullable String outputPath, Path sourceFile) {
     }
 
     interface OutputSink {
         /**
          * @param outputRoot       output directory
          * @param items            output items that were successfully compiled.
-         * @param filesToRecompile virtual files that should be considered as "modified" next time compilation is invoked.
+         * @param filesToRecompile files that should be considered as "modified" next time compilation is invoked.
          */
-        void add(String outputRoot, Collection<OutputItem> items, VirtualFile[] filesToRecompile);
+        void add(String outputRoot, Collection<OutputItem> items, Collection<Path> filesToRecompile);
     }
 
     /**
@@ -65,9 +56,9 @@ public interface TranslatingCompiler extends Compiler {
      * @param context the context for the current compile operation.
      * @return true if can compile the file, false otherwise. If the method returns false, <code>file</code>
      * will not be included in the list of files passed to
-     * {@link #compile(CompileContext, Chunk<Module>, VirtualFile[], TranslatingCompiler.OutputSink)}.
+     * {@link #compile(CompileContext, Chunk, Collection, OutputSink)}.
      */
-    boolean isCompilableFile(VirtualFile file, CompileContext context);
+    boolean isCompilableFile(Path file, CompileContext context);
 
     /**
      * Compiles the specified files.
@@ -77,11 +68,9 @@ public interface TranslatingCompiler extends Compiler {
      * @param files       the source files to compile that correspond to the module chunk
      * @param sink        storage that accepts compiler output results
      */
-    void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink);
+    void compile(CompileContext context, Chunk<Module> moduleChunk, Collection<Path> files, OutputSink sink);
 
-    
     FileType[] getInputFileTypes();
 
-    
     FileType[] getOutputFileTypes();
 }

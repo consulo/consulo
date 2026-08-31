@@ -42,8 +42,8 @@ public class EnterAction extends EditorAction {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingCommandName());
             insertNewLineAtCaret(editor);

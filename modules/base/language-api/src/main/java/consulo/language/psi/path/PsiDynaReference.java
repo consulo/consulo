@@ -16,6 +16,8 @@
 
 package consulo.language.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
@@ -80,6 +82,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return new TextRange(start, end);
   }
 
+  @RequiredReadAction
   private TextRange getRange(PsiReference reference) {
     TextRange rangeInElement = reference.getRangeInElement();
     PsiElement element = reference.getElement();
@@ -106,6 +109,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
     PsiReference reference = chooseReference();
     if (reference != null) {
@@ -115,6 +119,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
     for (PsiReference reference : myReferences) {
       if (reference instanceof FileReference) {
@@ -125,6 +130,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
+  @RequiredReadAction
   public boolean isReferenceTo(PsiElement element) {
     for (PsiReference reference : myReferences) {
       if (reference.isReferenceTo(element)) return true;
@@ -138,6 +144,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
+  @RequiredReadAction
   public ResolveResult[] multiResolve(boolean incompleteCode) {
     if (myCachedResult == null) {
       myCachedResult = innerResolve(incompleteCode);
@@ -145,6 +152,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return myCachedResult;
   }
 
+  @RequiredReadAction
   protected ResolveResult[] innerResolve(boolean incompleteCode) {
     List<ResolveResult> result = new ArrayList<ResolveResult>();
     for (PsiReference reference : myReferences) {
@@ -166,6 +174,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return result.toArray(new ResolveResult[result.size()]);
   }
 
+  @RequiredReadAction
   private @Nullable PsiReference chooseReference() {
     if (myChosenOne != -1) {
       return myReferences.get(myChosenOne);

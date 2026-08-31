@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.OrderRootType;
 import consulo.application.progress.ProgressIndicator;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
@@ -33,11 +34,11 @@ import java.util.Collection;
 */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RootDetector {
-  private final OrderRootType myRootType;
+  private final String myRootType;
   private final boolean myJarDirectory;
-  private final String myPresentableRootTypeName;
+  private final LocalizeValue myPresentableRootTypeName;
 
-  protected RootDetector(OrderRootType rootType, boolean jarDirectory, String presentableRootTypeName) {
+  protected RootDetector(String rootType, boolean jarDirectory, LocalizeValue presentableRootTypeName) {
     myRootType = rootType;
     myJarDirectory = jarDirectory;
     myPresentableRootTypeName = presentableRootTypeName;
@@ -47,11 +48,11 @@ public abstract class RootDetector {
     return myJarDirectory;
   }
 
-  public OrderRootType getRootType() {
+  public String getRootType() {
     return myRootType;
   }
 
-  public String getPresentableRootTypeName() {
+  public LocalizeValue getPresentableRootTypeName() {
     return myPresentableRootTypeName;
   }
 

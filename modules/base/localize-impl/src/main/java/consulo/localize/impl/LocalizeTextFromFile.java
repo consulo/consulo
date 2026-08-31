@@ -16,8 +16,10 @@
 package consulo.localize.impl;
 
 import consulo.container.plugin.PluginDescriptor;
+import consulo.localize.LocalizeKey;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +33,11 @@ import java.util.function.Supplier;
 public class LocalizeTextFromFile extends LocalizeLoader<String> implements Supplier<String> {
     public LocalizeTextFromFile(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
         super(localizeId, pluginDescriptor, resourcePath);
+    }
+
+    @Override
+    public @Nullable String getValue(LocalizeKey key) {
+        return getValue();
     }
 
     @Override

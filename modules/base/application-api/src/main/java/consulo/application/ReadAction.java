@@ -18,19 +18,13 @@ package consulo.application;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Callable;
 
 public final class ReadAction<T> {
-    @Deprecated
-    public static AccessToken start() {
-        return Application.get().acquireReadActionLock();
-    }
-
     public static <E extends Throwable> void run(@RequiredReadAction ThrowableRunnable<E> action) throws E {
-        Application.get().runReadAction((ThrowableSupplier<@Nullable Void, E>) () -> {
+        compute((ThrowableSupplier<@Nullable Void, E>) () -> {
             action.run();
             return null;
         });
@@ -41,13 +35,13 @@ public final class ReadAction<T> {
     }
 
     public static <T extends @Nullable Object, E extends Throwable> T compute(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
-        return Application.get().runReadAction(action);
+        Application application = Application.get();
+        return application.runReadAction(action);
     }
 
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Runnable in non-blocking read action on a background thread.
      */
-    @Contract(pure = true)
     public static NonBlockingReadAction<Void> nonBlocking(@RequiredReadAction Runnable task) {
         return nonBlocking(() -> {
             task.run();
@@ -58,7 +52,6 @@ public final class ReadAction<T> {
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Callable in a non-blocking read action on a background thread.
      */
-    @Contract(pure = true)
     public static <T> NonBlockingReadAction<T> nonBlocking(@RequiredReadAction Callable<T> task) {
         return AsyncExecutionService.getService().buildNonBlockingReadAction(task);
     }

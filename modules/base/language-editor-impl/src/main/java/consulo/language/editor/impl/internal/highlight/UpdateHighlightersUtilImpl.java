@@ -13,12 +13,16 @@ import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.RedBlackTreeVerifier;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.component.ProcessCanceledException;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.logging.Logger;
 import consulo.language.editor.internal.HighlightersRecycler;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -27,14 +31,13 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -42,13 +45,37 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class UpdateHighlightersUtilImpl {
+    private static final Logger LOG = Logger.getInstance(UpdateHighlightersUtilImpl.class);
+
+    static void disposeWithFileLevelIgnoreErrors(HighlightInfo info, HighlightingSession session) {
+        if (info.isFileLevelAnnotation()) {
+            ((HighlightingSessionImpl)session).removeFileLevelHighlight(info);
+        }
+        RangeHighlighterEx highlighter = ((HighlightInfoImpl)info).getHighlighter();
+        if (highlighter == null) {
+            return;
+        }
+        try {
+            if (highlighter.getErrorStripeTooltip() == info && info.getHighlighter() == highlighter) {
+                ((HighlightInfoImpl)info).setHighlighter(null);
+                highlighter.dispose();
+            }
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            LOG.warn(e);
+        }
+    }
+
     private static boolean isCoveredByOffsets(HighlightInfo info, HighlightInfo coveredBy) {
         return coveredBy.getStartOffset() <= info.getStartOffset()
             && info.getEndOffset() <= coveredBy.getEndOffset()
             && info.getGutterIconRenderer() == null;
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void addHighlighterToEditorIncrementally(
         Project project,
         Document document,
@@ -61,7 +88,6 @@ public class UpdateHighlightersUtilImpl {
         int group,
         Map<TextRange, RangeMarker> ranges2markersCache
     ) {
-        UIAccess.assertIsUIThread();
         if (UpdateHighlightersUtil.isFileLevelOrGutterAnnotation(info)) {
             return;
         }
@@ -142,7 +168,7 @@ public class UpdateHighlightersUtilImpl {
         return o1.getDescription().compareTo(o2.getDescription());
     };
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void setHighlightersInRange(
         Project project,
         Document document,
@@ -153,7 +179,6 @@ public class UpdateHighlightersUtilImpl {
         MarkupModelEx markup,
         int group
     ) {
-        UIAccess.assertIsUIThread();
 
         SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         HighlightersRecycler infosToRemove = new HighlightersRecycler();
@@ -184,7 +209,9 @@ public class UpdateHighlightersUtilImpl {
 
         Lists.quickSort(infos, BY_START_OFFSET_NODUPS);
         Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>(10);
-        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+        SimpleReference<PsiFile> psiFileRef = new SimpleReference<>();
+        project.getApplication().tryRunReadAction(psiFileRef, () -> PsiDocumentManager.getInstance(project).getCachedPsiFile(document));
+        PsiFile psiFile = psiFileRef.get();
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
         boolean[] changed = {false};
         SweepProcessor.Generator<HighlightInfo> generator = (Predicate<HighlightInfo> processor) -> ContainerUtil.process(infos, processor);
@@ -304,7 +331,6 @@ public class UpdateHighlightersUtilImpl {
 
         TextRange finalInfoRange = new TextRange(infoStartOffset, infoEndOffset);
         TextAttributes infoAttributes = info.getTextAttributes(psiFile, colorsScheme);
-        @RequiredUIAccess
         Consumer<RangeHighlighterEx> changeAttributes = finalHighlighter -> {
             if (infoAttributes != null) {
                 finalHighlighter.setTextAttributes(infoAttributes);
@@ -392,7 +418,6 @@ public class UpdateHighlightersUtilImpl {
         return layer;
     }
 
-    
     private static RangeMarker getOrCreate(
         Document document,
         Map<TextRange, RangeMarker> ranges2markersCache,
@@ -415,10 +440,8 @@ public class UpdateHighlightersUtilImpl {
         document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, null);
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void updateHighlightersByTyping(Project project, DocumentEvent e) {
-        UIAccess.assertIsUIThread();
-
         Document document = e.getDocument();
         if (document instanceof DocumentEx && document.isInBulkUpdate()) {
             return;
@@ -514,7 +537,7 @@ public class UpdateHighlightersUtilImpl {
     }
 
     // set highlights inside startOffset,endOffset but outside priorityRange
-    @RequiredUIAccess
+    @RequiredReadAction
     static void setHighlightersOutsideRange(
         Project project,
         Document document,
@@ -527,7 +550,6 @@ public class UpdateHighlightersUtilImpl {
         ProperTextRange priorityRange,
         int group
     ) {
-        UIAccess.assertIsUIThread();
 
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
         if (startOffset == 0 && endOffset == document.getTextLength()) {
@@ -542,7 +564,6 @@ public class UpdateHighlightersUtilImpl {
         Lists.quickSort(infos, BY_START_OFFSET_NODUPS);
         Set<HighlightInfo> infoSet = new HashSet<>(infos);
 
-        @RequiredUIAccess
         Predicate<HighlightInfo> processor = info -> {
             HighlightInfoImpl highlightInfo = (HighlightInfoImpl) info;
             if (highlightInfo.getGroup() == group) {

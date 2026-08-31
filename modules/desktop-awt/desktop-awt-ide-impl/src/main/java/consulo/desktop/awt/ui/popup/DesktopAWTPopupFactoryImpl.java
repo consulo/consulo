@@ -29,6 +29,7 @@ import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.popup.AWTPopupSubFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.util.collection.Maps;
 import org.jspecify.annotations.Nullable;
@@ -52,6 +53,17 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
     @Override
     public int getPointerLength(Balloon.Position position, boolean dialogMode) {
         return BalloonImpl.getPointerLength(position, dialogMode);
+    }
+
+    @Override
+    public ComponentPopupBuilder createComponentPopupBuilder(
+        consulo.ui.Component content,
+        consulo.ui.@Nullable Component preferableFocusComponent
+    ) {
+        return createComponentPopupBuilder(
+            (JComponent) TargetAWT.to(content),
+            preferableFocusComponent == null ? null : (JComponent) TargetAWT.to(preferableFocusComponent)
+        );
     }
 
     @Override

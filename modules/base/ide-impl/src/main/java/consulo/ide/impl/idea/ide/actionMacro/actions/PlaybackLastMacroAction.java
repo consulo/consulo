@@ -19,15 +19,14 @@ import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author max
  */
 @ActionImpl(id = "PlaybackLastMacro")
-public class PlaybackLastMacroAction extends AnAction implements DumbAware {
+public class PlaybackLastMacroAction extends LegacyDumbAwareAction {
     public PlaybackLastMacroAction() {
         super(ActionLocalize.actionPlaybacklastmacroText(), ActionLocalize.actionPlaybacklastmacroDescription());
     }

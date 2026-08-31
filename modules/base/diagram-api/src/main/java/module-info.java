@@ -12,5 +12,5 @@ module consulo.diagram.api {
 
     exports consulo.diagram;
 
-    exports consulo.diagram.internal to consulo.desktop.awt.ide.impl;
+    exports consulo.diagram.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 }

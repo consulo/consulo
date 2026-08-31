@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

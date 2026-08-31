@@ -32,7 +32,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
     private DockLayout myLayout;
 
     private ComboBox<String> mySchemeComboBox;
-    private MutableListModel<String> myModel;
+    private MutableFlatDataModel<String> myModel;
 
     @RequiredUIAccess
     public SchemesPanel(ColorAndFontOptions options) {
@@ -63,7 +64,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
         HorizontalLayout topLayout = HorizontalLayout.create();
         myLayout.top(topLayout);
 
-        myModel = MutableListModel.of(new ArrayList<>());
+        myModel = FlatDataModel.of(new ArrayList<>());
         mySchemeComboBox = ComboBox.create(myModel);
 
         topLayout.add(Label.create(ApplicationLocalize.comboboxSchemeName()));
@@ -127,7 +128,11 @@ public class SchemesPanel implements SkipSelfSearchComponent {
             selectedName
         );
 
-        dialog.showAsync().doWhenDone(() -> myOptions.saveSchemeAs(dialog.getSchemeName()));
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error == null) {
+                myOptions.saveSchemeAs(dialog.getSchemeName());
+            }
+        });
     }
 
     @RequiredUIAccess

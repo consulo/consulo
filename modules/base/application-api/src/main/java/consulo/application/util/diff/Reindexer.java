@@ -25,7 +25,7 @@ import java.util.BitSet;
  * @author dyoma
  */
 class Reindexer {
-  private final int[][] myOldIndecies = new int[2][];
+  private final int[][] myOldIndices = new int[2][];
   private final int[] myOriginalLengths = new int[]{-1, -1};
   private final int[] myDiscardedLengths = new int[]{-1, -1};
 
@@ -41,30 +41,30 @@ class Reindexer {
     myDiscardedLengths[1] = length2;
     for (int j = 0; j < 2; j++) {
       int originalLength = myOriginalLengths[j];
-      myOldIndecies[j] = new int[originalLength];
+      myOldIndices[j] = new int[originalLength];
       for (int i = 0; i < originalLength; i++) {
-        myOldIndecies[j][i] = i;
+        myOldIndices[j][i] = i;
       }
     }
   }
 
   int restoreIndex(int index, int array) {
-    return myOldIndecies[array][index];
+    return myOldIndices[array][index];
   }
 
   private int[] discard(int[] needed, int[] toDiscard, int arrayIndex) {
     myOriginalLengths[arrayIndex] = toDiscard.length;
     int[] sorted1 = createSorted(needed);
     IntList discarded = IntLists.newArrayList(toDiscard.length);
-    IntList oldIndecies = IntLists.newArrayList(toDiscard.length);
+    IntList oldIndices = IntLists.newArrayList(toDiscard.length);
     for (int i = 0; i < toDiscard.length; i++) {
       int index = toDiscard[i];
       if (Arrays.binarySearch(sorted1, index) >= 0) {
         discarded.add(index);
-        oldIndecies.add(i);
+        oldIndices.add(i);
       }
     }
-    myOldIndecies[arrayIndex] = oldIndecies.toArray();
+    myOldIndices[arrayIndex] = oldIndices.toArray();
     myDiscardedLengths[arrayIndex] = discarded.size();
     return discarded.toArray();
   }
@@ -91,18 +91,18 @@ class Reindexer {
       int y = 0;
       while (x < myDiscardedLengths[0] || y < myDiscardedLengths[1]) {
         if ((x < myDiscardedLengths[0] && y < myDiscardedLengths[1]) && !discardedChanges[0].get(x) && !discardedChanges[1].get(y)) {
-          x = increment(myOldIndecies[0], x, changes1, myOriginalLengths[0]);
-          y = increment(myOldIndecies[1], y, changes2, myOriginalLengths[1]);
+          x = increment(myOldIndices[0], x, changes1, myOriginalLengths[0]);
+          y = increment(myOldIndices[1], y, changes2, myOriginalLengths[1]);
           continue;
         }
         if (discardedChanges[0].get(x)) {
-          changes1.set(getOriginal(myOldIndecies[0], x));
-          x = increment(myOldIndecies[0], x, changes1, myOriginalLengths[0]);
+          changes1.set(getOriginal(myOldIndices[0], x));
+          x = increment(myOldIndices[0], x, changes1, myOriginalLengths[0]);
           continue;
         }
         if (discardedChanges[1].get(y)) {
-          changes2.set(getOriginal(myOldIndecies[1], y));
-          y = increment(myOldIndecies[1], y, changes2, myOriginalLengths[1]);
+          changes2.set(getOriginal(myOldIndices[1], y));
+          y = increment(myOldIndices[1], y, changes2, myOriginalLengths[1]);
           continue;
         }
       }
@@ -110,13 +110,13 @@ class Reindexer {
         changes1.set(0, myOriginalLengths[0]);
       }
       else {
-        changes1.set(0, myOldIndecies[0][0]);
+        changes1.set(0, myOldIndices[0][0]);
       }
       if (myDiscardedLengths[1] == 0) {
         changes2.set(0, myOriginalLengths[1]);
       }
       else {
-        changes2.set(0, myOldIndecies[1][0]);
+        changes2.set(0, myOldIndices[1][0]);
       }
     }
 

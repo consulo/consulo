@@ -22,7 +22,7 @@ import consulo.ui.HasFocus;
  * @since 2019-11-09
  */
 public final class FocusEvent extends ComponentEvent<HasFocus> {
-  public FocusEvent(HasFocus component) {
-    super(component);
-  }
+    public FocusEvent(HasFocus component) {
+        super(component);
+    }
 }

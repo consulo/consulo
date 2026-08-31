@@ -24,6 +24,5 @@ import consulo.annotation.component.ExtensionAPI;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BundledColorSchemeProvider {
-    
     String[] getColorSchemeFiles();
 }

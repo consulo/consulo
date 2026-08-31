@@ -46,6 +46,8 @@ public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedA
 
   @Override
   public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
-    if (myDelegate instanceof TypedActionHandlerEx) ((TypedActionHandlerEx)myDelegate).beforeExecute(editor, c, context, plan);
+    if (myDelegate instanceof TypedActionHandlerEx typedActionHandlerEx) {
+      typedActionHandlerEx.beforeExecute(editor, c, context, plan);
+    }
   }
 }

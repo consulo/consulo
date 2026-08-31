@@ -22,6 +22,7 @@ import consulo.application.ApplicationProperties;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 
@@ -30,7 +31,7 @@ import consulo.ui.ex.action.IdeActions;
  * @since 2024-09-07
  */
 @ActionImpl(id = "Internal", parents = @ActionParentRef(value = @ActionRef(id = IdeActions.TOOLS_MENU)))
-public class InternalActionGroup extends DefaultActionGroup implements DumbAware {
+public class InternalActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public InternalActionGroup() {
         super(LocalizeValue.localizeTODO("Internal"), true);
     }

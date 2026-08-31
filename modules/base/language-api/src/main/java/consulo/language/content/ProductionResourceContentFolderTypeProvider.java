@@ -31,14 +31,14 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 22:37/31.10.13
+ * @since 2013-10-31
  */
 @ExtensionImpl(id = "production-resource", order = "after production")
-public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements ProductionLikeContentFolderTypeProvider, ResourceLikeContentFolderTypeProvider {
+public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider
+    implements ProductionLikeContentFolderTypeProvider, ResourceLikeContentFolderTypeProvider {
     private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE =
         ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-    
     public static ProductionResourceContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -52,19 +52,16 @@ public class ProductionResourceContentFolderTypeProvider extends ContentFolderTy
         return 100;
     }
 
-    
     @Override
     public Image getIcon() {
         return AllIcons.Modules.ResourcesRoot;
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleResourcesAction();
     }
 
-    
     @Override
     public ColorValue getGroupColor() {
         return new RGBColor(129, 45, 243);

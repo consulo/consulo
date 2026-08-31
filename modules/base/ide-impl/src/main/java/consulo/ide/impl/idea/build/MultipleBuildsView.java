@@ -86,9 +86,13 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
             if (obj.statusMessage != null) {
                 SimpleColoredComponent statusComponent = new SimpleColoredComponent();
                 statusComponent.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
-                ansiEscapeDecoder.escapeText(obj.statusMessage, ProcessOutputTypes.STDOUT, (text, attributes) -> {
-                    statusComponent.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES); //NON-NLS
-                });
+                ansiEscapeDecoder.escapeText(
+                    obj.statusMessage.get(),
+                    ProcessOutputTypes.STDOUT,
+                    (text, attributes) -> {
+                        statusComponent.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES); //NON-NLS
+                    }
+                );
                 panel.add(statusComponent, BorderLayout.SOUTH);
             }
             return panel;
@@ -119,12 +123,11 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
     public void onEvent(Object buildId, BuildEvent event) {
         List<Runnable> runOnEdt = new SmartList<>();
         AbstractViewManager.BuildInfo buildInfo;
-        if (event instanceof StartBuildEvent) {
-            StartBuildEvent startBuildEvent = (StartBuildEvent) event;
+        if (event instanceof StartBuildEvent startBuildEvent) {
             if (isInitializeStarted.get()) {
                 clearOldBuilds(runOnEdt, startBuildEvent);
             }
-            buildInfo = new AbstractViewManager.BuildInfo(((StartBuildEvent) event).getBuildDescriptor());
+            buildInfo = new AbstractViewManager.BuildInfo(startBuildEvent.getBuildDescriptor());
             myBuildsMap.put(buildId, buildInfo);
         }
         else {

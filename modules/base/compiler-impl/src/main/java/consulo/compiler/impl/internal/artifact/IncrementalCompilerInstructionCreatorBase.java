@@ -18,20 +18,33 @@ package consulo.compiler.impl.internal.artifact;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
 import consulo.compiler.artifact.element.PackagingFileFilter;
 import consulo.language.file.FileTypeManager;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @author nik
  */
 public abstract class IncrementalCompilerInstructionCreatorBase implements IncrementalCompilerInstructionCreator {
+    private static final Logger LOG = Logger.getInstance(IncrementalCompilerInstructionCreatorBase.class);
+
     protected final ArtifactsProcessingItemsBuilderContext myContext;
 
     public IncrementalCompilerInstructionCreatorBase(ArtifactsProcessingItemsBuilderContext context) {
@@ -39,59 +52,120 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
     }
 
     @Override
-    public void addDirectoryCopyInstructions(VirtualFile directory) {
+    public void addFileCopyInstruction(Path file, String outputFileName) {
+        addFileCopyInstruction(FileUtil.toSystemIndependentName(file.toString()), outputFileName);
+    }
+
+    protected abstract void addFileCopyInstruction(String sourcePath, String outputFileName);
+
+    @Override
+    public void addDirectoryCopyInstructions(Path directory) {
         addDirectoryCopyInstructions(directory, null);
     }
 
     @Override
-    public void addDirectoryCopyInstructions(VirtualFile directory, @Nullable PackagingFileFilter filter) {
-        ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
-        boolean copyExcluded = index.isExcluded(directory);
-        collectInstructionsRecursively(directory, this, filter, index, copyExcluded);
-    }
-
-    private static void collectInstructionsRecursively(
-        VirtualFile directory,
-        final IncrementalCompilerInstructionCreatorBase creator,
-        final @Nullable PackagingFileFilter filter,
-        final ProjectFileIndex index,
-        final boolean copyExcluded
-    ) {
-        final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-        VirtualFileUtil.visitChildrenRecursively(
-            directory,
-            new VirtualFileVisitor<IncrementalCompilerInstructionCreatorBase>(VirtualFileVisitor.SKIP_ROOT) {
-                {
-                    setValueForChildren(creator);
+    public void addDirectoryCopyInstructions(Path directory, @Nullable PackagingFileFilter filter) {
+        Set<String> excludedPaths = myContext.getExcludedPaths();
+        boolean copyExcluded = isUnderExcluded(directory, excludedPaths);
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        Deque<IncrementalCompilerInstructionCreatorBase> creators = new ArrayDeque<>();
+        creators.push(this);
+        try {
+            Files.walkFileTree(directory, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                    if (dir.equals(directory)) {
+                        return FileVisitResult.CONTINUE;
+                    }
+                    if (!accept(dir)) {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    creators.push(creators.peek().subFolder(dir.getFileName().toString()));
+                    return FileVisitResult.CONTINUE;
                 }
 
                 @Override
-                public boolean visitFile(VirtualFile child) {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    if (accept(file)) {
+                        creators.peek().addFileCopyInstruction(file, file.getFileName().toString());
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException e) {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException e) {
+                    if (!dir.equals(directory)) {
+                        creators.pop();
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                private boolean accept(Path child) {
                     if (copyExcluded) {
-                        if (fileTypeManager.isFileIgnored(child)) {
+                        if (fileTypeManager.isFileIgnored(child.getFileName().toString())) {
                             return false;
                         }
                     }
-                    else if (index.isExcluded(child)) {
+                    else if (excludedPaths.contains(FileUtil.toSystemIndependentName(child.toString()))) {
                         return false;
                     }
-
-                    IncrementalCompilerInstructionCreatorBase creator = getCurrentValue();
-                    if (filter != null && !filter.accept(child, creator.myContext.getCompileContext())) {
-                        return false;
-                    }
-
-                    if (!child.isDirectory()) {
-                        creator.addFileCopyInstruction(child, child.getName());
-                    }
-                    else {
-                        setValueForChildren(creator.subFolder(child.getName()));
-                    }
-
-                    return true;
+                    return filter == null || filter.accept(child, myContext.getCompileContext());
                 }
+            });
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    private static boolean isUnderExcluded(Path directory, Set<String> excludedPaths) {
+        String path = FileUtil.toSystemIndependentName(directory.toString());
+        for (String excludedPath : excludedPaths) {
+            if (FileUtil.startsWith(path, excludedPath)) {
+                return true;
             }
-        );
+        }
+        return false;
+    }
+
+    @Override
+    public void addExtractDirectoryInstruction(Path jarFile, String pathInJar) {
+        String jarPath = FileUtil.toSystemIndependentName(jarFile.toString());
+        String prefix = StringUtil.trimStart(pathInJar, "/");
+        if (!prefix.isEmpty() && !prefix.endsWith("/")) {
+            prefix += "/";
+        }
+        try (ZipFile zipFile = new ZipFile(jarFile.toFile())) {
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                String entryName = entry.getName();
+                if (!entryName.startsWith(prefix)) {
+                    continue;
+                }
+                String relativePath = entryName.substring(prefix.length());
+                int nameIndex = relativePath.lastIndexOf('/');
+                IncrementalCompilerInstructionCreatorBase creator = this;
+                if (nameIndex != -1) {
+                    creator = (IncrementalCompilerInstructionCreatorBase) subFolderByRelativePath(relativePath.substring(0, nameIndex));
+                }
+                creator.addFileCopyInstruction(jarPath + URLUtil.ARCHIVE_SEPARATOR + entryName, relativePath.substring(nameIndex + 1));
+            }
+        }
+        catch (IOException e) {
+            LOG.warn(e);
+            myContext.getCompileContext()
+                .newError(LocalizeValue.localizeTODO("Cannot read '" + jarPath + "': " + e.getMessage()))
+                .add();
+        }
     }
 
     @Override

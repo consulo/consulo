@@ -16,90 +16,98 @@
 package consulo.colorScheme.impl.internal;
 
 import consulo.colorScheme.*;
+import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.ui.color.ColorValue;
-import org.jspecify.annotations.Nullable;
+import consulo.ui.font.Font;
 import org.jdom.Element;
-
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Yura Cangea
  */
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
-  private String myName;
+    private String myName;
 
-  public DefaultColorsScheme(EditorColorsManager editorColorsManager) {
-    super(null, editorColorsManager);
-  }
-
-  @Override
-  public @Nullable TextAttributes getAttributes(TextAttributesKey key) {
-    if (key != null) {
-      TextAttributesKey fallbackKey = key.getFallbackAttributeKey();
-      TextAttributes attributes = myAttributesMap.get(key);
-      if (fallbackKey == null) {
-        if (attributes != null) return attributes;
-      }
-      else {
-        if (attributes != null && !attributes.isFallbackEnabled()) return attributes;
-        attributes = getFallbackAttributes(fallbackKey);
-        if (attributes != null) return attributes;
-      }
-    }
-    return myParentScheme == null ? null : myParentScheme.getAttributes(key);
-  }
-
-  @Override
-  public @Nullable ColorValue getColor(EditorColorKey key) {
-    if (key == null) return null;
-    ColorValue color = myColorsMap.get(key);
-    if (color != null) {
-      return color;
-    }
-    if (myParentScheme != null) {
-      color = myParentScheme.getColor(key);
-      if (color != null) {
-        return color;
-      }
+    public DefaultColorsScheme(EditorColorsManager editorColorsManager, FontPreferencesManager fontPreferencesManager) {
+        super(null, editorColorsManager, fontPreferencesManager);
     }
 
-    EditorColorKey fallbackColorKey = key.getFallbackColorKey();
-    if (fallbackColorKey != null) {
-        return getColor(fallbackColorKey);
+    @Override
+    public @Nullable TextAttributes getAttributes(TextAttributesKey key) {
+        if (key != null) {
+            TextAttributesKey fallbackKey = key.getFallbackAttributeKey();
+            TextAttributes attributes = myAttributesMap.get(key);
+            if (fallbackKey == null) {
+                if (attributes != null) {
+                    return attributes;
+                }
+            }
+            else {
+                if (attributes != null && !attributes.isFallbackEnabled()) {
+                    return attributes;
+                }
+                attributes = getFallbackAttributes(fallbackKey);
+                if (attributes != null) {
+                    return attributes;
+                }
+            }
+        }
+        return myParentScheme == null ? null : myParentScheme.getAttributes(key);
     }
-    return key.getDefaultColorValue();
-  }
 
-  @Override
-  public void readExternal(Element parentNode) {
-    super.readExternal(parentNode);
-    myName = parentNode.getAttributeValue(NAME_ATTR);
-  }
+    @Override
+    public @Nullable ColorValue getColor(EditorColorKey key) {
+        if (key == null) {
+            return null;
+        }
+        ColorValue color = myColorsMap.get(key);
+        if (color != null) {
+            return color;
+        }
+        if (myParentScheme != null) {
+            color = myParentScheme.getColor(key);
+            if (color != null) {
+                return color;
+            }
+        }
 
-  
-  @Override
-  public String getName() {
-    return myName;
-  }
+        EditorColorKey fallbackColorKey = key.getFallbackColorKey();
+        if (fallbackColorKey != null) {
+            return getColor(fallbackColorKey);
+        }
+        return key.getDefaultColorValue();
+    }
 
-  @Override
-  public void setAttributes(TextAttributesKey key, TextAttributes attributes) {
-  }
+    @Override
+    public void readExternal(Element parentNode) {
+        super.readExternal(parentNode);
+        myName = parentNode.getAttributeValue(NAME_ATTR);
+    }
 
-  @Override
-  public void setColor(EditorColorKey key, @Nullable ColorValue color) {
-  }
 
-  @Override
-  public void setFont(EditorFontType key, Font font) {
-  }
+    @Override
+    public String getName() {
+        return myName;
+    }
 
-  @Override
-  public EditorColorsScheme clone() {
-    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(this, myEditorColorsManager);
-    copyTo(newScheme);
-    newScheme.setName(myName);
-    return newScheme;
-  }
+    @Override
+    public void setAttributes(TextAttributesKey key, TextAttributes attributes) {
+    }
+
+    @Override
+    public void setColor(EditorColorKey key, @Nullable ColorValue color) {
+    }
+
+    @Override
+    public void setFont(EditorFontType key, Font font) {
+    }
+
+    @Override
+    public EditorColorsScheme clone() {
+        EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(this, myEditorColorsManager, myFontPreferencesManager);
+        copyTo(newScheme);
+        newScheme.setName(myName);
+        return newScheme;
+    }
 }

@@ -25,10 +25,10 @@ import javax.swing.*;
 import java.util.function.Function;
 
 /**
- * Inteface for JBPopupFactory impl
+ * Interface for JBPopupFactory impl
  *
  * @author VISTALL
- * @since 21-Jul-22
+ * @since 2022-07-21
  */
 @Deprecated
 @DeprecationInfo("Do not depend to Swing classes")

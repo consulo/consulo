@@ -22,6 +22,8 @@ import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.util.lang.Couple;
 
 import org.jspecify.annotations.Nullable;
@@ -38,43 +40,46 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
     public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent) {
         super(project, canBeParent);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent, IdeModalityType ideModalityType) {
         super(project, canBeParent, ideModalityType);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     public WholeWestDialogWrapper(@Nullable Project project) {
         super(project);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     public WholeWestDialogWrapper(boolean canBeParent) {
         super(canBeParent);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     public WholeWestDialogWrapper(boolean canBeParent, boolean applicationModalIfPossible) {
         super(canBeParent, applicationModalIfPossible);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     public WholeWestDialogWrapper(Project project, boolean canBeParent, boolean applicationModalIfPossible) {
         super(project, canBeParent, applicationModalIfPossible);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     public WholeWestDialogWrapper(Component parent, boolean canBeParent) {
         super(parent, canBeParent);
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
     }
 
     @Override
     protected void init() {
         super.init();
-        myTitlelessDecorator.install(getWindow());
+
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.install(getWindow());
+        }
     }
 
     @Override
@@ -118,7 +123,9 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
         JComponent first = splitterComponents.getFirst();
         assert first != null;
         splitter.setFirstComponent(first);
-        myTitlelessDecorator.makeLeftComponentLower(first);
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.makeLeftComponentLower(first);
+        }
 
         JPanel rightComponent = new JPanel(new BorderLayout());
         rightComponent.setBorder(createContentPaneBorder());
@@ -126,7 +133,11 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
         JComponent second = splitterComponents.getSecond();
         assert second != null;
-        rightComponent.add(myTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            rightComponent.add(awtTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
+        } else {
+            rightComponent.add(second, BorderLayout.CENTER);
+        }
         myErrorPane = second;
 
         JPanel southSection = new JPanel(new BorderLayout());

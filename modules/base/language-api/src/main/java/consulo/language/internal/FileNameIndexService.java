@@ -17,13 +17,11 @@ package consulo.language.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -41,7 +39,6 @@ public interface FileNameIndexService {
 
     void processAllFileNames(Predicate<? super String> processor, SearchScope scope, @Nullable IdFilter filter);
 
-    
     Collection<VirtualFile> getFilesWithFileType(FileType type, SearchScope scope);
 
     boolean processFilesWithFileType(FileType type, Predicate<? super VirtualFile> processor, SearchScope scope);

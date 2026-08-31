@@ -31,14 +31,16 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
+abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     protected OccurenceNavigatorActionBase(
         LocalizeValue text,
         LocalizeValue description,
@@ -68,33 +70,31 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         }
     }
 
-    
     @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT; // TODO rework
-    }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = event.getPresentation();
+            Project project = event.getData(Project.KEY);
+            if (project == null) {
+                presentation.setEnabled(false);
+                // make it invisible only in main menu to avoid initial invisibility in toolbars
+                presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
+                return null;
+            }
 
-    @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            // make it invisible only in main menu to avoid initial invisibility in toolbars
-            presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
-            return;
-        }
-        OccurenceNavigator navigator = getNavigator(event.getDataContext());
-        if (navigator == null) {
-            presentation.setEnabled(false);
-            // make it invisible only in main menu to avoid initial invisibility in toolbars
-            presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
-            return;
-        }
-        presentation.setVisible(true);
-        presentation.setEnabled(hasOccurenceToGo(navigator));
-        presentation.setText(getDescription(navigator));
+            OccurenceNavigator navigator = getNavigator(event.getDataContext());
+            if (navigator == null) {
+                presentation.setEnabled(false);
+                // make it invisible only in main menu to avoid initial invisibility in toolbars
+                presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
+                return null;
+            }
+
+            presentation.setVisible(true);
+            presentation.setEnabled(hasOccurenceToGo(navigator));
+            presentation.setText(getDescription(navigator));
+            return null;
+        }));
     }
 
     protected abstract OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator);

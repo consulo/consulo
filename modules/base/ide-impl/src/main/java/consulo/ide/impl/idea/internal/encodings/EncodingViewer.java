@@ -42,7 +42,11 @@ public class EncodingViewer extends DialogWrapper {
   public EncodingViewer() {
     super(false);
     initEncodings();
-    myLoadFile.addActionListener(e -> FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), myPanel, null, null).doWhenDone(file -> {
+    myLoadFile.addActionListener(e -> FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), myPanel, null, null).whenComplete((file, error) -> {
+        if (error != null) {
+            return;
+        }
+
       loadFrom(file);
     }));
     init();

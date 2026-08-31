@@ -23,6 +23,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author max
@@ -62,6 +63,13 @@ public abstract class RefreshQueue {
   }
 
   public abstract void processSingleEvent(VFileEvent event);
+
+  /**
+   * Applies a batch of explicit VFS events synchronously (in a single refresh session), blocking until they are fired.
+   * Used by the settings store to keep the VFS in sync with lock-free NIO writes, so that a later filesystem refresh
+   * observes no diff.
+   */
+  public abstract void processEvents(List<? extends VFileEvent> events);
 
   public abstract void cancelSession(long id);
 

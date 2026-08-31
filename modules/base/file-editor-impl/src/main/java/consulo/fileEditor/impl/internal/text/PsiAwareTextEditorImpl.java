@@ -20,7 +20,6 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.internal.AsyncEditorLoader;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
@@ -33,7 +32,8 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSink;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -71,7 +71,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
   
   @Override
   protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-    return new PsiAwareTextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+    return new PsiAwareTextEditorComponent(project, file, this);
   }
 
   @Override
@@ -90,11 +90,8 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(Project project,
-                                        VirtualFile file,
-                                        TextEditorImpl textEditor,
-                                        TextEditorComponentContainerFactory factory) {
-      super(project, file, textEditor, factory);
+    private PsiAwareTextEditorComponent(Project project, VirtualFile file, TextEditorImpl textEditor) {
+      super(project, file, textEditor);
       myProject = project;
       myFile = file;
     }
@@ -109,17 +106,20 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-      if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-        LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
-        if (lookup != null && lookup.isVisible()) {
-          return lookup.getBounds();
-        }
+    public void uiDataSnapshot(DataSink sink) {
+      super.uiDataSnapshot(sink);
+
+      // Lookup bounds — EDT-safe, just UI state
+      LookupEx lookup = myProject.getDisposeState().get() != ThreeState.NO
+          ? null
+          : LookupManager.getInstance(myProject).getActiveLookup();
+
+      if (lookup != null && lookup.isVisible()) {
+        sink.set(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE, lookup.getBounds());
       }
-      if (LangDataKeys.MODULE == dataId) {
-        return ModuleUtilCore.findModuleForFile(myFile, myProject);
-      }
-      return super.getData(dataId);
+
+      // Module — may need read access for index lookups
+      sink.lazy(LangDataKeys.MODULE, () -> ModuleUtilCore.findModuleForFile(myFile, myProject));
     }
   }
 }

@@ -94,10 +94,6 @@ public interface ToolWindowFactory {
         return true;
     }
 
-    default boolean isUnified() {
-        return false;
-    }
-
     /**
      * If return false - toolwindow will be unregistered
      */

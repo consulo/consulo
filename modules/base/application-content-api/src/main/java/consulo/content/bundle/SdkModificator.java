@@ -39,26 +39,24 @@ public interface SdkModificator {
 
   void setSdkAdditionalData(SdkAdditionalData data);
 
-  
-  VirtualFile[] getRoots(OrderRootType rootType);
+  VirtualFile[] getRoots(String rootType);
 
-  
-  default Object[] getUrls(OrderRootType rootType) {
+  default Object[] getUrls(String rootType) {
     return Arrays.stream(getRoots(rootType)).map(VirtualFile::getUrl).toArray(ArrayUtil.STRING_ARRAY_FACTORY);
   }
 
-  void addRoot(VirtualFile root, OrderRootType rootType);
+  void addRoot(VirtualFile root, String rootType);
 
-  default void addRoot(String url, OrderRootType rootType) {
+  default void addRoot(String url, String rootType) {
     VirtualFile rootFile = VirtualFileManager.getInstance().findFileByUrl(url);
     if (rootFile != null) {
       addRoot(rootFile, rootType);
     }
   }
 
-  void removeRoot(VirtualFile root, OrderRootType rootType);
+  void removeRoot(VirtualFile root, String rootType);
 
-  default void removeRoot(String url, OrderRootType rootType) {
+  default void removeRoot(String url, String rootType) {
     for (VirtualFile file : getRoots(rootType)) {
       if (file.getUrl().equals(url)) {
         removeRoot(file, rootType);
@@ -67,7 +65,7 @@ public interface SdkModificator {
     }
   }
 
-  void removeRoots(OrderRootType rootType);
+  void removeRoots(String rootType);
 
   void removeAllRoots();
 

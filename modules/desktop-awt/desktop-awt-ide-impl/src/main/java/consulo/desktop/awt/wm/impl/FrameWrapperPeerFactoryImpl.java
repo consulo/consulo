@@ -17,11 +17,13 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -38,7 +40,6 @@ import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
@@ -67,15 +68,20 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       myOwner = owner;
       myParent = parent;
 
-      toUIWindow().putUserData(IdeFrame.KEY, this);
-      toUIWindow().addUserDataProvider(this::getData);
+      toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+        sink.set(IdeFrame.KEY, this);
+        if (owner != null) {
+          owner.uiDataSnapshot(sink);
+        }
+      });
 
       setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
 
-      boolean setMenuOnFrame = Platform.current().os().isMac();
+      // with the native screen menu the app-global menu is used; secondary frames must not add an in-window Swing bar
+      boolean setMenuOnFrame = Platform.current().os().isMac() && !Menu.isJbScreenMenuEnabled();
 
       if (setMenuOnFrame) {
-        setJMenuBar(new IdeMenuBar(null, ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
+        setJMenuBar(new DefaultIdeMenuBar(null, ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
       }
 
       MouseGestureManager.getInstance().add(this);
@@ -83,7 +89,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    
     @Override
     public Window getWindow() {
       return toUIWindow();
@@ -154,13 +159,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setMenuBar((MenuBar)null);
     }
 
-    private Object getData(Key<?> dataId) {
-      if (IdeFrame.KEY == dataId) {
-        return this;
-      }
-      return myOwner == null ? null : myOwner.getDataInner(dataId);
-    }
-
     @Override
     public void paint(Graphics g) {
       UISettingsUtil.setupAntialiasing(g);
@@ -185,18 +183,14 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-      toUIWindow().putUserData(IdeFrame.KEY, this);
-      toUIWindow().addUserDataProvider(this::getData);
+      toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+        sink.set(IdeFrame.KEY, this);
+        if (owner != null) {
+            owner.uiDataSnapshot(sink);
+        }
+      });
     }
 
-    private Object getData(Key<?> dataId) {
-      if (IdeFrame.KEY == dataId) {
-        return this;
-      }
-      return myOwner == null ? null : myOwner.getDataInner(dataId);
-    }
-
-    
     @Override
     public consulo.ui.Window getWindow() {
       return toUIWindow();

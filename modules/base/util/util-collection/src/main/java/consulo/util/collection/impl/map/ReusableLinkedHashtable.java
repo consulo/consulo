@@ -42,9 +42,9 @@ import java.util.function.Consumer;
  *
  * <p>This class is intended to work in pair with {@link ReusableImmutableLinkedHashMap}. There may be several
  * {@code ImmutableLinkedHashMap}s pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s
- * would have all the key/value entries of the whole hash-table. This map is called master-map. Other maps are sattelites.</p>
+ * would have all the key/value entries of the whole hash-table. This map is called master-map. Other maps are satellites.</p>
  *
- * <p>If master-map is garbage-collected but some of sattelite maps remain in memory, some of the key/value entries become unreachable
+ * <p>If master-map is garbage-collected but some of satellite maps remain in memory, some of the key/value entries become unreachable
  * but still referenced from hash-table. This creates memory leak and one of this hash-table purposes is to resolve such leaks.
  * While creating hashtable Range map must provide an instance implementing {@link ReusableLinkedHashtableUser} interface. This instance
  * must be able to detach from the hash-table via creating new one containing only the key/value entries owned by the map.</p>
@@ -52,7 +52,7 @@ import java.util.function.Consumer;
  * <p>Links to maps using this hash-table are stored in {@code WeakReference}s, so maps are free to be garbage-collected.
  * But when GC collects such a map it notifies hash-table via thread which reads {@link ReferenceQueue} connected to {@link WeakReference}.
  * So hash-table can check if master-map referencing it is still present or the master-map was garbage-collected.
- * If there's no master-map present, hash-table detaches all the remaining sattelite maps preventing memory leaks.</p>
+ * If there's no master-map present, hash-table detaches all the remaining satellite maps preventing memory leaks.</p>
  *
  * @author UNV
  * @see ReusableImmutableLinkedHashMap
@@ -718,7 +718,7 @@ public class ReusableLinkedHashtable<K, V extends @Nullable Object> implements R
 
     static {
         Thread.ofVirtual()
-            .name("ReusableLinkehHashtable memory leaks resolver")
+            .name("ReusableLinkedHashtable memory leaks resolver")
             .start(() -> {
                 //noinspection InfiniteLoopStatement
                 while (true) {

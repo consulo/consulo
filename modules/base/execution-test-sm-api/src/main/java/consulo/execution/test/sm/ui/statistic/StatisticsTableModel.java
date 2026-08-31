@@ -58,7 +58,7 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
     }
 
     /**
-     * Searches index of given test or suite. If finds nothing will retun -1
+     * Searches index of given test or suite. If finds nothing will return -1
      *
      * @param test Test or suite
      * @return Proxy's index or -1

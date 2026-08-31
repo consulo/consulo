@@ -15,32 +15,21 @@
  */
 package consulo.versionControlSystem.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSnapshot;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-@ExtensionImpl
-public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
-  
-  @Override
-  public Key<Stream<VirtualFile>> getKey() {
-    return VcsDataKeys.VIRTUAL_FILE_STREAM;
-  }
-
-  @Override
-  public @Nullable Stream<VirtualFile> getData(DataProvider dataProvider) {
-    VirtualFile[] files = dataProvider.getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
+public final class VirtualFileStreamRule {
+  public static @Nullable Stream<VirtualFile> getData(DataSnapshot dataProvider) {
+    VirtualFile[] files = dataProvider.get(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       return Stream.of(files);
     }
 
-    VirtualFile file = dataProvider.getDataUnchecked(VirtualFile.KEY);
+    VirtualFile file = dataProvider.get(VirtualFile.KEY);
     if (file != null) {
       return Stream.of(file);
     }

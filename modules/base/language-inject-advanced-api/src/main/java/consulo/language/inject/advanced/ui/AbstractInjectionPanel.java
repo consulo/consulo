@@ -38,7 +38,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	private final Project myProject;
 
 	/**
-	 * The orignal item - must not be modified unless apply() is called.
+	 * The original item - must not be modified unless apply() is called.
 	 */
 	
 	private final T myOrigInjection;

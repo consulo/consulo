@@ -35,12 +35,6 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   private final FileBasedIndex.InputFilter myInputFilter;
 
-  public static final boolean ourSnapshotMappingsEnabled = Boolean.parseBoolean(Platform.current()
-                                                                                        .jvm()
-                                                                                        .getRuntimeProperty(
-                                                                                          "idea.index.snapshot.mappings.enabled",
-                                                                                          "true"));
-
   private final DataExternalizer<Integer> myValueExternalizer = new DataExternalizer<Integer>() {
     @Override
     public void save(DataOutput out, Integer value) throws IOException {
@@ -67,7 +61,6 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   private final DataIndexer<IdIndexEntry, Integer, FileContent> myIndexer = new DataIndexer<IdIndexEntry, Integer, FileContent>() {
     @Override
-    
     public Map<IdIndexEntry, Integer> map(FileContent inputData) {
       IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
       if (indexer != null) {
@@ -89,7 +82,8 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   @Override
   public int getVersion() {
-    return 16 + (ourSnapshotMappingsEnabled ? 0xFF : 0); // TODO: version should enumerate all word scanner versions and build version upon that set
+    // TODO: version should enumerate all word scanner versions and build version upon that set
+    return 17;
   }
 
   @Override
@@ -97,31 +91,26 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
     return true;
   }
 
-  
   @Override
   public ID<IdIndexEntry, Integer> getName() {
     return NAME;
   }
 
-  
   @Override
   public DataIndexer<IdIndexEntry, Integer, FileContent> getIndexer() {
     return myIndexer;
   }
 
-  
   @Override
   public DataExternalizer<Integer> getValueExternalizer() {
     return myValueExternalizer;
   }
 
-  
   @Override
   public KeyDescriptor<IdIndexEntry> getKeyDescriptor() {
     return myKeyDescriptor;
   }
 
-  
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return myInputFilter;
@@ -132,11 +121,6 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
       fileType instanceof CustomSyntaxTableFileType ||
       IdTableBuilding.isIdIndexerRegistered(fileType) ||
       cacheBuilderRegistry.getCacheBuilder(fileType) != null;
-  }
-
-  @Override
-  public boolean hasSnapshotMapping() {
-    return true;
   }
 
   public static boolean hasIdentifierInFile(PsiFile file, String name) {

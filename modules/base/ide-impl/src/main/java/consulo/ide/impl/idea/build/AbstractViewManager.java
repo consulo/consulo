@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SystemNotifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
@@ -195,10 +195,8 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     static class BuildInfo extends DefaultBuildDescriptor {
-        @BuildEventsNls.Message
-        String message;
-        @BuildEventsNls.Message
-        String statusMessage;
+        LocalizeValue message = LocalizeValue.empty();
+        LocalizeValue statusMessage = LocalizeValue.empty();
         long endTime = -1;
         EventResult result;
         Content content;
@@ -238,9 +236,11 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     private String getPinnedTabName(MultipleBuildsView buildsView) {
         Map<BuildDescriptor, BuildView> buildsMap = buildsView.getBuildsMap();
 
-        BuildDescriptor buildInfo = buildsMap.keySet().stream().reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2).orElse(null);
+        BuildDescriptor buildInfo = buildsMap.keySet().stream()
+            .reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2)
+            .orElse(null);
         if (buildInfo != null) {
-            String title = buildInfo.getTitle();
+            String title = buildInfo.getTitle().get();
             String viewName = getViewName().get().split(" ")[0];
             String tabName = viewName + ": " + StringUtil.trimStart(title, viewName);
             if (buildsMap.size() > 1) {
@@ -251,7 +251,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         return getViewName().get();
     }
 
-    private static class PinBuildViewAction extends DumbAwareAction implements Toggleable {
+    private static class PinBuildViewAction extends LegacyDumbAwareAction implements Toggleable {
         private final Content myContent;
 
         PinBuildViewAction(MultipleBuildsView buildsView) {

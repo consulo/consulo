@@ -21,6 +21,7 @@ import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.inject.InjectingBindingHolder;
+import consulo.component.internal.inject.InjectingBindingHolderImpl;
 import consulo.component.internal.inject.InjectingBindingLoader;
 
 import java.util.Collection;

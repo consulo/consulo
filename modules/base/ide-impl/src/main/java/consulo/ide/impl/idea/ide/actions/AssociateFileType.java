@@ -20,13 +20,13 @@ import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 
-public class AssociateFileType extends AnAction {
+public class AssociateFileType extends LegacyAnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

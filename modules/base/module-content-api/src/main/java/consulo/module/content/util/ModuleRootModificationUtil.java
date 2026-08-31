@@ -52,10 +52,10 @@ public class ModuleRootModificationUtil {
     Library library = model.getModuleLibraryTable().createLibrary(libName);
     Library.ModifiableModel libraryModel = library.getModifiableModel();
     for (String root : classesRoots) {
-      libraryModel.addRoot(root, BinariesOrderRootType.getInstance());
+      libraryModel.addRoot(root, BinariesOrderRootType.ID);
     }
     for (String root : sourceRoots) {
-      libraryModel.addRoot(root, SourcesOrderRootType.getInstance());
+      libraryModel.addRoot(root, SourcesOrderRootType.ID);
     }
     LibraryOrderEntry libraryOrderEntry = model.findLibraryOrderEntry(library);
     if (libraryOrderEntry != null) {

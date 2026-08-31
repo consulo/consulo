@@ -19,40 +19,18 @@ package consulo.desktop.awt.welcomeScreen;
 import consulo.application.ApplicationProperties;
 import consulo.desktop.awt.startup.splash.AnimatedLogoLabel;
 import consulo.disposer.Disposable;
-import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ui.internal.NotificationIconBuilder;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ui.Button;
-import consulo.ui.ButtonStyle;
-import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MorphColor;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awt.AWTTitlelessDecorator;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.Image;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Konstantin Bulenkov

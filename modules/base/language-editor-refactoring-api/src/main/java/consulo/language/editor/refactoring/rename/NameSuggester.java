@@ -22,8 +22,8 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -119,24 +119,24 @@ public class NameSuggester {
                                   String propertyName) {
     StringBuffer resultingWords = new StringBuffer();
     int currentWord = 0;
-    Pair<int[],int[]> wordIndicies = calculateWordPositions(propertyName, propertyWords);
+    Pair<int[],int[]> wordIndices = calculateWordPositions(propertyName, propertyWords);
     for (Map.Entry<Pair<Integer, Integer>, String> entry : replacements.entrySet()) {
       int first = entry.getKey().getFirst().intValue();
       int last = entry.getKey().getSecond().intValue();
       for (int i = currentWord; i < first; i++) {
-        resultingWords.append(calculateBetween(wordIndicies, i, propertyName));
+        resultingWords.append(calculateBetween(wordIndices, i, propertyName));
         String propertyWord = propertyWords[i];
         appendWord(resultingWords, propertyWord);
       }
-      resultingWords.append(calculateBetween(wordIndicies, first, propertyName));
+      resultingWords.append(calculateBetween(wordIndices, first, propertyName));
       appendWord(resultingWords, entry.getValue());
       currentWord = last + 1;
     }
     for(; currentWord < propertyWords.length; currentWord++) {
-      resultingWords.append(calculateBetween(wordIndicies, currentWord, propertyName));
+      resultingWords.append(calculateBetween(wordIndices, currentWord, propertyName));
       appendWord(resultingWords, propertyWords[currentWord]);
     }
-    resultingWords.append(calculateBetween(wordIndicies, propertyWords.length, propertyName));
+    resultingWords.append(calculateBetween(wordIndices, propertyWords.length, propertyName));
     if (resultingWords.length() == 0) return propertyName;
     return decapitalizeProbably(resultingWords.toString(), propertyName);
   }
@@ -151,20 +151,21 @@ public class NameSuggester {
     resultingWords.append(propertyWord);
   }
 
-  private static String calculateBetween(Pair<int[], int[]> wordIndicies, int i, String propertyName) {
-    int thisWordStart = wordIndicies.getFirst()[i];
-    int prevWordEnd = wordIndicies.getSecond()[i];
+  private static String calculateBetween(Pair<int[], int[]> wordIndices, int i, String propertyName) {
+    int thisWordStart = wordIndices.getFirst()[i];
+    int prevWordEnd = wordIndices.getSecond()[i];
     return propertyName.substring(prevWordEnd + 1, thisWordStart);
   }
 
   /**
-   * Calculates a map of replacements. Result has a form:<br>
-   * {&lt;first,last&gt; -&gt; replacement} <br>
-   * where start and end are indices of property words range (inclusive), and replacement is a
-   * string that this range must be replaced with.<br>
-   * It is valid situation that <code>last == first - 1</code>: in this case replace means insertion
-   * before first word. Furthermore, first may be equal to <code>propertyWords.length</code>  - in
-   * that case replacements transormates to appending.
+   * <p>Calculates a map of replacements. Result has a form:</p>
+   * <code>{&lt;first,last&gt; -&gt; replacement}</code>
+   * <p>where start and end are indices of property words range (inclusive), and replacement is a
+   * string that this range must be replaced with.</p>
+   *
+   * <p>It is valid situation that <code>last == first - 1</code>: in this case replace means insertion
+   * before first word. Furthermore, first may be equal to <code>propertyWords.length</code> -
+   * in that case a replacement turns into appending.</p>
    * @param propertyWords
    * @param matches
    * @return

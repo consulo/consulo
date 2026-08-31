@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
@@ -51,13 +52,15 @@ public class CompileProjectAction extends CompileActionBase {
         });
     }
 
+    @RequiredReadAction
     @Override
-    public void update(AnActionEvent event) {
-        super.update(event);
-        Presentation presentation = event.getPresentation();
+    protected void updateInReadAction(AnActionEvent e) {
+        super.updateInReadAction(e);
+
+        Presentation presentation = e.getPresentation();
         if (!presentation.isEnabled()) {
             return;
         }
-        presentation.setEnabled(event.hasData(Project.KEY));
+        presentation.setEnabled(e.hasData(Project.KEY));
     }
 }

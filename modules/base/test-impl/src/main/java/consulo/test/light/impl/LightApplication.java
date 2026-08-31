@@ -37,13 +37,16 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -135,6 +138,12 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         return true;
     }
 
+    @Override
+    public <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref, ThrowableSupplier<T, E> computation) throws E {
+        ref.set(computation.get());
+        return true;
+    }
+
     @RequiredUIAccess
     @Override
     public void runWriteAction(Runnable action) {
@@ -182,8 +191,13 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
     @RequiredUIAccess
     @Override
-    public void saveAll() {
+    public Continuation<Void> saveAll() {
+        return null;
+    }
 
+    @Override
+    public CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess) {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -203,12 +217,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
     @Override
     public boolean isDispatchThread() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isWriteThread() {
-        throw new UnsupportedOperationException();
+        return false;
     }
 
     @Override
@@ -303,29 +312,14 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         return true;
     }
 
-    
     @Override
     public Image getIcon() {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public UIAccess getLastUIAccess() {
         throw new UnsupportedOperationException();
-    }
-
-    
-    @Override
-    public AccessToken acquireReadActionLock() {
-        throw new UnsupportedOperationException();
-    }
-
-    @RequiredUIAccess
-    
-    @Override
-    public AccessToken acquireWriteActionLock(Class marker) {
-        return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 
     @RequiredUIAccess

@@ -27,6 +27,7 @@ import java.util.function.Function;
  * <li>rejected: meaning that the operation failed.</li>
  * </ul>
  */
+@Deprecated
 public interface Promise<T> {
   enum State {
     PENDING,

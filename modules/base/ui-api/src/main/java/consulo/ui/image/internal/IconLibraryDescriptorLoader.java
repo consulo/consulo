@@ -23,10 +23,13 @@ import java.util.stream.Collectors;
 
 /**
  * @author VISTALL
- * @since 15/01/2022
+ * @since 2022-01-15
  */
 public class IconLibraryDescriptorLoader {
-  public static List<IconLibraryDescriptor> getAll(ClassLoader classLoader) {
-    return ServiceLoader.load(IconLibraryDescriptor.class, classLoader).stream().map(ServiceLoader.Provider::get).collect(Collectors.toList());
-  }
+    public static List<IconLibraryDescriptor> getAll(ClassLoader classLoader) {
+        return ServiceLoader.load(IconLibraryDescriptor.class, classLoader)
+            .stream()
+            .map(ServiceLoader.Provider::get)
+            .collect(Collectors.toList());
+    }
 }

@@ -15,11 +15,9 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.index.io.KeyDescriptor;
+import consulo.compiler.impl.internal.state.PathKeyDescriptor;
 import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.data.IOUtil;
-import consulo.util.io.FileUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -29,31 +27,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class StateCache<T> {
-    private static class FileKeyDescriptor implements KeyDescriptor<File> {
-        public static final FileKeyDescriptor INSTANCE = new FileKeyDescriptor();
-
-        @Override
-        public int hashCode(File value) {
-            return FileUtil.fileHashCode(value);
-        }
-
-        @Override
-        public boolean equals(File val1, File val2) {
-            return FileUtil.filesEqual(val1, val2);
-        }
-
-        @Override
-        public void save(DataOutput out, File value) throws IOException {
-            IOUtil.writeUTF(out, value.getPath());
-        }
-
-        @Override
-        public File read(DataInput in) throws IOException {
-            return new File(IOUtil.readUTF(in));
-        }
-    }
-
-    private PersistentHashMap<File, T> myMap;
+    private PersistentHashMap<String, T> myMap;
     private final File myBaseFile;
 
     public StateCache(File storePath) throws IOException {
@@ -89,33 +63,33 @@ public abstract class StateCache<T> {
         return true;
     }
 
-    public void update(File file, T state) throws IOException {
+    public void update(String path, T state) throws IOException {
         if (state != null) {
-            myMap.put(file, state);
+            myMap.put(path, state);
         }
         else {
-            remove(file);
+            remove(path);
         }
     }
 
-    public void remove(File file) throws IOException {
-        myMap.remove(file);
+    public void remove(String path) throws IOException {
+        myMap.remove(path);
     }
 
-    public T getState(File file) throws IOException {
-        return myMap.get(file);
+    public T getState(String path) throws IOException {
+        return myMap.get(path);
     }
 
-    public Collection<File> getFiles() throws IOException {
+    public Collection<String> getPaths() throws IOException {
         return myMap.getAllKeysWithExistingMapping();
     }
 
-    public Iterator<File> getFilesIterator() throws IOException {
+    public Iterator<String> getPathsIterator() throws IOException {
         return myMap.getAllKeysWithExistingMapping().iterator();
     }
 
-    private PersistentHashMap<File, T> createMap(File file) throws IOException {
-        return new PersistentHashMap<>(file, FileKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
+    private PersistentHashMap<String, T> createMap(File file) throws IOException {
+        return new PersistentHashMap<>(file, PathKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
             @Override
             public void save(DataOutput out, T value) throws IOException {
                 StateCache.this.write(value, out);

@@ -18,25 +18,24 @@ package consulo.logging.util;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.util.lang.StringUtil;
 
 /**
  * @author VISTALL
- * @since 20-Mar-22
+ * @since 2022-03-20
  */
 public class LoggerUtil {
     public static void error(Logger logger, String message, String... attachmentText) {
         error(logger, message, new Throwable(), attachmentText);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void error(Logger logger, String message, Throwable cause, String... attachmentText) {
-        StringBuilder detailsBuffer = new StringBuilder();
-        for (String detail : attachmentText) {
-            detailsBuffer.append(detail).append(",");
+        if (attachmentText != null && attachmentText.length != 0) {
+            logger.error(message, cause, AttachmentFactory.get().create("current-context.txt", StringUtil.join(attachmentText, ",")));
         }
-        if (attachmentText.length > 0 && detailsBuffer.length() > 0) {
-            detailsBuffer.setLength(detailsBuffer.length() - 1);
+        else {
+            logger.error(message, cause, Attachment.EMPTY_ARRAY);
         }
-        Attachment attachment = detailsBuffer.length() > 0 ? AttachmentFactory.get().create("current-context.txt", detailsBuffer.toString()) : null;
-        logger.error(message, cause, attachment);
     }
 }

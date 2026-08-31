@@ -7,12 +7,13 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
 @ActionImpl(id = "ServiceView.AddService")
-public final class AddServiceActionGroup extends DefaultActionGroup implements DumbAware {
+public final class AddServiceActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public AddServiceActionGroup() {
         super(ActionLocalize.groupServiceviewAddserviceText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
     }

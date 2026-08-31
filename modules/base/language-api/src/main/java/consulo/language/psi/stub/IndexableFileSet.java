@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -23,6 +22,4 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 public interface IndexableFileSet {
     boolean isInSet(VirtualFile file);
-
-    void iterateIndexableFilesIn(VirtualFile file, ContentIterator iterator);
 }

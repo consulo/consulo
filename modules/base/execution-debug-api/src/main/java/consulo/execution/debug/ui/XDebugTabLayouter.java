@@ -1,7 +1,7 @@
 package consulo.execution.debug.ui;
 
 import consulo.execution.debug.XDebugProcess;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.layout.PlaceInGrid;
@@ -15,7 +15,6 @@ import consulo.ui.ex.content.Content;
  * @see XDebugProcess#createTabLayouter()
  */
 public class XDebugTabLayouter {
-
     /**
      * Registers tab for the given {@code console}.
      *
@@ -24,10 +23,13 @@ public class XDebugTabLayouter {
      * @return registered {@code Content} instance
      */
     public Content registerConsoleContent(RunnerLayoutUi ui, ExecutionConsole console) {
-        Content content = ui.createContent(DebuggerContentInfo.CONSOLE_CONTENT, console.getComponent(),
-            XDebuggerBundle.message("debugger.session.tab.console.content.name"),
+        Content content = ui.createContent(
+            DebuggerContentInfo.CONSOLE_CONTENT,
+            console.getComponent(),
+            XDebuggerLocalize.debuggerSessionTabConsoleContentName().get(),
             ExecutionIconGroup.console(),
-            console.getPreferredFocusableComponent());
+            console.getPreferredFocusableComponent()
+        );
         content.setCloseable(false);
         ui.addContent(content, 1, PlaceInGrid.bottom, false);
         return content;
@@ -40,5 +42,4 @@ public class XDebugTabLayouter {
      */
     public void registerAdditionalContent(RunnerLayoutUi ui) {
     }
-
 }

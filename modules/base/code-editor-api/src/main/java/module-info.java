@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 05/02/2022
+ * @since 2022-02-05
  */
+@NullMarked
 module consulo.code.editor.api {
     // todo not required dependency
     requires java.desktop;
@@ -15,6 +18,7 @@ module consulo.code.editor.api {
     requires transitive consulo.undo.redo.api;
 
     exports consulo.codeEditor;
+    exports consulo.codeEditor.imaginary;
     exports consulo.codeEditor.action;
     exports consulo.codeEditor.event;
     exports consulo.codeEditor.localize;
@@ -26,12 +30,13 @@ module consulo.code.editor.api {
         consulo.code.editor.impl,
         consulo.ide.impl,
         consulo.language.editor.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.codeEditor.internal to consulo.ide.impl,
+        consulo.ui.ex.impl,
         consulo.code.editor.impl,
         consulo.language.inject.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.language.editor.api,
         consulo.language.code.style.ui.api,
         consulo.language.code.style.impl,
@@ -39,9 +44,11 @@ module consulo.code.editor.api {
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.file.editor.api,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.language.editor.impl,
-        consulo.execution.debug.impl;
+        consulo.execution.debug.impl,
+        consulo.version.control.system.impl,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     opens consulo.codeEditor.internal to consulo.proxy;
 }

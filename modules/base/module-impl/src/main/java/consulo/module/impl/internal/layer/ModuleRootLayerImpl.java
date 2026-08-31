@@ -105,13 +105,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         public void add(int i, OrderEntry orderEntry) {
             super.add(i, orderEntry);
             clearCachedEntries();
-            setIndicies(i);
+            setIndices(i);
         }
 
         @Override
         public OrderEntry remove(int i) {
             OrderEntry entry = super.remove(i);
-            setIndicies(i);
+            setIndices(i);
             clearCachedEntries();
             return entry;
         }
@@ -131,7 +131,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         public boolean addAll(Collection<? extends OrderEntry> collection) {
             int startSize = size();
             boolean result = super.addAll(collection);
-            setIndicies(startSize);
+            setIndices(startSize);
             clearCachedEntries();
             return result;
         }
@@ -139,7 +139,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         @Override
         public boolean addAll(int i, Collection<? extends OrderEntry> collection) {
             boolean result = super.addAll(i, collection);
-            setIndicies(i);
+            setIndices(i);
             clearCachedEntries();
             return result;
         }
@@ -148,13 +148,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         public void removeRange(int i, int i1) {
             super.removeRange(i, i1);
             clearCachedEntries();
-            setIndicies(i);
+            setIndices(i);
         }
 
         @Override
         public boolean removeAll(Collection<?> collection) {
             boolean result = super.removeAll(collection);
-            setIndicies(0);
+            setIndices(0);
             clearCachedEntries();
             return result;
         }
@@ -162,7 +162,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         @Override
         public boolean retainAll(Collection<?> collection) {
             boolean result = super.retainAll(collection);
-            setIndicies(0);
+            setIndices(0);
             clearCachedEntries();
             return result;
         }
@@ -171,7 +171,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             myCachedOrderEntries = null;
         }
 
-        private void setIndicies(int startIndex) {
+        private void setIndices(int startIndex) {
             for (int j = startIndex; j < size(); j++) {
                 ((OrderEntryBaseImpl) get(j)).setIndex(j);
             }
@@ -920,7 +920,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         Set<OrderEntry> set = new HashSet<>();
         for (OrderEntry newEntry : newEntries) {
             if (!myOrderEntries.contains(newEntry)) {
-                return "Trying to add nonexisting order entry " + newEntry;
+                return "Trying to add non-existing order entry " + newEntry;
             }
 
             if (set.contains(newEntry)) {

@@ -1,6 +1,6 @@
 package consulo.language.dataFlow;
 
-import org.jetbrains.annotations.Contract;
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class SetUtil {
     if (set1.equals(set2)) {
       return set1;
     }
-    Set<T> result = new HashSet<T>();
+    Set<T> result = new HashSet<>();
     Set<T> minSet;
     Set<T> otherSet;
     if (set1.size() < set2.size()) {

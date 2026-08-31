@@ -34,7 +34,7 @@ import consulo.diff.util.MergeConflictType;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.document.Document;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;

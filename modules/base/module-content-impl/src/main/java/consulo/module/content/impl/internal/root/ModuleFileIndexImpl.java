@@ -183,25 +183,21 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
             myOwnerModule = ownerModule;
         }
 
-        
         @Override
         public OrderEntryType<?> getType() {
             throw new UnsupportedOperationException();
         }
 
-        
         @Override
-        public VirtualFile[] getFiles(OrderRootType type) {
+        public VirtualFile[] getFiles(String type) {
             throw new UnsupportedOperationException();
         }
 
-        
         @Override
-        public String[] getUrls(OrderRootType rootType) {
+        public String[] getUrls(String rootType) {
             throw new UnsupportedOperationException();
         }
 
-        
         @Override
         public String getPresentableName() {
             throw new UnsupportedOperationException();

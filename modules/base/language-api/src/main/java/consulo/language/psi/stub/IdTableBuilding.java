@@ -16,7 +16,6 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.ReviewAfterIssueFix;
-import consulo.application.util.function.Processor;
 import consulo.language.Language;
 import consulo.language.ast.TokenSet;
 import consulo.language.cacheBuilder.*;
@@ -32,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class IdTableBuilding {
   private IdTableBuilding() {
@@ -110,9 +110,9 @@ public class IdTableBuilding {
       final CharSequence chars = inputData.getContentAsText();
       final char[] charsArray = CharArrayUtil.fromSequenceWithoutCopying(chars);
       final IdDataConsumer consumer = new IdDataConsumer();
-      myScanner.processWords(chars, new Processor<WordOccurrence>() {
+      myScanner.processWords(chars, new Predicate<>() {
         @Override
-        public boolean process(WordOccurrence t) {
+        public boolean test(WordOccurrence t) {
           if (charsArray != null && t.getBaseText() == chars) {
             consumer.addOccurrence(charsArray, t.getStart(), t.getEnd(), convertToMask(t.getKind()));
           }

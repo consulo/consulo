@@ -1,12 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.ide.impl.idea.ui.tabs.impl.singleRow.MoreTabsIcon;
+import consulo.desktop.awt.ui.impl.tabs.singleRow.MoreTabsIcon;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
+import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDSupport;
@@ -97,7 +98,7 @@ class TabContentLayout extends ContentLayout {
         ContentManager manager = myUi.myManager;
         LayoutData data = new LayoutData(myUi);
 
-        data.eachX = TAB_LAYOUT_START;
+        data.eachX = JBUI.scale(TAB_LAYOUT_START);
         data.eachY = 0;
 
         if (isIdVisible()) {
@@ -281,7 +282,10 @@ class TabContentLayout extends ContentLayout {
                 g2d.fillRect(isIdVisible() ? r.x : r.x, r.y, r.width, r.height);
 
                 if (each.isSelected()) {
-                    ToolwindowPaintUtil.paintUnderlineColor(g2d, r.x, r.y, r.width, r.height, myUi.myWindow.isActive());
+                    TabPainter.paintTabSelection(g2d, r.x, r.y, r.width, r.height, myUi.myWindow.isActive());
+                }
+                else {
+                    TabPainter.paintTabHover(g2d, r.x, r.y, r.width, r.height);
                 }
 
                 g2d.dispose();

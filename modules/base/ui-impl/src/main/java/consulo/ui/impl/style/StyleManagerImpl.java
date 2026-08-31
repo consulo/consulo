@@ -26,16 +26,15 @@ import consulo.ui.style.StyleManager;
  * @since 05-Nov-17
  */
 public abstract class StyleManagerImpl implements StyleManager {
-  private EventDispatcher<StyleChangeListener> myEventDispatcher = EventDispatcher.create(StyleChangeListener.class);
+    private EventDispatcher<StyleChangeListener> myEventDispatcher = EventDispatcher.create(StyleChangeListener.class);
 
-  protected void fireStyleChanged(Style oldStyle, Style newStyle) {
-    myEventDispatcher.getMulticaster().styleChanged(oldStyle, newStyle);
-  }
+    protected void fireStyleChanged(Style oldStyle, Style newStyle) {
+        myEventDispatcher.getMulticaster().styleChanged(oldStyle, newStyle);
+    }
 
-  
-  @Override
-  public Disposable addChangeListener(StyleChangeListener listener) {
-    myEventDispatcher.addListener(listener);
-    return () -> myEventDispatcher.removeListener(listener);
-  }
+    @Override
+    public Disposable addChangeListener(StyleChangeListener listener) {
+        myEventDispatcher.addListener(listener);
+        return () -> myEventDispatcher.removeListener(listener);
+    }
 }

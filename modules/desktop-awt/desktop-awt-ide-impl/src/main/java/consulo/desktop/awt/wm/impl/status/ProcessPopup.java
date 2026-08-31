@@ -76,7 +76,7 @@ public class ProcessPopup {
         myProcessBox.add(indicator.getComponent());
         myProcessBox.add(Box.createVerticalStrut(JBUI.scale(4)));
 
-        swithToActive();
+        switchToActive();
 
         revalidateAll();
     }
@@ -95,7 +95,7 @@ public class ProcessPopup {
         revalidateAll();
     }
 
-    private void swithToActive() {
+    private void switchToActive() {
         if (myActiveContentComponent.getParent() == null && myIndicators.size() > 0) {
             myRootContent.removeAll();
             myRootContent.setContent(myActiveContentComponent);

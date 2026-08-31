@@ -1,25 +1,25 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.impl.internal.search.ContextAwareShortcutProvider;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.fileEditor.impl.internal.search.SearchUtils;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.util.collection.ContainerUtil;
 
 import java.util.List;
 
-public abstract class PrevNextOccurrenceAction extends DumbAwareAction implements ContextAwareShortcutProvider {
+public abstract class PrevNextOccurrenceAction extends LegacyDumbAwareAction implements ContextAwareShortcutProvider {
     protected final boolean mySearch;
 
     PrevNextOccurrenceAction(String templateActionId, boolean search) {
         mySearch = search;
-        ActionImplUtil.copyFrom(this, templateActionId);
+        ActionUtil.copyFrom(this, templateActionId);
     }
 
     @Override

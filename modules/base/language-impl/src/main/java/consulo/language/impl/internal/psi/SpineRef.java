@@ -21,7 +21,6 @@ public class SpineRef extends SubstrateRef {
     myIndex = index;
   }
 
-  
   @Override
   public ASTNode getNode() {
     return myFile.calcTreeElement().getStubbedSpine().getSpineNodes().get(myIndex);
@@ -44,7 +43,6 @@ public class SpineRef extends SubstrateRef {
     return myFile.isValid();
   }
 
-  
   @Override
   public PsiFile getContainingFile() {
     return myFile;

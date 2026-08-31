@@ -163,28 +163,26 @@ class CustomWalker implements Walker {
     /**
      * Ensure we have space for at least one more text-like item.
      */
-    private void ensurespace() {
-      if (mtsize >= mtdata.length) {
-        mtdata = ArrayCopy.copyOf(mtdata, mtsize + 1 + (mtsize / 2));
-        mttext = ArrayCopy.copyOf(mttext, mtdata.length);
+    private void ensureSpace() {
+      if (mtSize >= mtData.length) {
+        mtData = ArrayCopy.copyOf(mtData, mtSize + 1 + (mtSize / 2));
+        mtText = ArrayCopy.copyOf(mtText, mtData.length);
       }
     }
 
     /**
      * Handle the case where we have been accumulating true text content,
      * and the next item is not more text.
-     *
-     * @param postspace true if the last char in the text should be a space
      */
     private void closeText() {
-      if (mtbuffer.length() == 0) {
+      if (mtBuffer.length() == 0) {
         // empty text does not need adding at all.
         return;
       }
-      ensurespace();
-      mtdata[mtsize] = null;
-      mttext[mtsize++] = mtbuffer.toString();
-      mtbuffer.setLength(0);
+      ensureSpace();
+      mtData[mtSize] = null;
+      mtText[mtSize++] = mtBuffer.toString();
+      mtBuffer.setLength(0);
     }
 
     /**
@@ -197,37 +195,37 @@ class CustomWalker implements Walker {
      * @param text The actual Text content.
      */
     public void appendText(Trim trim, String text) {
-      int tlen = text.length();
-      if (tlen == 0) {
+      int tLen = text.length();
+      if (tLen == 0) {
         return;
       }
-      String toadd = null;
+      String toAdd = null;
       switch (trim) {
         case NONE:
-          toadd = text;
+          toAdd = text;
           break;
         case BOTH:
-          toadd = Format.trimBoth(text);
+          toAdd = Format.trimBoth(text);
           break;
         case LEFT:
-          toadd = Format.trimLeft(text);
+          toAdd = Format.trimLeft(text);
           break;
         case RIGHT:
-          toadd = Format.trimRight(text);
+          toAdd = Format.trimRight(text);
           break;
         case COMPACT:
-          toadd = Format.compact(text);
+          toAdd = Format.compact(text);
           break;
       }
-      if (toadd != null) {
-        toadd = escapeText(toadd);
-        mtbuffer.append(toadd);
-        mtgottext = true;
+      if (toAdd != null) {
+        toAdd = escapeText(toAdd);
+        mtBuffer.append(toAdd);
+        mtGotText = true;
       }
     }
 
     private String escapeText(String text) {
-      if (escape == null || !fstack.getEscapeOutput()) {
+      if (escape == null || !fStack.getEscapeOutput()) {
         return text;
       }
       return JDOMUtil.escapeText(text, false, false);
@@ -248,9 +246,9 @@ class CustomWalker implements Walker {
      * @param text The actual CDATA content.
      */
     public void appendCDATA(Trim trim, String text) {
-      // this resets the mtbuffer too.
+      // this resets the mtBuffer too.
       closeText();
-      String toadd = switch (trim) {
+      String toAdd = switch (trim) {
         case NONE -> text;
         case BOTH -> Format.trimBoth(text);
         case LEFT -> Format.trimLeft(text);
@@ -258,14 +256,13 @@ class CustomWalker implements Walker {
         case COMPACT -> Format.compact(text);
       };
 
-      toadd = escapeCDATA(toadd);
-      ensurespace();
+      toAdd = escapeCDATA(toAdd);
+      ensureSpace();
       // mark this as being CDATA text
-      mtdata[mtsize] = CDATATOKEN;
-      mttext[mtsize++] = toadd;
+      mtData[mtSize] = CDATATOKEN;
+      mtText[mtSize++] = toAdd;
 
-      mtgottext = true;
-
+      mtGotText = true;
     }
 
     /**
@@ -275,8 +272,8 @@ class CustomWalker implements Walker {
      * @param text
      */
     private void forceAppend(String text) {
-      mtgottext = true;
-      mtbuffer.append(text);
+      mtGotText = true;
+      mtBuffer.append(text);
     }
 
     /**
@@ -287,10 +284,10 @@ class CustomWalker implements Walker {
      */
     public void appendRaw(Content c) {
       closeText();
-      ensurespace();
-      mttext[mtsize] = null;
-      mtdata[mtsize++] = c;
-      mtbuffer.setLength(0);
+      ensureSpace();
+      mtText[mtSize] = null;
+      mtData[mtSize++] = c;
+      mtBuffer.setLength(0);
     }
 
     /**
@@ -298,148 +295,147 @@ class CustomWalker implements Walker {
      * text-like sequence.
      */
     public void done() {
-      if (mtpostpad && newlineindent != null) {
+      if (mtPostPad && newLineIndent != null) {
         // this will be ignored if there was not some content.
-        mtbuffer.append(newlineindent);
+        mtBuffer.append(newLineIndent);
       }
-      if (mtgottext) {
+      if (mtGotText) {
         closeText();
       }
-      mtbuffer.setLength(0);
+      mtBuffer.setLength(0);
     }
-
   }
 
   private @Nullable Content pending = null;
   private final Iterator<? extends Content> content;
-  private final boolean alltext;
-  private final boolean allwhite;
-  private final String newlineindent;
-  private final String endofline;
+  private final boolean allText;
+  private final boolean allWhite;
+  private final String newLineIndent;
+  private final String endOfLine;
   private final @Nullable EscapeStrategy escape;
-  private final FormatStack fstack;
-  private @Nullable boolean hasnext = true;
+  private final FormatStack fStack;
+  private @Nullable boolean hasNext = true;
 
   // MultiText handling changed in 2.0.5
   // MultiText is something quite complicated, but it goes something like this:
   // XML Content is either text-like, or its not. If we encounter text-like content
   // then we find out how many text-like contents are in a row, and we add them to a
   // multi-text. We then either get to the end of the content, or a non-text content.
-  // If we complete the multitext, we then move on to the non-text item, and we set multitext
-  // to null. Both multitect and pendingmt are thus null.
-  // If the content following the non-text is then text-like, we populate pendingmt.
-  // bottom line is that multitext and pendingmt can never both be set.
+  // If we complete the multi-text, we then move on to the non-text item, and we set multi-text
+  // to null. Both multi-text and pendingMT are thus null.
+  // If the content following the non-text is then text-like, we populate pendingMT.
+  // bottom line is that multi-text and pendingMT can never both be set.
   // we use one set of variables to back up both of them. This is fast, and safe in a single
   // threaded environment (which the Walkers are guaranteed to be in).
   // all MultiText-specific variables have the names mt*
-  private @Nullable MultiText multitext = null;
-  private @Nullable MultiText pendingmt = null;
-  private final MultiText holdingmt = new MultiText();
+  private @Nullable MultiText multiText = null;
+  private @Nullable MultiText pendingMT = null;
+  private final MultiText holdingMT = new MultiText();
 
-  private final StringBuilder mtbuffer = new StringBuilder();
+  private final StringBuilder mtBuffer = new StringBuilder();
   // if there should be indenting after this text.
-  private boolean mtpostpad = false;
+  private boolean mtPostPad = false;
   // indicate whether there is something actually added.
-  private boolean mtgottext = false;
+  private boolean mtGotText = false;
   // the number of mixed content values.
-  private int mtsize = 0;
-  private int mtsourcesize = 0;
-  private @Nullable Content[] mtsource = new Content[8];
+  private int mtSize = 0;
+  private int mtSourceSize = 0;
+  private @Nullable Content[] mtSource = new Content[8];
   // the location of the processed content.
-  private @Nullable Content[] mtdata = new Content[8];
+  private @Nullable Content[] mtData = new Content[8];
   // whether the mixed content should be returned as raw JDOM objects
-  private @Nullable String[] mttext = new String[8];
+  private @Nullable String[] mtText = new String[8];
 
   // the current cursor in the mixed content.
-  private int mtpos = -1;
+  private int mtPos = -1;
   // we cheat here by using Boolean as a three-state option...
   // we expect it to be null often.
-  private @Nullable Boolean mtwasescape;
+  private @Nullable Boolean mtWasEscape;
 
   /**
    * Create a Walker that preserves all content in its raw state.
    *
    * @param xx       the content to walk.
-   * @param fstack   the current FormatStack
-   * @param doescape Whether Text values should be escaped.
+   * @param fStack   the current FormatStack
+   * @param doEscape Whether Text values should be escaped.
    */
-  public CustomWalker(List<? extends Content> xx, FormatStack fstack, boolean doescape) {
+  public CustomWalker(List<? extends Content> xx, FormatStack fStack, boolean doEscape) {
     super();
-    this.fstack = fstack;
+    this.fStack = fStack;
     this.content = xx.isEmpty() ? EMPTYIT : xx.iterator();
-    this.escape = doescape ? fstack.getEscapeStrategy() : null;
-    newlineindent = fstack.getPadBetween();
-    endofline = fstack.getLevelEOL();
+    this.escape = doEscape ? fStack.getEscapeStrategy() : null;
+    newLineIndent = fStack.getPadBetween();
+    endOfLine = fStack.getLevelEOL();
     if (!content.hasNext()) {
-      alltext = true;
-      allwhite = true;
+      allText = true;
+      allWhite = true;
     }
     else {
-      boolean atext = false;
-      boolean awhite = false;
+      boolean aText = false;
+      boolean aWhite = false;
       pending = content.next();
       if (isTextLike(pending)) {
         // the first item in the list is Text-like, and we pre-check
         // to see whether all content is text.... and whether it amounts
         // to something.
-        pendingmt = buildMultiText(true);
-        analyzeMultiText(pendingmt, 0, mtsourcesize);
-        pendingmt.done();
+        pendingMT = buildMultiText(true);
+        analyzeMultiText(pendingMT, 0, mtSourceSize);
+        pendingMT.done();
 
         if (pending == null) {
-          atext = true;
-          awhite = mtsize == 0;
+          aText = true;
+          aWhite = mtSize == 0;
         }
-        if (mtsize == 0) {
+        if (mtSize == 0) {
           // first content in list is ignorable.
-          pendingmt = null;
+          pendingMT = null;
         }
       }
-      alltext = atext;
-      allwhite = awhite;
+      allText = aText;
+      allWhite = aWhite;
     }
-    hasnext = pendingmt != null || pending != null;
+    hasNext = pendingMT != null || pending != null;
   }
 
   @Override
   public final @Nullable Content next() {
 
-    if (!hasnext) {
+    if (!hasNext) {
       throw new NoSuchElementException("Cannot walk off end of Content");
     }
 
-    if (multitext != null && mtpos + 1 >= mtsize) {
-      // finished this multitext. need to move on.
-      multitext = null;
+    if (multiText != null && mtPos + 1 >= mtSize) {
+      // finished this multi-text. need to move on.
+      multiText = null;
       resetMultiText();
     }
-    if (pendingmt != null) {
+    if (pendingMT != null) {
       // we have a multi-text pending from the last block
       // this will only be the case when the previous value was non-text.
-      if (mtwasescape != null && fstack.getEscapeOutput() != mtwasescape.booleanValue()) {
+      if (mtWasEscape != null && fStack.getEscapeOutput() != mtWasEscape.booleanValue()) {
         // we calculated pending with one escape strategy, but it changed...
         // we need to recalculate it....
 
-        mtsize = 0;
-        mtwasescape = fstack.getEscapeOutput();
-        analyzeMultiText(pendingmt, 0, mtsourcesize);
-        pendingmt.done();
+        mtSize = 0;
+        mtWasEscape = fStack.getEscapeOutput();
+        analyzeMultiText(pendingMT, 0, mtSourceSize);
+        pendingMT.done();
       }
-      multitext = pendingmt;
-      pendingmt = null;
+      multiText = pendingMT;
+      pendingMT = null;
     }
 
-    if (multitext != null) {
+    if (multiText != null) {
 
       // OK, we have text-like content to push back.
       // and it still has values in it.
       // advance the cursor
-      mtpos++;
+      mtPos++;
 
-      Content ret = mttext[mtpos] == null ? mtdata[mtpos] : null;
+      Content ret = mtText[mtPos] == null ? mtData[mtPos] : null;
 
-      // we can calculate the hasnext
-      hasnext = mtpos + 1 < mtsize || pending != null;
+      // we can calculate the hasNext
+      hasNext = mtPos + 1 < mtSize || pending != null;
 
       // return null to indicate text content.
       return ret;
@@ -453,71 +449,71 @@ class CustomWalker implements Walker {
     // we need to determine the state of the next loop.
     // cursor at this point has been advanced!
     if (pending == null) {
-      hasnext = false;
+      hasNext = false;
     }
     else {
       // there is some more content.
       // we need to inspect it to determine whether it is good
       if (isTextLike(pending)) {
         // calculate what this next text-like content looks like.
-        pendingmt = buildMultiText(false);
-        analyzeMultiText(pendingmt, 0, mtsourcesize);
-        pendingmt.done();
+        pendingMT = buildMultiText(false);
+        analyzeMultiText(pendingMT, 0, mtSourceSize);
+        pendingMT.done();
 
-        if (mtsize > 0) {
-          hasnext = true;
+        if (mtSize > 0) {
+          hasNext = true;
         }
         else {
           // all white text... perhaps we need indenting anyway.
           // buildMultiText has moved on the pending value....
-          if (pending != null && newlineindent != null) {
+          if (pending != null && newLineIndent != null) {
             // yes, we need indenting.
             // redefine the pending.
             resetMultiText();
-            pendingmt = holdingmt;
-            pendingmt.forceAppend(newlineindent);
-            pendingmt.done();
-            hasnext = true;
+            pendingMT = holdingMT;
+            pendingMT.forceAppend(newLineIndent);
+            pendingMT.done();
+            hasNext = true;
           }
           else {
-            pendingmt = null;
-            hasnext = pending != null;
+            pendingMT = null;
+            hasNext = pending != null;
           }
         }
       }
       else {
         // it is non-text content... we have more content.
         // but, we just returned non-text content. We may need to indent
-        if (newlineindent != null) {
+        if (newLineIndent != null) {
           resetMultiText();
-          pendingmt = holdingmt;
-          pendingmt.forceAppend(newlineindent);
-          pendingmt.done();
+          pendingMT = holdingMT;
+          pendingMT.forceAppend(newLineIndent);
+          pendingMT.done();
         }
-        hasnext = true;
+        hasNext = true;
       }
     }
     return ret;
   }
 
   private void resetMultiText() {
-    mtsourcesize = 0;
-    mtpos = -1;
-    mtsize = 0;
-    mtgottext = false;
-    mtpostpad = false;
-    mtwasescape = null;
-    mtbuffer.setLength(0);
+    mtSourceSize = 0;
+    mtPos = -1;
+    mtSize = 0;
+    mtGotText = false;
+    mtPostPad = false;
+    mtWasEscape = null;
+    mtBuffer.setLength(0);
   }
 
   /**
    * Add the content at the specified indices to the provided MultiText.
    *
-   * @param mtext  the MultiText to append to.
+   * @param mText  the MultiText to append to.
    * @param offset The first Text-like content to add to the MultiText
    * @param len    The number of Text-like content items to add.
    */
-  protected void analyzeMultiText(MultiText mtext, int offset, int len) {
+  protected void analyzeMultiText(MultiText mText, int offset, int len) {
     while (len > 0) {
       Content c = get(offset);
       if (c instanceof Text) {
@@ -561,16 +557,16 @@ class CustomWalker implements Walker {
       Content c = get(offset + i);
       switch (c.getCType()) {
         case Text:
-          mtext.appendText(trim, c.getValue());
+          mText.appendText(trim, c.getValue());
           break;
         case CDATA:
-          mtext.appendCDATA(trim, c.getValue());
+          mText.appendCDATA(trim, c.getValue());
           break;
         case EntityRef:
           // treat like any other content.
           // raw.
         default:
-          mtext.appendRaw(c);
+          mText.appendRaw(c);
           break;
       }
     }
@@ -584,23 +580,23 @@ class CustomWalker implements Walker {
    * @return the content at the index.
    */
   protected final Content get(int index) {
-    return Objects.requireNonNull(mtsource[index]);
+    return Objects.requireNonNull(mtSource[index]);
   }
 
   @Override
   public final boolean isAllText() {
-    return alltext;
+    return allText;
   }
 
   @Override
   public final boolean hasNext() {
-    return hasnext;
+    return hasNext;
   }
 
   /**
    * This method was changed in 2.0.5
-   * It now is only called when building the content of the variable pendingmt
-   * This is important, because only pendingmt can be referenced when analyzing
+   * It now is only called when building the content of the variable pendingMT
+   * This is important, because only pendingMT can be referenced when analyzing
    * the MultiText content.
    *
    * @param first
@@ -608,47 +604,47 @@ class CustomWalker implements Walker {
    */
   private MultiText buildMultiText(boolean first) {
     // set up a sequence where the next bunch of stuff is text.
-    if (!first && newlineindent != null) {
-      mtbuffer.append(newlineindent);
+    if (!first && newLineIndent != null) {
+      mtBuffer.append(newLineIndent);
     }
-    mtsourcesize = 0;
+    mtSourceSize = 0;
     do {
-      if (mtsourcesize >= mtsource.length) {
-        mtsource = ArrayCopy.copyOf(mtsource, mtsource.length * 2);
+      if (mtSourceSize >= mtSource.length) {
+        mtSource = ArrayCopy.copyOf(mtSource, mtSource.length * 2);
       }
-      mtsource[mtsourcesize++] = pending;
+      mtSource[mtSourceSize++] = pending;
       pending = content.hasNext() ? content.next() : null;
     }
     while (pending != null && isTextLike(pending));
 
-    mtpostpad = pending != null;
-    mtwasescape = fstack.getEscapeOutput();
-    return holdingmt;
+    mtPostPad = pending != null;
+    mtWasEscape = fStack.getEscapeOutput();
+    return holdingMT;
   }
 
   @Override
   public final @Nullable String text() {
-    if (multitext == null || mtpos >= mtsize) {
+    if (multiText == null || mtPos >= mtSize) {
       return null;
     }
-    return mttext[mtpos];
+    return mtText[mtPos];
   }
 
   @Override
   public final boolean isCDATA() {
-    if (multitext == null || mtpos >= mtsize) {
+    if (multiText == null || mtPos >= mtSize) {
       return false;
     }
-    if (mttext[mtpos] == null) {
+    if (mtText[mtPos] == null) {
       return false;
     }
 
-    return mtdata[mtpos] == CDATATOKEN;
+    return mtData[mtPos] == CDATATOKEN;
   }
 
   @Override
   public final boolean isAllWhitespace() {
-    return allwhite;
+    return allWhite;
   }
 
   private final boolean isTextLike(Content c) {

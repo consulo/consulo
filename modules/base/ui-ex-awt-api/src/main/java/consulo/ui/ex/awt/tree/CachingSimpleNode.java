@@ -15,43 +15,44 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
+import consulo.ui.ex.tree.NodeDescriptor;
 import org.jspecify.annotations.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.tree.CachingSimpleNode")
 public abstract class CachingSimpleNode extends SimpleNode {
+    SimpleNode[] myChildren;
 
-  SimpleNode[] myChildren;
-
-  protected CachingSimpleNode(SimpleNode aParent) {
-    super(aParent);
-  }
-
-  protected CachingSimpleNode(Project aProject, @Nullable NodeDescriptor aParentDescriptor) {
-    super(aProject, aParentDescriptor);
-  }
-
-  @Override
-  public final SimpleNode[] getChildren() {
-    if (myChildren == null) {
-      myChildren = buildChildren();
-      onChildrenBuilt();
+    protected CachingSimpleNode(SimpleNode aParent) {
+        super(aParent);
     }
 
-    return myChildren;
-  }
+    protected CachingSimpleNode(Project aProject, @Nullable NodeDescriptor aParentDescriptor) {
+        super(aProject, aParentDescriptor);
+    }
 
-  protected void onChildrenBuilt() {
-  }
+    @Override
+    public final SimpleNode[] getChildren() {
+        if (myChildren == null) {
+            myChildren = buildChildren();
+            onChildrenBuilt();
+        }
 
-  protected abstract SimpleNode[] buildChildren();
+        return myChildren;
+    }
 
-  public void cleanUpCache() {
-    myChildren = null;
-  }
+    protected void onChildrenBuilt() {
+    }
 
-  protected @Nullable SimpleNode[] getCached() {
-    return myChildren;
-  }
+    protected abstract SimpleNode[] buildChildren();
+
+    public void cleanUpCache() {
+        myChildren = null;
+    }
+
+    protected @Nullable SimpleNode[] getCached() {
+        return myChildren;
+    }
 }

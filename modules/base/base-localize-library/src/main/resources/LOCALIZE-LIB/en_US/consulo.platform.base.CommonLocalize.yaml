@@ -26,8 +26,6 @@ action.settings.path.mac:
     text: Preferences
 an.attempt.was.made.to.load.a.program.with.an.incorrect.format.error.message:
     text: An attempt was made to load a program with an incorrect format.
-autodetected.proxies.clear.button:
-    text: Clear passwords
 button.add:
     text: Add
 button.add.a:
@@ -100,16 +98,8 @@ cannot.undo.message:
     text: Cannot undo
 captured.memory.snapshot.placed.in.user.home.directory.message.text:
     text: 'Captured memory snapshot: ''''{0}'''' is placed in user home directory.'
-checkbox.automatic.proxy.configuration.url:
-    text: 'Automatic proxy configuration URL:'
-checkbox.proxy.authentication:
-    text: Proxy &authentication
 checkbox.remember.password:
     text: '&Remember password'
-checkbox.use.http.proxy:
-    text: '&Use proxy'
-checkbox.use.http.proxy.pac:
-    text: Auto-detect proxy settings
 close.action.name:
     text: Close
 comparison.ignore.whitespace.acton.name:
@@ -138,14 +128,10 @@ dialog.title.choose.date:
     text: Choose Date
 drop.undo.history.command.name:
     text: Dummy
-editbox.host.name:
-    text: '&Host name:'
 editbox.login:
     text: '&Login:'
 editbox.password:
     text: '&Password:'
-editbox.port.number:
-    text: 'Port &number:'
 error.reading.color.scheme.from.file.error.message:
     text: Error reading color scheme from {0}
 exception.directory.can.not.create:
@@ -164,20 +150,10 @@ format.file.size.kbytes:
     text: '{0}Kb'
 format.file.size.mbytes:
     text: '{0}Mb'
-http.noproxy:
-    text: No proxy
-http.proxy.type:
-    text: HTTP
 incorrect.function.error.message:
     text: Incorrect function.
 information.dialog.title:
     text: Information
-label.old.way.jvm.property.used:
-    text: '<html>You have JVM property "{0}" set to "{1}".<br>This may lead to incorrect behaviour. Proxy should be set in Settings | HTTP Proxy<br>This JVM property is old and its usage is not recommended by Oracle.<br>(Note: It could have been assigned by some code dynamically.)'
-label.proxy.exceptions.text:
-    text: 'Example: *.domain.com, 192.168.*'
-label.system.proxy.used:
-    text: <html>You have JVM property 'java.net.useSystemProxies' set to true.<br>This will cause some network calls to go through operating system-defined proxy.<br>If you didn't intend to use system-defined proxy, disable this property
 link.reset:
     text: Reset
 local.vcs.action.name.redo.command:
@@ -241,8 +217,6 @@ safe.write.restored:
         Original content was restored from backup.
 smth.already.exist.error.message:
     text: '{0} with name ''''{1}'''' already exist.'
-socks.proxy.type:
-    text: SOCKS
 the.access.code.is.invalid.error.message:
     text: The access code is invalid.
 the.data.is.invalid.error.message:
@@ -287,16 +261,12 @@ there.are.no.more.files.error.message:
     text: There are no more files.
 title.error:
     text: Error
-title.http.proxy.settings:
-    text: HTTP Proxy Settings
 title.settings:
     text: Settings
 title.settings.mac:
     text: Preferences
 title.warning:
     text: Warning
-tooltip.http.proxy.pac:
-    text: This will attempt to use your system settings and is useful if your system uses a proxy autoconfiguration file (.pac).
 tree.node.loading:
     text: Loading...
 undo.command.confirmation.text:

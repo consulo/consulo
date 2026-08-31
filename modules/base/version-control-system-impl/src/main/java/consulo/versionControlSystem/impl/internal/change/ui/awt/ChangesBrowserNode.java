@@ -15,14 +15,15 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.versionControlSystem.impl.internal.change.ChangeListOwner;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,14 +38,14 @@ import java.util.stream.StreamSupport;
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
-  public static final Object IGNORED_FILES_TAG = new Tag("changes.nodetitle.ignored.files");
-  public static final Object LOCKED_FOLDERS_TAG = new Tag("changes.nodetitle.locked.folders");
-  public static final Object LOGICALLY_LOCKED_TAG = new Tag("changes.nodetitle.logicallt.locked.folders");
-  public static final Object UNVERSIONED_FILES_TAG = new Tag("changes.nodetitle.unversioned.files");
-  public static final Object MODIFIED_WITHOUT_EDITING_TAG = new Tag("changes.nodetitle.modified.without.editing");
-  public static final Object SWITCHED_FILES_TAG = new Tag("changes.nodetitle.switched.files");
-  public static final Object SWITCHED_ROOTS_TAG = new Tag("changes.nodetitle.switched.roots");
-  public static final Object LOCALLY_DELETED_NODE_TAG = new Tag("changes.nodetitle.locally.deleted.files");
+  public static final Object IGNORED_FILES_TAG = new Tag(VcsLocalize.changesNodeTitleIgnoredFiles());
+  public static final Object LOCKED_FOLDERS_TAG = new Tag(VcsLocalize.changesNodeTitleLockedFolders());
+  public static final Object LOGICALLY_LOCKED_TAG = new Tag(VcsLocalize.changesNodeTitleLogicallyLockedFolders());
+  public static final Object UNVERSIONED_FILES_TAG = new Tag(VcsLocalize.changesNodeTitleUnversionedFiles());
+  public static final Object MODIFIED_WITHOUT_EDITING_TAG = new Tag(VcsLocalize.changesNodeTitleModifiedWithoutEditing());
+  public static final Object SWITCHED_FILES_TAG = new Tag(VcsLocalize.changesNodeTitleSwitchedFiles());
+  public static final Object SWITCHED_ROOTS_TAG = new Tag(VcsLocalize.changesNodeTitleSwitchedRoots());
+  public static final Object LOCALLY_DELETED_NODE_TAG = new Tag(VcsLocalize.changesNodeTitleLocallyDeletedFiles());
 
   protected static final int DEFAULT_CHANGE_LIST_SORT_WEIGHT = 1;
   protected static final int CHANGE_LIST_SORT_WEIGHT = 2;
@@ -70,27 +71,25 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     myAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
   }
 
-  
   public static ChangesBrowserNode create(LocallyDeletedChange change) {
     return new ChangesBrowserLocallyDeletedNode(change);
   }
 
-  
   public static ChangesBrowserNode create(Project project, Object userObject) {
-    if (userObject instanceof Change) {
-      return new ChangesBrowserChangeNode(project, (Change)userObject, null);
+    if (userObject instanceof Change change) {
+      return new ChangesBrowserChangeNode(project, change, null);
     }
-    if (userObject instanceof VirtualFile) {
-      return new ChangesBrowserFileNode(project, (VirtualFile)userObject);
+    if (userObject instanceof VirtualFile virtualFile) {
+      return new ChangesBrowserFileNode(project, virtualFile);
     }
-    if (userObject instanceof FilePath) {
-      return new ChangesBrowserFilePathNode((FilePath)userObject);
+    if (userObject instanceof FilePath filePath) {
+      return new ChangesBrowserFilePathNode(filePath);
     }
     if (userObject == LOCKED_FOLDERS_TAG) {
       return new ChangesBrowserLockedFoldersNode(project, userObject);
     }
-    if (userObject instanceof ChangesBrowserLogicallyLockedFileImpl) {
-      return (ChangesBrowserNode)userObject;
+    if (userObject instanceof ChangesBrowserLogicallyLockedFileImpl changesBrowserNode) {
+      return changesBrowserNode;
     }
     return new ChangesBrowserNode(userObject);
   }
@@ -134,17 +133,14 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     myDirectoryCount = -1;
   }
 
-  
   public List<Change> getAllChangesUnder() {
     return getAllObjectsUnder(Change.class);
   }
 
-  
   public <U> List<U> getAllObjectsUnder(Class<U> clazz) {
     return getObjectsUnderStream(clazz).collect(Collectors.toList());
   }
 
-  
   public <U> Stream<U> getObjectsUnderStream(Class<U> clazz) {
     return toStream(preorderEnumeration())
       .map(ChangesBrowserNode::getUserObject)
@@ -157,7 +153,6 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     return getFilesUnderStream().collect(Collectors.toList());
   }
 
-  
   public Stream<VirtualFile> getFilesUnderStream() {
     return toStream(breadthFirstEnumeration())
       .map(ChangesBrowserNode::getUserObject)
@@ -166,12 +161,10 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
       .filter(VirtualFile::isValid);
   }
 
-  
   public List<FilePath> getAllFilePathsUnder() {
     return getFilePathsUnderStream().collect(Collectors.toList());
   }
 
-  
   public Stream<FilePath> getFilePathsUnderStream() {
     return toStream(breadthFirstEnumeration())
       .filter(ChangesBrowserNode::isLeaf)
@@ -194,7 +187,6 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     appendCount(renderer);
   }
 
-  
   protected String getCountText() {
     int count = getFileCount();
     int dirCount = getDirectoryCount();
@@ -203,10 +195,10 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     if (dirCount != 0 || count != 0) {
       result = spaceAndThinSpace() +
         (dirCount == 0
-          ? VcsBundle.message("changes.nodetitle.changecount", count)
+          ? VcsLocalize.changesNodeTitleChangeCount(count).get()
           : count == 0
-          ? VcsBundle.message("changes.nodetitle.directory.changecount", dirCount)
-          : VcsBundle.message("changes.nodetitle.directory.file.changecount", dirCount, count));
+          ? VcsLocalize.changesNodeTitleDirectoryChangeCount(dirCount).get()
+          : VcsLocalize.changesNodeTitleDirectoryFileChangeCount(dirCount, count).get());
     }
 
     return result;
@@ -216,6 +208,7 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     renderer.append(getCountText(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
   }
 
+  @Override
   public String toString() {
     return getTextPresentation();
   }
@@ -253,8 +246,13 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
   }
 
   protected void appendUpdatingState(ChangesBrowserNodeRenderer renderer) {
-    renderer.append((getCountText().isEmpty() ? spaceAndThinSpace() : ", ") + VcsBundle.message("changes.nodetitle.updating"),
-                    SimpleTextAttributes.GRAYED_ATTRIBUTES);
+    renderer.append(
+      LocalizeValue.join(
+        LocalizeValue.of(getCountText().isEmpty() ? spaceAndThinSpace() : ", "),
+        VcsLocalize.changesNodeTitleUpdating()
+      ),
+      SimpleTextAttributes.GRAYED_ATTRIBUTES
+    );
   }
 
   @Deprecated
@@ -263,16 +261,15 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
   }
 
   private static class Tag {
-    
-    private final String myKey;
+    private final LocalizeValue myText;
 
-    public Tag(String key) {
-      myKey = key;
+    public Tag(LocalizeValue text) {
+      myText = text;
     }
 
     @Override
     public String toString() {
-      return VcsBundle.message(myKey);
+      return myText.get();
     }
   }
 }

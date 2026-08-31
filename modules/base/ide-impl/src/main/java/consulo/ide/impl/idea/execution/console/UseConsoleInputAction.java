@@ -21,7 +21,7 @@ import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;

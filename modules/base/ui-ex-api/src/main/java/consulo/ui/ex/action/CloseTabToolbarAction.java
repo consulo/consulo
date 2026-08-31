@@ -15,11 +15,10 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 
-public abstract class CloseTabToolbarAction extends AnAction implements DumbAware {
+public abstract class CloseTabToolbarAction extends LegacyDumbAwareAction {
     public CloseTabToolbarAction() {
         copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
         Presentation presentation = getTemplatePresentation();

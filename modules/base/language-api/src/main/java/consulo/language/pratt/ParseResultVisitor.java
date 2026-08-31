@@ -21,7 +21,9 @@ import consulo.language.ast.IElementType;
  * @author peter
  */
 public interface ParseResultVisitor<T> {
-  T append();
-  T error();
-  T done(IElementType type);
+    T append();
+
+    T error();
+
+    T done(IElementType type);
 }

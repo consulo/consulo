@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.project.Project;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 
 import org.jspecify.annotations.Nullable;
 
@@ -30,5 +30,5 @@ public abstract class PlaceInProjectStructure {
   public abstract @Nullable String getPlacePath();
 
   
-  public abstract AsyncResult<Void> navigate(Project project);
+  public abstract CompletableFuture<?> navigate(Project project);
 }

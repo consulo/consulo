@@ -19,10 +19,12 @@ import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.util.ExportableUserDataHolder;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
+import java.util.Collection;
 
 /**
  * Interface describing the current compilation scope.
@@ -39,16 +41,16 @@ public interface CompileScope extends ExportableUserDataHolder {
      * @param fileType the type of the files. Null should be passed if all available files are needed.
      * @return a list of files of given type that belong to this scope.
      */
-    VirtualFile[] getFiles(@Nullable FileType fileType);
+    Collection<Path> getFiles(@Nullable FileType fileType);
 
     /**
-     * Checks if the file with the specified URL belongs to the scope.
+     * Checks if the file with the specified path belongs to the scope.
      *
-     * @param url an VFS url. Note that actual file may not exist on the disk.
-     * @return true if the url specified belongs to the scope, false otherwise.
+     * @param path a file path. Note that actual file may not exist on the disk.
+     * @return true if the path specified belongs to the scope, false otherwise.
      * Note: the method may be time-consuming.
      */
-    boolean belongs(String url);
+    boolean belongs(Path path);
 
     /**
      * Returns the list of modules files in which belong to the scope.

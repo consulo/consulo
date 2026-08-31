@@ -30,8 +30,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
@@ -55,7 +55,7 @@ import java.util.function.Predicate;
  * @author Dmitry Avdeev
  */
 @ActionImpl(id = "GotoRelated")
-public class GotoRelatedFileAction extends AnAction {
+public class GotoRelatedFileAction extends LegacyAnAction {
     public GotoRelatedFileAction() {
         super(ActionLocalize.actionGotorelatedText(), ActionLocalize.actionGotorelatedDescription());
     }

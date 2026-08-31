@@ -65,7 +65,7 @@ import java.util.function.Function;
 /**
  * @author gregsh
  */
-public class RunIdeConsoleAction extends DumbAwareAction {
+public class RunIdeConsoleAction extends LegacyDumbAwareAction {
     private static final String DEFAULT_FILE_NAME = "ide-scripting";
 
     private static final Key<WeakReference<RunContentDescriptor>> DESCRIPTOR_KEY = Key.create("DESCRIPTOR_KEY");
@@ -257,7 +257,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         return descriptor;
     }
 
-    private static class MyRunAction extends DumbAwareAction {
+    private static class MyRunAction extends LegacyDumbAwareAction {
         private IdeScriptEngine engine;
 
         @Override

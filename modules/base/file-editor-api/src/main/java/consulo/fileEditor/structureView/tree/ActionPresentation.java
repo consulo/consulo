@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.structureView.tree;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -27,25 +28,26 @@ import org.jspecify.annotations.Nullable;
  * @see ActionPresentationData
  */
 public interface ActionPresentation {
-  /**
-   * Returns the name of the action, displayed in the tooltip for the toolbar button.
-   *
-   * @return the action name.
-   */
-  String getText();
+    /**
+     * Returns the name of the action, displayed in the tooltip for the toolbar button.
+     *
+     * @return the action name.
+     */
+    LocalizeValue getText();
 
-  /**
-   * Returns the description of the action, displayed in the status bar when the mouse
-   * is over the toolbar button.
-   *
-   * @return the action description.
-   */
-  String getDescription();
+    /**
+     * Returns the description of the action, displayed in the status bar when the mouse
+     * is over the toolbar button.
+     *
+     * @return the action description.
+     */
+    LocalizeValue getDescription();
 
-  /**
-   * Returns the icon for the action, displayed on the toolbar button.
-   *
-   * @return the action icon.
-   */
-  @Nullable Image getIcon();
+    /**
+     * Returns the icon for the action, displayed on the toolbar button.
+     *
+     * @return the action icon.
+     */
+    @Nullable
+    Image getIcon();
 }

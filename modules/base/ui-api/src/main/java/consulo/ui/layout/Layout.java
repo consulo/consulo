@@ -16,16 +16,17 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
-import consulo.ui.HasComponentStyle;
+import consulo.ui.HasAccessibility;
+import consulo.ui.HasSize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
-public interface Layout<C extends LayoutConstraint> extends Component, HasComponentStyle<LayoutStyle> {
+public interface Layout<C extends LayoutConstraint> extends Component, HasSize, HasAccessibility {
     default Layout<C> add(Component component, C constraint) {
         throw new UnsupportedOperationException("Adding not supported");
     }
@@ -39,8 +40,8 @@ public interface Layout<C extends LayoutConstraint> extends Component, HasCompon
         throw new AbstractMethodError(getClass().getName());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     default void setEnabledRecursive(boolean value) {
         setEnabled(value);
 

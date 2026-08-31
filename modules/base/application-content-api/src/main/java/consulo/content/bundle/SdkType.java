@@ -18,6 +18,7 @@ package consulo.content.bundle;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -80,8 +81,8 @@ public abstract class SdkType implements SdkTypeId {
     @Override
     public final @Nullable String getVersionString(Sdk sdk) {
         SdkTypeId sdkType = sdk.getSdkType();
-        if (sdkType instanceof BundleType bundleType) {
-            return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
+        if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
+            return platformAwareSdkType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
         }
         String homePath = sdk.getHomePath();
         return homePath != null ? getVersionString(homePath) : null;
@@ -183,8 +184,8 @@ public abstract class SdkType implements SdkTypeId {
         return null;
     }
 
-    public boolean isRootTypeApplicable(OrderRootType type) {
-        return false;
+    public boolean isRootTypeApplicable(String type) {
+        return BinariesOrderRootType.ID.equals(type);
     }
 
     /**

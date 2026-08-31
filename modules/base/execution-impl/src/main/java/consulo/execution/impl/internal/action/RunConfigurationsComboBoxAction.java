@@ -47,6 +47,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
@@ -94,10 +95,14 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                     Set<Image> defaultRunImages = new SmartHashSet<>();
 
                     for (Executor executor : RunCurrentFileExecutor.getExecutors(myApplication)) {
-                        RunCurrentFileActionStatus status = ReadAction.compute(() -> myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false));
+                        SimpleReference<RunCurrentFileActionStatus> statusRef = SimpleReference.create();
+                        myApplication.tryRunReadAction(statusRef, () -> myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false));
 
-                        for (RunnerAndConfigurationSettings runConfig : status.runConfigs()) {
-                            defaultRunImages.add(runConfig.getConfiguration().getType().getIcon());
+                        RunCurrentFileActionStatus status = statusRef.get();
+                        if (status != null) {
+                            for (RunnerAndConfigurationSettings runConfig : status.runConfigs()) {
+                                defaultRunImages.add(runConfig.getConfiguration().getType().getIcon());
+                            }
                         }
                     }
 

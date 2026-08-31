@@ -22,7 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.io.FileUtil;
@@ -53,7 +53,7 @@ public class ScratchFileActions {
         return ourCurrentBuffer;
     }
 
-    public static class NewBufferAction extends DumbAwareAction {
+    public static class NewBufferAction extends LegacyDumbAwareAction {
         @Override
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && Registry.intValue("ide.scratch.buffers") > 0);
@@ -172,7 +172,7 @@ public class ScratchFileActions {
         return language;
     }
 
-    public static class LanguageAction extends DumbAwareAction {
+    public static class LanguageAction extends LegacyDumbAwareAction {
         @Override
         public void update(AnActionEvent e) {
             Project project = e.getData(Project.KEY);

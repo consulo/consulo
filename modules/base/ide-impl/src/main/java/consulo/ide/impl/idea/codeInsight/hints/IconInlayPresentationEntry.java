@@ -17,12 +17,15 @@ package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.project.Project;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -70,6 +73,11 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
         int centerRect = rectHeight / 2;
 
         TargetAWT.to(myImage).paintIcon(editor.getComponent(), graphics, 0, centerRect - centerImage);
+    }
+
+    @Override
+    public InlayContentSegment toContentSegment(@Nullable TextAttributesKey attributesKey) {
+        return InlayContentSegment.of(myImage);
     }
 
     @Override

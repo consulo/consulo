@@ -24,14 +24,14 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = "AssociateWithFileType")
-public class AssociateFileTypeAction extends AnAction {
+public class AssociateFileTypeAction extends LegacyAnAction {
     public AssociateFileTypeAction() {
         super(ActionLocalize.actionAssociatewithfiletypeText(), ActionLocalize.actionAssociatewithfiletypeDescription());
     }

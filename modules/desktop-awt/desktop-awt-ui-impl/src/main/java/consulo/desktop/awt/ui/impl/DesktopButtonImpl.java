@@ -1,0 +1,154 @@
+/*
+ * Copyright 2013-2017 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.desktop.awt.ui.impl;
+
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.plaf2.flat.InplaceComponent;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+
+/**
+ * @author VISTALL
+ * @since 13-Sep-17
+ */
+class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButton> implements Button {
+    class MyButton extends JButton implements FromSwingComponentWrapper {
+        private LocalizeValue myTextValue = LocalizeValue.empty();
+
+        private Boolean myDefaultButton;
+
+        MyButton(LocalizeValue textValue) {
+            super("");
+            myTextValue = textValue;
+
+            updateText();
+        }
+
+        @Override
+        public boolean isDefaultButton() {
+            if (Boolean.TRUE == myDefaultButton) {
+                return true;
+            }
+
+            return super.isDefaultButton();
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+
+            // null if called from parent object before field initialize
+            if (myTextValue != null) {
+                updateText();
+            }
+        }
+
+        
+        @Override
+        public Component toUIComponent() {
+            return DesktopButtonImpl.this;
+        }
+
+        private void updateText() {
+            updateTextForButton(this, myTextValue);
+        }
+    }
+
+    private final LocalizeValue myInitText;
+
+    public DesktopButtonImpl(LocalizeValue text) {
+        myInitText = text;
+    }
+
+    @Override
+    protected MyButton createComponent() {
+        MyButton button = new MyButton(myInitText);
+        button.addActionListener(e -> invoke(DesktopAWTInputDetails.convert(toAWTComponent(), e)));
+        return button;
+    }
+
+    
+    @Override
+    public Disposable addClickListener(ComponentEventListener<Component, ClickEvent> clickListener) {
+        return addListener(ClickEvent.class, clickListener);
+    }
+
+    @Override
+    public void addStyle(ButtonStyle style) {
+        switch (style) {
+            case BORDERLESS:
+                toAWTComponent().putClientProperty("JButton.buttonType", "borderless");
+                break;
+            case TOOLBAR:
+                toAWTComponent().putClientProperty("JButton.buttonType", "toolBarButton");
+                break;
+            case INPLACE:
+                InplaceComponent.prepareLeadingOrTrailingComponent(toAWTComponent());
+                break;
+            case PRIMARY:
+                toAWTComponent().myDefaultButton = true;
+                break;
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void invoke(InputDetails inputDetails) {
+        ComponentEventListener<Component, ClickEvent> listener = getListenerDispatcher(ClickEvent.class);
+
+        listener.onEvent(new ClickEvent(this, inputDetails));
+    }
+
+    
+    @Override
+    public LocalizeValue getText() {
+        MyButton button = toAWTComponent();
+        return button.myTextValue;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setText(LocalizeValue text) {
+        MyButton button = toAWTComponent();
+        button.myTextValue = text;
+        button.updateText();
+    }
+
+    @Override
+    public @Nullable Image getIcon() {
+        return TargetAWT.from(toAWTComponent().getIcon());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setIcon(@Nullable Image image) {
+        toAWTComponent().setIcon(TargetAWT.to(image));
+    }
+}

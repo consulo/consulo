@@ -10,16 +10,19 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     protected JBPopup myPopup;
@@ -27,7 +30,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     private SimpleReference<? extends UsageView> myUsageView;
     private final Collection<T> myData;
 
-    private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+    private final AtomicReference<ScheduledFuture<?>> myRefresh = new AtomicReference<>();
     private final Object lock = new Object();
 
     private volatile boolean myCanceled;
@@ -60,7 +63,8 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         myUsageView = usageView;
     }
 
-    public abstract String getCaption(int size);
+    @Nonnull
+    public abstract LocalizeValue getCaption(int size);
 
     protected abstract @Nullable Usage createUsage(T element);
 
@@ -97,7 +101,6 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         if (myPopup.isDisposed()) {
             return false;
         }
-        ModalityState modalityState = Application.get().getModalityStateForComponent(myPopup.getContent());
 
         synchronized (lock) {
             if (myData.contains(element)) {
@@ -109,14 +112,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
             }
         }
 
-        myAlarm.addRequest(
-            () -> {
-                myAlarm.cancelAllRequests();
-                refreshModelImmediately();
-            },
-            200,
-            modalityState
-        );
+        scheduleRefresh();
         return true;
     }
 
@@ -151,15 +147,46 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
             }
         }
 
-        myAlarm.addRequest(
+        scheduleRefresh();
+        return true;
+    }
+
+    /**
+     * Coalesces bursts of incoming elements into one refresh, by leaving an already pending refresh to
+     * pick them all up rather than pushing it further out - a search that keeps producing results would
+     * otherwise never redraw.
+     */
+    private void scheduleRefresh() {
+        if (myRefresh.get() != null) {
+            return;
+        }
+
+        UIAccess uiAccess = myPopup.getUIAccess();
+        if (uiAccess == null) {
+            return;
+        }
+
+        ModalityState modalityState = Application.get().getModalityStateForComponent(myPopup.getContent());
+        ScheduledFuture<?> scheduled = uiAccess.getScheduler().schedule(
             () -> {
-                myAlarm.cancelAllRequests();
+                myRefresh.set(null);
                 refreshModelImmediately();
             },
+            modalityState,
             200,
-            Application.get().getModalityStateForComponent(myPopup.getContent())
+            TimeUnit.MILLISECONDS
         );
-        return true;
+
+        if (!myRefresh.compareAndSet(null, scheduled)) {
+            scheduled.cancel(false);
+        }
+    }
+
+    private void cancelRefresh() {
+        ScheduledFuture<?> scheduled = myRefresh.getAndSet(null);
+        if (scheduled != null) {
+            scheduled.cancel(false);
+        }
     }
 
     @RequiredUIAccess
@@ -176,7 +203,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
             data = new ArrayList<>(myData);
         }
         replaceModel(data);
-        myPopup.setCaption(getCaption(getCurrentSize()));
+        myPopup.setCaption(getCaption(getCurrentSize()).get());
         myPopup.pack(true, true);
     }
 
@@ -203,7 +230,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     @Override
     @RequiredUIAccess
     public void onFinished() {
-        myAlarm.cancelAllRequests();
+        cancelRefresh();
         myFinished = true;
     }
 

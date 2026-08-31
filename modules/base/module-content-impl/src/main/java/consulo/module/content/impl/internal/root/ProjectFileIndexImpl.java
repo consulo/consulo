@@ -250,7 +250,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
     }
 
     public static boolean isFileInContent(VirtualFile fileOrDir, DirectoryInfo info) {
-        return info.isInProject(fileOrDir) && info.getModule() != null;
+        return info.isInProject(fileOrDir) && info.getContentRoot() != null;
     }
 
     @Override

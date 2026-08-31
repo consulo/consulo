@@ -45,16 +45,14 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -80,7 +78,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final YesResult ALWAYS_YES = new YesResult(PlatformIconGroup.actionsCompile());
 
-    
     private final Project myProject;
     private final CompilerManager myCompilerManager;
 
@@ -90,45 +87,43 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         myCompilerManager = compilerManager;
     }
 
-    
+    @RequiredReadAction
     @Override
     public Result checkAvailable(DataContext dataContext) {
         return ALWAYS_YES;
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("BuiltIn");
     }
 
     @Override
-    @RequiredReadAction
     public void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
         CompilerManager compilerManager = CompilerManager.getInstance(myProject);
 
-        VirtualFile[] allSources = compilerManager.createProjectCompileScope().getFiles(null);
+        Collection<Path> allSources = compilerManager.createProjectCompileScope().getFiles(null);
 
         for (Compiler compiler : compilerManager.getCompilers(Compiler.class)) {
             try {
                 if (compiler instanceof GeneratingCompiler generatingCompiler) {
                     StateCache<ValidityState> cache = getGeneratingCompilerCache(generatingCompiler);
-                    Iterator<File> fileIterator = cache.getFilesIterator();
-                    while (fileIterator.hasNext()) {
+                    Iterator<String> pathIterator = cache.getPathsIterator();
+                    while (pathIterator.hasNext()) {
                         context.getProgressIndicator().checkCanceled();
-                        compileDriver.deleteFile(fileIterator.next());
+                        compileDriver.deleteFile(new File(pathIterator.next()));
                     }
                 }
                 else if (compiler instanceof TranslatingCompiler translatingCompiler) {
                     List<Trinity<File, String, Boolean>> toDelete = new ArrayList<>();
-                    Application.get().runReadAction(() -> TranslatingCompilerFilesMonitor.getInstance().collectFiles(context,
+                    TranslatingCompilerFilesMonitor.getInstance().collectFiles(context,
                         translatingCompiler,
-                        Arrays.<VirtualFile>asList(allSources).iterator(),
+                        allSources.iterator(),
                         true /*pass true to make sure that every source in scope file is processed*/,
                         false /*important! should pass false to enable collection of files to delete*/,
                         new ArrayList<>(),
                         toDelete
-                    ));
+                    );
                     for (Trinity<File, String, Boolean> trinity : toDelete) {
                         context.getProgressIndicator().checkCanceled();
                         File file = trinity.getFirst();
@@ -293,8 +288,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         DumbService dumbService = DumbService.getInstance(myProject);
         try {
             Set<Module> processedModules = new HashSet<>();
-            VirtualFile[] snapshot = null;
-            Map<Chunk<Module>, Collection<VirtualFile>> chunkMap = new HashMap<>();
+            Collection<Path> snapshot = null;
+            Map<Chunk<Module>, Collection<Path>> chunkMap = new HashMap<>();
             int total = 0;
             int processed = 0;
             for (Chunk<Module> currentChunk : sortedChunks) {
@@ -303,14 +298,14 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                     .forEach(compilerSorter -> compilerSorter.sort(currentChunk, translators, TranslatingCompiler.class));
                 TranslatorsOutputSink sink = new TranslatorsOutputSink(context, translators);
                 Set<FileType> generatedTypes = new HashSet<>();
-                Collection<VirtualFile> chunkFiles = chunkMap.get(currentChunk);
-                Set<VirtualFile> filesToRecompile = new HashSet<>();
-                Set<VirtualFile> allDependent = new HashSet<>();
+                Collection<Path> chunkFiles = chunkMap.get(currentChunk);
+                Set<Path> filesToRecompile = new HashSet<>();
+                Set<Path> allDependent = new HashSet<>();
                 try {
                     int round = 0;
                     boolean compiledSomethingForThisChunk = false;
-                    Collection<VirtualFile> dependentFiles = Collections.emptyList();
-                    Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> dependencyFilter =
+                    Collection<Path> dependentFiles = Collections.emptyList();
+                    Function<Pair<int[], Set<Path>>, Pair<int[], Set<Path>>> dependencyFilter =
                         new DependentClassesCumulativeFilter();
 
                     do {
@@ -330,28 +325,26 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             if (snapshot == null
                                 || ContainerUtil.intersects(generatedTypes, compilerManager.getRegisteredInputTypes(compiler))) {
                                 // rescan snapshot if previously generated files may influence the input of this compiler
-                                Collection<VirtualFile> prevSnapshot = round > 0 && snapshot != null
-                                    ? Arrays.asList(snapshot)
-                                    : Collections.<VirtualFile>emptySet();
-                                snapshot = Application.get().runReadAction(
-                                    (Supplier<VirtualFile[]>) () -> context.getCompileScope().getFiles(null)
-                                );
+                                Collection<Path> prevSnapshot = round > 0 && snapshot != null
+                                    ? snapshot
+                                    : Collections.<Path>emptySet();
+                                snapshot = context.getCompileScope().getFiles(null);
                                 recalculateChunkToFilesMap(context, sortedChunks, snapshot, chunkMap);
                                 if (round == 0) {
                                     chunkFiles = chunkMap.get(currentChunk);
                                 }
                                 else {
-                                    Set<VirtualFile> newFiles = new HashSet<>(chunkMap.get(currentChunk));
+                                    Set<Path> newFiles = new HashSet<>(chunkMap.get(currentChunk));
                                     newFiles.removeAll(prevSnapshot);
                                     newFiles.removeAll(chunkFiles);
                                     if (!newFiles.isEmpty()) {
-                                        List<VirtualFile> merged = new ArrayList<>(chunkFiles.size() + newFiles.size());
+                                        List<Path> merged = new ArrayList<>(chunkFiles.size() + newFiles.size());
                                         merged.addAll(chunkFiles);
                                         merged.addAll(newFiles);
                                         chunkFiles = merged;
                                     }
                                 }
-                                total = snapshot.length * translatorsLength;
+                                total = snapshot.size() * translatorsLength;
                             }
 
                             CompileContextEx _context;
@@ -359,12 +352,12 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                 // wrap compile context so that output goes into intermediate directories
                                 _context = new CompileContextExDelegate(context) {
                                     @Override
-                                    public VirtualFile getModuleOutputDirectory(Module module) {
+                                    public Path getModuleOutputDirectory(Module module) {
                                         return getGenerationOutputDir(compileDriver, _compiler, module, false);
                                     }
 
                                     @Override
-                                    public VirtualFile getModuleOutputDirectoryForTests(Module module) {
+                                    public Path getModuleOutputDirectoryForTests(Module module) {
                                         return getGenerationOutputDir(compileDriver, _compiler, module, true);
                                     }
                                 };
@@ -402,14 +395,14 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                         boolean hasUnprocessedTraverseRoots = context.getDependencyCache().hasUnprocessedTraverseRoots();
                         if (!isRebuild && (compiledSomethingForThisChunk || hasUnprocessedTraverseRoots)) {
                             CompileCounters counters = context.getUserData(CompileCounters.KEY);
-                            Set<VirtualFile> compiledWithErrors = counters == null ? Set.of() : counters.getErrorFiles();
+                            Set<Path> compiledWithErrors = counters == null ? Set.of() : counters.getErrorFiles();
                             filesToRecompile.removeAll(sink.getCompiledSources());
                             filesToRecompile.addAll(compiledWithErrors);
 
                             dependentFiles = CacheUtils.findDependentFiles(context, compiledWithErrors, dependencyFilter);
                             if (!processedModules.isEmpty()) {
-                                for (Iterator<VirtualFile> it = dependentFiles.iterator(); it.hasNext(); ) {
-                                    VirtualFile next = it.next();
+                                for (Iterator<Path> it = dependentFiles.iterator(); it.hasNext(); ) {
+                                    Path next = it.next();
                                     Module module = context.getModuleByFile(next);
                                     if (module != null && processedModules.contains(module)) {
                                         it.remove();
@@ -424,7 +417,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                     || context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
                                     break;
                                 }
-                                List<VirtualFile> filesInScope = getFilesInScope(context, currentChunk, dependentFiles);
+                                List<Path> filesInScope = getFilesInScope(context, currentChunk, dependentFiles);
                                 if (filesInScope.isEmpty()) {
                                     break;
                                 }
@@ -474,14 +467,11 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                         filesToRecompile.addAll(allDependent);
                     }
                     if (filesToRecompile.size() > 0) {
-                        sink.add(
-                            null,
-                            Collections.<TranslatingCompiler.OutputItem>emptyList(),
-                            VirtualFileUtil.toVirtualFileArray(filesToRecompile)
-                        );
+                        sink.add(null, Collections.<TranslatingCompiler.OutputItem>emptyList(), filesToRecompile);
                     }
                     if (errorCount == 0) {
-                        // perform update only if there were no errors, so it is guaranteed that the file was processd by all neccesary compilers
+                        // perform update only if there were no errors, so it is guaranteed
+                        // that the file was processed by all necessary compilers
                         sink.flushPostponedItems();
                     }
                 }
@@ -490,13 +480,13 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         catch (ProcessCanceledException e) {
             ProgressManager.getInstance().executeNonCancelableSection(() -> {
                 try {
-                    Collection<VirtualFile> deps = CacheUtils.findDependentFiles(context, Collections.<VirtualFile>emptySet(), null);
+                    Collection<Path> deps = CacheUtils.findDependentFiles(context, Collections.<Path>emptySet(), null);
                     if (deps.size() > 0) {
                         TranslatingCompilerFilesMonitor.getInstance().update(
                             context,
                             null,
                             Collections.<TranslatingCompiler.OutputItem>emptyList(),
-                            VirtualFileUtil.toVirtualFileArray(deps)
+                            deps
                         );
                     }
                 }
@@ -509,38 +499,36 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         finally {
             compileDriver.dropDependencyCache(context);
             if (didSomething) {
-                TranslatingCompilerFilesMonitor.getInstance().updateOutputRootsLayout(myProject);
+                ((TranslatingCompilerFilesMonitorImpl) TranslatingCompilerFilesMonitor.getInstance()).updateOutputRootsLayout(myProject);
             }
         }
         return didSomething;
     }
 
-    private static List<VirtualFile> getFilesInScope(CompileContextEx context, Chunk<Module> chunk, Collection<VirtualFile> files) {
-        List<VirtualFile> filesInScope = new ArrayList<>(files.size());
-        Application.get().runReadAction(() -> {
-            for (VirtualFile file : files) {
-                if (context.getCompileScope().belongs(file.getUrl())) {
-                    Module module = context.getModuleByFile(file);
-                    if (chunk.getNodes().contains(module)) {
-                        filesInScope.add(file);
-                    }
+    private static List<Path> getFilesInScope(CompileContextEx context, Chunk<Module> chunk, Collection<Path> files) {
+        List<Path> filesInScope = new ArrayList<>(files.size());
+        for (Path file : files) {
+            if (context.getCompileScope().belongs(file)) {
+                Module module = context.getModuleByFile(file);
+                if (chunk.getNodes().contains(module)) {
+                    filesInScope.add(file);
                 }
             }
-        });
+        }
         return filesInScope;
     }
 
     private static void recalculateChunkToFilesMap(
         CompileContextEx context,
         List<Chunk<Module>> allChunks,
-        VirtualFile[] snapshot,
-        Map<Chunk<Module>, Collection<VirtualFile>> chunkMap
+        Collection<Path> snapshot,
+        Map<Chunk<Module>, Collection<Path>> chunkMap
     ) {
-        Map<Module, List<VirtualFile>> moduleToFilesMap = CompilerUtil.buildModuleToFilesMap(context, snapshot);
+        Map<Module, List<Path>> moduleToFilesMap = CompilerUtil.buildModuleToFilesMap(context, snapshot);
         for (Chunk<Module> moduleChunk : allChunks) {
-            List<VirtualFile> files = Collections.emptyList();
+            List<Path> files = Collections.emptyList();
             for (Module module : moduleChunk.getNodes()) {
-                List<VirtualFile> moduleFiles = moduleToFilesMap.get(module);
+                List<Path> moduleFiles = moduleToFilesMap.get(module);
                 if (moduleFiles != null) {
                     files = ContainerUtil.concat(files, moduleFiles);
                 }
@@ -554,19 +542,19 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         CompileContextEx context,
         Chunk<Module> moduleChunk,
         TranslatingCompiler compiler,
-        Collection<VirtualFile> srcSnapshot,
+        Collection<Path> srcSnapshot,
         boolean forceCompile,
         boolean isRebuild,
         boolean onlyCheckStatus,
         TranslatingCompiler.OutputSink sink
     ) throws ExitException {
-        Set<VirtualFile> toCompile = new HashSet<>();
+        Set<Path> toCompile = new HashSet<>();
         List<Trinity<File, String, Boolean>> toDelete = new ArrayList<>();
         context.getProgressIndicator().pushState();
 
         boolean[] wereFilesDeleted = {false};
         try {
-            Application.get().runReadAction(() -> TranslatingCompilerFilesMonitor.getInstance().collectFiles(
+            TranslatingCompilerFilesMonitor.getInstance().collectFiles(
                 context,
                 compiler,
                 srcSnapshot.iterator(),
@@ -574,7 +562,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 isRebuild,
                 toCompile,
                 toDelete
-            ));
+            );
 
             if (onlyCheckStatus) {
                 if (toDelete.isEmpty() && toCompile.isEmpty()) {
@@ -609,7 +597,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
             }
 
             if ((wereFilesDeleted[0] || !toCompile.isEmpty()) && context.getMessageCount(CompilerMessageCategory.ERROR) == 0) {
-                compiler.compile(context, moduleChunk, VirtualFileUtil.toVirtualFileArray(toCompile), sink);
+                compiler.compile(context, moduleChunk, toCompile, sink);
             }
         }
         finally {
@@ -686,12 +674,12 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                         if (compiler instanceof IntermediateOutputCompiler _compiler) {
                             _context = new CompileContextExDelegate(context) {
                                 @Override
-                                public VirtualFile getModuleOutputDirectory(Module module) {
+                                public Path getModuleOutputDirectory(Module module) {
                                     return getGenerationOutputDir(compileDriver, _compiler, module, false);
                                 }
 
                                 @Override
-                                public VirtualFile getModuleOutputDirectoryForTests(Module module) {
+                                public Path getModuleOutputDirectoryForTests(Module module) {
                                     return getGenerationOutputDir(compileDriver, _compiler, module, true);
                                 }
                             };
@@ -720,13 +708,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 throw e;
             }
             catch (Exception e) {
-                context.addMessage(
-                    CompilerMessageCategory.ERROR,
-                    CompilerLocalize.compilerErrorException(e.getMessage()).get(),
-                    null,
-                    -1,
-                    -1
-                );
+                context.newError(CompilerLocalize.compilerErrorException(StringUtil.notNullize(e.getMessage()))).add();
                 LOG.error(e);
             }
         }
@@ -748,40 +730,29 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         List<Module> affectedModules = new ArrayList<>();
         try {
             StateCache<ValidityState> cache = getGeneratingCompilerCache(compiler);
-            Set<File> pathsToRemove = new HashSet<>(cache.getFiles());
+            Set<String> pathsToRemove = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
+            pathsToRemove.addAll(cache.getPaths());
 
-            Map<GeneratingCompiler.GenerationItem, File> itemToOutputPathMap = new HashMap<>();
-            IOException[] ex = {null};
-            Application.get().runReadAction(() -> {
-                for (GeneratingCompiler.GenerationItem item : allItems) {
-                    Module itemModule = item.getModule();
-                    String outputDirPath = CompilerPaths.getGenerationOutputPath(compiler, itemModule, item.isTestSource());
-                    File outputPath = new File(outputDirPath, item.getPath());
-                    itemToOutputPathMap.put(item, outputPath);
+            Map<GeneratingCompiler.GenerationItem, String> itemToOutputPathMap = new HashMap<>();
+            for (GeneratingCompiler.GenerationItem item : allItems) {
+                Module itemModule = item.getModule();
+                String outputDirPath = CompilerPaths.getGenerationOutputPath(compiler, itemModule, item.isTestSource());
+                String outputPath = FileUtil.toSystemIndependentName(outputDirPath + "/" + item.getPath());
+                itemToOutputPathMap.put(item, outputPath);
 
-                    try {
-                        ValidityState savedState = cache.getState(outputPath);
+                ValidityState savedState = cache.getState(outputPath);
 
-                        if (forceGenerate || savedState == null || !savedState.equalsTo(item.getValidityState())) {
-                            String outputPathUrl = VirtualFileManager.constructUrl(LocalFileSystem.PROTOCOL, outputPath.getPath());
-                            if (context.getCompileScope().belongs(outputPathUrl)) {
-                                toGenerate.add(item);
-                            }
-                            else {
-                                pathsToRemove.remove(outputPath);
-                            }
-                        }
-                        else {
-                            pathsToRemove.remove(outputPath);
-                        }
+                if (forceGenerate || savedState == null || !savedState.equalsTo(item.getValidityState())) {
+                    if (context.getCompileScope().belongs(Path.of(outputPath))) {
+                        toGenerate.add(item);
                     }
-                    catch (IOException e) {
-                        ex[0] = e;
+                    else {
+                        pathsToRemove.remove(outputPath);
                     }
                 }
-            });
-            if (ex[0] != null) {
-                throw ex[0];
+                else {
+                    pathsToRemove.remove(outputPath);
+                }
             }
 
             if (onlyCheckStatus) {
@@ -804,11 +775,11 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                     context,
                     CompilerLocalize.progressSynchronizingOutputDirectory(),
                     () -> {
-                        for (File file : pathsToRemove) {
-                            boolean result = compileDriver.deleteFile(file);
-                            boolean deleted = result;
+                        for (String path : pathsToRemove) {
+                            File file = new File(path);
+                            boolean deleted = compileDriver.deleteFile(file);
                             if (deleted) {
-                                cache.remove(file);
+                                cache.remove(path);
                                 filesToRefresh.add(file);
                             }
                         }
@@ -833,7 +804,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             if (_items.length == 0) {
                                 continue;
                             }
-                            VirtualFile outputDir = getGenerationOutputDir(compileDriver, compiler, module, _items[0].isTestSource());
+                            Path outputDir = getGenerationOutputDir(compileDriver, compiler, module, _items[0].isTestSource());
                             GeneratingCompiler.GenerationItem[] successfullyGenerated = compiler.generate(context, _items, outputDir);
 
                             CompilerUtil.runInContext(
@@ -844,11 +815,12 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                         affectedModules.add(module);
                                     }
                                     for (GeneratingCompiler.GenerationItem item : successfullyGenerated) {
-                                        File file = itemToOutputPathMap.get(item);
-                                        cache.update(file, item.getValidityState());
+                                        String path = itemToOutputPathMap.get(item);
+                                        File file = new File(path);
+                                        cache.update(path, item.getValidityState());
                                         filesToRefresh.add(file);
                                         generatedFiles.add(file);
-                                        context.getProgressIndicator().setText2(LocalizeValue.ofNullable(file.getPath()));
+                                        context.getProgressIndicator().setText2(LocalizeValue.ofNullable(path));
                                     }
                                 }
                             );
@@ -864,26 +836,20 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         }
         finally {
             if (!generatedFiles.isEmpty()) {
-                List<VirtualFile> vFiles = DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
-                    ArrayList<VirtualFile> vFiles1 = new ArrayList<>(generatedFiles.size());
-                    for (File generatedFile : generatedFiles) {
-                        VirtualFile vFile = LocalFileSystem.getInstance().findFileByIoFile(generatedFile);
-                        if (vFile != null) {
-                            vFiles1.add(vFile);
-                        }
-                    }
-                    return vFiles1;
-                });
-                if (forceGenerate) {
-                    context.addScope(new FileSetCompileScope(vFiles, affectedModules.toArray(new Module[affectedModules.size()])));
+                List<Path> generatedPaths = new ArrayList<>(generatedFiles.size());
+                for (File generatedFile : generatedFiles) {
+                    generatedPaths.add(generatedFile.toPath());
                 }
-                context.markGenerated(vFiles);
+                if (forceGenerate) {
+                    context.addScope(new FileSetCompileScope(generatedPaths, affectedModules.toArray(new Module[affectedModules.size()])));
+                }
+                context.markGenerated(generatedPaths);
             }
         }
         return !toGenerate.isEmpty() || !filesToRefresh.isEmpty();
     }
 
-    private VirtualFile getGenerationOutputDir(
+    private Path getGenerationOutputDir(
         CompileDriver compileDriver,
         IntermediateOutputCompiler compiler,
         Module module,
@@ -933,54 +899,40 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         }
         CompileScope scope = context.getCompileScope();
         List<FileProcessingCompiler.ProcessingItem> toProcess = new ArrayList<>();
-        Set<File> allFiles = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
-        IOException[] ex = {null};
-        DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
-            try {
-                for (FileProcessingCompiler.ProcessingItem item : items) {
-                    File file = item.getFile();
-                    allFiles.add(file);
-                    if (!forceCompile && cache.getTimestamp(file) == file.lastModified()) {
-                        ValidityState state = cache.getExtState(file);
-                        ValidityState itemState = item.getValidityState();
-                        if (state != null ? state.equalsTo(itemState) : itemState == null) {
-                            continue;
-                        }
-                    }
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Adding item to process: " + file.getPath() + "; saved ts= " + cache.getTimestamp(file) + "; VFS ts=" + file.lastModified());
-                    }
-                    toProcess.add(item);
+        Set<String> allPaths = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
+        for (FileProcessingCompiler.ProcessingItem item : items) {
+            Path file = item.getFile();
+            allPaths.add(FileUtil.toSystemIndependentName(file.toString()));
+            long lastModified = CompilerUtil.lastModified(file);
+            if (!forceCompile && cache.getTimestamp(file) == lastModified) {
+                ValidityState state = cache.getExtState(file);
+                ValidityState itemState = item.getValidityState();
+                if (state != null ? state.equalsTo(itemState) : itemState == null) {
+                    continue;
                 }
             }
-            catch (IOException e) {
-                ex[0] = e;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding item to process: " + file + "; saved ts= " + cache.getTimestamp(file) + "; disk ts=" + lastModified);
             }
-        });
-
-        if (ex[0] != null) {
-            throw ex[0];
+            toProcess.add(item);
         }
 
-        Collection<File> files = cache.getFiles();
-        List<File> urlsToRemove = new ArrayList<>();
+        Collection<Path> files = cache.getFiles();
+        List<Path> pathsToRemove = new ArrayList<>();
         if (!files.isEmpty()) {
             CompilerUtil.runInContext(
                 context,
                 CompilerLocalize.progressProcessingOutdatedFiles(),
                 () -> {
-                    Application.get().runReadAction(() -> {
-                        for (File file : files) {
-                            if (!allFiles.contains(file)) {
-                                String fileUrl = VirtualFileUtil.urlToPath(file.getPath());
-                                if (!checkScope || scope.belongs(fileUrl)) {
-                                    urlsToRemove.add(file);
-                                }
+                    for (Path file : files) {
+                        if (!allPaths.contains(FileUtil.toSystemIndependentName(file.toString()))) {
+                            if (!checkScope || scope.belongs(file)) {
+                                pathsToRemove.add(file);
                             }
                         }
-                    });
-                    if (!onlyCheckStatus && !urlsToRemove.isEmpty()) {
-                        for (File file : urlsToRemove) {
+                    }
+                    if (!onlyCheckStatus && !pathsToRemove.isEmpty()) {
+                        for (Path file : pathsToRemove) {
                             adapter.processOutdatedItem(context, file, cache.getExtState(file));
                             cache.remove(file);
                         }
@@ -990,20 +942,20 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         }
 
         if (onlyCheckStatus) {
-            if (urlsToRemove.isEmpty() && toProcess.isEmpty()) {
+            if (pathsToRemove.isEmpty() && toProcess.isEmpty()) {
                 return false;
             }
             if (LOG.isDebugEnabled()) {
-                if (!urlsToRemove.isEmpty()) {
-                    LOG.debug("Found urls to remove, compiler " + adapter.getCompiler().getDescription());
-                    for (File file : urlsToRemove) {
-                        LOG.debug("\t" + file.getPath());
+                if (!pathsToRemove.isEmpty()) {
+                    LOG.debug("Found paths to remove, compiler " + adapter.getCompiler().getDescription());
+                    for (Path file : pathsToRemove) {
+                        LOG.debug("\t" + file);
                     }
                 }
                 if (!toProcess.isEmpty()) {
                     LOG.debug("Found items to compile, compiler " + adapter.getCompiler().getDescription());
                     for (FileProcessingCompiler.ProcessingItem item : toProcess) {
-                        LOG.debug("\t" + item.getFile().getPath());
+                        LOG.debug("\t" + item.getFile());
                     }
                 }
             }
@@ -1024,28 +976,10 @@ public class BuiltInCompilerRunner implements CompilerRunner {
             context,
             CompilerLocalize.progressUpdatingCaches(),
             () -> {
-                //List<File> vFiles = new ArrayList<>(processed.length);
-                for (FileProcessingCompiler.ProcessingItem aProcessed : processed) {
-                    File file = aProcessed.getFile();
-                    //vFiles.add(file);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("\tFile processed " + file.getPath() + "; ts=" + file.lastModified());
-                    }
-
-                    //String path = file.getPath();
-                    //String outputDir = myOutputFinder.lookupOutputPath(path);
-                    //if (outputDir != null) {
-                    //  context.updateZippedOuput(outputDir, path.substring(outputDir.length() + 1));
-                    //}
-                }
-      /*LocalFileSystem.getInstance().refreshFiles(vFiles);
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Files after VFS refresh:");
-        for (File file : vFiles) {
-          LOG.debug("\t" + file.getPath() + "; ts=" + file.lastModified());
-        }
-      } */
                 for (FileProcessingCompiler.ProcessingItem item : processed) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("\tFile processed " + item.getFile() + "; ts=" + CompilerUtil.lastModified(item.getFile()));
+                    }
                     cacheUpdater.addFileForUpdate(item, cache);
                 }
             }

@@ -23,9 +23,11 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.popup;
     exports consulo.ui.ex.popup.event;
     exports consulo.ui.ex.action;
+    exports consulo.ui.ex.action.coroutine;
     exports consulo.ui.ex.action.event;
     exports consulo.ui.ex.action.touchBar;
     exports consulo.ui.ex.action.util;
+    exports consulo.ui.ex.toolbar;
     exports consulo.ui.ex.content;
     exports consulo.ui.ex.update;
     exports consulo.ui.ex.content.event;
@@ -34,7 +36,6 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.event;
     exports consulo.ui.ex.awtUnsafe;
     exports consulo.ui.ex.keymap;
-    exports consulo.ui.ex.coroutine;
     exports consulo.ui.ex.keymap.localize;
     exports consulo.ui.ex.keymap.event;
     exports consulo.ui.ex.keymap.util;
@@ -46,10 +47,16 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.errorTreeView;
     exports consulo.ui.ex.localize;
 
-    exports consulo.ui.ex.internal to
+    exports consulo.ui.ex.internal.actionholder;
+  exports consulo.ui.ex.internal to
+        consulo.ui.ex.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.external.system.api,
+        consulo.language.editor.api,
+        consulo.language.inject.advanced.impl,
+        consulo.language.editor.refactoring.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.ui.ex.awt.api,
         consulo.execution.api,
         consulo.execution.impl,
@@ -58,14 +65,26 @@ module consulo.ui.ex.api {
         consulo.execution.coverage.impl,
         consulo.external.service.impl,
         consulo.version.control.system.impl,
+        consulo.code.editor.api,
         consulo.code.editor.impl,
         consulo.project.ui.impl,
         consulo.module.content.api,
-        consulo.desktop.awt.os.mac;
+        consulo.external.tool.impl,
+        consulo.desktop.awt.os.mac,
+        consulo.it,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+
+    exports consulo.ui.ex.keymap.internal to
+        consulo.ui.ex.impl,
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.ui.ex.awtUnsafe.internal to
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     uses TargetAWTFacade;
 }

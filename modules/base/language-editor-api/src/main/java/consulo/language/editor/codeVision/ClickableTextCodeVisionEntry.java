@@ -2,11 +2,11 @@
 package consulo.language.editor.codeVision;
 
 import consulo.codeEditor.Editor;
+import consulo.ui.event.ComponentEvent;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +16,12 @@ import java.util.List;
  * WARNING: do not store PSI inside the handler. Use smart pointers to avoid accidental PSI capture.
  */
 public class ClickableTextCodeVisionEntry extends TextCodeVisionEntry implements CodeVisionPredefinedActionEntry {
-    public static final Key<MouseEvent> MOUSE_EVENT_KEY = Key.create("CodeVisionEntryMouseEventKey");
+    /**
+     * Left on the entry by whatever renderer dispatched the click, so the handler learns where it happened.
+     * An invocation that arrives without one - the more popup, a shortcut - is handed a programmatic event
+     * anchored on the editor instead.
+     */
+    public static final Key<ComponentEvent<?>> EVENT_KEY = Key.create("CodeVisionEntryEventKey");
 
     private final CodeVisionClickHandler onClick;
 
@@ -37,12 +42,12 @@ public class ClickableTextCodeVisionEntry extends TextCodeVisionEntry implements
 
     @Override
     public void onClick(Editor editor) {
-        MouseEvent mouseEvent = getUserData(MOUSE_EVENT_KEY);
-        onClick.onClick(mouseEvent, editor);
+        ComponentEvent<?> event = getUserData(EVENT_KEY);
+        onClick.onClick(event == null ? new ComponentEvent<>(editor.getUIComponent()) : event, editor);
     }
 
     @FunctionalInterface
     public interface CodeVisionClickHandler {
-        void onClick(@Nullable MouseEvent event, Editor editor);
+        void onClick(ComponentEvent<?> event, Editor editor);
     }
 }

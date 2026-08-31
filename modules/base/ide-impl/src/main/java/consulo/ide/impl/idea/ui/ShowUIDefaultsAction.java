@@ -21,15 +21,17 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Cell;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ColorPickerBuilder;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.ColorChooser;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.PairFunction;
 import org.jspecify.annotations.Nullable;
@@ -98,15 +100,19 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
             if (isCellEditable(row, column) && e instanceof MouseEvent) {
               Object color = getValueAt(row, column);
 
-              ColorChooser.chooseColor(this, LocalizeValue.localizeTODO("Choose Color"), (Color)color, true, true, newColor -> {
-                if (newColor != null) {
-                  ColorUIResource colorUIResource = new ColorUIResource(newColor);
-                  Object key = getValueAt(row, 0);
-                  UIManager.put(key, colorUIResource);
-                  setValueAt(colorUIResource, row, column);
-                }
-              });
-
+              ColorPickerBuilder.create()
+                .withTitle(LocalizeValue.localizeTODO("Choose Color"))
+                .withColor(TargetAWT.from((Color)color))
+                .withAlphaAsPercent()
+                .showAsync(TargetAWT.from(UIUtil.getWindow(this)))
+                .whenComplete((newColor, throwable) -> {
+                  if (newColor != null) {
+                    ColorUIResource colorUIResource = new ColorUIResource(TargetAWT.to(newColor));
+                    Object key = getValueAt(row, 0);
+                    UIManager.put(key, colorUIResource);
+                    setValueAt(colorUIResource, row, column);
+                  }
+                });
             }
             return false;
           }

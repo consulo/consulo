@@ -1,0 +1,574 @@
+/* owned by a single area of the frontend, keeps the theme files from colliding */
+
+/* the gutter overlay and the status panel are placed against the editor host, which has to be the containing
+   block for them - otherwise they anchor to whatever positioned ancestor happens to be above */
+.arquill-editor
+{
+  position: relative;
+
+  /* the error stripe is the orion overview ruler, which orion lays out itself - the width is published here
+     because the analyze counters are placed against the same edge and have to clear it. orion ships the ruler
+     at 14px, an ide stripe has to carry a readable dash per highlighter */
+  --arquill-overview-ruler-width: 28px;
+
+  /* the fallbacks are the ones the bundled arquill css hardcodes, they only apply until the color scheme
+     font arrives from the server */
+  --arquill-editor-font-size: 12px;
+  --arquill-editor-font-family: "Consolas", "Menlo", "Monaco", "Vera Mono", monospace;
+
+  /* the line spacing of the colour scheme, the same number the awt editor multiplies its row height by */
+  --arquill-editor-line-spacing: 1.0;
+
+  /* every row of the view is this tall, rulers included - a length rather than a ratio, so that a row and the
+     ruler row beside it cannot end up measured against two different font sizes */
+  /* the natural line box of a font is taller than the font size - what line-height: normal resolves to, near
+     1.2 for the faces an editor is set in. the spacing of the scheme multiplies that, not the size, so a scheme
+     at 1.0 leaves the gap the face was designed with instead of pressing the rows together */
+  --arquill-editor-line-height: calc(var(--arquill-editor-font-size) * 1.2 * var(--arquill-editor-line-spacing));
+}
+
+/* the font of the color scheme, published as custom properties by the client - the bundled .textview rule
+   carries the family and the size, and it outweighs an inline style put on the host rather than on the view */
+.arquill-editor .textview
+{
+  font-family: var(--arquill-editor-font-family);
+  font-size: var(--arquill-editor-font-size);
+  min-height: 0;
+}
+
+.arquill-editor-fit-content .textview
+{
+  height: auto !important;
+}
+
+.arquill-editor-fit-content .textviewScroll
+{
+  position: relative !important;
+  inset: auto !important;
+  height: auto !important;
+  overflow: hidden !important;
+}
+
+/* An inlay is projected into the view as text, so its box is drawn by the run itself rather than painted under
+   it. The colours travel from the scheme as inline styles; the shape is decided here, the way the awt editor
+   decides it in its own painter - padding of 6px against a rounded rect of 8, and a margin holding the hint off
+   the code it sits between.
+
+   A hint is several runs when its parts are coloured differently, so only the run which opens one is rounded and
+   padded on the left and only the run which closes one on the right - the parts in between carry the background
+   alone and the whole reads as a single box. */
+.arquill-inlay
+{
+  /* without this the box is only as tall as the glyphs and the rounding barely shows */
+  padding-top: 1px;
+  padding-bottom: 1px;
+  /* the hint must not stretch the line it sits on - a proportional face with taller metrics than the editor
+     one would otherwise push every line apart the moment a hint appeared on it */
+  line-height: 1;
+}
+
+/* the family the awt editor takes from the label font when USE_EDITOR_FONT_IN_INLAYS is off, which it is by
+   default - a hint reads as a note about the code rather than as more code */
+.arquill-inlay-ui-font
+{
+  font-family: var(--lumo-font-family, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+}
+
+/* a run which reaches somewhere reads as a link while the modifier is held, the same as a reference in the code.
+   the class on the editor says the modifier is down; which run is under the pointer is left to :hover, so a hint
+   of several reachable parts - the three class names of Map<String, Integer> - lights up only the one aimed at */
+.arquill-editor.arquill-inlay-hover .arquill-inlay-action:hover
+{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.arquill-inlay-start
+{
+  margin-left: 2px;
+  padding-left: 6px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.arquill-inlay-end
+{
+  margin-right: 2px;
+  padding-right: 6px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+/* overflow must be clipped - the marks are absolutely positioned across the whole document height and would
+   otherwise give the editor a second scrollbar */
+.arquill-gutter
+{
+  /* left and width follow the orion annotation ruler, they are set while rendering */
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* orion ships the annotation ruler at 16px and measures the left ruler width from the dom, so the column has to
+   be widened here rather than from script - the measurement is cached the moment the view is created, and two
+   markers on one line have to fit */
+.textviewLeftRuler .ruler.annotations
+{
+  /* the script widens the column when a line carries more markers than it can hold, and makes orion measure
+     the view again - the value it sets is this property */
+  min-width: calc(var(--arquill-gutter-annotations-width, 0px) + var(--arquill-gutter-marks-width, 32px));
+}
+
+.arquill-gutter-annotation
+{
+  position: absolute;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: clip;
+  pointer-events: auto;
+  cursor: default;
+  box-sizing: border-box;
+  padding-left: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.arquill-gutter-mark
+{
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+  pointer-events: auto;
+
+  --web-image-width: 100%;
+  --web-image-height: var(--arquill-gutter-icon-size, 12px);
+}
+
+/* a breakpoint stands in place of the line number, so it covers the whole column and is painted on the gutter
+   background - the digit underneath is still drawn by orion, which the awt gutter simply skips */
+.arquill-gutter-mark-line-number
+{
+  width: 100%;
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
+
+  --web-image-width: var(--arquill-gutter-icon-size, 12px);
+}
+
+/* the icon is narrower than the column it replaces, and the box it hangs in is stretched across that column */
+.arquill-gutter-mark-line-number > *
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* the breakpoint the hovered line would take is only an offer, drawn at the alpha the awt gutter paints it with -
+   EditorGutterComponentImpl reads it from Breakpoint.iconHoverAlpha, which defaults to 0.5 */
+/* an offer rather than a control - what the click belongs to is the column of line numbers underneath, so the
+   pointer goes through it */
+.arquill-gutter-mark-hover
+{
+  pointer-events: none;
+}
+
+.arquill-gutter-mark-hover > *
+{
+  opacity: 0.5;
+}
+
+/* the vcs change bars are drawn over the right edge of the folding ruler, which is the last of the left
+   rulers and so the only column that touches the text - the same place the awt gutter paints them. the
+   ruler ships at 14px and its anchors are left aligned inline blocks, so the extra width stays free */
+.textviewLeftRuler .ruler.folding
+{
+  width: 22px;
+}
+
+/* the folding marker is the div the annotation of the row carries. what stands inside it is the gutter icon of
+   the platform, handed to the editor as markup - the rule has to outweigh the bundled .annotationHTML.expanded,
+   whose stylesheet is added after the theme. an open region carries two: the head on the row it begins on and
+   the foot on the row it ends on, which is the bracket the awt gutter draws around what the region holds */
+.textviewLeftRuler .ruler.folding .annotationHTML.expanded,
+.textviewLeftRuler .ruler.folding .annotationHTML.collapsed,
+.textviewLeftRuler .ruler.folding .annotationHTML.expandedBottom
+{
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  /* the bundle draws a plus and a minus circle of its own here */
+  background-image: none;
+  cursor: pointer;
+
+  /* the image of the platform is sized by the box it hangs in, as in the gutter marks. the icon is a chevron
+     drawn inside a square with a margin of its own - at the 9px the file declares, the mark reads far heavier
+     beside a 13px line than the awt one does in a gutter row, so the box is taken down to the width the stroke
+     actually covers and the chevron ends up about as tall as the x height of the text */
+  --web-image-width: var(--arquill-fold-icon-size, 9px);
+  --web-image-height: var(--arquill-fold-icon-size, 9px);
+
+  /* the awt gutter only shows the anchors while the pointer is over it - see the alpha context of
+     EditorGutterComponentImpl, which is made visible by the hover of the gutter */
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+/* the whole left gutter is the hover area, the way the awt one is - the anchors of every row appear at once
+   rather than the one under the pointer */
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expanded,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.collapsed,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expandedBottom
+{
+  opacity: 0.75;
+}
+
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expanded:hover,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.collapsed:hover,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expandedBottom:hover
+{
+  opacity: 1;
+}
+
+/* the layer every line marker presentation is drawn into - one box per band, placed while rendering, since
+   which strip of the gutter an area resolves to is only known from the orion rulers */
+.arquill-gutter-bands
+{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arquill-gutter-band
+{
+  position: absolute;
+  box-sizing: border-box;
+  left: var(--arquill-band-left);
+  width: var(--arquill-band-width);
+  border-radius: 2px;
+}
+
+.arquill-gutter-band-clickable:hover
+{
+  left: calc(var(--arquill-band-left) - 2px);
+  width: calc(var(--arquill-band-width) + 4px);
+  border-radius: 4px;
+}
+
+/* the error stripe, the counterpart of the awt error panel - the orion overview ruler, which ships at 14px and
+   is measured from the dom the same way the left rulers are */
+.textviewRightRuler .ruler.overview
+{
+  width: var(--arquill-overview-ruler-width);
+
+  /* the stripe is a column of its own beside the text, and it carries the background of the panels around
+     the editor, like the awt error panel does */
+  background-color: var(--consulo-panel-background, #fff);
+}
+
+/* orion draws a mark as a rounded 8px pill left aligned in the column, the awt panel paints a dash over the
+   whole width of it. the height is orion's own, it counts the lines the highlighter spans */
+.annotationOverview.arquillStripe
+{
+  left: 2px;
+  right: 2px;
+  width: auto;
+
+  border-radius: 0;
+}
+
+/* a thin mark keeps to the left half, so a wide one covering the same lines stays readable next to it - the
+   ruler has room for a single mark per row, which is why they cannot share it the way the awt panel does */
+.annotationOverview.arquillStripeThin
+{
+  right: auto;
+  width: 40%;
+}
+
+/* orion marks the caret row in the overview ruler of its own accord, the awt panel has nothing of the kind */
+.annotationOverview.currentLine
+{
+  display: none;
+}
+
+/* an icon is a tree of web-image tags, and the size of every tag in it comes from the variables - setting a
+   width on the outermost one alone would leave the layers of a composition at the size the platform asked
+   for, overflowing the box they were fitted into */
+.arquill-status-icon > *
+{
+  position: absolute;
+  inset: 0;
+}
+
+/* the box is as tall as the row so the mark cannot land between two lines, but the icon inside follows the
+   font - the row is twice the font height, and an icon that size towers over the text it belongs to. the
+   script publishes the measured size, the box has no other way of knowing it */
+.arquill-gutter-mark > *
+{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* the icon width pinned by the variable over-constrains left and right, and left wins - the mark of a line
+   number belongs at the right edge instead, where the digits it stands in for end */
+.arquill-gutter-mark-line-number > *
+{
+  left: auto;
+  right: 0;
+}
+
+.arquill-status-icon
+{
+  position: relative;
+  flex: 0 0 14px;
+
+  width: 14px;
+  height: 14px;
+
+  --web-image-width: 100%;
+  --web-image-height: 100%;
+}
+
+/* the counters of the whole file, sitting over the top right corner of the editor the way the awt inspection
+   widget does - it is a readout, not a control, so it carries no frame and no selection of its own */
+.arquill-status
+{
+  position: absolute;
+  /* left of the error stripe and of the vertical scrollbar - the counters are a readout, covering either of
+     them costs more than the space it saves */
+  right: calc(var(--arquill-overview-ruler-width) + 24px);
+  top: 2px;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 4px;
+
+  font-size: 12px;
+  line-height: 16px;
+  cursor: default;
+}
+
+/* a readout is not text to work with - dragging over it must not leave the counters highlighted, and the
+   descendants have to be named too, the counters are elements of their own */
+.arquill-status,
+.arquill-status *
+{
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.arquill-status.arquill-status-analyzing
+{
+  opacity: 0.5;
+}
+
+/* a fixed slot per severity, otherwise the panel resizes under the pointer while the daemon is still counting */
+.arquill-status-item
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  /* the count is laid out on its own line box, which is taller than the icon beside it - without this the two
+     sit on different centre lines even though the row is centered */
+  line-height: 1;
+
+  min-width: 2em;
+}
+
+
+/* ctrl/cmd over a resolvable reference turns the editor into a link, like the awt one */
+.arquill-ctrl-hover,
+.arquill-ctrl-hover *
+{
+  cursor: pointer !important;
+}
+
+/* the daemon messages carry markup, so they are rendered in an element instead of a title attribute */
+.arquill-tooltip
+{
+  position: fixed;
+  z-index: 1000;
+
+  max-width: 40em;
+  padding: 4px 6px;
+
+  border: 1px solid var(--consulo-component-border-color, lightgray);
+  background-color: var(--consulo-tool-tip-background, white);
+  color: var(--consulo-tool-tip-foreground, black);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+  font-size: 12px;
+  pointer-events: none;
+}
+
+/* the bundled arquill css leaves the font on the default normal line height, which is cramped.
+   orion forces line-height: normal inline on the root and on the div it measures the metrics with, so the
+   rule has to sit on the line divs and it has to be important - otherwise the measured height and the
+   rendered height disagree and orion falls back to its variable line height path */
+.textviewContent > div
+{
+  line-height: var(--arquill-editor-line-height) !important;
+}
+
+/* the caret never takes the colour of what it stands in. left alone a contenteditable draws it in the colour of
+   the text under it, so it turned red inside an error and green inside a string - it belongs to the editor, not
+   to the token. one fixed colour, and a theme overrides it by writing the variable.
+   the spans carry the rule too: currentColor is resolved again by every one of them, so declaring it only on the
+   container is the same as not declaring it, and the caret is drawn inside whichever span it stands in */
+/* the caret is drawn here rather than by the browser. a contenteditable caret takes the colour of the text it
+   stands in, is always one pixel wide and blinks at a rate the page cannot ask about - the platform has a width,
+   a colour and a blink period for it, and none of the three are reachable through css on the native one */
+.textview .textviewContent,
+.textview .textviewContent *
+{
+  caret-color: transparent;
+}
+
+.arquill-caret
+{
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  width: var(--arquill-editor-caret-width, 2px);
+  background-color: var(--arquill-editor-caret-color, black);
+}
+
+/* step-end so it is shown or hidden and never faded, which is how an editor caret blinks */
+.arquill-caret.arquill-caret-blinking
+{
+  animation: arquill-caret-blink var(--arquill-editor-caret-blink-period, 500ms) step-end infinite;
+}
+
+.arquill-caret-hidden
+{
+  display: none;
+}
+
+@keyframes arquill-caret-blink
+{
+  50% { opacity: 0; }
+}
+
+/* the line numbers are drawn in the font of the color scheme, the way the awt gutter draws them - the rule
+   which publishes it matches .textview, and the ruler is a column of its own beside it. the row metric is
+   pinned below and is computed from the same size, so a taller font does not pull the numbers off the lines
+   they belong to */
+.textviewLeftRuler .ruler.lines
+{
+  font-family: var(--arquill-editor-font-family);
+  font-size: var(--arquill-editor-font-size);
+}
+
+/* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is
+   drawn at the top of its row while the gutter marker beside it is centered in the same row - the two then
+   read as misaligned even though both are where they were put */
+.textviewLeftRuler .rulerLines,
+.textviewRightRuler .rulerLines
+{
+  line-height: var(--arquill-editor-line-height) !important;
+}
+
+/* the zoom ruler renders the whole file at 1px per line, it must keep its own height */
+.textviewZoom .textviewContent > div
+{
+  line-height: normal !important;
+}
+
+/* the rules below override the bundled orion stylesheet, which carries fixed light colors of its own. the
+   bundle is regenerated on an arquill update, so the theme never touches it - and it is injected after this
+   file, which is why every selector doubles a class to win the cascade on specificity */
+
+.textview.textview
+{
+  color: var(--arquill-editor-foreground, #333);
+  background-color: var(--arquill-editor-background, white);
+}
+
+/* orion swaps to its own grey plate whenever its content div does not hold the dom focus, which here is most of
+   the time - the caret is drawn by the ide and the focus is kept off it. the scheme has one selection colour and
+   the awt editor keeps it whether or not the editor is active, so both plates take it */
+.textviewSelection.textviewSelection,
+.textviewSelectionUnfocused.textviewSelectionUnfocused
+{
+  background: var(--arquill-editor-selection-background, rgb(180, 213, 255));
+}
+
+.textview .textviewContent ::-moz-selection
+{
+  background: var(--arquill-editor-selection-background, rgba(180, 213, 255, 0.99));
+}
+
+.textview .textviewContent ::selection
+{
+  background: var(--arquill-editor-selection-background, rgba(180, 213, 255, 0.99));
+}
+
+.annotationLine.annotationLine.currentLine,
+.meta.meta.annotation.currentLine
+{
+  background-color: var(--arquill-editor-caret-row-background, #EAF2FE);
+}
+
+/* the bundled orion sheet gives the line number ruler a grey of its own, which is what the scheme colour of
+   the ide has to outweigh - the awt gutter paints these two keys itself */
+.textviewLeftRuler.textviewLeftRuler .rulerLines.rulerLines
+{
+  color: var(--arquill-editor-line-number-color, #767676);
+}
+
+.textviewLeftRuler.textviewLeftRuler .rulerLines.rulerLines.currentLine
+{
+  color: var(--arquill-editor-line-number-caret-row-color, var(--arquill-editor-line-number-color, #767676));
+}
+
+/* the rulers belong to the editor rather than to the frame around it, so they take the gutter colour of the
+   colour scheme - the awt gutter reads the same key and falls back to the editor background the same way.
+   the seam is the one EditorGutterComponentImpl draws down the gutter, in the indent guide colour of the
+   scheme rather than in the border colour of a control */
+.textviewLeftRuler.textviewLeftRuler
+{
+  border-right: 1px solid var(--arquill-editor-gutter-separator, #ebecf0);
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
+}
+
+.textviewRightRuler.textviewRightRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
+}
+
+.textviewInnerRightRuler.textviewInnerRightRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
+}
+
+.textviewMarginRuler.textviewMarginRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+}
+
+/* the pointer over a collapsed placeholder says the click opens it, the hand cursor the awt editor answers
+   with from DesktopEditorImpl#getDefaultCursor */
+.arquill-fold-hover .textview,
+.arquill-fold-hover .textview *
+{
+  cursor: pointer;
+}

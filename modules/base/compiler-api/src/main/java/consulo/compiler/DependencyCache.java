@@ -18,10 +18,10 @@ package consulo.compiler;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -33,9 +33,9 @@ public interface DependencyCache {
     void findDependentFiles(
         CompileContext context,
         SimpleReference<CacheCorruptedException> exceptionRef,
-        Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,
-        Set<VirtualFile> dependentFiles,
-        Set<VirtualFile> compiledWithErrors
+        Function<Pair<int[], Set<Path>>, Pair<int[], Set<Path>>> filter,
+        Set<Path> dependentFiles,
+        Set<Path> compiledWithErrors
     ) throws CacheCorruptedException, ExitException;
 
     boolean hasUnprocessedTraverseRoots();

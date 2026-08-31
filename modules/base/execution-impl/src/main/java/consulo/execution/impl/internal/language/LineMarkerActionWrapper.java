@@ -11,9 +11,11 @@ import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.action.ActionWithDelegate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -23,7 +25,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public class LineMarkerActionWrapper extends ActionGroup implements PriorityAction, ActionWithDelegate<AnAction> {
+public class LineMarkerActionWrapper extends ActionGroup implements PriorityAction, ActionWithDelegate<AnAction>, AnActionWithSyncUpdate {
     private static final Logger LOG = Logger.getInstance(LineMarkerActionWrapper.class);
     public static final Key<Pair<PsiElement, MyDataContext>> LOCATION_WRAPPER = Key.create("LOCATION_WRAPPER");
 
@@ -77,7 +79,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     @Override
     public void update(AnActionEvent e) {
         AnActionEvent wrapped = wrapEvent(e);
-        myOrigin.update(wrapped);
+        ActionUpdateInvoker.updateSync(myOrigin, wrapped);
         Image icon = wrapped.getPresentation().getIcon();
         if (icon != null) {
             getTemplatePresentation().setIcon(icon);

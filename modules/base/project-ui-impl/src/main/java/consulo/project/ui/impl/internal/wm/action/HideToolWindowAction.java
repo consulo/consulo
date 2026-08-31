@@ -16,18 +16,20 @@
 package consulo.project.ui.impl.internal.wm.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.UIAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "HideActiveWindow")
-public class HideToolWindowAction extends AnAction implements DumbAware {
+public class HideToolWindowAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public HideToolWindowAction() {
         super(ActionLocalize.actionHideactivewindowText(), ActionLocalize.actionHideactivewindowDescription());
     }
@@ -45,28 +47,32 @@ public class HideToolWindowAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = event.getPresentation();
+            Project project = event.getData(Project.KEY);
+            if (project == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
 
-        ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
-        String id = toolWindowManager.getActiveToolWindowId();
-        if (id != null) {
-            presentation.setEnabled(true);
-            return;
-        }
+            ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+            String id = toolWindowManager.getActiveToolWindowId();
+            if (id != null) {
+                presentation.setEnabled(true);
+                return null;
+            }
 
-        id = toolWindowManager.getLastActiveToolWindowId();
-        if (id == null) {
-            presentation.setEnabled(false);
-            return;
-        }
+            id = toolWindowManager.getLastActiveToolWindowId();
+            if (id == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
 
-        ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
-        presentation.setEnabled(toolWindow.isVisible());
+            ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
+            presentation.setEnabled(toolWindow != null && toolWindow.isVisible());
+
+            return null;
+        }));
     }
 }

@@ -167,7 +167,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
       }, context, true);
     List<Library> result = new ArrayList<Library>();
     for (Library library : librariesList) {
-      if (!roots.containsAll(Arrays.asList(library.getFiles(BinariesOrderRootType.getInstance())))) {
+      if (!roots.containsAll(Arrays.asList(library.getFiles(BinariesOrderRootType.ID)))) {
         result.add(library);
       }
     }

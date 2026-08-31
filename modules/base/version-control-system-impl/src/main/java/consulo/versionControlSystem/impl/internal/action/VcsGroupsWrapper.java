@@ -17,6 +17,7 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.EditorKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
@@ -31,7 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.*;
 
 @ActionImpl(id = "VcsFileGroupPopup")
-public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
+public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private static final Logger LOG = Logger.getInstance(VcsGroupsWrapper.class);
 
     private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
@@ -43,7 +44,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        VcsContext dataContext = VcsContextWrapper.createInstanceOn(e);
+        VcsContext dataContext = VcsContextWrapper.createInstanceOn(e, EditorKeys.EDITOR_SNAPSHOT);
         if (myChildren == null) {
             DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup) ActionManager.getInstance().getAction(VcsActionGroup.ID);
             List<AnAction> validChildren = new ArrayList<>();
@@ -118,8 +119,6 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
                 e.getPresentation().setVisible(false);
             }
         }
-
-        super.update(e);
     }
 
     private void updateFromAction(AnAction action, Presentation presentation) {

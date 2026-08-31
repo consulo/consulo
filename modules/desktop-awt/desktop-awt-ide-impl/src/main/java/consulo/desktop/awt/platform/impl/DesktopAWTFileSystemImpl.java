@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -36,8 +37,8 @@ class DesktopAWTFileSystemImpl extends PlatformFileSystemImpl {
     }
 
     @Override
-    public @Nullable Image getImage(File file) {
-        Icon systemIcon = FileSystemView.getFileSystemView().getSystemIcon(file);
+    public @Nullable Image getImage(Path file) {
+        Icon systemIcon = FileSystemView.getFileSystemView().getSystemIcon(file.toFile());
         return systemIcon == null ? null : new DesktopImageOverIconImpl(systemIcon);
     }
 }

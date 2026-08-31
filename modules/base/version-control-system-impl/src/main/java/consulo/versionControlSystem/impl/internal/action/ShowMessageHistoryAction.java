@@ -16,11 +16,10 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.CommitMessage;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
@@ -41,7 +40,7 @@ import java.util.List;
  * @since 5.1
  */
 @ActionImpl(id = "Vcs.ShowMessageHistory")
-public class ShowMessageHistoryAction extends AnAction implements DumbAware {
+public class ShowMessageHistoryAction extends LegacyDumbAwareAction {
     public ShowMessageHistoryAction() {
         super(
             VcsLocalize.actionShowMessageHistoryText(),
@@ -53,8 +52,6 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
-
         Project project = e.getData(Project.KEY);
         Object panel = e.getData(CheckinProjectPanel.PANEL_KEY);
         if (!(panel instanceof CommitMessage)) {

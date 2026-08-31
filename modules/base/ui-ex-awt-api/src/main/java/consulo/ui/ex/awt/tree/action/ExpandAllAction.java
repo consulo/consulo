@@ -19,12 +19,12 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 import javax.swing.*;
 
-public class ExpandAllAction extends AnAction {
+public class ExpandAllAction extends LegacyAnAction {
     protected JTree myTree;
 
     public ExpandAllAction(JTree tree) {

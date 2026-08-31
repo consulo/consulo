@@ -21,8 +21,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author yole
  */
 @ActionImpl(id = "ShelvedChanges.Rename", shortcutFrom = @ActionRef(id = "RenameElement"))
-public class RenameShelvedChangeListAction extends AnAction {
+public class RenameShelvedChangeListAction extends LegacyAnAction {
     public RenameShelvedChangeListAction() {
         super(ActionLocalize.actionShelvedchangesRenameText(), ActionLocalize.actionShelvedchangesRenameDescription());
     }

@@ -43,20 +43,20 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     super(type, text);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getFirstChild() {
     return null;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getLastChild() {
     return null;
   }
@@ -70,14 +70,14 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     return SharedImplUtil.getParent(this);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getNextSibling() {
     return SharedImplUtil.getNextSibling(this);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getPrevSibling() {
     return SharedImplUtil.getPrevSibling(this);
   }
@@ -89,14 +89,14 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     return file;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement findElementAt(int offset) {
     return this;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiReference findReferenceAt(int offset) {
     return SharedPsiElementImplUtil.findReferenceAt(this, offset);
   }
@@ -132,14 +132,14 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
@@ -149,28 +149,28 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor)
     throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
     throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public void delete() throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null);
     CheckUtil.checkWritable(this);
@@ -183,14 +183,14 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     CheckUtil.checkWritable(this);
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null);
     CheckUtil.checkWritable(this);
@@ -254,8 +254,8 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     return getManager().getProject();
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
@@ -275,8 +275,8 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     return this == another;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }

@@ -232,6 +232,12 @@ log.monitor.remove.button:
     text: '&Remove'
 lower.jre.versions.0.message:
     text: Java versions lower {0} will be not supported in near future. Please migrate to JRE {0}+ or use bundled jre (at next update)
+message.failed.to.read.data.from.url:
+    text: |-
+        Failed to read data from URL: {0}
+        View logs for details.
+message.failed.to.receive.oauth.token:
+    text: Failed to receive OAuth token
 message.idea.few.plugins.will.be.not.updated:
     text: Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?
 message.idea.restart.required:
@@ -244,10 +250,6 @@ message.plugins.suggestion.notification:
     text: Features covered by non-installed plugins are detected.
 message.successfully.logged.in.as.0:
     text: Successfully logged in as {0}
-message.failed.to.receive.oauth.token:
-    text: Failed to receive OAuth token
-message.failed.to.read.data.from.url:
-    text: "Failed to read data from URL: {0}\nView logs for details."
 notification.group.platform.or.plugins.update.display.name:
     text: Platform Or Plugins Update
 plugin.advestiser.notification.install.link:

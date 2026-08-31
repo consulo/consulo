@@ -24,6 +24,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -52,13 +53,12 @@ import java.util.regex.Pattern;
 public class ConflictsDialog extends DialogWrapper {
     private static final int SHOW_CONFLICTS_EXIT_CODE = 4;
 
-    
     private Collection<LocalizeValue> myConflictDescriptions;
     private MultiMap<PsiElement, LocalizeValue> myElementConflictDescription;
     private final Project myProject;
     private Runnable myDoRefactoringRunnable;
     private final boolean myCanShowConflictsInView;
-    
+
     private LocalizeValue myCommandName;
 
     public ConflictsDialog(Project project, MultiMap<PsiElement, LocalizeValue> conflictDescriptions) {
@@ -115,7 +115,6 @@ public class ConflictsDialog extends DialogWrapper {
     }
 
     @Override
-    
     protected Action[] createActions() {
         Action okAction = getOKAction();
         boolean showUsagesButton = myElementConflictDescription != null && myCanShowConflictsInView;
@@ -213,7 +212,7 @@ public class ConflictsDialog extends DialogWrapper {
 
                 usages[i++] = isRead || isWrite
                     ? new ReadWriteAccessUsageInfo2UsageAdapter(new UsageInfo(element), isRead, isWrite) {
-                    
+
                     @Override
                     public UsagePresentation getPresentation() {
                         UsagePresentation usagePresentation = super.getPresentation();
@@ -221,7 +220,7 @@ public class ConflictsDialog extends DialogWrapper {
                     }
                 }
                     : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
-                    
+
                     @Override
                     public UsagePresentation getPresentation() {
                         UsagePresentation usagePresentation = super.getPresentation();
@@ -247,7 +246,6 @@ public class ConflictsDialog extends DialogWrapper {
                 " (" + Pattern.compile("<[^<>]*>").matcher(StringUtil.join(elementConflicts, "\n")).replaceAll("") + ")";
             return new UsagePresentation() {
                 @Override
-                
                 public TextChunk[] getText() {
                     TextChunk[] chunks = usagePresentation.getText();
                     return ArrayUtil.append(
@@ -260,7 +258,6 @@ public class ConflictsDialog extends DialogWrapper {
                 }
 
                 @Override
-                
                 public String getPlainText() {
                     return usagePresentation.getPlainText() + conflictDescription;
                 }
@@ -283,11 +280,9 @@ public class ConflictsDialog extends DialogWrapper {
                 .replaceAll("");
 
             @Override
-            
             public UsagePresentation getPresentation() {
                 return new UsagePresentation() {
                     @Override
-                    
                     public TextChunk[] getText() {
                         return new TextChunk[0];
                     }
@@ -303,7 +298,6 @@ public class ConflictsDialog extends DialogWrapper {
                     }
 
                     @Override
-                    
                     public String getPlainText() {
                         return myConflictDescription;
                     }
@@ -323,6 +317,7 @@ public class ConflictsDialog extends DialogWrapper {
             }
 
             @Override
+            @RequiredUIAccess
             public void navigate(boolean requestFocus) {
             }
 

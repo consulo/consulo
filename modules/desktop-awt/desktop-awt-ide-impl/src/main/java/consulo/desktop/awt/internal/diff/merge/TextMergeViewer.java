@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.internal.diff.merge;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -59,7 +59,6 @@ import consulo.diff.util.*;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -1049,7 +1048,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        private abstract class ApplySelectedChangesActionBase extends AnAction implements DumbAware {
+        private abstract class ApplySelectedChangesActionBase extends LegacyDumbAwareAction {
             private final boolean myShortcut;
 
             public ApplySelectedChangesActionBase(boolean shortcut) {
@@ -1179,7 +1178,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             public IgnoreSelectedChangesSideAction(Side side, boolean shortcut) {
                 super(shortcut);
                 mySide = side;
-                ActionImplUtil.copyFrom(this, mySide.select("Diff.IgnoreLeftSide", "Diff.IgnoreRightSide"));
+                ActionUtil.copyFrom(this, mySide.select("Diff.IgnoreLeftSide", "Diff.IgnoreRightSide"));
             }
 
             
@@ -1245,7 +1244,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             public ApplySelectedChangesAction(Side side, boolean shortcut) {
                 super(shortcut);
                 mySide = side;
-                ActionImplUtil.copyFrom(this, mySide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"));
+                ActionUtil.copyFrom(this, mySide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"));
             }
 
             
@@ -1309,13 +1308,13 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        public class ApplyNonConflictsAction extends DumbAwareAction {
+        public class ApplyNonConflictsAction extends LegacyDumbAwareAction {
             
             private final ThreeSide mySide;
 
             public ApplyNonConflictsAction(ThreeSide side) {
                 String id = side.select("Diff.ApplyNonConflicts.Left", "Diff.ApplyNonConflicts", "Diff.ApplyNonConflicts.Right");
-                ActionImplUtil.copyFrom(this, id);
+                ActionUtil.copyFrom(this, id);
                 mySide = side;
             }
 

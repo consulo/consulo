@@ -16,7 +16,6 @@
 package consulo.project.ui.impl.internal.wm.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -24,6 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -35,7 +35,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @ActionImpl(id = "ShowContent")
-public class ShowContentAction extends AnAction implements DumbAware {
+public class ShowContentAction extends LegacyDumbAwareAction {
     private ToolWindow myWindow;
 
     @Inject

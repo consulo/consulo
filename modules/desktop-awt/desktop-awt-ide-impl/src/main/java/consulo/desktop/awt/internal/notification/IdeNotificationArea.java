@@ -31,6 +31,7 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -102,7 +103,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
 
     @RequiredUIAccess
     private void applyIconToStatusAndToolWindow(Project project, Image icon) {
-        if (UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE) {
+        if (ToolWindowSettings.getInstance(project).isHideToolStripes() || UISettings.getInstance().PRESENTATION_MODE) {
             myLabel.setVisible(true);
             myLabel.setImage(icon);
         }

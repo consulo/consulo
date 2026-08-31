@@ -44,10 +44,6 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import java.io.*;
 import java.util.*;
 
@@ -63,13 +59,13 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         super(context);
     }
 
-    
+
     @Override
     public List<ArtifactBuildTarget> getAllTargets() {
         return getArtifactTargets(false);
     }
 
-    
+
     @Override
     public List<ArtifactBuildTarget> getSelectedTargets() {
         return getArtifactTargets(true);
@@ -111,7 +107,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         );
     }
 
-    
+
     @Override
     public List<ArtifactCompilerCompileItem> getItems(ArtifactBuildTarget target) {
         myBuilderContext = new ArtifactsProcessingItemsBuilderContext(myContext);
@@ -122,25 +118,17 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         String selfIncludingName = selfIncludingArtifacts.get(artifact.getName());
         if (selfIncludingName != null) {
             String name = selfIncludingName.equals(artifact.getName()) ? "it" : "'" + selfIncludingName + "' artifact";
-            myContext.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot build '" + artifact.getName() + "' artifact: " + name + " includes itself in the output layout",
-                null,
-                -1,
-                -1
-            );
+            myContext.newError(LocalizeValue.localizeTODO(
+                "Cannot build '" + artifact.getName() + "' artifact: " + name + " includes itself in the output layout"
+            )).add();
             return Collections.emptyList();
         }
 
         String outputPath = artifact.getOutputPath();
         if (StringUtil.isEmpty(outputPath)) {
-            myContext.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot build '" + artifact.getName() + "' artifact: output path is not specified",
-                null,
-                -1,
-                -1
-            );
+            myContext.newError(
+                LocalizeValue.localizeTODO("Cannot build '" + artifact.getName() + "' artifact: output path is not specified")
+            ).add();
             return Collections.emptyList();
         }
 
@@ -151,9 +139,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     private void collectItems(Artifact artifact, String outputPath) {
         CompositePackagingElement<?> rootElement = artifact.getRootElement();
-        VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
-        CopyToDirectoryInstructionCreator instructionCreator =
-            new CopyToDirectoryInstructionCreator(myBuilderContext, outputPath, outputFile);
+        CopyToDirectoryInstructionCreator instructionCreator = new CopyToDirectoryInstructionCreator(myBuilderContext, outputPath);
         PackagingElementResolvingContext resolvingContext = ArtifactManager.getInstance(getProject()).getResolvingContext();
         FULL_LOG.debug("Collecting items for " + artifact.getName());
         rootElement.computeIncrementalCompilerInstructions(
@@ -191,30 +177,29 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                 ArtifactCompilerCompileItem sourceItem = item.getItem();
                 myContext.getProgressIndicator().checkCanceled();
 
-                ReadAction.run(() -> {
-                    VirtualFile sourceFile = sourceItem.getFile();
-                    for (DestinationInfo destination : sourceItem.getDestinations()) {
-                        if (destination instanceof ExplodedDestinationInfo) {
-                            ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo) destination;
-                            File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
-                            if (sourceFile.isInLocalFileSystem()) {
-                                File ioFromFile = VirtualFileUtil.virtualToIoFile(sourceFile);
-                                if (ioFromFile.exists()) {
-                                    DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
-                                }
-                                else {
-                                    LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");
-                                }
+                String sourcePath = sourceItem.getSourcePath();
+                boolean isArchiveEntry = sourcePath.contains(URLUtil.ARCHIVE_SEPARATOR);
+                for (DestinationInfo destination : sourceItem.getDestinations()) {
+                    if (destination instanceof ExplodedDestinationInfo) {
+                        ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo) destination;
+                        File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
+                        if (!isArchiveEntry) {
+                            File ioFromFile = new File(FileUtil.toSystemDependentName(sourcePath));
+                            if (ioFromFile.exists()) {
+                                DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
                             }
                             else {
-                                extractFile(sourceFile, toFile, writtenPaths, fileFilter);
+                                LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");
                             }
                         }
                         else {
-                            changedJars.add(((ArchiveDestinationInfo) destination).getArchivePackageInfo());
+                            extractFile(sourcePath, toFile, writtenPaths, fileFilter);
                         }
                     }
-                });
+                    else {
+                        changedJars.add(((ArchiveDestinationInfo) destination).getArchivePackageInfo());
+                    }
+                }
 
                 myContext.getProgressIndicator().setFraction(++i * 1.0 / changedItems.size());
                 processedItems.add(sourceItem);
@@ -229,13 +214,13 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                 return false;
             }
 
-            Set<VirtualFile> recompiledSources = new HashSet<>();
+            Set<String> recompiledSources = new HashSet<>();
             for (ArchivePackageInfo info : builder.getArchivesToBuild()) {
-                for (Pair<String, VirtualFile> pair : info.getPackedFiles()) {
+                for (Pair<String, String> pair : info.getPackedFiles()) {
                     recompiledSources.add(pair.getSecond());
                 }
             }
-            for (VirtualFile source : recompiledSources) {
+            for (String source : recompiledSources) {
                 ArtifactCompilerCompileItem item = myBuilderContext.getItemBySource(source);
                 LOG.assertTrue(item != null, source);
                 processedItems.add(item);
@@ -251,37 +236,28 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
         catch (Exception e) {
             LOG.info(e);
-            myContext.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
+            myContext.newError(LocalizeValue.of(ExceptionUtil.getThrowableText(e))).add();
             return false;
         }
         return true;
     }
 
-    private void extractFile(VirtualFile sourceFile, File toFile, Set<String> writtenPaths, FileFilter fileFilter) throws IOException {
+    private void extractFile(String sourcePath, File toFile, Set<String> writtenPaths, FileFilter fileFilter) throws IOException {
         if (!writtenPaths.add(toFile.getPath())) {
             return;
         }
 
         if (!FileUtil.createParentDirs(toFile)) {
-            myContext.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot create directory for '" + toFile.getAbsolutePath() + "' file",
-                null,
-                -1,
-                -1
-            );
+            myContext.newError(LocalizeValue.localizeTODO("Cannot create directory for '" + toFile.getAbsolutePath() + "' file")).add();
             return;
         }
 
-        InputStream input = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext).getFirst();
-        if (input == null) {
+        ArtifactCompilerUtil.ArchiveEntryData entryData = ArtifactCompilerUtil.getArchiveEntry(sourcePath, myContext);
+        if (entryData == null) {
             return;
         }
-        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile))) {
+        try (InputStream input = entryData.stream(); BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile))) {
             FileUtil.copy(input, output);
-        }
-        finally {
-            input.close();
         }
     }
 
@@ -401,16 +377,12 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                     notDeletedJars.add(filePath);
                 }
                 if (notDeletedFilesCount++ > 50) {
-                    myContext.addMessage(
-                        CompilerMessageCategory.WARNING,
-                        "Deletion of outdated files stopped because too many files cannot be deleted",
-                        null,
-                        -1,
-                        -1
+                    myContext.newWarning(
+                        LocalizeValue.localizeTODO("Deletion of outdated files stopped because too many files cannot be deleted")
                     );
                     break;
                 }
-                myContext.addMessage(CompilerMessageCategory.WARNING, "Cannot delete file '" + filePath + "'", null, -1, -1);
+                myContext.newWarning(LocalizeValue.localizeTODO("Cannot delete file '" + filePath + "'")).add();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Cannot delete file " + file);
                 }

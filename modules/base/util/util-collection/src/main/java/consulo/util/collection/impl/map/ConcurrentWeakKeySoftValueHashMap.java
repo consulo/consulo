@@ -41,7 +41,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
     ValueReference<K, V> getValueReference(); // no strong references
 
-    // MUST work even with gced references for the code in processQueue to work
+    // MUST work even with gc-ed references for the code in processQueue to work
     @Override
     boolean equals(Object o);
 

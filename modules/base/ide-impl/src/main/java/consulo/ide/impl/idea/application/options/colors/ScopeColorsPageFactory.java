@@ -89,7 +89,7 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, ConfigurableWe
             if (optionsEditor != null) {
                 try {
                     Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);
-                    if (configurable == null || optionsEditor.clearSearchAndSelect(configurable).isRejected()) {
+                    if (configurable == null || optionsEditor.clearSearchAndSelect(configurable).isCompletedExceptionally()) {
                         EditScopesDialog.showDialog(project, null);
                     }
                 }

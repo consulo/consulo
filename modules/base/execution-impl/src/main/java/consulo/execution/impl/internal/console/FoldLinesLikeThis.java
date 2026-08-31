@@ -1,6 +1,7 @@
 package consulo.execution.impl.internal.console;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.SelectionModel;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.document.Document;
@@ -9,7 +10,9 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -18,7 +21,7 @@ import jakarta.inject.Provider;
 /**
  * @author peter
  */
-public class FoldLinesLikeThis extends DumbAwareAction {
+public class FoldLinesLikeThis extends DumbAwareAction implements AnActionWithSyncUpdate {
     private final Provider<ShowConfigurableService> myShowConfigurableService;
 
     @Inject
@@ -54,7 +57,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        Editor editor = e.getData(Editor.KEY);
+        Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);
         e.getPresentation().setEnabledAndVisible(e.hasData(ConsoleView.KEY) && editor != null && getSingleLineSelection(editor) != null);
     }
 

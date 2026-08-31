@@ -20,6 +20,7 @@ import consulo.util.concurrent.internal.AsyncFutureResultImpl;
 /**
  * @author dmitrylomov
  */
+@Deprecated
 public class AsyncFutureFactory {
   private static final AsyncFutureFactory ourInstance = new AsyncFutureFactory();
 

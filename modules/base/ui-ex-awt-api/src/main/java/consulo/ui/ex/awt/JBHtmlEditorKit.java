@@ -10,6 +10,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 
+import org.jspecify.annotations.Nullable;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -45,7 +47,7 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
 
     private Function<String, Image> myImageResolver = null;
 
-    private boolean myNoGapsBetweenParagraphs;
+    private final StyleSheet myStyle;
 
     @Override
     public Cursor getDefaultCursor() {
@@ -59,7 +61,15 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     }
 
     public JBHtmlEditorKit(boolean noGapsBetweenParagraphs) {
-        myNoGapsBetweenParagraphs = noGapsBetweenParagraphs;
+        StyleSheet style = new StyleSheet();
+        // link the global default style sheet to avoid mutation of a global variable
+        style.addStyleSheet(super.getStyleSheet());
+        updateStyle(style);
+        if (noGapsBetweenParagraphs) {
+            style.addRule("p { margin-top: 0; }");
+        }
+        myStyle = style;
+
         myHyperlinkListener = new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -96,14 +106,22 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     }
 
     @Override
+    public StyleSheet getStyleSheet() {
+        return myStyle;
+    }
+
+    /**
+     * Will not work as one might expect it to.
+     * To override default style you should use the provided constructor.
+     */
+    @Override
+    public void setStyleSheet(StyleSheet style) {
+        // prevent setting the global style
+    }
+
+    @Override
     public Document createDefaultDocument() {
         StyleSheet style = getStyleSheet();
-
-        updateStyle(style);
-        
-        if (myNoGapsBetweenParagraphs) {
-            style.addRule("p { margin-top: 0; }");
-        }
 
         // static class instead anonymous for exclude $this [memory leak]
         StyleSheet ss = new StyleSheetCompressionThreshold();
@@ -189,6 +207,104 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     }
 
     // Workaround for https://bugs.openjdk.java.net/browse/JDK-8202529
+    /**
+     * Style of the chip painted behind inline {@code code}, set as a client property on the pane. Swing's CSS engine ignores
+     * {@code border-radius} and vertical padding on inline elements, so the chip has to be painted by a view instead.
+     */
+    public record InlineCodeStyle(Color background, int horizontalPadding, int verticalPadding, int arc) {
+    }
+
+    /**
+     * Swing does not give inline tags their own element - {@code <code>} ends up as a character attribute on the enclosing
+     * {@code content} leaf, so the tag has to be looked up in the attribute set rather than by element name.
+     */
+    private static boolean isInlineCode(Element element) {
+        return AbstractDocument.ContentElementName.equals(element.getName())
+            && element.getAttributes().getAttribute(HTML.Tag.CODE) != null
+            && !isInsidePre(element);
+    }
+
+    private static boolean isInsidePre(Element element) {
+        for (Element parent = element.getParentElement(); parent != null; parent = parent.getParentElement()) {
+            if ("pre".equals(parent.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static class InlineCodeView extends InlineView {
+        private InlineCodeView(Element elem) {
+            super(elem);
+        }
+
+        @Override
+        public float getPreferredSpan(int axis) {
+            float span = super.getPreferredSpan(axis);
+            // the chip reserves its horizontal padding in the layout, so neighbouring text is never overlapped
+            return axis == View.X_AXIS ? span + horizontalPadding() * 2 : span;
+        }
+
+        @Override
+        public void paint(Graphics g, Shape allocation) {
+            InlineCodeStyle style = getInlineCodeStyle();
+            if (style != null) {
+                Rectangle bounds = allocation instanceof Rectangle rectangle ? rectangle : allocation.getBounds();
+                Graphics2D g2 = (Graphics2D) g.create();
+                try {
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(style.background());
+                    g2.fillRoundRect(
+                        bounds.x,
+                        bounds.y - style.verticalPadding(),
+                        bounds.width,
+                        bounds.height + style.verticalPadding() * 2,
+                        style.arc(),
+                        style.arc()
+                    );
+                }
+                finally {
+                    g2.dispose();
+                }
+            }
+            super.paint(g, textAllocation(allocation));
+        }
+
+        @Override
+        public Shape modelToView(int pos, Shape allocation, Position.Bias bias) throws BadLocationException {
+            return super.modelToView(pos, textAllocation(allocation), bias);
+        }
+
+        @Override
+        public int viewToModel(float x, float y, Shape allocation, Position.Bias[] biasReturn) {
+            return super.viewToModel(x, y, textAllocation(allocation), biasReturn);
+        }
+
+        /**
+         * The glyphs occupy the allocation minus the horizontal padding reserved by {@link #getPreferredSpan}; everything that
+         * maps between offsets and coordinates has to use this inner shape, otherwise the caret and hit testing drift.
+         */
+        private Shape textAllocation(Shape allocation) {
+            int padding = horizontalPadding();
+            if (padding == 0) {
+                return allocation;
+            }
+            Rectangle bounds = allocation instanceof Rectangle rectangle ? rectangle : allocation.getBounds();
+            return new Rectangle(bounds.x + padding, bounds.y, Math.max(0, bounds.width - padding * 2), bounds.height);
+        }
+
+        private int horizontalPadding() {
+            InlineCodeStyle style = getInlineCodeStyle();
+            return style == null ? 0 : style.horizontalPadding();
+        }
+
+        private @Nullable InlineCodeStyle getInlineCodeStyle() {
+            return getContainer() instanceof JComponent component
+                ? (InlineCodeStyle) component.getClientProperty(InlineCodeStyle.class)
+                : null;
+        }
+    }
+
     private static class MouseExitSupportLinkController extends LinkController {
         @Override
         public void mouseExited(MouseEvent e) {
@@ -202,6 +318,9 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
             AttributeSet attrs = elem.getAttributes();
             if ("hr".equals(elem.getName())) {
                 return new ColoredHRuleView(elem);
+            }
+            else if (isInlineCode(elem)) {
+                return new InlineCodeView(elem);
             }
             else if ("icon".equals(elem.getName())) {
                 String src = (String) attrs.getAttribute(HTML.Attribute.SRC);

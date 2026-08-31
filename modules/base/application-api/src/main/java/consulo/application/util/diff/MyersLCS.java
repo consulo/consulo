@@ -65,7 +65,7 @@ class MyersLCS {
   /**
    * Runs O(ND) Myers algorithm where D is bound by A + B * sqrt(N)
    * <p/>
-   * Under certains assumptions about the distribution of the elements of the sequences the expected
+   * Under certain assumptions about the distribution of the elements of the sequences the expected
    * running time of the myers algorithm is O(N + D^2). Thus under given constraints it reduces to O(N).
    */
   public void executeLinear() {

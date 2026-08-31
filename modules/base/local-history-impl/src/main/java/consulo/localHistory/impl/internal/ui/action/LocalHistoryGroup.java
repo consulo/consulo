@@ -27,6 +27,8 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.NonTrivialActionGroup;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(
@@ -44,17 +46,17 @@ public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAwar
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         VirtualFile file = e.getData(VirtualFile.KEY);
         PsiElement element = e.getData(PsiElement.KEY);
         if (project == null || ActionPlaces.isPopupPlace(e.getPlace())
             && (file != null && !file.isInLocalFileSystem() || file == null && element != null)) {
             e.getPresentation().setEnabledAndVisible(false);
+            return Coroutine.empty();
         }
-        else {
-            super.update(e);
-        }
+
+        return super.updateAsync(e);
     }
 }
 

@@ -37,7 +37,7 @@ public class OrderRootsCache {
     myParentDisposable = parentDisposable;
   }
 
-  public VirtualFilePointerContainer setCachedRoots(OrderRootType rootType, int flags, Collection<String> urls) {
+  public VirtualFilePointerContainer setCachedRoots(String rootType, int flags, Collection<String> urls) {
     VirtualFilePointerContainer container = VirtualFilePointerManager.getInstance().createContainer(myParentDisposable);
     for (String url : urls) {
       container.add(url);
@@ -46,12 +46,12 @@ public class OrderRootsCache {
     return container;
   }
 
-  public VirtualFile @Nullable [] getCachedRoots(OrderRootType rootType, int flags) {
+  public VirtualFile @Nullable [] getCachedRoots(String rootType, int flags) {
     VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached == null ? null : cached.getFiles();
   }
 
-  public String @Nullable [] getCachedUrls(OrderRootType rootType, int flags) {
+  public String @Nullable [] getCachedUrls(String rootType, int flags) {
     VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached != null ? cached.getUrls() : null;
   }
@@ -64,10 +64,10 @@ public class OrderRootsCache {
   }
 
   private static final class CacheKey {
-    private final OrderRootType myRootType;
+    private final String myRootType;
     private final int myFlags;
 
-    private CacheKey(OrderRootType rootType, int flags) {
+    private CacheKey(String rootType, int flags) {
       myRootType = rootType;
       myFlags = flags;
     }

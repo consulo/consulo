@@ -3,13 +3,12 @@ package consulo.execution.impl.internal.service;
 
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 final class ServiceViewCopyProvider implements CopyProvider {
@@ -28,8 +27,8 @@ final class ServiceViewCopyProvider implements CopyProvider {
   public void performCopy(DataContext dataContext) {
     List<ServiceViewItem> items = ServiceViewActionProvider.getSelectedItems(dataContext);
     if (!items.isEmpty()) {
-      CopyPasteManager.getInstance().setContents(new StringSelection(
-        StringUtil.join(items, item -> ServiceViewDragHelper.getDisplayName(item.getViewDescriptor().getPresentation()), "\n")));
+      CopyPasteManager.getInstance().setText(
+        StringUtil.join(items, item -> ServiceViewDragHelper.getDisplayName(item.getViewDescriptor().getPresentation()), "\n"));
     }
   }
 

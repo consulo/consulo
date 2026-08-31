@@ -25,6 +25,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
@@ -142,6 +143,14 @@ public interface EditorEx extends Editor {
     void setOneLineMode(boolean b);
 
     
+    /**
+     * Whether {@link #getScrollPane()} answers - the pane belongs to the awt editor, and a caller which only
+     * wants it to time its work must take another route on the platforms without one.
+     */
+    default boolean isScrollPaneAvailable() {
+        return false;
+    }
+
     default JScrollPane getScrollPane() {
         throw new UnsupportedOperationException("Unsupported platform");
     }

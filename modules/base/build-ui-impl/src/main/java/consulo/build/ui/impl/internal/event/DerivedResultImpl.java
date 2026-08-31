@@ -9,38 +9,34 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class DerivedResultImpl implements DerivedResult {
+    private final Supplier<EventResult> myOnDefault;
 
-  
-  private final Supplier<EventResult> myOnDefault;
-  
-  private final Supplier<FailureResult> myFail;
+    private final Supplier<FailureResult> myFail;
 
-  public DerivedResultImpl() {
-    this(null, null);
-  }
-
-  public DerivedResultImpl(@Nullable Supplier<EventResult> onDefault, @Nullable Supplier<FailureResult> onFail) {
-    myOnDefault = onDefault != null ? onDefault : SuccessResultImpl::new;
-    myFail = onFail != null ? onFail : FailureResultImpl::new;
-  }
-
-  
-  @Override
-  public FailureResult createFailureResult() {
-    FailureResult result = myFail.get();
-    if (result == null) {
-      return new FailureResultImpl();
+    public DerivedResultImpl() {
+        this(null, null);
     }
-    return result;
-  }
 
-  
-  @Override
-  public EventResult createDefaultResult() {
-    EventResult result = myOnDefault.get();
-    if (result == null) {
-      return new SuccessResultImpl();
+    public DerivedResultImpl(@Nullable Supplier<EventResult> onDefault, @Nullable Supplier<FailureResult> onFail) {
+        myOnDefault = onDefault != null ? onDefault : SuccessResultImpl::new;
+        myFail = onFail != null ? onFail : FailureResultImpl::new;
     }
-    return result;
-  }
+
+    @Override
+    public FailureResult createFailureResult() {
+        FailureResult result = myFail.get();
+        if (result == null) {
+            return new FailureResultImpl();
+        }
+        return result;
+    }
+
+    @Override
+    public EventResult createDefaultResult() {
+        EventResult result = myOnDefault.get();
+        if (result == null) {
+            return new SuccessResultImpl();
+        }
+        return result;
+    }
 }

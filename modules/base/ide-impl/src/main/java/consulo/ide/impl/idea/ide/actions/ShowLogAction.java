@@ -19,10 +19,9 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.Platform;
 import consulo.platform.PlatformFeature;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.application.dumb.DumbAware;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,7 +32,7 @@ import java.io.File;
  * @author pegov
  */
 @ActionImpl(id = "ShowLog")
-public class ShowLogAction extends AnAction implements DumbAware {
+public class ShowLogAction extends LegacyDumbAwareAction {
     public ShowLogAction() {
         super(ActionLocalize.actionShowlogText(), ActionLocalize.actionShowlogDescription());
     }

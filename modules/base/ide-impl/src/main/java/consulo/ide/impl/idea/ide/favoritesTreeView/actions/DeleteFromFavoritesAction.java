@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
@@ -30,8 +29,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 
@@ -41,7 +40,7 @@ import java.util.*;
  * @author anna
  * @author Konstantin Bulenkov
  */
-public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
+public class DeleteFromFavoritesAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(DeleteFromFavoritesAction.class);
 
     public DeleteFromFavoritesAction() {

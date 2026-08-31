@@ -17,10 +17,13 @@ package consulo.versionControlSystem.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Streams;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.action.VcsContext;
@@ -37,138 +40,137 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 public class VcsContextWrapper implements VcsContext {
-  
-  protected final DataContext myContext;
-  protected final int myModifiers;
-  
-  private final String myPlace;
-  private final @Nullable String myActionName;
 
-  public VcsContextWrapper(DataContext context, int modifiers, String place, @Nullable String actionName) {
-    myContext = context;
-    myModifiers = modifiers;
-    myPlace = place;
-    myActionName = actionName;
-  }
+    protected final DataContext myContext;
+    private final Key<Editor> myEditorKey;
+    protected final int myModifiers;
 
-  
-  @Override
-  public String getPlace() {
-    return myPlace;
-  }
+    private final String myPlace;
+    private final LocalizeValue myActionName;
 
-  @Override
-  public @Nullable String getActionName() {
-    return myActionName;
-  }
-
-  
-  public static VcsContext createCachedInstanceOn(AnActionEvent event) {
-    return new CachedVcsContext(createInstanceOn(event));
-  }
-
-  
-  public static VcsContextWrapper createInstanceOn(AnActionEvent event) {
-    return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
-  }
-
-  @Override
-  public @Nullable Project getProject() {
-    return myContext.getData(Project.KEY);
-  }
-
-  @Override
-  public @Nullable VirtualFile getSelectedFile() {
-    return getSelectedFilesStream().findFirst().orElse(null);
-  }
-
-  
-  @Override
-  public VirtualFile[] getSelectedFiles() {
-    VirtualFile[] fileArray = myContext.getData(VirtualFile.KEY_OF_ARRAY);
-    if (fileArray != null) {
-      return Stream.of(fileArray).filter(VirtualFile::isInLocalFileSystem).toArray(VirtualFile[]::new);
+    public VcsContextWrapper(DataContext context,
+                             Key<Editor> editorKey,
+                             int modifiers,
+                             String place,
+                             LocalizeValue actionName) {
+        myContext = context;
+        myEditorKey = editorKey;
+        myModifiers = modifiers;
+        myPlace = place;
+        myActionName = actionName;
     }
 
-    VirtualFile file = myContext.getData(VirtualFile.KEY);
-    return file != null && file.isInLocalFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
-  }
+    @Override
+    public String getPlace() {
+        return myPlace;
+    }
 
-  
-  @Override
-  public Stream<VirtualFile> getSelectedFilesStream() {
-    Stream<VirtualFile> result = myContext.getData(VcsDataKeys.VIRTUAL_FILE_STREAM);
+    @Override
+    public LocalizeValue getActionName() {
+        return myActionName;
+    }
 
-    return result != null ? result.filter(VirtualFile::isInLocalFileSystem) : VcsContext.super.getSelectedFilesStream();
-  }
+    public static VcsContext createCachedInstanceOn(AnActionEvent event) {
+        return createCachedInstanceOn(event, Editor.KEY);
+    }
 
-  @Override
-  public Editor getEditor() {
-    return myContext.getData(Editor.KEY);
-  }
+    public static VcsContext createCachedInstanceOn(AnActionEvent event, Key<Editor> editorKey) {
+        return new CachedVcsContext(createInstanceOn(event, editorKey));
+    }
 
-  @Override
-  public Collection<VirtualFile> getSelectedFilesCollection() {
-    return Arrays.asList(getSelectedFiles());
-  }
+    public static VcsContextWrapper createInstanceOn(AnActionEvent event, Key<Editor> editorKey) {
+        return new VcsContextWrapper(event.getDataContext(), editorKey, event.getModifiers(), event.getPlace(), event.getPresentation().getTextValue());
+    }
 
-  @Override
-  public @Nullable File getSelectedIOFile() {
-    File file = myContext.getData(VcsDataKeys.IO_FILE);
+    @Override
+    public @Nullable Project getProject() {
+        return myContext.getData(Project.KEY);
+    }
 
-    return file != null ? file : ArrayUtil.getFirstElement(myContext.getData(VcsDataKeys.IO_FILE_ARRAY));
-  }
+    @Override
+    public @Nullable VirtualFile getSelectedFile() {
+        return ArrayUtil.getFirstElement(getSelectedFiles());
+    }
 
-  @Override
-  public @Nullable File[] getSelectedIOFiles() {
-    File[] files = myContext.getData(VcsDataKeys.IO_FILE_ARRAY);
-    if (!ArrayUtil.isEmpty(files)) return files;
+    @Override
+    public VirtualFile[] getSelectedFiles() {
+        VirtualFile[] fileArray = myContext.getData(VirtualFile.KEY_OF_ARRAY);
+        if (fileArray != null) {
+            return Stream.of(fileArray).filter(VirtualFile::isInLocalFileSystem).toArray(VirtualFile[]::new);
+        }
 
-    File file = myContext.getData(VcsDataKeys.IO_FILE);
-    return file != null ? new File[]{file} : null;
-  }
+        VirtualFile file = myContext.getData(VirtualFile.KEY);
+        return file != null && file.isInLocalFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
+    }
 
-  @Override
-  public int getModifiers() {
-    return myModifiers;
-  }
+    @Override
+    public Editor getEditor() {
+        return myContext.getData(myEditorKey);
+    }
 
-  @Override
-  public Refreshable getRefreshableDialog() {
-    return myContext.getData(Refreshable.PANEL_KEY);
-  }
+    @Override
+    public Collection<VirtualFile> getSelectedFilesCollection() {
+        return Arrays.asList(getSelectedFiles());
+    }
 
-  
-  @Override
-  public FilePath[] getSelectedFilePaths() {
-    return getSelectedFilePathsStream().toArray(FilePath[]::new);
-  }
+    @Override
+    public @Nullable File getSelectedIOFile() {
+        File file = myContext.getData(VcsDataKeys.IO_FILE);
 
-  
-  @Override
-  public Stream<FilePath> getSelectedFilePathsStream() {
-    FilePath path = myContext.getData(VcsDataKeys.FILE_PATH);
+        return file != null ? file : ArrayUtil.getFirstElement(myContext.getData(VcsDataKeys.IO_FILE_ARRAY));
+    }
 
-    return Streams.concat(
-      path != null ? Stream.of(path) : Stream.empty(),
-      Streams.stream(myContext.getData(VcsDataKeys.FILE_PATH_ARRAY)),
-      getSelectedFilesStream().map(VcsUtil::getFilePath),
-      Streams.stream(getSelectedIOFiles()).map(VcsUtil::getFilePath)
-    );
-  }
+    @Override
+    public @Nullable File[] getSelectedIOFiles() {
+        File[] files = myContext.getData(VcsDataKeys.IO_FILE_ARRAY);
+        if (!ArrayUtil.isEmpty(files)) {
+            return files;
+        }
 
-  @Override
-  public @Nullable FilePath getSelectedFilePath() {
-    return ArrayUtil.getFirstElement(getSelectedFilePaths());
-  }
+        File file = myContext.getData(VcsDataKeys.IO_FILE);
+        return file != null ? new File[]{file} : null;
+    }
 
-  @Override
-  public @Nullable ChangeList[] getSelectedChangeLists() {
-    return myContext.getData(VcsDataKeys.CHANGE_LISTS);
-  }
+    @Override
+    public int getModifiers() {
+        return myModifiers;
+    }
 
-  @Override
-  public @Nullable Change[] getSelectedChanges() {
-    return myContext.getData(VcsDataKeys.CHANGES);
-  }
+    @Override
+    public Refreshable getRefreshableDialog() {
+        return myContext.getData(Refreshable.PANEL_KEY);
+    }
+
+
+    @Override
+    public FilePath[] getSelectedFilePaths() {
+        return getSelectedFilePathsStream().toArray(FilePath[]::new);
+    }
+
+    @Override
+    public Stream<FilePath> getSelectedFilePathsStream() {
+        FilePath path = myContext.getData(VcsDataKeys.FILE_PATH);
+
+        return Streams.concat(
+            path != null ? Stream.of(path) : Stream.empty(),
+            Streams.stream(myContext.getData(VcsDataKeys.FILE_PATH_ARRAY)),
+            Arrays.stream(getSelectedFiles()).map(VcsUtil::getFilePath),
+            Streams.stream(getSelectedIOFiles()).map(VcsUtil::getFilePath)
+        );
+    }
+
+    @Override
+    public @Nullable FilePath getSelectedFilePath() {
+        return ArrayUtil.getFirstElement(getSelectedFilePaths());
+    }
+
+    @Override
+    public @Nullable ChangeList[] getSelectedChangeLists() {
+        return myContext.getData(VcsDataKeys.CHANGE_LISTS);
+    }
+
+    @Override
+    public @Nullable Change[] getSelectedChanges() {
+        return myContext.getData(VcsDataKeys.CHANGES);
+    }
 }

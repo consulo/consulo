@@ -29,6 +29,7 @@ import consulo.project.impl.internal.DefaultProjectImpl;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.event.VFileEvent;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -75,7 +76,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
               protected XmlElementStorageSaveSession createSaveSession(StorageData storageData) {
                 return new XmlElementStorageSaveSession(storageData) {
                   @Override
-                  protected void doSave(@Nullable Element element) {
+                  protected void doSave(@Nullable Element element, @Nullable List<VFileEvent> events) {
                     // we must set empty element instead of null as indicator - ProjectManager state is ready to save
                     getProject().setStateElement(element == null ? new Element("empty") : element);
                   }

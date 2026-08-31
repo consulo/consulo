@@ -15,112 +15,137 @@
  */
 package consulo.ide.impl.diff;
 
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.diff.internal.DiffImplUtil;
+import consulo.codeEditor.markup.EditorGutterArea;
+import consulo.codeEditor.markup.LineMarkerPresentation;
+import consulo.codeEditor.markup.LineMarkerPresentationContext;
+import consulo.codeEditor.markup.LineMarkerPresentationProvider;
+import consulo.colorScheme.TextAttributes;
+import consulo.diff.util.DiffChunkPresentation;
 import consulo.diff.util.TextDiffType;
-import consulo.codeEditor.markup.LineMarkerRendererEx;
+import consulo.diff.util.TextDiffTypeFactory;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
-  
-  private final RangeHighlighter myHighlighter;
-  
-  private final TextDiffType myDiffType;
-  private final boolean myIgnoredFoldingOutline;
-  private final boolean myResolved;
-  private final boolean myHideWithoutLineNumbers;
+public class DiffLineMarkerRenderer implements LineMarkerPresentationProvider {
 
-  private final boolean myEmptyRange;
-  private final boolean myLastLine;
+    private final TextDiffType myDiffType;
+    private final boolean myIgnoredFoldingOutline;
+    private final boolean myResolved;
+    private final boolean myHideWithoutLineNumbers;
 
-  public DiffLineMarkerRenderer(RangeHighlighter highlighter,
-                                TextDiffType diffType,
-                                boolean ignoredFoldingOutline,
-                                boolean resolved,
-                                boolean hideWithoutLineNumbers,
-                                boolean isEmptyRange,
-                                boolean isLastLine) {
-    myHighlighter = highlighter;
-    myDiffType = diffType;
-    myIgnoredFoldingOutline = ignoredFoldingOutline;
-    myResolved = resolved;
-    myHideWithoutLineNumbers = hideWithoutLineNumbers;
-    myEmptyRange = isEmptyRange;
-    myLastLine = isLastLine;
-  }
+    private final boolean myEmptyRange;
+    private final boolean myLastLine;
 
-  @Override
-  public void paint(Editor editor, Graphics g, Rectangle range) {
-    EditorGutterComponentEx gutter = ((EditorEx)editor).getGutterComponentEx();
-    Graphics2D g2 = (Graphics2D)g;
-    int x1 = 0;
-    int x2 = x1 + gutter.getComponent().getWidth();
-
-    int y1, y2;
-    if (myEmptyRange && myLastLine) {
-      y1 = DiffDrawUtil.lineToY(editor, DiffImplUtil.getLineCount(editor.getDocument()));
-      y2 = y1;
-    }
-    else {
-      int startLine = editor.getDocument().getLineNumber(myHighlighter.getStartOffset());
-      int endLine = editor.getDocument().getLineNumber(myHighlighter.getEndOffset()) + 1;
-      y1 = DiffDrawUtil.lineToY(editor, startLine);
-      y2 = myEmptyRange ? y1 : DiffDrawUtil.lineToY(editor, endLine);
+    public DiffLineMarkerRenderer(
+        TextDiffType diffType,
+        boolean ignoredFoldingOutline,
+        boolean resolved,
+        boolean hideWithoutLineNumbers,
+        boolean isEmptyRange,
+        boolean isLastLine
+    ) {
+        myDiffType = diffType;
+        myIgnoredFoldingOutline = ignoredFoldingOutline;
+        myResolved = resolved;
+        myHideWithoutLineNumbers = hideWithoutLineNumbers;
+        myEmptyRange = isEmptyRange;
+        myLastLine = isLastLine;
     }
 
-    if (myHideWithoutLineNumbers && !editor.getSettings().isLineNumbersShown()) {
-      x1 = gutter.getWhitespaceSeparatorOffset();
-    }
-    else {
-      int annotationsOffset = gutter.getAnnotationsAreaOffset();
-      int annotationsWidth = gutter.getAnnotationsAreaWidth();
-      if (annotationsWidth != 0) {
-        drawMarker(editor, g2, x1, annotationsOffset, y1, y2, false);
-        x1 = annotationsOffset + annotationsWidth;
-      }
+    @Override
+    public Set<EditorGutterArea> getUsedAreas() {
+        return Set.of(
+            EditorGutterArea.WHOLE_GUTTER,
+            EditorGutterArea.BEFORE_ANNOTATIONS,
+            EditorGutterArea.AFTER_ANNOTATIONS,
+            EditorGutterArea.AFTER_ANNOTATIONS_TO_SEPARATOR,
+            EditorGutterArea.BEFORE_WHITESPACE_SEPARATOR,
+            EditorGutterArea.FROM_WHITESPACE_SEPARATOR
+        );
     }
 
-    if (myIgnoredFoldingOutline) {
-      int xOutline = gutter.getWhitespaceSeparatorOffset();
-      drawMarker(editor, g2, xOutline, x2, y1, y2, true);
-      drawMarker(editor, g2, x1, xOutline, y1, y2, false);
-    }
-    else {
-      drawMarker(editor, g2, x1, x2, y1, y2, false);
-    }
-  }
+    @Override
+    public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+        TextAttributes attributes = context.getAttributes(myDiffType.getKey());
+        ColorValue borderColor = attributes.getBackgroundColor();
+        ColorValue fillColor = myResolved ? null : borderColor;
 
-  private void drawMarker(Editor editor, Graphics2D g2,
-                          int x1, int x2, int y1, int y2,
-                          boolean ignoredBackgroundColor) {
-    if (x1 >= x2) return;
+        int startLine;
+        int endLine;
+        if (myEmptyRange && myLastLine) {
+            startLine = context.lineCount();
+            endLine = startLine;
+        }
+        else {
+            startLine = context.startLine();
+            endLine = myEmptyRange ? startLine : context.endLine();
+        }
 
-    ColorValue color = myDiffType.getColor(editor);
-    if (y2 - y1 > 2) {
-      if (!myResolved) {
-        g2.setColor(TargetAWT.to(ignoredBackgroundColor ? myDiffType.getIgnoredColor(editor) : color));
-        g2.fillRect(x1, y1, x2 - x1, y2 - y1);
-      }
+        List<DiffChunkPresentation> result = new ArrayList<>();
 
-      DiffDrawUtil.drawChunkBorderLine(g2, x1, x2, y1 - 1, color, false, myResolved);
-      DiffDrawUtil.drawChunkBorderLine(g2, x1, x2, y2 - 1, color, false, myResolved);
+        // Without line numbers there is nothing worth marking left of the folding outline.
+        if (myHideWithoutLineNumbers && !context.isLineNumbersShown()) {
+            add(result, startLine, endLine, EditorGutterArea.FROM_WHITESPACE_SEPARATOR, borderColor, fillColor);
+            return result;
+        }
+
+        boolean annotationsShown = context.isAnnotationsShown();
+        if (annotationsShown) {
+            // the annotations area keeps its own background, so the chunk is split around it
+            add(result, startLine, endLine, EditorGutterArea.BEFORE_ANNOTATIONS, borderColor, fillColor);
+        }
+
+        if (myIgnoredFoldingOutline) {
+            // the folding outline shows the chunk as ignored, the rest as a normal change
+            ColorValue ignoredFill = myResolved ? null : getIgnoredColor(attributes, context);
+            add(result, startLine, endLine, EditorGutterArea.FROM_WHITESPACE_SEPARATOR, borderColor, ignoredFill);
+            add(
+                result,
+                startLine,
+                endLine,
+                annotationsShown ? EditorGutterArea.AFTER_ANNOTATIONS_TO_SEPARATOR : EditorGutterArea.BEFORE_WHITESPACE_SEPARATOR,
+                borderColor,
+                fillColor
+            );
+        }
+        else {
+            add(
+                result,
+                startLine,
+                endLine,
+                annotationsShown ? EditorGutterArea.AFTER_ANNOTATIONS : EditorGutterArea.WHOLE_GUTTER,
+                borderColor,
+                fillColor
+            );
+        }
+
+        return result;
     }
-    else {
-      // range is empty - insertion or deletion
-      // Draw 2 pixel line in that case
-      DiffDrawUtil.drawChunkBorderLine(g2, x1, x2, y1 - 1, color, true, myResolved);
-    }
-  }
 
-  
-  @Override
-  public Position getPosition() {
-    return Position.CUSTOM;
-  }
+    private void add(
+        List<DiffChunkPresentation> result,
+        int startLine,
+        int endLine,
+        EditorGutterArea area,
+        ColorValue borderColor,
+        @Nullable ColorValue fillColor
+    ) {
+        result.add(new DiffChunkPresentation(startLine, endLine, area, borderColor, fillColor, myResolved, myDiffType));
+    }
+
+    /**
+     * Mirrors {@code TextDiffType.getIgnoredColor}, which needs the editor background to blend
+     * against when the scheme defines no explicit foreground.
+     */
+    private static ColorValue getIgnoredColor(TextAttributes attributes, LineMarkerPresentationContext context) {
+        ColorValue color = attributes.getForegroundColor();
+        if (color != null) {
+            return color;
+        }
+        return TextDiffTypeFactory.getMiddleColor(attributes.getBackgroundColor(), context.getEditorBackgroundColor());
+    }
 }

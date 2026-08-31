@@ -43,7 +43,7 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction {
     }
 
     @Override
-    protected @Nullable Editor getBaseEditor(DataContext dataContext, Project project) {
+    protected @Nullable Editor getBaseEditor(DataContext dataContext, Project project, boolean forUpdate) {
         return dataContext.getData(PlatformDataKeys.EDITOR_EVEN_IF_INACTIVE);
     }
 

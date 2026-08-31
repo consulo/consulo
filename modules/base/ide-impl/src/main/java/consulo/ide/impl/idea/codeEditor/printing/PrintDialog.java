@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.application.HelpManager;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 
@@ -461,9 +461,9 @@ class PrintDialog extends DialogWrapper {
     linePlacementCombo.setRenderer(new ColoredListCellRenderer() {
       @Override
       protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        String aligment = ALIGNMENT_MAP.get(value);
-        if(aligment != null) {
-          append(aligment);
+        String alignment = ALIGNMENT_MAP.get(value);
+        if(alignment != null) {
+          append(alignment);
         }
       }
     });

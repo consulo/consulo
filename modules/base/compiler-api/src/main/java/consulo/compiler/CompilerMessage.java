@@ -15,18 +15,20 @@
  */
 package consulo.compiler;
 
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
+import consulo.util.io.URLUtil;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 
 /**
  * Describes a single compiler message that is shown in compiler message view.
  *
- * @see CompileContext#addMessage(CompilerMessageCategory, String, String, int, int)
+ * @see CompileContext#newMessage(CompilerMessageCategory, LocalizeValue)
  */
 public interface CompilerMessage {
     /**
@@ -46,7 +48,7 @@ public interface CompilerMessage {
      *
      * @return message text
      */
-    String getMessage();
+    LocalizeValue getMessage();
 
     /**
      * Returns the navigatable object allowing to navigate to the message source.
@@ -56,11 +58,24 @@ public interface CompilerMessage {
     @Nullable Navigatable getNavigatable();
 
     /**
-     * Returns the file to which the message applies.
+     * Returns the url of the file to which the message applies.
      *
-     * @return the file to which the message applies.
+     * @return the url of the file to which the message applies, null if not available.
      */
-    VirtualFile getVirtualFile();
+    @Nullable String getUrl();
+
+    /**
+     * Returns the file to which the message applies, derived from {@link #getUrl()} for local files.
+     *
+     * @return the file to which the message applies, null if not available or not a local file.
+     */
+    default @Nullable Path getFile() {
+        String url = getUrl();
+        if (url == null || !url.startsWith(URLUtil.FILE_PROTOCOL_PREFIX)) {
+            return null;
+        }
+        return Path.of(url.substring(URLUtil.FILE_PROTOCOL_PREFIX.length()));
+    }
 
     /**
      * Returns the location prefix prepended to message while exporting compilation results to text.
@@ -76,8 +91,14 @@ public interface CompilerMessage {
      */
     String getRenderTextPrefix();
 
+    /**
+     * @return a line number, -1 if not available.
+     */
     int getLine();
 
+    /**
+     * @return a column number, -1 if not available.
+     */
     int getColumn();
 
     /**

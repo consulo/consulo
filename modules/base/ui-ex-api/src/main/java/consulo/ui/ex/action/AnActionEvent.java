@@ -23,7 +23,6 @@ import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.event.AnActionEventVisitor;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.event.InputEvent;
 import java.util.IdentityHashMap;
@@ -90,7 +89,6 @@ public class AnActionEvent implements PlaceProvider<String> {
     private final String myPlace;
     
     private final Presentation myPresentation;
-    @JdkConstants.InputEventMask
     private final int myModifiers;
     private boolean myWorksInInjected;
 
@@ -98,6 +96,8 @@ public class AnActionEvent implements PlaceProvider<String> {
     private final boolean myIsActionToolbar;
 
     private final InputDetails myInputDetails;
+
+    private ActionUpdateSession myUpdateSession = ActionUpdateSession.EMPTY;
 
     /**
      * @throws IllegalArgumentException if {@code dataContext} is {@code null} or
@@ -110,7 +110,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         String place,
         @Nullable Presentation presentation,
         ActionManager actionManager,
-        @JdkConstants.InputEventMask int modifiers
+        int modifiers
     ) {
         this(
             inputEvent,
@@ -130,7 +130,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         String place,
         Presentation presentation,
         ActionManager actionManager,
-        @JdkConstants.InputEventMask int modifiers,
+        int modifiers,
         boolean isContextMenuAction,
         boolean isActionToolbar
     ) {
@@ -143,7 +143,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         String place,
         Presentation presentation,
         ActionManager actionManager,
-        @JdkConstants.InputEventMask int modifiers,
+        int modifiers,
         boolean isContextMenuAction,
         boolean isActionToolbar,
         InputDetails inputDetails
@@ -350,7 +350,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * @return the modifier keys.
      */
-    @JdkConstants.InputEventMask
     public int getModifiers() {
         return myModifiers;
     }
@@ -370,6 +369,18 @@ public class AnActionEvent implements PlaceProvider<String> {
 
     public final @Nullable InputDetails getInputDetails() {
         return myInputDetails;
+    }
+
+    /**
+     * The update session of the current expansion, or {@link ActionUpdateSession#EMPTY} when the
+     * update runs outside of an expansion.
+     */
+    public ActionUpdateSession getUpdateSession() {
+        return myUpdateSession;
+    }
+
+    public void setUpdateSession(ActionUpdateSession updateSession) {
+        myUpdateSession = updateSession;
     }
 
     public void accept(AnActionEventVisitor visitor) {

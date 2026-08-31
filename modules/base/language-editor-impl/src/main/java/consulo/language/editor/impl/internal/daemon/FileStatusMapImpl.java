@@ -23,8 +23,8 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,7 +143,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         public String toString() {
             StringBuilder s = new StringBuilder();
             s.append("defensivelyMarked = ").append(defensivelyMarked);
-            s.append("; wolfPassFinfished = ").append(wolfPassFinished);
+            s.append("; wolfPassFinished = ").append(wolfPassFinished);
             s.append("; errorFound = ").append(errorFound);
             s.append("; dirtyScopes: (");
             for (IntObjectMap.IntObjectEntry<RangeMarker> entry : dirtyScopes.entrySet()) {
@@ -230,7 +230,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     public void markFileScopeDirtyDefensively(PsiFile file, Object reason) {
         assertAllowModifications();
         log("Mark dirty file defensively: ", file.getName(), reason);
-        // mark whole file dirty in case no subsequent PSI events will come, but file requires rehighlighting nevertheless
+        // mark whole file dirty in case no subsequent PSI events will come, but file requires re-highlighting nevertheless
         // e.g. in the case of quick typing/backspacing char
         synchronized (myDocumentToStatusMap) {
             Document document = PsiDocumentManager.getInstance(myProject).getCachedDocument(file);

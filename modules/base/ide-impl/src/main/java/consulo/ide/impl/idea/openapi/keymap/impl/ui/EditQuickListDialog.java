@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.impl.internal.action.QuickListImpl;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -23,12 +23,12 @@ import consulo.ui.ex.awt.DialogWrapper;
 import javax.swing.*;
 
 public class EditQuickListDialog extends DialogWrapper {
-  private QuickList myList;
-  private final QuickList[] myAllQuickLists;
+  private QuickListImpl myList;
+  private final QuickListImpl[] myAllQuickLists;
   private QuickListPanel myPanel;
   private final Project myProject;
 
-  public EditQuickListDialog(Project project, QuickList list, QuickList[] allQuickLists) {
+  public EditQuickListDialog(Project project, QuickListImpl list, QuickListImpl[] allQuickLists) {
     super(project, true);
     myProject = project;
     myList = list;
@@ -43,7 +43,7 @@ public class EditQuickListDialog extends DialogWrapper {
     return myPanel.getPanel();
   }
 
-  public QuickList getList() {
+  public QuickListImpl getList() {
     return myList;
   }
 
@@ -57,7 +57,7 @@ public class EditQuickListDialog extends DialogWrapper {
       ids[i] = actionId;
     }
 
-    myList = new QuickList(myPanel.getDisplayName(), myPanel.getDescription(), ids, myList.isReadonly());
+    myList = new QuickListImpl(myPanel.getDisplayName(), myPanel.getDescription(), ids, myList.isReadonly());
 
     super.doOKAction();
   }

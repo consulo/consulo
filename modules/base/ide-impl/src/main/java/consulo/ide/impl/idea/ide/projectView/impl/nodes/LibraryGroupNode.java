@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.internal.LibraryEx;
@@ -46,10 +45,7 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     public LibraryGroupNode(Project project, LibraryGroupElement value, ViewSettings viewSettings) {
@@ -60,9 +56,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         this(project, (LibraryGroupElement) value, viewSettings);
     }
 
-    @RequiredReadAction
     @Override
-    
+    @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue().getModule();
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -101,7 +96,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         PsiManager psiManager = PsiManager.getInstance(project);
         VirtualFile[] files = entry instanceof LibraryOrderEntry libraryOrderEntry
             ? getLibraryRoots(libraryOrderEntry)
-            : entry.getFiles(BinariesOrderRootType.getInstance());
+            : entry.getFiles(BinariesOrderRootType.ID);
         for (VirtualFile file : files) {
             if (!file.isValid()) {
                 continue;
@@ -146,6 +141,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         return ProjectSettingsService.getInstance(myProject).canOpenModuleLibrarySettings();
     }
@@ -157,13 +153,12 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
     }
 
-    
     static VirtualFile[] getLibraryRoots(LibraryOrderEntry orderEntry) {
         Library library = orderEntry.getLibrary();
         if (library == null) {
             return VirtualFile.EMPTY_ARRAY;
         }
-        OrderRootType[] rootTypes = LibraryType.getDefaultExternalRootTypes();
+        Set<String> rootTypes = LibraryType.getDefaultExternalRootTypes();
         if (library instanceof LibraryEx) {
             if (library.isDisposed()) {
                 return VirtualFile.EMPTY_ARRAY;
@@ -177,7 +172,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
             }
         }
         List<VirtualFile> files = new ArrayList<>();
-        for (OrderRootType rootType : rootTypes) {
+        for (String rootType : rootTypes) {
             files.addAll(Arrays.asList(library.getFiles(rootType)));
         }
         return VirtualFileUtil.toVirtualFileArray(files);

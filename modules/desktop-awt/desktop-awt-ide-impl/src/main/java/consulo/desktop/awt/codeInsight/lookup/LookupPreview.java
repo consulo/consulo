@@ -26,6 +26,7 @@ import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.FList;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -115,7 +116,7 @@ class LookupPreview {
       }
 
       private Font getFont(Editor editor) {
-        return editor.getColorsScheme().getFont(EditorFontType.PLAIN);
+        return TargetAWT.to(editor.getColorsScheme().getFont(EditorFontType.PLAIN));
       }
     };
   }

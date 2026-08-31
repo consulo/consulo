@@ -23,12 +23,13 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 25-Oct-17
+ * @since 2017-10-25
  */
 public interface WrappedLayout extends Layout<LayoutConstraint> {
     static WrappedLayout create() {
         return UIInternal.get()._Layouts_wrapped();
     }
+
     @RequiredUIAccess
     static WrappedLayout create(Component component) {
         return UIInternal.get()._Layouts_wrapped().set(component);

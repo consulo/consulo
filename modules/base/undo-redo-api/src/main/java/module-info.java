@@ -20,11 +20,11 @@ module consulo.undo.redo.api {
         consulo.language.editor.refactoring.api,
         consulo.local.history.impl,
         consulo.code.editor.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac;
 
     exports consulo.undoRedo.internal.builder to
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.diff.api,
         consulo.diff.impl,
         consulo.ide.impl;

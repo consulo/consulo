@@ -16,7 +16,7 @@
 package consulo.ide.impl.desktop.awt.editor;
 
 import consulo.codeEditor.RealEditor;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.ex.awt.AWTConstants;
 
 import java.awt.*;
 
@@ -27,5 +27,5 @@ import java.awt.*;
 // TODO move it to desktop-awt-ide-impl
 public interface DesktopAWTEditor extends RealEditor {
   
-  FontMetrics getFontMetrics(@JdkConstants.FontStyle int fontType);
+  FontMetrics getFontMetrics(@AWTConstants.FontStyle int fontType);
 }

@@ -1,7 +1,6 @@
 package consulo.task.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -10,8 +9,8 @@ import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.task.internal.CreateNewTaskAction;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import jakarta.inject.Inject;
@@ -20,7 +19,7 @@ import jakarta.inject.Inject;
  * @author Evgeny Zakrevsky
  */
 @ActionImpl(id = GotoTaskAction.ID)
-public class GotoTaskAction extends AnAction implements DumbAware {
+public class GotoTaskAction extends LegacyDumbAwareAction {
     public static final String ID = "tasks.goto";
 
     @Inject
@@ -30,7 +29,6 @@ public class GotoTaskAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 

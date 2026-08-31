@@ -26,6 +26,9 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * @author nik
  */
@@ -72,9 +75,9 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
                                                      PackagingElementResolvingContext resolvingContext,
                                                      ArtifactIncrementalCompilerContext compilerContext,
                                                      ArtifactType artifactType) {
-    VirtualFile file = findFile();
-    if (file != null && file.isValid() && file.isDirectory()) {
-      creator.addDirectoryCopyInstructions(file);
+    Path jarFile = getNioPath();
+    if (jarFile != null && Files.isRegularFile(jarFile)) {
+      creator.addExtractDirectoryInstruction(jarFile, myPathInJar);
     }
   }
 

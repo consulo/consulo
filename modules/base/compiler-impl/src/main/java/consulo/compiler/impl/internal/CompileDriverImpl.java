@@ -18,11 +18,9 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.Semaphore;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.registry.Registry;
 import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
@@ -54,7 +52,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
@@ -71,7 +68,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.OrderedSet;
 import consulo.util.collection.Sets;
@@ -82,15 +78,18 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jspecify.annotations.Nullable;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author Eugene Zhuravlev
@@ -104,7 +103,7 @@ public class CompileDriverImpl implements CompileDriver {
     public static volatile boolean ourDebugMode = false;
 
     private final Project myProject;
-    private final Map<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
+    private final Map<Pair<IntermediateOutputCompiler, Module>, Couple<Path>> myGenerationCompilerModuleToOutputDirMap;
     // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
     private final String myCachesDirectoryPath;
     private boolean myShouldClearOutputDirectory;
@@ -115,8 +114,6 @@ public class CompileDriverImpl implements CompileDriver {
     private static final String LOCK_FILE_NAME = "in_progress.dat";
 
     private static final boolean GENERATE_CLASSPATH_INDEX = "true".equals(System.getProperty("generate.classpath.index"));
-    private static final String PROP_PERFORM_INITIAL_REFRESH = "compiler.perform.outputs.refresh.on.start";
-    private static final Key<Boolean> REFRESH_DONE_KEY = Key.create("_compiler.initial.refresh.done_");
     private static final Key<Boolean> COMPILATION_STARTED_AUTOMATICALLY = Key.create("compilation_started_automatically");
 
     private Predicate<Compiler> myCompilerFilter = Predicates.alwaysTrue();
@@ -126,7 +123,6 @@ public class CompileDriverImpl implements CompileDriver {
     private Set<File> myAllOutputDirectories;
     private static final long ONE_MINUTE_MS = 60L /*sec*/ * 1000L /*millisec*/;
 
-    @RequiredReadAction
     public CompileDriverImpl(Project project) {
         myProject = project;
         myCachesDirectoryPath = CompilerPaths.getCacheStoreDirectory(myProject).getPath().replace('/', File.separatorChar);
@@ -134,27 +130,37 @@ public class CompileDriverImpl implements CompileDriver {
 
         myGenerationCompilerModuleToOutputDirMap = new HashMap<>();
 
-        LocalFileSystem lfs = LocalFileSystem.getInstance();
         IntermediateOutputCompiler[] generatingCompilers =
             CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
         Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
         for (Module module : allModules) {
             for (IntermediateOutputCompiler compiler : generatingCompilers) {
-                VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
-                VirtualFile testOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, true));
+                Path productionOutput = lookupOutputPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
+                Path testOutput = lookupOutputPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
                 Pair<IntermediateOutputCompiler, Module> pair = Pair.create(compiler, module);
-                Couple<VirtualFile> outputs = new Couple<>(productionOutput, testOutput);
+                Couple<Path> outputs = new Couple<>(productionOutput, testOutput);
                 myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
             }
 
             var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
             point.forEachExtensionSafe(provider -> {
                 for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                    lookupVFile(lfs, directory.path());
+                    lookupOutputPath(directory.path());
                 }
             });
         }
+    }
+
+    private static Path lookupOutputPath(String path) {
+        Path result = Path.of(path);
+        try {
+            Files.createDirectories(result);
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+        return result;
     }
 
     public void setCompilerFilter(Predicate<Compiler> compilerFilter) {
@@ -201,7 +207,7 @@ public class CompileDriverImpl implements CompileDriver {
         CompositeDependencyCache cache = createDependencyCache();
         CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false, counters);
 
-        checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
+        checkCachesVersion(compileContext);
         if (compileContext.isRebuildRequested()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Rebuild requested, up-to-date=false");
@@ -209,9 +215,9 @@ public class CompileDriverImpl implements CompileDriver {
             return false;
         }
 
-        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
+        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<Path>> entry
             : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
-            Couple<VirtualFile> outputs = entry.getValue();
+            Couple<Path> outputs = entry.getValue();
             Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
             Module module = key.getSecond();
             compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
@@ -276,28 +282,20 @@ public class CompileDriverImpl implements CompileDriver {
     private static class CompileStatus {
         final int CACHE_FORMAT_VERSION;
         final boolean COMPILATION_IN_PROGRESS;
-        final long VFS_CREATION_STAMP;
 
-        private CompileStatus(int cacheVersion, boolean isCompilationInProgress, long vfsStamp) {
+        private CompileStatus(int cacheVersion, boolean isCompilationInProgress) {
             CACHE_FORMAT_VERSION = cacheVersion;
             COMPILATION_IN_PROGRESS = isCompilationInProgress;
-            VFS_CREATION_STAMP = vfsStamp;
         }
     }
 
     private CompileStatus readStatus() {
         boolean isInProgress = getLockFile().exists();
         int version = -1;
-        long vfsStamp = -1L;
         try {
             File versionFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
             try (DataInputStream in = new DataInputStream(new FileInputStream(versionFile))) {
                 version = in.readInt();
-                try {
-                    vfsStamp = in.readLong();
-                }
-                catch (IOException ignored) {
-                }
             }
         }
         catch (FileNotFoundException e) {
@@ -307,7 +305,7 @@ public class CompileDriverImpl implements CompileDriver {
             LOG.info(e);  // may happen in case of IDEA crashed and the file is not written properly
             return null;
         }
-        return new CompileStatus(version, isInProgress, vfsStamp);
+        return new CompileStatus(version, isInProgress);
     }
 
     private void writeStatus(CompileStatus status, CompileContextEx context) {
@@ -318,7 +316,6 @@ public class CompileDriverImpl implements CompileDriver {
             FileUtil.createIfDoesntExist(statusFile);
             try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statusFile))) {
                 out.writeInt(status.CACHE_FORMAT_VERSION);
-                out.writeLong(status.VFS_CREATION_STAMP);
             }
             if (status.COMPILATION_IN_PROGRESS) {
                 FileUtil.createIfDoesntExist(lockFile);
@@ -328,13 +325,7 @@ public class CompileDriverImpl implements CompileDriver {
             }
         }
         catch (IOException e) {
-            context.addMessage(
-                CompilerMessageCategory.ERROR,
-                CompilerLocalize.compilerErrorException(e.getMessage()).get(),
-                null,
-                -1,
-                -1
-            );
+            context.newError(CompilerLocalize.compilerErrorException(StringUtil.notNullize(e.getMessage()))).add();
         }
     }
 
@@ -377,11 +368,11 @@ public class CompileDriverImpl implements CompileDriver {
     public CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter) {
         CompileScope scope = originalScope;
         Set<Module> affected = new HashSet<>(Arrays.asList(originalScope.getAffectedModules()));
-        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
+        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<Path>> entry
             : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
             Module module = entry.getKey().getSecond();
             if (affected.contains(module) && filter.test(entry.getKey().getFirst())) {
-                Couple<VirtualFile> outputs = entry.getValue();
+                Couple<Path> outputs = entry.getValue();
                 scope = new CompositeScope(
                     scope,
                     new FileSetCompileScope(Arrays.asList(outputs.getFirst(), outputs.getSecond()), new Module[]{module})
@@ -401,30 +392,36 @@ public class CompileDriverImpl implements CompileDriver {
     }
 
     private void attachAnnotationProcessorsOutputDirectories(CompileContextEx context) {
-        LocalFileSystem lfs = LocalFileSystem.getInstance();
         Set<Module> affected = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
         for (Module module : affected) {
-            ModuleFileIndex fileIndex = ModuleRootManager.getInstance(module).getFileIndex();
+            Set<String> sourceFolderPaths = new HashSet<>();
+            for (String url : ModuleRootManager.getInstance(module).getContentFolderUrls(LanguageContentFolderScopes.all(false))) {
+                sourceFolderPaths.add(FileUtil.toSystemIndependentName(VirtualFileUtil.urlToPath(url)));
+            }
 
             var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
 
             point.forEachExtensionSafe(provider -> {
                 for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                    VirtualFile vFile = lfs.findFileByPath(directory.path());
-                    if (vFile == null) {
-                        continue;
+                    String directoryPath = FileUtil.toSystemIndependentName(directory.path());
+                    boolean inSourceContent = false;
+                    for (String sourceFolderPath : sourceFolderPaths) {
+                        if (FileUtil.startsWith(directoryPath, sourceFolderPath)) {
+                            inSourceContent = true;
+                            break;
+                        }
                     }
-                    if (fileIndex.isInSourceContent(vFile)) {
-                        // no need to add, is already marked as source
+                    if (inSourceContent) {
                         continue;
                     }
 
+                    Path path = Path.of(directory.path());
                     context.addScope(new FileSetCompileScope(
-                        Collections.singletonList(vFile),
+                        Collections.singletonList(path),
                         new Module[]{module},
                         directory.testScope()
                     ));
-                    context.assignModule(vFile, module, false, null);
+                    context.assignModule(path, module, false, null);
                 }
             });
         }
@@ -455,9 +452,9 @@ public class CompileDriverImpl implements CompileDriver {
         CompileContextImpl compileContext =
             new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild, counters);
 
-        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
+        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<Path>> entry
             : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
-            Couple<VirtualFile> outputs = entry.getValue();
+            Couple<Path> outputs = entry.getValue();
             Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
             Module module = key.getSecond();
             compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
@@ -484,7 +481,7 @@ public class CompileDriverImpl implements CompileDriver {
                     //FIXME [VISTALL] notifyDeprecatedImplementation();
                 }
 
-                TranslatingCompilerFilesMonitor.getInstance()
+                ((TranslatingCompilerFilesMonitorImpl) TranslatingCompilerFilesMonitor.getInstance())
                     .ensureInitializationCompleted(myProject, compileContext.getProgressIndicator());
 
                 ExitStatus status = doCompile(compileContext, buildProgress, isRebuild, forceCompile, callback, checkCachesVersion);
@@ -499,7 +496,6 @@ public class CompileDriverImpl implements CompileDriver {
         compileTask.start(compileWork);
     }
 
-    @RequiredReadAction
     private ExitStatus doCompile(
         CompileContextImpl compileContext,
         BuildProgress<BuildProgressDescriptor> buildProgress,
@@ -510,15 +506,14 @@ public class CompileDriverImpl implements CompileDriver {
     ) {
         ExitStatus status = ExitStatus.ERRORS;
         boolean wereExceptions = false;
-        long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
         try {
             if (checkCachesVersion) {
-                checkCachesVersion(compileContext, vfsTimestamp);
+                checkCachesVersion(compileContext);
                 if (compileContext.isRebuildRequested()) {
                     return status;
                 }
             }
-            writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, true, vfsTimestamp), compileContext);
+            writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, true), compileContext);
             if (compileContext.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
                 return status;
             }
@@ -540,7 +535,7 @@ public class CompileDriverImpl implements CompileDriver {
                 message.append(" (Plugin: ").append(pluginId).append(")");
             }
             message.append(": ").append(ex.getMessage());
-            compileContext.addMessage(CompilerMessageCategory.ERROR, message.toString(), null, -1, -1);
+            compileContext.newError(LocalizeValue.localizeTODO(message.toString())).add();
 
             if (pluginId != null) {
                 throw new PluginException(ex, pluginId);
@@ -562,9 +557,9 @@ public class CompileDriverImpl implements CompileDriver {
             }
             else {
                 if (!myProject.isDisposed()) {
-                    writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions, vfsTimestamp), compileContext);
+                    writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions), compileContext);
                 }
-                long duration = notifyCompilationCompleted(compileContext, callback, status, false);
+                long duration = notifyCompilationCompleted(compileContext, callback, status);
                 CompilerUtil.logDuration(
                     "\tCOMPILATION FINISHED; Errors: " + compileContext.getMessageCount(CompilerMessageCategory.ERROR) +
                         "; warnings: " + compileContext.getMessageCount(CompilerMessageCategory.WARNING),
@@ -582,41 +577,38 @@ public class CompileDriverImpl implements CompileDriver {
     private long notifyCompilationCompleted(
         CompileContextImpl compileContext,
         CompileStatusNotification callback,
-        ExitStatus _status,
-        boolean refreshOutputRoots
+        ExitStatus _status
     ) {
         long duration = System.currentTimeMillis() - compileContext.getStartCompilationStamp();
-        if (refreshOutputRoots) {
-            // refresh on output roots is required in order for the order enumerator to see all roots via VFS
-            Set<File> outputs = new HashSet<>();
-            Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
-            for (String path : CompilerPaths.getOutputPaths(affectedModules)) {
-                outputs.add(new File(path));
-            }
-            LocalFileSystem lfs = LocalFileSystem.getInstance();
-            if (!outputs.isEmpty()) {
-                ProgressIndicator indicator = compileContext.getProgressIndicator();
-                indicator.setText(CompilerLocalize.progressSynchronizingOutputDirectories());
-                lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
-                indicator.setText(LocalizeValue.empty());
-            }
+        // refresh on output roots is required in order for the order enumerator to see all roots via VFS
+        Set<File> outputs = new HashSet<>();
+        Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
+        for (String path : CompilerPaths.getOutputPaths(affectedModules)) {
+            outputs.add(new File(path));
+        }
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        if (!outputs.isEmpty()) {
+            ProgressIndicator indicator = compileContext.getProgressIndicator();
+            indicator.setText(CompilerLocalize.progressSynchronizingOutputDirectories());
+            lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
+            indicator.setText(LocalizeValue.empty());
+        }
 
-            Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
-            for (Module affectedModule : affectedModules) {
-                ExtensionPoint<ModuleAdditionalOutputDirectoriesProvider> point =
-                    affectedModule.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
+        Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
+        for (Module affectedModule : affectedModules) {
+            ExtensionPoint<ModuleAdditionalOutputDirectoriesProvider> point =
+                affectedModule.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
 
-                point.forEachExtensionSafe(provider -> {
-                    for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                        genSourceRoots.add(new File(directory.path()));
-                    }
-                });
-            }
+            point.forEachExtensionSafe(provider -> {
+                for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
+                    genSourceRoots.add(new File(directory.path()));
+                }
+            });
+        }
 
-            if (!genSourceRoots.isEmpty()) {
-                // refresh generates source roots asynchronously; needed for error highlighting update
-                lfs.refreshIoFiles(genSourceRoots, true, true, null);
-            }
+        if (!genSourceRoots.isEmpty()) {
+            // refresh generates source roots asynchronously; needed for error highlighting update
+            lfs.refreshIoFiles(genSourceRoots, true, true, null);
         }
         myProject.getUIAccess().give(() -> {
             int errorCount = 0;
@@ -639,7 +631,7 @@ public class CompileDriverImpl implements CompileDriver {
                         .notify(myProject);
 
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
-                        compileContext.addMessage(CompilerMessageCategory.INFORMATION, statusMessage.get(), null, -1, -1);
+                        compileContext.newInfo(statusMessage).add();
                     }
                 }
             }
@@ -652,7 +644,7 @@ public class CompileDriverImpl implements CompileDriver {
         return duration;
     }
 
-    private void checkCachesVersion(CompileContextImpl compileContext, long currentVFSTimestamp) {
+    private void checkCachesVersion(CompileContextImpl compileContext) {
         if (CompilerPaths.getRebuildMarkerFile(compileContext.getProject()).exists()) {
             compileContext.requestRebuildNextTime(CompilerLocalize.errorCompilerCachesExpired());
             return;
@@ -666,11 +658,6 @@ public class CompileDriverImpl implements CompileDriver {
         }
         else if (compileStatus.COMPILATION_IN_PROGRESS) {
             compileContext.requestRebuildNextTime(CompilerLocalize.errorPreviousCompilationFailed());
-        }
-        else if (compileStatus.VFS_CREATION_STAMP >= 0L) {
-            if (currentVFSTimestamp != compileStatus.VFS_CREATION_STAMP) {
-                compileContext.requestRebuildNextTime(CompilerLocalize.errorVfsWasRebuilt());
-            }
         }
     }
 
@@ -694,7 +681,6 @@ public class CompileDriverImpl implements CompileDriver {
         }
     }
 
-    @RequiredReadAction
     private ExitStatus doCompile(
         CompileContextEx context,
         BuildProgress<BuildProgressDescriptor> buildProgress,
@@ -728,75 +714,16 @@ public class CompileDriverImpl implements CompileDriver {
                 return ExitStatus.ERRORS;
             }
 
-            boolean needRecalcOutputDirs = false;
-            if (Registry.is(PROP_PERFORM_INITIAL_REFRESH) || !REFRESH_DONE_KEY.get(myProject, Boolean.FALSE)) {
-                REFRESH_DONE_KEY.set(myProject, Boolean.TRUE);
-                long refreshStart = System.currentTimeMillis();
-
-                //need this to make sure the VFS is built
-                List<VirtualFile> outputsToRefresh = new ArrayList<>();
-
-                VirtualFile[] all = context.getAllOutputDirectories();
-
-                ProgressIndicator progressIndicator = context.getProgressIndicator();
-
-                //int totalCount = all.length + myGenerationCompilerModuleToOutputDirMap.size() * 2;
-                progressIndicator.pushState();
-                progressIndicator.setText(CompilerLocalize.progressInspectingOutputDirectories());
-                try {
-                    for (VirtualFile output : all) {
-                        if (output.isValid()) {
-                            walkChildren(output, context);
-                        }
-                        else {
-                            needRecalcOutputDirs = true;
-                            File file = new File(output.getPath());
-                            if (!file.exists()) {
-                                boolean created = file.mkdirs();
-                                if (!created) {
-                                    context.addMessage(
-                                        CompilerMessageCategory.ERROR,
-                                        CompilerLocalize.errorFailedToCreateOutputDirectory(file.getPath()).get(),
-                                        null,
-                                        0,
-                                        0
-                                    );
-                                    return ExitStatus.ERRORS;
-                                }
-                            }
-                            output = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
-                            if (output == null) {
-                                context.addMessage(
-                                    CompilerMessageCategory.ERROR,
-                                    CompilerLocalize.errorFailedToLocateOutputDirectory(file.getPath()).get(),
-                                    null,
-                                    0,
-                                    0
-                                );
-                                return ExitStatus.ERRORS;
-                            }
-                        }
-                        outputsToRefresh.add(output);
+            for (Path outputPath : context.getAllOutputDirectories()) {
+                if (!Files.exists(outputPath)) {
+                    try {
+                        Files.createDirectories(outputPath);
                     }
-                    for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
-                        Couple<VirtualFile> generated = myGenerationCompilerModuleToOutputDirMap.get(pair);
-                        walkChildren(generated.getFirst(), context);
-                        outputsToRefresh.add(generated.getFirst());
-                        walkChildren(generated.getSecond(), context);
-                        outputsToRefresh.add(generated.getSecond());
-                    }
-
-                    RefreshQueue.getInstance().refresh(false, true, null, outputsToRefresh);
-                    if (progressIndicator.isCanceled()) {
-                        return ExitStatus.CANCELLED;
+                    catch (IOException e) {
+                        context.newError(CompilerLocalize.errorFailedToCreateOutputDirectory(outputPath.toString())).add();
+                        return ExitStatus.ERRORS;
                     }
                 }
-                finally {
-                    progressIndicator.popState();
-                }
-
-                long initialRefreshTime = System.currentTimeMillis() - refreshStart;
-                CompilerUtil.logDuration("Initial VFS refresh", initialRefreshTime);
             }
 
             //DumbService.getInstance(myProject).waitForSmartMode();
@@ -807,10 +734,6 @@ public class CompileDriverImpl implements CompileDriver {
                 if (context.getProgressIndicator().isCanceled()) {
                     return ExitStatus.CANCELLED;
                 }
-            }
-
-            if (needRecalcOutputDirs) {
-                context.recalculateOutputDirs();
             }
 
             boolean didSomething = false;
@@ -835,7 +758,7 @@ public class CompileDriverImpl implements CompileDriver {
             finally {
                 // drop in case it has not been dropped yet.
                 dropDependencyCache(context);
-                VirtualFile[] allOutputDirs = context.getAllOutputDirectories();
+                Path[] allOutputDirs = context.getAllOutputDirectories();
 
                 if (didSomething && GENERATE_CLASSPATH_INDEX) {
                     CompilerUtil.runInContext(
@@ -843,9 +766,9 @@ public class CompileDriverImpl implements CompileDriver {
                         CompilerLocalize.progressGeneratingClasspathIndex(),
                         () -> {
                             int count = 0;
-                            for (VirtualFile file : allOutputDirs) {
+                            for (Path path : allOutputDirs) {
                                 context.getProgressIndicator().setFraction((double) ++count / allOutputDirs.length);
-                                createClasspathIndex(file);
+                                createClasspathIndex(path);
                             }
                         }
                     );
@@ -876,7 +799,6 @@ public class CompileDriverImpl implements CompileDriver {
         }
     }
 
-    @RequiredReadAction
     private void clearAffectedOutputPathsIfPossible(CompileContextEx context) {
         @RequiredReadAction
         ThrowableComputable<List<File>, RuntimeException> action = () -> {
@@ -921,45 +843,24 @@ public class CompileDriverImpl implements CompileDriver {
     private static void logErrorMessages(CompileContext context) {
     }
 
-    private static void walkChildren(VirtualFile from, CompileContext context) {
-        VirtualFileUtil.visitChildrenRecursively(from, new VirtualFileVisitor() {
-            @Override
-            public boolean visitFile(VirtualFile file) {
-                if (file.isDirectory()) {
-                    context.getProgressIndicator().checkCanceled();
-                    context.getProgressIndicator().setText2(LocalizeValue.of(file.getPresentableUrl()));
-                }
-                return true;
-            }
-        });
-    }
-
-    private static void createClasspathIndex(VirtualFile file) {
-        try (BufferedWriter writer =
-                 new BufferedWriter(new FileWriter(new File(VirtualFileUtil.virtualToIoFile(file), "classpath.index")))) {
-            writeIndex(writer, file, file);
+    private static void createClasspathIndex(Path root) {
+        try (BufferedWriter writer = Files.newBufferedWriter(root.resolve("classpath.index"))) {
+            writeIndex(writer, root);
         }
         catch (IOException e) {
             // Ignore. Failed to create optional classpath index
         }
     }
 
-    private static void writeIndex(BufferedWriter writer, VirtualFile root, VirtualFile file) throws IOException {
-        VirtualFileUtil.visitChildrenRecursively(file,
-            new VirtualFileVisitor() {
-                @Override
-                public boolean visitFile(VirtualFile file) {
-                    try {
-                        writer.write(VirtualFileUtil.getRelativePath(file, root, '/'));
-                        writer.write('\n');
-                        return true;
-                    }
-                    catch (IOException e) {
-                        throw new VisitorException(e);
-                    }
-                }
-            }, IOException.class
-        );
+    private static void writeIndex(BufferedWriter writer, Path root) throws IOException {
+        try (Stream<Path> stream = Files.walk(root)) {
+            Iterator<Path> iterator = stream.iterator();
+            while (iterator.hasNext()) {
+                Path path = iterator.next();
+                writer.write(FileUtil.toSystemIndependentName(root.relativize(path).toString()));
+                writer.write('\n');
+            }
+        }
     }
 
     @Override
@@ -1094,13 +995,7 @@ public class CompileDriverImpl implements CompileDriver {
                     for (File file : files) {
                         boolean deleteOk = deleteFile(file);
                         if (!deleteOk) {
-                            context.addMessage(
-                                CompilerMessageCategory.ERROR,
-                                CompilerLocalize.compilerErrorFailedToDelete(file.getPath()).get(),
-                                null,
-                                -1,
-                                -1
-                            );
+                            context.newError(CompilerLocalize.compilerErrorFailedToDelete(file.getPath())).add();
                         }
                     }
                 }
@@ -1298,21 +1193,6 @@ public class CompileDriverImpl implements CompileDriver {
                         return false;
                     }
                 }
-                Boolean refreshSuccess = WriteAction.compute(() -> {
-                    LocalFileSystem.getInstance().refreshIoFiles(nonExistingOutputPaths);
-                    Boolean res = Boolean.TRUE;
-                    for (File file : nonExistingOutputPaths) {
-                        if (LocalFileSystem.getInstance().findFileByIoFile(file) == null) {
-                            res = Boolean.FALSE;
-                            break;
-                        }
-                    }
-                    return res;
-                });
-
-                if (!refreshSuccess) {
-                    return false;
-                }
                 dropScopesCaches();
             }
 
@@ -1381,12 +1261,17 @@ public class CompileDriverImpl implements CompileDriver {
     @RequiredUIAccess
     private boolean validateOutputAndSourcePathsIntersection() {
         Module[] allModules = ModuleManager.getInstance(myProject).getModules();
-        List<VirtualFile> allOutputs = new ArrayList<>();
-        ContainerUtil.addAll(allOutputs, CompilerPaths.getOutputDirectories(allModules));
-        for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
-            ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());
+        List<Path> allOutputs = new ArrayList<>();
+        for (String outputPath : CompilerPaths.getOutputPaths(allModules)) {
+            allOutputs.add(Path.of(outputPath));
         }
-        Set<VirtualFile> affectedOutputPaths = new HashSet<>();
+        for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
+            String outputFilePath = artifact.getOutputFilePath();
+            if (!StringUtil.isEmpty(outputFilePath)) {
+                allOutputs.add(Path.of(FileUtil.toSystemDependentName(outputFilePath)));
+            }
+        }
+        Set<Path> affectedOutputPaths = new HashSet<>();
         CompilerUtil.computeIntersectingPaths(myProject, allOutputs, affectedOutputPaths);
         affectedOutputPaths.addAll(ArtifactCompilerUtil.getArtifactOutputsContainingSourceFiles(myProject));
 
@@ -1408,31 +1293,12 @@ public class CompileDriverImpl implements CompileDriver {
     }
 
     @Override
-    public VirtualFile getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources) {
-        Couple<VirtualFile> outputs = myGenerationCompilerModuleToOutputDirMap.get(Pair.create(compiler, module));
+    public Path getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources) {
+        Couple<Path> outputs = myGenerationCompilerModuleToOutputDirMap.get(Pair.create(compiler, module));
         return forTestSources ? outputs.getSecond() : outputs.getFirst();
     }
 
     private void showConfigurationDialog(String moduleNameToSelect, String tabNameToSelect) {
         //FIXME [VISTALL] ProjectSettingsService.getInstance(myProject).showModuleConfigurationDialog(moduleNameToSelect, tabNameToSelect);
-    }
-
-    private static VirtualFile lookupVFile(LocalFileSystem lfs, String path) {
-        File file = new File(path);
-
-        VirtualFile vFile = lfs.findFileByIoFile(file);
-        if (vFile != null) {
-            return vFile;
-        }
-
-        boolean justCreated = file.mkdirs();
-        vFile = lfs.refreshAndFindFileByIoFile(file);
-
-        if (vFile == null) {
-            assert false :
-                "Virtual file not found for " + file.getPath() + "; mkdirs() exit code is " + justCreated + "; file exists()? " + file.exists();
-        }
-
-        return vFile;
     }
 }

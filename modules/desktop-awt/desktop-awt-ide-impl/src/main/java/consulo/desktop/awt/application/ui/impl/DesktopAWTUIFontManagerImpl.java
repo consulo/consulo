@@ -32,7 +32,7 @@ import java.awt.*;
 @ServiceImpl
 public class DesktopAWTUIFontManagerImpl extends UIFontManagerImpl {
   @Override
-  public void afterLoadState() {
+  public void afterLoad(boolean first) {
     // 1. Sometimes system font cannot display standard ASCII symbols. If so we have
     // find any other suitable font withing "preferred" fonts first.
     boolean fontIsValid = UIUtil.isValidFont(new Font(getFontName(), Font.PLAIN, getFontSize()));

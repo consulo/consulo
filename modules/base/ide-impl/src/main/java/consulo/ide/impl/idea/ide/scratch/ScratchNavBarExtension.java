@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.navigationToolbar.AbstractNavBarModelExtension;
 import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.ui.navigationBar.NavBarModelExtension;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -34,7 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ExtensionImpl
-public class ScratchNavBarExtension extends AbstractNavBarModelExtension {
+public class ScratchNavBarExtension implements NavBarModelExtension {
     @Override
     @RequiredReadAction
     public @Nullable String getPresentableText(Object object) {

@@ -49,6 +49,16 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-awt-ui-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-awt-editor-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-ide-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -103,12 +113,46 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.formdev</groupId>
-            <artifactId>flatlaf</artifactId>
-            <classifier>no-natives</classifier>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-execution-coverage-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.formdev</groupId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-ui-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-navigation-bar-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-navigation-bar-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-version-control-system-log-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-version-control-system-distributed-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-diagram-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>flatlaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
             <artifactId>flatlaf-swingx</artifactId>
         </dependency>
         <dependency>
@@ -150,6 +194,10 @@
         <dependency>
             <groupId>consulo.internal</groupId>
             <artifactId>jediterm-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.runtime</groupId>
+            <artifactId>jbr-api</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>

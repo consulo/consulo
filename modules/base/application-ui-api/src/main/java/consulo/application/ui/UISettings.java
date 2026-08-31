@@ -90,17 +90,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     public int EDITOR_TAB_LIMIT = 10;
     public boolean REUSE_NOT_MODIFIED_TABS = false;
     public boolean ANIMATE_WINDOWS = true;
-    public boolean SHOW_TOOL_WINDOW_NUMBERS = true;
-    public boolean HIDE_TOOL_STRIPES = false;
-    public boolean WIDESCREEN_SUPPORT = true;
-    public boolean LEFT_HORIZONTAL_SPLIT = false;
-    public boolean RIGHT_HORIZONTAL_SPLIT = false;
     public boolean SHOW_EDITOR_TOOLTIP = true;
     public boolean ALLOW_MERGE_BUTTONS = true;
     public boolean SHOW_MAIN_TOOLBAR = false;
     public boolean SHOW_STATUS_BAR = true;
     public boolean SHOW_NAVIGATION_BAR = true;
-    public boolean ALWAYS_SHOW_WINDOW_BUTTONS = false;
     public boolean CYCLE_SCROLLING = true;
     public boolean SCROLL_TAB_LAYOUT_IN_EDITOR = true;
     public boolean HIDE_TABS_IF_NEED = true;
@@ -274,10 +268,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return SCROLL_TAB_LAYOUT_IN_EDITOR;
     }
 
-    public boolean getHideToolStripes() {
-        return HIDE_TOOL_STRIPES;
-    }
-
     public boolean getShowCloseButton() {
         return SHOW_CLOSE_BUTTON;
     }
@@ -326,32 +316,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return MAX_LOOKUP_LIST_HEIGHT;
     }
 
-    public void setHideToolStripes(boolean value) {
-        HIDE_TOOL_STRIPES = value;
-    }
-
-    public boolean getWideScreenSupport() {
-        return WIDESCREEN_SUPPORT;
-    }
-
     public boolean getAnimateWindows() {
         return ANIMATE_WINDOWS;
-    }
-
-    public boolean getLeftHorizontalSplit() {
-        return LEFT_HORIZONTAL_SPLIT;
-    }
-
-    public void setLeftHorizontalSplit(boolean value) {
-        LEFT_HORIZONTAL_SPLIT = value;
-    }
-
-    public boolean getRightHorizontalSplit() {
-        return RIGHT_HORIZONTAL_SPLIT;
-    }
-
-    public void setRightHorizontalSplit(boolean value) {
-        RIGHT_HORIZONTAL_SPLIT = value;
     }
 
     public boolean getShowIconInQuickNavigation() {

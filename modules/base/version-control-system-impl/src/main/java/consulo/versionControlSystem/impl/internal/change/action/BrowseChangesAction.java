@@ -19,10 +19,9 @@ import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.*;
@@ -36,7 +35,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author yole
  */
 @ActionImpl(id = "ChangesView.Browse")
-public class BrowseChangesAction extends AnAction implements DumbAware {
+public class BrowseChangesAction extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

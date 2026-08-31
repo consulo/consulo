@@ -85,7 +85,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   }
 
   @Override
-  public void mark(int readlimit) {
+  public void mark(int readLimit) {
     myMarkedPosition = myPosition;
   }
 

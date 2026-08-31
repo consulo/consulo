@@ -36,9 +36,11 @@ public interface HasFocus extends Component {
     void setFocusable(boolean focusable);
 
     boolean isFocusable();
+
     default Disposable addFocusListener(ComponentEventListener<HasFocus, FocusEvent> listener) {
         return addListener(FocusEvent.class, listener);
     }
+
     default Disposable addBlurListener(ComponentEventListener<HasFocus, BlurEvent> listener) {
         return addListener(BlurEvent.class, listener);
     }

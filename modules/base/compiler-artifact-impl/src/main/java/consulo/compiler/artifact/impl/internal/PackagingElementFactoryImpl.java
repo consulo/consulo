@@ -237,7 +237,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
             }
         }
         List<PackagingElement<?>> elements = new ArrayList<>();
-        for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
+        for (VirtualFile file : library.getFiles(BinariesOrderRootType.ID)) {
             String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
             elements.add(
                 file.isDirectory() && file.isInLocalFileSystem()

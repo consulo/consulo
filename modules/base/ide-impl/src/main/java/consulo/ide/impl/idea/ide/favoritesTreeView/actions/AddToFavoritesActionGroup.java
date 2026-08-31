@@ -22,6 +22,8 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -31,12 +33,12 @@ import java.util.List;
  * @since 2005-03-03
  */
 @ActionImpl(id = IdeActions.ADD_TO_FAVORITES)
-public class AddToFavoritesActionGroup extends ActionGroup {
+public class AddToFavoritesActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
     public AddToFavoritesActionGroup() {
         super(ActionLocalize.groupAddtofavoritesText(), true);
     }
 
-    
+
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
@@ -63,8 +65,7 @@ public class AddToFavoritesActionGroup extends ActionGroup {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        super.update(e);
-        e.getPresentation().setVisible(AddToFavoritesAction.canCreateNodes(e));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, p -> p.setVisible(AddToFavoritesAction.canCreateNodes(e))).toCoroutine();
     }
 }

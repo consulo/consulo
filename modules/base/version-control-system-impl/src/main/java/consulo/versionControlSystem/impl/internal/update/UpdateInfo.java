@@ -78,8 +78,13 @@ public class UpdateInfo {
     return null;
   }
 
-  public Project getPoject() {
+  public Project getProject() {
     return myProject;
+  }
+
+  @Deprecated
+  public Project getPoject() {
+    return getProject();
   }
 
   public UpdatedFiles getFileInformation() {

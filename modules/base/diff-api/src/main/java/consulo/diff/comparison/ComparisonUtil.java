@@ -16,10 +16,8 @@
 package consulo.diff.comparison;
 
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
 
 public class ComparisonUtil {
-  @Contract(pure = true)
   public static boolean isEquals(CharSequence text1, CharSequence text2, ComparisonPolicy policy) {
     switch (policy) {
       case DEFAULT:
@@ -33,7 +31,6 @@ public class ComparisonUtil {
     }
   }
 
-  @Contract(pure = true)
   public static boolean equalsTrimWhitespaces(CharSequence s1, CharSequence s2) {
     int index1 = 0;
     int index2 = 0;

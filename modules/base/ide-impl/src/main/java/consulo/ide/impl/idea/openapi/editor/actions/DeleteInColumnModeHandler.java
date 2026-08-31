@@ -13,7 +13,7 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.util.DocumentUtil;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import org.jspecify.annotations.Nullable;
 
@@ -21,8 +21,8 @@ import org.jspecify.annotations.Nullable;
 public class DeleteInColumnModeHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
     private EditorActionHandler myOriginalHandler;
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (editor.isColumnMode() && caret == null && editor.getCaretModel().getCaretCount() > 1) {
             CodeEditorInternalHelper.getInstance().hideCursorInEditor(editor);
@@ -47,7 +47,6 @@ public class DeleteInColumnModeHandler extends EditorWriteActionHandler implemen
         myOriginalHandler = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_DELETE;

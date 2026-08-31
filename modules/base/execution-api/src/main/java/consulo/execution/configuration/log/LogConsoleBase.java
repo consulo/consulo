@@ -386,7 +386,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
     private @Nullable Editor getEditor() {
         ConsoleView console = getConsole();
-        return console != null ? ((DataProvider) console).getDataUnchecked(Editor.KEY) : null;
+        return console == null ? null : console.getEditor();
     }
 
     private void filterConsoleOutput() {

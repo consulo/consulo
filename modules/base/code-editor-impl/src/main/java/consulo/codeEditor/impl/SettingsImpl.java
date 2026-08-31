@@ -20,6 +20,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.TabCharacterPaintMode;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
@@ -62,6 +63,9 @@ public class SettingsImpl implements EditorSettings {
     private Boolean myIsCaretInsideTabs = null;
     private Boolean myIsCaretBlinking = null;
     private Integer myCaretBlinkingPeriod = null;
+    private Boolean myIsAnimatedCaret = null;
+    private Boolean myIsSmoothCaretBlinking = null;
+    private EditorSettings.CaretEasing myCaretEasing = null;
     private Boolean myIsRightMarginShown = null;
     private Integer myRightMargin = null;
     private Boolean myAreLineNumbersShown = null;
@@ -74,6 +78,10 @@ public class SettingsImpl implements EditorSettings {
     private Boolean myIsLeadingWhitespacesShown = null;
     private Boolean myIsInnerWhitespacesShown = null;
     private Boolean myIsTrailingWhitespacesShown = null;
+    private Boolean myIsSelectionWhitespacesShown = null;
+    private Boolean myIsFullLineHeightCursor = null;
+    private Boolean myIsShowingSpecialChars = null;
+    private TabCharacterPaintMode myTabCharacterPaintMode = null;
     private Boolean myIndentGuidesShown = null;
     private Boolean myIsAnimatedScrolling = null;
     private Boolean myIsAdditionalPageAtBottom = null;
@@ -400,7 +408,7 @@ public class SettingsImpl implements EditorSettings {
     }
 
     @Override
-    public int getTabSize(Project project) {
+    public int getTabSize(@Nullable Project project) {
         if (myTabSize != null) {
             return myTabSize;
         }
@@ -595,6 +603,109 @@ public class SettingsImpl implements EditorSettings {
             return;
         }
         myCaretBlinkingPeriod = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isAnimatedCaret() {
+        return myIsAnimatedCaret != null ? myIsAnimatedCaret : myPersistentEditorSettings.isAnimatedCaret();
+    }
+
+    @Override
+    public void setAnimatedCaret(boolean val) {
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        if (newValue.equals(myIsAnimatedCaret)) {
+            return;
+        }
+        myIsAnimatedCaret = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isSmoothCaretBlinking() {
+        return myIsSmoothCaretBlinking != null ? myIsSmoothCaretBlinking : myPersistentEditorSettings.isSmoothCaretBlinking();
+    }
+
+    @Override
+    public void setSmoothCaretBlinking(boolean val) {
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        if (newValue.equals(myIsSmoothCaretBlinking)) {
+            return;
+        }
+        myIsSmoothCaretBlinking = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public EditorSettings.CaretEasing getCaretEasing() {
+        return myCaretEasing != null ? myCaretEasing : myPersistentEditorSettings.getCaretEasing();
+    }
+
+    @Override
+    public void setCaretEasing(EditorSettings.CaretEasing easing) {
+        if (easing.equals(myCaretEasing)) {
+            return;
+        }
+        myCaretEasing = easing;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isSelectionWhitespaceShown() {
+        return myIsSelectionWhitespacesShown != null ? myIsSelectionWhitespacesShown : myPersistentEditorSettings.isSelectionWhitespacesShown();
+    }
+
+    @Override
+    public void setSelectionWhitespaceShown(boolean val) {
+        Boolean newValue = val;
+        if (newValue.equals(myIsSelectionWhitespacesShown)) {
+            return;
+        }
+        myIsSelectionWhitespacesShown = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isFullLineHeightCursor() {
+        return myIsFullLineHeightCursor != null ? myIsFullLineHeightCursor : myPersistentEditorSettings.isFullLineHeightCursor();
+    }
+
+    @Override
+    public void setFullLineHeightCursor(boolean val) {
+        Boolean newValue = val;
+        if (newValue.equals(myIsFullLineHeightCursor)) {
+            return;
+        }
+        myIsFullLineHeightCursor = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isShowingSpecialChars() {
+        return myIsShowingSpecialChars != null ? myIsShowingSpecialChars : myPersistentEditorSettings.isShowingSpecialChars();
+    }
+
+    @Override
+    public void setShowingSpecialChars(boolean val) {
+        Boolean newValue = val;
+        if (newValue.equals(myIsShowingSpecialChars)) {
+            return;
+        }
+        myIsShowingSpecialChars = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public TabCharacterPaintMode getTabCharacterPaintMode() {
+        return myTabCharacterPaintMode != null ? myTabCharacterPaintMode : myPersistentEditorSettings.getTabCharacterPaintMode();
+    }
+
+    @Override
+    public void setTabCharacterPaintMode(TabCharacterPaintMode mode) {
+        if (mode.equals(myTabCharacterPaintMode)) {
+            return;
+        }
+        myTabCharacterPaintMode = mode;
         fireEditorRefresh();
     }
 

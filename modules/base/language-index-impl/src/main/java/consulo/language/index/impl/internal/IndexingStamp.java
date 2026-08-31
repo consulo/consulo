@@ -6,7 +6,7 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.FileAttribute;
@@ -353,8 +353,9 @@ public class IndexingStamp {
         }
     }
 
-    private static final IntObjectMap<Timestamps> myTimestampsCache = IntMaps.newConcurrentIntObjectHashMap();
-    private static final BlockingQueue<Integer> ourFinishedFiles = new ArrayBlockingQueue<>(100);
+    private static final ConcurrentIntObjectMap<Timestamps> myTimestampsCache = IntMaps.newConcurrentIntObjectHashMap();
+    private static final BlockingQueue<Integer> ourFinishedFiles =
+        new ArrayBlockingQueue<>(Math.max(100, Runtime.getRuntime().availableProcessors() * 64));
 
     public static long getIndexStamp(int fileId, ID<?, ?> indexName) {
         Lock readLock = getStripedLock(fileId).readLock();
@@ -480,7 +481,8 @@ public class IndexingStamp {
         }
     }
 
-    private static final ReadWriteLock[] ourLocks = new ReadWriteLock[16];
+    private static final ReadWriteLock[] ourLocks =
+        new ReadWriteLock[Math.max(16, Math.min(256, Runtime.getRuntime().availableProcessors() * 4))];
 
     static {
         for (int i = 0; i < ourLocks.length; ++i) ourLocks[i] = new ReentrantReadWriteLock();

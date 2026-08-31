@@ -29,7 +29,7 @@ public class DetectedLibraryRoot {
   private final VirtualFile myFile;
   private final List<LibraryRootType> myTypes;
 
-  public DetectedLibraryRoot(VirtualFile file, OrderRootType rootType, boolean jarDirectory) {
+  public DetectedLibraryRoot(VirtualFile file, String rootType, boolean jarDirectory) {
     this(file, Collections.singletonList(new LibraryRootType(rootType, jarDirectory)));
   }
 
@@ -38,7 +38,6 @@ public class DetectedLibraryRoot {
     myTypes = types;
   }
 
-  
   public VirtualFile getFile() {
     return myFile;
   }

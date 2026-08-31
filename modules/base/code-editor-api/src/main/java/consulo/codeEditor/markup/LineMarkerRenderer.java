@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.markup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
 
 import java.awt.*;
@@ -23,8 +24,12 @@ import java.awt.*;
  * Interface which should be implemented in order to paint custom markers in the line
  * marker area (over the folding area).
  *
- * @see RangeHighlighter#setLineMarkerRenderer(LineMarkerRenderer)
+ * @deprecated Kept for source parity with IntelliJ. Consulo renders gutter markers through
+ * {@link LineMarkerPresentationProvider}, which each editor implementation paints natively; this
+ * interface is not dispatched by the platform.
  */
+@Deprecated
+@DeprecationInfo("Use LineMarkerPresentationProvider")
 public interface LineMarkerRenderer {
   /**
    * Draws the line marker over the specified rectangle.
@@ -37,7 +42,8 @@ public interface LineMarkerRenderer {
    *               the top of the first line covered by the associated range highlighter
    *               and the bottom of the last line).
    */
-  void paint(Editor editor, Graphics g, Rectangle r);
+  default void paint(Editor editor, Graphics g, Rectangle r) {
+  }
 
   enum Position {
     LEFT,

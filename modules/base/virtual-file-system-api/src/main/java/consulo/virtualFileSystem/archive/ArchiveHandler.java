@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.archive;
 
+import consulo.application.internal.SlowOperations;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileAttributes;
@@ -118,6 +119,7 @@ public abstract class ArchiveHandler {
           }
           else {
             try {
+              SlowOperations.assertSlowOperationsAreAllowed();
               map = createEntriesMap();
             }
             catch (Exception e) {

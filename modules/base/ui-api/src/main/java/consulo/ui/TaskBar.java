@@ -23,35 +23,36 @@ import consulo.ui.color.ColorValue;
  * @since 2020-10-06
  */
 public interface TaskBar {
-  static TaskBar get() {
-    return UIInternal.get()._TaskBar_get();
-  }
+    static TaskBar get() {
+        return UIInternal.get()._TaskBar_get();
+    }
 
-  interface ProgressScheme {
-    ColorValue getOkColor();
-    ColorValue getErrorColor();
-  }
+    interface ProgressScheme {
+        ColorValue getOkColor();
 
-  default void requestFocus(Window window) {
-  }
+        ColorValue getErrorColor();
+    }
 
-  default boolean setProgress(Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
-    return false;
-  }
+    default void requestFocus(Window window) {
+    }
 
-  default boolean hideProgress(Window window, Object processId) {
-    return false;
-  }
+    default boolean setProgress(Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
+        return false;
+    }
 
-  default void setTextBadge(Window window, String text) {
-  }
+    default boolean hideProgress(Window window, Object processId) {
+        return false;
+    }
 
-  default void setErrorBadge(Window window, String text) {
-  }
+    default void setTextBadge(Window window, String text) {
+    }
 
-  default void setOkBadge(Window window, boolean visible) {
-  }
+    default void setErrorBadge(Window window, String text) {
+    }
 
-  default void requestAttention(Window window, boolean critical) {
-  }
+    default void setOkBadge(Window window, boolean visible) {
+    }
+
+    default void requestAttention(Window window, boolean critical) {
+    }
 }

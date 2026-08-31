@@ -59,16 +59,16 @@ public class PsiElementResolveResult implements ResolveResult {
 
     PsiElementResolveResult that = (PsiElementResolveResult)o;
 
-    if (!myElement.equals(that.myElement)) return false;
-
-    return true;
+    return myElement.equals(that.myElement);
   }
 
+  @Override
   public int hashCode() {
     return myElement.hashCode();
   }
 
   @Override
+  @RequiredReadAction
   public String toString() {
     return "PsiElementResolveResult with " + myElement.getClass() + ": " +
         (myElement instanceof PsiNamedElement namedElem ? namedElem.getName() : myElement.getText());

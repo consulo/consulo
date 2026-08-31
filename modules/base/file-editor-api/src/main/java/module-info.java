@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 19-Feb-22
+ * @since 2022-02-19
  */
+@NullMarked
 module consulo.file.editor.api {
     // TODO obsolete dep
     requires java.desktop;
@@ -31,12 +34,14 @@ module consulo.file.editor.api {
         consulo.ide.impl,
         consulo.proxy,
         consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.language.editor.impl,
         consulo.configuration.editor.api,
         consulo.version.control.system.impl,
-        consulo.execution.coverage.impl;
+        consulo.execution.coverage.impl,
+        consulo.it,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.fileEditor.internal.largeFileEditor to consulo.file.editor.impl, consulo.ide.impl;
 }

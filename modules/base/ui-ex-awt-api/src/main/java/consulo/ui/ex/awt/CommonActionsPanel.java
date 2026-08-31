@@ -186,7 +186,7 @@ public class CommonActionsPanel extends JPanel {
     }
 
     private static void registerDeleteHook(final MyActionButton removeButton) {
-        new AnAction(LocalizeValue.localizeTODO("Delete Hook")) {
+        new LegacyAnAction(LocalizeValue.localizeTODO("Delete Hook")) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

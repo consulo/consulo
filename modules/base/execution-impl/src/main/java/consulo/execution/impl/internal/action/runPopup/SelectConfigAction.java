@@ -39,7 +39,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVisibleActionGroup {
+public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVisibleActionGroup, AnActionWithSyncUpdate {
     private final RunnerAndConfigurationSettings myConfiguration;
     private final Project myProject;
     private final String myTag;
@@ -75,8 +75,6 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
-
         Presentation presentation = e.getPresentation();
 
         updateIcon(presentation);

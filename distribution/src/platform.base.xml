@@ -17,6 +17,7 @@
     <!--FIXME [VISTALL] if you update this file - update _mac file too-->
     <dependencySets>
         <dependencySet>
+            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
             <unpack>false</unpack>
             <includes>
@@ -58,9 +59,12 @@
                 <include>consulo:consulo-virtual-file-system-http-impl</include>
                 <include>consulo:consulo-datacontext-api</include>
                 <include>consulo:consulo-navigation-api</include>
+                <include>consulo:consulo-navigation-bar-api</include>
+                <include>consulo:consulo-navigation-bar-impl</include>
                 <include>consulo:consulo-module-api</include>
                 <include>consulo:consulo-index-io</include>
                 <include>consulo:consulo-file-chooser-api</include>
+                <include>consulo:consulo-file-chooser-impl</include>
                 <include>consulo:consulo-application-content-api</include>
                 <include>consulo:consulo-project-content-api</include>
                 <include>consulo:consulo-module-content-api</include>
@@ -72,6 +76,7 @@
                 <include>consulo:consulo-ui-ex-api</include>
                 <include>consulo:consulo-configurable-api</include>
                 <include>consulo:consulo-language-api</include>
+                <include>consulo:consulo-language-ui-api</include>
                 <include>consulo:consulo-language-duplicate-analysis-api</include>
                 <include>consulo:consulo-code-editor-api</include>
                 <include>consulo:consulo-process-api</include>
@@ -103,6 +108,7 @@
                 <include>consulo:consulo-compiler-artifact-impl</include>
                 <include>consulo:consulo-color-scheme-api</include>
                 <include>consulo:consulo-color-scheme-ui-api</include>
+                <include>consulo:consulo-ui-ex-impl</include>
                 <include>consulo:consulo-ui-ex-awt-api</include>
                 <include>consulo:consulo-virtual-file-system-impl</include>
                 <include>consulo:consulo-component-impl</include>
@@ -137,6 +143,7 @@
                 <include>consulo:consulo-project-ui-view-impl</include>
                 <include>consulo:consulo-application-content-impl</include>
                 <include>consulo:consulo-module-impl</include>
+                <include>consulo:consulo-module-creation-api</include>
                 <include>consulo:consulo-path-macro-api</include>
                 <include>consulo:consulo-path-macro-impl</include>
                 <include>consulo:consulo-module-ui-api</include>
@@ -161,6 +168,11 @@
                 <include>consulo:consulo-external-system-rt</include>
                 <include>consulo:consulo-builtin-web-server-api</include>
                 <include>consulo:consulo-builtin-web-server-impl</include>
+                <include>consulo:consulo-ai-api</include>
+                <include>consulo:consulo-ai-impl</include>
+                <include>consulo:consulo-mcp-api</include>
+                <include>consulo:consulo-mcp-server-api</include>
+                <include>consulo:consulo-mcp-server-impl</include>
                 <include>consulo:consulo-repository-ui-api</include>
                 <include>consulo:consulo-language-spellchecker-api</include>
                 <include>consulo:consulo-language-spellchecker-impl</include>
@@ -191,7 +203,6 @@
                 <include>consulo:consulo-util-lang</include>
                 <include>consulo:consulo-util-collection</include>
                 <include>consulo:consulo-util-collection-primitive</include>
-                <include>consulo:consulo-util-collection-via-trove</include>
                 <include>consulo:consulo-util-concurrent</include>
                 <include>consulo:consulo-util-concurrent-coroutine</include>
                 <include>consulo:consulo-util-rmi</include>
@@ -221,6 +232,7 @@
                 <include>consulo.internal:pty4j</include>
                 <include>consulo.internal:jediterm-core</include>
                 <include>consulo.internal:build.serviceMessages</include>
+                <include>consulo.internal.com.dslplatform:dsl-json</include>
                 <include>consulo:kava.beans</include>
                 <!--External libraries-->
                 <include>net.java.dev.jna:jna-jpms</include>
@@ -244,6 +256,7 @@
                 <include>org.lz4:lz4-java</include>
                 <include>com.github.markusbernhardt:proxy-vole</include>
                 <include>com.google.code.gson:gson</include>
+                <include>tools.jackson.core:jackson-core</include>
                 <include>net.bytebuddy:byte-buddy</include>
                 <include>org.apache.commons:commons-compress</include>
                 <include>org.tukaani:xz</include>
@@ -269,6 +282,8 @@
                 <include>com.github.weisj:jsvg</include>
                 <include>it.unimi.dsi:fastutil</include>
                 <include>ch.qos.logback:logback-core</include>
+                <include>com.google.protobuf:protobuf-javalite</include>
+                <include>org.jetbrains.runtime:jbr-api</include>
 
                 <include>com.github.hypfvieh:dbus-java-core</include>
                 <include>com.github.hypfvieh:dbus-java-transport-native-unixsocket</include>

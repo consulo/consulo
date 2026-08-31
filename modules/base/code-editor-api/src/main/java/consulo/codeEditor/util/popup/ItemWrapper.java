@@ -30,7 +30,7 @@ public abstract class ItemWrapper {
 
   public abstract @Nullable String footerText();
 
-  public void updateDetailView(DetailView panel) {
+  public void updateDetailView(@Nullable DetailView panel) {
     if (panel == null) return;
 
     if (equals(panel.getCurrentItem())) {

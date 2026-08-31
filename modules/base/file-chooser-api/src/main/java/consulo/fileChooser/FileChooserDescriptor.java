@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -33,10 +34,12 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Predicate;
 
 /**
@@ -60,6 +63,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private boolean myTreeRootVisible = false;
   private boolean myShowHiddenFiles = false;
   private @Nullable Predicate<VirtualFile> myFileFilter = null;
+  private @Nullable Pair<LocalizeValue, List<String>> myExtensionFilter = null;
   private @Nullable String myForceOperateDialogProviderId = null;
 
   /**
@@ -265,11 +269,50 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   }
 
   /**
+   * Defines whether a file can be chosen or not, for the choosers which browse the file system through {@link Path}
+   * and never bring it into the Virtual File System - a descriptor which restricts the selection has to answer
+   * from the path alone there.
+   */
+  public boolean isPathSelectable(Path path) {
+    return true;
+  }
+
+  /**
    * Sets simple boolean condition for use in {@link #isFileVisible(VirtualFile, boolean)} and {@link #isFileSelectable(VirtualFile)}.
    */
   public FileChooserDescriptor withFileFilter(@Nullable Predicate<VirtualFile> filter) {
     myFileFilter = filter;
     return this;
+  }
+
+  /**
+   * @see #withExtensionFilter(LocalizeValue, String...)
+   */
+  public FileChooserDescriptor withExtensionFilter(String extension) {
+    return withExtensionFilter(FileChooserLocalize.fileChooserFilesLabel(extension.toUpperCase(Locale.ROOT)), extension);
+  }
+
+  /**
+   * Adds a simple filter based on file extensions that is compatible with native (OS) file chooser dialogs.
+   * The behavior is platform-dependent (some dialogs make non-matching files non-selectable, others hide them completely).
+   * The {@code label} parameter is used in a combobox to switch between showing only matching or all files
+   * in dialogs supporting this feature.
+   */
+  public FileChooserDescriptor withExtensionFilter(LocalizeValue label, String... extensions) {
+    if (extensions.length == 0) {
+      throw new IllegalArgumentException("The list must not be empty");
+    }
+    myExtensionFilter = Pair.create(label, List.of(extensions));
+    return this;
+  }
+
+  public FileChooserDescriptor withoutExtensionFilter() {
+    myExtensionFilter = null;
+    return this;
+  }
+
+  public @Nullable Pair<LocalizeValue, List<String>> getExtensionFilter() {
+    return myExtensionFilter;
   }
 
   /**

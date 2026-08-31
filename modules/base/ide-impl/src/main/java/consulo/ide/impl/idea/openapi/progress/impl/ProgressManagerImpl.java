@@ -41,9 +41,10 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
 
     @Override
     public boolean hasUnsafeProgressIndicator() {
-        return super.hasUnsafeProgressIndicator() || ContainerUtil.exists(getCurrentIndicators(), it -> {
-            return it instanceof UnsafeProgressIndicator pi && pi.isUnsafeIndicator();
-        });
+        return super.hasUnsafeProgressIndicator() || ContainerUtil.exists(
+            getCurrentIndicators(),
+            it -> it instanceof UnsafeProgressIndicator pi && pi.isUnsafeIndicator()
+        );
     }
 
     @Override
@@ -51,11 +52,12 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
         return new BackgroundableProcessIndicator(backgroundable);
     }
 
-    
     @Override
-    public ProgressIndicator newBackgroundableProcessIndicator(@Nullable ComponentManager project,
-                                                               TaskInfo info,
-                                                               PerformInBackgroundOption option) {
+    public ProgressIndicator newBackgroundableProcessIndicator(
+        @Nullable ComponentManager project,
+        TaskInfo info,
+        PerformInBackgroundOption option
+    ) {
         return new BackgroundableProcessIndicator((Project) project, info, option);
     }
 

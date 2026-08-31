@@ -32,7 +32,8 @@ import java.util.Set;
  * <p/>
  * Custom providers are registered via {@link FileViewProviderFactory}.
  * <p/>
- * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
+ * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA
+ * Architectural Overview </a>
  * for high-level overview.
  *
  * @see PsiFile#getViewProvider()
@@ -55,22 +56,23 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 
   /**
    * @return the contents of this file view provider, which are parsed into PSI trees. May or may not be equal
-   * to the contents of the corresponding document. The latter happens for non-committed documents.
-   * If the document is modified but not yet committed, the result is equivalent to {@link PsiDocumentManager#getLastCommittedText(Document)}.
+   *         to the contents of the corresponding document. The latter happens for non-committed documents.
+   *         If the document is modified but not yet committed, the result is equivalent to
+   *         {@link PsiDocumentManager#getLastCommittedText(Document)}.
    * @see #getDocument()
    * @see PsiDocumentManager#isUncommited(Document)
    */
   CharSequence getContents();
 
   /**
-   * @return the virtual file corresponding to this view provider. Physical or an instance of {@link LightVirtualFile} for most non-physical files.
+   * @return the virtual file corresponding to this view provider. Physical or an instance of {@link LightVirtualFile}
+   *         for most non-physical files.
    */
   VirtualFile getVirtualFile();
 
   /**
    * @return the language of the main PSI tree (or the only one in a single-tree view providers). Used when returning a PsiFile from
-   * {@link PsiManager#findFile(VirtualFile)},
-   * {@link PsiDocumentManager#getPsiFile(Document)} etc.
+   *         {@link PsiManager#findFile(VirtualFile)}, {@link PsiDocumentManager#getPsiFile(Document)} etc.
    */
   Language getBaseLanguage();
 
@@ -95,14 +97,16 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
   PsiFile getPsi(Language target);
 
   /**
-   * @return all PSI files for this view provider. In most cases, just one main file. For multi-root languages, several files. The files' languages
-   * should be the same as {@link #getLanguages()}. The main file which corresponds to {@link #getBaseLanguage()}, should be the first one. Otherwise
-   * the order is non-deterministic and should not be relied upon.
+   * @return all PSI files for this view provider. In most cases, just one main file. For multi-root languages, several files.
+   *         The files' languages should be the same as {@link #getLanguages()}. The main file which corresponds to
+   *         {@link #getBaseLanguage()}, should be the first one. Otherwise the order is non-deterministic and should not be relied upon.
    */
   List<PsiFile> getAllFiles();
 
   /**
-   * @return whether PSI events are fired when changes occur inside PSI in this view provider. True for physical files and for some non-physical as well.
+   * @return whether PSI events are fired when changes occur inside PSI in this view provider.
+   *         True for physical files and for some non-physical as well.
+   *
    * @see PsiTreeChangeListener
    * @see PsiFileFactory#createFileFromText(String, FileType, CharSequence, long, boolean)
    * @see PsiFile#isPhysical()
@@ -111,15 +115,19 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 
   /**
    * @return whether this file corresponds to a file on a disk. For such files, {@link PsiFile#getVirtualFile()} returns non-null.
-   * Not to be confused with {@link PsiFile#isPhysical()} which (for historical reasons) returns {@code getViewProvider().isEventSystemEnabled()}
+   *         Not to be confused with {@link PsiFile#isPhysical()} which (for historical reasons) returns
+   *         {@code getViewProvider().isEventSystemEnabled()}
+   *
    * @see #isEventSystemEnabled()
    * @see PsiFile#isPhysical()
    */
   boolean isPhysical();
 
   /**
-   * @return a number to quickly check if contents of this view provider have diverged from the corresponding {@link VirtualFile} or {@link Document}.
-   * If a document is modified but not yet committed, the result is the same as {@link PsiDocumentManager#getLastCommittedStamp(Document)}
+   * @return a number to quickly check if contents of this view provider have diverged from the corresponding {@link VirtualFile}
+   *         or {@link Document}. If a document is modified but not yet committed, the result is the same as
+   *         {@link PsiDocumentManager#getLastCommittedStamp(Document)}
+   *
    * @see VirtualFile#getModificationStamp()
    * @see Document#getModificationStamp()
    */

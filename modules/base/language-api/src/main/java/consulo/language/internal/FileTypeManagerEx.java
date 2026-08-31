@@ -26,7 +26,6 @@ public abstract class FileTypeManagerEx extends FileTypeManager {
         return (FileTypeManagerEx) getInstance();
     }
 
-    
     public abstract String getExtension(String fileName);
 
     public abstract void fireFileTypesChanged();

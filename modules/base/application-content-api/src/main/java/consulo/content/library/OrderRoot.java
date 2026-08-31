@@ -23,26 +23,24 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 public class OrderRoot {
   private final VirtualFile myFile;
-  private final OrderRootType myType;
+  private final String myType;
   private final boolean myJarDirectory;
 
-  public OrderRoot(VirtualFile file, OrderRootType type) {
+  public OrderRoot(VirtualFile file, String type) {
     this(file, type, false);
   }
 
-  public OrderRoot(VirtualFile file, OrderRootType type, boolean jarDirectory) {
+  public OrderRoot(VirtualFile file, String type, boolean jarDirectory) {
     myFile = file;
     myType = type;
     myJarDirectory = jarDirectory;
   }
 
-  
   public VirtualFile getFile() {
     return myFile;
   }
 
-  
-  public OrderRootType getType() {
+  public String getType() {
     return myType;
   }
 

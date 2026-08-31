@@ -15,10 +15,11 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.debug.frame.XValueGroup;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.ui.XValuePresentationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import org.jspecify.annotations.Nullable;
 
@@ -38,12 +39,9 @@ public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implem
     }
 
     if (group.isAutoExpand()) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if (!isObsolete()) {
-            myTree.expandPath(getPath());
-          }
+      Application.get().invokeLater(()-> {
+        if (!isObsolete()) {
+          myTree.expandPath(getPath());
         }
       });
     }
@@ -56,7 +54,7 @@ public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implem
   }
 
   @Override
-  public @Nullable String getName() {
+  public LocalizeValue getName() {
     return myValueContainer.getName();
   }
 

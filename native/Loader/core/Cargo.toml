@@ -9,7 +9,6 @@ publish.workspace = true
 [features]
 default = ["awt"]
 awt = []
-swt = []
 
 [dependencies]
 anyhow = { workspace = true }

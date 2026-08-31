@@ -19,10 +19,10 @@ import com.github.markusbernhardt.proxy.ProxySearch;
 import com.github.markusbernhardt.proxy.selector.misc.BufferedProxySelector;
 import com.github.markusbernhardt.proxy.selector.pac.PacProxySelector;
 import com.github.markusbernhardt.proxy.selector.pac.UrlPacScriptSource;
+import com.uber.nullaway.annotations.Contract;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 

@@ -17,8 +17,8 @@ package consulo.desktop.awt.startup.customize;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
+import consulo.ui.ex.internal.KeymapManagerEx;
+import consulo.ui.ex.impl.internal.keymap.DefaultKeymap;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;

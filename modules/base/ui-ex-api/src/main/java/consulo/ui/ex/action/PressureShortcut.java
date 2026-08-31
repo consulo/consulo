@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.event.MouseEvent;
 
@@ -34,7 +33,6 @@ public class PressureShortcut extends MouseShortcut {
   }
 
   @Override
-  @JdkConstants.InputEventMask
   public int getModifiers() {
     return 0;
   }

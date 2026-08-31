@@ -50,3 +50,31 @@ toolwindow.notifications.display.name:
     text: Notifications
 toolwindow.project.display.name:
     text: Project
+toolwindow.settings.configurable.display.name:
+    text: Tool Windows
+toolwindow.settings.highlight.selected.button:
+    text: Highlight selected tool window button
+toolwindow.settings.show.mnemonic:
+    text: 'Show tool window mnemonic (1: Project)'
+toolwindow.settings.hide.tool.window.bars:
+    text: Hide tool window bars
+toolwindow.settings.widescreen.layout:
+    text: Widescreen tool window layout
+toolwindow.settings.side.by.side.left:
+    text: Side by side layout on the left
+toolwindow.settings.side.by.side.right:
+    text: Side by side layout on the right
+toolwindow.settings.always.show.buttons:
+    text: Always show tool window buttons
+toolwindow.settings.buttons.group:
+    text: Tool window buttons
+toolwindow.settings.display.icon.and.text:
+    text: Icon and text
+toolwindow.settings.display.icon:
+    text: Icon only
+toolwindow.settings.display.large.icon:
+    text: Large icon only
+toolwindow.settings.display.text:
+    text: Text only
+toolwindow.settings.large.icon.note:
+    text: 'Large icons: bottom tool window buttons are shown on the left side, windows still open at the bottom'

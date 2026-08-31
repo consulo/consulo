@@ -10,7 +10,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author cdr
  */
-public class PackageFileAction extends AnAction {
+public class PackageFileAction extends LegacyAnAction {
     public PackageFileAction() {
         super(
             CompilerLocalize.actionNamePackageFile(),

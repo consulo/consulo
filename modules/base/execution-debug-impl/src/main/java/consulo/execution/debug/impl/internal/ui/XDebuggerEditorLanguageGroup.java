@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2025-01-04
  */
-public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAware {
+public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private final Supplier<Language> myLanguageGetter;
     private final Supplier<Collection<Language>> myLanguagesGetter;
     private final Consumer<Language> myLanguageConsumer;

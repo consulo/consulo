@@ -23,6 +23,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.internal.StorageNotificationService;
 import consulo.component.store.internal.ReadOnlyModificationException;
+import consulo.component.store.internal.StateStorageException;
 import consulo.component.store.internal.StateStorage;
 import consulo.component.store.internal.StreamProvider;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
@@ -79,45 +80,6 @@ public class StorageUtil {
     }
   }
 
-  
-  @RequiredUIAccess
-  public static VirtualFile writeFile(@Nullable File file,
-                                      Object requestor,
-                                      @Nullable VirtualFile lastResolvedFile,
-                                      byte[] content,
-                                      @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
-    SimpleReference<VirtualFile> vFileRef = SimpleReference.create();
-    try {
-      return Application.get().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> {
-        VirtualFile virtualFile = lastResolvedFile;
-        vFileRef.set(virtualFile);
-        if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-          virtualFile = getOrCreateVirtualFile(requestor, file);
-        }
-        vFileRef.set(virtualFile);
-        assert virtualFile != null;
-        try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-          if (lineSeparatorIfPrependXmlProlog != null) {
-            out.write(XML_PROLOG);
-            out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
-          }
-          out.write(content);
-        }
-        return virtualFile;
-      });
-
-    }
-    catch (FileNotFoundException e) {
-      VirtualFile virtualFile = vFileRef.get();
-      if (virtualFile == null) {
-        throw e;
-      }
-      else {
-        throw new ReadOnlyModificationException(file);
-      }
-    }
-  }
-
   public static void writeFile(@Nullable File file, byte[] content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
     try {
 
@@ -158,47 +120,17 @@ public class StorageUtil {
     });
   }
 
-  public static void deleteFile(File file, Object requestor, @Nullable VirtualFile virtualFile) throws IOException {
-    if (virtualFile == null) {
-      LOG.warn("Cannot find virtual file " + file.getAbsolutePath());
-    }
-
-    if (virtualFile == null) {
-      if (file.exists()) {
-        FileUtil.delete(file);
-      }
-    }
-    else if (virtualFile.exists()) {
-      deleteFile(requestor, virtualFile);
-    }
-  }
-
   public static void deleteFile(File file) throws IOException {
     if (file.exists()) {
       FileUtil.delete(file);
     }
   }
 
-  @RequiredUIAccess
-  public static void deleteFile(Object requestor, VirtualFile virtualFile) throws IOException {
-    try {
-      Application.get().runWriteAction((ThrowableComputable<Object, IOException>)() -> {
-        virtualFile.delete(requestor);
-        return null;
-      });
-    }
-    catch (FileNotFoundException e) {
-      throw new ReadOnlyModificationException(VirtualFileUtil.virtualToIoFile(virtualFile));
-    }
-  }
-
-  
   @Deprecated
   public static byte[] writeToBytes(Parent element, String lineSeparator) throws IOException {
     return writeToBytes(element);
   }
 
-  
   public static byte[] writeToBytes(Parent element) throws IOException {
     UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(256);
     JDOMUtil.writeParent(element, out, "\n");
@@ -235,7 +167,6 @@ public class StorageUtil {
     return defaultSeparator == null ? Platform.current().os().lineSeparator() : defaultSeparator;
   }
 
-  
   public static byte[] elementToBytes(Parent element, boolean useSystemLineSeparator) throws IOException {
     return writeToBytes(element);
   }

@@ -37,15 +37,19 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.external.service.impl;
     requires consulo.file.editor.impl;
     requires consulo.ide.impl;
+    requires consulo.desktop.awt.editor.impl;
+    requires consulo.desktop.awt.ui.impl;
     requires consulo.language.editor.impl;
     requires consulo.platform.impl;
     requires consulo.project.ui.impl;
     requires consulo.ui.ex.awt.api;
+    requires consulo.ui.ex.impl;
     requires consulo.ui.impl;
     requires consulo.util.jna;
     requires consulo.version.control.system.impl;
     requires consulo.version.control.system.api;
     requires consulo.execution.api;
+    requires consulo.execution.coverage.api;
     requires consulo.find.api;
     requires consulo.application.impl;
     requires consulo.ide.api;
@@ -57,6 +61,9 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.execution.debug.api;
     requires consulo.builtin.web.server.api;
     requires consulo.color.scheme.ui.api;
+    requires consulo.navigation.bar.api;
+    requires consulo.language.ui.api;
+    requires consulo.navigation.bar.impl;
 
     // TODO remove
     requires gnu.trove;
@@ -70,16 +77,15 @@ open module consulo.desktop.awt.ide.impl {
 
     requires swingx.all;
 
+    requires jetbrains.runtime.api;
+    
     requires consulo.desktop.awt.bootstrap;
     requires consulo.desktop.awt.hacking;
     requires consulo.desktop.awt.eawt.wrapper;
 
-    provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
     provides consulo.platform.internal.PlatformInternal with consulo.desktop.awt.platform.impl.DesktopAWTPlatformInternalImpl;
     provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopAWTContainerStartupImpl;
-    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 
-    provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon;
 
     exports consulo.desktop.awt.ui to consulo.desktop.awt.os.mac;
 }

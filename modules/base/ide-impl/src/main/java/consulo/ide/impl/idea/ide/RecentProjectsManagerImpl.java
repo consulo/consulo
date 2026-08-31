@@ -41,6 +41,7 @@ import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
+import consulo.project.internal.RecentProjectsChecker;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.impl.internal.action.SimpleProjectGroupActionGroup;
 import consulo.project.ui.wm.IdeFrame;
@@ -85,6 +86,12 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         public Map<String, RecentProjectMetaInfo> additionalInfo = new LinkedHashMap<>();
         public Map<String, IdeFrameState> frameStates = new LinkedHashMap<>();
 
+        /**
+         * Last known VCS branch per project path. Persisted so the Welcome screen can show the branch instantly at
+         * startup, before {@link RecentProjectsChecker} re-reads it from disk.
+         */
+        public Map<String, String> branches = new LinkedHashMap<>();
+
         public String lastProjectLocation;
 
         public int recentProjectsLimit = DEFAULT_RECENT_PROJECTS_LIMIT;
@@ -96,10 +103,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             //noinspection StatementWithEmptyBody
             while (displayNames.remove("")) ;
 
-            List<String> groppedProjects = groups.stream().flatMap(g -> g.getProjects().stream()).toList();
+            List<String> groupedProjects = groups.stream().flatMap(g -> g.getProjects().stream()).toList();
 
             List<String> reviewList = new ArrayList<>(recentPaths);
-            reviewList.removeAll(groppedProjects);
+            reviewList.removeAll(groupedProjects);
             Collections.reverse(reviewList);
 
             Iterator<String> reviewIterator = reviewList.iterator();
@@ -114,8 +121,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                     frameStates.remove(projectPath);
 
                     additionalInfo.remove(projectPath);
-                    
+
                     names.remove(projectPath);
+
+                    branches.remove(projectPath);
                 } else {
                     break;
                 }
@@ -190,6 +199,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         synchronized (myStateLock) {
             removePathFrom(myState.recentPaths, path);
             myState.names.remove(path);
+            myState.branches.remove(path);
             for (ProjectGroup group : myState.groups) {
                 group.removeProject(path);
             }
@@ -404,7 +414,25 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return new ReopenProjectAction(path, projectName, displayName, extensions, state, opened);
     }
 
-    @RequiredReadAction
+    @Override
+    public @Nullable String getBranch(String path) {
+        synchronized (myStateLock) {
+            return myState.branches.get(path);
+        }
+    }
+
+    @Override
+    public void setBranch(String path, @Nullable String branch) {
+        synchronized (myStateLock) {
+            if (branch == null) {
+                myState.branches.remove(path);
+            }
+            else {
+                myState.branches.put(path, branch);
+            }
+        }
+    }
+
     private void markPathRecent(String path, @Nullable Project project) {
         synchronized (myStateLock) {
             if (path.endsWith(File.separator)) {
@@ -418,10 +446,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                 List<String> projects = group.getProjects();
                 projects.add(0, path);
                 group.save(projects);
-            }
-            myState.additionalInfo.remove(path);
-            if (project != null) {
-                myState.additionalInfo.put(path, RecentProjectMetaInfo.create(project));
             }
         }
     }
@@ -438,7 +462,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return null;
     }
 
-    private @Nullable String getProjectPath(Project project) {
+    static @Nullable String getProjectPath(Project project) {
         VirtualFile baseDirVFile = project.getBaseDir();
         return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
     }

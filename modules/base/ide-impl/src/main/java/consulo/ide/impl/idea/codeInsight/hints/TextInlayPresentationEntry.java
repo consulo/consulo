@@ -3,8 +3,11 @@ package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
+import org.jspecify.annotations.Nullable;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.project.Project;
@@ -81,6 +84,11 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
             graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, savedHint);
             graphics.setColor(savedColor);
         }
+    }
+
+    @Override
+    public InlayContentSegment toContentSegment(@Nullable TextAttributesKey attributesKey) {
+        return InlayContentSegment.of(text, attributesKey);
     }
 
     @Override

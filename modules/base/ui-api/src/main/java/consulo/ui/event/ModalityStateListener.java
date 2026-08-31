@@ -24,5 +24,5 @@ import java.util.EventListener;
  * @see UIAccess#addModalityStateListener(ModalityStateListener, Disposable)
  */
 public interface ModalityStateListener extends EventListener {
-  void beforeModalityStateChanged(boolean entering, Object modalEntity);
+    void beforeModalityStateChanged(boolean entering, Object modalEntity);
 }

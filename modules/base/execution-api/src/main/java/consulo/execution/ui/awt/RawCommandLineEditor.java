@@ -15,11 +15,11 @@
  */
 package consulo.execution.ui.awt;
 
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.Wrapper;
-import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.process.cmd.ParametersListUtil;
@@ -42,7 +42,7 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
 
   public RawCommandLineEditor(Function<String, List<String>> lineParser, Function<List<String>, String> lineJoiner) {
     super(new BorderLayout());
-    myTextBoxWithExpandAction = TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "", lineParser, lineJoiner);
+    myTextBoxWithExpandAction = TextBoxWithExpandAction.create(PlatformIconGroup.actionsShow(), "", lineParser, lineJoiner);
     setContent((JComponent)TargetAWT.to(myTextBoxWithExpandAction));
 
     setDescriptor(null);

@@ -16,7 +16,7 @@
 package consulo.usage;
 
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class UsageTargetUtil {
-    public static UsageTarget[] findUsageTargets(DataProvider dataProvider) {
-        Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
-        PsiFile file = dataProvider.getDataUnchecked(PsiFile.KEY);
+    public static UsageTarget[] findUsageTargets(DataSnapshot dataProvider) {
+        Editor editor = dataProvider.get(Editor.KEY);
+        PsiFile file = dataProvider.get(PsiFile.KEY);
 
         List<UsageTarget> result = new ArrayList<>();
         if (file != null && editor != null) {
@@ -36,7 +36,7 @@ public class UsageTargetUtil {
                 Collections.addAll(result, targets);
             }
         }
-        PsiElement psiElement = dataProvider.getDataUnchecked(PsiElement.KEY);
+        PsiElement psiElement = dataProvider.get(PsiElement.KEY);
         if (psiElement != null) {
             UsageTarget[] targets = findUsageTargets(psiElement);
             if (targets != null) {

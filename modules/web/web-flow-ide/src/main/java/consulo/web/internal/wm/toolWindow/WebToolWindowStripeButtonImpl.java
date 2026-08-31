@@ -22,12 +22,13 @@ import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.image.WebImageConverter;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.image.WebImageConverter;
 
 /**
  * @author VISTALL
@@ -83,7 +84,9 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     myDecorator = decorator;
 
     toVaadinComponent().addClickListener(event -> {
-      if (isSelected()) {
+      // the tool window itself is the live state - WindowInfo here is an immutable snapshot and the
+      // cached selected flag is only refreshed by apply(), which never runs for restored tool windows
+      if (myDecorator.getToolWindow().isVisible()) {
         myDecorator.fireHidden();
       }
       else {
@@ -107,8 +110,11 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   @RequiredUIAccess
   private void updateState() {
     ToolWindowBase window = (ToolWindowBase)myDecorator.getToolWindow();
+
+    setSelected(window.isVisible());
+
     boolean toShow = window.isAvailable() || window.isPlaceholderMode();
-    if (UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
+    if (ToolWindowSettings.getInstance(window.getToolWindowManager().getProject()).isAlwaysShowWindowButtons()) {
       setVisible(window.isShowStripeButton() || isSelected());
     }
     else {
@@ -116,7 +122,7 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     }
     setEnabled(toShow && !window.isPlaceholderMode());
 
-    toVaadinComponent().update(window.getDisplayName(), window.isSplitMode(), window.getIcon());
+    toVaadinComponent().update(window.getDisplayName(), getWindowInfo().isSplit(), window.getIcon());
   }
 
   public boolean isSelected() {

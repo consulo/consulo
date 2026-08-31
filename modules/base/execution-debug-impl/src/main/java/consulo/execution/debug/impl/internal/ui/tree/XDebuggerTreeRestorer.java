@@ -16,12 +16,12 @@
 package consulo.execution.debug.impl.internal.ui.tree;
 
 import consulo.execution.debug.frame.presentation.XValueExtendedPresentation;
-import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.ui.XNamedTreeNode;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.Comparing;
 
 import javax.swing.event.TreeSelectionEvent;
@@ -133,20 +133,18 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   private static boolean checkExtendedModified(RestorableStateNode treeNode) {
-    if (treeNode instanceof XValueNodeImpl) {
-      XValuePresentation presentation = ((XValueNodeImpl)treeNode).getValuePresentation();
-      if (presentation instanceof XValueExtendedPresentation) {
-        if (((XValueExtendedPresentation)presentation).isModified()) {
-          treeNode.markChanged();
-        }
-        return true;
+    if (treeNode instanceof XValueNodeImpl valueNode
+        && valueNode.getValuePresentation() instanceof XValueExtendedPresentation extendedPresentation) {
+      if (extendedPresentation.isModified()) {
+        treeNode.markChanged();
       }
+      return true;
     }
     return false;
   }
 
   @Override
-  public void nodeLoaded(RestorableStateNode node, String name) {
+  public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
     XDebuggerTreeState.NodeInfo parentInfo = myNode2ParentState.remove(node);
     if (parentInfo != null) {
       doRestoreNode(node, parentInfo.getChild(node));

@@ -45,9 +45,9 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     return myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
-  @RequiredWriteAction
   @Override
-  public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredWriteAction
+  public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     Project project = editor.getProject();
     if (project != null && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.ENTER_CHAR)) {
       return;
@@ -63,7 +63,6 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     myOriginalHandler = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_ENTER;

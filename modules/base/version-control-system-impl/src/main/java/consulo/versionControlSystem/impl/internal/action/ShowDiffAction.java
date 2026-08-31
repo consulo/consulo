@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.chain.DiffRequestChain;
@@ -24,8 +23,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
@@ -46,7 +45,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 @ActionImpl(id = "ChangesView.Diff")
-public class ShowDiffAction extends AnAction implements DumbAware {
+public class ShowDiffAction extends LegacyDumbAwareAction {
     public ShowDiffAction() {
         super(
             VcsLocalize.actionChangesViewDiffText(),

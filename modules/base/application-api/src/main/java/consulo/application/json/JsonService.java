@@ -29,9 +29,7 @@ public interface JsonService {
     return Application.get().getInstance(JsonService.class);
   }
 
-  
   String toJson(Object value);
 
-  
   <T> T fromJson(String json, Class<T> clazz);
 }

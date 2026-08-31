@@ -6,9 +6,12 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,31 +33,26 @@ public abstract class ActionGroup extends AnAction {
         protected Builder() {
         }
 
-        
         public Builder text(LocalizeValue text) {
             myText = text;
             return this;
         }
-
         
         public Builder setPopup() {
             myPopup = true;
             return this;
         }
-
         
         public Builder add(AnAction anAction) {
             myActions.add(anAction);
             return this;
         }
 
-        
         public Builder addAll(List<? extends AnAction> items) {
             myActions.addAll(items);
             return this;
         }
 
-        
         public Builder addAll(AnAction... actions) {
             for (AnAction action : actions) {
                 myActions.add(action);
@@ -62,12 +60,10 @@ public abstract class ActionGroup extends AnAction {
             return this;
         }
 
-        
         public Builder addSeparator() {
             return add(AnSeparator.create());
         }
 
-        
         public Builder addSeparator(LocalizeValue separatorText) {
             return add(AnSeparator.create(separatorText));
         }
@@ -80,7 +76,6 @@ public abstract class ActionGroup extends AnAction {
             return myActions.isEmpty();
         }
 
-        
         public abstract ActionGroup build();
     }
 
@@ -88,8 +83,8 @@ public abstract class ActionGroup extends AnAction {
         private final AnAction[] myChildren;
         private final boolean myPopup;
 
-        private ImmutableActionGroup(AnAction[] chilren, boolean popup, LocalizeValue actionText) {
-            myChildren = chilren;
+        private ImmutableActionGroup(AnAction[] children, boolean popup, LocalizeValue actionText) {
+            myChildren = children;
             myPopup = popup;
 
             if (actionText.isNotEmpty()) {
@@ -102,7 +97,6 @@ public abstract class ActionGroup extends AnAction {
             return myPopup;
         }
 
-        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myChildren;
@@ -113,7 +107,6 @@ public abstract class ActionGroup extends AnAction {
         private ImmutableBuilder() {
         }
 
-        
         @Override
         public ActionGroup build() {
             return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY), myPopup, myText);
@@ -125,7 +118,6 @@ public abstract class ActionGroup extends AnAction {
         return newImmutableBuilder().addAll(actions).build();
     }
 
-    
     public static Builder newImmutableBuilder() {
         return new ImmutableBuilder();
     }
@@ -219,9 +211,12 @@ public abstract class ActionGroup extends AnAction {
      */
     public abstract AnAction[] getChildren(@Nullable AnActionEvent e);
 
-    
     public AnAction[] getChildren(@Nullable AnActionEvent e, ActionManager actionManager) {
         return getChildren(null);
+    }
+
+    public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
+        return Coroutine.first(CodeExecution.supply(() -> Arrays.asList(getChildren(e))));
     }
 
     @Override
@@ -229,7 +224,6 @@ public abstract class ActionGroup extends AnAction {
         return super.isDumbAware() || getClass() == DefaultActionGroup.class;
     }
 
-    
     public List<AnAction> postProcessVisibleChildren(List<AnAction> visibleChildren) {
         return Collections.unmodifiableList(visibleChildren);
     }

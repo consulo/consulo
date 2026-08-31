@@ -25,44 +25,47 @@ import java.util.Locale;
  * @since 27/04/2021
  */
 public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
-  public static final DesktopAwtJava9Processor INSTANCE = new DesktopAwtJava9Processor();
+    public static final DesktopAwtJava9Processor INSTANCE = new DesktopAwtJava9Processor();
 
-  @Override
-  public void process(List<Opens> toOpenMap) {
-    toOpenMap.add(new Opens("java.base", "java.lang", "consulo.hacking.java.base"));
+    @Override
+    public void process(List<Opens> toOpenMap) {
+        toOpenMap.add(new Opens("java.base", "java.lang", "consulo.hacking.java.base"));
 
-    toOpenMap.add(new Opens("java.desktop", "sun.awt", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "sun.swing", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "sun.awt.image", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "sun.java2d", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "sun.font", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "sun.awt.datatransfer", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "java.awt", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "javax.swing", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "javax.swing.plaf.basic", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "javax.swing.text.html", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "java.awt.peer", "consulo.desktop.awt.hacking"));
-    toOpenMap.add(new Opens("java.desktop", "java.awt.event", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "sun.awt", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "sun.swing", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "sun.awt.image", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "sun.java2d", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "sun.font", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "sun.awt.datatransfer", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "java.awt", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "javax.swing", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "javax.swing.plaf.basic", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "javax.swing.text.html", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "java.awt.peer", "consulo.desktop.awt.hacking"));
+        toOpenMap.add(new Opens("java.desktop", "java.awt.event", "consulo.desktop.awt.hacking"));
 
-    boolean isWindows = System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("windows");
-    boolean isMac = System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("mac");
-    if (isMac) {
-      toOpenMap.add(new Opens("java.desktop", "com.apple.laf", "consulo.desktop.awt.hacking"));
-      toOpenMap.add(new Opens("java.desktop", "sun.lwawt", "consulo.desktop.awt.hacking"));
-      toOpenMap.add(new Opens("java.desktop", "sun.lwawt.macosx", "consulo.desktop.awt.hacking"));
+        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+        boolean isWindows = osName.startsWith("windows");
+        boolean isMac = osName.startsWith("mac");
+        boolean isHaiku = osName.startsWith("haiku");
 
-      toOpenMap.add(new Opens("java.desktop", "com.apple.eawt", "consulo.desktop.awt.eawt.wrapper"));
-      toOpenMap.add(new Opens("java.desktop", "com.apple.eawt.event", "consulo.desktop.awt.eawt.wrapper"));
+        if (isMac) {
+            toOpenMap.add(new Opens("java.desktop", "com.apple.laf", "consulo.desktop.awt.hacking"));
+            toOpenMap.add(new Opens("java.desktop", "sun.lwawt", "consulo.desktop.awt.hacking"));
+            toOpenMap.add(new Opens("java.desktop", "sun.lwawt.macosx", "consulo.desktop.awt.hacking"));
+
+            toOpenMap.add(new Opens("java.desktop", "com.apple.eawt", "consulo.desktop.awt.eawt.wrapper"));
+            toOpenMap.add(new Opens("java.desktop", "com.apple.eawt.event", "consulo.desktop.awt.eawt.wrapper"));
+        }
+
+        // linux, haiku not uses x11 frontend
+        if (!isWindows && !isMac && !isHaiku) {
+            toOpenMap.add(new Opens("java.desktop", "sun.awt.X11", "consulo.desktop.awt.hacking"));
+        }
     }
 
-    // linux
-    if (!isWindows && !isMac) {
-      toOpenMap.add(new Opens("java.desktop", "sun.awt.X11", "consulo.desktop.awt.hacking"));
+    @Override
+    public boolean isEnabledModules() {
+        return System.getProperty("jdk.module.path") != null;
     }
-  }
-
-  @Override
-  public boolean isEnabledModules() {
-    return System.getProperty("jdk.module.path") != null;
-  }
 }

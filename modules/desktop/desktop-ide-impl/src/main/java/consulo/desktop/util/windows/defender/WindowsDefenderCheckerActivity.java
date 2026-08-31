@@ -1,5 +1,6 @@
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,32 +22,28 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.ide.impl.idea.ide.SystemHealthMonitorImpl;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- * from kotlin
- */
 @ExtensionImpl
 public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity, DumbAware {
-    
+    private static final Logger LOG = Logger.getInstance(WindowsDefenderCheckerActivity.class);
+
     private final Application myApplication;
     private final Provider<WindowsDefenderChecker> myWindowsDefenderChecker;
     private final Provider<EarlyAccessProgramManager> myEarlyAccessProgramManager;
-    
     private final NotificationService myNotificationService;
 
     @Inject
@@ -64,44 +61,52 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
 
     @Override
     public void runActivity(Project project, UIAccess uiAccess) {
-        Platform platform = Platform.current();
-        if (!platform.os().isWindows()) {
+        if (!Platform.current().os().isWindows()) {
             return;
         }
 
-        EarlyAccessProgramManager earlyAccessProgramManager = myEarlyAccessProgramManager.get();
-        if (!earlyAccessProgramManager.getState(WindowsDefenderCheckerEarlyAccessDescriptor.class)) {
+        if (!myEarlyAccessProgramManager.get().getState(WindowsDefenderCheckerEarlyAccessDescriptor.class)) {
             return;
         }
 
-        WindowsDefenderChecker windowsDefenderChecker = myWindowsDefenderChecker.get();
-        if (windowsDefenderChecker.isVirusCheckIgnored(project)) {
+        WindowsDefenderChecker checker = myWindowsDefenderChecker.get();
+        if (checker.isVirusCheckIgnored(project)) {
+            LOG.info("status check is disabled");
             return;
         }
 
-        WindowsDefenderChecker.CheckResult checkResult = windowsDefenderChecker.checkWindowsDefender(project);
-
-        if (checkResult.status == WindowsDefenderChecker.RealtimeScanningStatus.SCANNING_ENABLED
-            && ContainerUtil.any(checkResult.pathStatus, it -> !it.getValue())) {
-            List<Path> nonExcludedPaths = checkResult.pathStatus.entrySet().stream()
-                .filter(it -> !it.getValue())
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-            WindowsDefenderNotification notification = new WindowsDefenderNotification(
-                myNotificationService.newWarn(SystemHealthMonitorImpl.GROUP)
-                    .content(ExternalServiceLocalize.virusScanningWarnMessage(
-                        Application.get().getName(),
-                        StringUtil.join(nonExcludedPaths, "<br/>")
-                    ))
-                    .important(true),
-                nonExcludedPaths
-            );
-
-            notification.setCollapseActionsDirection(Notification.CollapseActionsDirection.KEEP_LEFTMOST);
-            windowsDefenderChecker.configureActions(project, notification);
-
-            myApplication.invokeLater(() -> notification.notify(project));
+        Boolean protection = checker.isRealTimeProtectionEnabled();
+        if (!Boolean.TRUE.equals(protection)) {
+            LOG.info("real-time protection: " + protection);
+            return;
         }
+
+        String basePath = project.getBasePath();
+        Path projectDir = basePath == null ? null : Paths.get(basePath);
+        if (projectDir != null && checker.isUntrustworthyLocation(projectDir)) {
+            LOG.info("untrustworthy location: " + projectDir);
+            return;
+        }
+
+        List<Path> paths = checker.filterDevDrivePaths(checker.getPathsToExclude(project));
+        if (paths.isEmpty()) {
+            LOG.info("all paths are on a DevDrive");
+            return;
+        }
+
+        WindowsDefenderNotification notification = new WindowsDefenderNotification(
+            myNotificationService.newWarn(SystemHealthMonitorImpl.GROUP)
+                .content(ExternalServiceLocalize.virusScanningWarnMessage(
+                    Application.get().getName(),
+                    StringUtil.join(paths, "<br/>")
+                ))
+                .important(true),
+            paths
+        );
+
+        notification.setCollapseActionsDirection(Notification.CollapseActionsDirection.KEEP_LEFTMOST);
+        checker.configureActions(project, notification);
+
+        myApplication.invokeLater(() -> notification.notify(project));
     }
 }

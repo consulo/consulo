@@ -15,17 +15,16 @@
  */
 package consulo.ui.ex.awt.tree.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import javax.swing.*;
 
-public class CollapseAllAction extends AnAction implements DumbAware {
+public class CollapseAllAction extends LegacyDumbAwareAction {
     protected JTree myTree;
 
     public CollapseAllAction(JTree tree) {

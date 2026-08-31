@@ -39,7 +39,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
@@ -83,8 +83,8 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
             project,
             problemsHolder,
             library,
-            BinariesOrderRootType.getInstance(),
-            "classes",
+            BinariesOrderRootType.ID,
+            "binaries",
             ProjectStructureProblemType.error("library-invalid-classes-path")
         );
         String libraryName = library.getName();
@@ -93,7 +93,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
                 project,
                 problemsHolder,
                 library,
-                SourcesOrderRootType.getInstance(),
+                SourcesOrderRootType.ID,
                 "sources",
                 ProjectStructureProblemType.warning("library-invalid-source-javadoc-path")
             );
@@ -101,7 +101,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
                 project,
                 problemsHolder,
                 library,
-                DocumentationOrderRootType.getInstance(),
+                DocumentationOrderRootType.ID,
                 "javadoc",
                 ProjectStructureProblemType.warning("library-invalid-source-javadoc-path")
             );
@@ -112,11 +112,11 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         Project project,
         ProjectStructureProblemsHolder problemsHolder,
         LibraryEx library,
-        OrderRootType type,
+        String orderRootTypeId,
         String rootName,
         ProjectStructureProblemType problemType
     ) {
-        List<String> invalidUrls = library.getInvalidRootUrls(type);
+        List<String> invalidUrls = library.getInvalidRootUrls(orderRootTypeId);
         if (!invalidUrls.isEmpty()) {
             String description = createInvalidRootsDescription(invalidUrls, rootName, library.getName());
             PlaceInProjectStructure place = createPlace();
@@ -131,7 +131,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
                 place,
                 problemType,
                 level,
-                List.of(new RemoveInvalidRootsQuickFix(project, library, type, invalidUrls)),
+                List.of(new RemoveInvalidRootsQuickFix(project, library, orderRootTypeId, invalidUrls)),
                 true
             ));
         }
@@ -159,7 +159,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> librariesNavigator(Project project) {
+    private CompletableFuture<?> librariesNavigator(Project project) {
         return ShowSettingsUtil.getInstance().showProjectStructureDialog(
             project,
             projectStructureSelector -> projectStructureSelector.selectProjectOrGlobalLibrary(myLibrary, true)
@@ -178,7 +178,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
             && getSourceOrThis() == that.getSourceOrThis();
     }
 
-    public AsyncResult<Void> navigate(Project project) {
+    public CompletableFuture<?> navigate(Project project) {
         return createPlace().navigate(project);
     }
 
@@ -237,10 +237,10 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     private class RemoveInvalidRootsQuickFix extends ConfigurationErrorQuickFix {
         private final Project myProject;
         private final Library myLibrary;
-        private final OrderRootType myType;
+        private final String myType;
         private final List<String> myInvalidUrls;
 
-        public RemoveInvalidRootsQuickFix(Project project, Library library, OrderRootType type, List<String> invalidUrls) {
+        public RemoveInvalidRootsQuickFix(Project project, Library library, String type, List<String> invalidUrls) {
             super("Remove invalid " + StringUtil.pluralize("root", invalidUrls.size()));
             myProject = project;
             myLibrary = library;
@@ -265,7 +265,11 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
                 Settings settings = dataContext.getRequiredData(Settings.KEY);
                 ProjectLibrariesConfigurable librariesConfigurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
 
-                navigate(myProject).doWhenDone(() -> {
+                navigate(myProject).whenComplete((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     if (librariesConfigurable.getSelectedConfigurable() instanceof LibraryConfigurable libConfigurable) {
                         libConfigurable.updateComponent();
                     }

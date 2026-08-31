@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIConstant;
@@ -23,19 +24,30 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2016-06-11
  */
 public interface VerticalLayout extends Layout<LayoutConstraint> {
     static VerticalLayout create() {
         return create(UIConstant.DEFAULT_SPACING_PX);
     }
+
     static VerticalLayout create(int vGap) {
         return UIInternal.get()._Layouts_vertical(vGap);
     }
+
+    /**
+     * Without an alignment every child is given the width of the layout. With one the children keep their own
+     * width and are placed at that side of it.
+     */
+    static VerticalLayout create(int vGap, HorizontalAlignment alignment) {
+        return UIInternal.get()._Layouts_vertical(vGap, alignment);
+    }
+
     @RequiredUIAccess
     default VerticalLayout add(PseudoComponent component) {
         return add(component.getComponent());
     }
+
     @RequiredUIAccess
     default VerticalLayout add(Component component) {
         return (VerticalLayout) add(component, LayoutConstraint.NONE);

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.ide.localize.IdeLocalize;
@@ -27,7 +26,7 @@ import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = IdeActions.ACTION_CLOSE_EDITOR)
-public class CloseEditorAction extends AnAction implements DumbAware {
+public class CloseEditorAction extends LegacyDumbAwareAction {
     public CloseEditorAction() {
         super(ActionLocalize.actionCloseeditorText(), ActionLocalize.actionCloseeditorDescription());
     }

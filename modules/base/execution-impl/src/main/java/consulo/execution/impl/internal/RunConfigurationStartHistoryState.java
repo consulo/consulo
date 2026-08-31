@@ -15,12 +15,15 @@
  */
 package consulo.execution.impl.internal;
 
+import com.dslplatform.json.CompiledJson;
+
 import java.util.LinkedHashSet;
 
 /**
  * @author VISTALL
  * @since 2025-10-20
  */
+@CompiledJson
 public class RunConfigurationStartHistoryState {
     public LinkedHashSet<String> myHistory = new LinkedHashSet<>();
 

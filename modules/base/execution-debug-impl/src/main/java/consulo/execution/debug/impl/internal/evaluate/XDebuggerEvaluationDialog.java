@@ -18,7 +18,8 @@ package consulo.execution.debug.impl.internal.evaluate;
 import consulo.application.Application;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.XDebuggerUtil;
@@ -43,6 +44,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.BorderLayoutPanel;
@@ -68,7 +70,8 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     public static final Key<XDebuggerEvaluationDialog> KEY = Key.create("DEBUGGER_EVALUATION_DIALOG");
 
     //can not use new SHIFT_DOWN_MASK etc because in this case ActionEvent modifiers do not match
-    private static final int ADD_WATCH_MODIFIERS = (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
+    private static final int ADD_WATCH_MODIFIERS =
+        (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
     static KeyStroke ADD_WATCH_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ADD_WATCH_MODIFIERS);
 
     private final JPanel myMainPanel;
@@ -112,8 +115,14 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
             }
         }, myDisposable);
 
-        myTreePanel = new XDebuggerTreePanel(session.getProject(), editorsProvider, myDisposable, sourcePosition, XDebuggerActions.EVALUATE_DIALOG_TREE_POPUP_GROUP,
-            ((XDebugSessionImpl) session).getValueMarkers());
+        myTreePanel = new XDebuggerTreePanel(
+            session.getProject(),
+            editorsProvider,
+            myDisposable,
+            sourcePosition,
+            XDebuggerActions.EVALUATE_DIALOG_TREE_POPUP_GROUP,
+            session.getValueMarkers()
+        );
         myResultPanel = JBUI.Panels.simplePanel()
             .addToTop(new JLabel(XDebuggerLocalize.xdebuggerEvaluateLabelResult().get()))
             .addToCenter(myTreePanel.getMainPanel());
@@ -121,7 +130,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
         mySwitchModeAction = new SwitchModeAction();
 
-        new AnAction() {
+        new LegacyAnAction() {
             @Override
             public void update(AnActionEvent e) {
                 Project project = e.getData(Project.KEY);
@@ -208,7 +217,6 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    
     @Override
     protected Action[] createActions() {
         if (myIsCodeFragmentEvaluationSupported) {
@@ -269,6 +277,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         return myInputComponent.getInputEditor();
     }
 
+    @RequiredUIAccess
     private EvaluationInputComponent createInputComponent(EvaluationMode mode, XExpression text) {
         Project project = mySession.getProject();
         text = XExpression.changeMode(text, mode);
@@ -370,13 +379,10 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    private class EvaluationMainPanel extends BorderLayoutPanel implements DataProvider {
+    private class EvaluationMainPanel extends BorderLayoutPanel implements UiDataProvider {
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (KEY == dataId) {
-                return XDebuggerEvaluationDialog.this;
-            }
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(XDebuggerEvaluationDialog.KEY, XDebuggerEvaluationDialog.this);
         }
     }
 }

@@ -25,6 +25,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -38,7 +39,7 @@ public class DuplicateLinesAction extends EditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (editor.getSelectionModel().hasSelection()) {
                 int selStart = editor.getSelectionModel().getSelectionStart();
                 int selEnd = editor.getSelectionModel().getSelectionEnd();

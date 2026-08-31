@@ -30,13 +30,19 @@ import javax.swing.*;
 public class XStandaloneVariablesViewImpl extends XVariablesViewBase implements XStandaloneVariablesView {
     private final XStackFrame myStackFrame;
 
-    public XStandaloneVariablesViewImpl(Project project, XDebuggerEditorsProvider editorsProvider, XStackFrame stackFrame) {
+    public XStandaloneVariablesViewImpl(Project project,
+                                        XDebuggerEditorsProvider editorsProvider,
+                                        XStackFrame stackFrame) {
         super(project, editorsProvider, null);
         myStackFrame = stackFrame;
         buildTreeAndRestoreState(stackFrame);
     }
 
-    
+    @Override
+    protected XDebugSession getSession() {
+        return null;
+    }
+
     @Override
     public JComponent getComponent() {
         return getPanel();

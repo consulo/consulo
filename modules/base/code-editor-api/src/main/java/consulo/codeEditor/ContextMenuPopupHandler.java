@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
@@ -44,6 +45,7 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
     return true;
   }
 
+  @Contract("null -> null; !null -> !null")
   private static @Nullable ActionGroup getGroupForId(@Nullable String groupId) {
     return groupId == null ? null : ObjectUtil.tryCast(CustomActionsSchema.getInstance().getCorrectedAction(groupId), ActionGroup.class);
   }

@@ -88,7 +88,7 @@ public class DuplocatorUtil {
       return element;
     }*/
 
-    // todo optimize! (this method is often invokated for the same node)
+    // todo optimize! (this method is often invoked for the same node)
 
     if (descriptor == null) {
       EquivalenceDescriptorProvider provider = EquivalenceDescriptorProvider.getInstance(element);

@@ -23,13 +23,13 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = "SaveFileAsTemplate")
-public class SaveFileAsTemplateAction extends AnAction {
+public class SaveFileAsTemplateAction extends LegacyAnAction {
     public SaveFileAsTemplateAction() {
         super(ActionLocalize.actionSavefileastemplateText(), ActionLocalize.actionSavefileastemplateDescription());
     }

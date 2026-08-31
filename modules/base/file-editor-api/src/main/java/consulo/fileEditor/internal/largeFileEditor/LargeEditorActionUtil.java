@@ -10,8 +10,8 @@ import org.jspecify.annotations.Nullable;
 public class LargeEditorActionUtil {
     public static @Nullable LargeFileEditor tryGetLargeFileEditorManager(AnActionEvent e) {
         FileEditor fileEditor = getFileEditor(e);
-        if (fileEditor instanceof LargeFileEditor) {
-            return (LargeFileEditor) fileEditor;
+        if (fileEditor instanceof LargeFileEditor largeFileEditor) {
+            return largeFileEditor;
         }
 
         Editor editor = getEditor(e);
@@ -22,11 +22,11 @@ public class LargeEditorActionUtil {
         return editor.getUserData(LargeFileEditor.LARGE_FILE_EDITOR_KEY);
     }
 
-    private static FileEditor getFileEditor(AnActionEvent e) {
+    private static @Nullable FileEditor getFileEditor(AnActionEvent e) {
         return e.getData(FileEditor.KEY);
     }
 
-    private static Editor getEditor(AnActionEvent e) {
+    private static @Nullable Editor getEditor(AnActionEvent e) {
         return e.getData(Editor.KEY);
     }
 }

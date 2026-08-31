@@ -48,7 +48,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
       markers.unmarkValue(value);
     }
     else {
-      ValueMarkerPresentationDialog dialog = new ValueMarkerPresentationDialog(node.getName());
+      ValueMarkerPresentationDialog dialog = new ValueMarkerPresentationDialog(node.getName().getNullIfEmpty());
       dialog.show();
       ValueMarkup markup = dialog.getConfiguredMarkup();
       if (dialog.isOK() && markup != null) {

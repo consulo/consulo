@@ -21,6 +21,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.Settings;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.bundle.SdkTable;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.configurable.BaseProjectStructureShowSettingsUtil;
@@ -40,14 +41,14 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
-import consulo.util.concurrent.AsyncResult;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -59,7 +60,8 @@ import java.util.function.Function;
 public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSettingsUtil {
     private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 
-    private final AtomicBoolean myShown = new AtomicBoolean(false);
+    private volatile DesktopSettingsDialog myCurrentSettingsDialog;
+    private CompletableFuture<Void> myShowDialogResult = CompletableFuture.failedFuture(new CancellationException());
 
     private final DefaultProjectFactory myDefaultProjectFactory;
 
@@ -71,7 +73,6 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         mySdksModel = new DefaultSdksModel(sdkTableProvider);
     }
 
-    
     @Override
     public SettingsSdksModel getSdksModel() {
         mySdksModel.initializeIfNeed();
@@ -79,7 +80,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> showSettingsImpl(
+    private CompletableFuture<Void> showSettingsImpl(
         @Nullable Project tempProject,
         Function<Project, Configurable[]> configurableBuilder,
         ConfigurablePreselectStrategy strategy,
@@ -87,12 +88,21 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     ) {
         Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
-        AsyncResult<Void> result = AsyncResult.undefined();
+        CompletableFuture<Void> result = new CompletableFuture<>();
+
+        DesktopSettingsDialog currentDialog = myCurrentSettingsDialog;
+        if (currentDialog != null) {
+            OptionsEditor editor = myCurrentSettingsDialog.getEditor();
+
+            editor.doSelect(strategy, () -> {
+                onShow.accept(currentDialog);
+            });
+
+            return myShowDialogResult;
+        }
 
         UIAccess uiAccess = UIAccess.current();
         uiAccess.give(() -> {
-            myShown.set(true);
-
             DesktopSettingsDialog dialog;
             if (ModalityPerProjectEAPDescriptor.is()) {
                 dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, true, onShow);
@@ -101,19 +111,33 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
                 dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, onShow);
             }
 
+            myCurrentSettingsDialog = dialog;
+
             Disposer.register(dialog.getDisposable(), this::clearCaches);
 
-            dialog.showAsync().doWhenProcessed(() -> myShown.set(false)).notify(result);
+            dialog.showAsync().whenComplete((value, error) -> {
+                myShowDialogResult = CompletableFuture.failedFuture(new CancellationException());
+                myCurrentSettingsDialog = null;
+
+                if (error == null) {
+                    result.complete(null);
+                }
+                else {
+                    result.completeExceptionally(error);
+                }
+            });
         });
+
+        myShowDialogResult = result;
 
         return result;
     }
 
-    
+
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
     @Override
-    public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(
+    public <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(
         @Nullable Project project,
         Class<T> configurableClass,
         Consumer<T> afterSelect
@@ -121,16 +145,22 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
         return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
-            Settings editor = dialog.getDataUnchecked(Settings.KEY);
+            Settings editor = DataManager.getInstance().getDataContext(dialog.getContentPane()).getData(Settings.KEY);
             assert editor != null;
-            editor.select(configurableClass).doWhenDone(afterSelect);
+            editor.select(configurableClass).whenComplete((configurable, error) -> {
+                if (error != null) {
+                    return;
+                }
+
+                afterSelect.accept(configurable);
+            });
         });
     }
 
-    
+
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
+    public CompletableFuture<Void> showSettingsDialog(@Nullable Project project) {
         return showSettingsImpl(
             project,
             BaseShowSettingsUtil::buildConfigurables,
@@ -140,10 +170,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    
+
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
+    public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
         return showSettingsImpl(
             project,
             BaseShowSettingsUtil::buildConfigurables,
@@ -153,10 +183,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    
+
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
+    public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
         return showSettingsImpl(
             project,
             BaseShowSettingsUtil::buildConfigurables,
@@ -191,10 +221,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         return null;
     }
 
-    
+
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
+    public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
         return showSettingsImpl(
             project,
             BaseShowSettingsUtil::buildConfigurables,
@@ -206,9 +236,9 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> showProjectStructureDialog(Project project, Consumer<ProjectStructureSelector> consumer) {
+    public CompletableFuture<Void> showProjectStructureDialog(Project project, Consumer<ProjectStructureSelector> consumer) {
         return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
-            ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
+            ProjectStructureSelector editor = DataManager.getInstance().getDataContext(dialog.getContentPane()).getData(ProjectStructureSelector.KEY);
             assert editor != null;
             consumer.accept(editor);
         });
@@ -216,13 +246,13 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
+    public CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
         return editConfigurable(title, project, createDimensionKey(configurable), configurable);
     }
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(
+    public CompletableFuture<Void> editConfigurable(
         @Nullable String title,
         Project project,
         String dimensionServiceKey,
@@ -233,19 +263,19 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
+    public CompletableFuture<Void> editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
         return editConfigurable(null, project, configurable, LocalizeValue.ofNullable(title), createDimensionKey(configurable), advancedInitialization);
     }
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
+    public CompletableFuture<Void> editConfigurable(Component parent, Configurable configurable) {
         return editConfigurable(parent, configurable, null);
     }
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(
+    public CompletableFuture<Void> editConfigurable(
         Component parent,
         Configurable configurable,
         @Nullable Runnable advancedInitialization
@@ -254,7 +284,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     }
 
     @RequiredUIAccess
-    private static AsyncResult<Void> editConfigurable(
+    private static CompletableFuture<Void> editConfigurable(
         @Nullable Component parent,
         @Nullable Project project,
         Configurable configurable,
@@ -282,12 +312,12 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
+    public CompletableFuture<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
         return editConfigurable(parent, null, configurable, null, dimensionServiceKey, null);
     }
 
     @Override
     public boolean isAlreadyShown(Project project) {
-        return myShown.get();
+        return myCurrentSettingsDialog != null;
     }
 }

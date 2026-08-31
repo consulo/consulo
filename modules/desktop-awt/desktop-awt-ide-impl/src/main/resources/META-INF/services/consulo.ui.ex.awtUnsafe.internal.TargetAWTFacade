@@ -1,1 +1,1 @@
-consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl
+consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl

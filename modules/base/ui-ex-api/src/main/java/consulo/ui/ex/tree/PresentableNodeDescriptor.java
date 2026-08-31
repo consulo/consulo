@@ -15,8 +15,10 @@
  */
 package consulo.ui.ex.tree;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import org.jspecify.annotations.Nullable;
@@ -82,6 +84,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     PresentationData presentation = myUpdatedPresentation != null ? myUpdatedPresentation : createPresentation();
     myUpdatedPresentation = presentation;
     presentation.clear();
+    presentation.setBackground(computeBackgroundColor());
     update(presentation);
 
     if (shouldPostprocess()) {
@@ -91,7 +94,11 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     return presentation;
   }
 
-  
+  @RequiredReadAction
+  protected @Nullable ColorValue computeBackgroundColor() {
+    return null;
+  }
+
   protected PresentationData createPresentation() {
     return new PresentationData();
   }

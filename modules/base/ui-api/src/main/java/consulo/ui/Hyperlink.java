@@ -29,23 +29,27 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-05-11
  */
 public interface Hyperlink extends Component {
-  static Hyperlink create(LocalizeValue text) {
-    return UIInternal.get()._Components_hyperlink(text);
-  }
-  static Hyperlink create(LocalizeValue text, @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
-    Hyperlink hyperlink = UIInternal.get()._Components_hyperlink(text);
-    hyperlink.addHyperlinkListener(listener);
-    return hyperlink;
-  }
-  LocalizeValue getText();
+    static Hyperlink create(LocalizeValue text) {
+        return UIInternal.get()._Components_hyperlink(text);
+    }
 
-  @RequiredUIAccess
-  void setText(LocalizeValue text);
+    static Hyperlink create(LocalizeValue text, @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
+        Hyperlink hyperlink = UIInternal.get()._Components_hyperlink(text);
+        hyperlink.addHyperlinkListener(listener);
+        return hyperlink;
+    }
 
-  void setIcon(@Nullable Image icon);
+    LocalizeValue getText();
 
-  @Nullable Image getIcon();
-  default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
-    return addListener(HyperlinkEvent.class, hyperlinkListener);
-  }
+    @RequiredUIAccess
+    void setText(LocalizeValue text);
+
+    void setIcon(@Nullable Image icon);
+
+    @Nullable
+    Image getIcon();
+
+    default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+        return addListener(HyperlinkEvent.class, hyperlinkListener);
+    }
 }

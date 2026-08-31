@@ -4,10 +4,10 @@ package consulo.ide.impl.idea.find.actions;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
-public class ShowSearchHistoryAction extends AnAction {
+public class ShowSearchHistoryAction extends LegacyAnAction {
   public ShowSearchHistoryAction() {
     super(
       LocalizeValue.localizeTODO("Search History"),

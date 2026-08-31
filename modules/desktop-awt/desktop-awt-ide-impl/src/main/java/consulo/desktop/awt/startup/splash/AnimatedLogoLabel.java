@@ -16,6 +16,9 @@
 package consulo.desktop.awt.startup.splash;
 
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.internal.Alphabet;
+import consulo.ui.ex.internal.Glyph;
+import consulo.ui.ex.internal.Names;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -32,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author VISTALL
  * @since 2016-12-11
  */
-public class AnimatedLogoLabel extends JComponent {
+public class AnimatedLogoLabel extends JComponent implements Glyph.PixelSink {
     private static class MyComponentUI extends ComponentUI {
         private Dimension myFixedSizeScaled;
 
@@ -158,6 +161,7 @@ public class AnimatedLogoLabel extends JComponent {
         setUI(new MyComponentUI(this, unstableScaling));
     }
 
+    @Override
     public void setPixel(int x, int y, boolean foreground) {
         Color color = foreground ? getForeground() : getBackground();
         if (color != null) {

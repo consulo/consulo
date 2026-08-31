@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIterator;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Functions;
@@ -195,7 +194,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   private static final class Empty extends JBIterable {
     @Override
     public Iterator iterator() {
-      return EmptyIterator.getInstance();
+      return Collections.emptyIterator();
     }
   }
 
@@ -622,7 +621,9 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
    * @see JBIterable#map(Function)
    * @see JBIterable#filter(Predicate)
    */
+  @SuppressWarnings("NullAway")
   public final <T> JBIterable<T> filterMap(Function<? super E, @Nullable T> function) {
+    // Transforming nullable into non-nullable with predicate isn't supported by NullAway, so disabling validation
     return map(function).filter(Predicates.<@Nullable T>notNull());
   }
 
@@ -812,7 +813,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   }
 
   /**
-   * Synonym for {@code toList().toAfunctionrray)}.
+   * Synonym for {@code toList().toFunctionArray)}.
    *
    * @see List#toArray(Object[])
    */
@@ -860,18 +861,18 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   }
 
   /**
-   * A synonym for {@code toMap(Convertor.SELF, toValue)}
+   * A synonym for {@code toMap(Function.identity(), toValue)}
    *
-   * @see JBIterable#toMap(Convertor, Convertor)
+   * @see JBIterable#toMap(Function, Function)
    */
   public final <V> Map<E, V> toMap(Function<E, V> toValue) {
     return toMap(Function.identity(), toValue);
   }
 
   /**
-   * A synonym for {@code toMap(toKey, Convertor.SELF)}
+   * A synonym for {@code toMap(toKey, Function.identity())}
    *
-   * @see JBIterable#toMap(Convertor, Convertor)
+   * @see JBIterable#toMap(Function, Function)
    */
   public final <K> Map<K, E> toReverseMap(Function<E, K> toKey) {
     return toMap(toKey, Function.identity());

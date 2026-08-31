@@ -16,9 +16,10 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.navigationToolbar.EmbeddedNavService;
+import consulo.desktop.awt.navbar.ui.NavBarUIController;
+import consulo.desktop.awt.navbar.ui.NewNavBarPanel;
+import consulo.navigationBar.internal.EmbeddedNavService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
@@ -44,16 +45,15 @@ public class DesktopAWTEmbeddedNavService implements EmbeddedNavService {
     @Override
     public void show(DataContext context) {
         Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        
         if (!isInsideNavBar(component)) {
-            Editor editor = context.getData(Editor.KEY);
-            NavBarPanel toolbarPanel = new NavBarPanel(myProject, false);
-            toolbarPanel.showHint(editor, context);
+            NavBarUIController.getInstance(myProject).showFloatingNavbar(context);
         }
     }
 
     private static boolean isInsideNavBar(Component c) {
         return c == null
-            || c instanceof NavBarPanel
-            || UIUtil.getParentOfType(NavBarListWrapper.class, c) != null;
+            || c instanceof NewNavBarPanel
+            || UIUtil.getParentOfType(NewNavBarPanel.class, c) != null;
     }
 }

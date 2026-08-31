@@ -21,12 +21,15 @@ import org.slf4j.LoggerFactory;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Collection;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Deprecated
 public class AsyncResult<T> extends ActionCallback {
   private static final Logger LOG = LoggerFactory.getLogger(AsyncResult.class);
 
@@ -183,6 +186,14 @@ public class AsyncResult<T> extends ActionCallback {
     doWhenDone((Runnable)result::setDone);
     doWhenRejected((Runnable)result::setRejected);
     return result;
+  }
+
+  public CompletableFuture<T> toCompletableFuture() {
+    CompletableFuture<T> future = new CompletableFuture<>();
+    doWhenDone(() -> future.complete(myResult));
+    doWhenRejectedWithThrowable(future::completeExceptionally);
+    doWhenRejectedButNotThrowable(() -> future.completeExceptionally(new CancellationException(myError)));
+    return future;
   }
 
   public @Nullable T getResult() {

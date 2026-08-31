@@ -17,28 +17,28 @@ package consulo.compiler;
 
 import consulo.compiler.scope.CompileScope;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
 
 public interface CompileContextEx extends CompileContext {
     CompositeDependencyCache getDependencyCache();
 
-    @Nullable VirtualFile getSourceFileByOutputFile(VirtualFile outputFile);
+    @Nullable Path getSourceFileByOutputFile(Path outputFile);
 
     void addMessage(CompilerMessage message);
 
-    Set<VirtualFile> getTestOutputDirectories();
+    Set<Path> getTestOutputDirectories();
 
     /**
      * the same as FileIndex.isInTestSourceContent(), but takes into account generated output dirs
      */
-    boolean isInTestSourceContent(VirtualFile fileOrDir);
+    boolean isInTestSourceContent(Path fileOrDir);
 
-    boolean isInSourceContent(VirtualFile fileOrDir);
+    boolean isInSourceContent(Path fileOrDir);
 
     void addScope(CompileScope additionalScope);
 
@@ -46,9 +46,9 @@ public interface CompileContextEx extends CompileContext {
 
     void recalculateOutputDirs();
 
-    void markGenerated(Collection<VirtualFile> files);
+    void markGenerated(Collection<Path> files);
 
-    boolean isGenerated(VirtualFile file);
+    boolean isGenerated(Path file);
 
-    void assignModule(VirtualFile root, Module module, boolean isTestSource, @Nullable Compiler compiler);
+    void assignModule(Path root, Module module, boolean isTestSource, @Nullable Compiler compiler);
 }

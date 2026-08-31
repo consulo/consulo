@@ -15,12 +15,17 @@
  */
 package consulo.ui.ex.awt.tree;
 
-public class NullNode extends SimpleNode {
-  public NullNode() {
-    super();
-  }
+import consulo.annotation.DeprecationInfo;
 
-  public SimpleNode[] getChildren() {
-    return NO_CHILDREN;
-  }
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.tree.NullNode")
+public class NullNode extends SimpleNode {
+    public NullNode() {
+        super();
+    }
+
+    @Override
+    public SimpleNode[] getChildren() {
+        return NO_CHILDREN;
+    }
 }

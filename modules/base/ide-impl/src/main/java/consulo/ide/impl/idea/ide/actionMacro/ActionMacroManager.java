@@ -38,8 +38,8 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -286,7 +286,7 @@ public class ActionMacroManager implements Disposable {
         return myIsPlaying;
     }
 
-    private static class InvokeMacroAction extends AnAction {
+    private static class InvokeMacroAction extends LegacyAnAction {
         private final ActionMacro myMacro;
 
         InvokeMacroAction(ActionMacro macro) {
@@ -302,7 +302,6 @@ public class ActionMacroManager implements Disposable {
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             e.getPresentation().setEnabled(!getInstance().isPlaying());
         }
     }

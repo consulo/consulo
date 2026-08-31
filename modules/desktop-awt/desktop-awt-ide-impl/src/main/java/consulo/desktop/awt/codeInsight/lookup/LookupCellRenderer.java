@@ -22,8 +22,8 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
-import consulo.colorScheme.FontPreferences;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.language.editor.impl.internal.completion.lookup.EmptyLookupItem;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupIconUtil;
 import consulo.language.editor.completion.lookup.*;
 import consulo.logging.Logger;
@@ -101,8 +101,8 @@ public class LookupCellRenderer implements ListCellRenderer {
 
   public LookupCellRenderer(LookupImpl lookup, JComponent editorComponent) {
     EditorColorsScheme scheme = lookup.getTopLevelEditor().getColorsScheme();
-    myNormalFont = scheme.getFont(EditorFontType.PLAIN);
-    myBoldFont = scheme.getFont(EditorFontType.BOLD);
+    myNormalFont = TargetAWT.to(scheme.getFont(EditorFontType.PLAIN));
+    myBoldFont = TargetAWT.to(scheme.getFont(EditorFontType.BOLD));
 
     myLookup = lookup;
     myNameComponent = new MySimpleColoredComponent();

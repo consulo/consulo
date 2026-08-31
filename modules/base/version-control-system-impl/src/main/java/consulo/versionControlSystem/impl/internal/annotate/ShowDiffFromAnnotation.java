@@ -25,7 +25,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumberListener {
+class ShowDiffFromAnnotation extends LegacyDumbAwareAction implements UpToDateLineNumberListener {
     private final FileAnnotation myFileAnnotation;
     private final AbstractVcs myVcs;
     private final VirtualFile myFile;

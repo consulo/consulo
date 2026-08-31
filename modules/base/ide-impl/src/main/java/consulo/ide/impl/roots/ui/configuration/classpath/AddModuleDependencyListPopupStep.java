@@ -22,11 +22,11 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -62,8 +62,12 @@ public class AddModuleDependencyListPopupStep extends BaseListPopupStep<Map.Entr
     AddModuleDependencyActionProvider provider = entry.getKey();
     AddModuleDependencyContext value = entry.getValue();
 
-    AsyncResult result = provider.invoke(value);
+    CompletableFuture result = provider.invoke(value);
 
-    result.doWhenDone(o -> value.processAddOrderEntries(o));
+    result.whenComplete((o, error) -> {
+      if (error == null) {
+        value.processAddOrderEntries(o);
+      }
+    });
   }
 }

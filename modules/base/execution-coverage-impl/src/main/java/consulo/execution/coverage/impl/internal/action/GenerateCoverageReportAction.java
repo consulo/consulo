@@ -1,7 +1,6 @@
 package consulo.execution.coverage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
@@ -11,8 +10,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 
 /**
@@ -20,7 +19,7 @@ import consulo.ui.ex.action.Presentation;
  * @since 2007-11-20
  */
 @ActionImpl(id = "GenerateCoverageReport")
-public class GenerateCoverageReportAction extends AnAction implements DumbAware {
+public class GenerateCoverageReportAction extends LegacyDumbAwareAction {
     public GenerateCoverageReportAction() {
         super(
             ExecutionCoverageLocalize.actionGenerateCoverageReportText(),

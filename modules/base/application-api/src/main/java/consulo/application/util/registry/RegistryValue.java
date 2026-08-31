@@ -15,9 +15,9 @@
  */
 package consulo.application.util.registry;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.disposer.Disposable;
 
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.MissingResourceException;

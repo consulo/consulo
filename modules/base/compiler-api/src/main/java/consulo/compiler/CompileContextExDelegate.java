@@ -20,13 +20,12 @@ import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
 
@@ -52,7 +51,7 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
+    public Path getSourceFileByOutputFile(Path outputFile) {
         return myDelegate.getSourceFileByOutputFile(outputFile);
     }
 
@@ -62,18 +61,17 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    
-    public Set<VirtualFile> getTestOutputDirectories() {
+    public Set<Path> getTestOutputDirectories() {
         return myDelegate.getTestOutputDirectories();
     }
 
     @Override
-    public boolean isInTestSourceContent(VirtualFile fileOrDir) {
+    public boolean isInTestSourceContent(Path fileOrDir) {
         return myDelegate.isInTestSourceContent(fileOrDir);
     }
 
     @Override
-    public boolean isInSourceContent(VirtualFile fileOrDir) {
+    public boolean isInSourceContent(Path fileOrDir) {
         return myDelegate.isInSourceContent(fileOrDir);
     }
 
@@ -82,23 +80,9 @@ public class CompileContextExDelegate implements CompileContextEx {
         myDelegate.addScope(additionalScope);
     }
 
-    @Deprecated
     @Override
-    public void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum) {
-        myDelegate.addMessage(category, message, url, lineNum, columnNum);
-    }
-
-    @Deprecated
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        @Nullable String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
-        myDelegate.addMessage(category, message, url, lineNum, columnNum, navigatable);
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return myDelegate.newMessage(category, message);
     }
 
     @Override
@@ -106,7 +90,6 @@ public class CompileContextExDelegate implements CompileContextEx {
         return myDelegate.getMessageCount(category);
     }
 
-    
     @Override
     public ProgressIndicator getProgressIndicator() {
         return myDelegate.getProgressIndicator();
@@ -123,42 +106,37 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public void requestRebuildNextTime(String message) {
-        myDelegate.requestRebuildNextTime(message);
-    }
-
-    @Override
-    public Module getModuleByFile(VirtualFile file) {
+    public Module getModuleByFile(Path file) {
         return myDelegate.getModuleByFile(file);
     }
 
     @Override
-    public VirtualFile[] getSourceRoots(Module module) {
+    public Path[] getSourceRoots(Module module) {
         return myDelegate.getSourceRoots(module);
     }
 
     @Override
-    public VirtualFile[] getAllOutputDirectories() {
+    public Path[] getAllOutputDirectories() {
         return myDelegate.getAllOutputDirectories();
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectory(Module module) {
+    public Path getModuleOutputDirectory(Module module) {
         return myDelegate.getModuleOutputDirectory(module);
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectoryForTests(Module module) {
+    public Path getModuleOutputDirectoryForTests(Module module) {
         return myDelegate.getModuleOutputDirectoryForTests(module);
     }
 
     @Override
-    public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
-        return myDelegate.getOutputForFile(module, virtualFile);
+    public Path getOutputForFile(Module module, Path file) {
+        return myDelegate.getOutputForFile(module, file);
     }
 
     @Override
-    public @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable Path getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
         return myDelegate.getOutputForFile(module, contentFolderType);
     }
 
@@ -188,12 +166,12 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public void markGenerated(Collection<VirtualFile> files) {
+    public void markGenerated(Collection<Path> files) {
         myDelegate.markGenerated(files);
     }
 
     @Override
-    public boolean isGenerated(VirtualFile file) {
+    public boolean isGenerated(Path file) {
         return myDelegate.isGenerated(file);
     }
 
@@ -203,7 +181,7 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public void assignModule(VirtualFile root, Module module, boolean isTestSource, Compiler compiler) {
+    public void assignModule(Path root, Module module, boolean isTestSource, Compiler compiler) {
         myDelegate.assignModule(root, module, isTestSource, compiler);
     }
 }

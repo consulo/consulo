@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ui.ex.action;
-
-import consulo.ui.ex.action.Presentation;
-import org.jetbrains.annotations.Contract;
 
 /**
  * A marker interface for the action which could be toggled between "selected" and "not selected" states.
@@ -36,7 +32,6 @@ public interface Toggleable {
    * @param presentation presentation to check
    * @return true if "selected", false if "not selected" or the state wasn't set previously.
    */
-  @Contract(pure = true)
   static boolean isSelected(Presentation presentation) {
     Object property = presentation.getClientProperty(SELECTED_PROPERTY);
     if (property != null && !(property instanceof Boolean)) {

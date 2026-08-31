@@ -1,53 +1,64 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.project;
 
-import consulo.disposer.Disposable;
 import consulo.application.progress.ProgressIndicator;
+import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A task that should be executed in IDE dumb mode, via {@link DumbService#queueTask(DumbModeTask)}.
- *
- * @author peter
  */
-public abstract class DumbModeTask implements Disposable {
-  private final Object myEquivalenceObject;
+public abstract class DumbModeTask implements MergeableQueueTask<DumbModeTask> {
+    private final @Nullable Object myEquivalenceObject;
 
-  public DumbModeTask() {
-    myEquivalenceObject = this;
-  }
+    /**
+     * Consider implementing {@link DumbModeTask#tryMergeWith(DumbModeTask)} to allow alike tasks to merge while waiting in queue
+     */
+    public DumbModeTask() {
+        myEquivalenceObject = null;
+    }
 
-  /**
-   * @param equivalenceObject see {@link #getEquivalenceObject()}
-   */
-  public DumbModeTask(Object equivalenceObject) {
-    myEquivalenceObject = equivalenceObject;
-  }
+    /**
+     * Tasks with same class and {@code equivalenceObject} would be merged while waiting in queue
+     * unless {@link DumbModeTask#tryMergeWith(DumbModeTask)} is overwritten.
+     *
+     * @deprecated Consider using {@link DumbModeTask()} and overwriting {@link DumbModeTask#tryMergeWith(DumbModeTask)} instead.
+     */
+    @Deprecated
+    public DumbModeTask(Object equivalenceObject) {
+        myEquivalenceObject = Pair.create(getClass(), equivalenceObject);
+    }
 
-  /**
-   * @return an object whose {@link Object#equals(Object)} determines task equivalence. If several equivalent tasks are queued
-   * for dumb mode execution at once, only one of them will be executed. By default the task object itself is returned.
-   */
-  public final Object getEquivalenceObject() {
-    return myEquivalenceObject;
-  }
+    public abstract void performInDumbMode(ProgressIndicator indicator, Exception trace);
 
-  public abstract void performInDumbMode(ProgressIndicator indicator, Exception trace);
+    @Override
+    public final void perform(ProgressIndicator indicator, Exception trace) {
+        performInDumbMode(indicator, trace);
+    }
 
-  @Override
-  public void dispose() {
-  }
+    @Override
+    public void dispose() {
+    }
+
+    /**
+     * Allows merging tasks waiting in queue for execution.
+     *
+     * @return {@code null} - if current task has nothing to do with {@code taskFromQueue}; <p>
+     *         {@code this} - if you want to remove {@code taskFromQueue} from the queue and add current one;  <p>
+     *         some other task - then it would be added to the queue, and {@code taskFromQueue} would be removed.
+     */
+    @Override
+    public @Nullable DumbModeTask tryMergeWith(DumbModeTask taskFromQueue) {
+        if (myEquivalenceObject != null && myEquivalenceObject.equals(taskFromQueue.myEquivalenceObject)) {
+            return this;
+        }
+        return null;
+    }
+
+    /**
+     * Queues dumb mode task to be performed in dumb mode. See {@link DumbService#queueTask(DumbModeTask)}.
+     */
+    public final void queue(Project project) {
+        DumbService.getInstance(project).queueTask(this);
+    }
 }

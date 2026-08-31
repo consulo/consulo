@@ -24,6 +24,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import java.util.List;
  * @author Vladimir Kondratyev
  */
 @ActionImpl(id = "ToolWindowsGroup")
-public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
+public final class ToolWindowsGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private static final Comparator<ActivateToolWindowAction> COMPARATOR = (a1, a2) -> {
         int m1 = ActivateToolWindowAction.getMnemonicForToolWindow(a1.getToolWindowId());
         int m2 = ActivateToolWindowAction.getMnemonicForToolWindow(a2.getToolWindowId());

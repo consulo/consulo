@@ -24,27 +24,27 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Supplier;
 
 /**
+ * Extracted part of {@link OpenFileHyperlinkInfo}.
+ *
  * @author VISTALL
- * @since 14/01/2021
- * <p>
- * extract part of {@link OpenFileHyperlinkInfo}
+ * @since 2021-01-14
  */
 public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
   private static final int UNDEFINED_OFFSET = -1;
 
   private final Project myProject;
-  private final boolean myIncludeInOccurenceNavigation;
+  private final boolean myIncludeInOccurrenceNavigation;
   private final int myDocumentLine;
   private final int myDocumentColumn;
 
-  public FileHyperlinkInfoBase(Project project, boolean includeInOccurenceNavigation, int documentLine, int documentColumn) {
+  public FileHyperlinkInfoBase(Project project, boolean includeInOccurrenceNavigation, int documentLine, int documentColumn) {
     myProject = project;
-    myIncludeInOccurenceNavigation = includeInOccurenceNavigation;
+    myIncludeInOccurrenceNavigation = includeInOccurrenceNavigation;
     myDocumentLine = documentLine;
     myDocumentColumn = documentColumn;
   }
@@ -97,7 +97,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
 
   @Override
   public boolean includeInOccurenceNavigation() {
-    return myIncludeInOccurenceNavigation;
+    return myIncludeInOccurrenceNavigation;
   }
 
   /**

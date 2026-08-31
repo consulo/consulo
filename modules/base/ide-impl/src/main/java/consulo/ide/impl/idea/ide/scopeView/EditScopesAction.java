@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.scopeView;
 
 import consulo.application.AllIcons;
-import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
@@ -24,15 +23,15 @@ import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 
 /**
  * @author anna
  * @since 2006-01-27
  */
-public class EditScopesAction extends AnAction implements DumbAware {
+public class EditScopesAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(EditScopesAction.class);
 
     public EditScopesAction() {
@@ -53,7 +52,6 @@ public class EditScopesAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(false);
         Project project = e.getData(Project.KEY);
         if (project != null) {

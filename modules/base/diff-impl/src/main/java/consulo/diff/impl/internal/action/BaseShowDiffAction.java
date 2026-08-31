@@ -23,14 +23,17 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import org.jspecify.annotations.Nullable;
 
-public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
+public abstract class BaseShowDiffAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     protected BaseShowDiffAction(LocalizeValue text, LocalizeValue description) {
         this(text, description, null);
     }
@@ -41,13 +44,20 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        boolean canShow = isAvailable(e);
-        presentation.setEnabled(canShow);
-        if (ActionPlaces.isPopupPlace(e.getPlace())) {
-            presentation.setVisible(canShow);
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply((o, continuation) -> {
+            Presentation presentation = e.getPresentation();
+            boolean canShow = isAvailable(e);
+            presentation.setEnabled(canShow);
+            if (ActionPlaces.isPopupPlace(e.getPlace())) {
+                presentation.setVisible(canShow);
+            }
+            updatePresentation(e);
+            return null;
+        }));
+    }
+
+    protected void updatePresentation(AnActionEvent e) {
     }
 
     @Override

@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
@@ -31,7 +32,7 @@ public interface CommandBuilder<THIS extends CommandBuilder<THIS>> {
 
     THIS groupId(Object groupId);
 
-    THIS project(Project project);
+    THIS project(@Nullable Project project);
 
     THIS document(Document document);
 

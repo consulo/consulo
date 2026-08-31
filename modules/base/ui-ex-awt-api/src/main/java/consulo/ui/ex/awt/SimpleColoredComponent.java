@@ -32,7 +32,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -94,7 +93,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
     private final IntIntMap myFragmentPadding;
 
-    @JdkConstants.HorizontalAlignment
+    @AWTConstants.HorizontalAlignment
     private int myTextAlign = SwingConstants.LEFT;
 
     private boolean myIconOpaque = false;
@@ -161,7 +160,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         LocalizeValue fragment,
         SimpleTextAttributes attributes,
         int padding,
-        @JdkConstants.HorizontalAlignment int align
+        @AWTConstants.HorizontalAlignment int align
     ) {
         append(fragment, attributes, myMainTextLastIndex < 0);
         appendTextPadding(padding, align);
@@ -209,7 +208,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         String fragment,
         SimpleTextAttributes attributes,
         int padding,
-        @JdkConstants.HorizontalAlignment int align
+        @AWTConstants.HorizontalAlignment int align
     ) {
         append(fragment, attributes, myMainTextLastIndex < 0);
         appendTextPadding(padding, align);
@@ -282,13 +281,13 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
      *                or SwingConstants.TRAILING then the text fragment will be aligned to the right at
      *                the padding, otherwise it will be aligned to the left
      */
-    public synchronized void appendTextPadding(int padding, @JdkConstants.HorizontalAlignment int align) {
+    public synchronized void appendTextPadding(int padding, @AWTConstants.HorizontalAlignment int align) {
         int alignIndex = myFragments.size() - 1;
         myFragmentPadding.putInt(alignIndex, padding);
         myFragmentAlignment.putInt(alignIndex, align);
     }
 
-    public void setTextAlign(@JdkConstants.HorizontalAlignment int align) {
+    public void setTextAlign(@AWTConstants.HorizontalAlignment int align) {
         myTextAlign = align;
     }
 

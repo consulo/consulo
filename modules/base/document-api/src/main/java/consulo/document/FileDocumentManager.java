@@ -6,6 +6,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
@@ -64,6 +65,14 @@ public interface FileDocumentManager extends SavingRequestor {
    * Should be invoked on the event dispatch thread.
    */
   public abstract void saveAllDocuments();
+
+  /**
+   * Saves all unsaved documents to disk from a background thread holding a write action.
+   * Unlike {@link #saveAllDocuments()} this variant does not require the event dispatch thread;
+   * it only requires write access (so it can be run inside a coroutine write-lock step off the EDT).
+   * Error notifications are dispatched back to the UI thread via the given {@link UIAccess}.
+   */
+  public abstract void saveAllDocuments(UIAccess uiAccess);
 
   /**
    * Saves the specified document to disk. This operation can modify the document (due to 'Strip

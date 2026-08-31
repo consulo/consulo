@@ -15,15 +15,18 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.application.ui.UISettings;
+import consulo.component.ComponentManager;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 
 /**
  * @author VISTALL
  * @since 26-Feb-22
  */
 public class ToolWindowAnchorUtil {
-  public static boolean isSplitVertically(ToolWindowAnchor anchor) {
-    return (anchor == ToolWindowAnchor.LEFT && !UISettings.getInstance().LEFT_HORIZONTAL_SPLIT) || (anchor == ToolWindowAnchor.RIGHT && !UISettings.getInstance().RIGHT_HORIZONTAL_SPLIT);
+  public static boolean isSplitVertically(ComponentManager project, ToolWindowAnchor anchor) {
+    ToolWindowSettings settings = ToolWindowSettings.getInstance(project);
+    return (anchor == ToolWindowAnchor.LEFT && !settings.isLeftHorizontalSplit())
+      || (anchor == ToolWindowAnchor.RIGHT && !settings.isRightHorizontalSplit());
   }
 }

@@ -21,7 +21,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.ApplicationUndoManager;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
-public class ProxyUndoRedoAction extends DumbAwareAction {
+public class ProxyUndoRedoAction extends LegacyDumbAwareAction {
   
   private final UndoManager myUndoManager;
   

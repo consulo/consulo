@@ -23,8 +23,11 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ import java.util.ArrayList;
  * @author anna
  * @since 2005-04-05
  */
-public class AddAllOpenFilesToFavorites extends AnAction {
+public class AddAllOpenFilesToFavorites extends LegacyAnAction implements AnActionWithAsyncUpdate {
     private final String myFavoritesName;
 
     public AddAllOpenFilesToFavorites(String chosenList) {
@@ -69,6 +72,14 @@ public class AddAllOpenFilesToFavorites extends AnAction {
             }
         }
         return result;
+    }
+
+    @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            Project project = e.getData(Project.KEY);
+            presentation.setEnabled(project != null && !getFilesToAdd(project).isEmpty());
+        }).toCoroutine();
     }
 
     @Override

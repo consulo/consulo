@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.project.Project;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 /**
  * @author nik
  */
-public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
+public class AddLibraryToModuleDependenciesAction extends LegacyDumbAwareAction {
     
     private final Project myProject;
     

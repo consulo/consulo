@@ -20,47 +20,48 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.PerApplicationInstance;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Supplier;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class KeymapManager {
-  public static final String DEFAULT_IDEA_KEYMAP = "$default";
-  public static final String MAC_OS_X_KEYMAP = "Mac OS X";
-  public static final String X_WINDOW_KEYMAP = "Default for XWin";
-  public static final String KDE_KEYMAP = "Default for KDE";
-  public static final String GNOME_KEYMAP = "Default for GNOME";
-  public static final String MAC_OS_X_10_5_PLUS_KEYMAP = "Mac OS X 10.5+";
+    public static final String DEFAULT_IDEA_KEYMAP = "$default";
+    public static final String MAC_OS_X_KEYMAP = "Mac OS X";
+    public static final String X_WINDOW_KEYMAP = "Default for XWin";
+    public static final String KDE_KEYMAP = "Default for KDE";
+    public static final String GNOME_KEYMAP = "Default for GNOME";
+    public static final String WEB_KEYMAP = "Default for Web";
+    public static final String MAC_OS_X_10_5_PLUS_KEYMAP = "Mac OS X 10.5+";
 
-  private static final Supplier<KeymapManager> ourInstance = PerApplicationInstance.of(KeymapManager.class);
+    private static final Supplier<KeymapManager> ourInstance = PerApplicationInstance.of(KeymapManager.class);
 
-  
-  public static KeymapManager getInstance() {
-    return ourInstance.get();
-  }
 
-  /**
-   * @return all available keymaps. The method return an empty array if no
-   * keymaps are available.
-   */
-  public abstract Keymap[] getAllKeymaps();
+    public static KeymapManager getInstance() {
+        return ourInstance.get();
+    }
 
-  public abstract Keymap getActiveKeymap();
+    /**
+     * @return all available keymaps. The method return an empty array if no
+     * keymaps are available.
+     */
+    public abstract Keymap[] getAllKeymaps();
 
-  public abstract Keymap getDefaultKeymap();
+    public abstract Keymap getActiveKeymap();
 
-  public abstract @Nullable Keymap getKeymap(String name);
+    public abstract Keymap getDefaultKeymap();
 
-  public abstract void setActiveKeymap(Keymap activeKeymap);
+    public abstract @Nullable Keymap getKeymap(String name);
 
-  /**
-   * @deprecated use {@link KeymapManager#addKeymapManagerListener(KeymapManagerListener, Disposable)} instead
-   */
-  @Deprecated(forRemoval = true)
-  public abstract void addKeymapManagerListener(KeymapManagerListener listener);
+    public abstract void setActiveKeymap(Keymap activeKeymap);
 
-  public abstract void addKeymapManagerListener(KeymapManagerListener listener, Disposable parentDisposable);
+    /**
+     * @deprecated use {@link KeymapManager#addKeymapManagerListener(KeymapManagerListener, Disposable)} instead
+     */
+    @Deprecated(forRemoval = true)
+    public abstract void addKeymapManagerListener(KeymapManagerListener listener);
 
-  public abstract void removeKeymapManagerListener(KeymapManagerListener listener);
+    public abstract void addKeymapManagerListener(KeymapManagerListener listener, Disposable parentDisposable);
+
+    public abstract void removeKeymapManagerListener(KeymapManagerListener listener);
 }

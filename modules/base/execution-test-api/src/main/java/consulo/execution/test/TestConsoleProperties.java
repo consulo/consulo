@@ -39,8 +39,8 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.AWTConstants;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
@@ -217,7 +217,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return new DumbAwareToggleBooleanProperty(text, LocalizeValue.empty(), null, target, HIDE_SUCCESSFUL_CONFIG);
   }
 
-  @JdkConstants.TreeSelectionMode
+  @AWTConstants.TreeSelectionMode
   public int getSelectionMode() {
     return TreeSelectionModel.SINGLE_TREE_SELECTION;
   }

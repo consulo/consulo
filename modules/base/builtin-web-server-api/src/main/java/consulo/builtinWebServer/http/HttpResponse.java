@@ -16,7 +16,10 @@
 package consulo.builtinWebServer.http;
 
 import org.jspecify.annotations.Nullable;
+
 import java.net.HttpURLConnection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -46,17 +49,42 @@ public final class HttpResponse {
 
   
   public static HttpResponse create(int code, @Nullable String contentType, @Nullable byte[] content) {
-    return new HttpResponse(code, contentType, content);
+    return new HttpResponse(code, contentType, content, null, Map.of());
+  }
+
+  /**
+   * Response whose body is produced incrementally, using chunked transfer encoding.
+   */
+  public static HttpResponse streaming(String contentType, HttpStreamingBody body) {
+    return streaming(HttpURLConnection.HTTP_OK, contentType, body);
+  }
+
+  public static HttpResponse streaming(int code, String contentType, HttpStreamingBody body) {
+    return new HttpResponse(code, contentType, null, body, Map.of());
   }
 
   private final int myCode;
   private final String myContentType;
   private final byte[] myContent;
+  private final HttpStreamingBody myStreamingBody;
+  private final Map<String, String> myHeaders;
 
-  private HttpResponse(int code, @Nullable String contentType, @Nullable byte[] content) {
+  private HttpResponse(int code,
+                       @Nullable String contentType,
+                       @Nullable byte[] content,
+                       @Nullable HttpStreamingBody streamingBody,
+                       Map<String, String> headers) {
     myCode = code;
     myContentType = contentType;
     myContent = content;
+    myStreamingBody = streamingBody;
+    myHeaders = headers;
+  }
+
+  public HttpResponse withHeader(String name, String value) {
+    Map<String, String> headers = new LinkedHashMap<>(myHeaders);
+    headers.put(name, value);
+    return new HttpResponse(myCode, myContentType, myContent, myStreamingBody, Map.copyOf(headers));
   }
 
   public int getCode() {
@@ -69,6 +97,14 @@ public final class HttpResponse {
 
   public @Nullable byte[] getContent() {
     return myContent;
+  }
+
+  public @Nullable HttpStreamingBody getStreamingBody() {
+    return myStreamingBody;
+  }
+
+  public Map<String, String> getHeaders() {
+    return myHeaders;
   }
 
   @Override

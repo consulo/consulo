@@ -26,11 +26,23 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * Interface which should be implemented in order to paint custom markers in the line
- * marker area (over the folding area) and process mouse events on the markers.
+ * Handles mouse events over a gutter marker.
+ * <p>
+ * Painting is not part of this contract: what the marker looks like is described by
+ * {@link LineMarkerPresentationProvider}.
  *
  * @author max
+ * @deprecated Kept for source parity with IntelliJ. Ties gutter interaction to
+ * {@link MouseEvent} and {@link Rectangle}, so it cannot be implemented by editors other than the
+ * AWT one. Use the action methods on {@link LineMarkerPresentationProvider} instead
+ * ({@link LineMarkerPresentationProvider#getTooltipValue},
+ * {@link LineMarkerPresentationProvider#canDoAction},
+ * {@link LineMarkerPresentationProvider#doAction}), which take a toolkit-free
+ * {@link consulo.ui.event.details.InputDetails} and address the presentation that was clicked
+ * rather than the whole highlighter.
  */
+@Deprecated
+@DeprecationInfo("Use action methods of LineMarkerPresentationProvider")
 public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessible {
     /**
      * Returns the text of the tooltip displayed when the mouse is over the renderer area.

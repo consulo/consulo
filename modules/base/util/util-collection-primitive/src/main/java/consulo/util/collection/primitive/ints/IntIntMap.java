@@ -18,7 +18,9 @@ package consulo.util.collection.primitive.ints;
 /**
  * @author VISTALL
  * @since 08/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.Int2IntMap} directly
  */
+@Deprecated
 public interface IntIntMap {
   interface Entry {
     int getKey();

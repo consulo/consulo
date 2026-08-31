@@ -12,6 +12,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.awt.hint.LightweightHint;
 
 import java.awt.*;
@@ -76,8 +77,7 @@ public class DeclarativeInlayHintsMouseMotionListener implements EditorMouseMoti
             if (ctrlDownNow && !newEntries.isEmpty()) {
                 if (e.getEditor() instanceof EditorEx) {
                     ((EditorEx) e.getEditor())
-                        .setCustomCursor(DeclarativeInlayHintsMouseMotionListener.class,
-                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                        .setCustomCursor(DeclarativeInlayHintsMouseMotionListener.class, StandardCursors.HAND);
                 }
             }
             else {

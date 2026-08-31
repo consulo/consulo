@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<Settings> {
   private Collection<SettingsEditor<Settings>> myEditors;
   private SettingsEditorListener<Settings> myChildSettingsListener;
-  private SynchronizationConroller mySyncConroller;
+  private SynchronizationController mySyncController;
   private boolean myIsDisposed = false;
 
   public CompositeSettingsEditor() {}
@@ -37,7 +37,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
   public CompositeSettingsEditor(Supplier<Settings> factory) {
     super(factory);
     if (factory != null) {
-      mySyncConroller = new SynchronizationConroller();
+      mySyncController = new SynchronizationController();
     }
   }
 
@@ -70,7 +70,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
       @Override
       public void stateChanged(SettingsEditor<Settings> editor) {
         fireEditorStateChanged();
-        if (mySyncConroller != null) mySyncConroller.handleStateChange(editor);
+        if (mySyncController != null) mySyncController.handleStateChange(editor);
       }
     };
 
@@ -97,7 +97,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
     myIsDisposed = true;
   }
 
-  private class SynchronizationConroller {
+  private class SynchronizationController {
     private final Set<SettingsEditor> myChangedEditors = new HashSet<SettingsEditor>();
     private final Alarm mySyncAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
     private boolean myIsInSync = false;

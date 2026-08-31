@@ -29,8 +29,6 @@ public interface LayoutViewOptions {
   
   LayoutViewOptions setTopToolbar(ActionGroup actions, String place);
 
-  
-  LayoutViewOptions setLeftToolbar(ActionGroup leftToolbar, String place);
 
   
   LayoutViewOptions setMinimizeActionEnabled(boolean enabled);

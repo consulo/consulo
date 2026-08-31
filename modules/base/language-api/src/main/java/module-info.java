@@ -77,6 +77,7 @@ module consulo.language.api {
         consulo.language.index.impl;
 
     exports consulo.language.internal to
+        consulo.it,
         consulo.find.api,
         consulo.ide.impl,
         consulo.language.editor.api,

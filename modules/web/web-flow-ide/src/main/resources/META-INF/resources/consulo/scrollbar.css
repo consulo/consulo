@@ -1,0 +1,37 @@
+/* the size is the one the frontend always used - the only change is that the arrow buttons the browser draws
+   at the ends are gone, and the colors come from the theme. the track stays transparent so a scrollbar carries
+   the background of whatever it scrolls.
+
+   scrollbar-width is deliberately not set: it is the standard property, but it cannot remove the buttons, and
+   setting it makes the browser ignore every ::-webkit-scrollbar rule below - which is what does remove them */
+::-webkit-scrollbar
+{
+	width: 8px;
+	height: 8px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-button
+{
+	display: none;
+	width: 0;
+	height: 0;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece,
+::-webkit-scrollbar-corner
+{
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: var(--consulo-scroll-bar-thumb, #c2c2c2);
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover
+{
+	background-color: var(--consulo-scroll-bar-hover-thumb-color, #a9a9a9);
+}

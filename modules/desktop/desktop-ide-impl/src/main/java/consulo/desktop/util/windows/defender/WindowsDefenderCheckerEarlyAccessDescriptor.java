@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,20 +26,18 @@ import consulo.platform.Platform;
  */
 @ExtensionImpl
 public class WindowsDefenderCheckerEarlyAccessDescriptor extends EarlyAccessProgramDescriptor {
-  @Override
-  public boolean isAvailable() {
-    return Platform.current().os().isWindows();
-  }
+    @Override
+    public boolean isAvailable() {
+        return Platform.current().os().isWindows();
+    }
 
-  
-  @Override
-  public LocalizeValue getName() {
-    return LocalizeValue.localizeTODO("Windows Defender Checker");
-  }
+    @Override
+    public LocalizeValue getName() {
+        return LocalizeValue.localizeTODO("Windows Defender Checker");
+    }
 
-  
-  @Override
-  public LocalizeValue getDescription() {
-    return LocalizeValue.localizeTODO("Enable checking for protecting source files by Windows Defender which can slow running IDE");
-  }
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Enable checking for protecting source files by Windows Defender which can slow running IDE");
+    }
 }

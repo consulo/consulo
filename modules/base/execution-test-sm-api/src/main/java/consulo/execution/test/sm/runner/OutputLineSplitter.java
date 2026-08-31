@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.sm.runner;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
@@ -36,6 +37,10 @@ public abstract class OutputLineSplitter {
         myBuffers.put(ProcessOutputTypes.STDERR, new StringBuilder());
 
         myStdinSupportEnabled = stdinEnabled;
+    }
+
+    public void process(LocalizeValue text, Key outputType) {
+        process(text.get(), outputType);
     }
 
     public void process(String text, Key outputType) {
@@ -88,11 +93,11 @@ public abstract class OutputLineSplitter {
             flushStdOutBuffer();
         }
         else {
-            // test framework may show some promt and ask user for smth. Question may not
+            // test framework may show some prompt and ask user for smth. Question may not
             // finish with \n or \r thus buffer wont be flushed and user will have to input smth
             // before question. And question will became visible with next portion of text.
             // Such behaviour is confusing. So
-            // 1. Let's assume that sevice messages starts with \n if console is editable
+            // 1. Let's assume that service messages starts with \n if console is editable
             // 2. Then we can suggest that each service message will start from new line and buffer should
             //    be flushed before every service message. Thus if chunks list is empty and output doesn't end
             //    with \n or \r but starts with ##teamcity then it is a service message and should be buffered otherwise

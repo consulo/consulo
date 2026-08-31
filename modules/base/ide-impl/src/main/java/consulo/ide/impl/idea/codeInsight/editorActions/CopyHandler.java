@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -30,8 +31,12 @@ import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 
 import org.jspecify.annotations.Nullable;
 
@@ -48,14 +53,14 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
         myOriginalAction = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_COPY;
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret == null : "Invocation of 'copy' operation for specific caret is not supported";
         Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
         if (project == null) {
@@ -98,19 +103,19 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
             ? EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDatas)
             : selectionModel.getSelectedText();
         String rawText = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDatas);
-        String escapedText = null;
-        for (CopyPastePreProcessor processor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
-            escapedText = processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText);
-            if (escapedText != null) {
-                break;
-            }
-        }
+        String escapedText = Application.get().getExtensionPoint(CopyPastePreProcessor.class).computeSafeIfAny(
+            processor -> processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText)
+        );
+        String clipboardText = escapedText != null ? escapedText : rawText;
         Transferable transferable = new TextBlockTransferable(
-            escapedText != null ? escapedText : rawText,
+            clipboardText,
             transferableDatas,
             escapedText != null ? new RawText(rawText) : null
         );
-        CopyPasteManager.getInstance().setContents(transferable);
+        CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+            .put(DataTransferType.TEXT, clipboardText)
+            .put(EditorImplUtil.TRANSFERABLE, transferable)
+            .build());
         if (editor instanceof EditorEx ex && ex.isStickySelection()) {
             ex.setStickySelection(false);
         }

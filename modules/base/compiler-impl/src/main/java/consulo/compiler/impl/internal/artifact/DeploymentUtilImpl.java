@@ -62,13 +62,7 @@ public class DeploymentUtilImpl {
             return;
         }
         if (toFile.isDirectory()) {
-            context.addMessage(
-                CompilerMessageCategory.ERROR,
-                CompilerLocalize.messageTextDestinationIsDirectory(createCopyErrorMessage(fromFile, toFile)).get(),
-                null,
-                -1,
-                -1
-            );
+            context.newError(CompilerLocalize.messageTextDestinationIsDirectory(createCopyErrorMessage(fromFile, toFile))).add();
             return;
         }
         if (FileUtil.filesEqual(fromFile, toFile) || writtenPaths != null && !writtenPaths.add(toFile.getPath())) {
@@ -101,13 +95,9 @@ public class DeploymentUtilImpl {
             FileUtil.copy(fromFile, toFile, FilePermissionCopier.BY_NIO2);
         }
         catch (IOException e) {
-            context.addMessage(
-                CompilerMessageCategory.ERROR,
-                createCopyErrorMessage(fromFile, toFile) + ": " + ExceptionUtil.getThrowableText(e),
-                null,
-                -1,
-                -1
-            );
+            context.newError(
+                LocalizeValue.localizeTODO(createCopyErrorMessage(fromFile, toFile) + ": " + ExceptionUtil.getThrowableText(e))
+            ).add();
         }
     }
 
@@ -117,8 +107,8 @@ public class DeploymentUtilImpl {
         int i = path.indexOf("..");
         if (i != -1) {
             String filepath = path.substring(0, i - 1);
-            File filepart = new File(filepath);
-            if (filepart.exists() && !filepart.isDirectory()) {
+            File filePart = new File(filepath);
+            if (filePart.exists() && !filePart.isDirectory()) {
                 LOG.error("Incorrect file path: '" + path + '\'');
             }
         }

@@ -25,10 +25,12 @@ import consulo.language.editor.FileColorManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.ColorPickerBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -298,19 +300,18 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
 
         @Override
         protected void doPerformAction(ActionEvent e) {
-            ColorChooser.chooseColor(
-                FileColorConfigurationEditDialog.this.getRootPane(),
-                LocalizeValue.localizeTODO("Choose Color"),
-                myColor,
-                color -> {
+            ColorPickerBuilder.create()
+                .withTitle(LocalizeValue.localizeTODO("Choose Color"))
+                .withColor(TargetAWT.from(myColor))
+                .showAsync(TargetAWT.from(UIUtil.getWindow(FileColorConfigurationEditDialog.this.getRootPane())))
+                .whenComplete((color, throwable) -> {
                     if (color != null) {
-                        myColor = color;
+                        myColor = TargetAWT.to(color);
                     }
 
                     setSelected(myColor != null);
                     getOKAction().setEnabled(myColor != null);
-                }
-            );
+                });
         }
 
         @Override

@@ -27,6 +27,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -46,7 +47,7 @@ public class StartNewLineBeforeAction extends EditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             editor.getSelectionModel().removeSelection();
             LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
             int line = caretPosition.line;

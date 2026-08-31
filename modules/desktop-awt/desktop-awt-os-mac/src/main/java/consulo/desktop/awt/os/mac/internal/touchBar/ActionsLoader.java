@@ -2,7 +2,6 @@
 package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.ide.impl.idea.ide.ui.customization.CustomisedActionGroup;
-import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -95,9 +94,6 @@ final class ActionsLoader {
                         butt.setHasArrowIcon(false);
                         butt.setLayout(0, 0, 5, 8);
                     }
-                }
-                else if (butt.getAnAction() instanceof WelcomePopupAction) {
-                    butt.setHasArrowIcon(true);
                 }
             });
         return Pair.create(defaultGroup, customizer);

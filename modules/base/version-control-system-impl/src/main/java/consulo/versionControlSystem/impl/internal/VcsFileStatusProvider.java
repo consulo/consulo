@@ -29,6 +29,7 @@ import consulo.ui.ex.awt.util.Update;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -221,17 +222,36 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
             return provider == null ? null : provider.getBaseRevision(file);
         }
         Change change = ChangeListManager.getInstance(myProject).getChange(file);
-        if (change == null) {
-            return null;
+        if (change != null) {
+            ContentRevision beforeRevision = change.getBeforeRevision();
+            if (beforeRevision == null || beforeRevision instanceof BinaryContentRevision) {
+                return null;
+            }
+            return new BaseContentImpl(beforeRevision);
         }
-        ContentRevision beforeRevision = change.getBeforeRevision();
-        if (beforeRevision == null) {
-            return null;
+
+        FileStatus status = ChangeListManager.getInstance(myProject).getStatus(file);
+        if (status == FileStatus.NOT_CHANGED && isDocumentModified(file)) {
+            AbstractVcs vcs = myVcsManager.get().getVcsFor(file);
+            if (vcs == null) {
+                return null;
+            }
+            DiffProvider diffProvider = vcs.getDiffProvider();
+            ChangeProvider changeProvider = vcs.getChangeProvider();
+            if (diffProvider == null || changeProvider == null || !changeProvider.isModifiedDocumentTrackingRequired()) {
+                return null;
+            }
+            VcsRevisionNumber currentRevision = diffProvider.getCurrentRevision(file);
+            if (currentRevision == null) {
+                return null;
+            }
+            ContentRevision beforeRevision = diffProvider.createFileContent(currentRevision, file);
+            if (beforeRevision == null) {
+                return null;
+            }
+            return new BaseContentImpl(beforeRevision);
         }
-        if (beforeRevision instanceof BinaryContentRevision) {
-            return null;
-        }
-        return new BaseContentImpl(beforeRevision);
+        return null;
     }
 
     private @Nullable VcsBaseContentProvider findProviderFor(VirtualFile file) {

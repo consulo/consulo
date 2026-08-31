@@ -15,19 +15,15 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import java.util.Set;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 /**
  * @author VISTALL
  * @since 07/02/2021
  */
-public interface ConcurrentIntObjectMap<V> extends IntObjectMap<V> {
+public interface ConcurrentIntObjectMap<V> extends Int2ObjectMap<V> {
   /**
    * @return written value
    */
   V cacheOrGet(int key, V value);
-
-  boolean remove(int key, V value);
-
-  boolean replace(int key, V oldValue, V newValue);
 }

@@ -23,7 +23,7 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface TableLayout extends Layout<TableLayout.TableCell> {
     static class TableCell implements LayoutConstraint {
@@ -48,6 +48,7 @@ public interface TableLayout extends Layout<TableLayout.TableCell> {
         public int getColumn() {
             return myColumn;
         }
+
         public TableCell fill() {
             myFill = true;
             return this;
@@ -57,13 +58,16 @@ public interface TableLayout extends Layout<TableLayout.TableCell> {
     static TableLayout create(StaticPosition fillOption) {
         return UIInternal.get()._Layouts_table(fillOption);
     }
+
     static TableCell cell(int row, int column) {
         return new TableCell(row, column);
     }
+
     @RequiredUIAccess
     default TableLayout add(PseudoComponent pseudoComponent, TableCell tableCell) {
         return add(pseudoComponent.getComponent(), tableCell);
     }
+
     @Override
     default TableLayout add(Component component, TableCell constraint) {
         return (TableLayout) Layout.super.add(component, constraint);

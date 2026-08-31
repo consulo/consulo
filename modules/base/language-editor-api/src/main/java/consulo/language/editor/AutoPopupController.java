@@ -10,17 +10,17 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class AutoPopupController {
   /**
    * Settings this user data key to the editor with a completion provider
-   * makes the autopopup scheduling ignore the state of the corresponding setting.
+   * makes the auto-popup scheduling ignore the state of the corresponding setting.
    * <p/>
-   * This doesn't affect other conditions when autopopup is not possible (e.g. power save mode).
+   * This doesn't affect other conditions when auto-popup is not possible (e.g. power save mode).
    */
   public static final Key<Boolean> ALWAYS_AUTO_POPUP = Key.create("Always Show Completion Auto-Popup");
   /**

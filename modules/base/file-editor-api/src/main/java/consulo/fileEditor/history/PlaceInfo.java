@@ -12,56 +12,55 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
 public final class PlaceInfo {
-  private final VirtualFile myFile;
-  private final FileEditorState myNavigationState;
-  private final String myEditorTypeId;
-  private final Reference<FileEditorWindow> myWindow;
-  private final @Nullable RangeMarker myCaretPosition;
-  private final long myTimeStamp;
+    private final VirtualFile myFile;
+    private final FileEditorState myNavigationState;
+    private final String myEditorTypeId;
+    private final Reference<@Nullable FileEditorWindow> myWindow;
+    private final @Nullable RangeMarker myCaretPosition;
+    private final long myTimeStamp;
 
-  public PlaceInfo(VirtualFile file,
-                   FileEditorState navigationState,
-                   String editorTypeId,
-                   @Nullable FileEditorWindow window,
-                   @Nullable RangeMarker caretPosition,
-                   long stamp) {
-    myNavigationState = navigationState;
-    myFile = file;
-    myEditorTypeId = editorTypeId;
-    myWindow = new WeakReference<>(window);
-    myCaretPosition = caretPosition;
-    myTimeStamp = stamp;
-  }
+    public PlaceInfo(
+        VirtualFile file,
+        FileEditorState navigationState,
+        String editorTypeId,
+        @Nullable FileEditorWindow window,
+        @Nullable RangeMarker caretPosition,
+        long stamp
+    ) {
+        myNavigationState = navigationState;
+        myFile = file;
+        myEditorTypeId = editorTypeId;
+        myWindow = new WeakReference<>(window);
+        myCaretPosition = caretPosition;
+        myTimeStamp = stamp;
+    }
 
-  public FileEditorWindow getWindow() {
-    return myWindow.get();
-  }
+    public @Nullable FileEditorWindow getWindow() {
+        return myWindow.get();
+    }
 
-  
-  public FileEditorState getNavigationState() {
-    return myNavigationState;
-  }
+    public FileEditorState getNavigationState() {
+        return myNavigationState;
+    }
 
-  
-  public VirtualFile getFile() {
-    return myFile;
-  }
+    public VirtualFile getFile() {
+        return myFile;
+    }
 
-  
-  public String getEditorTypeId() {
-    return myEditorTypeId;
-  }
+    public String getEditorTypeId() {
+        return myEditorTypeId;
+    }
 
-  @Override
-  public String toString() {
-    return getFile().getName() + " " + getNavigationState();
-  }
+    @Override
+    public String toString() {
+        return getFile().getName() + " " + getNavigationState();
+    }
 
-  public @Nullable RangeMarker getCaretPosition() {
-    return myCaretPosition;
-  }
+    public @Nullable RangeMarker getCaretPosition() {
+        return myCaretPosition;
+    }
 
-  public long getTimeStamp() {
-    return myTimeStamp;
-  }
+    public long getTimeStamp() {
+        return myTimeStamp;
+    }
 }

@@ -15,13 +15,13 @@
  */
 package consulo.ui.ex.awt;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import org.jspecify.annotations.Nullable;
 import org.imgscalr.Scalr;
-import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.awt.image.*;

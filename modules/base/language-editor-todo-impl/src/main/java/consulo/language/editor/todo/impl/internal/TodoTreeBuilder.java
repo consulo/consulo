@@ -142,7 +142,7 @@ public abstract class TodoTreeBuilder implements Disposable {
         catch (IndexNotReadyException ignore) {
         }
 
-        FileStatusManager.getInstance(myProject).addFileStatusListener(myFileStatusListener);
+        FileStatusManager.getInstance(myProject).addFileStatusListener(myFileStatusListener, this);
     }
 
     public boolean isDisposed() {
@@ -152,7 +152,6 @@ public abstract class TodoTreeBuilder implements Disposable {
     @Override
     public final void dispose() {
         myDisposed = true;
-        FileStatusManager.getInstance(myProject).removeFileStatusListener(myFileStatusListener);
     }
 
     final boolean isUpdatable() {

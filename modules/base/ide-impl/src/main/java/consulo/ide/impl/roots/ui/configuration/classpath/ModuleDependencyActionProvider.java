@@ -27,9 +27,9 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -57,7 +57,7 @@ public class ModuleDependencyActionProvider implements AddModuleDependencyAction
   @RequiredUIAccess
   
   @Override
-  public AsyncResult<List<Module>> invoke(ModuleDependencyContext context) {
+  public CompletableFuture<List<Module>> invoke(ModuleDependencyContext context) {
     return new ChooseModulesDialog(context.getProject(), context.getNotAddedModules(), "Add Module Dependency", "Select modules for adding as dependency").showAsync2();
   }
 }

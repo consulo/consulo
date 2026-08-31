@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.platform.base.localize.ActionLocalize;
@@ -28,14 +27,13 @@ import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +41,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ActionImpl(id = "SelectIn")
-public class SelectInAction extends AnAction implements DumbAware {
+public class SelectInAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public SelectInAction() {
         super(ActionLocalize.actionSelectinText(), ActionLocalize.actionSelectinText());
     }
@@ -60,8 +58,10 @@ public class SelectInAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        event.getPresentation().setEnabledAndVisible(SelectInContextImpl.createContext(event) != null);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(SelectInContextImpl.createContext(e) != null);
+        }).toCoroutine();
     }
 
     private static void invoke(DataContext dataContext, SelectInContext context) {

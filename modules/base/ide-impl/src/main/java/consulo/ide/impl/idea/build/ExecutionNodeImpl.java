@@ -1,10 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.NullableLazyValue;
 import consulo.build.ui.ExecutionNode;
 import consulo.build.ui.event.*;
 import consulo.build.ui.localize.BuildLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -110,6 +112,11 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         return myName;
     }
 
+    public void setName(LocalizeValue name) {
+        assert myIsCorrectThread.get();
+        myName = name.get();
+    }
+
     public void setName(String name) {
         assert myIsCorrectThread.get();
         myName = name;
@@ -120,11 +127,25 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         return myTitle;
     }
 
+    public void setTitle(LocalizeValue title) {
+        assert myIsCorrectThread.get();
+        myTitle = title.get();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setTitle(@BuildEventsNls.Title @Nullable String title) {
         assert myIsCorrectThread.get();
         myTitle = title;
     }
 
+    public void setHint(LocalizeValue hint) {
+        assert myIsCorrectThread.get();
+        myHint = hint.getNullIfEmpty();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setHint(@BuildEventsNls.Hint @Nullable String hint) {
         assert myIsCorrectThread.get();
         myHint = hint;

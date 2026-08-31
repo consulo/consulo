@@ -21,19 +21,12 @@ import consulo.annotation.component.TopicAPI;
 import java.util.List;
 
 @TopicAPI(ComponentScope.APPLICATION)
-public interface BulkFileListener {
-  /**
-   * @deprecated obsolete, implement {@link BulkFileListener} directly (to be removed in IDEA 2019)
-   */
-  class Adapter implements BulkFileListener {
+public interface BulkFileListener extends BulkFileListenerBase {
     @Override
-    public void before(List<? extends VFileEvent> events) { }
+    default void before(List<? extends VFileEvent> events) {
+    }
 
     @Override
-    public void after(List<? extends VFileEvent> events) { }
-  }
-
-  default void before(List<? extends VFileEvent> events) { }
-
-  default void after(List<? extends VFileEvent> events) { }
+    default void after(List<? extends VFileEvent> events) {
+    }
 }

@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Couple;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -132,10 +131,8 @@ public class TranslationCompilerProjectMonitor {
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
             ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
-            VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-            String outputUrl = output == null ? null : output.getUrl();
-            VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
-            String testoutUrl = testsOutput == null ? null : testsOutput.getUrl();
+            String outputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
+            String testoutUrl = moduleCompilerPathsManager.getCompilerOutputUrl(TestContentFolderTypeProvider.getInstance());
             map.put(module.getName(), Couple.of(outputUrl, testoutUrl));
         }
 

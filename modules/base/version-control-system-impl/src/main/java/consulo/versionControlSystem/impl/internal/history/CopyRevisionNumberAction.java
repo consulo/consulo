@@ -19,8 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
@@ -28,13 +28,12 @@ import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
-import java.awt.datatransfer.StringSelection;
 
 /**
  * The action that copies a revision number text to clipboard
  */
 @ActionImpl(id = VcsActions.ACTION_COPY_REVISION_NUMBER)
-public class CopyRevisionNumberAction extends DumbAwareAction {
+public class CopyRevisionNumberAction extends LegacyDumbAwareAction {
     public CopyRevisionNumberAction() {
         super(VcsLocalize.historyCopyRevisionNumber(), VcsLocalize.historyCopyRevisionNumber(), PlatformIconGroup.actionsCopy());
     }
@@ -54,12 +53,11 @@ public class CopyRevisionNumberAction extends DumbAwareAction {
         }
 
         String rev = revision instanceof ShortVcsRevisionNumber ? ((ShortVcsRevisionNumber) revision).toShortString() : revision.asString();
-        CopyPasteManager.getInstance().setContents(new StringSelection(rev));
+        CopyPasteManager.getInstance().setText(rev);
     }
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(VcsDataKeys.VCS_FILE_REVISION) || e.hasData(VcsDataKeys.VCS_REVISION_NUMBER));
     }
 }

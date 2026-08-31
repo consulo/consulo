@@ -43,10 +43,15 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
@@ -73,6 +78,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
             }
 
             @Override
+            public boolean isPathSelectable(Path path) {
+                return super.isPathSelectable(path) || showFiles && !Files.isDirectory(path) && !isArchive(path);
+            }
+
+            @Override
             @RequiredUIAccess
             public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
                 if (!file.isDirectory() && isFileSelectable(file)) {
@@ -93,7 +103,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
         descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).doWhenDone(files -> {
+        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).whenComplete((files, error) -> {
+            if (error != null) {
+                return;
+            }
+
             for (VirtualFile file : files) {
                 if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
                     Messages.showInfoMessage(
@@ -144,6 +158,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
                 openFile(file, project);
             }
         }
+    }
+
+    private static boolean isArchive(Path path) {
+        Path fileName = path.getFileName();
+        return fileName != null && FileTypeRegistry.getInstance().getFileTypeByFileName(fileName.toString()) instanceof ArchiveFileType;
     }
 
     @RequiredUIAccess

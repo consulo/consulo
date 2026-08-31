@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @ActionImpl(id = "OverrideFileTypeAction")
-public class OverrideFileTypeAction extends AnAction {
+public class OverrideFileTypeAction extends LegacyAnAction {
     public OverrideFileTypeAction() {
         super(
             ActionLocalize.actionOverridefiletypeactionText(),
@@ -107,7 +107,7 @@ public class OverrideFileTypeAction extends AnAction {
             .toArray(VirtualFile.ARRAY_FACTORY::create);
     }
 
-    private static class ChangeToThisFileTypeAction extends AnAction {
+    private static class ChangeToThisFileTypeAction extends LegacyAnAction {
         private final
         
         VirtualFile[] myFiles;

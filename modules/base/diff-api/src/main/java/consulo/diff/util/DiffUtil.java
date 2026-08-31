@@ -15,7 +15,7 @@
  */
 package consulo.diff.util;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.internal.GenericDataProvider;
 import consulo.util.dataholder.Key;
@@ -24,16 +24,19 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 06-Jul-24
+ * @since 2024-07-06
  */
 public class DiffUtil {
-
-  public static <T> void putDataKey(UserDataHolder holder, Key<T> key, @Nullable T value) {
-    DataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-    if (!(dataProvider instanceof GenericDataProvider)) {
-      dataProvider = new GenericDataProvider(dataProvider);
-      holder.putUserData(DiffUserDataKeys.DATA_PROVIDER, dataProvider);
+    public static <T> void putDataKey(UserDataHolder holder, Key<T> key, @Nullable T value) {
+        UiDataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
+        GenericDataProvider genericDataProvider;
+        if (dataProvider instanceof GenericDataProvider gdp) {
+            genericDataProvider = gdp;
+        }
+        else {
+            genericDataProvider = new GenericDataProvider(dataProvider);
+            holder.putUserData(DiffUserDataKeys.DATA_PROVIDER, genericDataProvider);
+        }
+        genericDataProvider.putData(key, value);
     }
-    ((GenericDataProvider)dataProvider).putData(key, value);
-  }
 }

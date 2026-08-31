@@ -15,10 +15,10 @@
  */
 package consulo.application;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.BundleBase;
 import consulo.platform.Platform;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.PropertyKey;
 import org.jspecify.annotations.Nullable;
 

@@ -12,8 +12,11 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.util.EditorUtil;
-import consulo.colorScheme.impl.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.colorScheme.internal.FontPreferencesManager;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
@@ -26,7 +29,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
 import org.jspecify.annotations.Nullable;
@@ -79,7 +81,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
 
     private boolean myUseSoftWraps;
     private int myTabWidth = -1;
-    private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
+    private final ModifiableFontPreferences myFontPreferences;
 
     /**
      * Soft wraps need to be kept up-to-date on all editor modification (changing text, adding/removing/expanding/collapsing fold
@@ -108,8 +110,9 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     private boolean myForceAdditionalColumns;
     private boolean myAfterLineEndInlayUpdated;
 
-    public CodeEditorSoftWrapModelBase(CodeEditorBase editor) {
+    public CodeEditorSoftWrapModelBase(CodeEditorBase editor, FontPreferencesManager fontPreferencesManager) {
         myEditor = editor;
+        myFontPreferences = fontPreferencesManager.newFontPreferences();
         myStorage = new SoftWrapsStorage();
         myPainter = new CompositeSoftWrapPainter(editor);
         myEditorTextRepresentationHelper = new DefaultEditorTextRepresentationHelper(editor);
@@ -187,7 +190,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     @Override
     @RequiredUIAccess
     public boolean isSoftWrappingEnabled() {
-        UIAccess.assertIsUIThread();
+        CodeEditorAssertion.assertEditorThreading();
         return myUseSoftWraps && !myEditor.isPurePaintingMode();
     }
 

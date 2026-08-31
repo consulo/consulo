@@ -16,14 +16,13 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
@@ -42,7 +41,7 @@ import java.util.List;
  * @author yole
  */
 @ActionImpl(id = "ChangesView.CreatePatchFromChanges")
-public class CreatePatchFromChangesAction extends AnAction implements DumbAware {
+public class CreatePatchFromChangesAction extends LegacyDumbAwareAction {
     public CreatePatchFromChangesAction() {
         super(
             VcsLocalize.actionNameCreatePatchForSelectedRevisions(),

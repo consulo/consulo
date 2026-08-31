@@ -27,6 +27,7 @@ import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 public abstract class TemplateLineStartEndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -52,6 +53,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler im
   }
 
   @Override
+  @RequiredUIAccess
   protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {

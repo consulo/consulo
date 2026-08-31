@@ -17,6 +17,7 @@ package consulo.diff;
 
 import consulo.codeEditor.EditorKind;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.ui.ex.action.AnAction;
@@ -60,7 +61,7 @@ public interface DiffUserDataKeys {
 
   Key<List<JComponent>> NOTIFICATIONS = Key.create("Diff.Notifications");
   Key<List<AnAction>> CONTEXT_ACTIONS = Key.create("Diff.ContextActions");
-  Key<DataProvider> DATA_PROVIDER = Key.create("Diff.DataProvider");
+  Key<UiDataProvider> DATA_PROVIDER = Key.create("Diff.DataProvider");
   Key<Boolean> GO_TO_SOURCE_DISABLE = Key.create("Diff.GoToSourceDisable");
   Key<Boolean> FORCE_READ_ONLY = Key.create("Diff.ForceReadOnly");
 

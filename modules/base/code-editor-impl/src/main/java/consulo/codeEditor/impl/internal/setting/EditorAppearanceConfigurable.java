@@ -20,7 +20,9 @@ import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
 import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.PersistentEditorSettings;
+import consulo.codeEditor.TabCharacterPaintMode;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurationException;
@@ -29,8 +31,10 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
@@ -40,6 +44,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -82,9 +87,32 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         propertyBuilder.add(caretBlinkingTimeBox, editorSettings::getBlinkPeriod, editorSettings::setBlinkPeriod);
         root.add(DockLayout.create().left(caretBlinkingBox).right(caretBlinkingTimeBox));
 
+        CheckBox smoothBlinkBox = CheckBox.create(LocalizeValue.localizeTODO("Smooth caret blinking"));
+        propertyBuilder.add(smoothBlinkBox, editorSettings::isSmoothCaretBlinking, editorSettings::setSmoothCaretBlinking);
+        smoothBlinkBox.setEnabled(editorSettings.isBlinkCaret());
+        caretBlinkingBox.addValueListener(event -> smoothBlinkBox.setEnabled(event.getValue()));
+        root.add(smoothBlinkBox);
+
+        CheckBox animatedCaretBox = CheckBox.create(LocalizeValue.localizeTODO("Use animated caret"));
+        propertyBuilder.add(animatedCaretBox, editorSettings::isAnimatedCaret, editorSettings::setAnimatedCaret);
+
+        ComboBox<EditorSettings.CaretEasing> caretEasingBox = ComboBox.create(Arrays.asList(EditorSettings.CaretEasing.values()));
+        caretEasingBox.setTextRenderer(value -> switch (value) {
+            case NINJA -> LocalizeValue.localizeTODO("Ninja");
+            case EASE -> LocalizeValue.localizeTODO("Ease");
+        });
+        propertyBuilder.add(caretEasingBox, editorSettings::getCaretEasing, editorSettings::setCaretEasing);
+        caretEasingBox.setEnabled(editorSettings.isAnimatedCaret());
+        animatedCaretBox.addValueListener(event -> caretEasingBox.setEnabled(event.getValue()));
+        root.add(DockLayout.create().left(animatedCaretBox).right(caretEasingBox));
+
         CheckBox useBlockCaret = CheckBox.create(ApplicationLocalize.checkboxUseBlockCaret());
         propertyBuilder.add(useBlockCaret, editorSettings::isBlockCursor, editorSettings::setBlockCursor);
         root.add(useBlockCaret);
+
+        CheckBox fullLineHeightCaret = CheckBox.create(LocalizeValue.localizeTODO("Use full line height caret"));
+        propertyBuilder.add(fullLineHeightCaret, editorSettings::isFullLineHeightCursor, editorSettings::setFullLineHeightCursor);
+        root.add(fullLineHeightCaret);
 
         CheckBox showRightMargin = CheckBox.create(ApplicationLocalize.checkboxRightMargin());
         propertyBuilder.add(showRightMargin, editorSettings::isRightMarginShown, editorSettings::setRightMarginShown);
@@ -110,6 +138,21 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         CheckBox showWhitespaces = CheckBox.create(ApplicationLocalize.checkboxShowWhitespaces());
         propertyBuilder.add(showWhitespaces, editorSettings::isWhitespacesShown, editorSettings::setWhitespacesShown);
         root.add(showWhitespaces);
+
+        CheckBox showSelectionWhitespaces = CheckBox.create(LocalizeValue.localizeTODO("Show whitespaces in selection"));
+        propertyBuilder.add(showSelectionWhitespaces, editorSettings::isSelectionWhitespacesShown, editorSettings::setSelectionWhitespacesShown);
+        showSelectionWhitespaces.setEnabled(editorSettings.isWhitespacesShown());
+        showWhitespaces.addValueListener(event -> showSelectionWhitespaces.setEnabled(event.getValue()));
+        root.add(showSelectionWhitespaces);
+
+        CheckBox showSpecialChars = CheckBox.create(LocalizeValue.localizeTODO("Show special characters"));
+        propertyBuilder.add(showSpecialChars, editorSettings::isShowingSpecialChars, editorSettings::setShowingSpecialChars);
+        root.add(showSpecialChars);
+
+        ComboBox<TabCharacterPaintMode> tabPaintModeBox = ComboBox.create(Arrays.asList(TabCharacterPaintMode.values()));
+        tabPaintModeBox.setTextRenderer(value -> value == null ? LocalizeValue.empty() : value.getText());
+        propertyBuilder.add(tabPaintModeBox, editorSettings::getTabCharacterPaintMode, editorSettings::setTabCharacterPaintMode);
+        root.add(DockLayout.create().left(Label.create(LocalizeValue.localizeTODO("Tab character:"))).right(tabPaintModeBox));
 
         CheckBox showVerticalIndents = CheckBox.create(ApplicationLocalize.labelAppearanceShowVerticalIndentGuides());
         propertyBuilder.add(showVerticalIndents, editorSettings::isIndentGuidesShown, editorSettings::setIndentGuidesShown);

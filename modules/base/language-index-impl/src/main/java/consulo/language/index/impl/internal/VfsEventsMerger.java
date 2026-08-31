@@ -26,21 +26,21 @@ import org.intellij.lang.annotations.MagicConstant;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-class VfsEventsMerger {
+public final class VfsEventsMerger {
   private static final boolean DEBUG = false;
   //static final boolean DEBUG = (true);
 
-  void recordFileEvent(VirtualFile file, boolean contentChange) {
+  public void recordFileEvent(VirtualFile file, boolean contentChange) {
     if (DEBUG) System.out.println("Request build indices for file:" + file.getPath() + ", contentChange:" + contentChange);
     updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, contentChange ? FILE_CONTENT_CHANGED : FILE_ADDED);
   }
 
-  void recordBeforeFileEvent(VirtualFile file, boolean contentChanged) {
-    if (DEBUG) System.out.println("Request invalidate indices for file:" + file.getPath() + ", contentChange:" + contentChanged);
-    updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, contentChanged ? BEFORE_FILE_CONTENT_CHANGED : FILE_REMOVED);
+  public void recordFileRemovedEvent(VirtualFile file) {
+    if (DEBUG) System.out.println("Request invalidate indices for file:" + file.getPath() + ", deletion");
+    updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, FILE_REMOVED);
   }
 
-  void recordTransientStateChangeEvent(VirtualFile file) {
+  public void recordTransientStateChangeEvent(VirtualFile file) {
     if (DEBUG) System.out.println("Transient state changed for file:" + file.getPath());
     updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, FILE_TRANSIENT_STATE_CHANGED);
   }
@@ -53,58 +53,88 @@ class VfsEventsMerger {
 
   // NB: this code is executed not only during vfs events dispatch (in write action) but also during requestReindex (in read action)
   private void updateChange(int fileId, VirtualFile file, @EventMask short mask) {
-    while (true) {
+    while (true) { // CAS-like loop:
       ChangeInfo existingChangeInfo = myChangeInfos.get(fileId);
+      if (existingChangeInfo != null && existingChangeInfo.eventMask == mask) {
+        return; // nothing to update
+      }
+
       ChangeInfo newChangeInfo = new ChangeInfo(file, mask, existingChangeInfo);
-      if (myChangeInfos.put(fileId, newChangeInfo) == existingChangeInfo) {
-        myPublishedEventIndex.incrementAndGet();
-        break;
+      if (existingChangeInfo == null) { // .replace() impl doesn't support oldValue=null, hence the branch:
+        if (myChangeInfos.putIfAbsent(fileId, newChangeInfo) == null) {
+          break;
+        }
+      }
+      else {
+        if (myChangeInfos.replace(fileId, existingChangeInfo, newChangeInfo)) {
+          break;
+        }
       }
     }
-  }
-
-  void applyMergedEvents(VfsEventsMerger merger) {
-    for (ChangeInfo info : merger.myChangeInfos.values()) {
-      updateChange(info.getFileId(), info.file, info.eventMask);
-    }
+    myPublishedEventIndex.incrementAndGet();
   }
 
   @FunctionalInterface
   public interface VfsEventProcessor {
+    /** Prepares a change before it is removed from the merger: this phase MAY be cancellable */
+    default void prepare(ChangeInfo changeInfo) {
+    }
+
+    /** Applies a change in some way: this method MUST NOT be cancellable */
     boolean process(ChangeInfo changeInfo);
+
+    /** this is a helper method that designates the end of the events batch, can be used for optimizations */
+    default void endBatch() {
+    }
   }
 
-  // 1. Method can be invoked in several threads
-  // 2. Method processes snapshot of available events at the time of the invocation, it does mean that if events are produced concurrently
-  // with the processing then set of events will be not empty
-  // 3. Method regularly checks for cancellations (thus can finish with PCEs) but event processor should process the change info atomically
-  // (without PCE)
-  boolean processChanges(VfsEventProcessor eventProcessor) {
+  /**
+   * 1. Method can be invoked in several threads.
+   * 2. Method processes the snapshot of available events at the time of the invocation: it means that if events are produced
+   *    concurrently with their processing, then the set of events _could_ be non-empty after the method terminates.
+   * 3. Method itself regularly checks for cancellations (thus _can_ finish with PCEs), but event {@code eventProcessor.process()}
+   *    should process the change info atomically (i.e. without PCE)
+   */
+  public boolean processChanges(VfsEventProcessor eventProcessor) {
     if (!myChangeInfos.isEmpty()) {
-      int[] fileIds = myChangeInfos.keys(); // snapshot of the keys
+      int[] fileIds = myChangeInfos.keySet().toIntArray(); // snapshot of the keys
       for (int fileId : fileIds) {
         ProgressManager.checkCanceled();
-        ChangeInfo info = myChangeInfos.remove(fileId);
+
+        ChangeInfo info = myChangeInfos.get(fileId);
         if (info == null) continue;
+
+        // Keep the change in myChangeInfos while the cancellable preparation is running.
+        eventProcessor.prepare(info);
+        // If a newer event is recorded concurrently -> the identity check fails and the newer change stays queued.
+        if (!myChangeInfos.remove(fileId, info)) continue;
 
         try {
           if (DEBUG) System.out.println("Processing " + info);
-          if (!eventProcessor.process(info)) return false;
+          if (!eventProcessor.process(info)) {
+            eventProcessor.endBatch();
+            return false;
+          }
         }
-        catch (ProcessCanceledException pce) { // todo remove
-          FileBasedIndexImpl.LOG.error(pce);
+        catch (ProcessCanceledException pce) {
+          // it should be no PCE here -- eventProcessor.process()/.endBatch() should
+          // be 'atomic': a change is either processed, or not, so throwing PCE from inside
+          // the processor is an error
+          FileBasedIndexImpl.LOG.error(new RuntimeException(pce));
           assert false;
         }
       }
+      // endBatch() is a logical end of _successful_ batch => shouldn't be in 'finally'
+      eventProcessor.endBatch();
     }
     return true;
   }
 
-  boolean hasChanges() {
+  public boolean hasChanges() {
     return !myChangeInfos.isEmpty();
   }
 
-  int getApproximateChangesCount() {
+  public int getApproximateChangesCount() {
     return myChangeInfos.size();
   }
 
@@ -118,14 +148,13 @@ class VfsEventsMerger {
   private static final short FILE_ADDED = 1;
   private static final short FILE_REMOVED = 2;
   private static final short FILE_CONTENT_CHANGED = 4;
-  private static final short BEFORE_FILE_CONTENT_CHANGED = 8;
-  private static final short FILE_TRANSIENT_STATE_CHANGED = 16;
+  private static final short FILE_TRANSIENT_STATE_CHANGED = 8;
 
-  @MagicConstant(flags = {FILE_ADDED, FILE_REMOVED, FILE_CONTENT_CHANGED, BEFORE_FILE_CONTENT_CHANGED, FILE_TRANSIENT_STATE_CHANGED})
+  @MagicConstant(flags = {FILE_ADDED, FILE_REMOVED, FILE_CONTENT_CHANGED, FILE_TRANSIENT_STATE_CHANGED})
   @interface EventMask {
   }
 
-  static class ChangeInfo {
+  public static final class ChangeInfo {
     private final VirtualFile file;
 
     @EventMask
@@ -149,39 +178,33 @@ class VfsEventsMerger {
       StringBuilder builder = new StringBuilder();
       builder.append("file: ").append(file.getPath()).append("\n").append("operation: ");
       if ((eventMask & FILE_TRANSIENT_STATE_CHANGED) != 0) builder.append("TRANSIENT_STATE_CHANGE ");
-      if ((eventMask & BEFORE_FILE_CONTENT_CHANGED) != 0) builder.append("UPDATE-REMOVE ");
       if ((eventMask & FILE_CONTENT_CHANGED) != 0) builder.append("UPDATE ");
       if ((eventMask & FILE_REMOVED) != 0) builder.append("REMOVE ");
       if ((eventMask & FILE_ADDED) != 0) builder.append("ADD ");
       return builder.toString().trim();
     }
 
-    boolean isBeforeContentChanged() {
-      return (eventMask & BEFORE_FILE_CONTENT_CHANGED) != 0;
-    }
-
-    boolean isContentChanged() {
+    public boolean isContentChanged() {
       return (eventMask & FILE_CONTENT_CHANGED) != 0;
     }
 
-    boolean isFileRemoved() {
+    public boolean isFileRemoved() {
       return (eventMask & FILE_REMOVED) != 0;
     }
 
-    boolean isFileAdded() {
+    public boolean isFileAdded() {
       return (eventMask & FILE_ADDED) != 0;
     }
 
-    boolean isTransientStateChanged() {
+    public boolean isTransientStateChanged() {
       return (eventMask & FILE_TRANSIENT_STATE_CHANGED) != 0;
     }
 
-    
-    VirtualFile getFile() {
+    public VirtualFile getFile() {
       return file;
     }
 
-    int getFileId() {
+    public int getFileId() {
       int fileId = FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file);
       if (fileId < 0) fileId = -fileId;
       return fileId;

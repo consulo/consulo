@@ -29,7 +29,7 @@ import consulo.ui.layout.VerticalLayout;
 
 public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOptionsDialog {
     protected CheckBox myCbSearchInComments;
-    protected CheckBox myCbSearchTextOccurences;
+    protected CheckBox myCbSearchTextOccurrences;
 
     protected InlineOptionsWithSearchSettingsDialog(Project project, boolean canBeParent, PsiElement element) {
         super(project, canBeParent, element);
@@ -45,27 +45,27 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
 
     @Override
     protected void doAction() {
-        boolean searchInNonJava = myCbSearchTextOccurences.getValueOrError();
+        boolean searchInNonJava = myCbSearchTextOccurrences.getValueOrError();
         boolean searchInComments = myCbSearchInComments.getValueOrError();
         if (myCbSearchInComments.isEnabled()) {
             saveSearchInCommentsAndStrings(searchInComments);
         }
-        if (myCbSearchTextOccurences.isEnabled()) {
+        if (myCbSearchTextOccurrences.isEnabled()) {
             saveSearchInTextOccurrences(searchInNonJava);
         }
     }
 
     @RequiredUIAccess
-    public void setEnabledSearchSettngs(boolean enabled) {
+    public void setEnabledSearchSettings(boolean enabled) {
         myCbSearchInComments.setEnabled(enabled);
-        myCbSearchTextOccurences.setEnabled(enabled);
+        myCbSearchTextOccurrences.setEnabled(enabled);
         if (enabled) {
             myCbSearchInComments.setValue(isSearchInCommentsAndStrings());
-            myCbSearchTextOccurences.setValue(isSearchForTextOccurrences());
+            myCbSearchTextOccurrences.setValue(isSearchForTextOccurrences());
         }
         else {
             myCbSearchInComments.setValue(false);
-            myCbSearchTextOccurences.setValue(false);
+            myCbSearchTextOccurrences.setValue(false);
         }
     }
 
@@ -75,17 +75,17 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
         VerticalLayout layout = super.createCenterUIComponent();
 
         myCbSearchInComments = CheckBox.create(RefactoringLocalize.searchInCommentsAndStrings(), isSearchInCommentsAndStrings());
-        myCbSearchTextOccurences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences(), isSearchForTextOccurrences());
+        myCbSearchTextOccurrences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences(), isSearchForTextOccurrences());
 
         ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> actionListener = e ->
-            setEnabledSearchSettngs(myRbInlineAll.getValueOrError());
+            setEnabledSearchSettings(myRbInlineAll.getValueOrError());
 
         myRbInlineThisOnly.addValueListener(actionListener);
         myRbInlineAll.addValueListener(actionListener);
 
-        setEnabledSearchSettngs(myRbInlineAll.getValueOrError());
+        setEnabledSearchSettings(myRbInlineAll.getValueOrError());
 
-        layout.add(HorizontalLayout.create().add(myCbSearchInComments).add(myCbSearchTextOccurences));
+        layout.add(HorizontalLayout.create().add(myCbSearchInComments).add(myCbSearchTextOccurrences));
         return layout;
     }
 }

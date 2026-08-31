@@ -21,6 +21,7 @@ import consulo.util.collection.primitive.bytes.impl.list.ByteArrayList;
  * @author VISTALL
  * @since 09/05/2021
  */
+@Deprecated
 public final class ByteLists {
   public static ByteList newArrayList() {
     return new ByteArrayList();

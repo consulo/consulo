@@ -48,7 +48,7 @@ public class XCopyWatchAction extends XWatchesTreeActionBase {
         XDebuggerTreeNode root = tree.getRoot();
         for (XValueNodeImpl node : getSelectedNodes(tree, XValueNodeImpl.class)) {
             node.getValueContainer().calculateEvaluationExpression().doWhenDone(expr -> {
-                XExpression watchExpression = expr != null ? expr : XExpression.fromText(node.getName());
+                XExpression watchExpression = expr != null ? expr : XExpression.fromText(node.getName().getNullIfEmpty());
                 if (watchExpression != null) {
                     DebuggerUIImplUtil.invokeLater(() -> watchesView.addWatchExpression(
                         watchExpression,

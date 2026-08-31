@@ -1,16 +1,19 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2023-11-13
  */
+@NullMarked
 module consulo.build.ui.impl {
-  requires transitive consulo.build.ui.api;
-  requires consulo.compiler.api;
+    requires transitive consulo.build.ui.api;
+    requires consulo.compiler.api;
 
-  exports consulo.build.ui.impl.internal.event to
-    consulo.ide.impl,
-    consulo.compiler.impl;
+    exports consulo.build.ui.impl.internal.event to
+        consulo.ide.impl,
+        consulo.compiler.impl;
 
-  exports consulo.build.ui.impl.internal to
-    consulo.ide.impl,
-    consulo.compiler.impl;
+    exports consulo.build.ui.impl.internal to
+        consulo.ide.impl,
+        consulo.compiler.impl;
 }

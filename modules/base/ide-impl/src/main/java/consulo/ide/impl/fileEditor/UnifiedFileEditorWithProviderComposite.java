@@ -22,7 +22,12 @@ import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
 import consulo.ui.ex.ComponentContainer;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
@@ -39,6 +44,7 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   private FileEditorManagerEx myFileEditorManager;
 
   private final Component[] myComponents;
+  private final VerticalLayout[] myTopLayouts;
 
   public UnifiedFileEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     myFile = file;
@@ -46,11 +52,27 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     myProviders = providers;
     myFileEditorManager = fileEditorManager;
 
+    // said here rather than left to the index out of bounds every accessor of this class would throw later -
+    // a composite of no editors cannot show anything, and the file it was built for is the only clue as to why
+    if (editors.length == 0) {
+      throw new IllegalArgumentException("No file editor was created for " + file.getPath());
+    }
+
     myComponents = new Component[editors.length];
+    myTopLayouts = new VerticalLayout[editors.length];
     for (int i = 0; i < editors.length; i++) {
       FileEditor editor = editors[i];
 
-      myComponents[i] = editor.getUIComponent();
+      Component component = editor.getUIComponent();
+      if (component == null) {
+        // an editor of the awt frontend only - it has nothing to put in a tab of this window, and a null in
+        // here surfaces much later as a tab which simply stays blank
+        throw new IllegalArgumentException(
+          "File editor " + editor.getClass().getName() + " of " + file.getPath() + " has no unified component");
+      }
+
+      myTopLayouts[i] = VerticalLayout.create(0);
+      myComponents[i] = DockLayout.create(0).top(myTopLayouts[i]).center(component);
     }
   }
 
@@ -102,10 +124,19 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     return List.of();
   }
 
-  
   @Override
+  @RequiredUIAccess
   public Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
-    return () -> {};
+    int index = ArrayUtil.indexOf(myEditors, editor);
+    if (index == -1) {
+      throw new IllegalArgumentException("File editor " + editor.getClass().getName() + " is not part of composite of " + myFile.getPath());
+    }
+
+    VerticalLayout topLayout = myTopLayouts[index];
+    Component uiComponent = component.getUIComponent();
+    uiComponent.addBorder(BorderPosition.BOTTOM);
+    topLayout.add(uiComponent);
+    return () -> topLayout.remove(uiComponent);
   }
 
   @Override

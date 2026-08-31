@@ -15,11 +15,10 @@
  */
 package consulo.language.findUsage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-
-import org.jspecify.annotations.Nullable;
 
 /**
  * The default empty implementation of the {@link FindUsagesProvider} interface.
@@ -32,22 +31,21 @@ public class EmptyFindUsagesProvider implements FindUsagesProvider {
   }
 
   @Override
-  
   public String getType(PsiElement element) {
     return "";
   }
 
   @Override
-  
+  @RequiredReadAction
   public String getDescriptiveName(PsiElement element) {
     return getNodeText(element, true);
   }
 
   @Override
-  
+  @RequiredReadAction
   public String getNodeText(PsiElement element, boolean useFullName) {
-    if (element instanceof PsiNamedElement) {
-      String name = ((PsiNamedElement)element).getName();
+    if (element instanceof PsiNamedElement namedElem) {
+      String name = namedElem.getName();
       if (name != null) {
         return name;
       }
@@ -55,7 +53,6 @@ public class EmptyFindUsagesProvider implements FindUsagesProvider {
     return "";
   }
 
-  
   @Override
   public Language getLanguage() {
     return Language.ANY;

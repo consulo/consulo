@@ -17,13 +17,18 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.internal.KillRingTransferable;
+import consulo.codeEditor.internal.KillRingData;
 import consulo.document.Document;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
+import consulo.ui.ex.internal.CopyPasteManagerInternal;
 import consulo.util.lang.StringUtil;
 
+import java.util.List;
+
 /**
- * Holds utility methods for {@link KillRingTransferable kill ring}-aware processing.
+ * Holds utility methods for {@link KillRingData kill ring}-aware processing.
  */
 public class KillRingUtil {
     private KillRingUtil() {
@@ -54,7 +59,31 @@ public class KillRingUtil {
         Document document = editor.getDocument();
         String s = document.getCharsSequence().subSequence(startOffset, endOffset).toString();
         s = StringUtil.convertLineSeparators(s);
-        CopyPasteManager.getInstance().setContents(new KillRingTransferable(s, document, startOffset, endOffset, cut));
+
+        CopyPasteManager manager = CopyPasteManager.getInstance();
+        KillRingData data = new KillRingData(s, document, startOffset, endOffset, cut);
+
+        KillRingData previous = manager.getLocalContents().get(KillRingData.TYPE);
+        CopyPasteManagerInternal history = (CopyPasteManagerInternal) manager;
+        if (previous != null && !history.isKillRingBroken()) {
+            KillRingData merged = KillRingData.merge(data, previous);
+            if (merged != null) {
+                List<DataTransfer> entries = history.getHistory();
+                // replace the previous kill rather than stacking next to it - but only when it is
+                // still the newest entry, identity on the payload says it is the same kill
+                if (!entries.isEmpty() && entries.get(0).get(KillRingData.TYPE) == previous) {
+                    history.removeFromHistory(entries.get(0));
+                }
+                data = merged;
+                s = merged.getText();
+            }
+        }
+
+        manager.setContents(DataTransfer.builder()
+            .put(DataTransferType.TEXT, s)
+            .put(KillRingData.TYPE, data)
+            .build());
+
         if (editor instanceof EditorEx editorEx) {
             if (editorEx.isStickySelection()) {
                 editorEx.setStickySelection(false);

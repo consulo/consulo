@@ -59,8 +59,16 @@ public interface RepositoryManager<T extends Repository> {
      * <p/>
      * The method checks both project roots and external roots previously registered
      * via {@link #addExternalRepository(VirtualFile, Repository)}.
+     *
+     * Not allowed calling from UI thread
      */
     @Nullable T getRepositoryForRoot(@Nullable VirtualFile root);
+
+    /**
+     * Same as {@link #getRepositoryForRoot(VirtualFile)}, but never triggers a synchronous repository update,
+     * so it can be called from any thread, including UI thread.
+     */
+    @Nullable T getRepositoryForRootQuick(@Nullable VirtualFile root);
 
     boolean isExternal(T repository);
 

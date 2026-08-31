@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.ui;
 
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -27,12 +28,15 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StandardColors;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.TimeoutUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 import java.util.*;
 
 /**
@@ -45,9 +49,8 @@ public class UITester {
             super(LocalizeValue.of("UI Tester"));
         }
 
-        @RequiredUIAccess
-        
         @Override
+        @RequiredUIAccess
         public Component createCenterComponent(Disposable uiDisposable) {
             TabbedLayout tabbedLayout = TabbedLayout.create();
 
@@ -57,8 +60,20 @@ public class UITester {
             tabbedLayout.addTab("Components > Table", table());
             tabbedLayout.addTab("Components > Tree", tree(uiDisposable));
             tabbedLayout.addTab("Alerts", alerts());
+            tabbedLayout.addTab("DelayedAction", delayedAction());
 
             return tabbedLayout;
+        }
+
+        @RequiredUIAccess
+        private Component delayedAction() {
+            VerticalLayout layout = VerticalLayout.create();
+            layout.add(Label.create(LocalizeValue.localizeTODO("The indicator is drawn where the click happened, for two seconds")));
+            layout.add(Button.create(LocalizeValue.localizeTODO("Start"), e -> {
+                DelayedAction action = DelayedAction.start(e);
+                UIAccess.current().getScheduler().schedule(action::stop, 2, TimeUnit.SECONDS);
+            }));
+            return layout;
         }
 
         @RequiredUIAccess
@@ -67,7 +82,7 @@ public class UITester {
 
             VerticalLayout fold = VerticalLayout.create();
             fold.add(Label.create("Some label"));
-            fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), (e) -> Alerts.okError("Clicked!").showAsync()));
+            fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), e -> Alerts.okError("Clicked!").showAsync()));
 
             FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
             layout.addOpenedListener(it -> Alerts.okInfo("State " + it.isOpened()).showAsync());
@@ -95,8 +110,6 @@ public class UITester {
             );
 
             borderLayout.add(centerBtn).add(dockLayout);
-
-            borderLayout.add(centerBtn);
 
             tabbedLayout.addTab("DockLayout", borderLayout);
             tabbedLayout.addTab("LoadingLayout", loadingLayout(uiDisposable));
@@ -136,11 +149,27 @@ public class UITester {
                 presentation.append(LocalizeValue.of("Advanced "), TextAttribute.REGULAR_BOLD);
                 presentation.append(
                     LocalizeValue.of("Label"),
-                    new TextAttribute(Font.STYLE_PLAIN, StandardColors.RED, StandardColors.BLACK)
+                    new TextAttribute(Font.PLAIN, StandardColors.RED, StandardColors.BLACK)
                 );
             }));
 
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Toggle Switch"))).add(toggleSwitch).add(checkBox));
+
+            TriStateCheckBox triStateCheckBox = TriStateCheckBox.create(LocalizeValue.of("Tri state"));
+            triStateCheckBox.addValueListener(
+                event -> Alerts.okInfo(LocalizeValue.of("triStateCheckBox " + event.getValue())).showAsync()
+            );
+
+            TriStateCheckBox twoStateCheckBox = TriStateCheckBox.create(LocalizeValue.of("Unsure disabled"), ThreeState.UNSURE);
+            twoStateCheckBox.setUnsureEnabled(false);
+            twoStateCheckBox.addValueListener(
+                event -> Alerts.okInfo(LocalizeValue.of("twoStateCheckBox " + event.getValue())).showAsync()
+            );
+
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("TriStateCheckBox")))
+                .add(triStateCheckBox)
+                .add(twoStateCheckBox));
 
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Password"))).add(PasswordBox.create()));
 
@@ -156,6 +185,35 @@ public class UITester {
             intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
 
+            DatePicker datePicker = DatePicker.create();
+            datePicker.setValue(new Date());
+            datePicker.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("datePicker " + event.getValue())).showAsync());
+            layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("DatePicker"))).add(datePicker));
+
+            layout.add(HtmlLabel.create(LocalizeValue.of("<b>Html</b> <i>Label</i>")));
+
+            TextBoxWithExtensions textBoxWithExtensions = TextBoxWithExtensions.create("with extensions");
+            textBoxWithExtensions.addLastExtension(new TextBoxWithExtensions.Extension(
+                false,
+                PlatformIconGroup.actionsFind(),
+                null,
+                event -> Alerts.okInfo(LocalizeValue.of("extension clicked")).showAsync()
+            ));
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("TextBox With Extensions")))
+                .add(textBoxWithExtensions));
+
+            TextBoxWithExpandAction textBoxWithExpandAction = TextBoxWithExpandAction.create(
+                null,
+                "Edit Lines",
+                text -> List.of(text.split(";")),
+                lines -> String.join(";", lines)
+            );
+            textBoxWithExpandAction.setValue("one;two;three");
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("TextBox With Expand")))
+                .add(textBoxWithExpandAction));
+
             layout.add(Hyperlink.create(
                 LocalizeValue.localizeTODO("Some Link"),
                 (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()
@@ -170,18 +228,80 @@ public class UITester {
         @RequiredUIAccess
         private Component table() {
             DockLayout layout = DockLayout.create();
-            Map<String, String> map = new TreeMap<>();
-            map.put("test1", "1");
-            map.put("test2", "3");
-            map.put("test3", "5");
 
-            List<TableColumn<?, Map.Entry<String, String>>> columns = new ArrayList<>();
-            columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 1", Map.Entry::getKey).build());
-            columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 2", Map.Entry::getValue).build());
+            // the rows are the keys, so the cell values live outside the model and an edit is a write into these maps
+            Map<String, String> values = new TreeMap<>();
+            values.put("test1", "1");
+            values.put("test2", "3");
+            values.put("test3", "5");
 
-            TableModel<Map.Entry<String, String>> model = TableModel.of(map.entrySet());
+            Map<String, ThreeState> states = new TreeMap<>();
+            states.put("test1", ThreeState.YES);
+            states.put("test2", ThreeState.UNSURE);
+            states.put("test3", ThreeState.NO);
 
-            layout.center(ScrollableLayout.create(Table.create(columns, model)));
+            MutableFlatDataModel<String> model = FlatDataModel.of(new ArrayList<>(values.keySet()));
+
+            Table<String> table = Table.create(model);
+
+            // a component column which is also editable - a check box carries its whole value in the click, so it has
+            // to commit there and then rather than wait for the edit to be left
+            table.addColumn(LocalizeValue.localizeTODO("On"), key -> states.getOrDefault(key, ThreeState.NO))
+                .setWidth(40)
+                .setResizable(false)
+                .setRender(ComponentItemRender.reusable(
+                    () -> TriStateCheckBox.create(LocalizeValue.empty()),
+                    (checkBox, item) -> checkBox.setValue(item.getValue() == null ? ThreeState.NO : item.getValue())))
+                .setEditor(new TableItemEditor<>() {
+                    @Override
+                    @RequiredUIAccess
+                    public ValueComponent<ThreeState> createComponent(String key) {
+                        TriStateCheckBox checkBox =
+                            TriStateCheckBox.create(LocalizeValue.empty(), states.getOrDefault(key, ThreeState.NO));
+                        checkBox.setUnsureEnabled(true);
+                        return checkBox;
+                    }
+
+                    @Override
+                    @RequiredUIAccess
+                    public void commit(String key, @Nullable ThreeState value) {
+                        states.put(key, value == null ? ThreeState.NO : value);
+                        model.update(key);
+                    }
+                });
+
+            table.addColumn(LocalizeValue.localizeTODO("Key"), key -> key)
+                .setSortable(Comparator.naturalOrder())
+                .setWidth(160);
+
+            // a text column which is also editable - the opposite case, where the value is only settled once typing stops
+            table.addColumn(LocalizeValue.localizeTODO("Value"), values::get)
+                .setHorizontalAlignment(HorizontalAlignment.RIGHT)
+                .setSortable(Comparator.naturalOrder())
+                .setRender((presentation, item) -> presentation.append(
+                    String.valueOf(item.getValue()),
+                    item.isSelected() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
+                ))
+                .setEditor(new TableItemEditor<>() {
+                    @Override
+                    @RequiredUIAccess
+                    public ValueComponent<String> createComponent(String key) {
+                        return TextBox.create(values.get(key));
+                    }
+
+                    @Override
+                    @RequiredUIAccess
+                    public void commit(String key, @Nullable String value) {
+                        values.put(key, value == null ? "" : value);
+                        model.update(key);
+                    }
+                });
+
+            table.setSelectionMode(SelectionMode.MULTIPLE);
+            table.setSpeedSearchConverter(key -> key);
+            table.addSelectListener(event -> Alerts.okInfo(LocalizeValue.of("Selected: " + event.getValues().size())).showAsync());
+
+            layout.center(ScrollableLayout.create(table));
 
             return layout;
         }
@@ -229,14 +349,13 @@ public class UITester {
                         for (int i = 0; i < 50; i++) {
                             TreeNode<String> node = nodeFactory.apply("First Child = " + i);
 
-                            List<Image> icons =
-                                List.of(
-                                    PlatformIconGroup.nodesClass(),
-                                    PlatformIconGroup.nodesEnum(),
-                                    PlatformIconGroup.nodesStruct(),
-                                    PlatformIconGroup.nodesInterface(),
-                                    PlatformIconGroup.nodesAttribute()
-                                );
+                            List<Image> icons = List.of(
+                                PlatformIconGroup.nodesClass(),
+                                PlatformIconGroup.nodesEnum(),
+                                PlatformIconGroup.nodesStruct(),
+                                PlatformIconGroup.nodesInterface(),
+                                PlatformIconGroup.nodesAttribute()
+                            );
                             int r = new Random().nextInt(icons.size());
 
                             node.setRenderer((s, textItemPresentation) -> {
@@ -250,9 +369,9 @@ public class UITester {
                             nodeFactory.apply(parentValue + ", second child = " + i);
                         }
                     }
-                },
-                uiDisposable
+                }
             );
+            Disposer.register(uiDisposable, tree.destroyHook());
 
             return ScrollableLayout.create(tree);
         }
@@ -280,8 +399,8 @@ public class UITester {
         }
 
         @Override
-        public @Nullable Size2D getInitialSize() {
-            return new Size2D(500, 500);
+        public @Nullable WidthAndHeight getInitialSize() {
+            return WidthAndHeight.ofFont(25, 25);
         }
     }
 

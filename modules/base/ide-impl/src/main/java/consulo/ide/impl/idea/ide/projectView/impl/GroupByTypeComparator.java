@@ -72,7 +72,7 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
         if (result != 0) return result;
       }
 
-      boolean isFoldersOnTop = !(myProjectView instanceof ProjectViewImpl && !((ProjectViewImpl)myProjectView).isFoldersAlwaysOnTop());
+      boolean isFoldersOnTop = myProjectView == null || myProjectView.isFoldersAlwaysOnTop();
       if (isFoldersOnTop) {
         int typeWeight1 = node1.getTypeSortWeight(isSortByType());
         int typeWeight2 = node2.getTypeSortWeight(isSortByType());

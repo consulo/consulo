@@ -27,12 +27,11 @@ import static ch.qos.logback.core.joran.JoranConstants.INHERITED;
 import static ch.qos.logback.core.spi.ErrorCodes.ROOT_LEVEL_CANNOT_BE_SET_TO_NULL;
 
 public class RootLoggerAction extends BaseModelAction {
-
     Logger root;
     boolean inError = false;
 
     @Override
-    protected boolean validPreconditions(SaxEventInterpretationContext interpcont, String name, Attributes attributes) {
+    protected boolean validPreconditions(SaxEventInterpretationContext interpretationContext, String name, Attributes attributes) {
         PreconditionValidator pv;
         String levelStr = attributes.getValue(JoranConstants.LEVEL_ATTRIBUTE);
         if(NULL.equalsIgnoreCase(levelStr) || INHERITED.equalsIgnoreCase(levelStr)) {
@@ -41,14 +40,13 @@ public class RootLoggerAction extends BaseModelAction {
         }
         return true;
     }
+
     @Override
-    protected Model buildCurrentModel(SaxEventInterpretationContext interpretationContext, String name,
-            Attributes attributes) {
+    protected Model buildCurrentModel(SaxEventInterpretationContext interpretationContext, String name, Attributes attributes) {
         RootLoggerModel rootLoggerModel = new RootLoggerModel();
         String levelStr = attributes.getValue(JoranConstants.LEVEL_ATTRIBUTE);
         rootLoggerModel.setLevel(levelStr);
 
         return rootLoggerModel;
     }
-
 }

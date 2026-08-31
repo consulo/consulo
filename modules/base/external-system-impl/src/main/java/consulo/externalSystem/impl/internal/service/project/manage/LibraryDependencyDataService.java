@@ -164,7 +164,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
                     try {
                         LibraryDataService libraryDataService = LibraryDataService.getInstance();
 
-                        Map<OrderRootType, Collection<File>> files = libraryDataService.prepareLibraryFiles(libraryData);
+                        Map<String, Collection<File>> files = libraryDataService.prepareLibraryFiles(libraryData);
                         libraryDataService.registerPaths(files, libModel, libraryName);
                         LibraryOrderEntry orderEntry = moduleRootModel.findLibraryOrderEntry(moduleLib);
                         assert orderEntry != null;
@@ -220,7 +220,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
                     continue;
                 }
                 moduleLibraryKey.clear();
-                for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
+                for (VirtualFile file : library.getFiles(BinariesOrderRootType.ID)) {
                     moduleLibraryKey.add(ExternalSystemApiUtil.getLocalFileSystemPath(file) + moduleLibraryOrderEntry.getScope().name());
                 }
                 LibraryDependencyData existing = moduleLibrariesToImport.remove(moduleLibraryKey);

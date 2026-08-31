@@ -16,14 +16,19 @@
 package consulo.ide.impl.application;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.application.options.PathMacrosCollectorImpl;
-import consulo.component.macro.PathMacroFilter;
 import consulo.application.macro.PathMacros;
+import consulo.component.macro.PathMacroFilter;
 import consulo.component.store.internal.PathMacrosService;
+import consulo.component.store.internal.PathMacrosCollectorImpl;
+import consulo.pathMacro.Macro;
+import consulo.pathMacro.MacroManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -33,8 +38,32 @@ import java.util.Set;
 @Singleton
 @ServiceImpl
 public class PathMacrosServiceImpl extends PathMacrosService {
-  @Override
-  public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros) {
-    return PathMacrosCollectorImpl.getMacroNames(root, filter, pathMacros);
-  }
+    private final Provider<PathMacros> myPathMacros;
+
+    @Inject
+    public PathMacrosServiceImpl(Provider<PathMacros> pathMacros) {
+        myPathMacros = pathMacros;
+    }
+
+    @Override
+    public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros) {
+        return getMacroNamesImpl(root, filter, pathMacros);
+    }
+
+    @Override
+    public PathMacros getPathMacros() {
+        return myPathMacros.get();
+    }
+
+    public static Set<String> getMacroNamesImpl(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros) {
+        PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
+        collector.substitute(root, true, false, filter);
+        HashSet<String> result = new HashSet<>(collector.getMacroMap().keySet());
+        result.removeAll(pathMacros.getSystemMacroNames());
+        for (Macro macro : MacroManager.getInstance().getMacros()) {
+            result.remove(macro.getName());
+        }
+        result.removeAll(pathMacros.getIgnoredMacroNames());
+        return result;
+    }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.localize.LanguageLocalize;
@@ -226,9 +228,10 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   private boolean isAllowedEmptyPath(String text) {
-    return text.isEmpty() &&
-           isLast() &&
-           (StringUtil.isEmpty(myFileReferenceSet.getPathString()) && myFileReferenceSet.isEmptyPathAllowed() || !myFileReferenceSet.isEndingSlashNotAllowed() && myIndex > 0);
+    return text.isEmpty() && isLast() && (
+        StringUtil.isEmpty(myFileReferenceSet.getPathString()) && myFileReferenceSet.isEmptyPathAllowed()
+            || !myFileReferenceSet.isEndingSlashNotAllowed() && myIndex > 0
+    );
   }
 
   
@@ -366,6 +369,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return myFileReferenceSet.getElement();
   }
 
+  @RequiredWriteAction
   public PsiElement bindToElement(PsiElement element, boolean absolute) throws IncorrectOperationException {
     if (!(element instanceof PsiFileSystemItem)) {
       throw new IncorrectOperationException("Cannot bind to element, should be instanceof PsiFileSystemItem: " + element);
@@ -478,6 +482,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return helper.getContexts(project, curVFile);
   }
 
+  @RequiredWriteAction
   protected PsiElement fixRefText(String name) {
     return ElementManipulators.getNotNullManipulator(getElement()).handleContentChange(getElement(), getRangeInElement(), name);
   }

@@ -28,8 +28,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public class PsiUtilBase extends PsiUtilCore {
@@ -122,7 +122,7 @@ public class PsiUtilBase extends PsiUtilCore {
   public static PsiFile getPsiFileAtOffset(PsiFile file, int offset) {
     PsiElement elt = getElementAtOffset(file, offset);
 
-    assert elt.isValid() : elt + "; file: " + file + "; isvalid: " + file.isValid();
+    assert elt.isValid() : elt + "; file: " + file + "; isValid: " + file.isValid();
     return elt.getContainingFile();
   }
 

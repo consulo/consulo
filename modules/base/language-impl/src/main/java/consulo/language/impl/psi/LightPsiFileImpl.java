@@ -197,8 +197,8 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return getViewProvider().isEventSystemEnabled();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public Language getLanguage() {
         return myLanguage;
     }
@@ -253,25 +253,25 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public synchronized PsiElement findElementAt(int offset) {
         return getViewProvider().findElementAt(offset);
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public synchronized PsiReference findReferenceAt(int offset) {
         return getViewProvider().findReferenceAt(offset);
     }
 
-    @RequiredReadAction
     @Override
-    
+    @RequiredReadAction
     public char[] textToCharArray() {
         return CharArrayUtil.fromSequence(getViewProvider().getContents());
     }
@@ -290,19 +290,19 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return getViewProvider().getVirtualFile().isWritable();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public abstract PsiElement[] getChildren();
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public PsiElement getFirstChild() {
         PsiElement[] children = getChildren();
         return children.length == 0 ? null : children[0];
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public PsiElement getLastChild() {
         PsiElement[] children = getChildren();
         return children.length == 0 ? null : children[children.length - 1];
@@ -360,40 +360,40 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         throw new IncorrectOperationException("Not implemented");
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public final PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }

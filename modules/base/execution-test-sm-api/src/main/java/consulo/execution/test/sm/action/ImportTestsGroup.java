@@ -25,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.util.collection.ContainerUtil;
 
@@ -33,7 +34,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 
-public class ImportTestsGroup extends ActionGroup {
+public class ImportTestsGroup extends ActionGroup implements AnActionWithSyncUpdate {
     private SMTRunnerConsoleProperties myProperties;
 
     public ImportTestsGroup() {

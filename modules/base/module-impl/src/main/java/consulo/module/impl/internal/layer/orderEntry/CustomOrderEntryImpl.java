@@ -72,7 +72,6 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     return myModel.getRootProvider();
   }
 
-  
   @Override
   public String getPresentableName() {
     return myModel.getPresentableName();

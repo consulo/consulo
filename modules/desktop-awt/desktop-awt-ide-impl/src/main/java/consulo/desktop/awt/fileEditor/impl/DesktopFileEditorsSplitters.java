@@ -22,7 +22,7 @@ import consulo.application.internal.perfomance.ActivityCategory;
 import consulo.application.internal.perfomance.StartUpMeasurer;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
+import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -31,7 +31,7 @@ import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.*;
 import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
-import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -103,11 +103,8 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         };
         myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
         myComponent.setTransferHandler(new MyTransferHandler());
-        DataManager.registerDataProvider(myComponent, dataId -> {
-            if (dataId == KEY) {
-                return this;
-            }
-            return null;
+        DataManager.registerUiDataProvider(myComponent, sink -> {
+            sink.set(KEY, this);
         });
 
         AWTComponentProviderUtil.putMark(myComponent, this);

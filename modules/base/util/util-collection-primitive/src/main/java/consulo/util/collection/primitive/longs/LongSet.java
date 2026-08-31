@@ -18,6 +18,8 @@ package consulo.util.collection.primitive.longs;
 /**
  * @author VISTALL
  * @since 17/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.longs.LongSet} directly
  */
+@Deprecated
 public interface LongSet extends LongCollection {
 }

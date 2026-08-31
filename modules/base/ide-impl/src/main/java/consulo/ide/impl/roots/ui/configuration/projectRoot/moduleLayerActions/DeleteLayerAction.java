@@ -17,7 +17,7 @@ package consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions;
 
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
@@ -27,7 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @author VISTALL
  * @since 2014-07-30
  */
-public class DeleteLayerAction extends AnAction {
+public class DeleteLayerAction extends LegacyAnAction {
     private ModuleEditor myModuleEditor;
 
     public DeleteLayerAction(ModuleEditor moduleEditor) {

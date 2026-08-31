@@ -80,7 +80,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
     super.setIndeterminate(indeterminate);
   }
 
-  public void update(String scanningPackagesMessage, boolean indeterminate, double ffraction) {
+  public void update(String scanningPackagesMessage, boolean indeterminate, double fFraction) {
     if (myPaintInQueue) return;
     checkCanceled();
     myPaintInQueue = true;
@@ -88,7 +88,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
     myAlarm = myUiAccessScheduler.schedule(() -> {
       myPaintInQueue = false;
       myProgressPanel.myTextLabel.setText(scanningPackagesMessage);
-      int fraction = (int)(ffraction * 99 + 0.5);
+      int fraction = (int)(fFraction * 99 + 0.5);
       myProgressPanel.myFractionLabel.setText(fraction + "%");
       if (fraction != -1) {
         myProgressPanel.myFractionProgress.setValue(fraction);

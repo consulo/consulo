@@ -30,6 +30,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.execution.ui.console.UrlFilter;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -178,7 +179,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
         UUID uuid = UUID.randomUUID();
         DefaultBuildDescriptor buildDescriptor =
-            new DefaultBuildDescriptor(uuid, virtualFile.getName(), myProject.getBasePath(), System.currentTimeMillis());
+            new DefaultBuildDescriptor(uuid, LocalizeValue.of(virtualFile.getName()), myProject.getBasePath(), System.currentTimeMillis());
         buildDescriptor.withExecutionFilter(new UrlFilter(myProject));
         buildDescriptor.withRestartAction(new DumbAwareAction("Restart", null, PlatformIconGroup.actionsExecute()) {
             @RequiredUIAccess

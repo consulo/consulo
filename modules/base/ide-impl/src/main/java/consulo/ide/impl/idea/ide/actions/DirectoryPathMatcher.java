@@ -186,7 +186,6 @@ class DirectoryPathMatcher {
         return StringUtil.indexOf(name, c, 0, name.length(), false) >= 0;
     }
 
-    
     @RequiredReadAction
     private static List<Pair<VirtualFile, String>> getProjectRoots(GotoFileModel model) {
         Set<VirtualFile> roots = new HashSet<>();
@@ -194,8 +193,8 @@ class DirectoryPathMatcher {
             Collections.addAll(roots, ModuleRootManager.getInstance(module).getContentRoots());
             for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
                 if (entry instanceof OrderEntryWithTracking) {
-                    Collections.addAll(roots, entry.getFiles(BinariesOrderRootType.getInstance()));
-                    Collections.addAll(roots, entry.getFiles(SourcesOrderRootType.getInstance()));
+                    Collections.addAll(roots, entry.getFiles(BinariesOrderRootType.ID));
+                    Collections.addAll(roots, entry.getFiles(SourcesOrderRootType.ID));
                 }
             }
         }

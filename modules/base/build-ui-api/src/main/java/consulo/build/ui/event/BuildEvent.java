@@ -15,44 +15,43 @@
  */
 package consulo.build.ui.event;
 
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildEvent {
-  /**
-   * Returns an id that uniquely identifies the event.
-   *
-   * @return The event id.
-   */
-  Object getId();
+    /**
+     * Returns an id that uniquely identifies the event.
+     *
+     * @return The event id.
+     */
+    Object getId();
 
-  /**
-   * Returns the parent event id, if any.
-   *
-   * @return The parent event id.
-   */
-  @Nullable Object getParentId();
+    /**
+     * Returns the parent event id, if any.
+     *
+     * @return The parent event id.
+     */
+    @Nullable
+    Object getParentId();
 
-  /**
-   * Returns the time this event was triggered.
-   *
-   * @return The event time, in milliseconds since the epoch.
-   */
-  long getEventTime();
+    /**
+     * Returns the time this event was triggered.
+     *
+     * @return The event time, in milliseconds since the epoch.
+     */
+    long getEventTime();
 
-  /**
-   * Returns textual representation of the event.
-   *
-   * @return The event text message.
-   */
-  @BuildEventsNls.Message
-  String getMessage();
+    /**
+     * Returns textual representation of the event.
+     *
+     * @return The event text message.
+     */
+    LocalizeValue getMessage();
 
-  @BuildEventsNls.Hint
-  @Nullable String getHint();
+    LocalizeValue getDescription();
 
-  @BuildEventsNls.Description
-  @Nullable String getDescription();
+    LocalizeValue getHint();
 }

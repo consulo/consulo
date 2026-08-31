@@ -22,6 +22,7 @@ import consulo.util.concurrent.coroutine.CoroutineStep;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -31,12 +32,16 @@ import java.util.function.Supplier;
  */
 public final class ReadLock<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, O> {
     public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction Function<I, O> function) {
+        return new ReadLock<>((i, c) -> function.apply(i));
+    }
+
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction BiFunction<I, Continuation<?>, O> function) {
         return new ReadLock<>(function);
     }
 
-    private final Function<I, O> myFunction;
+    private final BiFunction<I, Continuation<?>, O> myFunction;
 
-    private ReadLock(Function<I, O> function) {
+    private ReadLock(BiFunction<I, Continuation<?>, O> function) {
         myFunction = function;
     }
 
@@ -46,6 +51,6 @@ public final class ReadLock<I extends @Nullable Object, O extends @Nullable Obje
         Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
         // NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable
         // We cannot explain this to the static validator, so suppressing NullAway validation
-        return application.runReadAction((Supplier<O>) () -> myFunction.apply(input));
+        return application.runReadAction((Supplier<O>) () -> myFunction.apply(input, continuation));
     }
 }

@@ -79,14 +79,9 @@ public class AnnotateLocalFileAction {
   }
 
   public static boolean isAnnotated(AnActionEvent e) {
-    VcsContext context = VcsContextFactory.getInstance().createContextOn(e);
-
-    Editor editor = context.getEditor();
-    if (editor != null) {
-      return editor.getGutter().isAnnotationsShown();
-    }
-
-    return ContainerUtil.exists(getEditors(context), editor1 -> editor1.getGutter().isAnnotationsShown());
+    VirtualFile file = e.getRequiredData(VirtualFile.KEY);
+    Editor editor = VcsAnnotateUtil.getEditorFor(file, e.getDataContext());
+    return editor != null && editor.getGutter().isAnnotationsShown();
   }
 
   public static void perform(AnActionEvent e, boolean selected) {

@@ -95,7 +95,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
         boolean valuesInline = XDebuggerSettingsManager.getInstance().getDataViewSettings().isShowValuesInline();
         InlineDebuggerHelper inlineHelper = getTree().getEditorsProvider().getInlineDebuggerHelper();
         for (int i = 0; i < children.size(); i++) {
-          XValueNodeImpl node = new XValueNodeImpl(myTree, this, children.getName(i), children.getValue(i));
+          XValueNodeImpl node = new XValueNodeImpl(myTree, this, LocalizeValue.localizeTODO(children.getName(i)), children.getValue(i));
           myValueChildren.add(node);
           newChildren.add(node);
 
@@ -222,7 +222,6 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     fireNodesInserted(messages);
   }
 
-  
   public XDebuggerTreeNode addTemporaryEditorNode(@Nullable Image icon, @Nullable String text) {
     if (isLeaf()) {
       setLeaf(false);
@@ -258,7 +257,6 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return index;
   }
 
-  
   @Override
   public List<? extends TreeNode> getChildren() {
     loadChildren();
@@ -287,13 +285,11 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return myCachedAllChildren;
   }
 
-  
   public ValueContainer getValueContainer() {
     return myValueContainer;
   }
 
   @Override
-  
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     List<? extends XValueContainerNode<?>> empty = Collections.<XValueGroupNodeImpl>emptyList();
     return ContainerUtil.concat(

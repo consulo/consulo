@@ -21,7 +21,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 @ActionImpl(id = "Vcs.Push")
-public class VcsPushAction extends DumbAwareAction {
+public class VcsPushAction extends LegacyDumbAwareAction {
     public VcsPushAction() {
         super(ActionLocalize.actionVcsPushText(), ActionLocalize.actionVcsPushText(), VersionControlSystemIconGroup.checkin());
     }
@@ -49,7 +49,7 @@ public class VcsPushAction extends DumbAwareAction {
         }
         Collection<Repository> repositories = new HashSet<>();
         for (VirtualFile file : files) {
-            Repository repo = vcsRepositoryManager.getRepositoryForFile(file);
+            Repository repo = vcsRepositoryManager.getRepositoryForFileQuick(file);
             if (repo != null) {
                 repositories.add(repo);
             }
@@ -69,7 +69,7 @@ public class VcsPushAction extends DumbAwareAction {
         new VcsPushDialog(
             project,
             DvcsUtil.sortRepositories(repositories),
-            selectedFile != null ? manager.getRepositoryForFile(selectedFile) : null
+            selectedFile != null ? manager.getRepositoryForFileQuick(selectedFile) : null
         ).show();
     }
 

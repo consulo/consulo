@@ -2,6 +2,7 @@
 package consulo.execution.test.sm.runner;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 
 /**

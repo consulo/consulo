@@ -28,6 +28,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 
 import org.jspecify.annotations.Nullable;
 
@@ -39,7 +40,7 @@ import java.util.List;
  * @author cdr
  */
 @ActionImpl(id = "ShowRecentFindUsagesGroup")
-public class ShowRecentFindUsagesGroup extends ActionGroup {
+public class ShowRecentFindUsagesGroup extends ActionGroup implements AnActionWithSyncUpdate {
     public ShowRecentFindUsagesGroup() {
         super(ActionLocalize.groupShowrecentfindusagesgroupText(), ActionLocalize.groupShowrecentfindusagesgroupDescription());
         setPopup(true);

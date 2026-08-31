@@ -38,7 +38,7 @@ import java.util.*;
  * @author cdr
  */
 @ActionImpl(id = IdeActions.GROUP_MOVE_MODULE_TO_GROUP)
-public class MoveModuleToGroupTopLevel extends ActionGroup {
+public class MoveModuleToGroupTopLevel extends ActionGroup implements AnActionWithSyncUpdate {
     public MoveModuleToGroupTopLevel() {
         super(ActionLocalize.groupMovemoduletogroupText(), ActionLocalize.groupMovemoduletogroupDescription());
         setPopup(true);

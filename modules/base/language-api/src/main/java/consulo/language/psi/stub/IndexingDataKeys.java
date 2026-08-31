@@ -31,4 +31,6 @@ public interface IndexingDataKeys {
   Key<CharSequence> FILE_TEXT_CONTENT_KEY = Key.create("file text content cached by stub indexer");
 
   Key<LighterAST> LIGHTER_AST_NODE_KEY = Key.create("lighter.ast.node");
+
+  Key<Boolean> REBUILD_REQUESTED = Key.create("REBUILD_REQUESTED");
 }

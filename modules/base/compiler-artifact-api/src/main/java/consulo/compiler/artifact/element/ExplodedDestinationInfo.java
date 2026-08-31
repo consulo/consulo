@@ -16,20 +16,16 @@
 
 package consulo.compiler.artifact.element;
 
-import consulo.compiler.artifact.element.DestinationInfo;
-import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
-
 /**
  * @author nik
  */
 public class ExplodedDestinationInfo extends DestinationInfo {
-  public ExplodedDestinationInfo(String outputPath, @Nullable VirtualFile outputFile) {
-    super(outputPath, outputFile, outputPath);
-  }
+    public ExplodedDestinationInfo(String outputPath) {
+        super(outputPath, outputPath);
+    }
 
-  @Override
-  public String toString() {
-    return getOutputPath();
-  }
+    @Override
+    public String toString() {
+        return getOutputPath();
+    }
 }

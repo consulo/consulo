@@ -17,15 +17,18 @@ package consulo.sandboxPlugin.ide.compiler;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.TranslatingCompiler;
+import consulo.localize.LocalizeValue;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;
+
+import java.nio.file.Path;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -36,16 +39,16 @@ public class SandCompiler implements TranslatingCompiler {
   private boolean myAddError = false;
 
   @Override
-  public boolean isCompilableFile(VirtualFile file, CompileContext context) {
-    return file.getFileType() == SandFileType.INSTANCE;
+  public boolean isCompilableFile(Path file, CompileContext context) {
+    return FileTypeRegistry.getInstance().getFileTypeByFileName(file.getFileName().toString()) == SandFileType.INSTANCE;
   }
 
   @Override
-  public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
+  public void compile(CompileContext context, Chunk<Module> moduleChunk, Collection<Path> files, OutputSink sink) {
     SandBundleType sandBundleType = SandBundleType.INSTANCE.get();
 
     try {
-      context.addMessage(CompilerMessageCategory.WARNING, "my warning", null, -1, -1);
+      context.newWarning(LocalizeValue.of("my warning")).add();
       Thread.sleep(5000L);
     }
     catch (InterruptedException e) {
@@ -53,7 +56,7 @@ public class SandCompiler implements TranslatingCompiler {
     }
 
     if (myAddError) {
-      context.addMessage(CompilerMessageCategory.ERROR, "my error", null, -1, -1);
+      context.newError(LocalizeValue.of("my error")).add();
     }
     myAddError = !myAddError;
   }

@@ -31,13 +31,13 @@ import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.ClientProperty;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
@@ -68,25 +68,26 @@ import java.util.Map;
  * @author lesya
  */
 @ActionImpl(id = "Annotate")
-public class AnnotateToggleAction extends ToggleAction implements DumbAware {
+public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware {
     private static final Key<Runnable> ERROR_NOTIFICATION = Key.create("AnnotateToggleAction.EditorNotify");
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        super.update(e);
-        AnnotateToggleActionProvider provider = getProvider(e);
-        Presentation presentation = e.getPresentation();
-        presentation.setEnabled(provider != null && !provider.isSuspended(e));
-        if (provider != null) {
-            presentation.setText(provider.getActionName(e));
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            AnnotateToggleActionProvider provider = getProvider(e);
+            presentation.setEnabled(provider != null && !provider.isSuspended(e));
+            if (provider != null) {
+                presentation.setText(provider.getActionName(e));
+            }
+        }).toCoroutine();
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-        AnnotateToggleActionProvider provider = getProvider(e);
-        return provider != null && provider.isAnnotated(e);
+    public CoroutineStep<Object, Boolean> isSelectedAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, presentation -> {
+            AnnotateToggleActionProvider provider = getProvider(e);
+            return provider != null && provider.isAnnotated(e);
+        });
     }
 
     @Override
@@ -344,11 +345,6 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
 
     private static @Nullable AnnotateToggleActionProvider getProvider(AnActionEvent e) {
-        for (AnnotateToggleActionProvider provider : Application.get().getExtensionList(AnnotateToggleActionProvider.class)) {
-            if (provider.isEnabled(e)) {
-                return provider;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(AnnotateToggleActionProvider.class).findFirstSafe(p -> p.isEnabled(e));
     }
 }

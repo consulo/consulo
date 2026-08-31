@@ -55,7 +55,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
 
   protected SpecificFilesViewDialog(Project project,
                                     String title,
-                                    Key<Stream<VirtualFile>> shownDataKey,
+                                    Key<List<VirtualFile>> shownDataKey,
                                     List<VirtualFile> initDataFiles) {
     super(project, true);
     setTitle(title);
@@ -63,11 +63,9 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     final Runnable closer = () -> this.close(0);
     myView = new ChangesListViewImpl(project) {
       @Override
-      public void calcData(Key<?> key, DataSink sink) {
-        super.calcData(key, sink);
-        if (shownDataKey == key) {
-          sink.put(shownDataKey, getSelectedFiles());
-        }
+      public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(shownDataKey, getSelectedFiles());
       }
 
       @Override

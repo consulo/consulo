@@ -25,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.ToggleAction;
 import org.jspecify.annotations.Nullable;
 
@@ -33,7 +34,7 @@ import javax.swing.*;
 /**
  * @author Dennis.Ushakov
  */
-public class AdjustAutotestDelayActionGroup extends ActionGroup {
+public class AdjustAutotestDelayActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
     public static final int MAX_DELAY = 10;
     private final DataContext myDataContext;
 

@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
 /**
  * @author dmitrylomov
  */
+@Deprecated
 public interface AsyncFuture<V> extends Future<V> {
   void addConsumer(Executor executor, ResultConsumer<V> consumer);
 }

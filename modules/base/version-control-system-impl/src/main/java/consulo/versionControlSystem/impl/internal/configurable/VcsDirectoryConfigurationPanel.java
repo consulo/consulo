@@ -39,7 +39,6 @@ import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -432,7 +431,6 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         checkNotifyListeners(getActiveVcses());
     }
 
-    @Contract(pure = false)
     private static void sortAndAddSeparatorIfNeeded(List<MapInfo> items) {
         boolean hasUnregistered = false;
         boolean hasSeparator = false;
@@ -547,7 +545,6 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return panelForTable;
     }
 
-    
     private List<MapInfo> getSelectedUnregisteredRoots() {
         return ContainerUtil.filter(myDirectoryMappingTable.getSelection(), info -> info.type == MapInfo.Type.UNREGISTERED);
     }
@@ -564,7 +561,6 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return selectedRegisteredRoots.size() == selection.size() || selectedRegisteredRoots.size() == 0;
     }
 
-    
     private List<MapInfo> getSelectedRegisteredRoots() {
         Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
         return ContainerUtil.filter(selection, info -> info.type == MapInfo.Type.NORMAL || info.type == MapInfo.Type.INVALID);
@@ -613,14 +609,12 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return myShowChangedRecursively;
     }
 
-    
     private JComponent createShowUnversionedFilesOption() {
         myShowUnversionedFiles =
             new JCheckBox("Show unversioned files in Commit dialog", myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT);
         return myShowUnversionedFiles;
     }
 
-    
     private JComponent createCheckCommitMessageSpelling() {
         myCheckCommitMessageSpelling = new JBCheckBox("Check commit message spelling", myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING);
         return myCheckCommitMessageSpelling;

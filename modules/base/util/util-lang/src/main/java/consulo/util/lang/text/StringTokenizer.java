@@ -148,13 +148,13 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
 
     public int countTokens() {
         int count = 0;
-        int currpos = currentPosition;
-        while (currpos < maxPosition) {
-            currpos = skipDelimiters(currpos);
-            if (currpos >= maxPosition) {
+        int curPos = currentPosition;
+        while (curPos < maxPosition) {
+            curPos = skipDelimiters(curPos);
+            if (curPos >= maxPosition) {
                 break;
             }
-            currpos = scanToken(currpos);
+            curPos = scanToken(curPos);
             count++;
         }
         return count;

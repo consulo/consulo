@@ -16,7 +16,8 @@
 package consulo.execution.test.ui;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.test.*;
@@ -26,7 +27,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
@@ -39,7 +40,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +48,7 @@ import java.util.List;
  * @author anna
  * @since 2007-05-25
  */
-public abstract class TestTreeView extends Tree implements DataProvider, CopyProvider {
+public abstract class TestTreeView extends Tree implements UiDataProvider, CopyProvider {
   public static final Key<TestFrameworkRunningModel> MODEL_DATA_KEY = Key.create("testFrameworkModel.dataId");
 
   private TestFrameworkRunningModel myModel;
@@ -82,12 +82,10 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public Object getData(Key<?> dataId) {
-    if (CopyProvider.KEY == dataId) {
-      return this;
-    }
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(CopyProvider.KEY, this);
 
-    if (PsiElement.KEY_OF_ARRAY == dataId) {
+    sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
         List<PsiElement> els = new ArrayList<>(paths.length);
@@ -103,9 +101,10 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
         }
         return els.isEmpty() ? null : els.toArray(new PsiElement[els.size()]);
       }
-    }
+      return null;
+    });
 
-    if (Location.DATA_KEYS == dataId) {
+    sink.lazy(Location.DATA_KEYS, () -> {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
         List<Location<?>> locations = new ArrayList<>(paths.length);
@@ -121,17 +120,18 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
         }
         return locations.isEmpty() ? null : locations.toArray(new Location[locations.size()]);
       }
-    }
+      return null;
+    });
 
-    if (MODEL_DATA_KEY == dataId) {
-      return myModel;
-    }
+    sink.set(MODEL_DATA_KEY, myModel);
 
     TreePath selectionPath = getSelectionPath();
-    if (selectionPath == null) return null;
-    AbstractTestProxy testProxy = getSelectedTest(selectionPath);
-    if (testProxy == null) return null;
-    return TestsUIUtil.getData(testProxy, dataId, myModel);
+    if (selectionPath != null) {
+      AbstractTestProxy testProxy = getSelectedTest(selectionPath);
+      if (testProxy != null) {
+        TestsUIUtil.uiSnapshot(sink, testProxy, myModel);
+      }
+    }
   }
 
   @Override
@@ -145,7 +145,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
       AbstractTestProxy selectedTest = getSelectedTest();
       fqn = selectedTest instanceof TestProxyRoot ? ((TestProxyRoot)selectedTest).getRootLocation() : selectedTest != null ? selectedTest.getLocationUrl() : null;
     }
-    CopyPasteManager.getInstance().setContents(new StringSelection(fqn));
+    CopyPasteManager.getInstance().setText(fqn);
   }
 
   @Override

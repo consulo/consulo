@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -89,6 +90,9 @@ public interface ProjectView {
   ProjectViewPane getProjectViewPaneById(String id);
 
   boolean isAutoscrollFromSource(String paneId);
+
+  @RequiredUIAccess
+  void scrollFromSource();
 
   boolean isAbbreviatePackageNames(String paneId);
 

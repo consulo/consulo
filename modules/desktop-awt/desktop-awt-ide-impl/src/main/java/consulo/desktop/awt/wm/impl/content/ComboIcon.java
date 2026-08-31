@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,9 +29,8 @@ public abstract class ComboIcon {
     public void paintIcon(Component c, Graphics g) {
         Rectangle bounds = c.getBounds();
 
-        // we need it move to center of label text, not label
-        int borderTop = JBUI.scale(3);
-        myImage.paintIcon(c, g, bounds.x + bounds.width - myImage.getIconWidth(), bounds.y + myImage.getIconHeight() / 2 + borderTop);
+        int y = bounds.y + (bounds.height - myImage.getIconHeight()) / 2;
+        myImage.paintIcon(c, g, bounds.x + bounds.width - myImage.getIconWidth(), y);
     }
 
     public int getIconWidth() {

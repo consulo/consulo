@@ -166,12 +166,12 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
       NamedScope scope = scopesDialog.getSelectedScope();
       if (scope != null) {
         String newName = scope.getName();
-        FileSetDescriptor newDesciptor = null;
+        FileSetDescriptor newDescriptor = null;
         if (selectedName == null) {
-          newDesciptor = findDescriptor(newName);
-          if (newDesciptor == null) {
-            newDesciptor = new NamedScopeDescriptor(scope);
-            myModel.addElement(newDesciptor);
+          newDescriptor = findDescriptor(newName);
+          if (newDescriptor == null) {
+            newDescriptor = new NamedScopeDescriptor(scope);
+            myModel.addElement(newDescriptor);
           }
         }
         else {
@@ -179,10 +179,10 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
           if (!selectedName.equals(newName)) {
             int index = myModel.indexOf(oldDescriptor);
             myModel.removeElement(oldDescriptor);
-            newDesciptor = findDescriptor(newName);
-            if (newDesciptor == null) {
-              newDesciptor = new NamedScopeDescriptor(scope);
-              myModel.add(index, newDesciptor);
+            newDescriptor = findDescriptor(newName);
+            if (newDescriptor == null) {
+              newDescriptor = new NamedScopeDescriptor(scope);
+              myModel.add(index, newDescriptor);
             }
           }
           else if (oldDescriptor != null) {
@@ -190,8 +190,8 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
             oldDescriptor.setPattern(fileSet != null ? fileSet.getText() : null);
           }
         }
-        if (newDesciptor != null) {
-          setSelectedValue(newDesciptor, true);
+        if (newDescriptor != null) {
+          setSelectedValue(newDescriptor, true);
         }
       }
     }

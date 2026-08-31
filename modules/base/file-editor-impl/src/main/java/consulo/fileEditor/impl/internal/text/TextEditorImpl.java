@@ -31,7 +31,6 @@ import consulo.fileEditor.TextEditorLocation;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.RealTextEditor;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
@@ -43,9 +42,9 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -59,19 +58,15 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     
     private final TextEditorComponent myComponent;
 
-    
     public final VirtualFile myFile;
 
     private final AsyncEditorLoaderImpl myAsyncLoader;
-
-    protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
 
     @RequiredUIAccess
     public TextEditorImpl(Project project, VirtualFile file, TextEditorProviderImpl provider) {
         myProject = project;
         myFile = file;
         myChangeSupport = new PropertyChangeSupport(this);
-        myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
         myComponent = createEditorComponent(project, file);
         Disposer.register(this, myComponent);
 
@@ -79,7 +74,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         myAsyncLoader.start();
     }
 
-    
     public Runnable loadEditorInBackground() {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
@@ -88,9 +82,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         return () -> editor.setHighlighter(highlighter);
     }
 
-    
     protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-        return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+        return new TextEditorComponent(project, file, this);
     }
 
     @Override
@@ -98,29 +91,21 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
-    public JComponent getComponent() {
-        return myComponent.getComponentContainer().getComponent();
-    }
-
-    @Override
-    public @Nullable Component getUIComponent() {
-        return myComponent.getComponentContainer().getUIComponent();
+    public Component getUIComponent() {
+        return myComponent.getUIComponent();
     }
 
     @Override
     public @Nullable Component getPreferredFocusedUIComponent() {
-        return getUIComponent();
+        return getActiveEditor().getContentUIComponent();
     }
 
     @Override
-    
     public JComponent getPreferredFocusedComponent() {
         return getActiveEditor().getContentComponent();
     }
 
     @Override
-    
     public Editor getEditor() {
         return getActiveEditor();
     }
@@ -133,13 +118,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public String getName() {
         return "Text";
     }
 
     @Override
-    
     public FileEditorState getState(FileEditorStateLevel level) {
         return myAsyncLoader.getEditorState(level);
     }
@@ -222,7 +205,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
 
     @Override
     public boolean canNavigateTo(Navigatable navigatable) {
-        return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor) navigatable).getLine() != -1 || ((OpenFileDescriptor) navigatable).getOffset() >= 0);
+        return navigatable instanceof OpenFileDescriptor fileDescriptor
+            && (fileDescriptor.getLine() != -1 || fileDescriptor.getOffset() >= 0);
     }
 
     @Override

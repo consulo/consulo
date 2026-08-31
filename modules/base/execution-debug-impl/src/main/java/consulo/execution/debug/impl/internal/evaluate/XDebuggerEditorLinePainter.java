@@ -16,21 +16,16 @@
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.document.Document;
 import consulo.codeEditor.EditorLinePainter;
 import consulo.codeEditor.LineExtensionInfo;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
-import consulo.project.Project;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.XDebuggerManagerImpl;
@@ -40,12 +35,18 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueTextRendererImpl;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.DebuggerColors;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -128,7 +129,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
           continue;
         }
 
-        String name = value.getName();
+        LocalizeValue name = value.getName();
         if (StringUtil.isEmpty(text.toString())) {
           continue;
         }
@@ -136,7 +137,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
         result.add(res);
         res.add(new LineExtensionInfo("  " + name + ": ", attributes));
 
-        Variable var = new Variable(name, lineNumber);
+        Variable var = new Variable(name.get(), lineNumber);
         VariableValue variableValue = oldValues.computeIfAbsent(var, k -> new VariableValue(text.toString(), null, value.hashCode()));
         if (variableValue.valueNodeHashCode != value.hashCode()) {
           variableValue.old = variableValue.actual;

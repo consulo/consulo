@@ -21,10 +21,9 @@ import consulo.compiler.TranslatingCompiler;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 
 class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
@@ -34,8 +33,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
     private final CompileContextEx myContext;
     private final TranslatingCompiler[] myCompilers;
     private int myCurrentCompilerIdx;
-    private final Set<VirtualFile> myCompiledSources = new HashSet<>();
-    //private LinkedBlockingQueue<Future> myFutures = new LinkedBlockingQueue<Future>();
+    private final Set<Path> myCompiledSources = new HashSet<>();
 
     TranslatorsOutputSink(CompileContextEx context, TranslatingCompiler[] compilers) {
         myContext = context;
@@ -46,26 +44,25 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
         myCurrentCompilerIdx = index;
     }
 
-    public Set<VirtualFile> getCompiledSources() {
+    public Set<Path> getCompiledSources() {
         return Collections.unmodifiableSet(myCompiledSources);
     }
 
     @Override
-    public void add(String outputRoot, Collection<TranslatingCompiler.OutputItem> items, VirtualFile[] filesToRecompile) {
+    public void add(String outputRoot, Collection<TranslatingCompiler.OutputItem> items, Collection<Path> filesToRecompile) {
         for (TranslatingCompiler.OutputItem item : items) {
-            VirtualFile file = item.getSourceFile();
+            Path file = item.sourceFile();
             if (file != null) {
                 myCompiledSources.add(file);
             }
         }
         TranslatingCompiler compiler = myCompilers[myCurrentCompilerIdx];
         if (compiler instanceof IntermediateOutputCompiler) {
-            LocalFileSystem lfs = LocalFileSystem.getInstance();
-            List<VirtualFile> outputs = new ArrayList<>();
+            List<Path> outputs = new ArrayList<>();
             for (TranslatingCompiler.OutputItem item : items) {
-                VirtualFile vFile = lfs.findFileByPath(item.getOutputPath());
-                if (vFile != null) {
-                    outputs.add(vFile);
+                String outputPath = item.outputPath();
+                if (outputPath != null) {
+                    outputs.add(Path.of(outputPath));
                 }
             }
             myContext.markGenerated(outputs);
@@ -84,7 +81,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
                         TranslatingCompiler.OutputItem item = it.next();
                         boolean shouldPostpone = false;
                         for (int idx = nextCompilerIdx; idx < myCompilers.length; idx++) {
-                            shouldPostpone = myCompilers[idx].isCompilableFile(item.getSourceFile(), myContext);
+                            shouldPostpone = myCompilers[idx].isCompilableFile(item.sourceFile(), myContext);
                             if (shouldPostpone) {
                                 break;
                             }
@@ -100,7 +97,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
                 for (TranslatingCompiler.OutputItem item : items) {
                     boolean shouldPostpone = false;
                     for (int idx = nextCompilerIdx; idx < myCompilers.length; idx++) {
-                        shouldPostpone = myCompilers[idx].isCompilableFile(item.getSourceFile(), myContext);
+                        shouldPostpone = myCompilers[idx].isCompilableFile(item.sourceFile(), myContext);
                         if (shouldPostpone) {
                             break;
                         }
@@ -124,9 +121,9 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
                     for (Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry : updateNow.entrySet()) {
                         String outputDir = entry.getKey();
                         Collection<TranslatingCompiler.OutputItem> itemsToUpdate = entry.getValue();
-                        translatingCompilerFilesMonitor.update(myContext, outputDir, itemsToUpdate, VirtualFile.EMPTY_ARRAY);
+                        translatingCompilerFilesMonitor.update(myContext, outputDir, itemsToUpdate, List.of());
                     }
-                    if (filesToRecompile.length > 0) {
+                    if (!filesToRecompile.isEmpty()) {
                         translatingCompilerFilesMonitor.update(
                             myContext,
                             null,
@@ -165,7 +162,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
             for (Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry : myPostponedItems.entrySet()) {
                 String outputDir = entry.getKey();
                 Collection<TranslatingCompiler.OutputItem> items = entry.getValue();
-                filesMonitor.update(myContext, outputDir, items, VirtualFile.EMPTY_ARRAY);
+                filesMonitor.update(myContext, outputDir, items, List.of());
             }
         }
         catch (IOException e) {

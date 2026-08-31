@@ -20,13 +20,12 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import jakarta.inject.Inject;
 
 import java.util.Map;
@@ -42,7 +41,7 @@ import java.util.Map;
         relatedToAction = @ActionRef(id = "OnlineDocAction")
     )}
 )
-public class WhatsNewAction extends AnAction implements DumbAware {
+public class WhatsNewAction extends LegacyDumbAwareAction {
     private final ConfigurationFileEditorManager myConfigurationFileEditorManager;
 
     @Inject

@@ -18,7 +18,6 @@ package consulo.ide.impl.internal;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ide.impl.dataContext.BaseDataManager;
@@ -26,7 +25,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -40,15 +38,8 @@ public class UnifiedDataManagerImpl extends BaseDataManager {
     super(application, windowManagerProvider);
   }
 
-  
   @Override
   public DataContext getDataContext() {
     return new MyUIDataContext(this, null);
-  }
-
-  
-  @Override
-  public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
-    throw new UnsupportedOperationException();
   }
 }

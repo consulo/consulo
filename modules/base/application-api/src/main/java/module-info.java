@@ -10,9 +10,10 @@ module consulo.application.api {
     requires java.desktop;
     requires java.management;
 
+    requires transitive consulo.annotation;
+    requires transitive consulo.base.icon.library;
     requires transitive consulo.component.api;
     requires transitive consulo.localize.api;
-    requires transitive consulo.base.icon.library;
     requires consulo.proxy;
 
     requires transitive consulo.util.concurrent.coroutine;
@@ -46,20 +47,23 @@ module consulo.application.api {
     exports consulo.application.internal.start to
         consulo.ide.impl,
         consulo.external.service.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.application.internal to
+        consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.desktop.ide.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.external.system.impl,
         consulo.document.impl,
         consulo.language.impl,
         consulo.language.index.impl,
         consulo.application.impl,
         consulo.test.impl,
+        consulo.it,
         consulo.ui.ex.api,
         consulo.project.impl,
         consulo.language.editor.api,
@@ -68,6 +72,7 @@ module consulo.application.api {
         consulo.language.code.style.impl,
         consulo.http.api,
         consulo.builtin.web.server.impl,
+        consulo.mcp.server.impl,
         consulo.version.control.system.distributed.api,
         consulo.version.control.system.log.impl,
         consulo.compiler.impl,
@@ -78,14 +83,17 @@ module consulo.application.api {
         consulo.diff.impl,
         consulo.external.service.impl,
         consulo.virtual.file.system.api,
-        consulo.desktop.awt.os.mac;
+        consulo.credential.storage.impl,
+        consulo.file.editor.impl,
+        consulo.desktop.awt.os.mac,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.application.internal.plugin to
         consulo.application.impl,
         consulo.external.service.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
 
     exports consulo.application.internal.util to
         consulo.language.api,
@@ -96,12 +104,12 @@ module consulo.application.api {
 
     exports consulo.application.internal.perfomance to
         consulo.project.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.application.util.mac.foundation;
 
     exports consulo.application.internal.dateTime to
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac;
 
     exports consulo.application.util;

@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KeyStokeMap {
-
   private static final Logger LOG = Logger.getInstance(KeyStokeMap.class);
 
   private Map<Character, KeyStroke> myMap;
@@ -102,12 +101,12 @@ public class KeyStokeMap {
   }
 
   private KeyStroke throwUnrecognized(String symbol) {
-    throw new IllegalArgumentException("Unrecoginzed symbol: " + symbol);
+    throw new IllegalArgumentException("Unrecognized symbol: " + symbol);
   }
 
   private static Map<Character, KeyStroke> generateKeyStrokeMappings() {
     LOG.debug("Generating default keystroke mappings");
-    // character, keycode, modifiers
+    // character, key-code, modifiers
     int shift = InputEvent.SHIFT_MASK;
     //int alt = InputEvent.ALT_MASK;
     //int altg = InputEvent.ALT_GRAPH_MASK;

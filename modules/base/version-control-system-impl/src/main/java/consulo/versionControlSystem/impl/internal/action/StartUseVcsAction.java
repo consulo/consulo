@@ -16,19 +16,18 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "Start.Use.Vcs")
-public class StartUseVcsAction extends AnAction implements DumbAware {
+public class StartUseVcsAction extends LegacyDumbAwareAction {
     public StartUseVcsAction() {
         super(VcsLocalize.actionEnableVersionControlIntegrationText());
     }

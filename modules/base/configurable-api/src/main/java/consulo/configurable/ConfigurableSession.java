@@ -18,8 +18,10 @@ package consulo.configurable;
 import consulo.component.ComponentManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.internal.ConfigurableSessionHolder;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventListener;
 import java.util.function.Function;
@@ -29,26 +31,26 @@ import java.util.function.Function;
  * @since 17/04/2021
  */
 public interface ConfigurableSession {
-  @RequiredUIAccess
-  static ConfigurableSession get() {
-    return ConfigurableSessionHolder.get();
-  }
+    @RequiredUIAccess
+    static ConfigurableSession get() {
+        return ConfigurableSessionHolder.get();
+    }
 
-  /**
-   * @return default or frame project
-   */
-  Project getProject();
+    /**
+     * @return default or frame project
+     */
+    Project getProject();
 
-  
-  <T extends PersistentStateComponent<?>> T getOrCopy(ComponentManager componentManager, Class<T> clazz);
+    <T extends PersistentStateComponent<?>> T getOrCopy(ComponentManager componentManager, Class<T> clazz);
 
-  /**
-   * Can be disposable
-   */
-  <T> T get(Class<T> key, Function<Project, T> factory);
+    /**
+     * Can be disposable
+     */
+    <T> T get(Class<T> key, Function<Project, T> factory);
 
-  <T extends EventListener> void addListener(Class<T> listenerClass, T listener);
+    <T extends EventListener> void addListener(Class<T> listenerClass, T listener);
 
-  
-  <T extends EventListener> T getListenerMulticaster(Class<T> listenerClass);
+    <T extends EventListener> T getListenerMulticaster(Class<T> listenerClass);
+
+    LocalizeValue getDisplayConfigurablePath(String configurableId);
 }

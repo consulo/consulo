@@ -35,7 +35,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 
 import javax.swing.*;
 
@@ -76,7 +76,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   @RequiredUIAccess
-  public AsyncResult<Void> editToolSettings(Project project,
+  public CompletableFuture<?> editToolSettings(Project project,
                                             InspectionProfileImpl inspectionProfile,
                                             boolean canChooseDifferentProfiles) {
     return editToolSettings(project,
@@ -86,7 +86,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   @RequiredUIAccess
-  public static AsyncResult<Void> editToolSettings(Project project,
+  public static CompletableFuture<?> editToolSettings(Project project,
                                                    InspectionProfile inspectionProfile,
                                                    boolean canChooseDifferentProfile,
                                                    String selectedToolShortName) {

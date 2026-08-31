@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 
 import org.jspecify.annotations.Nullable;
@@ -29,11 +30,11 @@ public abstract class InitialPatternCondition<T> {
     myAcceptedClass = aAcceptedClass;
   }
 
-  
   public Class<T> getAcceptedClass() {
     return myAcceptedClass;
   }
 
+  @RequiredReadAction
   public boolean accepts(@Nullable Object o, ProcessingContext context) {
     return myAcceptedClass.isInstance(o);
   }

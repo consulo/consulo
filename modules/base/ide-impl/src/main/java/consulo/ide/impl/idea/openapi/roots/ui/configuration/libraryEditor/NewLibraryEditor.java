@@ -28,243 +28,243 @@ import java.util.function.Function;
  * @author nik
  */
 public class NewLibraryEditor extends LibraryEditorBase {
-  private String myLibraryName;
-  private final MultiMap<OrderRootType, LightFilePointer> myRoots;
-  private final Set<LightFilePointer> myExcludedRoots;
-  private final MultiMap<OrderRootType, String> myJarDirectoryUrls = new MultiMap<>();
-  private final MultiMap<OrderRootType, String> myJarDirectoryRecursiveUrls = new MultiMap<>();
-  private LibraryType myType;
-  private LibraryProperties myProperties;
-  private boolean myKeepInvalidUrls = true;
+    private String myLibraryName;
+    private final MultiMap<String, LightFilePointer> myRoots;
+    private final Set<LightFilePointer> myExcludedRoots;
+    private final MultiMap<String, String> myJarDirectoryUrls = new MultiMap<>();
+    private final MultiMap<String, String> myJarDirectoryRecursiveUrls = new MultiMap<>();
+    private LibraryType myType;
+    private LibraryProperties myProperties;
+    private boolean myKeepInvalidUrls = true;
 
-  public NewLibraryEditor() {
-    this(null, null);
-  }
-
-  public NewLibraryEditor(@Nullable LibraryType type, @Nullable LibraryProperties properties) {
-    myType = type;
-    myProperties = properties;
-    myRoots = new MultiMap<>();
-    myExcludedRoots = new LinkedHashSet<>();
-  }
-
-  public void setKeepInvalidUrls(boolean keepInvalidUrls) {
-    myKeepInvalidUrls = keepInvalidUrls;
-  }
-
-  @Override
-  public Collection<OrderRootType> getOrderRootTypes() {
-    return myRoots.keySet();
-  }
-
-  @Override
-  public @Nullable LibraryType<?> getType() {
-    return myType;
-  }
-
-  @Override
-  public void setType(LibraryType<?> type) {
-    myType = type;
-  }
-
-  @Override
-  public LibraryProperties getProperties() {
-    return myProperties;
-  }
-
-  @Override
-  public void setProperties(LibraryProperties properties) {
-    myProperties = properties;
-  }
-
-  @Override
-  public String getName() {
-    return myLibraryName;
-  }
-
-  
-  @Override
-  public String[] getUrls(OrderRootType rootType) {
-    return pointersToUrls(myRoots.get(rootType));
-  }
-
-  private static String[] pointersToUrls(Collection<? extends LightFilePointer> pointers) {
-    List<String> urls = new ArrayList<>(pointers.size());
-    for (LightFilePointer pointer : pointers) {
-      urls.add(pointer.getUrl());
+    public NewLibraryEditor() {
+        this(null, null);
     }
-    return ArrayUtil.toStringArray(urls);
-  }
 
-  
-  @Override
-  public VirtualFile[] getFiles(OrderRootType rootType) {
-    List<VirtualFile> result = new ArrayList<>();
-    for (LightFilePointer pointer : myRoots.get(rootType)) {
-      VirtualFile file = pointer.getFile();
-      if (file == null) {
-        continue;
-      }
+    public NewLibraryEditor(@Nullable LibraryType type, @Nullable LibraryProperties properties) {
+        myType = type;
+        myProperties = properties;
+        myRoots = new MultiMap<>();
+        myExcludedRoots = new LinkedHashSet<>();
+    }
 
-      if (file.isDirectory()) {
-        String url = file.getUrl();
-        if (isJarDirectory(url, rootType)) {
-          boolean recursive = myJarDirectoryRecursiveUrls.get(rootType).contains(url);
-          collectJarFiles(file, result, recursive);
-          continue;
+    public void setKeepInvalidUrls(boolean keepInvalidUrls) {
+        myKeepInvalidUrls = keepInvalidUrls;
+    }
+
+    @Override
+    public Collection<String> getOrderRootTypes() {
+        return myRoots.keySet();
+    }
+
+    @Override
+    public @Nullable LibraryType<?> getType() {
+        return myType;
+    }
+
+    @Override
+    public void setType(LibraryType<?> type) {
+        myType = type;
+    }
+
+    @Override
+    public LibraryProperties getProperties() {
+        return myProperties;
+    }
+
+    @Override
+    public void setProperties(LibraryProperties properties) {
+        myProperties = properties;
+    }
+
+    @Override
+    public String getName() {
+        return myLibraryName;
+    }
+
+    @Override
+    public String[] getUrls(String rootType) {
+        return pointersToUrls(myRoots.get(rootType));
+    }
+
+    private static String[] pointersToUrls(Collection<? extends LightFilePointer> pointers) {
+        List<String> urls = new ArrayList<>(pointers.size());
+        for (LightFilePointer pointer : pointers) {
+            urls.add(pointer.getUrl());
         }
-      }
-      result.add(file);
+        return ArrayUtil.toStringArray(urls);
     }
-    return VirtualFileUtil.toVirtualFileArray(result);
-  }
 
-  
-  @Override
-  public String[] getExcludedRootUrls() {
-    return pointersToUrls(myExcludedRoots);
-  }
+    @Override
+    public VirtualFile[] getFiles(String rootType) {
+        List<VirtualFile> result = new ArrayList<>();
+        for (LightFilePointer pointer : myRoots.get(rootType)) {
+            VirtualFile file = pointer.getFile();
+            if (file == null) {
+                continue;
+            }
 
-  @Override
-  public void setName(String name) {
-    myLibraryName = name;
-  }
+            if (file.isDirectory()) {
+                String url = file.getUrl();
+                if (isJarDirectory(url, rootType)) {
+                    boolean recursive = myJarDirectoryRecursiveUrls.get(rootType).contains(url);
+                    collectJarFiles(file, result, recursive);
+                    continue;
+                }
+            }
+            result.add(file);
+        }
+        return VirtualFileUtil.toVirtualFileArray(result);
+    }
 
-  @Override
-  public void addRoot(VirtualFile file, OrderRootType rootType) {
-    myRoots.putValue(rootType, new LightFilePointer(file));
-  }
 
-  @Override
-  public void addRoot(String url, OrderRootType rootType) {
-    myRoots.putValue(rootType, new LightFilePointer(url));
-  }
+    @Override
+    public String[] getExcludedRootUrls() {
+        return pointersToUrls(myExcludedRoots);
+    }
 
-  @Override
-  public void addJarDirectory(VirtualFile file, boolean recursive, OrderRootType rootType) {
-    addJarDirectory(file.getUrl(), recursive, rootType);
-  }
+    @Override
+    public void setName(String name) {
+        myLibraryName = name;
+    }
 
-  @Override
-  public void addExcludedRoot(String url) {
-    myExcludedRoots.add(new LightFilePointer(url));
-  }
+    @Override
+    public void addRoot(VirtualFile file, String rootType) {
+        myRoots.putValue(rootType, new LightFilePointer(file));
+    }
 
-  @Override
-  public void removeExcludedRoot(String url) {
-    myExcludedRoots.remove(new LightFilePointer(url));
-  }
+    @Override
+    public void addRoot(String url, String rootType) {
+        myRoots.putValue(rootType, new LightFilePointer(url));
+    }
 
-  @Override
-  public void addJarDirectory(String url, boolean recursive, OrderRootType rootType) {
-    addRoot(url, rootType);
-    (recursive ? myJarDirectoryRecursiveUrls : myJarDirectoryUrls).putValue(rootType, url);
-  }
+    @Override
+    public void addJarDirectory(VirtualFile file, boolean recursive, String rootType) {
+        addJarDirectory(file.getUrl(), recursive, rootType);
+    }
 
-  @Override
-  public void removeRoot(String url, OrderRootType rootType) {
-    myRoots.remove(rootType, new LightFilePointer(url));
-    myExcludedRoots.removeIf(pointer -> !isUnderRoots(pointer.getUrl()));
-    myJarDirectoryUrls.remove(rootType, url);
-    myJarDirectoryRecursiveUrls.remove(rootType, url);
-  }
+    @Override
+    public void addExcludedRoot(String url) {
+        myExcludedRoots.add(new LightFilePointer(url));
+    }
 
-  private boolean isUnderRoots(String url) {
-    for (LightFilePointer pointer : myRoots.values()) {
-      if (VirtualFileUtil.isEqualOrAncestor(pointer.getUrl(), url)) {
+    @Override
+    public void removeExcludedRoot(String url) {
+        myExcludedRoots.remove(new LightFilePointer(url));
+    }
+
+    @Override
+    public void addJarDirectory(String url, boolean recursive, String rootType) {
+        addRoot(url, rootType);
+        (recursive ? myJarDirectoryRecursiveUrls : myJarDirectoryUrls).putValue(rootType, url);
+    }
+
+    @Override
+    public void removeRoot(String url, String rootType) {
+        myRoots.remove(rootType, new LightFilePointer(url));
+        myExcludedRoots.removeIf(pointer -> !isUnderRoots(pointer.getUrl()));
+        myJarDirectoryUrls.remove(rootType, url);
+        myJarDirectoryRecursiveUrls.remove(rootType, url);
+    }
+
+    private boolean isUnderRoots(String url) {
+        for (LightFilePointer pointer : myRoots.values()) {
+            if (VirtualFileUtil.isEqualOrAncestor(pointer.getUrl(), url)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasChanges() {
         return true;
-      }
     }
-    return false;
-  }
 
-  @Override
-  public boolean hasChanges() {
-    return true;
-  }
-
-  @Override
-  public boolean isJarDirectory(String url, OrderRootType rootType) {
-    return myJarDirectoryUrls.get(rootType).contains(url) || myJarDirectoryRecursiveUrls.get(rootType).contains(url);
-  }
-
-  @Override
-  public boolean isValid(String url, OrderRootType orderRootType) {
-    Collection<LightFilePointer> pointers = myRoots.get(orderRootType);
-    for (LightFilePointer pointer : pointers) {
-      if (pointer.getUrl().equals(url)) {
-        return pointer.isValid();
-      }
+    @Override
+    public boolean isJarDirectory(String url, String rootType) {
+        return myJarDirectoryUrls.get(rootType).contains(url) || myJarDirectoryRecursiveUrls.get(rootType).contains(url);
     }
-    return false;
-  }
 
-  public void applyTo(LibraryEx.ModifiableModelEx model) {
-    model.setProperties(myProperties);
-    exportRoots(model::getUrls, model::isValid, model::removeRoot, model::addRoot, model::addJarDirectory, model::addExcludedRoot);
-  }
-
-  public void applyTo(LibraryEditorBase editor) {
-    editor.setProperties(myProperties);
-    exportRoots(editor::getUrls, editor::isValid, editor::removeRoot, editor::addRoot, editor::addJarDirectory, editor::addExcludedRoot);
-  }
-
-  private void exportRoots(Function<? super OrderRootType, String[]> getUrls,
-                           BiPredicate<? super String, ? super OrderRootType> isValid,
-                           BiConsumer<? super String, ? super OrderRootType> removeRoot,
-                           BiConsumer<? super String, ? super OrderRootType> addRoot,
-                           TriConsumer<? super String, ? super Boolean, ? super OrderRootType> addJarDir,
-                           Consumer<? super String> addExcludedRoot) {
-
-    // first, clean the target container optionally preserving invalid paths
-    for (OrderRootType type : OrderRootType.getAllTypes()) {
-      for (String url : getUrls.apply(type)) {
-        if (!myKeepInvalidUrls || isValid.test(url, type)) {
-          removeRoot.accept(url, type);
+    @Override
+    public boolean isValid(String url, String orderRootType) {
+        Collection<LightFilePointer> pointers = myRoots.get(orderRootType);
+        for (LightFilePointer pointer : pointers) {
+            if (pointer.getUrl().equals(url)) {
+                return pointer.isValid();
+            }
         }
-      }
+        return false;
     }
 
-    // apply editor's state to the target container
-    for (OrderRootType type : myRoots.keySet()) {
-      for (LightFilePointer pointer : myRoots.get(type)) {
-        if (!isJarDirectory(pointer.getUrl(), type)) {
-          addRoot.accept(pointer.getUrl(), type);
-        }
-      }
+    public void applyTo(LibraryEx.ModifiableModelEx model) {
+        model.setProperties(myProperties);
+        exportRoots(model::getUrls, model::isValid, model::removeRoot, model::addRoot, model::addJarDirectory, model::addExcludedRoot);
     }
-    for (Map.Entry<OrderRootType, Collection<String>> entry : myJarDirectoryUrls.entrySet()) {
-      OrderRootType type = entry.getKey();
-      for (String url : entry.getValue()) {
-        addJarDir.accept(url, false, type);
-      }
-    }
-    for (Map.Entry<OrderRootType, Collection<String>> entry : myJarDirectoryRecursiveUrls.entrySet()) {
-      OrderRootType type = entry.getKey();
-      for (String url : entry.getValue()) {
-        addJarDir.accept(url, true, type);
-      }
-    }
-    for (LightFilePointer root : myExcludedRoots) {
-      addExcludedRoot.accept(root.getUrl());
-    }
-  }
 
-  private static void collectJarFiles(VirtualFile dir, List<? super VirtualFile> container, final boolean recursively) {
-    VirtualFileUtil.visitChildrenRecursively(dir, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT, recursively ? null : VirtualFileVisitor.ONE_LEVEL_DEEP) {
-      @Override
-      public boolean visitFile(VirtualFile file) {
-        FileType type;
-        if (!file.isDirectory() && (type = FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())) instanceof ArchiveFileType) {
-          VirtualFile jarRoot = ((ArchiveFileType)type).getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
-          if (jarRoot != null) {
-            container.add(jarRoot);
-            return false;
-          }
+    public void applyTo(LibraryEditorBase editor) {
+        editor.setProperties(myProperties);
+        exportRoots(editor::getUrls, editor::isValid, editor::removeRoot, editor::addRoot, editor::addJarDirectory, editor::addExcludedRoot);
+    }
+
+    private void exportRoots(Function<? super String, String[]> getUrls,
+                             BiPredicate<? super String, ? super String> isValid,
+                             BiConsumer<? super String, ? super String> removeRoot,
+                             BiConsumer<? super String, ? super String> addRoot,
+                             TriConsumer<? super String, ? super Boolean, ? super String> addJarDir,
+                             Consumer<? super String> addExcludedRoot) {
+
+        // first, clean the target container optionally preserving invalid paths
+        for (OrderRootType type : OrderRootType.getAllTypes()) {
+            String typeId = type.getId();
+
+            for (String url : getUrls.apply(typeId)) {
+                if (!myKeepInvalidUrls || isValid.test(url, typeId)) {
+                    removeRoot.accept(url, typeId);
+                }
+            }
         }
-        return true;
-      }
-    });
-  }
+
+        // apply editor's state to the target container
+        for (String type : myRoots.keySet()) {
+            for (LightFilePointer pointer : myRoots.get(type)) {
+                if (!isJarDirectory(pointer.getUrl(), type)) {
+                    addRoot.accept(pointer.getUrl(), type);
+                }
+            }
+        }
+        for (Map.Entry<String, Collection<String>> entry : myJarDirectoryUrls.entrySet()) {
+            String type = entry.getKey();
+            for (String url : entry.getValue()) {
+                addJarDir.accept(url, false, type);
+            }
+        }
+        for (Map.Entry<String, Collection<String>> entry : myJarDirectoryRecursiveUrls.entrySet()) {
+            String type = entry.getKey();
+            for (String url : entry.getValue()) {
+                addJarDir.accept(url, true, type);
+            }
+        }
+        for (LightFilePointer root : myExcludedRoots) {
+            addExcludedRoot.accept(root.getUrl());
+        }
+    }
+
+    private static void collectJarFiles(VirtualFile dir, List<? super VirtualFile> container, final boolean recursively) {
+        VirtualFileUtil.visitChildrenRecursively(dir, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT, recursively ? null : VirtualFileVisitor.ONE_LEVEL_DEEP) {
+            @Override
+            public boolean visitFile(VirtualFile file) {
+                FileType type;
+                if (!file.isDirectory() && (type = FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())) instanceof ArchiveFileType) {
+                    VirtualFile jarRoot = ((ArchiveFileType) type).getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
+                    if (jarRoot != null) {
+                        container.add(jarRoot);
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+    }
 
 }

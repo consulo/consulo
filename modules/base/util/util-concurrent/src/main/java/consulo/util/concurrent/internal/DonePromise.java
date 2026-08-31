@@ -15,6 +15,7 @@ import java.util.function.Function;
 import static consulo.util.concurrent.internal.InternalPromiseUtil.CANCELLED_PROMISE;
 import static consulo.util.concurrent.internal.InternalPromiseUtil.isHandlerObsolete;
 
+@Deprecated
 public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   private final PromiseValue<T> value;
 

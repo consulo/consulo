@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -58,7 +57,7 @@ public final class ValidationInfo {
      * @param component the component containing the invalid data.
      */
     @Deprecated
-    @DeprecationInfo("Use variant with LocalizaValue")
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ValidationInfo(String message, @Nullable JComponent component) {
         this(LocalizeValue.of(message), component);
     }
@@ -78,7 +77,7 @@ public final class ValidationInfo {
      * @param message the error message to display.
      */
     @Deprecated
-    @DeprecationInfo("Use variant with LocalizaValue")
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ValidationInfo(String message) {
         this(message, null);
     }

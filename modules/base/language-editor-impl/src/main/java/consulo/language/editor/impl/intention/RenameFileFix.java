@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.impl.intention;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -26,6 +28,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,6 +41,8 @@ import java.io.IOException;
  * @author ven
  */
 public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
+    private static final Logger LOG = Logger.getInstance(RenameFileFix.class);
+
     private final String myNewFileName;
 
     /**
@@ -48,13 +53,11 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     }
 
     @Override
-    
     public LocalizeValue getText() {
         return CodeInsightLocalize.renameFileFix();
     }
 
     @Override
-    
     public LocalizeValue getName() {
         return getText();
     }
@@ -72,6 +75,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     }
 
     @Override
+    @RequiredReadAction
     public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
         if (!file.isValid()) {
             return false;
@@ -89,6 +93,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     }
 
     @Override
+    @RequiredWriteAction
     public void invoke(Project project, Editor editor, PsiFile file) {
         VirtualFile vFile = file.getVirtualFile();
         Document document = PsiDocumentManager.getInstance(project).getDocument(file);
@@ -97,7 +102,8 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
             vFile.rename(file.getManager(), myNewFileName);
         }
         catch (IOException e) {
-            project.getUIAccess().giveIfNeed(() -> Alerts.okError(e.getLocalizedMessage()).showAsync());
+            LOG.warn(e);
+            project.getUIAccess().giveIfNeed(() -> Alerts.okError(e).showAsync());
         }
     }
 

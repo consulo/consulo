@@ -18,6 +18,7 @@ package consulo.versionControlSystem.internal;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -25,5 +26,5 @@ import java.util.stream.Stream;
  * @since 2025-09-05
  */
 public interface ChangesListView {
-    public static final Key<Stream<VirtualFile>> UNVERSIONED_FILES_DATA_KEY = Key.create("ChangeListView.UnversionedFiles");
+    public static final Key<List<VirtualFile>> UNVERSIONED_FILES_DATA_KEY = Key.create("ChangeListView.UnversionedFiles");
 }

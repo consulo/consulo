@@ -16,15 +16,13 @@
 package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.DataSink;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
@@ -42,7 +40,7 @@ import java.util.*;
 /**
  * @author yole
  */
-public class InternalRepositoryChangesBrowser extends InternalChangesBrowser implements DataProvider, RepositoryChangesBrowser {
+public class InternalRepositoryChangesBrowser extends InternalChangesBrowser implements RepositoryChangesBrowser {
 
     private CommittedChangesBrowserUseCase myUseCase;
     private CommonEditSourceAction myEditSourceAction;
@@ -85,23 +83,13 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (CommittedChangesBrowserUseCase.DATA_KEY == dataId) {
-            return myUseCase;
-        }
-
-        else if (VcsDataKeys.SELECTED_CHANGES == dataId) {
-            List<Change> list = myViewer.getSelectedChanges();
-            return list.toArray(new Change[list.size()]);
-        }
-        else if (VcsDataKeys.CHANGE_LEAD_SELECTION == dataId) {
-            Change highestSelection = myViewer.getHighestLeadSelection();
-            return (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection};
-        }
-        else {
-            TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter(this);
-            return adapter.getData(dataId);
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(CommittedChangesBrowserUseCase.DATA_KEY, myUseCase);
+        List<Change> list = myViewer.getSelectedChanges();
+        sink.set(VcsDataKeys.SELECTED_CHANGES, list.toArray(new Change[list.size()]));
+        Change highestSelection = myViewer.getHighestLeadSelection();
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
     }
 
     @Override
@@ -116,8 +104,8 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
         }
 
         @Override
-        public void update(AnActionEvent event) {
-            super.update(event);
+        public void updateInReadAction(AnActionEvent event) {
+            super.updateInReadAction(event);
             boolean isModalContext = Objects.equals(event.getData(PlatformDataKeys.IS_MODAL_CONTEXT), Boolean.TRUE);
             event.getPresentation().setEnabled(
                 !isModalContext && !CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))

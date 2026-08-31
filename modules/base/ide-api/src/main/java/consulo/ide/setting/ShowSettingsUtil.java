@@ -23,7 +23,8 @@ import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -39,39 +40,39 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
 
   @RequiredUIAccess
   
-  public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
+  public CompletableFuture<Void> showSettingsDialog(@Nullable Project project) {
     return showSettingsDialog(project, (Configurable)null);
   }
 
   @RequiredUIAccess
   
-  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, Class toSelect) {
+  public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, Class toSelect) {
     return showAndSelect(project, toSelect, o -> {
     });
   }
 
   @RequiredUIAccess
   
-  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, Class<T> toSelect) {
+  public <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(@Nullable Project project, Class<T> toSelect) {
     return showAndSelect(project, toSelect, o -> {
     });
   }
 
   @RequiredUIAccess
   
-  public abstract <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, Class<T> toSelect, Consumer<T> afterSelect);
+  public abstract <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(@Nullable Project project, Class<T> toSelect, Consumer<T> afterSelect);
 
   @RequiredUIAccess
   
-  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect);
+  public abstract CompletableFuture<Void> showSettingsDialog(@Nullable Project project, String nameToSelect);
 
   @RequiredUIAccess
   
-  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter);
+  public abstract CompletableFuture<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter);
 
   @RequiredUIAccess
   
-  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect);
+  public abstract CompletableFuture<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect);
 
   @RequiredUIAccess
   public void showProjectStructureDialog(Project project) {
@@ -79,58 +80,58 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
   }
 
   @RequiredUIAccess
-  public abstract AsyncResult<Void> showProjectStructureDialog(Project project, @RequiredUIAccess Consumer<ProjectStructureSelector> consumer);
+  public abstract CompletableFuture<Void> showProjectStructureDialog(Project project, @RequiredUIAccess Consumer<ProjectStructureSelector> consumer);
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {
+  public CompletableFuture<Void> editConfigurable(Project project, Configurable configurable) {
     return editConfigurable(null, project, configurable);
   }
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable);
+  public abstract CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable);
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public AsyncResult<Void> editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
+  public CompletableFuture<Void> editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
     return editConfigurable(null, project, configurable, advancedInitialization);
   }
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
+  public abstract CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
+  public abstract CompletableFuture<Void> editConfigurable(Component parent, Configurable configurable);
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
+  public abstract CompletableFuture<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public AsyncResult<Void> editConfigurable(Project project, String dimensionServiceKey, Configurable configurable) {
+  public CompletableFuture<Void> editConfigurable(Project project, String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(null, project, dimensionServiceKey, configurable);
   }
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable);
+  public abstract CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable);
 
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Show #showAndSelect()")
-  public abstract AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
+  public abstract CompletableFuture<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
 
   public abstract boolean isAlreadyShown(Project project);
 }

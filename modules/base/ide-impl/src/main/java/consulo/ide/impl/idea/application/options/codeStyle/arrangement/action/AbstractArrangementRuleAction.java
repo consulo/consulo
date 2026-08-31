@@ -18,15 +18,15 @@ package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementSectionRulesControl;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya
  */
-public abstract class AbstractArrangementRuleAction extends AnAction {
+public abstract class AbstractArrangementRuleAction extends LegacyAnAction {
     protected AbstractArrangementRuleAction() {
     }
 

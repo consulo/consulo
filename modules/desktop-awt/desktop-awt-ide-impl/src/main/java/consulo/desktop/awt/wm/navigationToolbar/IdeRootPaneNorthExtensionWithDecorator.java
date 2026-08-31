@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecorator;
 
 /**
  * @author VISTALL

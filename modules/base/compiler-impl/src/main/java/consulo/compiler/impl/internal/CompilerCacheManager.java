@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.*;
 import consulo.compiler.generic.GenericCompiler;
+import consulo.compiler.impl.internal.state.ProjectCompilerState;
 import consulo.compiler.impl.internal.generic.GenericCompilerCache;
 import consulo.compiler.impl.internal.generic.GenericCompilerRunner;
 import consulo.compiler.localize.CompilerLocalize;
@@ -86,7 +87,7 @@ public class CompilerCacheManager implements Disposable {
             myGenericCachesMap.put(compiler, genericCache);
             myCacheDisposables.add(() -> {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Closing cache for feneric compiler " + compiler.getId());
+                    LOG.debug("Closing cache for generic compiler " + compiler.getId());
                 }
                 genericCache.close();
             });
@@ -163,22 +164,19 @@ public class CompilerCacheManager implements Disposable {
         myCacheDisposables.clear();
         myGenericCachesMap.clear();
         myCompilerToCacheMap.clear();
+
+        ProjectCompilerState.getInstance(myProject).force();
     }
 
     public void clearCaches(CompileContext context) {
         flushCaches();
+        ProjectCompilerState.getInstance(myProject).reset();
         File[] children = myCachesRoot.listFiles();
         if (children != null) {
             for (File child : children) {
                 boolean deleteOk = FileUtil.delete(child);
                 if (!deleteOk) {
-                    context.addMessage(
-                        CompilerMessageCategory.ERROR,
-                        CompilerLocalize.compilerErrorFailedToDelete(child.getPath()).get(),
-                        null,
-                        -1,
-                        -1
-                    );
+                    context.newError(CompilerLocalize.compilerErrorFailedToDelete(child.getPath())).add();
                 }
             }
         }

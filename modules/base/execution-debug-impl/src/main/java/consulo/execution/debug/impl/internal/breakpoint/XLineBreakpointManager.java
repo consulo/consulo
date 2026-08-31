@@ -50,6 +50,7 @@ import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.MergingQueue;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.collection.BidirectionalMap;
@@ -250,10 +251,17 @@ public class XLineBreakpointManager {
     public void mouseClicked(EditorMouseEvent e) {
       Editor editor = e.getEditor();
       MouseEvent mouseEvent = e.getMouseEvent();
-      if (mouseEvent.isPopupTrigger() ||
-        mouseEvent.isMetaDown() ||
-        mouseEvent.isControlDown() ||
-        mouseEvent.getButton() != MouseEvent.BUTTON1 ||
+      MouseInputDetails details = e.getInputDetails() instanceof MouseInputDetails mouseDetails ? mouseDetails : null;
+
+      boolean altDown = details != null ? details.withAlt() : mouseEvent.isAltDown();
+      boolean shiftDown = details != null ? details.withShift() : mouseEvent.isShiftDown();
+
+      if (e.isPopupTrigger() ||
+        (details != null ? details.withMeta() : mouseEvent.isMetaDown()) ||
+        (details != null ? details.withCtrl() : mouseEvent.isControlDown()) ||
+        (details != null
+          ? details.getButton() != MouseInputDetails.MouseButton.LEFT
+          : mouseEvent.getButton() != MouseEvent.BUTTON1) ||
         editor.getEditorKind() == EditorKind.DIFF ||
         !isInsideClickableGutterArea(e, editor) ||
         ConsoleViewUtil.isConsoleViewEditor(editor) ||
@@ -263,16 +271,16 @@ public class XLineBreakpointManager {
       }
 
       PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-      int line = AWTEditorUtil.yPositionToLogicalLine(editor, mouseEvent);
+      int line = details != null ? e.getLogicalPosition().line : AWTEditorUtil.yPositionToLogicalLine(editor, mouseEvent);
       Document document = editor.getDocument();
       VirtualFile file = FileDocumentManager.getInstance().getFile(document);
       if (line >= 0 && line < document.getLineCount() && file != null) {
         ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
 
         AsyncResult<XLineBreakpoint> lineBreakpoint =
-          XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
+          XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, altDown, false);
         lineBreakpoint.doWhenDone(breakpoint -> {
-          if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
+          if (details == null && !altDown && shiftDown && breakpoint != null) {
             breakpoint.setSuspendPolicy(SuspendPolicy.NONE);
             String selection = editor.getSelectionModel().getSelectedText();
             if (selection != null) {

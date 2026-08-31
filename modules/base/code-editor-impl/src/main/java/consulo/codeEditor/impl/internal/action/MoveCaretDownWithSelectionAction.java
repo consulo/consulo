@@ -24,6 +24,7 @@ import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -34,6 +35,7 @@ import org.jspecify.annotations.Nullable;
 public class MoveCaretDownWithSelectionAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (!editor.getCaretModel().supportsMultipleCarets()) {
                 editor.getCaretModel().moveCaretRelatively(0, 1, true, editor.isColumnMode(), true);

@@ -16,22 +16,26 @@
 
 package consulo.util.collection.primitive.ints.impl.map;
 
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.impl.map.RefValueHashMap;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
-import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.lang.ref.SoftReference;
+import it.unimi.dsi.fastutil.ints.AbstractInt2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.objects.AbstractObjectSet;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * Base class for concurrent key:int -> (weak/soft) value:V map
  * Null values are NOT allowed
  */
-public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIntObjectMap<V> {
+public abstract class ConcurrentIntKeyRefValueHashMap<V> extends AbstractInt2ObjectMap<V> implements ConcurrentIntObjectMap<V> {
   private final ConcurrentIntObjectHashMap<IntReference<V>> myMap = new ConcurrentIntObjectHashMap<>();
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
@@ -72,9 +76,10 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   }
 
   @Override
-  public boolean remove(int key, @Nullable V value) {
+  @SuppressWarnings("unchecked")
+  public boolean remove(int key, @Nullable Object value) {
     processQueue();
-    return myMap.remove(key, createReference(key, value, myQueue));
+    return myMap.remove(key, createReference(key, (V)value, myQueue));
   }
 
   @Override
@@ -119,25 +124,18 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     processQueue();
   }
 
-  @Override
   public int[] keys() {
     return myMap.keys();
   }
 
   @Override
-  public Set<IntObjectEntry<V>> entrySet() {
+  public ObjectSet<Int2ObjectMap.Entry<V>> int2ObjectEntrySet() {
     return new MyEntrySetView();
   }
 
-  @Override
-  public IntSet keySet() {
-    // todo [vistall] todo
-    throw new UnsupportedOperationException("todo");
-  }
-
-  private class MyEntrySetView extends AbstractSet<IntObjectEntry<V>> {
+  private class MyEntrySetView extends AbstractObjectSet<Int2ObjectMap.Entry<V>> {
     @Override
-    public Iterator<IntObjectEntry<V>> iterator() {
+    public ObjectIterator<Int2ObjectMap.Entry<V>> iterator() {
       return entriesIterator();
     }
 
@@ -147,12 +145,12 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     }
   }
 
-  private Iterator<IntObjectEntry<V>> entriesIterator() {
-    final Iterator<IntObjectEntry<IntReference<V>>> entryIterator = myMap.entrySet().iterator();
-    return new Iterator<>() {
-      private @Nullable IntObjectEntry<V> nextVEntry = null;
-      private @Nullable IntObjectEntry<IntReference<V>> nextReferenceEntry = null;
-      private @Nullable IntObjectEntry<IntReference<V>> lastReturned = null;
+  private ObjectIterator<Int2ObjectMap.Entry<V>> entriesIterator() {
+    final ObjectIterator<Int2ObjectMap.Entry<IntReference<V>>> entryIterator = myMap.int2ObjectEntrySet().iterator();
+    return new ObjectIterator<>() {
+      private Int2ObjectMap.@Nullable Entry<V> nextVEntry = null;
+      private Int2ObjectMap.@Nullable Entry<IntReference<V>> nextReferenceEntry = null;
+      private Int2ObjectMap.@Nullable Entry<IntReference<V>> lastReturned = null;
 
       {
         nextAliveEntry();
@@ -164,9 +162,9 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
       }
 
       @Override
-      public @Nullable IntObjectEntry<V> next() {
+      public Int2ObjectMap.Entry<V> next() {
         if (!hasNext()) throw new NoSuchElementException();
-        IntObjectEntry<V> result = nextVEntry;
+        Int2ObjectMap.Entry<V> result = Objects.requireNonNull(nextVEntry);
         lastReturned = nextReferenceEntry;
         nextAliveEntry();
         return result;
@@ -174,13 +172,13 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
 
       private void nextAliveEntry() {
         while (entryIterator.hasNext()) {
-          IntObjectEntry<IntReference<V>> entry = entryIterator.next();
+          Int2ObjectMap.Entry<IntReference<V>> entry = entryIterator.next();
           V v = Objects.requireNonNull(entry.getValue()).get();
           if (v == null) {
             continue;
           }
-          int key = entry.getKey();
-          nextVEntry = new SimpleIntObjectEntry<>(key, v);
+          int key = entry.getIntKey();
+          nextVEntry = new AbstractInt2ObjectMap.BasicEntry<>(key, v);
           nextReferenceEntry = entry;
           return;
         }
@@ -189,9 +187,9 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
 
       @Override
       public void remove() {
-        IntObjectEntry<IntReference<V>> last = lastReturned;
+        Int2ObjectMap.Entry<IntReference<V>> last = lastReturned;
         if (last == null) throw new NoSuchElementException();
-        myMap.replaceNode(last.getKey(), null, last.getValue());
+        myMap.replaceNode(last.getIntKey(), null, last.getValue());
       }
     };
   }
@@ -206,35 +204,6 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   public boolean isEmpty() {
     processQueue();
     return myMap.isEmpty();
-  }
-
-  public Iterator<V> elementsIterator() {
-    final Iterator<IntReference<V>> elementRefs = myMap.values().iterator();
-    return new Iterator<V>() {
-      private @Nullable V findNextRef() {
-        while (elementRefs.hasNext()) {
-          IntReference<V> result = elementRefs.next();
-          V v = result.get();
-          if (v != null) return v;
-        }
-        return null;
-      }
-
-      private @Nullable V next = findNextRef();
-
-      @Override
-      public boolean hasNext() {
-        return next != null;
-      }
-
-      @Override
-      public V next() {
-        if (next == null) throw new NoSuchElementException();
-        V v = next;
-        next = findNextRef();
-        return v;
-      }
-    };
   }
 
   @Override
@@ -252,12 +221,5 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
         return oldVal;
       }
     }
-  }
-
-  @Override
-  public Collection<V> values() {
-    Set<V> result = new HashSet<>();
-    ContainerUtil.addAll(result, elementsIterator());
-    return result;
   }
 }

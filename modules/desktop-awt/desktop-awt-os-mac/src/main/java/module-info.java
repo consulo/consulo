@@ -13,6 +13,7 @@ module consulo.desktop.awt.os.mac {
     requires consulo.file.chooser.api;
     requires consulo.application.impl;
     requires consulo.ui.ex.api;
+    requires consulo.ui.ex.impl;
     requires consulo.ui.ex.awt.api;
     requires consulo.undo.redo.api;
     requires consulo.code.editor.api;

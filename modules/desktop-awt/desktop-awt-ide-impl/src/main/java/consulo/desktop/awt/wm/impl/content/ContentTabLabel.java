@@ -6,7 +6,9 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.localize.IdeLocalize;
@@ -128,12 +130,15 @@ class ContentTabLabel extends BaseLabel {
 
             if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 && !myLayout.myDoubleClickActions.isEmpty()) {
                 DataContext dataContext = DataManager.getInstance().getDataContext(ContentTabLabel.this);
+                UIAccess uiAccess = UIAccess.current();
                 for (AnAction action : myLayout.myDoubleClickActions) {
                     AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.UNKNOWN, null, dataContext);
-                    if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
-                        ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(action, dataContext, event);
-                        ActionImplUtil.performActionDumbAware(action, event);
-                    }
+                    ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+                        if (Boolean.TRUE.equals(enabled)) {
+                            ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(action, dataContext, event);
+                            ActionImplUtil.performActionDumbAware(action, event);
+                        }
+                    }, uiAccess);
                 }
             }
         }

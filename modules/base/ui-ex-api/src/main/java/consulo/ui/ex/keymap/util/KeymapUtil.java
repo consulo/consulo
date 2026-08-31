@@ -30,12 +30,12 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.StringTokenizer;
 import java.util.function.Predicate;
 
 import static consulo.ui.ex.action.util.ShortcutUtil.getKeystrokeText;
@@ -48,6 +48,64 @@ import static consulo.ui.ex.action.util.ShortcutUtil.isUseUnicodeShortcuts;
 public class KeymapUtil {
     private static final Logger LOG = Logger.getInstance(KeymapUtil.class);
     private static final String TOOL_ACTION_PREFIX = "Tool_";
+
+    private static final String SHIFT = "shift";
+    private static final String CONTROL = "control";
+    private static final String CTRL = "ctrl";
+    private static final String META = "meta";
+    private static final String ALT = "alt";
+    private static final String ALT_GRAPH = "altGraph";
+    private static final String DOUBLE_CLICK = "doubleClick";
+
+    /**
+     * Factory method. It parses passed string and creates <code>MouseShortcut</code>.
+     *
+     * @param keystrokeString target keystroke
+     * @return shortcut for the given keystroke
+     * @throws IllegalArgumentException if <code>keystrokeString</code> doesn't represent valid <code>MouseShortcut</code>.
+     */
+    public static MouseShortcut parseMouseShortcut(String keystrokeString) {
+        if (keystrokeString.startsWith("Force touch")) {
+            return new PressureShortcut(2);
+        }
+
+        int button = -1;
+        int modifiers = 0;
+        int clickCount = 1;
+        for (StringTokenizer tokenizer = new StringTokenizer(keystrokeString); tokenizer.hasMoreTokens(); ) {
+            String token = tokenizer.nextToken();
+            if (SHIFT.equals(token)) {
+                modifiers |= InputEvent.SHIFT_DOWN_MASK;
+            }
+            else if (CONTROL.equals(token) || CTRL.equals(token)) {
+                modifiers |= InputEvent.CTRL_DOWN_MASK;
+            }
+            else if (META.equals(token)) {
+                modifiers |= InputEvent.META_DOWN_MASK;
+            }
+            else if (ALT.equals(token)) {
+                modifiers |= InputEvent.ALT_DOWN_MASK;
+            }
+            else if (ALT_GRAPH.equals(token)) {
+                modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
+            }
+            else if (token.startsWith("button") && token.length() > 6) {
+                try {
+                    button = Integer.parseInt(token.substring(6));
+                }
+                catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("unparseable token: " + token);
+                }
+            }
+            else if (DOUBLE_CLICK.equals(token)) {
+                clickCount = 2;
+            }
+            else {
+                throw new IllegalArgumentException("unknown token: " + token);
+            }
+        }
+        return new MouseShortcut(button, modifiers, clickCount);
+    }
 
     
     public static String createTooltipText(String tooltipText, String actionId) {
@@ -158,7 +216,7 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    public static LocalizeValue getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
+    public static LocalizeValue getMouseShortcutText(int button, int modifiers, int clickCount) {
         if (clickCount < 3) {
             return clickCount == 1
                 ? KeyMapLocalize.mouseClickShortcutText(getModifiersText(mapNewModifiers(modifiers)), button)
@@ -169,8 +227,7 @@ public class KeymapUtil {
         }
     }
 
-    @JdkConstants.InputEventMask
-    private static int mapNewModifiers(@JdkConstants.InputEventMask int modifiers) {
+    private static int mapNewModifiers(int modifiers) {
         if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0) {
             modifiers |= InputEvent.SHIFT_MASK;
         }
@@ -209,7 +266,7 @@ public class KeymapUtil {
         return false;
     }
 
-    private static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
+    private static String getModifiersText(int modifiers) {
         if (Platform.current().os().isMac()) {
             return MacKeymapUtil.getModifiersText(modifiers);
         }
@@ -226,7 +283,7 @@ public class KeymapUtil {
     /**
      * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided
      */
-    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, String actionId) {
+    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, int modifiers, String actionId) {
         MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
         for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
             if (shortcut instanceof MouseShortcut mouseShortcut && mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {

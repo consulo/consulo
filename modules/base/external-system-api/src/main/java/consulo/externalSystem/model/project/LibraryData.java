@@ -17,7 +17,7 @@ public class LibraryData extends AbstractNamedData implements Named {
 
   private static final long serialVersionUID = 1L;
 
-  private final Map<LibraryPathType, Set<String>> myPaths = new HashMap<LibraryPathType, Set<String>>();
+  private final Map<String, Set<String>> myPaths = new HashMap<String, Set<String>>();
 
   private final boolean myUnresolved;
 
@@ -34,18 +34,21 @@ public class LibraryData extends AbstractNamedData implements Named {
     return myUnresolved;
   }
 
-  
-  public Set<String> getPaths(LibraryPathType type) {
+  public Set<String> getPaths(String type) {
     Set<String> result = myPaths.get(type);
     return result == null ? Collections.<String>emptySet() : result;
   }
 
-  public void addPath(LibraryPathType type, String path) {
+  public void addPath(String type, String path) {
     Set<String> paths = myPaths.get(type);
     if (paths == null) {
       myPaths.put(type, paths = new HashSet<String>());
     }
     paths.add(ExternalSystemApiUtil.toCanonicalPath(path));
+  }
+
+  public Set<String> getLibraryRootTypeIds() {
+     return myPaths.keySet();
   }
 
   public void forgetAllPaths() {

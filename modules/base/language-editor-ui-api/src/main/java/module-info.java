@@ -9,12 +9,14 @@ module consulo.language.editor.ui.api {
 
     requires transitive consulo.code.editor.api;
     requires transitive consulo.language.editor.api;
+    requires transitive consulo.language.ui.api;
     requires transitive consulo.language.spellchecker.editor.api;
     requires transitive consulo.usage.api;
     requires consulo.find.api;
 
     exports consulo.language.editor.ui;
     exports consulo.language.editor.ui.navigation;
+    exports consulo.language.editor.ui.navigationBar;
     exports consulo.language.editor.ui.awt;
     exports consulo.language.editor.ui.scope;
     exports consulo.language.editor.ui.awt.scope;
@@ -24,5 +26,6 @@ module consulo.language.editor.ui.api {
         consulo.execution.debug.impl,
         consulo.version.control.system.impl,
         consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.web.editor.impl, consulo.desktop.qt.editor.impl;
 }

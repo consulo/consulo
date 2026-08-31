@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class DefaultLogFilterModel extends LogFilterModel {
   private final Project myProject;
-  private boolean myCheckStandartFilters = true;
+  private boolean myCheckStandardFilters = true;
   private String myPrevType = null;
 
   public DefaultLogFilterModel(Project project) {
@@ -41,11 +41,11 @@ public class DefaultLogFilterModel extends LogFilterModel {
   }
 
   public boolean isCheckStandartFilters() {
-    return myCheckStandartFilters;
+    return myCheckStandardFilters;
   }
 
-  public void setCheckStandartFilters(boolean checkStandartFilters) {
-    myCheckStandartFilters = checkStandartFilters;
+  public void setCheckStandartFilters(boolean checkStandardFilters) {
+    myCheckStandardFilters = checkStandardFilters;
   }
 
   @Override
@@ -67,7 +67,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
   @Override
   public boolean isApplicable(String line) {
     if (!super.isApplicable(line)) return false;
-    return getPreferences().isApplicable(line, myPrevType, myCheckStandartFilters);
+    return getPreferences().isApplicable(line, myPrevType, myCheckStandardFilters);
   }
 
   @Override
@@ -79,14 +79,14 @@ public class DefaultLogFilterModel extends LogFilterModel {
   public List<LogFilter> getLogFilters() {
     LogConsolePreferences prefs = getPreferences();
     ArrayList<LogFilter> filters = new ArrayList<LogFilter>();
-    if (myCheckStandartFilters) {
-      addStandartFilters(filters, prefs);
+    if (myCheckStandardFilters) {
+      addStandardFilters(filters, prefs);
     }
     filters.addAll(prefs.getRegisteredLogFilters());
     return filters;
   }
 
-  private void addStandartFilters(ArrayList<LogFilter> filters, final LogConsolePreferences prefs) {
+  private void addStandardFilters(ArrayList<LogFilter> filters, final LogConsolePreferences prefs) {
     filters.add(new MyFilter(ExecutionLocalize.logConsoleFilterShowAll().get(), prefs) {
       @Override
       public void selectFilter() {
@@ -179,7 +179,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
 
     @Override
     public boolean isAcceptable(String line) {
-      return myPrefs.isApplicable(line, myPrevType, myCheckStandartFilters);
+      return myPrefs.isApplicable(line, myPrevType, myCheckStandardFilters);
     }
   }
 }

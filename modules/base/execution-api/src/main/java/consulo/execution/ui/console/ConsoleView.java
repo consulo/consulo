@@ -17,6 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.codeEditor.Editor;
 import consulo.execution.ui.ExecutionConsole;
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.annotation.RequiredUIAccess;

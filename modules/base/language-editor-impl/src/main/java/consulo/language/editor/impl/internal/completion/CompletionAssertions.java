@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.completion;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
@@ -29,7 +30,6 @@ import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Contract;
 
 import java.util.List;
 
@@ -37,7 +37,6 @@ import java.util.List;
  * @author peter
  */
 public class CompletionAssertions {
-
     @RequiredReadAction
     public static void assertCommitSuccessful(Editor editor, PsiFile psiFile) {
         Document document = editor.getDocument();

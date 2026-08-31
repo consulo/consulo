@@ -26,7 +26,8 @@ import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.project.Project;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -51,7 +52,7 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
   
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
+  public CompletableFuture<Void> showSettingsDialog(@Nullable Project project) {
     Project actualProject = project == null ? myDefaultProjectFactory.getDefaultProject() : project;
 
     UnifiedSettingsDialog settingsDialog = new UnifiedSettingsDialog(buildConfigurables(actualProject));
@@ -61,71 +62,71 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
   
   @RequiredUIAccess
   @Override
-  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, Class<T> toSelect, Consumer<T> afterSelect) {
+  public <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(@Nullable Project project, Class<T> toSelect, Consumer<T> afterSelect) {
     return showSettingsDialog(project);
   }
 
   
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
+  public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
     return showSettingsDialog(project);
   }
 
   
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
+  public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
     return showSettingsDialog(project);
   }
 
   
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showSettingsDialog(Project project, Configurable toSelect) {
+  public CompletableFuture<Void> showSettingsDialog(Project project, Configurable toSelect) {
     return showSettingsDialog(project);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showProjectStructureDialog(Project project, Consumer<ProjectStructureSelector> consumer) {
-    return AsyncResult.rejected();
+  public CompletableFuture<Void> showProjectStructureDialog(Project project, Consumer<ProjectStructureSelector> consumer) {
+    return CompletableFuture.failedFuture(new CancellationException());
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
-    return AsyncResult.resolved();
+  public CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization) {
-    return AsyncResult.resolved();
+  public CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
-    return AsyncResult.resolved();
+  public CompletableFuture<Void> editConfigurable(Component parent, Configurable configurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization) {
-    return AsyncResult.resolved();
+  public CompletableFuture<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable) {
-    return AsyncResult.resolved();
+  public CompletableFuture<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
-    return AsyncResult.resolved();
+  public CompletableFuture<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

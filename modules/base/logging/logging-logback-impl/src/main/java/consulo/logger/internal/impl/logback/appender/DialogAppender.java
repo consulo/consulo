@@ -72,16 +72,12 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
                 ideaEvent = extractLoggingEvent(message, thrown);
             }
 
-            // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
-            IdeaLoggingEvent finalIdeaEvent = ideaEvent;
-            Application.get().invokeLater(() -> {
-                try {
-                    appendToLoggers(finalIdeaEvent);
-                }
-                finally {
-                    myPendingAppendCounts.decrementAndGet();
-                }
-            });
+            try {
+                appendToLoggers(ideaEvent);
+            }
+            finally {
+                myPendingAppendCounts.decrementAndGet();
+            }
         }
     }
 

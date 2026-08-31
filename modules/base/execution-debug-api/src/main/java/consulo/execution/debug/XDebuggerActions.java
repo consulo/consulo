@@ -43,6 +43,7 @@ public interface XDebuggerActions {
 
   String KEYMAP_GROUP = "XDebugger.Actions";
   String TOOL_WINDOW_TOP_TOOLBAR_GROUP = "XDebugger.ToolWindow.TopToolbar";
+  String TOOL_WINDOW_TOP_TOOLBAR_EXTRA_GROUP = "XDebugger.ToolWindow.TopToolbar.Extra";
   String TOOL_WINDOW_LEFT_TOOLBAR_GROUP = "XDebugger.ToolWindow.LeftToolbar";
   String EVALUATE_DIALOG_TREE_POPUP_GROUP = "XDebugger.Evaluation.Dialog.Tree.Popup";
   String INSPECT_TREE_POPUP_GROUP = "XDebugger.Inspect.Tree.Popup";

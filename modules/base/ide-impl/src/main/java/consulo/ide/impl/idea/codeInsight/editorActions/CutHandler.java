@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.access.RequiredWriteAction;
@@ -33,6 +32,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,15 +48,14 @@ public class CutHandler extends EditorWriteActionHandler implements ExtensionEdi
     myOriginalHandler = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_CUT;
   }
 
-  @RequiredWriteAction
   @Override
-  public void executeWriteAction(final Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredWriteAction
+  public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
     assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";
     Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
     if (project == null) {
@@ -104,7 +103,6 @@ public class CutHandler extends EditorWriteActionHandler implements ExtensionEdi
     EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_COPY).execute(editor, null, dataContext);
 
     if (editor.getCaretModel().supportsMultipleCarets()) {
-
       Collections.reverse(selections);
       final Iterator<TextRange> it = selections.iterator();
       editor.getCaretModel().runForEachCaret(new CaretAction() {
@@ -118,15 +116,13 @@ public class CutHandler extends EditorWriteActionHandler implements ExtensionEdi
       });
       editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
+    else if (start != end) {
+      // There is a possible case that 'sticky selection' is active. It's automatically removed on copying then, so, we explicitly
+      // remove the text.
+      editor.getDocument().deleteString(start, end);
+    }
     else {
-      if (start != end) {
-        // There is a possible case that 'sticky selection' is active. It's automatically removed on copying then, so, we explicitly
-        // remove the text.
-        editor.getDocument().deleteString(start, end);
-      }
-      else {
-        EditorModificationUtil.deleteSelectedText(editor);
-      }
+      EditorModificationUtil.deleteSelectedText(editor);
     }
   }
 }

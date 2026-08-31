@@ -15,9 +15,9 @@
  */
 package consulo.application.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.io.File;
@@ -26,7 +26,7 @@ import java.io.File;
  * Some file path trim util which depends to user home path.
  *
  * @author VISTALL
- * @since 10-Aug-22
+ * @since 2022-08-10
  */
 public class UserHomeFileUtil {
   @Contract("null -> null; !null -> !null")
@@ -52,7 +52,6 @@ public class UserHomeFileUtil {
     return path;
   }
 
-  
   public static String expandUserHome(String path) {
     if (path.startsWith("~/") || path.startsWith("~\\")) {
       path = Platform.current().user().homePath() + path.substring(1);

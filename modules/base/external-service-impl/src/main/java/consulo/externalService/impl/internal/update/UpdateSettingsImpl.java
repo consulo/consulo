@@ -34,18 +34,11 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 @State(name = "UpdateSettingsImpl", storages = @Storage(value = "updates.xml", roamingType = RoamingType.DISABLED))
-public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettingsImpl.State>, UpdateSettingsEx {
-    static class State {
-        public boolean enable = true;
-        public long lastTimeCheck = 0;
-        public UpdateChannel channel;
-        public PlatformOrPluginUpdateResultType lastCheckResult = PlatformOrPluginUpdateResultType.NO_UPDATE;
-    }
+public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettingsState>, UpdateSettingsEx {
 
-    private State myState = new State();
+    private UpdateSettingsState myState = new UpdateSettingsState();
 
     @Override
-    
     public UpdateChannel getChannel() {
         UpdateChannel channel = myState.channel;
         if (channel == null) {
@@ -59,7 +52,6 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
         myState.lastCheckResult = type;
     }
 
-    
     @Override
     public PlatformOrPluginUpdateResultType getLastCheckResult() {
         return ObjectUtil.notNull(myState.lastCheckResult, PlatformOrPluginUpdateResultType.NO_UPDATE);
@@ -91,12 +83,12 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
     }
 
     @Override
-    public State getState() {
+    public UpdateSettingsState getState() {
         return myState;
     }
 
     @Override
-    public void loadState(State state) {
+    public void loadState(UpdateSettingsState state) {
         myState = state;
 
         // switch to release if branch obsolete

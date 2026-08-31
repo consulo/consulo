@@ -31,6 +31,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.navigation.Navigatable;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,7 +51,10 @@ public class HttpFileEditor implements TextEditor {
     myPanel = new RemoteFilePanel(project, virtualFile);
   }
 
-  
+  public consulo.ui.Component getUIComponent() {
+    return TargetAWT.wrap(myPanel.getMainPanel());
+  }
+
   public JComponent getComponent() {
     return myPanel.getMainPanel();
   }

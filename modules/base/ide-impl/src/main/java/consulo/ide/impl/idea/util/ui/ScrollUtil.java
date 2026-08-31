@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.util.ui;
 
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.UIUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class ScrollUtil {
     return findScrollBar(c, Adjustable.HORIZONTAL);
   }
 
-  private static @Nullable JScrollBar findScrollBar(JComponent c, @JdkConstants.AdjustableOrientation int orientation) {
+  private static @Nullable JScrollBar findScrollBar(JComponent c, @AWTConstants.AdjustableOrientation int orientation) {
     if (c == null) return null;
     if (c instanceof JScrollBar && ((JScrollBar)c).getOrientation() == orientation) {
       return (JScrollBar)c;

@@ -1,0 +1,80 @@
+{
+  "name": "Light",
+  "dark": false,
+  "author": "consulo.io",
+  "iconLibraryId": "light",
+  "editorScheme": "Default",
+  "colors": {
+    "background": "#f2f3f5",
+    "foreground": "#252525",
+    "componentBackground": "#ffffff",
+    "selectionBackground": "#bfdeff",
+    "borderColor": "#00000019"
+  },
+  "ui": {
+    "TabbedPane": {
+      "background": "#f2f3f5",
+      "foreground": "#252525",
+      "hoverColor": "#dee0e5",
+      "underlineColor": "#007aff",
+      "selectedBackground": "#d8e8fa",
+      "inactiveSelectedBackground": "#e5eef8"
+    },
+    "ScrollBar": {
+      "thumb": "#c2c2c2",
+      "hoverThumbColor": "#a9a9a9"
+    },
+    "ToolWindow": {
+      "Button": {
+        "hoverBackground": "#bbc0cb",
+        "selectedBackground": "#c9cdd6"
+      }
+    },
+    "Panel": {
+      "background": "background"
+    },
+    "Label": {
+      "foreground": "foreground",
+      "disabledForeground": "#797a7b",
+      "infoForeground": "#808080",
+      "errorForeground": "#c7222d"
+    },
+    "TextField": {
+      "background": "componentBackground"
+    },
+    "List": {
+      "selectionBackground": "selectionBackground",
+      "selectionForeground": "foreground",
+      "selectionInactiveBackground": "#dcdcdc",
+      "selectionInactiveForeground": "foreground"
+    },
+    "MenuItem": {
+      "selectionBackground": "selectionBackground"
+    },
+    "Button": {
+      "hoverBackground": "#f7f7f7"
+    },
+    "Separator": {
+      "foreground": "borderColor"
+    },
+    "ToolTip": {
+      "background": "background",
+      "foreground": "foreground"
+    },
+    "Component": {
+      "borderColor": "#dadbdd",
+      "disabledBorderColor": "borderColor",
+      "focusColor": "#0069ff80",
+      "linkColor": "#007aff",
+      "error": {
+        "borderColor": "#ebb8bc"
+      },
+      "warning": {
+        "borderColor": "#fed284"
+      },
+      "success": {
+        "borderColor": "#8be5c4"
+      }
+    }
+  }
+}

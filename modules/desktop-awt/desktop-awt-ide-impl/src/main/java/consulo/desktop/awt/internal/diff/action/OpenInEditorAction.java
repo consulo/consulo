@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffContext;
@@ -44,7 +45,8 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredReadAction
+  public void updateInReadAction(AnActionEvent e) {
     if (!e.isFromActionToolbar()) {
       e.getPresentation().setEnabledAndVisible(true);
       return;
@@ -63,7 +65,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
       return;
     }
 
-    Navigatable[] navigatables = ReadAction.compute(() -> e.getData(DiffDataKeys.NAVIGATABLE_ARRAY));
+    Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGATABLE_ARRAY);
     if (navigatables == null || !ContainerUtil.exists(navigatables, Navigatable::canNavigate)) {
       e.getPresentation().setVisible(true);
       e.getPresentation().setEnabled(false);

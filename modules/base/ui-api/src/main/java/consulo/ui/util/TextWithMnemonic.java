@@ -3,7 +3,6 @@ package consulo.ui.util;
 
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.function.IntPredicate;
 
@@ -96,7 +95,8 @@ public final class TextWithMnemonic {
             return this;
         }
         String resultText = myText.substring(0, index) + replacement + myText.substring(index + target.length());
-        int resultIndex = myMnemonicIndex < index ? myMnemonicIndex : myMnemonicIndex >= index + target.length() ? myMnemonicIndex - target.length() + replacement.length() : -1;
+        int resultIndex = myMnemonicIndex < index ? myMnemonicIndex
+            : myMnemonicIndex >= index + target.length() ? myMnemonicIndex - target.length() + replacement.length() : -1;
         return new TextWithMnemonic(resultText, resultIndex);
     }
 
@@ -113,7 +113,6 @@ public final class TextWithMnemonic {
      * @param text a plain text to create a TextWithMnemonic object from
      * @return new TextWithMnemonic object which has no mnemonic
      */
-    @Contract(pure = true)
     public static TextWithMnemonic fromPlainText(String text) {
         return new TextWithMnemonic(text, -1);
     }
@@ -128,11 +127,10 @@ public final class TextWithMnemonic {
      * @param text text to parse
      * @return TextWithMnemonic object which corresponds to the parsed text.
      */
-    @Contract(pure = true)
     public static TextWithMnemonic parse(@Nullable String text) {
         return parse(text, value -> true);
     }
-    @Contract(pure = true)
+
     public static TextWithMnemonic parse(@Nullable String text, IntPredicate indexAllower) {
         if (StringUtil.isEmpty(text)) {
             return ourNull;
@@ -154,7 +152,9 @@ public final class TextWithMnemonic {
                     if (mnemonicIndex == -1 && (ch == '_' || ch == '&')) {
                         //noinspection AssignmentToForLoopParameter
                         i++;
-                        if (i >= text.length()) break;
+                        if (i >= text.length()) {
+                            break;
+                        }
                         ch = text.charAt(i);
                         if (ch != '_' && ch != '&') {
                             mnemonicIndex = i - 1 - backShift;
@@ -164,7 +164,7 @@ public final class TextWithMnemonic {
                         }
                     }
                 }
-                
+
                 plainText.append(ch);
             }
             return new TextWithMnemonic(plainText.toString(), mnemonicIndex);
@@ -173,7 +173,7 @@ public final class TextWithMnemonic {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

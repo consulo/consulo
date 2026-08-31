@@ -17,11 +17,18 @@ package consulo.language.editor.impl.internal.daemon;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.document.FileDocumentManager;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
-import consulo.language.editor.AutoImportHelper;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactoryWithContext;
+import consulo.language.editor.internal.SilentChangeVetoer;
 import consulo.language.editor.Pass;
+import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiFile;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ThreeState;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import org.jspecify.annotations.Nullable;
@@ -32,12 +39,14 @@ import org.jspecify.annotations.Nullable;
  * @since 2006-11-25
  */
 @ExtensionImpl
-public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactory {
-  private final AutoImportHelper myAutoImportHelper;
+public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactoryWithContext<CanISilentlyChange.Result> {
+  private final Project myProject;
+  private final FileDocumentManager myFileDocumentManager;
 
   @Inject
-  public ShowAutoImportPassFactory(AutoImportHelper autoImportHelper) {
-    myAutoImportHelper = autoImportHelper;
+  public ShowAutoImportPassFactory(Project project, FileDocumentManager fileDocumentManager) {
+    myProject = project;
+    myFileDocumentManager = fileDocumentManager;
   }
 
   @Override
@@ -45,8 +54,34 @@ public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFact
     registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, -1);
   }
 
+  /**
+   * Called on the EDT to capture only the undo-manager state (the cheap, EDT-required stage of the
+   * "can I silently change" computation). The expensive VCS check runs later on a background thread
+   * inside {@link #createHighlightingPass}.
+   */
+  @RequiredUIAccess
   @Override
-  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
-    return myAutoImportHelper.canChangeFileSilently(file) ? new ShowAutoImportPass(file.getProject(), file, editor) : null;
+  public CanISilentlyChange.@Nullable Result getContextFromUI(Editor editor) {
+    VirtualFile virtualFile = myFileDocumentManager.getFile(editor.getDocument());
+    return CanISilentlyChange.thisFile(myProject, virtualFile);
+  }
+
+  @Override
+  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor, CanISilentlyChange.@Nullable Result context) {
+    // PsiCodeFragment is always allowed — this PSI check is safe under the read action held on BGT.
+    if (file instanceof PsiCodeFragment) {
+      return new ShowAutoImportPass(file.getProject(), file, editor);
+    }
+    if (context == null) {
+      return null;
+    }
+    VirtualFile virtualFile = file.getVirtualFile();
+    if (virtualFile == null) {
+      return null;
+    }
+    // VCS dirty-scope query and index access run here on the background thread, not on the EDT.
+    ThreeState extensionsAllow = SilentChangeVetoer.extensionsAllowToChangeFileSilently(file.getProject(), virtualFile);
+    boolean isInContent = ModuleUtilCore.projectContainsFile(file.getProject(), virtualFile, false);
+    return context.canIReally(isInContent, extensionsAllow) ? new ShowAutoImportPass(file.getProject(), file, editor) : null;
   }
 }

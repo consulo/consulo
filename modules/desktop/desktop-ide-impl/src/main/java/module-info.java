@@ -13,6 +13,7 @@ module consulo.desktop.ide.impl {
     requires consulo.project.ui.api;
     requires consulo.application.impl;
     requires consulo.ui.ex.awt.api;
+    requires consulo.ui.ex.impl;
     requires consulo.external.service.api;
     requires consulo.web.browser.api;
 
@@ -32,12 +33,13 @@ module consulo.desktop.ide.impl {
     requires io.netty.transport;
     requires consulo.ide.api;
 
-    exports consulo.desktop.application.jna.windows to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
-    exports consulo.desktop.application.util to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
-    exports consulo.desktop.container.impl to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
-    exports consulo.desktop.startup to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
-    exports consulo.desktop.util.windows to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
-    exports consulo.desktop.util.windows.defender to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
+    exports consulo.desktop.application.jna.windows to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.desktop.application.util to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.desktop.container.impl to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.desktop.startup to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.desktop.util.windows to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.desktop.util.windows.defender to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
 
     opens consulo.desktop.util.windows to com.sun.jna;
+    opens consulo.desktop.util.windows.defender to com.sun.jna;
 }

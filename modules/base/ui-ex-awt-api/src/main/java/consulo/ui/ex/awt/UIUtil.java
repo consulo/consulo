@@ -54,7 +54,6 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
@@ -2465,7 +2464,7 @@ public class UIUtil {
         return getFontWithFallback(font.getFamily(), font.getStyle(), font.getSize());
     }
 
-    public static FontUIResource getFontWithFallback(String familyName, @JdkConstants.FontStyle int style, int size) {
+    public static FontUIResource getFontWithFallback(String familyName, @AWTConstants.FontStyle int style, int size) {
         Font fontWithFallback = StyleContext.getDefaultStyleContext().getFont(familyName, style, size);
         return fontWithFallback instanceof FontUIResource fontUIRes ? fontUIRes : new FontUIResource(fontWithFallback);
     }
@@ -3194,6 +3193,18 @@ public class UIUtil {
             }
         }
         return maxWidthAnchor;
+    }
+
+    /**
+     * By default soft wrapping in text components (for ASCII text) is only performed at spaces. This enables wrapping also at other places,
+     * e.g. at dots.
+     * <p>
+     * NOTE: any operation which replaces document in the text component (e.g. {@link JTextComponent#setDocument(Document)},
+     * {@link JEditorPane#setPage(URL)}, {@link JEditorPane#setEditorKit(EditorKit)}) will cancel the effect of this call.
+     */
+    public static void enableEagerSoftWrapping(JTextComponent textComponent) {
+        // see javax.swing.text.GlyphView.getBreaker()
+        textComponent.getDocument().putProperty("multiByte", Boolean.TRUE);
     }
 
     public static void setNotOpaqueRecursively(Component component) {

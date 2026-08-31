@@ -24,9 +24,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.impl.inspection.reference.RefElementImpl;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
-import consulo.language.editor.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
 import consulo.language.editor.inspection.*;
@@ -35,6 +32,7 @@ import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.*;
@@ -455,7 +453,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         }
     }
 
-    public void close(boolean noSuspisiousCodeFound) {
+    public void close(boolean noSuspiciousCodeFound) {
         cleanup();
     }
 

@@ -18,27 +18,36 @@ package consulo.codeEditor;
 import org.jspecify.annotations.Nullable;
 
 public class CaretState {
-  private final LogicalPosition caretPosition;
-  private final int visualColumnAdjustment;
-  private final LogicalPosition selectionStart;
-  private final LogicalPosition selectionEnd;
+  private final @Nullable LogicalPosition myCaretPosition;
+  private final int myVisualColumnAdjustment;
+  private final @Nullable LogicalPosition mySelectionStart;
+  private final @Nullable LogicalPosition mySelectionEnd;
 
-  public CaretState(@Nullable LogicalPosition caretPosition, @Nullable LogicalPosition selectionStart, @Nullable LogicalPosition selectionEnd) {
+  public CaretState(
+    @Nullable LogicalPosition caretPosition,
+    @Nullable LogicalPosition selectionStart,
+    @Nullable LogicalPosition selectionEnd
+  ) {
     this(caretPosition, 0, selectionStart, selectionEnd);
   }
 
   /**
    * @param visualColumnAdjustment see {@link #getVisualColumnAdjustment()}
    */
-  public CaretState(@Nullable LogicalPosition caretPosition, int visualColumnAdjustment, @Nullable LogicalPosition selectionStart, @Nullable LogicalPosition selectionEnd) {
-    this.caretPosition = caretPosition;
-    this.visualColumnAdjustment = visualColumnAdjustment;
-    this.selectionStart = selectionStart;
-    this.selectionEnd = selectionEnd;
+  public CaretState(
+    @Nullable LogicalPosition caretPosition,
+    int visualColumnAdjustment,
+    @Nullable LogicalPosition selectionStart,
+    @Nullable LogicalPosition selectionEnd
+  ) {
+    this.myCaretPosition = caretPosition;
+    this.myVisualColumnAdjustment = visualColumnAdjustment;
+    this.mySelectionStart = selectionStart;
+    this.mySelectionEnd = selectionEnd;
   }
 
   public @Nullable LogicalPosition getCaretPosition() {
-    return caretPosition;
+    return myCaretPosition;
   }
 
   /**
@@ -47,24 +56,24 @@ public class CaretState {
    * if one needs to calculate caret's visual position.
    */
   public int getVisualColumnAdjustment() {
-    return visualColumnAdjustment;
+    return myVisualColumnAdjustment;
   }
 
   public @Nullable LogicalPosition getSelectionStart() {
-    return selectionStart;
+    return mySelectionStart;
   }
 
   public @Nullable LogicalPosition getSelectionEnd() {
-    return selectionEnd;
+    return mySelectionEnd;
   }
 
   @Override
   public String toString() {
     return "CaretState{" +
-           "caretPosition=" + caretPosition +
-           (visualColumnAdjustment == 0 ? "" : (", visualColumnAdjustment=" + visualColumnAdjustment)) +
-           ", selectionStart=" + selectionStart +
-           ", selectionEnd=" + selectionEnd +
-           '}';
+      "caretPosition=" + myCaretPosition +
+      (myVisualColumnAdjustment == 0 ? "" : (", visualColumnAdjustment=" + myVisualColumnAdjustment)) +
+      ", selectionStart=" + mySelectionStart +
+      ", selectionEnd=" + mySelectionEnd +
+      '}';
   }
 }

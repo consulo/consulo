@@ -15,12 +15,19 @@
  */
 package consulo.codeEditor.markup;
 
+import consulo.annotation.DeprecationInfo;
+
 import java.awt.*;
 
 /**
  * @author irengrig
  * @since 2011-07-07
+ * @deprecated Kept for source parity with IntelliJ. Draws through {@link Graphics}, so only the AWT
+ * editor can dispatch it; use {@link LineSeparatorPresentationProvider}, which describes the
+ * separator and lets each editor implementation render it.
  */
+@Deprecated
+@DeprecationInfo("Use LineSeparatorPresentationProvider")
 public interface LineSeparatorRenderer {
   void drawLine(Graphics g, int x1, int x2, int y);
 }

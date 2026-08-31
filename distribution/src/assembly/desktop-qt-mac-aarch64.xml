@@ -1,0 +1,73 @@
+<!--
+  - Copyright 2013-2026 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>desktop-qt-mac-aarch64</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <componentDescriptors>
+    <componentDescriptor>${project.basedir}/src/platform.base_mac.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/src/platform.desktop.qt_mac.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/boot/macA64/</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo.app${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/consulo/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/consulo.desktop.qt/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <!--the native libraries are unpacked into the plugin native directory instead of being shipped as a jar:
+          qtjambi picks them up off io.qt.library-path-override and skips extracting 100+ mb into a temp
+          directory on every start, only to delete it again on exit-->
+      <useStrictFiltering>true</useStrictFiltering>
+      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.qt/native</outputDirectory>
+      <unpack>true</unpack>
+      <unpackOptions>
+        <includes>
+          <include>lib/**</include>
+        </includes>
+      </unpackOptions>
+      <includes>
+        <!--qtjambi ships a single universal macOS native artifact-->
+        <include>io.qtjambi:qtjambi-native-macos</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

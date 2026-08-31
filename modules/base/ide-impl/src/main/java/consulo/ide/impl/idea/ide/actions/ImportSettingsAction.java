@@ -74,7 +74,11 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
             component,
             IdeLocalize.titleImportFileLocation(),
             IdeLocalize.promptChooseImportFilePath()
-        ).doWhenDone(this::doImport);
+        ).whenComplete((path, error) -> {
+            if (error == null) {
+                doImport(path);
+            }
+        });
     }
 
     @RequiredUIAccess

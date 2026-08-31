@@ -113,7 +113,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     @RequiredUIAccess
     protected JComponent createCenterPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        DataManager.registerDataProvider(panel, dataId -> {
+        DataManager.registerUiDataProvider(panel, sink -> {
             TreePath path = myTree.getSelectionPath();
             if (path != null) {
                 Object component = path.getLastPathComponent();
@@ -124,14 +124,10 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
                 if (component instanceof MyDuplicatesNode duplicatesNode) {
                     file = duplicatesNode.getUserObject().iterator().next();
                 }
-                if (VirtualFile.KEY == dataId) {
-                    return file;
-                }
-                if (VirtualFile.KEY_OF_ARRAY == dataId && file != null) {
-                    return new VirtualFile[]{file};
-                }
+
+                sink.set(VirtualFile.KEY, file);
+                sink.set(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{file});
             }
-            return null;
         });
 
         JBList<String> list = new JBList<>(new ResourceModules().getModuleNames());

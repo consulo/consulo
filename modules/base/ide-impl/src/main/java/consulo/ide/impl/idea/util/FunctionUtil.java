@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.util;
 
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.function.Function;
 
@@ -27,27 +27,22 @@ public class FunctionUtil {
     private FunctionUtil() {
     }
 
-    
     public static <T> Function<T, T> id() {
         return Function.identity();
     }
 
-    
     public static <A, B> Function<A, B> nullConstant() {
         return a -> null;
     }
 
-    
     public static <T> Function<T, String> string() {
         return Object::toString;
     }
 
-    
     public static <A, B> Function<A, B> constant(B b) {
         return a -> b;
     }
 
-    
     public static <A, B, C> Function<A, C> composition(Function<B, C> f, Function<A, B> g) {
         return a -> f.apply(g.apply(a));
     }
@@ -60,8 +55,8 @@ public class FunctionUtil {
      * @param r2 second runnable to run
      * @return composed runnable. If one of arguments is null, returns other argument.
      */
-    @Contract(value = "_, null -> param1; null, !null -> param2", pure = true)
-    public static Runnable composeRunnables(@Nullable Runnable r1, @Nullable Runnable r2) {
+    @Contract("!null, _ -> !null; _, !null -> !null; null, null -> null")
+    public static @Nullable Runnable composeRunnables(@Nullable Runnable r1, @Nullable Runnable r2) {
         if (r2 == null) {
             return r1;
         }

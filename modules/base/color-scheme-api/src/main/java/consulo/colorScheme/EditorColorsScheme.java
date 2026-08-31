@@ -15,12 +15,12 @@
  */
 package consulo.colorScheme;
 
+import consulo.colorScheme.internal.FontPreferences;
 import consulo.component.util.pointer.Named;
 import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-
-import java.awt.*;
 
 public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Named {
     String DEFAULT_SCHEME_NAME = "Default";
@@ -30,10 +30,8 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
     void setAttributes(TextAttributesKey key, TextAttributes attributes);
 
-    
     ColorValue getDefaultBackground();
 
-    
     ColorValue getDefaultForeground();
 
     @Nullable ColorValue getColor(EditorColorKey key);
@@ -80,6 +78,10 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
     float getLineSpacing();
 
     void setLineSpacing(float lineSpacing);
+
+    boolean isUseLigatures();
+
+    void setUseLigatures(boolean useLigatures);
 
     EditorColorsScheme clone();
 

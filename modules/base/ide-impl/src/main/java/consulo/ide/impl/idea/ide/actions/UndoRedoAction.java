@@ -15,24 +15,26 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.PlatformDataKeys;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
-import consulo.ui.image.Image;
-import consulo.undoRedo.UndoManager;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.UIAction;
+import consulo.ui.image.Image;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoManager;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.Couple;
 
-public abstract class UndoRedoAction extends DumbAwareAction {
+public abstract class UndoRedoAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public UndoRedoAction(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
@@ -46,37 +48,36 @@ public abstract class UndoRedoAction extends DumbAwareAction {
         perform(editor, undoManager);
     }
 
-    
     @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
-    }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = e.getPresentation();
+            FileEditor editor = e.getData(FileEditor.KEY);
 
-    @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        FileEditor editor = e.getData(FileEditor.KEY);
-
-        // do not allow global undo in dialogs
-        if (editor == null) {
-            Boolean isModalContext = e.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
-            if (isModalContext != null && isModalContext) {
-                presentation.setEnabled(false);
-                return;
+            // do not allow global undo in dialogs
+            if (editor == null) {
+                Boolean isModalContext = e.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
+                if (isModalContext != null && isModalContext) {
+                    presentation.setEnabled(false);
+                    return null;
+                }
             }
-        }
 
-        UndoManager undoManager = getUndoManager(editor, e.getDataContext());
-        if (undoManager == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        presentation.setEnabled(isAvailable(editor, undoManager));
+            UndoManager undoManager = getUndoManager(editor, e.getDataContext());
+            if (undoManager == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
 
-        Couple<String> pair = getActionNameAndDescription(editor, undoManager);
+            presentation.setEnabled(isAvailable(editor, undoManager));
 
-        presentation.setText(pair.first);
-        presentation.setDescription(pair.second);
+            Couple<String> pair = getActionNameAndDescription(editor, undoManager);
+
+            presentation.setText(pair.first);
+            presentation.setDescription(pair.second);
+            return null;
+        }));
+
     }
 
     private static UndoManager getUndoManager(FileEditor editor, DataContext dataContext) {

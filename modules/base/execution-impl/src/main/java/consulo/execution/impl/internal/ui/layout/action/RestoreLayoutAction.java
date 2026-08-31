@@ -6,15 +6,14 @@ import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Jeka
  */
-public final class RestoreLayoutAction extends DumbAwareAction {
+public final class RestoreLayoutAction extends LegacyDumbAwareAction {
     public RestoreLayoutAction() {
         super(
             ActionLocalize.actionRunnerRestorelayoutText(),
@@ -32,11 +31,6 @@ public final class RestoreLayoutAction extends DumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         RunnerContentUi ui = e.getRequiredData(RunnerContentUi.KEY);
         ui.restoreLayout();
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

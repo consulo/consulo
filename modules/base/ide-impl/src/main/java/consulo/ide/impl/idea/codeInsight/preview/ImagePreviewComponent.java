@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.ui.ex.awt.UIUtil;
 
 import org.jetbrains.annotations.TestOnly;

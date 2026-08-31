@@ -22,6 +22,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "MethodHierarchy")
 public final class BrowseMethodHierarchyAction extends BrowseHierarchyActionBase<MethodHierarchyProvider> {
@@ -30,11 +31,10 @@ public final class BrowseMethodHierarchyAction extends BrowseHierarchyActionBase
     }
 
     @Override
-    @RequiredUIAccess
-    public final void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         if (!ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
             e.getPresentation().setText(IdeLocalize.actionBrowseMethodHierarchy());
         }
-        super.update(e);
+        return super.updateAsync(e);
     }
 }

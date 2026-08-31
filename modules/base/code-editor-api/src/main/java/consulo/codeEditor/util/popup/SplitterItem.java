@@ -17,6 +17,7 @@ package consulo.codeEditor.util.popup;
 
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -25,7 +26,6 @@ import javax.swing.*;
  * @since 2012-05-11
  */
 public class SplitterItem extends ItemWrapper {
-
     private final String myText;
 
     public SplitterItem(String text) {
@@ -50,7 +50,7 @@ public class SplitterItem extends ItemWrapper {
     }
 
     @Override
-    public String footerText() {
+    public @Nullable String footerText() {
         return null;
     }
 

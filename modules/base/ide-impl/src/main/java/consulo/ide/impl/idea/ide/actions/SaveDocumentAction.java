@@ -6,14 +6,14 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author yole
  */
 @ActionImpl(id = "SaveDocument")
-public class SaveDocumentAction extends AnAction {
+public class SaveDocumentAction extends LegacyAnAction {
     public SaveDocumentAction() {
         super(ActionLocalize.actionSavedocumentText(), ActionLocalize.actionSavedocumentDescription());
     }

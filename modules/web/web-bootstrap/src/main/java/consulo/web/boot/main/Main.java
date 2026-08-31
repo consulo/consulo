@@ -18,7 +18,6 @@ package consulo.web.boot.main;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.internal.SystemContainerLogger;
 import consulo.container.internal.plugin.classloader.BootstrapClassLoaderUtil;
-import consulo.container.internal.plugin.classloader.Java9ModuleProcessor;
 import consulo.container.util.StatCollector;
 
 import java.io.File;
@@ -45,7 +44,7 @@ public class Main {
     map.put(ContainerStartup.ARGS, args);
     map.put(ContainerStartup.STAT_COLLECTOR, stat);
 
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE, Java9ModuleProcessor.EMPTY);
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE, new WebJava9ModuleProcessor());
 
     containerStartup.run(map);
   }

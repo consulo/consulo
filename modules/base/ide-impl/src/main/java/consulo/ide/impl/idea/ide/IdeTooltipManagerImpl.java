@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
@@ -37,7 +38,6 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -291,7 +291,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
      * @return true if the component is taken a part in any tooltip activity
      */
     //@ApiStatus.Experimental
-    @Contract(value = "null -> false", pure = true)
+    @Contract("null -> false")
     public boolean isProcessing(@Nullable Component tooltipOwner) {
         return tooltipOwner != null && (tooltipOwner == myCurrentComponent || tooltipOwner == myQueuedComponent || tooltipOwner == myProcessingComponent);
     }

@@ -146,7 +146,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
         ProjectViewNode node
     ) {
         PsiManager psiManager = PsiManager.getInstance(project);
-        VirtualFile[] files = entry.getFiles(BinariesOrderRootType.getInstance());
+        VirtualFile[] files = entry.getFiles(BinariesOrderRootType.ID);
         for (VirtualFile file : files) {
             PsiDirectory psiDir = psiManager.findDirectory(file);
             if (psiDir == null) {

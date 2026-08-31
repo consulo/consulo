@@ -21,14 +21,14 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
-import consulo.desktop.awt.editor.impl.view.EditorPainter;
+import consulo.desktop.awt.editor.impl.internal.DesktopEditorImpl;
+import consulo.desktop.awt.editor.impl.internal.view.EditorPainter;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
-import consulo.desktop.awt.ui.ExperimentalUI;
+import consulo.desktop.awt.ui.impl.ExperimentalUI;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IndentsPass;
-import consulo.ide.impl.idea.codeInsight.highlighting.DefaultLineMarkerRenderer;
+import consulo.ide.impl.idea.codeInsight.highlighting.BraceHighlightingHandler;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
@@ -171,12 +171,10 @@ public class DesktopAWTIndentPass extends IndentsPass {
     EditorColorsScheme scheme = editor.getColorsScheme();
     if (ExperimentalUI.isNewUI()) {
       List<RangeHighlighter> highlighters = ContainerUtil.filter(editor.getMarkupModel().getAllHighlighters(),
-                                                                 x -> x.getLineMarkerRenderer() instanceof DefaultLineMarkerRenderer);
+                                                                 x -> x.getUserData(BraceHighlightingHandler.MATCHED_BRACE_INDENT_COLOR) != null);
       if (!highlighters.isEmpty()) {
-        DefaultLineMarkerRenderer renderer = (DefaultLineMarkerRenderer)highlighters.get(0).getLineMarkerRenderer();
-        assert renderer != null;
         if (editor.offsetToVisualLine(startOffset, false) == editor.offsetToVisualLine(highlighters.get(0).getStartOffset(), false)) {
-          ColorValue color = renderer.getColor();
+          ColorValue color = highlighters.get(0).getUserData(BraceHighlightingHandler.MATCHED_BRACE_INDENT_COLOR);
           if (color != null) {
             ColorValue matched = scheme.getColor(EditorColors.MATCHED_BRACES_INDENT_GUIDE_COLOR);
             return ObjectUtil.notNull(matched, color);

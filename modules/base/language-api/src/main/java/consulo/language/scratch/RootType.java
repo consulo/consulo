@@ -15,6 +15,7 @@
  */
 package consulo.language.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -98,6 +99,7 @@ public abstract class RootType {
     return null;
   }
 
+  @RequiredReadAction
   public VirtualFile findFile(@Nullable Project project, String pathName, ScratchFileService.Option option) throws IOException {
     return ScratchFileService.getInstance().findFile(this, pathName, option);
   }

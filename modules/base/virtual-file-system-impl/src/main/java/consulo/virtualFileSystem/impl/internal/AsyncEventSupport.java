@@ -101,27 +101,37 @@ public final class AsyncEventSupport {
     }
 
     private static void beforeVfsChange(List<? extends AsyncFileListener.ChangeApplier> appliers) {
-        for (AsyncFileListener.ChangeApplier applier : appliers) {
-            PingProgress.interactWithEdtProgress();
-            try {
-                applier.beforeVfsChange();
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
+        if (appliers.isEmpty()) {
+            return;
         }
+        VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> {
+            for (AsyncFileListener.ChangeApplier applier : appliers) {
+                PingProgress.interactWithEdtProgress();
+                try {
+                    applier.beforeVfsChange();
+                }
+                catch (Throwable e) {
+                    LOG.error(e);
+                }
+            }
+        });
     }
 
     private static void afterVfsChange(List<? extends AsyncFileListener.ChangeApplier> appliers) {
-        for (AsyncFileListener.ChangeApplier applier : appliers) {
-            PingProgress.interactWithEdtProgress();
-            try {
-                applier.afterVfsChange();
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
+        if (appliers.isEmpty()) {
+            return;
         }
+        VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> {
+            for (AsyncFileListener.ChangeApplier applier : appliers) {
+                PingProgress.interactWithEdtProgress();
+                try {
+                    applier.afterVfsChange();
+                }
+                catch (Throwable e) {
+                    LOG.error(e);
+                }
+            }
+        });
     }
 
     @RequiredWriteAction

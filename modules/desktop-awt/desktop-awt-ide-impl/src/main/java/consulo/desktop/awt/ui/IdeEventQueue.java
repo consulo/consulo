@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui;
 
+import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -33,7 +34,7 @@ import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.desktop.awt.ui.keymap.IdeMouseEventDispatcher;
-import consulo.desktop.awt.wm.FocusManagerImpl;
+
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;
@@ -89,8 +90,8 @@ public class IdeEventQueue extends EventQueue {
     private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
     private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
-    private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
-    private static final boolean ourDefaultEventWithWrite = true;
+    private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of();
+    private static final boolean ourDefaultEventWithWrite = false;
 
     private static ProgressManager ourProgressManager;
 
@@ -106,6 +107,10 @@ public class IdeEventQueue extends EventQueue {
      * Swing event.
      */
     private int myEventCount;
+
+    private int myAsyncInputDispatchCount;
+    private final java.util.ArrayDeque<KeyEvent> myHeldKeyEvents = new java.util.ArrayDeque<>();
+    private int myReplayInProgressCount;
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private boolean myIsInInputEvent;
@@ -308,7 +313,14 @@ public class IdeEventQueue extends EventQueue {
     }
 
     public AWTEvent getTrueCurrentEvent() {
-        return myCurrentEvent;
+        AWTEvent currentEvent = myCurrentEvent;
+        if (currentEvent instanceof InputEvent) {
+            return currentEvent;
+        }
+        // events retargeted by LightweightDispatcher straight to a component never pass through dispatchEvent(), so
+        // myCurrentEvent can still hold an unrelated event while a mouse click is being delivered - AWT knows the real one
+        AWTEvent awtCurrentEvent = getCurrentEvent();
+        return awtCurrentEvent == null ? currentEvent : awtCurrentEvent;
     }
 
     private static boolean ourAppIsLoaded;
@@ -658,6 +670,11 @@ public class IdeEventQueue extends EventQueue {
 
     @RequiredUIAccess
     public void _dispatchEvent(AWTEvent e) {
+        if (myAsyncInputDispatchCount > 0 && e instanceof KeyEvent) {
+            myHeldKeyEvents.add((KeyEvent) e);
+            return;
+        }
+
         if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
             DnDManagerImpl dndManager = (DnDManagerImpl) DnDManager.getInstance();
             dndManager.setLastDropHandler(null);
@@ -850,6 +867,45 @@ public class IdeEventQueue extends EventQueue {
         }
     }
 
+    public void dispatchToAwtDirectly(AWTEvent e) {
+        defaultDispatchEvent(e);
+    }
+
+    public void beginAsyncInputDispatch() {
+        myAsyncInputDispatchCount++;
+    }
+
+    public void endAsyncInputDispatch() {
+        if (--myAsyncInputDispatchCount <= 0) {
+            myAsyncInputDispatchCount = 0;
+            flushHeldKeyEvents();
+        }
+    }
+
+    private void flushHeldKeyEvents() {
+        if (myHeldKeyEvents.isEmpty()) {
+            return;
+        }
+
+        // repost instead of dispatching inline: keeps the chronological order relative to the action
+        // which has just been performed, and lets a modal event pump started by that action deliver them
+        while (myAsyncInputDispatchCount == 0 && !myHeldKeyEvents.isEmpty()) {
+            postEvent(myHeldKeyEvents.poll());
+        }
+
+        // the reposted events are still ahead of us in the queue, and until they are dispatched the key
+        // dispatcher must keep STATE_PROCESSED so that inProcessedState() can swallow them. The sentinel
+        // is posted after them, so it marks the point where the replay is really over.
+        myReplayInProgressCount++;
+        //noinspection SSBasedInspection
+        SwingUtilities.invokeLater(() -> {
+            if (--myReplayInProgressCount <= 0) {
+                myReplayInProgressCount = 0;
+                maybeReady();
+            }
+        });
+    }
+
     public void flushQueue() {
         while (true) {
             AWTEvent event = peekEvent();
@@ -946,7 +1002,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     private boolean isReady() {
-        return !myKeyboardBusy && myKeyEventDispatcher.isReady();
+        return !myKeyboardBusy && myReplayInProgressCount == 0 && myKeyEventDispatcher.isReady();
     }
 
     public void maybeReady() {
@@ -998,8 +1054,7 @@ public class IdeEventQueue extends EventQueue {
                     if (uiSettings == null
                         || !Platform.current().os().isWindows()
                         || !Registry.is("actionSystem.win.suppressAlt")
-                        || !(uiSettings.getHideToolStripes()
-                        || uiSettings.getPresentationMode())) {
+                        || !uiSettings.getPresentationMode()) {
                         return false;
                     }
 

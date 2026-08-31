@@ -24,6 +24,8 @@ import consulo.util.io.ClassPathUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.function.Supplier;
@@ -53,26 +55,32 @@ public class ApplicationInfo {
     BuildNumber build = null;
     Calendar buildDate = null;
 
-    try (JarFile jarFile = new JarFile(jarPathForClass)) {
-      Manifest manifest = jarFile.getManifest();
-
-      Attributes attributes = manifest.getMainAttributes();
-
+    try {
       String buildNumberFromJvm = Platform.current().jvm().getRuntimeProperty("consulo.build.number");
       if (buildNumberFromJvm != null) {
         build = BuildNumber.fromString(buildNumberFromJvm);
       }
-      else {
-        String buildNumber = attributes.getValue("Consulo-Build-Number");
-        if (buildNumber != null) {
-          build = BuildNumber.fromString(buildNumber);
-        }
-      }
 
-      // yyyyMMddHHmm
-      String rawBuildDate = attributes.getValue("Consulo-Build-Date");
-      if (rawBuildDate != null) {
-        buildDate = parseDate(rawBuildDate);
+      // when running from exploded classes (tests), the class 'jar' is a directory - there is no manifest to read
+      if (jarPathForClass != null && Files.isRegularFile(Path.of(jarPathForClass))) {
+        try (JarFile jarFile = new JarFile(jarPathForClass)) {
+          Manifest manifest = jarFile.getManifest();
+
+          Attributes attributes = manifest.getMainAttributes();
+
+          if (build == null) {
+            String buildNumber = attributes.getValue("Consulo-Build-Number");
+            if (buildNumber != null) {
+              build = BuildNumber.fromString(buildNumber);
+            }
+          }
+
+          // yyyyMMddHHmm
+          String rawBuildDate = attributes.getValue("Consulo-Build-Date");
+          if (rawBuildDate != null) {
+            buildDate = parseDate(rawBuildDate);
+          }
+        }
       }
     }
     catch (Throwable e) {

@@ -1,0 +1,50 @@
+<!--
+  - Copyright 2013-2026 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<component>
+  <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
+  <!--the qtjambi native artifact is OS specific, it is added by each desktop-qt-* assembly descriptor-->
+  <dependencySets>
+    <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
+      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.qt/lib</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>consulo:consulo-desktop-ide-impl</include>
+        <include>consulo:consulo-desktop-qt-ui-impl</include>
+        <include>consulo:consulo-desktop-qt-editor-impl</include>
+        <include>consulo:consulo-desktop-qt-ide-impl</include>
+
+        <!--qtjambi is not booted, it belongs to this module and has to sit next to the os native jar that
+            each desktop-qt-* assembly descriptor adds here-->
+        <include>io.qtjambi:qtjambi</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
+      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>consulo:consulo-container-api</include>
+        <include>consulo:consulo-desktop-qt-bootstrap</include>
+        <include>consulo:consulo-bootstrap</include>
+        <include>consulo:consulo-util-nodep</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</component>

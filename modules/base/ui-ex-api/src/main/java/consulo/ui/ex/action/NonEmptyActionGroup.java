@@ -18,7 +18,7 @@ package consulo.ui.ex.action;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 
-public class NonEmptyActionGroup extends DefaultActionGroup implements DumbAware {
+public class NonEmptyActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public NonEmptyActionGroup() {
     }
 

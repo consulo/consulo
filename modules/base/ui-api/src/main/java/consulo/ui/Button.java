@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2017-09-13
  */
 public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFocus {
     @Deprecated
@@ -35,25 +35,30 @@ public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFo
     static Button create(String text) {
         return create(LocalizeValue.of(text));
     }
+
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue, ComponentEventListener<Component, ClickEvent>)")
     static Button create(String text, ComponentEventListener<Component, ClickEvent> clickListener) {
         return create(LocalizeValue.of(text), clickListener);
     }
+
     static Button create(LocalizeValue text) {
         return UIInternal.get()._Components_button(text);
     }
+
     static Button create(LocalizeValue text, ComponentEventListener<Component, ClickEvent> clickListener) {
         Button button = create(text);
         button.addClickListener(clickListener);
         return button;
     }
+
     LocalizeValue getText();
 
     @RequiredUIAccess
     void setText(LocalizeValue text);
 
-    @Nullable Image getIcon();
+    @Nullable
+    Image getIcon();
 
     @RequiredUIAccess
     void setIcon(@Nullable Image image);

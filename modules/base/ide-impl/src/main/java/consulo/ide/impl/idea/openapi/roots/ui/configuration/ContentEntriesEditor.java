@@ -362,7 +362,11 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
-            FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {
+            FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).whenComplete((virtualFiles, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 myLastSelectedDir = virtualFiles[0];
                 addContentEntries(virtualFiles);
             });

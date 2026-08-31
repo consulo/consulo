@@ -102,7 +102,7 @@ public class TreeTable extends JBTable {
     // No grid.
     setShowGrid(false);
 
-    // No intercell spacing
+    // No inter-cell spacing
     setIntercellSpacing(new Dimension(0, 0));
 
     // And update the height of the trees row to match that of the table.
@@ -242,7 +242,7 @@ public class TreeTable extends JBTable {
     }
 
     /**
-     * This is overriden to set <code>updatingListSelectionModel</code>
+     * This is overridden to set <code>updatingListSelectionModel</code>
      * and message super. This is the only place DefaultTreeSelectionModel
      * alters the ListSelectionModel.
      */
@@ -328,7 +328,7 @@ public class TreeTable extends JBTable {
 
     /**
      * Class responsible for calling updateSelectedPathsFromSelectedRows
-     * when the selection of the list changse.
+     * when the selection of the list change.
      */
     class ListSelectionHandler implements ListSelectionListener {
       @Override
@@ -363,7 +363,7 @@ public class TreeTable extends JBTable {
       // Some LAFs, for example, Aqua under MAC OS X
       // expand tree node by MOUSE_RELEASED event. Unfortunately,
       // it's not possible to find easy way to wedge in table's
-      // event sequense. Therefore we send "synthetic" release event.
+      // event sequence. Therefore we send "synthetic" release event.
       if (newEvent.getID()==MouseEvent.MOUSE_PRESSED) {
         MouseEvent newME2 = new MouseEvent(
                 myTree,
@@ -402,6 +402,5 @@ public class TreeTable extends JBTable {
   public void setMinRowHeight(int i) {
     setRowHeight(Math.max(getRowHeight(), i));
   }
-
 }
 

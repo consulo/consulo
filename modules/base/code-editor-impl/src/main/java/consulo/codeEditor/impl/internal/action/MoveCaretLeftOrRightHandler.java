@@ -19,6 +19,8 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -37,7 +39,8 @@ class MoveCaretLeftOrRightHandler extends EditorActionHandler {
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         SelectionModel selectionModel = editor.getSelectionModel();
         CaretModel caretModel = editor.getCaretModel();
         ScrollingModel scrollingModel = editor.getScrollingModel();

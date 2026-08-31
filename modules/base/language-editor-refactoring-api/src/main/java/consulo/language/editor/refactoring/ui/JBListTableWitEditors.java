@@ -24,6 +24,9 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.JBListTable;
 import consulo.ui.ex.awt.table.JBTableRowEditor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.font.Font;
+import consulo.ui.font.FontManager;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.swing.*;
@@ -45,8 +48,8 @@ public abstract class JBListTableWitEditors extends JBListTable {
         field.setBorder(JBUI.Borders.empty());
 
         Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
-        font = new Font(font.getFontName(), font.getStyle(), 12);
-        field.setFont(font);
+        font = FontManager.get().createFont(font.getFontName(), font.getFontStyle(), 12);
+        field.setFont(TargetAWT.to(font));
         field.addSettingsProvider(EditorSettingsProvider.NO_WHITESPACE);
 
         if (selected && focused) {

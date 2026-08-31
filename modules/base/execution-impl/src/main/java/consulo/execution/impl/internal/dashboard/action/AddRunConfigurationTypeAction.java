@@ -27,7 +27,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -42,7 +42,7 @@ import java.util.function.Consumer;
  * @since 2024-05-13
  */
 @ActionImpl(id = "RunDashboard.AddType", parents = @ActionParentRef(@ActionRef(type = AddServiceActionGroup.class)))
-public class AddRunConfigurationTypeAction extends DumbAwareAction {
+public class AddRunConfigurationTypeAction extends LegacyDumbAwareAction {
     public AddRunConfigurationTypeAction() {
         super(ActionLocalize.actionRundashboardAddtypeText());
     }

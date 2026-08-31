@@ -98,7 +98,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
   }
 
   @Override
-  public void afterLoadState() {
+  public void afterLoad(boolean first) {
     if (myProject.isDefault()) {
       return;
     }

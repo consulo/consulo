@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.inject.Inject;
@@ -28,7 +29,7 @@ import jakarta.inject.Inject;
  * @author mike
  */
 @ActionImpl(id = VcsActionGroup.ID)
-public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
+public class VcsActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public static final String ID = "VcsGroup";
 
     @Inject
@@ -42,7 +43,6 @@ public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
 
     @Override
     public void update(AnActionEvent event) {
-        super.update(event);
         Project project = event.getData(Project.KEY);
         event.getPresentation().setEnabledAndVisible(project != null && project.isOpen());
     }

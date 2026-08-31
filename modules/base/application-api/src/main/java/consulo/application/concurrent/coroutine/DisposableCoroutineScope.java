@@ -32,7 +32,7 @@ public final class DisposableCoroutineScope {
     public static void launchAsync(CoroutineContext context,
                                    Disposable parentDisposable,
                                    Supplier<Coroutine<@Nullable ?, ?>> supplier) {
-        CoroutineScope aScope = new CoroutineScope(context);
+        CoroutineScope aScope = CoroutineScope.of(context);
 
         Disposer.register(parentDisposable, aScope::cancel);
 

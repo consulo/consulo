@@ -112,6 +112,6 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
 
         styleManager.setCurrentStyle(style);
 
-        uiAccess.give(styleManager::refreshUI);
+        uiAccess.give(styleManager::forceRepaintAll);
     }
 }

@@ -31,7 +31,7 @@ import java.util.Objects;
 public interface ValueComponent<V> extends Component {
     @SuppressWarnings("unchecked")
     default Disposable addValueListener(ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener) {
-        return addListener((Class)ValueComponentEvent.class, valueListener);
+        return addListener((Class) ValueComponentEvent.class, valueListener);
     }
 
     @Nullable V getValue();

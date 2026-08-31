@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.content.library.ui.DocumentationUtil;
@@ -30,7 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -40,29 +41,27 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author anna
  * @since 2007-12-26
  */
-@ExtensionImpl
+@ExtensionImpl(id = DocumentationOrderRootType.ID, order = "after " + SourcesOrderRootType.ID)
 public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
     
     @Override
     public String getOrderRootTypeId() {
-        return "documentation";
+        return DocumentationOrderRootType.ID;
     }
 
-    
     @Override
     public SdkPathEditor createPathEditor(Sdk sdk) {
         return new DocumentationPathsEditor(sdk);
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.filetypesText();
     }
 
     @Override
-    public String getNodeText() {
-        return ProjectLocalize.libraryJavadocsNode().get();
+    public LocalizeValue getNodeText() {
+        return ProjectLocalize.libraryJavadocsNode();
     }
 
     static class DocumentationPathsEditor extends SdkPathEditor {
@@ -70,8 +69,8 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
         public DocumentationPathsEditor(Sdk sdk) {
             super(
-                ProjectLocalize.libraryJavadocsNode().get(),
-                DocumentationOrderRootType.getInstance(),
+                ProjectLocalize.libraryJavadocsNode(),
+                DocumentationOrderRootType.ID,
                 FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(),
                 sdk
             );
@@ -81,7 +80,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
         @Override
         protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
             AnAction specifyUrlButton =
-                new DumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.empty(), PlatformIconGroup.nodesPpweb()) {
+                new LegacyDumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.empty(), PlatformIconGroup.nodesPpweb()) {
                     {
                         setShortcutSet(CustomShortcutSet.fromString("alt S"));
                     }

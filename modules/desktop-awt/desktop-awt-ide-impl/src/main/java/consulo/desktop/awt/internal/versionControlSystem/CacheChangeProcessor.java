@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
@@ -40,7 +41,6 @@ import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.impl.internal.change.FakeRevision;
 import consulo.versionControlSystem.internal.CacheChangeProcessorBridge;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,12 +48,10 @@ import java.util.List;
 public abstract class CacheChangeProcessor extends DiffRequestProcessor implements CacheChangeProcessorBridge {
     private static final Logger LOG = Logger.getInstance(CacheChangeProcessor.class);
 
-    
     private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
     private @Nullable Change myCurrentChange;
 
-    
     private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
     public CacheChangeProcessor(Project project) {
@@ -68,10 +66,8 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
     // Abstract
     //
 
-    
     protected abstract List<Change> getSelectedChanges();
 
-    
     protected abstract List<Change> getAllChanges();
 
     protected abstract void selectChange(Change change);
@@ -93,11 +89,7 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
     }
 
     @RequiredUIAccess
-    public void updateRequest(
-        boolean force,
-        boolean useCache,
-        @Nullable ScrollToPolicy scrollToChangePolicy
-    ) {
+    public void updateRequest(boolean force, boolean useCache, @Nullable ScrollToPolicy scrollToChangePolicy) {
         if (isDisposed()) {
             return;
         }
@@ -147,7 +139,6 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
         return null;
     }
 
-    
     @CalledInBackground
     private DiffRequest loadRequest(Change change, ProgressIndicator indicator) {
         ChangeDiffRequestProducer presentable = ChangeDiffRequestProducer.create(getProject(), change);
@@ -183,7 +174,6 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
         myRequestCache.clear();
     }
 
-    
     @Override
     public Project getProject() {
         return super.getProject();

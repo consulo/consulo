@@ -20,6 +20,8 @@ import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentEntry;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
@@ -43,12 +45,15 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         myProject = project;
     }
 
-    
+
     @Override
     public VirtualFile[] getExcludeRootsForProject() {
-        VirtualFile outputPath = CompilerConfiguration.getInstance(myProject).getCompilerOutput();
-        if (outputPath != null) {
-            return new VirtualFile[]{outputPath};
+        String outputUrl = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+        if (outputUrl != null) {
+            VirtualFile outputPath = VirtualFileManager.getInstance().findFileByUrl(outputUrl);
+            if (outputPath != null) {
+                return new VirtualFile[]{outputPath};
+            }
         }
         return VirtualFile.EMPTY_ARRAY;
     }
@@ -60,10 +65,12 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         List<VirtualFilePointer> result = new ArrayList<>(3);
 
         if (manager.isInheritedCompilerOutput()) {
-            VirtualFilePointer compilerOutputPointer = CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
-            for (ContentEntry contentEntry : moduleRootLayer.getContentEntries()) {
-                if (compilerOutputPointer.getUrl().contains(contentEntry.getUrl())) {
-                    result.add(compilerOutputPointer);
+            String outputUrl = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+            if (outputUrl != null) {
+                for (ContentEntry contentEntry : moduleRootLayer.getContentEntries()) {
+                    if (outputUrl.contains(contentEntry.getUrl())) {
+                        result.add(new LightFilePointer(outputUrl));
+                    }
                 }
             }
         }
@@ -74,7 +81,10 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
 
             for (ContentFolderTypeProvider contentFolderType
                 : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
-                result.add(manager.getCompilerOutputPointer(contentFolderType));
+                String url = manager.getCompilerOutputUrl(contentFolderType);
+                if (url != null) {
+                    result.add(new LightFilePointer(url));
+                }
             }
         }
         return result.isEmpty() ? VirtualFilePointer.EMPTY_ARRAY : result.toArray(new VirtualFilePointer[result.size()]);

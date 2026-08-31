@@ -34,9 +34,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -152,7 +152,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         }
     }
 
-   
     public <T extends CustomCodeStyleSettings> T getCustomSettings(Class<T> aClass) {
         synchronized (myCustomSettings) {
             //noinspection unchecked
@@ -225,12 +224,12 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     private static final String ourSystemLineSeparator = SystemProperties.getLineSeparator();
 
     /**
-     * Line separator. It can be null if choosen line separator is "System-dependent"!
+     * Line separator. It can be null if chosen line separator is "System-dependent"!
      */
     public String LINE_SEPARATOR;
 
     /**
-     * @return line separator. If choosen line separator is "System-dependent" method returns default separator for this OS.
+     * @return line separator. If chosen line separator is "System-dependent" method returns default separator for this OS.
      */
     public String getLineSeparator() {
         return LINE_SEPARATOR != null ? LINE_SEPARATOR : ourSystemLineSeparator;
@@ -255,7 +254,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     @Deprecated
     public String PARAMETER_NAME_PREFIX = "";
     /**
-     * @deprecated Use JavaCodeStyleSettings.LOCAL_VARIABL_NAME_PREFIX
+     * @deprecated Use JavaCodeStyleSettings.LOCAL_VARIABLE_NAME_PREFIX
      */
     @Deprecated
     public String LOCAL_VARIABLE_NAME_PREFIX = "";
@@ -766,6 +765,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
+    @SuppressWarnings("SpellCheckingInspection")
     public String HTML_INLINE_ELEMENTS =
         "a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd," +
             "label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var";
@@ -852,7 +852,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     private CodeStyleSettings myParentSettings;
     private boolean myLoadedAdditionalIndentOptions;
 
-   
     private Collection<CustomCodeStyleSettings> getCustomSettingsValues() {
         synchronized (myCustomSettings) {
             return Collections.unmodifiableCollection(myCustomSettings.values());
@@ -1050,7 +1049,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         return getIndentOptions(fileType);
     }
 
-   
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByFile(@Nullable PsiFile file) {
         return getIndentOptionsByFile(file, null);
     }
@@ -1316,24 +1314,20 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         }
 
         @Override
-       
         public String getId() {
             return "TempFileType";
         }
 
         @Override
-       
         public LocalizeValue getDescription() {
             return LocalizeValue.of("TempFileType");
         }
 
         @Override
-       
         public String getDefaultExtension() {
             return myExtension;
         }
 
-       
         @Override
         public Image getIcon() {
             return null;
@@ -1587,7 +1581,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         mySoftMargins.setValues(softMargins);
     }
 
-   
     public ExcludedFiles getExcludedFiles() {
         return myExcludedFiles;
     }

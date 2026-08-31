@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.action.CreateFileAction;
 import consulo.ui.ex.action.*;
@@ -42,9 +45,9 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        super.update(e);
-        e.getPresentation().setText(getTemplatePresentation().getTextValue());
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return super.updateAsync(e)
+            .then(CodeExecution.consume(ignored -> e.getPresentation().setText(getTemplatePresentation().getTextValue())));
     }
 
     @Override

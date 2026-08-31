@@ -47,14 +47,18 @@ public interface FoldingModel {
   @Nullable FoldRegion addFoldRegion(int startOffset, int endOffset, String placeholderText);
 
   /**
-   * @deprecated Does nothing
-   * TODO to remove in IDEA 2018
+   * Creates a fold region with custom representation (defined by the provided renderer). Created region spans whole document lines, and
+   * always remains in a collapsed state (it can be removed, but not expanded).
+   *
+   * @param startLine starting document line in a target line range to fold (inclusive)
+   * @param endLine ending document line in a target line range to fold (inclusive)
+   * @param renderer Renderer defining the representation of fold region (size and rendered content). One renderer can be re-used for
+   *                 multiple fold regions.
+   * @return resulting fold region, or {@code null} if it cannot be created (e.g., due to unsupported overlapping with already existing
+   * regions)
    */
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2018")
-  @Deprecated
-  default boolean addFoldRegion(FoldRegion region) {
-    DeprecatedMethodException.report("Use addFoldRegion(int,int,String) instead");
-    return true;
+  default @Nullable CustomFoldRegion addCustomLinesFolding(int startLine, int endLine, CustomFoldRegionRenderer renderer) {
+    return null;
   }
 
   /**

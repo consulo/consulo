@@ -3,6 +3,7 @@ package consulo.versionControlSystem.change;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.util.function.Throwable2Computable;
 import consulo.project.Project;
 import consulo.util.io.CharsetToolkit;
@@ -13,7 +14,6 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.IOException;

@@ -3,7 +3,6 @@ package consulo.language.editor.inlay;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,14 +11,12 @@ public interface InlayPresentationFactory {
     /**
      * Text that can be used for elements that ARE valid syntax if they are pasted into file.
      */
-    @Contract(pure = true)
     InlayPresentation text(String text);
 
     /**
      * Small text should be used for elements whose text is not valid syntax in the file.
      * Should be used with {@link #container} to be aligned and properly placed.
      */
-    @Contract(pure = true)
     InlayPresentation smallText(String text);
 
     /**
@@ -31,17 +28,17 @@ public interface InlayPresentationFactory {
      * @param background      background color (may be null)
      * @param backgroundAlpha opacity from 0 to 1
      */
-    @Contract(pure = true)
-    InlayPresentation container(InlayPresentation presentation,
-                                Padding padding,
-                                RoundedCorners roundedCorners,
-                                ColorValue background,
-                                float backgroundAlpha);
+    InlayPresentation container(
+        InlayPresentation presentation,
+        Padding padding,
+        RoundedCorners roundedCorners,
+        ColorValue background,
+        float backgroundAlpha
+    );
 
     /**
      * Renders an icon inline.
      */
-    @Contract(pure = true)
     InlayPresentation icon(Image icon);
 
     /**
@@ -51,15 +48,11 @@ public interface InlayPresentationFactory {
      * @param clickListener click handler (may be null)
      * @param hoverListener hover handler (may be null)
      */
-    @Contract(pure = true)
-    InlayPresentation mouseHandling(InlayPresentation base,
-                                    ClickListener clickListener,
-                                    HoverListener hoverListener);
+    InlayPresentation mouseHandling(InlayPresentation base, ClickListener clickListener, HoverListener hoverListener);
 
     /**
      * Small icon variant.
      */
-    @Contract(pure = true)
     InlayPresentation smallScaledIcon(consulo.ui.image.Image icon);
 
     /**

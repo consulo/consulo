@@ -27,11 +27,10 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -55,13 +54,10 @@ public abstract class CompilerManager {
 
     public abstract boolean isCompilationActive();
 
-    
     public abstract Collection<FileType> getRegisteredInputTypes(TranslatingCompiler compiler);
 
-    
     public abstract Collection<FileType> getRegisteredOutputTypes(TranslatingCompiler compiler);
 
-    
     @Deprecated
     @DeprecationInfo("Use Compiler extension point")
     public abstract Compiler[] getAllCompilers();
@@ -111,11 +107,11 @@ public abstract class CompilerManager {
     /**
      * Compile a set of files.
      *
-     * @param files    a list of files to compile. If a VirtualFile is a directory, all containing files are processed.
+     * @param files    a list of files to compile. If a path is a directory, all containing files are processed.
      *                 Compiler excludes are not honored.
      * @param callback a notification callback, or null if no notifications needed.
      */
-    public abstract void compile(VirtualFile[] files, @Nullable CompileStatusNotification callback);
+    public abstract void compile(Collection<Path> files, @Nullable CompileStatusNotification callback);
 
     /**
      * Compile all sources (including test sources) from the module. Compiler excludes are not honored.
@@ -216,23 +212,21 @@ public abstract class CompilerManager {
      * @param file the file to check.
      * @return true if the file is excluded from compilation, false otherwise
      */
-    public abstract boolean isExcludedFromCompilation(VirtualFile file);
+    public abstract boolean isExcludedFromCompilation(Path file);
 
     public abstract ExcludedEntriesConfiguration getExcludedEntriesConfiguration();
 
     /*
-     * Convetience methods for creating frequently-used compile scopes
+     * Convenience methods for creating frequently-used compile scopes
      */
-    
-    public abstract CompileScope createFilesCompileScope(VirtualFile[] files);
 
-    
+    public abstract CompileScope createFilesCompileScope(Collection<Path> files);
+
     @RequiredReadAction
     public CompileScope createProjectCompileScope() {
         return createProjectCompileScope(true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createProjectCompileScope(boolean includeTestScope);
 
@@ -242,7 +236,6 @@ public abstract class CompilerManager {
         return createModuleCompileScope(module, includeDependentModules, true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createModuleCompileScope(
         Module module,
@@ -256,7 +249,6 @@ public abstract class CompilerManager {
         return createModulesCompileScope(modules, includeDependentModules, true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createModulesCompileScope(
         Module[] modules,
@@ -264,7 +256,6 @@ public abstract class CompilerManager {
         boolean includeTestScope
     );
 
-    
     @RequiredReadAction
     public CompileScope createModuleGroupCompileScope(
         Project project,
@@ -274,7 +265,6 @@ public abstract class CompilerManager {
         return createModuleGroupCompileScope(project, modules, includeDependentModules, true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createModuleGroupCompileScope(
         Project project,

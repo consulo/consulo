@@ -31,10 +31,12 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MnemonicHelper;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awt.AWTTitlelessDecorator;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
@@ -62,7 +64,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         myClearInstance = clearInstance;
         JRootPane rootPane = getRootPane();
 
-        TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane(), TitlelessDecorator.WELCOME_WINDOW);
+        TitlelessDecorator titlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane(), AWTTitlelessDecorator.WELCOME_WINDOW);
 
         FlatWelcomeScreen screen = new FlatWelcomeScreen(this, titlelessDecorator);
 
@@ -91,7 +93,9 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         MnemonicHelper.init(this);
         Disposer.register(application, this);
 
-        titlelessDecorator.install(this);
+        if (titlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.install(this);
+        }
 
         muTouchBarDisposable = TouchBarController.getInstance().showWindowActions(getContentPane());
     }

@@ -18,7 +18,9 @@ package consulo.util.collection.primitive.doubles;
 /**
  * @author VISTALL
  * @since 08/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.doubles.DoubleCollection} directly
  */
+@Deprecated
 public interface DoubleCollection {
   boolean add(double value);
 

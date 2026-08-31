@@ -22,10 +22,10 @@ import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroSelector;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -39,9 +39,13 @@ public class DesktopAwtMacroSelectorImpl implements MacroSelector {
   @Override
   public void select(@Nullable Project project, @Nullable Module module, Consumer<Macro> macroConsumer) {
     MacrosDialog dialog = new MacrosDialog(project, module);
-    AsyncResult<Void> result = dialog.showAsync();
+    CompletableFuture<Void> result = dialog.showAsync();
 
-    result.doWhenDone(() -> {
+    result.whenComplete((value, error) -> {
+      if (error != null) {
+        return;
+      }
+
       Macro selectedMacro = dialog.getSelectedMacro();
       if (selectedMacro != null) {
         macroConsumer.accept(selectedMacro);

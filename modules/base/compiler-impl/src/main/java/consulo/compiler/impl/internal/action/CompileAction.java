@@ -34,12 +34,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +49,7 @@ import java.util.List;
 import static consulo.ui.ex.action.Presentation.NO_MNEMONIC;
 
 @ActionImpl(id = IdeActions.ACTION_COMPILE)
-public class CompileAction extends CompileActionBase {
+public class CompileAction extends CompileActionBase implements AnActionWithAsyncUpdate {
     public CompileAction() {
         super(CompilerLocalize.actionCompileText(), CompilerLocalize.actionCompileDescription(), null);
     }
@@ -62,20 +64,26 @@ public class CompileAction extends CompileActionBase {
         else {
             VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
             if (files.length > 0) {
-                CompilerManager.getInstance(project).compile(files, null);
+                List<Path> paths = new ArrayList<>(files.length);
+                for (VirtualFile file : files) {
+                    paths.add(file.toNioPath());
+                }
+                CompilerManager.getInstance(project).compile(paths, null);
             }
         }
     }
 
-    @Override
     @RequiredReadAction
-    public void update(AnActionEvent event) {
-        super.update(event);
-        Presentation presentation = event.getPresentation();
+    @Override
+    protected void updateInReadAction(AnActionEvent e) {
+        super.updateInReadAction(e);
+
+        Presentation presentation = e.getPresentation();
+
         if (!presentation.isEnabled()) {
             return;
         }
-        DataContext dataContext = event.getDataContext();
+        DataContext dataContext = e.getDataContext();
 
         presentation.setText(CompilerLocalize.actionCompileText().map(NO_MNEMONIC));
         presentation.setEnabledAndVisible(true);
@@ -91,7 +99,7 @@ public class CompileAction extends CompileActionBase {
         VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
         if (module == null && files.length == 0) {
             presentation.setEnabled(false);
-            presentation.setVisible(!ActionPlaces.isPopupPlace(event.getPlace()));
+            presentation.setVisible(!ActionPlaces.isPopupPlace(e.getPlace()));
             return;
         }
 
@@ -127,7 +135,7 @@ public class CompileAction extends CompileActionBase {
                 else {
                     presentation.setEnabled(false);
                     // the action should be invisible in popups for non-java files
-                    presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
+                    presentation.setVisible(ActionPlaces.MAIN_MENU.equals(e.getPlace()));
                 }
             }
             else {
@@ -175,7 +183,7 @@ public class CompileAction extends CompileActionBase {
     }
 
     private static boolean isCompilableResourceFile(Project project, VirtualFile file) {
-        if (!ResourceCompilerConfiguration.getInstance(project).isResourceFile(file)) {
+        if (!ResourceCompilerConfiguration.getInstance(project).isResourceFile(file.toNioPath())) {
             return false;
         }
         Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);

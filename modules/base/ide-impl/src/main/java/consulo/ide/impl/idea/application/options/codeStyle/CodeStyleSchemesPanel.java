@@ -24,7 +24,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 
 import org.jspecify.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class CodeStyleSchemesPanel {
 
     private final HorizontalLayout myLayout;
     private final ComboBox<CodeStyleScheme> mySchemeComboBox;
-    private final MutableListModel<CodeStyleScheme> mySchemeComboBoxModel;
+    private final MutableFlatDataModel<CodeStyleScheme> mySchemeComboBoxModel;
 
     @RequiredUIAccess
     public CodeStyleSchemesPanel(CodeStyleSchemesModel model) {
@@ -47,9 +48,10 @@ public class CodeStyleSchemesPanel {
         myLayout = HorizontalLayout.create();
         myLayout.add(Label.create(LocalizeValue.localizeTODO("Scheme:")));
 
-        mySchemeComboBoxModel = MutableListModel.of(List.of());
+        mySchemeComboBoxModel = FlatDataModel.of(List.of());
         mySchemeComboBox = ComboBox.create(mySchemeComboBoxModel);
-        mySchemeComboBox.setRenderer((renderer, index, scheme) -> {
+        mySchemeComboBox.setRender((renderer, renderItem) -> {
+            var scheme = renderItem.getValue();
             if (scheme == null) {
                 return;
             }

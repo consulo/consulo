@@ -15,29 +15,35 @@
  */
 package consulo.ui;
 
-import consulo.ui.internal.UIInternal;
+import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
-import java.util.function.Function;
+import java.util.Comparator;
 
 /**
  * @author VISTALL
  * @since 2020-09-15
  */
-public interface TableColumn<Value, Item> {
-  class Builder<Value, Item> {
-    private final String myName;
-    private final Function<Item, Value> myConverter;
+public interface TableColumn<Item, Value> {
+    TableColumn<Item, Value> setHeader(LocalizeValue header);
 
-    public Builder(String name, Function<Item, Value> converter) {
-      myName = name;
-      myConverter = converter;
-    }
+    TableColumn<Item, Value> setRender(TextItemRender<Value> render);
 
-    public TableColumn<Value, Item> build() {
-      return UIInternal.get()._Components_tableColumBuild(myName, myConverter);
-    }
-  }
-  static <Value1, Item1> Builder<Value1, Item1> create(String name, Function<Item1, Value1> converter) {
-    return new Builder<>(name, converter);
-  }
+    TableColumn<Item, Value> setRender(ComponentItemRender<Value> render);
+
+    TableColumn<Item, Value> setWidth(int pixels);
+
+    TableColumn<Item, Value> setResizable(boolean resizable);
+
+    TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment);
+
+    /**
+     * @param comparator over the column value, {@code null} makes the column unsortable
+     */
+    TableColumn<Item, Value> setSortable(@Nullable Comparator<Value> comparator);
+
+    /**
+     * @param editor {@code null} (the default) leaves the column read only
+     */
+    TableColumn<Item, Value> setEditor(@Nullable TableItemEditor<Item, Value> editor);
 }

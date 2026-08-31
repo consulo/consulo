@@ -15,20 +15,26 @@
  */
 package consulo.web.internal.wm;
 
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.actionSystem.impl.UnifiedActionUtil;
-import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.disposer.Disposer;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
-import consulo.project.Project;
-import consulo.ui.MenuBar;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.IdeActions;
-import consulo.web.internal.ui.WebRootPaneImpl;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.web.ui.impl.internal.action.WebActionMenuExpander;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.base.WebFocusTracker;
+import consulo.web.ui.impl.internal.base.WebKeyTracker;
+import consulo.web.ui.impl.internal.base.WebShortcutDispatcher;
 
 /**
  * @author VISTALL
@@ -36,20 +42,67 @@ import consulo.web.internal.ui.WebRootPaneImpl;
  */
 public class WebIdeRootView {
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
-    private final MenuItemPresentationFactory myPresentationFactory;
-    private Project myProject;
-
-    private MenuBar myMenuBar;
+    private final WebIdeMenuBar myMenuBar;
+    private final WebNavigationBar myNavigationBar;
+    private final Project myProject;
 
     @RequiredUIAccess
     public WebIdeRootView(Project project) {
         myProject = project;
-        myPresentationFactory = new MenuItemPresentationFactory();
 
-        myRootPanel.getComponent().putUserData(Project.KEY, myProject);
+        // the frame provider is reached by walking up from whatever scope is focused, it must not become a scope
+        // itself - otherwise clicking the menu bar or the navigation bar would drop the editor context
+        WebFocusTracker.exclude(myRootPanel.getComponent());
 
-        myMenuBar = MenuBar.create();
-        myRootPanel.setMenuBar(myMenuBar);
+        myRootPanel.getComponent().putUserData(UiDataProvider.KEY, sink -> {
+            // isInitialized() also waits for the startup activities, and until they pass every action that needs a
+            // project - Close Project above all - saw an empty context and disabled itself
+            if (myProject != null && !myProject.isDisposed()) {
+                sink.set(Project.KEY, myProject);
+            }
+        });
+
+        WebFocusTracker.installRoot(myRootPanel.getComponent());
+        WebKeyTracker.installRoot(myRootPanel.getComponent());
+        WebShortcutDispatcher.installRoot(myRootPanel.getComponent());
+
+        myMenuBar = new WebIdeMenuBar(myRootPanel.getComponent());
+        myRootPanel.setMenuBar(myMenuBar.getMenuBar());
+        myRootPanel.setMenuBarRightComponent(createCloseProjectButton());
+
+        myNavigationBar = new WebNavigationBar(project, myRootPanel.getComponent());
+        // the bar listens on the focus manager, which is one object for the whole application - nothing here is
+        // taken down when the project closes unless it is said out loud, and a listener left behind holds the bar,
+        // which holds the project. it then answers a focus change by asking a disposed project for a service
+        Disposer.register(project, myNavigationBar);
+        myRootPanel.setNavigationBar(myNavigationBar.getComponent());
+    }
+
+    /**
+     * Closing a project is the frame's own business - a browser has no window controls to put it among, so it
+     * sits at the end of the menu row. The platform action is what runs, the same one the File menu holds.
+     */
+    @RequiredUIAccess
+    private Component createCloseProjectButton() {
+        // the icon alone, drawn the way a toolbar draws its buttons - a label here wraps over two lines and
+        // takes the width the menu needs, which pushes the menu into an overflow of its own
+        Button button = Button.create(LocalizeValue.empty());
+        button.setIcon(PlatformIconGroup.actionsCancel());
+        button.setToolTipText(ActionLocalize.actionCloseprojectText());
+        button.addStyle(ButtonStyle.BORDERLESS);
+        button.addClickListener(event -> {
+            AnAction action = ActionManager.getInstance().getAction("CloseProject");
+            if (action != null) {
+                WebActionMenuExpander.performAction(
+                    action,
+                    WebFocusTracker.createDataContext(myRootPanel.getComponent()),
+                    ActionPlaces.MAIN_MENU,
+                    new MenuItemPresentationFactory(),
+                    event.getInputDetails()
+                );
+            }
+        });
+        return button;
     }
 
     @RequiredUIAccess
@@ -57,20 +110,16 @@ public class WebIdeRootView {
         myRootPanel.setStatusBar(statusBar);
     }
 
+    /**
+     * Runs when the frame comes on screen, first time or after a move to another ui - a client which has not
+     * seen the frame yet holds none of its lazily sent state, so everything of that kind is sent anew.
+     */
     @RequiredUIAccess
     public void update() {
-        DataContext dataContext = ((BaseDataManager) DataManager.getInstance()).getDataContextTest(myRootPanel.getComponent());
+        myMenuBar.reset();
+        myMenuBar.updateMenuActions();
 
-        AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
-
-        // TODO explicit read action - remove in future
-        myProject.getApplication().runReadAction(() -> {
-            UnifiedActionUtil.expandActionGroup((ActionGroup) action,
-                dataContext,
-                ActionManager.getInstance(),
-                myPresentationFactory,
-                menuItem -> myMenuBar.add(menuItem));
-        });
+        myNavigationBar.update();
     }
 
     public WebRootPaneImpl getRootPanel() {

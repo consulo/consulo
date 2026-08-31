@@ -19,13 +19,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 
 @ActionImpl(id = "ShelvedChanges.ShowHideDeleted")
-public class ShowHideRecycledAction extends AnAction {
+public class ShowHideRecycledAction extends LegacyAnAction {
     public ShowHideRecycledAction() {
         super(ActionLocalize.actionShelvedchangesShowhidedeletedText(), ActionLocalize.actionShelvedchangesShowhidedeletedDescription());
     }

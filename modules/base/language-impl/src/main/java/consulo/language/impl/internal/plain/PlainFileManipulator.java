@@ -16,6 +16,7 @@
 
 package consulo.language.impl.internal.plain;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -32,6 +33,7 @@ import consulo.language.util.IncorrectOperationException;
 @ExtensionImpl
 public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTextFile> {
   @Override
+  @RequiredWriteAction
   public PsiPlainTextFile handleContentChange(PsiPlainTextFile file, TextRange range, String newContent)
           throws IncorrectOperationException {
     Document document = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());

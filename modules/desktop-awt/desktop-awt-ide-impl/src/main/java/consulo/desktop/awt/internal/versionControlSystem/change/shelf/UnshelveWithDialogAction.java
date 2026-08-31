@@ -26,7 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -40,7 +40,7 @@ import java.util.Collections;
  * @since 2011-02-25
  */
 @ActionImpl(id = "ShelveChanges.UnshelveWithDialog")
-public class UnshelveWithDialogAction extends AnAction {
+public class UnshelveWithDialogAction extends LegacyAnAction {
   public UnshelveWithDialogAction() {
     super(LocalizeValue.localizeTODO("Unshelve..."), LocalizeValue.localizeTODO("Correct paths where to apply patches and unshelve"));
   }

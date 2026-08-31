@@ -42,15 +42,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -77,7 +76,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
 
-    private Class<?> myCurrentNotLazyServiceClass;
+    private final ThreadLocal<Class<?>> myCurrentNotLazyServiceClass = new ThreadLocal<>();
 
     private volatile ThreeState myDisposeState = ThreeState.NO;
 
@@ -130,7 +129,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         bootstrapInjectingContainer(builder);
 
+        builder.coroutineContext(this::createCoroutineContext);
+
         myInjectingContainer = builder.build();
+    }
+
+    /**
+     * The context asynchronous instance creation runs in. Evaluated lazily, since this is reached from the
+     * constructor, before the state store exists. A manager without one inherits the parent container's.
+     */
+    protected @Nullable CoroutineContext createCoroutineContext() {
+        return null;
     }
 
     public abstract ComponentManager getApplication();
@@ -175,9 +184,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
         InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(TopicAPI.class, getComponentScope());
 
-        for (List<InjectingBinding> bindings : holder.getBindings().values()) {
+        for (Collection<InjectingBinding> bindings : holder.getBindings().values()) {
             for (InjectingBinding binding : bindings) {
-                if (InjectingBindingHolder.isValid(binding, getProfiles())) {
+                if (InjectingBindingHolderImpl.isValid(binding, getProfiles())) {
                     mapByTopic.put(binding.getApiClassName(), bindings);
                 }
             }
@@ -198,9 +207,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         int profiles = getProfiles();
 
-        for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
+        for (Collection<InjectingBinding> listOfBindings : holder.getBindings().values()) {
             try {
-                InjectingBinding injectingBinding = InjectingBindingHolder.findValid(listOfBindings, profiles);
+                InjectingBinding injectingBinding = InjectingBindingHolderImpl.findValid(listOfBindings, profiles);
                 if (injectingBinding == null) {
                     LOG.error("There no valid binding " + listOfBindings);
                     continue;
@@ -220,18 +229,31 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
                 point.constructorParameterTypes(injectingBinding.getParameterTypes());
                 point.constructorFactory(injectingBinding::create);
 
-                point.injectListener((time, instance) -> {
+                point.injectListener(new PostInjectListener<>() {
+                    @Override
+                    public void afterInject(long time, Object instance) {
+                        registerInstance(instance);
 
-                    if (myChecker.containsKey(key.getTargetClass())) {
-                        throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
-                    }
-                    myChecker.put(key.getTargetClass(), instance);
-
-                    if (instance instanceof Disposable) {
-                        Disposer.register(this, (Disposable) instance);
+                        initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
                     }
 
-                    initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
+                    @Override
+                    public Coroutine<?, ?> afterInjectAsync(long time, Object instance) {
+                        registerInstance(instance);
+
+                        return initializeIfStorableComponentAsync(instance, true, injectingBinding.isLazy());
+                    }
+
+                    private void registerInstance(Object instance) {
+                        if (myChecker.containsKey(key.getTargetClass())) {
+                            throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
+                        }
+                        myChecker.put(key.getTargetClass(), instance);
+
+                        if (instance instanceof Disposable) {
+                            Disposer.register(BaseComponentManager.this, (Disposable) instance);
+                        }
+                    }
                 });
 
                 if (!injectingBinding.isLazy()) {
@@ -246,9 +268,11 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     protected <T> T runServiceInitialize(InjectingBinding binding, Supplier<T> runnable) {
-        if (!myNotLazyStepFinished && !binding.isLazy() && myCurrentNotLazyServiceClass != null) {
-            if (!Objects.equals(binding.getApiClass(), myCurrentNotLazyServiceClass) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
-                LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClass().getName() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
+        Class<?> current = myCurrentNotLazyServiceClass.get();
+
+        if (!myNotLazyStepFinished && !binding.isLazy() && current != null) {
+            if (!Objects.equals(binding.getApiClass(), current) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
+                LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClass().getName() + "] from another service [" + current + "]"));
             }
         }
         return runnable.get();
@@ -263,7 +287,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return false;
     }
 
+    /**
+     * Asynchronous form of {@link #initializeIfStorableComponent}, returned as a step of the creating chain so
+     * that a component loading its state through coroutines never blocks the creating thread.
+     */
+    public Coroutine<?, ?> initializeIfStorableComponentAsync(Object component, boolean service, boolean lazy) {
+        initializeIfStorableComponent(component, service, lazy);
+        return Coroutine.empty();
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     public void initNotLazyServices() {
         try {
             if (myNotLazyStepFinished) {
@@ -274,12 +308,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
             StatCollector stat = new StatCollector();
 
-            int i = 1;
-            for (Class<?> serviceClass : myNotLazyServices) {
+            AtomicInteger i = new AtomicInteger(0);
+            myNotLazyServices.parallelStream().forEach(serviceClass -> {
                 try {
-                    myCurrentNotLazyServiceClass = serviceClass;
+                    myCurrentNotLazyServiceClass.set(serviceClass);
 
-                    checkCanceledAndChangeProgress(progressIndicator, i, myNotLazyServices.size());
+                    checkCanceledAndChangeProgress(progressIndicator, i.get(), myNotLazyServices.size());
 
                     stat.markWith(serviceClass.getName(), () -> getInstance(serviceClass));  // init it
                 }
@@ -287,16 +321,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
                     PluginExceptionUtil.logPluginError(LOG, t.getMessage(), t, serviceClass);
                 }
                 finally {
-                    i++;
+                    myCurrentNotLazyServiceClass.remove();
+                    
+                    i.incrementAndGet();
                 }
-            }
+            });
 
-            if (i != 1) {
+            if (i.get() != 0) {
                 stat.dump(getClass().getSimpleName() + " not lazy services initialize", LOG::info);
             }
         }
         finally {
-            myCurrentNotLazyServiceClass = null;
             myNotLazyStepFinished = true;
         }
     }
@@ -385,7 +420,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     @Override
-    @RequiredUIAccess
     public void dispose() {
         myDisposeState = ThreeState.UNSURE;
 

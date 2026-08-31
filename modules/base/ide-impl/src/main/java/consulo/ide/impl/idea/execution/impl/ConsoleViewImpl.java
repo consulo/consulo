@@ -6,9 +6,10 @@ import com.google.common.base.CharMatcher;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.*;
 import consulo.codeEditor.event.EditorMouseEvent;
@@ -18,7 +19,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -57,7 +57,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.UIUtil;
@@ -76,7 +77,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -87,7 +87,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
 
-public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider, OccurenceNavigator {
+public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, UiDataProvider, OccurenceNavigator {
     private static final String CONSOLE_VIEW_POPUP_MENU = "ConsoleView.PopupMenu";
     private static final Logger LOG = Logger.getInstance(ConsoleViewImpl.class);
 
@@ -107,12 +107,10 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     private final DisposedPsiManagerCheck myPsiDisposedCheck;
 
     private final boolean myIsViewer;
-    
     private ConsoleState myState;
 
     private final Alarm mySpareTimeAlarm = new Alarm(this);
 
-    
     private final Alarm myHeavyAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
     private volatile int myHeavyUpdateTicket;
     private final Collection<ChangeListener> myListeners = new CopyOnWriteArraySet<>();
@@ -147,7 +145,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
     protected final CompositeFilter myFilters;
 
-    
     private final InputFilter myInputMessageFilter;
 
     private @Nullable BiPredicate<ProcessEvent, Key> myProcessTextFilter;
@@ -163,7 +160,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         boolean usePredefinedMessageFilter
     ) {
         this(project, searchScope, viewer, new ConsoleState.NotStartedStated() {
-            
             @Override
             public ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler) {
                 return new ConsoleViewRunningState(console, processHandler, this, true, true);
@@ -434,7 +430,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    
     public JComponent getComponent() {
         if (myMainPanel == null) {
             myMainPanel = new JPanel(new BorderLayout());
@@ -522,7 +517,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         }
     }
 
-    
     protected JComponent createCenterComponent() {
         return myEditor.getComponent();
     }
@@ -658,7 +652,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         }
     }
 
-    protected IdeaModalityState getStateForUpdate() {
+    protected ModalityState getStateForUpdate() {
         return null;
     }
 
@@ -937,11 +931,14 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myEditor == null) {
-            return null;
+            return;
         }
-        if (Navigatable.KEY == dataId) {
+        sink.set(Editor.KEY, myEditor);
+        sink.set(HelpManager.HELP_ID, myHelpId);
+        sink.set(ConsoleView.KEY, this);
+        sink.lazy(Navigatable.KEY, () -> {
             LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
             HyperlinkInfo info = myHyperlinks.getHyperlinkInfoByLineAndCol(pos.line, pos.column);
             OpenFileDescriptor openFileDescriptor =
@@ -950,18 +947,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
                 return null;
             }
             return openFileDescriptor;
-        }
-
-        if (Editor.KEY == dataId) {
-            return myEditor;
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return myHelpId;
-        }
-        if (KEY == dataId) {
-            return this;
-        }
-        return null;
+        });
     }
 
     @Override
@@ -983,7 +969,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         print(hyperlinkText, ConsoleViewContentType.NORMAL_OUTPUT, info);
     }
 
-    
     private EditorEx createConsoleEditor() {
         return AccessRule.read(() -> {
             EditorEx editor = doCreateConsoleEditor();
@@ -1006,7 +991,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         });
     }
 
-    
     protected EditorEx doCreateConsoleEditor() {
         return ConsoleViewUtil.setupConsoleEditor(myProject, true, false);
     }
@@ -1219,7 +1203,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
             .findFirstSafe(extension -> extension.shouldFoldLine(myProject, lineText));
     }
 
-    private static class ClearThisConsoleAction extends DumbAwareAction {
+    private static class ClearThisConsoleAction extends LegacyDumbAwareAction {
         private final ConsoleView myConsoleView;
 
         ClearThisConsoleAction(ConsoleView consoleView) {
@@ -1316,7 +1300,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         insertUserText(typeOffset, textToUse);
     }
 
-    private abstract static class ConsoleAction extends AnAction implements DumbAware {
+    private abstract static class ConsoleAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -1363,12 +1347,13 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         @Override
         @RequiredUIAccess
         public void execute(ConsoleViewImpl consoleView, DataContext context) {
-            String text = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
-            if (text == null) {
-                return;
-            }
-            Editor editor = consoleView.myEditor;
-            consoleView.type(editor, text);
+            UIAccess uiAccess = UIAccess.current();
+            CopyPasteManager.getInstance().getContentsAsync(DataTransferType.TEXT).whenCompleteAsync((text, throwable) -> {
+                if (throwable != null || text == null) {
+                    return;
+                }
+                consoleView.type(consoleView.myEditor, text);
+            }, uiAccess);
         }
     }
 
@@ -1508,13 +1493,11 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         return calcNextOccurrence(-1);
     }
 
-    
     @Override
     public String getNextOccurenceActionName() {
         return ExecutionLocalize.downTheStackTrace().get();
     }
 
-    
     @Override
     public String getPreviousOccurenceActionName() {
         return ExecutionLocalize.upTheStackTrace().get();
@@ -1525,7 +1508,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    
     public AnAction[] createConsoleActions() {
         //Initializing prev and next occurrences actions
         CommonActionsManager actionsManager = CommonActionsManager.getInstance();
@@ -1732,12 +1714,11 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
     private final ClearRunnable CLEAR = new ClearRunnable();
 
-    
     public Project getProject() {
         return myProject;
     }
 
-    private class HyperlinkNavigationAction extends DumbAwareAction {
+    private class HyperlinkNavigationAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -1753,9 +1734,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         }
     }
 
-    
     public String getText() {
         return myEditor.getDocument().getText();
     }
 }
-

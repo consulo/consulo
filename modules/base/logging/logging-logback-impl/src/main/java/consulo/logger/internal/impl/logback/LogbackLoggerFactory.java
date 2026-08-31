@@ -105,7 +105,10 @@ public class LogbackLoggerFactory implements LoggerFactory {
             return context;
         }
         catch (Exception e) {
-            ShowErrorCaller.showErrorDialog(Application.get().getName().get(), e.getMessage(), e);
+            // always print it to console, due in that case we 
+            e.printStackTrace();
+
+            ShowErrorCaller.showErrorDialog("Logger Error", e.getMessage(), e);
             return null;
         }
     }

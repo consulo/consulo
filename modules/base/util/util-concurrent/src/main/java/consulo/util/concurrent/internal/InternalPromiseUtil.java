@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 /**
  * Only internal usage.
  */
+@Deprecated
 public class InternalPromiseUtil {
   public static final RuntimeException OBSOLETE_ERROR = new MessageError("Obsolete", false);
 

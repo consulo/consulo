@@ -15,41 +15,45 @@
  */
 package consulo.compiler.scope;
 
-import consulo.application.ReadAction;
 import consulo.compiler.util.ExportableUserDataHolderBase;
 import consulo.module.Module;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-import java.util.*;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
  * @author 2003-01-20
  */
 public class FileSetCompileScope extends ExportableUserDataHolderBase implements CompileScope {
-    private final Set<VirtualFile> myRootFiles = new HashSet<>();
-    private final Set<String> myDirectoryUrls = new HashSet<>();
-    private Set<String> myUrls = null; // urls caching
+    private final Set<Path> myRootFiles = new HashSet<>();
+    private final Set<String> myDirectoryPaths = new HashSet<>();
+    private Set<String> myPaths = null;
     private final Module[] myAffectedModules;
     private final boolean myIncludeTestScope;
 
-    public FileSetCompileScope(Collection<VirtualFile> files, Module[] modules) {
+    public FileSetCompileScope(Collection<Path> files, Module[] modules) {
         this(files, modules, true);
     }
 
-    public FileSetCompileScope(Collection<VirtualFile> files, Module[] modules, boolean includeTestScope) {
+    public FileSetCompileScope(Collection<Path> files, Module[] modules, boolean includeTestScope) {
         myAffectedModules = modules;
         myIncludeTestScope = includeTestScope;
-        ReadAction.run(() -> {
-            for (VirtualFile file : files) {
-                assert file != null;
-                addFile(file);
-            }
-        });
+        for (Path file : files) {
+            addFile(file);
+        }
     }
 
     @Override
@@ -57,78 +61,80 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
         return myIncludeTestScope;
     }
 
-    
     @Override
     public Module[] getAffectedModules() {
         return myAffectedModules;
     }
 
-    public Collection<VirtualFile> getRootFiles() {
-        return Collections.unmodifiableCollection(myRootFiles);
-    }
-
-    
     @Override
-    public VirtualFile[] getFiles(FileType fileType) {
-        List<VirtualFile> files = new ArrayList<>();
-        for (Iterator<VirtualFile> it = myRootFiles.iterator(); it.hasNext(); ) {
-            VirtualFile file = it.next();
-            if (!file.isValid()) {
-                it.remove();
-                continue;
-            }
-            if (file.isDirectory()) {
+    public Collection<Path> getFiles(FileType fileType) {
+        List<Path> files = new ArrayList<>();
+        for (Path file : myRootFiles) {
+            if (Files.isDirectory(file)) {
                 addRecursively(files, file, fileType);
             }
-            else if (fileType == null || fileType.equals(file.getFileType())) {
+            else if (Files.exists(file) && matches(file, fileType)) {
                 files.add(file);
             }
         }
-        return VirtualFileUtil.toVirtualFileArray(files);
+        return files;
     }
 
     @Override
-    public boolean belongs(String url) {
-        //url = CompilerUtil.normalizePath(url, '/');
-        if (getUrls().contains(url)) {
+    public boolean belongs(Path path) {
+        String normalizedPath = FileUtil.toSystemIndependentName(path.toString());
+        if (getPaths().contains(normalizedPath)) {
             return true;
         }
-        for (String directoryUrl : myDirectoryUrls) {
-            if (FileUtil.startsWith(url, directoryUrl)) {
+        for (String directoryPath : myDirectoryPaths) {
+            if (FileUtil.startsWith(normalizedPath, directoryPath)) {
                 return true;
             }
         }
         return false;
     }
 
-    private Set<String> getUrls() {
-        if (myUrls == null) {
-            myUrls = new HashSet<>();
-            for (VirtualFile file : myRootFiles) {
-                String url = file.getUrl();
-                myUrls.add(url);
+    private Set<String> getPaths() {
+        if (myPaths == null) {
+            myPaths = new HashSet<>();
+            for (Path file : myRootFiles) {
+                myPaths.add(FileUtil.toSystemIndependentName(file.toString()));
             }
         }
-        return myUrls;
+        return myPaths;
     }
 
-    private void addFile(VirtualFile file) {
-        if (file.isDirectory()) {
-            myDirectoryUrls.add(file.getUrl() + "/");
+    private void addFile(Path file) {
+        if (Files.isDirectory(file)) {
+            myDirectoryPaths.add(FileUtil.toSystemIndependentName(file.toString()) + "/");
         }
         myRootFiles.add(file);
-        myUrls = null;
+        myPaths = null;
     }
 
-    private static void addRecursively(final Collection<VirtualFile> container, VirtualFile fromDirectory, final FileType fileType) {
-        VirtualFileUtil.visitChildrenRecursively(fromDirectory, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT) {
-            @Override
-            public boolean visitFile(VirtualFile child) {
-                if (!child.isDirectory() && (fileType == null || fileType.equals(child.getFileType()))) {
-                    container.add(child);
+    private static boolean matches(Path file, FileType fileType) {
+        return fileType == null
+            || fileType.equals(FileTypeRegistry.getInstance().getFileTypeByFileName(file.getFileName().toString()));
+    }
+
+    private static void addRecursively(Collection<Path> container, Path fromDirectory, FileType fileType) {
+        try {
+            Files.walkFileTree(fromDirectory, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    if (matches(file, fileType)) {
+                        container.add(file);
+                    }
+                    return FileVisitResult.CONTINUE;
                 }
-                return true;
-            }
-        });
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException e) {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        catch (IOException ignored) {
+        }
     }
 }

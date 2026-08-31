@@ -6,14 +6,13 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.remoteServer.impl.internal.ui.tree.ServersTreeStructure;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.execution.service.ServiceViewActionUtils.getTarget;
 
 @ActionImpl(id = "RemoteServers.EditDeploymentConfig")
-public class DeploymentConfigAction extends DumbAwareAction {
+public class DeploymentConfigAction extends LegacyDumbAwareAction {
     public DeploymentConfigAction() {
         super(RemoteServerLocalize.actionRemoteserversEditserverconfigText(), RemoteServerLocalize.actionRemoteserversEditserverconfigDescription(), PlatformIconGroup.actionsEdit());
     }
@@ -31,10 +30,5 @@ public class DeploymentConfigAction extends DumbAwareAction {
         if (node != null) {
             node.editConfiguration();
         }
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

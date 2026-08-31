@@ -7,8 +7,8 @@ import consulo.build.ui.FilePosition;
  * @author Vladislav.Soroka
  */
 public interface FileMessageEvent extends MessageEvent {
-  FilePosition getFilePosition();
+    FilePosition getFilePosition();
 
-  @Override
-  FileMessageEventResult getResult();
+    @Override
+    FileMessageEventResult getResult();
 }

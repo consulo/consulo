@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
@@ -56,6 +57,7 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -80,7 +82,6 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
         }
     }
 
-    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

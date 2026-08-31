@@ -22,11 +22,6 @@ public class SwitchUpdateModeAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
-    @Override
     @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);

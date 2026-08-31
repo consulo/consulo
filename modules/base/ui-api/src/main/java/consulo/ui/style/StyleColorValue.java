@@ -20,11 +20,11 @@ import consulo.ui.color.RGBColor;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 2016-06-22
  */
 public interface StyleColorValue extends ColorValue {
-  @Override
-  default RGBColor toRGB() {
-    return StyleManager.get().getCurrentStyle().getColorValue(this).toRGB();
-  }
+    @Override
+    default RGBColor toRGB() {
+        return StyleManager.get().getCurrentStyle().getColorValue(this).toRGB();
+    }
 }

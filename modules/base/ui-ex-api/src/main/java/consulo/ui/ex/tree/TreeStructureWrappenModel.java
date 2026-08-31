@@ -15,19 +15,27 @@
  */
 package consulo.ui.ex.tree;
 
-import consulo.application.ReadAction;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.dataContext.DataManager;
+import consulo.logging.Logger;
+import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.event.details.InputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
 /**
+ * Takes no read lock of its own: a tree over this model has to be created with an executor from
+ * {@link ApplicationTreeExecutorFactory}, which runs everything here - building and rendering alike - as one
+ * cancellable read action instead of the many small ones this model used to take itself.
+ *
  * @author VISTALL
  * @since 16-Sep-17
  */
 public class TreeStructureWrappenModel<T> implements TreeModel<T> {
+    private static final Logger LOG = Logger.getInstance(TreeStructureWrappenModel.class);
+
     private AbstractTreeStructure myStructure;
 
     public TreeStructureWrappenModel(AbstractTreeStructure structure) {
@@ -39,32 +47,61 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
     }
 
     @Override
+    public boolean onDoubleClick(Tree<T> tree, TreeNode<T> node, @Nullable InputDetails inputDetails) {
+        if (node.getValue() instanceof SimpleNode simpleNode) {
+            return !simpleNode.handleDoubleClickOrEnter(DataManager.getInstance().getDataContext(tree), inputDetails);
+        }
+        return onDoubleClick(tree, node);
+    }
+
+    @Override
     public boolean isNeedBuildChildrenBeforeOpen(TreeNode<T> node) {
         return myStructure.isToBuildChildrenInBackground(node.getValue());
+    }
+
+    private boolean isLeaf(Object element) {
+        LeafState leafState = element instanceof LeafState.Supplier supplier ? supplier.getLeafState() : LeafState.DEFAULT;
+
+        return switch (leafState) {
+            case ALWAYS -> true;
+            case NEVER, ASYNC -> false;
+            case DEFAULT -> myStructure.getChildElements(element).length == 0;
+        };
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void buildChildren(Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
-        ThrowableComputable<Object[], RuntimeException> action = () -> myStructure.getChildElements(parentValue);
-
-        for (Object o : ReadAction.compute(action)) {
+        for (Object o : myStructure.getChildElements(parentValue)) {
             T element = (T) o;
             TreeNode<T> apply = nodeFactory.apply(element);
 
-            apply.setLeaf(o instanceof consulo.ui.ex.tree.TreeNode && !((consulo.ui.ex.tree.TreeNode) o).isAlwaysShowPlus());
+            // the order of a level is decided on the descriptors of that level, and one which was never updated
+            // carries no presentation yet - its name is null, and a comparator ordering by name cannot tell two
+            // of them apart. the awt tree updates them as it builds, for the same reason
+            if (o instanceof NodeDescriptor descriptor) {
+                descriptor.update();
+            }
+
+            apply.setLeaf(isLeaf(o));
 
             apply.setRenderer((fileElement, itemPresentation) -> {
                 NodeDescriptor descriptor = myStructure.createDescriptor(element, null);
 
                 descriptor.update();
 
-                itemPresentation.append(descriptor.toString());
+                if (descriptor instanceof PresentableNodeDescriptor<?> presentable) {
+                    SimpleTreeModel.renderPresentation(itemPresentation, presentable, descriptor);
+                }
+                else {
+                    itemPresentation.append(descriptor.toString());
+                }
+
                 try {
-                    ReadAction.compute(() -> itemPresentation.withIcon(descriptor.getIcon()));
+                    itemPresentation.withIcon(SimpleTreeModel.iconOf(descriptor));
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error(e);
                 }
             });
         }

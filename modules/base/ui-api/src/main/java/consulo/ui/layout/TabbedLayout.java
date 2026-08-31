@@ -15,17 +15,22 @@
  */
 package consulo.ui.layout;
 
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.HasPrefixComponent;
+import consulo.ui.HasSuffixComponent;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.TabSelectEvent;
 import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
-public interface TabbedLayout extends Layout<LayoutConstraint> {
+public interface TabbedLayout extends Layout<LayoutConstraint>, HasPrefixComponent, HasSuffixComponent {
     static TabbedLayout create() {
         return UIInternal.get()._Layouts_tabbed();
     }
@@ -36,18 +41,26 @@ public interface TabbedLayout extends Layout<LayoutConstraint> {
      * @return new tab
      */
     Tab createTab();
+
     @RequiredUIAccess
     default Tab addTab(Tab tab, PseudoComponent component) {
         return addTab(tab, component.getComponent());
     }
+
     @RequiredUIAccess
     default Tab addTab(String tabName, PseudoComponent component) {
         return addTab(tabName, component.getComponent());
     }
+
     @RequiredUIAccess
     Tab addTab(Tab tab, Component component);
+
     @RequiredUIAccess
     Tab addTab(String tabName, Component component);
 
     void removeTab(Tab tab);
+
+    default Disposable addSelectListener(ComponentEventListener<Component, TabSelectEvent> listener) {
+        return addListener(TabSelectEvent.class, listener);
+    }
 }

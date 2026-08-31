@@ -3,11 +3,14 @@
  * @since 08-Aug-22
  */
 module consulo.execution.impl {
+    requires consulo.mcp.server.api;
     requires consulo.execution.api;
     requires consulo.configuration.editor.api;
     requires static consulo.task.api;
 
     requires com.google.common;
+    requires jediterm.core;
+    requires pty4j;
 
     // TODO remove in future
     requires consulo.ui.ex.awt.api;
@@ -33,12 +36,12 @@ module consulo.execution.impl {
     exports consulo.execution.impl.internal.ui.layout to
         consulo.ide.impl,
         consulo.execution.debug.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.impl.internal.ui.layout.action to
         consulo.ide.impl,
         consulo.execution.debug.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.impl.internal.dashboard.action to consulo.execution.debug.impl;
 

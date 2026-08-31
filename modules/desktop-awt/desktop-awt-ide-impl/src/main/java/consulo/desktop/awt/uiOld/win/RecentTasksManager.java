@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author VISTALL
- * @since 28-Feb-22
+ * @since 2022-02-28
  */
 public class RecentTasksManager {
   private static final int NOT_INITIALIZED = 0;
@@ -36,6 +36,7 @@ public class RecentTasksManager {
 
   private static AtomicInteger ourInitializeState = new AtomicInteger(NOT_INITIALIZED);
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static void init(Application application) {
     if (ourInitializeState.compareAndSet(NOT_INITIALIZED, INITIALIZING)) {
       try {

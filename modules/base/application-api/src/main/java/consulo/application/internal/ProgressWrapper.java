@@ -15,10 +15,10 @@
  */
 package consulo.application.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.application.progress.WrappedProgressIndicator;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 
@@ -60,13 +60,13 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
     return myOriginal;
   }
 
-  @Contract(value = "null -> null; !null -> !null", pure = true)
+  @Contract("null -> null; !null -> !null")
   public static @Nullable ProgressWrapper wrap(@Nullable ProgressIndicator indicator) {
     return indicator == null ? null
         : indicator instanceof ProgressWrapper progressWrapper ? progressWrapper : new ProgressWrapper(indicator);
   }
 
-  @Contract(value = "null -> null; !null -> !null", pure = true)
+  @Contract("null -> null; !null -> !null")
   public static @Nullable ProgressIndicator unwrap(ProgressIndicator indicator) {
     return indicator instanceof ProgressWrapper progressWrapper ? progressWrapper.getOriginalProgressIndicator() : indicator;
   }

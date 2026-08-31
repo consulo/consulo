@@ -43,13 +43,14 @@ import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Vladislav.Soroka
@@ -94,10 +95,10 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, ExternalSystemBeforeRunTask task) {
+    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, ExternalSystemBeforeRunTask task) {
         ExternalSystemEditTaskDialog dialog = new ExternalSystemEditTaskDialog(myProject, task.getTaskExecutionSettings(), mySystemId);
         dialog.setTitle(ExternalSystemLocalize.tasksSelectTaskTitle(mySystemId.getDisplayName()));
-        return dialog.showAsync();
+        return dialog.showAsync().toCompletableFuture();
     }
 
     @Override
@@ -127,11 +128,11 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
     
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess,
-                                              DataContext context,
-                                              RunConfiguration configuration,
-                                              ExecutionEnvironment env,
-                                              ExternalSystemBeforeRunTask beforeRunTask) {
+    public CompletableFuture<Void> executeTaskAsync(UIAccess uiAccess,
+                                                    DataContext context,
+                                                    RunConfiguration configuration,
+                                                    ExecutionEnvironment env,
+                                                    ExternalSystemBeforeRunTask beforeRunTask) {
         ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
         List<ExternalTaskPojo> tasks = new ArrayList<>();
@@ -139,14 +140,14 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
             tasks.add(new ExternalTaskPojo(taskName, executionSettings.getExternalProjectPath(), null));
         }
         if (tasks.isEmpty()) {
-            return AsyncResult.resolved();
+            return CompletableFuture.completedFuture(null);
         }
 
         Pair<ProgramRunner, ExecutionEnvironment> pair =
             ExternalSystemApiUtil.createRunner(executionSettings, DefaultRunExecutor.EXECUTOR_ID, myProject, mySystemId);
 
         if (pair == null) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
         ProgramRunner runner = pair.first;
@@ -158,8 +159,8 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
         Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         final String executorId = executor.getId();
 
-        AsyncResult<Void> result = AsyncResult.undefined();
-        result.doWhenProcessed(disposable::disposeWithTree);
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        result.whenComplete((value, error) -> disposable.disposeWithTree());
 
         myProject.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
             @Override
@@ -171,7 +172,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
             @Override
             public void processNotStarted(String executorIdLocal, ExecutionEnvironment environmentLocal) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-                    result.setRejected();
+                    result.completeExceptionally(new CancellationException());
                 }
             }
 
@@ -184,10 +185,10 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
                         @Override
                         public void processTerminated(ProcessEvent event) {
                             if (event.getExitCode() == 0) {
-                                result.setDone();
+                                result.complete(null);
                             }
                             else {
-                                result.setRejected();
+                                result.completeExceptionally(new CancellationException());
                             }
 
                             environmentLocal.getContentToReuse();
@@ -202,7 +203,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
                 runner.execute(environment);
             }
             catch (ExecutionException e) {
-                result.rejectWithThrowable(e);
+                result.completeExceptionally(e);
                 LOG.error(e);
             }
         });

@@ -15,16 +15,21 @@
  */
 package consulo.component.impl.internal.inject;
 
+import consulo.component.ProviderAsync;
+import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.ui.UIAccess;
 import jakarta.inject.Provider;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2018-08-26
  */
 class ProviderParameter<T> implements Parameter<Provider<T>> {
-  private static class ProviderImpl<T> implements Provider<T> {
-    private InstanceContainer myContainer;
-    private Class<? super T> myClass;
+  private static class ProviderImpl<T> implements ProviderAsync<T> {
+    private final InstanceContainer myContainer;
+    private final Class<? super T> myClass;
 
     private volatile T myValue;
 
@@ -38,14 +43,39 @@ class ProviderParameter<T> implements Parameter<Provider<T>> {
     public T get() {
       T value = myValue;
       if (value != null) {
-        myContainer = null;
-        myClass = null;
         return value;
+      }
+
+      // the type check comes first - UIAccess.isUIThread() needs a booted UI environment
+      if (isAsyncStateComponent() && UIAccess.isUIThread()) {
+        throw new IllegalStateException("Creating " + myClass.getName() + " loads state asynchronously - call #getAsync() on the UI thread");
       }
 
       value = (T)myContainer.getComponentInstance(myClass);
       myValue = value;
       return value;
+    }
+
+    @Override
+    public CompletableFuture<T> getAsync() {
+      T value = myValue;
+      if (value != null) {
+        return CompletableFuture.completedFuture(value);
+      }
+
+      return myContainer.<T>getComponentInstanceAsync(myClass).thenApply(instance -> {
+        myValue = instance;
+        return instance;
+      });
+    }
+
+    private boolean isAsyncStateComponent() {
+      ComponentAdapter<T> adapter = myContainer.getComponentAdapter(myClass);
+      if (adapter == null) {
+        return false;
+      }
+      Class<?> implClass = adapter.getComponentImplClassIfCheap();
+      return implClass != null && PersistentStateComponentAsync.class.isAssignableFrom(implClass);
     }
   }
 

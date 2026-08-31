@@ -21,6 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 
 import org.jspecify.annotations.Nullable;
@@ -72,6 +73,12 @@ public interface DocumentationManager {
                        @Nullable String documentation,
                        boolean closeOnSneeze,
                        boolean useStoredPopupSize);
+
+  /**
+   * Shows quick doc for {@code element}, anchoring the popup at {@code popupAnchor} instead of the caret.
+   * Used when the doc is requested from a place that has no caret of its own, e.g. a link inside a rendered doc comment.
+   */
+  void showJavaDocInfo(Editor editor, PsiElement element, PsiElement original, @Nullable RelativePoint popupAnchor);
 
   void showJavaDocInfoAtToolWindow(PsiElement element, PsiElement original);
 

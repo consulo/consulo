@@ -76,7 +76,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
   }
 
-  private class CopyAction extends AnAction implements DumbAware {
+  private class CopyAction extends LegacyDumbAwareAction {
     public CopyAction() {
       super(CommonLocalize.buttonCopy());
     }
@@ -88,7 +88,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
   }
 
-  private class RenameAction extends AnAction implements DumbAware {
+  private class RenameAction extends LegacyDumbAwareAction {
     public RenameAction() {
       super(LocalizeValue.localizeTODO("Rename"));
     }
@@ -105,7 +105,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
   }
 
-  private class DeleteAction extends AnAction implements DumbAware {
+  private class DeleteAction extends LegacyDumbAwareAction {
     public DeleteAction() {
       super(CommonLocalize.buttonDelete());
     }
@@ -122,7 +122,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
   }
 
-  private class EditDescriptionAction extends AnAction implements DumbAware {
+  private class EditDescriptionAction extends LegacyDumbAwareAction {
     public EditDescriptionAction(boolean hasDescription) {
       super(hasDescription ? "Edit description" : "Add description");
     }
@@ -139,7 +139,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
   }
 
-  private class ExportAction extends AnAction implements DumbAware {
+  private class ExportAction extends LegacyDumbAwareAction {
     public ExportAction() {
       super(LocalizeValue.localizeTODO("Export..."));
     }
@@ -151,7 +151,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
   }
 
-  private class ImportAction extends AnAction implements DumbAware {
+  private class ImportAction extends LegacyDumbAwareAction {
     public ImportAction() {
       super(LocalizeValue.localizeTODO("Import..."));
     }

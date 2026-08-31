@@ -15,6 +15,7 @@
  */
 package consulo.util.collection.primitive.ints;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.primitive.PrimitiveListIterator;
 import consulo.util.collection.primitive.ints.impl.list.IntArrayList;
 
@@ -25,6 +26,8 @@ import java.util.RandomAccess;
  * @since 10/02/2021
  */
 @SuppressWarnings("deprecation")
+@Deprecated
+@DeprecationInfo("Use fastutil")
 public class IntLists {
   private static final int REVERSE_THRESHOLD = 18;
 

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.FileEditorHistoryUtil;
@@ -28,8 +27,8 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -38,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @since 2005-04-18
  */
 @ActionImpl(id = "MoveEditorToOppositeTabGroup")
-public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
+public class MoveEditorToOppositeTabGroupAction extends LegacyDumbAwareAction {
     public MoveEditorToOppositeTabGroupAction() {
         super(
             ActionLocalize.actionMoveeditortooppositetabgroupText(),

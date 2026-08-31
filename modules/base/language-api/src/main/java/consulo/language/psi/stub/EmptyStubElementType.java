@@ -16,8 +16,8 @@ public abstract class EmptyStubElementType<T extends PsiElement> extends IStubEl
     super(debugName, language);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public final EmptyStub createStub(T psi, StubElement parentStub) {
     return createStub(parentStub);
   }

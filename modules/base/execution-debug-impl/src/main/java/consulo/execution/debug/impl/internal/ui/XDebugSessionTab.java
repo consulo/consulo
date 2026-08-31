@@ -15,8 +15,8 @@
  */
 package consulo.execution.debug.impl.internal.ui;
 
-import consulo.application.Application;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
@@ -50,7 +50,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -81,7 +80,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     };
 
-    
     public static XDebugSessionTab create(
         XDebugSessionImpl session,
         @Nullable Image icon,
@@ -104,7 +102,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return tab;
     }
 
-    
     public RunnerLayoutUi getUi() {
         return myUi;
     }
@@ -173,27 +170,17 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (XWatchesView.DATA_KEY == dataId) {
-            return myWatchesView;
-        }
-        else if (TAB_KEY == dataId) {
-            return this;
-        }
-        else if (XDebugSessionData.DATA_KEY == dataId) {
-            return mySessionData;
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+
+        sink.set(XWatchesView.DATA_KEY, myWatchesView);
+        sink.set(TAB_KEY, this);
+        sink.set(XDebugSessionData.DATA_KEY, mySessionData);
 
         if (mySession != null) {
-            if (XDebugSession.DATA_KEY == dataId) {
-                return mySession;
-            }
-            else if (ConsoleView.KEY == dataId) {
-                return mySession.getConsoleView();
-            }
+            sink.set(XDebugSession.DATA_KEY, mySession);
+            sink.set(ConsoleView.KEY, mySession.getConsoleView());
         }
-
-        return super.getData(dataId);
     }
 
     private Content createVariablesContent(XDebugSessionImpl session) {
@@ -215,9 +202,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return result;
     }
 
-    
     private Content createFramesContent() {
-        XFramesView framesView = new XFramesView(myProject);
+        XFramesView framesView = new XFramesView(myProject, mySession);
         registerView(DebuggerContentInfo.FRAME_CONTENT, framesView);
         Content framesContent = myUi.createContent(
             DebuggerContentInfo.FRAME_CONTENT,
@@ -275,27 +261,31 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             leftToolbar.add(action, new Constraints(Anchor.AFTER, IdeActions.ACTION_STOP_PROGRAM));
         }
 
-        //group.addSeparator();
-        //addAction(group, DebuggerActions.EXPORT_THREADS);
-        leftToolbar.addSeparator();
-
-        leftToolbar.add(myUi.getOptions().getLayoutActions());
-        AnAction[] commonSettings = myUi.getOptions().getSettingsActionsList();
         DefaultActionGroup settings = new DefaultActionGroup(ActionLocalize.groupXdebuggerSettingsText(), true);
         settings.getTemplatePresentation().setIcon(myUi.getOptions().getSettingsActions().getTemplatePresentation().getIcon());
-        settings.addAll(commonSettings);
-        leftToolbar.add(settings);
+        settings.add(myUi.getOptions().getLayoutActions());
+        settings.addAll(myUi.getOptions().getSettingsActionsList());
 
-        leftToolbar.addSeparator();
-
-        leftToolbar.add(ToolWindowActions.getPinAction());
+        MoreActionGroup more = new MoreActionGroup(false);
+        more.setPopup(true);
+        more.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_EXTRA_GROUP));
 
         DefaultActionGroup topToolbar = new DefaultActionGroup();
         topToolbar.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP));
 
-        session.getDebugProcess().registerAdditionalActions(leftToolbar, topToolbar, settings);
-        myUi.getOptions().setLeftToolbar(leftToolbar, ActionPlaces.DEBUGGER_TOOLBAR);
-        myUi.getOptions().setTopToolbar(topToolbar, ActionPlaces.DEBUGGER_TOOLBAR);
+        session.getDebugProcess().registerAdditionalActions(more, topToolbar, settings);
+
+        more.addSeparator();
+        more.add(settings);
+
+        DefaultActionGroup toolbar = new DefaultActionGroup();
+        toolbar.addAll(leftToolbar);
+        toolbar.addSeparator();
+        toolbar.addAll(topToolbar);
+        toolbar.addSeparator();
+        toolbar.add(more);
+
+        myUi.getOptions().setTopToolbar(toolbar, ActionPlaces.DEBUGGER_TOOLBAR);
 
         if (myEnvironment != null) {
             initLogConsoles(myEnvironment.getRunProfile(), myRunContentDescriptor, myConsole);
@@ -370,7 +360,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
-    
     private String getWatchesContentId() {
         return DebuggerContentInfo.VARIABLES_CONTENT;
     }

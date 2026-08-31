@@ -208,12 +208,14 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private static class MyEntry<K, V> implements Entry<K, V> {
     private final Entry<?, V> ent;
     private final K key; // Strong reference to key, so that the GC will leave it alone as long as this Entry exists
+    private V value;
     private final int myKeyHashCode;
     private final HashingStrategy<? super K> myStrategy;
 
     private MyEntry(Entry<?, V> ent, K key, int keyHashCode, HashingStrategy<? super K> strategy) {
       this.ent = ent;
       this.key = key;
+      this.value = ent.getValue();
       myKeyHashCode = keyHashCode;
       myStrategy = strategy;
     }
@@ -225,11 +227,12 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
     @Override
     public V getValue() {
-      return ent.getValue();
+      return value;
     }
 
     @Override
     public V setValue(V value) {
+      this.value = value;
       return ent.setValue(value);
     }
 

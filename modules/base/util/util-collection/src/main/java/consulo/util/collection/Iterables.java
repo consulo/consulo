@@ -16,7 +16,6 @@
 package consulo.util.collection;
 
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,12 +28,10 @@ import java.util.function.Predicate;
  * @since 2025-06-21
  */
 public class Iterables {
-    @Contract(pure = true)
     public static <T> Iterable<T> iterate(T[] arrays, Predicate<? super T> condition) {
         return iterate(Arrays.asList(arrays), condition);
     }
 
-    @Contract(pure = true)
     public static <T> Iterable<T> iterate(
         Collection<? extends T> collection,
         Predicate<? super T> condition

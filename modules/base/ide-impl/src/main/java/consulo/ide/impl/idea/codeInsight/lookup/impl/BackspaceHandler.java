@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -12,6 +11,7 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -20,7 +20,8 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
   private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredUIAccess
+  public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null) {
       myOriginalHandler.execute(editor, caret, dataContext);
@@ -51,7 +52,6 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
     myOriginalHandler = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_BACKSPACE;

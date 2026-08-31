@@ -1,0 +1,64 @@
+/*
+ * The look of a progress bar carrying the styles of the platform. A plain resource rather than a file of the
+ * theme - the theme goes through the vite bundle, which skips rebuilding it on css only changes.
+ */
+
+/* a layout which stretches its content, like the center of a dock, gives the bar the height of the whole cell,
+   and the track of the bar is drawn over the full height of it - the element takes the size it is given and the
+   line keeps the height of a line, centered in the space */
+vaadin-progress-bar
+{
+  display: flex;
+  align-items: center;
+}
+
+vaadin-progress-bar::part(bar)
+{
+  flex: 1 1 auto;
+  height: var(--vaadin-progress-bar-height, 0.5lh);
+}
+
+/* the status bar shows a running task as a spinner, and the aura bar is a full width track - the track becomes
+   the ring and the value part the arc that turns in it */
+vaadin-progress-bar.consulo-progress-spinner
+{
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  flex: 0 0 16px;
+  align-self: center;
+}
+
+/* the class is repeated to outweigh the theme, which resets the border of the bar it draws as a flat track */
+vaadin-progress-bar.consulo-progress-spinner.consulo-progress-spinner::part(bar)
+{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: none;
+  border-width: 2px;
+  border-style: solid;
+  /* the lumo palette is not defined under this theme, and a ring of one colour turns without looking like it
+     turns - the arc is taken from the text colour and the rest of the ring from a faded copy of it */
+  border-color: color-mix(in srgb, currentColor 20%, transparent);
+  border-top-color: currentColor;
+  animation: consulo-progress-spin 900ms linear infinite;
+}
+
+/* the value of an indeterminate bar slides along the track - a ring has nowhere to slide to */
+vaadin-progress-bar.consulo-progress-spinner::part(value)
+{
+  display: none;
+}
+
+vaadin-progress-bar.consulo-progress-transparent
+{
+  background: none;
+}
+
+@keyframes consulo-progress-spin
+{
+  to {
+    transform: rotate(360deg);
+  }
+}

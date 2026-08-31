@@ -44,6 +44,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     private static final UUID PREDEFINED_YANDEX_ID = UUID.fromString("B1B2EC2C-20BD-4EE2-89C4-616DB004BCD4");
     private static final UUID PREDEFINED_EXPLORER_ID = UUID.fromString("16BF23D4-93E0-4FFC-BFD6-CB13575177B0");
     private static final UUID PREDEFINED_OLD_EDGE_ID = UUID.fromString("B2A9DCA7-9D0B-4E1E-98A8-AFB19C1328D2");
+    @SuppressWarnings("SpellCheckingInspection")
     private static final UUID PREDEFINED_EDGE_ID = UUID.fromString("37cae5b9-e8b2-4949-9172-aafa37fbc09c");
 
     private static final UUID[] PREDEFINED_BROWSER_IDS = new UUID[]{
@@ -78,7 +79,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         );
     }
 
-    
+    @SuppressWarnings("SpellCheckingInspection")
     private static String getEdgeExecutionPath() {
         if (SystemInfo.isWindows) {
             return "msedge";
@@ -144,7 +145,6 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    
     public DefaultBrowserPolicy getDefaultBrowserPolicy() {
         return myDefaultBrowserPolicy;
     }
@@ -296,20 +296,17 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         }
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public CompletableFuture<?> showSettings() {
         return myApplication.getInstance(ShowConfigurableService.class).show(null, BrowserSettings.class);
     }
 
     @Override
-    
     public List<WebBrowser> getBrowsers() {
         return Collections.unmodifiableList(browsers);
     }
 
-    
     List<ConfigurableWebBrowser> getList() {
         return browsers;
     }
@@ -320,18 +317,15 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    
     public List<WebBrowser> getActiveBrowsers() {
         return getBrowsers(Predicates.alwaysTrue(), true);
     }
 
     @Override
-    
     public List<WebBrowser> getBrowsers(Predicate<? super WebBrowser> condition) {
         return getBrowsers(condition, true);
     }
 
-    
     public List<WebBrowser> getBrowsers(Predicate<? super WebBrowser> condition, boolean onlyActive) {
         List<WebBrowser> result = new SmartList<>();
         for (ConfigurableWebBrowser browser : browsers) {
@@ -382,7 +376,6 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         }
     }
 
-    
     @Override
     public String getAlternativeBrowserPath() {
         if (!StringUtil.isEmptyOrSpaces(myBrowserPath)) {
@@ -391,7 +384,6 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return getDefaultAlternativeBrowserPath();
     }
 
-    
     private String getDefaultAlternativeBrowserPath() {
         if (Platform.current().os().isWindows()) {
             return "C:\\Program Files\\Internet Explorer\\IExplore.exe";
@@ -451,7 +443,6 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return null;
     }
 
-    
     public WebBrowser getFirstBrowser(BrowserFamily family) {
         WebBrowser result = getFirstBrowserOrNull(family);
         if (result == null) {

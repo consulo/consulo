@@ -21,10 +21,13 @@ import consulo.execution.configuration.EnvironmentVariable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringEscapeUtil;
@@ -32,8 +35,6 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.table.TableCellEditor;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -141,7 +142,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
     
     @Override
     protected AnAction[] createExtraActions() {
-        AnAction copyButton = new AnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+        AnAction copyButton = new LegacyAnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
@@ -158,7 +159,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                     sb.append(StringUtil.escapeChar(environmentVariable.getName(), '=')).append('=')
                         .append(StringUtil.escapeChar(environmentVariable.getValue(), '='));
                 }
-                CopyPasteManager.getInstance().setContents(new StringSelection(sb.toString()));
+                CopyPasteManager.getInstance().setText(sb.toString());
             }
 
             @Override
@@ -176,7 +177,19 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
             public void actionPerformed(AnActionEvent e) {
                 removeSelected();
                 stopEditing();
-                String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+
+                UIAccess uiAccess = UIAccess.current();
+                CopyPasteManager.getInstance()
+                    .getContentsAsync(DataTransferType.TEXT)
+                    .whenCompleteAsync((content, throwable) -> {
+                        if (throwable == null) {
+                            pasteVariables(content);
+                        }
+                    }, uiAccess);
+            }
+
+            @RequiredUIAccess
+            private void pasteVariables(@Nullable String content) {
                 if (content == null || !content.contains("=")) {
                     return;
                 }

@@ -45,7 +45,6 @@ public class EditorMouseEvent extends EventObject {
         }
     }
 
-    
     private final MouseEvent myMouseEvent;
     private final @Nullable InputDetails myInputDetails;
     private boolean myConsumed;
@@ -56,30 +55,85 @@ public class EditorMouseEvent extends EventObject {
     private final LogicalPosition myLogicalPosition;
     private final VisualPosition myVisualPosition;
     private final boolean myIsOverText;
-    private final FoldRegion myCollapsedFoldRegion;
-    private final Inlay myInlay;
-    private final GutterIconRenderer myGutterIconRenderer;
+    private final @Nullable FoldRegion myCollapsedFoldRegion;
+    private final @Nullable Inlay myInlay;
+    private final @Nullable GutterIconRenderer myGutterIconRenderer;
 
     public EditorMouseEvent(Editor editor, MouseEvent mouseEvent, EditorMouseEventArea area) {
-        this(editor, mouseEvent, null, mouseEvent.isPopupTrigger(), area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
+        this(editor, mouseEvent, null, area);
+    }
+
+    /**
+     * Carries the input details over to another editor without the editor coordinates. A re-dispatching editor
+     * knows the pointer state but not the offset - the source offset belongs to the editor the event came from.
+     */
+    public EditorMouseEvent(Editor editor, MouseEvent mouseEvent, @Nullable InputDetails inputDetails, EditorMouseEventArea area) {
+        this(
+            editor,
+            mouseEvent,
+            inputDetails,
+            mouseEvent.isPopupTrigger(),
+            area,
+            0,
+            new LogicalPosition(0, 0),
+            new VisualPosition(0, 0),
+            true,
+            null,
+            null,
+            null
+        );
     }
 
     public EditorMouseEvent(Editor editor, InputDetails inputDetails, boolean popupTrigger, EditorMouseEventArea area) {
-        this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
+        this(
+            editor,
+            FakeHolder.createFake(),
+            inputDetails,
+            popupTrigger,
+            area,
+            0,
+            new LogicalPosition(0, 0),
+            new VisualPosition(0, 0),
+            true,
+            null,
+            null,
+            null
+        );
     }
 
-    public EditorMouseEvent(Editor editor,
-                            MouseEvent mouseEvent,
-                            @Nullable InputDetails inputDetails,
-                            boolean popupTrigger,
-                            EditorMouseEventArea area,
-                            int offset,
-                            LogicalPosition logicalPosition,
-                            VisualPosition visualPosition,
-                            boolean isOverText,
-                            FoldRegion collapsedFoldRegion,
-                            Inlay inlay,
-                            GutterIconRenderer gutterIconRenderer) {
+    /**
+     * Full-geometry event for frontends without an awt event to wrap.
+     */
+    public EditorMouseEvent(
+        Editor editor,
+        @Nullable InputDetails inputDetails,
+        boolean popupTrigger,
+        EditorMouseEventArea area,
+        int offset,
+        LogicalPosition logicalPosition,
+        VisualPosition visualPosition,
+        boolean isOverText,
+        @Nullable FoldRegion collapsedFoldRegion,
+        @Nullable Inlay inlay,
+        @Nullable GutterIconRenderer gutterIconRenderer
+    ) {
+        this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, offset, logicalPosition, visualPosition, isOverText, collapsedFoldRegion, inlay, gutterIconRenderer);
+    }
+
+    public EditorMouseEvent(
+        Editor editor,
+        MouseEvent mouseEvent,
+        @Nullable InputDetails inputDetails,
+        boolean popupTrigger,
+        EditorMouseEventArea area,
+        int offset,
+        LogicalPosition logicalPosition,
+        VisualPosition visualPosition,
+        boolean isOverText,
+        @Nullable FoldRegion collapsedFoldRegion,
+        @Nullable Inlay inlay,
+        @Nullable GutterIconRenderer gutterIconRenderer
+    ) {
         super(editor);
 
         myMouseEvent = mouseEvent;
@@ -95,12 +149,10 @@ public class EditorMouseEvent extends EventObject {
         myGutterIconRenderer = gutterIconRenderer;
     }
 
-    
     public Editor getEditor() {
         return (Editor) getSource();
     }
 
-    
     public MouseEvent getMouseEvent() {
         return myMouseEvent;
     }
@@ -144,15 +196,11 @@ public class EditorMouseEvent extends EventObject {
         return myOffset;
     }
 
-    public
-    
-    LogicalPosition getLogicalPosition() {
+    public LogicalPosition getLogicalPosition() {
         return myLogicalPosition;
     }
 
-    public
-    
-    VisualPosition getVisualPosition() {
+    public VisualPosition getVisualPosition() {
         return myVisualPosition;
     }
 

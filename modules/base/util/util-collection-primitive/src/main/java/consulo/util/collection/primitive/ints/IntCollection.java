@@ -25,7 +25,9 @@ import java.util.stream.StreamSupport;
 /**
  * @author VISTALL
  * @since 07/02/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntCollection} directly
  */
+@Deprecated
 public interface IntCollection extends IntIterable {
   boolean add(int value);
 

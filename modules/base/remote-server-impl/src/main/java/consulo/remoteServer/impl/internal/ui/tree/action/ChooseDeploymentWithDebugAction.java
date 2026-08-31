@@ -6,14 +6,13 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.remoteServer.impl.internal.ui.tree.ServersTreeStructure;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
 @ActionImpl(id = "RemoteServers.ChooseServerDeploymentWithDebug")
-public class ChooseDeploymentWithDebugAction extends DumbAwareAction {
+public class ChooseDeploymentWithDebugAction extends LegacyDumbAwareAction {
     public ChooseDeploymentWithDebugAction() {
         super(
             RemoteServerLocalize.actionRemoteserversChooseserverdeploymentwithdebugText(),
@@ -35,11 +34,5 @@ public class ChooseDeploymentWithDebugAction extends DumbAwareAction {
         if (node != null) {
             node.deployWithDebug(e);
         }
-    }
-
-    @Override
-    
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

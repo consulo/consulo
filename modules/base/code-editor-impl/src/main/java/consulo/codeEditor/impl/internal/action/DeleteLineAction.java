@@ -28,8 +28,9 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +40,7 @@ public class DeleteLineAction extends TextComponentEditorAction {
     private static class Handler extends EditorWriteActionHandler {
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             CopyPasteManager.getInstance().stopKillRings();
             Document document = editor.getDocument();

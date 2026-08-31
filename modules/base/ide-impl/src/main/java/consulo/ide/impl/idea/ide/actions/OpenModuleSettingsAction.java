@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.language.content.ProjectRootsUtil;
@@ -43,10 +44,10 @@ public class OpenModuleSettingsAction extends BaseNavigateToSourceAction {
         );
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     @Override
-    public void update(AnActionEvent event) {
-        super.update(event);
+    public void updateInReadAction(AnActionEvent event) {
+        super.updateInReadAction(event);
 
         if (!isModuleInProjectViewPopup(event)) {
             event.getPresentation().setEnabledAndVisible(false);

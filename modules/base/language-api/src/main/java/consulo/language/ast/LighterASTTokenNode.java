@@ -15,7 +15,6 @@
  */
 package consulo.language.ast;
 
-import consulo.language.ast.LighterASTNode;
 import consulo.language.util.CharTable;
 
 public interface LighterASTTokenNode extends LighterASTNode {

@@ -22,9 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class VcsLogSorter {
-
-  
-  public static <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(Collection<Commit> commits) {
-    return new VcsLogJoiner.NewCommitIntegrator<>(new ArrayList<>(), commits).getResultList();
-  }
+    public static <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(Collection<Commit> commits) {
+        return new VcsLogJoiner.NewCommitIntegrator<>(new ArrayList<>(), commits).getResultList();
+    }
 }

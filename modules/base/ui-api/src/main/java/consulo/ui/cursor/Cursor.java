@@ -16,10 +16,10 @@
 package consulo.ui.cursor;
 
 /**
- * @author VISTALL
- * @since 10/08/2021
- *
  * @see StandardCursors
+ *
+ * @author VISTALL
+ * @since 2021-08-10
  */
 public interface Cursor {
 }

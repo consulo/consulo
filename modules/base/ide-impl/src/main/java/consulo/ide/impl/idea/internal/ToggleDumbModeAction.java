@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.TimeoutUtil;
 
 /**
  * @author peter
  */
-public class ToggleDumbModeAction extends AnAction implements DumbAware {
+public class ToggleDumbModeAction extends LegacyDumbAwareAction {
   private volatile boolean myDumb = false;
 
   @Override

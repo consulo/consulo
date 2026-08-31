@@ -26,8 +26,6 @@ import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.proxy.EventDispatcher;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -175,12 +173,6 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     @Override
     public ArtifactProperties<?> getProperties(ArtifactPropertiesProvider provider) {
         return myProperties.get(provider);
-    }
-
-    @Override
-    public VirtualFile getOutputFile() {
-        String filePath = getOutputFilePath();
-        return !StringUtil.isEmpty(filePath) ? LocalFileSystem.getInstance().findFileByPath(filePath) : null;
     }
 
     @Override

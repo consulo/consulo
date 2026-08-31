@@ -17,7 +17,6 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.event.details.KeyboardInputDetails;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public sealed class KeyEvent extends ComponentEvent<Component> permits KeyPresse
     }
 
     @Override
-    public @Nullable KeyboardInputDetails getInputDetails() {
+    public KeyboardInputDetails getInputDetails() {
         return (KeyboardInputDetails) super.getInputDetails();
     }
 }

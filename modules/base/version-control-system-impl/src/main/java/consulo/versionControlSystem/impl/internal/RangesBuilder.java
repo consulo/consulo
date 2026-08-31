@@ -15,13 +15,20 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
-import consulo.application.util.diff.Diff;
-import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.diff.internal.DiffImplUtil;
+import consulo.application.progress.DumbProgressIndicator;
+import consulo.diff.comparison.ByLine;
+import consulo.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.ComparisonUtil;
+import consulo.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.TrimUtil;
+import consulo.diff.comparison.iterable.DiffIterableUtil;
+import consulo.diff.comparison.iterable.FairDiffIterable;
+import consulo.diff.util.DiffRangeUtil;
+import consulo.diff.util.LineOffsets;
+import consulo.diff.util.LineOffsetsUtil;
+import consulo.diff.util.Range;
 import consulo.document.Document;
-import consulo.logging.Logger;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.Pair;
 import consulo.versionControlSystem.internal.VcsRange;
 
 import java.util.ArrayList;
@@ -29,148 +36,209 @@ import java.util.Collections;
 import java.util.List;
 
 public class RangesBuilder {
-  private static final Logger LOG = Logger.getInstance(RangesBuilder.class);
-
-  
-  public static List<VcsRange> createRanges(Document current, Document vcs) throws FilesTooBigForDiffException {
-    return createRanges(current, vcs, false);
-  }
-
-  
-  public static List<VcsRange> createRanges(Document current, Document vcs, boolean innerWhitespaceChanges)
-          throws FilesTooBigForDiffException {
-    return createRanges(DiffImplUtil.getLines(current), DiffImplUtil.getLines(vcs), 0, 0, innerWhitespaceChanges);
-  }
-
-  
   public static List<VcsRange> createRanges(List<String> current,
                                             List<String> vcs,
-                                            int shift,
+                                            int currentShift,
                                             int vcsShift,
-                                            boolean innerWhitespaceChanges) throws FilesTooBigForDiffException {
-    Diff.Change ch = Diff.buildChanges(ArrayUtil.toStringArray(vcs), ArrayUtil.toStringArray(current));
+                                            boolean innerWhitespaceChanges) {
+    FairDiffIterable iterable = compareLines(vcs, current);
 
-    List<VcsRange> result = new ArrayList<VcsRange>();
-    while (ch != null) {
-      if (innerWhitespaceChanges) {
-        result.add(createOnSmart(ch, shift, vcsShift, current, vcs));
-      }
-      else {
-        result.add(createOn(ch, shift, vcsShift));
-      }
-      ch = ch.link;
+    List<VcsRange> result = new ArrayList<>();
+    for (Range range : iterable.iterateChanges()) {
+      List<VcsRange.InnerRange> inner = innerWhitespaceChanges
+        ? createInnerRanges(vcs.subList(range.start1, range.end1), current.subList(range.start2, range.end2))
+        : null;
+      result.add(new VcsRange(range.start2 + currentShift, range.end2 + currentShift,
+                              range.start1 + vcsShift, range.end1 + vcsShift, inner));
     }
     return result;
   }
 
-  private static VcsRange createOn(Diff.Change change, int shift, int vcsShift) {
-    int offset1 = shift + change.line1;
-    int offset2 = offset1 + change.inserted;
-
-    int uOffset1 = vcsShift + change.line0;
-    int uOffset2 = uOffset1 + change.deleted;
-
-    return new VcsRange(offset1, offset2, uOffset1, uOffset2);
+  public static List<VcsRange> createRanges(Document current, Document vcs) {
+    return createRanges(current.getImmutableCharSequence(), vcs.getImmutableCharSequence(),
+                        LineOffsetsUtil.create(current), LineOffsetsUtil.create(vcs));
   }
 
-  private static VcsRange createOnSmart(Diff.Change change,
-                                        int shift,
-                                        int vcsShift,
-                                        List<String> current,
-                                        List<String> vcs) throws FilesTooBigForDiffException {
-    byte type = getChangeType(change);
-
-    int offset1 = shift + change.line1;
-    int offset2 = offset1 + change.inserted;
-
-    int uOffset1 = vcsShift + change.line0;
-    int uOffset2 = uOffset1 + change.deleted;
-
-    if (type != VcsRange.MODIFIED) {
-      return new VcsRange(offset1, offset2, uOffset1, uOffset2, Collections.singletonList(new VcsRange.InnerRange(offset1, offset2, type)));
-    }
-
-    LineWrapper[] lines1 = new LineWrapper[change.deleted];
-    LineWrapper[] lines2 = new LineWrapper[change.inserted];
-    for (int i = 0; i < change.deleted; i++) {
-      lines1[i] = new LineWrapper(vcs.get(i + change.line0));
-    }
-    for (int i = 0; i < change.inserted; i++) {
-      lines2[i] = new LineWrapper(current.get(i + change.line1));
-    }
-
-    Diff.Change ch = Diff.buildChanges(lines1, lines2);
-
-    List<VcsRange.InnerRange> inner = new ArrayList<VcsRange.InnerRange>();
-
-    int last0 = 0;
-    int last1 = 0;
-    while (ch != null) {
-      if (ch.line0 != last0 && ch.line1 != last1) {
-        byte innerType = VcsRange.EQUAL;
-        int innerStart = shift + change.line1 + last1;
-        int innerEnd = shift + change.line1 + ch.line1;
-        inner.add(new VcsRange.InnerRange(innerStart, innerEnd, innerType));
-      }
-
-      byte innerType = getChangeType(ch);
-      int innerStart = shift + change.line1 + ch.line1;
-      int innerEnd = innerStart + ch.inserted;
-      inner.add(new VcsRange.InnerRange(innerStart, innerEnd, innerType));
-
-      last0 = ch.line0 + ch.deleted;
-      last1 = ch.line1 + ch.inserted;
-
-      ch = ch.link;
-    }
-    if (change.deleted != last0 && change.inserted != last1) {
-      byte innerType = VcsRange.EQUAL;
-      int innerStart = shift + change.line1 + last1;
-      int innerEnd = shift + change.line1 + change.inserted;
-      inner.add(new VcsRange.InnerRange(innerStart, innerEnd, innerType));
-    }
-
-    return new VcsRange(offset1, offset2, uOffset1, uOffset2, inner);
+  public static List<VcsRange> createRanges(CharSequence current, CharSequence vcs) {
+    return createRanges(current, vcs, LineOffsetsUtil.create(current), LineOffsetsUtil.create(vcs));
   }
 
-  private static byte getChangeType(Diff.Change change) {
-    if ((change.deleted > 0) && (change.inserted > 0)) return VcsRange.MODIFIED;
-    if ((change.deleted > 0)) return VcsRange.DELETED;
-    if ((change.inserted > 0)) return VcsRange.INSERTED;
-    LOG.error("Unknown change type");
+  private static List<VcsRange> createRanges(CharSequence current,
+                                             CharSequence vcs,
+                                             LineOffsets currentLineOffsets,
+                                             LineOffsets vcsLineOffsets) {
+    FairDiffIterable iterable = compareLines(vcs, current, vcsLineOffsets, currentLineOffsets);
+    return createRanges(iterable);
+  }
+
+  public static List<VcsRange> createRanges(FairDiffIterable iterable) {
+    List<VcsRange> result = new ArrayList<>();
+    for (Range range : iterable.iterateChanges()) {
+      result.add(new VcsRange(range.start2, range.end2, range.start1, range.end1));
+    }
+    return result;
+  }
+
+  public static FairDiffIterable compareLines(CharSequence text1,
+                                              CharSequence text2,
+                                              LineOffsets lineOffsets1,
+                                              LineOffsets lineOffsets2) {
+    Range range = TrimUtil.expand(text1, text2, 0, 0, text1.length(), text2.length());
+    if (range.isEmpty()) {
+      return DiffIterableUtil.fair(DiffIterableUtil.create(Collections.emptyList(), lineOffsets1.getLineCount(), lineOffsets2.getLineCount()));
+    }
+
+    int contextLines = 5;
+    int start = Math.max(lineOffsets1.getLineNumber(range.start1) - contextLines, 0);
+    int tail = Math.max(lineOffsets1.getLineCount() - lineOffsets1.getLineNumber(range.end1) - 1 - contextLines, 0);
+    Range lineRange = new Range(start, lineOffsets1.getLineCount() - tail, start, lineOffsets2.getLineCount() - tail);
+
+    FairDiffIterable iterable = compareLines(lineRange, text1, text2, lineOffsets1, lineOffsets2);
+    return DiffIterableUtil.fair(DiffIterableUtil.expandedIterable(iterable, start, start, lineOffsets1.getLineCount(), lineOffsets2.getLineCount()));
+  }
+
+  public static FairDiffIterable compareLines(Range lineRange,
+                                              CharSequence text1,
+                                              CharSequence text2,
+                                              LineOffsets lineOffsets1,
+                                              LineOffsets lineOffsets2) {
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    return compareLines(lines1, lines2);
+  }
+
+  public static List<VcsRange.InnerRange> createInnerRanges(Range lineRange,
+                                                            CharSequence text1,
+                                                            CharSequence text2,
+                                                            LineOffsets lineOffsets1,
+                                                            LineOffsets lineOffsets2) {
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    return createInnerRanges(lines1, lines2);
+  }
+
+  private static List<VcsRange.InnerRange> createInnerRanges(List<String> lines1, List<String> lines2) {
+    FairDiffIterable iwIterable = safeCompareLines(lines1, lines2, ComparisonPolicy.IGNORE_WHITESPACES);
+
+    List<VcsRange.InnerRange> result = new ArrayList<>();
+    for (Pair<Range, Boolean> pair : DiffIterableUtil.iterateAll(iwIterable)) {
+      Range range = pair.first;
+      boolean equals = pair.second;
+      result.add(new VcsRange.InnerRange(range.start2, range.end2, getChangeType(range, equals)));
+    }
+    return result;
+  }
+
+  private static byte getChangeType(Range range, boolean equals) {
+    if (equals) return VcsRange.EQUAL;
+    int deleted = range.end1 - range.start1;
+    int inserted = range.end2 - range.start2;
+    if (deleted > 0 && inserted > 0) return VcsRange.MODIFIED;
+    if (deleted > 0) return VcsRange.DELETED;
+    if (inserted > 0) return VcsRange.INSERTED;
     return VcsRange.EQUAL;
   }
 
-  private static class LineWrapper {
-    
-    private final String myLine;
-    private final int myHash;
+  public static FairDiffIterable tryCompareLines(Range lineRange,
+                                                 CharSequence text1,
+                                                 CharSequence text2,
+                                                 LineOffsets lineOffsets1,
+                                                 LineOffsets lineOffsets2) {
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    return tryCompareLines(lines1, lines2);
+  }
 
-    public LineWrapper(String line) {
-      myLine = line;
-      myHash = StringUtil.stringHashCodeIgnoreWhitespaces(line);
+  public static FairDiffIterable fastCompareLines(Range lineRange,
+                                                  CharSequence text1,
+                                                  CharSequence text2,
+                                                  LineOffsets lineOffsets1,
+                                                  LineOffsets lineOffsets2) {
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    return fastCompareLines(lines1, lines2);
+  }
+
+  private static FairDiffIterable compareLines(List<String> lines1, List<String> lines2) {
+    FairDiffIterable iwIterable = safeCompareLines(lines1, lines2, ComparisonPolicy.IGNORE_WHITESPACES);
+    return processLines(lines1, lines2, iwIterable);
+  }
+
+  private static FairDiffIterable tryCompareLines(List<String> lines1, List<String> lines2) {
+    FairDiffIterable iwIterable = tryCompareLines(lines1, lines2, ComparisonPolicy.IGNORE_WHITESPACES);
+    if (iwIterable == null) return null;
+    return processLines(lines1, lines2, iwIterable);
+  }
+
+  private static FairDiffIterable fastCompareLines(List<String> lines1, List<String> lines2) {
+    FairDiffIterable iwIterable = fastCompareLines(lines1, lines2, ComparisonPolicy.IGNORE_WHITESPACES);
+    return processLines(lines1, lines2, iwIterable);
+  }
+
+  /**
+   * Compare lines, preferring non-optimal but less confusing results for whitespace-only changed lines
+   * Ex: "X\n\nY\nZ" vs " X\n Y\n\n Z" should be a single big change, rather than 2 changes separated by "matched" empty line.
+   */
+  private static FairDiffIterable processLines(List<String> lines1, List<String> lines2, FairDiffIterable iwIterable) {
+    DiffIterableUtil.ExpandChangeBuilder builder = new DiffIterableUtil.ExpandChangeBuilder(lines1, lines2);
+    for (Range range : iwIterable.iterateUnchanged()) {
+      int count = range.end1 - range.start1;
+      for (int i = 0; i < count; i++) {
+        int index1 = range.start1 + i;
+        int index2 = range.start2 + i;
+        if (lines1.get(index1).equals(lines2.get(index2))) {
+          builder.markEqual(index1, index2);
+        }
+      }
     }
 
-    
-    public String getLine() {
-      return myLine;
+    return DiffIterableUtil.fair(builder.finish());
+  }
+
+  private static FairDiffIterable safeCompareLines(List<String> lines1, List<String> lines2, ComparisonPolicy comparisonPolicy) {
+    FairDiffIterable iterable = tryCompareLines(lines1, lines2, comparisonPolicy);
+    return iterable != null ? iterable : fastCompareLines(lines1, lines2, comparisonPolicy);
+  }
+
+  private static FairDiffIterable tryCompareLines(List<String> lines1, List<String> lines2, ComparisonPolicy comparisonPolicy) {
+    try {
+      return ByLine.compare(lines1, lines2, comparisonPolicy, DumbProgressIndicator.INSTANCE);
     }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      LineWrapper wrapper = (LineWrapper)o;
-
-      if (myHash != wrapper.myHash) return false;
-
-      return StringUtil.equalsIgnoreWhitespaces(myLine, wrapper.myLine);
-    }
-
-    @Override
-    public int hashCode() {
-      return myHash;
+    catch (DiffTooBigException e) {
+      return null;
     }
   }
+
+  private static FairDiffIterable fastCompareLines(List<String> lines1, List<String> lines2, ComparisonPolicy comparisonPolicy) {
+    Range range = TrimUtil.expand(lines1, lines2, 0, 0, lines1.size(), lines2.size(),
+                                  (line1, line2) -> ComparisonUtil.isEquals(line1, line2, comparisonPolicy));
+    List<Range> ranges = range.isEmpty() ? Collections.emptyList() : Collections.singletonList(range);
+    return DiffIterableUtil.fair(DiffIterableUtil.create(ranges, lines1.size(), lines2.size()));
+  }
+
+  public static boolean isValidRanges(CharSequence content1,
+                                      CharSequence content2,
+                                      LineOffsets lineOffsets1,
+                                      LineOffsets lineOffsets2,
+                                      List<Range> lineRanges) {
+    boolean allRangesValid = lineRanges.stream().allMatch(it ->
+      isValidLineRange(lineOffsets1, it.start1, it.end1) &&
+        isValidLineRange(lineOffsets2, it.start2, it.end2));
+    if (!allRangesValid) return false;
+
+    var iterable = DiffIterableUtil.create(lineRanges, lineOffsets1.getLineCount(), lineOffsets2.getLineCount());
+    for (Range range : iterable.iterateUnchanged()) {
+      List<String> lines1 = DiffRangeUtil.getLines(content1, lineOffsets1, range.start1, range.end1);
+      List<String> lines2 = DiffRangeUtil.getLines(content2, lineOffsets2, range.start2, range.end2);
+      if (!lines1.equals(lines2)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean isValidLineRange(LineOffsets lineOffsets, int start, int end) {
+    return start >= 0 && start <= end && end <= lineOffsets.getLineCount();
+  }
+
 }

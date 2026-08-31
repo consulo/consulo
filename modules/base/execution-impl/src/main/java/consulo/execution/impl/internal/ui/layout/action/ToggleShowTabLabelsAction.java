@@ -5,7 +5,6 @@ import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 
@@ -14,10 +13,6 @@ import java.util.Objects;
 public final class ToggleShowTabLabelsAction extends DumbAwareToggleAction {
     public ToggleShowTabLabelsAction() {
         super(ExecutionLocalize.actionRunnerToggletablabelsText());
-    }
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

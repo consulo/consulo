@@ -11,6 +11,7 @@ module consulo.version.control.system.log.impl {
     requires consulo.language.editor.ui.api;
 
     requires com.google.common;
+    requires it.unimi.dsi.fastutil;
 
     // TODO remove in future
     requires gnu.trove;

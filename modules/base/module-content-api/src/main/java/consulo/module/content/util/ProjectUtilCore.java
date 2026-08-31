@@ -28,6 +28,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 //TODO [VISTALL] not good name for util
 public class ProjectUtilCore {
     
@@ -75,10 +77,12 @@ public class ProjectUtilCore {
         boolean moduleOnTheLeft
     ) {
         if (includeFilePath) {
-            //noinspection ConstantConditions
-            String projectHomeUrl = FileUtil.toSystemDependentName(project.getBasePath());
-            if (result.startsWith(projectHomeUrl)) {
-                result = "..." + result.substring(projectHomeUrl.length());
+            String basePath = project.getBasePath();
+            if (basePath != null) {
+                String projectHomeUrl = FileUtil.toSystemDependentName(basePath);
+                if (result.startsWith(projectHomeUrl)) {
+                    result = "..." + result.substring(projectHomeUrl.length());
+                }
             }
         }
 

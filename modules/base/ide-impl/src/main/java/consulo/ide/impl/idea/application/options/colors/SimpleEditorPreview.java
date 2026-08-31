@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.codeEditor.*;
@@ -37,11 +36,11 @@ import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import consulo.language.editor.util.UsedColors;
 import consulo.localize.LocalizeValue;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -297,7 +296,7 @@ public class SimpleEditorPreview implements PreviewPanel {
 
         Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(page);
 
-        // sort highlights to avoid overlappings
+        // sort highlights to avoid overlapping
         Collections.sort(highlights, Comparator.comparingInt(HighlightData::getStartOffset));
         for (int i = highlights.size() - 1; i >= 0; i--) {
             HighlightData highlightData = highlights.get(i);
@@ -329,7 +328,7 @@ public class SimpleEditorPreview implements PreviewPanel {
         stopBlinking();
     }
 
-    private void setCursor(@JdkConstants.CursorType int type) {
+    private void setCursor(@AWTConstants.CursorType int type) {
         Cursor cursor = type == Cursor.TEXT_CURSOR ? UIUtil.getTextCursor(TargetAWT.to(myEditor.getBackgroundColor()))
             : Cursor.getPredefinedCursor(type);
         myEditor.getContentComponent().setCursor(cursor);

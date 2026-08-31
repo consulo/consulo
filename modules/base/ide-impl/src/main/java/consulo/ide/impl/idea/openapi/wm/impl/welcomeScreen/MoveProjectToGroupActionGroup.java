@@ -20,6 +20,7 @@ import consulo.project.ProjectGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;
@@ -33,7 +34,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "WelcomeScreen.MoveToGroup")
-public class MoveProjectToGroupActionGroup extends DefaultActionGroup implements DumbAware {
+public class MoveProjectToGroupActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public MoveProjectToGroupActionGroup() {
       super(ProjectUILocalize.actionRecentProjectsMoveToGroupText(), true);
     }

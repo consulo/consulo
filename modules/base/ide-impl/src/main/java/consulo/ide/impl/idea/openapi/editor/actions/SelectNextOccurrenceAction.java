@@ -70,7 +70,7 @@ public class SelectNextOccurrenceAction extends EditorAction {
                     EditorActionUtil.makePositionVisible(editor, newCaretOffset);
                     Caret newCaret = editor.getCaretModel().addCaret(editor.offsetToVisualPosition(newCaretOffset));
                     if (newCaret == null) {
-                        // this means that the found occurence is already selected
+                        // this means that the found occurrence is already selected
                         if (notFoundPreviously) {
                             setNotFoundStatus(editor); // to make sure we won't show hint anymore if there are no more occurrences
                         }

@@ -17,6 +17,7 @@ package consulo.execution.debug.impl.internal.setting;
 
 import consulo.application.util.registry.Registry;
 import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.IdeaTitledBorder;
 import consulo.ui.ex.awt.JBLabel;
@@ -67,7 +68,7 @@ public class DataViewsConfigurableUi {
     myShowValuesInlineCheckBox.setSelected(settings.isShowValuesInline());
     myShowValueTooltipCheckBox.setSelected(settings.isValueTooltipAutoShow());
     myShowValueTooltipOnCheckBox.setSelected(settings.isValueTooltipAutoShowOnSelection());
-    myTooltipLabel.setText(XDebuggerBundle.message("settings.tooltip.label", Registry.stringValue("ide.forcedShowTooltip")));
+    myTooltipLabel.setText(XDebuggerLocalize.settingsTooltipLabel(Registry.stringValue("ide.forcedShowTooltip")).get());
   }
 
   public void apply(XDebuggerDataViewSettings settings) {

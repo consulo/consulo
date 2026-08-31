@@ -15,10 +15,12 @@
  */
 package consulo.usage.impl.internal.rule;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.usage.*;
 import consulo.usage.rule.PsiElementUsage;
@@ -31,6 +33,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     @Override
+    @RequiredReadAction
     protected @Nullable UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
         if (usage instanceof PsiElementUsage elementUsage) {
             PsiElement element = elementUsage.getElement();
@@ -96,7 +99,6 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
         }
 
         @Override
-        
         public String getText(@Nullable UsageView view) {
             return view == null ? myUsageType.toString() : myUsageType.toString(view.getPresentation());
         }
@@ -112,15 +114,18 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
         }
 
         @Override
+        @RequiredUIAccess
         public void navigate(boolean focus) {
         }
 
         @Override
+        @RequiredReadAction
         public boolean canNavigate() {
             return false;
         }
 
         @Override
+        @RequiredReadAction
         public boolean canNavigateToSource() {
             return false;
         }

@@ -19,14 +19,14 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 
 import java.util.List;
 
-public abstract class NewBranchAction<T extends Repository> extends DumbAwareAction {
+public abstract class NewBranchAction<T extends Repository> extends LegacyDumbAwareAction {
     protected final List<T> myRepositories;
     protected final Project myProject;
 

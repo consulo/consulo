@@ -15,43 +15,14 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.annotation.DeprecationInfo;
 
-public abstract class SimpleTreeStructure extends AbstractTreeStructure {
-    
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.tree.SimpleTreeStructure")
+public abstract class SimpleTreeStructure extends consulo.ui.ex.tree.SimpleTreeStructure {
     @Override
-    public Object[] getChildElements(Object element) {
-        return ((SimpleNode)element).getChildren();
-    }
-
-    @Override
-    public Object getParentElement(Object element) {
-        return ((SimpleNode)element).getParent();
-    }
-
-    @Override
-    public boolean isAlwaysLeaf(Object element) {
-        return ((SimpleNode)element).isAlwaysLeaf();
-    }
-
-    @Override
-    
-    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
-        return (NodeDescriptor)element;
-    }
-
-    @Override
-    public void commit() {
-    }
-
-    @Override
-    public boolean hasSomethingToCommit() {
-        return false;
-    }
-
     public final void clearCaches() {
-        cleanUpCaches((SimpleNode)getRootElement());
+        cleanUpCaches((SimpleNode) getRootElement());
     }
 
     private void cleanUpCaches(SimpleNode node) {
@@ -77,7 +48,6 @@ public abstract class SimpleTreeStructure extends AbstractTreeStructure {
             myRoot = root;
         }
 
-        
         @Override
         public Object getRootElement() {
             return myRoot;

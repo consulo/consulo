@@ -60,7 +60,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
 
     public static final ID<Integer, IntList> NAME = ID.create("DuplicatesIndex");
 
-    private static final int myBaseVersion = 25;
+    private static final int myBaseVersion = 26;
 
     private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> {
         if (!ourEnabled ||
@@ -265,8 +265,4 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
         return old;
     }
 
-    @Override
-    public boolean hasSnapshotMapping() {
-        return true;
-    }
 }

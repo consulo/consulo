@@ -16,15 +16,15 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
 
 /**
  * @author nik
  */
-public class RefreshRemoteFileAction extends AnAction {
+public class RefreshRemoteFileAction extends LegacyAnAction {
   private final HttpVirtualFile myFile;
 
   public RefreshRemoteFileAction(HttpVirtualFile file) {

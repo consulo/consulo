@@ -61,7 +61,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -290,7 +289,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         mySplitter.repaint();
     }
 
-    @JdkConstants.InputEventMask
+    @AWTConstants.InputEventMask
     private static int ctrlMask() {
         return Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
     }

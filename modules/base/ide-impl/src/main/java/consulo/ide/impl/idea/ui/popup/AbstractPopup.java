@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -16,9 +16,11 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
@@ -55,6 +57,7 @@ import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.touchBar.TouchBarController;
@@ -65,6 +68,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.ui.ex.popup.*;
@@ -108,12 +112,21 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     private PopupComponent myPopup;
     private MyContentPanel myContent;
+
+    private @Nullable Predicate<? super JBPopup> myPinCallback;
+    private List<AnAction> myHeaderRightActions = List.of();
+    private ComponentPopupBuilderImpl.@Nullable CancelButtonInfo myCancelButtonInfo;
     private JComponent myPreferredFocusedComponent;
     private boolean myRequestFocus;
     private boolean myFocusable;
     private boolean myForcedHeavyweight;
     private boolean myLocateWithinScreen;
     private boolean myResizable;
+
+    @Override
+    public void setResizable(boolean resizable) {
+        myResizable = resizable;
+    }
     private WindowResizeListener myResizeListener;
     private WindowMoveListener myMoveListener;
     private JPanel myHeaderPanel;
@@ -342,28 +355,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
 
         if (myCaption != null) {
-            List<AnAction> rightActions = new ArrayList<>(headerRightActions);
-
-            if (pinCallback != null) {
-                Image icon = ToolWindowManagerEx
-                    .getInstanceEx(myProject != null ? myProject : ProjectUIUtil.guessCurrentProject((JComponent) myOwner))
-                    .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
-
-                rightActions.add(new PinToToolWindowAction(pinCallback::test, icon, this));
-            }
-            else if (cancelButtonInfo != null) {
-                ClosePopupAction action = new ClosePopupAction(cancelButtonInfo.tooltipText(), cancelButtonInfo.icon(), this);
-                rightActions.add(action);
-            }
-
-            if (!rightActions.isEmpty()) {
-                ActionToolbar toolbar = ActionManager.getInstance()
-                    .createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
-                toolbar.setMiniMode(true);
-                toolbar.setTargetComponent(myContent);
-
-                myCaption.setRightComponent(toolbar.getComponent());
-            }
+            // built when the popup is shown rather than here, so a pin handed to the popup after it is
+            // created - the way ListPopup.setCouldPin arrives - still gets its button
+            myPinCallback = pinCallback;
+            myHeaderRightActions = headerRightActions;
+            myCancelButtonInfo = cancelButtonInfo;
 
             if (!headerLeftActions.isEmpty()) {
                 ActionToolbar toolbar = ActionManager.getInstance()
@@ -544,6 +540,20 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
+    public void showUnderneathOf(AnActionEvent e) {
+        InputEvent inputEvent = e.getInputEvent();
+        Component componentUnder = inputEvent == null ? null : inputEvent.getComponent();
+
+        if (componentUnder != null) {
+            showUnderneathOf(componentUnder);
+        }
+        else {
+            showInBestPositionFor(e.getDataContext());
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
     public void show(RelativePoint aPoint) {
         if (UiInterceptors.tryIntercept(this)) {
             return;
@@ -551,6 +561,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         HelpTooltipImpl.setMasterPopup(aPoint.getOriginalComponent(), this);
         Point screenPoint = aPoint.getScreenPoint();
         show(aPoint.getComponent(), screenPoint.x, screenPoint.y, false);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void show(RelativePoint2D point) {
+        show(new RelativePoint(TargetAWT.to(point.getUIComponent()), TargetAWT.to(point.getUIPoint())));
     }
 
     @Override
@@ -933,6 +949,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         UIAccess.assertIsUIThread();
         assert myState == State.INIT : "Popup was already shown. Recreate a new instance to show again.";
+
+        buildCaptionRightToolbar();
 
         debugState("show popup", State.INIT);
         myState = State.SHOWING;
@@ -1496,6 +1514,45 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return myContent;
     }
 
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        Project project = myProject;
+        return project == null ? null : project.getUIAccess();
+    }
+
+    public void setCouldPin(@Nullable Predicate<? super JBPopup> couldPin) {
+        myPinCallback = couldPin;
+    }
+
+    private void buildCaptionRightToolbar() {
+        if (myCaption == null) {
+            return;
+        }
+
+        List<AnAction> rightActions = new ArrayList<>(myHeaderRightActions);
+
+        Predicate<? super JBPopup> pinCallback = myPinCallback;
+        if (pinCallback != null) {
+            Image icon = ToolWindowManagerEx
+                .getInstanceEx(myProject != null ? myProject : ProjectUIUtil.guessCurrentProject((JComponent) myOwner))
+                .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
+
+            rightActions.add(new PinToToolWindowAction(pinCallback::test, icon, this));
+        }
+        else if (myCancelButtonInfo != null) {
+            rightActions.add(new ClosePopupAction(myCancelButtonInfo.tooltipText(), myCancelButtonInfo.icon(), this));
+        }
+
+        if (!rightActions.isEmpty()) {
+            ActionToolbar toolbar = ActionManager.getInstance()
+                .createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
+            toolbar.setMiniMode(true);
+            toolbar.setTargetComponent(myContent);
+
+            myCaption.setRightComponent(toolbar.getComponent());
+        }
+    }
+
     public void setLocation(RelativePoint p) {
         if (isBusy()) {
             return;
@@ -1646,12 +1703,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myMouseOutCanceller = null;
 
         if (myFinalRunnable != null) {
-            IdeaModalityState modalityState = IdeaModalityState.current();
+            ModalityState modalityState = ModalityState.nonModal();
             Runnable finalRunnable = myFinalRunnable;
 
             getFocusManager().doWhenFocusSettlesDown(() -> {
 
-                if (IdeaModalityState.current().equals(modalityState)) {
+                if (ModalityState.nonModal().equals(modalityState)) {
                     finalRunnable.run();
                 }
                 else {
@@ -1708,7 +1765,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    public static class MyContentPanel extends JPanel implements DataProvider {
+    public static class MyContentPanel extends JPanel implements DataProvider, UiDataProvider {
         private final Border myBorder;
 
         private @Nullable DataProvider myDataProvider;
@@ -1737,6 +1794,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         @Override
         public @Nullable Object getData(Key dataId) {
             return myDataProvider != null ? myDataProvider.getData(dataId) : null;
+        }
+
+        @Override
+        public void uiDataSnapshot(DataSink sink) {
         }
 
         public void setDataProvider(@Nullable DataProvider dataProvider) {

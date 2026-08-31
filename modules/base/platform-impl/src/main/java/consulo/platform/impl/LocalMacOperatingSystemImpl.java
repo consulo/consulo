@@ -35,6 +35,8 @@ public class LocalMacOperatingSystemImpl extends MacOperatingSystemImpl {
 
     @Override
     public boolean isEnabledTopMenu() {
-        return myEnabledTopMenu;
+        // myEnabledTopMenu covers the JDK screen menu (apple.laf.useScreenMenuBar); the native screen menu sets
+        // the "consulo.mac.screenMenuBar" property when it is enabled
+        return myEnabledTopMenu || "true".equals(System.getProperty("consulo.mac.screenMenuBar"));
     }
 }

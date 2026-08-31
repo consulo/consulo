@@ -16,18 +16,20 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -37,7 +39,7 @@ import java.awt.*;
  * @author pegov
  */
 @ActionImpl(id = "ToggleFullScreen")
-public class ToggleFullScreenAction extends AnAction implements DumbAware {
+public class ToggleFullScreenAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     public ToggleFullScreenAction() {
         super(ActionLocalize.actionTogglefullscreenText(), ActionLocalize.actionTogglefullscreenDescription());
     }
@@ -52,20 +54,19 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        Presentation p = e.getPresentation();
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation p = e.getPresentation();
 
-        IdeFrameEx frame = null;
-        boolean isApplicable = WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && (frame = getFrame()) != null;
+            IdeFrameEx frame = null;
+            boolean isApplicable = WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && (frame = getFrame()) != null;
+            p.setEnabledAndVisible(isApplicable);
+            if (isApplicable) {
+                p.setText(frame.isInFullScreen() ? ActionLocalize.actionTogglefullscreenTextExit() : ActionLocalize.actionTogglefullscreenTextEnter());
+            }
 
-        p.setEnabledAndVisible(isApplicable);
-
-        if (isApplicable) {
-            p.setText(
-                frame.isInFullScreen() ? ActionLocalize.actionTogglefullscreenTextExit() : ActionLocalize.actionTogglefullscreenTextEnter()
-            );
-        }
+            return null;
+        }));
     }
 
     private static @Nullable IdeFrameEx getFrame() {

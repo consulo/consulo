@@ -15,6 +15,8 @@
  */
 package consulo.fileEditor.structureView.tree;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -24,35 +26,48 @@ import org.jspecify.annotations.Nullable;
  * information for a grouping, sorting or filtering action displayed in a generic tree.
  */
 public class ActionPresentationData implements ActionPresentation {
-  private final String myText;
-  private final String myDescription;
-  private final Image myIcon;
+    private final LocalizeValue myText;
+    private final LocalizeValue myDescription;
+    private final @Nullable Image myIcon;
 
-  /**
-   * Creates an action presentation with the specified text, description and icon.
-   * @param text        the name of the action, displayed in the tooltip for the toolbar button.
-   * @param description the description of the action, displayed in the status bar when the mouse
-   *                    is over the toolbar button.
-   * @param icon        the icon for the action, displayed on the toolbar button.
-   */
-  public ActionPresentationData(String text, String description, @Nullable Image icon) {
-    myText = text;
-    myDescription = description;
-    myIcon = icon;
-  }
+    /**
+     * Creates an action presentation with the specified text, description and icon.
+     *
+     * @param text        the name of the action, displayed in the tooltip for the toolbar button.
+     * @param description the description of the action, displayed in the status bar when the mouse is over the toolbar button.
+     * @param icon        the icon for the action, displayed on the toolbar button.
+     */
+    public ActionPresentationData(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
+        myText = text;
+        myDescription = description;
+        myIcon = icon;
+    }
 
-  @Override
-  public String getText() {
-    return myText;
-  }
+    /**
+     * Creates an action presentation with the specified text, description and icon.
+     *
+     * @param text        the name of the action, displayed in the tooltip for the toolbar button.
+     * @param description the description of the action, displayed in the status bar when the mouse is over the toolbar button.
+     * @param icon        the icon for the action, displayed on the toolbar button.
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ActionPresentationData(String text, @Nullable String description, @Nullable Image icon) {
+        this(LocalizeValue.of(text), LocalizeValue.ofNullable(description), icon);
+    }
 
-  @Override
-  public String getDescription() {
-    return myDescription;
-  }
+    @Override
+    public LocalizeValue getText() {
+        return myText;
+    }
 
-  @Override
-  public Image getIcon() {
-    return myIcon;
-  }
+    @Override
+    public LocalizeValue getDescription() {
+        return myDescription;
+    }
+
+    @Override
+    public @Nullable Image getIcon() {
+        return myIcon;
+    }
 }

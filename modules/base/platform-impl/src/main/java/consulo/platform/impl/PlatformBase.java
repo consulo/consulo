@@ -57,12 +57,10 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
         return map;
     }
 
-    
     protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
         return new PlatformFileSystemImpl(this, jvmProperties);
     }
 
-    
     protected PlatformOperatingSystem createOS(Map<String, String> jvmProperties) {
         String osNameLowered = jvmProperties.get("os.name").toLowerCase(Locale.ROOT);
         if (osNameLowered.startsWith("windows")) {
@@ -76,7 +74,6 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
         return new UnixOperationSystemImpl(jvmProperties, System::getenv, System::getenv);
     }
 
-    
     protected MacOperatingSystemImpl createMacOperatingSystem(Map<String, String> jvmProperties,
                                                                       Function<String, String> getEnvFunc,
                                                                       Supplier<Map<String, String>> getEnvsSup) {
@@ -90,34 +87,28 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
         return new LocalWindowsOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
     }
 
-    
     protected PlatformJvm createJVM(Map<String, String> jvmProperties) {
-        return new PlatformJvmImpl(jvmProperties);
+        return new LocalPlatformJvmImpl(jvmProperties);
     }
 
-    
     protected PlatformUser createUser(Map<String, String> jvmProperties) {
         return new PlatformUserImpl(jvmProperties);
     }
 
-    
     @Override
     public String getId() {
         return myId;
     }
 
-    
     @Override
     public String getName() {
         return myName;
     }
 
-    
     @Override
     public PlatformJvm jvm() {
         return myJvm;
     }
-
     
     @Override
     public PlatformFileSystem fs() {
@@ -129,7 +120,6 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
     public PlatformOperatingSystem os() {
         return myOperatingSystem;
     }
-
     
     @Override
     public PlatformUser user() {

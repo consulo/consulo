@@ -29,6 +29,7 @@ import consulo.bookmark.ui.view.internal.BookmarkItem;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.tree.PresentationData;
@@ -87,7 +88,6 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
         for (final Bookmark bookmark : bookmarks) {
             AbstractTreeNode<Bookmark> child = new AbstractTreeNode<>(myProject, bookmark) {
-                
                 @Override
                 @RequiredReadAction
                 public Collection<? extends AbstractTreeNode> getChildren() {
@@ -95,16 +95,19 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                 }
 
                 @Override
+                @RequiredReadAction
                 public boolean canNavigate() {
                     return bookmark.canNavigate();
                 }
 
                 @Override
+                @RequiredReadAction
                 public boolean canNavigateToSource() {
                     return bookmark.canNavigateToSource();
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void navigate(boolean requestFocus) {
                     bookmark.navigate(requestFocus);
                 }

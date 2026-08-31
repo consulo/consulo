@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public interface ProjectOpenProcessors {
   
   List<ProjectOpenProcessor> getProcessors();
 
-  default @Nullable ProjectOpenProcessor findProcessor(File file) {
+  default @Nullable ProjectOpenProcessor findProcessor(Path file) {
     for (ProjectOpenProcessor provider : getProcessors()) {
       if (provider.canOpenProject(file)) {
         return provider;

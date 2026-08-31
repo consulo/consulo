@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
- * @since 14/09/2023
+ * @since 2023-09-14
  */
 public interface UIAccessScheduler extends ScheduledExecutorService {
-  ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit);
+    ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit);
 }

@@ -44,6 +44,5 @@ public interface VirtualFileViewProviderFactory extends FileViewProviderFactory 
         return map.get(fileType);
     }
 
-    
     FileType getFileType();
 }

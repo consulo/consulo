@@ -15,9 +15,8 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValue;
@@ -25,22 +24,17 @@ import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.frame.XDebugView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 public class ResultNode extends WatchNodeImpl {
-    ResultNode(XDebuggerTree tree,
-               WatchesRootNode parent,
-               XExpression expression,
-               @Nullable XStackFrame stackFrame) {
-        super(tree, parent, expression, stackFrame, XDebuggerBundle.message("debugger.result.node.name"));
+    ResultNode(XDebuggerTree tree, WatchesRootNode parent, XExpression expression, @Nullable XStackFrame stackFrame) {
+        super(tree, parent, expression, stackFrame, XDebuggerLocalize.debuggerResultNodeName());
     }
 
-    ResultNode(XDebuggerTree tree,
-               WatchesRootNode parent,
-               XExpression expression,
-               XValue value) {
-        super(tree, parent, expression, XDebuggerBundle.message("debugger.result.node.name"), value);
+    ResultNode(XDebuggerTree tree, WatchesRootNode parent, XExpression expression, XValue value) {
+        super(tree, parent, expression, XDebuggerLocalize.debuggerResultNodeName(), value);
     }
 
     @Override
@@ -50,7 +44,7 @@ public class ResultNode extends WatchNodeImpl {
 
     @Override
     protected void evaluated() {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             XDebugSession session = XDebugView.getSession(getTree());
             if (session != null) {
                 session.rebuildViews();

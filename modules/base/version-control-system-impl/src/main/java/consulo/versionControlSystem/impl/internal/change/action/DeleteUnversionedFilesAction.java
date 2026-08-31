@@ -20,15 +20,15 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 /**
  * @author yole
  * @since 2006-11-02
  */
 @ActionImpl(id = "ChangesView.DeleteUnversioned")
-public class DeleteUnversionedFilesAction extends AnAction {
+public class DeleteUnversionedFilesAction extends LegacyAnAction {
     public DeleteUnversionedFilesAction() {
         super(
             ActionLocalize.actionChangesviewDeleteunversionedText(),

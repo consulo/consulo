@@ -22,15 +22,15 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author max
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = IdeActions.ACTION_RECENT_FILES)
-public class ShowRecentFilesAction extends DumbAwareAction {
+public class ShowRecentFilesAction extends LegacyDumbAwareAction {
     public ShowRecentFilesAction() {
         super(ActionLocalize.actionRecentfilesText(), ActionLocalize.actionRecentfilesDescription());
     }

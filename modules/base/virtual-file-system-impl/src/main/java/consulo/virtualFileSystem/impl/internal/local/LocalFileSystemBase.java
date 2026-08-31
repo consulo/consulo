@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.local;
 
+import consulo.application.internal.SlowOperations;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.io.SafeOutputStreamFactory;
@@ -72,7 +73,11 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return path;
     }
 
-    private static File convertToIOFileAndCheck(VirtualFile file) throws FileNotFoundException {
+    private static File convertToIOFileAndCheck(VirtualFile file, boolean assertSlowOp) throws FileNotFoundException {
+        if (assertSlowOp) { // remove condition when writes are moved to BGT
+            SlowOperations.assertSlowOperationsAreAllowed();
+        }
+
         File ioFile = convertToIOFile(file);
 
         if (Platform.current().os().isUnix() && file.is(VFileProperty.SPECIAL)) { // avoid opening fifo files
@@ -392,12 +397,12 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
     @Override
     public InputStream getInputStream(VirtualFile file) throws IOException {
-        return new BufferedInputStream(new FileInputStream(convertToIOFileAndCheck(file)));
+        return new BufferedInputStream(new FileInputStream(convertToIOFileAndCheck(file, true)));
     }
 
     @Override
     public byte[] contentsToByteArray(VirtualFile file) throws IOException {
-        try (InputStream stream = new FileInputStream(convertToIOFileAndCheck(file))) {
+        try (InputStream stream = new FileInputStream(convertToIOFileAndCheck(file, true))) {
             long l = file.getLength();
             if (RawFileLoader.getInstance().isLargeForContentLoading(l)) {
                 throw new FileTooBigException(file.getPath());
@@ -433,7 +438,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     @Override
     
     public OutputStream getOutputStream(VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
-        File ioFile = convertToIOFileAndCheck(file);
+        File ioFile = convertToIOFileAndCheck(file, false);
         OutputStream stream;
 
         if (SafeWriteRequestor.shouldUseSafeWrite(requestor)) {

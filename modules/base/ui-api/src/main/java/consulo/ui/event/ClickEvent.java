@@ -19,20 +19,19 @@ import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
 
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-11-21
  */
 public final class ClickEvent extends ComponentEvent<Component> {
-  @Deprecated
-  @DeprecationInfo("Use constructor with InputDetails")
-  public ClickEvent(Component component) {
-    super(component);
-  }
+    @Deprecated
+    @DeprecationInfo("Use constructor with InputDetails")
+    public ClickEvent(Component component) {
+        super(component);
+    }
 
-  public ClickEvent(Component component, @Nullable InputDetails inputDetails) {
-    super(component, inputDetails);
-  }
+    public ClickEvent(Component component, InputDetails inputDetails) {
+        super(component, inputDetails);
+    }
 }

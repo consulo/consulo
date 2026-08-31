@@ -17,19 +17,15 @@ package consulo.ide.impl.diff;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.markup.LineMarkerRendererEx;
-import consulo.codeEditor.markup.LineSeparatorRenderer;
+import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.diff.DiffColors;
-import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.util.DiffSeparatorGutterPresentation;
+import consulo.diff.util.DiffSeparatorWavePresentation;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.ColorValueUtil;
 import org.jspecify.annotations.Nullable;
@@ -37,21 +33,61 @@ import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
-public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSeparatorRenderer {
-    
-    private final Editor myEditor;
-    
+public class DiffLineSeparatorRenderer implements LineSeparatorPresentationProvider, LineMarkerPresentationProvider {
+
     private final BooleanSupplier myCondition;
 
-    public DiffLineSeparatorRenderer(Editor editor) {
-        this(editor, () -> true);
+    public DiffLineSeparatorRenderer() {
+        this(() -> true);
     }
 
-    public DiffLineSeparatorRenderer(Editor editor, BooleanSupplier condition) {
-        myEditor = editor;
+    public DiffLineSeparatorRenderer(BooleanSupplier condition) {
         myCondition = condition;
+    }
+
+    //
+    // Editor content
+    //
+
+    @Override
+    public @Nullable LineSeparatorPresentation buildPresentation(LineMarkerPresentationContext context) {
+        if (!myCondition.getAsBoolean()) {
+            return null;
+        }
+
+        return new DiffSeparatorWavePresentation(
+            getBackgroundColor(context),
+            context.getColor(TOP_BORDER),
+            context.getColor(BOTTOM_BORDER)
+        );
+    }
+
+    //
+    // Gutter
+    //
+
+    @Override
+    public Set<EditorGutterArea> getUsedAreas() {
+        return Set.of(EditorGutterArea.WHOLE_GUTTER);
+    }
+
+    @Override
+    public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+        if (!myCondition.getAsBoolean()) {
+            return List.of();
+        }
+
+        return List.of(new DiffSeparatorGutterPresentation(
+            context.startLine(),
+            getBackgroundColor(context),
+            context.getColor(TOP_BORDER),
+            context.getColor(BOTTOM_BORDER),
+            context.isAnnotationsShown() ? context.getColor(EditorColors.GUTTER_BACKGROUND) : null
+        ));
     }
 
     public static void drawConnectorLine(
@@ -102,144 +138,6 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
         }
 
         paintConnectorLine(g, xPoints, yPoints, lineHeight, scheme);
-    }
-
-    /*
-     * Gutter
-     */
-    @Override
-    public void paint(Editor editor, Graphics g, Rectangle r) {
-        if (!myCondition.getAsBoolean()) {
-            return;
-        }
-
-        int y = r.y;
-        int lineHeight = myEditor.getLineHeight();
-
-        EditorGutterComponentEx gutter = ((EditorEx) editor).getGutterComponentEx();
-        int annotationsOffset = gutter.getAnnotationsAreaOffset();
-        int annotationsWidth = gutter.getAnnotationsAreaWidth();
-        if (annotationsWidth != 0) {
-            g.setColor(TargetAWT.to(editor.getColorsScheme().getColor(EditorColors.GUTTER_BACKGROUND)));
-            g.fillRect(annotationsOffset, y, annotationsWidth, lineHeight);
-        }
-
-        draw(g, 0, y, lineHeight, myEditor.getColorsScheme());
-    }
-
-    /*
-     * Editor
-     */
-    @Override
-    public void drawLine(Graphics g, int x1, int x2, int y) {
-        if (!myCondition.getAsBoolean()) {
-            return;
-        }
-
-        y++; // we want y to be line's top position
-
-        int gutterWidth = ((EditorEx) myEditor).getGutterComponentEx().getComponent().getWidth();
-        int lineHeight = myEditor.getLineHeight();
-        int interval = getStepSize(lineHeight) * 2;
-
-        int shiftX = -interval; // skip zero index painting
-        if (DiffImplUtil.isMirrored(myEditor)) {
-            int contentWidth = ((EditorEx) myEditor).getScrollPane().getViewport().getWidth();
-            shiftX += contentWidth % interval - interval;
-            shiftX += gutterWidth % interval - interval;
-        }
-        else {
-            shiftX += -gutterWidth % interval - interval;
-        }
-
-        draw(g, shiftX, y, lineHeight, myEditor.getColorsScheme());
-    }
-
-    
-    @Override
-    public LineMarkerRendererEx.Position getPosition() {
-        return LineMarkerRendererEx.Position.CUSTOM;
-    }
-
-    private static void draw(
-        Graphics g,
-        int shiftX,
-        int shiftY,
-        int lineHeight,
-        @Nullable EditorColorsScheme scheme
-    ) {
-        int step = getStepSize(lineHeight);
-        int height = getHeight(lineHeight);
-
-        Rectangle clip = g.getClipBounds();
-        if (clip.width <= 0) {
-            return;
-        }
-        int count = (clip.width / step + 3);
-        int shift = (clip.x - shiftX) / step;
-
-        int[] xPoints = new int[count];
-        int[] yPoints = new int[count];
-
-        shiftY += (lineHeight - height - step) / 2;
-
-        for (int index = 0; index < count; index++) {
-            int absIndex = index + shift;
-
-            int xPos = absIndex * step + shiftX;
-            int yPos;
-
-            if (absIndex == 0) {
-                yPos = step / 2 + shiftY;
-            }
-            else if (absIndex % 2 == 0) {
-                yPos = shiftY;
-            }
-            else {
-                yPos = step + shiftY;
-            }
-
-            xPoints[index] = xPos;
-            yPoints[index] = yPos;
-        }
-
-        GraphicsConfig config = GraphicsUtil.disableAAPainting(g);
-        try {
-            paintLine(g, xPoints, yPoints, lineHeight, scheme);
-        }
-        finally {
-            config.restore();
-        }
-    }
-
-    private static void paintLine(
-        Graphics g,
-        int[] xPoints, int[] yPoints,
-        int lineHeight,
-        @Nullable EditorColorsScheme scheme
-    ) {
-        int height = getHeight(lineHeight);
-        if (scheme == null) {
-            scheme = EditorColorsManager.getInstance().getGlobalScheme();
-        }
-
-        Graphics2D gg = ((Graphics2D) g);
-        AffineTransform oldTransform = gg.getTransform();
-
-        for (int i = 0; i < height; i++) {
-            ColorValue color = getTopBorderColor(i, lineHeight, scheme);
-            if (color == null) {
-                color = getBottomBorderColor(i, lineHeight, scheme);
-            }
-            if (color == null) {
-                color = getBackgroundColor(scheme);
-            }
-
-            gg.setColor(TargetAWT.to(color));
-            gg.drawPolyline(xPoints, yPoints, xPoints.length);
-            gg.translate(0, 1);
-        }
-        gg.setTransform(oldTransform);
     }
 
     private static void paintConnectorLine(
@@ -318,6 +216,11 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     }
 
     
+    private static ColorValue getBackgroundColor(LineMarkerPresentationContext context) {
+        ColorValue color = context.getColor(BACKGROUND);
+        return color != null ? color : new RGBColor(128, 128, 128);
+    }
+
     private static ColorValue getBackgroundColor(EditorColorsScheme scheme) {
         ColorValue color = scheme.getColor(BACKGROUND);
         return color != null ? color : new RGBColor(128, 128, 128);

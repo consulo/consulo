@@ -137,7 +137,11 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         }
 
         FindApiInternal findApiInternal = myProject.getApplication().getInstance(FindApiInternal.class);
-        findApiInternal.openScopeConfigurable(myProject, selectedScopeName).doWhenDone(() -> {
+        findApiInternal.openScopeConfigurable(myProject, selectedScopeName).whenComplete((value, error) -> {
+            if (error != null) {
+                return;
+            }
+
             rebuildModelAndSelectScopeOnSuccess(selectedScope);
 
             if (myBrowseListener != null) {

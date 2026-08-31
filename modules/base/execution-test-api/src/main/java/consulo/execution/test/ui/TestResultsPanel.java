@@ -17,7 +17,8 @@ package consulo.execution.test.ui;
 
 import consulo.application.util.registry.Registry;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.test.TestConsoleProperties;
@@ -39,7 +40,7 @@ import java.awt.*;
 /**
  * @author yole
  */
-public abstract class TestResultsPanel extends JPanel implements Disposable, DataProvider {
+public abstract class TestResultsPanel extends JPanel implements Disposable, UiDataProvider {
   private JScrollPane myLeftPane;
   private JComponent myStatisticsComponent;
   private Splitter myStatisticsSplitter;
@@ -142,12 +143,11 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   }
 
   @Override
-  public @Nullable Object getData(Key<?> dataId) {
+  public void uiDataSnapshot(DataSink sink) {
     TestTreeView view = getTreeView();
     if (view != null) {
-      return view.getData(dataId);
+      sink.uiDataSnapshot(view);
     }
-    return null;
   }
 
   private JComponent createOutputTab(JComponent console, AnAction[] consoleActions) {
@@ -167,7 +167,6 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   public void dispose() {
   }
 
-  
   protected static JBSplitter createSplitter(String proportionProperty, float defaultProportion, boolean splitVertically) {
     JBSplitter splitter = new OnePixelSplitter(splitVertically, proportionProperty, defaultProportion);
     splitter.setHonorComponentsMinimumSize(true);

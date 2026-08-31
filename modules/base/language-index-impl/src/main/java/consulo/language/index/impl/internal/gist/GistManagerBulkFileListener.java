@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.language.psi.stub.gist.GistManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.BulkFileListenerBackgroundable;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import jakarta.inject.Inject;
@@ -32,7 +32,7 @@ import java.util.List;
 * @since 23-Jun-22
 */
 @TopicImpl(ComponentScope.APPLICATION)
-final class GistManagerBulkFileListener implements BulkFileListener {
+final class GistManagerBulkFileListener implements BulkFileListenerBackgroundable {
   private Provider<GistManager> myGistManager;
 
   @Inject

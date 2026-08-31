@@ -11,7 +11,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileTextField;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.ListActions;
-import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
+import consulo.desktop.awt.ui.impl.util.LazyUiDisposable;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.ui.awt.HintUtil;

@@ -99,7 +99,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
 
   
   @Override
-  public VirtualFile[] getLibraryFiles(Library library, OrderRootType type) {
+  public VirtualFile[] getLibraryFiles(Library library, String type) {
     LibraryTable table = library.getTable();
     if (table != null) {
       LibraryTable.ModifiableModel modifiableModel = getModifiableLibraryTable(table);

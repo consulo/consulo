@@ -5,38 +5,51 @@ import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ClientId;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.UiInterceptors;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.actionPopup.PopupInlineActionsSupportKt;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.statistician.StatisticsInfo;
 import consulo.language.statistician.StatisticsManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.ui.RenderItem;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.TextItemRender;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.internal.ListWithInlineButtons;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
 import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.ListPopupModel;
+import consulo.disposer.Disposer;
+import consulo.ui.model.FlatDataModel;
 import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -63,6 +76,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         LazyValue.notNull(() -> PopupInlineActionsSupportKt.createSupport(this));
 
     private MyList myList;
+    private @Nullable TextItemRender<Object> myTextItemRender;
 
     private MyMouseMotionListener myMouseMotionListener;
     private MyMouseListener myMouseListener;
@@ -76,6 +90,8 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
     private boolean myShowSubmenuOnHover;
     private boolean myExecuteExpandedItemOnClick;
+
+    private int myMinimumWidth = -1;
 
     /**
      * @deprecated use {@link #ListPopupImpl(Project, ListPopupStep)} + {@link #setMaxRowCount(int)}
@@ -135,7 +151,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return myListModel;
     }
 
-    
     @Override
     public PopupInlineActionsSupport getPopupInlineActionsSupport() {
         return myInlineActionsSupport.get();
@@ -286,6 +301,15 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
         ListPopupStep<Object> step = getListStep();
         myListModel = new ListPopupModel(this, getSpeedSearch(), step);
+
+        FlatDataModel<Object> stepModel = step.getModel();
+        if (stepModel != null) {
+            Disposer.register(this, stepModel.addListener(event -> {
+                myListModel.syncModel();
+                myList.setVisibleRowCount(Math.min(myMaxRowCount, myListModel.getSize()));
+            }));
+        }
+
         myList = new MyList();
         if (myStep.getTitle() != null) {
             myList.getAccessibleContext().setAccessibleName(myStep.getTitle());
@@ -350,7 +374,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return myList;
     }
 
-    
     protected KeyEvent createKeyEvent(ActionEvent e, int keyCode) {
         return new KeyEvent(myList, KeyEvent.KEY_PRESSED, e.getWhen(), e.getModifiers(), keyCode, KeyEvent.CHAR_UNDEFINED);
     }
@@ -420,7 +443,133 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     }
 
     protected ListCellRenderer getListElementRenderer() {
+        TextItemRender<Object> render = myTextItemRender;
+        if (render != null) {
+            return new TextItemRenderCellRenderer(render, getSpeedSearch());
+        }
         return new PopupListElementRenderer(this);
+    }
+
+    @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void setRender(TextItemRender<?> render) {
+        myTextItemRender = (TextItemRender<Object>) render;
+        if (myList != null) {
+            myList.setCellRenderer(getListElementRenderer());
+        }
+    }
+
+    /**
+     * The rows of a render-driven popup. The render paints in platform terms into a colored component;
+     * a background it sets stands only while the row is unselected, so the selection never loses its
+     * own color to a row's. Whatever the render pins as a suffix is drawn on the trailing edge, past
+     * the space the main text leaves.
+     */
+    private static class TextItemRenderCellRenderer extends JPanel implements ListCellRenderer<Object> {
+        private final TextItemRender<Object> myRender;
+        private final @Nullable SpeedSearchSupply mySpeedSearch;
+
+        private final MainComponent myMainComponent = new MainComponent();
+        private final SimpleColoredComponent mySuffixComponent = new SimpleColoredComponent();
+
+        private LocalizeValue mySuffixText = LocalizeValue.empty();
+        private Image mySuffixIcon;
+
+        private TextItemRenderCellRenderer(TextItemRender<Object> render, @Nullable SpeedSearchSupply speedSearch) {
+            super(new BorderLayout());
+            myRender = render;
+            mySpeedSearch = speedSearch;
+            setOpaque(true);
+            mySuffixComponent.setIpad(JBUI.insets(2, 8));
+            mySuffixComponent.setOpaque(false);
+        }
+
+        private class MainComponent extends ColoredListCellRenderer<Object> {
+            private MainComponent() {
+                setIpad(JBUI.insets(2, 8));
+            }
+
+            @Override
+            protected void customizeCellRenderer(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
+                myRender.render(new ColoredTextItemPresentation(this) {
+                    @Override
+                    public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
+                        if (color != null && !selected) {
+                            super.withBackgroundColor(color);
+                        }
+                        return this;
+                    }
+
+                    @Override
+                    public TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
+                        mySuffixText = text;
+                        mySuffixIcon = icon;
+                        return this;
+                    }
+                }, RenderItem.of(value, selected));
+
+                SpeedSearchUtil.applySpeedSearchHighlighting(mySpeedSearch, this, false, selected);
+            }
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
+            removeAll();
+
+            mySuffixText = LocalizeValue.empty();
+            mySuffixIcon = null;
+
+            Component main = myMainComponent.getListCellRendererComponent(list, value, index, selected, hasFocus);
+            Color background = ObjectUtil.notNull(main.getBackground(), list.getBackground());
+            myMainComponent.setOpaque(false);
+            add(main, BorderLayout.WEST);
+            setBackground(background);
+
+            if (mySuffixText.isNotEmpty() || mySuffixIcon != null) {
+                mySuffixComponent.clear();
+                mySuffixComponent.setIcon(mySuffixIcon);
+                if (mySuffixText.isNotEmpty()) {
+                    mySuffixComponent.append(
+                        mySuffixText,
+                        selected
+                            ? new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getSelectionForeground())
+                            : SimpleTextAttributes.GRAYED_ATTRIBUTES
+                    );
+                }
+                add(mySuffixComponent, BorderLayout.EAST);
+            }
+
+            return this;
+        }
+    }
+
+    @Override
+    public void setMinimumWidth(int width) {
+        myMinimumWidth = width;
+    }
+
+    /**
+     * The items of an action group arrive after the popup is up, so whatever it was packed to is a size for a list
+     * it no longer holds.
+     */
+    protected void updatePopupSize() {
+        int minimumWidth = myMinimumWidth <= 0 ? 0 : JBUIScale.scale(myMinimumWidth);
+
+        ApplicationManager.getApplication().invokeLater(() -> {
+            JComponent content = getContent();
+
+            // a size set here is the one handed back next time, so the content is asked what it wants before
+            // anything is forced on it
+            content.setPreferredSize(null);
+
+            Dimension preferred = content.getPreferredSize();
+            Dimension size = new Dimension(Math.max(preferred.width, minimumWidth), preferred.height);
+
+            content.setPreferredSize(size);
+            content.setSize(size);
+            setSize(size);
+        });
     }
 
     @Override
@@ -713,7 +862,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @SuppressWarnings("unchecked")
-        
         private ExtendMode calcExtendMode(int index) {
             ListPopupStep<Object> listStep = getListStep();
             Object selectedValue = myListModel.getElementAt(index);
@@ -742,6 +890,11 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
     private boolean isMovingToSubmenu(MouseEvent e) {
         if (myChild == null || myChild.isDisposed()) {
+            return false;
+        }
+
+        JComponent childContent = myChild.getContent();
+        if (childContent == null || !childContent.isShowing()) {
             return false;
         }
 
@@ -859,7 +1012,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         myIndexForShowingChild = aIndexForShowingChild;
     }
 
-    private class MyList extends JBList implements DataProvider, ListWithInlineButtons {
+    private class MyList extends JBList implements UiDataProvider, ListWithInlineButtons {
         private @Nullable Integer selectedButtonIndex;
 
         MyList() {
@@ -868,45 +1021,18 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @Override
-        public Dimension getPreferredSize() {
-            return removeSeparatorsHeight(super.getPreferredSize());
-        }
-
-        @Override
-        public Dimension getMinimumSize() {
-            return removeSeparatorsHeight(super.getMinimumSize());
-        }
-
-        @Override
-        public Dimension getMaximumSize() {
-            return removeSeparatorsHeight(super.getMaximumSize());
-        }
-
-        @Override
         public Dimension getPreferredScrollableViewportSize() {
-            return removeSeparatorsHeight(super.getPreferredScrollableViewportSize());
-        }
-
-        /**
-         * Hack for remove extra height produced by separators
-         */
-        private Dimension removeSeparatorsHeight(Dimension size) {
-            int height = size.height;
-
-            ListPopupModel model = getListModel();
-            for (int i = 0; i < model.getSize(); i++) {
-                Object o = model.getElementAt(i);
-                if (o != null && model.isSeparator(o)) {
-                    String textFor = model.getTextFor(o);
-                    if (!StringUtil.isEmpty(textFor)) {
-                        height -= JBUI.scale(12);
-                    }
-                    else {
-                        height -= JBUI.scale(20);
-                    }
-                }
+            int visibleRows = Math.min(myMaxRowCount, getVisibleRowCount());
+            if (getModel().getSize() <= visibleRows) {
+                return getPreferredSize();
             }
-            size.height = height;
+
+            Dimension size = super.getPreferredScrollableViewportSize();
+            Rectangle cellBounds = getCellBounds(0, visibleRows - 1);
+            if (cellBounds != null) {
+                Insets insets = getInsets();
+                size.height = cellBounds.height + insets.top + insets.bottom;
+            }
             return size;
         }
 
@@ -942,19 +1068,12 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @Override
-        public Object getData(Key dataId) {
-            if (PlatformDataKeys.SELECTED_ITEM == dataId) {
-                return myList.getSelectedValue();
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(PlatformDataKeys.SELECTED_ITEM, myList.getSelectedValue());
+            sink.set(PlatformDataKeys.SELECTED_ITEMS, myList.getSelectedValues());
+            if (mySpeedSearchPatternField != null && mySpeedSearchPatternField.isVisible()) {
+                sink.set(PlatformDataKeys.SPEED_SEARCH_COMPONENT, mySpeedSearchPatternField);
             }
-            if (PlatformDataKeys.SELECTED_ITEMS == dataId) {
-                return myList.getSelectedValues();
-            }
-            if (PlatformDataKeys.SPEED_SEARCH_COMPONENT == dataId) {
-                if (mySpeedSearchPatternField != null && mySpeedSearchPatternField.isVisible()) {
-                    return mySpeedSearchPatternField;
-                }
-            }
-            return null;
         }
 
         @Override

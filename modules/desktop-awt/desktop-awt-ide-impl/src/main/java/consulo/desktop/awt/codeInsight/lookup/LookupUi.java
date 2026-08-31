@@ -11,7 +11,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.CompletionExtender;
@@ -314,7 +314,7 @@ class LookupUi {
         }
     }
 
-    private class HintAction extends DumbAwareAction {
+    private class HintAction extends LegacyDumbAwareAction {
         private HintAction() {
             super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulb());
 
@@ -386,7 +386,7 @@ class LookupUi {
         }
     }
 
-    private static class DelegatedAction extends DumbAwareAction implements HintManagerImpl.ActionToIgnore {
+    private static class DelegatedAction extends LegacyDumbAwareAction implements HintManagerImpl.ActionToIgnore {
         private final AnAction delegateAction;
 
         private DelegatedAction(AnAction action) {

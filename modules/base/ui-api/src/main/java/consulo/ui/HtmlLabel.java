@@ -20,13 +20,14 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 public interface HtmlLabel extends Label {
-  static HtmlLabel create(LocalizeValue html) {
-    return create(html, LabelOptions.builder().build());
-  }
-  static HtmlLabel create(LocalizeValue html, LabelOptions labelOptions) {
-    return UIInternal.get()._Components_htmlLabel(html, labelOptions);
-  }
+    static HtmlLabel create(LocalizeValue html) {
+        return create(html, LabelOptions.builder().build());
+    }
+
+    static HtmlLabel create(LocalizeValue html, LabelOptions labelOptions) {
+        return UIInternal.get()._Components_htmlLabel(html, labelOptions);
+    }
 }

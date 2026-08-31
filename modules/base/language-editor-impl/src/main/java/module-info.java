@@ -3,6 +3,7 @@
  * @since 23-Mar-22
  */
 module consulo.language.editor.impl {
+    requires consulo.mcp.server.api;
   // TODO remove this dependency in future
   requires java.desktop;
   requires forms.rt;
@@ -11,6 +12,7 @@ module consulo.language.editor.impl {
   requires transitive consulo.file.template.api;
 
   requires consulo.external.service.api;
+  requires consulo.undo.redo.api;
   requires consulo.application.impl;
   requires consulo.project.impl;
   requires consulo.language.editor.ui.api;
@@ -28,8 +30,9 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.action to consulo.ide.impl;
   exports consulo.language.editor.impl.internal to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.daemon to consulo.ide.impl;
-  exports consulo.language.editor.impl.internal.completion to consulo.ide.impl, consulo.desktop.awt.ide.impl;
-  exports consulo.language.editor.impl.internal.intention to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.completion to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+  exports consulo.language.editor.impl.internal.completion.lookup to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+  exports consulo.language.editor.impl.internal.intention to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.web.editor.impl;
   exports consulo.language.editor.impl.internal.parser to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.inspection.scheme to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.inspection to consulo.ide.impl;
@@ -37,14 +40,15 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.template to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.rawHighlight to consulo.ide.impl;
-  exports consulo.language.editor.impl.internal.markup to consulo.file.editor.impl, consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.awt.ide.impl;
-  exports consulo.language.editor.impl.internal.hint to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.language.editor.impl.internal.markup to consulo.file.editor.impl, consulo.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.version.control.system.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+  exports consulo.language.editor.impl.internal.hint to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.language.editor.impl.internal.inlay to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.inlay.param to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.inlay.setting to consulo.ide.impl;
 
   opens consulo.language.editor.impl.internal.inlay.setting to consulo.util.xml.serializer;
+  opens consulo.language.editor.impl.internal.readerMode to consulo.util.xml.serializer;
   opens consulo.language.editor.impl.internal.template to consulo.util.xml.serializer, consulo.application.impl;
   opens consulo.language.editor.impl.internal.inspection.scheme to consulo.util.xml.serializer, consulo.component.impl;
   // listener calls via messagebus

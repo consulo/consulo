@@ -15,12 +15,12 @@
  */
 package consulo.virtualFileSystem.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.FileAttribute;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -38,7 +38,6 @@ public interface FSRecordsProxy {
     @Contract("_->fail")
     void handleError(Throwable e) throws RuntimeException, Error;
 
-    
     DataOutputStream writeAttribute(int fileId, FileAttribute att);
 
     @Nullable DataInputStream readAttributeWithLock(int fileId, FileAttribute att);

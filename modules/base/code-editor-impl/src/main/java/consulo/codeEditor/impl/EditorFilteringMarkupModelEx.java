@@ -50,7 +50,7 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     private boolean isAvailable(RangeHighlighter highlighter) {
-        return highlighter.getEditorFilter().avaliableIn(myEditor) && myEditor.isHighlighterAvailable(highlighter);
+        return highlighter.getEditorFilter().availableIn(myEditor) && myEditor.isHighlighterAvailable(highlighter);
     }
 
     @Override

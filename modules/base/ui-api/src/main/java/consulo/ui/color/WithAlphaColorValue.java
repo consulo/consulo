@@ -20,16 +20,17 @@ package consulo.ui.color;
  * @since 2018-06-17
  */
 final class WithAlphaColorValue implements ColorValue {
-  private final ColorValue myColorValue;
-  private final int myAlpha;
+    private final ColorValue myColorValue;
+    private final int myAlpha;
 
-  public WithAlphaColorValue(ColorValue colorValue, int alpha) {
-    myColorValue = colorValue;
-    myAlpha = alpha;
-  }
-  @Override
-  public RGBColor toRGB() {
-    RGBColor rgbColor = myColorValue.toRGB();
-    return new RGBColor(rgbColor, myAlpha);
-  }
+    public WithAlphaColorValue(ColorValue colorValue, int alpha) {
+        myColorValue = colorValue;
+        myAlpha = alpha;
+    }
+
+    @Override
+    public RGBColor toRGB() {
+        RGBColor rgbColor = myColorValue.toRGB();
+        return new RGBColor(rgbColor, myAlpha);
+    }
 }

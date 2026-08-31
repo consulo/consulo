@@ -46,8 +46,12 @@ public class QuotedStringParser extends PrefixedTokenParser {
         escaped = !escaped;
       }
 
-      if(!escaped && c == myQuote) return position + 1;
-      if(c == '\n') return position;
+      if (!escaped && c == myQuote) {
+        return position + 1;
+      }
+      if (c == '\n') {
+        return position;
+      }
       if (escapedStatus && escaped) {
         escaped = false;
       }

@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
 import org.jspecify.annotations.Nullable;
 
@@ -37,7 +38,7 @@ import java.util.List;
  * @since 2005-02-24
  */
 @ActionImpl(id = "SendToFavoritesGroup")
-public class SendToFavoritesGroup extends ActionGroup {
+public class SendToFavoritesGroup extends ActionGroup implements AnActionWithSyncUpdate {
     public SendToFavoritesGroup() {
         super(ActionLocalize.groupSendtofavoritesgroupText());
         setPopup(true);
@@ -68,7 +69,6 @@ public class SendToFavoritesGroup extends ActionGroup {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setVisible(
             SendToFavoritesAction.isEnabled(e) && e.hasData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY)
         );

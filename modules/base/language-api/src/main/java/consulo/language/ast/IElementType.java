@@ -58,7 +58,6 @@ public class IElementType {
         push(init);
     }
 
-    
     static IElementType[] push(IElementType[] types) {
         synchronized (lock) {
             IElementType[] oldRegistry = ourRegistry;
@@ -133,7 +132,8 @@ public class IElementType {
 
     /**
      * Controls whitespace balancing behavior of PsiBuilder.
-     * <p>By default, empty composite elements (containing no children) are bounded to the right (previous) neighbour, forming following tree:
+     * <p>By default, empty composite elements (containing no children) are bounded to the right (previous) neighbour,
+     * forming following tree:
      * <pre>
      *  [previous_element]
      *  [whitespace]

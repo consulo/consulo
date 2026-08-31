@@ -16,7 +16,6 @@
 package consulo.externalSystem.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
@@ -30,8 +29,8 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ import java.util.List;
  * Triggered by double-click or Enter on a TaskNode in the external projects view.
  */
 @ActionImpl(id = "ExternalSystem.RunTask")
-public class RunExternalSystemTaskAction extends AnAction implements DumbAware {
+public class RunExternalSystemTaskAction extends LegacyDumbAwareAction {
     public RunExternalSystemTaskAction() {
         super(
             LocalizeValue.localizeTODO("Run Task"),

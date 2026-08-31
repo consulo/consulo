@@ -29,8 +29,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
  * @author VISTALL
  * @since 2013-10-15
  */
-public class ShowDiagramAction extends AnAction {
+public class ShowDiagramAction extends LegacyAnAction {
     private final Application myApplication;
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
@@ -79,11 +79,9 @@ public class ShowDiagramAction extends AnAction {
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram..."))
             .cancelable()
-            .execute(UIAccess.current(), coroutine -> {
-                return coroutine.then(ReadLock.apply(o -> {
-                    return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
-                }));
-            });
+            .execute(UIAccess.current(), () -> ReadLock.apply(o -> {
+                return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
+            }).toCoroutine());
 
         UIAccess uiAccess = UIAccess.current();
 

@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ReadAction;
-import consulo.ide.navigationToolbar.AbstractNavBarModelExtension;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.ui.navigationBar.NavBarModelExtension;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleFileIndex;
@@ -42,171 +42,184 @@ import java.util.function.Predicate;
  * @since 04-Feb-2008
  */
 @ExtensionImpl(id = "defaultNavbar", order = "last")
-public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
-  @Override
-  public @Nullable String getPresentableText(Object object) {
-    if (object instanceof Project) {
-      return ((Project)object).getName();
-    }
-    else if (object instanceof Module) {
-      return ((Module)object).getName();
-    }
-    else if (object instanceof PsiFile) {
-      VirtualFile file = ((PsiFile)object).getVirtualFile();
-      return file != null ? file.getPresentableName() : ((PsiFile)object).getName();
-    }
-    else if (object instanceof PsiDirectory) {
-      return ((PsiDirectory)object).getVirtualFile().getName();
-    }
-    else if (object instanceof ModuleExtensionWithSdkOrderEntry) {
-      return ((ModuleExtensionWithSdkOrderEntry)object).getSdkName();
-    }
-    else if (object instanceof LibraryOrderEntry) {
-      String libraryName = ((LibraryOrderEntry)object).getLibraryName();
-      return libraryName != null ? libraryName : AnalysisScopeLocalize.packageDependenciesLibraryNodeText().get();
-    }
-    else if (object instanceof ModuleOrderEntry) {
-      ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)object;
-      return moduleOrderEntry.getModuleName();
-    }
-    return null;
-  }
-
-  @Override
-  public PsiElement adjustElement(PsiElement psiElement) {
-    PsiFile containingFile = psiElement.getContainingFile();
-    if (containingFile != null) return containingFile;
-    return psiElement;
-  }
-
-  @Override
-  public boolean processChildren(Object object, final Object rootElement, Predicate<Object> processor) {
-    if (object instanceof Project) {
-      return processChildren((Project)object, processor);
-    }
-    else if (object instanceof Module) {
-      return processChildren((Module)object, processor);
-    }
-    else if (object instanceof PsiDirectoryContainer psiPackage) {
-      PsiDirectory[] psiDirectories = ReadAction.compute(
-        () -> rootElement instanceof Module module
-          ? psiPackage.getDirectories(GlobalSearchScope.moduleScope(module))
-          : psiPackage.getDirectories()
-      );
-      for (PsiDirectory psiDirectory : psiDirectories) {
-        if (!processChildren(psiDirectory, rootElement, processor)) return false;
-      }
-      return true;
-    }
-    else if (object instanceof PsiDirectory) {
-      return processChildren((PsiDirectory)object, rootElement, processor);
-    }
-    else if (object instanceof PsiFileSystemItem) {
-      return processChildren((PsiFileSystemItem)object, processor);
-    }
-    return true;
-  }
-
-  private static boolean processChildren(Project object, Predicate<Object> processor) {
-    if (!object.isInitialized()) {
-      return true;
+public class DefaultNavBarExtension implements NavBarModelExtension {
+    @Override
+    public @Nullable String getPresentableText(Object object) {
+        if (object instanceof Project) {
+            return ((Project) object).getName();
+        }
+        else if (object instanceof Module) {
+            return ((Module) object).getName();
+        }
+        else if (object instanceof PsiFile) {
+            VirtualFile file = ((PsiFile) object).getVirtualFile();
+            return file != null ? file.getPresentableName() : ((PsiFile) object).getName();
+        }
+        else if (object instanceof PsiDirectory) {
+            return ((PsiDirectory) object).getVirtualFile().getName();
+        }
+        else if (object instanceof ModuleExtensionWithSdkOrderEntry) {
+            return ((ModuleExtensionWithSdkOrderEntry) object).getSdkName();
+        }
+        else if (object instanceof LibraryOrderEntry) {
+            String libraryName = ((LibraryOrderEntry) object).getLibraryName();
+            return libraryName != null ? libraryName : AnalysisScopeLocalize.packageDependenciesLibraryNodeText().get();
+        }
+        else if (object instanceof ModuleOrderEntry) {
+            ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry) object;
+            return moduleOrderEntry.getModuleName();
+        }
+        return null;
     }
 
-    return ReadAction.compute(() -> {
-      for (Module module : ModuleManager.getInstance(object).getModules()) {
-        if (!processor.test(module)) return false;
-      }
-      return true;
-    });
-  }
-
-  private static boolean processChildren(Module module, Predicate<Object> processor) {
-    final PsiManager psiManager = PsiManager.getInstance(module.getProject());
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    VirtualFile[] roots = moduleRootManager.getContentRoots();
-    for (final VirtualFile root : roots) {
-      PsiDirectory psiDirectory = ReadAction.compute(() -> psiManager.findDirectory(root));
-      if (psiDirectory != null) {
-        if (!processor.test(psiDirectory)) return false;
-      }
+    @Override
+    public PsiElement adjustElement(PsiElement psiElement) {
+        PsiFile containingFile = psiElement.getContainingFile();
+        if (containingFile != null) {
+            return containingFile;
+        }
+        return psiElement;
     }
-    return true;
-  }
 
-  private static boolean processChildren(PsiDirectory object, Object rootElement, Predicate<Object> processor) {
-    return ReadAction.compute(() -> {
-        ModuleFileIndex moduleFileIndex = rootElement instanceof Module ? ModuleRootManager.getInstance((Module)rootElement).getFileIndex() : null;
-        PsiElement[] children = object.getChildren();
-        for (PsiElement child : children) {
-          if (child != null && child.isValid()) {
-            if (moduleFileIndex != null) {
-              VirtualFile virtualFile = PsiUtilCore.getVirtualFile(child);
-              if (virtualFile != null && !moduleFileIndex.isInContent(virtualFile)) continue;
+    @Override
+    public boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
+        if (object instanceof Project) {
+            return processChildren((Project) object, processor);
+        }
+        else if (object instanceof Module) {
+            return processChildren((Module) object, processor);
+        }
+        else if (object instanceof PsiDirectoryContainer psiPackage) {
+            PsiDirectory[] psiDirectories = rootElement instanceof Module module
+                ? psiPackage.getDirectories(GlobalSearchScope.moduleScope(module))
+                : psiPackage.getDirectories();
+            for (PsiDirectory psiDirectory : psiDirectories) {
+                if (!processChildren(psiDirectory, rootElement, processor)) {
+                    return false;
+                }
             }
-            if (!processor.test(child)) return false;
-          }
+            return true;
+        }
+        else if (object instanceof PsiDirectory) {
+            return processChildren((PsiDirectory) object, rootElement, processor);
+        }
+        else if (object instanceof PsiFileSystemItem) {
+            return processChildren((PsiFileSystemItem) object, processor);
         }
         return true;
-    });
-  }
-
-  private static boolean processChildren(PsiFileSystemItem object, final Predicate<Object> processor) {
-    return ReadAction.compute(() -> object.processChildren(new PsiFileSystemItemProcessor() {
-      @Override
-        public boolean acceptItem(String name, boolean isDirectory) {
-          return true;
-        }
-
-        @Override
-        public boolean execute(PsiFileSystemItem element) {
-          return processor.test(element);
-        }
-    }));
-  }
-
-  @Override
-  public @Nullable PsiElement getParent(PsiElement psiElement) {
-    PsiFile containingFile = psiElement.getContainingFile();
-    if (containingFile != null) {
-      PsiDirectory containingDirectory = containingFile.getContainingDirectory();
-      if (containingDirectory != null) {
-        return containingDirectory;
-      }
     }
-    else if (psiElement instanceof PsiDirectory) {
-      PsiDirectory psiDirectory = (PsiDirectory)psiElement;
-      Project project = psiElement.getProject();
 
-      PsiDirectory parentDirectory = psiDirectory.getParentDirectory();
+    private static boolean processChildren(Project object, Predicate<Object> processor) {
+        if (!object.isInitialized()) {
+            return true;
+        }
 
-      if (parentDirectory == null) {
-        VirtualFile jar = VirtualFilePathUtil.getLocalFile(psiDirectory.getVirtualFile());
-        if (ProjectRootManager.getInstance(project).getFileIndex().isInContent(jar)) {
-          parentDirectory = PsiManager.getInstance(project).findDirectory(jar.getParent());
+        for (Module module : ModuleManager.getInstance(object).getModules()) {
+            if (!processor.test(module)) {
+                return false;
+            }
         }
-      }
-      return parentDirectory;
+        return true;
     }
-    else if (psiElement instanceof PsiFileSystemItem) {
-      VirtualFile virtualFile = ((PsiFileSystemItem)psiElement).getVirtualFile();
-      if (virtualFile == null) return null;
-      PsiManager psiManager = psiElement.getManager();
-      PsiElement resultElement;
-      if (virtualFile.isDirectory()) {
-        resultElement = psiManager.findDirectory(virtualFile);
-      }
-      else {
-        resultElement = psiManager.findFile(virtualFile);
-      }
-      if (resultElement == null) return null;
-      VirtualFile parentVFile = virtualFile.getParent();
-      if (parentVFile != null) {
-        PsiDirectory parentDirectory = psiManager.findDirectory(parentVFile);
-        if (parentDirectory != null) {
-          return parentDirectory;
+
+    @RequiredReadAction
+    private static boolean processChildren(Module module, Predicate<Object> processor) {
+        PsiManager psiManager = PsiManager.getInstance(module.getProject());
+        ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+        VirtualFile[] roots = moduleRootManager.getContentRoots();
+        for (VirtualFile root : roots) {
+            PsiDirectory psiDirectory = psiManager.findDirectory(root);
+            if (psiDirectory != null) {
+                if (!processor.test(psiDirectory)) {
+                    return false;
+                }
+            }
         }
-      }
+        return true;
     }
-    return null;
-  }
+
+    @RequiredReadAction
+    private static boolean processChildren(PsiDirectory object, Object rootElement, Predicate<Object> processor) {
+        ModuleFileIndex moduleFileIndex = rootElement instanceof Module ? ModuleRootManager.getInstance((Module) rootElement).getFileIndex() : null;
+        PsiElement[] children = object.getChildren();
+        for (PsiElement child : children) {
+            if (child != null && child.isValid()) {
+                if (moduleFileIndex != null) {
+                    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(child);
+                    if (virtualFile != null && !moduleFileIndex.isInContent(virtualFile)) {
+                        continue;
+                    }
+                }
+                if (!processor.test(child)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean processChildren(PsiFileSystemItem object, final Predicate<Object> processor) {
+        return object.processChildren(new PsiFileSystemItemProcessor() {
+            @Override
+            public boolean acceptItem(String name, boolean isDirectory) {
+                return true;
+            }
+
+            @Override
+            public boolean execute(PsiFileSystemItem element) {
+                return processor.test(element);
+            }
+        });
+    }
+
+    @Override
+    @RequiredReadAction
+    public @Nullable PsiElement getParent(PsiElement psiElement) {
+        PsiFile containingFile = psiElement.getContainingFile();
+        if (containingFile != null) {
+            PsiDirectory containingDirectory = containingFile.getContainingDirectory();
+            if (containingDirectory != null) {
+                return containingDirectory;
+            }
+        }
+        else if (psiElement instanceof PsiDirectory) {
+            PsiDirectory psiDirectory = (PsiDirectory) psiElement;
+            Project project = psiElement.getProject();
+
+            PsiDirectory parentDirectory = psiDirectory.getParentDirectory();
+
+            if (parentDirectory == null) {
+                VirtualFile jar = VirtualFilePathUtil.getLocalFile(psiDirectory.getVirtualFile());
+                if (ProjectRootManager.getInstance(project).getFileIndex().isInContent(jar)) {
+                    parentDirectory = PsiManager.getInstance(project).findDirectory(jar.getParent());
+                }
+            }
+            return parentDirectory;
+        }
+        else if (psiElement instanceof PsiFileSystemItem) {
+            VirtualFile virtualFile = ((PsiFileSystemItem) psiElement).getVirtualFile();
+            if (virtualFile == null) {
+                return null;
+            }
+            PsiManager psiManager = psiElement.getManager();
+            PsiElement resultElement;
+            if (virtualFile.isDirectory()) {
+                resultElement = psiManager.findDirectory(virtualFile);
+            }
+            else {
+                resultElement = psiManager.findFile(virtualFile);
+            }
+            if (resultElement == null) {
+                return null;
+            }
+            VirtualFile parentVFile = virtualFile.getParent();
+            if (parentVFile != null) {
+                PsiDirectory parentDirectory = psiManager.findDirectory(parentVFile);
+                if (parentDirectory != null) {
+                    return parentDirectory;
+                }
+            }
+        }
+        return null;
+    }
 }

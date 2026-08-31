@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
@@ -23,16 +22,19 @@ import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -48,7 +50,7 @@ import java.util.List;
 /**
  * @author yole
  */
-public class ReopenProjectAction extends AnAction implements DumbAware {
+public class ReopenProjectAction extends LegacyDumbAwareAction {
     private final String myProjectPath;
     private final String myProjectName;
     private List<String> myExtensions;
@@ -85,12 +87,19 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (myOpened) {
-            presentation.setEnabled(false);
+            presentation.setEnabled(UIAccess.supportsMultipleUI());
             presentation.setText(ProjectLocalize.recentProject0OpenedActionText(myProjectText));
         }
         else {
             presentation.setEnabled(true);
-            presentation.setText(myProjectText);
+
+            String branch = RecentProjectsManager.getInstance().getBranch(myProjectPath);
+            if (branch != null && !branch.isEmpty()) {
+                presentation.setText(LocalizeValue.join(myProjectText, LocalizeValue.of(" [" + branch + "]")));
+            }
+            else {
+                presentation.setText(myProjectText);
+            }
         }
     }
 
@@ -106,6 +115,13 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
             || ActionPlaces.WELCOME_SCREEN.equals(e.getPlace());
 
         Project project = e.getData(Project.KEY);
+
+        Project opened = findOpenedProject();
+        if (opened != null) {
+            reattach(opened);
+            return;
+        }
+
         if (!new File(myProjectPath).exists()) {
             int result = Messages.showDialog(project,
                 "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
@@ -134,6 +150,31 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         }
 
         ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current(), context);
+    }
+
+    private @Nullable Project findOpenedProject() {
+        if (!UIAccess.supportsMultipleUI()) {
+            return null;
+        }
+
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            if (myProjectPath.equals(RecentProjectsManagerImpl.getProjectPath(project))) {
+                return project;
+            }
+        }
+
+        return null;
+    }
+
+    @RequiredUIAccess
+    private static void reattach(Project project) {
+        WelcomeFrameManager.getInstance().closeFrame();
+
+        WindowManagerEx.getInstanceEx().reattachFrame(project, UIAccess.current());
+    }
+
+    public boolean isOpened() {
+        return myOpened;
     }
 
     public boolean isRemoved() {

@@ -17,23 +17,22 @@ package consulo.ide.impl.newProject.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
+import consulo.ide.impl.module.creation.UnifiedNewProjectPanel;
+import consulo.ide.impl.welcomeScreen.WelcomeSlide;
+import consulo.ide.impl.welcomeScreen.WelcomeSlideAction;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.JBCardLayout;
-import consulo.ui.ex.awt.TitlelessDecorator;
-
-import javax.swing.*;
+import consulo.ui.ex.TitlelessDecorator;
 
 /**
  * @author VISTALL
  * @since 2024-11-24
  */
 @ActionImpl(id = "WelcomeScreen.CreateNewProject")
-public class WelcomeNewProjectAction extends NewProjectAction {
+public class WelcomeNewProjectAction extends WelcomeSlideAction {
     public WelcomeNewProjectAction() {
         super(
             ActionLocalize.actionWelcomescreenCreatenewprojectText(),
@@ -47,34 +46,16 @@ public class WelcomeNewProjectAction extends NewProjectAction {
         return true;
     }
 
-    
-    @RequiredUIAccess
-    public JComponent createSlide(
-        Disposable parentDisposable,
-        WelcomeScreenSlider owner,
-        TitlelessDecorator titlelessDecorator
-    ) {
-        owner.setTitle(IdeLocalize.titleNewProject().get());
-
-        return new SlideNewProjectPanel(parentDisposable, owner, null, null, titlelessDecorator);
+    @Override
+    protected LocalizeValue getSlideTitle() {
+        return IdeLocalize.titleNewProject();
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        WelcomeScreenSlider slider = e.getRequiredData(WelcomeScreenSlider.KEY);
-        TitlelessDecorator titlelessDecorator = slider.getTitlelessDecorator();
-
-        JPanel sliderPanel = (JPanel) slider;
-
-        JComponent panel = createSlide(slider.getDisposable(), slider, titlelessDecorator);
-
-        JBCardLayout layout = (JBCardLayout) sliderPanel.getLayout();
-
-        String id = getClass().getName();
-
-        sliderPanel.add(panel, id);
-
-        layout.swipe(sliderPanel, id, JBCardLayout.SwipeDirection.FORWARD);
+    protected WelcomeSlide createSlide(Disposable parentDisposable, TitlelessDecorator titlelessDecorator) {
+        UnifiedNewProjectPanel panel = new UnifiedNewProjectPanel(parentDisposable, null, titlelessDecorator);
+        panel.setDefaultOkAction(() -> NewProjectAction.generateProject(null, panel));
+        return panel;
     }
 }

@@ -3,18 +3,59 @@ package consulo.language.index.impl.internal.stub;
 
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.index.io.StorageException;
+import consulo.language.index.impl.internal.UpdatableIndex;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author dmitrylomov
  */
 public final class StubProcessingHelper extends StubProcessingHelperBase {
+  private static final Logger LOG = Logger.getInstance(StubProcessingHelper.class);
+
   private final ThreadLocal<Set<VirtualFile>> myFilesHavingProblems = new ThreadLocal<>();
+
+  public @Nullable <Key, Psi extends PsiElement> StubIdList retrieveStubIdList(
+    StubIndexKey<Key, Psi> indexKey,
+    Key key,
+    VirtualFile file,
+    UpdatableIndex<Integer, SerializedStubTree, FileContent> stubUpdatingIndex,
+    boolean failOnMissedKeys
+  ) {
+    int id = FileBasedIndex.getFileId(file);
+    try {
+      Map<Integer, SerializedStubTree> data = stubUpdatingIndex.getIndexedFileData(id);
+      if (data.size() != 1) {
+        if (failOnMissedKeys) {
+          LOG.error("Stub index points to a file (" + file.getPath() + ") without indexed stub tree; actual stub count = " + data.size());
+          onInternalError(file);
+        }
+        return null;
+      }
+      SerializedStubTree tree = data.values().iterator().next();
+      StubIdList stubIdList =
+        tree.restoreIndexedStubs(StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE, indexKey, key);
+      if (stubIdList == null && failOnMissedKeys) {
+        LOG.error("Stub ids not found for key in index = " + indexKey.getName() + ", file " + file.getPath());
+        onInternalError(file);
+      }
+      return stubIdList;
+    }
+    catch (StorageException | IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   @Override
   protected void onInternalError(VirtualFile file) {

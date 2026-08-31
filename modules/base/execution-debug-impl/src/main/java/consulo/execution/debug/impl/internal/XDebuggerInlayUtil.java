@@ -21,7 +21,7 @@ import consulo.codeEditor.Inlay;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.FontPreferences;
+import consulo.colorScheme.internal.FontPreferences;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.ui.DebuggerColors;

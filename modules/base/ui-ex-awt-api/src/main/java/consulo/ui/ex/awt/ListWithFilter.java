@@ -2,7 +2,8 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -10,7 +11,6 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -23,7 +23,7 @@ import java.util.function.Function;
 /**
  * @author max
  */
-public class ListWithFilter<T> extends JPanel implements DataProvider {
+public class ListWithFilter<T> extends JPanel implements UiDataProvider {
   private final JList<T> myList;
   private final SearchTextField mySearchField = new SearchTextField(false);
   private final NameFilteringListModel<T> myModel;
@@ -32,19 +32,14 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
   private boolean myAutoPackHeight = true;
 
   @Override
-  public Object getData(Key dataId) {
-    if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
-      return mySearchField.getText();
-    }
-    return null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY, mySearchField.getText());
   }
 
-  
   public static <T> JComponent wrap(JList<? extends T> list, JScrollPane scrollPane, @Nullable Function<? super T, String> namer) {
     return wrap(list, scrollPane, namer, false);
   }
 
-  
   public static <T> JComponent wrap(JList<? extends T> list, JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
     return new ListWithFilter<>(list, scrollPane, namer, highlightAllOccurrences);
   }
@@ -172,12 +167,10 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
     }
   }
 
-  
   public JList<T> getList() {
     return myList;
   }
 
-  
   public JScrollPane getScrollPane() {
     return myScrollPane;
   }

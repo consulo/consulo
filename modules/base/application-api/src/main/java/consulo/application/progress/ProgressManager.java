@@ -15,16 +15,16 @@
  */
 package consulo.application.progress;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
+import consulo.util.lang.function.ThrowableSupplier;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -33,7 +33,6 @@ import java.util.function.Supplier;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProgressManager extends ProgressIndicatorProvider {
-    
     public static ProgressManager getInstance() {
         return (ProgressManager) Application.get().getProgressManager();
     }
@@ -142,7 +141,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @throws E exception thrown by process
      */
     public <T, E extends Exception> T runProcessWithProgressSynchronously(
-        ThrowableComputable<T, E> process,
+        ThrowableSupplier<T, E> process,
         LocalizeValue progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
@@ -210,7 +209,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public abstract <T, E extends Exception> T runProcessWithProgressSynchronously(
-        ThrowableComputable<T, E> process,
+        ThrowableSupplier<T, E> process,
         String progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
@@ -294,10 +293,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      */
     public abstract void run(Task task);
 
-    public abstract void runProcessWithProgressAsynchronously(
-        Task.Backgroundable task,
-        ProgressIndicator progressIndicator
-    );
+    public abstract void runProcessWithProgressAsynchronously(Task.Backgroundable task, ProgressIndicator progressIndicator);
 
     protected void indicatorCanceled(ProgressIndicator indicator) {
     }
@@ -313,14 +309,13 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     /**
      * @param progress an indicator to use, {@code null} means reuse current progress
      */
-    public abstract void executeProcessUnderProgress(
-        Runnable process,
-        @Nullable ProgressIndicator progress
-    ) throws ProcessCanceledException;
+    public abstract void executeProcessUnderProgress(Runnable process, @Nullable ProgressIndicator progress)
+        throws ProcessCanceledException;
 
     public static void assertNotCircular(ProgressIndicator original) {
         Set<ProgressIndicator> wrappedParents = null;
-        for (ProgressIndicator i = original; i instanceof WrappedProgressIndicator;
+        for (ProgressIndicator i = original;
+             i instanceof WrappedProgressIndicator;
              i = ((WrappedProgressIndicator) i).getOriginalProgressIndicator()) {
             if (wrappedParents == null) {
                 wrappedParents = new HashSet<>();
@@ -358,11 +353,11 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * This is intended for relatively short (expected to be under 10 seconds) background activities that the user is waiting for
      * (e.g. code navigation), and which shouldn't be slowed down by CPU-intensive background tasks like highlighting or indexing.
      */
-    public abstract <T, E extends Throwable> T computePrioritized(ThrowableComputable<T, E> computable) throws E;
+    public abstract <T, E extends Throwable> T computePrioritized(ThrowableSupplier<T, E> computable) throws E;
 
-    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Contract("null -> null; !null -> !null")
     public abstract WrappedProgressIndicator wrapProgressIndicator(@Nullable ProgressIndicator indicator);
 
-    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Contract("null -> null; !null -> !null")
     public abstract ProgressIndicator unwrapProgressIndicator(WrappedProgressIndicator indicator);
 }

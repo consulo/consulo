@@ -17,9 +17,9 @@ package consulo.compiler.impl.internal;
 
 import consulo.compiler.CompilerMessageCategory;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +34,7 @@ public class CompileCounters {
 
     private Map<CompilerMessageCategory, AtomicInteger> myCounters = new ConcurrentHashMap<>();
 
-    private Set<VirtualFile> myErrorFiles = ConcurrentHashMap.newKeySet();
+    private Set<Path> myErrorFiles = ConcurrentHashMap.newKeySet();
 
     public void inc(CompilerMessageCategory category) {
         myCounters.computeIfAbsent(category, category1 -> new AtomicInteger()).incrementAndGet();
@@ -53,11 +53,11 @@ public class CompileCounters {
         return val == null ? 0 : val.get();
     }
 
-    public void addErrorFile(VirtualFile file) {
+    public void addErrorFile(Path file) {
         myErrorFiles.add(file);
     }
 
-    public Set<VirtualFile> getErrorFiles() {
+    public Set<Path> getErrorFiles() {
         return myErrorFiles;
     }
 }

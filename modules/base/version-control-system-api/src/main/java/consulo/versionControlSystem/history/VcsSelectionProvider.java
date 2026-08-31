@@ -15,10 +15,10 @@
  */
 package consulo.versionControlSystem.history;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.action.VcsContext;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -26,5 +26,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsSelectionProvider {
-  @Nullable VcsSelection getSelection(VcsContext context);
+    @RequiredReadAction
+    @Nullable
+    VcsSelection getSelection(VcsContext context);
 }

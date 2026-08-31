@@ -60,17 +60,17 @@ public class ModuleContentLibraryUtil {
         if (entry instanceof LibraryOrderEntry) {
           Library library = ((LibraryOrderEntry)entry).getLibrary();
           if (library != null) {
-            VirtualFile[] files = includeSourceFiles ? library.getFiles(SourcesOrderRootType.getInstance()) : null;
+            VirtualFile[] files = includeSourceFiles ? library.getFiles(SourcesOrderRootType.ID) : null;
             if (files == null || files.length == 0) {
-              files = library.getFiles(BinariesOrderRootType.getInstance());
+              files = library.getFiles(BinariesOrderRootType.ID);
             }
             ContainerUtil.addAll(roots, files);
           }
         }
         else if (includeSdk && entry instanceof ModuleExtensionWithSdkOrderEntry) {
-          VirtualFile[] files = includeSourceFiles ? entry.getFiles(SourcesOrderRootType.getInstance()) : null;
+          VirtualFile[] files = includeSourceFiles ? entry.getFiles(SourcesOrderRootType.ID) : null;
           if (files == null || files.length == 0) {
-            files = entry.getFiles(BinariesOrderRootType.getInstance());
+            files = entry.getFiles(BinariesOrderRootType.ID);
           }
           ContainerUtil.addAll(roots, files);
         }

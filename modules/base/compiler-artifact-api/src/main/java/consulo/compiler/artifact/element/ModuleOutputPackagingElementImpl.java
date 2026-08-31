@@ -41,6 +41,8 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -75,8 +77,8 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
                                                      ArtifactType artifactType) {
     Module module = findModule(resolvingContext);
     if (module != null) {
-      VirtualFile output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(myContentFolderType);
-      if (output != null) {
+      Path output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPath(myContentFolderType);
+      if (output != null && Files.isDirectory(output)) {
         creator.addDirectoryCopyInstructions(output, null);
       }
     }

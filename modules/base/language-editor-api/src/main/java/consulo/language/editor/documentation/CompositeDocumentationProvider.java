@@ -18,6 +18,8 @@ package consulo.language.editor.documentation;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CompositeDocumentationProvider extends DocumentationProviderEx implements ExternalDocumentationProvider, ExternalDocumentationHandler {
 
@@ -145,6 +148,35 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   public String generateDoc(PsiElement element, PsiElement originalElement) {
     for (DocumentationProvider provider : getAllProviders()) {
       String result = provider.generateDoc(element, originalElement);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public @Nullable String generateRenderedDoc(PsiDocCommentBase comment) {
+    for (DocumentationProvider provider : getAllProviders()) {
+      String result = provider.generateRenderedDoc(comment);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public void collectDocComments(PsiFile file, Consumer<? super PsiDocCommentBase> sink) {
+    for (DocumentationProvider provider : getAllProviders()) {
+      provider.collectDocComments(file, sink);
+    }
+  }
+
+  @Override
+  public @Nullable PsiDocCommentBase findDocComment(PsiFile file, TextRange range) {
+    for (DocumentationProvider provider : getAllProviders()) {
+      PsiDocCommentBase result = provider.findDocComment(file, range);
       if (result != null) {
         return result;
       }

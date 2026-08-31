@@ -22,41 +22,41 @@ import consulo.ui.Point2D;
  * @since 2021-08-17
  */
 public class InputDetails {
-  /**
-   * Position inside component - relative
-   */
-  private final Point2D myPosition;
-  /**
-   * Position XY on screen - absolute
-   */
-  private final Point2D myPositionOnScreen;
+    /**
+     * Position inside component - relative
+     */
+    private final Point2D myPosition;
+    /**
+     * Position XY on screen - absolute
+     */
+    private final Point2D myPositionOnScreen;
 
-  public InputDetails(Point2D position, Point2D positionOnScreen) {
-    myPosition = position;
-    myPositionOnScreen = positionOnScreen;
-  }
+    public InputDetails(Point2D position, Point2D positionOnScreen) {
+        myPosition = position;
+        myPositionOnScreen = positionOnScreen;
+    }
 
-  public int getX() {
-    return myPosition.x();
-  }
+    public int getX() {
+        return myPosition.x();
+    }
 
-  public int getY() {
-    return myPosition.y();
-  }
+    public int getY() {
+        return myPosition.y();
+    }
 
-  public int getXOnScreen() {
-    return myPositionOnScreen.x();
-  }
+    public int getXOnScreen() {
+        return myPositionOnScreen.x();
+    }
 
-  public int getYOnScreen() {
-    return myPositionOnScreen.y();
-  }
+    public int getYOnScreen() {
+        return myPositionOnScreen.y();
+    }
 
-  public Point2D getPosition() {
-    return myPosition;
-  }
+    public Point2D getPosition() {
+        return myPosition;
+    }
 
-  public Point2D getPositionOnScreen() {
-    return myPositionOnScreen;
-  }
+    public Point2D getPositionOnScreen() {
+        return myPositionOnScreen;
+    }
 }

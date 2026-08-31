@@ -19,10 +19,9 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Jul-22
+ * @since 2022-07-09
  */
 public interface ObjectStubSerializerProvider {
-  
   String getExternalId();
 
   boolean isLazy();

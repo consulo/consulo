@@ -23,8 +23,9 @@ module consulo.version.control.system.distributed.api {
     exports consulo.versionControlSystem.distributed.repository;
     exports consulo.versionControlSystem.distributed.ui;
     exports consulo.versionControlSystem.distributed.ui.awt;
+    exports consulo.versionControlSystem.distributed.ui.branch.popup;
 
     opens consulo.versionControlSystem.distributed.branch to consulo.util.xml.serializer;
 
-    exports consulo.versionControlSystem.distributed.internal to consulo.desktop.awt.ide.impl;
+    exports consulo.versionControlSystem.distributed.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 }

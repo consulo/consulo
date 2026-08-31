@@ -15,43 +15,43 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import consulo.application.AllIcons;
-import consulo.fileEditor.FileEditorBundle;
+import consulo.fileEditor.localize.FileEditorLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.Shortcut;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class InheritedMembersNodeProvider<T extends TreeElement> implements FileStructureNodeProvider<T>, ActionShortcutProvider {
-  public static final String ID = "SHOW_INHERITED";
+    public static final String ID = "SHOW_INHERITED";
 
-  
-  @Override
-  public String getCheckBoxText() {
-    return FileEditorBundle.message("file.structure.toggle.show.inherited");
-  }
+    @Override
+    public String getCheckBoxText() {
+        return FileEditorLocalize.fileStructureToggleShowInherited().get();
+    }
 
-  
-  @Override
-  public Shortcut[] getShortcut() {
-    throw new UnsupportedOperationException("see getActionIdForShortcut()");
-  }
+    @Override
+    public Shortcut[] getShortcut() {
+        throw new UnsupportedOperationException("see getActionIdForShortcut()");
+    }
 
-  
-  @Override
-  public String getActionIdForShortcut() {
-    return "FileStructurePopup";
-  }
+    @Override
+    public String getActionIdForShortcut() {
+        return "FileStructurePopup";
+    }
 
-  @Override
-  
-  public ActionPresentation getPresentation() {
-    return new ActionPresentationData(FileEditorBundle.message("action.structureview.show.inherited"), null, AllIcons.Hierarchy.Supertypes);
-  }
+    @Override
+    public ActionPresentation getPresentation() {
+        return new ActionPresentationData(
+            FileEditorLocalize.actionStructureviewShowInherited(),
+            LocalizeValue.empty(),
+            PlatformIconGroup.hierarchySupertypes()
+        );
+    }
 
-  @Override
-  
-  public String getName() {
-    return ID;
-  }
+    @Override
+    public String getName() {
+        return ID;
+    }
 }

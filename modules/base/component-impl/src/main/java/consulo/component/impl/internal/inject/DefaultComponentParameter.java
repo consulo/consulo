@@ -15,6 +15,8 @@
  */
 package consulo.component.impl.internal.inject;
 
+import consulo.component.persist.PersistentStateComponentAsync;
+
 /**
  * @author VISTALL
  * @since 2019-11-16
@@ -24,9 +26,21 @@ class DefaultComponentParameter<T> implements Parameter<T> {
 
   @Override
   public T resolveInstance(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
+    ComponentAdapter<T> targetAdapter = container.getComponentAdapter(expectedType);
+    if (targetAdapter != null) {
+      Class<?> implClass = targetAdapter.getComponentImplClassIfCheap();
+      if (implClass != null && PersistentStateComponentAsync.class.isAssignableFrom(implClass)) {
+        throw new AsyncInjectionNotSupportedException(adapter.getComponentImplClass(), implClass);
+      }
+    }
     return container.getComponentInstance(expectedType);
   }
 
+  /**
+   * Deliberately unchanged for async state components: reporting them as unresolvable would make
+   * {@code getGreediestSatisfiableConstructor} silently pick a different constructor instead of reporting the
+   * problem. The rejection belongs in {@link #resolveInstance}, where it fails loudly.
+   */
   @Override
   public boolean isResolvable(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
     return container.getComponentAdapter(expectedType) != null;

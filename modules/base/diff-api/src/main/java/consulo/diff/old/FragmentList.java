@@ -17,8 +17,8 @@ package consulo.diff.old;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.document.util.TextRange;
-import consulo.util.collection.Iterators;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
@@ -45,7 +45,7 @@ public interface FragmentList {
 
         @Override
         public Iterator<Fragment> iterator() {
-            return Iterators.empty();
+            return Collections.emptyIterator();
         }
 
         @Override

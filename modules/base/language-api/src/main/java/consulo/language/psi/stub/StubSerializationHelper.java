@@ -16,8 +16,8 @@ import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.ObjectUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,7 +108,7 @@ public class StubSerializationHelper {
   public void serialize(Stub rootStub, OutputStream stream) throws IOException {
     BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream();
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(true);
-    IntEnumerator selializerIdLocalEnumerator = new IntEnumerator();
+    IntEnumerator serializerIdLocalEnumerator = new IntEnumerator();
     StubOutputStream stubOutputStream = new StubOutputStream(out, storage);
     boolean doDefaultSerialization = true;
 
@@ -121,17 +121,17 @@ public class StubSerializationHelper {
         doDefaultSerialization = false;
         DataInputOutputUtil.writeINT(stubOutputStream, roots.length);
         for (PsiFileStub root : roots) {
-          serializeRoot(stubOutputStream, root, storage, selializerIdLocalEnumerator);
+          serializeRoot(stubOutputStream, root, storage, serializerIdLocalEnumerator);
         }
       }
     }
 
     if (doDefaultSerialization) {
       DataInputOutputUtil.writeINT(stubOutputStream, 1);
-      serializeRoot(stubOutputStream, rootStub, storage, selializerIdLocalEnumerator);
+      serializeRoot(stubOutputStream, rootStub, storage, serializerIdLocalEnumerator);
     }
     DataOutputStream resultStream = new DataOutputStream(stream);
-    selializerIdLocalEnumerator.dump(resultStream);
+    serializerIdLocalEnumerator.dump(resultStream);
     storage.write(resultStream);
     resultStream.write(out.getInternalBuffer(), 0, out.size());
   }
@@ -151,7 +151,6 @@ public class StubSerializationHelper {
 
   private static final ThreadLocal<ObjectStubSerializer> ourRootStubSerializer = new ThreadLocal<>();
 
-  
   public Stub deserialize(InputStream stream) throws IOException, SerializerNotFoundException {
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(false);
     StubInputStream inputStream = new StubInputStream(stream, storage);

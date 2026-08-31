@@ -22,34 +22,32 @@ import consulo.project.internal.ProjectReloadState;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
 @ExtensionImpl
 public class RestoreUpdateTreeStartUpActivity implements PostStartupActivity, DumbAware {
-  @Override
-  public void runActivity(Project project, UIAccess uiAccess) {
-    RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(project);
-    UpdateInfo updateInfo = restoreUpdateTree.myUpdateInfo;
+    @Override
+    public void runActivity(Project project, UIAccess uiAccess) {
+        RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(project);
+        UpdateInfo updateInfo = restoreUpdateTree.myUpdateInfo;
 
-    if (updateInfo != null && !updateInfo.isEmpty() && ProjectReloadState.getInstance(project).isAfterAutomaticReload()) {
-      ActionInfo actionInfo = updateInfo.getActionInfo();
-      if (actionInfo != null) {
-        ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManagerEx.getInstanceEx(project);
+        if (updateInfo != null && !updateInfo.isEmpty() && ProjectReloadState.getInstance(project).isAfterAutomaticReload()) {
+            ActionInfo actionInfo = updateInfo.getActionInfo();
+            if (actionInfo != null) {
+                ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManagerEx.getInstanceEx(project);
 
-        projectLevelVcsManager.showUpdateProjectInfo(updateInfo.getFileInformation(),
-                                         VcsBundle.message("action.display.name.update"),
-                                         actionInfo,
-                                         false);
-
-        CommittedChangesCache.getInstance(project).refreshIncomingChangesAsync();
-      }
-      restoreUpdateTree.myUpdateInfo = null;
+                uiAccess.execute(() -> projectLevelVcsManager.showUpdateProjectInfo(updateInfo.getFileInformation(),
+                    VcsLocalize.actionDisplayNameUpdate().get(), actionInfo, false)
+                );
+                CommittedChangesCache.getInstance(project).refreshIncomingChangesAsync();
+            }
+            restoreUpdateTree.myUpdateInfo = null;
+        }
+        else {
+            restoreUpdateTree.myUpdateInfo = null;
+        }
     }
-    else {
-      restoreUpdateTree.myUpdateInfo = null;
-    }
-  }
 }

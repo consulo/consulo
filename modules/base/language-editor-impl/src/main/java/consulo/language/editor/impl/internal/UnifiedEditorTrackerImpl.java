@@ -66,6 +66,14 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
     Component uiComponent = editor.getUIComponent();
     uiComponent.addAttachListener(e -> {
       registerEditor(editor);
+
+      // a detached editor has no window ancestor yet, so the registration below cannot activate anything and
+      // registerEditor only refires for an already active window - without this the tracker stays empty and
+      // the daemon never sees the editor
+      Window attachedWindow = windowByEditor(editor);
+      if (attachedWindow != null) {
+        setActiveWindow(attachedWindow);
+      }
     });
 
     // TODO [VISTALL] focus handling

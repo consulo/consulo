@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.WeakList;
-import org.jetbrains.annotations.Contract;
 
 /**
  * @author Eugene Zhuravlev
@@ -62,12 +61,10 @@ public class LowMemoryWatcher {
    * @return a LowMemoryWatcher instance holding the runnable. This instance should be kept in memory while the
    * low memory notification functionality is needed. As soon as it's garbage-collected, the runnable won't receive any further notifications.
    */
-  @Contract(pure = true) // to avoid ignoring the result
   public static LowMemoryWatcher register(Runnable runnable, LowMemoryWatcherType notificationType) {
     return new LowMemoryWatcher(runnable, notificationType);
   }
 
-  @Contract(pure = true) // to avoid ignoring the result
   public static LowMemoryWatcher register(Runnable runnable) {
     return new LowMemoryWatcher(runnable, LowMemoryWatcherType.ALWAYS);
   }

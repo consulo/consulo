@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.util.lang.StringUtil;
@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * @author nik
  */
-public abstract class PutIntoDefaultLocationActionBase extends AnAction {
+public abstract class PutIntoDefaultLocationActionBase extends LegacyAnAction {
   protected final SourceItemsTree mySourceItemsTree;
   protected final ArtifactEditorEx myArtifactEditor;
 

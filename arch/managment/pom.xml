@@ -36,42 +36,50 @@
         <!--please exclude common logging library from dependency-->
         <httpclient.version>4.5.13</httpclient.version>
         <netty.version>4.1.66.Final</netty.version>
-        <gson.version>2.8.7</gson.version>
+        <gson.version>2.13.2</gson.version>
         <slf4j.version>2.0.7</slf4j.version>
         <junit.version>4.13.2</junit.version>
         <junit.jupiter.version>5.10.3</junit.jupiter.version>
         <gwt.version>2.9.0</gwt.version>
-        <servlet.version>5.0.0</servlet.version>
-        <websocket.version>2.0.0</websocket.version>
+        <servlet.version>6.1.0</servlet.version>
+        <websocket.version>2.2.0</websocket.version>
         <jaxb.version>4.0.0</jaxb.version>
-        <jetty.version>11.0.15</jetty.version>
-        <swt.version>3.120.0</swt.version>
-        <flatlaf.version>3.7</flatlaf.version>
+        <jetty.version>12.1.8</jetty.version>
+        <qtjambi.version>6.11.1</qtjambi.version>
+        <flatlaf.version>3.7.2.1</flatlaf.version>
+        <protobuf.version>4.33.4</protobuf.version>
 
-        <vaadin.flow.version>25.1.1</vaadin.flow.version>
+        <vaadin.flow.version>25.2.4</vaadin.flow.version>
 
         <jackson.version>2.21.2</jackson.version>
         
         <jackson3.version>3.1.1</jackson3.version>
 
-        <null.away.version>0.13.4</null.away.version>
+        <null.away.version>0.13.6</null.away.version>
 
         <build.number>SNAPSHOT</build.number>
         <dev.mode>true</dev.mode>
 
-        <maven.assembly.plugin>3.6.0</maven.assembly.plugin>
-        <maven.jar.plugin>3.3.0</maven.jar.plugin>
+        <maven.assembly.plugin>3.8.0</maven.assembly.plugin>
+        <!--the version maven-assembly-plugin 3.8.0 resolves for itself-->
+        <commons.compress.version>1.28.0</commons.compress.version>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
-        <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
+        <maven.consulo.plugin>3.32</maven.consulo.plugin>
+        <maven.jar.plugin>3.3.0</maven.jar.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
+        <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
 
-        <default.java.level>21</default.java.level>
+        <default.java.level>25</default.java.level>
+
+        <java.version>25</java.version>
 
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
-        <compiler.apt.version>2.0</compiler.apt.version>
+        <compiler.apt.version>3.0</compiler.apt.version>
+
+        <dsl.json.version>3.0.2</dsl.json.version>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
@@ -327,7 +335,7 @@
             <dependency>
                 <groupId>com.ibm.icu</groupId>
                 <artifactId>icu4j</artifactId>
-                <version>70.1</version>
+                <version>78.3</version>
             </dependency>
             <dependency>
                 <groupId>ar.com.hjg</groupId>
@@ -465,16 +473,15 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee11</groupId>
+                <artifactId>jetty-ee11-servlet</artifactId>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlet</artifactId>
+                <artifactId>jetty-session</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -503,69 +510,39 @@
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-servlet</artifactId>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-servlet</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-jakarta-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-jakarta-common</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jakarta-client</artifactId>
-                <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-websocket-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jakarta-common</artifactId>
-                <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-websocket-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-core-client</artifactId>
+                <artifactId>jetty-websocket-core-client</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-core-server</artifactId>
+                <artifactId>jetty-websocket-core-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-core-common</artifactId>
+                <artifactId>jetty-websocket-core-common</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jakarta-server</artifactId>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-jakarta-server</artifactId>
                 <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-websocket-api</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>jakarta.servlet</groupId>
@@ -642,6 +619,16 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-popover-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-virtual-list-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-ordered-layout-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
@@ -662,8 +649,33 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-breadcrumbs-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-tabs-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-details-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-slider-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-date-picker-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin.componentfactory</groupId>
+                <artifactId>togglebutton</artifactId>
+                <version>4.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
@@ -688,6 +700,16 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-flow-components-base</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-accordion-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-radio-button-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
             <dependency>
@@ -718,6 +740,11 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-select-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-custom-field-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
             <dependency>
@@ -759,7 +786,7 @@
             <dependency>
                 <groupId>com.vaadin.external.atmosphere</groupId>
                 <artifactId>atmosphere-runtime</artifactId>
-                <version>3.0.3.slf4jvaadin1</version>
+                <version>3.0.5.slf4jvaadin1</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -815,6 +842,17 @@
                     <exclusion>
                         <groupId>com.vaadin</groupId>
                         <artifactId>flow-server</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.vaadin.addons.tatu</groupId>
+                <artifactId>colorpicker</artifactId>
+                <version>2.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -878,18 +916,17 @@
                 <version>1.3.04</version>
             </dependency>
             <dependency>
-                <groupId>com.formdev</groupId>
+                <groupId>consulo.internal</groupId>
                 <artifactId>flatlaf</artifactId>
                 <version>${flatlaf.version}</version>
-                <classifier>no-natives</classifier>
             </dependency>
             <dependency>
-                <groupId>com.formdev</groupId>
+                <groupId>consulo.internal</groupId>
                 <artifactId>flatlaf-swingx</artifactId>
                 <version>${flatlaf.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>com.formdev</groupId>
+                        <groupId>consulo.internal</groupId>
                         <artifactId>flatlaf</artifactId>
                     </exclusion>
                 </exclusions>
@@ -898,6 +935,12 @@
                 <groupId>org.swinglabs.swingx</groupId>
                 <artifactId>swingx-all</artifactId>
                 <version>1.6.5</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.jetbrains.runtime</groupId>
+                <artifactId>jbr-api</artifactId>
+                <version>1.10.1</version>
             </dependency>
 
             <!-- Test -->
@@ -967,10 +1010,112 @@
                 <version>5.18.0</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.jimfs</groupId>
+                <artifactId>jimfs</artifactId>
+                <version>1.3.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-javalite</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>consulo.internal.com.dslplatform</groupId>
+                <artifactId>dsl-json</artifactId>
+                <version>${dsl.json.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <profiles>
+        <!--
+          - QtJambi splits its native libraries into per OS/arch artifacts. The profiles below select the one
+          - matching the machine which runs the build, so modules and the sandbox can be compiled and started
+          - on any supported platform. The per OS distributions do not use this property - they name every
+          - native artifact explicitly, see distribution/src/assembly/desktop-qt-*.xml
+          -->
+        <profile>
+            <id>qtjambi-native-linux-x64</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-linux-x64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>linux</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-linux-arm64</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-linux-arm64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>linux</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-windows-x64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-windows-x64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>win</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-windows-arm64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-windows-arm64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>win</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <!--macOS native artifact is universal - there is no x64/arm64 split-->
+            <id>qtjambi-native-macos-x64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-macos</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>mac64/Contents</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-macos-arm64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-macos</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>macA64/Contents</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+
         <profile>
             <id>build-number-is-set</id>
             <activation>
@@ -1013,6 +1158,27 @@
                 <updatePolicy>interval:60</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>consulo-proxy</id>
+            <url>https://maven.consulo.dev/repository/proxy/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>gcs-central-eu</id>
+            <name>GCS Maven Central mirror EU</name>
+            <url>https://maven-central-eu.storage-download.googleapis.com/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -1024,6 +1190,27 @@
                 <updatePolicy>interval:60</updatePolicy>
             </snapshots>
         </pluginRepository>
+        <pluginRepository>
+            <id>consulo-proxy</id>
+            <url>https://maven.consulo.dev/repository/proxy/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>gcs-central-eu</id>
+            <name>GCS Maven Central mirror EU</name>
+            <url>https://maven-central-eu.storage-download.googleapis.com/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -1031,16 +1218,29 @@
             <extension>
                 <groupId>org.apache.maven.extensions</groupId>
                 <artifactId>maven-build-cache-extension</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.3</version>
             </extension>
         </extensions>
 
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>io.github.ascopes</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>5.1.3</version>
+
+                    <configuration>
+                        <protoc kind="binary-maven">
+                            <version>${protobuf.version}</version>
+                        </protoc>
+                        <liteOnly>true</liteOnly>
+                    </configuration>
+                </plugin>
+
+                <plugin>
                     <groupId>consulo.maven</groupId>
                     <artifactId>maven-consulo-plugin</artifactId>
-                    <version>3.17</version>
+                    <version>${maven.consulo.plugin}</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>

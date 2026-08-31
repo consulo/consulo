@@ -18,15 +18,13 @@ package consulo.ide.impl.idea.codeInsight.template.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.component.util.pointer.NamedPointer;
+import consulo.codeEditor.EditorKeys;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateListPanel;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.Language;
-import consulo.language.LanguagePointerUtil;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
@@ -42,8 +40,8 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.undoRedo.CommandProcessor;
 
 import java.util.*;
@@ -53,10 +51,8 @@ import java.util.*;
  * @since 2002-08-20
  */
 @ActionImpl(id = "SaveAsTemplate")
-public class SaveAsTemplateAction extends AnAction {
+public class SaveAsTemplateAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
-    //FIXME [VISTALL] how remove this depend?
-    private static final NamedPointer<Language> ourXmlLanguagePointer = LanguagePointerUtil.createPointer("XML");
 
     public SaveAsTemplateAction() {
         super(ActionLocalize.actionSaveastemplateText(), ActionLocalize.actionSaveastemplateDescription());
@@ -92,7 +88,7 @@ public class SaveAsTemplateAction extends AnAction {
         Document document = EditorFactory.getInstance().createDocument(
             editor.getDocument().getText().substring(startOffset, selection.getEndOffset())
         );
-        boolean isXml = file.getLanguage().is(ourXmlLanguagePointer.get());
+        boolean isXml = "XML".equals(file.getLanguageId());
         int offsetDelta = startOffset;
         CommandProcessor.getInstance().newCommand()
             .project(project)
@@ -176,7 +172,7 @@ public class SaveAsTemplateAction extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
-        Editor editor = e.getData(Editor.KEY);
+        Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);
         PsiFile file = e.getData(PsiFile.KEY);
 
         if (file == null || editor == null) {

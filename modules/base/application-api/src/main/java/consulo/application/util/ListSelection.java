@@ -68,12 +68,12 @@ public final class ListSelection<T> {
    * Map all elements in the list and remove elements for which converter returned null.
    * If selected element was removed, select remaining element before it.
    */
-  public <V> ListSelection<V> map(Function<? super T, ? extends V> convertor) {
+  public <V> ListSelection<V> map(Function<? super T, ? extends V> converter) {
     int newSelectionIndex = -1;
     List<V> result = new ArrayList<>();
     for (int i = 0; i < myList.size(); i++) {
       if (i == mySelectedIndex) newSelectionIndex = result.size();
-      V out = convertor.apply(myList.get(i));
+      V out = converter.apply(myList.get(i));
       if (out != null) result.add(out);
     }
     return new ListSelection<>(result, newSelectionIndex);

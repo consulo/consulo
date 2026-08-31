@@ -16,7 +16,6 @@
 package consulo.project.ui.impl.internal.wm.action;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,7 +25,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.localize.UILocalize;
 
-public abstract class TabbedContentAction extends AnAction implements DumbAware {
+public abstract class TabbedContentAction extends LegacyDumbAwareAction {
     protected final ContentManager myManager;
 
     protected final ShadowAction myShadow;

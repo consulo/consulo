@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.ast;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
@@ -106,6 +107,7 @@ public class SharedImplUtil {
     return null;
   }
 
+  @RequiredWriteAction
   public static PsiElement addRange(PsiElement thisElement,
                                     PsiElement first,
                                     PsiElement last,
@@ -197,6 +199,7 @@ public class SharedImplUtil {
     }
   }
 
+  @RequiredWriteAction
   public static PsiElement doReplace(PsiElement psiElement, TreeElement treeElement, PsiElement newElement) {
     CompositeElement treeParent = treeElement.getTreeParent();
     LOG.assertTrue(treeParent != null);

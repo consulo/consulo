@@ -19,7 +19,8 @@ import com.google.common.primitives.Ints;
 import consulo.application.util.DateFormatUtil;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.logging.Logger;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
@@ -29,7 +30,6 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.log.VcsCommitStyleFactory;
@@ -53,7 +53,6 @@ import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
 import org.jspecify.annotations.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.basic.BasicTableHeaderUI;
@@ -69,7 +68,7 @@ import java.util.*;
 import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.BOLD;
 import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.ITALIC;
 
-public class VcsLogGraphTable extends TableWithProgress implements DataProvider, CopyProvider {
+public class VcsLogGraphTable extends TableWithProgress implements UiDataProvider, CopyProvider {
   private static final Logger LOG = Logger.getInstance(VcsLogGraphTable.class);
 
   public static final int ROOT_INDICATOR_WHITE_WIDTH = 5;
@@ -78,25 +77,17 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   private static final int MAX_DEFAULT_AUTHOR_COLUMN_WIDTH = 200;
   private static final int MAX_ROWS_TO_CALC_WIDTH = 1000;
 
-  
   private final VcsLogUiImpl myUi;
-  
   private final VcsLogDataImpl myLogData;
-  
   private final MyDummyTableCellEditor myDummyEditor = new MyDummyTableCellEditor();
-  
   private final TableCellRenderer myDummyRenderer = new DefaultTableCellRenderer();
-  
   private final GraphCommitCellRenderer myGraphCommitCellRenderer;
-  
   private final GraphTableController myController;
-  
   private final StringCellRenderer myStringCellRenderer;
   private boolean myColumnsSizeInitialized = false;
 
   private @Nullable Selection mySelection = null;
 
-  
   private final Collection<VcsLogHighlighter> myHighlighters = new ArrayList<>();
 
   public VcsLogGraphTable(VcsLogUiImpl ui, VcsLogDataImpl logData, VisiblePack initialDataPack) {
@@ -288,8 +279,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    return KEY == dataId ? this : null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(CopyProvider.KEY, this);
   }
 
   @Override
@@ -330,7 +321,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     myHighlighters.clear();
   }
 
-  
   public SimpleTextAttributes applyHighlighters(
     Component rendererComponent,
     int row,
@@ -411,12 +401,10 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  
   public GraphTableModel getModel() {
     return (GraphTableModel)super.getModel();
   }
 
-  
   public Selection getSelection() {
     if (mySelection == null) mySelection = new Selection(this);
     return mySelection;
@@ -441,13 +429,12 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   static class Selection {
-    
     private final VcsLogGraphTable myTable;
-    
     private final TIntHashSet mySelectedCommits;
     private final @Nullable Integer myVisibleSelectedCommit;
     private final @Nullable Integer myDelta;
     private final boolean myIsOnTop;
+
 
     public Selection(VcsLogGraphTable table) {
       myTable = table;
@@ -511,7 +498,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
               new Rectangle(startRect.x, Math.max(startRect.y - delta, 0), startRect.width, myTable.getVisibleRect().height));
     }
 
-    
     private Pair<TIntHashSet, Integer> findRowsToSelectAndScroll(GraphTableModel model,
                                                                  VisibleGraph<Integer> visibleGraph) {
       TIntHashSet rowsToSelect = new TIntHashSet();
@@ -539,7 +525,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     }
   }
 
-  
   public VisibleGraph<Integer> getVisibleGraph() {
     return getModel().getVisiblePack().getVisibleGraph();
   }
@@ -582,11 +567,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private static class RootCellRenderer extends JBLabel implements TableCellRenderer {
-    
     private final VcsLogUiImpl myUi;
-    
     private Color myColor = UIUtil.getTableBackground();
-    
     private Color myBorderColor = UIUtil.getTableBackground();
     private boolean isNarrow = true;
 
@@ -723,7 +705,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private class InvisibleResizableHeader extends JBTable.JBTableHeader {
-    
     private final MyBasicTableHeaderUI myHeaderUI;
     private @Nullable Cursor myCursor = null;
 
@@ -776,7 +757,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
       return myCursor;
     }
 
-    
     @Override
     public Rectangle getHeaderRect(int column) {
       // if a header has zero height, mouse pointer can never be inside it, so we pretend it is one pixel high
@@ -786,7 +766,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private static class EmptyTableCellRenderer implements TableCellRenderer {
-    
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JPanel panel = new JPanel(new BorderLayout());
@@ -802,7 +781,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
       mouseInputListener = createMouseInputListener();
     }
 
-    
     private MouseEvent convertMouseEvent(MouseEvent e) {
       // create a new event, almost exactly the same, but in the header
       return new MouseEvent(
@@ -869,7 +847,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private class MyProgressListener implements VcsLogProgress.ProgressListener {
-    
     private String myText = "";
 
     @Override

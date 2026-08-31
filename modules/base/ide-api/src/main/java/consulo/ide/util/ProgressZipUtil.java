@@ -22,7 +22,6 @@ import java.util.zip.ZipInputStream;
  * @author Sergey Simonchik
  */
 public class ProgressZipUtil {
-
     private static final Logger LOG = Logger.getInstance(ProgressZipUtil.class);
 
     public interface ContentProcessor {
@@ -57,7 +56,7 @@ public class ProgressZipUtil {
     public static void unzip(@Nullable ProgressIndicator progress,
                              File extractToDir,
                              ZipInputStream stream,
-                             @Nullable Function<String, String> pathConvertor,
+                             @Nullable Function<String, String> pathConverter,
                              @Nullable ContentProcessor contentProcessor) throws IOException {
         if (progress != null) {
             progress.setText("Extracting...");
@@ -65,7 +64,7 @@ public class ProgressZipUtil {
         try {
             ZipEntry entry;
             while ((entry = stream.getNextEntry()) != null) {
-                unzipEntryToDir(progress, entry, extractToDir, stream, pathConvertor, contentProcessor);
+                unzipEntryToDir(progress, entry, extractToDir, stream, pathConverter, contentProcessor);
             }
         }
         finally {
@@ -77,12 +76,11 @@ public class ProgressZipUtil {
                                         ZipEntry zipEntry,
                                         File extractToDir,
                                         ZipInputStream stream,
-                                        @Nullable Function<String, String> pathConvertor,
+                                        @Nullable Function<String, String> pathConverter,
                                         @Nullable ContentProcessor contentProcessor) throws IOException {
-
         String relativeExtractPath = createRelativeExtractPath(zipEntry);
-        if (pathConvertor != null) {
-            relativeExtractPath = pathConvertor.apply(relativeExtractPath);
+        if (pathConverter != null) {
+            relativeExtractPath = pathConverter.apply(relativeExtractPath);
             if (relativeExtractPath == null) {
                 // should be skipped
                 return;

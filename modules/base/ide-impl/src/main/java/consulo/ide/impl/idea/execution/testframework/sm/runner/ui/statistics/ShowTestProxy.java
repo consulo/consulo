@@ -20,15 +20,15 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.localize.ExecutionTestLocalize;
 import consulo.execution.test.sm.ui.statistic.StatisticsPanel;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 
 /**
  * @author Roman Chernyatchik
  */
 @ActionImpl(id = "ShowTestProxy")
-public class ShowTestProxy extends AnAction {
+public class ShowTestProxy extends LegacyAnAction {
     public ShowTestProxy() {
       super(ExecutionTestLocalize.actionNavigateToTestText());
     }

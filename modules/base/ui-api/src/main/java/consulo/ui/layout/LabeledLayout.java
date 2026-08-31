@@ -18,37 +18,45 @@ package consulo.ui.layout;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
+ * @since 2016-06-15
  */
-public interface LabeledLayout extends Layout<LayoutConstraint> {
-    @Deprecated
-    @DeprecationInfo("Use with LocalizeValue parameter")
-    static LabeledLayout create(String label) {
-        return create(LocalizeValue.of(label));
-    }
-    @RequiredUIAccess
-    @Deprecated
-    @DeprecationInfo("Use with LocalizeValue parameter")
-    static LabeledLayout create(String label, Component component) {
-        return create(LocalizeValue.of(label), component);
-    }
-    static LabeledLayout create(LocalizeValue label) {
-        return UIInternal.get()._Layouts_labeled(label);
-    }
+public interface LabeledLayout extends Layout<LayoutConstraint>, HasComponentStyle<LabeledLayoutStyle> {
     @RequiredUIAccess
     static LabeledLayout create(LocalizeValue label, Component component) {
         return UIInternal.get()._Layouts_labeled(label).set(component);
     }
+
+    @RequiredUIAccess
+    static LabeledLayout create(LocalizeValue label) {
+        return UIInternal.get()._Layouts_labeled(label);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    @RequiredUIAccess
+    static LabeledLayout create(String label) {
+        return create(LocalizeValue.of(label));
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    @RequiredUIAccess
+    static LabeledLayout create(String label, Component component) {
+        return create(LocalizeValue.of(label), component);
+    }
+
     @RequiredUIAccess
     default LabeledLayout set(PseudoComponent component) {
         return set(component.getComponent());
     }
+
     @RequiredUIAccess
     default LabeledLayout set(Component component) {
         return (LabeledLayout) add(component, LayoutConstraint.NONE);

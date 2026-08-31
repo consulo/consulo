@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.tree;
 
+import consulo.annotation.access.RequiredReadAction;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -22,7 +23,9 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-02-12
  */
 public interface TreeAnchorizerValue<T> {
-    @Nullable T extractValue();
+    @RequiredReadAction
+    @Nullable
+    T extractValue();
 
     void dispose();
 }

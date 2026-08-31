@@ -148,6 +148,18 @@ public interface PersistentEditorSettings {
 
     void setBlinkPeriod(int blinkInterval);
 
+    boolean isAnimatedCaret();
+
+    void setAnimatedCaret(boolean val);
+
+    boolean isSmoothCaretBlinking();
+
+    void setSmoothCaretBlinking(boolean val);
+
+    EditorSettings.CaretEasing getCaretEasing();
+
+    void setCaretEasing(EditorSettings.CaretEasing val);
+
     boolean isEnsureNewLineAtEOF();
 
     void setEnsureNewLineAtEOF(boolean ensure);
@@ -197,6 +209,22 @@ public interface PersistentEditorSettings {
     boolean isTrailingWhitespacesShown();
 
     void setTrailingWhitespacesShown(boolean val);
+
+    boolean isSelectionWhitespacesShown();
+
+    void setSelectionWhitespacesShown(boolean val);
+
+    boolean isFullLineHeightCursor();
+
+    void setFullLineHeightCursor(boolean val);
+
+    boolean isShowingSpecialChars();
+
+    void setShowingSpecialChars(boolean val);
+
+    TabCharacterPaintMode getTabCharacterPaintMode();
+
+    void setTabCharacterPaintMode(TabCharacterPaintMode mode);
 
     boolean isAllSoftWrapsShown();
 

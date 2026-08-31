@@ -15,10 +15,8 @@
  */
 package consulo.language.ast;
 
-import consulo.language.util.CharTable;
-import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
-
+import consulo.language.util.CharTable;
 import org.jspecify.annotations.Nullable;
 
 /**

@@ -23,7 +23,6 @@ import consulo.codeEditor.RawText;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -38,7 +37,7 @@ public interface CopyPastePreProcessor {
      * @param startOffsets
      * @param endOffsets
      * @param text
-     * @return null if no preprocession is to be applied
+     * @return null if no preprocessing is to be applied
      */
     @Nullable String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text);
 

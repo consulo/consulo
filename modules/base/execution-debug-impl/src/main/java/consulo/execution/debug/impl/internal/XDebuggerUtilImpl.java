@@ -56,7 +56,7 @@ import consulo.language.psi.*;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -68,10 +68,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author nik
@@ -144,35 +142,33 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
             else {
                 List<? extends XLineBreakpointType<P>.XLineBreakpointVariant> variants = type.computeVariants(project, position);
                 if (!variants.isEmpty() && editor != null) {
-                    RelativePoint relativePoint = DebuggerUIImplUtil.getPositionForPopup(editor, line);
+                    RelativePoint2D relativePoint = DebuggerUIImplUtil.getPositionForPopup(editor, line);
                     if (variants.size() > 1 && relativePoint != null) {
                         final AsyncResult<XLineBreakpoint> res = new AsyncResult<>();
-                        class MySelectionListener implements ListSelectionListener {
+                        class MySelectionListener implements Consumer<Object> {
                             RangeHighlighter myHighlighter = null;
 
                             @Override
-                            public void valueChanged(ListSelectionEvent e) {
-                                if (!e.getValueIsAdjusting()) {
-                                    clearHighlighter();
-                                    Object value = ((JList) e.getSource()).getSelectedValue();
-                                    if (value instanceof XLineBreakpointType.XLineBreakpointVariant) {
-                                        TextRange range = ((XLineBreakpointType.XLineBreakpointVariant) value).getHighlightRange();
-                                        TextRange lineRange = DocumentUtil.getLineTextRange(editor.getDocument(), line);
-                                        if (range != null) {
-                                            range = range.intersection(lineRange);
-                                        }
-                                        else {
-                                            range = lineRange;
-                                        }
-                                        if (range != null && !range.isEmpty()) {
-                                            myHighlighter = editor.getMarkupModel().addRangeHighlighter(
-                                                DebuggerColors.BREAKPOINT_ATTRIBUTES,
-                                                range.getStartOffset(),
-                                                range.getEndOffset(),
-                                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER,
-                                                HighlighterTargetArea.EXACT_RANGE
-                                            );
-                                        }
+                            public void accept(Object value) {
+                                clearHighlighter();
+
+                                if (value instanceof XLineBreakpointType.XLineBreakpointVariant variant) {
+                                    TextRange range = variant.getHighlightRange();
+                                    TextRange lineRange = DocumentUtil.getLineTextRange(editor.getDocument(), line);
+                                    if (range != null) {
+                                        range = range.intersection(lineRange);
+                                    }
+                                    else {
+                                        range = lineRange;
+                                    }
+                                    if (range != null && !range.isEmpty()) {
+                                        myHighlighter = editor.getMarkupModel().addRangeHighlighter(
+                                            DebuggerColors.BREAKPOINT_ATTRIBUTES,
+                                            range.getStartOffset(),
+                                            range.getEndOffset(),
+                                            DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER,
+                                            HighlighterTargetArea.EXACT_RANGE
+                                        );
                                     }
                                 }
                             }
@@ -239,7 +235,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                         ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
                         DebuggerUIImplUtil.registerExtraHandleShortcuts(popup, IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT);
                         popup.setAdText(DebuggerUIImplUtil.getSelectionShortcutsAdText(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT));
-                        popup.addListSelectionListener(selectionListener);
+                        popup.addSelectionListener(selectionListener);
                         popup.show(relativePoint);
                         return res;
                     }

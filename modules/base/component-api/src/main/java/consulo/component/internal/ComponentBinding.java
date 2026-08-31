@@ -25,6 +25,6 @@ import consulo.component.internal.inject.TopicBindingLoader;
  * @since 2023-11-04
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-// implementation will be autoregistered by application start
+// implementation will be auto registered by application start
 public record ComponentBinding(InjectingBindingLoader injectingBindingLoader, TopicBindingLoader topicBindingLoader) {
 }

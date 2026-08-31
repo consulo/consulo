@@ -52,7 +52,6 @@ public class PluginsList {
         new ListSpeedSearch(myPluginList, o -> ((PluginDescriptor) o).getName());
     }
 
-    
     protected PluginsListRender createRender(PluginsPanel pluginsPanel) {
         return new PluginsListRender(pluginsPanel);
     }

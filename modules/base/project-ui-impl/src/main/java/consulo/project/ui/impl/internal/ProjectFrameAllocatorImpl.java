@@ -19,14 +19,19 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectFrameAllocator;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.wm.IdeFrameState;
-import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.project.ui.wm.*;
+import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -35,35 +40,92 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
+    private static final Key<ToolWindowManagerBase> TOOL_WINDOW_MANAGER = Key.create(ToolWindowManagerBase.class);
+
     private final WindowManagerEx myWindowManager;
     private final WelcomeFrameManager myWelcomeFrameManager;
-    private final Project myProject;
 
     @Inject
-    public ProjectFrameAllocatorImpl(WindowManager windowManager, WelcomeFrameManager welcomeFrameManager, Project project) {
-        myWelcomeFrameManager = welcomeFrameManager;
+    public ProjectFrameAllocatorImpl(WindowManager windowManager, WelcomeFrameManager welcomeFrameManager) {
         myWindowManager = (WindowManagerEx) windowManager;
-        myProject = project;
+        myWelcomeFrameManager = welcomeFrameManager;
     }
 
-    @RequiredUIAccess
     @Override
-    public Object allocateFrame(ProjectOpenContext context) {
+    public <I, O extends Project> Coroutine<I, O> allocateFrame(ProjectOpenContext context, Coroutine<I, O> in) {
         IdeFrameState state = context.getUserData(IdeFrameState.KEY);
 
-        IdeFrameEx frame = myWindowManager.allocateFrame(myProject, state);
+        return in
+            .then(UIAction.apply((project, continuation) -> {
+                IdeFrameEx frame = myWindowManager.allocateFrame(project, state);
+                continuation.putUserData(IdeFrame.KEY, frame);
 
-        // force close welcome frame after frame allocating, since its project open
-        myWelcomeFrameManager.closeFrame();
+                // force close welcome frame after frame allocating, since its project open
+                myWelcomeFrameManager.closeFrame(project.getUIAccess());
+                return project;
+            }))
+            .then(UIAction.apply((project, continuation) -> {
+                IdeFrameEx ideFrame = (IdeFrameEx) Objects.requireNonNull(continuation.getUserData(IdeFrame.KEY));
+                ideFrame.initialize();
+                return project;
+            }))
+            .then(UIAction.apply((project, continuation) -> {
+                UIAccess uiAccess = project.getUIAccess();
 
-        return frame;
+                StatusBarWidgetsManager statusBarWidgetsManager = project.getInstance(StatusBarWidgetsManager.class);
+                statusBarWidgetsManager.updateAllWidgets(uiAccess);
+                return project;
+            }));
     }
 
-    @RequiredUIAccess
     @Override
-    public void initializeFrame() {
-        IdeFrameEx frame = myWindowManager.getIdeFrame(myProject);
+    public <I, O> Coroutine<I, O> initializeSteps(Project project, Coroutine<I, O> in) {
+        return in
+            .then(UIAction.apply((o, c) -> {
+                ToolWindowManagerBase manager = (ToolWindowManagerBase) ToolWindowManager.getInstance(project);
+                manager.initializeUI();
+                manager.connectModuleExtensionListener();
 
-        frame.initialize();
+                c.putCopyableUserData(TOOL_WINDOW_MANAGER, manager);
+                return o;
+            }))
+            .then(UIAction.apply((o, c) -> {
+                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
+                manager.initializeEditorComponent();
+                return o;
+            }))
+            .then(CompletableFutureStep.await((o, c) -> {
+                UIAccess uiAccess = c.getConfiguration(UIAccess.KEY);
+
+                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
+                return manager.registerToolWindowsFromBeans(uiAccess).thenApply(ignored -> o);
+            }))
+            .then(UIAction.apply((o, c) -> {
+                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
+                manager.postInitialize();
+                return o;
+            }))
+            .then(UIAction.apply((o, c) -> {
+                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
+                manager.activateOnProjectOpening();
+                return o;
+            }));
+    }
+
+    @Override
+    public <I, O> Coroutine<I, O> postSteps(Project project, Coroutine<I, O> in) {
+        return in.then(UIAction.apply((o, c) -> {
+                UIAccess uiAccess = c.getConfiguration(UIAccess.KEY);
+
+                // we need update widgets again
+                StatusBarWidgetsManager statusBarWidgetsManager = project.getInstance(StatusBarWidgetsManager.class);
+                statusBarWidgetsManager.updateAllWidgets(uiAccess);
+                return o;
+            }))
+            .then(UIAction.apply((o, c) -> {
+                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
+                manager.revalidateToolWindows();
+                return o;
+            }));
     }
 }

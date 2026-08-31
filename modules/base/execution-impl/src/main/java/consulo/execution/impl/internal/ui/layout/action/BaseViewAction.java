@@ -20,11 +20,11 @@ import consulo.execution.internal.layout.Tab;
 import consulo.execution.internal.layout.ViewContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.content.Content;
 import org.jspecify.annotations.Nullable;
 
-public abstract class BaseViewAction extends DumbAwareAction {
+public abstract class BaseViewAction extends LegacyDumbAwareAction {
     @Override
     public final void update(AnActionEvent e) {
         ViewContext context = getViewFacade(e);

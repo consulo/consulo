@@ -41,6 +41,7 @@ import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.util.AppIconUtil;
+import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
@@ -51,7 +52,6 @@ import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
-import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -69,6 +69,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
@@ -210,12 +211,14 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             }
         });
 
-        // init laf settings
-        LafManager.getInstance();
+        // load style state
+        app.getInstance(StyleManagerService.class);
 
         TopMenuInitializer.register(app);
 
         if (myPlatform.os().isMac()) {
+            // resolve native screen-menu availability early so the platform reports isEnabledTopMenu() from startup
+            Menu.isJbScreenMenuEnabled();
             MacTopMenuInitializer.installAutoUpdateMenu();
         }
         else if (myPlatform.os().isWindows()) {
@@ -237,7 +240,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-                SwingUtilities.invokeLater(windowManager::showFrame);
+                // frames will be showed, so not need show default frame
             }
             else {
                 SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());

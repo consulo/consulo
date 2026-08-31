@@ -21,6 +21,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.component.ProviderAsync;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -139,7 +140,9 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
       if (genericParameterType instanceof ParameterizedType) {
         Class<?> rawType = ReflectionUtil.getRawType(genericParameterType);
 
-        if (rawType == Provider.class) {
+        // exact match on both types - a user subinterface of Provider would receive a ProviderImpl that does
+        // not implement it, failing with ClassCastException at newInstance
+        if (rawType == Provider.class || rawType == ProviderAsync.class) {
           Type type = ((ParameterizedType)genericParameterType).getActualTypeArguments()[0];
 
           if (!(type instanceof Class)) {

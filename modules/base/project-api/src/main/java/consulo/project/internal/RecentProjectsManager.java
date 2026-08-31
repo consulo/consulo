@@ -51,6 +51,20 @@ public interface RecentProjectsManager {
 
     void removePath(@Nullable String path);
 
+    /**
+     * @return the last known VCS branch for the given project path, or {@code null} if none is stored.
+     */
+    @Nullable
+    default String getBranch(String path) {
+        return null;
+    }
+
+    /**
+     * Stores (or clears, when {@code branch} is {@code null}) the last known VCS branch for the given project path.
+     */
+    default void setBranch(String path, @Nullable String branch) {
+    }
+
     
     @Deprecated
     default AnAction[] getRecentProjectsActions(boolean forMenu) {

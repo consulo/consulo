@@ -116,7 +116,11 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     }
 
     private void addPath(FileChooserDescriptor descriptor) {
-      FileChooser.chooseFiles(descriptor, myProject, null).doWhenDone(chosen -> {
+      FileChooser.chooseFiles(descriptor, myProject, null).whenComplete((chosen, error) -> {
+          if (error != null) {
+              return;
+          }
+
         int selected = -1 /*myExcludedTable.getSelectedRow() + 1*/;
         if (selected < 0) {
           selected = myExcludeEntryDescriptions.size();
@@ -129,10 +133,10 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
           }
           ExcludeEntryDescription description;
           if (chosenFile.isDirectory()) {
-            description = new ExcludeEntryDescription(chosenFile, true, false, myProject);
+            description = new ExcludeEntryDescription(chosenFile.getUrl(), true, false, myProject);
           }
           else {
-            description = new ExcludeEntryDescription(chosenFile, false, true, myProject);
+            description = new ExcludeEntryDescription(chosenFile.getUrl(), false, true, myProject);
           }
           myExcludeEntryDescriptions.add(selected, description);
           selected++;
@@ -147,11 +151,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
 
     private boolean isFileExcluded(VirtualFile file) {
       for (ExcludeEntryDescription description : myExcludeEntryDescriptions) {
-        VirtualFile descriptionFile = description.getVirtualFile();
-        if (descriptionFile == null) {
-          continue;
-        }
-        if (file.equals(descriptionFile)) {
+        if (file.getUrl().equals(description.getUrl())) {
           return true;
         }
       }

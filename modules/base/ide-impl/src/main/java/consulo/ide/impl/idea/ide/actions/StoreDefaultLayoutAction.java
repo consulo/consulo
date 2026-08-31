@@ -18,19 +18,18 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author Vladimir Kondratyev
  */
 @ActionImpl(id = "StoreDefaultLayout")
-public class StoreDefaultLayoutAction extends AnAction implements DumbAware {
+public class StoreDefaultLayoutAction extends LegacyDumbAwareAction {
     public StoreDefaultLayoutAction() {
         super(ActionLocalize.actionStoredefaultlayoutText(), ActionLocalize.actionStoredefaultlayoutDescription());
     }

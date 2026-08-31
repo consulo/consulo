@@ -20,7 +20,9 @@ import java.util.PrimitiveIterator;
 
 /**
  * @author max
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntStack} directly
  */
+@Deprecated
 public class IntStack implements IntCollection {
   private int[] data;
   private int size;
@@ -35,9 +37,9 @@ public class IntStack implements IntCollection {
 
   public void push(int t) {
     if (size >= data.length) {
-      int[] newdata = new int[data.length * 3 / 2];
-      System.arraycopy(data, 0, newdata, 0, size);
-      data = newdata;
+      int[] newData = new int[data.length * 3 / 2];
+      System.arraycopy(data, 0, newData, 0, size);
+      data = newData;
     }
     data[size++] = t;
   }

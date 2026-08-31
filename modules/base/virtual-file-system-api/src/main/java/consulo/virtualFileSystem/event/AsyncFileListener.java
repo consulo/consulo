@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.ReadAction;
 import consulo.virtualFileSystem.VirtualFileManager;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
@@ -49,7 +48,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AsyncFileListener {
-
   /**
    * Called (possibly on a background thread) when a batch of VFS events is ready to be fired.
    * This method should not have side effects and should guarantee its cancellability by calling
@@ -67,7 +65,6 @@ public interface AsyncFileListener {
    * @return a ChangeApplier object to be called inside write action before/after the passed events
    * are finally applied to VFS
    */
-  @Contract(pure = true)
   @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events);
 
   interface ChangeApplier {

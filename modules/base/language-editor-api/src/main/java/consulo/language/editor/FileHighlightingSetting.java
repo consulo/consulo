@@ -17,8 +17,12 @@
 package consulo.language.editor;
 
 public enum FileHighlightingSetting {
+  /**
+   * @deprecated Do not use. For "do not run highlighting, do not run inspections" setting use {@link #SKIP_HIGHLIGHTING}
+   */
+  @Deprecated
   NONE,
-  SKIP_HIGHLIGHTING,
-  FORCE_HIGHLIGHTING,
-  SKIP_INSPECTION
+  SKIP_HIGHLIGHTING,  // do not run highlighting/annotators nor inspections
+  SKIP_INSPECTION,    // run everything except inspections
+  FORCE_HIGHLIGHTING  // do run everything
 }

@@ -30,10 +30,13 @@ import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.*;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -48,7 +51,7 @@ import java.nio.charset.Charset;
  * @author cdr
  */
 @ActionImpl(id = "ChangeFileEncodingAction")
-public class ChangeFileEncodingAction extends AnAction implements DumbAware {
+public class ChangeFileEncodingAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     
     private final Application myApplication;
     private final boolean myAllowDirectories;
@@ -75,11 +78,13 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        VirtualFile myFile = e.getData(VirtualFile.KEY);
-        boolean enabled = myFile != null && checkEnabled(myFile);
-        e.getPresentation().setEnabled(enabled);
-        e.getPresentation().setVisible(myFile != null);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, p -> {
+            VirtualFile myFile = e.getData(VirtualFile.KEY);
+            boolean enabled = myFile != null && checkEnabled(myFile);
+            p.setEnabled(enabled);
+            p.setVisible(myFile != null);
+        }).toCoroutine();
     }
 
     @Override

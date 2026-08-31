@@ -9,23 +9,19 @@ import java.util.Collection;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProblemsCollector extends ProblemsListener {
-    
     static ProblemsCollector getInstance(Project project) {
         return project.getInstance(ProblemsCollector.class);
     }
 
     int getProblemCount();
 
-    
     Collection<VirtualFile> getProblemFiles();
 
     int getFileProblemCount(VirtualFile file);
 
-    
     Collection<Problem> getFileProblems(VirtualFile file);
 
     int getOtherProblemCount();
 
-    
     Collection<Problem> getOtherProblems();
 }

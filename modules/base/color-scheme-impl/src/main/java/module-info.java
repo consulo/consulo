@@ -12,7 +12,7 @@ module consulo.color.scheme.impl {
 
     exports consulo.colorScheme.impl.internal to consulo.code.editor.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     opens consulo.colorScheme.impl.internal to consulo.util.xml.serializer;
 }

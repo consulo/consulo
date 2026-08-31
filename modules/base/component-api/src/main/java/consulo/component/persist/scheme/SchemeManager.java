@@ -25,14 +25,12 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class SchemeManager<T, E extends ExternalizableScheme> {
-    
     public abstract Collection<E> loadSchemes();
 
     public abstract void addNewScheme(T scheme, boolean replaceExisting);
 
     public abstract void clearAllSchemes();
 
-    
     public abstract List<T> getAllSchemes();
 
     public abstract @Nullable T findSchemeByName(String schemeName);
@@ -45,11 +43,10 @@ public abstract class SchemeManager<T, E extends ExternalizableScheme> {
 
     public abstract void removeScheme(T scheme);
 
-    
     public abstract Collection<String> getAllSchemeNames();
 
     public abstract File getRootDirectory();
 
-    public void loadBundledScheme(URL requestor, ThrowableFunction<Element, T, Throwable> convertor) {
+    public void loadBundledScheme(URL requestor, ThrowableFunction<Element, T, Throwable> converter) {
     }
 }

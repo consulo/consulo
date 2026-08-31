@@ -16,22 +16,21 @@
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
 import consulo.ide.impl.idea.ide.actionMacro.EditMacrosDialog;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author max
  * @since 2003-07-22
  */
 @ActionImpl(id = "EditMacros")
-public class EditMacrosAction extends AnAction implements DumbAware {
+public class EditMacrosAction extends LegacyDumbAwareAction {
     public EditMacrosAction() {
         super(ActionLocalize.actionEditmacrosText(), ActionLocalize.actionEditmacrosDescription());
     }

@@ -2,14 +2,13 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.JBIterable;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.NewVirtualFile;
@@ -19,7 +18,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.List;
 
 @ActionImpl(id = "SynchronizeCurrentFile")
-public class SynchronizeCurrentFileAction extends AnAction implements DumbAware {
+public class SynchronizeCurrentFileAction extends LegacyDumbAwareAction {
     public SynchronizeCurrentFileAction() {
         super(
             ActionLocalize.actionSynchronizecurrentfileText(),

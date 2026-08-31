@@ -18,10 +18,11 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -29,17 +30,17 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerConfiguration {
-    
+
     public static CompilerConfiguration getInstance(Project project) {
         return project.getInstance(CompilerConfiguration.class);
     }
 
-    public abstract @Nullable VirtualFile getCompilerOutput();
+    public @Nullable Path getCompilerOutputPath() {
+        String url = getCompilerOutputUrl();
+        return url == null ? null : Path.of(VirtualFileUtil.urlToPath(url));
+    }
 
-    
-    public abstract String getCompilerOutputUrl();
-
-    public abstract VirtualFilePointer getCompilerOutputPointer();
+    public abstract @Nullable String getCompilerOutputUrl();
 
     public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
 }

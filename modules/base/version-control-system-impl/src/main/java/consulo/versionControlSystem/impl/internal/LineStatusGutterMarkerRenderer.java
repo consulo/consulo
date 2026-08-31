@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
+import consulo.application.ApplicationManager;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -22,31 +23,39 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.markup.*;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.localize.LocalizeValue;
+import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.util.collection.PeekableIterator;
+import consulo.util.collection.PeekableIteratorWrapper;
+import consulo.versionControlSystem.internal.LineStatusMarkerPopupFactory;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
+import consulo.versionControlSystem.internal.VcsChangePresentation;
 import consulo.versionControlSystem.internal.VcsRange;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Manages a single document-level gutter highlighter that paints all VCS changed-line
- * markers in one pass at repaint time. Equivalent to JetBrains'
- * {@code LineStatusMarkerRenderer} (outer highlighter lifecycle) combined with its inner
- * {@code LineStatusGutterMarkerRenderer} (the actual painter).
+ * Manages a single document-level gutter highlighter describing all VCS changed-line markers.
+ * Equivalent to JetBrains' {@code LineStatusMarkerRenderer} (outer highlighter lifecycle) combined
+ * with its inner {@code LineStatusGutterMarkerRenderer}.
  *
- * <p>Error-stripe (scrollbar) markers are still managed per-range via
- * {@link LineStatusTracker#createHighlighter(VcsRange)}.
+ * <p>Presentations are contributed declaratively through {@link LineMarkerPresentationProvider}: the change
+ * type and line range are stated here, and the look is decided per platform.
+ *
+ * <p>Error-stripe (scrollbar) markers are managed per-range here as well, and are reused across
+ * updates whenever their offsets and change type still match.
  *
  * <p>Updates are debounced via {@link MergingUpdateQueue} (100 ms).
  */
@@ -57,13 +66,16 @@ public class LineStatusGutterMarkerRenderer {
     private final Document myDocument;
     private final @Nullable Project myProject;
 
+    /** Controls the lifetime of the update queue, the EditorFactory listener and all highlighters. */
+    private final Disposable myDisposable = Disposable.newDisposable();
+
     private final MergingUpdateQueue myUpdateQueue;
 
-    /** Disposable that controls the EditorFactory listener lifetime. */
-    private final Disposable myEditorListenerDisposable = Disposable.newDisposable();
+    /** Single document-wide gutter highlighter. Repainted on demand, recreated only on recovery. */
+    private RangeHighlighter myGutterHighlighter;
 
-    /** Single document-wide gutter highlighter. Repainted on demand, never recreated. */
-    private @Nullable RangeHighlighter myGutterHighlighter;
+    /** Error stripe markers, one per range. Owned here, rebuilt on the update queue. */
+    private final List<RangeHighlighter> myErrorStripeHighlighters = new ArrayList<>();
 
     private volatile boolean myDisposed = false;
 
@@ -76,10 +88,15 @@ public class LineStatusGutterMarkerRenderer {
 
         myUpdateQueue = new MergingUpdateQueue(
             "LineStatusGutterMarkerRenderer", 100, true,
-            MergingUpdateQueue.ANY_COMPONENT, null
+            MergingUpdateQueue.ANY_COMPONENT, myDisposable
         );
 
         myGutterHighlighter = createGutterHighlighter();
+
+        Disposer.register(myDisposable, () -> {
+            myDisposed = true;
+            destroyHighlighters();
+        });
 
         // Revalidate existing editors so the gutter allocates the right free-painters area.
         // calcLineMarkerAreaWidth() detects our RIGHT renderer and sets myRightFreePaintersAreaShown=true.
@@ -87,7 +104,7 @@ public class LineStatusGutterMarkerRenderer {
         revalidateAllEditors();
 
         // Also revalidate any editor opened AFTER we are created.
-        EditorFactory.getInstance().addEditorFactoryListener(new MyEditorFactoryListener(), myEditorListenerDisposable);
+        EditorFactory.getInstance().addEditorFactoryListener(new MyEditorFactoryListener(), myDisposable);
 
         tracker.addListener(new LineStatusTrackerListener() {
             @Override
@@ -119,7 +136,7 @@ public class LineStatusGutterMarkerRenderer {
         );
         h.setGreedyToLeft(true);
         h.setGreedyToRight(true);
-        h.setLineMarkerRenderer(new MyGutterMarkerRenderer());
+        h.setLineMarkerPresentationProvider(new MyLineMarkerPresentationProvider());
         return h;
     }
 
@@ -137,17 +154,110 @@ public class LineStatusGutterMarkerRenderer {
     }
 
     /**
-     * Schedules a gutter repaint via the merge queue (100 ms debounce).
-     * Can be called from any thread; the actual repaint runs on EDT.
+     * Schedules a gutter repaint and an error stripe marker rebuild via the merge queue
+     * (100 ms debounce). Can be called from any thread; the actual work runs on EDT.
      */
     public void scheduleUpdate() {
         myUpdateQueue.queue(new Update("update") {
             @Override
             public void run() {
-                if (myDisposed) return;
-                repaintGutter();
+                ApplicationManager.getApplication().runReadAction(() -> updateHighlighters());
             }
         });
+    }
+
+    /**
+     * Recover from an evildoer destroying all the highlighters for the Editor/Project/IDE.
+     * IDEA-331139 IDEA-246614
+     */
+    private void scheduleValidateHighlighter() {
+        myUpdateQueue.queue(new Update("validate highlighter") {
+            @Override
+            public void run() {
+                if (myDisposed || myGutterHighlighter.isValid()) return;
+
+                LOG.warn("Line marker highlighter was recovered. This incident will be reported.");
+                disposeHighlighter(myGutterHighlighter);
+                myGutterHighlighter = createGutterHighlighter();
+                ApplicationManager.getApplication().runReadAction(() -> updateHighlighters());
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private void updateHighlighters() {
+        if (myDisposed) return;
+
+        if (!myGutterHighlighter.isValid()) {
+            scheduleValidateHighlighter();
+        }
+
+        repaintGutter();
+        updateErrorStripeHighlighters();
+    }
+
+    @RequiredUIAccess
+    private void updateErrorStripeHighlighters() {
+        List<VcsRange> ranges = myTracker.getRanges();
+        if (!shouldPaintErrorStripeMarkers() || ranges == null || ranges.isEmpty()) {
+            for (RangeHighlighter highlighter : myErrorStripeHighlighters) {
+                disposeHighlighter(highlighter);
+            }
+            myErrorStripeHighlighters.clear();
+            return;
+        }
+
+        MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, true);
+        PeekableIterator<RangeHighlighter> highlighterIt = new PeekableIteratorWrapper<>(myErrorStripeHighlighters.iterator());
+        List<RangeHighlighter> newHighlighters = new ArrayList<>();
+        List<RangeHighlighter> oldHighlighters = new ArrayList<>();
+        for (VcsRange range : ranges) {
+            TextRange textRange = DiffImplUtil.getLinesRange(myDocument, range.getLine1(), range.getLine2(), false);
+            while (highlighterIt.hasNext() && highlighterIt.peek().getStartOffset() < textRange.getStartOffset()) {
+                oldHighlighters.add(highlighterIt.next());
+            }
+            RangeHighlighter oldHighlighter = highlighterIt.hasNext() ? highlighterIt.peek() : null;
+            LineStatusMarkerRenderer.MarkerData oldMarkerData =
+                oldHighlighter != null ? oldHighlighter.getUserData(LineStatusMarkerRenderer.TOOLTIP_KEY) : null;
+            if (oldHighlighter != null && oldHighlighter.isValid()
+                && oldMarkerData != null && oldMarkerData.getType() == range.getType()
+                && oldHighlighter.getStartOffset() == textRange.getStartOffset()
+                && oldHighlighter.getEndOffset() == textRange.getEndOffset()) {
+                // reuse existing highlighter if possible
+                newHighlighters.add(oldHighlighter);
+                highlighterIt.next();
+            }
+            else {
+                newHighlighters.add(LineStatusMarkerRenderer.createRangeHighlighter(range, textRange, markupModel));
+            }
+        }
+
+        while (highlighterIt.hasNext()) {
+            oldHighlighters.add(highlighterIt.next());
+        }
+
+        for (RangeHighlighter highlighter : oldHighlighters) {
+            disposeHighlighter(highlighter);
+        }
+
+        myErrorStripeHighlighters.clear();
+        myErrorStripeHighlighters.addAll(newHighlighters);
+    }
+
+    /**
+     * @return true if markers in the error stripe (near the scrollbar) should be painted, false otherwise
+     */
+    private boolean shouldPaintErrorStripeMarkers() {
+        return !myTracker.isSilentMode();
+    }
+
+    private void disposeHighlighter(RangeHighlighter highlighter) {
+        try {
+            highlighter.dispose();
+        }
+        catch (Exception e) {
+            LOG.error(e);
+        }
     }
 
     @RequiredUIAccess
@@ -159,20 +269,22 @@ public class LineStatusGutterMarkerRenderer {
         }
     }
 
-    public void dispose() {
-        myDisposed = true;
-        Disposer.dispose(myEditorListenerDisposable);
-        RangeHighlighter h = myGutterHighlighter;
-        myGutterHighlighter = null;
-        if (h != null) {
-            try {
-                h.dispose();
-            }
-            catch (Exception e) {
-                LOG.error(e);
-            }
+    private void destroyHighlighters() {
+        if (!myGutterHighlighter.isValid()
+            || myGutterHighlighter.getStartOffset() != 0
+            || myGutterHighlighter.getEndOffset() != myDocument.getTextLength()) {
+            LOG.warn(String.format("Highlighter is damaged for %s, isValid: %s", this, myGutterHighlighter.isValid()));
         }
-        myUpdateQueue.dispose();
+        disposeHighlighter(myGutterHighlighter);
+
+        for (RangeHighlighter highlighter : myErrorStripeHighlighters) {
+            disposeHighlighter(highlighter);
+        }
+        myErrorStripeHighlighters.clear();
+    }
+
+    public void dispose() {
+        Disposer.dispose(myDisposable);
     }
 
     // -------------------------------------------------------------------------
@@ -180,54 +292,47 @@ public class LineStatusGutterMarkerRenderer {
     // -------------------------------------------------------------------------
 
     /**
-     * Single renderer instance that paints ALL changed-line ranges on each repaint.
-     * Equivalent to JB's inner {@code LineStatusGutterMarkerRenderer}.
+     * Describes every changed-line range as {@link VcsChangePresentation}s; the platform renders them.
      */
-    private class MyGutterMarkerRenderer implements ActiveGutterRenderer {
-
-        // ActiveGutterRenderer has mutual recursion between getTooltipValue() ↔ getTooltipText().
-        // Break the cycle by overriding getTooltipValue() directly.
+    private class MyLineMarkerPresentationProvider implements LineMarkerPresentationProvider {
         @Override
-        public LocalizeValue getTooltipValue() {
-            return LocalizeValue.empty();
+        public Set<EditorGutterArea> getUsedAreas() {
+            return Set.of(EditorGutterArea.RIGHT_FREE_PAINTERS);
         }
 
         @Override
-        public void paint(Editor editor, Graphics g, Rectangle r) {
-            if (myDisposed) return;
-            List<VcsRange> ranges = myTracker.getRanges();
-            if (ranges == null) return;
-            for (VcsRange range : ranges) {
-                LineStatusMarkerDrawUtil.paintRange(range, editor, g, r);
+        public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+            if (myDisposed) {
+                return List.of();
             }
+            List<VcsRange> ranges = myTracker.getRanges();
+            if (ranges == null) {
+                return List.of();
+            }
+            return VcsLineMarkerBuilder.buildPresentations(ranges, context);
         }
 
         @Override
-        public boolean canDoAction(MouseEvent e) {
-            if (myDisposed) return false;
-            return LineStatusMarkerDrawUtil.isInsideMarkerArea(e);
+        public boolean canDoAction(LineMarkerPresentation presentation, InputDetails details) {
+            return !myDisposed && myTracker.isValid() && rangeOf(presentation) != null;
         }
 
         @Override
         @RequiredUIAccess
-        public void doAction(Editor editor, MouseEvent e) {
-            if (myDisposed) return;
-            VcsRange range = findRangeAtEvent(editor, e);
+        public void doAction(Editor editor, LineMarkerPresentation presentation, InputDetails details) {
+            if (myDisposed) {
+                return;
+            }
+            VcsRange range = rangeOf(presentation);
             if (range != null) {
-                new LineStatusTrackerDrawing.MyLineStatusMarkerPopup(myTracker, editor, range).showHint(e);
+                LineStatusMarkerPopupFactory.getInstance().create(myTracker, editor, range).showHintAt(details);
             }
         }
 
-        /** Finds the VCS range whose gutter area contains the click y-coordinate. */
-        private @Nullable VcsRange findRangeAtEvent(Editor editor, MouseEvent e) {
-            int line = editor.xyToLogicalPosition(e.getPoint()).line;
-            // First try the clicked line; for DELETED ranges (displayed as triangles between
-            // lines) also check the line below.
-            VcsRange range = myTracker.getRangeForLine(line);
-            if (range == null) {
-                range = myTracker.getRangeForLine(line + 1);
-            }
-            return range;
+        private @Nullable VcsRange rangeOf(LineMarkerPresentation presentation) {
+            return presentation instanceof VcsChangePresentation change && change.payload() instanceof VcsRange range
+                ? range
+                : null;
         }
     }
 

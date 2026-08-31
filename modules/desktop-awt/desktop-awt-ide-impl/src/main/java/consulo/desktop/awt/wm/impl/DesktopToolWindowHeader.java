@@ -17,8 +17,8 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.ui.tabs.TabsUtil;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.ui.ex.awt.TabsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
@@ -71,7 +71,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         }
     }
 
-    private class HideAction extends DumbAwareAction {
+    private class HideAction extends LegacyDumbAwareAction {
         private HideAction() {
             super(UILocalize.toolWindowHideActionName(), LocalizeValue.empty(), PlatformIconGroup.generalHidetoolwindow());
         }
@@ -107,7 +107,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         add(myWestPanel, BorderLayout.CENTER);
 
-        myWestPanel.add(wrapAndFillVertical(toolWindow.getContentUI().getTabComponent()));
+        myWestPanel.add(wrapAndFillVertical(toolWindow.getContentUI().getTabComponent(), 0));
 
         DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
 
@@ -189,7 +189,11 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     
     public static JPanel wrapAndFillVertical(JComponent owner) {
-        JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(5), false, true));
+        return wrapAndFillVertical(owner, 5);
+    }
+
+    public static JPanel wrapAndFillVertical(JComponent owner, int vGap) {
+        JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(vGap), false, true));
         panel.add(owner);
         panel.setOpaque(false);
         return panel;

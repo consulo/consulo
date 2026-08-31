@@ -25,7 +25,6 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface ElementPattern<T> {
-
   boolean accepts(@Nullable Object o);
 
   boolean accepts(@Nullable Object o, ProcessingContext context);

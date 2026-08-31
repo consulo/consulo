@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 20/01/2022
+ * @since 2022-01-20
  */
 public abstract class PackageBasedContentFolderTypeProvider extends ContentFolderTypeProvider {
   public PackageBasedContentFolderTypeProvider(String id) {
@@ -44,13 +44,11 @@ public abstract class PackageBasedContentFolderTypeProvider extends ContentFolde
    * @return icon of child directory
    */
   @Override
-  
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable VirtualFile file, @Nullable ComponentManager project) {
     return getChildDirectoryIcon(file, project, null);
   }
 
-  
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory, @Nullable PsiPackageManager oldPsiPackageManager) {
     Project project = psiDirectory == null ? null : psiDirectory.getProject();
@@ -58,16 +56,20 @@ public abstract class PackageBasedContentFolderTypeProvider extends ContentFolde
     return getChildDirectoryIcon(virtualFile, project, oldPsiPackageManager);
   }
 
-  
   @RequiredReadAction
-  public final Image getChildDirectoryIcon(@Nullable VirtualFile file, @Nullable ComponentManager project, @Nullable PsiPackageManager oldPsiPackageManager) {
+  public final Image getChildDirectoryIcon(
+    @Nullable VirtualFile file,
+    @Nullable ComponentManager project,
+    @Nullable PsiPackageManager oldPsiPackageManager
+  ) {
     Image packageIcon = getChildPackageIcon();
     if (packageIcon == null) {
       return getChildDirectoryIcon();
     }
 
     if (file != null && project != null) {
-      PsiPackageManager psiPackageManager = oldPsiPackageManager == null ? PsiPackageManager.getInstance((Project)project) : oldPsiPackageManager;
+      PsiPackageManager psiPackageManager =
+        oldPsiPackageManager == null ? PsiPackageManager.getInstance((Project)project) : oldPsiPackageManager;
       PsiPackage anyPackage = psiPackageManager.findAnyPackage(file);
       if (anyPackage != null) {
         return packageIcon;

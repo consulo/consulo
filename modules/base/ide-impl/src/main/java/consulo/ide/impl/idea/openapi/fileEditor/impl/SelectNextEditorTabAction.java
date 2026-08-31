@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 
 /**
@@ -30,7 +29,7 @@ import consulo.ui.ex.action.IdeActions;
  * @author max
  */
 @ActionImpl(id = IdeActions.ACTION_NEXT_EDITOR_TAB)
-public class SelectNextEditorTabAction extends AnAction implements DumbAware {
+public class SelectNextEditorTabAction extends LegacyDumbAwareAction {
     public SelectNextEditorTabAction() {
         super(ActionLocalize.actionNexteditortabText());
     }

@@ -15,9 +15,11 @@
  */
 package consulo.language.pratt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.lexer.Lexer;
 import consulo.language.ast.IElementType;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -27,84 +29,114 @@ import java.util.ListIterator;
  * @author peter
  */
 public abstract class PrattBuilder {
-  public abstract Lexer getLexer();
+    public abstract Lexer getLexer();
 
-  public abstract void setTokenTypeRemapper(@Nullable ITokenTypeRemapper remapper);
+    public abstract void setTokenTypeRemapper(@Nullable ITokenTypeRemapper remapper);
 
-  public abstract MutableMarker mark();
+    public abstract MutableMarker mark();
 
-  public PrattBuilder createChildBuilder(int priority, @Nullable String expectedMessage) {
-    return createChildBuilder(priority).expecting(expectedMessage);
-  }
-
-  public PrattBuilder createChildBuilder(int priority) {
-    return createChildBuilder().withLowestPriority(priority);
-  }
-
-  public @Nullable IElementType parseChildren(int priority, @Nullable String expectedMessage) {
-    return createChildBuilder(priority, expectedMessage).parse();
-  }
-
-  protected abstract PrattBuilder createChildBuilder();
-
-  public boolean assertToken(PrattTokenType type) {
-    if (checkToken(type)) {
-      return true;
+    public PrattBuilder createChildBuilder(int priority, LocalizeValue expectedMessage) {
+        return createChildBuilder(priority).expecting(expectedMessage);
     }
-    error(type.getExpectedText(this));
-    return false;
-  }
 
-  public boolean assertToken(IElementType type, String errorMessage) {
-    if (checkToken(type)) {
-      return true;
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public final PrattBuilder createChildBuilder(int priority, @Nullable String expectedMessage) {
+        return createChildBuilder(priority, LocalizeValue.ofNullable(expectedMessage));
     }
-    error(errorMessage);
-    return false;
-  }
 
-  public boolean checkToken(IElementType type) {
-    if (isToken(type)) {
-      advance();
-      return true;
+    public PrattBuilder createChildBuilder(int priority) {
+        return createChildBuilder().withLowestPriority(priority);
     }
-    return false;
-  }
 
-  public abstract void advance();
+    public @Nullable IElementType parseChildren(int priority, LocalizeValue expectedMessage) {
+        return createChildBuilder(priority, expectedMessage).parse();
+    }
 
-  public abstract void error(String errorText);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public final @Nullable IElementType parseChildren(int priority, @Nullable String expectedMessage) {
+        return parseChildren(priority, LocalizeValue.ofNullable(expectedMessage));
+    }
 
-  public boolean isEof() {
-    return isToken(null);
-  }
+    protected abstract PrattBuilder createChildBuilder();
 
-  public boolean isToken(@Nullable IElementType type) {
-    return getTokenType() == type;
-  }
+    public boolean assertToken(PrattTokenType type) {
+        if (checkToken(type)) {
+            return true;
+        }
+        error(type.getExpectedText(this));
+        return false;
+    }
 
-  public abstract @Nullable IElementType getTokenType();
+    public boolean assertToken(IElementType type, LocalizeValue errorMessage) {
+        if (checkToken(type)) {
+            return true;
+        }
+        error(errorMessage);
+        return false;
+    }
 
-  public abstract @Nullable String getTokenText();
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public final boolean assertToken(IElementType type, String errorMessage) {
+        return assertToken(type, LocalizeValue.of(errorMessage));
+    }
 
-  public abstract void reduce(IElementType type);
+    public boolean checkToken(IElementType type) {
+        if (isToken(type)) {
+            advance();
+            return true;
+        }
+        return false;
+    }
 
-  public ListIterator<IElementType> getBackResultIterator() {
-    List<IElementType> resultTypes = getResultTypes();
-    return resultTypes.listIterator(resultTypes.size());
-  }
+    public abstract void advance();
 
-  public abstract List<IElementType> getResultTypes();
+    public abstract void error(LocalizeValue errorText);
 
-  public abstract @Nullable PrattBuilder getParent();
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public final void error(String errorText) {
+        error(LocalizeValue.of(errorText));
+    }
 
-  public abstract int getPriority();
+    public boolean isEof() {
+        return isToken(null);
+    }
 
-  public abstract int getCurrentOffset();
+    public boolean isToken(@Nullable IElementType type) {
+        return getTokenType() == type;
+    }
 
-  public abstract PrattBuilder expecting(@Nullable String expectedMessage);
+    public abstract @Nullable IElementType getTokenType();
 
-  public abstract PrattBuilder withLowestPriority(int priority);
+    public abstract @Nullable String getTokenText();
 
-  public abstract @Nullable IElementType parse();
+    public abstract void reduce(IElementType type);
+
+    public ListIterator<IElementType> getBackResultIterator() {
+        List<IElementType> resultTypes = getResultTypes();
+        return resultTypes.listIterator(resultTypes.size());
+    }
+
+    public abstract List<IElementType> getResultTypes();
+
+    public abstract @Nullable PrattBuilder getParent();
+
+    public abstract int getPriority();
+
+    public abstract int getCurrentOffset();
+
+    public abstract PrattBuilder expecting(LocalizeValue expectedMessage);
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public final PrattBuilder expecting(@Nullable String expectedMessage) {
+        return expecting(LocalizeValue.ofNullable(expectedMessage));
+    }
+
+    public abstract PrattBuilder withLowestPriority(int priority);
+
+    public abstract @Nullable IElementType parse();
 }

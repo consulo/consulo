@@ -35,66 +35,66 @@ import org.jdom.Element;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileEditorProvider {
-  ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create(FileEditorProvider.class);
+    ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create(FileEditorProvider.class);
 
-  Key<FileEditorProvider> KEY = Key.create("com.intellij.fileEditorProvider");
+    Key<FileEditorProvider> KEY = Key.create("com.intellij.fileEditorProvider");
 
-  /**
-   * @param file file to be tested for acceptance. This
-   *             parameter is never {@code null}.
-   * @return whether the provider can create valid editor for the specified
-   * {@code file} or not
-   */
-  boolean accept(Project project, VirtualFile file);
+    /**
+     * @param file file to be tested for acceptance. This
+     *             parameter is never {@code null}.
+     * @return whether the provider can create valid editor for the specified
+     * {@code file} or not
+     */
+    boolean accept(Project project, VirtualFile file);
 
-  /**
-   * Creates editor for the specified file. This method
-   * is called only if the provider has accepted this file (i.e. method {@link #accept(Project, VirtualFile)} returned
-   * {@code true}).
-   * The provider should return only valid editor.
-   *
-   * @return created editor for specified file. This method should never return {@code null}.
-   */
-  @RequiredUIAccess
-  FileEditor createEditor(Project project, VirtualFile file);
+    /**
+     * Creates editor for the specified file. This method
+     * is called only if the provider has accepted this file (i.e. method {@link #accept(Project, VirtualFile)} returned
+     * {@code true}).
+     * The provider should return only valid editor.
+     *
+     * @return created editor for specified file. This method should never return {@code null}.
+     */
+    @RequiredUIAccess
+    FileEditor createEditor(Project project, VirtualFile file);
 
-  /**
-   * Disposes the specified {@code editor}. It is guaranteed that this method is invoked only for editors
-   * created with this provider.
-   *
-   * @param editor editor to be disposed. This parameter is always not {@code null}.
-   */
-  default void disposeEditor(FileEditor editor) {
-    Disposer.dispose(editor);
-  }
+    /**
+     * Disposes the specified {@code editor}. It is guaranteed that this method is invoked only for editors
+     * created with this provider.
+     *
+     * @param editor editor to be disposed. This parameter is always not {@code null}.
+     */
+    default void disposeEditor(FileEditor editor) {
+        Disposer.dispose(editor);
+    }
 
-  /**
-   * Deserialize state from the specified {@code sourceElement}
-   * Use {@link FileEditorState#INSTANCE} as default implementation
-   */
-  default FileEditorState readState(Element sourceElement, Project project, VirtualFile file) {
-    return FileEditorState.INSTANCE;
-  }
+    /**
+     * Deserialize state from the specified {@code sourceElement}
+     * Use {@link FileEditorState#INSTANCE} as default implementation
+     */
+    default FileEditorState readState(Element sourceElement, Project project, VirtualFile file) {
+        return FileEditorState.INSTANCE;
+    }
 
-  /**
-   * Serializes state into the specified {@code targetElement}
-   */
-  default void writeState(FileEditorState state, Project project, Element targetElement) {
-  }
+    /**
+     * Serializes state into the specified {@code targetElement}
+     */
+    default void writeState(FileEditorState state, Project project, Element targetElement) {
+    }
 
-  /**
-   * @return id of type of the editors that are created with this FileEditorProvider. Each FileEditorProvider should have
-   * unique non null id. The id is used for saving/loading of EditorStates.
-   */
-  String getEditorTypeId();
+    /**
+     * @return id of type of the editors that are created with this FileEditorProvider. Each FileEditorProvider should have
+     * unique non null id. The id is used for saving/loading of EditorStates.
+     */
+    String getEditorTypeId();
 
-  /**
-   * @return policy that specifies how show editor created via this provider be opened
-   * @see FileEditorPolicy#NONE
-   * @see FileEditorPolicy#HIDE_DEFAULT_EDITOR
-   * @see FileEditorPolicy#PLACE_BEFORE_DEFAULT_EDITOR
-   */
-  default FileEditorPolicy getPolicy() {
-    return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
-  }
+    /**
+     * @return policy that specifies how show editor created via this provider be opened
+     * @see FileEditorPolicy#NONE
+     * @see FileEditorPolicy#HIDE_DEFAULT_EDITOR
+     * @see FileEditorPolicy#PLACE_BEFORE_DEFAULT_EDITOR
+     */
+    default FileEditorPolicy getPolicy() {
+        return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+    }
 }

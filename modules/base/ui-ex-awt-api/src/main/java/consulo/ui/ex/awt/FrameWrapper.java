@@ -20,7 +20,8 @@ import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowState;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -34,7 +35,10 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.util.ActionUtil;
-import consulo.ui.ex.awt.internal.*;
+import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
+import consulo.ui.ex.awt.internal.InternalPopupUtil;
+import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
@@ -50,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FrameWrapper implements Disposable, DataProvider {
+public class FrameWrapper implements Disposable, UiDataProvider {
 
   private String myDimensionKey = null;
   private JComponent myComponent = null;
@@ -260,29 +264,21 @@ public class FrameWrapper implements Disposable, DataProvider {
     return getPeerFactory().createJDialog(this, parent);
   }
 
-  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
+  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
     return null;
   }
 
   @Override
-  public Object getData(Key<?> dataId) {
-    if (Project.KEY == dataId) {
-      return myProject;
-    }
-    return null;
-  }
-
-  public @Nullable Object getDataInner(Key<?> dataId) {
-    Object data = getData(dataId);
-    return data != null ? data : myDataMap.get(dataId);
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(Project.KEY, myProject);
   }
 
   public void setComponent(JComponent component) {
     myComponent = component;
   }
 
-  public void setPreferredFocusedComponent(JComponent preferedFocus) {
-    myPreferredFocus = preferedFocus;
+  public void setPreferredFocusedComponent(JComponent preferredFocus) {
+    myPreferredFocus = preferredFocus;
   }
 
   public JComponent getPreferredFocusedComponent() {

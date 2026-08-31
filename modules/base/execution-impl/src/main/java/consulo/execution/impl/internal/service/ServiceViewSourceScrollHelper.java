@@ -13,7 +13,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.Promise;
@@ -98,7 +98,7 @@ final class ServiceViewSourceScrollHelper {
     }
   }
 
-  private static final class ScrollFromEditorAction extends DumbAwareAction {
+  private static final class ScrollFromEditorAction extends LegacyDumbAwareAction {
     private final ServiceViewAutoScrollFromSourceHandler myScrollFromHandler;
 
     ScrollFromEditorAction(ServiceViewAutoScrollFromSourceHandler scrollFromHandler) {

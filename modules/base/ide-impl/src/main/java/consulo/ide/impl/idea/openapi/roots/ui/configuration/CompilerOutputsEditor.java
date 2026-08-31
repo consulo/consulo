@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.compiler.ModuleCompilerPathsManager;
@@ -38,7 +37,6 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -68,9 +66,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         myFilter = LanguageContentFolderScopes.productionAndTest();
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public Component createUIComponentImpl(Disposable parentUIDisposable) {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
@@ -145,21 +142,14 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
             for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(myFilter)) {
                 CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
 
-                VirtualFile compilerOutputPath = moduleCompilerPathsManager.getCompilerOutput(contentFolderTypeProvider);
-                if (compilerOutputPath != null) {
-                    commitableFieldPanel.setValue(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
-                }
-                else {
-                    String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
-                    if (compilerOutputUrl != null) {
-                        commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(compilerOutputUrl)));
-                    }
+                String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+                if (compilerOutputUrl != null) {
+                    commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(compilerOutputUrl)));
                 }
             }
         }
     }
 
-    
     public Module getModule() {
         return getModel().getModule();
     }
@@ -202,8 +192,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         return commitableFieldPanel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         if (myInheritCompilerOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
@@ -241,7 +231,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @RequiredUIAccess
     public void moduleStateChanged() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        //if content enties tree was changed
+        // If content of entire tree was changed
         myCbExcludeOutput.setValue(moduleCompilerPathsManager.isExcludeOutput());
     }
 

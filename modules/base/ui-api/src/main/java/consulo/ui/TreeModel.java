@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.event.details.InputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -22,26 +23,33 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 2017-09-12
  */
 public interface TreeModel<N> {
-  void buildChildren(Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
+    void buildChildren(Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
 
-  /**
-   * If return true - children will be build for current node, and node will be marked as leaf (if not children)
-   */
-  default boolean isNeedBuildChildrenBeforeOpen(TreeNode<N> node) {
-    return false;
-  }
+    /**
+     * If return true - children will be build for current node, and node will be marked as leaf (if not children)
+     */
+    default boolean isNeedBuildChildrenBeforeOpen(TreeNode<N> node) {
+        return false;
+    }
 
-  /**
-   * @return expand on double click
-   */
-  default boolean onDoubleClick(Tree<N> tree, TreeNode<N> node) {
-    return true;
-  }
+    /**
+     * @return expand on double click
+     */
+    default boolean onDoubleClick(Tree<N> tree, TreeNode<N> node) {
+        return true;
+    }
 
-  default @Nullable Comparator<TreeNode<N>> getNodeComparator() {
-    return null;
-  }
+    /**
+     * @return expand on double click
+     */
+    default boolean onDoubleClick(Tree<N> tree, TreeNode<N> node, @Nullable InputDetails inputDetails) {
+        return onDoubleClick(tree, node);
+    }
+
+    default @Nullable Comparator<TreeNode<N>> getNodeComparator() {
+        return null;
+    }
 }

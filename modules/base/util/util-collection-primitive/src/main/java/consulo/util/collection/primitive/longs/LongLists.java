@@ -15,12 +15,15 @@
  */
 package consulo.util.collection.primitive.longs;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.primitive.longs.impl.list.LongArrayList;
 
 /**
  * @author VISTALL
  * @since 10/06/2021
  */
+@Deprecated
+@DeprecationInfo("Use Fast Util")
 public class LongLists {
   public static LongList newArrayList() {
     return new LongArrayList();

@@ -31,7 +31,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -108,7 +107,7 @@ public class GuiUtils {
     });
   }
 
-  public static JComponent constructLabeledComponent(String aLabelText, JComponent aComponent, @JdkConstants.BoxLayoutAxis int aAxis) {
+  public static JComponent constructLabeledComponent(String aLabelText, JComponent aComponent, @AWTConstants.BoxLayoutAxis int aAxis) {
     JPanel result = new JPanel();
     BoxLayout boxLayout = new BoxLayout(result, aAxis);
     result.setLayout(boxLayout);
@@ -393,6 +392,10 @@ public class GuiUtils {
 
   public static void setGraphicsConfiguration(Component comp, @Nullable GraphicsConfiguration gc) {
     AWTAccessorHacking.setGraphicsConfiguration(comp, gc);
+  }
+
+  public static void processEvent(Component comp, AWTEvent event) {
+    AWTAccessorHacking.processEvent(comp, event);
   }
 
   /**

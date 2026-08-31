@@ -17,13 +17,16 @@ package consulo.language.editor.gutter;
 
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import java.awt.event.MouseEvent;
+import consulo.ui.event.ComponentEvent;
 
 /**
  * @author max
  */
 public interface GutterIconNavigationHandler<T extends PsiElement> {
+    /**
+     * @param e the event the icon was activated with - where it happened comes from the event's input
+     *          details, so a handler works the same on every frontend
+     */
     @RequiredUIAccess
-    void navigate(MouseEvent e, T elt);
+    void navigate(ComponentEvent<?> e, T elt);
 }

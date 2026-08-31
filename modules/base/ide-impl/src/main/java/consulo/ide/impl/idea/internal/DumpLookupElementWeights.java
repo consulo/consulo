@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -24,20 +23,19 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.Pair;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author peter
  */
-public class DumpLookupElementWeights extends AnAction implements DumbAware {
+public class DumpLookupElementWeights extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(DumpLookupElementWeights.class);
 
     @Override
@@ -64,7 +62,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
         System.out.println(sb);
         LOG.info(sb);
         try {
-            CopyPasteManager.getInstance().setContents(new StringSelection(sb));
+            CopyPasteManager.getInstance().setText(sb);
         }
         catch (Exception ignore) {
         }

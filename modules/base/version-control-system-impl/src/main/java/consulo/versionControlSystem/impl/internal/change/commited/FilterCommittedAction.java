@@ -16,20 +16,19 @@
 package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 
 /**
  * @author yole
  */
 @ActionImpl(id = "CommittedChanges.Filter")
-public class FilterCommittedAction extends AnAction implements DumbAware {
+public class FilterCommittedAction extends LegacyDumbAwareAction {
     public FilterCommittedAction() {
         super(
             ActionLocalize.actionCommittedchangesFilterText(),

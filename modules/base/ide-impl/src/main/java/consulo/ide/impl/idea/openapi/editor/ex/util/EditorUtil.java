@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.editor.ex.util;
 
 import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.application.WriteAction;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -45,13 +45,14 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,8 +61,6 @@ import java.awt.event.MouseWheelEvent;
 import java.util.List;
 
 public final class EditorUtil {
-    private static final Logger LOG = Logger.getInstance(EditorUtil.class);
-
     private EditorUtil() {
     }
 
@@ -147,8 +146,7 @@ public final class EditorUtil {
         }
     }
 
-    
-    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
+    public static FontInfo fontForChar(char c, @AWTConstants.FontStyle int style, Editor editor) {
         return EditorImplUtil.fontForChar(c, style, editor);
     }
 
@@ -162,11 +160,11 @@ public final class EditorUtil {
         return icon;
     }
 
-    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int charWidth(char c, @AWTConstants.FontStyle int fontType, Editor editor) {
         return EditorImplUtil.charWidth(c, fontType, editor);
     }
 
-    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int getSpaceWidth(@AWTConstants.FontStyle int fontType, Editor editor) {
         return EditorImplUtil.getSpaceWidth(fontType, editor);
     }
 
@@ -257,7 +255,7 @@ public final class EditorUtil {
                                 CharSequence text,
                                 int start,
                                 int end,
-                                @JdkConstants.FontStyle int fontType,
+                                @AWTConstants.FontStyle int fontType,
                                 int x) {
         int result = 0;
         for (int i = start; i < end; i++) {
@@ -350,8 +348,9 @@ public final class EditorUtil {
         if (e.getWheelRotation() == 0) {
             return false;
         }
-        return Platform.current().os().isMac() ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e
-            .isAltDown() && !e.isShiftDown();
+        return Platform.current().os().isMac()
+            ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown()
+            : e.isControlDown() && !e.isMetaDown() && !e.isAltDown() && !e.isShiftDown();
     }
 
     public static boolean inVirtualSpace(Editor editor, LogicalPosition logicalPosition) {
@@ -518,7 +517,7 @@ public final class EditorUtil {
      * excluded
      */
     public static boolean isPointOverText(Editor editor, Point point) {
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             VisualPosition visualPosition = editor.xyToVisualPosition(point);
             int visualLineStartY = editor.visualLineToY(visualPosition.line);
             if (point.y < visualLineStartY || point.y >= visualLineStartY + editor.getLineHeight()) {
@@ -586,7 +585,7 @@ public final class EditorUtil {
             }
 
             private Pair<int[], int[]> getSelectionOffsets() {
-                return Pair.create(editor.getSelectionModel().getBlockSelectionStarts(), editor.getSelectionModel().getBlockSelectionEnds());
+                return Couple.of(editor.getSelectionModel().getBlockSelectionStarts(), editor.getSelectionModel().getBlockSelectionEnds());
             }
         }, disposable);
     }
@@ -594,7 +593,6 @@ public final class EditorUtil {
     public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, Document document) {
         EditorHighlighter highlighter = new EmptyEditorHighlighter(new TextAttributes()) {
             @Override
-            
             public HighlighterIterator createIterator(int startOffset) {
                 setText(document.getImmutableCharSequence());
                 return super.createIterator(startOffset);

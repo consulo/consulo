@@ -16,7 +16,6 @@
 package consulo.ui.ex.action;
 
 import consulo.util.lang.BitUtil;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -30,7 +29,7 @@ public class MouseShortcut extends Shortcut {
   public static final int BUTTON_WHEEL_UP = 143;
   public static final int BUTTON_WHEEL_DOWN = 142;
   private final int myButton;
-  @JdkConstants.InputEventMask private final int myModifiers;
+  private final int myModifiers;
   private final int myClickCount;
 
   public static int getButton(MouseEvent event) {
@@ -48,7 +47,7 @@ public class MouseShortcut extends Shortcut {
    * @param modifiers modifiersEx masks like InputEvent.ALT_DOWN_MASK and so on...
    * @param clickCount click count from the MouseEvent that caused the MouseShortcut creation
    */
-  public MouseShortcut(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
+  public MouseShortcut(int button, int modifiers, int clickCount) {
     myButton = button;
     // TODO[vova] check modifiers?
     myModifiers = mapOldModifiers(modifiers);
@@ -62,7 +61,6 @@ public class MouseShortcut extends Shortcut {
     return myButton;
   }
 
-  @JdkConstants.InputEventMask
   public int getModifiers() {
     return myModifiers;
   }
@@ -86,8 +84,7 @@ public class MouseShortcut extends Shortcut {
     return myButton + myModifiers + myClickCount;
   }
 
-  @JdkConstants.InputEventMask
-  private static int mapOldModifiers(@JdkConstants.InputEventMask int modifiers) {
+  private static int mapOldModifiers(int modifiers) {
     if (BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)) {
       modifiers |= InputEvent.SHIFT_DOWN_MASK;
     }

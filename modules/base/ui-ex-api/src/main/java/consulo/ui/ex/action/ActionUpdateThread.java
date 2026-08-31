@@ -16,6 +16,7 @@ package consulo.ui.ex.action;
  *
  * @see AnAction#getActionUpdateThread()
  */
+@Deprecated
 public enum ActionUpdateThread {
     /**
      * Background thread with all data in the provided {@link DataContext} instance (<b>PREFERRED</b>).

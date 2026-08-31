@@ -30,6 +30,5 @@ import java.util.function.Consumer;
 public interface PluginAdvertiserExtension {
     void extend(Consumer<ExtensionPreview> consumer);
 
-    
     Set<Class<?>> acceptExtensionAPIs();
 }

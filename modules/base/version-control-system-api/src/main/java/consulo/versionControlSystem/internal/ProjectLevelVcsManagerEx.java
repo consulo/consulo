@@ -20,6 +20,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsInitObject;
+import consulo.versionControlSystem.checkout.CheckoutCallback;
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
     public abstract ContentManager getContentManager();
 
-    
+    public abstract CheckoutCallback getCompositeCheckoutCallback();
+
     public abstract VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option);
 
     public abstract List<VcsShowOptionsSettingImpl> getAllOptions();

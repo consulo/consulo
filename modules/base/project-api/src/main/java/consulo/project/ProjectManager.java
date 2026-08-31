@@ -23,9 +23,9 @@ import consulo.disposer.Disposable;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
-import consulo.virtualFileSystem.VirtualFile;
+
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -43,30 +43,19 @@ public interface ProjectManager {
         return Application.get().getInstance(ProjectManager.class);
     }
 
-    
-    AsyncResult<Project> openProjectAsync(VirtualFile file, UIAccess uiAccess, ProjectOpenContext context);
+    CompletableFuture<Project> openProjectAsync(
+        Path filePath,
+        UIAccess uiAccess,
+        ProjectOpenContext context
+    );
 
-    
-    default AsyncResult<Project> openProjectAsync(VirtualFile file, UIAccess uiAccess) {
-        return openProjectAsync(file, uiAccess, new ProjectOpenContext());
-    }
-
-    
-    AsyncResult<Project> openProjectAsync(Project project, UIAccess uiAccess, ProjectOpenContext context);
-
-    default AsyncResult<Project> openProjectAsync(Project project, UIAccess uiAccess) {
-        return openProjectAsync(project, uiAccess, new ProjectOpenContext());
-    }
-
-    
-    default AsyncResult<Void> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
+    default CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
         return closeAndDisposeAsync(project, uiAccess, true, true, true);
     }
 
     boolean isProjectOpened(Project project);
 
-    
-    AsyncResult<Void> closeAndDisposeAsync(Project project, UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
+    CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
     /**
      * Adds listener to the specified project.
@@ -101,15 +90,6 @@ public interface ProjectManager {
     default Project getDefaultProject() {
         return DefaultProjectFactory.getInstance().getDefaultProject();
     }
-
-    /**
-     * Closes the specified project.
-     *
-     * @param project the project to close.
-     * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
-     */
-    @RequiredUIAccess
-    boolean closeProject(Project project);
 
     /**
      * Asynchronously reloads the specified project.

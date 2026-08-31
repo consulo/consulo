@@ -21,6 +21,8 @@ import consulo.dataContext.DataContext;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.localization.LocalizedValue;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.content.OrderRootType;
 import consulo.content.library.ui.LibraryEditor;
@@ -33,7 +35,7 @@ import javax.swing.*;
 * @author nik
 */
 public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootButtonDescriptor {
-  public ChooserBasedAttachRootButtonDescriptor(OrderRootType rootType, String buttonText) {
+  public ChooserBasedAttachRootButtonDescriptor(String rootType, LocalizeValue buttonText) {
     super(rootType, buttonText);
   }
 

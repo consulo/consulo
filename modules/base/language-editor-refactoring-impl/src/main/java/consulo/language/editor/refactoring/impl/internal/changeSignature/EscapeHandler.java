@@ -56,7 +56,6 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     myOriginalHandler = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_ESCAPE;

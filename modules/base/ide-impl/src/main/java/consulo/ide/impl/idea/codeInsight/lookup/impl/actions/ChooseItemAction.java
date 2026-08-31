@@ -7,12 +7,12 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
-import consulo.ide.impl.idea.util.SlowOperations;
+import consulo.application.internal.SlowOperations;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.CompletionService;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -27,6 +27,7 @@ import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +44,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         }
 
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             LookupEx lookup = LookupManager.getActiveLookup(editor);
             assert lookup != null;

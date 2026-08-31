@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
@@ -31,7 +32,6 @@ import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.NameId;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -59,7 +59,8 @@ public class FSRecords {
     private static final boolean backgroundVfsFlush = SystemProperties.getBooleanProperty("idea.background.vfs.flush", true);
     private static final boolean inlineAttributes = SystemProperties.getBooleanProperty("idea.inline.vfs.attributes", true);
     private static final boolean bulkAttrReadSupport = SystemProperties.getBooleanProperty("idea.bulk.attr.read", false);
-    private static final boolean useCompressionUtil = SystemProperties.getBooleanProperty("idea.use.lightweight.compression.for.vfs", false);
+    private static final boolean useCompressionUtil =
+        SystemProperties.getBooleanProperty("idea.use.lightweight.compression.for.vfs", false);
     private static final boolean useSmallAttrTable = SystemProperties.getBooleanProperty("idea.use.small.attr.table.for.vfs", true);
     private static final boolean ourStoreRootsSeparately = SystemProperties.getBooleanProperty("idea.store.roots.separately", false);
 
@@ -151,7 +152,6 @@ public class FSRecords {
         DbConnection.handleError(e);
     }
 
-    
     public static File basePath() {
         return new File(DbConnection.getCachesDir());
     }
@@ -165,7 +165,8 @@ public class FSRecords {
         private static ResizeableMappedFile myRecords;
         private static PersistentBTreeEnumerator<byte[]> myContentHashesEnumerator;
         private static File myRootsFile;
-        private static final VfsDependentEnum<String> myAttributesList = new VfsDependentEnum<>("attrib", EnumeratorStringDescriptor.INSTANCE, 1);
+        private static final VfsDependentEnum<String> myAttributesList =
+            new VfsDependentEnum<>("attrib", EnumeratorStringDescriptor.INSTANCE, 1);
         private static final IntList myFreeRecords = IntLists.newArrayList();
 
         private static volatile boolean myDirty;
@@ -272,26 +273,36 @@ public class FSRecords {
                 myAttributes = new Storage(attributesFile.getPath(), REASONABLY_SMALL) {
                     @Override
                     protected AbstractRecordsTable createRecordsTable(PagePool pool, File recordsFile) throws IOException {
-                        return inlineAttributes && useSmallAttrTable ? new CompactRecordsTable(recordsFile, pool, false) : super.createRecordsTable(pool, recordsFile);
+                        return inlineAttributes && useSmallAttrTable
+                            ? new CompactRecordsTable(recordsFile, pool, false)
+                            : super.createRecordsTable(pool, recordsFile);
                     }
                 };
 
-                myContents = new RefCountingStorage(contentsFile.getPath(), CapacityAllocationPolicy.FIVE_PERCENT_FOR_GROWTH, useCompressionUtil) {
-                    
-                    @Override
-                    protected ExecutorService createExecutor() {
-                        return SequentialTaskExecutor.createSequentialApplicationPoolExecutor("FSRecords Pool");
-                    }
-                };
+                myContents =
+                    new RefCountingStorage(contentsFile.getPath(), CapacityAllocationPolicy.FIVE_PERCENT_FOR_GROWTH, useCompressionUtil) {
+                        @Override
+                        protected ExecutorService createExecutor() {
+                            return SequentialTaskExecutor.createSequentialApplicationPoolExecutor("FSRecords Pool");
+                        }
+                    };
 
                 // sources usually zipped with 4x ratio
-                myContentHashesEnumerator = WE_HAVE_CONTENT_HASHES ? new ContentHashesUtil.HashEnumerator(contentsHashesFile, storageLockContext) : null;
+                myContentHashesEnumerator =
+                    WE_HAVE_CONTENT_HASHES ? new ContentHashesUtil.HashEnumerator(contentsHashesFile, storageLockContext) : null;
 
                 boolean aligned = PagedFileStorage.BUFFER_SIZE % RECORD_SIZE == 0;
                 if (!aligned) {
                     LOG.error("Buffer size " + PagedFileStorage.BUFFER_SIZE + " is not aligned for record size " + RECORD_SIZE);
                 }
-                myRecords = new ResizeableMappedFile(recordsFile, 20 * 1024, storageLockContext, PagedFileStorage.BUFFER_SIZE, aligned, IOUtil.BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER);
+                myRecords = new ResizeableMappedFile(
+                    recordsFile,
+                    20 * 1024,
+                    storageLockContext,
+                    PagedFileStorage.BUFFER_SIZE,
+                    aligned,
+                    IOUtil.BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER
+                );
 
                 boolean initial = myRecords.length() == 0;
 
@@ -341,9 +352,15 @@ public class FSRecords {
                             e1.printStackTrace();
                         }
                         else {
-                            String message = "Files in " + basePath.getPath() + " are locked.\n" + Application.get().getName() + " will not be able to start up.";
+                            String message = "Files in " + basePath.getPath() + " are locked.\n" +
+                                Application.get().getName() + " will not be able to start up.";
                             if (!Application.get().isHeadlessEnvironment()) {
-                                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), message, "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(
+                                    JOptionPane.getRootFrame(),
+                                    message,
+                                    "Fatal Error",
+                                    JOptionPane.ERROR_MESSAGE
+                                );
                             }
                             else {
                                 //noinspection UseOfSystemOutOrSystemErr
@@ -381,7 +398,6 @@ public class FSRecords {
             }
         }
 
-        
         private static String getCachesDir() {
             String dir = System.getProperty("caches_dir");
             return dir == null ? ContainerPathManager.get().getSystemPath() + "/caches/" : dir;
@@ -438,7 +454,12 @@ public class FSRecords {
         }
 
         public static boolean isDirty() {
-            return myDirty || myNames.isDirty() || myAttributes.isDirty() || myContents.isDirty() || myRecords.isDirty() || myContentHashesEnumerator != null && myContentHashesEnumerator.isDirty();
+            return myDirty
+                || myNames.isDirty()
+                || myAttributes.isDirty()
+                || myContents.isDirty()
+                || myRecords.isDirty()
+                || myContentHashesEnumerator != null && myContentHashesEnumerator.isDirty();
         }
 
         private static int getVersion() {
@@ -705,14 +726,14 @@ public class FSRecords {
 
     private static final int ROOT_RECORD_ID = 1;
 
-    
     @TestOnly
     static int[] listRoots() {
         return readAndHandleErrors(() -> {
             if (ourStoreRootsSeparately) {
                 IntList result = IntLists.newArrayList();
 
-                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
+                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream =
+                         new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
                     String str;
                     while ((str = stream.readLine()) != null) {
                         int index = str.indexOf(' ');
@@ -767,7 +788,8 @@ public class FSRecords {
     static int findRootRecord(String rootUrl) {
         return writeAndHandleErrors(() -> {
             if (ourStoreRootsSeparately) {
-                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
+                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream =
+                         new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
                     String str;
                     while ((str = stream.readLine()) != null) {
                         int index = str.indexOf(' ');
@@ -781,7 +803,8 @@ public class FSRecords {
                 }
 
                 DbConnection.markDirty();
-                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") Writer stream = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(DbConnection.myRootsFile, true)))) {
+                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") Writer stream =
+                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream(DbConnection.myRootsFile, true)))) {
                     int id = createRecord();
                     stream.write(id + " " + rootUrl + "\n");
                     return id;
@@ -836,7 +859,8 @@ public class FSRecords {
             DbConnection.markDirty();
             if (ourStoreRootsSeparately) {
                 List<String> rootsThatLeft = new ArrayList<>();
-                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
+                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream =
+                         new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
                     String str;
                     while ((str = stream.readLine()) != null) {
                         int index = str.indexOf(' ');
@@ -849,7 +873,8 @@ public class FSRecords {
                 catch (FileNotFoundException ignored) {
                 }
 
-                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") Writer stream = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(DbConnection.myRootsFile)))) {
+                try (@SuppressWarnings("ImplicitDefaultCharsetUsage") Writer stream = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+                    DbConnection.myRootsFile)))) {
                     for (String line : rootsThatLeft) {
                         stream.write(line);
                         stream.write("\n");
@@ -888,7 +913,6 @@ public class FSRecords {
         });
     }
 
-    
     static int[] list(int id) {
         return readAndHandleErrors(() -> {
             try (final DataInputStream input = readAttribute(id, ourChildrenAttr)) {
@@ -919,7 +943,6 @@ public class FSRecords {
     }
 
     // returns NameId[] sorted by NameId.id
-    
     public static NameId[] listAll(int parentId) {
         assert parentId > 0 : parentId;
         return readAndHandleErrors(() -> {
@@ -1170,12 +1193,10 @@ public class FSRecords {
         return getNameSequence(id).toString();
     }
 
-    
     static CharSequence getNameSequence(int id) {
         return readAndHandleErrors(() -> doGetNameSequence(id));
     }
 
-    
     private static CharSequence doGetNameSequence(int id) throws IOException {
         int nameId = getRecordInt(id, NAME_OFFSET);
         return nameId == 0 ? "" : FileNameCache.getVFileName(nameId, FSRecords::doGetNameByNameId);
@@ -1300,7 +1321,6 @@ public class FSRecords {
         return null;
     }
 
-    
     static DataInputStream readContentById(int contentId) {
         try {
             return doReadContentById(contentId);
@@ -1311,7 +1331,6 @@ public class FSRecords {
         return null;
     }
 
-    
     private static DataInputStream doReadContentById(int contentId) throws IOException {
         DataInputStream stream = getContentStorage().readStream(contentId);
         if (useCompressionUtil) {
@@ -1502,7 +1521,6 @@ public class FSRecords {
         return readAndHandleErrors(() -> getContentRecordId(fileId));
     }
 
-    
     static DataOutputStream writeContent(int fileId, boolean readOnly) {
         return new ContentOutputStream(fileId, readOnly);
     }
@@ -1534,7 +1552,6 @@ public class FSRecords {
         });
     }
 
-    
     public static DataOutputStream writeAttribute(int fileId, FileAttribute att) {
         DataOutputStream stream = new AttributeOutputStream(fileId, att);
         if (att.isVersioned()) {
@@ -1660,7 +1677,6 @@ public class FSRecords {
     }
 
     private static class AttributeOutputStream extends DataOutputStream {
-        
         private final FileAttribute myAttribute;
         private final int myFileId;
 
@@ -1879,7 +1895,8 @@ public class FSRecords {
         }
     }
 
-    private static void checkAttributesSanity(int attributeRecordId, IntList usedAttributeRecordIds, IntList validAttributeIds) throws IOException {
+    private static void checkAttributesSanity(int attributeRecordId, IntList usedAttributeRecordIds, IntList validAttributeIds)
+        throws IOException {
         assert !usedAttributeRecordIds.contains(attributeRecordId);
         usedAttributeRecordIds.add(attributeRecordId);
 

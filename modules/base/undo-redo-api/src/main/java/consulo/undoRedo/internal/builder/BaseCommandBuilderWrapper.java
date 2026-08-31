@@ -23,6 +23,7 @@ import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.CommandBuilder;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
@@ -49,7 +50,7 @@ public abstract class BaseCommandBuilderWrapper<THIS extends CommandBuilder<THIS
     }
 
     @Override
-    public THIS project(Project project) {
+    public THIS project(@Nullable Project project) {
         mySubBuilder = mySubBuilder.project(project);
         return self();
     }

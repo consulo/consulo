@@ -18,6 +18,7 @@ package consulo.util.concurrent;
 /**
  * @author dmitrylomov
  */
+@Deprecated
 public interface AsyncFutureResult<V> extends AsyncFuture<V> {
   void set(V value);
 

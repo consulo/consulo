@@ -20,7 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -37,7 +37,7 @@ import java.util.function.Function;
 /**
  * @author max
  */
-public abstract class TreeCollapseAllActionBase extends DumbAwareAction implements DumbAware {
+public abstract class TreeCollapseAllActionBase extends LegacyDumbAwareAction implements DumbAware {
     protected TreeCollapseAllActionBase(
         LocalizeValue text,
         LocalizeValue description,

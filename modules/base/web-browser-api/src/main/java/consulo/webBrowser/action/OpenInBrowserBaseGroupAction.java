@@ -67,7 +67,7 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         return actions;
     }
 
-    public static final class OpenInBrowserGroupAction extends OpenInBrowserBaseGroupAction {
+    public static final class OpenInBrowserGroupAction extends OpenInBrowserBaseGroupAction implements AnActionWithSyncUpdate {
         public OpenInBrowserGroupAction() {
             super(true);
         }
@@ -85,7 +85,7 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         }
     }
 
-    public static final class OpenInBrowserEditorContextBarGroupAction extends OpenInBrowserBaseGroupAction {
+    public static final class OpenInBrowserEditorContextBarGroupAction extends OpenInBrowserBaseGroupAction implements AnActionWithSyncUpdate {
         public OpenInBrowserEditorContextBarGroupAction() {
             super(false);
         }

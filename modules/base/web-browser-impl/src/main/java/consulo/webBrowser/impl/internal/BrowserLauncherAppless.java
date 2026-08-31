@@ -15,6 +15,7 @@
  */
 package consulo.webBrowser.impl.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.application.progress.ProgressIndicator;
@@ -48,7 +49,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.*;
 import consulo.webBrowser.localize.WebBrowserLocalize;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;

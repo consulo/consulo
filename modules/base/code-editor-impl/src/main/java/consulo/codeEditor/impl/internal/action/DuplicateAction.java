@@ -42,7 +42,7 @@ public class DuplicateAction extends EditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             duplicateLineOrSelectedBlockAtCaret(editor);
         }
 

@@ -31,7 +31,6 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   }
 
   @Override
-  
   public ASTNode getRoot() {
     return myRoot;
   }
@@ -42,7 +41,6 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   }
 
   @Override
-  
   public ASTNode prepareForGetChildren(ASTNode astNode) {
     return astNode;
   }
@@ -77,7 +75,6 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   public void disposeChildren(ASTNode[] nodes, int count) {
   }
 
-  
   @Override
   public CharSequence toString(ASTNode node) {
     return node.getChars();

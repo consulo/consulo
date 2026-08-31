@@ -15,7 +15,6 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
-import consulo.content.OrderRootType;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
@@ -34,19 +33,16 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
     super(provider, rootLayer);
   }
 
-  
   @Override
-  public VirtualFile[] getFiles(OrderRootType type) {
+  public VirtualFile[] getFiles(String type) {
     return VirtualFile.EMPTY_ARRAY;
   }
 
-  
   @Override
-  public String[] getUrls(OrderRootType rootType) {
+  public String[] getUrls(String rootType) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  
   @Override
   public String getPresentableName() {
     return "Unknown Order Entry. Type: " + getType().getId();
@@ -57,7 +53,6 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
     return true;
   }
 
-  
   @Override
   public Module getOwnerModule() {
     return getRootModel().getModule();

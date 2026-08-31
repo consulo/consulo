@@ -53,6 +53,7 @@ public class ClassFilter implements ElementFilter {
     return myAcceptableFlag ? filterMatches(element.getClass()) : !filterMatches(element.getClass());
   }
 
+  @Override
   public String toString(){
     return "class(" + myFilter.getName() + ")";
   }

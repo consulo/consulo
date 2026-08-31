@@ -19,12 +19,24 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 17/08/2021
+ * @since 2021-08-17
  */
 public interface PopupMenu extends Menu {
-  static PopupMenu create(Component target) {
-    return UIInternal.get()._PopupMenu_create(target);
-  }
+    static PopupMenu create(Component target) {
+        return UIInternal.get()._PopupMenu_create(target);
+    }
 
-  void show(int relativeX, int relativeY);
+    void show(int relativeX, int relativeY);
+
+    /**
+     * Takes the menu off screen. A menu which was never shown is left alone.
+     */
+    void hide();
+
+    /**
+     * Opens the menu on a plain click of the target rather than on {@link #show}, which is what a toolbar
+     * button holding a popup group needs. Off by default - a context menu belongs to the right button.
+     */
+    default void setOpenOnClick(boolean openOnClick) {
+    }
 }

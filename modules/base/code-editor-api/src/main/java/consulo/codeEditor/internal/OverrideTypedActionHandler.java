@@ -19,7 +19,7 @@ import consulo.codeEditor.action.TypedActionHandler;
 
 /**
  * @author VISTALL
- * @since 22-Jun-22
+ * @since 2022-06-22
  */
 public interface OverrideTypedActionHandler extends TypedActionHandler {
   void init(TypedActionHandler delegate);

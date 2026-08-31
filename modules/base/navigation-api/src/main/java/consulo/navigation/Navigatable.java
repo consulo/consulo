@@ -31,6 +31,7 @@ public interface Navigatable {
    *
    * @param requestFocus <code>true</code> if focus requesting is necessary
    */
+  @RequiredReadAction
   void navigate(boolean requestFocus);
 
   /**

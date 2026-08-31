@@ -21,6 +21,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorLastActionTracker;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
@@ -53,6 +54,7 @@ public class CloneCaretActionHandler extends EditorActionHandler {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doExecute(Editor editor, @Nullable Caret targetCaret, DataContext dataContext) {
         if (targetCaret != null) {
             targetCaret.clone(myCloneAbove);

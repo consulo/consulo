@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.CompositePackagingElementNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class MovePackagingElementAction extends DumbAwareAction {
+public class MovePackagingElementAction extends LegacyDumbAwareAction {
   private final LayoutTreeComponent myLayoutTreeComponent;
   private final int myDirection;
 

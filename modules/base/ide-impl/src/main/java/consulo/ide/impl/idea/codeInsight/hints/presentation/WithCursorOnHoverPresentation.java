@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.cursor.Cursor;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

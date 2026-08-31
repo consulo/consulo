@@ -23,9 +23,9 @@ import java.util.Map;
  * @since 2023-04-25
  */
 public interface PlatformJvm {
-  String version();
+  JavaVersion version();
 
-  String runtimeVersion();
+  String rawVersion();
 
   String vendor();
 

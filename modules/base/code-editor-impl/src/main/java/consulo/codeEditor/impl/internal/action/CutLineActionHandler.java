@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -38,8 +38,8 @@ class CutLineActionHandler extends EditorWriteActionHandler {
         myCopyToClipboard = copyToClipboard;
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (caret == null) {
             caret = editor.getCaretModel().getCurrentCaret();

@@ -24,8 +24,10 @@ import consulo.project.internal.ProjectOpenProcessors;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     public OpenProjectFileChooserDescriptor(boolean chooseFiles) {
@@ -39,6 +41,11 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     }
 
     @Override
+    public boolean isPathSelectable(Path path) {
+        return isProjectDirectory(path) || canOpenAsProject(path);
+    }
+
+    @Override
     public Image getIcon(VirtualFile file) {
         if (isProjectDirectory(file)) {
             return dressIcon(file, Application.get().getIcon());
@@ -48,9 +55,13 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     }
 
     private @Nullable Image getProcessorIcon(VirtualFile virtualFile) {
-        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
+        Path path = toNioPath(virtualFile);
+        if (path == null) {
+            return null;
+        }
+        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(path);
         if (provider != null) {
-            return provider.getIcon(virtualFile);
+            return provider.getIcon(path);
         }
         return null;
     }
@@ -64,7 +75,38 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     }
 
     public static boolean canOpen(VirtualFile file) {
-        return ProjectOpenProcessors.getInstance().findProcessor(VirtualFileUtil.virtualToIoFile(file)) != null;
+        Path path = toNioPath(file);
+        return path != null && ProjectOpenProcessors.getInstance().findProcessor(path) != null;
+    }
+
+    /**
+     * Unlike {@link ProjectOpenProcessors#findProcessor} this does not fall back to the processor which turns an
+     * arbitrary directory into a new project, so it answers whether the path already holds a project.
+     */
+    private static boolean canOpenAsProject(Path path) {
+        for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
+            if (processor.canOpenProject(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static @Nullable Path toNioPath(VirtualFile file) {
+        try {
+            return file.toNioPath();
+        }
+        catch (UnsupportedOperationException e) {
+            return null;
+        }
+    }
+
+    private static boolean isProjectDirectory(Path path) {
+        // the root directory of any drive is never an Consulo project
+        if (path.getParent() == null) {
+            return false;
+        }
+        return Files.isDirectory(path) && Files.exists(path.resolve(Project.DIRECTORY_STORE_FOLDER));
     }
 
     private static boolean isProjectDirectory(VirtualFile virtualFile) {

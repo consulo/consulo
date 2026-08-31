@@ -26,9 +26,11 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Vladislav.Kaznacheev
@@ -70,10 +72,10 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     public abstract @Nullable T createTask(RunConfiguration runConfiguration);
 
     /**
-     * @return <code>true</code> if task configuration is changed
+     * Resolves when the configuration of the task changed, fails when the user walked away from it.
      */
     @RequiredUIAccess
-    public abstract AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task);
+    public abstract CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task);
 
     public boolean canExecuteTask(RunConfiguration configuration, T task) {
         return true;
@@ -86,15 +88,20 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     }
 
     
+    /**
+     * Resolves when the task passed and the run may go on, fails when the run must not continue.
+     */
     @SuppressWarnings("deprecation")
-    public AsyncResult<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeTaskAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,
         ExecutionEnvironment env,
         T task
     ) {
-        return executeTask(context, configuration, env, task) ? AsyncResult.resolved() : AsyncResult.rejected();
+        return executeTask(context, configuration, env, task)
+            ? CompletableFuture.completedFuture(null)
+            : CompletableFuture.failedFuture(new CancellationException());
     }
 
     @SuppressWarnings("unchecked")

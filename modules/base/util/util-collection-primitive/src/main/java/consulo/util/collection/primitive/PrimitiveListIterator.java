@@ -24,6 +24,7 @@ import java.util.function.IntConsumer;
  * @author VISTALL
  * @since 08/05/2021
  */
+@Deprecated
 public interface PrimitiveListIterator<T, T_CONS> extends ListIterator<T> {
   public static interface OfInt extends PrimitiveListIterator<Integer, IntConsumer>, PrimitiveIterator.OfInt {
     @Override

@@ -61,9 +61,12 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
-import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.*;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -79,12 +82,15 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -106,11 +112,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     private class WriteAccessToken extends AccessToken {
-        
+
         private final Class<?> clazz;
+        private final boolean acquiredWriteIntent;
 
         WriteAccessToken(Class<?> clazz) {
             this.clazz = clazz;
+            this.acquiredWriteIntent = !myLock.isWriteThread();
+            if (acquiredWriteIntent) {
+                myLock.writeIntentLock();
+            }
             startWrite(clazz);
             markThreadNameInStackTrace();
         }
@@ -119,6 +130,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         public void finish() {
             try {
                 endWrite(clazz);
+                if (acquiredWriteIntent) {
+                    myLock.writeIntentUnlock();
+                }
             }
             finally {
                 unmarkThreadNameInStackTrace();
@@ -173,6 +187,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     private final long myStartTime;
 
     protected RWLock myLock;
+
+    /**
+     * Single platform thread, see {@link ApplicationEx#getWriteExecutor()} - write ownership is tracked by
+     * thread identity, so it has to stay on one thread that is never mounted or unmounted.
+     */
+    private final ExecutorService myWriteExecutor =
+        Executors.newSingleThreadExecutor(runnable -> new Thread(runnable, "Consulo Write Thread"));
 
     protected boolean myDoNotSave;
     private boolean myLoaded;
@@ -323,7 +344,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     public void _saveSettings() {
         if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
             try {
-                StoreUtil.save(getStateStore(), false, null);
+                CoroutineScope scope = CoroutineScope.of(coroutineContext());
+                scope.putCopyableUserData(UIAccess.KEY, getLastUIAccess());
+                getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(scope, null);
+            }
+            catch (Throwable e) {
+                StoreUtil.handleSaveError(getLastUIAccess(), null, e);
             }
             finally {
                 mySaveSettingsIsInProgress.set(false);
@@ -331,17 +357,60 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
+    @Override
+    public Coroutine<Object, Object> saveSettingsAsync() {
+        if (myDoNotSave) {
+            return Coroutine.empty();
+        }
+        return getStateStore().createSaveCoroutine(new ArrayList<>());
+    }
+
     @RequiredUIAccess
     @Override
-    public void saveAll() {
+    public Continuation<Void> saveAll() {
         if (myDoNotSave) {
-            return;
+            return null;
         }
 
-        FileDocumentManager.getInstance().saveAllDocuments();
+        UIAccess uiAccess = UIAccess.current();
 
-        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        for (Project openProject : openProjects) {
+        CoroutineScope scope = CoroutineScope.of(coroutineContext());
+        scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+
+        // documents are saved on the EDT (the trailing-spaces stripper reads the focus owner); settings run off the EDT
+        return Coroutine.<Void, Object>first(UIAction.<Void, Object>apply(input -> {
+                FileDocumentManager.getInstance().saveAllDocuments();
+                return null;
+            }))
+            .then(callSubroutine(saveOpenProjectsAndSettings(uiAccess)))
+            .then(CodeExecution.<Object, Void>apply(input -> null))
+            .runAsync(scope, null)
+            .onError(StoreUtil.onSaveError(uiAccess, null));
+    }
+
+    @Override
+    public CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess) {
+        if (myDoNotSave) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        ProgressBuilderFactory progressBuilderFactory = getInstance(ProgressBuilderFactory.class);
+
+        return progressBuilderFactory
+            .newProgressBuilder(null, LocalizeValue.localizeTODO("Save All"))
+            .execute(uiAccess, () -> Coroutine
+                .<Void, Object>first(UIAction.<Void, Object>apply(input -> {
+                    FileDocumentManager.getInstance().saveAllDocuments();
+                    return null;
+                }))
+                .then(callSubroutine(saveOpenProjectsAndSettings(uiAccess)))
+                .then(CodeExecution.<Object, Void>apply(input -> null)));
+    }
+
+    private Coroutine<Object, Object> saveOpenProjectsAndSettings(UIAccess uiAccess) {
+        Coroutine<Object, Object> chain = Coroutine.first(CodeExecution.<Object, Object>apply(input -> input));
+
+        for (Project openProject : ProjectManager.getInstance().getOpenProjects()) {
             if (openProject.isDisposed()) {
                 // debug for https://github.com/consulo/consulo/issues/296
                 LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
@@ -350,11 +419,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
             ProjectEx project = (ProjectEx)openProject;
             if (project.isInitialized()) {
-                project.save();
+                // saves the project store off the EDT; UI-state components hop back to the UI thread internally
+                chain = chain.then(CodeExecution.<Object, Object>apply(input -> null))
+                    .then(callSubroutine(project.saveAsync(uiAccess)));
             }
         }
 
-        saveSettings();
+        return chain.then(CodeExecution.<Object, Object>apply(input -> null))
+            .then(callSubroutine(getStateStore().createSaveCoroutine(new ArrayList<>())));
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static CoroutineStep<Object, Object> callSubroutine(Coroutine<?, ?> coroutine) {
+        return CallSubroutine.call((Coroutine) coroutine);
     }
 
     @Override
@@ -440,10 +517,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return true;
     }
 
-    @RequiredUIAccess
+    @Override
+    public boolean isWriteThread() {
+        return myLock.isWriteThread();
+    }
+
+    @Override
+    public Executor getWriteExecutor() {
+        return myWriteExecutor;
+    }
+
     @Override
     public void dispose() {
-        assertIsDispatchThread();
+        myWriteExecutor.shutdownNow();
 
         fireApplicationExiting();
 
@@ -470,7 +556,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    
     @Override
     public IApplicationStore getStateStore() {
         return (IApplicationStore)super.getStateStore();
@@ -506,17 +591,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return ApplicationInfo.getInstance().getBuild();
     }
 
-    
-    @Override
-    public AccessToken acquireReadActionLock() {
-        DeprecatedMethodException.report("Use runReadAction() instead");
-
-        // if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-        return isWriteThread() || myLock.isReadLockedByThisThread() ? AccessToken.EMPTY_ACCESS_TOKEN : new ReadAccessToken();
-    }
-
     @Override
     public void runReadAction(Runnable action) {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            action.run();
+            return;
+        }
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             action.run();
@@ -530,6 +611,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T> T runReadAction(Supplier<T> computation) {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            return computation.get();
+        }
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
@@ -543,6 +628,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T, E extends Throwable> T runReadAction(ThrowableSupplier<T, E> computation) throws E {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            return computation.get();
+        }
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
@@ -572,10 +661,32 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return true;
     }
 
+    @Override
+    public <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref,
+                                                             ThrowableSupplier<T, E> computation) throws E {
+        //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
+        RWLock.ReadToken status = myLock.startTryRead();
+        if (status != null && !status.readRequested()) {
+            return false;
+        }
+        try {
+            T t = computation.get();
+            ref.set(t);
+        }
+        finally {
+            if (status != null) {
+                myLock.endRead(status);
+            }
+        }
+        return true;
+    }
+
     @RequiredUIAccess
     @Override
     public void executeSuspendingWriteAction(@Nullable ComponentManager project, String title, Runnable runnable) {
-        assertIsWriteThread();
+        if (!myLock.isWriteThread()) {
+            throw new IllegalStateException("Access is allowed from write thread only");
+        }
         if (!myLock.isWriteLocked()) {
             runModalProgress(project, title, runnable);
             return;
@@ -602,7 +713,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public boolean isReadAccessAllowed() {
-        return isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
     }
 
     @Override
@@ -690,7 +801,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             .modal()
             .withProgress(progress);
 
-        ProgressResult<?> result = progressRunner.submitAndGet();
+        ProgressResult<?> result = wrapWithWriteIntent(progressRunner::submitAndGet);
 
         Throwable exception = result.getThrowable();
         if (!(exception instanceof ProcessCanceledException)) {
@@ -747,7 +858,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     protected void startWrite(Class clazz) {
-        assertIsWriteThread();
+        if (!myLock.isWriteThread()) {
+            throw new IllegalStateException("Access is allowed from write thread only");
+        }
         boolean writeActionPending = myWriteActionPending;
         myWriteActionPending = true;
         try {
@@ -803,25 +916,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @RequiredUIAccess
-    
-    @Override
-    public AccessToken acquireWriteActionLock(Class clazz) {
-        DeprecatedMethodException.report("Use runWriteAction() instead");
-
-        return new WriteAccessToken(clazz);
-    }
-
-    @RequiredUIAccess
     @Override
     public void runWriteAction(Runnable action) {
-        Class<? extends Runnable> clazz = action.getClass();
-        startWrite(clazz);
-        try {
+        runWriteActionWithClass(action.getClass(), () -> {
             action.run();
-        }
-        finally {
-            endWrite(clazz);
-        }
+            return null;
+        });
     }
 
     @RequiredUIAccess
@@ -850,21 +950,33 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return false;
     }
 
-    @Override
-    public boolean isWriteThread() {
-        return myLock.isWriteThread();
-    }
-
     protected <T, E extends Throwable> T runWriteActionWithClass(
         Class<?> clazz,
         ThrowableSupplier<T, E> computable
     ) throws E {
-        startWrite(clazz);
+        if (myLock.isWriteThread()) {
+            startWrite(clazz);
+            try {
+                return computable.get();
+            }
+            finally {
+                endWrite(clazz);
+            }
+        }
+        // acquire the write-intent lock first: this thread becomes the transient write thread,
+        // then escalates to the full write lock in startWrite
+        myLock.writeIntentLock();
         try {
-            return computable.get();
+            startWrite(clazz);
+            try {
+                return computable.get();
+            }
+            finally {
+                endWrite(clazz);
+            }
         }
         finally {
-            endWrite(clazz);
+            myLock.writeIntentUnlock();
         }
     }
 
@@ -879,39 +991,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void invokeLaterOnWriteThread(Runnable action, ModalityState modal) {
-        invokeLaterOnWriteThread(action, modal, getDisposed());
-    }
-
-    @Override
-    public void invokeLaterOnWriteThread(
-        Runnable action,
-        ModalityState modal,
-        BooleanSupplier expired
-    ) {
-        Runnable r = wrapLaterInvocation(action, modal);
-        // EDT == Write Thread in legacy mode
-        LaterInvocator.invokeLaterWithCallback(
-            () -> runIntendedWriteActionOnCurrentThread(r),
-            modal,
-            expired,
-            null
-        );
-    }
-
-    
-    protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
-        return action;
-    }
-
-    @Override
     public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
         return action.compute();
     }
 
     @Override
     public void runIntendedWriteActionOnCurrentThread(Runnable action) {
-        if (isWriteThread()) {
+        if (myLock.isWriteThread()) {
             action.run();
         }
         else {
@@ -925,14 +1011,22 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @Override
-    public void invokeLaterOnWriteThread(Runnable action) {
-        invokeLaterOnWriteThread(action, getDefaultModalityState());
+    protected <T> T wrapWithWriteIntent(Supplier<T> action) {
+        if (myLock.isWriteThread()) {
+            return action.get();
+        }
+        acquireWriteIntentLock(action.getClass().getName());
+        try {
+            return action.get();
+        }
+        finally {
+            releaseWriteIntentLock();
+        }
     }
 
     @Override
     public boolean isWriteAccessAllowed() {
-        return isWriteThread() && myLock.isWriteLocked();
+        return myLock.isWriteThread() && myLock.isWriteLocked();
     }
 
     @Override

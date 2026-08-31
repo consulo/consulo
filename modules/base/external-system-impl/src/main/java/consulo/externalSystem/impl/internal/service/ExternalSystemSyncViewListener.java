@@ -19,12 +19,15 @@ import consulo.application.Application;
 import consulo.build.ui.DefaultBuildDescriptor;
 import consulo.build.ui.SyncViewManager;
 import consulo.build.ui.event.BuildEventFactory;
+import consulo.build.ui.event.FailureResult;
+import consulo.build.ui.event.FinishBuildEvent;
 import consulo.externalSystem.impl.internal.service.execution.ExternalSystemEventDispatcher;
 import consulo.externalSystem.impl.internal.service.execution.ExternalSystemProcessHandler;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter;
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessOutputType;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
@@ -37,30 +40,31 @@ import java.io.IOException;
  *
  * <h3>How it works</h3>
  * <ol>
- *   <li>On {@link #onStart} a {@link DefaultBuildDescriptor} with an attached
- *       {@link ExternalSystemProcessHandler} is posted to {@link SyncViewManager} — this opens
- *       the Sync panel and wires up the stop button.</li>
- *   <li>On {@link #onTaskOutput} raw text is routed through
- *       {@link ExternalSystemEventDispatcher}, which pipes it through any registered
- *       {@link consulo.externalSystem.service.execution.ExternalSystemOutputParserProvider}
- *       parsers so that file/line errors become clickable links in the tree.</li>
- *   <li>On {@link #onSuccess} / {@link #onFailure} the process handler is terminated and the
- *       outcome is captured.</li>
- *   <li>On {@link #onEnd} the dispatcher is closed (flushing remaining buffered text through
- *       the parser chain) and a {@code FinishBuildEvent} is fired — matching the ordering used
- *       by IntelliJ IDEA.</li>
+ * <li>On {@link #onStart} a {@link DefaultBuildDescriptor} with an attached
+ * {@link ExternalSystemProcessHandler} is posted to {@link SyncViewManager} — this opens
+ * the Sync panel and wires up the stop button.</li>
+ * <li>On {@link #onTaskOutput} raw text is routed through
+ * {@link ExternalSystemEventDispatcher}, which pipes it through any registered
+ * {@link consulo.externalSystem.service.execution.ExternalSystemOutputParserProvider}
+ * parsers so that file/line errors become clickable links in the tree.</li>
+ * <li>On {@link #onSuccess} / {@link #onFailure} the process handler is terminated and the
+ * outcome is captured.</li>
+ * <li>On {@link #onEnd} the dispatcher is closed (flushing remaining buffered text through
+ * the parser chain) and a {@code FinishBuildEvent} is fired — matching the ordering used
+ * by IntelliJ IDEA.</li>
  * </ol>
  *
  * @author VISTALL
  */
 public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificationListenerAdapter {
-
     private final Project myProject;
     private final String myProjectPath;
     private final String myProjectName;
     private final SyncViewManager mySyncViewManager;
 
-    /** Wraps the task so the stop button in the Sync tool window can cancel it. */
+    /**
+     * Wraps the task so the stop button in the Sync tool window can cancel it.
+     */
     private final ExternalSystemProcessHandler myProcessHandler;
 
     /**
@@ -80,11 +84,13 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
      * @param projectName      human-readable project name shown in the Sync panel title
      * @param task             the resolve task that is about to be executed
      */
-    public ExternalSystemSyncViewListener(Project project,
-                                          ProjectSystemId externalSystemId,
-                                          String projectPath,
-                                          String projectName,
-                                          ExternalSystemTask task) {
+    public ExternalSystemSyncViewListener(
+        Project project,
+        ProjectSystemId externalSystemId,
+        String projectPath,
+        String projectName,
+        ExternalSystemTask task
+    ) {
         myProject = project;
         myProjectPath = projectPath;
         myProjectName = projectName;
@@ -98,11 +104,13 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
 
     @Override
     public void onStart(ExternalSystemTaskId id) {
-        if (myProject.isDisposed()) return;
+        if (myProject.isDisposed()) {
+            return;
+        }
 
         DefaultBuildDescriptor descriptor = new DefaultBuildDescriptor(
             id,
-            myProjectName,
+            LocalizeValue.of(myProjectName),
             myProjectPath,
             System.currentTimeMillis()
         ).withProcessHandler(myProcessHandler, null);
@@ -112,13 +120,17 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
         descriptor.setActivateToolWindowWhenFailed(true);
 
         BuildEventFactory factory = Application.get().getInstance(BuildEventFactory.class);
-        myEventDispatcher.onEvent(id, factory.createStartBuildEvent(descriptor, "Syncing..."));
+        myEventDispatcher.onEvent(id, factory.createStartBuildEvent(descriptor, LocalizeValue.localizeTODO("Syncing...")));
     }
 
     @Override
     public void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) {
-        if (myProject.isDisposed()) return;
-        if (text == null || text.isEmpty()) return;
+        if (myProject.isDisposed()) {
+            return;
+        }
+        if (text == null || text.isEmpty()) {
+            return;
+        }
 
         // Notify any console view attached to the process handler.
         myProcessHandler.notifyTextAvailable(text, stdOut ? ProcessOutputType.STDOUT : ProcessOutputType.STDERR);
@@ -147,7 +159,9 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
 
     @Override
     public void onEnd(ExternalSystemTaskId id) {
-        if (myProject.isDisposed()) return;
+        if (myProject.isDisposed()) {
+            return;
+        }
 
         // Flush remaining buffered text through the parser chain BEFORE the finish event,
         // so all file-level error messages appear in the tree first.
@@ -161,15 +175,16 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
         long eventTime = System.currentTimeMillis();
 
         // Fire directly to SyncViewManager (dispatcher is now closed).
+        FinishBuildEvent finishBuildEvent;
         if (mySucceeded) {
-            mySyncViewManager.onEvent(id, factory.createFinishBuildEvent(
-                id, null, eventTime, "finished", factory.createSuccessResult()
-            ));
+            finishBuildEvent =
+                factory.createFinishBuildEvent(id, null, eventTime, LocalizeValue.localizeTODO("finished"), factory.createSuccessResult());
         }
         else {
-            mySyncViewManager.onEvent(id, factory.createFinishBuildEvent(
-                id, null, eventTime, "failed", factory.createFailureResult(myException)
-            ));
+            FailureResult failureResult = factory.createFailureResult(myException);
+            finishBuildEvent =
+                factory.createFinishBuildEvent(id, null, eventTime, LocalizeValue.localizeTODO("failed"), failureResult);
         }
+        mySyncViewManager.onEvent(id, finishBuildEvent);
     }
 }

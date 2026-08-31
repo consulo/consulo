@@ -41,7 +41,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -93,7 +93,7 @@ import static consulo.versionControlSystem.impl.internal.patch.PatchFileType.isP
         ),
     }
 )
-public class ApplyPatchAction extends DumbAwareAction {
+public class ApplyPatchAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(ApplyPatchAction.class);
 
     public ApplyPatchAction() {
@@ -137,7 +137,11 @@ public class ApplyPatchAction extends DumbAwareAction {
                 ? null
                 : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(settings.PATCH_STORAGE_LOCATION));
 
-            FileChooser.chooseFile(descriptor, project, toSelect).doWhenDone(file -> {
+            FileChooser.chooseFile(descriptor, project, toSelect).whenComplete((file, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 VirtualFile parent = file.getParent();
                 if (parent != null) {
                     settings.PATCH_STORAGE_LOCATION = FileUtil.toSystemDependentName(parent.getPath());

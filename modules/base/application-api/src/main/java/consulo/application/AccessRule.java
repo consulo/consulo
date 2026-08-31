@@ -49,9 +49,9 @@ public final class AccessRule {
 
     public static <T extends @Nullable Object> CompletableFuture<T> writeAsync(@RequiredWriteAction ThrowableSupplier<T, Throwable> action) {
         CompletableFuture<T> result = new CompletableFuture<>();
-        AppUIExecutor.onWriteThread().later().execute(() -> {
+        AppUIExecutor.onUiThread().later().execute(() -> {
             try {
-                result.complete(action.get());
+                result.complete(WriteAction.compute(action));
             }
             catch (Throwable throwable) {
                 LOG.error(throwable);

@@ -1,18 +1,43 @@
-// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package consulo.desktop.util.windows.defender;
 
+import com.sun.jna.Memory;
+import com.sun.jna.Structure;
+import com.sun.jna.platform.win32.COM.COMException;
+import com.sun.jna.platform.win32.COM.Wbemcli;
+import com.sun.jna.platform.win32.COM.WbemcliUtil;
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.Kernel32Util;
+import com.sun.jna.platform.win32.KnownFolders;
+import com.sun.jna.platform.win32.Ole32;
+import com.sun.jna.platform.win32.Shell32Util;
+import com.sun.jna.platform.win32.WinBase;
+import com.sun.jna.platform.win32.WinNT;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.internal.ApplicationInfo;
+import consulo.application.util.WindowsDefenderCheckerExcludePathProvider;
 import consulo.container.boot.ContainerPathManager;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessUtil;
@@ -25,54 +50,33 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.internal.PersistentFS;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.TreeSet;
 
+/**
+ * Sources:
+ * <a href="https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-extension-file-exclusions-microsoft-defender-antivirus">Defender Settings</a>,
+ * <a href="https://learn.microsoft.com/en-us/powershell/module/defender/">Defender PowerShell Module</a>.
+ */
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class WindowsDefenderChecker {
     private static final Logger LOG = Logger.getInstance(WindowsDefenderChecker.class);
 
-    private static final Pattern WINDOWS_ENV_VAR_PATTERN = Pattern.compile("%([^%]+?)%");
-    private static final Pattern WINDOWS_DEFENDER_WILDCARD_PATTERN = Pattern.compile("[?*]");
-    private static final int WMIC_COMMAND_TIMEOUT_MS = 10000;
-    private static final int POWERSHELL_COMMAND_TIMEOUT_MS = 10000;
-    private static final int MAX_POWERSHELL_STDERR_LENGTH = 500;
     private static final String IGNORE_VIRUS_CHECK = "ignore.virus.scanning.warn.message";
+    private static final int WMI_QUERY_TIMEOUT_MS = 10_000;
 
-    public enum RealtimeScanningStatus {
-        SCANNING_DISABLED,
-        SCANNING_ENABLED,
-        ERROR
-    }
-
-    public static class CheckResult {
-        public final RealtimeScanningStatus status;
-
-        // Value in the map is true if the path is excluded, false otherwise
-        public final Map<Path, Boolean> pathStatus;
-
-        public CheckResult(RealtimeScanningStatus status, Map<Path, Boolean> pathStatus) {
-            this.status = status;
-            this.pathStatus = pathStatus;
-        }
-    }
-
-    
     private final Application myApplication;
 
     @Inject
@@ -84,277 +88,201 @@ public class WindowsDefenderChecker {
         return Application.get().getInstance(WindowsDefenderChecker.class);
     }
 
-    public boolean isVirusCheckIgnored(Project project) {
-        return ApplicationPropertiesComponent.getInstance().isTrueValue(IGNORE_VIRUS_CHECK) || ProjectPropertiesComponent.getInstance(project)
-            .isTrueValue(
-                IGNORE_VIRUS_CHECK);
-    }
-
-    public CheckResult checkWindowsDefender(Project project) {
-        Boolean windowsDefenderActive = isWindowsDefenderActive();
-        if (windowsDefenderActive == null || !windowsDefenderActive) {
-            LOG.info("Windows Defender status: not used");
-            return new CheckResult(RealtimeScanningStatus.SCANNING_DISABLED, Collections.emptyMap());
-        }
-
-        RealtimeScanningStatus scanningStatus = getRealtimeScanningEnabled();
-        if (scanningStatus == RealtimeScanningStatus.SCANNING_ENABLED) {
-            Collection<String> excludedProcesses = getExcludedProcesses();
-            List<File> processesToCheck = getProcessesToCheck();
-            if (excludedProcesses != null && ContainerUtil.all(processesToCheck,
-                (exe) -> excludedProcesses.contains(exe.getName()
-                    .toLowerCase(Locale.ENGLISH))) && excludedProcesses
-                .contains("java.exe")) {
-                LOG.info("Windows Defender status: all relevant processes excluded from real-time scanning");
-                return new CheckResult(RealtimeScanningStatus.SCANNING_DISABLED, Collections.emptyMap());
-            }
-
-            List<Pattern> excludedPatterns = getExcludedPatterns();
-            if (excludedPatterns != null) {
-                Map<Path, Boolean> pathStatuses = checkPathsExcluded(getImportantPaths(project), excludedPatterns);
-                boolean anyPathNotExcluded = !ContainerUtil.all(pathStatuses.values(), Boolean::booleanValue);
-                if (anyPathNotExcluded) {
-                    LOG.info("Windows Defender status: some relevant paths not excluded from real-time scanning, notifying user");
-                }
-                else {
-                    LOG.info("Windows Defender status: all relevant paths excluded from real-time scanning");
-                }
-                return new CheckResult(scanningStatus, pathStatuses);
-            }
-        }
-        if (scanningStatus == RealtimeScanningStatus.ERROR) {
-            LOG.info("Windows Defender status: failed to detect");
-        }
-        else {
-            LOG.info("Windows Defender status: real-time scanning disabled");
-        }
-        return new CheckResult(scanningStatus, Collections.emptyMap());
-    }
-
-    
-    protected List<File> getProcessesToCheck() {
-        List<File> result = new ArrayList<>();
-        File ideStarter = new File(ContainerPathManager.get().getAppHomeDirectory(), getExecutableOnWindows());
-        if (ideStarter.exists()) {
-            result.add(ideStarter);
-        }
-
-        PersistentFS fs = (PersistentFS) ManagingFS.getInstance();
-
-        Path fsNotifier = fs.getFileWatcherExecutablePath();
-        if (fsNotifier != null) {
-            result.add(fsNotifier.toFile());
-        }
-        return result;
+    public boolean isVirusCheckIgnored(@Nullable Project project) {
+        return ApplicationPropertiesComponent.getInstance().isTrueValue(IGNORE_VIRUS_CHECK)
+            || (project != null && ProjectPropertiesComponent.getInstance(project).isTrueValue(IGNORE_VIRUS_CHECK));
     }
 
     /**
-     * @return full path to consulo.exe or consulo64.exe
+     * {@link Boolean#TRUE} means Defender is present, active, and real-time protection check is enabled.
+     * {@link Boolean#FALSE} means something from the above list is not true.
+     * {@code null} means the IDE cannot detect the status.
      */
-    private static String getExecutableOnWindows() {
-        return Platform.current().mapWindowsExecutable(ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT), "exe");
-    }
+    public @Nullable Boolean isRealTimeProtectionEnabled() {
+        if (!JnaLoader.isLoaded()) {
+            LOG.debug("isRealTimeProtectionEnabled: JNA is not loaded");
+            return null;
+        }
 
-    private static Boolean isWindowsDefenderActive() {
         try {
-            ProcessOutput output = CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine("wmic",
-                    "/Namespace:\\\\root\\SecurityCenter2",
-                    "Path",
-                    "AntivirusProduct",
-                    "Get",
-                    "displayName,productState"),
-                WMIC_COMMAND_TIMEOUT_MS);
-            if (output.getExitCode() == 0) {
-                return parseWindowsDefenderProductState(output);
+            WinNT.HRESULT comInit = Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_APARTMENTTHREADED);
+            if (LOG.isDebugEnabled()) LOG.debug("CoInitializeEx: " + comInit);
+
+            WbemcliUtil.WmiQuery<AntivirusProduct> avQuery =
+                new WbemcliUtil.WmiQuery<>("Root\\SecurityCenter2", "AntivirusProduct", AntivirusProduct.class);
+            WbemcliUtil.WmiResult<AntivirusProduct> avResult = avQuery.execute(WMI_QUERY_TIMEOUT_MS);
+            if (LOG.isDebugEnabled()) LOG.debug(avQuery.getWmiClassName() + ": " + avResult.getResultCount());
+            for (int i = 0; i < avResult.getResultCount(); i++) {
+                Object name = avResult.getValue(AntivirusProduct.DisplayName, i);
+                if (LOG.isDebugEnabled()) LOG.debug("DisplayName[" + i + "]: " + name + " (" + name.getClass().getName() + ')');
+                if (name instanceof String s && (s.contains("Windows Defender") || s.contains("Microsoft Defender"))) {
+                    Object state = avResult.getValue(AntivirusProduct.ProductState, i);
+                    if (LOG.isDebugEnabled()) LOG.debug("ProductState: " + state + " (" + state.getClass().getName() + ')');
+                    boolean enabled = state instanceof Integer intState && (intState.intValue() & 0x1000) != 0;
+                    if (!enabled) return false;
+                    break;
+                }
             }
-            else {
-                LOG.warn("wmic Windows Defender check exited with status " + output.getExitCode() + ": " + StringUtil.first(output.getStderr(),
-                    MAX_POWERSHELL_STDERR_LENGTH,
-                    false));
-            }
+
+            WbemcliUtil.WmiQuery<MpComputerStatus> statusQuery =
+                new WbemcliUtil.WmiQuery<>("Root\\Microsoft\\Windows\\Defender", "MSFT_MpComputerStatus", MpComputerStatus.class);
+            WbemcliUtil.WmiResult<MpComputerStatus> statusResult = statusQuery.execute(WMI_QUERY_TIMEOUT_MS);
+            if (LOG.isDebugEnabled()) LOG.debug(statusQuery.getWmiClassName() + ": " + statusResult.getResultCount());
+            if (statusResult.getResultCount() != 1) return false;
+            Object rtProtection = statusResult.getValue(MpComputerStatus.RealTimeProtectionEnabled, 0);
+            if (LOG.isDebugEnabled()) LOG.debug("RealTimeProtectionEnabled: " + rtProtection + " (" + rtProtection.getClass().getName() + ')');
+            return Boolean.TRUE.equals(rtProtection);
         }
-        catch (ExecutionException e) {
-            LOG.warn("wmic Windows Defender check failed", e);
+        catch (COMException e) {
+            // reference: https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-error-constants
+            if (e.matchesErrorCode(Wbemcli.WBEM_E_INVALID_NAMESPACE)) return false;  // Microsoft Defender not installed
+            String message = "WMI Microsoft Defender check failed";
+            WinNT.HRESULT hresult = e.getHresult();
+            if (hresult != null) message += " [0x" + Integer.toHexString(hresult.intValue()) + ']';
+            LOG.warn(message, e);
+            return null;
         }
-        return null;
+        catch (Exception e) {
+            LOG.warn("WMI Microsoft Defender check failed", e);
+            return null;
+        }
     }
 
-    private static Boolean parseWindowsDefenderProductState(ProcessOutput output) {
-        String[] lines = StringUtil.splitByLines(output.getStdout());
-        for (String line : lines) {
-            if (line.startsWith("Windows Defender")) {
-                String productStateString = StringUtil.substringAfterLast(line, " ");
-                int productState;
-                try {
-                    productState = Integer.parseInt(productStateString);
-                    return (productState & 0x1000) != 0;
-                }
-                catch (NumberFormatException e) {
-                    LOG.info("Unexpected wmic output format: " + line);
-                    return null;
-                }
+    private enum AntivirusProduct {DisplayName, ProductState}
+
+    private enum MpComputerStatus {RealTimeProtectionEnabled}
+
+    public boolean isUntrustworthyLocation(Path path) {
+        String tempVar = System.getenv("TEMP");
+        if (tempVar != null && path.startsWith(Paths.get(tempVar))) {
+            return true;
+        }
+
+        Path downloadDir = null;
+        if (JnaLoader.isLoaded()) {
+            try {
+                downloadDir = Paths.get(Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Downloads));
+            }
+            catch (Exception e) {
+                LOG.warn("download dir detection failed", e);
             }
         }
+        if (downloadDir == null) {
+            downloadDir = Paths.get(System.getProperty("user.home"), "Downloads");
+        }
+        if (path.startsWith(downloadDir)) {
+            return true;
+        }
+
         return false;
-    }
-
-    /**
-     * Runs a powershell command to list the paths that are excluded from realtime scanning by Windows Defender. These
-     * <p>
-     * paths can contain environment variable references, as well as wildcards ('?', which matches a single character, and
-     * '*', which matches any sequence of characters (but cannot match multiple nested directories; i.e., "foo\*\bar" would
-     * match foo\baz\bar but not foo\baz\quux\bar)). The behavior of wildcards with respect to case-sensitivity is undocumented.
-     * Returns a list of patterns, one for each exclusion path, that emulate how Windows Defender would interpret that path.
-     */
-    private static @Nullable List<Pattern> getExcludedPatterns() {
-        Collection<String> paths = getWindowsDefenderProperty("ExclusionPath");
-        if (paths == null) {
-            return null;
-        }
-        return ContainerUtil.map(paths, path -> wildcardsToRegex(expandEnvVars(path)));
-    }
-
-    private static @Nullable Collection<String> getExcludedProcesses() {
-        Collection<String> processes = getWindowsDefenderProperty("ExclusionProcess");
-        if (processes == null) {
-            return null;
-        }
-        return ContainerUtil.map(processes, process -> process.toLowerCase());
-    }
-
-    /**
-     * Runs a powershell command to determine whether realtime scanning is enabled or not.
-     */
-    private static RealtimeScanningStatus getRealtimeScanningEnabled() {
-        Collection<String> output = getWindowsDefenderProperty("DisableRealtimeMonitoring");
-        if (output == null) {
-            return RealtimeScanningStatus.ERROR;
-        }
-        if (output.size() > 0 && output.iterator().next().startsWith("False")) {
-            return RealtimeScanningStatus.SCANNING_ENABLED;
-        }
-        return RealtimeScanningStatus.SCANNING_DISABLED;
-    }
-
-    private static @Nullable Collection<String> getWindowsDefenderProperty(String propertyName) {
-        try {
-            GeneralCommandLine cmd = new GeneralCommandLine();
-            cmd.setExePath("powershell");
-            cmd.addParameters("-inputformat", "none", "-outputformat", "text", "-NonInteractive", "-Command");
-            cmd.addParameter("Get-MpPreference | select -ExpandProperty '" + propertyName + "'");
-
-            ProcessOutput output = CapturingProcessUtil.execAndGetOutput(cmd, POWERSHELL_COMMAND_TIMEOUT_MS);
-            if (output.getExitCode() == 0) {
-                return output.getStdoutLines();
-            }
-            else {
-                LOG.warn("Windows Defender " + propertyName + " check exited with status " + output.getExitCode() + ": " + StringUtil.first(output.getStderr(),
-                    MAX_POWERSHELL_STDERR_LENGTH,
-                    false));
-            }
-        }
-        catch (ExecutionException e) {
-            LOG.warn("Windows Defender " + propertyName + " check failed", e);
-        }
-        return null;
     }
 
     /**
      * Returns a list of paths that might impact build performance if Windows Defender were configured to scan them.
      */
-    protected List<Path> getImportantPaths(Project project) {
-        String homeDir = System.getProperty("user.home");
-        String gradleUserHome = System.getenv("GRADLE_USER_HOME");
-        String projectDir = project.getBasePath();
-
-        List<Path> paths = new ArrayList<>();
-        if (projectDir != null) {
-            paths.add(Paths.get(projectDir));
-        }
+    public List<Path> getPathsToExclude(@Nullable Project project) {
+        TreeSet<Path> paths = new TreeSet<>();
         paths.add(Paths.get(ContainerPathManager.get().getSystemPath()));
-        if (gradleUserHome != null) {
-            paths.add(Paths.get(gradleUserHome));
-        }
-        else {
-            paths.add(Paths.get(homeDir, ".gradle"));
+
+        String basePath = project == null ? null : project.getBasePath();
+        Path projectPath = basePath == null ? null : Paths.get(basePath);
+
+        myApplication.getExtensionPoint(WindowsDefenderCheckerExcludePathProvider.class).forEach(provider -> {
+            provider.collectPaths(project, projectPath, path -> paths.add(path.toAbsolutePath()));
+        });
+
+        if (projectPath != null) {
+            paths.add(projectPath);
         }
 
-        return paths;
+        return new ArrayList<>(paths);
     }
 
-    /**
-     * Expands references to environment variables (strings delimited by '%') in 'path'
-     */
-    private static String expandEnvVars(String path) {
-        Matcher m = WINDOWS_ENV_VAR_PATTERN.matcher(path);
-        StringBuffer result = new StringBuffer();
-        while (m.find()) {
-            String value = System.getenv(m.group(1));
-            if (value != null) {
-                m.appendReplacement(result, Matcher.quoteReplacement(value));
-            }
+    public List<Path> filterDevDrivePaths(List<Path> paths) {
+        if (paths.isEmpty()) return paths;
+
+        if (!JnaLoader.isLoaded()) {
+            LOG.debug("filterDevDrivePaths: JNA is not loaded");
+            return paths;
         }
-        m.appendTail(result);
-        return result.toString();
+
+        Long buildNumber = getWinBuildNumber();
+        if (buildNumber == null || buildNumber < 22621) {
+            if (LOG.isDebugEnabled()) LOG.debug("DevDrive feature is not supported on " + buildNumber);
+            return paths;
+        }
+
+        try (FILE_FS_PERSISTENT_VOLUME_INFORMATION volInfo = new FILE_FS_PERSISTENT_VOLUME_INFORMATION()) {
+            return paths.stream().filter(path -> !isOnDevDrive(path, volInfo)).toList();
+        }
+        catch (Exception e) {
+            LOG.warn("DevDrive detection failed", e);
+            return paths;
+        }
     }
 
-    /**
-     * Produces a {@link Pattern} that approximates how Windows Defender interprets the exclusion path {@link path}.
-     * The path is split around wildcards; the non-wildcard portions are quoted, and regex equivalents of
-     * the wildcards are inserted between them. See
-     * https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-antivirus/configure-extension-file-exclusions-windows-defender-antivirus
-     * for more details.
-     */
-    private static Pattern wildcardsToRegex(String path) {
-        Matcher m = WINDOWS_DEFENDER_WILDCARD_PATTERN.matcher(path);
-        StringBuilder sb = new StringBuilder();
-        int previousWildcardEnd = 0;
-        while (m.find()) {
-            sb.append(Pattern.quote(path.substring(previousWildcardEnd, m.start())));
-            if (m.group().equals("?")) {
-                sb.append("[^\\\\]");
+    private static @Nullable Long getWinBuildNumber() {
+        String osVersion = System.getProperty("os.version");
+        if (osVersion == null) return null;
+        try {
+            String[] parts = osVersion.split("\\.");
+            if (parts.length >= 3) return Long.parseLong(parts[2]);
+        }
+        catch (NumberFormatException ignored) {
+        }
+        return null;
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final int FSCTL_QUERY_PERSISTENT_VOLUME_STATE = 0x9023C;
+    private static final int PERSISTENT_VOLUME_STATE_DEV_VOLUME = 0x00002000;
+    private static final int PERSISTENT_VOLUME_STATE_TRUSTED_VOLUME = 0x00004000;
+
+    @SuppressWarnings({"unused", "FieldMayBeFinal"})
+    @Structure.FieldOrder({"VolumeFlags", "FlagMask", "Version", "Reserved"})
+    public static final class FILE_FS_PERSISTENT_VOLUME_INFORMATION extends Structure implements AutoCloseable {
+        public int VolumeFlags;
+        public int FlagMask;
+        public int Version;
+        public int Reserved;
+
+        @Override
+        public void close() {
+            if (getPointer() instanceof Memory m) m.close();
+        }
+    }
+
+    // https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/ns-ntifs-_file_fs_persistent_volume_information
+    private static boolean isOnDevDrive(Path path, FILE_FS_PERSISTENT_VOLUME_INFORMATION volInfo) {
+        WinNT.HANDLE handle = Kernel32.INSTANCE.CreateFile(
+            path.toString(), WinNT.FILE_READ_ATTRIBUTES, WinNT.FILE_SHARE_READ | WinNT.FILE_SHARE_WRITE, null, WinNT.OPEN_EXISTING,
+            WinNT.FILE_FLAG_BACKUP_SEMANTICS, null);
+        if (handle == WinBase.INVALID_HANDLE_VALUE) {
+            int err = Kernel32.INSTANCE.GetLastError();
+            LOG.warn("CreateFile(" + path + "): " + err + ": " + Kernel32Util.formatMessageFromLastErrorCode(err));
+            return false;
+        }
+        try {
+            volInfo.FlagMask = PERSISTENT_VOLUME_STATE_DEV_VOLUME | PERSISTENT_VOLUME_STATE_TRUSTED_VOLUME;
+            volInfo.Version = 1;
+            volInfo.write();
+            if (Kernel32.INSTANCE.DeviceIoControl(handle, FSCTL_QUERY_PERSISTENT_VOLUME_STATE,
+                volInfo.getPointer(), volInfo.size(), volInfo.getPointer(), volInfo.size(), null, null)) {
+                volInfo.read();
+                if (LOG.isDebugEnabled()) LOG.debug(path + ": 0x" + Integer.toHexString(volInfo.VolumeFlags));
+                return volInfo.VolumeFlags == (PERSISTENT_VOLUME_STATE_DEV_VOLUME | PERSISTENT_VOLUME_STATE_TRUSTED_VOLUME);
             }
             else {
-                sb.append("[^\\\\]*");
-            }
-            previousWildcardEnd = m.end();
-        }
-        sb.append(Pattern.quote(path.substring(previousWildcardEnd)));
-        sb.append(".*"); // technically this should only be appended if the path refers to a directory, not a file. This is difficult to determine.
-        return Pattern.compile(sb.toString(),
-            Pattern.CASE_INSENSITIVE); // CASE_INSENSITIVE is overly permissive. Being precise with this is more work than it's worth.
-    }
-
-    /**
-     * Checks whether each of the given paths in {@link paths} is matched by some pattern in {@link excludedPatterns},
-     * returning a map of the results.
-     */
-    private static Map<Path, Boolean> checkPathsExcluded(List<Path> paths, List<Pattern> excludedPatterns) {
-        Map<Path, Boolean> result = new HashMap<>();
-        for (Path path : paths) {
-            if (!path.toFile().exists()) {
-                continue;
-            }
-
-            try {
-                String canonical = path.toRealPath().toString();
-                boolean found = false;
-                for (Pattern pattern : excludedPatterns) {
-                    if (pattern.matcher(canonical).matches()) {
-                        found = true;
-                        result.put(path, true);
-                        break;
-                    }
+                if (LOG.isDebugEnabled()) {
+                    int err = Kernel32.INSTANCE.GetLastError();
+                    LOG.debug("DeviceIoControl(" + path + "): " + err + ": " + Kernel32Util.formatMessageFromLastErrorCode(err));
                 }
-                if (!found) {
-                    result.put(path, false);
-                }
-            }
-            catch (IOException e) {
-                LOG.warn("Windows Defender exclusion check couldn't get real path for " + path, e);
+                return false;
             }
         }
-        return result;
+        finally {
+            Kernel32.INSTANCE.CloseHandle(handle);
+        }
     }
 
     public void configureActions(Project project, WindowsDefenderNotification notification) {
@@ -382,7 +310,7 @@ public class WindowsDefenderChecker {
         return "https://intellij-support.jetbrains.com/hc/en-us/articles/360006298560";
     }
 
-    public boolean runExcludePathsCommand(Project project, Collection<Path> paths) {
+    public boolean runExcludePathsCommand(@Nullable Project project, Collection<Path> paths) {
         try {
             ProcessOutput output = CapturingProcessUtil.execAndGetOutput(
                 new GeneralCommandLine("powershell",

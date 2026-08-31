@@ -44,6 +44,7 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
+@Deprecated(forRemoval = true)
 public abstract class PsiElementListCellRenderer<T extends PsiElement> extends JPanel implements ListCellRenderer<T> {
     private static final Logger LOG = Logger.getInstance(PsiElementListCellRenderer.class);
     private static final String LEFT = BorderLayout.WEST;

@@ -15,9 +15,6 @@
  */
 package consulo.colorScheme;
 
-import javax.swing.*;
-import javax.swing.text.html.StyleSheet;
-
 /**
  * Enumerates common font size values (inspired by CSS <code>'font-size'</code> property values).
  * <p/>

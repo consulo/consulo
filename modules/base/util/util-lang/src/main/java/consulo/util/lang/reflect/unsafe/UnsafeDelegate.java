@@ -89,16 +89,6 @@ public class UnsafeDelegate {
     myUnsafe.putObjectVolatile(o, offset, x);
   }
 
-  public boolean shouldBeInitialized(Class<?> clazz) {
-    try {
-      return myUnsafe.shouldBeInitialized(clazz);
-    }
-    catch (Throwable e) {
-      LOG.error(e.getMessage(), e);
-      return false;
-    }
-  }
-
   public void freeMemory(long address) {
     myUnsafe.freeMemory(address);
   }

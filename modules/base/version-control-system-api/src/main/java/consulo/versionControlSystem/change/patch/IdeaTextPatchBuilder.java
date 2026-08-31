@@ -45,11 +45,11 @@ public class IdeaTextPatchBuilder {
   public static List<BeforeAfter<AirContentRevision>> revisionsConvertor(Project project, List<Change> changes) throws VcsException {
     List<BeforeAfter<AirContentRevision>> result = new ArrayList<>(changes.size());
 
-    Function<Change, FilePath> beforePrefferingConvertor = o -> {
+    Function<Change, FilePath> beforePreferringConverter = o -> {
       FilePath before = ChangesUtil.getBeforePath(o);
       return before == null ? ChangesUtil.getAfterPath(o) : before;
     };
-    MultiMap<VcsRoot,Change> byRoots = new SortByVcsRoots<>(project, beforePrefferingConvertor).sort(changes);
+    MultiMap<VcsRoot,Change> byRoots = new SortByVcsRoots<>(project, beforePreferringConverter).sort(changes);
 
     for (VcsRoot root : byRoots.keySet()) {
       Collection<Change> rootChanges = byRoots.get(root);
@@ -79,12 +79,10 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  
   public static List<FilePatch> buildPatch(Project project, Collection<Change> changes, String basePath, boolean reversePatch) throws VcsException {
     return buildPatch(project, changes, basePath, reversePatch, false);
   }
 
-  
   public static List<FilePatch> buildPatch(Project project, Collection<Change> changes, String basePath,
                                            boolean reversePatch, boolean includeBaseText) throws VcsException {
     Collection<BeforeAfter<AirContentRevision>> revisions;

@@ -30,6 +30,8 @@ import consulo.ide.impl.idea.application.options.colors.PreviewPanel;
 import consulo.ide.impl.idea.openapi.diff.impl.settings.DiffPreviewProvider;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.project.Project;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
@@ -161,7 +163,7 @@ class DiffPreviewPanel implements PreviewPanel {
     @Override
     public void mouseMoved(EditorMouseEvent e) {
       int line = e.getLogicalPosition().line;
-      Cursor cursor = getChange(mySide, line) != null || getFoldRegion(mySide, line) != null ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : null;
+      Cursor cursor = getChange(mySide, line) != null || getFoldRegion(mySide, line) != null ? StandardCursors.HAND : null;
       ((EditorEx)e.getEditor()).setCustomCursor(DiffPreviewPanel.class, cursor);
     }
   }

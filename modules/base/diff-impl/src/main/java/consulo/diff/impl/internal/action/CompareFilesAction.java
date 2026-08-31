@@ -51,9 +51,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        super.update(e);
-
+    protected void updatePresentation(AnActionEvent e) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
         String text = "Compare Files";

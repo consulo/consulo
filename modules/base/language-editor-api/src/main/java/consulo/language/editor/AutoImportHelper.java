@@ -21,6 +21,7 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author VISTALL
@@ -34,6 +35,8 @@ public interface AutoImportHelper {
     }
 
     boolean canChangeFileSilently(PsiFile file);
+
+    boolean canChangeFileSilently(VirtualFile virtualFile);
 
     boolean mayAutoImportNow(PsiFile psiFile, boolean isInContent);
 

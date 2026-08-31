@@ -510,7 +510,7 @@ public class ScopeEditorPanel {
                 includeSelected(false);
             }
         });
-        actionGroup.add(new AnAction(IdeLocalize.buttonIncludeRecursively()) {
+        actionGroup.add(new LegacyAnAction(IdeLocalize.buttonIncludeRecursively()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
@@ -531,7 +531,7 @@ public class ScopeEditorPanel {
                 excludeSelected(false);
             }
         });
-        actionGroup.add(new AnAction(IdeLocalize.buttonExcludeRecursively()) {
+        actionGroup.add(new LegacyAnAction(IdeLocalize.buttonExcludeRecursively()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

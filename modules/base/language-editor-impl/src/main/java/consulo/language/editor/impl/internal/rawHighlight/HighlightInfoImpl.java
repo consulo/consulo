@@ -31,8 +31,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.Lists;
 import consulo.util.lang.BitUtil;
@@ -44,6 +42,7 @@ import org.intellij.lang.annotations.MagicConstant;
 import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -111,8 +110,11 @@ public class HighlightInfoImpl implements HighlightInfo {
      * null means it the same as highlighter
      */
     public @Nullable RangeMarker myFixMarker;
-    protected volatile RangeHighlighterEx myHighlighter; // modified in EDT only
+    protected volatile RangeHighlighterEx myHighlighter; // bound atomically, may be updated off the EDT
     private PsiElement myPsiElement;
+
+    private static final AtomicReferenceFieldUpdater<HighlightInfoImpl, RangeHighlighterEx> HIGHLIGHTER_UPDATER =
+        AtomicReferenceFieldUpdater.newUpdater(HighlightInfoImpl.class, RangeHighlighterEx.class, "myHighlighter");
 
     /**
      * Returns the HighlightInfo instance from which the given range highlighter was created, or null if there isn't any.
@@ -193,13 +195,19 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myHighlighter;
     }
 
-    /**
-     * Modified only in EDT.
-     */
-    @RequiredUIAccess
     public void setHighlighter(@Nullable RangeHighlighterEx highlighter) {
-        UIAccess.assertIsUIThread();
-        myHighlighter = highlighter;
+        // clearing (used on the highlighter-recycling path) is always allowed
+        if (highlighter == null) {
+            myHighlighter = null;
+            return;
+        }
+        // bind the highlighter atomically; it must not already be bound, otherwise this
+        // HighlightInfo was (incorrectly) stored and reused
+        if (!HIGHLIGHTER_UPDATER.compareAndSet(this, null, highlighter)) {
+            throw new IllegalStateException(
+                "Cannot set highlighter to " + highlighter + " because it is already set: " + myHighlighter +
+                    ". Maybe this HighlightInfo was (incorrectly) stored and reused?");
+        }
     }
 
     public boolean isAfterEndOfLine() {

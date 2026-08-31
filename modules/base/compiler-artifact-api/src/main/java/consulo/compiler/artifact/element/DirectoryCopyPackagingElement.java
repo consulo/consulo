@@ -20,7 +20,9 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.DirectoryCopyPresentation;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
-import consulo.virtualFileSystem.VirtualFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author nik
@@ -45,8 +47,8 @@ public class DirectoryCopyPackagingElement extends FileOrDirectoryCopyPackagingE
                                                      PackagingElementResolvingContext resolvingContext,
                                                      ArtifactIncrementalCompilerContext compilerContext,
                                                      ArtifactType artifactType) {
-    VirtualFile file = findFile();
-    if (file != null && file.isValid() && file.isDirectory()) {
+    Path file = getNioPath();
+    if (file != null && Files.isDirectory(file)) {
       creator.addDirectoryCopyInstructions(file);
     }
   }

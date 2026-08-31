@@ -16,34 +16,32 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.content.OrderRootType;
 import consulo.ui.image.Image;
 
 /**
  * @author nik
  */
 public class OrderRootTypeElement extends LibraryTableTreeContentElement<OrderRootTypeElement> {
-  private final OrderRootType myRootType;
+  private final String myRootTypeId;
 
-  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, OrderRootType rootType, String nodeText, Image icon) {
+  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, String rootTypeId, String nodeText, Image icon) {
     super(rootElementDescriptor);
-    myRootType = rootType;
+    myRootTypeId = rootTypeId;
     setIcon(icon);
     myName = nodeText;
   }
 
-  
-  public OrderRootType getOrderRootType() {
-    return myRootType;
+  public String getOrderRootType() {
+    return myRootTypeId;
   }
 
   @Override
   public int hashCode() {
-    return myRootType.hashCode();
+    return myRootTypeId.hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return obj instanceof OrderRootTypeElement && ((OrderRootTypeElement)obj).getOrderRootType().equals(myRootType);
+    return obj instanceof OrderRootTypeElement && ((OrderRootTypeElement)obj).getOrderRootType().equals(myRootTypeId);
   }
 }

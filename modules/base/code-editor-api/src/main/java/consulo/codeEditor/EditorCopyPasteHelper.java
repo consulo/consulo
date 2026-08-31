@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.document.util.TextRange;
+import consulo.ui.clipboard.DataTransfer;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.Transferable;
@@ -48,12 +49,21 @@ public abstract class EditorCopyPasteHelper {
    *
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
-  public abstract @Nullable TextRange[] pasteFromClipboard(Editor editor);
+  public abstract TextRange @Nullable [] pasteFromClipboard(Editor editor);
 
   /**
    * Pastes given Transferable instance into editor at caret(s) position.
    *
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
-  public abstract @Nullable TextRange[] pasteTransferable(Editor editor, Transferable content);
+  public abstract TextRange @Nullable [] pasteTransferable(Editor editor, Transferable content);
+
+  /**
+   * Pastes the given payload into the editor at caret(s) position. This form carries no awt, so it is the one a
+   * frontend without a toolkit reaches: a payload which came from another application holds only what the
+   * platform types describe, and nothing has to be wrapped into a {@link Transferable} to be inserted.
+   *
+   * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
+   */
+  public abstract TextRange @Nullable [] pasteDataTransfer(Editor editor, DataTransfer content);
 }

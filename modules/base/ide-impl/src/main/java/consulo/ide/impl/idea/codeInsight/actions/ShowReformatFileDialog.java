@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.psi.PsiDocumentManager;
@@ -24,11 +23,11 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 @ActionImpl(id = "ShowReformatFileDialog")
-public class ShowReformatFileDialog extends AnAction implements DumbAware {
+public class ShowReformatFileDialog extends LegacyDumbAwareAction {
     private static final String HELP_ID = "editing.codeReformatting";
 
     public ShowReformatFileDialog() {

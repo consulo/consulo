@@ -22,7 +22,9 @@ import java.util.function.IntConsumer;
 /**
  * @author VISTALL
  * @since 10/02/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntIterable} directly
  */
+@Deprecated
 public interface IntIterable {
   PrimitiveIterator.OfInt iterator();
 

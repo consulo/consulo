@@ -20,13 +20,13 @@ import consulo.execution.executor.Executor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-public abstract class BaseChooseRunConfigurationPopupAction extends AnAction {
+public abstract class BaseChooseRunConfigurationPopupAction extends LegacyAnAction {
     public BaseChooseRunConfigurationPopupAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
         super(text, description, icon);
     }

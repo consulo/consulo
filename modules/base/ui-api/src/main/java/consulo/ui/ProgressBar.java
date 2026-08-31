@@ -22,17 +22,17 @@ import consulo.ui.internal.UIInternal;
  * @since 2020-05-11
  */
 public interface ProgressBar extends Component, HasComponentStyle<ProgressBarStyle> {
-  static ProgressBar create() {
-    return UIInternal.get()._Components_progressBar();
-  }
+    static ProgressBar create() {
+        return UIInternal.get()._Components_progressBar();
+    }
 
-  void setIndeterminate(boolean value);
+    void setIndeterminate(boolean value);
 
-  boolean isIndeterminate();
+    boolean isIndeterminate();
 
-  void setMinimum(int value);
+    void setMinimum(int value);
 
-  void setMaximum(int value);
+    void setMaximum(int value);
 
-  void setValue(int value);
+    void setValue(int value);
 }

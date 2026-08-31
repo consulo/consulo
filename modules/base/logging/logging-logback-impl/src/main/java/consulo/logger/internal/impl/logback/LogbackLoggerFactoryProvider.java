@@ -28,10 +28,9 @@ public class LogbackLoggerFactoryProvider implements LoggerFactoryProvider {
 
     @Override
     public int getPriority() {
-        return HIGHT_PRIORITY;
+        return HIGH_PRIORITY;
     }
 
-    
     @Override
     public LoggerFactory create() {
         return new LogbackLoggerFactory();

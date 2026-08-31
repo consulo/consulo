@@ -53,6 +53,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.IdeActions;
@@ -67,8 +68,8 @@ import consulo.util.lang.*;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +91,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     private final LightVirtualFile myNewVirtualFile;
 
     private final long myOrigCreationStamp;
-    private FileEditorWindow mySplittedWindow;
+    private FileEditorWindow mySplitWindow;
     private boolean myCommittingToOriginal;
 
     private final PsiFile myInjectedFile;
@@ -158,7 +159,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                 EditorActionHandler editorEscape =
                     EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ESCAPE);
                 if (!myAction.isShowInBalloon()) {
-                    new AnAction() {
+                    new LegacyAnAction() {
                         @Override
                         public void update(AnActionEvent e) {
                             Editor editor = e.getData(Editor.KEY);
@@ -262,7 +263,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             FileEditor[] editors = fileEditorManager.getEditors(myNewVirtualFile);
             if (editors.length == 0) {
                 FileEditorWindow curWindow = fileEditorManager.getCurrentWindow();
-                mySplittedWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
+                mySplitWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
             }
             Editor editor = fileEditorManager.openTextEditor(OpenFileDescriptorFactory.getInstance(myProject)
                 .builder(myNewVirtualFile)
@@ -321,15 +322,15 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
     private void closeEditor() {
         boolean unsplit = false;
-        if (mySplittedWindow != null && !mySplittedWindow.isDisposed()) {
-            FileEditorWithProviderComposite[] editors = mySplittedWindow.getEditors();
+        if (mySplitWindow != null && !mySplitWindow.isDisposed()) {
+            FileEditorWithProviderComposite[] editors = mySplitWindow.getEditors();
             if (editors.length == 1 && Comparing.equal(editors[0].getFile(), myNewVirtualFile)) {
                 unsplit = true;
             }
         }
         FileEditorManager.getInstance(myProject).closeFile(myNewVirtualFile);
         if (unsplit) {
-            for (FileEditorWindow editorWindow : mySplittedWindow.findSiblings()) {
+            for (FileEditorWindow editorWindow : mySplitWindow.findSiblings()) {
                 editorWindow.unsplit(true);
             }
         }

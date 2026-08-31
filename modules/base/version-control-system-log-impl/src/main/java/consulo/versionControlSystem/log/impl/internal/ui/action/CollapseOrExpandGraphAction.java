@@ -18,7 +18,7 @@ package consulo.versionControlSystem.log.impl.internal.ui.action;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
@@ -27,7 +27,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 
-abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
+abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction {
     
     private final LocalizeValue myLinearBranchesText;
     

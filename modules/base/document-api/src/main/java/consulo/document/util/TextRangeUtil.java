@@ -15,8 +15,6 @@
  */
 package consulo.document.util;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -129,8 +127,6 @@ public class TextRangeUtil {
     return Math.max(s1, s2) <= Math.min(e1, e2) ? 0 : Math.min(Math.abs(s1 - e2), Math.abs(s2 - e1));
   }
 
-  
-  @Contract(pure = true)
   public static List<TextRange> getWordIndicesIn(String text) {
     List<TextRange> result = new ArrayList<>();
     int start = -1;

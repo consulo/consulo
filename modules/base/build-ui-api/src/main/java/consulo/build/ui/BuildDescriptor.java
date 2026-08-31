@@ -15,19 +15,17 @@
  */
 package consulo.build.ui;
 
-import consulo.build.ui.event.BuildEventsNls;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildDescriptor {
-  
-  Object getId();
+    Object getId();
 
-  @BuildEventsNls.Title
-  String getTitle();
-  
-  String getWorkingDir();
+    LocalizeValue getTitle();
 
-  long getStartTime();
+    String getWorkingDir();
+
+    long getStartTime();
 }

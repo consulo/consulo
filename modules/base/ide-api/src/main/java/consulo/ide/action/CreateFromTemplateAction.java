@@ -33,9 +33,12 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -45,7 +48,7 @@ import java.util.Map;
 /**
  * @author Eugene.Kudelevsky
  */
-public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction {
+public abstract class CreateFromTemplateAction<T extends PsiElement> extends LegacyAnAction implements AnActionWithAsyncUpdate {
     protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
     @Deprecated
@@ -126,7 +129,17 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public final void update(AnActionEvent e) {
+        throw new AbstractMethodError();
+    }
+
+    @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> updateInReadAction(e)).toCoroutine();
+    }
+
+    @RequiredReadAction
+    public void updateInReadAction(AnActionEvent e) {
         if (!e.getPresentation().isVisible()) {
             return;
         }
@@ -134,6 +147,8 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
         e.getPresentation().setEnabledAndVisible(isAvailable(e.getDataContext()) && e.getPresentation().isEnabled());
     }
 
+    @RequiredReadAction
+    @SuppressWarnings("unchecked")
     protected boolean isAvailable(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         IdeView view = dataContext.getData(IdeView.KEY);

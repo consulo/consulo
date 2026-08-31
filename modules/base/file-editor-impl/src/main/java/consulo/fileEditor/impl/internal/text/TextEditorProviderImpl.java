@@ -17,10 +17,10 @@ package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.*;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorProvider;
@@ -34,9 +34,8 @@ import consulo.ui.util.ShowNotifier;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
-import jakarta.inject.Inject;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -49,28 +48,19 @@ import java.util.List;
 public class TextEditorProviderImpl extends TextEditorProvider {
     private static final Logger LOG = Logger.getInstance(TextEditorProviderImpl.class);
 
-    protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
-
-    @Inject
-    public TextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
-        myTextEditorComponentContainerFactory = textEditorComponentContainerFactory;
-    }
-
     @Override
     public boolean accept(Project project, VirtualFile file) {
         return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
     }
 
-    @RequiredUIAccess
     @Override
-    
+    @RequiredUIAccess
     public FileEditor createEditor(Project project, VirtualFile file) {
         LOG.assertTrue(accept(project, file));
         return new TextEditorImpl(project, file, this);
     }
 
     @Override
-    
     public TextEditor getTextEditor(Editor editor) {
         TextEditor textEditor = editor.getUserData(TEXT_EDITOR_KEY);
         if (textEditor == null) {
@@ -81,20 +71,21 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         return textEditor;
     }
 
-    
     protected EditorWrapper createWrapperForEditor(Editor editor) {
         return new EditorWrapper(editor);
     }
 
-    public void setStateImpl(Project project, Editor editor, TextEditorState state) {
+    public void setStateImpl(@Nullable Project project, Editor editor, TextEditorState state) {
         if (state.CARETS != null && state.CARETS.length > 0) {
             if (editor.getCaretModel().supportsMultipleCarets()) {
                 CaretModel caretModel = editor.getCaretModel();
                 List<CaretState> states = new ArrayList<>(state.CARETS.length);
                 for (TextEditorState.CaretState caretState : state.CARETS) {
-                    states.add(new CaretState(new LogicalPosition(caretState.LINE, caretState.COLUMN, caretState.LEAN_FORWARD),
+                    states.add(new CaretState(
+                        new LogicalPosition(caretState.LINE, caretState.COLUMN, caretState.LEAN_FORWARD),
                         new LogicalPosition(caretState.SELECTION_START_LINE, caretState.SELECTION_START_COLUMN),
-                        new LogicalPosition(caretState.SELECTION_END_LINE, caretState.SELECTION_END_COLUMN)));
+                        new LogicalPosition(caretState.SELECTION_END_LINE, caretState.SELECTION_END_COLUMN)
+                    ));
                 }
                 caretModel.setCaretsAndSelections(states, false);
             }
@@ -102,10 +93,14 @@ public class TextEditorProviderImpl extends TextEditorProvider {
                 TextEditorState.CaretState caretState = state.CARETS[0];
                 LogicalPosition pos = new LogicalPosition(caretState.LINE, caretState.COLUMN);
                 editor.getCaretModel().moveToLogicalPosition(pos);
-                int startOffset = editor.logicalPositionToOffset(new LogicalPosition(caretState.SELECTION_START_LINE,
-                    caretState.SELECTION_START_COLUMN));
-                int endOffset = editor.logicalPositionToOffset(new LogicalPosition(caretState.SELECTION_END_LINE,
-                    caretState.SELECTION_END_COLUMN));
+                int startOffset = editor.logicalPositionToOffset(new LogicalPosition(
+                    caretState.SELECTION_START_LINE,
+                    caretState.SELECTION_START_COLUMN
+                ));
+                int endOffset = editor.logicalPositionToOffset(new LogicalPosition(
+                    caretState.SELECTION_END_LINE,
+                    caretState.SELECTION_END_COLUMN
+                ));
                 if (startOffset == endOffset) {
                     editor.getSelectionModel().removeSelection();
                 }
@@ -120,7 +115,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
             if (!editor.isDisposed()) {
                 editor.getScrollingModel().disableAnimation();
                 if (relativeCaretPosition != Integer.MAX_VALUE) {
-                    setRelativeCaretPosition(editor, relativeCaretPosition);
+                    EditorUtil.setRelativeCaretPosition(editor, relativeCaretPosition);
                 }
                 editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
                 editor.getScrollingModel().enableAnimation();
@@ -130,14 +125,12 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         if (Boolean.TRUE.equals(editor.getUserData(TREAT_AS_SHOWN))) {
             scrollingRunnable.run();
         }
+        else if (editor instanceof EditorEx editorEx && editorEx.isScrollPaneAvailable()) {
+            EditorUtil.runWhenViewportReady(editorEx, scrollingRunnable);
+        }
         else {
             ShowNotifier.once(editor.getContentUIComponent(), scrollingRunnable);
         }
-    }
-
-    private static void setRelativeCaretPosition(Editor editor, int position) {
-        int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
-        editor.getScrollingModel().scrollVertically(caretY - position);
     }
 
     public class EditorWrapper extends UserDataHolderBase implements TextEditor {
@@ -148,13 +141,11 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        
         public Editor getEditor() {
             return myEditor;
         }
 
         @Override
-        
         public JComponent getComponent() {
             return myEditor.getComponent();
         }
@@ -175,7 +166,6 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        
         public String getName() {
             return "Text";
         }
@@ -190,13 +180,8 @@ public class TextEditorProviderImpl extends TextEditorProvider {
 
             Project project = myEditor.getProject();
             LOG.assertTrue(project != null);
-            for (StructureViewBuilderProvider provider : project.getApplication().getExtensionList(StructureViewBuilderProvider.class)) {
-                StructureViewBuilder builder = provider.getStructureViewBuilder(file.getFileType(), file, project);
-                if (builder != null) {
-                    return builder;
-                }
-            }
-            return null;
+            return project.getApplication().getExtensionPoint(StructureViewBuilderProvider.class)
+                .computeSafeIfAny(provider -> provider.getStructureViewBuilder(file.getFileType(), file, project));
         }
 
         @Override
@@ -205,7 +190,6 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        
         public FileEditorState getState(FileEditorStateLevel level) {
             return getStateImpl(null, myEditor, level);
         }

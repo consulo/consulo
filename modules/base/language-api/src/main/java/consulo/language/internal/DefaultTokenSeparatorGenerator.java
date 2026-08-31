@@ -42,18 +42,13 @@ public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
     if (parserDefinition != null) {
       PsiManager manager = Objects.requireNonNull(right.getTreeParent()).getRequiredPsi().getManager();
-      ASTNode generatedWhitespace;
-      switch (parserDefinition.spaceExistenceTypeBetweenTokens(left, right)) {
-        case MUST:
-          generatedWhitespace = ASTElementFactory.getInstance(manager.getProject()).createSingleLeafElement(TokenType.WHITE_SPACE, " ", 0, 1, null, manager);
-          break;
-        case MUST_LINE_BREAK:
-          generatedWhitespace = ASTElementFactory.getInstance(manager.getProject()).createSingleLeafElement(TokenType.WHITE_SPACE, "\n", 0, 1, null, manager);
-          break;
-        default:
-          generatedWhitespace = null;
-      }
-      return generatedWhitespace;
+      return switch (parserDefinition.spaceExistenceTypeBetweenTokens(left, right)) {
+        case MUST ->
+          ASTElementFactory.getInstance(manager.getProject()).createSingleLeafElement(TokenType.WHITE_SPACE, " ", 0, 1, null, manager);
+        case MUST_LINE_BREAK ->
+          ASTElementFactory.getInstance(manager.getProject()).createSingleLeafElement(TokenType.WHITE_SPACE, "\n", 0, 1, null, manager);
+        default -> null;
+      };
     }
     return null;
   }

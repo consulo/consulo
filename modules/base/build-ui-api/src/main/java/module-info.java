@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 01-Aug-22
+ * @since 2022-08-01
  */
+@NullMarked
 module consulo.build.ui.api {
     // TODO remove in future
     requires java.desktop;

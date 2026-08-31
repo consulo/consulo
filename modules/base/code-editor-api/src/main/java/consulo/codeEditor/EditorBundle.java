@@ -20,6 +20,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author lesya
@@ -34,11 +35,11 @@ public class EditorBundle extends AbstractBundle{
     super("consulo.codeEditor.EditorBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.codeEditor.EditorBundle") String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.codeEditor.EditorBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.codeEditor.EditorBundle") String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.codeEditor.EditorBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

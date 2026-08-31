@@ -37,7 +37,7 @@ import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
@@ -60,7 +60,7 @@ import java.util.Arrays;
  * <p>
  * Without console properties no navigation, no rerun failed is possible.
  */
-public abstract class AbstractImportTestsAction extends AnAction {
+public abstract class AbstractImportTestsAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(AbstractImportTestsAction.class);
     public static final String TEST_HISTORY_SIZE = "test_history_size";
     private SMTRunnerConsoleProperties myProperties;

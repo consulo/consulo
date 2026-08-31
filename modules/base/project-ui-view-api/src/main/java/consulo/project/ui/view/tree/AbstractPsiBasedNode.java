@@ -23,6 +23,7 @@ import consulo.navigation.StatePreservingNavigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.TreeNode;
 import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.ui.ex.tree.PresentationData;
@@ -57,14 +58,13 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
     protected abstract void updateImpl(PresentationData data);
 
-    @RequiredReadAction
     @Override
-    
+    @RequiredReadAction
     public final Collection<? extends AbstractTreeNode> getChildren() {
         return ProjectViewInternalHelper.getInstance().disallowTreeLoading(this::doGetChildren);
     }
 
-    
+    @RequiredReadAction
     private Collection<? extends AbstractTreeNode> doGetChildren() {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null) {
@@ -80,6 +80,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
+    @RequiredReadAction
     public boolean isValid() {
         PsiElement psiElement = extractPsiFromValue();
         return psiElement != null && psiElement.isValid();
@@ -98,7 +99,6 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         return parentValue instanceof PsiDirectory || parentValue instanceof Module;
     }
 
-    
     @Override
     public FileStatus getFileStatus() {
         return computeFileStatus(getVirtualFileForValue(), Objects.requireNonNull(getProject()));
@@ -111,6 +111,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         return FileStatusManager.getInstance(project).getStatus(virtualFile);
     }
 
+    @RequiredReadAction
     private @Nullable VirtualFile getVirtualFileForValue() {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null) {
@@ -199,6 +200,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
+    @RequiredReadAction
     public boolean contains(VirtualFile file) {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null || !psiElement.isValid()) {
@@ -219,6 +221,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus, boolean preserveState) {
         if (canNavigate()) {
             if (requestFocus || preserveState) {
@@ -231,17 +234,20 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         navigate(requestFocus, false);
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         NavigationItem item = getNavigationItem();
         return item != null && item.canNavigate();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
         NavigationItem item = getNavigationItem();
         return item != null && item.canNavigateToSource();
@@ -252,6 +258,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
+    @RequiredReadAction
     public boolean validate() {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null || !psiElement.isValid()) {

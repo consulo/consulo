@@ -18,55 +18,47 @@ package consulo.web.main;
 import consulo.application.Application;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import consulo.application.internal.StartupProgress;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
+import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.web.internal.WebApplicationImpl;
-import consulo.web.internal.WebStartupProgressImpl;
+import consulo.web.ui.impl.internal.WebApplicationImpl;
+import consulo.web.ui.impl.internal.WebStartupProgressImpl;
 import org.jspecify.annotations.Nullable;
 
 /**
- *
  * @author VISTALL
  * @since 15-May-16
  */
 public class WebApplicationStarter extends ApplicationStarter {
-  public WebApplicationStarter(CommandLineArgs args, StatCollector stat) {
-    super(args, stat);
-  }
-
-  @Override
-  public @Nullable StartupProgress createSplash(CommandLineArgs args) {
-    return new WebStartupProgressImpl();
-  }
-
-  
-  @Override
-  protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
-    return new WebApplicationImpl(componentBinding, splashRef);
-  }
-
-  @Override
-  public void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, CommandLineArgs args) {
-    StartupProgress startupProgress = mySplashRef.get();
-    if (startupProgress != null) {
-      startupProgress.dispose();
-      mySplashRef.set(null);
+    public WebApplicationStarter(CommandLineArgs args, StatCollector stat) {
+        super(args, stat);
     }
 
-    appInitalizeMark.run();
+    @Override
+    public @Nullable StartupProgress createSplash(CommandLineArgs args) {
+        return new WebStartupProgressImpl();
+    }
 
-    /*AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
-      System.out.println("Save All");
 
-      Application application = ApplicationManager.getApplication();
-      if(application == null || application.isDisposed()) {
-        return;
-      }
+    @Override
+    protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+        return new WebApplicationImpl(componentBinding, splashRef);
+    }
 
-      SwingUtilities.invokeLater(() -> application.saveSettings());
-    }, 1, 5, TimeUnit.MINUTES); */
-  }
+    @Override
+    public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, CommandLineArgs args) {
+        StartupProgress startupProgress = mySplashRef.get();
+        if (startupProgress != null) {
+            startupProgress.dispose();
+            mySplashRef.set(null);
+        }
+
+        appInitializeMark.run();
+
+        // load style state
+        app.getInstance(StyleManagerService.class);
+    }
 }

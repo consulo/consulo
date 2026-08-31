@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.awt.hacking.PopupHacking;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
@@ -57,8 +56,7 @@ public interface PopupComponent {
                     myNativeBorder = jComponent.getClientProperty("FlatLaf.internal.FlatPopupFactory.popupUsesNativeBorder") != null;
                 }
 
-                Window resolvedWindow = SwingUtilities.getWindowAncestor(content);
-                return new AwtPopupWrapper(popup, jbPopup, resolvedWindow);
+                return new AwtPopupWrapper(popup, jbPopup, content);
             }
 
             @Override
@@ -90,8 +88,7 @@ public interface PopupComponent {
                     myNativeBorder = jComponent.getClientProperty("FlatLaf.internal.FlatPopupFactory.popupUsesNativeBorder") != null;
                 }
 
-                Window resolvedWindow = SwingUtilities.getWindowAncestor(content);
-                return new AwtPopupWrapper(popup, jbPopup, resolvedWindow);
+                return new AwtPopupWrapper(popup, jbPopup, content);
             }
 
             @Override
@@ -191,12 +188,12 @@ public interface PopupComponent {
 
         private final Popup myPopup;
         private final JBPopup myJBPopup;
-        private final Window myResolvedWindow;
+        private final Component myContent;
 
-        public AwtPopupWrapper(Popup popup, JBPopup jbPopup, Window resolvedWindow) {
+        public AwtPopupWrapper(Popup popup, JBPopup jbPopup, Component content) {
             myPopup = popup;
             myJBPopup = jbPopup;
-            myResolvedWindow = resolvedWindow;
+            myContent = content;
         }
 
         @Override
@@ -226,12 +223,7 @@ public interface PopupComponent {
 
         @Override
         public Window getWindow() {
-            if (myResolvedWindow != null) {
-                return myResolvedWindow;
-            }
-
-            Component c = PopupHacking.getComponent(myPopup);
-            return c instanceof JWindow ? (JWindow) c : null;
+            return SwingUtilities.getWindowAncestor(myContent);
         }
 
         @Override

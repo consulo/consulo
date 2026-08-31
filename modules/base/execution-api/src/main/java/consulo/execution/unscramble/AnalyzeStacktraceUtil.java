@@ -20,7 +20,8 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -32,18 +33,21 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -58,8 +62,9 @@ public class AnalyzeStacktraceUtil {
         consoleView.scrollTo(0);
     }
 
-    public static @Nullable String getTextInClipboard() {
-        return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+    @RequiredUIAccess
+    public static CompletableFuture<@Nullable String> getTextInClipboard() {
+        return CopyPasteManager.getInstance().getContentsAsync(DataTransferType.TEXT);
     }
 
     public interface ConsoleFactory {
@@ -139,7 +144,7 @@ public class AnalyzeStacktraceUtil {
         return editorPanel;
     }
 
-    public static final class StacktraceEditorPanel extends JPanel implements DataProvider, Disposable {
+    public static final class StacktraceEditorPanel extends JPanel implements UiDataProvider, Disposable {
         private final Project myProject;
         private final Editor myEditor;
 
@@ -151,11 +156,8 @@ public class AnalyzeStacktraceUtil {
         }
 
         @Override
-        public Object getData(Key<?> dataId) {
-            if (Editor.KEY == dataId) {
-                return myEditor;
-            }
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(Editor.KEY, myEditor);
         }
 
         public Editor getEditor() {
@@ -176,10 +178,13 @@ public class AnalyzeStacktraceUtil {
 
         @RequiredUIAccess
         public void pasteTextFromClipboard() {
-            String text = getTextInClipboard();
-            if (text != null) {
-                setText(text);
-            }
+            UIAccess uiAccess = UIAccess.current();
+
+            getTextInClipboard().whenCompleteAsync((text, throwable) -> {
+                if (throwable == null && text != null) {
+                    setText(text);
+                }
+            }, uiAccess);
         }
 
         @Override

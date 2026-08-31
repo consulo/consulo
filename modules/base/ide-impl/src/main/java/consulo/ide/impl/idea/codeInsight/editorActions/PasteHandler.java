@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.codeEditor.impl.internal.action.PasteAction;
@@ -43,13 +44,17 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -72,7 +77,6 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         myOriginalHandler = originalAction;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_PASTE;
@@ -80,18 +84,65 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
     @Override
     @RequiredUIAccess
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret == null : "Invocation of 'paste' operation for specific caret is not supported";
         execute(editor, dataContext, null);
     }
 
+    /**
+     * The clipboard is read first and everything else waits for it - a frontend which keeps the clipboard in a
+     * browser answers with a round trip, and from the command down the paste has to stay synchronous.
+     */
     @Override
     @RequiredUIAccess
     public void execute(Editor editor, DataContext dataContext, @Nullable Supplier<Transferable> producer) {
-        Transferable transferable = EditorImplUtil.getContentsToPasteToEditor(producer);
-        if (transferable == null) {
-            return;
-        }
+        UIAccess uiAccess = UIAccess.current();
+
+        Supplier<DataTransfer> transferProducer = producer == null
+            ? null
+            : () -> DataTransfer.builder().put(EditorImplUtil.TRANSFERABLE, producer.get()).build();
+
+        EditorImplUtil.getContentsToPasteToEditor(transferProducer).whenCompleteAsync((transfer, throwable) -> {
+            if (throwable != null) {
+                LOG.warn("Failed to read the clipboard for a paste", throwable);
+                return;
+            }
+            if (transfer != null) {
+                CommandProcessor.getInstance()
+                    .newCommand()
+                    .project(editor.getProject())
+                    .document(editor.getDocument())
+                    .name(CodeEditorLocalize.actionPasteText())
+                    .groupId(getCommandGroupId(editor))
+                    .run(() -> executePinned(editor, dataContext, producer, transfer));
+            }
+        }, uiAccess).exceptionally(throwable -> {
+            // the future of a continuation is dropped, so without this a paste which threw would leave no trace
+            // at all - no insert and nothing in the log
+            LOG.error("Paste failed", throwable);
+            return null;
+        });
+    }
+
+    /**
+     * The command is opened once the clipboard has answered - an action which opened one first would hold it
+     * open across the round trip and close it before anything was inserted.
+     */
+    @Override
+    public boolean executeInCommand(Editor editor, DataContext dataContext) {
+        return false;
+    }
+
+    @RequiredUIAccess
+    private void executePinned(
+        Editor editor,
+        DataContext dataContext,
+        @Nullable Supplier<Transferable> producer,
+        DataTransfer transfer
+    ) {
+        // the rich half only exists in a payload this process wrote; a foreign one carries text and nothing else
+        Transferable transferable = transfer.get(EditorImplUtil.TRANSFERABLE);
+        DataTransfer pinnedTransfer = producer == null ? transfer : null;
 
         if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) {
             return;
@@ -105,14 +156,10 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         DataContext context = new DataContext() {
             @Override
             public Object getData(Key dataId) {
-                return PasteAction.TRANSFERABLE_PROVIDER == dataId
-                    ? new Supplier<Transferable>() {
-                        @Override
-                        public @Nullable Transferable get() {
-                            return transferable;
-                        }
-                    }
-                    : dataContext.getData(dataId);
+                if (PasteAction.DATA_TRANSFER_PROVIDER == dataId && pinnedTransfer != null) {
+                    return (Supplier<DataTransfer>) () -> pinnedTransfer;
+                }
+                return dataContext.getData(dataId);
             }
         };
 
@@ -141,7 +188,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
                     return;
                 }
             }
-            doPaste(editor, project, file, document, transferable);
+            doPaste(editor, project, file, document, transfer, transferable);
         }
         catch (ReadOnlyFragmentModificationException e) {
             EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
@@ -158,17 +205,12 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         Project project,
         PsiFile file,
         Document document,
-        Transferable content
+        DataTransfer transfer,
+        @Nullable Transferable content
     ) {
         CopyPasteManager.getInstance().stopKillRings();
 
-        String text = null;
-        try {
-            text = (String)content.getTransferData(DataFlavor.stringFlavor);
-        }
-        catch (Exception e) {
-            editor.getComponent().getToolkit().beep();
-        }
+        String text = transfer.get(DataTransferType.TEXT);
         if (text == null) {
             return;
         }
@@ -178,11 +220,15 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         Map<CopyPastePostProcessor, List<? extends TextBlockTransferableData>> extraData = new HashMap<>();
         Collection<TextBlockTransferableData> allValues = new ArrayList<>();
 
-        for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
-            List<? extends TextBlockTransferableData> data = processor.extractTransferableData(content);
-            if (!data.isEmpty()) {
-                extraData.put(processor, data);
-                allValues.addAll(data);
+        // the extra data of a copy travels in the awt payload, which only a copy made in this process has. a
+        // payload from another application carries text alone and there is nothing for a processor to extract
+        if (content != null) {
+            for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
+                List<? extends TextBlockTransferableData> data = processor.extractTransferableData(content);
+                if (!data.isEmpty()) {
+                    extraData.put(processor, data);
+                    allValues.addAll(data);
+                }
             }
         }
 
@@ -206,7 +252,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
         // We assume that EditorModificationUtil.insertStringAtCaret() is smart enough to remove currently selected text (if any).
 
-        RawText rawText = RawText.fromTransferable(content);
+        // the raw half of a copy lives in the awt payload, which a paste from another application does not have
+        RawText rawText = content == null ? null : RawText.fromTransferable(content);
         String newText = text;
         for (CopyPastePreProcessor preProcessor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
             newText = preProcessor.preprocessOnPaste(project, file, editor, newText, rawText);

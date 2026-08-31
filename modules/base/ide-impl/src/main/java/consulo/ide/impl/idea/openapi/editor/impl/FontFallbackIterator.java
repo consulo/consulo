@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.application.Application;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
-import consulo.colorScheme.FontPreferences;
-import consulo.colorScheme.impl.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.colorScheme.internal.FontPreferencesManager;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.lang.text.CharArrayIterator;
 import consulo.util.lang.text.CharSequenceIterator;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -50,191 +52,200 @@ import java.text.CharacterIterator;
  * </pre></code>
  */
 public class FontFallbackIterator {
-  private static final char COMPLEX_CHAR_START = 0x300; // start of Combining Diacritical Marks block
+    private static final char COMPLEX_CHAR_START = 0x300; // start of Combining Diacritical Marks block
 
-  private final BreakAtEveryCharacterIterator myTrivialBreaker = new BreakAtEveryCharacterIterator();
+    private final BreakAtEveryCharacterIterator myTrivialBreaker = new BreakAtEveryCharacterIterator();
 
-  private FontPreferences myFontPreferences = new FontPreferencesImpl();
-  private int myFontStyle = Font.PLAIN;
-  private FontRenderContext myFontRenderContext;
+    private FontPreferences myFontPreferences;
+    private int myFontStyle = consulo.ui.font.Font.PLAIN;
+    private FontRenderContext myFontRenderContext;
 
-  private char[] myTextAsArray;
-  private CharSequence myTextAsCharSequence;
-  private BreakIterator myIterator;
-  private int myStart;
-  private int myEnd;
-  private FontInfo myFontInfo;
-  private FontInfo myNextFontInfo;
-
-  public FontFallbackIterator setPreferredFonts(FontPreferences fontPreferences) {
-    myFontPreferences = fontPreferences;
-    return this;
-  }
-
-  public FontFallbackIterator setPreferredFont(String familyName, int size) {
-    FontPreferencesImpl preferences = new FontPreferencesImpl();
-    preferences.register(familyName, size);
-    myFontPreferences = preferences;
-    return this;
-  }
-
-  public FontFallbackIterator setFontStyle(@JdkConstants.FontStyle int fontStyle) {
-    myFontStyle = fontStyle;
-    return this;
-  }
-
-  public FontFallbackIterator setFontRenderContext(@Nullable FontRenderContext fontRenderContext) {
-    myFontRenderContext = fontRenderContext;
-    return this;
-  }
-
-  public void start(CharSequence text, int start, int end) {
-    assert 0 <= start && start <= end && end <= text.length() : "Text length: " + text.length() + ", start: " + start + ", end: " + end;
-    CharacterIterator characterIterator = null;
-    for (int i = start; i < end; i++) {
-      if (text.charAt(i) >= COMPLEX_CHAR_START) {
-        characterIterator = new CharSequenceIterator(text, start, end);
-        break;
-      }
-    }
-    doStart(text, null, characterIterator, start, end);
-  }
-
-  public void start(char[] text, int start, int end) {
-    assert 0 <= start && start <= end && end <= text.length : "Text length: " + text.length + ", start: " + start + ", end: " + end;
-    CharacterIterator characterIterator = null;
-    for (int i = start; i < end; i++) {
-      if (text[i] >= COMPLEX_CHAR_START) {
-        characterIterator = new CharArrayIterator(text, start, end);
-        break;
-      }
-    }
-    doStart(null, text, characterIterator, start, end);
-  }
-
-  private void doStart(CharSequence textAsCharSequence, char[] textAsArray, CharacterIterator characterIterator, int start, int end) {
-    myTextAsCharSequence = textAsCharSequence;
-    myTextAsArray = textAsArray;
-    if (characterIterator == null) {
-      myTrivialBreaker.setRange(start, end);
-      myIterator = myTrivialBreaker;
-    }
-    else {
-      myIterator = BreakIterator.getCharacterInstance(); // locale-dependent
-      myIterator.setText(characterIterator);
-    }
-    myStart = myEnd = myIterator.first();
-    assert myStart == start;
-    myFontInfo = myNextFontInfo = null;
-    advance();
-  }
-
-  public boolean atEnd() {
-    return myStart == myEnd;
-  }
-
-  public void advance() {
-    myStart = myEnd;
-    myEnd = myIterator.current();
-    myFontInfo = myNextFontInfo;
-    int end;
-    while ((end = myIterator.next()) != BreakIterator.DONE) {
-      myNextFontInfo = getFontAbleToDisplay(myEnd, end);
-      if (myFontInfo == null) myFontInfo = myNextFontInfo;
-      if (myNextFontInfo.equals(myFontInfo)) {
-        myEnd = end;
-      }
-      else {
-        return;
-      }
-    }
-  }
-
-  private FontInfo getFontAbleToDisplay(int start, int end) {
-    if (myTextAsCharSequence == null) {
-      return ComplementaryFontsRegistry.getFontAbleToDisplay(myTextAsArray, start, end,
-                                                             myFontStyle, myFontPreferences, myFontRenderContext);
-    }
-    else {
-      return ComplementaryFontsRegistry.getFontAbleToDisplay(myTextAsCharSequence, start, end,
-                                                             myFontStyle, myFontPreferences, myFontRenderContext);
-    }
-  }
-
-  public int getStart() {
-    return myStart;
-  }
-
-  public int getEnd() {
-    return myEnd;
-  }
-
-  
-  public FontInfo getFontInfo() {
-    if (myFontRenderContext == null) {
-      throw new IllegalStateException("FontRenderContext must be set to generate FontInfo");
-    }
-    return myFontInfo;
-  }
-
-  
-  public Font getFont() {
-    return myFontInfo.getFont();
-  }
-
-  private static class BreakAtEveryCharacterIterator extends BreakIterator {
+    private char[] myTextAsArray;
+    private CharSequence myTextAsCharSequence;
+    private BreakIterator myIterator;
     private int myStart;
     private int myEnd;
-    private int myCurrent;
+    private FontInfo myFontInfo;
+    private FontInfo myNextFontInfo;
 
-    public void setRange(int start, int end) {
-      myStart = start;
-      myEnd = end;
+    private final FontPreferencesManager myFontPreferencesManager;
+
+    public FontFallbackIterator() {
+        myFontPreferencesManager = Application.get().getInstance(FontPreferencesManager.class);
+
+        myFontPreferences = myFontPreferencesManager.newFontPreferences();
     }
 
-    @Override
-    public int first() {
-      return myCurrent = myStart;
+    public FontFallbackIterator setPreferredFonts(FontPreferences fontPreferences) {
+        myFontPreferences = fontPreferences;
+        return this;
     }
 
-    @Override
-    public int last() {
-      throw new UnsupportedOperationException();
+    public FontFallbackIterator setPreferredFont(String familyName, int size) {
+        ModifiableFontPreferences preferences = myFontPreferencesManager.newFontPreferences();
+        preferences.register(familyName, size);
+        myFontPreferences = preferences;
+        return this;
     }
 
-    @Override
-    public int next(int n) {
-      throw new UnsupportedOperationException();
+    public FontFallbackIterator setFontStyle(@AWTConstants.FontStyle int fontStyle) {
+        myFontStyle = fontStyle;
+        return this;
     }
 
-    @Override
-    public int next() {
-      return myCurrent >= myEnd ? DONE : ++myCurrent;
+    public FontFallbackIterator setFontRenderContext(@Nullable FontRenderContext fontRenderContext) {
+        myFontRenderContext = fontRenderContext;
+        return this;
     }
 
-    @Override
-    public int previous() {
-      throw new UnsupportedOperationException();
+    public void start(CharSequence text, int start, int end) {
+        assert 0 <= start && start <= end && end <= text.length() : "Text length: " + text.length() + ", start: " + start + ", end: " + end;
+        CharacterIterator characterIterator = null;
+        for (int i = start; i < end; i++) {
+            if (text.charAt(i) >= COMPLEX_CHAR_START) {
+                characterIterator = new CharSequenceIterator(text, start, end);
+                break;
+            }
+        }
+        doStart(text, null, characterIterator, start, end);
     }
 
-    @Override
-    public int following(int offset) {
-      throw new UnsupportedOperationException();
+    public void start(char[] text, int start, int end) {
+        assert 0 <= start && start <= end && end <= text.length : "Text length: " + text.length + ", start: " + start + ", end: " + end;
+        CharacterIterator characterIterator = null;
+        for (int i = start; i < end; i++) {
+            if (text[i] >= COMPLEX_CHAR_START) {
+                characterIterator = new CharArrayIterator(text, start, end);
+                break;
+            }
+        }
+        doStart(null, text, characterIterator, start, end);
     }
 
-    @Override
-    public int current() {
-      return myCurrent;
+    private void doStart(CharSequence textAsCharSequence, char[] textAsArray, CharacterIterator characterIterator, int start, int end) {
+        myTextAsCharSequence = textAsCharSequence;
+        myTextAsArray = textAsArray;
+        if (characterIterator == null) {
+            myTrivialBreaker.setRange(start, end);
+            myIterator = myTrivialBreaker;
+        }
+        else {
+            myIterator = BreakIterator.getCharacterInstance(); // locale-dependent
+            myIterator.setText(characterIterator);
+        }
+        myStart = myEnd = myIterator.first();
+        assert myStart == start;
+        myFontInfo = myNextFontInfo = null;
+        advance();
     }
 
-    @Override
-    public CharacterIterator getText() {
-      throw new UnsupportedOperationException();
+    public boolean atEnd() {
+        return myStart == myEnd;
     }
 
-    @Override
-    public void setText(CharacterIterator newText) {
-      throw new UnsupportedOperationException();
+    public void advance() {
+        myStart = myEnd;
+        myEnd = myIterator.current();
+        myFontInfo = myNextFontInfo;
+        int end;
+        while ((end = myIterator.next()) != BreakIterator.DONE) {
+            myNextFontInfo = getFontAbleToDisplay(myEnd, end);
+            if (myFontInfo == null) {
+                myFontInfo = myNextFontInfo;
+            }
+            if (myNextFontInfo.equals(myFontInfo)) {
+                myEnd = end;
+            }
+            else {
+                return;
+            }
+        }
     }
-  }
+
+    private FontInfo getFontAbleToDisplay(int start, int end) {
+        if (myTextAsCharSequence == null) {
+            return ComplementaryFontsRegistry.getFontAbleToDisplay(myTextAsArray, start, end,
+                myFontStyle, myFontPreferences, myFontRenderContext);
+        }
+        else {
+            return ComplementaryFontsRegistry.getFontAbleToDisplay(myTextAsCharSequence, start, end,
+                myFontStyle, myFontPreferences, myFontRenderContext);
+        }
+    }
+
+    public int getStart() {
+        return myStart;
+    }
+
+    public int getEnd() {
+        return myEnd;
+    }
+
+
+    public FontInfo getFontInfo() {
+        if (myFontRenderContext == null) {
+            throw new IllegalStateException("FontRenderContext must be set to generate FontInfo");
+        }
+        return myFontInfo;
+    }
+
+    public Font getFont() {
+        return myFontInfo.getFont();
+    }
+
+    private static class BreakAtEveryCharacterIterator extends BreakIterator {
+        private int myStart;
+        private int myEnd;
+        private int myCurrent;
+
+        public void setRange(int start, int end) {
+            myStart = start;
+            myEnd = end;
+        }
+
+        @Override
+        public int first() {
+            return myCurrent = myStart;
+        }
+
+        @Override
+        public int last() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int next(int n) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int next() {
+            return myCurrent >= myEnd ? DONE : ++myCurrent;
+        }
+
+        @Override
+        public int previous() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int following(int offset) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int current() {
+            return myCurrent;
+        }
+
+        @Override
+        public CharacterIterator getText() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void setText(CharacterIterator newText) {
+            throw new UnsupportedOperationException();
+        }
+    }
 }

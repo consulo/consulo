@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.application.Application;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.disposer.Disposable;
@@ -30,6 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -47,8 +48,6 @@ import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -65,7 +64,7 @@ import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArra
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl.*;
 
-public abstract class InternalChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, ChangesBrowser<T>, Disposable {
+public abstract class InternalChangesBrowserBase<T> extends JPanel implements UiDataProvider, ChangesBrowser<T>, Disposable {
     // for backgroundable rollback to mark
     private boolean myDataIsDirty;
     protected final Class<T> myClass;
@@ -156,15 +155,12 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         myViewer.setDoubleClickHandler(getDoubleClickHandler());
     }
 
-    
     protected abstract DefaultTreeModel buildTreeModel(List<T> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten);
 
-    
     protected abstract List<T> getSelectedObjects(ChangesBrowserNode<T> node);
 
     protected abstract @Nullable T getLeadSelectedObject(ChangesBrowserNode node);
 
-    
     protected Runnable getDoubleClickHandler() {
         return this::showDiff;
     }
@@ -205,52 +201,29 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
     }
 
     @Override
-    
     public JScrollPane getViewerScrollPane() {
         return myViewerScrollPane;
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (key == VcsDataKeys.CHANGES) {
-            List<Change> list = getSelectedChanges();
-            if (list.isEmpty()) {
-                list = getAllChanges();
-            }
-            sink.put(VcsDataKeys.CHANGES, list.toArray(new Change[list.size()]));
+    public void uiDataSnapshot(DataSink sink) {
+        List<Change> list = getSelectedChanges();
+        if (list.isEmpty()) {
+            list = getAllChanges();
         }
-        else if (key == VcsDataKeys.CHANGES_SELECTION) {
-            sink.put(VcsDataKeys.CHANGES_SELECTION, getChangesSelection());
-        }
-        else if (key == VcsDataKeys.CHANGE_LISTS) {
-            sink.put(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists());
-        }
-        else if (key == VcsDataKeys.CHANGE_LEAD_SELECTION) {
-            Change highestSelection = ObjectUtil.tryCast(myViewer.getHighestLeadSelection(), Change.class);
-            sink.put(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
-        }
-        else if (key == VirtualFile.KEY_OF_ARRAY) {
-            sink.put(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
-        }
-        else if (key == Navigatable.KEY_OF_ARRAY) {
-            sink.put(Navigatable.KEY_OF_ARRAY, getNavigatableArray(myProject, getSelectedFiles()));
-        }
-        else if (VcsDataKeys.IO_FILE_ARRAY.equals(key)) {
-            sink.put(VcsDataKeys.IO_FILE_ARRAY, getSelectedIoFiles());
-        }
-        else if (key == DATA_KEY) {
-            sink.put(DATA_KEY, this);
-        }
-        else if (VcsDataKeys.SELECTED_CHANGES_IN_DETAILS.equals(key)) {
-            List<Change> selectedChanges = getSelectedChanges();
-            sink.put(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
-        }
-        else if (UNVERSIONED_FILES_DATA_KEY.equals(key)) {
-            sink.put(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG));
-        }
-        else if (DeleteProvider.KEY.equals(key)) {
-            sink.put(DeleteProvider.KEY, myDeleteProvider);
-        }
+        sink.set(VcsDataKeys.CHANGES, list.toArray(new Change[list.size()]));
+        sink.set(VcsDataKeys.CHANGES_SELECTION, getChangesSelection());
+        sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists());
+        Change highestSelection = ObjectUtil.tryCast(myViewer.getHighestLeadSelection(), Change.class);
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
+        sink.set(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
+        sink.set(Navigatable.KEY_OF_ARRAY, getNavigatableArray(myProject, getSelectedFiles()));
+        sink.set(VcsDataKeys.IO_FILE_ARRAY, getSelectedIoFiles());
+        sink.set(DATA_KEY, this);
+        List<Change> selectedChanges = getSelectedChanges();
+        sink.set(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
+        sink.set(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG).toList());
+        sink.set(DeleteProvider.KEY, myDeleteProvider);
     }
 
     public void select(List<T> changes) {
@@ -289,6 +262,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         }
     }
 
+    @RequiredUIAccess
     protected void showDiffForChanges(Change[] changesArray, int indexInSelection) {
         ShowDiffContext context = new ShowDiffContext(isInFrame() ? DiffDialogHints.FRAME : DiffDialogHints.MODAL);
 
@@ -309,6 +283,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         return ShowDiffAction.canShowDiff(myProject, getChangesSelection().getChanges());
     }
 
+    @RequiredUIAccess
     protected void showDiff() {
         ChangesSelection selection = getChangesSelection();
         List<Change> changes = selection.getChanges();
@@ -319,7 +294,6 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         afterDiffRefresh();
     }
 
-    
     protected ChangesSelection getChangesSelection() {
         Change leadSelection = ObjectUtil.tryCast(myViewer.getLeadSelection(), Change.class);
         List<Change> changes = getSelectedChanges();
@@ -369,7 +343,6 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         myViewer.setAlwaysExpandList(value);
     }
 
-    
     protected JComponent createToolbar() {
         DefaultActionGroup toolbarGroups = new DefaultActionGroup();
         myToolBarGroup = new DefaultActionGroup();
@@ -389,7 +362,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
     }
 
     protected void buildToolBar(DefaultActionGroup toolBarGroup) {
-        myDiffAction = new DumbAwareAction() {
+        myDiffAction = new LegacyDumbAwareAction() {
             @Override
             @RequiredUIAccess
             public void update(AnActionEvent e) {
@@ -407,24 +380,19 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         toolBarGroup.add(myDiffAction);
     }
 
-    
     public Set<AbstractVcs> getAffectedVcses() {
         return ChangesUtil.getAffectedVcses(getCurrentDisplayedChanges(), myProject);
     }
 
-    
     public abstract List<Change> getCurrentIncludedChanges();
 
     @Override
-    
     public List<Change> getCurrentDisplayedChanges() {
         return mySelectedChangeList != null ? new ArrayList<>(mySelectedChangeList.getChanges()) : Collections.emptyList();
     }
 
-    
     public abstract List<T> getCurrentDisplayedObjects();
 
-    
     public List<VirtualFile> getIncludedUnversionedFiles() {
         return Collections.emptyList();
     }
@@ -464,16 +432,13 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
     }
 
     @Override
-    
     public abstract List<Change> getSelectedChanges();
 
-    
     public abstract List<Change> getAllChanges();
 
-    
     protected Stream<VirtualFile> getSelectedFiles() {
         return Stream.concat(
-            getAfterRevisionsFiles(getSelectedChanges().stream()),
+            getAfterRevisionsFiles(getSelectedChanges().stream()).stream(),
             getVirtualFiles(myViewer.getSelectionPaths(), null)
         ).distinct();
     }
@@ -492,12 +457,10 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         myDataIsDirty = dataIsDirty;
     }
 
-    public void setSelectionMode(@JdkConstants.TreeSelectionMode int mode) {
+    public void setSelectionMode(@AWTConstants.TreeSelectionMode int mode) {
         myViewer.setSelectionMode(mode);
     }
 
-    @Contract(pure = true)
-    
     protected static <T> List<Change> findChanges(Collection<T> items) {
         return ContainerUtil.findAll(items, Change.class);
     }

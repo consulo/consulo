@@ -38,5 +38,4 @@ public class CaseInsensitiveValuePatternCondition extends PatternCondition<Strin
     }
     return false;
   }
-
 }

@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.document.impl.DocumentImpl;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.util.dataholder.Key;
@@ -83,6 +84,10 @@ public class LightFileDocumentManager implements FileDocumentManager {
 
   @Override
   public void saveAllDocuments() {
+  }
+
+  @Override
+  public void saveAllDocuments(UIAccess uiAccess) {
   }
 
   @Override

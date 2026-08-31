@@ -6,6 +6,7 @@ module consulo.test.impl {
   requires transitive consulo.container.api;
   requires transitive consulo.application.api;
   requires transitive consulo.project.api;
+  requires transitive consulo.project.ui.api;
   requires transitive consulo.module.api;
   requires transitive consulo.document.api;
   requires transitive consulo.language.api;
@@ -16,6 +17,9 @@ module consulo.test.impl {
   requires consulo.language.impl;
   requires consulo.document.impl;
   requires consulo.platform.impl;
+  requires consulo.code.editor.api;
+  requires consulo.version.control.system.api;
+  requires java.desktop;
 
   exports consulo.test.light;
   exports consulo.test.light.impl;

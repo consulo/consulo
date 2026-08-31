@@ -15,6 +15,7 @@
  */
 package consulo.component.extension;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.InheritCallerContext;
 import consulo.annotation.ReviewAfterIssueFix;
@@ -24,7 +25,6 @@ import consulo.component.util.ModificationTracker;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -141,6 +141,26 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("deprecation")
+    default <R> R computeSafeIfAny(
+        @InheritCallerContext Function<? super E, ? extends R> processor,
+        Predicate<R> accepter,
+        R defaultValue
+    ) {
+        for (E extension : getExtensionList()) {
+            try {
+                R result = processor.apply(extension);
+                if (accepter.test(result)) {
+                    return result;
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, extension);
+            }
+        }
+        return defaultValue;
     }
 
     @Contract("_,!null -> !null")

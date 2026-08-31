@@ -1,0 +1,55 @@
+/* the overlay sits in the shadow root of the dialog and exports its parts, so the host is what a rule outside
+   reaches it through - vaadin-dialog-overlay is not matchable from here */
+
+/* the curtain is there to catch a click outside the popup, not to say the ide is unavailable - a popup raised over
+   the frame leaves everything under it readable */
+vaadin-dialog::part(backdrop)
+{
+  background: transparent;
+}
+
+/* a popup of the ide is a panel rather than a card - the rounding and the drop shadow vaadin draws by default read
+   as a bubble at the size a list of actions is */
+vaadin-dialog::part(overlay)
+{
+  border-radius: var(--consulo-popup-radius, 4px);
+  box-shadow: none;
+}
+
+/* the parts round themselves as well, and a corner of theirs left as it was shows past the one of the overlay */
+vaadin-dialog::part(header)
+{
+  border-radius: var(--consulo-popup-radius, 4px) var(--consulo-popup-radius, 4px) 0 0;
+}
+
+vaadin-dialog::part(content)
+{
+  border-radius: 0 0 var(--consulo-popup-radius, 4px) var(--consulo-popup-radius, 4px);
+}
+
+/* the content is the popup - what it is given already carries whatever spacing it wants, and the padding of a
+   card around it only makes the popup bigger than the thing it shows */
+vaadin-dialog::part(content)
+{
+  padding: 2px;
+}
+
+/* the title names what is under it rather than heading a page, which is the size vaadin writes it at, so the
+   header keeps no height of its own beyond the line of text */
+vaadin-dialog::part(header)
+{
+  padding: 0 6px;
+  min-height: 0;
+}
+
+/* the header is a row of title and whatever the popup put beside it, so the title is given the rest of the row to
+   sit in the middle of */
+vaadin-dialog::part(title)
+{
+  font-size: inherit;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}

@@ -16,28 +16,28 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.newModule.NewOrImportModuleUtil;
+import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.newProject.ui.NewProjectDialog;
-import consulo.ide.impl.newProject.ui.NewProjectPanel;
+import consulo.ide.impl.module.creation.NewProjectDialog;
+import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
-import consulo.util.concurrent.AsyncResult;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2004-01-05
  */
 @ActionImpl(id = "NewModule")
-public class NewModuleAction extends AnAction implements DumbAware {
+public class NewModuleAction extends LegacyDumbAwareAction {
     public NewModuleAction() {
         super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription());
     }
@@ -67,13 +67,21 @@ public class NewModuleAction extends AnAction implements DumbAware {
         };
         fileChooserDescriptor.withTitle(ProjectLocalize.chooseModuleHome());
 
-        AsyncResult<VirtualFile> chooseAsync =
+        CompletableFuture<VirtualFile> chooseAsync =
             FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
-        chooseAsync.doWhenDone(moduleDir -> {
+        chooseAsync.whenComplete((moduleDir, error) -> {
+            if (error != null) {
+                return;
+            }
+
             NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
 
-            dialog.showAsync().doWhenDone(() -> {
-                NewProjectPanel panel = dialog.getProjectPanel();
+            dialog.showAsync().whenComplete((value, dialogError) -> {
+                if (dialogError != null) {
+                    return;
+                }
+
+                NewProjectWizardData panel = dialog.getProjectPanel();
                 NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
             });
         });
@@ -81,7 +89,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

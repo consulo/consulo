@@ -24,19 +24,20 @@ import java.util.EnumSet;
  * @since 2021-08-17
  */
 public class MouseInputDetails extends ModifiedInputDetails {
-  public static enum MouseButton {
-    LEFT,
-    MIDDLE,
-    RIGHT
-  }
+    public static enum MouseButton {
+        LEFT,
+        MIDDLE,
+        RIGHT
+    }
 
-  private final MouseButton myButton;
+    private final MouseButton myButton;
 
-  public MouseInputDetails(Point2D position, Point2D positionOnScreen, EnumSet<Modifier> modifiers, MouseButton button) {
-    super(position, positionOnScreen, modifiers);
-    myButton = button;
-  }
-  public MouseButton getButton() {
-    return myButton;
-  }
+    public MouseInputDetails(Point2D position, Point2D positionOnScreen, EnumSet<Modifier> modifiers, MouseButton button) {
+        super(position, positionOnScreen, modifiers);
+        myButton = button;
+    }
+
+    public MouseButton getButton() {
+        return myButton;
+    }
 }

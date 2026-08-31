@@ -5,11 +5,9 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import consulo.logging.Logger;
-import consulo.navigation.NavigationItem;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
-import consulo.ui.ex.tree.TreeNode;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.SmartList;
@@ -155,7 +153,12 @@ public class TreeState implements JDOMExternalizable {
     return new TreeState(createPaths(tree, TreeUtil.collectExpandedPaths(tree)), new ArrayList<>());
   }
 
-  
+  public static TreeState createOn(JTree tree, boolean persistExpand, boolean persistSelect) {
+    List<TreePath> expanded = persistExpand ? TreeUtil.collectExpandedPaths(tree) : new ArrayList<>();
+    List<TreePath> selected = persistSelect ? TreeUtil.collectSelectedPaths(tree) : new ArrayList<>();
+    return new TreeState(createPaths(tree, expanded), createPaths(tree, selected));
+  }
+
   public static TreeState createFrom(@Nullable Element element) {
     TreeState state = new TreeState(new ArrayList<>(), new ArrayList<>());
     try {
@@ -208,23 +211,25 @@ public class TreeState implements JDOMExternalizable {
   
   private static String calcId(@Nullable Object userObject) {
     if (userObject == null) return "";
-    Object value = userObject instanceof NodeDescriptorProvidingKey
-                   ? ((NodeDescriptorProvidingKey)userObject).getKey()
-                   : userObject instanceof TreeNode ? ((TreeNode)userObject).getValue() : userObject;
-    if (value instanceof NavigationItem) {
-      try {
-        String name = ((NavigationItem)value).getName();
-        return name != null ? name : StringUtil.notNullize(value.toString());
-      }
-      catch (Exception ignored) {
-      }
+    // The easiest case: the node provides an ID explicitly.
+    if (userObject instanceof PathElementIdProvider provider) {
+      return provider.getPathElementId();
     }
+    // Otherwise fall back to toString(), which MUST work fast and must NOT resolve the node value
+    // (that would invoke a read action on the EDT during state serialization and freeze the UI).
+    // If a node needs a different ID, it should implement PathElementIdProvider.
     return StringUtil.notNullize(userObject.toString());
   }
 
-  
+
   private static String calcType(@Nullable Object userObject) {
     if (userObject == null) return "";
+    if (userObject instanceof PathElementIdProvider provider) {
+      String type = provider.getPathElementType();
+      if (type != null) {
+        return type;
+      }
+    }
     String name = userObject.getClass().getName();
     return Integer.toHexString(StringHash.murmur(name, 31)) + ":" + StringUtil.getShortName(name);
   }
@@ -479,7 +484,6 @@ public class TreeState implements JDOMExternalizable {
       this.elements = elements;
     }
 
-    
     @Override
     public Action visit(TreePath path) {
       int count = path.getPathCount();

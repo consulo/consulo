@@ -26,7 +26,6 @@ import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.impl.internal.change.action.DeleteUnversionedFilesAction;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
@@ -136,14 +135,12 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> im
         }
 
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
-            super.calcData(key, sink);
-            if (DeleteProvider.KEY == key && myDeleteProvider != null) {
-                sink.put(DeleteProvider.KEY, myDeleteProvider);
+        public void uiDataSnapshot(DataSink sink) {
+            super.uiDataSnapshot(sink);
+            if (myDeleteProvider != null) {
+                sink.set(DeleteProvider.KEY, myDeleteProvider);
             }
-            else if (VirtualFile.KEY_OF_ARRAY == key) {
-                sink.put(VirtualFile.KEY_OF_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
-            }
+            sink.set(VirtualFile.KEY_OF_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
         }
 
         public void refresh() {

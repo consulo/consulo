@@ -41,7 +41,7 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 18-Mar-22
+ * @since 2022-03-18
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface CodeEditorInternalHelper {
@@ -67,7 +67,6 @@ public interface CodeEditorInternalHelper {
         return Application.get().getInstance(CodeEditorInternalHelper.class);
     }
 
-    
     default CaretDataContext createCaretDataContext(DataContext delegate, Caret caret) {
         return new CaretDataContext(delegate, caret);
     }
@@ -119,13 +118,11 @@ public interface CodeEditorInternalHelper {
     default void setShowMethodSeparators(boolean value) {
     }
 
-    
     default LineWrapPositionStrategy getLineWrapPositionStrategy(Editor editor) {
         return new DefaultLineWrapPositionStrategy();
     }
 
-    
-    default EditorHighlighter createEmptyHighlighter(Project project, Document document) {
+    default EditorHighlighter createEmptyHighlighter(@Nullable Project project, Document document) {
         throw new UnsupportedOperationException();
     }
 

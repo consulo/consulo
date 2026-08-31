@@ -59,7 +59,8 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
     if (c == null) return null;
 
     for (DockContainer eachContainer : myContainers) {
-      if (TraverseUtil.isDescendingFrom(c, eachContainer.getUIContainerComponent())) {
+      Component container = eachContainer.getUIContainerComponent();
+      if (container != null && TraverseUtil.isDescendingFrom(c, container)) {
         return eachContainer;
       }
     }
@@ -68,7 +69,8 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
     if (parent == null) return null;
 
     for (DockContainer eachContainer : myContainers) {
-      if (parent == TraverseUtil.findUltimateParent(eachContainer.getUIContainerComponent())) {
+      Component container = eachContainer.getUIContainerComponent();
+      if (container != null && parent == TraverseUtil.findUltimateParent(container)) {
         return eachContainer;
       }
     }

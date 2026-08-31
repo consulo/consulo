@@ -22,13 +22,12 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ColorPickerBuilder;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.ColorChooser;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-
-import javax.swing.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -42,22 +41,20 @@ public class ShowColorPickerAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        JComponent root = rootComponent(e.getData(Project.KEY));
-        if (root != null) {
-            ColorChooser.chooseColor(root, IdeLocalize.dialogTitleColorPicker(), null, true, true, color -> {
-            });
-        }
+        ColorPickerBuilder.create()
+            .withTitle(IdeLocalize.dialogTitleColorPicker())
+            .withAlphaAsPercent()
+            .showAsync(rootWindow(e.getData(Project.KEY)));
     }
 
-    private static JComponent rootComponent(Project project) {
+    private static @Nullable Window rootWindow(@Nullable Project project) {
         if (project != null) {
             IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
             if (frame != null) {
-                return frame.getComponent();
+                return frame.getWindow();
             }
         }
 
-        JFrame frame = (JFrame) TargetAWT.to(WindowManager.getInstance().findVisibleWindow());
-        return frame != null ? frame.getRootPane() : null;
+        return WindowManager.getInstance().findVisibleWindow();
     }
 }

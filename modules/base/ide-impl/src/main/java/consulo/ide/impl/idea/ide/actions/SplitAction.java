@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 
@@ -31,7 +30,7 @@ import javax.swing.*;
 /**
  * @author Vladimir Kondratyev
  */
-public abstract class SplitAction extends AnAction implements DumbAware {
+public abstract class SplitAction extends LegacyDumbAwareAction {
     protected enum Orientation {
         HORIZONTAL(SwingConstants.HORIZONTAL),
         VERTICAL(SwingConstants.VERTICAL);

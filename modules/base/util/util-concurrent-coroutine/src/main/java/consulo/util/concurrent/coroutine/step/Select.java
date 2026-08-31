@@ -61,7 +61,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	private final List<Coroutine<? super I, ? extends O>> aCoroutines =
 		new ArrayList<>();
 
-	private Predicate<Continuation<?>> pSelectCritiera = c -> true;
+	private Predicate<Continuation<?>> pSelectCriteria = c -> true;
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -88,7 +88,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	private Select(Select<I, O> rOther) {
 		aCoroutines.addAll(rOther.aCoroutines);
 
-		pSelectCritiera = rOther.pSelectCritiera;
+		pSelectCriteria = rOther.pSelectCriteria;
 	}
 
 	//~ Static methods ---------------------------------------------------------
@@ -124,7 +124,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	@SafeVarargs
 	public static <I extends @Nullable Object, O> Select<I, O> select(CoroutineStep<? super I, ? extends O>... rFromSteps) {
 		return new Select<>(asList(rFromSteps).stream()
-			.map(rStep -> new Coroutine<>(rStep))
+			.map(rStep -> Coroutine.first(rStep))
 			.collect(Collectors.toList()));
 	}
 
@@ -157,7 +157,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	public Select<I, O> or(CoroutineStep<? super I, ? extends O> rStep) {
 		Select<I, O> aSelect = new Select<>(this);
 
-		aSelect.aCoroutines.add(new Coroutine<>(rStep));
+		aSelect.aCoroutines.add(Coroutine.first(rStep));
 
 		return aSelect;
 	}
@@ -176,7 +176,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	}
 
 	/***************************************
-	 * Adds a condition for the result selection. If a succefully finished
+	 * Adds a condition for the result selection. If a successfully finished
 	 * continuation matches the given predicate it will be selected as the step
 	 * result.
 	 *
@@ -188,7 +188,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	public Select<I, O> when(Predicate<Continuation<?>> pSelectCriteria) {
 		Select<I, O> aSelect = new Select<>(aCoroutines);
 
-		aSelect.pSelectCritiera = pSelectCriteria;
+		aSelect.pSelectCriteria = pSelectCriteria;
 
 		return aSelect;
 	}
@@ -204,7 +204,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 
 		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
 		// We cannot explain this to the static validator, so suppressing NullAway validation.
-		return new Coroutine<>(this).runAsync(continuation.scope(), input)
+		return Coroutine.first(this).runAsync(continuation.scope(), input)
 			.getResult();
 	}
 
@@ -218,7 +218,8 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	void selectAsync(I rInput, @Nullable CoroutineStep<O, ?> rNextStep, Continuation<?> rContinuation) {
 		Selection<O, O, O> aSelection =
 			Selection.ofSingleValue(this, rNextStep, rContinuation,
-				pSelectCritiera);
+				pSelectCriteria
+			);
 
 		rContinuation.suspendTo(aSelection);
 

@@ -20,14 +20,15 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 03-May-17
+ * @since 2017-05-03
  */
 public interface ValueGroup<V> {
-  static ValueGroup<Boolean> createBool() {
-    return UIInternal.get()._ValueGroups_boolGroup();
-  }
+    static ValueGroup<Boolean> createBool() {
+        return UIInternal.get()._ValueGroups_boolGroup();
+    }
 
-  @RequiredUIAccess
-  void clearValues();
-  ValueGroup<V> add(ValueComponent<V> component);
+    @RequiredUIAccess
+    void clearValues();
+
+    ValueGroup<V> add(ValueComponent<V> component);
 }

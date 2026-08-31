@@ -18,6 +18,7 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.TextChange;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Default {@link TextChange} implementation with mutable state.
@@ -26,12 +27,11 @@ import consulo.util.lang.StringUtil;
  * @since 2010-07-07
  */
 public class TextChangeImpl implements TextChange {
-
   private final StringBuilder myText = new StringBuilder();
 
-  private char[] myChars;
-  private int    myStart;
-  private int    myEnd;
+  private char @Nullable [] myChars;
+  private int myStart;
+  private int myEnd;
 
   /**
    * Shorthand for creating change object with the given arguments where <code>'end index'</code> has the same value as
@@ -169,7 +169,7 @@ public class TextChangeImpl implements TextChange {
   }
   
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

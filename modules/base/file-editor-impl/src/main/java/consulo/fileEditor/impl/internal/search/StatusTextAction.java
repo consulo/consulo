@@ -4,7 +4,7 @@ package consulo.fileEditor.impl.internal.search;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
@@ -13,7 +13,7 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import javax.swing.*;
 import java.awt.*;
 
-public class StatusTextAction extends DumbAwareAction implements CustomComponentAction {
+public class StatusTextAction extends LegacyDumbAwareAction implements CustomComponentAction {
   @Override
   public void update(AnActionEvent e) {
     SearchSession search = e.getData(SearchSession.KEY);

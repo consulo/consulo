@@ -15,34 +15,9 @@
  */
 package consulo.ide.navigationToolbar;
 
-import consulo.language.psi.PsiElement;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-
-import org.jspecify.annotations.Nullable;
-import java.util.Collection;
-import java.util.List;
-
 /**
  * @author gregsh
  */
+@Deprecated
 public abstract class AbstractNavBarModelExtension implements NavBarModelExtension {
-  @Override
-  public abstract @Nullable String getPresentableText(Object object);
-
-  @Override
-  public @Nullable PsiElement adjustElement(PsiElement psiElement) {
-    return psiElement;
-  }
-
-  @Override
-  public @Nullable PsiElement getParent(PsiElement psiElement) {
-    return null;
-  }
-
-  
-  @Override
-  public Collection<VirtualFile> additionalRoots(Project project) {
-    return List.of();
-  }
 }

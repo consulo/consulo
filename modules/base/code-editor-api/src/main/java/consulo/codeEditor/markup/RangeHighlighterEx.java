@@ -36,6 +36,7 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
      */
     void setTextAttributes(@Nullable TextAttributes textAttributes);
 
+    @SuppressWarnings("deprecation")
     default void copyFrom(RangeHighlighterEx other) {
         setAfterEndOfLine(other.isAfterEndOfLine());
         setGreedyToLeft(other.isGreedyToLeft());
@@ -50,6 +51,7 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
         }
 
         setLineMarkerRenderer(other.getLineMarkerRenderer());
+        setLineMarkerPresentationProvider(other.getLineMarkerPresentationProvider());
         setCustomRenderer(other.getCustomRenderer());
         setGutterIconRenderer(other.getGutterIconRenderer());
 
@@ -60,6 +62,7 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
         setLineSeparatorColor(other.getLineSeparatorColor());
         setLineSeparatorPlacement(other.getLineSeparatorPlacement());
         setLineSeparatorRenderer(other.getLineSeparatorRenderer());
+        setLineSeparatorPresentationProvider(other.getLineSeparatorPresentationProvider());
 
         setEditorFilter(other.getEditorFilter());
     }

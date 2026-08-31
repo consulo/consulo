@@ -33,19 +33,22 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public class ExecutorAction extends AnAction implements DumbAware {
+public class ExecutorAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     private final Executor myExecutor;
-    
     private final ExecutorRegistry myExecutorRegistry;
-    
     private final RunCurrentFileService myRunCurrentFileService;
 
     public ExecutorAction(ExecutorRegistry executorRegistry,
@@ -58,63 +61,60 @@ public class ExecutorAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Project project = e.getData(Project.KEY);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            Project project = e.getData(Project.KEY);
 
-        if (project == null || project.isDisposed()) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
-
-        presentation.setVisible(myExecutor.isApplicable(project));
-        if (!presentation.isVisible()) {
-            return;
-        }
-
-        if (DumbService.getInstance(project).isDumb() || !project.isInitialized()) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
-        boolean enabled;
-
-        LocalizeValue text;
-        if (selectedConfiguration != null) {
-            presentation.setIcon(getInformativeIcon(project, myExecutor, selectedConfiguration));
-
-            ProgramRunner runner = RunnerRegistry.getInstance().getRunner(myExecutor.getId(), selectedConfiguration.getConfiguration());
-
-            ExecutionTarget target = ExecutionTargetManager.getActiveTarget(project);
-            enabled = ExecutionTargetManager.canRun(selectedConfiguration, target)
-                && runner != null && !myExecutorRegistry.isStarting(project, myExecutor.getId(), runner.getRunnerId());
-
-            if (enabled) {
-                presentation.setDescription(myExecutor.getDescription());
+            if (project == null || project.isDisposed()) {
+                presentation.setEnabledAndVisible(false);
+                return;
             }
-            text = ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, selectedConfiguration.getName());
-        }
-        else {
-            // don't compute current file to run if editors are not yet loaded
-            if (!project.isDefault() && !StartupManager.getInstance(project).postStartupActivityPassed()) {
+
+            presentation.setVisible(myExecutor.isApplicable(project));
+            if (!presentation.isVisible()) {
+                return;
+            }
+
+            if (DumbService.getInstance(project).isDumb() || !project.isInitialized()) {
                 presentation.setEnabled(false);
                 return;
             }
 
-            RunCurrentFileActionStatus status = myRunCurrentFileService.getRunCurrentFileActionStatus(myExecutor, e, false);
-            enabled = status.enabled();
-            text = status.tooltip();
-            presentation.setIcon(status.icon());
-        }
+            RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
+            boolean enabled;
 
-        presentation.setEnabled(enabled);
-        presentation.setText(text);
-    }
+            LocalizeValue text;
+            if (selectedConfiguration != null) {
+                presentation.setIcon(getInformativeIcon(project, myExecutor, selectedConfiguration));
 
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
+                ProgramRunner runner = RunnerRegistry.getInstance().getRunner(myExecutor.getId(), selectedConfiguration.getConfiguration());
+
+                ExecutionTarget target = ExecutionTargetManager.getActiveTarget(project);
+                enabled = ExecutionTargetManager.canRun(selectedConfiguration, target)
+                    && runner != null && !myExecutorRegistry.isStarting(project, myExecutor.getId(), runner.getRunnerId());
+
+                if (enabled) {
+                    presentation.setDescription(myExecutor.getDescription());
+                }
+                text = ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, selectedConfiguration.getName());
+            }
+            else {
+                // don't compute current file to run if editors are not yet loaded
+                if (!project.isDefault() && !StartupManager.getInstance(project).postStartupActivityPassed()) {
+                    presentation.setEnabled(false);
+                    return;
+                }
+
+                RunCurrentFileActionStatus status = myRunCurrentFileService.getRunCurrentFileActionStatus(myExecutor, e, false);
+                enabled = status.enabled();
+                text = status.tooltip();
+                presentation.setIcon(status.icon());
+            }
+
+            presentation.setEnabled(enabled);
+            presentation.setText(text);
+            return;
+        }).toCoroutine();
     }
 
     public static Image getInformativeIcon(Project project,

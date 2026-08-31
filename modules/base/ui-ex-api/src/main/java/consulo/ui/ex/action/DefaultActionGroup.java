@@ -135,7 +135,6 @@ public class DefaultActionGroup extends ActionGroup {
         addAction(action, Constraints.LAST);
     }
 
-    
     @Deprecated
     public final ActionInGroup addAction(AnAction action) {
         return addAction(action, Constraints.LAST);
@@ -162,7 +161,6 @@ public class DefaultActionGroup extends ActionGroup {
         add(action, constraint, ActionManager.getInstance());
     }
 
-    
     @Deprecated
     public final ActionInGroup addAction(AnAction action, Constraints constraint) {
         return addAction(action, constraint, ActionManager.getInstance());
@@ -172,7 +170,6 @@ public class DefaultActionGroup extends ActionGroup {
         addAction(action, constraint, actionManager);
     }
 
-    
     public final ActionInGroup addAction(AnAction action, Constraints constraint, ActionManager actionManager) {
         if (action == this) {
             throw new IllegalArgumentException(CANT_ADD_ITSELF + action);
@@ -351,7 +348,6 @@ public class DefaultActionGroup extends ActionGroup {
      * @return An array of children actions
      */
     @Override
-    
     public synchronized final AnAction[] getChildren(@Nullable AnActionEvent e, ActionManager actionManager) {
         boolean hasNulls = false;
         addAllToSortedList(actionManager);
@@ -385,7 +381,7 @@ public class DefaultActionGroup extends ActionGroup {
             else if (action instanceof ActionStubBase) {
                 action = unStub(actionManager, (ActionStubBase) action);
                 if (action == null) {
-                    LOG.error("Can't unstub " + pair);
+                    LOG.error("Can't un-stub " + pair);
                 }
                 else {
                     myPairs.set(i, Pair.create(action, pair.second));
@@ -429,7 +425,6 @@ public class DefaultActionGroup extends ActionGroup {
         return mySortedChildren.size() + myPairs.size();
     }
 
-    
     public final AnAction[] getChildActionsOrStubs() {
         // Mix sorted actions and pairs
         int sortedSize = mySortedChildren.size();

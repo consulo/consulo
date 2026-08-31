@@ -42,9 +42,9 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
     isDown = down;
   }
 
-  @RequiredWriteAction
   @Override
-  public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredWriteAction
+  public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     Project project = editor.getProject();
     assert project != null;
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);

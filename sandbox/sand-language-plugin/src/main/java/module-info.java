@@ -5,7 +5,11 @@
 module consulo.sand.language.plugin {
   requires java.desktop;
 
+  requires org.slf4j;
+  
   requires consulo.virtual.file.watcher.api;
+
+  requires consulo.ai.api;
 
   requires consulo.ide.api;
 
@@ -31,15 +35,22 @@ module consulo.sand.language.plugin {
 
   requires consulo.remote.server.api;
 
+  requires consulo.module.creation.api;
   requires consulo.module.ui.api;
 
   requires consulo.language.copyright.api;
 
   requires consulo.builtin.web.server.api;
 
+  requires consulo.version.control.system.api;
+
   requires consulo.language.impl;
 
   opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;
 
   opens consulo.sandboxPlugin.colorScheme to consulo.ide.impl;
+
+  requires org.apache.thrift;
+
+  opens consulo.enviroment.remoteAgent to consulo.util.xml.serializer;
 }

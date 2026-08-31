@@ -18,14 +18,19 @@ package consulo.ui.ex.toolWindow;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
 public interface ToolWindowStripeButton extends Disposable {
-  
+
   WindowInfo getWindowInfo();
+
+  default @Nullable ToolWindowSettings getSettings() {
+    return null;
+  }
 
   void apply(WindowInfo windowInfo);
 

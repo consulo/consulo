@@ -18,6 +18,7 @@ package consulo.ui.image;
 import consulo.ui.internal.UIInternal;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Locale;
 
 /**
@@ -25,21 +26,23 @@ import java.util.Locale;
  * @since 2020-09-26
  */
 public interface ImageKey extends Image {
-  static @Nullable ImageKey fromString(@Nullable String ids, int width, int height) {
-    if(ids != null && ids.contains("@")) {
-      String[] split = ids.split("@");
-      return of(split[0], split[1].toLowerCase(Locale.ROOT), width, height);
+    static @Nullable ImageKey fromString(@Nullable String ids, int width, int height) {
+        if (ids != null && ids.contains("@")) {
+            String[] split = ids.split("@");
+            return of(split[0], split[1].toLowerCase(Locale.ROOT), width, height);
+        }
+
+        return null;
     }
 
-    return null;
-  }
+    /**
+     * ImageID is case sensitive.
+     */
+    static ImageKey of(String groupId, String imageId, int width, int height) {
+        return UIInternal.get()._ImageKey_of(groupId, imageId, width, height);
+    }
 
-  /**
-   * ImageID must is case sensitive
-   */
-  static ImageKey of(String groupId, String imageId, int width, int height) {
-    return UIInternal.get()._ImageKey_of(groupId, imageId, width, height);
-  }
-  String getGroupId();
-  String getImageId();
+    String getGroupId();
+
+    String getImageId();
 }

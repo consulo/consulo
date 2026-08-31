@@ -73,6 +73,7 @@ import consulo.ui.ex.*;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;

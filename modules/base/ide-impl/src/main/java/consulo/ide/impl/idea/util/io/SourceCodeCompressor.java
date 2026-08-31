@@ -37,6 +37,7 @@ public class SourceCodeCompressor {
   }
 
   static {
+    @SuppressWarnings("SpellCheckingInspection")
     String preset_buf_string =
       "                   ;\r\n\r\n\r\n\r\n\n\n\n { {\r\n }\r\n = == != < > >= <= ? : ++ += -- -= [] [i] () ()) ())) (); ()); ())); () {" +
       "// /* /** */ * opyright (c)package com.import java.utilimport javax.swingimport java.awt" +

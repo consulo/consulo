@@ -17,15 +17,15 @@ package consulo.ui.cursor;
 
 /**
  * @author VISTALL
- * @since 10/08/2021
+ * @since 2021-08-10
  */
 public enum StandardCursors implements Cursor {
-  /**
-   * default cursor
-   */
-  ARROW,
-  CROSSHAIR,
-  TEXT,
-  WAIT,
-  HAND
+    /**
+     * default cursor
+     */
+    ARROW,
+    CROSSHAIR,
+    TEXT,
+    WAIT,
+    HAND
 }

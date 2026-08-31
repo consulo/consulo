@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.structureView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.structureView.StructureViewModel;
@@ -25,10 +26,12 @@ import consulo.fileEditor.structureView.tree.ProvidingTreeModel;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.ItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -37,159 +40,173 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public class StructureViewCompositeModel extends StructureViewModelBase implements Disposable, StructureViewModel.ElementInfoProvider, StructureViewModel.ExpandInfoProvider {
-  private final List<? extends StructureViewComposite.StructureViewDescriptor> myViews;
+    private final List<? extends StructureViewComposite.StructureViewDescriptor> myViews;
 
-  public StructureViewCompositeModel(PsiFile file, @Nullable Editor editor, List<? extends StructureViewComposite.StructureViewDescriptor> views) {
-    super(file, editor, createRootNode(file, views));
-    myViews = views;
-  }
-
-  
-  private JBIterable<StructureViewModel> getModels() {
-    return JBIterable.from(myViews).map(o -> o.structureModel);
-  }
-
-  @Override
-  public Object getCurrentEditorElement() {
-    return getModels().filterMap(o -> o.getCurrentEditorElement()).first();
-  }
-
-  
-  private static StructureViewTreeElement createRootNode(PsiFile file, List<? extends StructureViewComposite.StructureViewDescriptor> views) {
-    JBIterable<TreeElement> children = JBIterable.from(views).map(o -> createTreeElementFromView(file, o));
-    return new StructureViewTreeElement() {
-      @Override
-      public Object getValue() {
-        return file;
-      }
-
-      @Override
-      public void navigate(boolean requestFocus) {
-        file.navigate(requestFocus);
-      }
-
-      @Override
-      public boolean canNavigate() {
-        return file.canNavigate();
-      }
-
-      @Override
-      public boolean canNavigateToSource() {
-        return file.canNavigateToSource();
-      }
-
-      
-      @Override
-      public ItemPresentation getPresentation() {
-        return file.getPresentation();
-      }
-
-      
-      @Override
-      public TreeElement[] getChildren() {
-        List<TreeElement> elements = children.toList();
-        return elements.toArray(TreeElement.EMPTY_ARRAY);
-      }
-    };
-  }
-
-  
-  @Override
-  public Collection<NodeProvider> getNodeProviders() {
-    return getModels().filter(ProvidingTreeModel.class).flatMap(ProvidingTreeModel::getNodeProviders).toSet();
-  }
-
-  
-  @Override
-  public Filter[] getFilters() {
-    Set<Filter> filters = getModels().flatMap(o -> JBIterable.of(o.getFilters())).toSet();
-    return filters.toArray(Filter.EMPTY_ARRAY);
-  }
-
-  @Override
-  public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
-    for (ElementInfoProvider p : getModels().filter(ElementInfoProvider.class)) {
-      if (p.isAlwaysShowsPlus(element)) return true;
+    public StructureViewCompositeModel(
+        PsiFile file,
+        @Nullable Editor editor,
+        List<? extends StructureViewComposite.StructureViewDescriptor> views
+    ) {
+        super(file, editor, createRootNode(file, views));
+        myViews = views;
     }
-    return false;
-  }
 
-  @Override
-  public boolean isAlwaysLeaf(StructureViewTreeElement element) {
-    for (ElementInfoProvider p : getModels().filter(ElementInfoProvider.class)) {
-      if (p.isAlwaysLeaf(element)) return true;
+    private JBIterable<StructureViewModel> getModels() {
+        return JBIterable.from(myViews).map(o -> o.structureModel);
     }
-    return false;
-  }
 
-  @Override
-  public boolean isAutoExpand(StructureViewTreeElement element) {
-    if (element.getValue() instanceof StructureViewComposite.StructureViewDescriptor) return true;
-    for (ExpandInfoProvider p : getModels().filter(ExpandInfoProvider.class)) {
-      if (p.isAutoExpand(element)) return true;
+    @Override
+    public Object getCurrentEditorElement() {
+        return getModels().filterMap(o -> o.getCurrentEditorElement()).first();
     }
-    return false;
-  }
 
-  @Override
-  public boolean isSmartExpand() {
-    boolean result = false;
-    for (ExpandInfoProvider p : getModels().filter(ExpandInfoProvider.class)) {
-      if (!p.isSmartExpand()) return false;
-      result = true;
-    }
-    return result;
-  }
+    private static StructureViewTreeElement createRootNode(
+        PsiFile file,
+        List<? extends StructureViewComposite.StructureViewDescriptor> views
+    ) {
+        JBIterable<TreeElement> children = JBIterable.from(views).map(o -> createTreeElementFromView(file, o));
+        return new StructureViewTreeElement() {
+            @Override
+            public Object getValue() {
+                return file;
+            }
 
-  
-  private static TreeElement createTreeElementFromView(final PsiFile file, final StructureViewComposite.StructureViewDescriptor view) {
-    return new StructureViewTreeElement() {
-      @Override
-      public Object getValue() {
-        return view;
-      }
+            @Override
+            @RequiredUIAccess
+            public void navigate(boolean requestFocus) {
+                file.navigate(requestFocus);
+            }
 
-      @Override
-      public void navigate(boolean requestFocus) {
-        file.navigate(requestFocus);
-      }
+            @Override
+            @RequiredReadAction
+            public boolean canNavigate() {
+                return file.canNavigate();
+            }
 
-      @Override
-      public boolean canNavigate() {
-        return file.canNavigate();
-      }
+            @Override
+            @RequiredReadAction
+            public boolean canNavigateToSource() {
+                return file.canNavigateToSource();
+            }
 
-      @Override
-      public boolean canNavigateToSource() {
-        return file.canNavigateToSource();
-      }
+            @Override
+            public ItemPresentation getPresentation() {
+                return file.getPresentation();
+            }
 
-      
-      @Override
-      public ItemPresentation getPresentation() {
-        return new ItemPresentation() {
-          @Override
-          public @Nullable String getPresentableText() {
-            return view.title;
-          }
-
-          @Override
-          public @Nullable String getLocationString() {
-            return null;
-          }
-
-          @Override
-          public @Nullable Image getIcon() {
-            return view.icon;
-          }
+            @Override
+            public TreeElement[] getChildren() {
+                List<TreeElement> elements = children.toList();
+                return elements.toArray(TreeElement.EMPTY_ARRAY);
+            }
         };
-      }
+    }
 
-      
-      @Override
-      public TreeElement[] getChildren() {
-        return view.structureModel.getRoot().getChildren();
-      }
-    };
-  }
+    @Override
+    public Collection<NodeProvider> getNodeProviders() {
+        return getModels().filter(ProvidingTreeModel.class).flatMap(ProvidingTreeModel::getNodeProviders).toSet();
+    }
+
+    @Override
+    public Filter[] getFilters() {
+        Set<Filter> filters = getModels().flatMap(o -> JBIterable.of(o.getFilters())).toSet();
+        return filters.toArray(Filter.EMPTY_ARRAY);
+    }
+
+    @Override
+    public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
+        for (ElementInfoProvider p : getModels().filter(ElementInfoProvider.class)) {
+            if (p.isAlwaysShowsPlus(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isAlwaysLeaf(StructureViewTreeElement element) {
+        for (ElementInfoProvider p : getModels().filter(ElementInfoProvider.class)) {
+            if (p.isAlwaysLeaf(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isAutoExpand(StructureViewTreeElement element) {
+        if (element.getValue() instanceof StructureViewComposite.StructureViewDescriptor) {
+            return true;
+        }
+        for (ExpandInfoProvider p : getModels().filter(ExpandInfoProvider.class)) {
+            if (p.isAutoExpand(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isSmartExpand() {
+        boolean result = false;
+        for (ExpandInfoProvider p : getModels().filter(ExpandInfoProvider.class)) {
+            if (!p.isSmartExpand()) {
+                return false;
+            }
+            result = true;
+        }
+        return result;
+    }
+
+    private static TreeElement createTreeElementFromView(final PsiFile file, final StructureViewComposite.StructureViewDescriptor view) {
+        return new StructureViewTreeElement() {
+            @Override
+            public Object getValue() {
+                return view;
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void navigate(boolean requestFocus) {
+                file.navigate(requestFocus);
+            }
+
+            @Override
+            @RequiredReadAction
+            public boolean canNavigate() {
+                return file.canNavigate();
+            }
+
+            @Override
+            @RequiredReadAction
+            public boolean canNavigateToSource() {
+                return file.canNavigateToSource();
+            }
+
+            @Override
+            public ItemPresentation getPresentation() {
+                return new ItemPresentation() {
+                    @Override
+                    public @Nullable String getPresentableText() {
+                        return view.title;
+                    }
+
+                    @Override
+                    public @Nullable String getLocationString() {
+                        return null;
+                    }
+
+                    @Override
+                    public @Nullable Image getIcon() {
+                        return view.icon;
+                    }
+                };
+            }
+
+            @Override
+            public TreeElement[] getChildren() {
+                return view.structureModel.getRoot().getChildren();
+            }
+        };
+    }
 }

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.action.QuickList;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;

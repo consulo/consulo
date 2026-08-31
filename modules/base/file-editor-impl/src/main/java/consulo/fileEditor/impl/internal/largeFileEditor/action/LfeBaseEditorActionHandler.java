@@ -8,6 +8,7 @@ import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.fileEditor.internal.largeFileEditor.LargeEditorActionUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 public abstract class LfeBaseEditorActionHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -19,15 +20,14 @@ public abstract class LfeBaseEditorActionHandler extends EditorActionHandler imp
     }
 
     @Override
+    @RequiredUIAccess
     protected final void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         LargeFileEditor largeFileEditor = LargeEditorActionUtil.tryGetLargeFileEditorManagerFromEditor(editor);
         if (largeFileEditor != null) {
             doExecuteInLfe(largeFileEditor, editor, caret, dataContext);
         }
-        else {
-            if (originalHandler != null) {
-                originalHandler.execute(editor, caret, dataContext);
-            }
+        else if (originalHandler != null) {
+            originalHandler.execute(editor, caret, dataContext);
         }
     }
 

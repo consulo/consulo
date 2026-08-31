@@ -23,7 +23,7 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.keymap.Keymap;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 

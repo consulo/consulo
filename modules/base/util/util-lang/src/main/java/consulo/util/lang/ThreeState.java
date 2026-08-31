@@ -15,9 +15,12 @@
  */
 package consulo.util.lang;
 
+import com.dslplatform.json.CompiledJson;
+
 /**
  * @author max
  */
+@CompiledJson
 public enum ThreeState {
   YES,
   NO,

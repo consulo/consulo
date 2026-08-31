@@ -1,5 +1,5 @@
 -Dapple.awt.application.appearance=system
--Dapple.laf.useScreenMenuBar=true
+-Dapple.laf.useScreenMenuBar=false
 --add-opens=java.desktop/sun.awt=consulo.container.api
 --add-opens=java.desktop/sun.swing=consulo.container.api
 --add-opens=java.desktop/sun.awt.image=consulo.container.api

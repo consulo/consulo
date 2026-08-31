@@ -35,220 +35,217 @@ import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
+ * Extracted part from {@link TextEditorProviderImpl}
+ *
  * @author VISTALL
  * @since 2018-05-10
- * <p>
- * Extracted part from {@link TextEditorProviderImpl}
  */
 public abstract class TextEditorProvider implements FileEditorProvider, DumbAware {
-  
-  public static TextEditorProvider getInstance() {
-    return EP_FILE_EDITOR_PROVIDER.findExtensionOrFail(TextEditorProvider.class);
-  }
+    public static TextEditorProvider getInstance() {
+        return EP_FILE_EDITOR_PROVIDER.findExtensionOrFail(TextEditorProvider.class);
+    }
 
-  @TestOnly
-  public static final Key<Boolean> TREAT_AS_SHOWN = Key.create("treat.editor.component.as.shown");
+    @TestOnly
+    public static final Key<Boolean> TREAT_AS_SHOWN = Key.create("treat.editor.component.as.shown");
 
-  protected static final Key<TextEditor> TEXT_EDITOR_KEY = Key.create("textEditor");
+    protected static final Key<TextEditor> TEXT_EDITOR_KEY = Key.create("textEditor");
 
-  
-  private static final String TYPE_ID = "text-editor";
-  
-  private static final String LINE_ATTR = "line";
-  
-  private static final String COLUMN_ATTR = "column";
-  
-  private static final String LEAN_FORWARD_ATTR = "lean-forward";
-  
-  private static final String SELECTION_START_LINE_ATTR = "selection-start-line";
-  
-  private static final String SELECTION_START_COLUMN_ATTR = "selection-start-column";
-  
-  private static final String SELECTION_END_LINE_ATTR = "selection-end-line";
-  
-  private static final String SELECTION_END_COLUMN_ATTR = "selection-end-column";
-  
-  private static final String RELATIVE_CARET_POSITION_ATTR = "relative-caret-position";
-  
-  private static final String CARET_ELEMENT = "caret";
+    private static final String TYPE_ID = "text-editor";
 
-  
-  public abstract TextEditor getTextEditor(Editor editor);
+    private static final String LINE_ATTR = "line";
 
-  @Override
-  public boolean accept(Project project, VirtualFile file) {
-    return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
-  }
+    private static final String COLUMN_ATTR = "column";
 
-  @Override
-  
-  public FileEditorState readState(Element element, Project project, VirtualFile file) {
-    TextEditorState state = new TextEditorState();
+    private static final String LEAN_FORWARD_ATTR = "lean-forward";
 
-    try {
-      List<Element> caretElements = element.getChildren(CARET_ELEMENT);
-      if (caretElements.isEmpty()) {
-        state.CARETS = new TextEditorState.CaretState[]{readCaretInfo(element)};
-      }
-      else {
-        state.CARETS = new TextEditorState.CaretState[caretElements.size()];
-        for (int i = 0; i < caretElements.size(); i++) {
-          state.CARETS[i] = readCaretInfo(caretElements.get(i));
+    private static final String SELECTION_START_LINE_ATTR = "selection-start-line";
+
+    private static final String SELECTION_START_COLUMN_ATTR = "selection-start-column";
+
+    private static final String SELECTION_END_LINE_ATTR = "selection-end-line";
+
+    private static final String SELECTION_END_COLUMN_ATTR = "selection-end-column";
+
+    private static final String RELATIVE_CARET_POSITION_ATTR = "relative-caret-position";
+
+    private static final String CARET_ELEMENT = "caret";
+
+    public abstract TextEditor getTextEditor(Editor editor);
+
+    @Override
+    public boolean accept(Project project, VirtualFile file) {
+        return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
+    }
+
+    @Override
+    public FileEditorState readState(Element element, Project project, VirtualFile file) {
+        TextEditorState state = new TextEditorState();
+
+        try {
+            List<Element> caretElements = element.getChildren(CARET_ELEMENT);
+            if (caretElements.isEmpty()) {
+                state.CARETS = new TextEditorState.CaretState[]{readCaretInfo(element)};
+            }
+            else {
+                state.CARETS = new TextEditorState.CaretState[caretElements.size()];
+                for (int i = 0; i < caretElements.size(); i++) {
+                    state.CARETS[i] = readCaretInfo(caretElements.get(i));
+                }
+            }
+
+            String verticalScrollProportion = element.getAttributeValue(RELATIVE_CARET_POSITION_ATTR);
+            state.RELATIVE_CARET_POSITION = verticalScrollProportion == null ? 0 : Integer.parseInt(verticalScrollProportion);
         }
-      }
-
-      String verticalScrollProportion = element.getAttributeValue(RELATIVE_CARET_POSITION_ATTR);
-      state.RELATIVE_CARET_POSITION = verticalScrollProportion == null ? 0 : Integer.parseInt(verticalScrollProportion);
-    }
-    catch (NumberFormatException ignored) {
-    }
-
-    return state;
-  }
-
-  private static TextEditorState.CaretState readCaretInfo(Element element) {
-    TextEditorState.CaretState caretState = new TextEditorState.CaretState();
-    caretState.LINE = parseWithDefault(element, LINE_ATTR);
-    caretState.COLUMN = parseWithDefault(element, COLUMN_ATTR);
-    caretState.LEAN_FORWARD = parseBooleanWithDefault(element, LEAN_FORWARD_ATTR);
-    caretState.SELECTION_START_LINE = parseWithDefault(element, SELECTION_START_LINE_ATTR);
-    caretState.SELECTION_START_COLUMN = parseWithDefault(element, SELECTION_START_COLUMN_ATTR);
-    caretState.SELECTION_END_LINE = parseWithDefault(element, SELECTION_END_LINE_ATTR);
-    caretState.SELECTION_END_COLUMN = parseWithDefault(element, SELECTION_END_COLUMN_ATTR);
-    return caretState;
-  }
-
-  private static int parseWithDefault(Element element, String attributeName) {
-    String value = element.getAttributeValue(attributeName);
-    return value == null ? 0 : Integer.parseInt(value);
-  }
-
-  private static boolean parseBooleanWithDefault(Element element, String attributeName) {
-    String value = element.getAttributeValue(attributeName);
-    return value != null && Boolean.parseBoolean(value);
-  }
-
-  @Override
-  public void writeState(FileEditorState _state, Project project, Element element) {
-    TextEditorState state = (TextEditorState)_state;
-
-    element.setAttribute(RELATIVE_CARET_POSITION_ATTR, Integer.toString(state.RELATIVE_CARET_POSITION));
-    if (state.CARETS != null) {
-      for (TextEditorState.CaretState caretState : state.CARETS) {
-        Element e = new Element(CARET_ELEMENT);
-        e.setAttribute(LINE_ATTR, Integer.toString(caretState.LINE));
-        e.setAttribute(COLUMN_ATTR, Integer.toString(caretState.COLUMN));
-        e.setAttribute(LEAN_FORWARD_ATTR, Boolean.toString(caretState.LEAN_FORWARD));
-        e.setAttribute(SELECTION_START_LINE_ATTR, Integer.toString(caretState.SELECTION_START_LINE));
-        e.setAttribute(SELECTION_START_COLUMN_ATTR, Integer.toString(caretState.SELECTION_START_COLUMN));
-        e.setAttribute(SELECTION_END_LINE_ATTR, Integer.toString(caretState.SELECTION_END_LINE));
-        e.setAttribute(SELECTION_END_COLUMN_ATTR, Integer.toString(caretState.SELECTION_END_COLUMN));
-        element.addContent(e);
-      }
-    }
-  }
-
-  @Override
-  
-  public String getEditorTypeId() {
-    return TYPE_ID;
-  }
-
-  @Override
-  
-  public FileEditorPolicy getPolicy() {
-    return FileEditorPolicy.NONE;
-  }
-
-  public static @Nullable Document[] getDocuments(FileEditor editor) {
-    if (editor instanceof DocumentsEditor) {
-      DocumentsEditor documentsEditor = (DocumentsEditor)editor;
-      Document[] documents = documentsEditor.getDocuments();
-      return documents.length > 0 ? documents : null;
-    }
-
-    if (editor instanceof TextEditor) {
-      Document document = ((TextEditor)editor).getEditor().getDocument();
-      return new Document[]{document};
-    }
-
-    Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    for (int i = projects.length - 1; i >= 0; i--) {
-      VirtualFile file = FileEditorManager.getInstance(projects[i]).getFile(editor);
-      if (file != null) {
-        Document document = FileDocumentManager.getInstance().getDocument(file);
-        if (document != null) {
-          return new Document[]{document};
+        catch (NumberFormatException ignored) {
         }
-      }
+
+        return state;
     }
 
-    return null;
-  }
-
-  public static void putTextEditor(Editor editor, TextEditor textEditor) {
-    editor.putUserData(TEXT_EDITOR_KEY, textEditor);
-  }
-
-  
-  public TextEditorState getStateImpl(Project project, Editor editor, FileEditorStateLevel level) {
-    TextEditorState state = new TextEditorState();
-    CaretModel caretModel = editor.getCaretModel();
-    if (caretModel.supportsMultipleCarets()) {
-      List<CaretState> caretsAndSelections = caretModel.getCaretsAndSelections();
-      state.CARETS = new TextEditorState.CaretState[caretsAndSelections.size()];
-      for (int i = 0; i < caretsAndSelections.size(); i++) {
-        CaretState caretState = caretsAndSelections.get(i);
-        LogicalPosition caretPosition = caretState.getCaretPosition();
-        LogicalPosition selectionStartPosition = caretState.getSelectionStart();
-        LogicalPosition selectionEndPosition = caretState.getSelectionEnd();
-        state.CARETS[i] = createCaretState(caretPosition, selectionStartPosition, selectionEndPosition);
-      }
-    }
-    else {
-      LogicalPosition caretPosition = caretModel.getLogicalPosition();
-      LogicalPosition selectionStartPosition = editor.offsetToLogicalPosition(editor.getSelectionModel().getSelectionStart());
-      LogicalPosition selectionEndPosition = editor.offsetToLogicalPosition(editor.getSelectionModel().getSelectionEnd());
-      state.CARETS = new TextEditorState.CaretState[1];
-      state.CARETS[0] = createCaretState(caretPosition, selectionStartPosition, selectionEndPosition);
+    private static TextEditorState.CaretState readCaretInfo(Element element) {
+        TextEditorState.CaretState caretState = new TextEditorState.CaretState();
+        caretState.LINE = parseWithDefault(element, LINE_ATTR);
+        caretState.COLUMN = parseWithDefault(element, COLUMN_ATTR);
+        caretState.LEAN_FORWARD = parseBooleanWithDefault(element, LEAN_FORWARD_ATTR);
+        caretState.SELECTION_START_LINE = parseWithDefault(element, SELECTION_START_LINE_ATTR);
+        caretState.SELECTION_START_COLUMN = parseWithDefault(element, SELECTION_START_COLUMN_ATTR);
+        caretState.SELECTION_END_LINE = parseWithDefault(element, SELECTION_END_LINE_ATTR);
+        caretState.SELECTION_END_COLUMN = parseWithDefault(element, SELECTION_END_COLUMN_ATTR);
+        return caretState;
     }
 
-    // Saving scrolling proportion on UNDO may cause undesirable results of undo action fails to perform since
-    // scrolling proportion restored slightly differs from what have been saved.
-    state.RELATIVE_CARET_POSITION = level == FileEditorStateLevel.UNDO ? Integer.MAX_VALUE : EditorUtil.calcRelativeCaretPosition(editor);
-
-    return state;
-  }
-
-  public static boolean isTextFile(VirtualFile file) {
-    if (file.isDirectory() || !file.isValid()) {
-      return false;
+    private static int parseWithDefault(Element element, String attributeName) {
+        String value = element.getAttributeValue(attributeName);
+        return value == null ? 0 : Integer.parseInt(value);
     }
 
-    FileType ft = file.getFileType();
-    return !ft.isBinary() || BinaryFileDecompiler.forFileType(ft) != null;
-  }
+    private static boolean parseBooleanWithDefault(Element element, String attributeName) {
+        String value = element.getAttributeValue(attributeName);
+        return value != null && Boolean.parseBoolean(value);
+    }
 
-  private static TextEditorState.CaretState createCaretState(LogicalPosition caretPosition, LogicalPosition selectionStartPosition, LogicalPosition selectionEndPosition) {
-    TextEditorState.CaretState caretState = new TextEditorState.CaretState();
-    caretState.LINE = getLine(caretPosition);
-    caretState.COLUMN = getColumn(caretPosition);
-    caretState.LEAN_FORWARD = caretPosition != null && caretPosition.leansForward;
-    caretState.SELECTION_START_LINE = getLine(selectionStartPosition);
-    caretState.SELECTION_START_COLUMN = getColumn(selectionStartPosition);
-    caretState.SELECTION_END_LINE = getLine(selectionEndPosition);
-    caretState.SELECTION_END_COLUMN = getColumn(selectionEndPosition);
-    return caretState;
-  }
+    @Override
+    public void writeState(FileEditorState _state, Project project, Element element) {
+        TextEditorState state = (TextEditorState) _state;
 
-  private static int getLine(@Nullable LogicalPosition pos) {
-    return pos == null ? 0 : pos.line;
-  }
+        element.setAttribute(RELATIVE_CARET_POSITION_ATTR, Integer.toString(state.RELATIVE_CARET_POSITION));
+        if (state.CARETS != null) {
+            for (TextEditorState.CaretState caretState : state.CARETS) {
+                Element e = new Element(CARET_ELEMENT);
+                e.setAttribute(LINE_ATTR, Integer.toString(caretState.LINE));
+                e.setAttribute(COLUMN_ATTR, Integer.toString(caretState.COLUMN));
+                e.setAttribute(LEAN_FORWARD_ATTR, Boolean.toString(caretState.LEAN_FORWARD));
+                e.setAttribute(SELECTION_START_LINE_ATTR, Integer.toString(caretState.SELECTION_START_LINE));
+                e.setAttribute(SELECTION_START_COLUMN_ATTR, Integer.toString(caretState.SELECTION_START_COLUMN));
+                e.setAttribute(SELECTION_END_LINE_ATTR, Integer.toString(caretState.SELECTION_END_LINE));
+                e.setAttribute(SELECTION_END_COLUMN_ATTR, Integer.toString(caretState.SELECTION_END_COLUMN));
+                element.addContent(e);
+            }
+        }
+    }
 
-  private static int getColumn(@Nullable LogicalPosition pos) {
-    return pos == null ? 0 : pos.column;
-  }
+    @Override
+    public String getEditorTypeId() {
+        return TYPE_ID;
+    }
+
+    @Override
+    public FileEditorPolicy getPolicy() {
+        return FileEditorPolicy.NONE;
+    }
+
+    public static Document @Nullable [] getDocuments(FileEditor editor) {
+        if (editor instanceof DocumentsEditor documentsEditor) {
+            Document[] documents = documentsEditor.getDocuments();
+            return documents.length > 0 ? documents : null;
+        }
+
+        if (editor instanceof TextEditor textEditor) {
+            Document document = textEditor.getEditor().getDocument();
+            return new Document[]{document};
+        }
+
+        Project[] projects = ProjectManager.getInstance().getOpenProjects();
+        for (int i = projects.length - 1; i >= 0; i--) {
+            VirtualFile file = FileEditorManager.getInstance(projects[i]).getFile(editor);
+            if (file != null) {
+                Document document = FileDocumentManager.getInstance().getDocument(file);
+                if (document != null) {
+                    return new Document[]{document};
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static void putTextEditor(Editor editor, TextEditor textEditor) {
+        editor.putUserData(TEXT_EDITOR_KEY, textEditor);
+    }
+
+    public TextEditorState getStateImpl(@Nullable Project project, Editor editor, FileEditorStateLevel level) {
+        TextEditorState state = new TextEditorState();
+        CaretModel caretModel = editor.getCaretModel();
+        if (caretModel.supportsMultipleCarets()) {
+            List<CaretState> caretsAndSelections = caretModel.getCaretsAndSelections();
+            state.CARETS = new TextEditorState.CaretState[caretsAndSelections.size()];
+            for (int i = 0; i < caretsAndSelections.size(); i++) {
+                CaretState caretState = caretsAndSelections.get(i);
+                LogicalPosition caretPosition = caretState.getCaretPosition();
+                LogicalPosition selectionStartPosition = caretState.getSelectionStart();
+                LogicalPosition selectionEndPosition = caretState.getSelectionEnd();
+                state.CARETS[i] = createCaretState(caretPosition, selectionStartPosition, selectionEndPosition);
+            }
+        }
+        else {
+            LogicalPosition caretPosition = caretModel.getLogicalPosition();
+            LogicalPosition selectionStartPosition = editor.offsetToLogicalPosition(editor.getSelectionModel().getSelectionStart());
+            LogicalPosition selectionEndPosition = editor.offsetToLogicalPosition(editor.getSelectionModel().getSelectionEnd());
+            state.CARETS = new TextEditorState.CaretState[1];
+            state.CARETS[0] = createCaretState(caretPosition, selectionStartPosition, selectionEndPosition);
+        }
+
+        // Saving scrolling proportion on UNDO may cause undesirable results of undo action fails to perform since
+        // scrolling proportion restored slightly differs from what have been saved.
+        state.RELATIVE_CARET_POSITION = level == FileEditorStateLevel.UNDO ? Integer.MAX_VALUE : EditorUtil.calcRelativeCaretPosition(editor);
+
+        return state;
+    }
+
+    public static boolean isTextFile(VirtualFile file) {
+        if (file.isDirectory() || !file.isValid()) {
+            return false;
+        }
+
+        FileType ft = file.getFileType();
+        return !ft.isBinary() || BinaryFileDecompiler.forFileType(ft) != null;
+    }
+
+    private static TextEditorState.CaretState createCaretState(
+        @Nullable LogicalPosition caretPosition,
+        @Nullable LogicalPosition selectionStartPosition,
+        @Nullable LogicalPosition selectionEndPosition
+    ) {
+        TextEditorState.CaretState caretState = new TextEditorState.CaretState();
+        caretState.LINE = getLine(caretPosition);
+        caretState.COLUMN = getColumn(caretPosition);
+        caretState.LEAN_FORWARD = caretPosition != null && caretPosition.leansForward;
+        caretState.SELECTION_START_LINE = getLine(selectionStartPosition);
+        caretState.SELECTION_START_COLUMN = getColumn(selectionStartPosition);
+        caretState.SELECTION_END_LINE = getLine(selectionEndPosition);
+        caretState.SELECTION_END_COLUMN = getColumn(selectionEndPosition);
+        return caretState;
+    }
+
+    private static int getLine(@Nullable LogicalPosition pos) {
+        return pos == null ? 0 : pos.line;
+    }
+
+    private static int getColumn(@Nullable LogicalPosition pos) {
+        return pos == null ? 0 : pos.column;
+    }
 }

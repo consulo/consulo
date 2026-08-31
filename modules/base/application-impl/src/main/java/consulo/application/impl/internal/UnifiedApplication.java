@@ -41,7 +41,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     public UnifiedApplication(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
 
-        myLock = new UnifiedRWLock();
+        myLock = new StampedRWLock();
 
         ApplicationManager.setApplication(this);
     }
@@ -54,12 +54,6 @@ public abstract class UnifiedApplication extends BaseApplication {
     @Override
     protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
-    }
-
-    @Override
-    public void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
-        UIAccess uiAccess = getLastUIAccess();
-        uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
     }
 
     @Override
@@ -145,10 +139,11 @@ public abstract class UnifiedApplication extends BaseApplication {
 
     @Override
     public boolean isReadAccessAllowed() {
-        return isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
+        // hack: the ui thread is read allowed here like the awt event dispatch thread, otherwise every
+        // platform call reached from a vaadin request logs a read access error
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
     }
 
-    
     @Override
     public ModalityState getCurrentModalityState() {
         return ModalityState.nonModal();

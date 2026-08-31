@@ -26,19 +26,19 @@ import java.util.function.Function;
 
 public class SortByVcsRoots<T> {
   private final Project myProject;
-  private final Function<T, FilePath> myConvertor;
+  private final Function<T, FilePath> myConverter;
   private ProjectLevelVcsManager myVcsManager;
 
-  public SortByVcsRoots(Project project, Function<T, FilePath> convertor) {
+  public SortByVcsRoots(Project project, Function<T, FilePath> converter) {
     myProject = project;
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
-    myConvertor = convertor;
+    myConverter = converter;
   }
 
   public MultiMap<VcsRoot, T> sort(Collection<T> in) {
     MultiMap<VcsRoot, T> result = new MultiMap<>();
     for (T t : in) {
-      VcsRoot root = myVcsManager.getVcsRootObjectFor(myConvertor.apply(t));
+      VcsRoot root = myVcsManager.getVcsRootObjectFor(myConverter.apply(t));
       if (root != null) {
         result.putValue(root, t);
       }

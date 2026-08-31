@@ -24,16 +24,38 @@ import consulo.ui.internal.KeyCodeImpl;
 public interface KeyCode {
     KeyCode ENTER = KeyCode.of('\n', "ENTER");
 
+    KeyCode END = KeyCode.of(0x23, "VK_END");
+
+    KeyCode HOME = KeyCode.of(0x24, "VK_HOME");
+
+    KeyCode LEFT = KeyCode.of(0x25, "VK_LEFT");
+
     KeyCode UP = KeyCode.of(0x26, "VK_UP");
 
+    KeyCode RIGHT = KeyCode.of(0x27, "VK_RIGHT");
+
     KeyCode DOWN = KeyCode.of(0x28, "VK_DOWN");
+
+    KeyCode ESCAPE = KeyCode.of(0x1B, "VK_ESCAPE");
+
+    KeyCode TAB = KeyCode.of(0x09, "VK_TAB");
+
+    KeyCode SHIFT = KeyCode.of(0x10, "VK_SHIFT");
+
+    KeyCode CTRL = KeyCode.of(0x11, "VK_CONTROL");
+
+    KeyCode ALT = KeyCode.of(0x12, "VK_ALT");
+
+    KeyCode META = KeyCode.of(0x9D, "VK_META");
 
     int key();
 
     String name();
+
     static KeyCode of(int key) {
         return KeyCodeImpl.ourMap.computeIfAbsent(key, it -> new KeyCodeImpl(it, Character.toString(it)));
     }
+
     static KeyCode of(int key, String name) {
         return KeyCodeImpl.ourMap.computeIfAbsent(key, it -> new KeyCodeImpl(it, name));
     }

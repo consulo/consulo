@@ -21,7 +21,9 @@ import java.util.*;
 /**
  * @author VISTALL
  * @since 07/02/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.Int2ObjectMap} directly
  */
+@Deprecated
 public interface IntObjectMap<V> {
   interface IntObjectEntry<V1> {
     int getKey();

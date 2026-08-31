@@ -350,7 +350,7 @@ public interface VirtualFile extends CopyableUserDataHolder, ModificationTracker
   /**
    * @return the {@link FileType} of this file.
    * When IDEA has no idea what the file type is (i.e. file type is not registered via {@link FileTypeRegistry}),
-   * it returns {@link consulo.ide.impl.idea.openapi.fileTypes.FileTypes#UNKNOWN}
+   * it returns {@link consulo.virtualFileSystem.fileType.UnknownFileType#INSTANCE}
    */
   @SuppressWarnings("JavadocReference")
   default FileType getFileType() {

@@ -17,7 +17,7 @@ package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 21/12/2025
+ * @since 2025-12-21
  */
 public enum LabelStyle implements ComponentStyle {
     TRANSPARENT_BACKGROUND

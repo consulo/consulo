@@ -18,11 +18,12 @@ package consulo.ide.impl.wm.impl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
-import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsSwicher;
+import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsSwitcher;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.CustomStatusBarWidget;
@@ -43,13 +44,12 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     CENTER
   }
 
-  private final Map<String, WidgetBean> myWidgetMap = new HashMap<>();
+  private final Map<String, WidgetBean> myWidgetMap = new LinkedHashMap<>();
 
   private HorizontalLayout myLeftPanel;
   private HorizontalLayout myRightPanel;
@@ -79,14 +79,16 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   private static class WidgetBean {
     PseudoComponent component;
+    consulo.ui.Component uiComponent;
     Position position;
     StatusBarWidget widget;
 
-    static WidgetBean create(StatusBarWidget widget, Position position, PseudoComponent component) {
+    static WidgetBean create(StatusBarWidget widget, Position position, PseudoComponent component, consulo.ui.Component uiComponent) {
       WidgetBean bean = new WidgetBean();
       bean.widget = widget;
       bean.position = position;
       bean.component = component;
+      bean.uiComponent = uiComponent;
       return bean;
     }
   }
@@ -97,38 +99,47 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   private UnifiedInfoAndProgressPanel myInfoAndProgressPanel;
 
+  private final @Nullable StatusBar myMaster;
+
+  private UnifiedToolWindowsSwitcher mySwitcher;
+
   @RequiredUIAccess
   public UnifiedStatusBarImpl(Application application, @Nullable StatusBar master) {
     myApplication = application;
+    myMaster = master;
 
     myInfoAndProgressPanel = new UnifiedInfoAndProgressPanel();
     Disposer.register(this, myInfoAndProgressPanel);
 
     centerPanel().add(myInfoAndProgressPanel.getUIComponent());
 
-    if (master == null) {
-      UnifiedToolWindowsSwicher swicher = new UnifiedToolWindowsSwicher(this);
-      swicher.update();
-
-      Disposer.register(this, swicher);
-      leftPanel().add(swicher.getUIComponent());
-    }
-
-    myComponent.addUserDataProvider(Project.KEY, this::getProject);
-    myComponent.addUserDataProvider(StatusBar.KEY, () -> this);
+    myComponent.putUserData(UiDataProvider.KEY, sink -> {
+        sink.set(Project.KEY, getProject());
+        sink.set(StatusBar.KEY, this);
+    });
 
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }
 
+  /**
+   * The bar is shown in one frame, and on the web a frame belongs to a single browser session - the access of
+   * its own component is the one its widgets may be pushed into. The application wide one is what is left
+   * while the bar is being built and not attached yet.
+   */
+  private UIAccess uiAccess() {
+    UIAccess uiAccess = myComponent.getUIAccess();
+    return uiAccess != null ? uiAccess : myApplication.getLastUIAccess();
+  }
+
   private void addWidget(StatusBarWidget widget, Position pos) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
+    UIAccess uiAccess = uiAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, pos, List.of()));
   }
 
   @Override
   public void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
+    UIAccess uiAccess = uiAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, order));
 
@@ -139,14 +150,19 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   private void addWidget(StatusBarWidget widget, Position position, List<String> order) {
     UIAccess.assertIsUIThread();
     PseudoComponent c = wrap(widget);
+    // the custom widget wrapper builds a new component on each call, it must be resolved exactly once
+    consulo.ui.Component uiComponent = c.getComponent();
     HorizontalLayout panel = getTargetPanel(position);
     //if (position == Position.LEFT && panel.getComponentCount() == 0) {
     //  c.setBorder(SystemInfo.isMac ? JBUI.Borders.empty(2, 0, 2, 4) : JBUI.Borders.empty());
     //}
-    panel.add(c/*, getPositionIndex(position, anchor)*/);
-    myWidgetMap.put(widget.getId(), WidgetBean.create(widget, position, c));
+    panel.add(uiComponent/*, getPositionIndex(position, anchor)*/);
+    myWidgetMap.put(widget.getId(), WidgetBean.create(widget, position, c, uiComponent));
     if (c instanceof StatusBarWidgetWrapper) {
       ((StatusBarWidgetWrapper)c).beforeUpdate();
+    }
+    else {
+      widget.beforeUpdate();
     }
     widget.install(this);
     //panel.revalidate();
@@ -202,7 +218,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   //  return -1;
   //}
 
-  
   @RequiredUIAccess
   private HorizontalLayout getTargetPanel(Position position) {
     if (position == Position.RIGHT) {
@@ -243,10 +258,17 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void removeWidget(String id) {
-
+    // the widget manager drops widgets while the project closes, when the ui access may already be gone -
+    // invokeLater is the only entry point that tolerates it
+    myApplication.invokeLater(() -> {
+      WidgetBean bean = myWidgetMap.remove(id);
+      if (bean != null) {
+        getTargetPanel(bean.position).remove(bean.uiComponent);
+        Disposer.dispose(bean.widget);
+      }
+    });
   }
 
-  
   @Override
   public consulo.ui.Component getUIComponent() {
     return myComponent;
@@ -286,6 +308,32 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   @Override
   public void install(IdeFrame frame) {
     myFrame = frame;
+
+    // the switcher hides itself while getProject() is null, and the project is only reachable through the frame
+    if (myMaster == null) {
+      uiAccess().giveIfNeed(this::installToolWindowsSwitcher);
+    }
+  }
+
+  /** The switcher is the leftmost item of the bar. */
+  @RequiredUIAccess
+  protected void installToolWindowsSwitcher() {
+    if (mySwitcher == null) {
+      mySwitcher = new UnifiedToolWindowsSwitcher(this);
+      Disposer.register(this, mySwitcher);
+      addToLeft(mySwitcher.getUIComponent());
+    }
+
+    mySwitcher.update();
+  }
+
+  /**
+   * Consulo renders the bottom tool window stripe and the status bar as one row, the stripe buttons taking
+   * the left side of the bar.
+   */
+  @RequiredUIAccess
+  public void addToLeft(consulo.ui.Component component) {
+    leftPanel().add(component);
   }
 
   @Override
@@ -310,12 +358,14 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void addProgress(ProgressIndicator indicator, TaskInfo info) {
-
+    if (myInfoAndProgressPanel != null) {
+      myInfoAndProgressPanel.addProgress(indicator, info);
+    }
   }
 
   @Override
   public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
-    return null;
+    return myInfoAndProgressPanel == null ? List.of() : myInfoAndProgressPanel.getBackgroundProcesses();
   }
 
   @Override
@@ -329,22 +379,22 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void updateWidget(String id) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
+    UIAccess uiAccess = uiAccess();
     uiAccess.giveIfNeed(() -> {
-      PseudoComponent widgetComponent = getWidgetComponent(id);
-      if (widgetComponent != null) {
-        if (widgetComponent instanceof StatusBarWidgetWrapper) {
-          ((StatusBarWidgetWrapper)widgetComponent).beforeUpdate();
+      WidgetBean bean = myWidgetMap.get(id);
+      if (bean != null) {
+        if (bean.component instanceof StatusBarWidgetWrapper) {
+          ((StatusBarWidgetWrapper)bean.component).beforeUpdate();
         }
-
-        //widgetComponent.repaint();
+        else {
+          bean.widget.beforeUpdate();
+        }
       }
 
       //updateChildren(child -> child.updateWidget(id));
     });
   }
 
-  
   @Override
   @SuppressWarnings("unchecked")
   public <W extends StatusBarWidget> Optional<W> findWidget(Predicate<StatusBarWidget> predicate) {
@@ -365,18 +415,17 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
       .forEach(it -> updateWidget(it.getKey()));
   }
 
-  private PseudoComponent getWidgetComponent(String id) {
-    WidgetBean bean = myWidgetMap.get(id);
-    return bean == null ? null : bean.component;
-  }
-
   @Override
   public boolean isProcessWindowOpen() {
-    return false;
+    return myInfoAndProgressPanel != null && myInfoAndProgressPanel.isProcessWindowOpen();
   }
 
   @Override
+  @RequiredUIAccess
   public void setProcessWindowOpen(boolean open) {
+    if (myInfoAndProgressPanel != null) {
+      myInfoAndProgressPanel.setProcessWindowOpen(open);
+    }
   }
 
   @Override

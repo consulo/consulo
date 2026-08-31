@@ -3,6 +3,7 @@
  * @since 2025-08-14
  */
 module consulo.version.control.system.distributed.impl {
+    requires consulo.mcp.server.api;
     requires transitive consulo.version.control.system.distributed.api;
 
     requires consulo.language.editor.ui.api;

@@ -26,7 +26,8 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.application.progress.ProgressIndicator;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
@@ -41,8 +42,6 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
-import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -57,7 +56,7 @@ import java.util.Set;
 /**
  * @author yole
  */
-public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel implements HierarchyBrowser, Disposable, DataProvider {
+public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel implements HierarchyBrowser, Disposable, UiDataProvider {
     private static final HierarchyNodeDescriptor[] EMPTY_DESCRIPTORS = new HierarchyNodeDescriptor[0];
 
     protected Content myContent;
@@ -200,7 +199,6 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
         return list.toArray(new HierarchyNodeDescriptor[list.size()]);
     }
 
-    
     protected PsiElement[] getSelectedElements() {
         HierarchyNodeDescriptor[] descriptors = getSelectedDescriptors();
         ArrayList<PsiElement> elements = new ArrayList<>();
@@ -238,18 +236,15 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (PsiElement.KEY == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.lazy(PsiElement.KEY, () -> {
             PsiElement anElement = getSelectedElement();
-            return anElement != null && anElement.isValid() ? anElement : super.getData(dataId);
-        }
-        if (PsiElement.KEY_OF_ARRAY == dataId) {
-            return getSelectedElements();
-        }
-        if (DeleteProvider.KEY == dataId) {
-            return null;
-        }
-        if (Navigatable.KEY == dataId) {
+            return anElement != null && anElement.isValid() ? anElement : null;
+        });
+        sink.lazy(PsiElement.KEY_OF_ARRAY, this::getSelectedElements);
+        sink.set(DeleteProvider.KEY, null);
+        sink.lazy(Navigatable.KEY, () -> {
             DefaultMutableTreeNode selectedNode = getSelectedNode();
             if (selectedNode == null) {
                 return null;
@@ -259,17 +254,15 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
                 return null;
             }
             return getNavigatable(descriptor);
-        }
-        if (Navigatable.KEY_OF_ARRAY == dataId) {
-            return getNavigatables();
-        }
-        if (PlatformDataKeys.TREE_EXPANDER == dataId) {
+        });
+        sink.lazy(Navigatable.KEY_OF_ARRAY, this::getNavigatables);
+        sink.lazy(PlatformDataKeys.TREE_EXPANDER, () -> {
             JTree tree = getCurrentTree();
             if (tree != null) {
                 return new DefaultTreeExpander(tree);
             }
-        }
-        return super.getData(dataId);
+            return null;
+        });
     }
 
     private final class CloseAction extends CloseTabToolbarAction {

@@ -17,6 +17,7 @@ package consulo.externalService.statistic;
 
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -28,11 +29,11 @@ public class FeatureStatisticsBundle extends AbstractBundle {
     super("consulo.externalService.statistic.FeatureStatisticsBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

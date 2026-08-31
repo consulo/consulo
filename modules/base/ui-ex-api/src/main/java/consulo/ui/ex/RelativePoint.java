@@ -1,13 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex;
 
+import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class RelativePoint {
-  
+public class RelativePoint implements RelativePoint2D {
+
   private final Component myComponent;
   
   private final Point myPointOnComponent;
@@ -157,6 +162,30 @@ public class RelativePoint {
     return new RelativePoint(root, screenPoint);
   }
 
+  /**
+   * Where a unified event happened, in awt terms. Only the screen position survives the trip - the component
+   * an event carries is a unified one and says nothing about the awt hierarchy.
+   */
+  public static RelativePoint fromScreen(ComponentEvent<?> event) {
+    InputDetails details = event.getInputDetails();
+    return fromScreen(new Point(details.getXOnScreen(), details.getYOnScreen()));
+  }
+
+  /**
+   * The awt form of a platform point. A frontend's own relative point already is one and passes through;
+   * anything else must carry a component this frontend can answer for.
+   */
+  public static RelativePoint from(RelativePoint2D point) {
+    if (point instanceof RelativePoint relativePoint) {
+      return relativePoint;
+    }
+    Component component = TargetAWT.to(point.getUIComponent());
+    if (component == null) {
+      throw new IllegalArgumentException(point + " carries no component of this frontend");
+    }
+    return new RelativePoint(component, TargetAWT.to(point.getUIPoint()));
+  }
+
   
   public Component getOriginalComponent() {
     return myOriginalComponent;
@@ -165,5 +194,19 @@ public class RelativePoint {
   
   public Point getOriginalPoint() {
     return myOriginalPoint;
+  }
+
+  /**
+   * The component the point was given against, not the one it was re-anchored to - a root pane is a thing of this
+   * frontend alone, and the platform can say nothing about a point measured against one.
+   */
+  @Override
+  public consulo.ui.@Nullable Component getUIComponent() {
+    return TargetAWT.from(myOriginalComponent);
+  }
+
+  @Override
+  public Point2D getUIPoint() {
+    return TargetAWT.from(myOriginalPoint);
   }
 }

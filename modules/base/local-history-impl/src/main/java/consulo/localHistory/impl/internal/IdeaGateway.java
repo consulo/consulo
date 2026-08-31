@@ -16,6 +16,7 @@
 package consulo.localHistory.impl.internal;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.localHistory.impl.internal.tree.DirectoryEntry;
@@ -332,7 +333,7 @@ public class IdeaGateway {
   }
 
   public void registerUnsavedDocuments(LocalHistoryFacade vcs) {
-    ApplicationManager.getApplication().runReadAction(() -> {
+    ReadAction.run(() -> {
       vcs.beginChangeSet();
       for (Document d : FileDocumentManager.getInstance().getUnsavedDocuments()) {
         VirtualFile f = getFile(d);

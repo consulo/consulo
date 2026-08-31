@@ -27,7 +27,7 @@ import java.io.Serializable;
  * @since 2006-09-05
  */
 public class RawText implements Cloneable, Serializable {
-  public static DataFlavor ourFlavor;
+  public static @Nullable DataFlavor ourFlavor;
   public String rawText;
 
   public RawText(String rawText) {
@@ -44,17 +44,14 @@ public class RawText implements Cloneable, Serializable {
     }
   }
 
-  public static DataFlavor getDataFlavor() {
+  public static @Nullable DataFlavor getDataFlavor() {
     if (ourFlavor != null) {
       return ourFlavor;
     }
     try {
       ourFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=" + RawText.class.getName(), "Raw Text");
     }
-    catch (NoClassDefFoundError e) {
-      return null;
-    }
-    catch (IllegalArgumentException e) {
+    catch (NoClassDefFoundError | IllegalArgumentException e) {
       return null;
     }
     return ourFlavor;
@@ -67,10 +64,7 @@ public class RawText implements Cloneable, Serializable {
       try {
         raw = (RawText)content.getTransferData(flavor);
       }
-      catch (UnsupportedFlavorException e) {
-        // OK. raw will be null and we'll get plain string
-      }
-      catch (IOException e) {
+      catch (UnsupportedFlavorException | IOException e) {
         // OK. raw will be null and we'll get plain string
       }
     }

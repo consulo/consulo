@@ -15,140 +15,144 @@
  */
 package consulo.ui.color;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Serializable;
 
 /**
  * @author VISTALL
- * @since 21-Jun-16
+ * @since 2016-06-21
  */
 public final class RGBColor implements Serializable, ColorValue {
-  public static RGBColor fromFloatValues(float r, float g, float b) {
-    return fromFloatValues(r, g, b, 1f);
-  }
-  public static RGBColor fromFloatValues(float r, float g, float b, float a) {
-    return new RGBColor((int)(r * 255 + 0.5), (int)(g * 255 + 0.5), (int)(b * 255 + 0.5), (int)(b * 255 + 0.5));
-  }
-  public static RGBColor fromRGBValue(int rgb) {
-    return new RGBColor((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
-  }
+    public static RGBColor fromFloatValues(float r, float g, float b) {
+        return fromFloatValues(r, g, b, 1f);
+    }
 
-  public static int toRGBValue(RGBColor rgbColor) {
-    int b = rgbColor.getBlue();
-    int r = rgbColor.getRed();
-    int g = rgbColor.getGreen();
-    return /*((a & 0xFF) << 24) | */((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
-  }
+    public static RGBColor fromFloatValues(float r, float g, float b, float a) {
+        return new RGBColor((int) (r * 255 + 0.5), (int) (g * 255 + 0.5), (int) (b * 255 + 0.5), (int) (a * 255 + 0.5));
+    }
 
-  /**
-   * Converts a <code>String</code> to an integer and returns the
-   * specified opaque <code>Color</code>. This method handles string
-   * formats that are used to represent octal and hexadecimal numbers.
-   *
-   * @param nm a <code>String</code> that represents
-   *           an opaque color as a 24-bit integer
-   * @return the new <code>Color</code> object.
-   * @throws NumberFormatException if the specified string cannot
-   *                               be interpreted as a decimal,
-   *                               octal, or hexadecimal integer.
-   * @see Integer#decode
-   */
-  public static RGBColor decode(String nm) {
-    int i = Integer.decode(nm);
-    return fromRGBValue(i);
-  }
+    public static RGBColor fromRGBValue(int rgb) {
+        return new RGBColor((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
+    }
 
-  private int myRed;
-  private int myGreen;
-  private int myBlue;
-  private int myAlpha;
+    public static int toRGBValue(RGBColor rgbColor) {
+        int b = rgbColor.getBlue();
+        int r = rgbColor.getRed();
+        int g = rgbColor.getGreen();
+        return /*((a & 0xFF) << 24) | */((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
+    }
 
-  private RGBColor() {
-  }
+    /**
+     * Converts a <code>String</code> to an integer and returns the specified opaque <code>Color</code>.
+     * This method handles string formats that are used to represent octal and hexadecimal numbers.
+     *
+     * @param nm a <code>String</code> that represents an opaque color as a 24-bit integer
+     * @return the new <code>Color</code> object.
+     * @throws NumberFormatException if the specified string cannot be interpreted as a decimal, octal, or hexadecimal integer.
+     * @see Integer#decode
+     */
+    public static RGBColor decode(String nm) {
+        int i = Integer.decode(nm);
+        return fromRGBValue(i);
+    }
 
-  public RGBColor(int red, int green, int blue, float alpha) {
-    this(red, green, blue, Math.round(alpha * 255));
-  }
+    private int myRed;
+    private int myGreen;
+    private int myBlue;
+    private int myAlpha;
 
-  public RGBColor(int red, int green, int blue) {
-    this(red, green, blue, 255);
-  }
+    private RGBColor() {
+    }
 
-  public RGBColor(RGBColor color, int alpha) {
-    this(color.getRed(), color.getGreen(), color.getBlue(), alpha);
-  }
+    public RGBColor(int red, int green, int blue, float alpha) {
+        this(red, green, blue, Math.round(alpha * 255));
+    }
 
-  public RGBColor(int red, int green, int blue, int alpha) {
-    myRed = red;
-    myGreen = green;
-    myBlue = blue;
-    myAlpha = alpha;
-  }
+    public RGBColor(int red, int green, int blue) {
+        this(red, green, blue, 255);
+    }
 
-  public float[] getFloatValues() {
-    float[] values = new float[4];
-    values[0] = ((float)getRed()) / 255f;
-    values[1] = ((float)getGreen()) / 255f;
-    values[2] = ((float)getBlue()) / 255f;
-    values[3] = ((float)getAlpha()) / 255f;
-    return values;
-  }
-  @Override
-  public RGBColor toRGB() {
-    return this;
-  }
+    public RGBColor(RGBColor color, int alpha) {
+        this(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    }
 
-  public int getRed() {
-    return myRed;
-  }
+    public RGBColor(int red, int green, int blue, int alpha) {
+        myRed = red;
+        myGreen = green;
+        myBlue = blue;
+        myAlpha = alpha;
+    }
 
-  public int getGreen() {
-    return myGreen;
-  }
+    public float[] getFloatValues() {
+        float[] values = new float[4];
+        values[0] = ((float) getRed()) / 255f;
+        values[1] = ((float) getGreen()) / 255f;
+        values[2] = ((float) getBlue()) / 255f;
+        values[3] = ((float) getAlpha()) / 255f;
+        return values;
+    }
 
-  public int getBlue() {
-    return myBlue;
-  }
+    @Override
+    public RGBColor toRGB() {
+        return this;
+    }
 
-  public int getAlpha() {
-    return myAlpha;
-  }
-  @Override
-  public ColorValue withAlpha(int value) {
-    return new RGBColor(getRed(), getGreen(), getBlue(), value);
-  }
+    public int getRed() {
+        return myRed;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public int getGreen() {
+        return myGreen;
+    }
 
-    RGBColor rgbColor = (RGBColor)o;
+    public int getBlue() {
+        return myBlue;
+    }
 
-    if (myRed != rgbColor.myRed) return false;
-    if (myGreen != rgbColor.myGreen) return false;
-    if (myBlue != rgbColor.myBlue) return false;
-    if (Float.compare(rgbColor.myAlpha, myAlpha) != 0) return false;
+    public int getAlpha() {
+        return myAlpha;
+    }
 
-    return true;
-  }
+    @Override
+    public ColorValue withAlpha(int value) {
+        return new RGBColor(getRed(), getGreen(), getBlue(), value);
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myRed;
-    result = 31 * result + myGreen;
-    result = 31 * result + myBlue;
-    result = 31 * result + (myAlpha != +0.0f ? Float.floatToIntBits(myAlpha) : 0);
-    return result;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("RGBColor{");
-    sb.append("myRed=").append(myRed);
-    sb.append(", myGreed=").append(myGreen);
-    sb.append(", myBlue=").append(myBlue);
-    sb.append(", myAlpha=").append(myAlpha);
-    sb.append('}');
-    return sb.toString();
-  }
+        RGBColor that = (RGBColor) o;
+
+        return myRed == that.myRed
+            && myGreen == that.myGreen
+            && myBlue == that.myBlue
+            && Float.compare(that.myAlpha, myAlpha) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = myRed;
+        result = 31 * result + myGreen;
+        result = 31 * result + myBlue;
+        result = 31 * result + (myAlpha != +0.0f ? Float.floatToIntBits(myAlpha) : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("RGBColor{");
+        sb.append("myRed=").append(myRed);
+        sb.append(", myGreed=").append(myGreen);
+        sb.append(", myBlue=").append(myBlue);
+        sb.append(", myAlpha=").append(myAlpha);
+        sb.append('}');
+        return sb.toString();
+    }
 }

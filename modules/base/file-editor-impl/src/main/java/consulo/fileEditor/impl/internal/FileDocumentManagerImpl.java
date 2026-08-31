@@ -336,6 +336,30 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             return;
         }
 
+        Map<Document, IOException> failedToSave = saveUnsavedDocuments(isExplicit);
+
+        if (!failedToSave.isEmpty()) {
+            handleErrorsOnSave(failedToSave);
+        }
+    }
+
+    @Override
+    public void saveAllDocuments(UIAccess uiAccess) {
+        Application.get().assertWriteAccessAllowed();
+
+        myMultiCaster.beforeAllDocumentsSaving();
+        if (myUnsavedDocuments.isEmpty()) {
+            return;
+        }
+
+        Map<Document, IOException> failedToSave = saveUnsavedDocuments(true);
+
+        if (!failedToSave.isEmpty()) {
+            uiAccess.give(() -> handleErrorsOnSave(failedToSave));
+        }
+    }
+
+    private Map<Document, IOException> saveUnsavedDocuments(boolean isExplicit) {
         Map<Document, IOException> failedToSave = new HashMap<>();
         Set<Document> vetoed = new HashSet<>();
         while (true) {
@@ -362,9 +386,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             }
         }
 
-        if (!failedToSave.isEmpty()) {
-            handleErrorsOnSave(failedToSave);
-        }
+        return failedToSave;
     }
 
     @Override

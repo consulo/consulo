@@ -33,9 +33,9 @@ import consulo.util.io.ResourceUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,7 +48,6 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
     private static final Logger LOG = Logger.getInstance(InspectionToolWrapper.class);
     private static final SkipDefaultValuesSerializationFilters ourFilter = new SkipDefaultValuesSerializationFilters();
 
-    
     protected final T myTool;
     
     private final HighlightDisplayKey myHighlightDisplayKey;
@@ -63,11 +62,10 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         myTool = other.myTool;
         myHighlightDisplayKey = other.myHighlightDisplayKey;
 
-        // reset state - it will inited again and loaded
+        // Reset state - it will be initialized again and loaded
         myStateProvider = null;
     }
 
-    
     public HighlightDisplayKey getHighlightDisplayKey() {
         return myHighlightDisplayKey;
     }
@@ -111,10 +109,8 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
     public void initialize(GlobalInspectionContext context) {
     }
 
-    
     public abstract InspectionToolWrapper<T> createCopy();
 
-    
     @SuppressWarnings("unchecked")
     public InspectionToolState<Object> getToolState() {
         if (myStateProvider == null) {
@@ -123,12 +119,10 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         return myStateProvider;
     }
 
-    
     public Object getState() {
         return getToolState().getState();
     }
 
-    
     public T getTool() {
         return myTool;
     }
@@ -146,17 +140,14 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         return getTool() instanceof CleanupLocalInspectionTool;
     }
 
-    
     public String getShortName() {
         return getTool().getShortName();
     }
 
-    
     public LocalizeValue getDisplayName() {
         return getTool().getDisplayName();
     }
 
-    
     @Deprecated
     @DeprecationInfo("Use #getJoinedGroupPath()")
     public LocalizeValue getGroupDisplayName() {
@@ -167,17 +158,14 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         return getTool().isEnabledByDefault();
     }
 
-    
     public HighlightDisplayLevel getDefaultLevel() {
         return getTool().getDefaultLevel();
     }
 
-    
     public LocalizeValue[] getGroupPath() {
         return getTool().getGroupPath();
     }
 
-    
     public LocalizeValue getJoinedGroupPath() {
         LocalizeValue[] groupPath = getGroupPath();
         if (groupPath.length == 0) {
@@ -218,17 +206,14 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
     }
 
-    
     public String getDescriptionFileName() {
         return getShortName() + ".html";
     }
 
-    
     public final String getFolderName() {
         return getShortName();
     }
 
-    
     public Class<? extends InspectionTool> getDescriptionContextClass() {
         return getTool().getClass();
     }
@@ -247,6 +232,5 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         tool.cleanup(project);
     }
 
-    
     public abstract JobDescriptor[] getJobDescriptors(GlobalInspectionContext context);
 }

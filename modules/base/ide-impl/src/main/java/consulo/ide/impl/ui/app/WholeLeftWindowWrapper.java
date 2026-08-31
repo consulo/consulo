@@ -29,37 +29,38 @@ import consulo.ui.layout.TwoComponentSplitLayout;
  * @since 2018-06-29
  */
 public abstract class WholeLeftWindowWrapper extends WindowWrapper {
-  public WholeLeftWindowWrapper(String title) {
-    super(title);
-  }
+    public WholeLeftWindowWrapper(String title) {
+        super(title);
+    }
 
-  @Override
-  
-  @RequiredUIAccess
-  protected Layout buildRootLayout(Disposable uiDisposable) {
-    TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-    layout.setProportion(30);
+    @Override
+    @RequiredUIAccess
+    protected Layout buildRootLayout(Disposable uiDisposable) {
+        TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        layout.setProportion(getSplitterProportion());
 
-    Couple<Component> compoents = createComponents(uiDisposable);
+        Couple<Component> components = createComponents(uiDisposable);
 
-    layout.setFirstComponent(compoents.getFirst());
+        layout.setFirstComponent(components.getFirst());
 
-    DockLayout baseRoot = DockLayout.create();
-    baseRoot.center(compoents.getSecond());
-    baseRoot.bottom(buildButtonsLayout());
+        DockLayout baseRoot = DockLayout.create();
+        baseRoot.center(components.getSecond());
+        baseRoot.bottom(buildButtonsLayout());
 
-    layout.setSecondComponent(baseRoot);
-    return layout;
-  }
+        layout.setSecondComponent(baseRoot);
+        return layout;
+    }
 
-  
-  @RequiredUIAccess
-  protected abstract Couple<Component> createComponents(Disposable uiDisposable);
+    protected int getSplitterProportion() {
+        return 30;
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  protected final Component createCenterComponent(Disposable uiDisposable) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    protected abstract Couple<Component> createComponents(Disposable uiDisposable);
+
+    @Override
+    @RequiredUIAccess
+    protected final Component createCenterComponent(Disposable uiDisposable) {
+        throw new UnsupportedOperationException();
+    }
 }

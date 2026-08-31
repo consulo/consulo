@@ -21,11 +21,13 @@
     <module>distribution</module>
 
     <module>sandbox/desktop-awt</module>
-    <module>sandbox/desktop-swt</module>
+    <module>sandbox/desktop-qt</module>
     <module>sandbox/web</module>
     <module>sandbox/sand-language-plugin</module>
 
     <module>modules/desktop-awt/desktop-awt-hacking</module>
+    <module>modules/desktop-awt/desktop-awt-ui-impl</module>
+    <module>modules/desktop-awt/desktop-awt-editor-impl</module>
     <module>modules/desktop-awt/desktop-awt-ide-impl</module>
     <module>modules/desktop-awt/desktop-awt-bootstrap</module>
     <module>modules/desktop-awt/desktop-awt-eawt-wrapper</module>
@@ -34,10 +36,14 @@
     <module>modules/desktop/desktop-ide-impl</module>
     <module>modules/desktop/desktop-bootstrap</module>
 
-    <module>modules/desktop-swt/desktop-swt-bootstrap</module>
-    <module>modules/desktop-swt/desktop-swt-ide-impl</module>
+    <module>modules/desktop-qt/desktop-qt-bootstrap</module>
+    <module>modules/desktop-qt/desktop-qt-ui-impl</module>
+    <module>modules/desktop-qt/desktop-qt-editor-impl</module>
+    <module>modules/desktop-qt/desktop-qt-ide-impl</module>
 
     <module>modules/web/web-bootstrap</module>
+    <module>modules/web/web-ui-impl</module>
+    <module>modules/web/web-editor-impl</module>
     <module>modules/web/web-flow-ide</module>
 
     <module>modules/boot/bootstrap</module>
@@ -47,6 +53,11 @@
     <module>modules/base/annotation</module>
     <module>modules/base/builtin-web-server-api</module>
     <module>modules/base/builtin-web-server-impl</module>
+    <module>modules/base/ai-api</module>
+    <module>modules/base/ai-impl</module>
+    <module>modules/base/mcp-api</module>
+    <module>modules/base/mcp-server-api</module>
+    <module>modules/base/mcp-server-impl</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
     <module>modules/base/build-ui-api</module>
@@ -75,6 +86,7 @@
     <module>modules/base/remote-servers-agent-rt</module>
     <module>modules/base/test-impl</module>
     <module>modules/base/test-junit-impl</module>
+    <module>modules/it</module>
     <module>modules/base/virtual-file-system-api</module>
     <module>modules/base/virtual-file-system-http-api</module>
     <module>modules/base/virtual-file-system-native-file-type-impl</module>
@@ -85,7 +97,9 @@
     <module>modules/base/module-content-api</module>
     <module>modules/base/module-content-impl</module>
     <module>modules/base/file-chooser-api</module>
+    <module>modules/base/file-chooser-impl</module>
     <module>modules/base/language-api</module>
+    <module>modules/base/language-ui-api</module>
     <module>modules/base/language-ignore-api</module>
     <module>modules/base/language-ignore-impl</module>
     <module>modules/base/index-io</module>
@@ -96,6 +110,8 @@
     <module>modules/base/project-ui-api</module>
     <module>modules/base/project-ui-impl</module>
     <module>modules/base/navigation-api</module>
+    <module>modules/base/navigation-bar-api</module>
+    <module>modules/base/navigation-bar-impl</module>
     <module>modules/base/code-editor-api</module>
     <module>modules/base/process-api</module>
     <module>modules/base/process-impl</module>
@@ -130,6 +146,7 @@
     <module>modules/base/color-scheme-impl</module>
     <module>modules/base/ide-api</module>
     <module>modules/base/component-impl</module>
+    <module>modules/base/ui-ex-impl</module>
     <module>modules/base/ui-ex-awt-api</module>
     <module>modules/base/virtual-file-system-impl</module>
     <module>modules/base/virtual-file-system-http-impl</module>
@@ -163,6 +180,7 @@
     <module>modules/base/path-macro-api</module>
     <module>modules/base/path-macro-impl</module>
     <module>modules/base/module-ui-api</module>
+    <module>modules/base/module-creation-api</module>
     <module>modules/base/language-editor-refactoring-api</module>
     <module>modules/base/language-editor-refactoring-impl</module>
     <module>modules/base/language-copyright-api</module>
@@ -214,7 +232,6 @@
     <module>modules/base/util/util-lang</module>
     <module>modules/base/util/util-collection</module>
     <module>modules/base/util/util-collection-primitive</module>
-    <module>modules/base/util/util-collection-via-trove</module>
     <module>modules/base/util/util-collection-runtime</module>
     <module>modules/base/util/util-concurrent</module>
     <module>modules/base/util/util-concurrent-coroutine</module>

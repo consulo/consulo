@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.navigation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.dataContext.DataContext;
 import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
@@ -32,7 +33,7 @@ import java.lang.ref.WeakReference;
  * @author Denis Zhdanov
  * @since 2012-07-26
  */
-public abstract class AbstractDocumentationTooltipAction extends AnAction {
+public abstract class AbstractDocumentationTooltipAction extends LegacyAnAction {
     private @Nullable WeakReference<PsiElement> myDocAnchor;
     private @Nullable WeakReference<PsiElement> myOriginalElement;
 

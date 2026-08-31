@@ -21,6 +21,7 @@ import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
@@ -31,7 +32,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2024-12-23
  */
-public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAware {
+public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public PluginSortFilterGroup() {
         super("Sort & Filters", true);
     }

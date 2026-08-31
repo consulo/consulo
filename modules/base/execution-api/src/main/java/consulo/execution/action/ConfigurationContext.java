@@ -18,6 +18,7 @@ package consulo.execution.action;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.RunManager;
@@ -66,8 +67,7 @@ public class ConfigurationContext {
 
     private List<ConfigurationFromContext> myConfigurationsFromContext;
 
-    
-    @RequiredUIAccess
+    @RequiredReadAction
     public static ConfigurationContext getFromContext(DataContext dataContext) {
         ConfigurationContext context = new ConfigurationContext(dataContext);
         DataManager dataManager = DataManager.getInstance();
@@ -82,7 +82,7 @@ public class ConfigurationContext {
         return sharedContext;
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     private ConfigurationContext(DataContext dataContext) {
         myRuntimeConfiguration = dataContext.getData(RunConfiguration.KEY);
         myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -117,7 +117,7 @@ public class ConfigurationContext {
 
     @RequiredReadAction
     public ConfigurationContext(PsiElement element) {
-        myModule = ModuleUtilCore.findModuleForPsiElement(element);
+        myModule = element.getModule();
         myLocation = new PsiLocation<>(element.getProject(), myModule, element);
         myRuntimeConfiguration = null;
         myContextComponent = null;
@@ -176,6 +176,7 @@ public class ConfigurationContext {
      * @return an existing configuration, or null if none was found.
      */
     @SuppressWarnings("deprecation")
+    @RequiredReadAction
     public @Nullable RunnerAndConfigurationSettings findExisting() {
         if (myExistingConfiguration != null) {
             return myExistingConfiguration.get();
@@ -224,10 +225,10 @@ public class ConfigurationContext {
         return myExistingConfiguration.get();
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     private static @Nullable PsiElement getSelectedPsiElement(DataContext dataContext, Project project) {
         PsiElement element = null;
-        Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = dataContext.getData(EditorKeys.EDITOR_SNAPSHOT);
         if (editor != null) {
             PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (psiFile != null) {

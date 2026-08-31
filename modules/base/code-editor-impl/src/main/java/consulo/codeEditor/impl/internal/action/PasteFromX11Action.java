@@ -28,7 +28,14 @@ import consulo.ui.ex.action.Presentation;
 
 import javax.swing.*;
 import java.awt.*;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import org.jspecify.annotations.Nullable;
+
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.util.concurrent.CompletableFuture;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -45,7 +52,7 @@ public class PasteFromX11Action extends EditorAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void updateInUI(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Editor editor = e.getData(Editor.KEY);
         if (editor == null || !Platform.current().os().isXWindow()) {
@@ -66,19 +73,29 @@ public class PasteFromX11Action extends EditorAction {
     }
 
     public static class Handler extends BasePasteHandler {
+        /**
+         * The x11 selection is an awt clipboard of its own and this action only exists where there is one, so the
+         * transferable is carried through as the rich half next to the text every paste understands.
+         */
         @Override
-        protected Transferable getContentsToPaste(Editor editor, DataContext dataContext) {
+        protected CompletableFuture<@Nullable DataTransfer> getContentsToPaste(Editor editor, DataContext dataContext) {
             Clipboard clip = editor.getComponent().getToolkit().getSystemSelection();
             if (clip == null) {
-                return null;
+                return CompletableFuture.completedFuture(null);
             }
 
             try {
-                return clip.getContents(null);
+                Transferable contents = clip.getContents(null);
+                String text = (String)contents.getTransferData(DataFlavor.stringFlavor);
+
+                return CompletableFuture.completedFuture(DataTransfer.builder()
+                    .put(DataTransferType.TEXT, text)
+                    .put(EditorImplUtil.TRANSFERABLE, contents)
+                    .build());
             }
             catch (Exception e) {
                 LOG.info(e);
-                return null;
+                return CompletableFuture.completedFuture(null);
             }
         }
     }

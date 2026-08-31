@@ -34,7 +34,7 @@ import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

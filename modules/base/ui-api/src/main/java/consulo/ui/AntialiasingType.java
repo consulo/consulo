@@ -20,7 +20,7 @@ package consulo.ui;
  * @since 2020-08-23
  */
 public enum AntialiasingType {
-  SUBPIXEL,
-  GREYSCALE,
-  OFF
+    SUBPIXEL,
+    GREYSCALE,
+    OFF
 }

@@ -46,6 +46,7 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
@@ -54,10 +55,10 @@ import java.util.function.Predicate;
 @State(name = "CompilerManager", storages = @Storage("compiler.xml"))
 @ServiceImpl
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
-    private class ListenerNotificator implements CompileStatusNotification {
+    private class ListenerNotifier implements CompileStatusNotification {
         private final @Nullable CompileStatusNotification myDelegate;
 
-        private ListenerNotificator(@Nullable CompileStatusNotification delegate) {
+        private ListenerNotifier(@Nullable CompileStatusNotification delegate) {
             myDelegate = delegate;
         }
 
@@ -155,44 +156,44 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
     @Override
     @RequiredUIAccess
-    public void compile(VirtualFile[] files, CompileStatusNotification callback) {
+    public void compile(Collection<Path> files, CompileStatusNotification callback) {
         compile(createFilesCompileScope(files), callback);
     }
 
     @Override
     @RequiredUIAccess
     public void compile(Module module, CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).compile(createModuleCompileScope(module, false), new ListenerNotificator(callback), true);
+        new CompileDriverImpl(myProject).compile(createModuleCompileScope(module, false), new ListenerNotifier(callback), true);
     }
 
     @Override
     @RequiredUIAccess
     public void compile(CompileScope scope, CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).compile(scope, new ListenerNotificator(callback), false);
+        new CompileDriverImpl(myProject).compile(scope, new ListenerNotifier(callback), false);
     }
 
     @Override
     @RequiredUIAccess
     public void make(CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).make(createProjectCompileScope(), new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(createProjectCompileScope(), new ListenerNotifier(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(Module module, CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).make(createModuleCompileScope(module, true), new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(createModuleCompileScope(module, true), new ListenerNotifier(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(Project project, Module[] modules, CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).make(createModuleGroupCompileScope(project, modules, true), new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(createModuleGroupCompileScope(project, modules, true), new ListenerNotifier(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(CompileScope scope, CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).make(scope, new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(scope, new ListenerNotifier(callback));
     }
 
     @Override
@@ -200,7 +201,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     public void make(CompileScope scope, Predicate<Compiler> filter, @Nullable CompileStatusNotification callback) {
         CompileDriverImpl compileDriver = new CompileDriverImpl(myProject);
         compileDriver.setCompilerFilter(filter);
-        compileDriver.make(scope, new ListenerNotificator(callback));
+        compileDriver.make(scope, new ListenerNotifier(callback));
     }
 
     @Override
@@ -212,7 +213,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     @Override
     @RequiredUIAccess
     public void rebuild(CompileStatusNotification callback) {
-        new CompileDriverImpl(myProject).rebuild(new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).rebuild(new ListenerNotifier(callback));
     }
 
     @Override
@@ -223,7 +224,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
 
     @Override
-    public boolean isExcludedFromCompilation(VirtualFile file) {
+    public boolean isExcludedFromCompilation(Path file) {
         return myExcludedEntriesConfiguration.isExcluded(file);
     }
 
@@ -233,11 +234,14 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
 
     @Override
-    
-    public CompileScope createFilesCompileScope(VirtualFile[] files) {
-        CompileScope[] scopes = new CompileScope[files.length];
-        for (int i = 0; i < files.length; i++) {
-            scopes[i] = new OneProjectItemCompileScope(myProject, files[i]);
+    public CompileScope createFilesCompileScope(Collection<Path> files) {
+        List<CompileScope> scopes = new ArrayList<>(files.size());
+        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+        for (Path file : files) {
+            VirtualFile virtualFile = localFileSystem.findFileByNioFile(file);
+            if (virtualFile != null) {
+                scopes.add(new OneProjectItemCompileScope(myProject, virtualFile));
+            }
         }
         return new CompositeScope(scopes);
     }

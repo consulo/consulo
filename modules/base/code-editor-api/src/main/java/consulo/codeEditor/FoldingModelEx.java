@@ -15,12 +15,14 @@
  */
 package consulo.codeEditor;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author max
  */
 @Deprecated
 public interface FoldingModelEx extends FoldingModel {
-  default FoldRegion[] fetchVisible() {
+  default FoldRegion @Nullable [] fetchVisible() {
     return null;
   }
 }

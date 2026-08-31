@@ -19,6 +19,7 @@ import consulo.annotation.UsedInPlugin;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.ui.XValueTree;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -69,7 +70,7 @@ public interface XValueNode extends Obsolescent {
      */
     void setFullValueEvaluator(XFullValueEvaluator fullValueEvaluator);
 
-    @Nullable String getName();
+    LocalizeValue getName();
 
     @Nullable XValue getValueContainer();
 

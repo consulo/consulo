@@ -15,41 +15,32 @@
  */
 package consulo.compiler.impl.internal.artifact;
 
-import consulo.compiler.artifact.element.ExplodedDestinationInfo;
 import consulo.compiler.artifact.element.ArchivePackageInfo;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
+import consulo.compiler.artifact.element.ExplodedDestinationInfo;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstructionCreatorBase {
     private final String myOutputPath;
-    private final @Nullable VirtualFile myOutputFile;
 
-    public CopyToDirectoryInstructionCreator(
-        ArtifactsProcessingItemsBuilderContext context,
-        String outputPath,
-        @Nullable VirtualFile outputFile
-    ) {
+    public CopyToDirectoryInstructionCreator(ArtifactsProcessingItemsBuilderContext context, String outputPath) {
         super(context);
         myOutputPath = outputPath;
-        myOutputFile = outputFile;
     }
 
     @Override
-    public void addFileCopyInstruction(VirtualFile file, String outputFileName) {
-        myContext.addDestination(file, new ExplodedDestinationInfo(myOutputPath + "/" + outputFileName, outputChild(outputFileName)));
+    protected void addFileCopyInstruction(String sourcePath, String outputFileName) {
+        myContext.addDestination(sourcePath, new ExplodedDestinationInfo(myOutputPath + "/" + outputFileName));
     }
 
     @Override
     public CopyToDirectoryInstructionCreator subFolder(String directoryName) {
-        return new CopyToDirectoryInstructionCreator(myContext, myOutputPath + "/" + directoryName, outputChild(directoryName));
+        return new CopyToDirectoryInstructionCreator(myContext, myOutputPath + "/" + directoryName);
     }
 
-    
     @Override
     public IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter) {
         String jarOutputPath = myOutputPath + "/" + archiveFileName;
@@ -57,13 +48,8 @@ public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstru
         if (!myContext.registerJarFile(archivePackageInfo, jarOutputPath)) {
             return new SkipAllInstructionCreator(myContext);
         }
-        VirtualFile outputFile = outputChild(archiveFileName);
-        ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath, outputFile);
+        ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath);
         archivePackageInfo.addDestination(destination);
         return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
-    }
-
-    private @Nullable VirtualFile outputChild(String name) {
-        return myOutputFile != null ? myOutputFile.findChild(name) : null;
     }
 }

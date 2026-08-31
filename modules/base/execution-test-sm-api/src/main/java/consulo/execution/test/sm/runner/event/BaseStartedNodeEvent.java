@@ -17,13 +17,12 @@ package consulo.execution.test.sm.runner.event;
 
 import consulo.util.lang.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.MessageWithAttributes;
-
 import org.jspecify.annotations.Nullable;
 
 public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     private final String myParentId;
     private final String myLocationUrl;
-    private final String myMetainfo;
+    private final String myMetaInfo;
     private final String myNodeType;
     private final String myNodeArgs;
     private final boolean myRunning;
@@ -33,7 +32,7 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
         @Nullable String id,
         @Nullable String parentId,
         @Nullable String locationUrl,
-        @Nullable String metainfo,
+        @Nullable String metaInfo,
         @Nullable String nodeType,
         @Nullable String nodeArgs,
         boolean running
@@ -41,7 +40,7 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
         super(name, id);
         myParentId = parentId;
         myLocationUrl = locationUrl;
-        myMetainfo = metainfo;
+        myMetaInfo = metaInfo;
         myNodeType = nodeType;
         myNodeArgs = nodeArgs;
         myRunning = running;
@@ -59,7 +58,7 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     }
 
     public @Nullable String getMetainfo() {
-        return myMetainfo;
+        return myMetaInfo;
     }
 
     public @Nullable String getNodeType() {
@@ -78,7 +77,7 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     protected void appendToStringInfo(StringBuilder buf) {
         append(buf, "parentId", myParentId);
         append(buf, "locationUrl", myLocationUrl);
-        append(buf, "metainfo", myMetainfo);
+        append(buf, "metainfo", myMetaInfo);
         append(buf, "running", myRunning);
     }
 

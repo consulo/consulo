@@ -72,8 +72,6 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
 
         myEditor = textEditor.getEditor();
         myEditor.putUserData(ASYNC_LOADER, this);
-
-        myEditorComponent.getComponentContainer().hideContent();
     }
 
     @RequiredUIAccess
@@ -99,7 +97,7 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
             }
         }
         if (showProgress) {
-            myEditorComponent.getComponentContainer().startLoading();
+            myEditorComponent.startLoading();
         }
     }
 

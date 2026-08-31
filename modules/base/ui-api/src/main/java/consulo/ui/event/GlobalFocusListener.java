@@ -22,5 +22,5 @@ import java.util.EventListener;
  * @since 2020-11-21
  */
 public interface GlobalFocusListener extends EventListener {
-  void focusChanged();
+    void focusChanged();
 }

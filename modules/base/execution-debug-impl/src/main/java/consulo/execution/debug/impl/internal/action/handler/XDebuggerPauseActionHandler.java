@@ -19,6 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
+import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -34,7 +35,12 @@ public class XDebuggerPauseActionHandler extends XDebuggerActionHandler {
   @Override
   public boolean isHidden(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
-    return session == null || !((XDebugSessionImpl)session).isPauseActionSupported();
+    if (session != null) {
+      return !((XDebugSessionImpl)session).isPauseActionSupported();
+    }
+
+    XDebugSessionData sessionData = event.getData(XDebugSessionData.DATA_KEY);
+    return sessionData == null || !sessionData.isPauseSupported();
   }
 
   @Override

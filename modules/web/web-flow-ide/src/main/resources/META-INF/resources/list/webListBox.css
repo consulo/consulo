@@ -1,0 +1,122 @@
+/* a list is chosen from, not read from - dragging across it selects text in the browser, which leaves a highlight
+   over rows the list is already drawing its own selection on */
+vaadin-list-box.web-list-box,
+vaadin-virtual-list.web-list-box
+{
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* the checkmark is how a vaadin list says which row is chosen, and it holds a gutter open down the left of every
+   row for a mark only one of them ever shows. a list of the platform says it with the fill of the row instead,
+   which is also the only thing that reads at the size a completion list is drawn at */
+vaadin-list-box.web-list-box vaadin-item
+{
+  --vaadin-item-checkmark-display: none;
+}
+
+/* the accent fill a list of the platform marks its row with, rather than the grey a vaadin list draws - a row is
+   picked out by colour, and the band is rounded the way every other selected thing in the ide is */
+vaadin-list-box.web-list-box vaadin-item[selected]
+{
+  border-radius: var(--consulo-list-row-selection-radius, 4px);
+  background: var(--consulo-list-row-selection, #d4e2ff);
+}
+
+/* a vaadin item wraps what it holds in a content part whose automatic minimum size is its content, so a row with a
+   long path in it pushes that part - and with it the row - past the width of the item, and whatever the row docks to
+   its right ends up outside the list. the part is told it may shrink, which is what makes a width of the row resolve
+   against the item it is actually in */
+vaadin-list-box.web-list-box vaadin-item::part(content)
+{
+  min-width: 0;
+}
+
+/* the lazy list has no vaadin-item to put a row in - what a render made is the row - so the chrome an item would
+   have carried is put on it here, and a row of either list ends up looking the same.
+   the list wraps every render of its own accord, so the row is the wrapper and what the render made is inside it */
+vaadin-virtual-list.web-list-box > *
+{
+  box-sizing: border-box;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+vaadin-virtual-list.web-list-box > * > *
+{
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--consulo-list-row-height, 24px);
+  padding: var(--consulo-list-row-padding-y, 0.125rem) var(--consulo-list-row-padding-x, 0.5rem);
+  align-items: center;
+}
+
+vaadin-virtual-list.web-list-box [selected]
+{
+  border-radius: var(--consulo-list-row-selection-radius, 4px);
+  background: var(--consulo-list-row-selection, #d4e2ff);
+}
+
+/* the pooled list scrolls over a count instead of over its rows, so the height the scrollbar runs against belongs
+   to no row - a pseudo element carries it and the rows sit over it, absolutely placed */
+consulo-virtual-list.web-list-box
+{
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+consulo-virtual-list.web-list-box::after
+{
+  content: '';
+  display: block;
+  height: var(--consulo-vlist-scroll-height, 0);
+}
+
+/* the row is the direct child here. the list built on vaadin's own wraps every render in a row of its own, so the
+   rules for it reach a level deeper - carrying that shape over put width 100% on each run of the row instead of on
+   the row, and a name which filled the line pushed the type text away from it */
+consulo-virtual-list.web-list-box > *
+{
+  box-sizing: border-box;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: var(--consulo-list-row-padding-y, 0.125rem) var(--consulo-list-row-padding-x, 0.5rem);
+  align-items: center;
+}
+
+consulo-virtual-list.web-list-box [selected]
+{
+  border-radius: var(--consulo-list-row-selection-radius, 4px);
+  background: var(--consulo-list-row-selection, #d4e2ff);
+}
+
+/* a separator is the gap between two groups of items, so it carries the row rather than sitting inside it.
+   the row is a flex box, and a rule left to itself in one collapses to no width at all */
+.web-list-box-separator
+{
+  flex: 1 1 auto;
+  align-self: center;
+  margin: 5px 0;
+  border: none;
+  border-top: 1px solid var(--consulo-component-border-color);
+}
+
+/* the row carries a line rather than a label, so it gives up the padding and the height a row of text needs */
+vaadin-item:has(> .web-list-box-separator)
+{
+  min-height: 0;
+  padding: 0;
+}
+
+/* a list which holds nothing says so in the middle of itself, the way the empty text of a platform list does - the
+   text is an attribute rather than a row, so it is never something the list can be scrolled to or chosen from */
+vaadin-list-box.web-list-box[placeholder]:not(:has(vaadin-item))::after
+{
+  content: attr(placeholder);
+  display: block;
+  padding: 8px;
+  text-align: center;
+  color: var(--vaadin-text-color-secondary, #6b7280);
+}

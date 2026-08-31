@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.ui.playback.commands;
 
 import consulo.application.util.registry.Registry;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.ex.awt.AWTConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ public abstract class TypeCommand extends AbstractCommand {
     super(text, line);
     }
 
-  protected void type(Robot robot, int code, @JdkConstants.InputEventMask int modifiers) {
+  protected void type(Robot robot, int code, @AWTConstants.InputEventMask int modifiers) {
     type(robot, KeyStroke.getKeyStroke(code, modifiers));
   }
 

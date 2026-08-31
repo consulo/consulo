@@ -5,6 +5,7 @@ import consulo.build.ui.BuildNotificationsGroups;
 import consulo.build.ui.event.BuildIssueEvent;
 import consulo.build.ui.event.MessageEventResult;
 import consulo.build.ui.issue.BuildIssue;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
@@ -15,57 +16,52 @@ import org.jspecify.annotations.Nullable;
  * @author Vladislav.Soroka
  */
 public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssueEvent {
-  private final BuildIssue myIssue;
-  private final Kind myKind;
+    private final BuildIssue myIssue;
+    private final Kind myKind;
 
-  public BuildIssueEventImpl(Object parentId, BuildIssue buildIssue, Kind kind) {
-    super(new Object(), parentId, System.currentTimeMillis(), buildIssue.getTitle());
-    myIssue = buildIssue;
-    myKind = kind;
-  }
+    public BuildIssueEventImpl(Object parentId, BuildIssue buildIssue, Kind kind) {
+        super(new Object(), parentId, System.currentTimeMillis(), buildIssue.getTitle());
+        myIssue = buildIssue;
+        myKind = kind;
+    }
 
-  
-  @Override
-  public final String getDescription() {
-    return myIssue.getDescription();
-  }
-
-  
-  @Override
-  public BuildIssue getIssue() {
-    return myIssue;
-  }
-
-  
-  @Override
-  public Kind getKind() {
-    return myKind;
-  }
-
-  
-  @Override
-  public NotificationGroup getGroup() {
-    return BuildNotificationsGroups.BUILD_ISSUES;
-  }
-
-  @Override
-  public @Nullable Navigatable getNavigatable(Project project) {
-    return myIssue.getNavigatable(project);
-  }
-
-  @Override
-  public MessageEventResult getResult() {
-    return new MessageEventResult() {
-      @Override
-      public Kind getKind() {
-        return myKind;
-      }
-
-      
-      @Override
-      public String getDetails() {
+    @Override
+    public final LocalizeValue getDescription() {
         return myIssue.getDescription();
-      }
-    };
-  }
+    }
+
+    @Override
+    public BuildIssue getIssue() {
+        return myIssue;
+    }
+
+    @Override
+    public Kind getKind() {
+        return myKind;
+    }
+
+    @Override
+    public NotificationGroup getGroup() {
+        return BuildNotificationsGroups.BUILD_ISSUES;
+    }
+
+    @Override
+    public @Nullable Navigatable getNavigatable(Project project) {
+        return myIssue.getNavigatable(project);
+    }
+
+    @Override
+    public MessageEventResult getResult() {
+        return new MessageEventResult() {
+            @Override
+            public Kind getKind() {
+                return myKind;
+            }
+
+            @Override
+            public LocalizeValue getDetails() {
+                return myIssue.getDescription();
+            }
+        };
+    }
 }

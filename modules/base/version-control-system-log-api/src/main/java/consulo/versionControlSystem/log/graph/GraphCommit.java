@@ -17,21 +17,16 @@ package consulo.versionControlSystem.log.graph;
 
 import java.util.List;
 
-/**
- */
 public interface GraphCommit<Id> {
+    Id getId();
 
-  
-  Id getId();
+    List<Id> getParents();
 
-  
-  List<Id> getParents();
-
-  /**
-   * <p>Returns the timestamp indicating the date & time when this commit was made.</p>
-   * <p>This time is displayed in the table by default;
-   * it is used for joining commits from different repositories;
-   * it is used for ordering commits in a single repository (keeping the preference of the topological ordering of course).</p>
-   */
-  long getTimestamp();
+    /**
+     * <p>Returns the timestamp indicating the date & time when this commit was made.</p>
+     * <p>This time is displayed in the table by default;
+     * it is used for joining commits from different repositories;
+     * it is used for ordering commits in a single repository (keeping the preference of the topological ordering of course).</p>
+     */
+    long getTimestamp();
 }

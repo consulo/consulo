@@ -37,7 +37,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -50,7 +50,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 @ActionImpl(id = "CreateDesktopEntry")
-public class CreateDesktopEntryAction extends DumbAwareAction {
+public class CreateDesktopEntryAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(CreateDesktopEntryAction.class);
 
     public CreateDesktopEntryAction() {

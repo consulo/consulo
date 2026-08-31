@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
@@ -31,7 +30,7 @@ import javax.swing.*;
 /**
  * @author nik
  */
-public abstract class FindUsagesInProjectStructureActionBase extends AnAction implements DumbAware {
+public abstract class FindUsagesInProjectStructureActionBase extends LegacyDumbAwareAction {
     private final JComponent myParentComponent;
 
     public FindUsagesInProjectStructureActionBase(JComponent parentComponent) {

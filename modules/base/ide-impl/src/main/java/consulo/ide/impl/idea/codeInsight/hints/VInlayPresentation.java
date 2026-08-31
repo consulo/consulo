@@ -20,6 +20,7 @@ import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorFontType;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import java.awt.*;
 
@@ -38,7 +39,7 @@ public class VInlayPresentation implements EditorCustomElementRenderer {
             .getGlobalScheme()
             .getFont(EditorFontType.PLAIN);
         Component component = editor.getContentComponent();
-        this.editorFontMetrics = component.getFontMetrics(font);
+        this.editorFontMetrics = component.getFontMetrics(TargetAWT.to(font));
     }
 
     @Override

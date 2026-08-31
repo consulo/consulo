@@ -72,10 +72,6 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
     return false;
   }
 
-  public boolean hasSnapshotMapping() {
-    return false;
-  }
-
   /**
    * Declares module-aware option providers this index depends on. Empty list means the
    * index is options-agnostic (current behaviour, zero overhead).

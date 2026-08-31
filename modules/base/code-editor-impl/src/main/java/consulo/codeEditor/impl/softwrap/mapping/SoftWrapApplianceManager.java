@@ -23,11 +23,11 @@ import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.Project;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
 import org.jspecify.annotations.Nullable;
@@ -363,7 +363,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         event.setActualEndOffset(myContext.currentPosition.offset);
     }
 
-    @JdkConstants.FontStyle
+    @AWTConstants.FontStyle
     private static int normalizeFontType(int fontType) {
         //noinspection MagicConstant
         return fontType & 3;
@@ -1204,11 +1204,11 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     private static class FontTypesStorage {
         private int[] myStarts = new int[256];
         private int[] myEnds = new int[256];
-        @JdkConstants.FontStyle
+        @AWTConstants.FontStyle
         private int[] myData = new int[256];
         private int myLastIndex = -1;
 
-        void fill(int start, int end, @JdkConstants.FontStyle int value) {
+        void fill(int start, int end, @AWTConstants.FontStyle int value) {
             if (myLastIndex >= 0 && myData[myLastIndex] == value && myEnds[myLastIndex] == start) {
                 myEnds[myLastIndex] = end;
                 return;
@@ -1227,7 +1227,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
          * @param offset target offset
          * @return target value if any is stored; {@code -1} otherwise
          */
-        @JdkConstants.FontStyle
+        @AWTConstants.FontStyle
         public int get(int offset) {
             // The key is array index plus anchor; the value is array value.
             if (myLastIndex < 0) {
@@ -1287,7 +1287,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         int tokenStartOffset;
         int tokenEndOffset;
         boolean nextIsFoldRegion;
-        @JdkConstants.FontStyle
+        @AWTConstants.FontStyle
         int fontType;
         boolean skipToLineEnd;
 
@@ -1339,7 +1339,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
             return getSpaceWidth(Font.PLAIN);
         }
 
-        private int getSpaceWidth(@JdkConstants.FontStyle int fontType) {
+        private int getSpaceWidth(@AWTConstants.FontStyle int fontType) {
             int result = fontType2spaceWidth.get(fontType);
             if (result <= 0) {
                 result = EditorImplUtil.getSpaceWidth(fontType, myEditor);

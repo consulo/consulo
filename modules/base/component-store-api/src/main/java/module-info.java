@@ -15,5 +15,6 @@ module consulo.component.store.api {
         consulo.module.impl,
         consulo.external.service.impl,
         consulo.language.index.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.it;
 }

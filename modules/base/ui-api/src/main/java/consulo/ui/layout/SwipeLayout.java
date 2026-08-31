@@ -28,9 +28,11 @@ public interface SwipeLayout extends Layout<LayoutConstraint> {
     static SwipeLayout create() {
         return UIInternal.get()._Layouts_swipe();
     }
+
     default SwipeLayout register(String id, Layout layout) {
         return register(id, () -> layout);
     }
+
     SwipeLayout register(String id, @RequiredUIAccess Supplier<Layout> layoutSupplier);
 
     /**

@@ -5,13 +5,16 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.LightweightWindow;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,11 +39,26 @@ public interface JBPopup extends Disposable, LightweightWindow {
     void showUnderneathOf(Component componentUnder);
 
     /**
+     * Shows the popup under whatever the action was invoked from. What that is depends on the frontend - an awt
+     * event carries the component it happened on, a browser one carries the point it happened at.
+     *
+     * @param e the event the action is performed with.
+     */
+    @RequiredUIAccess
+    void showUnderneathOf(AnActionEvent e);
+
+    /**
      * Shows the popup at the specified point.
      *
      * @param point the relative point where the popup should be displayed.
      */
     void show(RelativePoint point);
+
+    /**
+     * Shows the popup at a point of a component, named in the types of the platform rather than of a frontend.
+     */
+    @RequiredUIAccess
+    void show(RelativePoint2D point);
 
     void showInScreenCoordinates(Component owner, Point point);
 
@@ -93,7 +111,14 @@ public interface JBPopup extends Disposable, LightweightWindow {
         showBy(uiEvent.getComponent(), Objects.requireNonNull(uiEvent.getInputDetails()));
     }
 
-    void showBy(consulo.ui.Component component, InputDetails inputDetails);
+    void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails);
+
+    /**
+     * Whether the user may resize the popup. Set it before the popup is shown.
+     */
+    @RequiredUIAccess
+    default void setResizable(boolean resizable) {
+    }
 
     /**
      * Shows the popup in the center of the active window in the IDE frame for the specified project.
@@ -146,6 +171,15 @@ public interface JBPopup extends Disposable, LightweightWindow {
     JComponent getContent();
 
     /**
+     * The UI this popup belongs to, or {@code null} while it is attached to none. A frontend may serve
+     * several UIs at once, so background code that needs to get back to the UI thread must go through
+     * the popup it is updating rather than through any application-wide access.
+     * <p>
+     * A {@code null} means there is no UI to get back to, and the caller has nothing to do.
+     */
+    @Nullable UIAccess getUIAccess();
+
+    /**
      * Moves popup to the given point. Does nothing if popup is invisible.
      *
      * @param screenPoint Point to move to.
@@ -195,7 +229,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
         setAdText(s, SwingConstants.LEFT);
     }
 
-    void setAdText(String s, @JdkConstants.HorizontalAlignment int alignment);
+    void setAdText(String s, int alignment);
 
     void setDataProvider(DataProvider dataProvider);
 
@@ -217,7 +251,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
         return !isDisposed();
     }
 
-    default void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+    default void registerAction(String aActionName, int aKeyCode, int aModifier, Action aAction) {
         throw new UnsupportedOperationException();
     }
 

@@ -169,12 +169,12 @@ public class MasterDetailPopupBuilder implements MasterController {
             builder.setTitle(title);
         }
 
-        builder.
-            setItemChoosenCallback(runnable).
-            setCloseOnEnter(myCloseOnEnter).
-            setMayBeParent(true).
-            setDimensionServiceKey(myDimensionServiceKey).
-            setFilteringEnabled(o -> ((ItemWrapper) o).speedSearchText());
+        builder
+            .setItemChoosenCallback(runnable)
+            .setCloseOnEnter(myCloseOnEnter)
+            .setMayBeParent(true)
+            .setDimensionServiceKey(myDimensionServiceKey)
+            .setFilteringEnabled(o -> ((ItemWrapper) o).speedSearchText());
 
         if (myMinSize != null) {
             builder.setMinSize(myMinSize);
@@ -207,18 +207,17 @@ public class MasterDetailPopupBuilder implements MasterController {
     }
 
     private void setupRenderer() {
-        if (myChooserComponent instanceof JList) {
-            JList list = (JList) myChooserComponent;
+        if (myChooserComponent instanceof JList list) {
             list.setCellRenderer(new ListItemRenderer(myDelegate, myProject));
         }
     }
 
     private PopupChooserBuilder createInnerBuilder() {
-        if (myChooserComponent instanceof JList) {
-            return new MyPopupChooserBuilder((JList) myChooserComponent);
+        if (myChooserComponent instanceof JList list) {
+            return new MyPopupChooserBuilder(list);
         }
-        else if (myChooserComponent instanceof JTree) {
-            return new MyPopupChooserBuilder((JTree) myChooserComponent);
+        else if (myChooserComponent instanceof JTree tree) {
+            return new MyPopupChooserBuilder(tree);
         }
         return null;
     }
@@ -226,8 +225,8 @@ public class MasterDetailPopupBuilder implements MasterController {
     @Override
     public ItemWrapper[] getSelectedItems() {
         Object[] values = new Object[0];
-        if (myChooserComponent instanceof JList) {
-            values = ((JList) myChooserComponent).getSelectedValues();
+        if (myChooserComponent instanceof JList list) {
+            values = list.getSelectedValues();
         }
         else if (myChooserComponent instanceof JTree) {
             values = myDelegate.getSelectedItemsInTree();

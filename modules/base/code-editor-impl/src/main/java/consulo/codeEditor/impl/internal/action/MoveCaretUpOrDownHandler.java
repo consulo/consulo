@@ -8,6 +8,8 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
     enum Direction {
@@ -22,7 +24,12 @@ final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        if (caret == null) {
+            return;
+        }
+
         Runnable runnable = () -> {
             if (caret.hasSelection() && !(editor instanceof EditorEx editorEx && editorEx.isStickySelection())
                 && !Registry.is("editor.action.caretMovement.UpDownIgnoreSelectionBoundaries", false)) {

@@ -16,8 +16,8 @@
 package consulo.versionControlSystem.impl.internal.annotate;
 
 import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.util.collection.Lists;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 /**
  * @author Konstantin Bulenkov
  */
-class SwitchAnnotationSourceAction extends AnAction {
+class SwitchAnnotationSourceAction extends LegacyAnAction {
   private final AnnotationSourceSwitcher mySwitcher;
   private final EditorGutterComponentEx myGutter;
   private final List<Consumer<AnnotationSource>> myListeners = Lists.newLockFreeCopyOnWriteList();

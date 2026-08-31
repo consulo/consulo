@@ -20,12 +20,12 @@ import consulo.application.AllIcons;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
-import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.localize.LocalizeValue;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.module.creation.importing.ModuleImportContext;
+import consulo.module.creation.importing.ModuleImportProvider;
+import consulo.module.creation.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
@@ -90,9 +90,8 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
     });
   }
 
-  @RequiredReadAction
   @Override
-  public void process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
-
+  public Coroutine<Object, Object> process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
+    return Coroutine.empty();
   }
 }

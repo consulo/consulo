@@ -30,6 +30,7 @@ import consulo.module.content.DirectoryIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -87,13 +88,11 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return myQualifiedName.hashCode();
     }
 
-    
     @Override
     public String getQualifiedName() {
         return myQualifiedName;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getDirectories() {
@@ -101,7 +100,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return ContainerUtil.toArray(collection, PsiDirectory.ARRAY_FACTORY);
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getDirectories(GlobalSearchScope scope) {
@@ -141,8 +139,8 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     public void handleQualifiedNameChange(String newQualifiedName) {
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public @Nullable PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
         PsiDirectory[] dirs = getDirectories();
@@ -176,14 +174,12 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         }
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiPackage[] getSubPackages() {
         return getSubPackages(GlobalSearchScope.allScope(getProject()));
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiPackage[] getSubPackages(GlobalSearchScope scope) {
@@ -192,7 +188,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     protected abstract IntFunction<? extends PsiPackage[]> getPackageArrayFactory();
 
-    
     @RequiredReadAction
     public PsiPackage[] getSubPackages(PsiPackage psiPackage, GlobalSearchScope scope) {
         Map<String, PsiPackage> packagesMap = new HashMap<>();
@@ -214,14 +209,12 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return ContainerUtil.toArray(packagesMap.values(), getPackageArrayFactory());
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
         return myManager;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -240,7 +233,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -276,7 +268,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public char[] textToCharArray() {
@@ -403,7 +394,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         Collection<PsiDirectory> allDirectories = getAllDirectories(true);
         if (!allDirectories.isEmpty()) {

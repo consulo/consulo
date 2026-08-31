@@ -18,7 +18,8 @@ package consulo.execution.debug.impl.internal.ui.tree;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.configuration.RemoteRunProfile;
 import consulo.execution.debug.XDebugSession;
@@ -36,6 +37,7 @@ import consulo.execution.debug.ui.XValueTree;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.action.ActionGroup;
@@ -70,7 +72,7 @@ import java.util.function.Predicate;
 /**
  * @author nik
  */
-public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposable, XValueTree {
+public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Disposable, XValueTree {
     private final ComponentListener myMoveListener = new ComponentAdapter() {
         @Override
         public void componentMoved(ComponentEvent e) {
@@ -274,13 +276,11 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         mySourcePosition = sourcePosition;
     }
 
-    
     public XDebuggerEditorsProvider getEditorsProvider() {
         return myEditorsProvider;
     }
 
     @Override
-    
     public Project getProject() {
         return myProject;
     }
@@ -294,17 +294,16 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
 
     @Override
-    public @Nullable Object getData(Key dataId) {
-        if (XDEBUGGER_TREE_KEY == dataId || XValueTree.KEY == dataId) {
-            return this;
-        }
-        if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(XDEBUGGER_TREE_KEY, this);
+        sink.set(XValueTree.KEY, this);
+        sink.lazy(PlatformDataKeys.PREDEFINED_TEXT, () -> {
             XValueNodeImpl[] selectedNodes = getSelectedNodes(XValueNodeImpl.class, null);
             if (selectedNodes.length == 1 && selectedNodes[0].getFullValueEvaluator() == null) {
                 return DebuggerUIImplUtil.getNodeRawValue(selectedNodes[0]);
             }
-        }
-        return null;
+            return null;
+        });
     }
 
     public void rebuildAndRestore(XDebuggerTreeState treeState) {
@@ -327,7 +326,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         }
     }
 
-    public void nodeLoaded(RestorableStateNode node, String name) {
+    public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
         for (XDebuggerTreeListener listener : myListeners) {
             listener.nodeLoaded(node, name);
         }
@@ -380,7 +379,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     public void selectNodeOnLoad(final Predicate<TreeNode> nodeFilter) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
                 if (nodeFilter.test(node)) {
                     setSelectionPath(node.getPath());
                     removeTreeListener(this); // remove the listener on first match
@@ -396,7 +395,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     public void expandNodesOnLoad(final Predicate<TreeNode> nodeFilter) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
                 if (nodeFilter.test(node) && !node.isLeaf()) {
                     // cause children computing
                     node.getChildCount();
@@ -421,7 +420,6 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
        expandPath(impl.getPath());
     }
 
-    
     @Override
     public List<XValueNode> getSelectedNodes() {
         TreePath[] paths = getSelectionPaths();

@@ -3,37 +3,44 @@ package consulo.ide.action.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ide.localize.IdeLocalize;
-import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.Component;
 import consulo.ui.HasValidator;
+import consulo.ui.PseudoComponent;
+import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyboardInputDetails;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.util.lang.StringUtil;
 
-import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.function.Consumer;
 
-public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
-    protected final TextBoxWithExtensions myTextField;
+public class NewItemSimplePopupPanel implements PseudoComponent, Disposable {
+    protected final TextBox myTextField;
+    protected final DockLayout myRootLayout;
 
     protected Consumer<? super InputEvent> myApplyAction;
 
     @RequiredUIAccess
     public NewItemSimplePopupPanel() {
-        super(new BorderLayout());
-
         myTextField = createTextField();
 
-        WrappedLayout layout = WrappedLayout.create(myTextField);
-        layout.addBorder(BorderPosition.TOP, BorderStyle.LINE);
+        WrappedLayout textFieldLayout = WrappedLayout.create(myTextField);
+        textFieldLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE);
+        textFieldLayout.addBorder(BorderPosition.BOTTOM, BorderStyle.LINE);
 
-        add(TargetAWT.to(layout), BorderLayout.NORTH);
+        myRootLayout = DockLayout.create();
+        myRootLayout.top(textFieldLayout);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Component getComponent() {
+        return myRootLayout;
     }
 
     public void addValidator(HasValidator.Validator<String> validator) {
@@ -48,17 +55,16 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
     public void dispose() {
     }
 
-    public TextBoxWithExtensions getTextField() {
+    public TextBox getTextField() {
         return myTextField;
     }
 
-    
-    protected TextBoxWithExtensions createTextField() {
-        TextBoxWithExtensions res = TextBoxWithExtensions.create();
+    protected TextBox createTextField() {
+        TextBox res = TextBox.create();
 
         res.setVisibleLength(30);
 
-        res.addBorders(BorderStyle.EMPTY, null, 4);
+        res.addBorders(BorderStyle.EMPTY, null, 6);
 
         res.setPlaceholder(IdeLocalize.actionCreateNewClassNameField());
         res.addKeyPressedListener(e -> {

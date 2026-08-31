@@ -17,9 +17,10 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.application.AllIcons;
 import consulo.application.HelpManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
@@ -48,7 +49,6 @@ import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.ui.ex.errorTreeView.HotfixData;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
 import consulo.ui.ex.errorTreeView.SimpleErrorData;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -63,7 +63,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, NewErrorTreeViewPanel, CopyProvider {
+public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider, NewErrorTreeViewPanel, CopyProvider {
     protected static final Logger LOG = Logger.getInstance(NewErrorTreeViewPanelImpl.class);
     private volatile String myProgressText = "";
     private volatile float myFraction = 0.0f;
@@ -86,7 +86,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     private JPanel myProgressPanel;
 
     private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
-    private MyOccurenceNavigatorSupport myOccurenceNavigatorSupport;
+    private MyOccurrenceNavigatorSupport myOccurrenceNavigatorSupport;
 
     private boolean myCanHideWarningsOrInfos = true;
 
@@ -142,7 +142,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         myBuilder = new ErrorViewTreeBuilder(myTree, treeModel, myErrorViewStructure);
 
         myExporterToTextFile = new ErrorViewTextExporter(myErrorViewStructure);
-        myOccurenceNavigatorSupport = new MyOccurenceNavigatorSupport(myTree);
+        myOccurrenceNavigatorSupport = new MyOccurrenceNavigatorSupport(myTree);
 
         myAutoScrollToSourceHandler.install(myTree);
         TreeUtil.installActions(myTree);
@@ -209,28 +209,19 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (KEY == dataId) {
-            return this;
-        }
-        if (Navigatable.KEY == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(CopyProvider.KEY, this);
+        sink.lazy(Navigatable.KEY, () -> {
             NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
             return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
-        }
-        else if (HelpManager.HELP_ID == dataId) {
-            return myHelpId;
-        }
-        else if (PlatformDataKeys.TREE_EXPANDER == dataId) {
-            return myTreeExpander;
-        }
-        else if (PlatformDataKeys.EXPORTER_TO_TEXT_FILE == dataId) {
-            return myExporterToTextFile;
-        }
-        else if (CURRENT_EXCEPTION_DATA_KEY == dataId) {
+        });
+        sink.set(HelpManager.HELP_ID, myHelpId);
+        sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+        sink.set(PlatformDataKeys.EXPORTER_TO_TEXT_FILE, myExporterToTextFile);
+        sink.lazy(CURRENT_EXCEPTION_DATA_KEY, () -> {
             NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
             return selectedMessageElement != null ? selectedMessageElement.getData() : null;
-        }
-        return null;
+        });
     }
 
     public void selectFirstMessage() {
@@ -341,7 +332,6 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    
     public JComponent getComponent() {
         return this;
     }
@@ -390,7 +380,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             return;
         }
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
-        if (getData(Navigatable.KEY) != null) {
+        if (getSelectedMessageElement() != null && getSelectedMessageElement().getNavigatable() != null) {
             group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
         }
         group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
@@ -475,7 +465,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
                 }
             },
             50,
-            IdeaModalityState.nonModal()
+            ModalityState.nonModal()
         );
     }
 
@@ -555,35 +545,35 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
     @Override
     public OccurenceInfo goNextOccurence() {
-        return myOccurenceNavigatorSupport.goNextOccurence();
+        return myOccurrenceNavigatorSupport.goNextOccurence();
     }
 
     @Override
     public OccurenceInfo goPreviousOccurence() {
-        return myOccurenceNavigatorSupport.goPreviousOccurence();
+        return myOccurrenceNavigatorSupport.goPreviousOccurence();
     }
 
     @Override
     public boolean hasNextOccurence() {
-        return myOccurenceNavigatorSupport.hasNextOccurence();
+        return myOccurrenceNavigatorSupport.hasNextOccurence();
     }
 
     @Override
     public boolean hasPreviousOccurence() {
-        return myOccurenceNavigatorSupport.hasPreviousOccurence();
+        return myOccurrenceNavigatorSupport.hasPreviousOccurence();
     }
 
     @Override
     public String getNextOccurenceActionName() {
-        return myOccurenceNavigatorSupport.getNextOccurenceActionName();
+        return myOccurrenceNavigatorSupport.getNextOccurenceActionName();
     }
 
     @Override
     public String getPreviousOccurenceActionName() {
-        return myOccurenceNavigatorSupport.getPreviousOccurenceActionName();
+        return myOccurrenceNavigatorSupport.getPreviousOccurenceActionName();
     }
 
-    private class RerunAction extends AnAction {
+    private class RerunAction extends LegacyAnAction {
         private final Runnable myRerunAction;
 
         public RerunAction(Runnable rerunAction) {
@@ -607,7 +597,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         }
     }
 
-    private class StopAction extends AnAction {
+    private class StopAction extends LegacyAnAction {
         public StopAction() {
             super(IdeLocalize.actionStop(), LocalizeValue.empty(), AllIcons.Actions.Suspend);
         }
@@ -713,8 +703,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         }
     }
 
-    private static class MyOccurenceNavigatorSupport extends OccurenceNavigatorSupport {
-        public MyOccurenceNavigatorSupport(Tree tree) {
+    private static class MyOccurrenceNavigatorSupport extends OccurenceNavigatorSupport {
+        public MyOccurrenceNavigatorSupport(Tree tree) {
             super(tree);
         }
 

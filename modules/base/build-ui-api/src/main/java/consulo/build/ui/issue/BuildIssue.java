@@ -15,27 +15,27 @@
  */
 package consulo.build.ui.issue;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
- * @author VISTALL
- * @since 14/01/2021
- * <p>
  * from kotlin
+ *
+ * @author VISTALL
+ * @since 2021-01-14
  */
 public interface BuildIssue {
-  
-  String getTitle();
+    LocalizeValue getTitle();
 
-  
-  String getDescription();
+    LocalizeValue getDescription();
 
-  
-  List<BuildIssueQuickFix> getQuickFixes();
+    List<BuildIssueQuickFix> getQuickFixes();
 
-  @Nullable Navigatable getNavigatable(Project project);
+    @Nullable
+    Navigatable getNavigatable(Project project);
 }

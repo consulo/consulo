@@ -51,6 +51,7 @@ import consulo.project.ui.util.AppUIUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -83,12 +84,12 @@ public class DebuggerUIImplUtil {
     private DebuggerUIImplUtil() {
     }
 
-    public static void enableEditorOnCheck(JCheckBox checkbox, JComponent textfield) {
+    public static void enableEditorOnCheck(JCheckBox checkbox, JComponent textField) {
         checkbox.addActionListener(e -> {
             boolean selected = checkbox.isSelected();
-            textfield.setEnabled(selected);
+            textField.setEnabled(selected);
         });
-        textfield.setEnabled(checkbox.isSelected());
+        textField.setEnabled(checkbox.isSelected());
     }
 
     public static void focusEditorOnCheck(JCheckBox checkbox, JComponent component) {
@@ -100,7 +101,7 @@ public class DebuggerUIImplUtil {
         ApplicationManager.getApplication().invokeLater(runnable);
     }
 
-    public static @Nullable RelativePoint getPositionForPopup(Editor editor, int line) {
+    public static @Nullable RelativePoint2D getPositionForPopup(Editor editor, int line) {
         return DebuggerUIUtil.getPositionForPopup(editor, line);
     }
 

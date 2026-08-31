@@ -4,7 +4,8 @@ package consulo.desktop.awt.find;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.fileEditor.impl.internal.search.ContextAwareShortcutProvider;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.find.FindInProjectSettings;
@@ -69,12 +70,10 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private final Runnable myCloseAction;
     private final Runnable myReplaceAction;
 
-    private final DataProvider myDataProviderDelegate;
+    private final UiDataProvider myDataProviderDelegate;
 
     private boolean myMultilineMode;
-    
     private String myStatusText = "";
-    
     private Color myStatusColor = UIUtil.getLabelForeground();
 
     private final List<AnAction> mySearchSuffixActions = new ArrayList<>();
@@ -93,7 +92,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         DefaultActionGroup replaceFieldActions,
         @Nullable Runnable replaceAction,
         @Nullable Runnable closeAction,
-        @Nullable DataProvider dataProvider
+        @Nullable UiDataProvider dataProvider
     ) {
         myProject = project;
         myTargetComponent = targetComponent;
@@ -249,13 +248,11 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    
     public String getStatusText() {
         return myStatusText;
     }
 
     @Override
-    
     public Color getStatusColor() {
         return myStatusColor;
     }
@@ -285,11 +282,11 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    public @Nullable Object getData(Key dataId) {
-        if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
-            return mySearchTextComponent.getText();
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY, mySearchTextComponent.getText());
+        if (myDataProviderDelegate != null) {
+            sink.uiDataSnapshot(myDataProviderDelegate);
         }
-        return myDataProviderDelegate != null ? myDataProviderDelegate.getData(dataId) : null;
     }
 
     @Override
@@ -340,13 +337,11 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-    
     @Override
     public JTextComponent getSearchTextComponent() {
         return mySearchTextComponent;
     }
 
-    
     public JTextComponent getReplaceTextComponent() {
         return myReplaceTextComponent;
     }
@@ -502,7 +497,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @RequiredUIAccess
-    
     @Override
     public CompletableFuture<?> prepareAsync() {
         return CompletableFuture.allOf(
@@ -610,7 +604,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-    
+
     private ActionToolbar createSearchToolbar1(DefaultActionGroup group) {
         ActionGroup.Builder toolbarGroup = ActionGroup.newImmutableBuilder();
 
@@ -632,13 +626,11 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         return toolbar;
     }
 
-    
     private ActionToolbar createReplaceToolbar1(DefaultActionGroup group) {
         ActionToolbar toolbar = createToolbar(group);
         return toolbar;
     }
 
-    
     private ActionToolbar createToolbar(ActionGroup group) {
         ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
             ActionPlaces.EDITOR_TOOLBAR,
@@ -650,6 +642,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
+
 
     private static class MyTextComponentWrapper extends Wrapper {
         public @Nullable JTextComponent getTextComponent() {
@@ -667,7 +660,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
             return CompletableFuture.completedFuture(null);
         }
 
-        
         protected static JTextComponent unwrapTextComponent(JComponent wrapped) {
             if (wrapped instanceof SearchTextField searchTextField) {
                 return searchTextField.getTextEditor();

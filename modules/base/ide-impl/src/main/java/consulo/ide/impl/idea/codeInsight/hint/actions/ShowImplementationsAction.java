@@ -32,7 +32,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
@@ -52,8 +52,8 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
@@ -64,6 +64,7 @@ import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -74,7 +75,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @ActionImpl(id = IdeActions.ACTION_QUICK_IMPLEMENTATIONS)
-public class ShowImplementationsAction extends AnAction implements PopupAction {
+public class ShowImplementationsAction extends LegacyAnAction implements PopupAction {
     public static final String CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE = "codeassists.quickdefinition.lookup";
     public static final String CODEASSISTS_QUICKDEFINITION_FEATURE = "codeassists.quickdefinition";
 
@@ -506,9 +507,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             myIncludeSelf = includeSelf;
         }
 
+        @Nonnull
         @Override
-        public String getCaption(int size) {
-            return myCaption.get();
+        public LocalizeValue getCaption(int size) {
+            return myCaption;
         }
 
         @Override

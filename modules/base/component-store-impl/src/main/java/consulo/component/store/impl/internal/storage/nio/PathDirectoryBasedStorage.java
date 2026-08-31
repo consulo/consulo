@@ -15,6 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage.nio;
 
+import consulo.application.Application;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.DefaultStateSerializer;
@@ -31,11 +32,22 @@ import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.SavingRequestor;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.event.VFileDeleteEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -50,6 +62,7 @@ import java.util.Set;
 public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
     private final Path myDir;
     private final StateSplitterEx mySplitter;
+    private final boolean myCollectVfsEvents;
 
     private DirectoryStorageData myStorageData;
 
@@ -57,12 +70,55 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                                      String dir,
                                      StateSplitterEx splitter,
                                      Disposable parentDisposable,
-                                     @Nullable StateStorageListener listener,
+                                     final @Nullable StateStorageListener listener,
+                                     boolean collectVfsEvents,
                                      PathMacrosService pathMacrosService) {
         super(pathMacroSubstitutor, pathMacrosService);
 
         myDir = Path.of(dir);
         mySplitter = splitter;
+        myCollectVfsEvents = collectVfsEvents;
+
+        if (collectVfsEvents && listener != null) {
+            VirtualFileTracker virtualFileTracker = Application.get().getInstance(VirtualFileTracker.class);
+            String url = LocalFileSystem.PROTOCOL_PREFIX + myDir.toAbsolutePath().toString().replace(File.separatorChar, '/');
+            virtualFileTracker.addTracker(url, new VirtualFileListener() {
+                @Override
+                public void contentsChanged(VirtualFileEvent event) {
+                    notifyIfNeed(event);
+                }
+
+                @Override
+                public void fileDeleted(VirtualFileEvent event) {
+                    notifyIfNeed(event);
+                }
+
+                @Override
+                public void fileCreated(VirtualFileEvent event) {
+                    notifyIfNeed(event);
+                }
+
+                private void notifyIfNeed(VirtualFileEvent event) {
+                    VirtualFile file = event.getFile();
+                    // storage directory will be removed if the only child was removed
+                    if (file.isDirectory() || StringUtil.endsWithIgnoreCase(file.getName(), DirectoryStorageData.DEFAULT_EXT)) {
+                        listener.storageFileChanged(event, PathDirectoryBasedStorage.this);
+                    }
+                }
+            }, false, parentDisposable);
+        }
+    }
+
+    // Append the event to the store's batch, so it is applied once, synchronously, after all writes. When no batch is
+    // supplied (a direct save outside the store flow), apply it immediately and synchronously - never async, otherwise a
+    // refresh could observe the stale VFS record before the event is fired.
+    static void collect(@Nullable List<VFileEvent> events, VFileEvent event) {
+        if (events != null) {
+            events.add(event);
+        }
+        else {
+            RefreshQueue.getInstance().processSingleEvent(event);
+        }
     }
 
     @Override
@@ -158,7 +214,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         return checkIsSavingDisabled() ? null : new MySaveSession(this, getStorageData());
     }
 
-    private static class MySaveSession implements SaveSession, ExternalizationSession {
+    private static class MySaveSession implements VfsEventCollectingSaveSession, ExternalizationSession, SavingRequestor {
         private final PathDirectoryBasedStorage storage;
         private final DirectoryStorageData originalStorageData;
         private DirectoryStorageData copiedStorageData;
@@ -222,7 +278,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         }
 
         @Override
-        public void save(boolean force) {
+        public void save(boolean force, @Nullable List<VFileEvent> events) {
             Path dir = storage.myDir;
             if (copiedStorageData.isEmpty()) {
                 if (Files.exists(dir)) {
@@ -257,6 +313,30 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
             }
 
             storage.myStorageData = copiedStorageData;
+
+            if (storage.myCollectVfsEvents) {
+                collectVfsEvents(events);
+            }
+        }
+
+        // Keep the VFS in sync via explicit save-tagged events per changed/removed child (same as the file storage)
+        private void collectVfsEvents(@Nullable List<VFileEvent> events) {
+            LocalFileSystem lfs = LocalFileSystem.getInstance();
+            for (String fileName : dirtyFileNames) {
+                Path childPath = storage.myDir.resolve(fileName);
+                VirtualFile file = lfs.findFileByNioFile(childPath);
+                if (file != null && file.isValid()) {
+                    File io = childPath.toFile();
+                    collect(events, new VFileContentChangeEvent(this, file, file.getModificationStamp(), -1, file.getTimeStamp(), io.lastModified(), file.getLength(), io.length(), false));
+                }
+            }
+            for (String fileName : removedFileNames) {
+                Path childPath = storage.myDir.resolve(fileName);
+                VirtualFile file = lfs.findFileByNioFile(childPath);
+                if (file != null && file.isValid()) {
+                    collect(events, new VFileDeleteEvent(this, file, false));
+                }
+            }
         }
 
         private void saveStates(Path dir) {

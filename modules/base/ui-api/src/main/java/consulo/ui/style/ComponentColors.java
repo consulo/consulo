@@ -17,13 +17,58 @@ package consulo.ui.style;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public enum ComponentColors implements StyleColorValue {
-  BORDER,
-  @Deprecated
-  // Use Use TEXT_FOREGROUND
-  TEXT,
-  TEXT_FOREGROUND,
-  LAYOUT,
-  DISABLED_TEXT}
+    BORDER,
+    @Deprecated
+    // Use Use TEXT_FOREGROUND
+    TEXT,
+    TEXT_FOREGROUND,
+    LAYOUT,
+    DISABLED_TEXT,
+    INFO_FOREGROUND,
+
+    COMPONENT_BACKGROUND,
+
+    SELECTION_BACKGROUND,
+    SELECTION_FOREGROUND,
+    SELECTION_INACTIVE_BACKGROUND,
+    SELECTION_INACTIVE_FOREGROUND,
+    MENU_SELECTION_BACKGROUND,
+
+    HOVER_BACKGROUND,
+    FOCUS_COLOR,
+
+    SEPARATOR,
+    DISABLED_BORDER,
+
+    LINK_FOREGROUND,
+
+    ERROR_FOREGROUND,
+
+    ERROR_BORDER,
+    WARNING_BORDER,
+    SUCCESS_BORDER,
+
+    TOOLTIP_BACKGROUND,
+    TOOLTIP_FOREGROUND,
+
+    TOOL_WINDOW_BUTTON_HOVER_BACKGROUND,
+    TOOL_WINDOW_BUTTON_SELECTED_BACKGROUND,
+
+    SCROLL_BAR_THUMB,
+    SCROLL_BAR_HOVER_THUMB,
+
+    TABBED_LAYOUT_BACKGROUND,
+    TABBED_LAYOUT_FOREGROUND,
+    TABBED_LAYOUT_HOVER,
+    TABBED_LAYOUT_UNDERLINE,
+    /**
+     * The fill of the selected tab, and of a selected tab whose window is not the active one. Both are what a
+     * tab is drawn as - the awt painter fills the tab with them, so a frontend which cannot ask for them has
+     * to invent a way to tell the selected tab apart.
+     */
+    TABBED_LAYOUT_SELECTED_BACKGROUND,
+    TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND
+}

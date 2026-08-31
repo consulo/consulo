@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,8 @@ public interface HttpRequest {
 
     @Nullable String statusMessage() throws IOException;
 
-    
     Map<String, List<String>> responseHeaders() throws IOException;
 
-    
     HttpVersion version();
 
     default @Nullable String headerValue(String header) throws IOException {
@@ -51,13 +50,10 @@ public interface HttpRequest {
 
     @Nullable String getContentType() throws IOException;
 
-    
     InputStream getInputStream() throws IOException;
 
-    
     BufferedReader getReader() throws IOException;
 
-    
     BufferedReader getReader(@Nullable ProgressIndicator indicator) throws IOException;
 
     /**
@@ -69,17 +65,22 @@ public interface HttpRequest {
         return code == 0 ||code == HttpURLConnection.HTTP_OK;
     }
 
-    
+    default Path saveToFile(Path file, @Nullable ProgressIndicator indicator) throws IOException {
+        return saveToFile(file, null, indicator);
+    }
+
+    Path saveToFile(Path file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException;
+
     default File saveToFile(File file, @Nullable ProgressIndicator indicator) throws IOException {
         return saveToFile(file, null, indicator);
     }
 
-    
-    File saveToFile(File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException;
+    default File saveToFile(File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException {
+        saveToFile(file.toPath(), digest, indicator);
+        return file;
+    }
 
-    
     byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException;
 
-    
     String readString(@Nullable ProgressIndicator indicator) throws IOException;
 }

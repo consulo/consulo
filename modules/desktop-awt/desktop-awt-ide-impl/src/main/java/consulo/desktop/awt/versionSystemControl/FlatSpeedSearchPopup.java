@@ -17,7 +17,7 @@ package consulo.desktop.awt.versionSystemControl;
 
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;

@@ -23,8 +23,10 @@ module consulo.project.api {
     exports consulo.project.localize;
 
     exports consulo.project.internal to
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.ui.ex.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.sand.language.plugin,
         consulo.application.impl,
         consulo.component.impl,
@@ -41,5 +43,8 @@ module consulo.project.api {
         consulo.external.system.impl,
         consulo.external.service.impl,
         consulo.module.content.impl,
-        consulo.file.editor.impl;
+        consulo.file.editor.impl,
+        consulo.file.chooser.impl,
+        consulo.it,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 }

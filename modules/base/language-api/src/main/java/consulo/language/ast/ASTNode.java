@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.ast;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
@@ -36,7 +37,8 @@ public interface ASTNode extends UserDataHolder {
   String getText();
 
   /**
-   * Returns same text getText() returns but might be more effective eliminating toString() transformation from internal CharSequence representation
+   * Returns same text getText() returns but might be more effective eliminating toString() transformation
+   * from internal CharSequence representation
    * <p></p>
    * Note: This call requires traversing whole subtree, so it can be expensive for composite nodes, and should be avoided if possible.
    *
@@ -139,6 +141,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @param child the child node to add.
    */
+  @RequiredWriteAction
   void addChild(ASTNode child);
 
   /**
@@ -147,6 +150,7 @@ public interface ASTNode extends UserDataHolder {
    * @param child        the child node to add.
    * @param anchorBefore the node before which the child node is inserted ({@code null} to add a child as a last node).
    */
+  @RequiredWriteAction
   void addChild(ASTNode child, @Nullable ASTNode anchorBefore);
 
   /**
@@ -156,6 +160,7 @@ public interface ASTNode extends UserDataHolder {
    * @param leafText     text of added leaf.
    * @param anchorBefore the node before which the child node is inserted.
    */
+  @RequiredWriteAction
   void addLeaf(IElementType leafType, CharSequence leafText, @Nullable ASTNode anchorBefore);
 
   /**
@@ -163,6 +168,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @param child the child node to remove.
    */
+  @RequiredWriteAction
   void removeChild(ASTNode child);
 
   /**
@@ -172,6 +178,7 @@ public interface ASTNode extends UserDataHolder {
    * @param firstNodeToRemove the first child node to remove from the tree.
    * @param firstNodeToKeep   the first child node to keep in the tree.
    */
+  @RequiredWriteAction
   void removeRange(ASTNode firstNodeToRemove, ASTNode firstNodeToKeep);
 
   /**
@@ -180,6 +187,7 @@ public interface ASTNode extends UserDataHolder {
    * @param oldChild the child node to replace.
    * @param newChild the node to replace with.
    */
+  @RequiredWriteAction
   void replaceChild(ASTNode oldChild, ASTNode newChild);
 
   /**

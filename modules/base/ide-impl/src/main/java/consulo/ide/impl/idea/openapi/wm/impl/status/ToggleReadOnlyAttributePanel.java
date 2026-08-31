@@ -129,7 +129,11 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         if (project == null) {
             return null;
         }
-        FileEditorsSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
+        FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+        // the awt component only names the frame the status bar sits in, and a unified frame has one set of
+        // splitters and no awt component to name it with
+        FileEditorsSplitters splitters =
+            myStatusBar.isUnified() ? manager.getSplitters() : manager.getSplittersFor(myStatusBar.getComponent());
         return splitters.getCurrentFile();
     }
 }

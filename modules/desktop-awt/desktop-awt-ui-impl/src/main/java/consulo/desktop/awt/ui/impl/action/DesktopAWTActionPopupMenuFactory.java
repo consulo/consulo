@@ -1,0 +1,56 @@
+/*
+ * Copyright 2013-2023 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.desktop.awt.ui.impl.action;
+
+import consulo.annotation.component.ServiceImpl;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
+import org.jspecify.annotations.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+/**
+ * @author VISTALL
+ * @since 27/06/2023
+ */
+@Singleton
+@ServiceImpl
+public class DesktopAWTActionPopupMenuFactory implements ActionPopupMenuFactory {
+    private final ActionManagerEx myActionManager;
+
+    @Inject
+    public DesktopAWTActionPopupMenuFactory(ActionManager actionManager) {
+        myActionManager = (ActionManagerEx) actionManager;
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenu(String place, ActionGroup group) {
+        return new DesktopActionPopupMenuImpl(place, group, myActionManager, null);
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenu(String place,
+                                                 ActionGroup group,
+                                                 @Nullable PresentationFactory presentationFactory) {
+        return new DesktopActionPopupMenuImpl(place, group, myActionManager, presentationFactory);
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenuForceHide(String place, ActionGroup group) {
+        return new DesktopActionPopupMenuImpl(place, group, myActionManager, new MenuItemPresentationFactory(true));
+    }
+}

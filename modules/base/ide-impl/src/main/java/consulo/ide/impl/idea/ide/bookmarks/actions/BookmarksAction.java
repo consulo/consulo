@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.localize.BookmarkLocalize;
@@ -31,6 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
@@ -49,7 +49,7 @@ import java.util.List;
  */
 // TODO rewrite without MasterDetailPopupBuilder
 @ActionImpl(id = "ShowBookmarks")
-public class BookmarksAction extends AnAction implements DumbAware, MasterDetailPopupBuilder.Delegate {
+public class BookmarksAction extends LegacyDumbAwareAction implements MasterDetailPopupBuilder.Delegate {
     public static final Font MNEMONIC_FONT = new Font("Monospaced", 0, 11);
 
     private JBPopup myLastPopup;

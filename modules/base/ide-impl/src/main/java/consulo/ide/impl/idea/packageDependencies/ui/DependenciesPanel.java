@@ -20,7 +20,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
@@ -80,7 +81,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class DependenciesPanel extends JPanel implements Disposable, DataProvider {
+public class DependenciesPanel extends JPanel implements Disposable, UiDataProvider {
     private final Map<PsiFile, Set<PsiFile>> myDependencies;
     private Map<PsiFile, Map<DependencyRule, Set<PsiFile>>> myIllegalDependencies;
     private final MyTree myLeftTree = new MyTree();
@@ -418,18 +419,16 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public @Nullable Object getData(Key dataId) {
-        if (PsiElement.KEY == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.lazy(PsiElement.KEY, () -> {
             PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
             if (selectedNode != null) {
                 PsiElement element = selectedNode.getPsiElement();
                 return element != null && element.isValid() ? element : null;
             }
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return "dependency.viewer.tool.window";
-        }
-        return null;
+            return null;
+        });
+        sink.set(HelpManager.HELP_ID, "dependency.viewer.tool.window");
     }
 
     private static class MyTreeCellRenderer extends ColoredTreeCellRenderer {
@@ -616,6 +615,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
+
     private final class FilterLegalsAction extends ToggleAction {
         FilterLegalsAction() {
             super(
@@ -652,9 +652,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         public void actionPerformed(AnActionEvent e) {
             ShowSettingsUtil.getInstance()
                 .editConfigurable(DependenciesPanel.this, new DependencyConfigurable(myProject))
-                .doWhenDone(DependenciesPanel.this::rebuild);
+                .whenComplete((value, error) -> {
+                    if (error == null) {
+                        DependenciesPanel.this.rebuild();
+                    }
+                });
         }
     }
+
 
     private class DependenciesExporterToTextFile implements ExporterToTextFile {
 
@@ -671,7 +676,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         public void removeSettingsChangedListener(ChangeListener listener) {
         }
 
-        
         @Override
         public String getReportText() {
             Element rootElement = new Element("root");
@@ -699,7 +703,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             return JDOMUtil.writeDocument(new Document(rootElement), SystemProperties.getLineSeparator());
         }
 
-        
         @Override
         public String getDefaultFilePath() {
             return "";
@@ -715,7 +718,8 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private class RerunAction extends AnAction {
+
+    private class RerunAction extends LegacyAnAction {
         public RerunAction(JComponent comp) {
             super(CommonLocalize.actionRerun(), AnalysisScopeLocalize.actionRerunDependency(), PlatformIconGroup.actionsRerun());
             registerCustomShortcutSet(CommonShortcuts.getRerun(), comp);
@@ -752,18 +756,19 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private static class MyTree extends Tree implements DataProvider {
+    private static class MyTree extends Tree implements UiDataProvider {
         @Override
-        public Object getData(Key<?> dataId) {
+        public void uiDataSnapshot(DataSink sink) {
             PackageDependenciesNode node = getSelectedNode();
-            if (Navigatable.KEY == dataId) {
-                return node;
-            }
-            if (PsiElement.KEY == dataId && node != null) {
-                PsiElement element = node.getPsiElement();
-                return element != null && element.isValid() ? element : null;
-            }
-            return null;
+            sink.set(Navigatable.KEY, node);
+            sink.lazy(PsiElement.KEY, () -> {
+                PackageDependenciesNode n = getSelectedNode();
+                if (n != null) {
+                    PsiElement element = n.getPsiElement();
+                    return element != null && element.isValid() ? element : null;
+                }
+                return null;
+            });
         }
 
         public @Nullable PackageDependenciesNode getSelectedNode() {
@@ -775,7 +780,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private class ShowDetailedInformationAction extends AnAction {
+    private class ShowDetailedInformationAction extends LegacyAnAction {
         private ShowDetailedInformationAction() {
             super(LocalizeValue.localizeTODO("Show indirect dependencies"));
         }
@@ -827,14 +832,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private class RemoveFromScopeAction extends AnAction {
+    private class RemoveFromScopeAction extends LegacyAnAction {
         private RemoveFromScopeAction() {
             super(LocalizeValue.localizeTODO("Remove from scope"));
         }
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             e.getPresentation().setEnabled(!getSelectedScope(myLeftTree).isEmpty());
         }
 
@@ -851,14 +855,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private class AddToScopeAction extends AnAction {
+    private class AddToScopeAction extends LegacyAnAction {
         private AddToScopeAction() {
             super(LocalizeValue.localizeTODO("Add to scope"));
         }
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             e.getPresentation().setEnabled(getScope() != null);
         }
 
@@ -914,7 +917,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private class SelectInLeftTreeAction extends AnAction {
+    private class SelectInLeftTreeAction extends LegacyAnAction {
         public SelectInLeftTreeAction() {
             super(
                 AnalysisScopeLocalize.actionSelectInLeftTree(),
@@ -959,7 +962,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-    private class MarkAsIllegalAction extends AnAction {
+    private class MarkAsIllegalAction extends LegacyAnAction {
         public MarkAsIllegalAction() {
             super(
                 AnalysisScopeLocalize.markDependencyIllegalText(),
@@ -1049,7 +1052,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     private final class ChooseScopeTypeAction extends ComboBoxAction {
-        
         @Override
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
             DefaultActionGroup group = new DefaultActionGroup();

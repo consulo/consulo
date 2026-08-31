@@ -56,7 +56,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -68,6 +67,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -175,35 +175,40 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             DataContext context = environment.getDataContext();
             DataContext projectContext = context != null ? context : DataContext.builder().add(Project.KEY, myProject).build();
 
-            AsyncResult<Void> result = AsyncResult.undefined();
+            CompletableFuture<Void> result = new CompletableFuture<>();
 
             runBeforeTask(beforeRunTasks, 0, environment, uiAccess, projectContext, runConfiguration, result);
 
-            if (onCancelRunnable != null) {
-                result.doWhenRejected(() -> uiAccess.give(onCancelRunnable));
-            }
-
-            result.doWhenDone(() -> uiAccess.give(() -> {
-                if (myProject.isDisposed()) {
+            result.whenComplete((value, error) -> {
+                if (error != null) {
+                    if (onCancelRunnable != null) {
+                        uiAccess.give(onCancelRunnable);
+                    }
                     return;
                 }
 
-                RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
-                ConfigurationType configurationType = settings == null ? null : settings.getType();
+                uiAccess.give(() -> {
+                    if (myProject.isDisposed()) {
+                        return;
+                    }
 
-                boolean canRunAnyway = configurationType == null
-                    || configurationType.isDumbAware()
-                    || !DumbService.isDumb(myProject);
+                    RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
+                    ConfigurationType configurationType = settings == null ? null : settings.getType();
 
-                if (canRunAnyway) {
-                    startRunnable.run();
-                }
-                else {
-                    // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
-                    // and execution of startRunnable could be skipped if modality state check fails
-                    DumbService.getInstance(myProject).runWhenSmart(startRunnable);
-                }
-            }));
+                    boolean canRunAnyway = configurationType == null
+                        || configurationType.isDumbAware()
+                        || !DumbService.isDumb(myProject);
+
+                    if (canRunAnyway) {
+                        startRunnable.run();
+                    }
+                    else {
+                        // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
+                        // and execution of startRunnable could be skipped if modality state check fails
+                        DumbService.getInstance(myProject).runWhenSmart(startRunnable);
+                    }
+                });
+            });
         }
     }
 
@@ -214,9 +219,9 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                                UIAccess uiAccess,
                                DataContext dataContext,
                                RunConfiguration runConfiguration,
-                               AsyncResult<Void> finishResult) {
+                               CompletableFuture<Void> finishResult) {
         if (beforeRunTasks.size() == index) {
-            finishResult.setDone();
+            finishResult.complete(null);
             return;
         }
 
@@ -233,18 +238,17 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             return;
         }
 
-        myApplication.executeOnPooledThread(() -> {
-            AsyncResult<Void> result = provider.executeTaskAsync(uiAccess, dataContext, runConfiguration, environment, task);
-            result.doWhenDone(() -> runBeforeTask(beforeRunTasks,
-                index + 1,
-                environment,
-                uiAccess,
-                dataContext,
-                runConfiguration,
-                finishResult)
-            );
-            result.doWhenRejected((Runnable) finishResult::setRejected);
-        });
+        myApplication.executeOnPooledThread(
+            () -> provider.executeTaskAsync(uiAccess, dataContext, runConfiguration, environment, task)
+                .whenComplete((value, error) -> {
+                    if (error == null) {
+                        runBeforeTask(beforeRunTasks, index + 1, environment, uiAccess, dataContext, runConfiguration, finishResult);
+                    }
+                    else {
+                        finishResult.completeExceptionally(error);
+                    }
+                })
+        );
     }
 
     @RequiredUIAccess
@@ -416,8 +420,8 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     @Override
-    public boolean isStarting(String exectutorId, String runnerId) {
-        return myInProgress.contains(new InProgressEntry(exectutorId, runnerId));
+    public boolean isStarting(String executorId, String runnerId) {
+        return myInProgress.contains(new InProgressEntry(executorId, runnerId));
     }
 
     @Override

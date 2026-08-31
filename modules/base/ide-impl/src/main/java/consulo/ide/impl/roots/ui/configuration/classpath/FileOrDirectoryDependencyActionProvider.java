@@ -27,8 +27,9 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -63,7 +64,7 @@ public class FileOrDirectoryDependencyActionProvider implements AddModuleDepende
   @RequiredUIAccess
   
   @Override
-  public AsyncResult<VirtualFile[]> invoke(FileOrDirectoryDependencyContext context) {
+  public CompletableFuture<VirtualFile[]> invoke(FileOrDirectoryDependencyContext context) {
     FileChooserDescriptor descriptor = context.getFileChooserDescriptor();
     ClasspathPanel classpathPanel = context.getClasspathPanel();
     return FileChooser.chooseFiles(descriptor, classpathPanel.getComponent(), context.getProject(), classpathPanel.getRootModel().getModule().getModuleDir());

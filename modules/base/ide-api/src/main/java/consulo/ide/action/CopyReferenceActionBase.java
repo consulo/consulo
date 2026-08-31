@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.internal.CopyPathProviderUtil;
+import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.ide.internal.CopyReferenceFQNTransferable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.QualifiedNameProviderUtil;
@@ -34,16 +34,20 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CopyReferenceActionBase extends DumbAwareAction {
+public abstract class CopyReferenceActionBase extends DumbAwareAction implements AnActionWithAsyncUpdate {
     protected CopyReferenceActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
@@ -51,7 +55,15 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, presentation -> {
+            updateInReadAction(e);
+            return null;
+        }).toCoroutine();
+    }
+
+    @RequiredReadAction
+    protected void updateInReadAction(AnActionEvent e) {
         boolean plural = false;
         boolean enabled;
         boolean paths = false;
@@ -68,7 +80,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
             paths = elements.stream().allMatch(el -> el instanceof PsiFileSystemItem && CopyReferenceUtil.getQualifiedNameFromProviders(el) == null);
 
             if (calcQualifiedName) {
-                e.getPresentation().putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, getQualifiedName(editor, elements));
+                e.getPresentation().putClientProperty(ListPopupStepEx.SECONDARY_TEXT, getQualifiedName(editor, elements));
             }
         }
 
@@ -94,7 +106,6 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
         }
     }
 
-    
     @RequiredReadAction
     protected List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
         return CopyReferenceUtil.getElementsToCopy(editor, dataContext);
@@ -109,14 +120,17 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
 
         String copy = getQualifiedName(editor, elements);
         if (copy != null) {
-            CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(copy));
+            CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+                .put(DataTransferType.TEXT, copy)
+                .put(CopyReferenceFQNTransferable.FQN, copy)
+                .build());
         }
         else if (editor != null && project != null) {
             Document document = editor.getDocument();
             PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
             if (file != null) {
                 String toCopy = QualifiedNameProviderUtil.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
-                CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
+                CopyPasteManager.getInstance().setText(toCopy);
             }
             return;
         }
@@ -134,7 +148,10 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
 
     private static boolean doCopy(List<? extends PsiElement> elements, @Nullable Project project) {
         String toCopy = CopyReferenceUtil.doCopy(elements, null);
-        CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
+        CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+            .put(DataTransferType.TEXT, toCopy)
+            .put(CopyReferenceFQNTransferable.FQN, toCopy)
+            .build());
         return true;
     }
 

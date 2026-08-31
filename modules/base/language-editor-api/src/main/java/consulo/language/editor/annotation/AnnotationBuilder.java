@@ -18,7 +18,6 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.function.Function;
 
@@ -30,8 +29,6 @@ public interface AnnotationBuilder {
      * {@code endOffset = startOffset + 1}.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     @RequiredReadAction
     AnnotationBuilder range(TextRange range);
 
@@ -41,8 +38,6 @@ public interface AnnotationBuilder {
      * The range of the {@code element} must be inside the range of the current element being annotated.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     @RequiredReadAction
     AnnotationBuilder range(ASTNode element);
 
@@ -52,8 +47,6 @@ public interface AnnotationBuilder {
      * The range of the {@code element} must be inside the range of the current element being annotated.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     @RequiredReadAction
     AnnotationBuilder range(PsiElement element);
 
@@ -61,8 +54,6 @@ public interface AnnotationBuilder {
      * Specify annotation should be shown after the end of line. Useful for creating warnings of the type "unterminated string literal".
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder afterEndOfLine();
 
     /**
@@ -70,8 +61,6 @@ public interface AnnotationBuilder {
      * Useful for file-wide messages like "This file is in the wrong directory".
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder fileLevel();
 
     /**
@@ -79,48 +68,36 @@ public interface AnnotationBuilder {
      * Useful for distinguish annotations linked to additional resources like "this is a test method. Click on the icon gutter to run".
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder gutterIconRenderer(GutterIconRenderer gutterIconRenderer);
 
     /**
      * Specify problem group for the annotation to group corresponding inspections.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder problemGroup(ProblemGroup problemGroup);
 
     /**
      * Override text attributes for the annotation to change the defaults specified for the given severity.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder enforcedTextAttributes(TextAttributes enforcedAttributes);
 
     /**
      * Specify text attributes for the annotation to change the defaults specified for the given severity.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder textAttributes(TextAttributesKey enforcedAttributes);
 
     /**
      * Specify the problem highlight type for the annotation. If not specified, the default type for the severity is used.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder highlightType(ProblemHighlightType highlightType);
 
     /**
      * Specify tooltip for the annotation to popup on mouse hover.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Use tooltip(LocalizeValue)")
     default AnnotationBuilder tooltip(String tooltip) {
@@ -131,24 +108,18 @@ public interface AnnotationBuilder {
      * Specify tooltip for the annotation to popup on mouse hover.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder tooltip(LocalizeValue tooltip);
 
     /**
      * Optimization method specifying whether the annotation should be re-calculated when the user types in it.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder needsUpdateOnTyping();
 
     /**
      * Optimization method which explicitly specifies whether the annotation should be re-calculated when the user types in it.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder needsUpdateOnTyping(boolean value);
 
     /**
@@ -156,8 +127,6 @@ public interface AnnotationBuilder {
      * If you want to tweak the fix, e.g. modify its range, please use {@link #newFix(IntentionAction)} instead.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     AnnotationBuilder withFix(IntentionAction fix);
 
     /**
@@ -165,8 +134,6 @@ public interface AnnotationBuilder {
      * If you want to tweak the fix, e.g. modify its range, please use {@link #newFix(IntentionAction)} instead.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder withOptionalFix(@Nullable IntentionAction fix) {
         return fix != null ? withFix(fix) : this;
     }
@@ -177,8 +144,6 @@ public interface AnnotationBuilder {
      *
      * @param fix an intention action to be shown for the annotation as a quick fix
      */
-    @Contract(pure = true)
-    
     FixBuilder newFix(IntentionAction fix);
 
     /**
@@ -188,8 +153,6 @@ public interface AnnotationBuilder {
      * @param fix               to be shown for the annotation as a quick fix
      * @param problemDescriptor to be passed to {@link LocalQuickFix#applyFix(Project, CommonProblemDescriptor)}
      */
-    @Contract(pure = true)
-    
     FixBuilder newLocalQuickFix(LocalQuickFix fix, ProblemDescriptor problemDescriptor);
 
     interface FixBuilder {
@@ -197,28 +160,20 @@ public interface AnnotationBuilder {
          * Specify the range for this quick fix. If not specified, the annotation range is used.
          * This is an intermediate method in the registering new quick fix pipeline.
          */
-        @Contract(pure = true)
-        
         FixBuilder range(TextRange range);
 
-        @Contract(pure = true)
-        
         FixBuilder key(HighlightDisplayKey key);
 
         /**
          * Specify that the quickfix will be available during batch mode only.
          * This is an intermediate method in the registering new quick fix pipeline.
          */
-        @Contract(pure = true)
-        
         FixBuilder batch();
 
         /**
          * Specify that the quickfix will be available both during batch mode and on-the-fly.
          * This is an intermediate method in the registering new quick fix pipeline.
          */
-        @Contract(pure = true)
-        
         FixBuilder universal();
 
         /**
@@ -231,8 +186,6 @@ public interface AnnotationBuilder {
          *   .create();
          * }</pre>
          */
-        @Contract(pure = true)
-        
         AnnotationBuilder registerFix();
     }
 

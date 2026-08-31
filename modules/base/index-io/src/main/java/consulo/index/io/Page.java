@@ -95,7 +95,7 @@ public class Page {
   }
   private final Range myContinuousRange = new Range();
 
-  private @Nullable Range calcContinousRange(BitSet mask) {
+  private @Nullable Range calcContinuousRange(BitSet mask) {
     int lowestByte = mask.nextSetBit(0);
     int highestByte;
     if (lowestByte >= 0) {
@@ -129,9 +129,9 @@ public class Page {
         int start = 0;
         int end = PAGE_SIZE;
         if (myWriteMask != null) {
-          Range range = calcContinousRange(myWriteMask);
+          Range range = calcContinuousRange(myWriteMask);
           if (range == null) {
-  //          System.out.println("Discountinous write of: " + myWriteMask.cardinality() + " bytes. Performing ensure read before flush.");
+  //          System.out.println("Discontinuous write of: " + myWriteMask.cardinality() + " bytes. Performing ensure read before flush.");
             ensureRead();
           }
           else {

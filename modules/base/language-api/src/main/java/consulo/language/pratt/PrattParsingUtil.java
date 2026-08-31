@@ -24,35 +24,36 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public class PrattParsingUtil {
-  private PrattParsingUtil() {
-  }
-
-  public static void searchFor(PrattBuilder builder, PrattTokenType... types) {
-    searchFor(builder, true, types);
-  }
-
-  public static boolean searchFor(PrattBuilder builder, boolean consume, PrattTokenType... types) {
-    TokenSet set = TokenSet.create(types);
-    if (!set.contains(builder.getTokenType())) {
-      builder.assertToken(types[0]);
-      while (!set.contains(builder.getTokenType()) && !builder.isEof()) {
-        builder.advance();
-      }
+    private PrattParsingUtil() {
     }
-    if (consume) {
-      builder.advance();
-    }
-    return !builder.isEof();
-  }
 
-  public static @Nullable IElementType parseOption(PrattBuilder builder, int rightPriority) {
-    MutableMarker marker = builder.mark();
-    IElementType type = builder.createChildBuilder(rightPriority).parse();
-    if (type == null) {
-      marker.rollback();
-    } else {
-      marker.finish();
+    public static void searchFor(PrattBuilder builder, PrattTokenType... types) {
+        searchFor(builder, true, types);
     }
-    return type;
-  }
+
+    public static boolean searchFor(PrattBuilder builder, boolean consume, PrattTokenType... types) {
+        TokenSet set = TokenSet.create(types);
+        if (!set.contains(builder.getTokenType())) {
+            builder.assertToken(types[0]);
+            while (!set.contains(builder.getTokenType()) && !builder.isEof()) {
+                builder.advance();
+            }
+        }
+        if (consume) {
+            builder.advance();
+        }
+        return !builder.isEof();
+    }
+
+    public static @Nullable IElementType parseOption(PrattBuilder builder, int rightPriority) {
+        MutableMarker marker = builder.mark();
+        IElementType type = builder.createChildBuilder(rightPriority).parse();
+        if (type == null) {
+            marker.rollback();
+        }
+        else {
+            marker.finish();
+        }
+        return type;
+    }
 }

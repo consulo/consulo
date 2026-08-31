@@ -17,9 +17,18 @@ package consulo.ui.border;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public enum BorderStyle {
-  LINE,
-  EMPTY
+    LINE,
+    /**
+     * A line around the component with the corners rounded by {@link #DEFAULT_ARC}.
+     */
+    LINE_ROUNDED,
+    EMPTY;
+
+    /**
+     * The radius of the corners of {@link #LINE_ROUNDED}, in unscaled pixels.
+     */
+    public static final int DEFAULT_ARC = 4;
 }

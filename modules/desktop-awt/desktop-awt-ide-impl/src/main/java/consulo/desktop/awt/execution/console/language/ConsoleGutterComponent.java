@@ -18,7 +18,7 @@ package consulo.desktop.awt.execution.console.language;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.colorScheme.EditorFontType;
-import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
+import consulo.desktop.awt.editor.impl.internal.DesktopEditorImpl;
 import consulo.execution.ui.console.language.GutterContentProvider;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -180,7 +180,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
     if (!atLineStart) {
       g.setColor(JBColor.BLUE);
     }
-    g.setFont(editor.getColorsScheme().getFont(EditorFontType.PLAIN));
+    g.setFont(TargetAWT.to(editor.getColorsScheme().getFont(EditorFontType.PLAIN)));
 
     int y = ((startLine + 1) * lineHeight) - editor.getDescent();
     FontMetrics fontMetrics = editor.getFontMetrics(Font.PLAIN);

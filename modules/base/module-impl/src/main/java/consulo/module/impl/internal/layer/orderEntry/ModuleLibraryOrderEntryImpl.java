@@ -94,11 +94,11 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
             return name;
         }
         else {
-            if (myLibrary instanceof LibraryEx && ((LibraryEx) myLibrary).isDisposed()) {
+            if (myLibrary instanceof LibraryEx && myLibrary.isDisposed()) {
                 return "<unknown>";
             }
 
-            String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
+            String[] urls = myLibrary.getUrls(BinariesOrderRootType.ID);
             if (urls.length > 0) {
                 String url = urls[0];
                 return VirtualFilePathUtil.toPresentableUrl(url);

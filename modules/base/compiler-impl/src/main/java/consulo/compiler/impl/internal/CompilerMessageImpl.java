@@ -18,35 +18,36 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public final class CompilerMessageImpl implements CompilerMessage {
-    
     private final Project myProject;
-    
+
     private final CompilerMessageCategory myCategory;
     private @Nullable Navigatable myNavigatable;
-    
-    private final String myMessage;
-    private final @Nullable VirtualFile myFile;
+
+    private final LocalizeValue myMessage;
+    private final @Nullable String myUrl;
     private final int myRow;
     private final int myColumn;
 
-    public CompilerMessageImpl(Project project, CompilerMessageCategory category, @Nullable String message) {
+    public CompilerMessageImpl(Project project, CompilerMessageCategory category, LocalizeValue message) {
         this(project, category, message, null, -1, -1, null);
     }
 
     public CompilerMessageImpl(
         Project project,
         CompilerMessageCategory category,
-        @Nullable String message,
-        @Nullable VirtualFile file,
+        LocalizeValue message,
+        @Nullable String url,
         int row,
         int column,
         @Nullable Navigatable navigatable
@@ -54,21 +55,19 @@ public final class CompilerMessageImpl implements CompilerMessage {
         myProject = project;
         myCategory = category;
         myNavigatable = navigatable;
-        myMessage = message == null ? "" : message;
+        myMessage = message;
         myRow = row;
         myColumn = column;
-        myFile = file;
+        myUrl = url;
     }
 
-    
     @Override
     public CompilerMessageCategory getCategory() {
         return myCategory;
     }
 
-    
     @Override
-    public String getMessage() {
+    public LocalizeValue getMessage() {
         return myMessage;
     }
 
@@ -77,7 +76,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
         if (myNavigatable != null) {
             return myNavigatable;
         }
-        VirtualFile virtualFile = getVirtualFile();
+        VirtualFile virtualFile = findVirtualFile();
         if (virtualFile != null && virtualFile.isValid()) {
             int line = getLine() - 1; // editor lines are zero-based
             if (line >= 0) {
@@ -88,9 +87,22 @@ public final class CompilerMessageImpl implements CompilerMessage {
         return null;
     }
 
+    private @Nullable VirtualFile findVirtualFile() {
+        if (myUrl == null) {
+            return null;
+        }
+        VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+        VirtualFile file = virtualFileManager.findFileByUrl(myUrl);
+        if (file == null) {
+            // generated sources may be placed in completely random directories which aren't refreshed automatically
+            return virtualFileManager.refreshAndFindFileByUrl(myUrl);
+        }
+        return file;
+    }
+
     @Override
-    public VirtualFile getVirtualFile() {
-        return myFile;
+    public @Nullable String getUrl() {
+        return myUrl;
     }
 
     @Override
@@ -126,7 +138,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
             && myColumn == that.myColumn
             && myRow == that.myRow
             && myCategory.equals(that.myCategory)
-            && Objects.equals(myFile, that.myFile)
+            && Objects.equals(myUrl, that.myUrl)
             && myMessage.equals(that.myMessage);
     }
 
@@ -134,13 +146,13 @@ public final class CompilerMessageImpl implements CompilerMessage {
     public int hashCode() {
         int result = myCategory.hashCode();
         result = 29 * result + myMessage.hashCode();
-        result = 29 * result + (myFile != null ? myFile.hashCode() : 0);
+        result = 29 * result + (myUrl != null ? myUrl.hashCode() : 0);
         result = 29 * result + myRow;
         return 29 * result + myColumn;
     }
 
     @Override
     public String toString() {
-        return myMessage;
+        return myMessage.get();
     }
 }

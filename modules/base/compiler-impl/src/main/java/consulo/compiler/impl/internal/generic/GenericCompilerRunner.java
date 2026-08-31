@@ -78,7 +78,7 @@ public class GenericCompilerRunner {
         }
         catch (Exception e) {
             LOG.info(e);
-            myContext.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
+            myContext.newError(LocalizeValue.localizeTODO(ExceptionUtil.getThrowableText(e))).add();
         }
         return didSomething;
     }

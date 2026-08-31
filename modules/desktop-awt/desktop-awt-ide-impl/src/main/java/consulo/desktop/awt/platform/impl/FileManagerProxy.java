@@ -24,6 +24,7 @@ import consulo.application.util.*;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.CapturingProcessHandler;
@@ -31,7 +32,6 @@ import consulo.process.io.ProcessIOExecutorService;
 import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.io.FileUtil;
 import consulo.util.jna.JnaLoader;
@@ -70,16 +70,22 @@ public class FileManagerProxy {
     };
 
     private static final NotNullLazyValue<String> fileManagerName = new AtomicNotNullLazyValue<>() {
-        
+
         @Override
         protected String compute() {
-            if (Platform.current().os().isMac()) {
+            PlatformOperatingSystem os = Platform.current().os();
+            if (os.isMac()) {
                 return "Finder";
             }
-            if (Platform.current().os().isWindows()) {
+            else if (os.isWindows()) {
                 return "Explorer";
             }
-            return readDesktopEntryKey("Name").orElse("File Manager");
+            else if (os.isHaiku()) {
+                return "Tracker";
+            }
+            else {
+                return readDesktopEntryKey("Name").orElse("File Manager");
+            }
         }
     };
 
@@ -117,7 +123,7 @@ public class FileManagerProxy {
             ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
     }
 
-    
+
     public static String getFileManagerName() {
         return fileManagerName.getValue();
     }

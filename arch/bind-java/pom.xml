@@ -39,6 +39,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
+                    <compilerArguments>
+                        <Adsljson.generatedmarker></Adsljson.generatedmarker>
+                    </compilerArguments>
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>-XDaddTypeAnnotationsToSymbol=true</arg> <!-- Needed for JSpecifyMode in NullAway in JDK 21.0.8+ -->
@@ -64,7 +67,7 @@
                         <path>
                             <groupId>com.uber.nullaway</groupId>
                             <artifactId>nullaway</artifactId>
-                            <version>0.13.3</version>
+                            <version>${null.away.version}</version>
                         </path>
                         <path>
                             <groupId>consulo.internal</groupId>
@@ -75,6 +78,11 @@
                             <groupId>consulo.internal</groupId>
                             <artifactId>compiler.apt.java.generation</artifactId>
                             <version>${compiler.apt.version}</version>
+                        </path>
+                        <path>
+                            <groupId>consulo.internal.com.dslplatform</groupId>
+                            <artifactId>dsl-json-processor</artifactId>
+                            <version>${dsl.json.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

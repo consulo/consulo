@@ -21,21 +21,16 @@ import consulo.language.ast.TokenSet;
 
 /**
  * @author VISTALL
- * @since 19:51/24.06.13
+ * @since 2013-06-24
  */
 public interface LanguageVersionWithParsing {
-  
   Lexer createLexer();
 
-  
   PsiParser createParser();
 
-  
   TokenSet getWhitespaceTokens();
 
-  
   TokenSet getCommentTokens();
 
-  
   TokenSet getStringLiteralElements();
 }

@@ -15,11 +15,11 @@
  */
 package consulo.component.macro;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import org.jdom.*;
 
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**

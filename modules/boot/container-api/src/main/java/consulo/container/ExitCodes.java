@@ -31,7 +31,7 @@ public interface ExitCodes {
   public static final int UNSUPPORTED_JAVA_VERSION = 4;
   public static final int OUT_OF_MEMORY = 9;
 
-  public static final int MIN_JAVA_VERSION = 21;
+  public static final int MIN_JAVA_VERSION = 25;
 
   public static @Nullable String validateJavaRuntime() {
     if (!SystemInfoRt.isJavaVersionAtLeast(MIN_JAVA_VERSION)) {

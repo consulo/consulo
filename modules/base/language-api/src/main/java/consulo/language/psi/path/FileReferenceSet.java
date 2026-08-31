@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
-import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -170,6 +169,7 @@ public class FileReferenceSet {
         this(str, element, startInElement, provider, isCaseSensitive, endingSlashNotAllowed, null);
     }
 
+    @RequiredReadAction
     public FileReferenceSet(PsiElement element) {
         myElement = element;
         TextRange range = ElementManipulators.getValueTextRange(element);
@@ -211,6 +211,7 @@ public class FileReferenceSet {
         myReferences = referencesList.toArray(new FileReference[referencesList.size()]);
     }
 
+    @RequiredReadAction
     protected List<FileReference> reparse(String str, int startInElement) {
         int wsHead = 0;
         int wsTail = 0;
@@ -233,7 +234,7 @@ public class FileReferenceSet {
             decoded = str;
             valueRange = TextRange.from(startInElement, decoded.length());
         }
-        List<FileReference> referencesList = ContainerUtil.newArrayList();
+        List<FileReference> referencesList = new ArrayList<>();
 
         for (int i = wsHead; i < decoded.length() && Character.isWhitespace(decoded.charAt(i)); i++) {
             wsHead++;     // skip head white spaces
@@ -386,6 +387,7 @@ public class FileReferenceSet {
         return Collections.emptyList();
     }
 
+    @RequiredReadAction
     protected Collection<PsiFileSystemItem> getParentDirectoryContext() {
         PsiFile file = getContainingFile();
         VirtualFile virtualFile = file == null ? null : file.getOriginalFile().getVirtualFile();
@@ -416,6 +418,7 @@ public class FileReferenceSet {
         return myReferences == null || myReferences.length == 0 ? null : myReferences[myReferences.length - 1];
     }
 
+    @RequiredReadAction
     public static Collection<PsiFileSystemItem> getAbsoluteTopLevelDirLocations(PsiFile file) {
         VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile == null) {
@@ -423,7 +426,7 @@ public class FileReferenceSet {
         }
 
         PsiDirectory parent = file.getParent();
-        Module module = ModuleUtilCore.findModuleForPsiElement(parent == null ? file : parent);
+        Module module = (parent == null ? file : parent).getModule();
         if (module == null) {
             return Collections.emptyList();
         }

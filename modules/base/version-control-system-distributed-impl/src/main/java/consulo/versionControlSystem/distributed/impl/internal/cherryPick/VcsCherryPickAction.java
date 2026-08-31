@@ -20,7 +20,7 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 @ActionImpl(id = VcsActions.ACTION_CHERRY_PICK)
-public class VcsCherryPickAction extends DumbAwareAction {
+public class VcsCherryPickAction extends LegacyDumbAwareAction {
     private static final String SEVERAL_VCS_DESCRIPTION = "Selected commits are tracked by different vcses";
 
     public VcsCherryPickAction() {
@@ -58,7 +58,6 @@ public class VcsCherryPickAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setVisible(true);
 
         VcsLog log = e.getData(VcsLog.KEY);

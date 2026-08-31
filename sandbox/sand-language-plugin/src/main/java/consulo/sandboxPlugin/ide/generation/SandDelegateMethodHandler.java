@@ -32,20 +32,19 @@ import consulo.ui.annotation.RequiredUIAccess;
  */
 @ExtensionImpl
 public class SandDelegateMethodHandler implements DelegateMethodHandler {
-  @Override
-  public boolean isValidFor(Editor editor, PsiFile file) {
-    return true;
-  }
+    @Override
+    public boolean isValidFor(Editor editor, PsiFile file) {
+        return true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void invoke(Project project, Editor editor, PsiFile file) {
-    Alerts.okInfo(LocalizeValue.localizeTODO("delegate methods called")).showAsync();
-  }
+    @Override
+    @RequiredUIAccess
+    public void invoke(Project project, Editor editor, PsiFile file) {
+        Alerts.okInfo(LocalizeValue.localizeTODO("delegate methods called")).showAsync();
+    }
 
-  
-  @Override
-  public Language getLanguage() {
-    return SandLanguage.INSTANCE;
-  }
+    @Override
+    public Language getLanguage() {
+        return SandLanguage.INSTANCE;
+    }
 }

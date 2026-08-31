@@ -6,21 +6,19 @@ module consulo.util.collection {
     requires transitive consulo.util.lang;
 
     requires org.slf4j;
+    requires it.unimi.dsi.fastutil;
 
     exports consulo.util.collection;
     exports consulo.util.collection.util;
 
     exports consulo.util.collection.impl.map to
-        consulo.util.collection.via.trove,
         consulo.util.collection.primitive,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.language.impl,
         consulo.index.io,
         consulo.ide.impl,
         consulo.virtual.file.system.impl;
 
     exports consulo.util.collection.impl.set to consulo.util.collection.primitive;
-    exports consulo.util.collection.impl to consulo.util.collection.primitive, consulo.util.collection.via.trove;
-
-    uses consulo.util.collection.impl.CollectionFactory;
+    exports consulo.util.collection.impl to consulo.util.collection.primitive;
 }

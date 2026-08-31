@@ -15,46 +15,27 @@
  */
 package consulo.build.ui.impl.internal.event;
 
-import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
 import consulo.build.ui.event.FailureResult;
-import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Vladislav.Soroka
  */
 public class FailureResultImpl implements FailureResult {
+    private final List<Failure> myFailures;
 
-  private final List<Failure> myFailures;
-
-  public FailureResultImpl() {
-    this(null, null);
-  }
-
-  public FailureResultImpl(@Nullable Throwable error) {
-    this(null, error);
-  }
-
-  public FailureResultImpl(@Nullable @BuildEventsNls.Message String message) {
-    this(message, null);
-  }
-
-  public FailureResultImpl(@Nullable @BuildEventsNls.Message  String message, @Nullable Throwable error) {
-    myFailures = new ArrayList<>();
-    if (message != null || error != null) {
-      myFailures.add(new FailureImpl(message, error));
+    public FailureResultImpl() {
+        this(List.of());
     }
-  }
 
-  public FailureResultImpl(List<Failure> failures) {
-    myFailures = failures;
-  }
-  
-  @Override
-  public List<? extends Failure> getFailures() {
-    return myFailures;
-  }
+    public FailureResultImpl(List<Failure> failures) {
+        myFailures = failures;
+    }
+
+    @Override
+    public List<? extends Failure> getFailures() {
+        return myFailures;
+    }
 }

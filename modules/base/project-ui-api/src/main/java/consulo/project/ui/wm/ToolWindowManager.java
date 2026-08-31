@@ -38,6 +38,8 @@ import javax.swing.event.HyperlinkListener;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ToolWindowManager {
+    public abstract Project getProject();
+
     public abstract boolean canShowNotification(String toolWindowId);
 
     public static ToolWindowManager getInstance(Project project) {
@@ -105,8 +107,10 @@ public abstract class ToolWindowManager {
     /**
      * @return <code>ID</code> of currently active tool window or <code>null</code> if there is no active
      * tool window.
+     * <p>
+     * Readable from any thread: the toggle actions of a tool window ask for it from {@code update}, which the
+     * action updater runs off the ui thread, and a stale id there is harmless - the action is updated again.
      */
-    @RequiredUIAccess
     public abstract @Nullable String getActiveToolWindowId();
 
     /**

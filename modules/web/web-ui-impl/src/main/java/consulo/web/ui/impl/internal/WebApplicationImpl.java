@@ -1,0 +1,154 @@
+package consulo.web.ui.impl.internal;
+
+import consulo.application.impl.internal.UnifiedApplication;
+import consulo.application.internal.StartupProgress;
+import consulo.component.internal.ComponentBinding;
+import consulo.logging.Logger;
+import com.vaadin.flow.component.UI;
+import consulo.ui.UIAccess;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.web.ui.impl.internal.WebUnboundUIAccess;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BooleanSupplier;
+
+/**
+ * @author VISTALL
+ * @since 16-Sep-17
+ */
+public class WebApplicationImpl extends UnifiedApplication {
+  private static final Logger LOG = Logger.getInstance(WebApplicationImpl.class);
+
+  private final WebUnboundUIAccess myUnboundUIAccess = new WebUnboundUIAccess();
+
+  private final Set<UIAccess> myUIAccesses = new LinkedHashSet<>();
+
+  public WebApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splash) {
+    super(componentBinding, splash);
+  }
+
+  public @Nullable WebStartupProgressImpl getSplash() {
+    return (WebStartupProgressImpl)mySplashRef.get();
+  }
+
+  @Override
+  public boolean isRestartCapable() {
+    return getRestartCode() != 0;
+  }
+
+  @Override
+  public void restart(boolean exitConfirmed) {
+    shutdown(getRestartCode());
+  }
+
+  @Override
+  public void exit(boolean force, boolean exitConfirmed) {
+    shutdown(0);
+  }
+
+  @Override
+  public void exit() {
+    shutdown(0);
+  }
+
+  /**
+   * The linux desktop restarts through its launcher: the jvm exits with the code named by
+   * {@code consulo.restart.code} and the script around it starts it again. The web frontend restarts the same
+   * way - whatever launched it, a container entrypoint among them, owns the loop.
+   */
+  private static int getRestartCode() {
+    Integer code = Integer.getInteger("consulo.restart.code");
+    return code == null ? 0 : code;
+  }
+
+  private void shutdown(int exitCode) {
+    try {
+      saveSettings();
+    }
+    catch (Throwable e) {
+      LOG.warn(e);
+    }
+
+    // off the ui thread, and a beat later - the click which asked for this still owes the browser a response,
+    // and an exit inside the request would drop it
+    Thread thread = new Thread(() -> {
+      try {
+        Thread.sleep(500L);
+      }
+      catch (InterruptedException ignored) {
+      }
+      System.exit(exitCode);
+    }, "consulo-shutdown");
+    thread.setDaemon(true);
+    thread.start();
+  }
+
+  /**
+   * Always defers, even when the caller already is the ui thread - running inline would let a service constructor
+   * that posts an initializer re-enter itself before the container finished binding it.
+   */
+  @Override
+  public void invokeLater(Runnable runnable) {
+    getLastUIAccess().give(runnable);
+  }
+
+  @Override
+  public void invokeLater(Runnable runnable, BooleanSupplier expired) {
+    getLastUIAccess().give(runnable);
+  }
+
+  @Override
+  public void invokeLater(Runnable runnable, consulo.ui.ModalityState state) {
+    getLastUIAccess().give(runnable);
+  }
+
+  @Override
+  public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
+    getLastUIAccess().give(runnable);
+  }
+
+  
+  /**
+   * The ui a caller already runs in is the one it means. Only a caller which has none - a background thread with
+   * no project to name - falls back to the ui which attached last.
+   */
+  @Override
+  public UIAccess getLastUIAccess() {
+    // not UIAccess#isUIThread, which also answers for a request which only holds the session lock - the access of
+    // a ui can only be taken while that ui is the current one
+    UI ui = UI.getCurrent();
+    if (ui != null) {
+      return VaadinComponentDelegate.getUIAccess(ui);
+    }
+
+    Collection<UIAccess> uiAccesses = getUIAccesses();
+    return uiAccesses.isEmpty() ? myUnboundUIAccess : List.copyOf(uiAccesses).getLast();
+  }
+
+  /**
+   * Adds a ui which has just been attached. Kept in the order they arrived, so the newest of them is what a caller
+   * without a ui of its own is answered with.
+   */
+  public void registerUIAccess(UIAccess uiAccess) {
+    synchronized (myUIAccesses) {
+      myUIAccesses.removeIf(access -> !access.isValid());
+      myUIAccesses.add(uiAccess);
+    }
+  }
+
+  /**
+   * Every ui still attached. A tab which went away is dropped while answering, since a browser is not obliged to
+   * say goodbye.
+   */
+  public Collection<UIAccess> getUIAccesses() {
+    synchronized (myUIAccesses) {
+      myUIAccesses.removeIf(access -> !access.isValid());
+      return List.copyOf(myUIAccesses);
+    }
+  }
+}

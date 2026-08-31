@@ -14,10 +14,7 @@ import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseOutputReader;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ShutDownTracker;
-import consulo.util.lang.StringUtil;
-import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.*;
 import consulo.virtualFileSystem.ManagingFS;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -40,7 +37,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private static final Logger LOG = Logger.getInstance(NativeFileWatcherImpl.class);
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static final String PROPERTY_WATCHER_DISABLED = "consulo.filewatcher.disabled";
+  @SuppressWarnings("SpellCheckingInspection")
   private static final String PROPERTY_WATCHER_EXECUTABLE_PATH = "consulo.filewatcher.executable.path";
   private static final Path PLATFORM_NOT_SUPPORTED = Path.of("(platform not supported)");
   private static final String ROOTS_COMMAND = "ROOTS";
@@ -134,6 +133,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     return path.toAbsolutePath();
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   public static @Nullable Path getExecutablePathImpl() {
     String execPath = System.getProperty(PROPERTY_WATCHER_EXECUTABLE_PATH);
     if (execPath != null) return Path.of(execPath);
@@ -270,6 +270,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
   };
 
+  @SuppressWarnings("SpellCheckingInspection")
   private enum WatcherOp {
     GIVEUP,
     RESET,
@@ -392,9 +393,9 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     private void processRemap() {
-      Set<Pair<String, String>> pairs = new HashSet<>();
+      Set<Couple<String>> pairs = new HashSet<>();
       for (int i = 0; i < myLines.size() - 1; i += 2) {
-        pairs.add(Pair.create(myLines.get(i), myLines.get(i + 1)));
+        pairs.add(Couple.of(myLines.get(i), myLines.get(i + 1)));
       }
       myNotificationSink.notifyMapping(pairs);
     }

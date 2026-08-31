@@ -20,8 +20,8 @@ package consulo.ui;
  * @since 2019-11-04
  */
 public enum NotificationType {
-  INFO,
-  WARNING,
-  ERROR,
-  QUESTION
+    INFO,
+    WARNING,
+    ERROR,
+    QUESTION
 }

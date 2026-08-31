@@ -28,7 +28,9 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -53,12 +55,14 @@ import java.util.List;
 public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
   private static final Logger LOG = Logger.getInstance(PsiCopyPasteManagerImpl.class);
 
+  public static final DataTransferType<MyData> PSI_DATA = DataTransferType.create("consulo.psi.elements");
+
   private MyData myRecentData;
-  private final CopyPasteManagerEx myCopyPasteManager;
+  private final CopyPasteManager myCopyPasteManager;
 
   @Inject
   public PsiCopyPasteManagerImpl(Application application, CopyPasteManager copyPasteManager) {
-    myCopyPasteManager = (CopyPasteManagerEx) copyPasteManager;
+    myCopyPasteManager = copyPasteManager;
     application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosing(Project project) {
@@ -71,24 +75,14 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
 
   @Override
   public @Nullable PsiElement[] getElements(boolean[] isCopied) {
-    try {
-      Object transferData = myCopyPasteManager.getContents(ourDataFlavor);
-      if (!(transferData instanceof MyData)) {
-        return null;
-      }
-      MyData dataProxy = (MyData)transferData;
-      if (!Comparing.equal(dataProxy, myRecentData)) {
-        return null;
-      }
-      if (isCopied != null) {
-        isCopied[0] = myRecentData.isCopied();
-      }
-      return myRecentData.getElements();
-    }
-    catch (Exception e) {
-      LOG.debug(e);
+    MyData dataProxy = myCopyPasteManager.getLocalContents().get(PSI_DATA);
+    if (dataProxy == null || !Comparing.equal(dataProxy, myRecentData)) {
       return null;
     }
+    if (isCopied != null) {
+      isCopied[0] = myRecentData.isCopied();
+    }
+    return myRecentData.getElements();
   }
 
   static @Nullable PsiElement[] getElements(Transferable content) {
@@ -110,16 +104,42 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
     return transferData instanceof MyData ? ((MyData)transferData).getElements() : null;
   }
 
+  static @Nullable PsiElement[] getElements(DataTransfer transfer) {
+    MyData data = transfer.get(PSI_DATA);
+    return data == null ? null : data.getElements();
+  }
+
   @Override
   public void clear() {
     myRecentData = null;
-    myCopyPasteManager.setContents(new StringSelection(""));
+    myCopyPasteManager.setCutElements(null);
+    myCopyPasteManager.setText("");
   }
 
   @Override
   public void setElements(PsiElement[] elements, boolean copied) {
     myRecentData = new MyData(elements, copied);
-    myCopyPasteManager.setContents(new MyTransferable(myRecentData));
+
+    String text = AccessRule.read(() -> {
+      List<String> names = new ArrayList<>();
+      for (PsiElement element : elements) {
+        if (element instanceof PsiNamedElement namedElement) {
+          String name = namedElement.getName();
+          if (name != null) {
+            names.add(name);
+          }
+        }
+      }
+      return names.isEmpty() ? null : StringUtil.join(names, "\n");
+    });
+    List<File> files = AccessRule.read(() -> PsiCopyPasteManager.asFileList(elements));
+
+    myCopyPasteManager.setContents(DataTransfer.builder()
+      .put(DataTransferType.TEXT, text)
+      .put(DataTransferType.FILE_LIST, files)
+      .put(PSI_DATA, myRecentData)
+      .build());
+    myCopyPasteManager.setCutElements(copied ? null : elements);
   }
 
   @Override

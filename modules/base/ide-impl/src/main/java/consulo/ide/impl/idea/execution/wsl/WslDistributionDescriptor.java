@@ -92,7 +92,7 @@ final class WslDistributionDescriptor {
   }
 
   /**
-   * @return the mount point for current distribution. Default value of {@code /mnt/} may be overriden with {@code /etc/wsl.conf}
+   * @return the mount point for current distribution. Default value of {@code /mnt/} may be overridden with {@code /etc/wsl.conf}
    * @apiNote caches value per IDE run. Meaning - reconfiguring of this option in WSL requires IDE restart.
    */
   final String getMntRoot() {

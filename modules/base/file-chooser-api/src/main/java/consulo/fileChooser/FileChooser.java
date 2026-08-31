@@ -18,11 +18,11 @@ package consulo.fileChooser;
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -36,35 +36,31 @@ public final class FileChooser {
 
   
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static CompletableFuture<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFiles(descriptor, null, project, toSelect);
   }
 
   
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static CompletableFuture<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, parent);
     return chooser.chooseAsync(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
   }
 
   
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static CompletableFuture<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFile(descriptor, null, project, toSelect);
   }
 
   
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor,
+  public static CompletableFuture<VirtualFile> chooseFile(FileChooserDescriptor descriptor,
                                                     @Nullable Component parent,
                                                     @Nullable ComponentManager project,
                                                     @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
-    AsyncResult<VirtualFile> result = AsyncResult.undefined();
-    AsyncResult<VirtualFile[]> filesAsync = chooseFiles(descriptor, parent, project, toSelect);
-    filesAsync.doWhenDone((files) -> result.setDone(files[0]));
-    filesAsync.doWhenRejected((Runnable)result::setRejected);
-    return result;
+    return chooseFiles(descriptor, parent, project, toSelect).thenApply(files -> files[0]);
   }
 
   /**
@@ -77,7 +73,7 @@ public final class FileChooser {
    * @param toSelect   file to preselect
    */
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
+  public static CompletableFuture<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     FileChooserFactory factory = FileChooserFactory.getInstance();
     PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
     return pathChooser.chooseAsync(toSelect);
@@ -92,13 +88,8 @@ public final class FileChooser {
    * @param toSelect   file to preselect
    */
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
+  public static CompletableFuture<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
-    AsyncResult<VirtualFile> result = AsyncResult.undefined();
-
-    AsyncResult<VirtualFile[]> filesAsync = chooseFiles(descriptor, project, parent, toSelect);
-    filesAsync.doWhenDone((f) -> result.setDone(f[0]));
-    filesAsync.doWhenRejected((Runnable)result::setRejected);
-    return result;
+    return chooseFiles(descriptor, project, parent, toSelect).thenApply(files -> files[0]);
   }
 }

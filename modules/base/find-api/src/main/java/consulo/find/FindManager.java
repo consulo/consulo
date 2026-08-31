@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.MagicConstant;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -209,7 +208,7 @@ public abstract class FindManager {
    * "Find Previous" operations specific for the editor given. It may be different than {@link #getFindNextModel()}
    * if there is find bar currently shown for the editor.
    *
-   * @param editor editor, for which find model shall be retreived for
+   * @param editor editor, for which find model shall be retrieved for
    * @return the model to use for the operations.
    */
   public abstract FindModel getFindNextModel(Editor editor);

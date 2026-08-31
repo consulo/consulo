@@ -21,16 +21,15 @@ import consulo.content.OrderRootType;
  * @author nik
  */
 public class LibraryRootType {
-  private final OrderRootType myType;
+  private final String myType;
   private final boolean myJarDirectory;
 
-  public LibraryRootType(OrderRootType type, boolean jarDirectory) {
+  public LibraryRootType(String type, boolean jarDirectory) {
     myType = type;
     myJarDirectory = jarDirectory;
   }
 
-  
-  public OrderRootType getType() {
+  public String getType() {
     return myType;
   }
 

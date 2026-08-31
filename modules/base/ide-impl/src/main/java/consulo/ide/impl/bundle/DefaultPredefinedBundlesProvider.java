@@ -52,8 +52,8 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         Platform platform = Platform.current();
 
         myApplication.getExtensionPoint(SdkType.class).forEach(sdkType -> {
-            if (sdkType instanceof BundleType bundleType) {
-                createBundles(context, bundleType, platform);
+            if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
+                createBundles(context, platformAwareSdkType, platform);
             }
             else {
                 createLegacySdks(context, sdkType, platform);
@@ -61,14 +61,14 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         });
     }
 
-    private void createBundles(Context context, BundleType sdkType, Platform platform) {
-        if (!sdkType.canCreatePredefinedSdks(platform)) {
+    private void createBundles(Context context, PlatformAwareSdkType platformAwareSdkType, Platform platform) {
+        if (!platformAwareSdkType.canCreatePredefinedSdks(platform)) {
             return;
         }
 
         List<BundlePath> paths = new ArrayList<>();
-        sdkType.collectHomePaths(platform, path -> paths.add(new BundlePath(path, null)));
-        for (String envVar : sdkType.getEnvironmentVariables(platform)) {
+        platformAwareSdkType.collectHomePaths(platform, path -> paths.add(new BundlePath(path, null)));
+        for (String envVar : platformAwareSdkType.getEnvironmentVariables(platform)) {
             String varValue = platform.os().getEnvironmentVariable(envVar);
             if (!StringUtil.isEmptyOrSpaces(varValue)) {
                 paths.add(new BundlePath(platform.fs().getPath(varValue), envVar));
@@ -76,29 +76,29 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         }
 
         for (BundlePath bundlePath : paths) {
-            Path path = sdkType.adjustSelectedSdkHome(platform, bundlePath.path());
+            Path path = platformAwareSdkType.adjustSelectedSdkHome(platform, bundlePath.path());
 
-            if (sdkType.isValidSdkHome(platform, path)) {
+            if (platformAwareSdkType.isValidSdkHome(platform, path)) {
                 VirtualFile dirPath = LocalFileSystem.getInstance().findFileByNioFile(path);
                 if (dirPath == null) {
                     continue;
                 }
 
-                String versionString = sdkType.getVersionString(platform, path);
+                String versionString = platformAwareSdkType.getVersionString(platform, path);
 
                 Sdk sdk;
                 if (bundlePath.envVarName() != null) {
-                    sdk = context.createSdkWithName(sdkType, path, bundlePath.envVarName());
+                    sdk = context.createSdkWithName(platformAwareSdkType, path, bundlePath.envVarName());
                 }
                 else {
-                    sdk = context.createSdk(platform, sdkType, path);
+                    sdk = context.createSdk(platform, platformAwareSdkType, path);
                 }
 
                 SdkModificator sdkModificator = sdk.getSdkModificator();
                 sdkModificator.setVersionString(versionString);
                 sdkModificator.commitChanges();
 
-                sdkType.setupSdkPaths(sdk);
+                platformAwareSdkType.setupSdkPaths(sdk);
             }
         }
     }

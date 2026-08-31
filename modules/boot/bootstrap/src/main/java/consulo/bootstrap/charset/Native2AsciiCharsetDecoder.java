@@ -50,9 +50,9 @@ class Native2AsciiCharsetDecoder extends CharsetDecoder {
   private CoderResult doFlush(CharBuffer out) {
     if (myOutBuffer.length() != 0) {
       int remaining = out.remaining();
-      int outlen = Math.min(remaining, myOutBuffer.length());
-      out.put(myOutBuffer.toString().substring(0,outlen).toCharArray());
-      myOutBuffer.delete(0, outlen);
+      int outLen = Math.min(remaining, myOutBuffer.length());
+      out.put(myOutBuffer.toString().substring(0,outLen).toCharArray());
+      myOutBuffer.delete(0, outLen);
       if (myOutBuffer.length() != 0) return CoderResult.OVERFLOW;
     }
     return CoderResult.UNDERFLOW;

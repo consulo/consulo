@@ -20,16 +20,27 @@ import consulo.localize.LocalizeValue;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.internal.ToolWindowEx;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
-public abstract class BaseToolWindowToggleAction extends ToggleAction implements DumbAware {
+public abstract class BaseToolWindowToggleAction extends ToggleAction implements DumbAware, AnActionWithAsyncUpdate {
     protected BaseToolWindowToggleAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
+    }
+
+    @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            update(e);
+            return o;
+        }));
     }
 
     @Override

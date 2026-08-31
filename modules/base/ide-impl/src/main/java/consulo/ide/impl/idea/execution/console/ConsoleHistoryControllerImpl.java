@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
@@ -288,7 +289,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         return start;
     }
 
-    private class MyAction extends DumbAwareAction {
+    private class MyAction extends LegacyDumbAwareAction {
         private final boolean myNext;
 
         
@@ -319,7 +320,6 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             boolean enabled = myMultiline || !isUpDownKey(e) || canMoveInEditor(myNext);
             //enabled &= getModel().hasHistory(myNext);
             e.getPresentation().setEnabled(enabled);
@@ -350,7 +350,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         }
     }
 
-    private class MyBrowseAction extends DumbAwareAction {
+    private class MyBrowseAction extends LegacyDumbAwareAction {
         @Override
         public void update(AnActionEvent e) {
             boolean enabled = hasHistory();
@@ -468,12 +468,18 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                     if (loadHistoryOld(id)) {
                         if (!myRootType.isHidden()) {
                             // migrate content
-                            AccessToken token = Application.get().acquireWriteActionLock(getClass());
-                            try {
-                                VirtualFileUtil.saveText(consoleFile, myContent);
-                            }
-                            finally {
-                                token.finish();
+                            IOException[] io = new IOException[1];
+                            WriteAction.runAndWait(() -> {
+                                try {
+                                    VirtualFileUtil.saveText(consoleFile, myContent);
+                                }
+                                catch (IOException e) {
+                                   io[0] = e;
+                                }
+                            });
+
+                            if (io[0] != null) {
+                                throw io[0];
                             }
                         }
                         return true;

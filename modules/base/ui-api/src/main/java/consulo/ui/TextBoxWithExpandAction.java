@@ -19,21 +19,29 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 import java.util.function.Function;
 
 /**
- * Text box with two states. Short - when text box looks like default {@link TextBox}, and expanded - when text are split and showed in large view
+ * Text box with two states. Short - when text box looks like default {@link TextBox}, and expanded -
+ * when text is split by delimiters and shown in large view.
  *
- * Some themes can not support inline actions, in this case it will show button with 'editButtonImage' icon, and will show text dialog on click
+ * Some themes can not support inline actions, in this case it will show button with 'editButtonImage' icon,
+ * and will show text dialog on click.
  *
  * @author VISTALL
  * @since 2019-04-26
  */
 public interface TextBoxWithExpandAction extends TextBox {
-  static TextBoxWithExpandAction create(@Nullable Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
-    return UIInternal.get()._Components_textBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
-  }
+    static TextBoxWithExpandAction create(
+        @Nullable Image editButtonImage,
+        String dialogTitle,
+        Function<String, List<String>> parser,
+        Function<List<String>, String> joiner
+    ) {
+        return UIInternal.get()._Components_textBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
+    }
 
-  TextBoxWithExpandAction withDialogTitle(String text);
+    TextBoxWithExpandAction withDialogTitle(String text);
 }

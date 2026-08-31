@@ -387,7 +387,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         return null;
     }
 
-    private class MyAddAction extends ActionGroup implements ActionGroupWithPreselection {
+    private class MyAddAction extends ActionGroup implements ActionGroupWithPreselection, AnActionWithSyncUpdate {
         private AnAction[] myChildren;
         private final boolean myFromPopup;
 
@@ -402,7 +402,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         @Override
         @RequiredUIAccess
         public void update(AnActionEvent e) {
-            super.update(e);
             if (myFromPopup) {
                 setPopup(false);
             }
@@ -469,7 +468,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         }
     }
 
-    private class MyMoveAction extends AnAction {
+    private class MyMoveAction extends LegacyAnAction {
         private final int myDirection;
 
         protected MyMoveAction(LocalizeValue text, Image icon, int direction) {
@@ -503,7 +502,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         }
     }
 
-    private class MyCopyAction extends AnAction {
+    private class MyCopyAction extends LegacyAnAction {
         public MyCopyAction() {
             super(
                 ExecutionLocalize.copyConfigurationActionName(),
@@ -532,7 +531,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         }
     }
 
-    private class MySaveAsAction extends AnAction {
+    private class MySaveAsAction extends LegacyAnAction {
         public MySaveAsAction() {
             super(
                 ExecutionLocalize.actionNameSaveAsConfiguration(),

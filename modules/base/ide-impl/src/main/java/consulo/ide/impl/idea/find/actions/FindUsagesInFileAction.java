@@ -33,8 +33,8 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -42,7 +42,7 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 
 @ActionImpl(id = "FindUsagesInFile")
-public class FindUsagesInFileAction extends AnAction {
+public class FindUsagesInFileAction extends LegacyAnAction {
     public FindUsagesInFileAction() {
         super(ActionLocalize.actionFindusagesinfileText(), ActionLocalize.actionFindusagesinfileDescription());
         setInjectedContext(true);

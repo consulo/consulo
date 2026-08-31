@@ -16,15 +16,12 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.diff.internal.DiffImplUtil;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.logging.Logger;
 
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class VcsRange {
-  private static final Logger LOG = Logger.getInstance(VcsRange.class);
   public static final byte EQUAL = 0;
   public static final byte MODIFIED = 1;
   public static final byte INSERTED = 2;
@@ -39,9 +36,6 @@ public class VcsRange {
   private final int myVcsLine2;
 
   private final @Nullable List<InnerRange> myInnerRanges;
-
-  private @Nullable RangeHighlighter myRangeHighlighter;
-  private boolean myValid = true;
 
   public VcsRange(VcsRange range) {
     this(range.getLine1(), range.getLine2(), range.getVcsLine1(), range.getVcsLine2());
@@ -129,26 +123,6 @@ public class VcsRange {
 
   public int getVcsLine2() {
     return myVcsLine2;
-  }
-
-  public boolean hasHighlighter() {
-    return myRangeHighlighter != null;
-  }
-
-  public void setHighlighter(@Nullable RangeHighlighter highlighter) {
-    myRangeHighlighter = highlighter;
-  }
-
-  public @Nullable RangeHighlighter getHighlighter() {
-    return myRangeHighlighter;
-  }
-
-  public boolean isValid() {
-    return myValid;
-  }
-
-  public void invalidate() {
-    myValid = false;
   }
 
   public static class InnerRange {

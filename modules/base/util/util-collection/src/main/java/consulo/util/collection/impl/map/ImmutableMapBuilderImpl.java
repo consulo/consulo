@@ -16,7 +16,6 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.ImmutableMapBuilder;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ public class ImmutableMapBuilderImpl<K, V> implements ImmutableMapBuilder<K, V> 
   }
 
   @Override
-  @Contract(pure = true)
   public Map<K, V> build() {
     return Collections.unmodifiableMap(myMap);
   }

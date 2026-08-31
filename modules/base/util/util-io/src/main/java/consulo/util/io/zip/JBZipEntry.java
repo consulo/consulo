@@ -357,8 +357,8 @@ public class JBZipEntry implements Cloneable {
   public int hashCode() {
     // this method has severe consequences on performance. We cannot rely
     // on the super.hashCode() method since super.getName() always return
-    // the empty string in the current implemention (there's no setter)
-    // so it is basically draining the performance of a hashmap lookup
+    // the empty string in the current implementation (there's no setter)
+    // so it is basically draining the performance of a hash-map lookup
     return getName().hashCode();
   }
 

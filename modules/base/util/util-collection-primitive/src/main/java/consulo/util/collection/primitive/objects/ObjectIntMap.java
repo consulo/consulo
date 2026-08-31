@@ -23,7 +23,9 @@ import java.util.function.ObjIntConsumer;
 /**
  * @author VISTALL
  * @since 10/02/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.objects.Object2IntMap} directly
  */
+@Deprecated
 public interface ObjectIntMap<K> {
   interface Entry<T> {
     T getKey();

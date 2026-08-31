@@ -20,6 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import org.jspecify.annotations.Nullable;
@@ -38,10 +39,13 @@ import javax.swing.plaf.ComboBoxUI;
 public final class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
     private static final String uiClassID = "ComboBoxButtonUI";
 
+    private static final int POPUP_REOPEN_THRESHOLD_MS = 200;
+
     private final ComboBoxAction myComboBoxAction;
     private final Presentation myPresentation;
 
     private Runnable myCurrentPopupCanceler;
+    private long myPopupHiddenAt = 0;
     private PropertyChangeListener myButtonSynchronizer;
 
     private Runnable myOnClickListener;
@@ -61,6 +65,8 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
                 setIcon(myPresentation.getIcon());
             }
         });
+
+        setFocusable(ScreenReader.isActive());
 
         // add and select one value
         revalidateValue();
@@ -88,18 +94,22 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     }
 
     public void showPopupImpl() {
-        hidePopupImpl();
+        if (myCurrentPopupCanceler != null) {
+            hidePopupImpl();
+            return;
+        }
+        if (System.currentTimeMillis() - myPopupHiddenAt < POPUP_REOPEN_THRESHOLD_MS) {
+            return;
+        }
 
         if (myOnClickListener != null) {
             myOnClickListener.run();
-
-            myCurrentPopupCanceler = null;
             return;
         }
 
         JBPopup popup = createPopup(() -> {
             myCurrentPopupCanceler = null;
-
+            myPopupHiddenAt = System.currentTimeMillis();
             updateSize();
         });
         popup.showUnderneathOf(this);

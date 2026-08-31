@@ -142,7 +142,7 @@ public class PlatformOrPluginUpdateChecker {
 
         if (showErrorDialog) {
             uiAccess.give(() -> {
-                Alert<Object> alert = Alerts.okError(LocalizeValue.of(e.getLocalizedMessage()));
+                Alert<Object> alert = Alerts.okError(e);
                 if (project != null) {
                     alert.showAsync(project);
                 }
@@ -176,7 +176,7 @@ public class PlatformOrPluginUpdateChecker {
             case PLUGIN_UPDATE:
             case PLATFORM_UPDATE:
                 if (showResults) {
-                    new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
+                    PlatformOrPluginDialogFactory.getInstance().showAsync(project, targetsForUpdate, null, null, false);
                 }
                 else {
                     NotificationService.getInstance()
@@ -185,7 +185,7 @@ public class PlatformOrPluginUpdateChecker {
                         .content(ExternalServiceLocalize.updateAvailable())
                         .addAction(
                             ExternalServiceLocalize.updateViewUpdates(),
-                            () -> new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync()
+                            () -> PlatformOrPluginDialogFactory.getInstance().showAsync(project, targetsForUpdate, null, null, false)
                         )
                         .notify(project);
                 }

@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import javax.net.ssl.HostnameVerifier;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public interface HttpRequestBuilder {
     /**
@@ -75,16 +76,18 @@ public interface HttpRequestBuilder {
         }
     }
 
+    default void saveToFile(Path file, @Nullable ProgressIndicator indicator) throws IOException {
+        connect((request) -> request.saveToFile(file, indicator));
+    }
+
     default void saveToFile(File file, @Nullable ProgressIndicator indicator) throws IOException {
         connect((request) -> request.saveToFile(file, indicator));
     }
 
-    
     default byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
         return connect((request) -> request.readBytes(indicator));
     }
 
-    
     default String readString(@Nullable ProgressIndicator indicator) throws IOException {
         return connect((request) -> request.readString(indicator));
     }

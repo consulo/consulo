@@ -24,4 +24,5 @@ module consulo.remote.server.api {
     exports consulo.remoteServer.runtime.log;
     exports consulo.remoteServer.runtime.ui;
     exports consulo.remoteServer.localize;
+    exports consulo.remoteServer.platformAware;
 }

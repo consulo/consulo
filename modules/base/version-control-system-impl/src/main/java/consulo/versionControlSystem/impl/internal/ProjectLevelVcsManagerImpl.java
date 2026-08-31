@@ -54,10 +54,10 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
-import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.versionControlSystem.impl.internal.change.VcsAnnotationLocalChangesListenerImpl;
-import consulo.versionControlSystem.impl.internal.checkout.CompositeCheckoutListener;
+import consulo.versionControlSystem.impl.internal.checkout.CompositeCheckoutCallback;
 import consulo.versionControlSystem.impl.internal.update.UpdateInfoTreeImpl;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -165,7 +165,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         myOptionsAndConfirmations.init(mySerialization::getInitOptionValue);
     }
 
@@ -764,8 +764,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public CheckoutProvider.Listener getCompositeCheckoutListener() {
-        return new CompositeCheckoutListener(myProject);
+    public CheckoutCallback getCompositeCheckoutCallback() {
+        return new CompositeCheckoutCallback(myProject);
     }
 
     @Override

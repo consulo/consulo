@@ -22,8 +22,9 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.component.store.impl.internal.storage.nio.PathDirectoryBasedStorage;
+import consulo.component.store.impl.internal.storage.nio.PathFileBasedStorage;
 import consulo.component.store.internal.PathMacrosService;
-import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
 import consulo.component.store.internal.StateStorage;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.StreamProvider;
@@ -47,19 +48,12 @@ import java.util.regex.Pattern;
 public abstract class StateStorageManagerImpl implements StateStorageManager, Disposable {
   private static final Logger LOG = Logger.getInstance(StateStorageManagerImpl.class);
 
-  private static final boolean ourHeadlessEnvironment;
-
-  static {
-    Application app = ApplicationManager.getApplication();
-    ourHeadlessEnvironment = app.isHeadlessEnvironment() || app.isUnitTestMode();
-  }
-
   private final Map<String, String> myMacros = new LinkedHashMap<>();
   private final Lock myStorageLock = new ReentrantLock();
   private final Map<String, StateStorage> myStorages = new HashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
  
-  private final StateStorageFacade myStateStorageFacade;
+  private final boolean myCollectVfsEvents;
   private final String myRootTagName;
   protected final Supplier<MessageBus> myMessageBusSupplier;
   protected final Supplier<PathMacrosService> myPathMacrosServiceSupplier;
@@ -71,12 +65,12 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
                                  @Nullable Disposable parentDisposable,
                                  Supplier<MessageBus> messageBusSupplier,
                                  Supplier<PathMacrosService> pathMacrosServiceSupplier,
-                                 StateStorageFacade stateStorageFacade) {
+                                 boolean collectVfsEvents) {
     myMessageBusSupplier = messageBusSupplier;
     myRootTagName = rootTagName;
     myPathMacrosServiceSupplier = pathMacrosServiceSupplier;
     myPathMacroSubstitutor = pathMacroSubstitutor;
-    myStateStorageFacade = stateStorageFacade;
+    myCollectVfsEvents = collectVfsEvents;
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, this);
     }
@@ -102,7 +96,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       return StoragePathMacros.DEFAULT_FILE;
     }
 
-    if (value.equals(StoragePathMacros.WORKSPACE_FILE)) {
+    if (value.equals(StoragePathMacros.WORKSPACE_FILE)
+        || value.equals(StoragePathMacros.DEFAULT_FILE)
+        || value.equals(StoragePathMacros.PROJECT_FILE)) {
       return value;
     }
     return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
@@ -112,8 +108,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createStateStorage(Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = createSplitter(storageSpec.stateSplitter());
-      return myStateStorageFacade
-              .createDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myPathMacrosServiceSupplier.get());
+      return new PathDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
     }
     else {
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
@@ -174,26 +169,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
- 
-  private Collection<VfsFileBasedStorage> getCachedFileStorages(Collection<String> fileSpecs) {
-    if (fileSpecs.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    List<VfsFileBasedStorage> result = null;
-    for (String fileSpec : fileSpecs) {
-      StateStorage storage = myStorages.get(fileSpec);
-      if (storage instanceof VfsFileBasedStorage) {
-        if (result == null) {
-          result = new ArrayList<>();
-        }
-        result.add((VfsFileBasedStorage)storage);
-      }
-    }
-    return result == null ? Collections.<VfsFileBasedStorage>emptyList() : result;
-  }
-
- 
   @Override
   public Collection<String> getStorageFileNames() {
     myStorageLock.lock();
@@ -220,7 +195,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createFileStateStorage(String fileSpec, @Nullable RoamingType roamingType) {
     String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
 
-    if (!ourHeadlessEnvironment && PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
+    if (PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);
     }
 
@@ -228,9 +203,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       roamingType = RoamingType.DISABLED;
     }
 
-    return myStateStorageFacade
-            .createFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
-                                    isUseXmlProlog(), myPathMacrosServiceSupplier.get());
+    return new PathFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
+                                    isUseXmlProlog(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
   }
 
   protected @Nullable StateStorageListener createStorageTopicListener() {
@@ -254,7 +228,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private static final Pattern MACRO_PATTERN = Pattern.compile("(\\$[^\\$]*\\$)");
 
   @Override
- 
   public synchronized String expandMacros(String file) {
     Matcher matcher = MACRO_PATTERN.matcher(file);
     while (matcher.find()) {
@@ -264,11 +237,21 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       }
     }
 
-    String expanded = file;
-    for (String macro : myMacros.keySet()) {
-      expanded = StringUtil.replace(expanded, macro, myMacros.get(macro));
+    for (Map.Entry<String, String> entry : myMacros.entrySet()) {
+      String macro = entry.getKey();
+      if (file.equals(macro)) {
+        return entry.getValue();
+      }
+      if (file.length() > macro.length() && file.charAt(macro.length()) == '/' && file.startsWith(macro)) {
+        String remainder = file.substring(macro.length() + 1);
+        if (MACRO_PATTERN.matcher(remainder).find()) {
+          throw new IllegalArgumentException("Nested macro in storage file spec: " + file);
+        }
+        return entry.getValue() + "/" + remainder;
+      }
     }
-    return expanded;
+
+    return file;
   }
 
  

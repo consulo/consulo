@@ -5,11 +5,11 @@ import consulo.application.util.Patches;
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -30,7 +30,7 @@ public class FontInfo {
 
   private final Font myFont;
   private final int mySize;
-  @JdkConstants.FontStyle
+  @AWTConstants.FontStyle
   private final int myStyle;
   private final boolean myUseLigatures;
   private final IntSet mySafeCharacters = IntSets.newHashSet();
@@ -41,7 +41,7 @@ public class FontInfo {
    * @deprecated Use {@link #FontInfo(String, int, int, boolean, FontRenderContext)} instead.
    */
   @Deprecated
-  public FontInfo(String familyName, int size, @JdkConstants.FontStyle int style) {
+  public FontInfo(String familyName, int size, @AWTConstants.FontStyle int style) {
     this(familyName, size, style, style, false, null);
   }
 
@@ -49,18 +49,18 @@ public class FontInfo {
    * @deprecated Use {@link #FontInfo(String, int, int, boolean, FontRenderContext)} instead.
    */
   @Deprecated
-  public FontInfo(String familyName, int size, @JdkConstants.FontStyle int style, boolean useLigatures) {
+  public FontInfo(String familyName, int size, @AWTConstants.FontStyle int style, boolean useLigatures) {
     this(familyName, size, style, useLigatures, null);
   }
 
   /**
    * To get valid font metrics from this {@link FontInfo} instance, pass valid {@link FontRenderContext} here as a parameter.
    */
-  public FontInfo(String familyName, int size, @JdkConstants.FontStyle int style, boolean useLigatures, FontRenderContext fontRenderContext) {
+  public FontInfo(String familyName, int size, @AWTConstants.FontStyle int style, boolean useLigatures, FontRenderContext fontRenderContext) {
     this(familyName, size, style, style, useLigatures, fontRenderContext);
   }
 
-  FontInfo(String familyName, int size, @JdkConstants.FontStyle int style, @JdkConstants.FontStyle int realStyle, boolean useLigatures, FontRenderContext context) {
+  FontInfo(String familyName, int size, @AWTConstants.FontStyle int style, @AWTConstants.FontStyle int realStyle, boolean useLigatures, FontRenderContext context) {
     mySize = size;
     myStyle = style;
     myUseLigatures = useLigatures;
@@ -70,7 +70,7 @@ public class FontInfo {
   }
 
   
-  private static Font getFontWithLigaturesEnabled(Font font, @JdkConstants.FontStyle int fontStyle) {
+  private static Font getFontWithLigaturesEnabled(Font font, @AWTConstants.FontStyle int fontStyle) {
     return font.deriveFont(Collections.singletonMap(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON));
   }
 
@@ -189,7 +189,7 @@ public class FontInfo {
     return mySize;
   }
 
-  @JdkConstants.FontStyle
+  @AWTConstants.FontStyle
   public int getStyle() {
     return myStyle;
   }

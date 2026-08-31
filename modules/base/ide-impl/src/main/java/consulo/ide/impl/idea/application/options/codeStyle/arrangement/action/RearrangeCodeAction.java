@@ -26,8 +26,8 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 /**
  * Arranges content at the target file(s).
@@ -36,7 +36,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * @since 2012-08-30
  */
 @ActionImpl(id = "RearrangeCode")
-public class RearrangeCodeAction extends AnAction {
+public class RearrangeCodeAction extends LegacyAnAction {
     public RearrangeCodeAction() {
         super(ActionLocalize.actionRearrangecodeText(), ActionLocalize.actionRearrangecodeDescription());
     }

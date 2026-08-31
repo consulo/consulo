@@ -50,7 +50,6 @@ import java.util.stream.Collectors;
 public abstract class AmendComponent {
     private static final Logger LOG = Logger.getInstance(AmendComponent.class);
 
-    
     private final RepositoryManager<? extends Repository> myRepoManager;
     
     private final CheckinProjectPanel myCheckinPanel;

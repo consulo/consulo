@@ -15,7 +15,9 @@
  */
 package consulo.application.ui.wm;
 
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -26,6 +28,15 @@ import javax.swing.*;
 public interface FocusableFrame {
   
   Window getWindow();
+
+  /**
+   * The ui the frame is drawn in. A frontend which holds more than one of them cannot be asked for it through the
+   * application, since every one of its uis has an access of its own.
+   */
+  default @Nullable UIAccess getUIAccess() {
+    Window window = getWindow();
+    return window == null ? null : window.getUIAccess();
+  }
 
   default boolean hasFocus() {
     return getWindow().isActive();

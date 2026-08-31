@@ -17,6 +17,7 @@ package consulo.ui.style;
 
 import consulo.disposer.Disposable;
 import consulo.ui.AntialiasingType;
+import consulo.ui.Component;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
@@ -25,12 +26,13 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 2016-06-22
  */
 public interface StyleManager {
     static StyleManager get() {
         return UIInternal.get()._StyleManager_get();
     }
+
     List<Style> getStyles();
 
     default @Nullable Style getStyle(String styleId) {
@@ -41,14 +43,25 @@ public interface StyleManager {
         }
         return null;
     }
+
     Style getCurrentStyle();
 
     void setCurrentStyle(Style newStyle);
+
     Disposable addChangeListener(StyleChangeListener listener);
 
     default void refreshAntialiasingType(AntialiasingType antialiasingType) {
     }
 
-    default void refreshUI() {
+    /**
+     * Force to repaint all compoents via {@link Component#forceRepaint()}
+     */
+    default void forceRepaintAll() {
+    }
+
+    /**
+     * Force to reinitialize UI of all components, for example style changed we need reinit UI
+     */
+    default void forceReinitAll() {
     }
 }

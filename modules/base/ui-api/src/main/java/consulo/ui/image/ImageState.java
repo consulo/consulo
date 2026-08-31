@@ -20,16 +20,17 @@ package consulo.ui.image;
  * @since 2020-08-27
  */
 public final class ImageState<S> {
-  private S myState;
+    private S myState;
 
-  public ImageState(S state) {
-    myState = state;
-  }
+    public ImageState(S state) {
+        myState = state;
+    }
 
-  public void setState(S state) {
-    myState = state;
-  }
-  public S getState() {
-    return myState;
-  }
+    public void setState(S state) {
+        myState = state;
+    }
+
+    public S getState() {
+        return myState;
+    }
 }

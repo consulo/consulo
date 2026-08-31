@@ -67,8 +67,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         private ComboBox<String> myFontCombo;
         private TextBoxWithHistory myFontSizeCombo;
         private CheckBox myAnimateWindowsCheckBox;
-        private CheckBox myWindowShortcutsCheckBox;
-        private CheckBox myShowToolStripesCheckBox;
         private ComboBox<Style> myStyleComboBox;
         private ComboBox<Object> myIconThemeComboBox;
         private CheckBox myCycleScrollingCheckBox;
@@ -84,9 +82,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         private CheckBox myAltDNDCheckBox;
         private CheckBox myAllowMergeButtons;
         private CheckBox myUseSmallLabelsOnTabs;
-        private CheckBox myWidescreenLayoutCheckBox;
-        private CheckBox myLeftLayoutCheckBox;
-        private CheckBox myRightLayoutCheckBox;
         private TextBoxWithHistory myPresentationModeFontSize;
         private CheckBox myEditorTooltipCheckBox;
         private ComboBox<AntialiasingType> myAntialiasingInIDE;
@@ -127,7 +122,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
             iconThemes.addAll(libraries.values());
             myIconThemeComboBox = ComboBox.create(iconThemes);
-            myIconThemeComboBox.setRenderer((renderer, index, item) -> {
+            myIconThemeComboBox.setRender((renderer, renderItem) -> {
+            var item = renderItem.getValue();
                 if (item == ObjectUtil.NULL) {
                     renderer.append(IdeLocalize.comboboxIconThemeUiDefault());
                 }
@@ -160,12 +156,12 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             TableLayout aaPanel = TableLayout.create(StaticPosition.CENTER);
 
             myAntialiasingInIDE = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInIDE.setRenderer(buildItemRenderer(false));
+            myAntialiasingInIDE.setRender(buildItemRender(false));
 
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeIde(), myAntialiasingInIDE), TableLayout.cell(0, 0).fill());
 
             myAntialiasingInEditor = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInEditor.setRenderer(buildItemRenderer(true));
+            myAntialiasingInEditor.setRender(buildItemRender(true));
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeEditor(), myAntialiasingInEditor), TableLayout.cell(0, 1).fill());
 
             myPanel.add(LabeledLayout.create(IdeLocalize.groupAntialiasingMode(), aaPanel));
@@ -182,15 +178,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             leftWindowOption.add(myDisableMnemonics = CheckBox.create(KeyMapLocalize.disableMnemonicInMenuCheckBox()));
             leftWindowOption.add(myDisableMnemonicInControlsCheckBox = CheckBox.create(KeyMapLocalize.disableMnemonicInControlsCheckBox()));
             leftWindowOption.add(myCbDisplayIconsInMenu = CheckBox.create(IdeLocalize.checkboxShowIconsInMenuItems()));
-            leftWindowOption.add(myLeftLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxLeftToolwindowLayout()));
             leftWindowOption.add(myEditorTooltipCheckBox = CheckBox.create(IdeLocalize.checkboxShowEditorPreviewPopup()));
 
-            rightWindowOption.add(myShowToolStripesCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowBars()));
-            rightWindowOption.add(myWindowShortcutsCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowNumbers()));
             rightWindowOption.add(myAllowMergeButtons = CheckBox.create(IdeLocalize.allowMergingDialogButtons()));
             rightWindowOption.add(myUseSmallLabelsOnTabs = CheckBox.create(IdeLocalize.smallLabelsInEditorTabs()));
-            rightWindowOption.add(myWidescreenLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxWidescreenToolWindowLayout()));
-            rightWindowOption.add(myRightLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxRightToolwindowLayout()));
             rightWindowOption.add(mySmoothScrollingBox = CheckBox.create(ApplicationLocalize.checkboxSmoothScrolling()));
 
             myPanel.add(LabeledLayout.create(IdeLocalize.groupWindowOptions(), windowOptions));
@@ -203,8 +194,9 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
         }
 
-        private TextItemRenderer<AntialiasingType> buildItemRenderer(boolean editor) {
-            return (renderer, index, item) -> {
+        private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
+            return (renderer, renderItem) -> {
+                AntialiasingType item = renderItem.getValue();
                 if (item == null) {
                     return;
                 }
@@ -216,7 +208,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
                     renderer.withFont(FontManager.get().createFont(
                         scheme.getEditorFontName(),
                         scheme.getEditorFontSize(),
-                        Font.STYLE_PLAIN
+                        Font.PLAIN
                     ));
                 }
 
@@ -291,8 +283,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         isModified |= component.myAntialiasingInIDE.getValue() != settings.IDE_AA_TYPE;
         isModified |= component.myAntialiasingInEditor.getValue() != settings.EDITOR_AA_TYPE;
         isModified |= component.myAnimateWindowsCheckBox.getValue() != settings.ANIMATE_WINDOWS;
-        isModified |= component.myWindowShortcutsCheckBox.getValue() != settings.SHOW_TOOL_WINDOW_NUMBERS;
-        isModified |= component.myShowToolStripesCheckBox.getValue() == settings.HIDE_TOOL_STRIPES;
         isModified |= component.myCbDisplayIconsInMenu.getValue() != settings.SHOW_ICONS_IN_MENUS;
         isModified |= component.myAllowMergeButtons.getValue() != settings.ALLOW_MERGE_BUTTONS;
         isModified |= component.myCycleScrollingCheckBox.getValue() != settings.CYCLE_SCROLLING;
@@ -303,9 +293,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         isModified |= component.myDisableMnemonicInControlsCheckBox.getValue() != settings.DISABLE_MNEMONICS_IN_CONTROLS;
 
         isModified |= component.myUseSmallLabelsOnTabs.getValue() != settings.USE_SMALL_LABELS_ON_TABS;
-        isModified |= component.myWidescreenLayoutCheckBox.getValue() != settings.WIDESCREEN_SUPPORT;
-        isModified |= component.myLeftLayoutCheckBox.getValue() != settings.LEFT_HORIZONTAL_SPLIT;
-        isModified |= component.myRightLayoutCheckBox.getValue() != settings.RIGHT_HORIZONTAL_SPLIT;
         isModified |= component.myEditorTooltipCheckBox.getValue() != settings.SHOW_EDITOR_TOOLTIP;
 
         isModified |= component.myHideIconsInQuickNavigation.getValue() != settings.SHOW_ICONS_IN_QUICK_NAVIGATION;
@@ -347,8 +334,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         component.myFontSizeCombo.setValue(Integer.toString(uiFontManager.getFontSize()));
         component.myPresentationModeFontSize.setValue(Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE));
         component.myAnimateWindowsCheckBox.setValue(settings.ANIMATE_WINDOWS);
-        component.myWindowShortcutsCheckBox.setValue(settings.SHOW_TOOL_WINDOW_NUMBERS);
-        component.myShowToolStripesCheckBox.setValue(!settings.HIDE_TOOL_STRIPES);
         component.myCbDisplayIconsInMenu.setValue(settings.SHOW_ICONS_IN_MENUS);
         component.myAllowMergeButtons.setValue(settings.ALLOW_MERGE_BUTTONS);
         component.myCycleScrollingCheckBox.setValue(settings.CYCLE_SCROLLING);
@@ -368,9 +353,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         component.myOverrideLAFFonts.setValue(uiFontManager.isOverrideFont());
         component.myDisableMnemonics.setValue(settings.DISABLE_MNEMONICS);
         component.myUseSmallLabelsOnTabs.setValue(settings.USE_SMALL_LABELS_ON_TABS);
-        component.myWidescreenLayoutCheckBox.setValue(settings.WIDESCREEN_SUPPORT);
-        component.myLeftLayoutCheckBox.setValue(settings.LEFT_HORIZONTAL_SPLIT);
-        component.myRightLayoutCheckBox.setValue(settings.RIGHT_HORIZONTAL_SPLIT);
         component.myEditorTooltipCheckBox.setValue(settings.SHOW_EDITOR_TOOLTIP);
         component.myDisableMnemonicInControlsCheckBox.setValue(settings.DISABLE_MNEMONICS_IN_CONTROLS);
         component.mySmoothScrollingBox.setValue(settings.SMOOTH_SCROLLING);
@@ -415,11 +397,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         }
 
         settings.ANIMATE_WINDOWS = component.myAnimateWindowsCheckBox.getValue();
-        boolean update = settings.SHOW_TOOL_WINDOW_NUMBERS != component.myWindowShortcutsCheckBox.getValue();
-        settings.SHOW_TOOL_WINDOW_NUMBERS = component.myWindowShortcutsCheckBox.getValue();
-        update |= settings.HIDE_TOOL_STRIPES != !component.myShowToolStripesCheckBox.getValue();
-        settings.HIDE_TOOL_STRIPES = !component.myShowToolStripesCheckBox.getValue();
-        update |= settings.SHOW_ICONS_IN_MENUS != component.myCbDisplayIconsInMenu.getValue();
+        boolean update = settings.SHOW_ICONS_IN_MENUS != component.myCbDisplayIconsInMenu.getValue();
         settings.SHOW_ICONS_IN_MENUS = component.myCbDisplayIconsInMenu.getValue();
         update |= settings.ALLOW_MERGE_BUTTONS != component.myAllowMergeButtons.getValue();
         settings.ALLOW_MERGE_BUTTONS = component.myAllowMergeButtons.getValue();
@@ -438,15 +416,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
         update |= settings.USE_SMALL_LABELS_ON_TABS != component.myUseSmallLabelsOnTabs.getValue();
         settings.USE_SMALL_LABELS_ON_TABS = component.myUseSmallLabelsOnTabs.getValue();
-
-        update |= settings.WIDESCREEN_SUPPORT != component.myWidescreenLayoutCheckBox.getValue();
-        settings.WIDESCREEN_SUPPORT = component.myWidescreenLayoutCheckBox.getValue();
-
-        update |= settings.LEFT_HORIZONTAL_SPLIT != component.myLeftLayoutCheckBox.getValue();
-        settings.LEFT_HORIZONTAL_SPLIT = component.myLeftLayoutCheckBox.getValue();
-
-        update |= settings.RIGHT_HORIZONTAL_SPLIT != component.myRightLayoutCheckBox.getValue();
-        settings.RIGHT_HORIZONTAL_SPLIT = component.myRightLayoutCheckBox.getValue();
 
         update |= settings.SHOW_EDITOR_TOOLTIP != component.myEditorTooltipCheckBox.getValue();
         settings.SHOW_EDITOR_TOOLTIP = component.myEditorTooltipCheckBox.getValue();
@@ -488,7 +457,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             }
 
             if (refreshUI) {
-                styleManager.refreshUI();
+                styleManager.forceRepaintAll();
             }
 
             if (finalUpdate) {

@@ -2,7 +2,6 @@ package consulo.externalSystem.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemProcessingManager;
@@ -16,8 +15,8 @@ import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.StringUtil;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import java.util.List;
  * @since 2012-01-23
  */
 @ActionImpl(id = "ExternalSystem.RefreshAllProjects")
-public class RefreshAllExternalProjectsAction extends AnAction implements DumbAware {
+public class RefreshAllExternalProjectsAction extends LegacyDumbAwareAction {
     public RefreshAllExternalProjectsAction() {
         super(
             ExternalSystemLocalize.actionRefreshAllExternalProjectsText(),

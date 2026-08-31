@@ -22,7 +22,6 @@ import consulo.configurable.internal.ShowConfigurableService;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -48,9 +47,7 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
     @RequiredUIAccess
     @Override
     public CompletableFuture<?> showAndSelect(@Nullable Project project, String toSelectId) {
-        CompletableFuture<?> future = new CompletableFuture<>();
-        myShowSettingsUtil.showSettingsDialog(project, toSelectId, null).doWhenDone(() -> future.complete(null));
-        return future;
+        return myShowSettingsUtil.showSettingsDialog(project, toSelectId, null);
     }
 
     @RequiredUIAccess
@@ -58,28 +55,24 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
     public <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project,
                                                                               Class<T> toSelect,
                                                                               Consumer<T> afterSelect) {
-        CompletableFuture<?> future = new CompletableFuture<>();
-        myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect).doWhenDone(() -> future.complete(null));
-        return future;
+        return myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect);
     }
 
     @RequiredUIAccess
     @Override
     public CompletableFuture<?> show(@Nullable Project project, Class<? extends UnnamedConfigurable> toSelect) {
-        CompletableFuture<?> future = new CompletableFuture<>();
-        myShowSettingsUtil.showAndSelect(project, toSelect).doWhenDone(() -> future.complete(null));
-        return future;
+        return myShowSettingsUtil.showAndSelect(project, toSelect);
     }
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
+    public CompletableFuture<?> editConfigurable(Component parent, Configurable configurable) {
         return myShowSettingsUtil.editConfigurable(parent, configurable);
     }
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {
+    public CompletableFuture<?> editConfigurable(Project project, Configurable configurable) {
         return myShowSettingsUtil.editConfigurable(project, configurable);
     }
 }

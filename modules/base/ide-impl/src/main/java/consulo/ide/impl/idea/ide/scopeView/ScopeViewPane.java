@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ShowModulesAction;
@@ -27,6 +28,7 @@ import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
@@ -45,7 +47,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -128,19 +129,16 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         myNamedScopeManager.addScopeListener(scopeListener, this);
     }
 
-    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.scopeViewTitle();
     }
 
     @Override
-    
     public String getId() {
         return ID;
     }
 
-    
     @Override
     public JComponent createComponent() {
         myViewPanel = new ScopeTreeViewPanel(myProject);
@@ -161,7 +159,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    
     public String[] getSubIds() {
         SequencedMap<String, NamedScopeFilter> map = myFilters;
         if (map == null || map.isEmpty()) {
@@ -170,7 +167,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return ArrayUtil.toStringArray(map.keySet());
     }
 
-    
     @Override
     public LocalizeValue getPresentableSubIdName(String subId) {
         NamedScopeFilter filter = getFilter(subId);
@@ -188,7 +184,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         }).setAsSecondary(true);
     }
 
-    
     @Override
     public ActionCallback updateFromRoot(boolean restoreExpandedPaths) {
         saveExpandedPaths();
@@ -268,7 +263,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         myViewPanel.setSortByType();
     }
 
-    
     @Override
     public SelectInTarget createSelectInTarget() {
         return new ScopePaneSelectInTarget(myProject);
@@ -283,15 +277,13 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        Object data = super.getData(dataId);
-        if (data != null) {
-            return data;
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        if (myViewPanel != null) {
+            sink.lazy(IdeView.KEY, () -> (IdeView) myViewPanel.getData(IdeView.KEY));
         }
-        return myViewPanel != null ? myViewPanel.getData(dataId) : null;
     }
 
-    
     @Override
     public AsyncResult<Void> getReady(Object requestor) {
         AsyncResult<Void> callback = myViewPanel.getActionCallback();
@@ -303,7 +295,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return filter == null ? null : filter.getScope();
     }
 
-    
     Iterable<NamedScopeFilter> getFilters() {
         return myFilters.values();
     }
@@ -313,7 +304,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return map == null || subId == null ? null : map.get(subId);
     }
 
-    
     private static SequencedMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
         SequencedMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
         for (NamedScopeFilter filter : NamedScopeFilter.list(holders)) {

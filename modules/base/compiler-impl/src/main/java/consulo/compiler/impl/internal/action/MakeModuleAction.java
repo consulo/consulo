@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
@@ -57,14 +58,17 @@ public class MakeModuleAction extends CompileActionBase {
         }
     }
 
+    @RequiredReadAction
     @Override
-    public void update(AnActionEvent event) {
-        super.update(event);
-        Presentation presentation = event.getPresentation();
+    protected void updateInReadAction(AnActionEvent e) {
+        super.updateInReadAction(e);
+
+        Presentation presentation = e.getPresentation();
         if (!presentation.isEnabled()) {
             return;
         }
-        DataContext dataContext = event.getDataContext();
+
+        DataContext dataContext = e.getDataContext();
         Module module = dataContext.getData(Module.KEY);
         Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         boolean isEnabled = module != null || modules != null;
@@ -94,6 +98,6 @@ public class MakeModuleAction extends CompileActionBase {
             presentationText = actionName;
         }
         presentation.setText(presentationText);
-        presentation.setVisible(isEnabled || !ActionPlaces.PROJECT_VIEW_POPUP.equals(event.getPlace()));
+        presentation.setVisible(isEnabled || !ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace()));
     }
 }

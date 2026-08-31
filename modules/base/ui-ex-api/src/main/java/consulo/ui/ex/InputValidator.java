@@ -41,7 +41,7 @@ public interface InputValidator {
    * If <code>false</code> is returned then then the message dialog will not be closed.
    *
    * @param inputString the input to check
-   * @return true if the dialog could be closed, false otherwhise.
+   * @return true if the dialog could be closed, false otherwise.
    */
   @RequiredUIAccess
   default boolean canClose(String inputString) {

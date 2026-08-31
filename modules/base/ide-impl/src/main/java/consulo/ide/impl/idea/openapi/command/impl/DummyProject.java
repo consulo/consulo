@@ -33,7 +33,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
         private static final DummyProject ourInstance = new DummyProject();
     }
 
-    
     public static Project getInstance() {
         return DummyProjectHolder.ourInstance;
     }
@@ -46,14 +45,12 @@ public class DummyProject extends UserDataHolderBase implements Project {
         return null;
     }
 
-    
     @Override
     public Application getApplication() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    
     public String getName() {
         return "";
     }
@@ -64,8 +61,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    
-    
     public String getLocationHash() {
         return "dummy";
     }
@@ -87,12 +82,8 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    public String getBasePath() {
+    public @Nullable String getBasePath() {
         return null;
-    }
-
-    @Override
-    public void save() {
     }
 
     @Override
@@ -101,7 +92,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    
     public BooleanSupplier getDisposed() {
         return this::isDisposed;
     }
@@ -126,7 +116,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
         return null;
     }
 
-    
     @Override
     public CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

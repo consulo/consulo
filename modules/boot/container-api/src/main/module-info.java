@@ -29,25 +29,30 @@ module consulo.container.api {
         consulo.application.impl,
         consulo.project.impl,
         consulo.desktop.awt.bootstrap,
-        consulo.desktop.swt.bootstrap,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.qt.bootstrap,
+        consulo.web.bootstrap,
+        consulo.desktop.qt.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.external.service.impl,
+        consulo.language.api,
         consulo.test.impl,
         consulo.logging.logback.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.it;
 
     exports consulo.container.internal.plugin to
         consulo.application.api,
         consulo.ide.impl,
         consulo.proxy,
-        consulo.external.service.impl;
+        consulo.external.service.impl,
+        consulo.it;
 
     exports consulo.container.internal.plugin.classloader to
         consulo.application.api,
         consulo.component.api,
         consulo.desktop.awt.bootstrap,
-        consulo.desktop.swt.bootstrap,
+        consulo.desktop.qt.bootstrap,
+        consulo.web.bootstrap,
         consulo.proxy;
 
     uses consulo.container.boot.ContainerStartup;

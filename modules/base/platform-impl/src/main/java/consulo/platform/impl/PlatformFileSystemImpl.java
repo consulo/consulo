@@ -18,9 +18,13 @@ package consulo.platform.impl;
 import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformOperatingSystem;
-
 import consulo.platform.os.WindowsOperatingSystem;
+
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,34 +32,37 @@ import java.util.Map;
  * @since 25/04/2023
  */
 public class PlatformFileSystemImpl implements PlatformFileSystem {
-  private boolean myIsFileSystemCaseSensitive;
-  private boolean myAreSymLinksSupported;
+    private boolean myIsFileSystemCaseSensitive;
+    private boolean myAreSymLinksSupported;
 
-  public PlatformFileSystemImpl(Platform platform, Map<String, String> jvmProperties) {
-    PlatformOperatingSystem os = platform.os();
-    myIsFileSystemCaseSensitive = os.isUnix() && !os.isMac() || "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
-    myAreSymLinksSupported = os.isUnix() || os instanceof WindowsOperatingSystem win && win.isWindows7OrNewer();
-  }
+    public PlatformFileSystemImpl(Platform platform, Map<String, String> jvmProperties) {
+        PlatformOperatingSystem os = platform.os();
+        myIsFileSystemCaseSensitive = os.isUnix() && !os.isMac() || "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
+        myAreSymLinksSupported = os.isUnix() || os instanceof WindowsOperatingSystem win && win.isWindows7OrNewer();
+    }
 
-  
-  @Override
-  public Path getPath(String path) {
-    return Path.of(path);
-  }
+    @Override
+    public Iterable<Path> getRootDirectories() {
+        return FileSystems.getDefault().getRootDirectories();
+    }
 
-  
-  @Override
-  public Path getPath(String path, String... more) {
-    return Path.of(path, path);
-  }
+    @Override
+    public Path getPath(String path) {
+        return Path.of(path);
+    }
 
-  @Override
-  public boolean isCaseSensitive() {
-    return myIsFileSystemCaseSensitive;
-  }
+    @Override
+    public Path getPath(String path, String... more) {
+        return Path.of(path, path);
+    }
 
-  @Override
-  public boolean areSymLinksSupported() {
-    return myAreSymLinksSupported;
-  }
+    @Override
+    public boolean isCaseSensitive() {
+        return myIsFileSystemCaseSensitive;
+    }
+
+    @Override
+    public boolean areSymLinksSupported() {
+        return myAreSymLinksSupported;
+    }
 }

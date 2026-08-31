@@ -645,7 +645,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
                 }
             }
             if (element instanceof NamedLibraryElement namedLibraryElement) {
-                VirtualFile[] files = namedLibraryElement.getOrderEntry().getFiles(BinariesOrderRootType.getInstance());
+                VirtualFile[] files = namedLibraryElement.getOrderEntry().getFiles(BinariesOrderRootType.ID);
                 if (ArrayUtil.find(files, vFile) > -1) {
                     return true;
                 }

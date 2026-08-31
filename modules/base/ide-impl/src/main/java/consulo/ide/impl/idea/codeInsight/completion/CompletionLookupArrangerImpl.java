@@ -8,7 +8,8 @@ import consulo.application.util.matcher.PrefixMatcher;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
+import consulo.language.editor.impl.internal.completion.lookup.EmptyLookupItem;
+import consulo.language.editor.impl.internal.completion.lookup.PrefixTrackingLookupArranger;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
@@ -29,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class CompletionLookupArrangerImpl extends LookupArranger implements CompletionLookupArranger {
+public class CompletionLookupArrangerImpl extends LookupArranger implements CompletionLookupArranger, PrefixTrackingLookupArranger {
     private static final Logger LOG = Logger.getInstance(CompletionLookupArrangerImpl.class);
     private static final Key<PresentationInvariant> PRESENTATION_INVARIANT = Key.create("PRESENTATION_INVARIANT");
     public static final Key<Object> FORCE_MIDDLE_MATCH = Key.create("FORCE_MIDDLE_MATCH");

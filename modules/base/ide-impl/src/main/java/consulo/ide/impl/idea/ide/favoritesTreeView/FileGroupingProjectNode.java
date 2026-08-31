@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.ui.view.ProjectViewNodeWithChildrenList;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
@@ -31,56 +33,59 @@ import java.io.File;
  * @since 2012-06-08
  */
 public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<File> {
-  private VirtualFile myVirtualFile;
+    private VirtualFile myVirtualFile;
 
-  public FileGroupingProjectNode(Project project, File file, ViewSettings viewSettings) {
-    super(project, file, viewSettings);
-    LocalFileSystem lfs = LocalFileSystem.getInstance();
-    myVirtualFile = lfs.findFileByIoFile(file);
-    if (myVirtualFile == null) {
-      myVirtualFile = lfs.refreshAndFindFileByIoFile(file);
+    public FileGroupingProjectNode(Project project, File file, ViewSettings viewSettings) {
+        super(project, file, viewSettings);
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        myVirtualFile = lfs.findFileByIoFile(file);
+        if (myVirtualFile == null) {
+            myVirtualFile = lfs.refreshAndFindFileByIoFile(file);
+        }
     }
-  }
 
-  @Override
-  public boolean contains(VirtualFile file) {
-    return file.equals(myVirtualFile);
-  }
-
-  @Override
-  protected void update(PresentationData presentation) {
-    if (myVirtualFile != null && myVirtualFile.isDirectory()) {
-      presentation.setIcon(AllIcons.Nodes.TreeClosed);
+    @Override
+    public boolean contains(VirtualFile file) {
+        return file.equals(myVirtualFile);
     }
-    else if (myVirtualFile != null) {
-      presentation.setIcon(myVirtualFile.getFileType().getIcon());
+
+    @Override
+    protected void update(PresentationData presentation) {
+        if (myVirtualFile != null && myVirtualFile.isDirectory()) {
+            presentation.setIcon(PlatformIconGroup.nodesTreeclosed());
+        }
+        else if (myVirtualFile != null) {
+            presentation.setIcon(myVirtualFile.getFileType().getIcon());
+        }
+        else {
+            presentation.setIcon(PlatformIconGroup.filetypesUnknown());
+        }
+        presentation.setPresentableText(getValue().getName());
     }
-    else {
-      presentation.setIcon(AllIcons.FileTypes.Unknown);
+
+    @Override
+    public VirtualFile getVirtualFile() {
+        return myVirtualFile;
     }
-    presentation.setPresentableText(getValue().getName());
-  }
 
-  @Override
-  public VirtualFile getVirtualFile() {
-    return myVirtualFile;
-  }
-
-  @Override
-  public void navigate(boolean requestFocus) {
-    if (myVirtualFile != null) {
-      new OpenFileDescriptorImpl(myProject, myVirtualFile).navigate(requestFocus);
+    @Override
+    @RequiredUIAccess
+    public void navigate(boolean requestFocus) {
+        if (myVirtualFile != null) {
+            new OpenFileDescriptorImpl(myProject, myVirtualFile).navigate(requestFocus);
+        }
     }
-  }
 
-  // todo possibly we need file
-  @Override
-  public boolean canNavigate() {
-    return myVirtualFile != null && myVirtualFile.isValid();
-  }
+    // todo possibly we need file
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return myVirtualFile != null && myVirtualFile.isValid();
+    }
 
-  @Override
-  public boolean canNavigateToSource() {
-    return myVirtualFile != null && myVirtualFile.isValid();
-  }
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return myVirtualFile != null && myVirtualFile.isValid();
+    }
 }

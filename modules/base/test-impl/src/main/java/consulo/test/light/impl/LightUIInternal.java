@@ -25,8 +25,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
@@ -87,7 +87,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+  public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
     return null;
   }
 
@@ -102,7 +102,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+  public <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model) {
     return null;
   }
 
@@ -123,7 +123,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+  public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
     return null;
   }
 
@@ -219,22 +219,6 @@ public class LightUIInternal extends UIInternal {
   public @Nullable Window _Window_getActiveWindow() {
     return null;
   }
-
-  @Override
-  public <T> Alert<T> _Alerts_create() {
-    return null;
-  }
-
-  @Override
-  public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
-    return null;
-  }
-
-  @Override
-  public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
-    return null;
-  }
-
   @RequiredUIAccess
   
   @Override
@@ -276,4 +260,14 @@ public class LightUIInternal extends UIInternal {
   public ModalityState _ModalityState_nonModal() {
     return LightModalityState.INSTANCE;
   }
+
+    @Override
+    public <T> Alert<T> _Alerts_create() {
+        return null;
+    }
+
+    @Override
+    public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
+        return null;
+    }
 }

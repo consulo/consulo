@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -51,7 +52,7 @@ import java.util.function.Function;
 import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.ENTERED_PREFIX_PROPERTY_NAME;
 
 @ActionImpl(id = "RecentLocations")
-public class RecentLocationsAction extends DumbAwareAction {
+public class RecentLocationsAction extends LegacyDumbAwareAction {
     public static final String RECENT_LOCATIONS_ACTION_ID = "RecentLocations";
     private static final String LOCATION_SETTINGS_KEY = "recent.locations.popup";
 

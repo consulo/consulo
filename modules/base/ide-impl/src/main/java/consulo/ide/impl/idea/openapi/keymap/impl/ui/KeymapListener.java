@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.action.QuickList;
 
 /**
  * @author Dmitry Avdeev

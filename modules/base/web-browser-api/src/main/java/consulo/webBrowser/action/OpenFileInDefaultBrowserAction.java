@@ -19,14 +19,14 @@ import consulo.application.ReadAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.*;
 import org.jspecify.annotations.Nullable;
 
-public class OpenFileInDefaultBrowserAction extends DumbAwareAction {
+public class OpenFileInDefaultBrowserAction extends LegacyDumbAwareAction {
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();

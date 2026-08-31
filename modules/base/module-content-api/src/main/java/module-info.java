@@ -19,12 +19,14 @@ module consulo.module.content.api {
     exports consulo.module.content.util;
     exports consulo.module.content.library;
     exports consulo.module.content.library.util;
+    exports consulo.module.content.localize;
     exports consulo.module.content.layer;
     exports consulo.module.content.layer.extension;
     exports consulo.module.content.layer.event;
     exports consulo.module.content.layer.orderEntry;
 
     exports consulo.module.content.internal to
+        consulo.it,
         consulo.ide.api,
         consulo.ide.impl,
         consulo.module.impl,
@@ -36,5 +38,6 @@ module consulo.module.content.api {
         consulo.external.system.impl,
         consulo.module.ui.api,
         consulo.module.content.impl,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.external.system.api;
 }

@@ -33,7 +33,7 @@
 			<key>CVS_PASSFILE</key>
 			<string>~/.cvspass</string>
 			<key>apple.laf.useScreenMenuBar</key>
-			<string>true</string>
+			<string>false</string>
 			<key>com.apple.mrj.application.live-resize</key>
 			<string>false</string>
 			<key>idea.config.path</key>

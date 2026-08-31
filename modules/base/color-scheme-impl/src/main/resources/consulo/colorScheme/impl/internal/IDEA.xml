@@ -8,6 +8,7 @@
         <option name="METHOD_SEPARATORS_COLOR" value="c0c0c0"/>
         <option name="WHITESPACES" value="c5c5c5"/>
         <option name="INDENT_GUIDE" value="ebecf0"/>
+        <option name="DOC_COMMENT_GUIDE" value="e8e8e8"/>
         <option name="GUTTER_BACKGROUND" value="f0f0f0"/>
         <option name="NOTIFICATION_BACKGROUND" value="ffffcc"/>
         <option name="SELECTED_INDENT_GUIDE" value="c8c8c8"/>
@@ -167,6 +168,12 @@
             <value>
                 <option name="FOREGROUND" value="808080"/>
                 <option name="FONT_TYPE" value="2"/>
+            </value>
+        </option>
+        <option name="DOC_CODE_INLINE">
+            <value>
+                <option name="FOREGROUND" value="000000"/>
+                <option name="BACKGROUND" value="f3f3f4"/>
             </value>
         </option>
         <option name="DEFAULT_DOC_COMMENT">

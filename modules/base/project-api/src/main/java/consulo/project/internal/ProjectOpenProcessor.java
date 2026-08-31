@@ -15,26 +15,41 @@
  */
 package consulo.project.internal;
 
-import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author max
  */
 public abstract class ProjectOpenProcessor {
-    public abstract @Nullable Image getIcon(VirtualFile file);
+    public abstract @Nullable Image getIcon(Path file);
 
-    public abstract boolean canOpenProject(File file);
+    public abstract boolean canOpenProject(Path file);
 
-    
-    public abstract AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile,
-                                                            UIAccess uiAccess,
-                                                            ProjectOpenContext context);
+    /**
+     * Extend the coroutine chain with preparation steps for opening a project.
+     * The chain receives a {@link VirtualFile} (the project directory) as input
+     * and must return a {@link VirtualFile} as output (typically the same one).
+     * <p>
+     * Processors should add steps to create directory structure (.consulo/, modules, etc.)
+     * or show import wizards. The actual project opening is handled by the service.
+     * <p>
+     * Default implementation: no-op (returns chain unchanged).
+     *
+     * @param uiAccess UI access for EDT operations
+     * @param context  project open context with configuration keys
+     * @param in       the incoming coroutine chain ending with VirtualFile
+     * @return the extended coroutine chain
+     */
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                      ProjectOpenContext context,
+                                                      Coroutine<I, VirtualFile> in) {
+        return in;
+    }
 }

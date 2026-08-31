@@ -25,6 +25,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.BitUtil;
@@ -32,7 +33,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -346,8 +346,8 @@ class ShortcutPresenter implements Disposable {
     /**
      * copy&paste from KeymapUtil
      */
-    @JdkConstants.InputEventMask
-    private static int mapNewModifiers(@JdkConstants.InputEventMask int modifiers) {
+    @AWTConstants.InputEventMask
+    private static int mapNewModifiers(@AWTConstants.InputEventMask int modifiers) {
         if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0) {
             modifiers |= InputEvent.SHIFT_MASK;
         }

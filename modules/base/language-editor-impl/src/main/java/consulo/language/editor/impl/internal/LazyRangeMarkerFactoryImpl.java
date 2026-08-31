@@ -16,7 +16,7 @@
 package consulo.language.editor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -35,7 +35,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @Singleton
 @ServiceImpl
@@ -104,9 +103,8 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     }
 
     @Override
-    
     public RangeMarker createRangeMarker(VirtualFile file, int offset) {
-        return ApplicationManager.getApplication().runReadAction((Supplier<RangeMarker>) () -> {
+        return ReadAction.compute(() -> {
             // even for already loaded document do not create range marker yet - wait until it really needed when e.g. user clicked to jump to OpenFileDescriptor
             LazyMarker marker = new OffsetLazyMarker(file, offset);
             addToLazyMarkersList(marker, file);
@@ -115,9 +113,8 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     }
 
     @Override
-    
     public RangeMarker createRangeMarker(VirtualFile file, int line, int column, boolean persistent) {
-        return ApplicationManager.getApplication().runReadAction((Supplier<RangeMarker>) () -> {
+        return ReadAction.compute(() -> {
             Document document = FileDocumentManager.getInstance().getCachedDocument(file);
             if (document != null) {
                 int myTabSize = CodeStyle.getProjectOrDefaultSettings(myProject).getTabSize(file.getFileType());

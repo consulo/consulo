@@ -2,28 +2,24 @@
 package consulo.build.ui.progress;
 
 import consulo.build.ui.BuildDescriptor;
+import consulo.localize.LocalizeValue;
 
 public interface BuildProgressDescriptor {
-  
-  public static BuildProgressDescriptor of(BuildDescriptor descriptor) {
-    return new BuildProgressDescriptor() {
-      
-      @Override
-      public String getTitle() {
-        return descriptor.getTitle();
-      }
+    public static BuildProgressDescriptor of(BuildDescriptor descriptor) {
+        return new BuildProgressDescriptor() {
+            @Override
+            public LocalizeValue getTitle() {
+                return descriptor.getTitle();
+            }
 
-      
-      @Override
-      public BuildDescriptor getBuildDescriptor() {
-        return descriptor;
-      }
-    };
-  }
+            @Override
+            public BuildDescriptor getBuildDescriptor() {
+                return descriptor;
+            }
+        };
+    }
 
-  
-  String getTitle();
+    LocalizeValue getTitle();
 
-  
-  BuildDescriptor getBuildDescriptor();
+    BuildDescriptor getBuildDescriptor();
 }

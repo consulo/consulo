@@ -36,7 +36,7 @@ public class FoldingAnchorsOverlayStrategy {
     FoldRegion[] visibleFoldRegions = myEditor.getFoldingModel().fetchVisible();
     if (visibleFoldRegions != null) {
       for (FoldRegion region : visibleFoldRegions) {
-        if (!region.isValid()) continue;
+        if (!region.isValid() || region.shouldNeverExpand()) continue;
         int startOffset = region.getStartOffset();
         if (startOffset > lastVisibleOffset) continue;
         int endOffset = region.getEndOffset();

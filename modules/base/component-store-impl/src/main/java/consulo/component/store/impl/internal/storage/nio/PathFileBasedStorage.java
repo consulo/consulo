@@ -28,23 +28,47 @@ import consulo.platform.LineSeparator;
 import consulo.platform.Platform;
 import consulo.ui.NotificationType;
 import consulo.util.jdom.JDOMUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.SavingRequestor;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.event.VFileDeleteEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
+ * File storage that writes bytes directly to disk (NIO), never taking a write action.
+ * <p>
+ * When {@code collectVfsEvents} is {@code true} (project-level stores) it also keeps the VFS in sync: after the
+ * lock-free write it appends an explicit, {@link SavingRequestor save-tagged} {@link VFileContentChangeEvent} carrying
+ * the real on-disk timestamp/length to the store's save batch. The store applies the whole batch once, synchronously,
+ * at the end of the save - so the VFS record matches disk before any later filesystem refresh runs, the refresh finds
+ * no diff, {@code StoreReloadManager} skips the event (SaveSession requestor) and the document manager skips reload
+ * ({@code isFromSave}). When {@code false} (application-level stores) it is a pure NIO write with no VFS involvement.
+ *
  * @author VISTALL
  * @since 2024-08-10
  */
 public class PathFileBasedStorage extends XmlElementStorage implements FileBasedStorage {
     private final boolean myUseXmlProlog;
+    private final boolean myCollectVfsEvents;
     private final Path myFile;
     private LineSeparator myLineSeparator;
+    private volatile VirtualFile myCachedVirtualFile;
 
     public PathFileBasedStorage(
         String filePath,
@@ -53,30 +77,43 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
         @Nullable TrackingPathMacroSubstitutor pathMacroManager,
         String rootElementName,
         Disposable parentDisposable,
-        @Nullable StateStorageListener listener,
+        final @Nullable StateStorageListener listener,
         @Nullable StreamProvider streamProvider,
         boolean useXmlProlog,
+        boolean collectVfsEvents,
         PathMacrosService pathMacrosService
     ) {
         super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, pathMacrosService);
 
         myUseXmlProlog = useXmlProlog;
+        myCollectVfsEvents = collectVfsEvents;
         myFile = Path.of(filePath);
 
-//        if (listener != null) {
-//            try {
-//                WatchService watchService = FileSystems.getDefault().newWatchService();
-//
-//                WatchKey key = myFile.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
-//
-//                Disposer.register(parentDisposable, () -> {
-//
-//                });
-//            }
-//            catch (IOException ignored) {
-//                // not supported
-//            }
-//        }
+        if (myCollectVfsEvents && listener != null) {
+            VirtualFileTracker virtualFileTracker = Application.get().getInstance(VirtualFileTracker.class);
+            String url = LocalFileSystem.PROTOCOL_PREFIX + myFile.toAbsolutePath().toString().replace(File.separatorChar, '/');
+            virtualFileTracker.addTracker(url, new VirtualFileListener() {
+                @Override
+                public void fileMoved(VirtualFileMoveEvent event) {
+                    myCachedVirtualFile = null;
+                }
+
+                @Override
+                public void fileDeleted(VirtualFileEvent event) {
+                    myCachedVirtualFile = null;
+                }
+
+                @Override
+                public void fileCreated(VirtualFileEvent event) {
+                    myCachedVirtualFile = event.getFile();
+                }
+
+                @Override
+                public void contentsChanged(VirtualFileEvent event) {
+                    listener.storageFileChanged(event, PathFileBasedStorage.this);
+                }
+            }, false, parentDisposable);
+        }
     }
 
     protected boolean isUseXmlProlog() {
@@ -87,18 +124,29 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
         return isUseXmlProlog();
     }
 
+    public @Nullable VirtualFile getVirtualFile() {
+        if (!myCollectVfsEvents) {
+            return null;
+        }
+        VirtualFile virtualFile = myCachedVirtualFile;
+        if (virtualFile == null) {
+            myCachedVirtualFile = virtualFile = LocalFileSystem.getInstance().findFileByNioFile(myFile);
+        }
+        return virtualFile;
+    }
+
     @Override
     protected XmlElementStorageSaveSession createSaveSession(StorageData storageData) {
         return new FileSaveSession(storageData);
     }
 
-    private class FileSaveSession extends XmlElementStorageSaveSession {
+    protected class FileSaveSession extends XmlElementStorageSaveSession implements SavingRequestor {
         protected FileSaveSession(StorageData storageData) {
             super(storageData);
         }
 
         @Override
-        protected void doSave(@Nullable Element element) throws IOException {
+        protected void doSave(@Nullable Element element, @Nullable List<VFileEvent> events) throws IOException {
             if (myLineSeparator == null) {
                 myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : Platform.current().os().lineSeparator();
             }
@@ -113,6 +161,11 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
                 LOG.error(e);
             }
 
+            VirtualFile file = getVirtualFile();
+            long oldModificationStamp = file == null ? -1 : file.getModificationStamp();
+            long oldTimestamp = file == null ? -1 : file.getTimeStamp();
+            long oldLength = file == null ? -1 : file.getLength();
+
             if (content == null) {
                 Files.deleteIfExists(myFile);
             }
@@ -123,22 +176,51 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
 
                 PathStorageUtil.writeFile(myFile, content, isUseXmlProlog() ? myLineSeparator : null);
             }
+
+            if (!myCollectVfsEvents || file == null || !file.isValid()) {
+                if (content == null) {
+                    myCachedVirtualFile = null;
+                }
+                return;
+            }
+
+            if (content == null) {
+                myCachedVirtualFile = null;
+                collect(events, new VFileDeleteEvent(this, file, false));
+                return;
+            }
+
+            // Keep the VFS in sync via an explicit save-tagged content-change event with the real on-disk timestamp/length,
+            // so that a later filesystem refresh observes no diff and does not report an external change.
+            File io = myFile.toFile();
+            long newTimestamp = io.lastModified();
+            long newLength = io.length();
+            collect(events, new VFileContentChangeEvent(this, file, oldModificationStamp, -1, oldTimestamp, newTimestamp, oldLength, newLength, false));
+        }
+    }
+
+    // Append the event to the store's batch, so it is applied once, synchronously, after all writes. When no batch is
+    // supplied (a direct save outside the store flow), apply it immediately and synchronously - never async, otherwise a
+    // refresh could observe the stale VFS record before the event is fired.
+    private static void collect(@Nullable List<VFileEvent> events, VFileEvent event) {
+        if (events != null) {
+            events.add(event);
+        }
+        else {
+            RefreshQueue.getInstance().processSingleEvent(event);
         }
     }
 
     @Override
-    
     protected StorageData createStorageData() {
         return new StorageData(myRootElementName, myPathMacrosService);
     }
 
-    
     public Path getFile() {
         return myFile;
     }
 
     @Override
-    
     public String getFilePath() {
         return myFile.toString();
     }

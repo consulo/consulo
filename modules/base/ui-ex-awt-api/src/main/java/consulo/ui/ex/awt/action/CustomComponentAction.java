@@ -33,7 +33,7 @@ public interface CustomComponentAction {
 
   /**
    * @return custom JComponent that represents action in UI.
-   * You (as a client/implementor) or this interface are not allowed to invoke
+   * You (as a client/implementer) or this interface are not allowed to invoke
    * this method directly. Only action system can invoke it!
    * <br/>
    * <br/>

@@ -24,9 +24,9 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 import java.util.Collection;
 
@@ -34,7 +34,7 @@ import java.util.Collection;
  * @author anna
  * @since 2005-02-28
  */
-class AddToNewFavoritesListAction extends AnAction {
+class AddToNewFavoritesListAction extends AnAction implements AnActionWithAsyncUpdate {
     public AddToNewFavoritesListAction() {
         super(
             IdeLocalize.actionAddToNewFavoritesList(),
@@ -57,7 +57,9 @@ class AddToNewFavoritesListAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabled(AddToFavoritesAction.canCreateNodes(e));
+        }).toCoroutine();
     }
 }

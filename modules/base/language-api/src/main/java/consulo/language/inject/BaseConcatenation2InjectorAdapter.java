@@ -39,6 +39,5 @@ public abstract class BaseConcatenation2InjectorAdapter implements MultiHostInje
         injectedLanguageManager.injectLanguagesFromConcatenationAdapter(registrar, context, this::computeAnchorAndOperands);
     }
 
-    
     protected abstract Pair<PsiElement, PsiElement[]> computeAnchorAndOperands(PsiElement context);
 }

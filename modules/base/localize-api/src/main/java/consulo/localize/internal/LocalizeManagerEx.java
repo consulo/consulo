@@ -15,10 +15,14 @@
  */
 package consulo.localize.internal;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 2024-09-01
  */
 public interface LocalizeManagerEx {
-    void initialize();
+    void visitPlugins(List<Runnable> actions);
+
+    void afterInit();
 }

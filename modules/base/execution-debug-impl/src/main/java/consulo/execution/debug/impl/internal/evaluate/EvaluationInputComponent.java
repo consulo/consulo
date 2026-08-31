@@ -16,6 +16,7 @@
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.execution.debug.impl.internal.ui.XDebuggerEditorBase;
+import consulo.localize.LocalizeValue;
 
 import javax.swing.*;
 
@@ -23,17 +24,16 @@ import javax.swing.*;
  * @author nik
  */
 public abstract class EvaluationInputComponent {
-  private final String myTitle;
+  private final LocalizeValue myTitle;
 
-  protected EvaluationInputComponent(String title) {
+  protected EvaluationInputComponent(LocalizeValue title) {
     myTitle = title;
   }
 
-  public String getTitle() {
+  public LocalizeValue getTitle() {
     return myTitle;
   }
 
-  
   protected abstract XDebuggerEditorBase getInputEditor();
 
   public abstract void addComponent(JPanel contentPanel, JPanel resultPanel);

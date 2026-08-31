@@ -314,7 +314,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
             FileBasedIndexExtension<Integer, SerializedStubTree> extension,
             IndexStorage<Integer, SerializedStubTree> storage
         ) throws StorageException, IOException {
-            super(extension, storage, new EmptyForwardIndex(), new StubUpdatingForwardIndexAccessor(), null, null);
+            super(extension, storage, new EmptyForwardIndex(), new StubUpdatingForwardIndexAccessor(), null);
             ((StubUpdatingForwardIndexAccessor) getForwardIndexAccessor()).setIndex(this);
             checkNameStorage();
         }

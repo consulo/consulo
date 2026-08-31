@@ -31,6 +31,7 @@ import consulo.document.Document;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.undoRedo.CommandProcessor;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -45,7 +46,7 @@ public class BackspaceAction extends EditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             MacUIUtil.hideCursor();
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             if (editor instanceof InjectedEditor editorWindow) {

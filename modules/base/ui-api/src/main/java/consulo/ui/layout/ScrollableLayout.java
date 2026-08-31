@@ -26,6 +26,7 @@ public interface ScrollableLayout extends Layout<LayoutConstraint> {
     static ScrollableLayout create(Component component) {
         return create(component, ScrollableLayoutOptions.builder().build());
     }
+
     static ScrollableLayout create(Component component, ScrollableLayoutOptions options) {
         return UIInternal.get()._ScrollLayout_create(component, options);
     }

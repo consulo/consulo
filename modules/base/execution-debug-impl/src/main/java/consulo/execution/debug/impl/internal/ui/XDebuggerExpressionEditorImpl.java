@@ -33,6 +33,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
+import consulo.dataContext.DataSink;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -68,14 +69,10 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
             }
 
             @Override
-            public Object getData(Key dataId) {
-                if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
-                    return new Language[]{myExpression.getLanguage()};
-                }
-                else if (PsiFile.KEY == dataId) {
-                    return PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument());
-                }
-                return super.getData(dataId);
+            public void uiDataSnapshot(DataSink sink) {
+                super.uiDataSnapshot(sink);
+                sink.set(LangDataKeys.CONTEXT_LANGUAGES, new Language[]{myExpression.getLanguage()});
+                sink.lazy(PsiFile.KEY, () -> PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument()));
             }
         };
 

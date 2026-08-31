@@ -17,7 +17,10 @@ package consulo.ui.ex.util;
 
 /**
  * @author Sergey.Malenkov
+ * @deprecated legacy of the swing tree models, which could not be handed an executor - the executor of a tree
+ * is chosen where the tree is created, see {@link consulo.ui.Tree#create(Object, consulo.ui.TreeModel, consulo.ui.TreeExecutor, consulo.disposer.Disposable)}
  */
+@Deprecated
 public interface InvokerSupplier {
   /**
    * @return preferable invoker to be used to access the supplier

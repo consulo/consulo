@@ -34,7 +34,7 @@ public interface ExtensionPreviewAcceptor<Api> {
             return Objects.equals(pluginPreview.apiPluginId(), featurePreview.apiPluginId())
                 && Objects.equals(pluginPreview.apiClassName(), featurePreview.apiClassName())
                 // we don't check #implPluginId()
-                && Objects.equals(pluginPreview.implId(), featurePreview.implId());
+                && ("*".equals(featurePreview.implId()) || Objects.equals(pluginPreview.implId(), featurePreview.implId()));
         }
 
         @Override

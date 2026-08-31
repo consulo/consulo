@@ -19,6 +19,7 @@ import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.logging.Logger;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.Pair;
 
 import org.jspecify.annotations.Nullable;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -42,8 +44,8 @@ public class DefaultInjectingContainer implements InjectingContainer {
 
   private final Set<Pair<Class, Class>> myGetInstanceWarningSet = new CopyOnWriteArraySet<>();
 
-  public DefaultInjectingContainer(@Nullable DefaultInjectingContainer parent, int size) {
-    myContainer = new InstanceContainer(parent == null ? null : parent.myContainer);
+  public DefaultInjectingContainer(@Nullable DefaultInjectingContainer parent, int size, @Nullable Supplier<CoroutineContext> coroutineContext) {
+    myContainer = new InstanceContainer(parent == null ? null : parent.myContainer, coroutineContext);
     myKeys = new ArrayList<>(size);
   }
 

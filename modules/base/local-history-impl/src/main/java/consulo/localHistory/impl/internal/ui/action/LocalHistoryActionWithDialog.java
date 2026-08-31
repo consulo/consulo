@@ -36,5 +36,6 @@ public abstract class LocalHistoryActionWithDialog extends LocalHistoryAction {
         showDialog(e.getData(Project.KEY), getGateway(), getFile(e), e);
     }
 
+    @RequiredUIAccess
     protected abstract void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e);
 }

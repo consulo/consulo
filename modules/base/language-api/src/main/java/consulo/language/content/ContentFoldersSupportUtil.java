@@ -44,7 +44,6 @@ public class ContentFoldersSupportUtil {
         return providers;
     }
 
-    
     @SuppressWarnings("unchecked")
     public static Image getContentFolderIcon(ContentFolderTypeProvider typeProvider, Map<Key, Object> params) {
         if (params.isEmpty()) {

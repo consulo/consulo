@@ -16,14 +16,14 @@
 
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ui.ex.awt.util.ListenerUtil;
-import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ListenerUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ public class FramelessNotificationPopup {
   public static final Dimension myPreferredContentSize = new Dimension(300, 100);
   private JBPopup myPopup;
   private int myTimerTick;
-  private Color myBackgroud;
+  private Color myBackground;
   private final boolean myUseDefaultPreferredSize;
   private final static int FADE_IN_TICKS = 60;
   private final static int SHOW_TIME_TICKS = FADE_IN_TICKS + 300;
@@ -67,12 +67,12 @@ public class FramelessNotificationPopup {
   private final Timer myFadeInTimer;
   private ActionListener myActionListener;
 
-  public FramelessNotificationPopup(JComponent owner, JComponent content, Color backgroud) {
-    this(owner, content, backgroud, true, null);
+  public FramelessNotificationPopup(JComponent owner, JComponent content, Color background) {
+    this(owner, content, background, true, null);
   }
 
-  public FramelessNotificationPopup(JComponent owner, JComponent content, Color backgroud, boolean useDefaultPreferredSize, ActionListener listener) {
-    myBackgroud = backgroud;
+  public FramelessNotificationPopup(JComponent owner, JComponent content, Color background, boolean useDefaultPreferredSize, ActionListener listener) {
+    myBackground = background;
     myUseDefaultPreferredSize = useDefaultPreferredSize;
     myContent = new ContentComponent(content);
 
@@ -115,7 +115,7 @@ public class FramelessNotificationPopup {
     public ContentComponent(JComponent content) {
       super(new BorderLayout());
       add(content, BorderLayout.CENTER);
-      setBackground(myBackgroud);
+      setBackground(myBackground);
 
       myMouseListener = new MouseAdapter() {
         @Override
@@ -164,5 +164,4 @@ public class FramelessNotificationPopup {
       return super.getPreferredSize();
     }
   }
-
 }

@@ -39,6 +39,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ import java.util.Set;
  * @author anna
  * @since 2005-02-15
  */
-public class AddToFavoritesAction extends AnAction {
+public class AddToFavoritesAction extends AnAction implements AnActionWithAsyncUpdate {
     private static final Logger LOG = Logger.getInstance(AddToFavoritesAction.class);
     private static final Set<String> POPUP_PLACES_IN_PROJECT_VIEW = Set.of(
         ActionPlaces.J2EE_VIEW_POPUP,
@@ -60,9 +63,9 @@ public class AddToFavoritesAction extends AnAction {
 
     private final String myFavoritesListName;
 
-    public AddToFavoritesAction(String choosenList) {
-        getTemplatePresentation().setText(choosenList, false);
-        myFavoritesListName = choosenList;
+    public AddToFavoritesAction(String chosenList) {
+        getTemplatePresentation().setText(chosenList, false);
+        myFavoritesListName = chosenList;
     }
 
     @Override
@@ -106,8 +109,8 @@ public class AddToFavoritesAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(canCreateNodes(e));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, p -> p.setVisible(AddToFavoritesAction.canCreateNodes(e))).toCoroutine();
     }
 
     @RequiredReadAction
@@ -121,7 +124,7 @@ public class AddToFavoritesAction extends AnAction {
             return false;
         }
         boolean inProjectView = POPUP_PLACES_IN_PROJECT_VIEW.contains(place);
-        //consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces.USAGE_VIEW_TOOLBAR
+        // ActionPlaces.USAGE_VIEW_TOOLBAR
         return getNodesToAdd(e.getDataContext(), inProjectView) != null;
     }
 

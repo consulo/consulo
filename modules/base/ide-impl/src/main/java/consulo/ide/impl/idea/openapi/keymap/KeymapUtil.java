@@ -19,14 +19,15 @@ import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +62,7 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    public static String getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
+    public static String getMouseShortcutText(int button, @AWTConstants.InputEventMask int modifiers, int clickCount) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getMouseShortcutText(button, modifiers, clickCount).get();
     }
 
@@ -141,49 +142,15 @@ public class KeymapUtil {
      * @throws InvalidDataException if <code>keystrokeString</code> doesn't represent valid <code>MouseShortcut</code>.
      */
     public static MouseShortcut parseMouseShortcut(String keystrokeString) throws InvalidDataException {
-        if (keystrokeString.startsWith("Force touch")) {
-            return new PressureShortcut(2);
+        try {
+            return consulo.ui.ex.keymap.util.KeymapUtil.parseMouseShortcut(keystrokeString);
         }
-
-        int button = -1;
-        int modifiers = 0;
-        int clickCount = 1;
-        for (StringTokenizer tokenizer = new StringTokenizer(keystrokeString); tokenizer.hasMoreTokens(); ) {
-            String token = tokenizer.nextToken();
-            if (SHIFT.equals(token)) {
-                modifiers |= InputEvent.SHIFT_DOWN_MASK;
-            }
-            else if (CONTROL.equals(token) || CTRL.equals(token)) {
-                modifiers |= InputEvent.CTRL_DOWN_MASK;
-            }
-            else if (META.equals(token)) {
-                modifiers |= InputEvent.META_DOWN_MASK;
-            }
-            else if (ALT.equals(token)) {
-                modifiers |= InputEvent.ALT_DOWN_MASK;
-            }
-            else if (ALT_GRAPH.equals(token)) {
-                modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
-            }
-            else if (token.startsWith("button") && token.length() > 6) {
-                try {
-                    button = Integer.parseInt(token.substring(6));
-                }
-                catch (NumberFormatException e) {
-                    throw new InvalidDataException("unparseable token: " + token);
-                }
-            }
-            else if (DOUBLE_CLICK.equals(token)) {
-                clickCount = 2;
-            }
-            else {
-                throw new InvalidDataException("unknown token: " + token);
-            }
+        catch (IllegalArgumentException e) {
+            throw new InvalidDataException(e.getMessage());
         }
-        return new MouseShortcut(button, modifiers, clickCount);
     }
 
-    public static String getKeyModifiersTextForMacOSLeopard(@JdkConstants.InputEventMask int modifiers) {
+    public static String getKeyModifiersTextForMacOSLeopard(@AWTConstants.InputEventMask int modifiers) {
         StringBuilder buf = new StringBuilder();
         if ((modifiers & InputEvent.META_MASK) != 0) {
             buf.append("\u2318");
@@ -297,7 +264,7 @@ public class KeymapUtil {
      */
     public static boolean matchActionMouseShortcutsModifiers(
         Keymap activeKeymap,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         String actionId
     ) {
         MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
@@ -310,6 +277,33 @@ public class KeymapUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided.
+     * {@link MouseShortcut} normalizes the mask, so the extended form built here compares equal to a keymap entry
+     * however it was written.
+     */
+    public static boolean matchActionMouseShortcutsModifiers(
+        Keymap activeKeymap,
+        Set<ModifiedInputDetails.Modifier> modifiers,
+        String actionId
+    ) {
+        return matchActionMouseShortcutsModifiers(activeKeymap, toInputEventMask(modifiers), actionId);
+    }
+
+    @AWTConstants.InputEventMask
+    private static int toInputEventMask(Set<ModifiedInputDetails.Modifier> modifiers) {
+        int mask = 0;
+        for (ModifiedInputDetails.Modifier modifier : modifiers) {
+            mask |= switch (modifier) {
+                case ALT -> InputEvent.ALT_DOWN_MASK;
+                case CTRL -> InputEvent.CTRL_DOWN_MASK;
+                case SHIFT -> InputEvent.SHIFT_DOWN_MASK;
+                case META -> InputEvent.META_DOWN_MASK;
+            };
+        }
+        return mask;
     }
 
     /**

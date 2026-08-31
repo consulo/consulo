@@ -50,13 +50,14 @@ public abstract class BeforeRunTask<T extends BeforeRunTask> implements Cloneabl
   }
 
   public void readExternal(Element element) {
-    String attribValue = element.getAttributeValue("enabled");
-    if (attribValue == null) {
-      attribValue = element.getAttributeValue("value"); // maintain compatibility with old format
+    String attrValue = element.getAttributeValue("enabled");
+    if (attrValue == null) {
+      attrValue = element.getAttributeValue("value"); // maintain compatibility with old format
     }
-    if (attribValue == null)
-      attribValue = "true";
-    myIsEnabled = Boolean.valueOf(attribValue).booleanValue();
+    if (attrValue == null) {
+      attrValue = "true";
+    }
+    myIsEnabled = Boolean.valueOf(attrValue).booleanValue();
   }
 
   //Task may aggregate several items or targets to do (e.g. BuildArtifactsBeforeRunTask)

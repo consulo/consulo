@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
@@ -41,10 +40,5 @@ public class EnableBackgroundTrackingAction extends ToggleAction implements Dumb
         if (project != null && !project.isDisposed()) {
             InstancesTracker.getInstance(project).setBackgroundTackingEnabled(state);
         }
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

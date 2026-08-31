@@ -50,7 +50,7 @@ class LibraryRootsDetectorImpl extends LibraryRootsDetector {
   public @Nullable String getRootTypeName(LibraryRootType rootType) {
     for (RootDetector detector : myDetectors) {
       if (detector.getRootType().equals(rootType.getType()) && detector.isJarDirectory() == rootType.isJarDirectory()) {
-        return detector.getPresentableRootTypeName();
+        return detector.getPresentableRootTypeName().get();
       }
     }
     return null;

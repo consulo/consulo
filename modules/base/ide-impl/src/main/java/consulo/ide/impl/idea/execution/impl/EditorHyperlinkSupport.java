@@ -25,6 +25,7 @@ import consulo.document.Document;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
 
@@ -87,7 +88,7 @@ public class EditorHyperlinkSupport {
       public void mouseMoved(EditorMouseEvent e) {
         if (e.getArea() != EditorMouseEventArea.EDITING_AREA) return;
         HyperlinkInfo info = getHyperlinkInfoByPoint(e.getMouseEvent().getPoint());
-        myEditor.setCustomCursor(EditorHyperlinkSupport.class, info == null ? null : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        myEditor.setCustomCursor(EditorHyperlinkSupport.class, info == null ? null : StandardCursors.HAND);
       }
     });
   }

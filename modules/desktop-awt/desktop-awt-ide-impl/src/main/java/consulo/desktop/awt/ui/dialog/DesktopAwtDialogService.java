@@ -18,12 +18,14 @@ package consulo.desktop.awt.ui.dialog;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.toolbar.ActionButtonToolbarImpl;
+import consulo.desktop.awt.ui.impl.action.toolbar.ActionButtonToolbarImpl;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.Size2D;
+import consulo.ui.WidthAndHeight;
+import consulo.desktop.awt.ui.impl.DesktopLength;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,10 +42,10 @@ import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
+import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.concurrent.AsyncResult;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -52,11 +54,13 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 13/12/2021
+ * @since 2021-12-13
  */
 @Singleton
 @ServiceImpl
 public class DesktopAwtDialogService implements DialogService {
+    private static final Logger LOG = Logger.getInstance(DesktopAwtDialogService.class);
+
     private static class DialogImpl implements Dialog {
         private final DialogWrapperImpl myDialogWrapper;
         private final DialogDescriptor myDescriptor;
@@ -78,16 +82,10 @@ public class DesktopAwtDialogService implements DialogService {
             myDialogWrapper = new DialogWrapperImpl(component, descriptor, this);
         }
 
-        @RequiredUIAccess
-        
         @Override
+        @RequiredUIAccess
         public CompletableFuture<DialogValue> showAsync() {
-            CompletableFuture<DialogValue> result = new CompletableFuture<>();
-
-            AsyncResult<Void> showAsync = myDialogWrapper.showAsync();
-            showAsync.doWhenDone(() -> result.complete(myValue));
-            showAsync.doWhenRejected(() -> result.completeExceptionally(new IllegalArgumentException("reject")));
-            return result;
+            return myDialogWrapper.showAsync().thenApply(ignored -> myValue);
         }
 
         @Override
@@ -150,15 +148,43 @@ public class DesktopAwtDialogService implements DialogService {
 
             setTitle(myDescriptor.getTitle());
 
-            init();
-
-            Size2D size = myDescriptor.getInitialSize();
-            if (size != null) {
-                setScalableSize(size.width(), size.height());
+            try {
+                init();
+            }
+            catch (Throwable e) {
+                LOG.error("Cannot build dialog: " + myDescriptor.getClass().getName(), e);
+                throw e;
             }
         }
 
-        
+        @Override
+        public @Nullable Dimension getInitialSize() {
+            WidthAndHeight size = myDescriptor.getInitialSize();
+            if (size == null) {
+                return null;
+            }
+
+            java.awt.Component owner = getWindow();
+            return new Dimension(DesktopLength.toPixels(owner, size.width()), DesktopLength.toPixels(owner, size.height()));
+        }
+
+        @Override
+        protected @Nullable String getDimensionServiceKey() {
+            return myDescriptor.getDimensionServiceKey();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void doCancelAction() {
+            DialogCancelAction action = new DialogCancelAction();
+
+            if (myDescriptor.canHandle(action, null, TargetAWT.from(getWindow()))) {
+                myDescriptor.onHandleValue(action, null);
+
+                super.doCancelAction();
+            }
+        }
+
         @Override
         protected Action[] createActions() {
             throw new UnsupportedOperationException();
@@ -173,12 +199,8 @@ public class DesktopAwtDialogService implements DialogService {
         @Override
         protected @Nullable JComponent createSouthPanel() {
             JPanel panel = new JPanel(new BorderLayout());
-            DataManager.registerDataProvider(panel, dataId -> {
-                if (dataId == Dialog.KEY) {
-                    return myDialog;
-                }
-
-                return null;
+            DataManager.registerUiDataProvider(panel, sink -> {
+                sink.set(Dialog.KEY, myDialog);
             });
 
             AnAction[] actions = myDescriptor.createActions(Platform.current().os().isMac());
@@ -215,6 +237,8 @@ public class DesktopAwtDialogService implements DialogService {
 
             toolbar.setTargetComponent(panel);
 
+            myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
+
             toolbar.updateActionsAsync();
 
             panel.add(toolbar.getComponent(), BorderLayout.EAST);
@@ -250,13 +274,11 @@ public class DesktopAwtDialogService implements DialogService {
         }
     }
 
-    
     @Override
     public Dialog build(DialogDescriptor descriptor) {
         return new DialogImpl(descriptor);
     }
 
-    
     @Override
     public Dialog build(Component parent, DialogDescriptor descriptor) {
         return new DialogImpl(TargetAWT.to(parent), descriptor);
@@ -266,7 +288,7 @@ public class DesktopAwtDialogService implements DialogService {
     @Override
     public Dialog build(WindowOwner windowOwner, DialogDescriptor descriptor) {
         if (!(windowOwner instanceof Project project)) {
-            throw new IllegalArgumentException("Expecte instance of Project");
+            throw new IllegalArgumentException("Project instance expected");
         }
         return new DialogImpl(project, descriptor);
     }

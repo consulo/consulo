@@ -17,7 +17,9 @@ package consulo.application.impl.internal.macro;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.macro.ApplicationPathMacroManager;
+import consulo.application.macro.PathMacros;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -26,7 +28,12 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class ApplicationPathMacroManagerImpl extends BasePathMacroManager implements ApplicationPathMacroManager {
-  public ApplicationPathMacroManagerImpl() {
-    super(null);
-  }
+    @Inject
+    public ApplicationPathMacroManagerImpl() {
+        super(null);
+    }
+
+    public ApplicationPathMacroManagerImpl(PathMacros pathMacros) {
+        super(pathMacros);
+    }
 }

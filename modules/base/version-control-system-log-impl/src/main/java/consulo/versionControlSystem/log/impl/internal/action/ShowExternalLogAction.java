@@ -26,7 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.collection.ContainerUtil;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.*;
 
 @ActionImpl(id = "Vcs.Log.ShowExternalLog", parents = @ActionParentRef(@ActionRef(id = "Vcs.Browse")))
-public class ShowExternalLogAction extends DumbAwareAction {
+public class ShowExternalLogAction extends LegacyDumbAwareAction {
     private static final String EXTERNAL = "EXTERNAL";
 
     public ShowExternalLogAction() {

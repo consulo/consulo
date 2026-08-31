@@ -39,6 +39,7 @@ public class LeftNeighbour extends PositionElementFilter {
     return previous != null && getRequiredFilter().isAcceptable(previous, context);
   }
 
+  @Override
   public String toString(){
     return "left(" + getFilter() + ")";
   }

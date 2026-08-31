@@ -15,15 +15,15 @@
  */
 package consulo.sandboxPlugin.lang.psi;
 
-import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
+import consulo.language.ast.StandardTokenTypes;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
-public interface SandTokens extends TokenType {
+public interface SandTokens extends StandardTokenTypes {
   IElementType IDENTIFIER = new IElementType("IDENTIFIER", SandLanguage.INSTANCE);
   IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", SandLanguage.INSTANCE);
   IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", SandLanguage.INSTANCE);

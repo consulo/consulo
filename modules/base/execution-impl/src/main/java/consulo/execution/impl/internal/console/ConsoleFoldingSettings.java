@@ -33,10 +33,10 @@ import java.util.*;
  * @author peter
  */
 @Singleton
-@State(name = "ConsoleFoldingSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/consoleFolding.xml"))
+@State(name = "ConsoleFoldingSettings", storages = @Storage("consoleFolding.xml"))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleFoldingSettings.MyBean> {
+public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleFoldingSettingsState> {
   private final List<String> myPositivePatterns = new ArrayList<>();
   private final List<String> myNegativePatterns = new ArrayList<>();
 
@@ -72,8 +72,8 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
   }
 
   @Override
-  public MyBean getState() {
-    MyBean result = new MyBean();
+  public ConsoleFoldingSettingsState getState() {
+    ConsoleFoldingSettingsState result = new ConsoleFoldingSettingsState();
     writeDiff(result.addedPositive, result.removedPositive, false);
     writeDiff(result.addedNegative, result.removedNegative, true);
     return result;
@@ -105,7 +105,7 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
   }
 
   @Override
-  public void loadState(MyBean state) {
+  public void loadState(ConsoleFoldingSettingsState state) {
     myPositivePatterns.clear();
     myNegativePatterns.clear();
 
@@ -127,13 +127,6 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
 
     myPositivePatterns.addAll(filterEmptyStringsFromCollection(state.addedPositive));
     myNegativePatterns.addAll(filterEmptyStringsFromCollection(state.addedNegative));
-  }
-
-  public static class MyBean {
-    public List<String> addedPositive = new ArrayList<>();
-    public List<String> addedNegative = new ArrayList<>();
-    public List<String> removedPositive = new ArrayList<>();
-    public List<String> removedNegative = new ArrayList<>();
   }
 
 }

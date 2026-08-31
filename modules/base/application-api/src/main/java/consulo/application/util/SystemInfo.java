@@ -16,6 +16,8 @@
 package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.platform.JavaVersion;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
@@ -195,7 +197,7 @@ public class SystemInfo {
   }
 
   public static boolean isJavaVersionAtLeast(int major) {
-    return JavaVersion.current().isAtLeast(major);
+    return Platform.current().jvm().version().isAtLeast(major);
   }
 
   private static boolean isJetbrainsJvm() {

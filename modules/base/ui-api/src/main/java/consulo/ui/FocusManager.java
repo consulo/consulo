@@ -24,10 +24,10 @@ import consulo.ui.internal.UIInternal;
  * @since 2020-11-21
  */
 public interface FocusManager {
-  static FocusManager get() {
-    return UIInternal.get()._FocusManager_get();
-  }
+    static FocusManager get() {
+        return UIInternal.get()._FocusManager_get();
+    }
 
-  // add global listener for focus change
-  Disposable addListener(GlobalFocusListener listener);
+    // add global listener for focus change
+    Disposable addListener(GlobalFocusListener listener);
 }

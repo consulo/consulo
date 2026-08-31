@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 
 import org.jspecify.annotations.Nullable;
@@ -32,6 +33,8 @@ public class ElementPatternCondition<T> {
     myInitialCondition = startCondition;
   }
 
+  @RequiredReadAction
+  @SuppressWarnings("unchecked")
   public boolean accepts(@Nullable Object o, ProcessingContext context) {
     if (!myInitialCondition.accepts(o, context)) {
       return false;

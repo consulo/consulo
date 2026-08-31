@@ -17,26 +17,28 @@ package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 03/05/2021
+ * @since 2021-05-03
  */
 public abstract class ComponentOptions {
-  protected static abstract class ComponentOptionsBuilder<B extends ComponentOptionsBuilder<B>> {
-    protected boolean myBackgroundPaint = true;
-    @SuppressWarnings("unchecked")
-    public B backgroundPaint(boolean value) {
-      myBackgroundPaint = value;
-      return (B)this;
+    protected static abstract class ComponentOptionsBuilder<B extends ComponentOptionsBuilder<B>> {
+        protected boolean myBackgroundPaint = true;
+
+        @SuppressWarnings("unchecked")
+        public B backgroundPaint(boolean value) {
+            myBackgroundPaint = value;
+            return (B) this;
+        }
+
+        public abstract ComponentOptions build();
     }
-    public abstract ComponentOptions build();
-  }
 
-  private final boolean myBackgroundPaint;
+    private final boolean myBackgroundPaint;
 
-  protected ComponentOptions(boolean backgroundPaint) {
-    myBackgroundPaint = backgroundPaint;
-  }
+    protected ComponentOptions(boolean backgroundPaint) {
+        myBackgroundPaint = backgroundPaint;
+    }
 
-  public boolean isBackgroundPaint() {
-    return myBackgroundPaint;
-  }
+    public boolean isBackgroundPaint() {
+        return myBackgroundPaint;
+    }
 }

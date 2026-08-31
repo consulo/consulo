@@ -3,9 +3,9 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
-public class SEActionStub extends DumbAwareAction {
+public class SEActionStub extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

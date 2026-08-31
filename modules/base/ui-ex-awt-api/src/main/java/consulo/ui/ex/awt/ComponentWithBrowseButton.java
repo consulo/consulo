@@ -28,7 +28,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.internal.GuiUtils;
@@ -243,7 +243,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     /**
      * Do not use this class directly it is public just to hack other implementation of controls similar to TextFieldWithBrowseButton.
      */
-    public static final class MyDoClickAction extends DumbAwareAction {
+    public static final class MyDoClickAction extends LegacyDumbAwareAction {
         private final JButton myBrowseButton;
 
         public MyDoClickAction(JButton browseButton) {
@@ -349,7 +349,11 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
                 }
             }
 
-            FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).doWhenDone(this::onFileChosen);
+            FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).whenComplete((value, error) -> {
+                if (error == null) {
+                    this.onFileChosen(value);
+                }
+            });
         }
 
         protected @Nullable VirtualFile getInitialFile() {

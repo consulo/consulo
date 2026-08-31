@@ -16,38 +16,27 @@
 package consulo.ide.impl.language.editor;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.language.editor.ui.PsiElementListNavigator;
 import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
 import consulo.language.navigation.GotoRelatedItem;
-import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
-import consulo.usage.UsageView;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,116 +51,16 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactory {
-    private static class NavigateOrPopupBuilderImpl extends PsiElementListNavigator.NavigateOrPopupBuilder {
-        public NavigateOrPopupBuilderImpl(NavigatablePsiElement[] targets, String title) {
-            super(targets, title);
-        }
-
-        @Override
-        public final @Nullable JBPopup build() {
-            if (myTargets.length == 0) {
-                if (!allowEmptyTargets()) {
-                    return null; // empty initial targets are not allowed
-                }
-                if (myListUpdaterTask == null || myListUpdaterTask.isFinished()) {
-                    return null; // there will be no targets.
-                }
-            }
-            if (myTargets.length == 1 && (myListUpdaterTask == null || myListUpdaterTask.isFinished())) {
-                myTargetsConsumer.accept(myTargets);
-                return null;
-            }
-            List<NavigatablePsiElement> initialTargetsList = Arrays.asList(myTargets);
-            Ref<NavigatablePsiElement[]> updatedTargetsList = Ref.create(myTargets);
-
-            IPopupChooserBuilder<NavigatablePsiElement> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(initialTargetsList);
-            afterPopupBuilderCreated(builder);
-            if (myListRenderer instanceof PsiElementListCellRenderer) {
-                ((PsiElementListCellRenderer) myListRenderer).installSpeedSearch(builder);
-            }
-
-            IPopupChooserBuilder<NavigatablePsiElement> popupChooserBuilder = builder.
-                setTitle(myTitle).
-                setMovable(true).
-                setFont(EditorUtil.getEditorFont()).
-                setRenderer(myListRenderer).
-                withHintUpdateSupply().
-                setResizable(true).
-                setItemsChosenCallback(selectedValues -> myTargetsConsumer.accept(ArrayUtil.toObjectArray(selectedValues))).
-                setCancelCallback(() -> {
-                    if (myListUpdaterTask != null) {
-                        myListUpdaterTask.cancelTask();
-                    }
-                    return true;
-                });
-            Ref<UsageView> usageView = new Ref<>();
-            if (myFindUsagesTitle != null) {
-                popupChooserBuilder = popupChooserBuilder.setCouldPin(popup -> {
-                    usageView.set(FindUtil.showInUsageView(null, updatedTargetsList.get(), myFindUsagesTitle, getProject()));
-                    popup.cancel();
-                    return false;
-                });
-            }
-
-            JBPopup popup = popupChooserBuilder.createPopup();
-            if (builder instanceof PopupChooserBuilder) {
-                JBList<NavigatablePsiElement> list = (JBList) ((PopupChooserBuilder) builder).getChooserComponent();
-                list.setTransferHandler(new TransferHandler() {
-                    @Override
-                    protected Transferable createTransferable(JComponent c) {
-                        Object[] selectedValues = list.getSelectedValues();
-                        PsiElement[] copy = new PsiElement[selectedValues.length];
-                        for (int i = 0; i < selectedValues.length; i++) {
-                            copy[i] = (PsiElement) selectedValues[i];
-                        }
-                        return new PsiCopyPasteManagerImpl.MyTransferable(copy);
-                    }
-
-                    @Override
-                    public int getSourceActions(JComponent c) {
-                        return COPY;
-                    }
-                });
-
-                JScrollPane pane = ((PopupChooserBuilder) builder).getScrollPane();
-                pane.setBorder(null);
-                pane.setViewportBorder(null);
-            }
-
-            if (myListUpdaterTask != null) {
-                ListComponentUpdater popupUpdater = builder.getBackgroundUpdater();
-                myListUpdaterTask.init(popup, new ListComponentUpdater<>() {
-                    @Override
-                    public void replaceModel(List<? extends PsiElement> data) {
-                        updatedTargetsList.set(data.toArray(NavigatablePsiElement.EMPTY_ARRAY));
-                        popupUpdater.replaceModel(data);
-                    }
-
-                    @Override
-                    public void paintBusy(boolean paintBusy) {
-                        popupUpdater.paintBusy(paintBusy);
-                    }
-                }, usageView);
-            }
-            return popup;
-        }
-    }
-
-    
-    @Override
-    public PsiElementListNavigator.NavigateOrPopupBuilder builder(NavigatablePsiElement[] targets, String title) {
-        return new NavigateOrPopupBuilderImpl(targets, title);
-    }
 
     @Override
-    
-    public JBPopup getPsiElementPopup(Object[] elements,
-                                      Map<PsiElement, GotoRelatedItem> itemsMap,
-                                      String title,
-                                      boolean showContainingModules,
-                                      Consumer<Object> processor) {
-
-        final Ref<Boolean> hasMnemonic = Ref.create(false);
+    public JBPopup getPsiElementPopup(
+        Object[] elements,
+        Map<PsiElement, GotoRelatedItem> itemsMap,
+        String title,
+        boolean showContainingModules,
+        Consumer<Object> processor
+    ) {
+        final SimpleReference<Boolean> hasMnemonic = SimpleReference.create(false);
         final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
             @Override
             public String getElementText(PsiElement element) {
@@ -202,7 +91,14 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
             }
 
             @Override
-            protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, int index, boolean selected, boolean hasFocus) {
+            protected boolean customizeNonPsiElementLeftRenderer(
+                ColoredListCellRenderer renderer,
+                JList list,
+                Object value,
+                int index,
+                boolean selected,
+                boolean hasFocus
+            ) {
                 GotoRelatedItem item = (GotoRelatedItem) value;
                 Color color = list.getForeground();
                 SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
@@ -337,10 +233,15 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
     }
 
     private static int getMnemonic(Object item, Map<PsiElement, GotoRelatedItem> itemsMap) {
-        return (item instanceof GotoRelatedItem ? (GotoRelatedItem) item : itemsMap.get((PsiElement) item)).getMnemonic();
+        return (item instanceof GotoRelatedItem gotoRelatedItem ? gotoRelatedItem : itemsMap.get(item)).getMnemonic();
     }
 
-    private static Action createNumberAction(final int mnemonic, final ListPopupImpl listPopup, final Map<PsiElement, GotoRelatedItem> itemsMap, final Consumer<Object> processor) {
+    private static Action createNumberAction(
+        final int mnemonic,
+        final ListPopupImpl listPopup,
+        final Map<PsiElement, GotoRelatedItem> itemsMap,
+        final Consumer<Object> processor
+    ) {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

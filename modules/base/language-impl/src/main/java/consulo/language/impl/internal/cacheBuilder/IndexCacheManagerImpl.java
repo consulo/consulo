@@ -60,21 +60,21 @@ public class IndexCacheManagerImpl implements CacheManager {
   @Override
   
   public PsiFile[] getFilesWithWord(String word,
-                                    short occurenceMask,
+                                    short occurrenceMask,
                                     GlobalSearchScope scope,
                                     boolean caseSensitively) {
     if (myProject.isDefault()) {
       return PsiFile.EMPTY_ARRAY;
     }
     CommonProcessors.CollectProcessor<PsiFile> processor = new CommonProcessors.CollectProcessor<>();
-    processFilesWithWord(processor, word, occurenceMask, scope, caseSensitively);
+    processFilesWithWord(processor, word, occurrenceMask, scope, caseSensitively);
     return processor.getResults().isEmpty() ? PsiFile.EMPTY_ARRAY : processor.toArray(PsiFile.ARRAY_FACTORY);
   }
 
   @Override
   
   public VirtualFile[] getVirtualFilesWithWord(String word,
-                                               short occurenceMask,
+                                               short occurrenceMask,
                                                GlobalSearchScope scope,
                                                boolean caseSensitively) {
     if (myProject.isDefault()) {
@@ -82,7 +82,7 @@ public class IndexCacheManagerImpl implements CacheManager {
     }
 
     List<VirtualFile> vFiles = new ArrayList<>(5);
-    collectVirtualFilesWithWord(new CommonProcessors.CollectProcessor<>(vFiles), word, occurenceMask, scope, caseSensitively);
+    collectVirtualFilesWithWord(new CommonProcessors.CollectProcessor<>(vFiles), word, occurrenceMask, scope, caseSensitively);
     return vFiles.isEmpty() ? VirtualFile.EMPTY_ARRAY : vFiles.toArray(new VirtualFile[vFiles.size()]);
   }
 

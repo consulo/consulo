@@ -17,6 +17,7 @@ package consulo.content.library.ui;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -31,8 +32,10 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 public class FileTypeBasedRootFilter extends RootFilter {
   private final FileType myFileType;
 
-  public FileTypeBasedRootFilter(OrderRootType rootType, boolean jarDirectory, FileType fileType,
-                                 String presentableRootTypeName) {
+  public FileTypeBasedRootFilter(String rootType,
+                                 boolean jarDirectory,
+                                 FileType fileType,
+                                 LocalizeValue presentableRootTypeName) {
     super(rootType, jarDirectory, presentableRootTypeName);
     myFileType = fileType;
   }

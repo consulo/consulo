@@ -23,6 +23,7 @@ import java.util.concurrent.*;
 /**
  * @author dmitrylomov
  */
+@Deprecated
 public class AsyncFutureResultImpl<V> implements AsyncFutureResult<V> {
   private CompletableFuture<V> myFuture;
 

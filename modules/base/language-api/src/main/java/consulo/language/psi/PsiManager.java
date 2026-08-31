@@ -16,6 +16,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
@@ -149,10 +150,10 @@ public abstract class PsiManager extends UserDataHolderBase {
   public abstract void dropResolveCaches();
 
   /**
-   * Clears all {@link com.intellij.psi.util.CachedValue} depending on {@link PsiModificationTracker#MODIFICATION_COUNT} and resolve caches.
+   * Clears all {@link consulo.application.util.CachedValue} depending on {@link PsiModificationTracker#MODIFICATION_COUNT} and resolve caches.
    * Can be used to reduce memory consumption in batch operations sequentially processing multiple files. Should be invoked on Swing thread.
    */
-  @RequiredUIAccess
+  @RequiredWriteAction
   public abstract void dropPsiCaches();
 
   /**

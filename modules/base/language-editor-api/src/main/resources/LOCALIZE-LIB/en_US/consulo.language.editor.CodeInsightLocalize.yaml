@@ -196,6 +196,18 @@ disable.intention.action:
     text: Disable ''{0}''
 display.coverage.prompt:
     text: Do you want to display coverage data for ''{0}''?
+doc.render.copy.action.text:
+    text: Copy Selection
+doc.render.dumb.mode.text:
+    text: <i>Cannot render documentation during the project analysis</i>
+doc.render.gutter.icon.setting:
+    text: Documentation comments in-place rendering
+doc.render.icon.accessible.name:
+    text: In-place comment rendering
+doc.render.loading.text:
+    text: Loading…
+doc.render.not.available.text:
+    text: <i>Not available</i>
 documentation.message.documentation.is.not.available:
     text: Documentation is not available until indexes are built.
 enable.intention.action:
@@ -281,7 +293,7 @@ generate.list.popup.title:
 generate.setter.fields.chooser.title:
     text: Select Fields to Generate Setters
 goto.implementation.chooserTitle:
-    text: <html><body>Choose Implementation of <b>{0}</b> ({1} found)</body></html>
+    text: <html><body>Choose Implementation of <b>{0}</b> ({1} found{2})</body></html>
 goto.implementation.findUsages.title:
     text: Implementations of {0}
 goto.implementation.notFound:
@@ -293,9 +305,9 @@ goto.super.method.chooser.title:
 goto.super.method.findUsages.title:
     text: Super methods of {0}
 goto.test.chooserTitle.subject:
-    text: <html><body>Choose Test Subject for <b>{0}</b> ({1} found)</body></html>
+    text: <html><body>Choose Test Subject for <b>{0}</b> ({1} found{2})</body></html>
 goto.test.chooserTitle.test:
-    text: <html><body>Choose Test for <b>{0}</b> ({1} found)</body></html>
+    text: <html><body>Choose Test for <b>{0}</b> ({1} found{2})</body></html>
 goto.test.findUsages.subject.title:
     text: Test Subjects for {0}
 goto.test.findUsages.test.title:
@@ -310,6 +322,8 @@ highlight.overridden.classes.chooser.title:
     text: Choose Classes to Highlight Overridden Methods from
 highlight.thrown.exceptions.chooser.all.entry:
     text: All listed
+hint.text.imports.optimized:
+    text: Imports optimized
 i18n.quickfix.code.panel.resource.bundle.expression.label:
     text: 'Resource bundle &expression:'
 i18n.quickfix.code.panel.title:
@@ -1079,5 +1093,3 @@ unwrap.with.placeholder:
     text: Unwrap ''{0}''
 xml.tag.info.no.attributes:
     text: <no attributes>
-hint.text.imports.optimized:
-    text: Imports optimized

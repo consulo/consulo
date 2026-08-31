@@ -38,8 +38,8 @@ public class SubmittedReportInfo {
     FAILED
   }
 
-  private final String myURL;
-  private final String myLinkText;
+  private final @Nullable String myURL;
+  private final @Nullable String myLinkText;
   private final SubmissionStatus myStatus;
 
   /**
@@ -55,11 +55,11 @@ public class SubmittedReportInfo {
     myStatus = status;
   }
 
-  public String getURL() {
+  public @Nullable String getURL() {
     return myURL;
   }
 
-  public String getLinkText() {
+  public @Nullable String getLinkText() {
     return myLinkText;
   }
 

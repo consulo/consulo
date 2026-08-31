@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.action;
 
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
@@ -35,13 +36,7 @@ public interface VcsContext extends PlaceProvider<String> {
 
   @Nullable VirtualFile getSelectedFile();
 
-  
   VirtualFile[] getSelectedFiles();
-
-  
-  default Stream<VirtualFile> getSelectedFilesStream() {
-    return Arrays.stream(getSelectedFiles());
-  }
 
   Editor getEditor();
 
@@ -55,10 +50,8 @@ public interface VcsContext extends PlaceProvider<String> {
 
   File getSelectedIOFile();
 
-  
   FilePath[] getSelectedFilePaths();
 
-  
   default Stream<FilePath> getSelectedFilePathsStream() {
     return Arrays.stream(getSelectedFilePaths());
   }
@@ -69,5 +62,5 @@ public interface VcsContext extends PlaceProvider<String> {
 
   @Nullable Change[] getSelectedChanges();
 
-  String getActionName();
+  LocalizeValue getActionName();
 }

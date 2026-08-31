@@ -37,12 +37,8 @@ public class BaseLabel extends JLabel {
         myUi = ui;
         setOpaque(false);
 
-        DataManager.registerDataProvider(this, dataId -> {
-            if (dataId == Content.KEY) {
-                return getContent();
-            }
-
-            return null;
+        DataManager.registerUiDataProvider(this, sink -> {
+            sink.lazy(Content.KEY, this::getContent);
         });
     }
 

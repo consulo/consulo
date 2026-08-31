@@ -47,7 +47,17 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
         return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER ? "" : myDelegate.getLineText(currentLine, editor);
     }
 
-    
+    @Override
+    public boolean useTabularNumsFont(int line, Editor editor) {
+        int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
+        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
+            return false;
+        }
+        else {
+            return myDelegate.useTabularNumsFont(currentLine, editor);
+        }
+    }
+
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);

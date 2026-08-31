@@ -18,28 +18,28 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProcessor;
-import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.ide.moduleImport.ModuleImportProviders;
+import consulo.ide.impl.module.importing.ModuleImportProcessor;
+import consulo.ide.impl.module.importing.ModuleImportProviders;
 import consulo.module.ModifiableModuleModel;
+import consulo.module.creation.importing.ModuleImportContext;
+import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.module.ModuleManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.util.concurrent.AsyncResult;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Dmitry Avdeev
  * @since 2012-10-31
  */
 @ActionImpl(id = "ImportModule")
-public class ImportModuleAction extends AnAction {
+public class ImportModuleAction extends LegacyAnAction {
     public ImportModuleAction() {
         super(ActionLocalize.actionImportmoduleText());
     }
@@ -53,10 +53,14 @@ public class ImportModuleAction extends AnAction {
 
     @RequiredUIAccess
     public static void executeImportAction(Project project, @Nullable FileChooserDescriptor descriptor) {
-        AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
+        CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
             ModuleImportProcessor.showFileChooser(project, descriptor);
 
-        chooser.doWhenDone(pair -> {
+        chooser.whenComplete((pair, error) -> {
+            if (error != null) {
+                return;
+            }
+
             ModuleImportContext context = pair.getFirst();
 
             ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();

@@ -36,12 +36,13 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -84,14 +85,14 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     }
 
     @Override
-    public AsyncResult<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeTaskAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,
         ExecutionEnvironment env,
         BuildArtifactsBeforeRunTask task
     ) {
-        AsyncResult<Void> result = AsyncResult.undefined();
+        CompletableFuture<Void> result = new CompletableFuture<>();
 
         List<Artifact> artifacts = new ArrayList<>();
         AccessRule.read(() -> {
@@ -102,20 +103,23 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
 
         CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
             if (!aborted && errors == 0) {
-                result.setDone();
+                result.complete(null);
             }
             else {
-                result.setRejected();
+                result.completeExceptionally(new CancellationException());
             }
         };
 
         Predicate<Compiler> compilerFilter = compiler -> compiler instanceof ArtifactsCompiler
             || compiler instanceof ArtifactAwareCompiler artifactAwareCompiler && artifactAwareCompiler.shouldRun(artifacts);
 
-        uiAccess.give(() -> {
+        uiAccess.giveAsync(() -> {
             CompilerManager manager = CompilerManager.getInstance(myProject);
             manager.make(ArtifactCompileScope.createArtifactsScope(myProject, artifacts), compilerFilter, callback);
-        }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+        }).exceptionally(error -> {
+            result.completeExceptionally(error);
+            return null;
+        });
 
         return result;
     }

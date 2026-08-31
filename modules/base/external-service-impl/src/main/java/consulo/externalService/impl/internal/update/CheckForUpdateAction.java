@@ -33,7 +33,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 @ActionImpl(id = IdeActions.ACTION_CHECK_FOR_UPDATE)
-public class CheckForUpdateAction extends DumbAwareAction {
+public class CheckForUpdateAction extends LegacyDumbAwareAction {
     private final Provider<UpdateSettings> myUpdateSettingsProvider;
 
     @Inject

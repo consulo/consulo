@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -78,7 +79,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
                     && baseRefactoringAction.hasAvailableHandler(dataContext)) {
                     Presentation presentation = new Presentation();
                     AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, presentation, actionManager, 0);
-                    child.update(event);
+                    ActionUpdateInvoker.updateSync(child, event);
                     if (presentation.isEnabled() && presentation.isVisible()) {
                         destinationGroup.add(child);
                     }

@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
@@ -31,7 +32,7 @@ import org.jspecify.annotations.Nullable;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public abstract class EditorAction extends AnAction implements DumbAware {
+public abstract class EditorAction extends AnAction implements DumbAware, AnActionWithUIUpdate {
     private EditorActionHandler myHandler;
     private boolean myHandlersLoaded;
 
@@ -52,12 +53,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         setEnabledInModalContext(true);
     }
 
-    protected EditorAction(
-        LocalizeValue text,
-        LocalizeValue description,
-        Image icon,
-        EditorActionHandler defaultHandler
-    ) {
+    protected EditorAction(LocalizeValue text, LocalizeValue description, Image icon, EditorActionHandler defaultHandler) {
         super(text, description, icon);
         myHandler = defaultHandler;
         setEnabledInModalContext(true);
@@ -83,7 +79,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         myHandlersLoaded = true;
         String id = ActionManager.getInstance().getId(this);
         List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
-        for (int i = extensions.size() - 1; i >= 0; i--) {
+        for (int i = extensions.size(); --i >= 0; ) {
             ExtensionEditorActionHandler handler = extensions.get(i);
             if (handler.getActionId().equals(id)) {
                 handler.init(myHandler);
@@ -102,18 +98,14 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         myHandler.setWorksInInjected(isInInjectedContext());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
-        actionPerformed(editor, dataContext);
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
+        if (editor != null) {
+            actionPerformed(editor, dataContext);
+        }
     }
 
     protected @Nullable Editor getEditor(DataContext dataContext) {
@@ -122,10 +114,6 @@ public abstract class EditorAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     public final void actionPerformed(Editor editor, DataContext dataContext) {
-        if (editor == null) {
-            return;
-        }
-
         EditorActionHandler handler = getHandler();
         Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
 
@@ -151,7 +139,11 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void updateAtUI(AnActionEvent e) {
+        updateInUI(e);
+    }
+
+    public void updateInUI(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
@@ -174,7 +166,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         return new DataContext() {
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) editor.getProject();
                 }

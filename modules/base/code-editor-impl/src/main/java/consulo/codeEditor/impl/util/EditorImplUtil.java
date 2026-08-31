@@ -15,8 +15,8 @@
  */
 package consulo.codeEditor.impl.util;
 
-import consulo.application.ReadAction;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
@@ -30,17 +30,20 @@ import consulo.document.impl.TextRangeInterval;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static consulo.codeEditor.util.EditorUtil.getTabSize;
@@ -51,6 +54,12 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
  */
 public class EditorImplUtil {
     private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
+
+    /**
+     * The rich half of an editor copy, kept in this process next to the plain text every other application
+     * sees. Declared here rather than in the editor api because it still carries an awt payload.
+     */
+    public static final DataTransferType<Transferable> TRANSFERABLE = DataTransferType.create("consulo.editor.transferable");
 
     public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
@@ -74,7 +83,7 @@ public class EditorImplUtil {
         if (CodeEditorInlayModelBase.showWhenFolded(inlay)) {
             return false;
         }
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Editor editor = inlay.getEditor();
             Inlay.Placement placement = inlay.getPlacement();
             int offset = inlay.getOffset();
@@ -156,7 +165,7 @@ public class EditorImplUtil {
             return editor.offsetToVisualPosition(lineEndOffset, true, true).column;
         }
 
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Document document = editor.getDocument();
             int lastLine = document.getLineCount() - 1;
             if (lastLine < 0) {
@@ -366,7 +375,7 @@ public class EditorImplUtil {
         return (nTabs + 1) * tabSize;
     }
 
-    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int getSpaceWidth(@AWTConstants.FontStyle int fontType, Editor editor) {
         int width = charWidth(' ', fontType, editor);
         return width > 0 ? width : 1;
     }
@@ -375,12 +384,12 @@ public class EditorImplUtil {
         return getSpaceWidth(Font.PLAIN, editor);
     }
 
-    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int charWidth(char c, @AWTConstants.FontStyle int fontType, Editor editor) {
         return fontForChar(c, fontType, editor).charWidth(c);
     }
 
     
-    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
+    public static FontInfo fontForChar(char c, @AWTConstants.FontStyle int style, Editor editor) {
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         return ComplementaryFontsRegistry.getFontAbleToDisplay(c,
             style,
@@ -388,13 +397,26 @@ public class EditorImplUtil {
             FontInfo.getFontRenderContext(editor.getContentComponent()));
     }
 
-    public static @Nullable Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
-        if (producer == null) {
-            CopyPasteManager manager = CopyPasteManager.getInstance();
-            return manager.areDataFlavorsAvailable(DataFlavor.stringFlavor) ? manager.getContents() : null;
+    /**
+     * A paste which follows a copy made in this process is answered from the local half of the payload and the
+     * future is already complete. Only a payload put there by another application costs a read, which on a
+     * frontend holding its clipboard in a browser is a round trip - so the paste is arranged around this
+     * completing rather than around it returning.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<@Nullable DataTransfer> getContentsToPasteToEditor(@Nullable Supplier<DataTransfer> producer) {
+        if (producer != null) {
+            return CompletableFuture.completedFuture(producer.get());
         }
-        else {
-            return producer.get();
+
+        CopyPasteManager manager = CopyPasteManager.getInstance();
+        DataTransfer local = manager.getLocalContents();
+        if (!local.isEmpty()) {
+            return CompletableFuture.completedFuture(local);
         }
+
+        // whatever another application left there. it is handed on as the platform payload rather than wrapped
+        // into an awt transferable, which is what lets a frontend without a toolkit paste at all
+        return manager.getContents().thenApply(transfer -> transfer.isEmpty() ? null : transfer);
     }
 }

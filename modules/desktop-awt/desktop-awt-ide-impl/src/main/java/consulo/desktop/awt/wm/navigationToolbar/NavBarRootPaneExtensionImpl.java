@@ -17,10 +17,12 @@ package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
+import consulo.desktop.awt.navbar.ui.NavBarUIController;
+import consulo.desktop.awt.navbar.ui.StaticNavBarPanel;
+import consulo.navigationBar.model.NavBarVm;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposer;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarBorder;
-import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUIManager;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomisedActionGroup;
 import consulo.project.Project;
@@ -28,10 +30,11 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.NavBarRootPaneExtension;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awt.AWTTitlelessDecorator;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -50,7 +53,7 @@ import java.awt.*;
 public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, IdeRootPaneNorthExtensionWithDecorator {
     private JComponent myWrapperPanel;
     private Project myProject;
-    private NavBarPanel myNavigationBar;
+    private StaticNavBarPanel myNavigationBar;
     private JPanel myRunPanel;
     private final boolean myNavToolbarGroupExist;
     private JScrollPane myScrollPane;
@@ -115,7 +118,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
             myWrapperPanel = new NavBarWrapperPanel(new BorderLayout()) {
                 @Override
                 public Insets getInsets() {
-                    return NavBarUIManager.getUI().getWrapperPanelInsets(super.getInsets());
+                    return JBUI.insets(super.getInsets());
                 }
             };
             myWrapperPanel.add(buildNavBarPanel(), BorderLayout.CENTER);
@@ -213,27 +216,11 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     }
 
     private JComponent buildNavBarPanel() {
-        myNavigationBar = new NavBarPanel(myProject, true);
+        myNavigationBar = (StaticNavBarPanel) NavBarUIController.getInstance(myProject).createNavBarPanel();
         myWrapperPanel.putClientProperty("NavBarPanel", myNavigationBar);
-        myNavigationBar.getModel().setFixedComponent(true);
         myScrollPane = ScrollPaneFactory.createScrollPane(myNavigationBar);
 
         JPanel panel = new JPanel(new BorderLayout()) {
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Component navBar = myScrollPane;
-                Insets insets = getInsets();
-                Rectangle r = navBar.getBounds();
-
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.translate(r.x, r.y);
-
-                Rectangle rectangle = new Rectangle(0, 0, r.width + insets.left + insets.right, r.height + insets.top + insets.bottom);
-                NavBarUIManager.getUI().doPaintNavBarPanel(g2d, rectangle, isMainToolbarVisible(), isUndocked());
-                g2d.dispose();
-            }
 
             @Override
             public void doLayout() {
@@ -277,7 +264,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     @Override
     public void uiSettingsChanged(UISettings settings) {
         if (myNavigationBar != null) {
-            myNavigationBar.updateState(settings.getShowNavigationBar());
+            NavBarUIController.getInstance(myProject).uiSettingsChanged(settings);
             myWrapperPanel.setVisible(settings.getShowNavigationBar() && !UISettings.getInstance().getPresentationMode());
 
             myWrapperPanel.revalidate();
@@ -311,7 +298,11 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     @Override
     public void rebuildAndSelectTail() {
         JComponent c = getComponent();
-        NavBarPanel panel = (NavBarPanel) c.getClientProperty("NavBarPanel");
-        panel.rebuildAndSelectTail(true);
+        if (c.getClientProperty("NavBarPanel") instanceof StaticNavBarPanel staticNavBarPanel) {
+            NavBarVm vm = staticNavBarPanel.getModel();
+            if (vm != null) {
+                vm.selectTail(false);
+            }
+        }
     }
 }

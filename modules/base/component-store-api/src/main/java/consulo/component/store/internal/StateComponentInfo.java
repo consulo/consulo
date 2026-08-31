@@ -16,34 +16,30 @@
 package consulo.component.store.internal;
 
 import consulo.component.ComponentManager;
+import consulo.component.internal.StateComponent;
 import consulo.component.persist.*;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.logging.Logger;
 import consulo.util.xml.serializer.JDOMExternalizable;
 
 import org.jspecify.annotations.Nullable;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 27-Feb-17
  */
-public class StateComponentInfo<T> {
-  private static final Logger LOG = Logger.getInstance(StateComponentInfo.class);
-
-  private static final String OPTION_WORKSPACE = "workspace";
-
-  public static @Nullable <K> StateComponentInfo<K> build(K o, @Nullable ComponentManager project) {
-    if (!(o instanceof PersistentStateComponent) && !(o instanceof JDOMExternalizable)) {
+public class StateComponentInfo {
+  public static @Nullable StateComponentInfo build(Object o, @Nullable ComponentManager project) {
+    if (!(o instanceof StateComponent) && !(o instanceof JDOMExternalizable)) {
       return null;
     }
-    PersistentStateComponent<?> stateComponent = null;
+
+    StateComponent stateComponent = null;
     State state = null;
-    if (o instanceof PersistentStateComponent) {
+    if (o instanceof StateComponent) {
       state = getStateSpec(o.getClass());
-      stateComponent = (PersistentStateComponent<?>)o;
+      stateComponent = (StateComponent)o;
     }
     else if (o instanceof JDOMExternalizable) {
       state = getStateSpec(o.getClass());
@@ -68,17 +64,13 @@ public class StateComponentInfo<T> {
     }
 
     if (stateComponent != null && state != null) {
-      return new StateComponentInfo<>((PersistentStateComponent<K>)stateComponent, state);
+      return new StateComponentInfo(stateComponent, state);
     }
 
     if (pluginId != null) {
       throw new PluginException("No @State annotation found in " + o.getClass().getName(), pluginId);
     }
     throw new RuntimeException("No @State annotation found in " + o.getClass().getName());
-  }
-
-  private static boolean isWorkspace(@Nullable Map<?, ?> options) {
-    return options != null && Boolean.parseBoolean((String)options.get(OPTION_WORKSPACE));
   }
 
   private static @Nullable State getStateSpec(Class<?> aClass) {
@@ -92,32 +84,57 @@ public class StateComponentInfo<T> {
     return null;
   }
 
-  private PersistentStateComponent<T> myComponent;
-  private State myState;
+  private final StateComponent myComponent;
+  private final State myState;
 
-  public StateComponentInfo(PersistentStateComponent<T> component, State state) {
+  public StateComponentInfo(StateComponent component, State state) {
     myComponent = component;
     myState = state;
   }
 
-  
-  public PersistentStateComponent<T> getComponent() {
+  public StateComponent getComponent() {
     return myComponent;
   }
 
-  
+  /**
+   * @return the state type argument declared by the component's state interface
+   */
+  public Class<?> getStateClass() {
+    if (myComponent instanceof PersistentStateComponentAsync) {
+      return ComponentSerializationUtil.getStateClass(myComponent.getClass(), PersistentStateComponentAsync.class);
+    }
+    return ComponentSerializationUtil.getStateClass(myComponent.getClass(), PersistentStateComponent.class);
+  }
+
+  public boolean isAsync() {
+    return myComponent instanceof PersistentStateComponentAsync;
+  }
+
+  /**
+   * Runs the synchronous post load callback. Asynchronous components expose it as a coroutine through
+   * {@link PersistentStateComponentAsync#afterLoad(boolean)} instead, so this is a no-op for them.
+   */
+  public void afterLoad(boolean first) {
+    if (myComponent instanceof PersistentStateComponent) {
+      ((PersistentStateComponent<?>)myComponent).afterLoad(first);
+    }
+  }
+
   public String getName() {
     return myState.name();
   }
 
-  
   public State getState() {
     return myState;
   }
 
   @Override
-  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object obj) {
-    return obj instanceof StateComponentInfo && ((StateComponentInfo)obj).getComponent().equals(((StateComponentInfo)obj).getComponent());
+    return obj instanceof StateComponentInfo other && other.myComponent.equals(myComponent);
+  }
+
+  @Override
+  public int hashCode() {
+    return myComponent.hashCode();
   }
 }

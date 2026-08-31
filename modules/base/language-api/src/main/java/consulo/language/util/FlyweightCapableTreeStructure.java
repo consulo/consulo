@@ -24,19 +24,16 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public interface FlyweightCapableTreeStructure<T> {
-  
   T getRoot();
 
   @Nullable T getParent(T node);
 
-  
   T prepareForGetChildren(T node);
 
   int getChildren(T parent, SimpleReference<T[]> into);
 
   void disposeChildren(T[] nodes, int count);
 
-  
   CharSequence toString(T node);
 
   int getStartOffset(T node);

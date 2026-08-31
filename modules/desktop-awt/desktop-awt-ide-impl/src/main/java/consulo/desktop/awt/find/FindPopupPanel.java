@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.find;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.Application;
@@ -28,9 +29,9 @@ import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.impl.*;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
+import consulo.ui.ex.awt.ComponentValidator;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
@@ -93,7 +94,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -271,7 +271,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 .subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
                     @Override
                     public void projectClosed(Project project, UIAccess uiAccess) {
-                        closeImmediately();
+                        uiAccess.giveAndWaitIfNeed(() -> closeImmediately());
                     }
                 });
             Disposer.register(myDialog.getDisposable(), myDisposable);
@@ -1586,12 +1586,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     @Override
-    
     public String getStringToFind() {
         return mySearchComponent.getText();
     }
 
-    
     private String getStringToReplace() {
         return myReplaceComponent.getText();
     }
@@ -1758,7 +1756,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
     }
 
-    private class MyShowFilterPopupAction extends DefaultActionGroup implements DumbAware {
+    private class MyShowFilterPopupAction extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
         private final Image myPrimaryImage;
 
         MyShowFilterPopupAction() {
@@ -1785,8 +1783,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
-
             if (!FindSearchContext.ANY.equals(mySelectedContext)) {
                 e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));
             }
@@ -1930,7 +1926,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
     }
 
-    private class MyEnterAction extends DumbAwareAction {
+    private class MyEnterAction extends LegacyDumbAwareAction {
         private final boolean myEnterAsOK;
 
         private MyEnterAction(boolean enterAsOK) {

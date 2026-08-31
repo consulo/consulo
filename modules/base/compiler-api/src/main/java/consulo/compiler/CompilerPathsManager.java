@@ -22,12 +22,12 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -51,16 +51,12 @@ public class CompilerPathsManager {
         myProject = project;
     }
 
-    public @Nullable VirtualFile getCompilerOutput() {
-        return CompilerConfiguration.getInstance(myProject).getCompilerOutput();
+    public @Nullable Path getCompilerOutputPath() {
+        return CompilerConfiguration.getInstance(myProject).getCompilerOutputPath();
     }
 
     public @Nullable String getCompilerOutputUrl() {
         return CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
-    }
-
-    public VirtualFilePointer getCompilerOutputPointer() {
-        return CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
     }
 
     public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
@@ -95,12 +91,7 @@ public class CompilerPathsManager {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
     }
 
-    public @Nullable VirtualFile getCompilerOutput(Module module, ContentFolderTypeProvider contentFolderType) {
-        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
-    }
-
-    
-    public VirtualFilePointer getCompilerOutputPointer(Module module, ContentFolderTypeProvider contentFolderType) {
-        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPointer(contentFolderType);
+    public @Nullable Path getCompilerOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
+        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPath(contentFolderType);
     }
 }

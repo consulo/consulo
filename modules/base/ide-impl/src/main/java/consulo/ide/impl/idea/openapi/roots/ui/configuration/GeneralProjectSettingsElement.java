@@ -25,7 +25,7 @@ import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.util.collection.Chunk;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.StringUtil;
 
 import java.util.*;
@@ -90,7 +90,7 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
     }
   }
 
-  private static AsyncResult<Void> navigateToModules(Project project) {
+  private static CompletableFuture<?> navigateToModules(Project project) {
     return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
       projectStructureSelector.select(null, null, true);
     });

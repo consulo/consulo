@@ -39,13 +39,11 @@ public interface OccurenceNavigator {
       return null;
     }
 
-    
     @Override
     public String getNextOccurenceActionName() {
       return "";
     }
 
-    
     @Override
     public String getPreviousOccurenceActionName() {
       return "";
@@ -53,34 +51,34 @@ public interface OccurenceNavigator {
   };
 
   class OccurenceInfo {
-    private final Navigatable myNavigateable;
-    private final int myOccurenceNumber;
-    private final int myOccurencesCount;
+    private final Navigatable myNavigatable;
+    private final int myOccurrenceNumber;
+    private final int myOccurrencesCount;
 
-    public OccurenceInfo(Navigatable navigateable, int occurenceNumber, int occurencesCount) {
-      myNavigateable = navigateable;
-      myOccurenceNumber = occurenceNumber;
-      myOccurencesCount = occurencesCount;
+    public OccurenceInfo(Navigatable navigatable, int occurrenceNumber, int occurrencesCount) {
+      myNavigatable = navigatable;
+      myOccurrenceNumber = occurrenceNumber;
+      myOccurrencesCount = occurrencesCount;
     }
 
-    private OccurenceInfo(int occurenceNumber, int occurencesCount) {
-      this(null, occurenceNumber, occurencesCount);
+    private OccurenceInfo(int occurrenceNumber, int occurrencesCount) {
+      this(null, occurrenceNumber, occurrencesCount);
     }
 
-    public static OccurenceInfo position(int occurenceNumber, int occurencesCount) {
-      return new OccurenceInfo(occurenceNumber, occurencesCount);
+    public static OccurenceInfo position(int occurrenceNumber, int occurrencesCount) {
+      return new OccurenceInfo(occurrenceNumber, occurrencesCount);
     }
 
     public Navigatable getNavigateable() {
-      return myNavigateable;
+      return myNavigatable;
     }
 
     public int getOccurenceNumber() {
-      return myOccurenceNumber;
+      return myOccurrenceNumber;
     }
 
     public int getOccurencesCount() {
-      return myOccurencesCount;
+      return myOccurrencesCount;
     }
   }
 

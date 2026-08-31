@@ -20,7 +20,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -215,7 +215,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
     private LayoutData recomputeBounds(boolean setBounds, Dimension toFitWith, boolean noDrop) {
         LayoutData data = new LayoutData();
-        int horizontaloffset = isBottom() ? getHeight() : getHeight() - 2;
+        int horizontaloffset = getHeight() - 2;
 
         data.eachY = 0;
         data.size = new Dimension();
@@ -226,8 +226,13 @@ final class DesktopStripePanelImpl extends JPanel {
             data.eachX = horizontaloffset - 1;
             data.eachY = 1;
         }
+        else if (data.horizontal) {
+            data.eachX = 0;
+        }
         else {
             data.eachX = 0;
+            data.eachY = JBUI.scale(3);
+            data.size.height = data.eachY;
         }
 
         data.fitSize = toFitWith != null ? toFitWith : new Dimension();
@@ -249,7 +254,7 @@ final class DesktopStripePanelImpl extends JPanel {
         }
 
         int gap = 0;
-        if (toFitWith != null) {
+        if (toFitWith != null && !isBottom()) {
             LayoutData layoutData = recomputeBounds(false, null, true);
             if (data.horizontal) {
                 gap = toFitWith.width - horizontaloffset - layoutData.size.width - data.eachX;
@@ -497,6 +502,23 @@ final class DesktopStripePanelImpl extends JPanel {
         for (DesktopStripeButton button : myButtons) {
             button.updatePresentation();
         }
+
+        SwingUtilities.invokeLater(() -> {
+            for (DesktopStripeButton button : myButtons) {
+                button.invalidate();
+            }
+
+            myPrefSize = null;
+            myLastLayoutData = null;
+            revalidate();
+            repaint();
+
+            Container parent = getParent();
+            if (parent != null) {
+                parent.revalidate();
+                parent.repaint();
+            }
+        });
     }
 
     public boolean containsScreen(Rectangle screenRec) {

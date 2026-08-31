@@ -27,14 +27,9 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class BinariesOrderRootType extends OrderRootType {
-  private static final Supplier<BinariesOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
+    public static final String ID = "binaries";
 
-  @Deprecated
-  public static BinariesOrderRootType getInstance() {
-    return INSTANCE.get();
-  }
-
-  public BinariesOrderRootType() {
-    super("binaries");
-  }
+    public BinariesOrderRootType() {
+        super(ID);
+    }
 }

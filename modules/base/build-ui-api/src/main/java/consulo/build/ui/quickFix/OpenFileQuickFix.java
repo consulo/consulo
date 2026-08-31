@@ -15,7 +15,7 @@
  */
 package consulo.build.ui.quickFix;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.build.ui.issue.BuildIssueQuickFix;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -36,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 17/01/2021
+ * @since 2021-01-17
  */
 public class OpenFileQuickFix implements BuildIssueQuickFix {
     private final Path myPath;
@@ -55,7 +55,7 @@ public class OpenFileQuickFix implements BuildIssueQuickFix {
     @Override
     public CompletableFuture<?> runQuickFix(Project project, DataProvider dataProvider) {
         CompletableFuture<Object> future = new CompletableFuture<>();
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             try {
                 showFile(project, myPath, mySearch);
                 future.complete(null);
@@ -68,12 +68,13 @@ public class OpenFileQuickFix implements BuildIssueQuickFix {
     }
 
     public static void showFile(Project project, Path path, String search) {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             VirtualFile file = VirtualFileUtil.findFileByIoFile(path.toFile(), false);
             if (file == null) {
                 return;
             }
-            Editor editor = FileEditorManager.getInstance(project).openTextEditor(OpenFileDescriptorFactory.getInstance(project).newBuilder(file).build(), false);
+            Editor editor = FileEditorManager.getInstance(project)
+                .openTextEditor(OpenFileDescriptorFactory.getInstance(project).newBuilder(file).build(), false);
             if (search == null || editor == null) {
                 return;
             }

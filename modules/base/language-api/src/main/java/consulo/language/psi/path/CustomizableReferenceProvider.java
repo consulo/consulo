@@ -37,6 +37,7 @@ public interface CustomizableReferenceProvider {
     @Override
     public String toString() { return myOptionDescription; }
 
+    @SuppressWarnings("unchecked")
     public @Nullable T getValue(@Nullable Map<CustomizationKey,Object> options) {
       return options == null ? null : (T) options.get(this);
     }

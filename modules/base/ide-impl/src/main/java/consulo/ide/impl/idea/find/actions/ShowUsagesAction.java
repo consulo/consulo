@@ -27,7 +27,8 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
@@ -45,7 +46,7 @@ import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.ModelDiff;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
@@ -71,6 +72,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -94,7 +96,6 @@ import consulo.usage.internal.NullUsage;
 import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
@@ -118,7 +119,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 @ActionImpl(id = "ShowUsages")
-public class ShowUsagesAction extends AnAction implements PopupAction {
+public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
     public static final String ID = "ShowUsages";
 
     public static int getUsagesPageSize() {
@@ -257,14 +258,20 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         HintManager.getInstance().hideHints(HintManager.HIDE_BY_ANY_KEY, false, false);
     }
 
+    /**
+     * The position comes in platform terms and turns into awt ones here, at the door of the awt popup - a
+     * frontend's own relative point walks through unchanged.
+     */
     @RequiredUIAccess
-    public void startFindUsages(PsiElement element, RelativePoint popupPosition, Editor editor, int maxUsages) {
+    public void startFindUsages(PsiElement element, RelativePoint2D position, Editor editor, int maxUsages) {
         Project project = element.getProject();
         FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(project)).getFindUsagesManager();
         FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
         if (handler == null) {
             return;
         }
+
+        RelativePoint popupPosition = RelativePoint.from(position);
 
         DataContext context = DataManager.getInstance().getDataContext();
         if (myShowSettingsDialogBefore) {
@@ -1341,7 +1348,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return newFileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
     }
 
-    private static class MyTable extends JBTable implements DataProvider {
+    private static class MyTable extends JBTable implements UiDataProvider {
         private static final int MARGIN = 2;
 
         public MyTable() {
@@ -1355,18 +1362,15 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
 
         @Override
-        @RequiredReadAction
-        public Object getData(Key<?> dataId) {
-            if (PsiElement.KEY == dataId) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(PsiElement.KEY, () -> {
                 int[] selected = getSelectedRows();
                 if (selected.length == 1) {
                     return getPsiElementForHint(getValueAt(selected[0], 0));
                 }
-            }
-            else if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
-                return PopupUtil.getPopupContainerFor(this);
-            }
-            return null;
+                return null;
+            });
+            sink.set(LangDataKeys.POSITION_ADJUSTER_POPUP, PopupUtil.getPopupContainerFor(this));
         }
 
         @Override

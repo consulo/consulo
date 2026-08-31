@@ -40,8 +40,8 @@ public class ZoomingDelegate {
   public void paint(Graphics g) {
     if (myCachedImage != null && myMagnificationPoint != null && myMagnification != 0) {
       double scale = magnificationToScale(myMagnification);
-      int xoffset = (int)(myMagnificationPoint.x - myMagnificationPoint.x * scale);
-      int yoffset = (int)(myMagnificationPoint.y - myMagnificationPoint.y * scale);
+      int xOffset = (int)(myMagnificationPoint.x - myMagnificationPoint.x * scale);
+      int yOffset = (int)(myMagnificationPoint.y - myMagnificationPoint.y * scale);
 
       Rectangle clip = g.getClipBounds();
 
@@ -49,7 +49,7 @@ public class ZoomingDelegate {
       g.fillRect(clip.x, clip.y, clip.width, clip.height);
 
       Graphics2D translated = (Graphics2D)g.create();
-      translated.translate(xoffset, yoffset);
+      translated.translate(xOffset, yOffset);
       translated.scale(scale, scale);
 
       translated.drawImage(myCachedImage, 0, 0, null);
@@ -69,12 +69,12 @@ public class ZoomingDelegate {
 
         Point inContentScaled = magnificator.magnify(magnificationToScale(magnification), inContent);
 
-        int voffset = inContentScaled.y - myMagnificationPoint.y;
-        int hoffset = inContentScaled.x - myMagnificationPoint.x;
+        int vOffset = inContentScaled.y - myMagnificationPoint.y;
+        int hOffset = inContentScaled.x - myMagnificationPoint.x;
         myViewportComponent.repaint();
         myViewportComponent.validate();
 
-        scrollTo(voffset, hoffset);
+        scrollTo(vOffset, hOffset);
       }
     }
 
@@ -83,13 +83,13 @@ public class ZoomingDelegate {
     myCachedImage = null;
   }
 
-  protected void scrollTo(int voffset, int hoffset) {
+  protected void scrollTo(int vOffset, int hOffset) {
     JViewport viewport = (JViewport)myViewportComponent;
     JScrollPane pane = (JScrollPane)viewport.getParent();
     JScrollBar vsb = pane.getVerticalScrollBar();
-    vsb.setValue(voffset);
+    vsb.setValue(vOffset);
     JScrollBar hsb = pane.getHorizontalScrollBar();
-    hsb.setValue(hoffset);
+    hsb.setValue(hOffset);
   }
   
   protected Point convertToContentCoordinates(Point point) {

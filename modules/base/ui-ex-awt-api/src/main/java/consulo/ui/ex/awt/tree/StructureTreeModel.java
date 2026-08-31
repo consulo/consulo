@@ -29,7 +29,12 @@ import static java.util.Collections.*;
 
 /**
  * @author Sergey.Malenkov
+ * @deprecated build the tree on {@link consulo.ui.Tree}, which is free of awt and so is shown by every
+ * frontend, and hand it a {@link consulo.ui.TreeExecutor}. A swing tree which cannot move yet has
+ * {@code consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel}, the same model over {@code TreeExecutor}
+ * and without the {@link InvokerSupplier} hook a tree used to read its executor from.
  */
+@Deprecated
 public class StructureTreeModel<Structure extends AbstractTreeStructure> extends AbstractTreeModel implements Disposable, InvokerSupplier, ChildrenProvider<TreeNode> {
 
   private static final TreePath ROOT_INVALIDATED = new TreePath(new DefaultMutableTreeNode());

@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.SuitableFontProvider;
 import jakarta.inject.Singleton;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 
@@ -30,7 +30,7 @@ import java.awt.*;
 @ServiceImpl
 public class SuitableFontProviderImpl implements SuitableFontProvider {
   @Override
-  public Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, String defaultFontFamily) {
+  public Font getFontAbleToDisplay(char c, int size, @AWTConstants.FontStyle int style, String defaultFontFamily) {
     return ComplementaryFontsRegistry.getFontAbleToDisplay(c, size, style, defaultFontFamily, null).getFont();
   }
 }

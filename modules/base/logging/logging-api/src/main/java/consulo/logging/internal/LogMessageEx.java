@@ -31,15 +31,15 @@ import java.util.*;
 public class LogMessageEx extends LogMessage {
     private final IdeaLoggingEvent myEvent;
     private final String myTitle;
-    private final String myNotificationText;
-    private List<Attachment> myAttachments = null;
+    private final @Nullable String myNotificationText;
+    private @Nullable List<Attachment> myAttachments = null;
 
     /**
      * @param aEvent
      * @param title            text to show in Event Log tool window entry (it comes before 'more')
      * @param notificationText text to show in the error balloon that is popped up automatically
      */
-    public LogMessageEx(IdeaLoggingEvent aEvent, String title, String notificationText) {
+    public LogMessageEx(IdeaLoggingEvent aEvent, String title, @Nullable String notificationText) {
         super(aEvent);
         myEvent = aEvent;
         myTitle = title;
@@ -49,7 +49,7 @@ public class LogMessageEx extends LogMessage {
     /**
      * @return text to show in the error balloon that is popped up automatically
      */
-    public String getNotificationText() {
+    public @Nullable String getNotificationText() {
         return myNotificationText;
     }
 
@@ -97,11 +97,13 @@ public class LogMessageEx extends LogMessage {
      * @param attachments      attachments that will be suggested to include to the report
      * @return
      */
-    public static IdeaLoggingEvent createEvent(final String userMessage,
-                                               final String details,
-                                               final @Nullable String title,
-                                               final @Nullable String notificationText,
-                                               final Collection<Attachment> attachments) {
+    public static IdeaLoggingEvent createEvent(
+        final String userMessage,
+        final String details,
+        final @Nullable String title,
+        final @Nullable String notificationText,
+        final Collection<Attachment> attachments
+    ) {
         final Throwable throwable = new Throwable() {
             @Override
             public void printStackTrace(PrintWriter s) {

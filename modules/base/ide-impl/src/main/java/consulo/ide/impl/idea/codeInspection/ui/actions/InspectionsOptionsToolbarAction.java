@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -37,7 +38,7 @@ import java.util.Set;
  * @author anna
  * @since 2006-01-11
  */
-public class InspectionsOptionsToolbarAction extends AnAction {
+public class InspectionsOptionsToolbarAction extends LegacyAnAction {
     private final InspectionResultsView myView;
 
     public InspectionsOptionsToolbarAction(InspectionResultsView view) {
@@ -104,7 +105,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
         result.add(new DisableInspectionAction(key));
 
-        result.add(new AnAction(InspectionLocalize.runInspectionOnFileIntentionText()) {
+        result.add(new LegacyAnAction(InspectionLocalize.runInspectionOnFileIntentionText()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

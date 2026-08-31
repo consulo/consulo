@@ -40,46 +40,59 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<Language> implements ProjectConfigurable {
-  @Inject
-  public TemplateDataLanguageConfigurable(Project project, TemplateDataLanguageMappings templateDataLanguageMappings) {
-    super(project, templateDataLanguageMappings);
-  }
+    @Inject
+    public TemplateDataLanguageConfigurable(Project project, TemplateDataLanguageMappings templateDataLanguageMappings) {
+        super(project, templateDataLanguageMappings);
+    }
 
-  @Override
-  public String getId() {
-    return "template.data.language.configurable";
-  }
+    @Override
+    public String getId() {
+        return "template.data.language.configurable";
+    }
 
-  @Override
-  public @Nullable String getParentId() {
-    return StandardConfigurableIds.EDITOR_GROUP;
-  }
+    @Override
+    public @Nullable String getParentId() {
+        return StandardConfigurableIds.EDITOR_GROUP;
+    }
 
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LanguageLocalize.templateDataLanguageConfigurable();
-  }
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LanguageLocalize.templateDataLanguageConfigurable();
+    }
 
-  @Override
-  protected <S> Object getParameter(Key<S> key) {
-    if (key == DESCRIPTION) return LanguageLocalize.dialogTemplateDataLanguageCaption(Application.get().getName()).get();
-    if (key == MAPPING_TITLE) return LanguageLocalize.templateDataLanguageConfigurableTreeTableTitle().get();
-    if (key == OVERRIDE_QUESTION) return LanguageLocalize.templateDataLanguageOverrideWarningText().get();
-    if (key == OVERRIDE_TITLE) return LanguageLocalize.templateDataLanguageOverrideWarningTitle().get();
-    return null;
-  }
+    @Override
+    public LocalizeValue getDescription() {
+        return LanguageLocalize.dialogTemplateDataLanguageCaption(Application.get().getName());
+    }
 
-  @Override
-  protected void renderValue(@Nullable Object target, Language language, ColoredTextContainer renderer) {
-    renderer.append(language.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
-  }
+    @Override
+    public LocalizeValue getMappingTitle() {
+        return LanguageLocalize.templateDataLanguageConfigurableTreeTableTitle();
+    }
 
-  @Override
-  protected void renderDefaultValue(Object target, ColoredTextContainer renderer) {
-    Language language = TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName((VirtualFile)target);
-    if (language == null) return;
-    renderer.append(language.getDisplayName(), SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
-    renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
-  }
+    @Override
+    public LocalizeValue getOverrideQuestion() {
+        return LanguageLocalize.templateDataLanguageOverrideWarningText();
+    }
+
+    @Override
+    public LocalizeValue getOverrideTitle() {
+        return LanguageLocalize.templateDataLanguageOverrideWarningTitle();
+    }
+
+    @Override
+    protected void renderValue(@Nullable Object target, Language language, ColoredTextContainer renderer) {
+        renderer.append(language.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
+    }
+
+    @Override
+    protected void renderDefaultValue(Object target, ColoredTextContainer renderer) {
+        Language language = TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName((VirtualFile) target);
+        if (language == null) {
+            return;
+        }
+        renderer.append(language.getDisplayName(), SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
+        renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
+    }
 }

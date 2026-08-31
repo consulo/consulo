@@ -246,7 +246,7 @@ public final class ProgressRunner<R> {
     // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
     private boolean checkIfForceDirectExecNeeded() {
         Application application = ApplicationManager.getApplication();
-        if (isSync && UIAccess.isUIThread() && !application.isWriteThread() && !application.isUnifiedApplication()) {
+        if (isSync && UIAccess.isUIThread() && !application.isDispatchThread() && !application.isUnifiedApplication()) {
             throw new IllegalStateException("Running sync tasks on pure EDT (w/o IW lock) is dangerous for several reasons.");
         }
         if (!isSync && isModal && UIAccess.isUIThread()) {
@@ -320,11 +320,11 @@ public final class ProgressRunner<R> {
             };
             // If a progress indicator has not been calculated yet, grabbing IW lock might lead to deadlock, as progress might need it for init
             progressFuture = progressFuture.thenApplyAsync(modalityRunnable, r -> {
-                if (ApplicationManager.getApplication().isWriteThread()) {
+                if (ApplicationManager.getApplication().isDispatchThread()) {
                     r.run();
                 }
                 else {
-                    ApplicationManager.getApplication().invokeLaterOnWriteThread(r);
+                    ApplicationManager.getApplication().invokeLater(r);
                 }
             });
         }
@@ -334,11 +334,11 @@ public final class ProgressRunner<R> {
         if (isModal) {
             CompletableFuture<Void> modalityExitFuture = resultFuture.handle((r, throwable) -> r) // ignore result computation exception
                 .thenAcceptBoth(progressFuture, (r, progressIndicator) -> {
-                    if (ApplicationManager.getApplication().isWriteThread()) {
+                    if (ApplicationManager.getApplication().isDispatchThread()) {
                         LaterInvocator.leaveModal(progressIndicator);
                     }
                     else {
-                        ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState) progressIndicator.getModalityState());
+                        ApplicationManager.getApplication().invokeLater(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState) progressIndicator.getModalityState());
                     }
                 });
 

@@ -15,9 +15,8 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.ui.event.ComponentEvent;
 import org.jspecify.annotations.Nullable;
-
-import java.awt.event.MouseEvent;
 
 /**
  * Adds support for author code lenses to editor.
@@ -42,7 +41,7 @@ public interface VcsCodeVisionLanguageContext extends LanguageExtension {
     /**
      * Called when the user clicks on the code-author lens for the given element.
      */
-    default void handleClick(MouseEvent mouseEvent, Editor editor, PsiElement element) {
+    default void handleClick(ComponentEvent<?> event, Editor editor, PsiElement element) {
     }
 
     /**

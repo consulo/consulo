@@ -81,7 +81,7 @@ public abstract class ReorderableListController<T> {
     }
 
     public void addMoveUpAction() {
-        addAction(new AnAction(UILocalize.moveUpActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMoveup()) {
+        addAction(new LegacyAnAction(UILocalize.moveUpActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMoveup()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
@@ -96,7 +96,7 @@ public abstract class ReorderableListController<T> {
     }
 
     public void addMoveDownAction() {
-        addAction(new AnAction(UILocalize.moveDownActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMovedown()) {
+        addAction(new LegacyAnAction(UILocalize.moveDownActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMovedown()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
@@ -175,7 +175,7 @@ public abstract class ReorderableListController<T> {
             myShowText = showText;
         }
 
-        protected static class BaseAction<V> extends DumbAwareAction {
+        protected static class BaseAction<V> extends LegacyDumbAwareAction {
             private final ActionBehaviour<V> myBehaviour;
             private final CustomActionDescription<V> myCustomActionDescription;
 

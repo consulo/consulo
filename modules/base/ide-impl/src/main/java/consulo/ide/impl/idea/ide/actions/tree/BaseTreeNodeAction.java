@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.actions.tree;
 
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 
 import javax.swing.*;
 
-abstract class BaseTreeNodeAction extends AnAction implements DumbAware {
+abstract class BaseTreeNodeAction extends LegacyDumbAwareAction {
     protected BaseTreeNodeAction(LocalizeValue text) {
         super(text);
         setEnabledInModalContext(true);

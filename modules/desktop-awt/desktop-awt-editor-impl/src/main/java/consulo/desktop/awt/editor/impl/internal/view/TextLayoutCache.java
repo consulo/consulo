@@ -1,0 +1,212 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.desktop.awt.editor.impl.internal.view;
+
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.internal.EditorDocumentPriorities;
+import consulo.document.internal.PrioritizedDocumentListener;
+import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.codeEditor.internal.CodeEditorAssertion;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
+
+/**
+ * Editor text layout storage. Layout is stored on a per-logical-line basis, 
+ * it's created lazily (when requested) and invalidated on document changes or when explicitly requested.
+ *
+ * @see LineLayout
+ */
+class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
+  private static final Logger LOG = Logger.getInstance(TextLayoutCache.class);
+
+  private static final int MAX_CHUNKS_IN_ACTIVE_EDITOR = 1000;
+  private static final int MAX_CHUNKS_IN_INACTIVE_EDITOR = 10;
+
+  private final EditorViewImpl myView;
+  private final Document myDocument;
+  private final LineLayout myBidiNotRequiredMarker;
+  private ArrayList<LineLayout> myLines = new ArrayList<>();
+  private int myDocumentChangeOldEndLine;
+
+  private final ObjectLinkedOpenHashSet<LineLayout.Chunk> myLaidOutChunks =
+          new ObjectLinkedOpenHashSet<>(MAX_CHUNKS_IN_ACTIVE_EDITOR);
+  private final Consumer<LineLayout.Chunk> myRemoveLaidOutChunk = myLaidOutChunks::remove;
+
+  TextLayoutCache(EditorViewImpl view) {
+    myView = view;
+    myDocument = view.getEditor().getDocument();
+    myDocument.addDocumentListener(this, this);
+    myBidiNotRequiredMarker = LineLayout.create(view, "", Font.PLAIN);
+    Disposer.register(this, new UiNotifyConnector(view.getEditor().getContentComponent(), new Activatable.Adapter() {
+      @Override
+      public void hideNotify() {
+        trimChunkCache();
+      }
+    }));
+  }
+
+  @Override
+  public int getPriority() {
+    return EditorDocumentPriorities.EDITOR_TEXT_LAYOUT_CACHE;
+  }
+
+  @Override
+  public void beforeDocumentChange(DocumentEvent event) {
+    myDocumentChangeOldEndLine = getAdjustedLineNumber(event.getOffset() + event.getOldLength());
+  }
+
+  @Override
+  public void documentChanged(DocumentEvent event) {
+    int startLine = myDocument.getLineNumber(event.getOffset());
+    int newEndLine = getAdjustedLineNumber(event.getOffset() + event.getNewLength());
+    invalidateLines(startLine, myDocumentChangeOldEndLine, newEndLine, true,
+                    LineLayout.isBidiLayoutRequired(event.getNewFragment()));
+
+    if (myLines.size() != myDocument.getLineCount()) {
+      LOG.error("Error updating text layout cache after " + event,
+                AttachmentFactory.get().create("editorState.txt", myView.getEditor().dumpState()));
+      resetToDocumentSize(true);
+    }
+  }
+
+  @Override
+  public void dispose() {
+    myLines = null;
+    synchronized (myLaidOutChunks) {
+      myLaidOutChunks.clear();
+    }
+  }
+
+  private int getAdjustedLineNumber(int offset) {
+    return myDocument.getTextLength() == 0 ? -1 : myDocument.getLineNumber(offset);
+  }
+
+  void resetToDocumentSize(boolean documentChangedWithoutNotification) {
+    checkDisposed();
+    invalidateLines(0, myLines.size() - 1, myDocument.getLineCount() - 1,
+                    documentChangedWithoutNotification, documentChangedWithoutNotification);
+    if (myLines.size() != myDocument.getLineCount()) {
+      LOG.error("Error resetting text layout cache", AttachmentFactory.get().create("editorState.txt", myView.getEditor().dumpState()));
+    }
+  }
+
+  void invalidateLines(int startLine, int endLine) {
+    invalidateLines(startLine, endLine, endLine, false, false);
+  }
+
+  private void invalidateLines(int startLine, int oldEndLine, int newEndLine, boolean textChanged, boolean bidiRequiredForNewText) {
+    checkDisposed();
+
+    if (textChanged) {
+      LineLayout firstOldLine = startLine >= 0 && startLine < myLines.size() ? myLines.get(startLine) : null;
+      LineLayout lastOldLine = oldEndLine >= 0 && oldEndLine < myLines.size() ? myLines.get(oldEndLine) : null;
+      if (firstOldLine == null || lastOldLine == null || !firstOldLine.isLtr() || !lastOldLine.isLtr()) bidiRequiredForNewText = true;
+    }
+
+    int endLine = Math.min(oldEndLine, newEndLine);
+    for (int line = startLine; line <= endLine; line++) {
+      LineLayout lineLayout = myLines.get(line);
+      if (lineLayout != null) {
+        removeChunksFromCache(lineLayout);
+        myLines.set(line, (textChanged && bidiRequiredForNewText) || !lineLayout.isLtr() ? null : myBidiNotRequiredMarker);
+      }
+    }
+    if (oldEndLine < newEndLine) {
+      myLines.addAll(oldEndLine + 1, Collections.nCopies(newEndLine - oldEndLine, null));
+    } else if (oldEndLine > newEndLine) {
+      List<LineLayout> layouts = myLines.subList(newEndLine + 1, oldEndLine + 1);
+      for (LineLayout layout : layouts) {
+        if (layout != null) {
+          removeChunksFromCache(layout);
+        }
+      }
+      layouts.clear();
+    }
+  }
+
+  
+  LineLayout getLineLayout(int line) {
+    checkDisposed();
+    if (line >= myLines.size()) LOG.error("Unexpected cache state",
+                                          AttachmentFactory.get().create("editorState.txt", myView.getEditor().dumpState()));
+    LineLayout result = myLines.get(line);
+    if (result == null || result == myBidiNotRequiredMarker) {
+      result = LineLayout.create(myView, line, result == myBidiNotRequiredMarker);
+      myLines.set(line, result);
+    }
+    return result;
+  }
+
+  boolean hasCachedLayoutFor(int line) {
+    LineLayout layout = myLines.get(line);
+    return layout != null && layout != myBidiNotRequiredMarker;
+  }
+
+  private int getChunkCacheSizeLimit() {
+    return myView.getEditor().getContentComponent().isShowing() ? MAX_CHUNKS_IN_ACTIVE_EDITOR : MAX_CHUNKS_IN_INACTIVE_EDITOR;
+  }
+
+  @RequiredUIAccess
+  void onChunkAccess(LineLayout.Chunk chunk) {
+    CodeEditorAssertion.assertEditorThreading();
+    int limit = getChunkCacheSizeLimit();
+    synchronized (myLaidOutChunks) {
+      if (myLaidOutChunks.addAndMoveToFirst(chunk) && myLaidOutChunks.size() > limit) {
+        debug();
+        myLaidOutChunks.removeLast().clearCache();
+      }
+    }
+  }
+
+  private void removeChunksFromCache(LineLayout layout) {
+    CodeEditorAssertion.assertEditorThreading();
+    synchronized (myLaidOutChunks) {
+      layout.getChunksInLogicalOrder().forEach(myRemoveLaidOutChunk);
+    }
+  }
+
+  private void trimChunkCache() {
+    CodeEditorAssertion.assertEditorThreading();
+    int limit = getChunkCacheSizeLimit();
+    synchronized (myLaidOutChunks) {
+      while (myLaidOutChunks.size() > limit) {
+        debug();
+        myLaidOutChunks.removeLast().clearCache();
+      }
+    }
+  }
+
+  private void debug() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Clearing chunk for " + myView.getEditor().getVirtualFile());
+    }
+  }
+
+  private void checkDisposed() {
+    if (myLines == null) myView.getEditor().throwDisposalError("Editor is already disposed");
+  }
+}

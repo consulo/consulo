@@ -17,40 +17,45 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.Clipboard;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 
+import java.util.Collection;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2016-06-11
  */
-public interface UIAccess extends Executor {
+public interface UIAccess extends Executor, UserDataHolder {
     Key<UIAccess> KEY = Key.of(UIAccess.class);
 
     /**
-     * @return if current thread can access to ui write mode
+     * @return if current thread has access to UI write mode.
      */
     static boolean isUIThread() {
         return UIInternal.get()._UIAccess_isUIThread();
     }
 
-    @RequiredUIAccess
     @Deprecated
+    @RequiredUIAccess
     static UIAccess get() {
         return current();
     }
 
     /**
-     * If we inside ui thread, we can get ui access
+     * If we're inside UI thread, we can get UI access.
      *
-     * @return ui access - or throw exception
+     * @return ui access - or throw exception.
      */
     @RequiredUIAccess
     static UIAccess current() {
@@ -72,6 +77,24 @@ public interface UIAccess extends Executor {
         UIInternal.get().addModalityStateListener(listener, parentDisposable);
     }
 
+    /**
+     * Every ui the application is showing at the moment. A frontend which draws into a single window answers with
+     * the one access it has, the browser frontend with one per tab.
+     */
+    static Collection<UIAccess> listAll() {
+        return UIInternal.get()._UIAccess_all();
+    }
+
+    /**
+     * Whether more than one ui can be attached to the running application at the same time, as the browser
+     * frontend allows with its tabs. A frontend which says so must accept a project being moved between them.
+     */
+    static boolean supportsMultipleUI() {
+        return UIInternal.get()._UIAccess_supportsMultipleUI();
+    }
+
+    Clipboard getClipboard();
+
     @RequiredUIAccess
     default int getEventCount() {
         assertIsUIThread();
@@ -79,7 +102,7 @@ public interface UIAccess extends Executor {
     }
 
     /**
-     * Calling Runnable#run() will restore event count from initial method call
+     * Calling Runnable#run() will restore event count from initial method call.
      */
     @RequiredUIAccess
     default Runnable markEventCount() {
@@ -91,27 +114,25 @@ public interface UIAccess extends Executor {
     default boolean isValid() {
         return true;
     }
-    default AsyncResult<Void> give(@RequiredUIAccess Runnable runnable) {
-        return give(() -> {
-            runnable.run();
-            return null;
-        });
-    }
 
-    /**
-     * prefer {@link #giveAsync(Supplier)}
-     */
-    <T> AsyncResult<T> give(@RequiredUIAccess Supplier<T> supplier);
+    void give(@RequiredUIAccess Runnable runnable);
+
     default CompletableFuture<?> giveAsync(@RequiredUIAccess Runnable runnable) {
         return giveAsync(() -> {
             runnable.run();
             return null;
         });
     }
+
     <T> CompletableFuture<T> giveAsync(@RequiredUIAccess Supplier<T> supplier);
 
     default void giveAndWait(@RequiredUIAccess Runnable runnable) {
-        give(runnable).getResultSync();
+        try {
+            giveAsync(runnable).get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -151,5 +172,6 @@ public interface UIAccess extends Executor {
     default void execute(@RequiredUIAccess Runnable command) {
         give(command);
     }
+
     UIAccessScheduler getScheduler();
 }

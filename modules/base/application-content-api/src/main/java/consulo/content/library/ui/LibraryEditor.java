@@ -30,25 +30,25 @@ import java.util.Collection;
 public interface LibraryEditor {
   String getName();
 
-  String[] getUrls(OrderRootType rootType);
+  String[] getUrls(String rootType);
 
-  VirtualFile[] getFiles(OrderRootType rootType);
+  VirtualFile[] getFiles(String rootType);
 
   String[] getExcludedRootUrls();
 
   void setName(String name);
 
-  void addRoot(VirtualFile file, OrderRootType rootType);
+  void addRoot(VirtualFile file, String rootType);
 
-  void addRoot(String url, OrderRootType rootType);
+  void addRoot(String url, String rootType);
 
-  void addJarDirectory(VirtualFile file, boolean recursive, OrderRootType rootType);
+  void addJarDirectory(VirtualFile file, boolean recursive, String rootType);
 
-  void addJarDirectory(String url, boolean recursive, OrderRootType rootType);
+  void addJarDirectory(String url, boolean recursive, String rootType);
 
   void addExcludedRoot(String url);
 
-  void removeRoot(String url, OrderRootType rootType);
+  void removeRoot(String url, String rootType);
 
   void removeExcludedRoot(String url);
 
@@ -56,9 +56,9 @@ public interface LibraryEditor {
 
   boolean hasChanges();
 
-  boolean isJarDirectory(String url, OrderRootType rootType);
+  boolean isJarDirectory(String url, String rootType);
 
-  boolean isValid(String url, OrderRootType orderRootType);
+  boolean isValid(String url, String orderRootType);
 
   LibraryProperties getProperties();
 

@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ActionImpl(id = "GotoClass")
-public class GotoClassAction extends GotoActionBase implements DumbAware {
+public class GotoClassAction extends SearchEverywhereBaseAction implements DumbAware {
     public GotoClassAction() {
         //we need to change the template presentation to show the proper text for the action in Settings | Keymap
         super(
@@ -81,82 +81,6 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         }
     }
 
-    static void invokeGoToFile(Project project, AnActionEvent e) {
-        String actionTitle =
-            StringUtil.trimEnd(ObjectUtil.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
-        DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.goToClassDumbModeMessage(actionTitle));
-        AnAction action = ActionManager.getInstance().getAction(GotoFileAction.ID);
-        InputEvent event = ActionCommand.getInputEvent(GotoFileAction.ID);
-        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        ActionManager.getInstance().tryToExecute(action, event, component, e.getPlace(), true);
-    }
-
-    @Override
-    public void gotoActionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
-        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.class");
-
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-
-        GotoClassModel2 model = new GotoClassModel2(project);
-        String pluralKinds =
-            StringUtil.capitalize(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), StringUtil::pluralize, "/"));
-        LocalizeValue title = IdeLocalize.goToClassToolwindowTitle(pluralKinds);
-        showNavigationPopup(
-            e,
-            model,
-            new GotoActionCallback<Language>() {
-                @Override
-                protected ChooseByNameFilter<Language> createFilter(ChooseByNamePopup popup) {
-                    return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
-                }
-
-                @Override
-                @RequiredReadAction
-                public void elementChosen(ChooseByNamePopup popup, Object element) {
-                    handleSubMemberNavigation(popup, element);
-                }
-            },
-            title.get(),
-            true
-        );
-    }
-
-    @RequiredReadAction
-    static void handleSubMemberNavigation(ChooseByNamePopup popup, Object element) {
-        if (element instanceof PsiElement psiElement0 && psiElement0.isValid()) {
-            PsiElement psiElement = getElement(psiElement0, popup);
-            psiElement = psiElement.getNavigationElement();
-            VirtualFile file = PsiUtilCore.getVirtualFile(psiElement);
-
-            if (file != null && popup.getLinePosition() != -1) {
-                OpenFileDescriptorImpl descriptor =
-                    new OpenFileDescriptorImpl(psiElement.getProject(), file, popup.getLinePosition(), popup.getColumnPosition());
-                Navigatable n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
-                if (n.canNavigate()) {
-                    n.navigate(true);
-                    return;
-                }
-            }
-
-            if (file != null && popup.getMemberPattern() != null) {
-                PopupNavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
-                Navigatable member = findMember(popup.getMemberPattern(), popup.getTrimmedText(), psiElement, file);
-                if (member != null) {
-                    member.navigate(true);
-                }
-            }
-
-            PopupNavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
-        }
-        else {
-            EditSourceUtil.navigate(((NavigationItem) element), true, popup.isOpenInCurrentWindowRequested());
-        }
-    }
 
     @RequiredReadAction
     public static @Nullable Navigatable findMember(String memberPattern, String fullPattern, PsiElement psiElement, VirtualFile file) {
@@ -221,14 +145,6 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         return null;
     }
 
-    
-    private static PsiElement getElement(PsiElement element, ChooseByNamePopup popup) {
-        String path = popup.getPathToAnonymous();
-        if (path != null) {
-            return getElement(element, path);
-        }
-        return element;
-    }
 
     
     public static PsiElement getElement(PsiElement element, String path) {

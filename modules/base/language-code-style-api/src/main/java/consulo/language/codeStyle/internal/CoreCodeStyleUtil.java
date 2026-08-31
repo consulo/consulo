@@ -68,9 +68,9 @@ public class CoreCodeStyleUtil {
 
     @RequiredReadAction
     public static @Nullable PsiElement findElementInTreeWithFormatterEnabled(PsiFile file, int offset) {
-        PsiElement bottomost = file.findElementAt(offset);
-        if (bottomost != null && FormattingModelBuilder.forContext(bottomost) != null) {
-            return bottomost;
+        PsiElement bottommost = file.findElementAt(offset);
+        if (bottommost != null && FormattingModelBuilder.forContext(bottommost) != null) {
+            return bottommost;
         }
 
         Language fileLang = file.getLanguage();
@@ -78,7 +78,7 @@ public class CoreCodeStyleUtil {
             return file.getViewProvider().findElementAt(offset, fileLang);
         }
 
-        return bottomost;
+        return bottommost;
     }
 
     public static boolean isSequentialProcessingAllowed() {

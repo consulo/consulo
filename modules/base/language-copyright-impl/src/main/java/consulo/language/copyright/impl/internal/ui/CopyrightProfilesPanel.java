@@ -32,6 +32,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -169,7 +170,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
             }
         });
         result.add(new MyDeleteAction(forAll(Predicates.alwaysTrue())));
-        result.add(new AnAction(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
+        result.add(new LegacyAnAction(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
             {
                 registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
             }
@@ -189,7 +190,6 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
 
             @Override
             public void update(AnActionEvent event) {
-                super.update(event);
                 event.getPresentation().setEnabled(getSelectedObject() != null);
             }
         });

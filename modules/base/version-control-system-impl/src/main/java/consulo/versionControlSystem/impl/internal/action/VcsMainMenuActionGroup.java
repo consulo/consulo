@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
@@ -41,7 +42,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
         @ActionRef(type = VcsImportGroup.class)
     }
 )
-public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAware {
+public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public VcsMainMenuActionGroup() {
         super(VcsLocalize.groupVcsGroupsText(), false);
     }

@@ -15,10 +15,13 @@
  */
 package consulo.externalService.internal;
 
+import com.dslplatform.json.CompiledJson;
+
 /**
  * @author VISTALL
  * @since 2025-01-30
  */
+@CompiledJson
 public enum PlatformOrPluginUpdateResultType {
     PLATFORM_UPDATE,
     PLUGIN_UPDATE,

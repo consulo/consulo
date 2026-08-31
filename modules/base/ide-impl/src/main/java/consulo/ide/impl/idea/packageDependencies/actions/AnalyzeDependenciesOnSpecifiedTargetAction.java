@@ -20,8 +20,8 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.module.Module;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -31,7 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @author nik
  */
 @ActionImpl(id = "ShowDependenciesOnTarget")
-public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
+public class AnalyzeDependenciesOnSpecifiedTargetAction extends LegacyAnAction {
     public static final Key<GlobalSearchScope> TARGET_SCOPE_KEY = Key.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
 
     public AnalyzeDependenciesOnSpecifiedTargetAction() {

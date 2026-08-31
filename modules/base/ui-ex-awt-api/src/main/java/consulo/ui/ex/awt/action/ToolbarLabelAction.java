@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.action;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
@@ -12,7 +12,7 @@ import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 
-public abstract class ToolbarLabelAction extends DumbAwareAction implements CustomComponentAction {
+public abstract class ToolbarLabelAction extends LegacyDumbAwareAction implements CustomComponentAction {
     protected ToolbarLabelAction(LocalizeValue text) {
         super(text);
     }

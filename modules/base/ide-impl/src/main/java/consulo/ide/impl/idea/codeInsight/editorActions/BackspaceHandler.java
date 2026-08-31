@@ -50,9 +50,9 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
         super(true);
     }
 
-    @RequiredWriteAction
     @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredWriteAction
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (!handleBackspace(editor, caret, dataContext, false)) {
             myOriginalHandler.execute(editor, caret, dataContext);
         }
@@ -168,7 +168,6 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
         myOriginalHandler = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_BACKSPACE;

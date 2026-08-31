@@ -24,6 +24,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.action.EditorAction;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "CollapseRegion")
@@ -34,6 +35,7 @@ public class CollapseRegionAction extends EditorAction {
             ActionLocalize.actionCollapseregionDescription(),
             new BaseFoldingHandler() {
                 @Override
+                @RequiredUIAccess
                 public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
                     CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(editor.getProject());
                     foldingManager.updateFoldRegions(editor);

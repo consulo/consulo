@@ -22,7 +22,6 @@ import consulo.util.collection.Maps;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
@@ -45,7 +44,6 @@ public class AttributesFlyweight {
     private final int myHashCode;
     private final @Nullable ColorValue myForeground;
     private final @Nullable ColorValue myBackground;
-    @JdkConstants.FontStyle
     private final int myFontType;
     private final @Nullable ColorValue myEffectColor;
     private final @Nullable EffectType myEffectType;
@@ -56,7 +54,6 @@ public class AttributesFlyweight {
     private static class FlyweightKey implements Cloneable {
         private @Nullable ColorValue foreground = null;
         private @Nullable ColorValue background = null;
-        @JdkConstants.FontStyle
         private int fontType;
         private @Nullable ColorValue effectColor = null;
         private @Nullable EffectType effectType = null;
@@ -129,7 +126,7 @@ public class AttributesFlyweight {
     public static AttributesFlyweight create(
         @Nullable ColorValue foreground,
         @Nullable ColorValue background,
-        @JdkConstants.FontStyle int fontType,
+        int fontType,
         @Nullable ColorValue effectColor,
         @Nullable EffectType effectType,
         @Nullable ColorValue errorStripeColor
@@ -140,7 +137,7 @@ public class AttributesFlyweight {
     public static AttributesFlyweight create(
         @Nullable ColorValue foreground,
         @Nullable ColorValue background,
-        @JdkConstants.FontStyle int fontType,
+        int fontType,
         @Nullable ColorValue effectColor,
         @Nullable EffectType effectType,
         Map<EffectType, ColorValue> additionalEffects,
@@ -159,7 +156,7 @@ public class AttributesFlyweight {
     public static AttributesFlyweight createNoCache(
         @Nullable ColorValue foreground,
         @Nullable ColorValue background,
-        @JdkConstants.FontStyle int fontType,
+        int fontType,
         @Nullable ColorValue effectColor,
         @Nullable EffectType effectType,
         Map<EffectType, ? extends ColorValue> additionalEffects,
@@ -172,7 +169,7 @@ public class AttributesFlyweight {
     private static FlyweightKey createKey(
         @Nullable ColorValue foreground,
         @Nullable ColorValue background,
-        @JdkConstants.FontStyle int fontType,
+        int fontType,
         @Nullable ColorValue effectColor,
         @Nullable EffectType effectType,
         Map<EffectType, ? extends ColorValue> additionalEffects,
@@ -310,7 +307,6 @@ public class AttributesFlyweight {
         return myBackground;
     }
 
-    @JdkConstants.FontStyle
     public int getFontType() {
         return myFontType;
     }
@@ -378,7 +374,7 @@ public class AttributesFlyweight {
         );
     }
 
-    public AttributesFlyweight withFontType(@JdkConstants.FontStyle int fontType) {
+    public AttributesFlyweight withFontType(int fontType) {
         return fontType == myFontType ? this : create(
             myForeground,
             myBackground,

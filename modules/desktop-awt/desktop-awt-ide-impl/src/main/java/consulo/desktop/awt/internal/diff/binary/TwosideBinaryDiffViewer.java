@@ -196,7 +196,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     // Actions
     //
 
-    private class MyAcceptSideAction extends DumbAwareAction {
+    private class MyAcceptSideAction extends LegacyDumbAwareAction {
         
         private final Side myBaseSide;
 

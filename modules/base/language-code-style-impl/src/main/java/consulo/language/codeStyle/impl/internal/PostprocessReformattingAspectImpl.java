@@ -157,7 +157,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     @RequiredUIAccess
     private void decrementPostponedCounter() {
         Application application = myProject.getApplication();
-        myProject.getApplication().assertIsWriteThread();
+        application.assertWriteAccessAllowed();
         if (--getContext().myPostponedCounter == 0) {
             if (application.isWriteAccessAllowed()) {
                 doPostponedFormatting();

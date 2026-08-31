@@ -1,0 +1,15 @@
+name: Source sync
+
+on:
+    push:
+        branches: [master]
+    workflow_dispatch: {}
+
+jobs:
+    sync:
+        if: ${{ github.repository_owner == 'consulo' }}
+        permissions:
+            contents: write
+            pull-requests: write
+        uses: consulo/shared-workflows/.github/workflows/source-sync.yml@master
+        secrets: inherit

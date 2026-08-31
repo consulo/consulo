@@ -15,7 +15,7 @@
  */
 package consulo.compiler;
 
-import consulo.virtualFileSystem.VirtualFile;
+import java.nio.file.Path;
 
 /**
  * This compiler is called right before the java sources compiler.
@@ -26,11 +26,11 @@ public interface JavaSourceTransformingCompiler extends Compiler {
      *
      * @param file an original file that is about to be compiled with java compiler
      * @return true if compiler would like to transform the file, false otherwise.
-     *         If true is returned, a copy of original file will be made and {@link #transform(CompileContext, VirtualFile, VirtualFile)}
+     *         If true is returned, a copy of original file will be made and {@link #transform(CompileContext, Path, Path)}
      *         method will be called on it. If transformation succeeded, the transformed copy will be passed to java compiler
      *         instead of original file.
      */
-    boolean isTransformable(VirtualFile file);
+    boolean isTransformable(Path file);
 
     /**
      * Transforms the specified file.
@@ -41,17 +41,7 @@ public interface JavaSourceTransformingCompiler extends Compiler {
      * @param originalFile an original file. Since the copy that is supposed to be modified is located outside the project,
      *                     it is not possible to use PSI for analysis. So the original file is provided. Note that it is passed
      *                     for reference purposes only. It MUST NOT be transformed or changed in any way.
-     *                     For example, it is possible to obtain a PsiFile for the original file:<br><br>
-     *                     <code>PsiJavaFile originalPsiJavaFile = (PsiJavaFile)PsiManager.getInstance(project).findFile(originalFile)</code>;
-     *                     <br><br>
-     *                     The obtained originalPsiJavaFile can be analysed, searched etc. For transforming the file by the means of PSI,
-     *                     there should be created a copy of the originalPsiJavaFile:<br><br>
-     *                     <code>PsiJavaFile psiFileCopy = (PsiJavaFile)originalPsiJavaFile.copy();</code><br><br>
-     *                     The psiFileCopy can then be transformed, and its text saved to the first "file" argument:<br><br>
-     *                     <code>String text = psiFileCopy.getText();</code><br><br>
-     *                     <p/>
-     *                     <b>Note that transforming files by the means of PSI may considerably slow down the overall make performance.</b>
      * @return true if transform succeeded, false otherwise.
      */
-    boolean transform(CompileContext context, VirtualFile file, VirtualFile originalFile);
+    boolean transform(CompileContext context, Path file, Path originalFile);
 }

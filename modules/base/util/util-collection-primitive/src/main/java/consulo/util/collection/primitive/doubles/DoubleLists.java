@@ -21,6 +21,7 @@ import consulo.util.collection.primitive.doubles.impl.list.DoubleArrayList;
  * @author VISTALL
  * @since 08/05/2021
  */
+@Deprecated
 public final class DoubleLists {
   public static DoubleList newArrayList() {
     return new DoubleArrayList();

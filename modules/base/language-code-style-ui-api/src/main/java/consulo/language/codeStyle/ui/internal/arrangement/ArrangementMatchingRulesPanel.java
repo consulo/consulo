@@ -16,7 +16,8 @@
 package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.application.ApplicationBundle;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.Language;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
@@ -25,8 +26,6 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.PopupHandler;
-import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +36,8 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 10/30/12 5:28 PM
  */
-public class ArrangementMatchingRulesPanel extends JPanel implements DataProvider {
+public class ArrangementMatchingRulesPanel extends JPanel implements UiDataProvider {
 
-  
   protected final ArrangementSectionRulesControl myControl;
 
   public ArrangementMatchingRulesPanel(Language language, ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
@@ -83,7 +81,6 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
     return new ArrangementSectionRulesControl(language, settingsManager, colorsProvider, callback);
   }
 
-  
   public List<ArrangementSectionRule> getSections() {
     return myControl.getSections();
   }
@@ -105,10 +102,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    if (ArrangementSectionRulesControl.KEY == dataId) {
-      return myControl;
-    }
-    return null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(ArrangementSectionRulesControl.KEY, myControl);
   }
 }

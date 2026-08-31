@@ -29,17 +29,21 @@ import consulo.ui.layout.event.FoldoutLayoutOpenedEvent;
  * @since 2020-05-29
  */
 public interface FoldoutLayout extends Layout<LayoutConstraint> {
-  static FoldoutLayout create(LocalizeValue titleValue, Component component) {
-    return create(titleValue, component, true);
-  }
-  static FoldoutLayout create(LocalizeValue titleValue, Component component, boolean state) {
-    return UIInternal.get()._Layouts_foldout(titleValue, component, state);
-  }
-  @RequiredUIAccess
-  FoldoutLayout setState(boolean showing);
-  @RequiredUIAccess
-  FoldoutLayout setTitle(LocalizeValue title);
-  default Disposable addOpenedListener(ComponentEventListener<FoldoutLayout, FoldoutLayoutOpenedEvent> stateListener) {
-      return addListener(FoldoutLayoutOpenedEvent.class, stateListener);
-  }
+    static FoldoutLayout create(LocalizeValue titleValue, Component component) {
+        return create(titleValue, component, true);
+    }
+
+    static FoldoutLayout create(LocalizeValue titleValue, Component component, boolean state) {
+        return UIInternal.get()._Layouts_foldout(titleValue, component, state);
+    }
+
+    @RequiredUIAccess
+    FoldoutLayout setState(boolean showing);
+
+    @RequiredUIAccess
+    FoldoutLayout setTitle(LocalizeValue title);
+
+    default Disposable addOpenedListener(ComponentEventListener<FoldoutLayout, FoldoutLayoutOpenedEvent> stateListener) {
+        return addListener(FoldoutLayoutOpenedEvent.class, stateListener);
+    }
 }

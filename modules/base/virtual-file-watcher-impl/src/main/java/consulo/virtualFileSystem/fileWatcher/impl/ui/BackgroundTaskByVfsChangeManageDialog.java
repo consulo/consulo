@@ -37,10 +37,10 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 30.04.14
+ * @since 2014-04-30
  */
 public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
-  private final CheckBoxList<BackgroundTaskByVfsChangeTask> myBoxlist;
+  private final CheckBoxList<BackgroundTaskByVfsChangeTask> myCheckBoxList;
   private final Project myProject;
   private final VirtualFile myVirtualFile;
   private JPanel myPanel = new JPanel(new BorderLayout());
@@ -58,26 +58,26 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     myVfsChangePanel.build();
     myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
 
-    myBoxlist = new CheckBoxList<>();
-    myBoxlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    myBoxlist.setCheckBoxListListener((index, value) -> {
-      BackgroundTaskByVfsChangeTask task = myBoxlist.getItemAt(index);
+    myCheckBoxList = new CheckBoxList<>();
+    myCheckBoxList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    myCheckBoxList.setCheckBoxListListener((index, value) -> {
+      BackgroundTaskByVfsChangeTask task = myCheckBoxList.getItemAt(index);
       if (task == null) {
         return;
       }
       task.setEnabled(value);
     });
-    myBoxlist.addListSelectionListener(e -> {
+    myCheckBoxList.addListSelectionListener(e -> {
       if (myPrevTask != null) {
         myVfsChangePanel.apply(myPrevTask.getParameters());
         myPrevTask = null;
       }
 
-      if (myBoxlist.getItemsCount() == 0 || myBoxlist.getSelectedIndex() == -1) {
+      if (myCheckBoxList.getItemsCount() == 0 || myCheckBoxList.getSelectedIndex() == -1) {
         myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
         return;
       }
-      BackgroundTaskByVfsChangeTask task = myBoxlist.getItemAt(myBoxlist.getSelectedIndex());
+      BackgroundTaskByVfsChangeTask task = myCheckBoxList.getItemAt(myCheckBoxList.getSelectedIndex());
       if (task == null) {
         myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
         return;
@@ -85,12 +85,12 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
       myVfsChangePanel.reset(task.getParameters());
       myPrevTask = task;
     });
-    myBoxlist.setBorder(null);
-    myBoxlist.setPreferredSize(JBUI.size(550, 200));
+    myCheckBoxList.setBorder(null);
+    myCheckBoxList.setPreferredSize(JBUI.size(550, 200));
 
     final List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(project, virtualFile);
 
-    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myBoxlist);
+    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myCheckBoxList);
     decorator = decorator.setAddActionUpdater(e -> !providers.isEmpty());
     decorator = decorator.setAddAction((b, e) -> {
 
@@ -122,9 +122,9 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
       cloneTasks.add(task.clone());
     }
 
-    myBoxlist.setItems(cloneTasks, BackgroundTaskByVfsChangeTask::getName, BackgroundTaskByVfsChangeTask::isEnabled);
+    myCheckBoxList.setItems(cloneTasks, BackgroundTaskByVfsChangeTask::getName, BackgroundTaskByVfsChangeTask::isEnabled);
 
-    ScrollingUtil.ensureSelectionExists(myBoxlist);
+    ScrollingUtil.ensureSelectionExists(myCheckBoxList);
 
     myPanel.add(decorator.createPanel(), BorderLayout.CENTER);
     myPanel.add(TargetAWT.to(myVfsChangePanel.getComponent()), BorderLayout.SOUTH);
@@ -140,16 +140,15 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
     BackgroundTaskByVfsChangeTask task = BackgroundTaskByVfsChangeManager.getInstance(myProject).createTask(provider, myVirtualFile, name);
 
-    myBoxlist.addItem(task, task.getName(), task.isEnabled());
+    myCheckBoxList.addItem(task, task.getName(), task.isEnabled());
     // select last item - selected item
-    myBoxlist.setSelectedIndex(myBoxlist.getItemsCount() - 1);
+    myCheckBoxList.setSelectedIndex(myCheckBoxList.getItemsCount() - 1);
   }
 
-  
   private List<BackgroundTaskByVfsChangeTask> getTasks() {
     List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
-    for (int i = 0; i < myBoxlist.getItemsCount(); i++) {
-      BackgroundTaskByVfsChangeTask task = myBoxlist.getItemAt(i);
+    for (int i = 0; i < myCheckBoxList.getItemsCount(); i++) {
+      BackgroundTaskByVfsChangeTask task = myCheckBoxList.getItemAt(i);
       list.add(task);
     }
     return list;

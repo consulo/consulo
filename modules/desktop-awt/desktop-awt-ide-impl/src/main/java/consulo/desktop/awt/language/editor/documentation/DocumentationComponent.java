@@ -18,8 +18,9 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.FontSize;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.desktop.awt.action.toolbar.AdvancedActionToolbarImpl;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
+import consulo.desktop.awt.ui.impl.action.toolbar.AdvancedActionToolbarImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
@@ -27,10 +28,10 @@ import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
@@ -84,7 +85,6 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -112,7 +112,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 
-public class DocumentationComponent extends JPanel implements Disposable, DataProvider, WidthBasedLayout {
+public class DocumentationComponent extends JPanel implements Disposable, UiDataProvider, WidthBasedLayout {
 
     private static final Logger LOG = Logger.getInstance(DocumentationComponent.class);
     private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
@@ -131,6 +131,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     private final ExternalDocAction myExternalDocAction;
 
     private DocumentationManagerImpl myManager;
+    private RelativePoint myPopupAnchor;
     private SmartPsiElementPointer<PsiElement> myElement;
     private long myModificationCount;
 
@@ -173,7 +174,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private final Map<KeyStroke, ActionListener> myKeyboardActions = new HashMap<>();
 
-   
     public static DocumentationComponent createAndFetch(
         Project project,
         PsiElement element,
@@ -274,8 +274,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             }
         };
         boolean newLayout = true;
-        DataProvider helpDataProvider = dataId -> HelpManager.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
-        myEditorPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
+        UiDataProvider helpDataProvider = sink -> sink.set(HelpManager.HELP_ID, DOCUMENTATION_TOPIC_ID);
+        myEditorPane.putClientProperty(UiDataProvider.KEY, helpDataProvider);
         myText = "";
         myDecoratedText = "";
         myEditorPane.setEditable(false);
@@ -296,7 +296,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         myEditorPane.setEditorKit(editorKit);
         myEditorPane.setBorder(JBUI.Borders.empty());
         myScrollPane = new MyScrollPane();
-        myScrollPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
+        myScrollPane.putClientProperty(UiDataProvider.KEY, helpDataProvider);
 
         FocusListener focusAdapter = new FocusAdapter() {
             @Override
@@ -591,15 +591,13 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
-    public Object getData(@NonNls Key dataId) {
-        if (DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT == dataId) {
-            // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
-            // with raw white spaces. See IDEA-86633 for more details.
+    public void uiDataSnapshot(DataSink sink) {
+        // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
+        // with raw white spaces. See IDEA-86633 for more details.
+        sink.lazy(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT, () -> {
             String selectedText = myEditorPane.getSelectedText();
             return selectedText == null ? null : selectedText.replace((char) 160, ' ');
-        }
-
-        return null;
+        });
     }
 
     private JComponent createSettingsPanel() {
@@ -635,7 +633,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return result;
     }
 
-   
     public static FontSize getQuickDocFontSize() {
         String strValue = PropertiesComponent.getInstance().getValue(QUICK_DOC_FONT_SIZE_PROPERTY);
         if (strValue != null) {
@@ -687,6 +684,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     public void setHint(JBPopup hint) {
         myHint = (AbstractPopup) hint;
+        myPopupAnchor = null;
     }
 
     public JBPopup getHint() {
@@ -817,14 +815,30 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
         setHintSize();
 
-        DataContext dataContext = getDataContext();
-        PopupPositionManager.positionPopupInBestPosition(
-            myHint,
-            myManager.getEditor(),
-            dataContext,
-            PopupPositionManager.Position.RIGHT,
-            PopupPositionManager.Position.LEFT
-        );
+        RelativePoint requestedAnchor = myManager == null ? null : myManager.consumePopupAnchor();
+        if (requestedAnchor != null) {
+            // showHint() runs again for every content update ('fetching...' then the real doc), so the anchor has to
+            // survive the first call - otherwise the later ones would fall back to the caret and move the popup
+            myPopupAnchor = requestedAnchor;
+        }
+        if (myPopupAnchor != null) {
+            if (myHint.canShow()) {
+                myHint.show(myPopupAnchor);
+            }
+            else {
+                myHint.setLocation(myPopupAnchor.getScreenPoint());
+            }
+        }
+        else {
+            DataContext dataContext = getDataContext();
+            PopupPositionManager.positionPopupInBestPosition(
+                myHint,
+                myManager.getEditor(),
+                dataContext,
+                PopupPositionManager.Position.RIGHT,
+                PopupPositionManager.Position.LEFT
+            );
+        }
 
         Window window = myHint.getPopupWindow();
         if (window != null) {
@@ -1130,7 +1144,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return -1;
     }
 
-   
     private static String getBottom(boolean hasContent) {
         return "<div class='" + (hasContent ? "bottom" : "bottom-no-content") + "'>";
     }
@@ -1367,7 +1380,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             myActions = actions;
         }
 
-       
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions;
@@ -1391,7 +1403,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
     }
 
-    private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class BackAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         BackAction() {
             super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
@@ -1412,7 +1424,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
     }
 
-    private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ForwardAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         ForwardAction() {
             super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
@@ -1467,7 +1479,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return ActionPlaces.JAVADOC_TOOLBAR.equals(e.getPlace());
     }
 
-    private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ExternalDocAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         private ExternalDocAction() {
             super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());
             registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
@@ -1676,13 +1688,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             this.highlightedLink = highlightedLink;
         }
 
-       
         Context withText(String text) {
             return new Context(element, text, externalUrl, provider, viewRect, highlightedLink);
         }
     }
 
-    private class MyShowSettingsAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class MyShowSettingsAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         private final boolean myOnToolbar;
 
         MyShowSettingsAction(boolean onToolbar) {
@@ -1897,7 +1908,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
     }
 
-    private class ShowAsToolwindowAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ShowAsToolwindowAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         ShowAsToolwindowAction() {
             super(LocalizeValue.localizeTODO("Open as Tool Window"));
         }
@@ -1922,7 +1933,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
     }
 
-    private class RestoreDefaultSizeAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class RestoreDefaultSizeAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         RestoreDefaultSizeAction() {
             super(LocalizeValue.localizeTODO("Restore Size"));
         }

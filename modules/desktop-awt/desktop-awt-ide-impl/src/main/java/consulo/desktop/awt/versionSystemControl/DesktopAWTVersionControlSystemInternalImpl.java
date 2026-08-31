@@ -17,8 +17,14 @@ package consulo.desktop.awt.versionSystemControl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.impl.internal.LineStatusTracker;
 import consulo.versionControlSystem.impl.internal.LineStatusTrackerDrawing;
@@ -92,5 +98,12 @@ public class DesktopAWTVersionControlSystemInternalImpl implements VersionContro
             VcsDiffImplUtil.getRevisionTitle(head, true),
             VcsUtil.getFilePath(file)
         );
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void invokeAction(Project project, AnAction action) {
+        DataContext dataContext = SimpleDataContext.getProjectContext(project);
+        ActionImplUtil.invokeAction(action, dataContext, ActionPlaces.UNKNOWN, null, null);
     }
 }

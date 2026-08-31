@@ -641,7 +641,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class MapDirectory extends AnAction {
+    private class MapDirectory extends LegacyAnAction {
         private final NewBaseSelector myNewBaseSelector;
 
         private MapDirectory() {
@@ -1065,7 +1065,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class StripDown extends AnAction {
+    private class StripDown extends LegacyAnAction {
         private StripDown() {
             super(
                 LocalizeValue.localizeTODO("Restore Directory"),
@@ -1106,7 +1106,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class StripUp extends AnAction {
+    private class StripUp extends LegacyAnAction {
         private StripUp() {
             super(
                 LocalizeValue.localizeTODO("Strip Directory"),
@@ -1167,7 +1167,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class MyShowDiff extends AnAction {
+    private class MyShowDiff extends LegacyAnAction {
         private final MyChangeComparator myMyChangeComparator;
 
         private MyShowDiff() {

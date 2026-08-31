@@ -36,13 +36,13 @@ public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void updateInReadAction(AnActionEvent e) {
         if (e.isFromContextMenu()) {
             e.getPresentation().setEnabledAndVisible(false);
             return;
         }
         
-        super.update(e);
+        super.updateInReadAction(e);
 
         Presentation presentation = e.getPresentation();
         if (!presentation.isVisible() || !presentation.isEnabled()) {

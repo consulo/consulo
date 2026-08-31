@@ -33,13 +33,13 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.ValueMarkup;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -52,18 +52,18 @@ import java.util.Comparator;
  */
 public class XValueNodeImpl extends XValueContainerNode<XValue>
   implements XValueNode, XCompositeNode, XValueNodePresentationConfigurator.ConfigurableXValueNode, RestorableStateNode {
-  public static final Comparator<XValueNodeImpl> COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.getName(), o2.getName());
+  public static final Comparator<XValueNodeImpl> COMPARATOR = (o1, o2) -> o1.getName().compareTo(o2.getName());
 
   private static final int MAX_NAME_LENGTH = 100;
 
-  private final String myName;
+  private final LocalizeValue myName;
   private @Nullable String myRawValue;
   private XFullValueEvaluator myFullValueEvaluator;
   private boolean myChanged;
   private XValuePresentation myValuePresentation;
 
   //todo[nik] annotate 'name' with @NotNull
-  public XValueNodeImpl(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, String name, XValue value) {
+  public XValueNodeImpl(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, LocalizeValue name, XValue value) {
     super(tree, parent, value);
     myName = name;
 
@@ -200,11 +200,11 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   private void appendName() {
-    if (!StringUtil.isEmpty(myName)) {
+    if (myName.isNotEmpty()) {
       SimpleTextAttributes attributes = myChanged
         ? XDebuggerUIConstants.CHANGED_VALUE_ATTRIBUTES
         : XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES;
-      XValuePresentationUtil.renderValue(myName, myText, attributes, MAX_NAME_LENGTH, null);
+      XValuePresentationUtil.renderValue(myName.get(), myText, attributes, MAX_NAME_LENGTH, null);
     }
   }
 
@@ -265,7 +265,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public @Nullable String getName() {
+  public LocalizeValue getName() {
     return myName;
   }
 
@@ -297,6 +297,6 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
 
   @Override
   public String toString() {
-    return getName();
+    return getName().get();
   }
 }

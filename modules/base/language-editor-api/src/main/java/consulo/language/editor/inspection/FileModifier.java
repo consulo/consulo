@@ -19,8 +19,8 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.reflect.ReflectionUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -85,7 +85,7 @@ public interface FileModifier extends WriteActionAware {
   }
 
   /**
-   * Use this annotation to mark fields in implementors that are known to contain no file-related state.
+   * Use this annotation to mark fields in implementers that are known to contain no file-related state.
    * It's mainly useful for the fields in abstract classes: marking unknown abstract class field as
    * safe for preview will enable default {@link #getFileModifierForPreview(PsiFile)} behavior for all
    * subclasses (unless subclass declares its own suspicious field).

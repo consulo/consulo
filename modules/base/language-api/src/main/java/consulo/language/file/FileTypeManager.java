@@ -52,10 +52,8 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @deprecated since more generic way of associations using wildcards exist, not every association matches extension paradigm
    */
   @Deprecated
-  
   public abstract String[] getAssociatedExtensions(FileType type);
 
-  
   public abstract List<FileNameMatcher> getAssociations(FileType type);
 
   /**
@@ -176,11 +174,9 @@ public abstract class FileTypeManager extends FileTypeRegistry {
 
   public abstract void removeAssociation(FileType type, FileNameMatcher matcher);
 
-  
   public static FileNameMatcher parseFromString(String pattern) {
     return FileNameMatcherFactory.getInstance().createMatcher(pattern);
   }
 
-  
   public abstract FileType getStdFileType(String fileTypeName);
 }

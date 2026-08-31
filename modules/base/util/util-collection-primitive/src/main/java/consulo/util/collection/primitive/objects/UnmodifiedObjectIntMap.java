@@ -25,6 +25,7 @@ import java.util.function.ObjIntConsumer;
  * @author VISTALL
  * @since 22/05/2021
  */
+@Deprecated
 class UnmodifiedObjectIntMap<K> implements ObjectIntMap<K> {
   private final ObjectIntMap<K> myDelegate;
 

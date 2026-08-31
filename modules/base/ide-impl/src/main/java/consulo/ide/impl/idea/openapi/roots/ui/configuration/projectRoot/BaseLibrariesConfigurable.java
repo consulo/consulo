@@ -39,6 +39,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
@@ -328,7 +329,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         return "Select a library to view or edit its details here";
     }
 
-    private class CopyLibraryAction extends AnAction {
+    private class CopyLibraryAction extends LegacyAnAction {
         private CopyLibraryAction() {
             super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
         }

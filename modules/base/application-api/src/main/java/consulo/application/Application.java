@@ -30,15 +30,18 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -70,40 +73,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * with {@link ModalityState#defaultModalityState()} modality state.
-     *
-     * @param action the runnable to execute.
-     */
-    default void invokeLaterOnWriteThread(Runnable action) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open).
-     *
-     * @param action the runnable to execute.
-     * @param modal  the state in which action will be executed
-     */
-    default void invokeLaterOnWriteThread(Runnable action, ModalityState modal) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open)
-     * - unless the expiration condition is fulfilled.
-     *
-     * @param action  the runnable to execute.
-     * @param modal   the state in which action will be executed
-     * @param expired condition to check before execution.
-     */
-    default void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
-        throw new AbstractMethodError();
-    }
-
-    /**
      * Runs the specified read action. Can be called from any thread. The action is executed immediately
      * if no write action is currently running, or blocked until the currently running write action completes.
      *
@@ -127,6 +96,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
      */
     boolean tryRunReadAction(@RequiredReadAction Runnable action);
+
+    /**
+     * Grab the lock and run the action, if write is not running. Set value to ref holder if locked successful
+     *
+     * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
+     */
+    <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref,
+                                                      @RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -198,13 +175,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     void assertIsDispatchThread();
 
     /**
-     * Asserts whether the method is being called from the write thread.
-     */
-    default void assertIsWriteThread() {
-        assertIsDispatchThread();
-    }
-
-    /**
      * Adds an {@link ApplicationListener}.
      *
      * @param listener the listener to add
@@ -227,10 +197,18 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     void removeApplicationListener(ApplicationListener listener);
 
     /**
-     * Saves all open documents and projects.
+     * Saves all open documents and projects asynchronously (off the UI thread).
+     *
+     * @return a {@link Continuation} that completes when the save operation finishes, or {@code null} if saving was skipped
      */
     @RequiredUIAccess
-    void saveAll();
+    @Nullable
+    Continuation<Void> saveAll();
+
+    /**
+     * Saves all open documents and projects, showing a modal progress while the save runs off the UI thread.
+     */
+    CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess);
 
     /**
      * Saves all application settings.
@@ -268,14 +246,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return true if the current thread is the Swing dispatch thread, false otherwise.
      */
     boolean isDispatchThread();
-
-    /**
-     * Checks if the current thread is "write thread".
-     *
-     * @return true if the current thread is the "write thread", false otherwise.
-     */
-    @Deprecated
-    boolean isWriteThread();
 
     /**
      * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -531,21 +501,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     // region Deprecated stuff
-
-    /**
-     * Returns lock used for read operations, should be closed in finally block
-     */
-    @Deprecated
-    @DeprecationInfo("Use runReadAction(Runnable)")
-    AccessToken acquireReadActionLock();
-
-    /**
-     * Returns lock used for write operations, should be closed in finally block
-     */
-    @Deprecated
-    @DeprecationInfo("Use runWriteAction(Runnable)")
-    @RequiredUIAccess
-    AccessToken acquireWriteActionLock(Class marker);
 
     @Deprecated
     @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

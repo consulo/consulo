@@ -398,6 +398,38 @@ public final class DaemonListeners implements Disposable {
         return listeners.canUndo(virtualFile);
     }
 
+    /**
+     * EDT-safe variant: checks whether a file can be changed silently using only
+     * VirtualFile-level and undo-manager state — no PSI access required.
+     * PSI-specific checks (e.g. {@code PsiCodeFragment}) must be handled separately
+     * by the caller under a read action.
+     */
+    @RequiredUIAccess
+    public boolean canChangeFileSilently(VirtualFile virtualFile) {
+        if (cutOperationJustHappened) {
+            return false;
+        }
+        if (virtualFile == null) {
+            return false;
+        }
+        if (ScratchUtil.isScratch(virtualFile)) {
+            return canUndo(virtualFile);
+        }
+        if (!ModuleUtilCore.projectContainsFile(myProject, virtualFile, false)) {
+            return false;
+        }
+        for (SilentChangeVetoer vetoer : myProject.getExtensionList(SilentChangeVetoer.class)) {
+            ThreeState state = vetoer.canChangeFileSilently(virtualFile);
+            if (state == ThreeState.YES) {
+                return true;
+            }
+            if (state == ThreeState.NO) {
+                return false;
+            }
+        }
+        return canUndo(virtualFile);
+    }
+
     private boolean canUndo(VirtualFile virtualFile) {
         FileEditor[] editors = FileEditorManager.getInstance(myProject).getEditors(virtualFile);
         if (editors.length == 0) {

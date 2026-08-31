@@ -16,9 +16,15 @@
 package consulo.component.impl.internal.inject;
 
 import consulo.component.internal.inject.InjectingContainer;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.PostInjectListener;
 import consulo.logging.Logger;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ExceptionUtil;
 import jakarta.inject.Provider;
@@ -26,6 +32,7 @@ import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
@@ -51,7 +58,9 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
 
   private Function<Provider<T>, T> myRemap = Provider::get;
 
-  private T myInstanceIfSingleton;
+  private volatile T myInstanceIfSingleton;
+
+  private volatile CompletableFuture<T> myInstanceFuture;
 
   private boolean myForceSingleton;
 
@@ -98,6 +107,11 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @Override
+  public Class<?> getComponentImplClassIfCheap() {
+    return myImplementationKey.getTargetClass();
+  }
+
+  @Override
   public @Nullable T getComponentInstanceOfCreated(InstanceContainer container) {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
@@ -107,11 +121,102 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
     return null;
   }
 
+  /**
+   * Creates the instance without blocking the caller. An already created singleton is returned as a completed
+   * future, so no coroutine is started; otherwise one chain does construct then post inject then publish.
+   * Concurrent callers share the memoised future, so the instance is created exactly once.
+   */
+  @Override
+  public CompletableFuture<T> getComponentInstanceAsync(InstanceContainer container) {
+    T instance = myInstanceIfSingleton;
+    if (instance != null) {
+      return CompletableFuture.completedFuture(instance);
+    }
+
+    synchronized (myLock) {
+      instance = myInstanceIfSingleton;
+      if (instance != null) {
+        return CompletableFuture.completedFuture(instance);
+      }
+
+      CompletableFuture<T> future = myInstanceFuture;
+      if (future == null) {
+        myInstanceFuture = future = startAsyncCreation(container);
+      }
+      return future;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private CompletableFuture<T> startAsyncCreation(InstanceContainer container) {
+    Class<? extends T> targetClass = myImplementationKey.getTargetClass();
+
+    CoroutineContext context = container.getCoroutineContext();
+    if (context == null) {
+      // only a component loading its state through coroutines actually needs one
+      if (PersistentStateComponentAsync.class.isAssignableFrom(targetClass)) {
+        throw new PicoInitializationException("No coroutine context bound for async creation of " + targetClass.getName());
+      }
+      return CompletableFuture.completedFuture(getComponentInstance(container));
+    }
+
+    Object[] holder = new Object[1];
+    long time = System.nanoTime();
+
+    Coroutine<Object, Object> chain = Coroutine.<Object, Object>first(CodeExecution.apply(input -> {
+        holder[0] = createInstance(container);
+        return null;
+      }))
+      .then(CallSubroutine.call(() -> (Coroutine<Object, Object>)myAfterInjectionListener.afterInjectAsync(time, (T)holder[0])))
+      .then(CodeExecution.apply(input -> publish((T)holder[0])));
+
+    CompletableFuture<T> future = (CompletableFuture<T>)chain.runAsync(CoroutineScope.of(context), null).toFuture();
+    // a failed creation must not be memoised, otherwise the service can never be created again
+    return future.whenComplete((result, error) -> {
+      if (error != null) {
+        synchronized (myLock) {
+          myInstanceFuture = null;
+        }
+      }
+    });
+  }
+
+  private T createInstance(InstanceContainer container) {
+    Class<? extends T> targetClass = myImplementationKey.getTargetClass();
+
+    ConstructorInjectionComponentAdapter<T> delegate;
+    if (myConstructorParameterTypes != null && myConstructorFactory != null) {
+      delegate = new NewConstructorInjectionComponentAdapter<T>(getComponentClass(), getComponentImplClass(), myConstructorParameterTypes, myConstructorFactory);
+    }
+    else {
+      delegate = new ConstructorInjectionComponentAdapter<T>(getComponentClass(), getComponentImplClass());
+    }
+
+    return myRemap.apply(() -> GetInstanceValidator.createObject(targetClass, () -> delegate.getComponentInstance(container)));
+  }
+
+  private @Nullable T publish(T instance) {
+    Class<? extends T> targetClass = myImplementationKey.getTargetClass();
+    if (myForceSingleton || targetClass.isAnnotationPresent(Singleton.class)) {
+      synchronized (myLock) {
+        myInstanceIfSingleton = instance;
+        myInstanceFuture = null;
+      }
+    }
+    return instance;
+  }
+
   @Override
   public T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
       return instance;
+    }
+
+    // an async creation may already be in flight - join it rather than creating a second instance
+    CompletableFuture<T> inFlight = myInstanceFuture;
+    if (inFlight != null) {
+      return inFlight.join();
     }
 
     boolean isSingleton, isAnnotationSingleton;

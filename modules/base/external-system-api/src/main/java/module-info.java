@@ -9,6 +9,7 @@ module consulo.external.system.api {
     requires transitive consulo.process.api;
     requires transitive consulo.module.api;
     requires transitive consulo.module.content.api;
+    requires transitive consulo.module.creation.api;
     requires transitive consulo.execution.api;
     requires transitive consulo.execution.debug.api;
     requires transitive consulo.build.ui.api;
@@ -51,6 +52,6 @@ module consulo.external.system.api {
     // TODO remove this dependency in future
     exports consulo.externalSystem.ui.awt;
 
-    exports consulo.externalSystem.internal to consulo.ide.api, consulo.ide.impl, consulo.external.system.impl;
-    exports consulo.externalSystem.internal.ui to consulo.ide.api, consulo.ide.impl, consulo.external.system.impl;
+    exports consulo.externalSystem.internal to consulo.ide.impl, consulo.external.system.impl;
+    exports consulo.externalSystem.internal.ui to consulo.ide.impl, consulo.external.system.impl;
 }

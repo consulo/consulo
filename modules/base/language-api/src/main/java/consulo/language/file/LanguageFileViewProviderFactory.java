@@ -28,11 +28,12 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 02-Jul-22
+ * @since 2022-07-02
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageFileViewProviderFactory extends FileViewProviderFactory, LanguageExtension {
-  ExtensionPointCacheKey<LanguageFileViewProviderFactory, ByLanguageValue<LanguageFileViewProviderFactory>> KEY = ExtensionPointCacheKey.create("LanguageFileViewProviderFactory", LanguageOneToOne.build());
+  ExtensionPointCacheKey<LanguageFileViewProviderFactory, ByLanguageValue<LanguageFileViewProviderFactory>> KEY =
+    ExtensionPointCacheKey.create("LanguageFileViewProviderFactory", LanguageOneToOne.build());
 
   static @Nullable LanguageFileViewProviderFactory forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageFileViewProviderFactory.class).getOrBuildCache(KEY).get(language);

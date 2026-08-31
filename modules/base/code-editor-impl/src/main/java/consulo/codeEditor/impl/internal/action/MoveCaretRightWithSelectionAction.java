@@ -22,7 +22,9 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -36,7 +38,8 @@ public class MoveCaretRightWithSelectionAction extends EditorAction {
         }
 
         @Override
-        public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+        @RequiredUIAccess
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             editor.getCaretModel()
                 .moveCaretRelatively(1, 0, true, editor.isColumnMode(), caret == editor.getCaretModel().getPrimaryCaret());
         }

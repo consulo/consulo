@@ -53,7 +53,7 @@ public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware 
         Content content = contentManager.getFactory().createContent(panel, null, false);
 
         contentManager.addContent(content);
-        contentManager.addDataProvider(panel);
+        contentManager.addUiDataProvider(panel);
     }
 
     @Override

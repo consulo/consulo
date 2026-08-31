@@ -29,11 +29,12 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -164,7 +165,6 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
-    @RequiredUIAccess
     public void changeAttributesInBatch(RangeHighlighterEx highlighter, Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         byte changeStatus = ((RangeHighlighterImpl) highlighter).changeAttributesNoEvents(changeAttributesAction);
         if (BitUtil.isSet(changeStatus, RangeHighlighterImpl.CHANGED_MASK)) {
@@ -263,31 +263,67 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
                                       boolean renderersChanged,
                                       boolean fontStyleChanged,
                                       boolean foregroundColorChanged) {
-        if (highlighter.isValid()) {
+        if (!highlighter.isValid()) return;
+        if (UIAccess.isUIThread()) {
             for (MarkupModelListener listener : myListeners) {
                 listener.attributesChanged(highlighter, renderersChanged, fontStyleChanged, foregroundColorChanged);
             }
+        }
+        else {
+            SwingUtilities.invokeLater(() -> {
+                if (!highlighter.isValid()) return;
+                for (MarkupModelListener listener : myListeners) {
+                    listener.attributesChanged(highlighter, renderersChanged, fontStyleChanged, foregroundColorChanged);
+                }
+            });
         }
     }
 
     @Override
     public void fireAfterAdded(RangeHighlighterEx segmentHighlighter) {
-        for (MarkupModelListener listener : myListeners) {
-            listener.afterAdded(segmentHighlighter);
+        if (UIAccess.isUIThread()) {
+            for (MarkupModelListener listener : myListeners) {
+                listener.afterAdded(segmentHighlighter);
+            }
+        }
+        else {
+            SwingUtilities.invokeLater(() -> {
+                for (MarkupModelListener listener : myListeners) {
+                    listener.afterAdded(segmentHighlighter);
+                }
+            });
         }
     }
 
     @Override
     public void fireBeforeRemoved(RangeHighlighterEx highlighter) {
         myCachedHighlighters = null;
-        for (MarkupModelListener listener : myListeners) {
-            listener.beforeRemoved(highlighter);
+        if (UIAccess.isUIThread()) {
+            for (MarkupModelListener listener : myListeners) {
+                listener.beforeRemoved(highlighter);
+            }
+        }
+        else {
+            SwingUtilities.invokeLater(() -> {
+                for (MarkupModelListener listener : myListeners) {
+                    listener.beforeRemoved(highlighter);
+                }
+            });
         }
     }
 
     public void fireAfterRemoved(RangeHighlighterEx highlighter) {
-        for (MarkupModelListener listener : myListeners) {
-            listener.afterRemoved(highlighter);
+        if (UIAccess.isUIThread()) {
+            for (MarkupModelListener listener : myListeners) {
+                listener.afterRemoved(highlighter);
+            }
+        }
+        else {
+            SwingUtilities.invokeLater(() -> {
+                for (MarkupModelListener listener : myListeners) {
+                    listener.afterRemoved(highlighter);
+                }
+            });
         }
     }
 

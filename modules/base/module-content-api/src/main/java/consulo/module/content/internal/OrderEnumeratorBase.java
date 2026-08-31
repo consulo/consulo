@@ -139,21 +139,21 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
 
   @Override
   public OrderRootsEnumerator classes() {
-    return new OrderRootsEnumeratorImpl(this, BinariesOrderRootType.getInstance());
+    return new OrderRootsEnumeratorImpl(this, BinariesOrderRootType.ID);
   }
 
   @Override
   public OrderRootsEnumerator sources() {
-    return new OrderRootsEnumeratorImpl(this, SourcesOrderRootType.getInstance());
+    return new OrderRootsEnumeratorImpl(this, SourcesOrderRootType.ID);
   }
 
   @Override
-  public OrderRootsEnumerator roots(OrderRootType rootType) {
+  public OrderRootsEnumerator roots(String rootType) {
     return new OrderRootsEnumeratorImpl(this, rootType);
   }
 
   @Override
-  public OrderRootsEnumerator roots(Function<OrderEntry, OrderRootType> rootTypeProvider) {
+  public OrderRootsEnumerator roots(Function<OrderEntry, String> rootTypeProvider) {
     return new OrderRootsEnumeratorImpl(this, rootTypeProvider);
   }
 

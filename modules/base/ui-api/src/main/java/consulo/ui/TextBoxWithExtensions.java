@@ -41,10 +41,12 @@ public interface TextBoxWithExtensions extends TextBox {
             this(left, icon, hoveredIcon, null);
         }
 
-        public Extension(boolean left,
-                         Image icon,
-                         @Nullable Image hoveredIcon,
-                         @Nullable ComponentEventListener<Component, ClickEvent> clickListener) {
+        public Extension(
+            boolean left,
+            Image icon,
+            @Nullable Image hoveredIcon,
+            @Nullable ComponentEventListener<Component, ClickEvent> clickListener
+        ) {
             myLeft = left;
             myIcon = icon;
             myHoveredIcon = ObjectUtil.notNull(hoveredIcon, icon);
@@ -58,24 +60,32 @@ public interface TextBoxWithExtensions extends TextBox {
         public boolean isLeft() {
             return myLeft;
         }
+
         public Image getIcon() {
             return myIcon;
         }
+
         public Image getHoveredIcon() {
             return myHoveredIcon;
         }
     }
+
     static TextBoxWithExtensions create() {
         return create(null);
     }
+
     static TextBoxWithExtensions create(@Nullable String text) {
         return UIInternal.get()._Components_textBoxWithExtensions(text);
     }
+
     TextBoxWithExtensions setExtensions(Extension... extensions);
+
     @Deprecated
     default TextBoxWithExtensions addExtension(Extension extension) {
         return addLastExtension(extension);
     }
+
     TextBoxWithExtensions addLastExtension(Extension extension);
+
     TextBoxWithExtensions addFirstExtension(Extension extension);
 }

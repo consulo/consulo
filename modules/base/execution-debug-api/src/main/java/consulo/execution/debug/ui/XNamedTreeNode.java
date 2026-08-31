@@ -15,12 +15,13 @@
  */
 package consulo.execution.debug.ui;
 
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
+
 import javax.swing.tree.TreeNode;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface XNamedTreeNode extends TreeNode {
-  @Nullable String getName();
+    LocalizeValue getName();
 }

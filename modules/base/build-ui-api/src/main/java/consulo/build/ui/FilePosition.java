@@ -2,79 +2,52 @@
 package consulo.build.ui;
 
 import java.io.File;
-import java.util.Objects;
 
 /**
  * 0-based position in file.
  *
+ * @param file        file
+ * @param startLine   0-based start line number
+ * @param startColumn 0-based start column number
+ * @param endLine     0-based end line number
+ * @param endColumn   0-based end column number
+ *
  * @author Vladislav.Soroka
  */
-public class FilePosition {
-  private final File myFile;
-  private final int myStartLine;
-  private final int myStartColumn;
-  private final int myEndLine;
-  private final int myEndColumn;
+public record FilePosition(File file, int startLine, int startColumn, int endLine, int endColumn) {
+    /**
+     * @param file file
+     */
+    public FilePosition(File file) {
+        this(file, 0, 0);
+    }
 
-  /**
-   * @param file file
-   * @param line 0-based line number
-   * @param column 0-based column number
-   */
-  public FilePosition(File file, int line, int column) {
-    this(file, line, column, line, column);
-  }
+    /**
+     * @param file   file
+     * @param line   0-based line number
+     * @param column 0-based column number
+     */
+    public FilePosition(File file, int line, int column) {
+        this(file, line, column, line, column);
+    }
 
-  /**
-   *
-   * @param file file
-   * @param startLine 0-based start line number
-   * @param startColumn 0-based start column number
-   * @param endLine 0-based end number
-   * @param endColumn 0-based end column number
-   */
-  public FilePosition(File file, int startLine, int startColumn, int endLine, int endColumn) {
-    myFile = file;
-    myStartLine = startLine;
-    myStartColumn = startColumn;
-    myEndLine = endLine;
-    myEndColumn = endColumn;
-  }
+    public File getFile() {
+        return file();
+    }
 
-  public File getFile() {
-    return myFile;
-  }
+    public int getStartLine() {
+        return startLine();
+    }
 
-  public int getStartLine() {
-    return myStartLine;
-  }
+    public int getStartColumn() {
+        return startColumn();
+    }
 
-  public int getStartColumn() {
-    return myStartColumn;
-  }
+    public int getEndLine() {
+        return endLine();
+    }
 
-  public int getEndLine() {
-    return myEndLine;
-  }
-
-  public int getEndColumn() {
-    return myEndColumn;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    FilePosition position = (FilePosition)o;
-    return myStartLine == position.myStartLine &&
-           myStartColumn == position.myStartColumn &&
-           myEndLine == position.myEndLine &&
-           myEndColumn == position.myEndColumn &&
-           Objects.equals(myFile, position.myFile);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(myFile, myStartLine, myStartColumn, myEndLine, myEndColumn);
-  }
+    public int getEndColumn() {
+        return endColumn();
+    }
 }

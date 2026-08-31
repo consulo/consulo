@@ -15,13 +15,17 @@
  */
 package consulo.desktop.awt.ui.keymap;
 
+import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.wm.FocusManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
+
+import consulo.ui.ex.awt.AWTConstants;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
+import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
+import consulo.ui.ex.impl.internal.keymap.KeymapManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
@@ -36,10 +40,10 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
@@ -58,9 +62,9 @@ public final class IdeMouseEventDispatcher {
     private final ArrayList<AnAction> myActions = new ArrayList<>(1);
     private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
     private boolean myPressedModifiersStored;
-    @JdkConstants.InputEventMask
+    @AWTConstants.InputEventMask
     private int myModifiers;
-    @JdkConstants.InputEventMask
+    @AWTConstants.InputEventMask
     private int myModifiersEx;
 
     private static boolean myForceTouchIsAllowed = true;
@@ -184,8 +188,8 @@ public final class IdeMouseEventDispatcher {
             ignore = true;
         }
 
-        @JdkConstants.InputEventMask int modifiers = e.getModifiers();
-        @JdkConstants.InputEventMask int modifiersEx = e.getModifiersEx();
+        @AWTConstants.InputEventMask int modifiers = e.getModifiers();
+        @AWTConstants.InputEventMask int modifiersEx = e.getModifiersEx();
         if (e.getID() == MOUSE_PRESSED) {
             myPressedModifiersStored = true;
             myModifiers = modifiers;
@@ -247,28 +251,74 @@ public final class IdeMouseEventDispatcher {
 
         MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
         fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
+
+        if (ActionRunnerAsync.ENABLED) {
+            boolean processed = false;
+            if (!myActions.isEmpty()) {
+                DataContext dataContext = DataManager.getInstance().getDataContext(c);
+                processed = IdeEventQueue.getInstance().getKeyEventDispatcher().processAction(
+                    e,
+                    ActionPlaces.MOUSE_SHORTCUT,
+                    dataContext,
+                    new ArrayList<>(myActions),
+                    newMouseActionProcessor(modifiers),
+                    myPresentationFactory
+                );
+            }
+            if (processed) {
+                // the original event must not reach the component: either the action will be performed,
+                // or an event copy will be re-dispatched when no action turns out to be enabled
+                e.consume();
+                return true;
+            }
+            return e.getButton() > 3;
+        }
+
         ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
         AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
         for (AnAction action : actions) {
             DataContext dataContext = DataManager.getInstance().getDataContext(c);
+
+            Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+
+            if (context != null && !context.isShowing()) {
+                continue;
+            }
+
             Presentation presentation = myPresentationFactory.getPresentation(action);
+
             AnActionEvent actionEvent = new AnActionEvent(e, dataContext, ActionPlaces.MOUSE_SHORTCUT, presentation, ActionManager.getInstance(), modifiers);
-            action.beforeActionPerformedUpdate(actionEvent);
 
             if (ActionImplUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
                 actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-                Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-
-                if (context != null && !context.isShowing()) {
-                    continue;
-                }
 
                 ActionImplUtil.performActionDumbAware(action, actionEvent);
+
                 actionManager.fireAfterActionPerformed(action, dataContext, actionEvent);
+
                 e.consume();
             }
         }
         return e.getButton() > 3;
+    }
+
+    private static ActionProcessor newMouseActionProcessor(@AWTConstants.InputEventMask int modifiers) {
+        return new ActionProcessor() {
+            @Override
+            public AnActionEvent createEvent(InputEvent inputEvent, DataContext context, String place, Presentation presentation, ActionManager manager) {
+                return new AnActionEvent(inputEvent, context, place, presentation, manager, modifiers);
+            }
+
+            @Override
+            public void onUpdatePassed(InputEvent inputEvent, AnAction action, AnActionEvent actionEvent) {
+            }
+
+            @Override
+            public void performAction(InputEvent e, AnAction action, AnActionEvent actionEvent) {
+                e.consume();
+                ActionImplUtil.performActionDumbAware(action, actionEvent);
+            }
+        };
     }
 
     private static void resetPopupTrigger(MouseEvent e) {

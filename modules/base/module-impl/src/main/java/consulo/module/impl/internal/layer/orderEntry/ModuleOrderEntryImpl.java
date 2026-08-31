@@ -93,12 +93,12 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public VirtualFile[] getFiles(OrderRootType type) {
+  public VirtualFile[] getFiles(String type) {
     OrderRootsEnumerator enumerator = getEnumerator(type);
     return enumerator != null ? enumerator.getRoots() : VirtualFile.EMPTY_ARRAY;
   }
 
-  private @Nullable OrderRootsEnumerator getEnumerator(OrderRootType type) {
+  private @Nullable OrderRootsEnumerator getEnumerator(String type) {
     Module module = myModulePointer.get();
     if (module == null) return null;
 
@@ -106,7 +106,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public String[] getUrls(OrderRootType rootType) {
+  public String[] getUrls(String rootType) {
     OrderRootsEnumerator enumerator = getEnumerator(rootType);
     return enumerator != null ? enumerator.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
   }

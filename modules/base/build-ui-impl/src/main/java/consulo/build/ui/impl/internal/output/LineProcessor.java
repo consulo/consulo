@@ -1,10 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.build.ui.impl.internal.output;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Closeable;
+import java.util.Objects;
 
 abstract class LineProcessor implements Appendable, Closeable {
-    private StringBuilder myLineBuilder = new StringBuilder();
+    private @Nullable StringBuilder myLineBuilder = new StringBuilder();
 
     abstract void process(String line);
 
@@ -47,7 +50,7 @@ abstract class LineProcessor implements Appendable, Closeable {
     }
 
     private void flushBuffer() {
-        String line = myLineBuilder.toString();
+        String line = Objects.requireNonNull(myLineBuilder).toString();
         myLineBuilder.setLength(0);
         process(line);
     }

@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
 
 import static consulo.util.lang.ObjectUtil.assertNotNull;
 
-public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
+public abstract class VcsShowToolWindowTabAction extends LegacyDumbAwareAction {
     protected VcsShowToolWindowTabAction(LocalizeValue text) {
         super(text, text);
     }
@@ -60,7 +60,6 @@ public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabledAndVisible(getToolWindow(e.getData(Project.KEY)) != null);
     }
 

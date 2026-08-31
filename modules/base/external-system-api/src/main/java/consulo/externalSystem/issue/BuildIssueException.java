@@ -13,7 +13,7 @@ public class BuildIssueException extends ExternalSystemException implements Buil
     private final BuildIssue myBuildIssue;
 
     public BuildIssueException(BuildIssue issue) {
-        super(issue.getDescription(), getQuickfixIds(issue));
+        super(issue.getDescription().get(), getQuickfixIds(issue));
         myBuildIssue = issue;
     }
 

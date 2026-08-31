@@ -19,10 +19,8 @@ public interface MessageEvent extends BuildEvent {
         SIMPLE
     }
 
-    
     Kind getKind();
 
-    
     NotificationGroup getGroup();
 
     @Nullable Navigatable getNavigatable(Project project);

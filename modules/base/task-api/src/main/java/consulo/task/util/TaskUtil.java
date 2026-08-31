@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.util.DateFormatUtil;
 import consulo.logging.Logger;
 import consulo.task.Task;
@@ -31,7 +32,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.apache.http.HttpResponse;
 import org.jdom.Element;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;

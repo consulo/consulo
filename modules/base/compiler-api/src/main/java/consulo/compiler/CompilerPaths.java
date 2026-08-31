@@ -15,32 +15,26 @@
  */
 package consulo.compiler;
 
-import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
-import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * A set of utility methods for working with paths
  */
 public class CompilerPaths {
-    private static final Logger LOG = Logger.getInstance(CompilerPaths.class);
-
     private static volatile String ourSystemPath;
     public static final Comparator<String> URLS_COMPARATOR = String::compareTo;
     private static final String DEFAULT_GENERATED_DIR_NAME = "generated";
@@ -146,31 +140,17 @@ public class CompilerPaths {
      * @param module
      * @param forTestClasses true if directory for test sources, false - for sources.
      * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
-     * Null is returned if output directory is not specified or is not valid
+     * Null is returned if output directory is not specified
      */
-    public static @Nullable VirtualFile getModuleOutputDirectory(Module module, boolean forTestClasses) {
+    public static @Nullable Path getModuleOutputDirectory(Module module, boolean forTestClasses) {
         ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
-        VirtualFile outPath;
         if (forTestClasses) {
-            VirtualFile path = manager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
+            Path path = manager.getCompilerOutputPath(TestContentFolderTypeProvider.getInstance());
             if (path != null) {
-                outPath = path;
-            }
-            else {
-                outPath = manager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+                return path;
             }
         }
-        else {
-            outPath = manager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-        }
-        if (outPath == null) {
-            return null;
-        }
-        if (!outPath.isValid()) {
-            LOG.info("Requested output path for module " + module.getName() + " is not valid");
-            return null;
-        }
-        return outPath;
+        return manager.getCompilerOutputPath(ProductionContentFolderTypeProvider.getInstance());
     }
 
     /**
@@ -179,37 +159,15 @@ public class CompilerPaths {
      */
     @Deprecated
     public static @Nullable String getModuleOutputPath(Module module, boolean forTestClasses) {
-        Application application = module.getApplication();
-        ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
-
-        String outPathUrl;
-        if (application.isDispatchThread()) {
-            outPathUrl = pathsManager.getCompilerOutputUrl(
-                forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()
-            );
-        }
-        else {
-            outPathUrl = application.runReadAction((Supplier<String>) () -> pathsManager.getCompilerOutputUrl(
-                forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()
-            ));
-        }
-
-        return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
+        return getModuleOutputPath(
+            module,
+            forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()
+        );
     }
 
     public static @Nullable String getModuleOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
-        Application application = module.getApplication();
-        ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
-
-        String outPathUrl;
-        if (application.isDispatchThread()) {
-            outPathUrl = pathsManager.getCompilerOutputUrl(contentFolderType);
-        }
-        else {
-            outPathUrl = application.runReadAction((Supplier<String>) () -> pathsManager.getCompilerOutputUrl(contentFolderType));
-        }
-
-        return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
+        String outPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
+        return outPathUrl != null ? VirtualFileUtil.urlToPath(outPathUrl) : null;
     }
 
     public static String[] getOutputPaths(Module[] modules) {
@@ -224,31 +182,11 @@ public class CompilerPaths {
             for (ContentFolderTypeProvider contentFolderType : contentFolderTypes) {
                 String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
                 if (outputPathUrl != null) {
-                    outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
+                    outputPaths.add(VirtualFileUtil.urlToPath(outputPathUrl).replace('/', File.separatorChar));
                 }
             }
         }
 
         return ArrayUtil.toStringArray(outputPaths);
-    }
-
-    public static VirtualFile[] getOutputDirectories(Module[] modules) {
-        if (modules.length == 0) {
-            return VirtualFile.EMPTY_ARRAY;
-        }
-
-        Set<VirtualFile> dirs = new LinkedHashSet<>();
-        for (Module module : modules) {
-            List<ContentFolderTypeProvider> contentFolderTypes =
-                ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest());
-            for (ContentFolderTypeProvider contentFolderType : contentFolderTypes) {
-                VirtualFile virtualFile = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
-                if (virtualFile != null) {
-                    dirs.add(virtualFile);
-                }
-            }
-        }
-
-        return VirtualFileUtil.toVirtualFileArray(dirs);
     }
 }

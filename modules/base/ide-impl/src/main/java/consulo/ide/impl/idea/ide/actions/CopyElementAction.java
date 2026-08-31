@@ -31,12 +31,15 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.UIAction;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "CopyElement")
-public class CopyElementAction extends AnAction {
+public class CopyElementAction extends AnAction implements AnActionWithAsyncUpdate {
     @Inject
     public CopyElementAction() {
         super(ActionLocalize.actionCopyelementText(), ActionLocalize.actionCopyelementDescription());
@@ -84,22 +87,25 @@ public class CopyElementAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Project project = e.getData(Project.KEY);
-        presentation.setEnabled(false);
-        if (project == null) {
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = e.getPresentation();
+            Project project = e.getData(Project.KEY);
+            presentation.setEnabled(false);
+            if (project == null) {
+                return null;
+            }
 
-        Editor editor = e.getData(Editor.KEY);
-        if (editor != null) {
-            updateForEditor(e.getDataContext(), presentation);
-        }
-        else {
-            String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-            updateForToolWindow(id, e.getDataContext(), presentation);
-        }
+            Editor editor = e.getData(Editor.KEY);
+            if (editor != null) {
+                updateForEditor(e.getDataContext(), presentation);
+            }
+            else {
+                String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
+                updateForToolWindow(id, e.getDataContext(), presentation);
+            }
+            return null;
+        }));
     }
 
     @RequiredUIAccess

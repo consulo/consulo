@@ -23,7 +23,9 @@ import java.util.function.LongConsumer;
 /**
  * @author VISTALL
  * @since 17/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.longs.LongIterable} directly
  */
+@Deprecated
 public interface LongIterable {
   PrimitiveIterator.OfLong iterator();
 

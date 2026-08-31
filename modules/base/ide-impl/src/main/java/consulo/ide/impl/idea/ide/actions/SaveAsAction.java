@@ -6,10 +6,10 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.virtualFileSystem.VirtualFile;
 
-public class SaveAsAction extends DumbAwareAction {
+public class SaveAsAction extends LegacyDumbAwareAction {
     @Override
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.hasData(VirtualFile.KEY));

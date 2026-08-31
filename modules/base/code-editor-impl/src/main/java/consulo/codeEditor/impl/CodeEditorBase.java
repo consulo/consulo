@@ -17,7 +17,9 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
-import consulo.colorScheme.impl.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.colorScheme.internal.FontPreferencesManager;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -41,6 +43,8 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.font.Font;
+import consulo.ui.font.FontManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
@@ -64,21 +68,26 @@ import java.util.function.Predicate;
  */
 public abstract class CodeEditorBase extends UserDataHolderBase implements RealEditor, HighlighterClient, Dumpable, Queryable {
     protected class MyColorSchemeDelegate extends DelegateColorScheme {
-        private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
-        private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
+        private final ModifiableFontPreferences myFontPreferences;
+        private final ModifiableFontPreferences myConsoleFontPreferences;
         private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<>();
         private final Map<EditorColorKey, ColorValue> myOwnColors = new HashMap<>();
         private final EditorColorsScheme myCustomGlobalScheme;
-        private Map<EditorFontType, Font> myFontsMap;
+        private final FontPreferencesManager myFontPreferencesManager;
+        private Map<EditorFontType, consulo.ui.font.Font> myFontsMap;
         private int myMaxFontSize = EditorFontsConstants.getMaxEditorFontSize();
         private int myFontSize = -1;
         private int myConsoleFontSize = -1;
         private String myFaceName;
         private Float myLineSpacing;
+        private Boolean myUseLigatures;
 
-        private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme) {
+        private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme, FontPreferencesManager fontPreferencesManager) {
             super(globalScheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : globalScheme);
+            myFontPreferences = fontPreferencesManager.newFontPreferences();
+            myConsoleFontPreferences = fontPreferencesManager.newFontPreferences();
             myCustomGlobalScheme = globalScheme;
+            myFontPreferencesManager = fontPreferencesManager;
             updateGlobalScheme();
         }
 
@@ -86,31 +95,40 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             EditorColorsScheme delegate = getDelegate();
             String editorFontName = getEditorFontName();
             int editorFontSize = getEditorFontSize();
-            updatePreferences(myFontPreferences, editorFontName, editorFontSize, delegate == null ? null : delegate.getFontPreferences());
+            updatePreferences(
+                myFontPreferences,
+                editorFontName,
+                editorFontSize,
+                myUseLigatures,
+                delegate == null ? null : delegate.getFontPreferences()
+            );
             String consoleFontName = getConsoleFontName();
             int consoleFontSize = getConsoleFontSize();
             updatePreferences(
                 myConsoleFontPreferences,
                 consoleFontName,
                 consoleFontSize,
+                myUseLigatures,
                 delegate == null ? null : delegate.getConsoleFontPreferences()
             );
 
+            FontManager fontManager = FontManager.get();
             myFontsMap = new EnumMap<>(EditorFontType.class);
-            myFontsMap.put(EditorFontType.PLAIN, new Font(editorFontName, Font.PLAIN, editorFontSize));
-            myFontsMap.put(EditorFontType.BOLD, new Font(editorFontName, Font.BOLD, editorFontSize));
-            myFontsMap.put(EditorFontType.ITALIC, new Font(editorFontName, Font.ITALIC, editorFontSize));
-            myFontsMap.put(EditorFontType.BOLD_ITALIC, new Font(editorFontName, Font.BOLD | Font.ITALIC, editorFontSize));
-            myFontsMap.put(EditorFontType.CONSOLE_PLAIN, new Font(consoleFontName, Font.PLAIN, consoleFontSize));
-            myFontsMap.put(EditorFontType.CONSOLE_BOLD, new Font(consoleFontName, Font.BOLD, consoleFontSize));
-            myFontsMap.put(EditorFontType.CONSOLE_ITALIC, new Font(consoleFontName, Font.ITALIC, consoleFontSize));
-            myFontsMap.put(EditorFontType.CONSOLE_BOLD_ITALIC, new Font(consoleFontName, Font.BOLD | Font.ITALIC, consoleFontSize));
+            myFontsMap.put(EditorFontType.PLAIN, fontManager.createFont(editorFontName, editorFontSize, consulo.ui.font.Font.PLAIN));
+            myFontsMap.put(EditorFontType.BOLD, fontManager.createFont(editorFontName, editorFontSize, consulo.ui.font.Font.BOLD));
+            myFontsMap.put(EditorFontType.ITALIC, fontManager.createFont(editorFontName, editorFontSize, consulo.ui.font.Font.ITALIC));
+            myFontsMap.put(EditorFontType.BOLD_ITALIC, fontManager.createFont(editorFontName, editorFontSize, consulo.ui.font.Font.BOLD | consulo.ui.font.Font.ITALIC));
+            myFontsMap.put(EditorFontType.CONSOLE_PLAIN, fontManager.createFont(consoleFontName, consoleFontSize, consulo.ui.font.Font.PLAIN));
+            myFontsMap.put(EditorFontType.CONSOLE_BOLD, fontManager.createFont(consoleFontName, consoleFontSize, consulo.ui.font.Font.BOLD));
+            myFontsMap.put(EditorFontType.CONSOLE_ITALIC, fontManager.createFont(consoleFontName, consoleFontSize, consulo.ui.font.Font.ITALIC));
+            myFontsMap.put(EditorFontType.CONSOLE_BOLD_ITALIC, fontManager.createFont(consoleFontName, consoleFontSize, consulo.ui.font.Font.BOLD | Font.ITALIC));
         }
 
         private void updatePreferences(
-            FontPreferencesImpl preferences,
+            ModifiableFontPreferences preferences,
             String fontName,
             int fontSize,
+            @Nullable Boolean useLigatures,
             @Nullable FontPreferences delegatePreferences
         ) {
             preferences.clear();
@@ -124,7 +142,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
                     first = false;
                 }
             }
-            preferences.setUseLigatures(delegatePreferences != null && delegatePreferences.useLigatures());
+            preferences.setUseLigatures(
+                useLigatures != null ? useLigatures : delegatePreferences != null && delegatePreferences.useLigatures()
+            );
         }
 
         private void reinitFontsAndSettings() {
@@ -237,9 +257,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
         
         @Override
-        public Font getFont(EditorFontType key) {
+        public consulo.ui.font.Font getFont(EditorFontType key) {
             if (myFontsMap != null) {
-                Font font = myFontsMap.get(key);
+                consulo.ui.font.Font font = myFontsMap.get(key);
                 if (font != null) {
                     return font;
                 }
@@ -248,7 +268,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        public void setFont(EditorFontType key, Font font) {
+        public void setFont(EditorFontType key, consulo.ui.font.Font font) {
             if (myFontsMap == null) {
                 reinitFontsAndSettings();
             }
@@ -293,6 +313,17 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         public void setLineSpacing(float lineSpacing) {
             myLineSpacing = EditorFontsConstants.checkAndFixEditorLineSpacing(lineSpacing);
             reinitSettings();
+        }
+
+        @Override
+        public boolean isUseLigatures() {
+            return myUseLigatures == null ? super.isUseLigatures() : myUseLigatures;
+        }
+
+        @Override
+        public void setUseLigatures(boolean useLigatures) {
+            myUseLigatures = useLigatures;
+            reinitFontsAndSettings();
         }
     }
 
@@ -1184,10 +1215,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myIsViewer = isViewer;
     }
 
-    
     @Override
     public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
-        return new MyColorSchemeDelegate(customGlobalScheme);
+        return new MyColorSchemeDelegate(customGlobalScheme, Application.get().getInstance(FontPreferencesManager.class));
     }
 
     @Override

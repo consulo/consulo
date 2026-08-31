@@ -4,14 +4,21 @@ package consulo.ide.impl.idea.codeInsight.hints;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
+import consulo.codeEditor.InlayContent;
+import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.DeclarativeInlayPosition;
+import consulo.ui.Point2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awt.hint.LightweightHint;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +72,75 @@ public abstract class DeclarativeInlayRendererBase<M> implements EditorCustomEle
                       Rectangle2D targetRegion,
                       TextAttributes textAttributes) {
         getView().paint(inlay, g, targetRegion, textAttributes, fontMetricsStorage);
+    }
+
+    @Override
+    public InlayContent getContent(Inlay<?> inlay) {
+        List<InlayContentSegment> segments = new ArrayList<>();
+
+        // the size belongs to the format of a hint, and the composite views hold hints which all share one
+        boolean smallerFont = false;
+        for (InlayPresentationList list : getPresentationLists()) {
+            segments.addAll(list.toContentSegments());
+
+            smallerFont |= list.isSmallerFont();
+        }
+        return new InlayContent(segments, smallerFont);
+    }
+
+    @Override
+    public boolean hasClickAction(Inlay<?> inlay, int segmentIndex) {
+        InlayPresentationEntry entry = findEntry(segmentIndex);
+        return entry != null && entry.hasClickAction();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void handleClick(Inlay<?> inlay, int segmentIndex, boolean controlDown) {
+        InlayPresentationList list = findList(segmentIndex);
+        InlayPresentationEntry entry = findEntry(segmentIndex);
+        if (list == null || entry == null) {
+            return;
+        }
+
+        // a frontend which never painted the hint has no pointer position to give, and the handlers only take the
+        // editor out of the event anyway - this is the constructor which builds its own stand-in mouse event
+        EditorMouseEvent event = new EditorMouseEvent(
+            inlay.getEditor(),
+            new InputDetails(new Point2D(), new Point2D()),
+            false,
+            EditorMouseEventArea.EDITING_AREA
+        );
+
+        entry.handleClick(event, list, controlDown);
+    }
+
+    /**
+     * The runs of {@link #getContent} are the entries of the presentation lists laid end to end, so an index walks
+     * the same order back.
+     */
+    private @Nullable InlayPresentationList findList(int segmentIndex) {
+        int index = segmentIndex;
+        for (InlayPresentationList list : getPresentationLists()) {
+            int size = list.getEntries().length;
+            if (index < size) {
+                return list;
+            }
+            index -= size;
+        }
+        return null;
+    }
+
+    private @Nullable InlayPresentationEntry findEntry(int segmentIndex) {
+        int index = segmentIndex;
+        for (InlayPresentationList list : getPresentationLists()) {
+            InlayPresentationEntry[] entries = list.getEntries();
+            if (index < entries.length) {
+                return entries[index];
+            }
+            index -= entries.length;
+        }
+        return null;
     }
 
     public void handleLeftClick(EditorMouseEvent e, Point pointInsideInlay, boolean controlDown) {

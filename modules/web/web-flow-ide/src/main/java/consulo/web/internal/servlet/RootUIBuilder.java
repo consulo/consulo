@@ -15,7 +15,9 @@
  */
 package consulo.web.internal.servlet;
 
-import consulo.application.WriteAction;
+import com.vaadin.flow.component.UI;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -26,8 +28,7 @@ import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.util.lang.TimeoutUtil;
-import consulo.web.application.WebApplication;
-import consulo.web.application.WebSession;
+import consulo.web.ui.impl.internal.WebApplicationImpl;
 
 /**
  * @author VISTALL
@@ -37,22 +38,19 @@ public class RootUIBuilder implements UIBuilder {
   @RequiredUIAccess
   @Override
   public void build(Window window) {
-    Disposer.register(window, () -> {
-      WebApplication application = WebApplication.getInstance();
-      if (application == null || !((ApplicationEx)application).isLoaded()) {
-        return;
-      }
-
-      WriteAction.run(() -> {
-        ProjectManager projectManager = ProjectManager.getInstance();
-
-        Project[] openProjects = projectManager.getOpenProjects();
-
-        for (Project openProject : openProjects) {
-          projectManager.closeProject(openProject);
-        }
-      });
-    });
+//    Disposer.register(UIServlet.getDisposable(UI.getCurrent()), () -> {
+//      Application application = ApplicationManager.getApplication();
+//      if (application == null || !((ApplicationEx)application).isLoaded()) {
+//        return;
+//      }
+//
+//      UIAccess uiAccess = application.getLastUIAccess();
+//      ProjectManager projectManager = ProjectManager.getInstance();
+//
+//      for (Project openProject : projectManager.getOpenProjects()) {
+//        projectManager.closeAndDisposeAsync(openProject, uiAccess);
+//      }
+//    });
 
     // TODO window.setContent(new WebLoadingPanelImpl());
 
@@ -65,7 +63,7 @@ public class RootUIBuilder implements UIBuilder {
     new Thread(() -> {
       TimeoutUtil.sleep(1000L);
       
-      WebApplication application = WebApplication.getInstance();
+      Application application = ApplicationManager.getApplication();
       if (application == null || !((ApplicationEx)application).isLoaded()) {
         if (access.isValid()) {
           scheduleWelcomeFrame(access, window, tryCount + 1);
@@ -80,26 +78,15 @@ public class RootUIBuilder implements UIBuilder {
   }
 
   @RequiredUIAccess
-  private void showWelcomeFrame(WebApplication application, Window window) {
+  private void showWelcomeFrame(Application application, Window window) {
     window.setContent(DockLayout.create());
 
     WelcomeFrameManager welcomeFrameManager = WelcomeFrameManager.getInstance();
 
-    WebSession currentSession = application.getCurrentSession();
-    if (currentSession != null) {
-      WebSession newSession = currentSession;
-
-      currentSession.close();
-
-      currentSession = newSession.copy();
-
-      welcomeFrameManager.closeFrame();
+    UIAccess uiAccess = UIAccess.current();
+    if (application instanceof WebApplicationImpl webApplication) {
+      webApplication.registerUIAccess(uiAccess);
     }
-    else {
-      currentSession = new VaadinWebSessionImpl();
-    }
-
-    application.setCurrentSession(currentSession);
 
     welcomeFrameManager.showIfNoProjectOpened();
   }

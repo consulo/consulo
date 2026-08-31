@@ -15,13 +15,12 @@
  */
 package consulo.versionControlSystem.change.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -52,7 +51,7 @@ import java.util.stream.Stream;
  * @author yole
  * @since 2006-11-02
  */
-public abstract class ScheduleForAdditionAction extends AnAction implements DumbAware {
+public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
     private static final Set<String> ALLOWED_PLACES =
         Set.of(ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, ActionPlaces.CHANGES_VIEW_POPUP);
 
@@ -111,16 +110,17 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         return result;
     }
 
-    
     private Stream<VirtualFile> getUnversionedFiles(AnActionEvent e, Project project) {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
-        boolean hasExplicitUnversioned = !Streams.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY));
+
+        List<VirtualFile> virtualFiles = e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY);
+        boolean hasExplicitUnversioned = virtualFiles != null && !virtualFiles.isEmpty();
 
         return hasExplicitUnversioned
-            ? e.getRequiredData(ChangesListView.UNVERSIONED_FILES_DATA_KEY)
+            ? virtualFiles.stream()
             : checkVirtualFiles(e)
-            ? Streams.notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM))
+            ? Streams.stream(e.getData(VirtualFile.KEY_OF_ARRAY))
             .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager))
             : Stream.empty();
     }

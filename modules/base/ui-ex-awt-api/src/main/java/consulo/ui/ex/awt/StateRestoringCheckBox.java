@@ -71,8 +71,8 @@ public class StateRestoringCheckBox extends JCheckBox {
   /**
    * The method should be used instead of setEnabled(false) or disable() in order to support selected state saving/recovering
    * Remembers the selected state of the checkbox when the checkbox is enabled, disables it
-   * and sets the selected state according to tha parameter pased
-   * @param isSelected the parameter telling whetheer the checkbox is selected when disabled
+   * and sets the selected state according to the parameter passed
+   * @param isSelected the parameter telling whether the checkbox is selected when disabled
    */
   public void makeUnselectable(boolean isSelected) {
     if (isEnabled()) {

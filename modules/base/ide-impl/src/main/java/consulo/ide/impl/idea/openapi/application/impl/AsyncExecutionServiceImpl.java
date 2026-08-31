@@ -32,25 +32,11 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
     }, app);
   }
 
-  //@NotNull
-  //@Override
-  //protected ExpirableExecutor createExecutor(@NotNull Executor executor) {
-  //  return new ExpirableExecutorImpl(executor);
-  //}
-  //
-  
   @Override
   protected AppUIExecutor createUIExecutor(ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
+    return new AppUIExecutorImpl(modalityState);
   }
 
-  
-  @Override
-  protected AppUIExecutor createWriteThreadExecutor(ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
-  }
-
-  
   @Override
   public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation) {
     return new NonBlockingReadActionImpl<>(myApplication, computation);

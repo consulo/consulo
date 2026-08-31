@@ -16,6 +16,7 @@
 package consulo.externalSystem.view;
 
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.event.RunManagerListener;
@@ -109,21 +110,18 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
     }
 
     @Override
-    @Nullable
-    public Object getData(consulo.util.dataholder.Key<?> dataId) {
-        if (ExternalSystemDataKeys.VIEW == dataId) return this;
-        if (ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID == dataId) return myExternalSystemId;
-        if (ExternalSystemDataKeys.UI_AWARE == dataId) return myUiAware;
-        if (ExternalSystemDataKeys.PROJECTS_TREE == dataId) return myTree;
-        if (ExternalSystemDataKeys.SELECTED_NODES == dataId) {
-            return getSelectedNodes(ExternalSystemNode.class);
-        }
-        if (ExternalSystemDataKeys.SELECTED_PROJECT_NODE == dataId) {
-            @SuppressWarnings("rawtypes")
-            List<ExternalSystemNode> selection = getSelectedNodes(ExternalSystemNode.class);
-            return ContainerUtil.getOnlyItem(ContainerUtil.filterIsInstance(selection, ProjectNode.class));
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(ExternalSystemDataKeys.VIEW, this);
+        sink.set(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID, myExternalSystemId);
+        sink.set(ExternalSystemDataKeys.UI_AWARE, myUiAware);
+        sink.set(ExternalSystemDataKeys.PROJECTS_TREE, myTree);
+
+        @SuppressWarnings("rawtypes")
+        List<ExternalSystemNode> selection = getSelectedNodes(ExternalSystemNode.class);
+        sink.set(ExternalSystemDataKeys.SELECTED_NODES, selection);
+        sink.set(ExternalSystemDataKeys.SELECTED_PROJECT_NODE,
+            ContainerUtil.getOnlyItem(ContainerUtil.filterIsInstance(selection, ProjectNode.class)));
     }
 
     @RequiredUIAccess

@@ -30,11 +30,11 @@ public class FilterDescendantVirtualFileConvertible<T> extends AbstractFilterChi
   
   private final Comparator<T> myComparator;
   
-  private final Function<T, VirtualFile> myConvertor;
+  private final Function<T, VirtualFile> myConverter;
 
-  public FilterDescendantVirtualFileConvertible(Function<T, VirtualFile> convertor, Comparator<VirtualFile> comparator) {
-    myConvertor = convertor;
-    myComparator = comparing(myConvertor, comparator);
+  public FilterDescendantVirtualFileConvertible(Function<T, VirtualFile> converter, Comparator<VirtualFile> comparator) {
+    myConverter = converter;
+    myComparator = comparing(myConverter, comparator);
   }
 
   @Override
@@ -44,6 +44,6 @@ public class FilterDescendantVirtualFileConvertible<T> extends AbstractFilterChi
 
   @Override
   protected boolean isAncestor(T parent, T child) {
-    return VirtualFileUtil.isAncestor(myConvertor.apply(parent), myConvertor.apply(child), false);
+    return VirtualFileUtil.isAncestor(myConverter.apply(parent), myConverter.apply(child), false);
   }
 }

@@ -17,9 +17,9 @@ package consulo.codeEditor.impl;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorTextRepresentationHelper;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -93,14 +93,14 @@ public class DefaultEditorTextRepresentationHelper implements EditorTextRepresen
   }
 
   private static class Key {
-    @JdkConstants.FontStyle private int fontType;
+    @AWTConstants.FontStyle private int fontType;
     private int c;
 
     private Key() {
       this(Font.PLAIN, ' ');
     }
 
-    Key(@JdkConstants.FontStyle int fontType, int c) {
+    Key(@AWTConstants.FontStyle int fontType, int c) {
       this.fontType = fontType;
       this.c = c;
     }

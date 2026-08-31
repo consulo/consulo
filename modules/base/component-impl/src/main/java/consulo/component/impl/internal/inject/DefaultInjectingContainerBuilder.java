@@ -19,9 +19,11 @@ import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.InjectingPoint;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -30,9 +32,16 @@ import java.util.Map;
 class DefaultInjectingContainerBuilder implements InjectingContainerBuilder {
   private DefaultInjectingContainer myParent;
   private Map<InjectingKey, DefaultInjectingPoint> myPoints = new HashMap<>();
+  private Supplier<CoroutineContext> myCoroutineContext;
 
   public DefaultInjectingContainerBuilder(DefaultInjectingContainer parent) {
     myParent = parent;
+  }
+
+  @Override
+  public InjectingContainerBuilder coroutineContext(Supplier<CoroutineContext> supplier) {
+    myCoroutineContext = supplier;
+    return this;
   }
 
   
@@ -64,7 +73,10 @@ class DefaultInjectingContainerBuilder implements InjectingContainerBuilder {
     myPoints = null;
     myParent = null;
 
-    DefaultInjectingContainer container = new DefaultInjectingContainer(parent, points.size());
+    Supplier<CoroutineContext> coroutineContext = myCoroutineContext;
+    myCoroutineContext = null;
+
+    DefaultInjectingContainer container = new DefaultInjectingContainer(parent, points.size(), coroutineContext);
     for (Map.Entry<InjectingKey, DefaultInjectingPoint> entry : points.entrySet()) {
       container.add(entry.getKey(), entry.getValue());
     }

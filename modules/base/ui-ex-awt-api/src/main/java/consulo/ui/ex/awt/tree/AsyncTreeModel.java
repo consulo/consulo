@@ -5,7 +5,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Command;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
@@ -31,7 +30,15 @@ import static java.util.Collections.singletonList;
 
 /**
  * @author Sergey.Malenkov
+ * @deprecated build the tree on {@link consulo.ui.Tree}, which is free of awt and so is shown by every
+ * frontend, and hand it a {@link consulo.ui.TreeExecutor} - the executor is named by the tree rather than
+ * read off the model through {@link InvokerSupplier}, and a model which names none no longer falls back to
+ * walking its levels on the very thread which draws them.
+ *
+ * <p>A swing tree which cannot move yet has {@code consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel},
+ * the same model over {@code TreeExecutor}, but it is a step on the way out rather than a destination.
  */
+@Deprecated
 public final class AsyncTreeModel extends AbstractTreeModel implements Identifiable, Searchable, Navigatable, TreeVisitor.Acceptor {
   private static final Logger LOG = Logger.getInstance(AsyncTreeModel.class);
   private final Command.Processor processor;
@@ -99,7 +106,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
     if (model instanceof Disposable) {
       Disposer.register(this, (Disposable)model);
     }
-    Invoker foreground = InvokerFactory.getInstance().forEventDispatchThread(UIAccess.current(), this);
+    Invoker foreground = InvokerFactory.getInstance().forEventDispatchThread(this);
     Invoker background = foreground;
     if (model instanceof InvokerSupplier) {
       InvokerSupplier supplier = (InvokerSupplier)model;

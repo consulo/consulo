@@ -226,6 +226,10 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
 
     @Override
     public void updateAllNotifications() {
+        if (!myProject.isOpen()) {
+            // when project is not open, we not have editor ui, so not need update
+            return;
+        }
         myUpdateAllFuture.cancel(false);
         myUpdateAllFuture = myProject.getUIAccess().getScheduler().schedule(() -> {
             for (VirtualFile file : myFileEditorManager.getOpenFiles()) {

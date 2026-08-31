@@ -30,7 +30,7 @@ public class SdkScope extends LibraryScopeBase {
   private final @Nullable String mySdkName;
 
   public SdkScope(Project project, ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
-    super(project, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()), sdkOrderEntry.getFiles(SourcesOrderRootType.getInstance()));
+    super(project, sdkOrderEntry.getFiles(BinariesOrderRootType.ID), sdkOrderEntry.getFiles(SourcesOrderRootType.ID));
     mySdkName = sdkOrderEntry.getSdkName();
   }
 

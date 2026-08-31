@@ -15,7 +15,7 @@
  */
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
+import com.uber.nullaway.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

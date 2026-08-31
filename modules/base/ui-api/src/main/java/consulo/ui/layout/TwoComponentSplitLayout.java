@@ -15,14 +15,17 @@
  */
 package consulo.ui.layout;
 
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.internal.UIInternal;
+import consulo.ui.layout.event.SplitProportionChangedEvent;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2016-06-13
  */
 public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     static TwoComponentSplitLayout create(SplitLayoutPosition position) {
@@ -32,21 +35,45 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     /**
      * @param percent from 0 to 100
      */
+    default TwoComponentSplitLayout withProportion(int percent) {
+        setProportion(percent);
+        return this;
+    }
+
+    /**
+     * @param percent from 0 to 100
+     */
     void setProportion(int percent);
 
-    @RequiredUIAccess
-    default TwoComponentSplitLayout setFirstComponent(PseudoComponent component) {
-        return setFirstComponent(component.getComponent());
+    default Disposable addSplitProportionChangedListener(ComponentEventListener<TwoComponentSplitLayout, SplitProportionChangedEvent> listener) {
+        return addListener(SplitProportionChangedEvent.class, listener);
     }
 
     @RequiredUIAccess
-    TwoComponentSplitLayout setFirstComponent(Component component);
-
-    @RequiredUIAccess
-    default TwoComponentSplitLayout setSecondComponent(PseudoComponent component) {
-        return setSecondComponent(component.getComponent());
+    default TwoComponentSplitLayout withFirstComponent(PseudoComponent component) {
+        return withFirstComponent(component.getComponent());
     }
 
     @RequiredUIAccess
-    TwoComponentSplitLayout setSecondComponent(Component component);
+    default TwoComponentSplitLayout withFirstComponent(Component component) {
+        setFirstComponent(component);
+        return this;
+    }
+
+    @RequiredUIAccess
+    void setFirstComponent(Component component);
+
+    @RequiredUIAccess
+    default TwoComponentSplitLayout withSecondComponent(PseudoComponent component) {
+        return withSecondComponent(component.getComponent());
+    }
+
+    @RequiredUIAccess
+    default TwoComponentSplitLayout withSecondComponent(Component component) {
+        setSecondComponent(component);
+        return this;
+    }
+
+    @RequiredUIAccess
+    void setSecondComponent(Component component);
 }

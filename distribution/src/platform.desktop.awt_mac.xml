@@ -17,10 +17,13 @@
     <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
     <dependencySets>
         <dependencySet>
+            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.awt/lib</outputDirectory>
             <unpack>false</unpack>
             <includes>
                 <include>consulo:consulo-desktop-ide-impl</include>
+                <include>consulo:consulo-desktop-awt-editor-impl</include>
+                <include>consulo:consulo-desktop-awt-ui-impl</include>
                 <include>consulo:consulo-desktop-awt-ide-impl</include>
                 <include>consulo:consulo-desktop-awt-os-mac</include>
                 <include>org.antlr:antlr4-runtime</include>
@@ -28,14 +31,15 @@
                 <include>consulo.internal.org.cobraparser:cobra-core</include>
                 <include>consulo.internal.org.cobraparser:cobra-jstyleparser</include>
                 <include>xml-apis:xml-apis-ext</include>
-                <include>com.formdev:flatlaf</include>
-                <include>com.formdev:flatlaf-swingx</include>
+                <include>consulo.internal:flatlaf</include>
+                <include>consulo.internal:flatlaf-swingx</include>
                 <include>org.swinglabs.swingx:swingx-all</include>
                 <include>consulo.internal:jediterm-ui</include>
             </includes>
         </dependencySet>
 
         <dependencySet>
+            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>

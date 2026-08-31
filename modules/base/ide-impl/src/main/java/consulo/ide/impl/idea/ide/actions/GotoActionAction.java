@@ -19,7 +19,10 @@ import consulo.ui.ex.action.OptionDescription;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.awt.AWTConstants;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
@@ -40,7 +43,6 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -53,7 +55,7 @@ import java.util.Set;
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 
 @ActionImpl(id = "GotoAction")
-public class GotoActionAction extends GotoActionBase implements DumbAware {
+public class GotoActionAction extends SearchEverywhereBaseAction implements DumbAware {
     public GotoActionAction() {
         super(ActionLocalize.actionGotoactionText(), ActionLocalize.actionGotoactionDescription());
     }
@@ -61,205 +63,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        if (e.hasData(Project.KEY)) {
-            showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
-        }
-        else {
-            super.actionPerformed(e);
-        }
-    }
-
-    @Override
-    public void gotoActionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        Editor editor = e.getData(Editor.KEY);
-
-        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.action");
-        GotoActionModel model = new GotoActionModel(project, component, editor);
-        GotoActionCallback<Object> callback = new GotoActionCallback<>() {
-            @Override
-            public void elementChosen(ChooseByNamePopup popup, Object element) {
-                if (project != null) {
-                    // if the chosen action displays another popup, don't populate it automatically with the text from this popup
-                    project.putUserData(ChooseByNamePopup.CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY, null);
-                }
-                String enteredText = popup.getTrimmedText();
-                int modifiers = popup.isClosedByShiftEnter() ? InputEvent.SHIFT_MASK : 0;
-                openOptionOrPerformAction(((GotoActionModel.MatchedValue)element).value, enteredText, project, component, modifiers);
-            }
-        };
-
-        Pair<String, Integer> start = getInitialText(false, e);
-        showNavigationPopup(callback, null, createPopup(project, model, start.first, start.second, component, e), false);
-    }
-
-    
-    private static ChooseByNamePopup createPopup(
-        @Nullable Project project,
-        GotoActionModel model,
-        String initialText,
-        int initialIndex,
-        Component component,
-        AnActionEvent event
-    ) {
-        ChooseByNamePopup oldPopup = project == null ? null : project.getUserData(ChooseByNamePopup.CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY);
-        if (oldPopup != null) {
-            oldPopup.close(false);
-        }
-        Disposable disposable = Disposable.newDisposable();
-        ShortcutSet altEnterShortcutSet = getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
-        KeymapManager km = KeymapManager.getInstance();
-        Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
-        ChooseByNamePopup popup =
-            new ChooseByNamePopup(project, model, new GotoActionItemProvider(model), oldPopup, initialText, false, initialIndex) {
-                @Override
-                protected void initUI(Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
-                    super.initUI(callback, modalityState, allowMultipleSelection);
-                    myList.addListSelectionListener(new ListSelectionListener() {
-                        @Override
-                        public void valueChanged(ListSelectionEvent e) {
-                            Object value = myList.getSelectedValue();
-                            String text = getText(value);
-                            if (text != null && myDropdownPopup != null) {
-                                myDropdownPopup.setAdText(text, SwingConstants.LEFT);
-                            }
-                        }
-
-                        private @Nullable String getText(@Nullable Object o) {
-                            if (o instanceof GotoActionModel.MatchedValue mv) {
-                                if (UISettings.getInstance().getShowInplaceCommentsInternal()
-                                    && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
-                                    AnAction action = actionWrapper.getAction();
-                                    String actionId = ActionManager.getInstance().getId(action);
-                                    return StringUtil.notNullize(actionId, "class: " + action.getClass().getName());
-                                }
-
-                                if (mv.value instanceof BooleanOptionDescription
-                                    || mv.value instanceof GotoActionModel.ActionWrapper actionWrapper
-                                    && actionWrapper.getAction() instanceof ToggleAction) {
-                                    return "Press " + KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(
-                                        KeyEvent.VK_ENTER,
-                                        0
-                                    )) + " to toggle option";
-                                }
-
-                                if (altEnterShortcutSet.getShortcuts().length > 0
-                                    && mv.value instanceof GotoActionModel.ActionWrapper aw
-                                    && activeKeymap != null) {
-                                    if (aw.isAvailable()) {
-                                        String actionId = ActionManager.getInstance().getId(aw.getAction());
-                                        boolean actionWithoutShortcuts = activeKeymap.getShortcuts(actionId).length == 0;
-                                        if (actionWithoutShortcuts && new Random().nextInt(2) > 0) {
-                                            String altEnter = KeymapUtil.getFirstKeyboardShortcutText(altEnterShortcutSet);
-                                            return "Press " + altEnter + " to assign a shortcut for the selected action";
-                                        }
-                                    }
-                                }
-                            }
-                            return getAdText();
-                        }
-                    });
-                }
-
-                private @Nullable String getValueDescription(@Nullable Object value) {
-                    if (value instanceof GotoActionModel.MatchedValue mv
-                        && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
-                        AnAction action = actionWrapper.getAction();
-                        return action.getTemplatePresentation().getDescription().getNullIfEmpty();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected Set<Object> filter(Set<Object> elements) {
-                    return super.filter(model.sortItems(elements));
-                }
-
-                @Override
-                protected boolean closeForbidden(boolean ok) {
-                    if (!ok) {
-                        return false;
-                    }
-                    Object element = getChosenElement();
-                    return element instanceof GotoActionModel.MatchedValue mv
-                        && processOptionInplace(mv.value, this, component, event)
-                        || super.closeForbidden(true);
-                }
-
-                @Override
-                public void setDisposed(boolean disposedFlag) {
-                    super.setDisposed(disposedFlag);
-                    Disposer.dispose(disposable);
-
-                    for (ListSelectionListener listener : myList.getListSelectionListeners()) {
-                        myList.removeListSelectionListener(listener);
-                    }
-                    UIUtil.dispose(myList);
-                }
-            };
-
-        ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(
-            ProgressWindowListener.class,
-            pw -> Disposer.register(
-                pw,
-                (Disposable)() -> {
-                    if (!popup.checkDisposed()) {
-                        popup.repaintList();
-                    }
-                }
-            )
-        );
-
-        if (project != null) {
-            project.putUserData(ChooseByNamePopup.CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY, popup);
-        }
-
-        popup.addMouseClickListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent me) {
-                Object element = popup.getSelectionByPoint(me.getPoint());
-                if (element instanceof GotoActionModel.MatchedValue mv && processOptionInplace(mv.value, popup, component, event)) {
-                    me.consume();
-                }
-            }
-        });
-
-        DumbAwareAction.create(e -> {
-            Object o = popup.getChosenElement();
-            if (o instanceof GotoActionModel.MatchedValue mv && activeKeymap != null
-                && mv.value instanceof GotoActionModel.ActionWrapper aw && aw.isAvailable()) {
-                String id = ActionManager.getInstance().getId(aw.getAction());
-                KeymapPanel.addKeyboardShortcut(
-                    id,
-                    ActionShortcutRestrictions.getInstance().getForActionId(id),
-                    activeKeymap,
-                    component
-                );
-            }
-        }).registerCustomShortcutSet(altEnterShortcutSet, popup.getTextField(), disposable);
-
-        return popup;
-    }
-
-    private static boolean processOptionInplace(Object value, ChooseByNamePopup popup, Component component, AnActionEvent e) {
-        if (value instanceof BooleanOptionDescription option) {
-            option.setOptionState(!option.isOptionEnabled());
-            repaint(popup);
-            return true;
-        }
-        else if (value instanceof GotoActionModel.ActionWrapper aw
-            && aw.getAction() instanceof ToggleAction toggleAction) {
-            performAction(toggleAction, component, e, 0, () -> repaint(popup));
-            return true;
-        }
-        return false;
-    }
-
-    private static void repaint(@Nullable ChooseByNamePopup popup) {
-        if (popup != null) {
-            popup.repaintListImmediate();
-        }
+        showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
     }
 
     @RequiredUIAccess
@@ -278,7 +82,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         String enteredText,
         @Nullable Project project,
         Component component,
-        @JdkConstants.InputEventMask int modifiers
+        @AWTConstants.InputEventMask int modifiers
     ) {
         if (element instanceof OptionDescription optionDescription) {
             String configurableId = optionDescription.getConfigurableId();
@@ -305,7 +109,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         Object element,
         @Nullable Component component,
         @Nullable AnActionEvent e,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         @Nullable Runnable callback
     ) {
         // element could be AnAction (SearchEverywhere)
@@ -329,10 +133,15 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 );
             }
 
-            if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
-                if (action instanceof ActionGroup actionGroup && !event.getPresentation().isPerformGroup()) {
+            AnActionEvent finalEvent = event;
+            UIAccess uiAccess = Application.get().getLastUIAccess();
+            ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, finalEvent, false).whenCompleteAsync((enabled, throwable) -> {
+                if (!Boolean.TRUE.equals(enabled)) {
+                    return;
+                }
+                if (action instanceof ActionGroup actionGroup && !finalEvent.getPresentation().isPerformGroup()) {
                     ListPopup popup = JBPopupFactory.getInstance()
-                        .createActionGroupPopup(event.getPresentation().getTextValue().get(), actionGroup, context, false, callback, -1);
+                        .createActionGroupPopup(finalEvent.getPresentation().getTextValue().get(), actionGroup, context, false, callback, -1);
                     Window window = SwingUtilities.getWindowAncestor(component);
                     if (window != null) {
                         popup.showInCenterOf(window);
@@ -343,14 +152,14 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 }
                 else {
                     ActionManagerEx manager = ActionManagerEx.getInstanceEx();
-                    manager.fireBeforeActionPerformed(action, context, event);
-                    ActionImplUtil.performActionDumbAware(action, event);
+                    manager.fireBeforeActionPerformed(action, context, finalEvent);
+                    manager.performActionDumbAware(action, finalEvent);
                     if (callback != null) {
                         callback.run();
                     }
-                    manager.fireAfterActionPerformed(action, context, event);
+                    manager.fireAfterActionPerformed(action, context, finalEvent);
                 }
-            }
+            }, uiAccess);
         });
     }
 

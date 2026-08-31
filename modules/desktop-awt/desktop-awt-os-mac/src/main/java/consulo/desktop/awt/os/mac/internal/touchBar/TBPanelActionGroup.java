@@ -7,11 +7,16 @@ import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionGroupExpander;
 import consulo.logging.Logger;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.Timer;
@@ -126,7 +131,7 @@ final class TBPanelActionGroup extends TBPanel {
 
             boolean result;
             try {
-                result = !ActionImplUtil.performDumbAwareUpdate(action, event, false);
+                result = !ActionImplUtil.performDumbAwareUpdate(action, event);
             }
             catch (Throwable exc) {
                 continue;
@@ -451,14 +456,14 @@ final class TBPanelActionGroup extends TBPanel {
     }
 
     private final class Updater {
-        private @Nullable TimerListener myTimerImpl;
+        private @Nullable Disposable myTickerRegistration;
 
         void start() {
-            if (myTimerImpl != null) {
+            if (myTickerRegistration != null) {
                 stop();
             }
 
-            myTimerImpl = new TimerListener() {
+            TimerListener timerListener = new TimerListener() {
                 @Override
                 public ModalityState getModalityState() {
                     return Application.get().getCurrentModalityState();
@@ -469,20 +474,20 @@ final class TBPanelActionGroup extends TBPanel {
                     updateActionItems();
                 }
             };
-            ActionManager.getInstance().addTimerListener(500, myTimerImpl);
+            myTickerRegistration = ActionTicker.getInstance().addListener(UIAccess.current(), timerListener);
         }
 
         void stop() {
-            if (myTimerImpl == null) {
+            if (myTickerRegistration == null) {
                 return;
             }
 
-            ActionManager.getInstance().removeTimerListener(myTimerImpl);
-            myTimerImpl = null;
+            Disposer.dispose(myTickerRegistration);
+            myTickerRegistration = null;
         }
 
         boolean isRunning() {
-            return myTimerImpl != null;
+            return myTickerRegistration != null;
         }
     }
 

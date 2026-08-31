@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2021-02-09
  */
+@Deprecated
 @FunctionalInterface
 public interface IntObjConsumer<T> {
   void accept(int param1, @Nullable T param2);

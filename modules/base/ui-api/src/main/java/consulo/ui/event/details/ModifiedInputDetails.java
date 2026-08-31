@@ -21,43 +21,44 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
+ * Always abstract.
+ *
  * @author VISTALL
  * @since 2021-08-17
- *
- * Always abstract
  */
 public abstract class ModifiedInputDetails extends InputDetails {
-  public enum Modifier {
-    ALT,
-    CTRL,
-    SHIFT,
-    META,
-    // WINDOWS ? windows eat all combination for it
-  }
+    public enum Modifier {
+        ALT,
+        CTRL,
+        SHIFT,
+        META,
+        // WINDOWS ? windows eat all combination for it
+    }
 
-  private final EnumSet<Modifier> myModifiers;
+    private final EnumSet<Modifier> myModifiers;
 
-  public ModifiedInputDetails(Point2D position, Point2D positionOnScreen, EnumSet<Modifier> modifiers) {
-    super(position, positionOnScreen);
-    myModifiers = modifiers;
-  }
-  public Set<Modifier> getModifiers() {
-    return myModifiers;
-  }
+    public ModifiedInputDetails(Point2D position, Point2D positionOnScreen, EnumSet<Modifier> modifiers) {
+        super(position, positionOnScreen);
+        myModifiers = modifiers;
+    }
 
-  public boolean withAlt() {
-    return myModifiers.contains(Modifier.ALT);
-  }
+    public Set<Modifier> getModifiers() {
+        return myModifiers;
+    }
 
-  public boolean withCtrl() {
-    return myModifiers.contains(Modifier.CTRL);
-  }
+    public boolean withAlt() {
+        return myModifiers.contains(Modifier.ALT);
+    }
 
-  public boolean withMeta() {
-    return myModifiers.contains(Modifier.META);
-  }
+    public boolean withCtrl() {
+        return myModifiers.contains(Modifier.CTRL);
+    }
 
-  public boolean withShift() {
-    return myModifiers.contains(Modifier.SHIFT);
-  }
+    public boolean withMeta() {
+        return myModifiers.contains(Modifier.META);
+    }
+
+    public boolean withShift() {
+        return myModifiers.contains(Modifier.SHIFT);
+    }
 }

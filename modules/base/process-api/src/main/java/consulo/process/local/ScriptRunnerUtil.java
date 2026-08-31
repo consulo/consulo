@@ -15,6 +15,7 @@
  */
 package consulo.process.local;
 
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcessHandler;
@@ -81,9 +82,7 @@ public final class ScriptRunnerUtil {
                 if (outputTypeFilter.test(outputType)) {
                     String text = event.getText();
                     outputBuilder.append(text);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(text);
-                    }
+                    LOG.debug(text);
                 }
             }
         });

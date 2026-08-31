@@ -62,11 +62,11 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
       return EMPTY_TODO_ITEMS;
     }
 
-    return processTodoOccurences(startOffset, endOffset, occurrences);
+    return processTodoOccurrences(startOffset, endOffset, occurrences);
   }
 
   
-  private static TodoItem[] processTodoOccurences(int startOffset, int endOffset, Collection<IndexPatternOccurrence> occurrences) {
+  private static TodoItem[] processTodoOccurrences(int startOffset, int endOffset, Collection<IndexPatternOccurrence> occurrences) {
     List<TodoItem> items = new ArrayList<>(occurrences.size());
     TextRange textRange = new TextRange(startOffset, endOffset);
     TodoItemsCreator todoItemsCreator = new TodoItemsCreator();
@@ -96,7 +96,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
       return EMPTY_TODO_ITEMS;
     }
 
-    return processTodoOccurences(startOffset, endOffset, occurrences);
+    return processTodoOccurrences(startOffset, endOffset, occurrences);
   }
 
   @Override

@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
  * @author VISTALL
  * @since 06/07/24
  */
-@ExtensionImpl
+@ExtensionImpl(order = "first")
 public class DefaultFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(FileTypeConsumer consumer) {

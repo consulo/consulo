@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.logging.api {
     requires transitive consulo.annotation;
     requires consulo.util.lang;
@@ -13,7 +16,8 @@ module consulo.logging.api {
         consulo.application.impl,
         consulo.external.service.impl,
         consulo.application.api,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.it;
 
     uses consulo.logging.internal.LoggerFactoryProvider;
     uses consulo.logging.attachment.AttachmentFactory;

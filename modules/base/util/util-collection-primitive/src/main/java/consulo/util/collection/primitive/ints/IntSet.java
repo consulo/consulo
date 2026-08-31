@@ -20,7 +20,9 @@ import consulo.util.collection.primitive.ints.impl.set.EmptyIntSet;
 /**
  * @author VISTALL
  * @since 08/02/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntSet} directly
  */
+@Deprecated
 public interface IntSet extends IntCollection {
   static IntSet of() {
     return EmptyIntSet.INSTANCE;

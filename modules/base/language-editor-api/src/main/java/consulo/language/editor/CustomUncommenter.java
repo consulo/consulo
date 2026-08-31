@@ -17,7 +17,6 @@ package consulo.language.editor;
 
 import consulo.document.util.TextRange;
 import consulo.util.lang.Couple;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -38,7 +37,7 @@ public interface CustomUncommenter {
   @Nullable TextRange findMaximumCommentedRange(CharSequence text);
 
   /**
-   * Returns couples each pointing to comment prefix and suffiix:
+   * Returns couples each pointing to comment prefix and suffix:
    * [commentPrefix-start,commentPrefix-end] -- [commentSuffix-start,commentSuffix-end].
    * If block has several commented areas you may provide all of them.
    *

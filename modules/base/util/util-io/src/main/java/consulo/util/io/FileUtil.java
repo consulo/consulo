@@ -16,6 +16,7 @@
  */
 package consulo.util.io;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
@@ -23,7 +24,6 @@ import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.RegExp;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -719,7 +719,6 @@ public class FileUtil {
         return !ThreeState.NO.equals(startsWith(path, start, false, caseSensitive, false));
     }
 
-    @Contract(pure = true)
     public static boolean startsWith(String path, String prefix, boolean isCaseSensitive, boolean strict) {
         return !ThreeState.NO.equals(startsWith(path, prefix, strict, isCaseSensitive, false));
     }

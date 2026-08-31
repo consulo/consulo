@@ -23,7 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This class represents non resizable, nonfocusable button with the
+ * This class represents non resizable, non-focusable button with the
  * same height and length.
  */
 @Deprecated

@@ -18,8 +18,6 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.forward.KeyValueUpdateProcessor;
 import consulo.index.io.forward.RemovedKeyProcessor;
 import consulo.language.index.impl.internal.*;
-import consulo.language.index.impl.internal.hash.MergedInvertedIndex;
-import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.FileContent;
@@ -218,18 +216,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 );
                 MemoryIndexStorage<K, Void> memStorage = new MemoryIndexStorage<>(storage, indexKey);
                 UpdatableIndex<K, Void, FileContent> index =
-                    new VfsAwareMapReduceIndex<>(wrappedExtension, memStorage, null, null, null, lock);
-
-                if (stubUpdatingIndex instanceof MergedInvertedIndex) {
-                    ProvidedIndexExtension<Integer, SerializedStubTree> ex =
-                        ((MergedInvertedIndex<Integer, SerializedStubTree>)stubUpdatingIndex).getProvidedExtension();
-                    if (ex instanceof StubProvidedIndexExtension stubProvidedIndexExt) {
-                        ProvidedIndexExtension<K, Void> providedStubIndexExtension = stubProvidedIndexExt.findProvidedStubIndex(extension);
-                        if (providedStubIndexExtension != null) {
-                            index = ProvidedIndexExtension.wrapWithProvidedIndex(providedStubIndexExtension, wrappedExtension, index);
-                        }
-                    }
-                }
+                    new VfsAwareMapReduceIndex<>(wrappedExtension, memStorage, null, null, lock);
 
                 HashingStrategy<K> keyHashingStrategy = new HashingStrategy<>() {
                     private final KeyDescriptor<K> descriptor = extension.getKeyDescriptor();
@@ -422,25 +409,12 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                     continue;
                 }
 
-                StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(new CompositeKey(key, id), __ -> {
-                    try {
-                        Map<Integer, SerializedStubTree> data = stubUpdatingIndex.getIndexedFileData(id);
-                        LOG.assertTrue(data.size() == 1);
-                        SerializedStubTree tree = data.values().iterator().next();
-                        return tree.restoreIndexedStubs(
-                            StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE,
-                            indexKey,
-                            key
-                        );
-                    }
-                    catch (StorageException | IOException e) {
-                        forceRebuild(e);
-                        return null;
-                    }
-                });
+                StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(
+                    new CompositeKey(key, id),
+                    __ -> myStubProcessingHelper.retrieveStubIdList(indexKey, key, file, stubUpdatingIndex, true)
+                );
                 if (list == null) {
-                    LOG.error("StubUpdatingIndex & " + indexKey + " stub index mismatch. No stub index key is present");
-                    return true;
+                    continue;
                 }
                 if (!myStubProcessingHelper.processStubsInFile(project, file, list, processor, scope, requiredClass)) {
                     return false;
@@ -632,7 +606,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         // ensure that FileBasedIndex task "FileIndexDataInitialization" submitted first
         FileBasedIndex.getInstance();
         myStateFuture = IndexInfrastructure.submitGenesisTask(new StubIndexInitialization());

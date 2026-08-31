@@ -178,7 +178,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         mySchemeManager.loadSchemes();
         Collection<InspectionProfile> profiles = mySchemeManager.getAllSchemes();
         if (profiles.isEmpty()) {

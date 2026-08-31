@@ -28,6 +28,7 @@ public class XDebugTabCustomizableActionGroupProvider extends CustomizableAction
     @Override
     public void registerGroups(CustomizableActionGroupRegistrar registrar) {
         registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP, LocalizeValue.localizeTODO("Debug Tool Window Top Toolbar"));
+        registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_EXTRA_GROUP, LocalizeValue.localizeTODO("Debug Tool Window Top Toolbar Extra"));
         registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_LEFT_TOOLBAR_GROUP, LocalizeValue.localizeTODO("Debug Tool Window Left Toolbar"));
     }
 }

@@ -104,7 +104,7 @@ class EventLogConsole {
                 @Override
                 public void projectClosed(Project project, UIAccess uiAccess) {
                     if (project == myProjectModel.getProject()) {
-                        EditorFactory.getInstance().releaseEditor(editor);
+                        uiAccess.giveAndWaitIfNeed(() -> EditorFactory.getInstance().releaseEditor(editor));
                     }
                 }
             }
@@ -501,7 +501,7 @@ class EventLogConsole {
         document.insertString(document.getTextLength(), s);
     }
 
-    public static class ClearLogAction extends DumbAwareAction {
+    public static class ClearLogAction extends LegacyDumbAwareAction {
         private EventLogConsole myConsole;
 
         public ClearLogAction(EventLogConsole console) {

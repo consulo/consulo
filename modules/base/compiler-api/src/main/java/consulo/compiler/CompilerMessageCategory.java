@@ -22,7 +22,7 @@ import consulo.localize.LocalizeValue;
  * A set of constants describing possible message categories.
  *
  * @see CompilerMessage#getCategory()
- * @see CompileContext#addMessage(CompilerMessageCategory, String, String, int, int)
+ * @see CompileContext#newMessage(CompilerMessageCategory, LocalizeValue)
  */
 public enum CompilerMessageCategory {
     ERROR(CompilerLocalize.messageCategoryError()),

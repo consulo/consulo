@@ -15,8 +15,8 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import consulo.application.AllIcons;
-import consulo.fileEditor.FileEditorBundle;
+import consulo.fileEditor.localize.FileEditorLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import java.util.Comparator;
 
@@ -26,55 +26,54 @@ import java.util.Comparator;
  * @see TreeModel#getSorters()
  */
 public interface Sorter extends TreeAction {
-  Sorter[] EMPTY_ARRAY = new Sorter[0];
+    Sorter[] EMPTY_ARRAY = new Sorter[0];
 
-  /**
-   * Returns the comparator used for comparing nodes in the tree.
-   *
-   * @return the comparator for comparing nodes.
-   */
-  Comparator getComparator();
+    /**
+     * Returns the comparator used for comparing nodes in the tree.
+     *
+     * @return the comparator for comparing nodes.
+     */
+    Comparator getComparator();
 
-  boolean isVisible();
+    boolean isVisible();
 
-  
-  String ALPHA_SORTER_ID = "ALPHA_COMPARATOR";
+    String ALPHA_SORTER_ID = "ALPHA_COMPARATOR";
 
-  /**
-   * The default sorter which sorts the tree nodes alphabetically.
-   */
-  Sorter ALPHA_SORTER = new Sorter() {
-    @Override
-    public Comparator getComparator() {
-      return new Comparator() {
+    /**
+     * The default sorter which sorts the tree nodes alphabetically.
+     */
+    Sorter ALPHA_SORTER = new Sorter() {
         @Override
-        public int compare(Object o1, Object o2) {
-          String s1 = SorterUtil.getStringPresentation(o1);
-          String s2 = SorterUtil.getStringPresentation(o2);
-          return s1.compareToIgnoreCase(s2);
+        public Comparator getComparator() {
+            return (o1, o2) -> {
+                String s1 = SorterUtil.getStringPresentation(o1);
+                String s2 = SorterUtil.getStringPresentation(o2);
+                return s1.compareToIgnoreCase(s2);
+            };
         }
-      };
-    }
 
-    @Override
-    public boolean isVisible() {
-      return true;
-    }
+        @Override
+        public boolean isVisible() {
+            return true;
+        }
 
-    public String toString() {
-      return getName();
-    }
+        @Override
+        public String toString() {
+            return getName();
+        }
 
-    @Override
-    
-    public ActionPresentation getPresentation() {
-      return new ActionPresentationData(FileEditorBundle.message("action.sort.alphabetically"), FileEditorBundle.message("action.sort.alphabetically"), AllIcons.ObjectBrowser.Sorted);
-    }
+        @Override
+        public ActionPresentation getPresentation() {
+            return new ActionPresentationData(
+                FileEditorLocalize.actionSortAlphabetically(),
+                FileEditorLocalize.actionSortAlphabetically(),
+                PlatformIconGroup.objectbrowserSorted()
+            );
+        }
 
-    @Override
-    
-    public String getName() {
-      return ALPHA_SORTER_ID;
-    }
-  };
+        @Override
+        public String getName() {
+            return ALPHA_SORTER_ID;
+        }
+    };
 }

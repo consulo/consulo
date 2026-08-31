@@ -72,7 +72,6 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         myOriginalHandler = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ENTER;
@@ -85,7 +84,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
 
     @Override
     @RequiredWriteAction
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         if (project != null && !project.isDefault()) {
             PostprocessReformattingAspect.getInstance(project)
@@ -101,8 +100,8 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
     }
 
-    @RequiredReadAction
-    private void executeWriteActionInner(Editor editor, Caret caret, DataContext dataContext, Project project) {
+    @RequiredWriteAction
+    private void executeWriteActionInner(Editor editor, @Nullable Caret caret, DataContext dataContext, @Nullable Project project) {
         CodeInsightSettings settings = CodeInsightSettings.getInstance();
         if (project == null) {
             myOriginalHandler.execute(editor, caret, dataContext);
@@ -198,7 +197,6 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
     }
 
-    
     private static DataContext getExtendedContext(DataContext originalContext, Project project, Caret caret) {
         DataContext context = originalContext instanceof UserDataHolder ? originalContext : new DataContextWrapper(originalContext);
         ((UserDataHolder)context).putUserData(EnterHandlerHelper.CONTEXT_LANGUAGE, PsiUtilBase.getLanguageInEditor(caret, project));

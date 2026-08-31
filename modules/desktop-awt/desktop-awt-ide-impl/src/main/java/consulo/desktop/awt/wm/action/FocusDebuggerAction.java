@@ -16,12 +16,11 @@
 package consulo.desktop.awt.wm.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
@@ -34,7 +33,7 @@ import java.awt.event.FocusEvent;
  * @author spleaner
  */
 @ActionImpl(id = "FocusDebugger")
-public class FocusDebuggerAction extends AnAction implements DumbAware {
+public class FocusDebuggerAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(FocusDebuggerAction.class);
     private FocusDrawer myFocusDrawer;
 

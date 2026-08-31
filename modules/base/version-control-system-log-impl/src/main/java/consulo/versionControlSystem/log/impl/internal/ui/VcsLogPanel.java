@@ -15,16 +15,14 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.awt.JBPanel;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
-import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
-public class VcsLogPanel extends JBPanel implements DataProvider {
-  
+public class VcsLogPanel extends JBPanel implements UiDataProvider {
   private final VcsLogManager myManager;
 
   public VcsLogPanel(VcsLogManager manager, VcsLogUiImpl logUi) {
@@ -34,10 +32,7 @@ public class VcsLogPanel extends JBPanel implements DataProvider {
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    if (VcsLogInternalDataKeys.LOG_MANAGER == dataId) {
-      return myManager;
-    }
-    return null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(VcsLogInternalDataKeys.LOG_MANAGER, myManager);
   }
 }

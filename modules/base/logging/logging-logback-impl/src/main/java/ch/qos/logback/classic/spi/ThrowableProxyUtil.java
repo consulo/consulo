@@ -22,13 +22,11 @@ import ch.qos.logback.core.CoreConstants;
  * @author Ceki G&uuml;lc&uuml;
  */
 public class ThrowableProxyUtil {
-
     public static final int REGULAR_EXCEPTION_INDENT = 1;
     public static final int SUPPRESSED_EXCEPTION_INDENT = 1;
     private static final int BUILDER_CAPACITY = 2048;
 
     public static void build(ThrowableProxy nestedTP, Throwable nestedThrowable, ThrowableProxy parentTP) {
-
         StackTraceElement[] nestedSTE = nestedThrowable.getStackTrace();
 
         int commonFramesCount = -1;
@@ -40,15 +38,15 @@ public class ThrowableProxyUtil {
         nestedTP.stackTraceElementProxyArray = steArrayToStepArray(nestedSTE);
     }
 
-    static StackTraceElementProxy[] steArrayToStepArray(StackTraceElement[] stea) {
-        if (stea == null) {
+    static StackTraceElementProxy[] steArrayToStepArray(StackTraceElement[] stElems) {
+        if (stElems == null) {
             return new StackTraceElementProxy[0];
         }
-        StackTraceElementProxy[] stepa = new StackTraceElementProxy[stea.length];
-        for (int i = 0; i < stepa.length; i++) {
-            stepa[i] = new StackTraceElementProxy(stea[i]);
+        StackTraceElementProxy[] stProxies = new StackTraceElementProxy[stElems.length];
+        for (int i = 0; i < stProxies.length; i++) {
+            stProxies[i] = new StackTraceElementProxy(stElems[i]);
         }
-        return stepa;
+        return stProxies;
     }
 
     static int findNumberOfCommonFrames(StackTraceElement[] steArray, StackTraceElementProxy[] parentSTEPArray) {

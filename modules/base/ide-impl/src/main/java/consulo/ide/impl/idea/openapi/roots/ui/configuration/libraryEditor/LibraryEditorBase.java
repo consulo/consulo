@@ -31,8 +31,8 @@ import java.util.List;
 public abstract class LibraryEditorBase implements LibraryEditor {
   @Override
   public void removeAllRoots() {
-    List<OrderRootType> types = new ArrayList<OrderRootType>(getOrderRootTypes());
-    for (OrderRootType type : types) {
+    List<String> types = new ArrayList<>(getOrderRootTypes());
+    for (String type : types) {
       String[] urls = getUrls(type);
       for (String url : urls) {
         removeRoot(url, type);
@@ -40,7 +40,7 @@ public abstract class LibraryEditorBase implements LibraryEditor {
     }
   }
 
-  protected abstract Collection<OrderRootType> getOrderRootTypes();
+  protected abstract Collection<String> getOrderRootTypes();
 
   public abstract void setProperties(LibraryProperties properties);
 

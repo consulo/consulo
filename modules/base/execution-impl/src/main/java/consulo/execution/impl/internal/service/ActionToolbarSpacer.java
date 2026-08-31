@@ -14,7 +14,7 @@ import java.awt.*;
  * collapsing of toolbar containing panel when toolbar action group is empty.
  */
 public final class ActionToolbarSpacer extends JLabel {
-    private static final AnAction EMPTY_ACTION = new DumbAwareAction(Image.empty(Image.DEFAULT_ICON_SIZE)) {
+    private static final AnAction EMPTY_ACTION = new LegacyDumbAwareAction(Image.empty(Image.DEFAULT_ICON_SIZE)) {
         @Override
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(false);

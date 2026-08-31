@@ -1262,19 +1262,19 @@ public class GenericPatchApplier {
   public static class MyAppliedData {
     private List<String> myList;
     private final boolean myHaveAlreadyApplied;
-    private final boolean myPlaceCoinside;
-    private final boolean myChangedCoinside;
+    private final boolean myPlaceCoinSide;
+    private final boolean myChangedCoinSide;
     private final ChangeType myChangeType;
 
     public MyAppliedData(List<String> list,
                          boolean alreadyApplied,
-                         boolean placeCoinside,
-                         boolean changedCoinside,
+                         boolean placeCoinSide,
+                         boolean changedCoinSide,
                          ChangeType changeType) {
       myList = list;
       myHaveAlreadyApplied = alreadyApplied;
-      myPlaceCoinside = placeCoinside;
-      myChangedCoinside = changedCoinside;
+      myPlaceCoinSide = placeCoinSide;
+      myChangedCoinSide = changedCoinSide;
       myChangeType = changeType;
     }
 
@@ -1292,11 +1292,11 @@ public class GenericPatchApplier {
     }
 
     public boolean isPlaceCoinside() {
-      return myPlaceCoinside;
+      return myPlaceCoinSide;
     }
 
     public boolean isChangedCoinside() {
-      return myChangedCoinside;
+      return myChangedCoinSide;
     }
   }
 

@@ -27,9 +27,19 @@ import java.util.Objects;
  * @author nik
  */
 public class ComponentSerializationUtil {
-  @SuppressWarnings("unchecked")
   public static <T> Class<T> getStateClass(Class<? extends PersistentStateComponent> aClass) {
-    TypeVariable<Class<PersistentStateComponent>> variable = PersistentStateComponent.class.getTypeParameters()[0];
+    return getStateClass(aClass, PersistentStateComponent.class);
+  }
+
+  /**
+   * Resolves the state type argument declared by {@code baseInterface} for the given component class.
+   *
+   * @param baseInterface single type parameter interface declaring the state type, either
+   *                      {@link PersistentStateComponent} or {@link PersistentStateComponentAsync}
+   */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static <T> Class<T> getStateClass(Class<?> aClass, Class<?> baseInterface) {
+    TypeVariable variable = baseInterface.getTypeParameters()[0];
     return (Class<T>)ReflectionUtil.getRawType(Objects.requireNonNull(ReflectionUtil.resolveVariableInHierarchy(variable, aClass)));
   }
 

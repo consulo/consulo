@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;

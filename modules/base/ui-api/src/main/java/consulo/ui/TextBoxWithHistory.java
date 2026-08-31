@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.ui.internal.UIInternal;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,14 +27,17 @@ import java.util.List;
  * @since 2020-08-24
  */
 public interface TextBoxWithHistory extends TextBox {
-  static TextBoxWithHistory create() {
-    return create("");
-  }
-  static TextBoxWithHistory create(@Nullable String text) {
-    return UIInternal.get()._Components_textBoxWithHistory(text == null ? "" : text);
-  }
-  default TextBoxWithHistory setHistory(String... history) {
-    return setHistory(Arrays.asList(history));
-  }
-  TextBoxWithHistory setHistory(List<String> history);
+    static TextBoxWithHistory create() {
+        return create("");
+    }
+
+    static TextBoxWithHistory create(@Nullable String text) {
+        return UIInternal.get()._Components_textBoxWithHistory(text == null ? "" : text);
+    }
+
+    default TextBoxWithHistory setHistory(String... history) {
+        return setHistory(Arrays.asList(history));
+    }
+
+    TextBoxWithHistory setHistory(List<String> history);
 }

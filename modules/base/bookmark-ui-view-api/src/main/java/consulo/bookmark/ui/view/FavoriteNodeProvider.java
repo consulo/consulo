@@ -82,7 +82,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
   public abstract String getFavoriteTypeId();
 
   /**
-   * Returns the persistable URL for the specified element.
+   * Returns the persistent URL for the specified element.
    *
    * @param element
    * @return the URL, or null if the element is not supported by this provider.

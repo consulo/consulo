@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.projectRoots.ui;
 
 import consulo.application.Application;
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.*;
-import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.PathEditor;
@@ -57,9 +57,9 @@ import java.util.Set;
 public abstract class BaseSdkEditor implements UnnamedConfigurable {
     private static final Logger LOG = Logger.getInstance(BaseSdkEditor.class);
 
-    
+
     protected final Sdk mySdk;
-    private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<>();
+    private final Map<String, SdkPathEditor> myPathEditors = new HashMap<>();
 
     private TextBoxWithExtensions myHomeComponent;
     private final Map<SdkType, AdditionalDataConfigurable> myAdditionalDataConfigurables = new HashMap<>();
@@ -70,7 +70,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     // GUI components
     private JPanel myMainPanel;
 
-    
+
     private final SdkModel mySdkModel;
     private JLabel myHomeFieldLabel;
     private String myVersionString;
@@ -108,6 +108,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         return myMainPanel;
     }
 
+    @RequiredUIAccess
     private void createMainPanel(Disposable parentUIDisposable) {
         if (myMainPanel != null) {
             throw new IllegalArgumentException();
@@ -115,20 +116,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
         myMainPanel = new JPanel(new GridBagLayout());
 
-        for (OrderRootType type : OrderRootType.getAllTypes()) {
-            if (showTabForType(type)) {
-                OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
-                if (factory == null) {
-                    LOG.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
-                    continue;
-                }
+        Application.get().getExtensionPoint(OrderRootTypeUIFactory.class).forEach(factory -> {
+            String orderRootTypeId = factory.getOrderRootTypeId();
+
+            if (showTabForType(orderRootTypeId)) {
                 SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
                 if (pathEditor != null) {
                     pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
-                    myPathEditors.put(type, pathEditor);
+                    myPathEditors.put(orderRootTypeId, pathEditor);
                 }
             }
-        }
+        });
 
         JComponent centerComponent = createCenterComponent(parentUIDisposable);
 
@@ -136,7 +134,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         myHomeComponent.withEditable(false);
 
         boolean changePathSupported =
-            !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
+            !mySdk.isPredefined() && ((SdkType) mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
         if (changePathSupported) {
             myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(
                 false,
@@ -216,16 +214,15 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         );
     }
 
-    
+
     protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
 
-    protected boolean showTabForType(OrderRootType type) {
-        return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
+    protected boolean showTabForType(String orderRootTypeId) {
+        return ((SdkType) mySdk.getSdkType()).isRootTypeApplicable(orderRootTypeId);
     }
 
-    
-    public SdkPathEditor getPathEditor(OrderRootType rootType) {
-        return myPathEditors.get(rootType);
+    public SdkPathEditor getPathEditor(String orderRootTypeId) {
+        return myPathEditors.get(orderRootTypeId);
     }
 
     @RequiredUIAccess
@@ -260,7 +257,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         myInitialName = mySdk.getName();
         myInitialPath = mySdk.getHomePath();
         SdkModificator sdkModificator = mySdk.getSdkModificator();
-        SdkType sdkType = (SdkType)mySdk.getSdkType();
+        SdkType sdkType = (SdkType) mySdk.getSdkType();
         // we can change home path only when user can add sdk via interface
         if (sdkType.supportsUserAdd()) {
             sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
@@ -279,7 +276,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     @Override
     public void reset() {
         SdkModificator sdkModificator = mySdk.getSdkModificator();
-        for (OrderRootType type : myPathEditors.keySet()) {
+        for (String type : myPathEditors.keySet()) {
             myPathEditors.get(type).reset(sdkModificator);
         }
         sdkModificator.commitChanges();
@@ -327,9 +324,9 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
             File homeDir = new File(absolutePath);
             boolean homeMustBeDirectory;
 
-            SdkType sdkType = (SdkType)mySdk.getSdkType();
-            if (sdkType instanceof BundleType bundleType) {
-                homeMustBeDirectory = bundleType.getHomeChooserDescriptor(mySdk.getPlatform()).isChooseFolders();
+            SdkType sdkType = (SdkType) mySdk.getSdkType();
+            if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
+                homeMustBeDirectory = platformAwareSdkType.getHomeChooserDescriptor(mySdk.getPlatform()).isChooseFolders();
             }
             else {
                 homeMustBeDirectory = sdkType.getHomeChooserDescriptor().isChooseFolders();
@@ -345,9 +342,9 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     @RequiredUIAccess
     private void doSelectHomePath() {
-        SdkType sdkType = (SdkType)mySdk.getSdkType();
-        if (sdkType instanceof BundleType bundleType) {
-            SdkUtil.selectSdkHome(mySdk.getPlatform(), bundleType, path -> doSetHomePath(path.toString(), sdkType));
+        SdkType sdkType = (SdkType) mySdk.getSdkType();
+        if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
+            SdkUtil.selectSdkHome(mySdk.getPlatform(), platformAwareSdkType, path -> doSetHomePath(path.toString(), sdkType));
         }
         else {
             SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
@@ -362,10 +359,10 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         setHomePathValue(homePath.replace('/', File.separatorChar));
 
         String newSdkName = suggestSdkName(homePath);
-        ((SdkImpl)mySdk).setName(newSdkName);
+        ((SdkImpl) mySdk).setName(newSdkName);
 
         try {
-            Sdk dummySdk = (Sdk)mySdk.clone();
+            Sdk dummySdk = (Sdk) mySdk.clone();
             SdkModificator sdkModificator = dummySdk.getSdkModificator();
             sdkModificator.setHomePath(homePath);
             sdkModificator.removeAllRoots();
@@ -383,7 +380,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
                 );
             }
             sdkModificator = dummySdk.getSdkModificator();
-            for (OrderRootType type : myPathEditors.keySet()) {
+            for (String type : myPathEditors.keySet()) {
                 myPathEditors.get(type).addPaths(sdkModificator.getRoots(type));
             }
             mySdkModel.getMulticaster().sdkHomeSelected(dummySdk, homePath);
@@ -395,7 +392,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     private String suggestSdkName(String homePath) {
         String currentName = mySdk.getName();
-        String suggestedName = ((SdkType)mySdk.getSdkType()).suggestSdkName(currentName, homePath);
+        String suggestedName = ((SdkType) mySdk.getSdkType()).suggestSdkName(currentName, homePath);
         if (Comparing.equal(currentName, suggestedName)) {
             return currentName;
         }
@@ -431,7 +428,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     }
 
     private @Nullable AdditionalDataConfigurable initAdditionalDataConfigurable(Sdk sdk) {
-        SdkType sdkType = (SdkType)sdk.getSdkType();
+        SdkType sdkType = (SdkType) sdk.getSdkType();
         AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
         if (configurable == null) {
             configurable = sdkType.createAdditionalDataConfigurable(mySdkModel, myEditedSdkModificator);
@@ -443,7 +440,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     }
 
     private class EditedSdkModificator implements SdkModificator {
-        
+
         @Override
         public String getName() {
             return mySdk.getName();
@@ -451,7 +448,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
         @Override
         public void setName(String name) {
-            ((SdkImpl)mySdk).setName(name);
+            ((SdkImpl) mySdk).setName(name);
         }
 
         @Override
@@ -462,10 +459,10 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         @Override
         @RequiredUIAccess
         public void setHomePath(String path) {
-            doSetHomePath(path, (SdkType)mySdk.getSdkType());
+            doSetHomePath(path, (SdkType) mySdk.getSdkType());
         }
 
-        
+
         @Override
         public Path getHomeNioPath() {
             return Path.of(getHomeValue());
@@ -497,9 +494,8 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
             throw new UnsupportedOperationException(); // not supported for this editor
         }
 
-        
         @Override
-        public VirtualFile[] getRoots(OrderRootType rootType) {
+        public VirtualFile[] getRoots(String rootType) {
             PathEditor editor = myPathEditors.get(rootType);
             if (editor == null) {
                 throw new IllegalStateException("no editor for root type " + rootType);
@@ -508,17 +504,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
 
         @Override
-        public void addRoot(VirtualFile root, OrderRootType rootType) {
+        public void addRoot(VirtualFile root, String rootType) {
             myPathEditors.get(rootType).addPaths(root);
         }
 
         @Override
-        public void removeRoot(VirtualFile root, OrderRootType rootType) {
+        public void removeRoot(VirtualFile root, String rootType) {
             myPathEditors.get(rootType).removePaths(root);
         }
 
         @Override
-        public void removeRoots(OrderRootType rootType) {
+        public void removeRoots(String rootType) {
             myPathEditors.get(rootType).clearList();
         }
 

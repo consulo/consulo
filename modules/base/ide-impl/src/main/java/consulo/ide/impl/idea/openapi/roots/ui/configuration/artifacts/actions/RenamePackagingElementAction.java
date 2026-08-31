@@ -24,14 +24,14 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import javax.swing.tree.TreePath;
 
 /**
  * @author nik
  */
-public class RenamePackagingElementAction extends DumbAwareAction {
+public class RenamePackagingElementAction extends LegacyDumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public RenamePackagingElementAction(ArtifactEditorEx artifactEditor) {

@@ -8,19 +8,15 @@ import consulo.language.codeStyle.ChangedRangesInfo;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 class ChangedRangesUtil {
-
-  @Contract(pure = true)
   private ChangedRangesUtil() {
   }
 
-  
   static List<TextRange> processChangedRanges(PsiFile file, ChangedRangesInfo changedRangesInfo) {
     Document document = file.getViewProvider().getDocument();
     List<TextRange> result = new ArrayList<>();
@@ -37,7 +33,6 @@ class ChangedRangesUtil {
     return optimizedChangedRanges(result);
   }
 
-  
   private static List<TextRange> optimizedChangedRanges(List<TextRange> allChangedRanges) {
     if (allChangedRanges.isEmpty()) return allChangedRanges;
     List<TextRange> sorted = ContainerUtil.sorted(allChangedRanges, Segment.BY_START_OFFSET_THEN_END_OFFSET);

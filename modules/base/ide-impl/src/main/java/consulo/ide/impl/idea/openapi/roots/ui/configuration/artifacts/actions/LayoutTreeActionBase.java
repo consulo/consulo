@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ui.image.Image;
 
 /**
  * @author nik
  */
-public abstract class LayoutTreeActionBase extends DumbAwareAction {
+public abstract class LayoutTreeActionBase extends LegacyDumbAwareAction {
   protected final ArtifactEditorEx myArtifactEditor;
 
   protected LayoutTreeActionBase(String text, String description, Image icon, ArtifactEditorEx artifactEditor) {

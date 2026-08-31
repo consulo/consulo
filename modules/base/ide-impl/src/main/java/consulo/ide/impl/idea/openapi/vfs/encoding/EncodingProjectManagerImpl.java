@@ -282,7 +282,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
     public void setMapping(Map<? extends VirtualFile, ? extends Charset> mapping) {
         Application app = myProject.getApplication();
-        app.assertIsWriteThread();
+        app.assertWriteAccessAllowed();
         FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
         Map<VirtualFilePointer, Charset> newMap = new HashMap<>(mapping.size());
         Map<VirtualFilePointer, Charset> oldMap = new HashMap<>(myMapping);

@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.CommonActionsPanel;
 
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * @author Vassiliy.Kudryashov
  */
-public class EditFavoritesAction extends AnAction {
+public class EditFavoritesAction extends LegacyAnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

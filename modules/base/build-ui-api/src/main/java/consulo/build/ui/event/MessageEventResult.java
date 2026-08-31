@@ -1,17 +1,15 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.build.ui.event;
 
-import consulo.build.ui.event.BuildEventsNls;
-import consulo.build.ui.event.MessageEvent;
-
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface MessageEventResult extends EventResult {
-  MessageEvent.Kind getKind();
+    MessageEvent.Kind getKind();
 
-  @BuildEventsNls.Description
-  @Nullable default String getDetails() { return null; }
+    default LocalizeValue getDetails() {
+        return LocalizeValue.empty();
+    }
 }

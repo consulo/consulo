@@ -17,6 +17,7 @@ package consulo.content.library.ui;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
@@ -28,7 +29,7 @@ import java.util.Collections;
  * @author nik
  */
 public abstract class RootFilter extends RootDetector {
-  public RootFilter(OrderRootType rootType, boolean jarDirectory, String presentableRootTypeName) {
+  public RootFilter(String rootType, boolean jarDirectory, LocalizeValue presentableRootTypeName) {
     super(rootType, jarDirectory, presentableRootTypeName);
   }
 

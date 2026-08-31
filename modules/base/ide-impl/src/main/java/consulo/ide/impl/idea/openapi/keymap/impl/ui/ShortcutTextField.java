@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.ui.KeyStrokeAdapter;
+import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
 
 import javax.swing.*;
 import java.awt.*;

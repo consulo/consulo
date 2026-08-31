@@ -16,15 +16,12 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.util.collection.SmartList;
-import consulo.util.collection.primitive.ints.IntList;
-import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.lazy.LazyValue;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.log.VcsLogStorage;
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.versionControlSystem.log.impl.internal.util.TroveUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import gnu.trove.TIntObjectHashMap;
+import it.unimi.dsi.fastutil.ints.*;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -32,103 +29,98 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CompressedRefs {
-  
-  private final VcsLogStorage myHashMap;
+    private final VcsLogStorage myStorage;
 
-  // maps each commit id to the list of tag ids on this commit
-  
-  private final TIntObjectHashMap<IntList> myTags = new TIntObjectHashMap<>();
-  // maps each commit id to the list of branches on this commit
-  
-  private final TIntObjectHashMap<List<VcsRef>> myBranches = new TIntObjectHashMap<>();
+    // maps each commit id to the list of tag ids on this commit
+    private final Int2ObjectMap<IntArrayList> myTags = new Int2ObjectOpenHashMap<>();
+    // maps each commit id to the list of branches on this commit
+    private final Int2ObjectMap<List<VcsRef>> myBranches = new Int2ObjectOpenHashMap<>();
 
-  public CompressedRefs(Set<VcsRef> refs, VcsLogStorage hashMap) {
-    myHashMap = hashMap;
+    public CompressedRefs(Set<VcsRef> refs, VcsLogStorage storage) {
+        myStorage = storage;
 
-    Ref<VirtualFile> root = new Ref<>();
+        SimpleReference<VirtualFile> root = new SimpleReference<>();
 
-    refs.forEach(ref -> {
-      assert root.get() == null || root.get().equals(ref.getRoot()) : "All references are supposed to be from the single root";
-      root.set(ref.getRoot());
+        refs.forEach(ref -> {
+            assert root.get() == null || root.get().equals(ref.getRoot()) : "All references are supposed to be from the single root";
+            root.set(ref.getRoot());
 
-      if (ref.getType().isBranch()) {
-        putRef(myBranches, ref, myHashMap);
-      }
-      else {
-        putRefIndex(myTags, ref, myHashMap);
-      }
-    });
-    myTags.forEachValue(list -> {
-      IntLists.trimToSize(list);
-      return true;
-    });
-    myHashMap.flush();
-  }
-
-  
-  SmartList<VcsRef> refsToCommit(int index) {
-    SmartList<VcsRef> result = new SmartList<>();
-    if (myBranches.containsKey(index)) result.addAll(myBranches.get(index));
-    IntList tags = myTags.get(index);
-    if (tags != null) {
-      tags.forEach(value -> result.add(myHashMap.getVcsRef(value)));
+            if (ref.getType().isBranch()) {
+                putRef(myBranches, ref, myStorage);
+            }
+            else {
+                putRefIndex(myTags, ref, myStorage);
+            }
+        });
+        myTags.values().forEach(IntArrayList::trim);
+        myStorage.flush();
     }
-    return result;
-  }
 
-  
-  Stream<VcsRef> streamBranches() {
-    return TroveUtil.streamValues(myBranches).flatMap(Collection::stream);
-  }
+    SmartList<VcsRef> refsToCommit(int index) {
+        SmartList<VcsRef> result = new SmartList<>();
+        if (myBranches.containsKey(index)) {
+            result.addAll(myBranches.get(index));
+        }
+        IntList tags = myTags.get(index);
+        if (tags != null) {
+            tags.forEach(value -> result.add(myStorage.getVcsRef(value)));
+        }
+        return result;
+    }
 
-  
-  private Stream<VcsRef> streamTags() {
-    return TroveUtil.streamValues(myTags).flatMapToInt(TroveUtil::stream).mapToObj(myHashMap::getVcsRef);
-  }
+    Stream<VcsRef> streamBranches() {
+        return myBranches.values().stream().flatMap(Collection::stream);
+    }
 
-  
-  public Stream<VcsRef> stream() {
-    return Stream.concat(streamBranches(), streamTags());
-  }
+    private Stream<VcsRef> streamTags() {
+        return myTags.values().stream()
+            .flatMapToInt(IntList::intStream)
+            .mapToObj(myStorage::getVcsRef);
+    }
 
-  
-  public Collection<VcsRef> getRefs() {
-    return new AbstractCollection<>() {
-      private final Supplier<Collection<VcsRef>> myLoadedRefs =
-        LazyValue.notNull(() -> CompressedRefs.this.stream().collect(Collectors.toList()));
+    public Stream<VcsRef> stream() {
+        return Stream.concat(streamBranches(), streamTags());
+    }
 
-      
-      @Override
-      public Iterator<VcsRef> iterator() {
-        return myLoadedRefs.get().iterator();
-      }
+    public Collection<VcsRef> getRefs() {
+        return new AbstractCollection<>() {
+            private final Supplier<Collection<VcsRef>> myLoadedRefs =
+                LazyValue.notNull(() -> CompressedRefs.this.stream().collect(Collectors.toList()));
 
-      @Override
-      public int size() {
-        return myLoadedRefs.get().size();
-      }
-    };
-  }
+            @Override
+            public Iterator<VcsRef> iterator() {
+                return myLoadedRefs.get().iterator();
+            }
 
-  
-  public Collection<Integer> getCommits() {
-    Set<Integer> result = new HashSet<>();
-    TroveUtil.streamKeys(myBranches).forEach(result::add);
-    TroveUtil.streamKeys(myTags).forEach(result::add);
-    return result;
-  }
+            @Override
+            public int size() {
+                return myLoadedRefs.get().size();
+            }
+        };
+    }
 
-  private static void putRef(TIntObjectHashMap<List<VcsRef>> map, VcsRef ref, VcsLogStorage hashMap) {
-    int index = hashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());
-    List<VcsRef> list = map.get(index);
-    if (list == null) map.put(index, list = new SmartList<>());
-    list.add(ref);
-  }
+    public IntCollection getCommits() {
+        IntSet result = new IntOpenHashSet(myBranches.size() + myTags.size());
+        result.addAll(myBranches.keySet());
+        result.addAll(myTags.keySet());
+        return result;
+    }
 
-  private static void putRefIndex(TIntObjectHashMap<IntList> map, VcsRef ref, VcsLogStorage hashMap) {
-    int index = hashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());
-    IntList list = map.get(index);
-    if (list == null) map.put(index, list = IntLists.newArrayList());
-    list.add(hashMap.getRefIndex(ref));
-  }
+    private static void putRef(Int2ObjectMap<List<VcsRef>> map, VcsRef ref, VcsLogStorage storage) {
+        int index = storage.getCommitIndex(ref.getCommitHash(), ref.getRoot());
+        List<VcsRef> list = map.get(index);
+        if (list == null) {
+            map.put(index, list = new SmartList<>());
+        }
+        list.add(ref);
+    }
+
+    private static void putRefIndex(Int2ObjectMap<IntArrayList> map, VcsRef ref, VcsLogStorage storage) {
+        int index = storage.getCommitIndex(ref.getCommitHash(), ref.getRoot());
+        IntArrayList list = map.get(index);
+        if (list == null) {
+            map.put(index, list = new IntArrayList());
+        }
+        list.add(storage.getRefIndex(ref));
+    }
 }

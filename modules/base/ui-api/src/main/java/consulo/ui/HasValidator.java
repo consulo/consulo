@@ -26,45 +26,46 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-11-04
  */
 public interface HasValidator<V> extends Component {
-  static class ValidationInfo {
-    private final String myMessage;
-    private final @Nullable Image myIcon;
-    private final NotificationType myType;
+    static class ValidationInfo {
+        private final String myMessage;
+        private final @Nullable Image myIcon;
+        private final NotificationType myType;
 
-    public ValidationInfo(String message) {
-      this(message, null, NotificationType.ERROR);
+        public ValidationInfo(String message) {
+            this(message, null, NotificationType.ERROR);
+        }
+
+        public ValidationInfo(String message, @Nullable Image icon, NotificationType type) {
+            myMessage = message;
+            myIcon = icon;
+            myType = type;
+        }
+
+        public String getMessage() {
+            return myMessage;
+        }
+
+        public @Nullable Image getIcon() {
+            return myIcon;
+        }
+
+        public NotificationType getType() {
+            return myType;
+        }
     }
 
-    public ValidationInfo(String message, @Nullable Image icon, NotificationType type) {
-      myMessage = message;
-      myIcon = icon;
-      myType = type;
+    interface Validator<V> {
+        @Nullable
+        ValidationInfo validateValue(V value);
     }
 
-    public String getMessage() {
-      return myMessage;
-    }
+    Disposable addValidator(Validator<V> validator);
 
-    public @Nullable Image getIcon() {
-      return myIcon;
-    }
-
-    public NotificationType getType() {
-      return myType;
-    }
-  }
-
-  interface Validator<V> {
-    @Nullable ValidationInfo validateValue(V value);
-  }
-
-  Disposable addValidator(Validator<V> validator);
-
-  /**
-   * Check value in all validators and show notification
-   *
-   * @return true if all validators return null
-   */
-  @RequiredUIAccess
-  boolean validate();
+    /**
+     * Check value in all validators and show notification.
+     *
+     * @return true if all validators return null.
+     */
+    @RequiredUIAccess
+    boolean validate();
 }

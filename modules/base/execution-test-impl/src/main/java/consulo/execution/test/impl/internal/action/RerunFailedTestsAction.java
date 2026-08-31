@@ -26,12 +26,13 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 import javax.swing.*;
 
 @ActionImpl(id = "RerunFailedTests")
-public class RerunFailedTestsAction extends AnAction {
+public class RerunFailedTestsAction extends LegacyAnAction {
     public RerunFailedTestsAction() {
         super(
             ActionLocalize.actionRerunfailedtestsText(),

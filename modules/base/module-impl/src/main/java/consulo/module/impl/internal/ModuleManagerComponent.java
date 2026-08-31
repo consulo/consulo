@@ -27,6 +27,7 @@ import consulo.component.persist.Storage;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.localize.ModuleLocalize;
@@ -72,36 +73,27 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 cleanCachedStuff();
             }
         });
-
-        if (project.isDefault()) {
-            myReady = true;
-        }
     }
 
-    
     @Override
     protected ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
     }
 
-    
-    public CompletableFuture<?> loadModules(ProgressIndicator indicator) {
+    public void loadModulesNew(ProgressIndicator indicator) {
         StatCollector stat = new StatCollector();
 
-        stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
+        ProjectRootManagerEx.getInstanceEx(myProject).makeRootsChange(() -> {
+            stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
 
-        indicator.setIndeterminate(true);
-
-        return AccessRule.writeAsync(() -> {
             stat.markWith("fire modules add", () -> {
                 for (Module module : myModuleModel.myModules) {
                     fireModuleAdded(module);
                 }
             });
+        }, false, true);
 
-            myReady = true;
-            stat.dump("ModulesManager", LOG::info);
-        });
+        stat.dump("ModulesManager", LOG::info);
     }
 
     @Override

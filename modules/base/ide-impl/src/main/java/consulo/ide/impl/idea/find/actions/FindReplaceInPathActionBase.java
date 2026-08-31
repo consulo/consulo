@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
  * @since 2025-06-25
  */
-public abstract class FindReplaceInPathActionBase extends AnAction implements DumbAware {
+public abstract class FindReplaceInPathActionBase extends LegacyDumbAwareAction {
     public static final NotificationGroup NOTIFICATION_GROUP =
         NotificationGroup.toolWindowGroup("findInPath", LocalizeValue.localizeTODO("Find in Path"), ToolWindowId.FIND, false);
 

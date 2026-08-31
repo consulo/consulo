@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.usage.Usage;
@@ -26,77 +28,80 @@ import java.util.Arrays;
  * @author max
  */
 public class UsageNode extends Node implements Comparable<UsageNode>, Navigatable {
-  @Deprecated
-  // todo remove in 2018.1
-  public UsageNode(Usage usage, UsageViewTreeModelBuilder model) {
-    this(null, usage);
-  }
-
-  public UsageNode(Node parent, Usage usage) {
-    setUserObject(usage);
-    setParent(parent);
-  }
-
-  public String toString() {
-    return getUsage().toString();
-  }
-
-  @Override
-  public String tree2string(int indent, String lineSeparator) {
-    StringBuffer result = new StringBuffer();
-    StringUtil.repeatSymbol(result, ' ', indent);
-    result.append(getUsage());
-    return result.toString();
-  }
-
-  @Override
-  public int compareTo(UsageNode usageNode) {
-    return UsageViewImpl.USAGE_COMPARATOR.compare(getUsage(), usageNode.getUsage());
-  }
-
-  
-  public Usage getUsage() {
-    return (Usage)getUserObject();
-  }
-
-  @Override
-  public void navigate(boolean requestFocus) {
-    getUsage().navigate(requestFocus);
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return getUsage().isValid() && getUsage().canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return getUsage().isValid() && getUsage().canNavigate();
-  }
-
-  @Override
-  protected boolean isDataValid() {
-    return getUsage().isValid();
-  }
-
-  @Override
-  protected boolean isDataReadOnly() {
-    return getUsage().isReadOnly();
-  }
-
-  @Override
-  protected boolean isDataExcluded() {
-    return isExcluded();
-  }
-
-  
-  @Override
-  protected String getText(UsageView view) {
-    try {
-      return getUsage().getPresentation().getPlainText();
+    @Deprecated
+    // todo remove in 2018.1
+    public UsageNode(Usage usage, UsageViewTreeModelBuilder model) {
+        this(null, usage);
     }
-    catch(AbstractMethodError e) {
-      return Arrays.asList(getUsage().getPresentation().getText()).toString();
+
+    public UsageNode(Node parent, Usage usage) {
+        setUserObject(usage);
+        setParent(parent);
     }
-  }
+
+    public String toString() {
+        return getUsage().toString();
+    }
+
+    @Override
+    public String tree2string(int indent, String lineSeparator) {
+        StringBuffer result = new StringBuffer();
+        StringUtil.repeatSymbol(result, ' ', indent);
+        result.append(getUsage());
+        return result.toString();
+    }
+
+    @Override
+    public int compareTo(UsageNode usageNode) {
+        return UsageViewImpl.USAGE_COMPARATOR.compare(getUsage(), usageNode.getUsage());
+    }
+
+
+    public Usage getUsage() {
+        return (Usage) getUserObject();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void navigate(boolean requestFocus) {
+        getUsage().navigate(requestFocus);
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return getUsage().isValid() && getUsage().canNavigate();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return getUsage().isValid() && getUsage().canNavigate();
+    }
+
+    @Override
+    protected boolean isDataValid() {
+        return getUsage().isValid();
+    }
+
+    @Override
+    protected boolean isDataReadOnly() {
+        return getUsage().isReadOnly();
+    }
+
+    @Override
+    protected boolean isDataExcluded() {
+        return isExcluded();
+    }
+
+
+    @Override
+    protected String getText(UsageView view) {
+        try {
+            return getUsage().getPresentation().getPlainText();
+        }
+        catch (AbstractMethodError e) {
+            return Arrays.asList(getUsage().getPresentation().getText()).toString();
+        }
+    }
 }

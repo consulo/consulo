@@ -19,10 +19,10 @@ import consulo.colorScheme.AttributesFlyweight;
 import consulo.colorScheme.AttributesFlyweightBuilder;
 import consulo.colorScheme.EffectType;
 import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,16 +60,11 @@ public class AttributesFlyweightBuilderImpl implements AttributesFlyweightBuilde
 
     @Override
     public AttributesFlyweightBuilder withAdditionalEffect(EffectType effectType, @Nullable ColorValue effectColor) {
-        if (myAdditionalEffects.isEmpty() && effectColor != null) {
+        if (myAdditionalEffects.isEmpty()) {
             myAdditionalEffects = new LinkedHashMap<>();
         }
 
-        if (effectColor != null) {
-            myAdditionalEffects.put(effectType, effectColor);
-        }
-        else {
-            myAdditionalEffects.remove(effectType);
-        }
+        myAdditionalEffects.put(effectType, effectColor);
         return this;
     }
 

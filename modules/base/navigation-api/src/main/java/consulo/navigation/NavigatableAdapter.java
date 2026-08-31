@@ -15,7 +15,9 @@
  */
 package consulo.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ComponentManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -27,21 +29,25 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 @Deprecated
 public abstract class NavigatableAdapter implements Navigatable {
-  @Override
-  public boolean canNavigate() {
-    return true;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return true;
+    }
 
-  @Override
-  public boolean canNavigateToSource() {
-    return true;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return true;
+    }
 
-  public static void navigate(ComponentManager project, VirtualFile file, boolean requestFocus) {
-    navigate(project, file, 0, requestFocus);
-  }
+    @RequiredUIAccess
+    public static void navigate(ComponentManager project, VirtualFile file, boolean requestFocus) {
+        navigate(project, file, 0, requestFocus);
+    }
 
-  public static void navigate(ComponentManager project, VirtualFile file, int offset, boolean requestFocus) {
-    OpenFileDescriptorFactory.getInstance(project).builder(file).offset(offset).build().navigate(requestFocus);
-  }
+    @RequiredUIAccess
+    public static void navigate(ComponentManager project, VirtualFile file, int offset, boolean requestFocus) {
+        OpenFileDescriptorFactory.getInstance(project).builder(file).offset(offset).build().navigate(requestFocus);
+    }
 }

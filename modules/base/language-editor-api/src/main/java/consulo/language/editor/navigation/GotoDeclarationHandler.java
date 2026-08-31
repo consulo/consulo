@@ -22,6 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -46,7 +47,7 @@ public interface GotoDeclarationHandler {
    * @return the custom text or null to use the default text
    * @param context the action data context
    */
-  default @Nullable String getActionText(DataContext context) {
-    return null;
+  default LocalizeValue getActionText(DataContext context) {
+    return LocalizeValue.empty();
   }
 }

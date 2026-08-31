@@ -20,7 +20,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.memory.MemoryViewManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
@@ -37,10 +36,5 @@ public class ShowTrackedAction extends ToggleAction implements DumbAware {
         if (e.hasData(Project.KEY)) {
             MemoryViewManager.getInstance().setShowTrackedOnly(state);
         }
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

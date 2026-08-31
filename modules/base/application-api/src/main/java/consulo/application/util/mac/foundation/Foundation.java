@@ -66,11 +66,11 @@ public class Foundation {
   }
 
   private static Object[] prepInvoke(ID id, Pointer selector, Object[] args) {
-    Object[] invokArgs = new Object[args.length + 2];
-    invokArgs[0] = id;
-    invokArgs[1] = selector;
-    System.arraycopy(args, 0, invokArgs, 2, args.length);
-    return invokArgs;
+    Object[] invocationArgs = new Object[args.length + 2];
+    invocationArgs[0] = id;
+    invocationArgs[1] = selector;
+    System.arraycopy(args, 0, invocationArgs, 2, args.length);
+    return invocationArgs;
   }
 
   public static ID invoke(ID id, Pointer selector, Object... args) {

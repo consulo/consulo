@@ -34,4 +34,8 @@ public interface LightweightHint extends Hint, UserDataHolder {
     void setForceLightweightPopup(boolean forceLightweightPopup);
 
     void setAsyncHide(boolean asyncHide);
+
+    void setCancelOnClickOutside(boolean cancelOnClickOutside);
+
+    void setCancelOnOtherWindowOpen(boolean cancelOnOtherWindowOpen);
 }

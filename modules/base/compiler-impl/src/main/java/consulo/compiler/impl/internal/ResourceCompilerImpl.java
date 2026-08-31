@@ -18,7 +18,6 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ResourceCompilerExtension;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.resourceCompiler.ResourceCompiler;
@@ -33,17 +32,19 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Chunk;
-import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 /**
@@ -64,7 +65,6 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     }
 
     @Override
-    
     public String getDescription() {
         return CompilerLocalize.resourceCompilerDescription().get();
     }
@@ -77,13 +77,14 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     }
 
     @Override
-    public boolean isCompilableFile(VirtualFile file, CompileContext context) {
+    public boolean isCompilableFile(Path file, CompileContext context) {
         Module module = context.getModuleByFile(file);
         if (module == null) {
             return false;
         }
 
-        if (myProjectFileIndex.isInResource(file) || myProjectFileIndex.isInTestResource(file)) {
+        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(file);
+        if (virtualFile != null && (myProjectFileIndex.isInResource(virtualFile) || myProjectFileIndex.isInTestResource(virtualFile))) {
             return true;
         }
         //noinspection SimplifiableIfStatement
@@ -94,7 +95,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     }
 
     @Override
-    public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
+    public void compile(CompileContext context, Chunk<Module> moduleChunk, Collection<Path> files, OutputSink sink) {
         context.getProgressIndicator().pushState();
         context.getProgressIndicator().setText(CompilerLocalize.progressCopyingResources());
 
@@ -102,7 +103,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         LinkedList<CopyCommand> copyCommands = new LinkedList<>();
         Module singleChunkModule = moduleChunk.getNodes().size() == 1 ? moduleChunk.getNodes().iterator().next() : null;
         Application.get().runReadAction(() -> {
-            for (VirtualFile file : files) {
+            for (Path file : files) {
                 if (context.getProgressIndicator().isCanceled()) {
                     break;
                 }
@@ -110,19 +111,19 @@ public class ResourceCompilerImpl implements ResourceCompiler {
                 if (module == null) {
                     continue; // looks like file invalidated
                 }
-                VirtualFile fileRoot = MakeUtil.getSourceRoot(context, module, file);
+                Path fileRoot = MakeUtil.getSourceRoot(context, module, file);
                 if (fileRoot == null) {
                     continue;
                 }
-                String sourcePath = file.getPath();
-                String relativePath = VirtualFileUtil.getRelativePath(file, fileRoot, '/');
-                VirtualFile outputDir = context.getOutputForFile(module, file);
+                String sourcePath = FileUtil.toSystemIndependentName(file.toString());
+                String relativePath = FileUtil.toSystemIndependentName(fileRoot.relativize(file).toString());
+                Path outputDir = context.getOutputForFile(module, file);
                 if (outputDir == null) {
                     continue;
                 }
-                String outputPath = outputDir.getPath();
+                String outputPath = FileUtil.toSystemIndependentName(outputDir.toString());
 
-                String packagePrefix = myProjectFileIndex.getPackageNameByDirectory(fileRoot);
+                String packagePrefix = getPackagePrefix(fileRoot);
                 String targetPath;
                 if (packagePrefix != null && packagePrefix.length() > 0) {
                     targetPath = outputPath + "/" + packagePrefix.replace('.', '/') + "/" + relativePath;
@@ -131,7 +132,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
                     targetPath = outputPath + "/" + relativePath;
                 }
                 if (sourcePath.equals(targetPath)) {
-                    addToMap(processed, outputPath, new MyOutputItem(targetPath, file));
+                    addToMap(processed, outputPath, new OutputItem(targetPath, file));
                 }
                 else {
                     copyCommands.add(new CopyCommand(outputPath, sourcePath, targetPath, file));
@@ -146,20 +147,17 @@ public class ResourceCompilerImpl implements ResourceCompiler {
             if (context.getProgressIndicator().isCanceled()) {
                 break;
             }
-            //context.getProgressIndicator().setFraction((idx++) * 1.0 / total);
             context.getProgressIndicator().setText2(LocalizeValue.localizeTODO("Copying " + command.getFromPath() + "..."));
             try {
-                MyOutputItem outputItem = command.copy(filesToRefresh);
+                OutputItem outputItem = command.copy(filesToRefresh);
                 addToMap(processed, command.getOutputPath(), outputItem);
             }
             catch (IOException e) {
-                context.addMessage(
-                    CompilerMessageCategory.ERROR,
-                    CompilerLocalize.errorCopying(command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)).get(),
-                    command.getSourceFileUrl(),
-                    -1,
-                    -1
-                );
+                context.newError(
+                        CompilerLocalize.errorCopying(command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e))
+                    )
+                    .url(command.getSourceFileUrl())
+                    .add();
             }
         }
 
@@ -170,19 +168,22 @@ public class ResourceCompilerImpl implements ResourceCompiler {
 
         for (Iterator<Map.Entry<String, Collection<OutputItem>>> it = processed.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<String, Collection<OutputItem>> entry = it.next();
-            sink.add(entry.getKey(), entry.getValue(), VirtualFile.EMPTY_ARRAY);
+            sink.add(entry.getKey(), entry.getValue(), List.of());
             it.remove(); // to free memory
         }
         context.getProgressIndicator().popState();
     }
 
-    
+    private String getPackagePrefix(Path fileRoot) {
+        VirtualFile rootFile = LocalFileSystem.getInstance().findFileByNioFile(fileRoot);
+        return rootFile == null ? null : myProjectFileIndex.getPackageNameByDirectory(rootFile);
+    }
+
     @Override
     public FileType[] getInputFileTypes() {
         return FileType.EMPTY_ARRAY;
     }
 
-    
     @Override
     public FileType[] getOutputFileTypes() {
         return FileType.EMPTY_ARRAY;
@@ -210,23 +211,27 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         private final String myOutputPath;
         private final String myFromPath;
         private final String myToPath;
-        private final VirtualFile mySourceFile;
+        private final Path mySourceFile;
 
-        private CopyCommand(String outputPath, String fromPath, String toPath, VirtualFile sourceFile) {
+        private CopyCommand(String outputPath, String fromPath, String toPath, Path sourceFile) {
             myOutputPath = outputPath;
             myFromPath = fromPath;
             myToPath = toPath;
             mySourceFile = sourceFile;
         }
 
-        public MyOutputItem copy(List<File> filesToRefresh) throws IOException {
+        public OutputItem copy(List<File> filesToRefresh) throws IOException {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Copying " + myFromPath + " to " + myToPath);
             }
-            File targetFile = new File(myToPath);
-            FileUtil.copyContent(new File(myFromPath), targetFile, FilePermissionCopier.BY_NIO2);
-            filesToRefresh.add(targetFile);
-            return new MyOutputItem(myToPath, mySourceFile);
+            Path targetFile = Path.of(FileUtil.toSystemDependentName(myToPath));
+            Path parent = targetFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+            Files.copy(mySourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+            filesToRefresh.add(targetFile.toFile());
+            return new OutputItem(myToPath, mySourceFile);
         }
 
         public String getOutputPath() {
@@ -242,28 +247,8 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         }
 
         public String getSourceFileUrl() {
-            // do not use mySourseFile.getUrl() directly as it requires read action
-            return VirtualFileManager.constructUrl(mySourceFile.getFileSystem().getProtocol(), myFromPath);
+            return VirtualFileUtil.pathToUrl(myFromPath);
         }
     }
 
-    private static class MyOutputItem implements OutputItem {
-        private final String myTargetPath;
-        private final VirtualFile myFile;
-
-        private MyOutputItem(String targetPath, VirtualFile sourceFile) {
-            myTargetPath = targetPath;
-            myFile = sourceFile;
-        }
-
-        @Override
-        public String getOutputPath() {
-            return myTargetPath;
-        }
-
-        @Override
-        public VirtualFile getSourceFile() {
-            return myFile;
-        }
-    }
 }

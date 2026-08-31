@@ -27,11 +27,12 @@ import brotli from 'rollup-plugin-brotli';
 import checker from 'vite-plugin-checker';
 import postcssLit from './target/plugins/rollup-plugin-postcss-lit-custom/rollup-plugin-postcss-lit.js';
 import vaadinI18n from './target/plugins/rollup-plugin-vaadin-i18n/rollup-plugin-vaadin-i18n.js';
-import serviceWorkerPlugin from './target/plugins/vite-plugin-service-worker';
+
 export { default as useLocalWebComponents } from './target/plugins/vite-plugin-local-web-components';
 
 import { visualizer } from 'rollup-plugin-visualizer';
 import reactPlugin from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
 
 
 
@@ -464,31 +465,23 @@ export const vaadinConfig: UserConfigFn = (env) => {
         allow: allowedFrontendFolders
       }
     },
-    esbuild: {
-        legalComments: 'inline',
-    },
     build: {
       minify: productionMode,
       outDir: buildOutputFolder,
       emptyOutDir: devBundle,
       assetsDir: 'VAADIN/build',
       target,
-      rollupOptions: {
+      rolldownOptions: {
         input: {
           indexhtml: projectIndexHtml,
 
           ...(hasExportedWebComponents ? { webcomponenthtml: path.resolve(frontendFolder, 'web-component.html') } : {})
         },
         output: {
-          // Workaround to enable dynamic imports with top-level await for
-          // commonjs modules, such as "atmosphere.js" in Hilla. Extracting
-          // Rollup's commonjs helpers into separate manual chunk avoids
-          // circular dependencies in this case. Caused
-          //   - https://github.com/vitejs/vite/issues/10995
-          //   - https://github.com/rollup/rollup/issues/5884
-          //   - https://github.com/vitejs/vite/issues/19695
-          //   - https://github.com/vitejs/vite/issues/12209
-          manualChunks: (id: string) => id.startsWith('\0commonjsHelpers.js') ? 'commonjsHelpers' : null
+          // Rolldown does not guarantee ESM-spec module execution order by
+          // default. Vaadin components (via Polymer) depend on correct
+          // initialization order, especially when top-level await is used.
+          strictExecutionOrder: true,
         },
         onwarn: (warning: any, defaultHandler: (warning: any) => void) => {
           const ignoreEvalWarning = [
@@ -496,7 +489,7 @@ export const vaadinConfig: UserConfigFn = (env) => {
             'generated/jar-resources/vaadin-spreadsheet/spreadsheet-export.js',
             '@vaadin/charts/src/helpers.js'
           ];
-          if (warning.code === 'EVAL' && warning.id && !!ignoreEvalWarning.find((id) => warning.id?.endsWith(id))) {
+          if (warning.code === 'EVAL' && warning.id && !!ignoreEvalWarning.find((id: string) => warning.id?.endsWith(id))) {
             return;
           }
           defaultHandler(warning);
@@ -504,9 +497,6 @@ export const vaadinConfig: UserConfigFn = (env) => {
       }
     },
     optimizeDeps: {
-      esbuildOptions: {
-        target,
-      },
       entries: [
         // Pre-scan entrypoints in Vite to avoid reloading on first open
         'generated/vaadin.ts'
@@ -524,9 +514,7 @@ export const vaadinConfig: UserConfigFn = (env) => {
     plugins: [
       productionMode && brotli(),
       devMode && showRecompileReason(),
-      settings.offlineEnabled && serviceWorkerPlugin({
-        srcPath: settings.clientServiceWorkerSource,
-      }),
+      
       !devMode && statsExtracterPlugin(),
       !productionMode && preserveUsageStats(),
       themePlugin({ devMode }),
@@ -540,33 +528,36 @@ export const vaadinConfig: UserConfigFn = (env) => {
           new RegExp('.*/.*\\?html-proxy.*')
         ]
       }),
-      // The React plugin provides fast refresh and debug source info
+      // The React plugin provides fast refresh. In dev mode Babel (below)
+      // handles the JSX transform so OXC skips it — keeping all source
+      // locations derived from Babel's AST, which refers to the original
+      // source. In production OXC does the JSX transform.
       reactPlugin({
         include: '**/*.tsx',
-        babel: {
-          // We need to use babel to provide the source information for it to be correct
-          // (otherwise Babel will slightly rewrite the source file and esbuild generate source info for the modified file)
-          presets: [
-            [
-              '@babel/preset-react',
-              {
-                runtime: 'automatic',
-                importSource: productionMode ? 'react' : 'Frontend/generated/jsx-dev-transform',
-                development: !productionMode
-              }
-            ]
+      }),
+      // Babel runs with enforce:'pre' (default), so it sees the original
+      // source. All line/column values it embeds in the output come from
+      // the original AST — not affected by any formatting differences in
+      // Babel's printed output that follows.
+      //
+      // In dev mode Babel also does the JSX dev transform with the custom
+      // jsxImportSource, which captures JSX element locations in
+      // _debugInfo.source (React 19 no longer exposes _source on fibers).
+      babel({
+        include: '**/*.tsx',
+        plugins: [
+          !productionMode && [
+            '@babel/plugin-transform-react-jsx-development',
+            { importSource: 'Frontend/generated/jsx-dev-transform' }
           ],
-          // React writes the source location for where components are used, this writes for where they are defined
-          plugins: [
-            !productionMode && addFunctionComponentSourceLocationBabel(),
-            [
-              'module:@preact/signals-react-transform',
-              {
-                mode: 'all' // Needed to include translations which do not use something.value
-              }
-            ]
-          ].filter(Boolean)
-        }
+          !productionMode && addFunctionComponentSourceLocationBabel(),
+          [
+            'module:@preact/signals-react-transform',
+            {
+              mode: 'all' // Needed to include translations which do not use something.value
+            }
+          ]
+        ].filter(Boolean),
       }),
       
       productionMode && vaadinI18n({

@@ -21,7 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
+import consulo.ui.ex.impl.internal.keymap.DefaultKeymap;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.KeyboardShortcut;

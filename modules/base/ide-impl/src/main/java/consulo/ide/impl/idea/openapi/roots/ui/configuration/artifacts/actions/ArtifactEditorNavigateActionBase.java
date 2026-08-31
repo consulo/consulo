@@ -19,7 +19,7 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 
 import org.jspecify.annotations.Nullable;
@@ -29,7 +29,7 @@ import javax.swing.*;
 /**
  * @author nik
  */
-public abstract class ArtifactEditorNavigateActionBase extends DumbAwareAction {
+public abstract class ArtifactEditorNavigateActionBase extends LegacyDumbAwareAction {
     public ArtifactEditorNavigateActionBase(JComponent contextComponent) {
         super(ProjectLocalize.actionNameFacetNavigate());
         registerCustomShortcutSet(CommonShortcuts.getEditSource(), contextComponent);

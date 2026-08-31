@@ -65,7 +65,11 @@ public final class FileChooserTextBoxBuilder {
             String text = myController.myAccessor.getValue(myController.myTextBox);
 
             FileChooser.chooseFile(fileChooserDescriptor, myController.myProject, myController.mySelectedFileMapper.apply(text))
-                .doWhenDone((f) -> myController.myAccessor.setValue(myController.myTextBox, f.getPresentableUrl()));
+                .whenComplete((f, error) -> {
+                    if (error == null) {
+                        myController.myAccessor.setValue(myController.myTextBox, f.getPresentableUrl());
+                    }
+                });
         }
     }
 

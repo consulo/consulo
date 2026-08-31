@@ -19,10 +19,10 @@ import consulo.ui.Component;
 
 /**
  * @author VISTALL
- * @since 01/08/2021
+ * @since 2021-08-01
  */
 public final class DetachEvent extends ComponentEvent<Component> {
-  public DetachEvent(Component component) {
-    super(component);
-  }
+    public DetachEvent(Component component) {
+        super(component);
+    }
 }

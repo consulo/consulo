@@ -18,13 +18,12 @@ package consulo.ide.impl.idea.internal;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VFileProperty;
 
@@ -37,7 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author anna
  * @since 2007-06-28
  */
-public class LoadAllContentsAction extends AnAction implements DumbAware {
+public class LoadAllContentsAction extends LegacyDumbAwareAction {
   private static final Logger LOG = Logger.getInstance(LoadAllContentsAction.class);
   public LoadAllContentsAction() {
     super("Load all files content", "Measure FileUtil.loadFile() for all files in the project", null);

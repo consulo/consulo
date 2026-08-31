@@ -11,10 +11,10 @@ import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
+import consulo.ui.event.ComponentEvent;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,9 +50,10 @@ public abstract class CodeVisionProviderBase implements DaemonBoundCodeVisionPro
     }
 
     /**
-     * Called when user clicks the code vision entry.
+     * Called when user clicks the code vision entry. An entry activated without user input carries a
+     * programmatic event anchored on the editor.
      */
-    public abstract void handleClick(Editor editor, PsiElement element, @Nullable MouseEvent event);
+    public abstract void handleClick(Editor editor, PsiElement element, ComponentEvent<?> event);
 
     /**
      * Override to log feature usage statistics on click.
@@ -145,7 +146,7 @@ public abstract class CodeVisionProviderBase implements DaemonBoundCodeVisionPro
         CodeVisionProviderBase provider
     ) implements ClickableTextCodeVisionEntry.CodeVisionClickHandler {
         @Override
-        public void onClick(@Nullable MouseEvent event, Editor editor) {
+        public void onClick(ComponentEvent<?> event, Editor editor) {
             PsiElement element = elementPointer().getElement();
             if (element == null) return;
             provider().logClickToFUS(element, hint());

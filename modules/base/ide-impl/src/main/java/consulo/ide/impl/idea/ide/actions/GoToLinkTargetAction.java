@@ -20,7 +20,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 
 @ActionImpl(id = "GoToLinkTarget")
-public class GoToLinkTargetAction extends DumbAwareAction {
+public class GoToLinkTargetAction extends LegacyDumbAwareAction {
     public GoToLinkTargetAction() {
         super(ActionLocalize.actionGotolinktargetText(), ActionLocalize.actionGotolinktargetDescription());
     }

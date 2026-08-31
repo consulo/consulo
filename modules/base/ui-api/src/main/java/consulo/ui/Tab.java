@@ -28,6 +28,14 @@ public interface Tab {
 
     void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
+    /**
+     * The group shown on a right click of the tab itself. Whoever builds the tab knows what it stands for, so
+     * the group is given rather than looked up from the data below it - the content of a tab which was never
+     * selected is not in the ui yet, and nothing can be read off it.
+     */
+    default void setPopupGroup(String groupId, String place) {
+    }
+
     void update();
 
     void select();

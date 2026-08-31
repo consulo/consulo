@@ -26,6 +26,7 @@ public interface IconLibraryDescriptor {
     String getLibraryId();
 
     @Nullable String getBaseLibraryId();
+
     LocalizeValue getName();
 
     default boolean isDark() {

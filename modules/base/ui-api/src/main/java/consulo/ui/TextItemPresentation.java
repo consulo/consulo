@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
@@ -23,35 +24,57 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 public interface TextItemPresentation {
-  default TextItemPresentation withIcon(@Nullable Image image) {
-    // unwarranted action
-    return this;
-  }
-  default TextItemPresentation withAntialiasingType(AntialiasingType type) {
-    // unwarranted action
-    return this;
-  }
-  default TextItemPresentation withFont(Font font) {
-    // unwarranted action
-    return this;
-  }
+    default TextItemPresentation withIcon(@Nullable Image image) {
+        // unwarranted action
+        return this;
+    }
 
-  void clearText();
+    default TextItemPresentation withAntialiasingType(AntialiasingType type) {
+        // unwarranted action
+        return this;
+    }
 
-  default void append(String text) {
-    append(text, TextAttribute.REGULAR);
-  }
+    default TextItemPresentation withFont(Font font) {
+        // unwarranted action
+        return this;
+    }
 
-  default void append(String text, TextAttribute textAttribute) {
-    append(LocalizeValue.of(text), textAttribute);
-  }
+    /**
+     * The fill of the item as a whole - the file colour of a project view row, the colour a tab carries. The
+     * background of a {@link TextAttribute} belongs to the run of text it is appended with; this one belongs
+     * to the surface the item is drawn on.
+     */
+    default TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
+        // unwarranted action
+        return this;
+    }
 
-  default void append(LocalizeValue text) {
-    append(text, TextAttribute.REGULAR);
-  }
+    /**
+     * Text and icon pinned to the trailing edge of the item, past whatever {@link #append} has written -
+     * the module, library or sdk a navigation target sits in. A frontend which has nowhere to put it
+     * leaves it out.
+     */
+    default TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
+        // unwarranted action
+        return this;
+    }
 
-  void append(LocalizeValue text, TextAttribute textAttribute);
+    void clearText();
+
+    default void append(String text) {
+        append(text, TextAttribute.REGULAR);
+    }
+
+    default void append(String text, TextAttribute textAttribute) {
+        append(LocalizeValue.of(text), textAttribute);
+    }
+
+    default void append(LocalizeValue text) {
+        append(text, TextAttribute.REGULAR);
+    }
+
+    void append(LocalizeValue text, TextAttribute textAttribute);
 }

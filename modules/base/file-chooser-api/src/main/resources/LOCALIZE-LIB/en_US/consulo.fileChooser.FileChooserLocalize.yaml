@@ -1,12 +1,56 @@
 file.chooser.default.title:
-  text: Select Path
-file.chooser.save.dialog.default.title:
-  text: Select File to Save
+    text: Select Path
+file.chooser.files.label:
+    text: '{0} files'
 file.chooser.save.dialog.confirmation:
-  text: |-
-    {0} is already exists.
-    Do you want to replace it?
+    text: |-
+        {0} is already exists.
+        Do you want to replace it?
 file.chooser.save.dialog.confirmation.title:
-  text: Confirm Save as
+    text: Confirm Save as
+file.chooser.save.dialog.default.title:
+    text: Select File to Save
 file.chooser.select.object.title:
-  text: Select {0}
+    text: Select {0}
+create.new.folder.could.not.create.folder.error.message:
+    text: Could not create folder "{0}"
+create.new.folder.enter.new.folder.name.prompt.text:
+    text: Enter new folder name
+new.folder.dialog.title:
+    text: New Folder
+universal.file.chooser.action.create.directory.description:
+    text: Create a new directory
+universal.file.chooser.action.create.directory.text:
+    text: New Folder
+universal.file.chooser.action.delete.confirm:
+    text: Delete "{0}"?
+universal.file.chooser.action.delete.confirm.directory:
+    text: Delete "{0}" and all of its contents?
+universal.file.chooser.action.delete.description:
+    text: Delete the selected file or directory
+universal.file.chooser.action.delete.text:
+    text: Delete
+universal.file.chooser.action.desktop.description:
+    text: Go to the desktop directory
+universal.file.chooser.action.desktop.text:
+    text: Desktop Directory
+universal.file.chooser.action.project.description:
+    text: Go to the project directory
+universal.file.chooser.action.project.text:
+    text: Project Directory
+universal.file.chooser.action.refresh.description:
+    text: Refresh the file tree
+universal.file.chooser.action.refresh.text:
+    text: Refresh
+universal.file.chooser.action.hidden.description:
+    text: Show hidden files and directories
+universal.file.chooser.action.hidden.text:
+    text: Show Hidden Files
+universal.file.chooser.action.home.description:
+    text: Go to the home directory
+universal.file.chooser.action.home.text:
+    text: Home Directory
+universal.file.chooser.invalid.path:
+    text: Invalid path
+universal.file.chooser.label.loading:
+    text: Loading...

@@ -2,7 +2,6 @@ package consulo.externalSystem.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
@@ -15,9 +14,9 @@ import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -27,7 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2013-07-16
  */
 @ActionImpl(id = "ExternalSystem.OpenConfig", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE))
-public class OpenExternalConfigAction extends AnAction implements DumbAware {
+public class OpenExternalConfigAction extends LegacyDumbAwareAction {
     public OpenExternalConfigAction() {
         super(ExternalSystemLocalize.actionOpenExternalConfigText(), ExternalSystemLocalize.actionOpenExternalConfigDescription());
     }

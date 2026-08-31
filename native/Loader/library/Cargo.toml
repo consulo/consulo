@@ -17,7 +17,6 @@ crate-type = ["cdylib"]
 [features]
 default = ["awt"]
 awt = ["consulo-loader-core/awt"]
-swt = ["consulo-loader-core/swt"]
 
 [dependencies]
 anyhow = { workspace = true }

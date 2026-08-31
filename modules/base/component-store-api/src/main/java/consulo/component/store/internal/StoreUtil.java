@@ -23,11 +23,13 @@ import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ShutDownTracker;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public final class StoreUtil {
   private static final Logger LOG = Logger.getInstance(StoreUtil.class);
@@ -35,22 +37,45 @@ public final class StoreUtil {
   private StoreUtil() {
   }
 
-  public static void save(IComponentStore stateStore, boolean force, @Nullable ComponentManager project) {
-    ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
-    try {
-      stateStore.save(force, new ArrayList<>());
-    }
-    catch (IComponentStore.SaveCancelledException e) {
-      LOG.info(e);
-    }
-    catch (Throwable e) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        LOG.error("Save settings failed", e);
-      }
-      else {
-        LOG.warn("Save settings failed", e);
+  public static Continuation<?> saveAsync(IComponentStore stateStore, UIAccess uiAccess, @Nullable ComponentManager project) {
+    Thread stopperThread = Thread.currentThread();
+    ShutDownTracker.getInstance().registerStopperThread(stopperThread);
+
+    return attachSaveHandlers(stateStore.saveAsync(uiAccess, new ArrayList<>()), stopperThread, uiAccess, project);
+  }
+
+  private static <T> Continuation<T> attachSaveHandlers(Continuation<T> continuation, Thread stopperThread, UIAccess uiAccess, @Nullable ComponentManager project) {
+    return continuation
+      .onFinish(c -> ShutDownTracker.getInstance().unregisterStopperThread(stopperThread))
+      .onError(onSaveError(uiAccess, project));
+  }
+
+  public static <T> Consumer<Continuation<T>> onSaveError(UIAccess uiAccess, @Nullable ComponentManager project) {
+    return continuation -> {
+      Throwable e = continuation.getError();
+      if (e == null) {
+        return;
       }
 
+      handleSaveError(uiAccess, project, e);
+      continuation.errorHandled();
+    };
+  }
+
+  public static void handleSaveError(UIAccess uiAccess, @Nullable ComponentManager project, Throwable e) {
+    if (e instanceof IComponentStore.SaveCancelledException) {
+      LOG.info(e);
+      return;
+    }
+
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
+      LOG.error("Save settings failed", e);
+    }
+    else {
+      LOG.warn("Save settings failed", e);
+    }
+
+    uiAccess.give(() -> {
       String messagePostfix = " Please restart " + Application.get().getName() + "</p>" + (Application.get().isInternal() ? "<p>" + ExceptionUtil.getThrowableText(e) + "</p>" : "");
 
       PluginId pluginId = PluginExceptionUtil.findFirstPluginId(e);
@@ -63,45 +88,6 @@ public final class StoreUtil {
                 .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings." + messagePostfix,
                         project);
       }
-    }
-    finally {
-      ShutDownTracker.getInstance().unregisterStopperThread(Thread.currentThread());
-    }
-  }
-
-  public static void saveAsync(IComponentStore stateStore, UIAccess uiAccess, @Nullable ComponentManager project) {
-    ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
-    try {
-      stateStore.saveAsync(uiAccess, new ArrayList<>());
-    }
-    catch (IComponentStore.SaveCancelledException e) {
-      LOG.info(e);
-    }
-    catch (Throwable e) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        LOG.error("Save settings failed", e);
-      }
-      else {
-        LOG.warn("Save settings failed", e);
-      }
-
-      uiAccess.give(() -> {
-        String messagePostfix = " Please restart " + Application.get().getName() + "</p>" + (Application.get().isInternal() ? "<p>" + ExceptionUtil.getThrowableText(e) + "</p>" : "");
-
-        PluginId pluginId = PluginExceptionUtil.findFirstPluginId(e);
-
-        if (pluginId == null) {
-          StorageNotificationService.getInstance().notify(NotificationType.ERROR, "Unable to save settings", "<p>Failed to save settings." + messagePostfix, project);
-        }
-        else {
-          StorageNotificationService.getInstance()
-                  .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings." + messagePostfix,
-                          project);
-        }
-      });
-    }
-    finally {
-      ShutDownTracker.getInstance().unregisterStopperThread(Thread.currentThread());
-    }
+    });
   }
 }

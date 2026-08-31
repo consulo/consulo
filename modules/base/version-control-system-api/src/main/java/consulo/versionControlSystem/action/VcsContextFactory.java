@@ -18,8 +18,10 @@ package consulo.versionControlSystem.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,102 +32,103 @@ import java.util.function.Function;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface VcsContextFactory {
 
-  
-  VcsContext createCachedContextOn(AnActionEvent event);
+    VcsContext createCachedContextOn(AnActionEvent event);
 
-  
-  VcsContext createContextOn(AnActionEvent event);
+    VcsContext createContextOn(AnActionEvent event, Key<Editor> editorKey);
 
-  /**
-   * Creates a FilePath corresponding to the specified virtual file.
-   *
-   * @param virtualFile the file for which the FilePath should be created.
-   * @return the FilePath instance.
-   */
-  FilePath createFilePathOn(VirtualFile virtualFile);
-
-  /**
-   * Creates a FilePath corresponding to the specified java.io.File.
-   *
-   * @param file the file for which the FilePath should be created.
-   * @return the FilePath instance.
-   */
-  FilePath createFilePathOn(File file);
-
-  /**
-   * Creates a FilePath corresponding to the specified java.io.File. Assumes that the file does not exist in the filesystem
-   * and does not try to find the corresponding VirtualFile, which provides a performance benefit.
-   *
-   * @param file        the file for which the FilePath should be created.
-   * @param isDirectory whether {@code file} specifies a file or a directory.
-   * @return the FilePath instance.
-   */
-  FilePath createFilePathOnDeleted(File file, boolean isDirectory);
-
-  /**
-   * Creates a FilePath corresponding to the specified java.io.File. If the file does not exist, uses the value
-   * of the {@code isDirectory} parameter to determine if the file is a directory.
-   *
-   * @param file        the file for which the FilePath should be created.
-   * @param isDirectory whether {@code file} specifies a file or a directory.
-   * @return the FilePath instance.
-   */
-  FilePath createFilePathOn(File file, boolean isDirectory);
-
-  /**
-   * Creates a FilePath corresponding to the specified java.io.File. If the file does not exist, uses
-   * detector to determine if the file is a directory.
-   *
-   * @param file     the file for which the FilePath should be created.
-   * @param detector - called to get to know whether the file is directory, if local file is not found
-   * @return the FilePath instance.
-   * @deprecated to remove in IDEA 16. Check the virtual file right away and pass to the right constructor.
-   */
-  @Deprecated
-  
-  FilePath createFilePathOn(File file, Function<File, Boolean> detector);
-
-  /**
-   * Creates a FilePath corresponding to the specified path in a VCS repository. Does not try to locate
-   * the file in the local filesystem.
-   *
-   * @param path        the repository path for which the FilePath should be created.
-   * @param isDirectory whether {@code file} specifies a file or a directory.
-   * @return the FilePath instance.
-   */
-  FilePath createFilePathOnNonLocal(String path, boolean isDirectory);
-
-  /**
-   * Creates a FilePath corresponding to a file with the specified name in the specified directory.
-   * Assumes that the file does not exist in the filesystem and does not try to find the corresponding VirtualFile,
-   * which provides a performance benefit.
-   *
-   * @param parent the containing directory for the file.
-   * @param name   the name of the file.
-   * @return the FilePath instance.
-   */
-  FilePath createFilePathOn(VirtualFile parent, String name);
-
-  
-  FilePath createFilePath(VirtualFile parent, String fileName, boolean isDirectory);
-
-  
-  LocalChangeList createLocalChangeList(Project project, String name);
-
-  
-  FilePath createFilePath(String path, boolean isDirectory);
-
-  static VcsContextFactory getInstance() {
-    return Application.get().getInstance(VcsContextFactory.class);
-  }
-
-  @Deprecated
-  class SERVICE {
-    private SERVICE() {
+    default VcsContext createContextOn(AnActionEvent event) {
+        return createContextOn(event, Editor.KEY);
     }
 
-    public static VcsContextFactory getInstance() {
-      return VcsContextFactory.getInstance();
+    /**
+     * Creates a FilePath corresponding to the specified virtual file.
+     *
+     * @param virtualFile the file for which the FilePath should be created.
+     * @return the FilePath instance.
+     */
+    FilePath createFilePathOn(VirtualFile virtualFile);
+
+    /**
+     * Creates a FilePath corresponding to the specified java.io.File.
+     *
+     * @param file the file for which the FilePath should be created.
+     * @return the FilePath instance.
+     */
+    FilePath createFilePathOn(File file);
+
+    /**
+     * Creates a FilePath corresponding to the specified java.io.File. Assumes that the file does not exist in the filesystem
+     * and does not try to find the corresponding VirtualFile, which provides a performance benefit.
+     *
+     * @param file        the file for which the FilePath should be created.
+     * @param isDirectory whether {@code file} specifies a file or a directory.
+     * @return the FilePath instance.
+     */
+    FilePath createFilePathOnDeleted(File file, boolean isDirectory);
+
+    /**
+     * Creates a FilePath corresponding to the specified java.io.File. If the file does not exist, uses the value
+     * of the {@code isDirectory} parameter to determine if the file is a directory.
+     *
+     * @param file        the file for which the FilePath should be created.
+     * @param isDirectory whether {@code file} specifies a file or a directory.
+     * @return the FilePath instance.
+     */
+    FilePath createFilePathOn(File file, boolean isDirectory);
+
+    /**
+     * Creates a FilePath corresponding to the specified java.io.File. If the file does not exist, uses
+     * detector to determine if the file is a directory.
+     *
+     * @param file     the file for which the FilePath should be created.
+     * @param detector - called to get to know whether the file is directory, if local file is not found
+     * @return the FilePath instance.
+     * @deprecated to remove in IDEA 16. Check the virtual file right away and pass to the right constructor.
+     */
+    @Deprecated
+    FilePath createFilePathOn(File file, Function<File, Boolean> detector);
+
+    /**
+     * Creates a FilePath corresponding to the specified path in a VCS repository. Does not try to locate
+     * the file in the local filesystem.
+     *
+     * @param path        the repository path for which the FilePath should be created.
+     * @param isDirectory whether {@code file} specifies a file or a directory.
+     * @return the FilePath instance.
+     */
+    FilePath createFilePathOnNonLocal(String path, boolean isDirectory);
+
+    /**
+     * Creates a FilePath corresponding to a file with the specified name in the specified directory.
+     * Assumes that the file does not exist in the filesystem and does not try to find the corresponding VirtualFile,
+     * which provides a performance benefit.
+     *
+     * @param parent the containing directory for the file.
+     * @param name   the name of the file.
+     * @return the FilePath instance.
+     */
+    FilePath createFilePathOn(VirtualFile parent, String name);
+
+
+    FilePath createFilePath(VirtualFile parent, String fileName, boolean isDirectory);
+
+
+    LocalChangeList createLocalChangeList(Project project, String name);
+
+
+    FilePath createFilePath(String path, boolean isDirectory);
+
+    static VcsContextFactory getInstance() {
+        return Application.get().getInstance(VcsContextFactory.class);
     }
-  }
+
+    @Deprecated
+    class SERVICE {
+        private SERVICE() {
+        }
+
+        public static VcsContextFactory getInstance() {
+            return VcsContextFactory.getInstance();
+        }
+    }
 }

@@ -29,27 +29,19 @@ public interface AttributesFlyweightBuilder {
         return new AttributesFlyweightBuilderImpl();
     }
 
-    
     AttributesFlyweightBuilder withForeground(ColorValue foreground);
 
-    
     AttributesFlyweightBuilder withBackground(ColorValue background);
 
-    
     AttributesFlyweightBuilder withEffect(EffectType effectType, @Nullable ColorValue effectColor);
 
-    
     AttributesFlyweightBuilder withAdditionalEffect(EffectType effectType, @Nullable ColorValue effectColor);
 
-    
     AttributesFlyweightBuilder withErrorStripeColor(ColorValue errorStripeColor);
 
-    
     AttributesFlyweightBuilder withBoldFont();
 
-    
     AttributesFlyweightBuilder withItalicFont();
 
-    
     AttributesFlyweight build();
 }

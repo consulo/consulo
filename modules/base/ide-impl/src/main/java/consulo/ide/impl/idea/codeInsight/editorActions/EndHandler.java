@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -33,6 +32,7 @@ import consulo.language.editor.EditorNavigationDelegate;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -45,7 +45,8 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
   }
 
   @Override
-  protected void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredUIAccess
+  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     CodeInsightSettings settings = CodeInsightSettings.getInstance();
     if (!settings.SMART_END_ACTION) {
       if (myOriginalHandler != null) {
@@ -141,7 +142,6 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
     myOriginalHandler = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_LINE_END;

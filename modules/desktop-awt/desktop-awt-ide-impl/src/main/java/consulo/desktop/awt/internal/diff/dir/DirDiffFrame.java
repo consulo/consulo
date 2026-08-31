@@ -42,7 +42,9 @@ public class DirDiffFrame extends FrameWrapper {
       setProject(project);
     }
     closeOnEsc();
-    DataManager.registerDataProvider(myPanel.getPanel(), dataId -> HelpManager.HELP_ID == dataId ? "reference.dialogs.diff.folder" : null);
+    DataManager.registerUiDataProvider(myPanel.getPanel(), sink -> {
+      sink.set(HelpManager.HELP_ID, "reference.dialogs.diff.folder");
+    });
   }
 
   @Override

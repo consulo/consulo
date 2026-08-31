@@ -29,12 +29,12 @@ public class CompositeLanguage extends Language {
     super(id);
   }
 
-  protected CompositeLanguage(String ID, String... mimeTypes) {
-    super(ID, mimeTypes);
+  protected CompositeLanguage(String id, String... mimeTypes) {
+    super(id, mimeTypes);
   }
 
-  protected CompositeLanguage(Language baseLanguage, String ID, String... mimeTypes) {
-    super(baseLanguage, ID, mimeTypes);
+  protected CompositeLanguage(Language baseLanguage, String id, String... mimeTypes) {
+    super(baseLanguage, id, mimeTypes);
   }
 
   public void registerLanguageExtension(LanguageFilter filter) {

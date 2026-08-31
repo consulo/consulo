@@ -5,7 +5,7 @@ import consulo.document.Document;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.impl.IterationState;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.ex.awt.AWTConstants;
 
 /**
  * Iterator over editor's 'atomic' (in terms of soft wrapping) elements. These are folded regions and individual Unicode characters
@@ -136,7 +136,7 @@ public class WrapElementIterator {
     return myElementEndOffset == myIterationState.getEndOffset() && myIterationState.nextIsFoldRegion();
   }
 
-  @JdkConstants.FontStyle
+  @AWTConstants.FontStyle
   public int getFontStyle() {
     return myIterationState.getMergedAttributes().getFontType();
   }

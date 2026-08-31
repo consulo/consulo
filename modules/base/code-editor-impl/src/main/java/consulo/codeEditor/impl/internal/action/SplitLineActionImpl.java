@@ -28,8 +28,9 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -49,11 +50,10 @@ public class SplitLineActionImpl extends EditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             CopyPasteManager.getInstance().stopKillRings();
             Document document = editor.getDocument();
-            RangeMarker rangeMarker =
-                document.createRangeMarker(editor.getCaretModel().getOffset(), editor.getCaretModel().getOffset());
+            RangeMarker rangeMarker = document.createRangeMarker(editor.getCaretModel().getOffset(), editor.getCaretModel().getOffset());
             CharSequence chars = document.getCharsSequence();
 
             int offset = editor.getCaretModel().getOffset();

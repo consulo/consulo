@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
-import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.UpdateInfoTree;
@@ -290,8 +290,6 @@ public abstract class ProjectLevelVcsManager {
     );
 
     public abstract @Nullable AbstractVcs findVersioningVcs(VirtualFile file);
-
-    public abstract CheckoutProvider.Listener getCompositeCheckoutListener();
 
     public abstract VcsHistoryCache getVcsHistoryCache();
 

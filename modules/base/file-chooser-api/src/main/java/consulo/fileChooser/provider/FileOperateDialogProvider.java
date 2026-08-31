@@ -22,10 +22,8 @@ package consulo.fileChooser.provider;
 public interface FileOperateDialogProvider {
   String APPLICATION_ID = "application";
 
-  
   String getId();
 
-  
   String getName();
 
   default boolean isAvailable() {

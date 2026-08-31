@@ -33,14 +33,18 @@ public class ElementTypeAsPsiFactory extends IElementType implements IElementTyp
     this(debugName, language, true, factory);
   }
 
-  public ElementTypeAsPsiFactory(String debugName, @Nullable Language language, boolean register, Function<ASTNode, ? extends PsiElement> factory) {
+  public ElementTypeAsPsiFactory(
+    String debugName,
+    @Nullable Language language,
+    boolean register,
+    Function<ASTNode, ? extends PsiElement> factory
+  ) {
     super(debugName, language, register);
 
     myFactory = factory;
   }
 
   @Override
-  
   public PsiElement createElement(ASTNode node) {
     return myFactory.apply(node);
   }

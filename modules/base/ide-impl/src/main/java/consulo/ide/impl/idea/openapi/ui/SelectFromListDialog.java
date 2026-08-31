@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.ui;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBList;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -41,7 +41,7 @@ public class SelectFromListDialog extends DialogWrapper {
                               Object[] objects,
                               ToStringAspect toStringAspect,
                               String title,
-                              @JdkConstants.ListSelectionMode int selectionMode) {
+                              @AWTConstants.ListSelectionMode int selectionMode) {
     super(project, true);
     myToStringAspect = toStringAspect;
     myList.setSelectionMode(selectionMode);
@@ -61,7 +61,7 @@ public class SelectFromListDialog extends DialogWrapper {
 
     myList.setCellRenderer(new ColoredListCellRenderer(){
       protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        append(myToStringAspect.getToStirng(value),
+        append(myToStringAspect.getToString(value),
                new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getForeground()));
       }
     });
@@ -87,7 +87,7 @@ public class SelectFromListDialog extends DialogWrapper {
   }
 
   public interface ToStringAspect {
-    String getToStirng(Object obj);
+    String getToString(Object obj);
   }
 
   public Object[] getSelection(){

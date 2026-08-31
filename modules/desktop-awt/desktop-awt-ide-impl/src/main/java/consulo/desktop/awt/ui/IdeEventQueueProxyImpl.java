@@ -34,6 +34,26 @@ import java.util.function.Predicate;
 @ServiceImpl
 @Singleton
 public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
+  @Override
+  public void blockNextEventsForActions(java.awt.event.MouseEvent e) {
+    IdeEventQueue.getInstance().blockNextEvents(e, IdeEventQueue.BlockMode.ACTIONS);
+  }
+
+  @Override
+  public boolean isInputMethodEnabled() {
+    return IdeEventQueue.getInstance().isInputMethodEnabled();
+  }
+
+  @Override
+  public int getEventCount() {
+    return IdeEventQueue.getInstance().getEventCount();
+  }
+
+  @Override
+  public void setEventCount(int eventCount) {
+    IdeEventQueue.getInstance().setEventCount(eventCount);
+  }
+
   private final IdeEventQueue myIdeEventQueue;
 
   public IdeEventQueueProxyImpl() {

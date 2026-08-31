@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author yole
  */
-public abstract class CloseEditorsActionBase extends AnAction implements DumbAware {
+public abstract class CloseEditorsActionBase extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     protected CloseEditorsActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }

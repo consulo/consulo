@@ -44,7 +44,7 @@ public class LibraryUtil {
   }
 
   public static boolean isClassAvailableInLibrary(Library library, String fqn) {
-    return isClassAvailableInLibrary(library.getFiles(BinariesOrderRootType.getInstance()), fqn);
+    return isClassAvailableInLibrary(library.getFiles(BinariesOrderRootType.ID), fqn);
   }
 
   public static boolean isClassAvailableInLibrary(VirtualFile[] files, String fqn) {
@@ -134,7 +134,7 @@ public class LibraryUtil {
     if (library instanceof LibraryEx && ((LibraryEx)library).isDisposed()) {
       return "Disposed Library";
     }
-    String[] urls = library.getUrls(BinariesOrderRootType.getInstance());
+    String[] urls = library.getUrls(BinariesOrderRootType.ID);
     if (urls.length > 0) {
       return PathUtil.getFileName(VirtualFileUtil.urlToPath(urls[0]));
     }

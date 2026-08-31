@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
  */
 public class TestCoroutineContext {
     public static CoroutineContext newSilent() {
-        CoroutineContext context = new CoroutineContext(Executors.newSingleThreadExecutor(), Executors.newSingleThreadScheduledExecutor());
+        CoroutineContext context = CoroutineContext.of(Executors.newSingleThreadExecutor(), Executors.newSingleThreadScheduledExecutor());
         context.putCopyableUserData(Coroutines.EXCEPTION_HANDLER, t -> {
         });
         return context;

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ui.ex.popup;
 
 import org.jspecify.annotations.Nullable;
@@ -22,10 +21,8 @@ import java.awt.*;
 import java.util.stream.Stream;
 
 public interface IdePopupEventDispatcher {
-
   @Nullable Component getComponent();
 
-  
   Stream<JBPopup> getPopupStream();
 
   boolean dispatch(AWTEvent event);

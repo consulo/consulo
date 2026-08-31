@@ -16,18 +16,15 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.map.ImmutableMapBuilderImpl;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Map;
 
 public interface ImmutableMapBuilder<K, V> {
-  @Contract(pure = true)
   public static <K, V> ImmutableMapBuilder<K, V> newBuilder() {
     return new ImmutableMapBuilderImpl<>();
   }
 
   ImmutableMapBuilder<K, V> put(K key, V value);
 
-  @Contract(pure = true)
   Map<K, V> build();
 }

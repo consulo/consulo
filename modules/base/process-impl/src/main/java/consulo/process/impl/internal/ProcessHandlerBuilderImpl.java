@@ -90,8 +90,8 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
   
   @Override
-  public ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destoryRecursive) {
-    myShouldDestroyProcessRecursively = destoryRecursive;
+  public ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destroyRecursive) {
+    myShouldDestroyProcessRecursively = destroyRecursive;
     return this;
   }
 
@@ -107,10 +107,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   public ProcessHandler build() throws ExecutionException {
     GeneralCommandLine line = myCommandLine;
 
-    String sudoPromt = line.getSudoPromt();
-    if (sudoPromt != null) {
+    String sudoPrompt = line.getSudoPromt();
+    if (sudoPrompt != null) {
       try {
-        line = SudoBuilder.sudoCommand(line, sudoPromt);
+        line = SudoBuilder.sudoCommand(line, sudoPrompt);
       }
       catch (IOException e) {
         throw new ExecutionException(e);

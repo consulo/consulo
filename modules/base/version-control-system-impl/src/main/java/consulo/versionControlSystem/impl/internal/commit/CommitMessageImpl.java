@@ -104,10 +104,8 @@ public class CommitMessageImpl extends AbstractDataProviderPanel implements Disp
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (VcsDataKeys.COMMIT_MESSAGE_CONTROL == key) {
-            sink.put(VcsDataKeys.COMMIT_MESSAGE_CONTROL, this);
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(VcsDataKeys.COMMIT_MESSAGE_CONTROL, this);
     }
 
     @Override

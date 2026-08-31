@@ -34,8 +34,11 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -49,7 +52,7 @@ import javax.swing.border.EmptyBorder;
 import java.util.*;
 
 @ActionImpl(id = "OptimizeImports")
-public class OptimizeImportsAction extends AnAction {
+public class OptimizeImportsAction extends AnAction implements AnActionWithAsyncUpdate {
     private static final String HELP_ID = "editing.manageImports";
 
     private static boolean myProcessVcsChangedFilesInTests;
@@ -215,7 +218,8 @@ public class OptimizeImportsAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, p -> {
         Presentation presentation = event.getPresentation();
         if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
             presentation.setVisible(false);
@@ -282,6 +286,7 @@ public class OptimizeImportsAction extends AnAction {
         }
 
         updatePresentationForFiles(presentation, true, psiFiles);
+        }).toCoroutine();
     }
 
     @RequiredUIAccess

@@ -15,8 +15,9 @@
  */
 package consulo.language.cacheBuilder;
 
-import consulo.application.util.function.Processor;
 import consulo.util.lang.CharArrayUtil;
+
+import java.util.function.Predicate;
 
 /**
  * The default primitive implementation of a words scanner. The implementation does not
@@ -27,7 +28,7 @@ import consulo.util.lang.CharArrayUtil;
  */
 public class SimpleWordsScanner implements WordsScanner {
   @Override
-  public void processWords(CharSequence fileText, Processor<WordOccurrence> processor) {
+  public void processWords(CharSequence fileText, Predicate<WordOccurrence> processor) {
     int index = 0;
     WordOccurrence occurrence = null;
     char[] fileTextArray = CharArrayUtil.fromSequenceWithoutCopying(fileText);
@@ -36,7 +37,7 @@ public class SimpleWordsScanner implements WordsScanner {
     while (true) {
       while (true) {
         if (index == fileText.length()) break ScanWordsLoop;
-        char c = fileTextArray != null ? fileTextArray[index]:fileText.charAt(index);
+        char c = fileTextArray != null ? fileTextArray[index] : fileText.charAt(index);
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
             (Character.isJavaIdentifierStart(c) && c != '$')) {
           break;
@@ -47,7 +48,7 @@ public class SimpleWordsScanner implements WordsScanner {
       while (true) {
         index++;
         if (index == fileText.length()) break;
-        char c = fileTextArray != null ? fileTextArray[index]:fileText.charAt(index);
+        char c = fileTextArray != null ? fileTextArray[index] : fileText.charAt(index);
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) continue;
         if (!Character.isJavaIdentifierPart(c) || c == '$') break;
       }
@@ -55,7 +56,7 @@ public class SimpleWordsScanner implements WordsScanner {
 
       if (occurrence == null) occurrence = new WordOccurrence(fileText, index1, index, null);
       else occurrence.init(fileText, index1, index, null);
-      processor.process(occurrence);
+      processor.test(occurrence);
     }
   }
 }

@@ -18,7 +18,6 @@ package consulo.fileEditor;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -183,14 +182,6 @@ public abstract class FileEditorManager {
    * @since 5.0.1
    */
   public abstract Project getProject();
-
-  public abstract void registerExtraEditorDataProvider(EditorDataProvider provider, Disposable parentDisposable);
-
-  /**
-   * Returns data associated with given editor/caret context. Data providers are registered via
-   * {@link #registerExtraEditorDataProvider(EditorDataProvider, Disposable)} method.
-   */
-  public abstract @Nullable Object getData(Key<?> dataId, Editor editor, Caret caret);
 
   /**
    * Selects a specified file editor tab for the specified editor.

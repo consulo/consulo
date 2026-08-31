@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.dnd;
 
-import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -32,258 +32,260 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Highlighters implements DnDEvent.DropTargetHighlightingType {
-  private static final List<DropTargetHighlighter> ourHightlighters = new ArrayList<>();
+    private static final List<DropTargetHighlighter> HIGHLIGHTERS = List.of(
+        new RectangleHighlighter(),
+        new FilledRectangleHighlighter(),
+        new HorizontalLinesHighlighter(),
+        new TextHighlighter(),
+        new ErrorTextHighlighter(),
+        new VerticalLinesHighlighter()
+    );
 
-  private static final ArrayList<DropTargetHighlighter> ourCurrentHighlighters = new ArrayList<>();
+    private static final ArrayList<DropTargetHighlighter> ourCurrentHighlighters = new ArrayList<>();
 
-  static {
-    ourHightlighters.add(new RectangleHighlighter());
-    ourHightlighters.add(new FilledRectangleHighlighter());
-    ourHightlighters.add(new HorizontalLinesHighlighter());
-    ourHightlighters.add(new TextHighlighter());
-    ourHightlighters.add(new ErrorTextHighlighter());
-    ourHightlighters.add(new VerticalLinesHighlighter());
-  }
-
-  static void show(int aType, JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-    List<DropTargetHighlighter> toShow = new ArrayList<>();
-    for (DropTargetHighlighter ourHightlighter : ourHightlighters) {
-      DropTargetHighlighter each = (DropTargetHighlighter)ourHightlighter;
-      if ((each.getMask() & aType) != 0) {
-        toShow.add(each);
-      }
-    }
-
-    for (int i = 0; i < toShow.size(); i++) {
-      DropTargetHighlighter each = toShow.get(i);
-      each.show(aPane, aRectangle, aEvent);
-    }
-    ourCurrentHighlighters.addAll(toShow);
-  }
-
-  static void hideAllBut(int aType) {
-    for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      DropTargetHighlighter each = ourCurrentHighlighters.get(i);
-      if ((each.getMask() & aType) == 0) {
-        each.vanish();
-        ourCurrentHighlighters.remove(each);
-      }
-    }
-  }
-
-  static void hide() {
-    for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      (ourCurrentHighlighters.get(i)).vanish();
-    }
-    ourCurrentHighlighters.clear();
-  }
-
-  static void hide(int aType) {
-    for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      DropTargetHighlighter each = ourCurrentHighlighters.get(i);
-      if ((each.getMask() & aType) != 0) {
-        each.vanish();
-        ourCurrentHighlighters.remove(each);
-      }
-    }
-  }
-
-  static boolean isVisibleExcept(int type) {
-    int resultType = type;
-    for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      DropTargetHighlighter each = ourCurrentHighlighters.get(i);
-      resultType = resultType | each.getMask();
-    }
-
-    return type != resultType;
-  }
-
-  static boolean isVisible() {
-    return ourCurrentHighlighters.size() > 0;
-  }
-
-  private static abstract class AbstractComponentHighlighter extends JPanel implements DropTargetHighlighter {
-
-    protected AbstractComponentHighlighter() {
-      setOpaque(false);
-      setLayout(new BorderLayout());
-    }
-
-    @Override
-    public final void show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      if (getParent() != aPane) {
-        vanish();
-        aPane.add(this, getLayer());
-      }
-      _show(aPane, aRectangle, aEvent);
-    }
-
-    protected Integer getLayer() {
-      return JLayeredPane.MODAL_LAYER;
-    }
-
-    @Override
-    public void vanish() {
-      Container parent = getParent();
-      Rectangle bounds = getBounds();
-      if (parent != null) {
-        parent.remove(this);
-        parent.repaint(bounds.x, bounds.y, bounds.width, bounds.height);
-      }
-    }
-
-    protected abstract void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent);
-  }
-
-  public abstract static class BaseTextHighlighter implements DropTargetHighlighter {
-
-    private Balloon myCurrentBalloon;
-    private NotificationType myMessageType;
-
-    public BaseTextHighlighter(NotificationType type) {
-      myMessageType = type;
-    }
-
-    @Override
-    public void show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      if (!Registry.is("ide.dnd.textHints")) return;
-
-      String result = aEvent.getExpectedDropResult();
-      if (result != null && result.length() > 0) {
-        RelativePoint point  = null;
-        for (DropTargetHighlighter each : ourHightlighters) {
-          if (each instanceof AbstractComponentHighlighter) {
-            Rectangle rec = ((AbstractComponentHighlighter)each).getBounds();
-            point = new RelativePoint(aPane, new Point(rec.x + rec.width, rec.y + rec.height / 2));
-            break;
-          }
+    static void show(int aType, JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+        List<DropTargetHighlighter> toShow = new ArrayList<>();
+        for (DropTargetHighlighter ourHighlighter : HIGHLIGHTERS) {
+            DropTargetHighlighter each = ourHighlighter;
+            if ((each.getMask() & aType) != 0) {
+                toShow.add(each);
+            }
         }
 
-        if (point == null) {
-          point = new RelativePoint(aPane, new Point(aRectangle.x + aRectangle.width, aRectangle.y + aRectangle.height / 2));
+        for (DropTargetHighlighter each : toShow) {
+            each.show(aPane, aRectangle, aEvent);
         }
-        
-        myCurrentBalloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(result, myMessageType, null).createBalloon();
-        myCurrentBalloon.show(point, Balloon.Position.atRight);
-      }
+        ourCurrentHighlighters.addAll(toShow);
     }
 
-    @Override
-    public void vanish() {
-      if (myCurrentBalloon != null) {
-        myCurrentBalloon.hide();
-        myCurrentBalloon = null;
-      }
+    static void hideAllBut(int aType) {
+        for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
+            DropTargetHighlighter each = ourCurrentHighlighters.get(i);
+            if ((each.getMask() & aType) == 0) {
+                each.vanish();
+                ourCurrentHighlighters.remove(each);
+            }
+        }
     }
 
-    protected Integer getLayer() {
-      return JLayeredPane.POPUP_LAYER;
+    static void hide() {
+        for (DropTargetHighlighter ourCurrentHighlighter : ourCurrentHighlighters) {
+            ourCurrentHighlighter.vanish();
+        }
+        ourCurrentHighlighters.clear();
     }
 
-  }
-
-  public static class TextHighlighter extends BaseTextHighlighter {
-
-    public TextHighlighter() {
-      super(NotificationType.INFO);
+    static void hide(int aType) {
+        for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
+            DropTargetHighlighter each = ourCurrentHighlighters.get(i);
+            if ((each.getMask() & aType) != 0) {
+                each.vanish();
+                ourCurrentHighlighters.remove(each);
+            }
+        }
     }
 
-    @Override
-    public int getMask() {
-      return TEXT;
-    }
-  }
+    static boolean isVisibleExcept(int type) {
+        int resultType = type;
+        for (DropTargetHighlighter each : ourCurrentHighlighters) {
+            resultType = resultType | each.getMask();
+        }
 
-  private static class ErrorTextHighlighter extends BaseTextHighlighter {
-    public ErrorTextHighlighter() {
-      super(NotificationType.ERROR);
+        return type != resultType;
     }
 
-    @Override
-    public int getMask() {
-      return ERROR_TEXT;
-    }
-  }
-
-  private static class FilledRectangleHighlighter extends AbstractComponentHighlighter {
-    public FilledRectangleHighlighter() {
-      super();
-      setOpaque(true);
-      setBorder(BorderFactory.createLineBorder(JBColor.RED));
-      setBackground(JBColor.RED);
+    static boolean isVisible() {
+        return ourCurrentHighlighters.size() > 0;
     }
 
-    @Override
-    protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      setBounds(aRectangle);
+    private static abstract class AbstractComponentHighlighter extends JPanel implements DropTargetHighlighter {
+        protected AbstractComponentHighlighter() {
+            setOpaque(false);
+            setLayout(new BorderLayout());
+        }
+
+        @Override
+        public final void show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+            if (getParent() != aPane) {
+                vanish();
+                aPane.add(this, getLayer());
+            }
+            _show(aPane, aRectangle, aEvent);
+        }
+
+        protected Integer getLayer() {
+            return JLayeredPane.MODAL_LAYER;
+        }
+
+        @Override
+        public void vanish() {
+            Container parent = getParent();
+            Rectangle bounds = getBounds();
+            if (parent != null) {
+                parent.remove(this);
+                parent.repaint(bounds.x, bounds.y, bounds.width, bounds.height);
+            }
+        }
+
+        protected abstract void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent);
     }
 
-    @Override
-    public int getMask() {
-      return FILLED_RECTANGLE;
-    }
-  }
+    public abstract static class BaseTextHighlighter implements DropTargetHighlighter {
 
-  private static class RectangleHighlighter extends AbstractComponentHighlighter {
-    public RectangleHighlighter() {
-      super();
-      setOpaque(false);
-      setBorder(BorderFactory.createLineBorder(JBColor.RED));
-    }
+        private Balloon myCurrentBalloon;
+        private NotificationType myMessageType;
 
-    @Override
-    protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      setBounds(aRectangle);
-    }
+        public BaseTextHighlighter(NotificationType type) {
+            myMessageType = type;
+        }
 
-    @Override
-    public int getMask() {
-      return RECTANGLE;
-    }
-  }
+        @Override
+        public void show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+            if (!Registry.is("ide.dnd.textHints")) {
+                return;
+            }
 
-  private static class HorizontalLinesHighlighter extends AbstractComponentHighlighter {
+            String result = aEvent.getExpectedDropResult();
+            if (result != null && result.length() > 0) {
+                RelativePoint point = null;
+                for (DropTargetHighlighter each : HIGHLIGHTERS) {
+                    if (each instanceof AbstractComponentHighlighter abstractComponentHighlighter) {
+                        Rectangle rec = abstractComponentHighlighter.getBounds();
+                        point = new RelativePoint(aPane, new Point(rec.x + rec.width, rec.y + rec.height / 2));
+                        break;
+                    }
+                }
 
-    @Override
-    protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      Rectangle rectangle = new Rectangle(aRectangle.x - AllIcons.Ide.Dnd.Left.getWidth(), aRectangle.y - AllIcons.Ide.Dnd.Left
-        .getHeight(), aRectangle.width + AllIcons.Ide.Dnd.Left.getWidth() + AllIcons.Ide.Dnd.Right.getWidth(), aRectangle.height + AllIcons.Ide.Dnd.Left
-        .getHeight());
-      setBounds(rectangle);
-    }
+                if (point == null) {
+                    point = new RelativePoint(aPane, new Point(aRectangle.x + aRectangle.width, aRectangle.y + aRectangle.height / 2));
+                }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-      TargetAWT.to(AllIcons.Ide.Dnd.Left).paintIcon(this, g, 0, (getHeight() / 2));
-      TargetAWT.to(AllIcons.Ide.Dnd.Right).paintIcon(this, g, getWidth() - AllIcons.Ide.Dnd.Right.getWidth(), (getHeight() / 2));
-    }
+                myCurrentBalloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(result, myMessageType, null).createBalloon();
+                myCurrentBalloon.show(point, Balloon.Position.atRight);
+            }
+        }
 
-    @Override
-    public int getMask() {
-      return H_ARROWS;
-    }
-  }
+        @Override
+        public void vanish() {
+            if (myCurrentBalloon != null) {
+                myCurrentBalloon.hide();
+                myCurrentBalloon = null;
+            }
+        }
 
-  private static class VerticalLinesHighlighter extends AbstractComponentHighlighter {
-    private static final Image TOP = AllIcons.Ide.Dnd.Top;
-    private static final Image BOTTOM = AllIcons.Ide.Dnd.Bottom;
-
-    @Override
-    protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      Rectangle rectangle = new Rectangle(aRectangle.x, aRectangle.y - TOP.getHeight(), aRectangle.width, aRectangle.height + TOP.getHeight() + BOTTOM
-        .getHeight());
-      setBounds(rectangle);
+        protected Integer getLayer() {
+            return JLayeredPane.POPUP_LAYER;
+        }
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-      TargetAWT.to(TOP).paintIcon(this, g, (getWidth() - TOP.getWidth()) / 2, 0);
-      TargetAWT.to(BOTTOM).paintIcon(this, g, (getWidth() - BOTTOM.getWidth()) / 2, getHeight() - BOTTOM.getHeight());
+    public static class TextHighlighter extends BaseTextHighlighter {
+        public TextHighlighter() {
+            super(NotificationType.INFO);
+        }
+
+        @Override
+        public int getMask() {
+            return TEXT;
+        }
     }
 
-    @Override
-    public int getMask() {
-      return V_ARROWS;
+    private static class ErrorTextHighlighter extends BaseTextHighlighter {
+        public ErrorTextHighlighter() {
+            super(NotificationType.ERROR);
+        }
+
+        @Override
+        public int getMask() {
+            return ERROR_TEXT;
+        }
     }
-  }
+
+    private static class FilledRectangleHighlighter extends AbstractComponentHighlighter {
+        public FilledRectangleHighlighter() {
+            super();
+            setOpaque(true);
+            setBorder(BorderFactory.createLineBorder(JBColor.RED));
+            setBackground(JBColor.RED);
+        }
+
+        @Override
+        protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+            setBounds(aRectangle);
+        }
+
+        @Override
+        public int getMask() {
+            return FILLED_RECTANGLE;
+        }
+    }
+
+    private static class RectangleHighlighter extends AbstractComponentHighlighter {
+        public RectangleHighlighter() {
+            super();
+            setOpaque(false);
+            setBorder(BorderFactory.createLineBorder(JBColor.RED));
+        }
+
+        @Override
+        protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+            setBounds(aRectangle);
+        }
+
+        @Override
+        public int getMask() {
+            return RECTANGLE;
+        }
+    }
+
+    private static class HorizontalLinesHighlighter extends AbstractComponentHighlighter {
+        @Override
+        protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+            Rectangle rectangle = new Rectangle(
+                aRectangle.x - PlatformIconGroup.ideDndLeft().getWidth(),
+                aRectangle.y - PlatformIconGroup.ideDndLeft().getHeight(),
+                aRectangle.width + PlatformIconGroup.ideDndLeft().getWidth() + PlatformIconGroup.ideDndRight().getWidth(),
+                aRectangle.height + PlatformIconGroup.ideDndLeft().getHeight()
+            );
+            setBounds(rectangle);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            TargetAWT.to(PlatformIconGroup.ideDndLeft()).paintIcon(this, g, 0, (getHeight() / 2));
+            TargetAWT.to(PlatformIconGroup.ideDndRight())
+                .paintIcon(this, g, getWidth() - PlatformIconGroup.ideDndRight().getWidth(), (getHeight() / 2));
+        }
+
+        @Override
+        public int getMask() {
+            return H_ARROWS;
+        }
+    }
+
+    private static class VerticalLinesHighlighter extends AbstractComponentHighlighter {
+        private static final Image TOP = PlatformIconGroup.ideDndTop();
+        private static final Image BOTTOM = PlatformIconGroup.ideDndBottom();
+
+        @Override
+        protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
+            Rectangle rectangle = new Rectangle(
+                aRectangle.x,
+                aRectangle.y - TOP.getHeight(),
+                aRectangle.width,
+                aRectangle.height + TOP.getHeight() + BOTTOM.getHeight()
+            );
+            setBounds(rectangle);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            TargetAWT.to(TOP).paintIcon(this, g, (getWidth() - TOP.getWidth()) / 2, 0);
+            TargetAWT.to(BOTTOM).paintIcon(this, g, (getWidth() - BOTTOM.getWidth()) / 2, getHeight() - BOTTOM.getHeight());
+        }
+
+        @Override
+        public int getMask() {
+            return V_ARROWS;
+        }
+    }
 }

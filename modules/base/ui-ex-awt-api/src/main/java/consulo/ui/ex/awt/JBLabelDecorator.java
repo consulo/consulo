@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.image.Image;
-import org.intellij.lang.annotations.JdkConstants;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
@@ -37,15 +36,15 @@ public class JBLabelDecorator extends JBLabel {
     super(text);
   }
 
-  private JBLabelDecorator(String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(String text, @AWTConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
 
-  private JBLabelDecorator(@Nullable Image image, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(@Nullable Image image, @AWTConstants.HorizontalAlignment int horizontalAlignment) {
     super(image, horizontalAlignment);
   }
 
-  private JBLabelDecorator(String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(String text, @Nullable Image icon, @AWTConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, icon, horizontalAlignment);
   }
 

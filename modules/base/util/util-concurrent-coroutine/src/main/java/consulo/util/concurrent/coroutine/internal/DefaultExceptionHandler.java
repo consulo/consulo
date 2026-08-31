@@ -15,9 +15,11 @@
  */
 package consulo.util.concurrent.coroutine.internal;
 
+import consulo.util.lang.ControlFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CancellationException;
 import java.util.function.Consumer;
 
 /**
@@ -31,6 +33,19 @@ public class DefaultExceptionHandler implements Consumer<Throwable> {
 
     @Override
     public void accept(Throwable throwable) {
+        // cancellation (e.g. ProcessCanceledException) is normal control flow, not an error to log
+        if (isControlFlow(throwable)) {
+            return;
+        }
         log.error("", throwable);
+    }
+
+    private static boolean isControlFlow(Throwable throwable) {
+        for (Throwable t = throwable; t != null; t = t.getCause()) {
+            if (t instanceof ControlFlowException || t instanceof CancellationException) {
+                return true;
+            }
+        }
+        return false;
     }
 }

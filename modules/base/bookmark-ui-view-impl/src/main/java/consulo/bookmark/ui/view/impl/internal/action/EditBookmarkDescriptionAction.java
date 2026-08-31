@@ -25,12 +25,12 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import javax.swing.*;
 
 @ActionImpl(id = "EditBookmark")
-public class EditBookmarkDescriptionAction extends DumbAwareAction {
+public class EditBookmarkDescriptionAction extends LegacyDumbAwareAction {
     public EditBookmarkDescriptionAction() {
         super(
             BookmarkLocalize.actionBookmarkEditDescription(),

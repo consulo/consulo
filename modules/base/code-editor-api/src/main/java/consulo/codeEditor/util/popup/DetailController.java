@@ -18,9 +18,11 @@ package consulo.codeEditor.util.popup;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -28,25 +30,26 @@ import java.util.concurrent.TimeUnit;
 public class DetailController {
     private final MasterController myMasterController;
     private Future<?> myUpdateAlarm = CompletableFuture.completedFuture(null);
-    private DetailView myDetailView;
-    private ItemWrapper mySelectedItem;
+    private @Nullable DetailView myDetailView = null;
+    private @Nullable ItemWrapper mySelectedItem = null;
 
     public DetailController(MasterController myMasterController) {
         this.myMasterController = myMasterController;
     }
 
-    protected void doUpdateDetailViewWithItem(ItemWrapper wrapper1) {
+    protected void doUpdateDetailViewWithItem(@Nullable ItemWrapper wrapper1) {
         if (wrapper1 != null) {
             wrapper1.updateDetailView(myDetailView);
         }
         else {
+            Objects.requireNonNull(myDetailView);
             myDetailView.clearEditor();
             myDetailView.setPropertiesPanel(null);
             myDetailView.setCurrentItem(null);
         }
     }
 
-    private String getTitle2Text(String fullText) {
+    private String getTitle2Text(@Nullable String fullText) {
         int labelWidth = getLabel().getWidth();
         if (fullText == null || fullText.length() == 0) {
             return " ";
@@ -66,7 +69,7 @@ public class DetailController {
         return myMasterController.getPathLabel();
     }
 
-    public ItemWrapper getSelectedItem() {
+    public @Nullable ItemWrapper getSelectedItem() {
         return mySelectedItem;
     }
 
@@ -88,13 +91,18 @@ public class DetailController {
         }
         else {
             UIAccessScheduler scheduler = UIAccess.current().getScheduler();
-            scheduler.schedule((Runnable) () -> {
-                doUpdateDetailViewWithItem(mySelectedItem);
-                myUpdateAlarm.cancel(false);
-            }, 100, TimeUnit.MILLISECONDS);
+            scheduler.schedule(
+                (Runnable) () -> {
+                    doUpdateDetailViewWithItem(mySelectedItem);
+                    myUpdateAlarm.cancel(false);
+                },
+                100,
+                TimeUnit.MILLISECONDS
+            );
         }
     }
 
+    @RequiredUIAccess
     public void updateDetailView() {
         doUpdateDetailView(false);
     }

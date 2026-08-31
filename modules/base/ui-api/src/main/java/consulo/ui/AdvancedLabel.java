@@ -22,16 +22,17 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 12/10/2021
+ * @since 2021-10-12
  */
 public interface AdvancedLabel extends Component {
-  static AdvancedLabel create() {
-    return UIInternal.get()._Components_advancedLabel();
-  }
+    static AdvancedLabel create() {
+        return UIInternal.get()._Components_advancedLabel();
+    }
 
-  /**
-   * Refresh presentation of label, fully reset state of label
-   * @return this
-   */
-  AdvancedLabel updatePresentation(@RequiredUIAccess  Consumer<TextItemPresentation> consumer);
+    /**
+     * Refresh presentation of label, fully reset state of label.
+     *
+     * @return this
+     */
+    AdvancedLabel updatePresentation(@RequiredUIAccess Consumer<TextItemPresentation> consumer);
 }

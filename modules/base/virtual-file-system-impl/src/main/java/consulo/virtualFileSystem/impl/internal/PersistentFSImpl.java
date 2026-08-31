@@ -58,6 +58,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     private final AtomicBoolean myShutDown = new AtomicBoolean(false);
     private final AtomicInteger myStructureModificationCount = new AtomicInteger();
     private BulkFileListener myPublisher;
+    private BulkFileListenerBackgroundable myPublisherBackgroundable;
     private final VfsData myVfsData = new VfsData();
 
     public PersistentFSImpl() {
@@ -79,6 +80,25 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             myPublisher = publisher;
         }
         return publisher;
+    }
+
+    private BulkFileListenerBackgroundable getPublisherBackgroundable() {
+        BulkFileListenerBackgroundable publisher = myPublisherBackgroundable;
+        if (publisher == null) {
+            publisher = Application.get().getMessageBus().syncPublisher(BulkFileListenerBackgroundable.class);
+            myPublisherBackgroundable = publisher;
+        }
+        return publisher;
+    }
+
+    private void fireBeforeEvents(List<? extends VFileEvent> events) {
+        getPublisherBackgroundable().before(events);
+        VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> getPublisher().before(events));
+    }
+
+    private void fireAfterEvents(List<? extends VFileEvent> events) {
+        VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> getPublisher().after(events));
+        getPublisherBackgroundable().after(events);
     }
 
     @Override
@@ -663,7 +683,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
                 VFileContentChangeEvent event = new VFileContentChangeEvent(requestor, file, file.getModificationStamp(), modStamp, false);
                 List<VFileContentChangeEvent> events = Collections.singletonList(event);
-                getPublisher().before(events);
+                fireBeforeEvents(events);
 
                 NewVirtualFileSystem delegate = getDelegate(file);
                 // FSRecords.ContentOutputStream already buffered, no need to wrap in BufferedStream
@@ -686,7 +706,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                             // due to fs rounding timestamp of written file can be significantly different from current time
                             attributes != null ? attributes.lastModified : DEFAULT_TIMESTAMP
                         );
-                        getPublisher().after(events);
+                        fireAfterEvents(events);
                     }
                 }
             }
@@ -721,11 +741,11 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         // optimisation: skip all groupings
         if (event.isValid()) {
             List<VFileEvent> events = Collections.singletonList(event);
-            getPublisher().before(events);
+            fireBeforeEvents(events);
 
             applyEvent(event);
 
-            getPublisher().after(events);
+            fireAfterEvents(events);
         }
     }
 
@@ -1024,7 +1044,6 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         };
         Set<String> middleDirs = Sets.newHashSet(cappedInitialSize, FileUtil.PATH_HASHING_STRATEGY);
         List<VFileEvent> validated = new ArrayList<>(cappedInitialSize);
-        BulkFileListener publisher = getPublisher();
         while (startIndex != events.size()) {
             PingProgress.interactWithEdtProgress();
 
@@ -1038,13 +1057,13 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                 PingProgress.interactWithEdtProgress();
                 // do defensive copy to cope with ill-written listeners that save passed list for later processing
                 List<VFileEvent> toSend = List.of(validated.toArray(new VFileEvent[0]));
-                publisher.before(toSend);
+                fireBeforeEvents(toSend);
 
                 PingProgress.interactWithEdtProgress();
                 applyEvents.forEach(Runnable::run);
 
                 PingProgress.interactWithEdtProgress();
-                publisher.after(toSend);
+                fireAfterEvents(toSend);
             }
         }
     }

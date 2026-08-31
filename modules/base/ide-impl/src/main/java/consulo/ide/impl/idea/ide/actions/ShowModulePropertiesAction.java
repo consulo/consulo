@@ -22,7 +22,7 @@ import consulo.module.Module;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -32,7 +32,7 @@ import jakarta.inject.Provider;
  * @since 2004-02-08
  */
 @ActionImpl(id = "ModuleSettings")
-public class ShowModulePropertiesAction extends AnAction {
+public class ShowModulePropertiesAction extends LegacyAnAction {
     private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 
     @Inject

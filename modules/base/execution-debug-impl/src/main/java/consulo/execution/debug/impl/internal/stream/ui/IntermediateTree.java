@@ -1,6 +1,6 @@
 package consulo.execution.debug.impl.internal.stream.ui;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.debug.frame.*;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeListener;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
@@ -9,6 +9,7 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.stream.trace.CollectionTreeBuilder;
 import consulo.execution.debug.stream.trace.GenericEvaluationContext;
 import consulo.execution.debug.stream.trace.TraceElement;
+import consulo.localize.LocalizeValue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,18 +28,24 @@ public class IntermediateTree extends CollectionTree {
         myBuilder = builder;
         itemsCount = traceElements.size();
 
-        XValueNodeImpl root = new XValueNodeImpl(this, null, "root", new MyTraceElementsRoot(traceElements, context));
+        XValueNodeImpl root = new XValueNodeImpl(
+            this,
+            null,
+            LocalizeValue.localizeTODO("root"),
+            new MyTraceElementsRoot(traceElements, context)
+        );
         setRoot(root, false);
         root.setLeaf(false);
 
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
                 XDebuggerTreeListener listener = this;
                 if (node instanceof XValueContainerNode<?>) {
                     XValueContainer container = ((XValueContainerNode<?>) node).getValueContainer();
                     if (myBuilder.isSupported(container)) {
-                        ApplicationManager.getApplication().invokeLater(() -> {
+                        Application app = Application.get();
+                        app.invokeLater(() -> {
                             TraceElement element = myXValue2TraceElement.get(container);
                             if (element != null) {
                                 myValue2Path.put(element, node.getPath());
@@ -47,7 +54,7 @@ public class IntermediateTree extends CollectionTree {
                             if (myPath2Value.size() == traceElements.size()) {
                                 myXValue2TraceElement.clear();
                                 removeTreeListener(listener);
-                                ApplicationManager.getApplication().invokeLater(() -> repaint());
+                                app.invokeLater(() -> repaint());
                             }
                         });
                     }

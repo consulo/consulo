@@ -127,7 +127,13 @@ public class IntentionDescriptionPanel {
           return;
         }
 
-        data.select(PluginsConfigurable.class).doWhenDone((pluginConfigurable) -> pluginConfigurable.selectInstalled(pluginId));
+        data.select(PluginsConfigurable.class).whenComplete((pluginConfigurable, error) -> {
+          if (error != null) {
+            return;
+          }
+
+          pluginConfigurable.selectInstalled(pluginId);
+        });
       }
     });
     owner = label;

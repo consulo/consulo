@@ -221,7 +221,7 @@ public class ScopesLexer extends LexerBase {
 
   /* error messages for the codes above */
   private static final String ZZ_ERROR_MSG[] = {
-    "Unkown internal scanner error",
+    "Unknown internal scanner error",
     "Error: could not match input",
     "Error: pushback value was too large"
   };
@@ -263,10 +263,10 @@ public class ScopesLexer extends LexerBase {
       the source of the yytext() string */
   private CharSequence zzBuffer = "";
 
-  /** the textposition at the last accepting state */
+  /** the text position at the last accepting state */
   private int zzMarkedPos;
 
-  /** the textposition at the last state to be included in yytext */
+  /** the text position at the last state to be included in yytext */
   private int zzPushbackPos;
 
   /** the current text position in the buffer */
@@ -275,8 +275,7 @@ public class ScopesLexer extends LexerBase {
   /** startRead marks the beginning of the yytext() string in the buffer */
   private int zzStartRead;
 
-  /** endRead marks the last character in the buffer, that has been read
-      from input */
+  /** endRead marks the last character in the buffer, that has been read from input */
   private int zzEndRead;
 
   /**
@@ -447,9 +446,9 @@ public class ScopesLexer extends LexerBase {
   }
 
   /**
-   * Reports an error that occured while scanning.
+   * Reports an error that occurred while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of
+   * In a well-formed scanner (no or only correct usage of
    * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
@@ -458,7 +457,7 @@ public class ScopesLexer extends LexerBase {
    * Usual syntax/scanner level error handling should be done
    * in error fallback rules.
    *
-   * @param   errorCode  the code of the errormessage to display
+   * @param   errorCode  the code of the error message to display
    */
   private void zzScanError(int errorCode) {
     String message;

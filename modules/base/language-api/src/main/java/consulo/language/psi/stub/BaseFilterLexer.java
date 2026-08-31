@@ -60,12 +60,12 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
   public static class TodoScanningState {
     final IndexPattern[] myPatterns;
     final Matcher[] myMatchers;
-    IntList myOccurences;
+    IntList myOccurrences;
 
     public TodoScanningState(IndexPattern[] patterns, Matcher[] matchers) {
       myPatterns = patterns;
       myMatchers = matchers;
-      myOccurences = IntLists.newArrayList(1);
+      myOccurrences = IntLists.newArrayList(1);
     }
   }
 
@@ -89,7 +89,7 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
       }
     }
     else {
-      todoScanningState.myOccurences.clear();
+      todoScanningState.myOccurrences.clear();
     }
 
     for (int i = todoScanningState.myMatchers.length - 1; i >= 0; --i) {
@@ -99,9 +99,9 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
 
       while (matcher.find()) {
         int start = matcher.start();
-        if (start != matcher.end() && todoScanningState.myOccurences.indexOf(start) == -1) {
+        if (start != matcher.end() && todoScanningState.myOccurrences.indexOf(start) == -1) {
           consumer.incTodoOccurrence(todoScanningState.myPatterns[i]);
-          todoScanningState.myOccurences.add(start);
+          todoScanningState.myOccurrences.add(start);
         }
       }
     }

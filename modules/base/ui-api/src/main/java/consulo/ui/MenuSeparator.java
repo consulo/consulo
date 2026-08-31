@@ -22,7 +22,7 @@ import consulo.ui.internal.UIInternal;
  * @since 2018-05-09
  */
 public interface MenuSeparator extends MenuItem {
-  static MenuSeparator create() {
-    return UIInternal.get()._MenuSeparator_create();
-  }
+    static MenuSeparator create() {
+        return UIInternal.get()._MenuSeparator_create();
+    }
 }

@@ -76,7 +76,6 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         return CreateFileAction.class.equals(getClass());
     }
 
-    
     @Override
     @RequiredUIAccess
     protected void invokeDialog(Project project, PsiDirectory directory, Consumer<PsiElement[]> elementsConsumer) {
@@ -98,8 +97,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     private JBPopup createLightWeightPopup(MyInputValidator validator, Consumer<PsiElement[]> consumer) {
         NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
         TextBox nameField = contentPanel.getTextField();
-        JBPopup popup =
-            NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile(), contentPanel, (JComponent) TargetAWT.to(nameField));
+        JBPopup popup = NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile(), contentPanel.getComponent(), nameField);
         contentPanel.addValidator(value -> {
             if (!validator.checkInput(value)) {
                 String message = InputValidatorEx.getErrorText(validator, value, LanguageLocalize.incorrectName().get());

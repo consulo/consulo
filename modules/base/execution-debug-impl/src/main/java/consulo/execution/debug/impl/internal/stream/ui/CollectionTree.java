@@ -14,7 +14,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -206,7 +205,6 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
             private int top = 0;
             private int bot = 0;
 
-            @Contract(pure = true)
             private int count() {
                 return bot - top;
             }

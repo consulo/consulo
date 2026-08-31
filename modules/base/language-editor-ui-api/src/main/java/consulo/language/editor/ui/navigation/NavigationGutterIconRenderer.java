@@ -16,31 +16,22 @@
 package consulo.language.editor.ui.navigation;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
-import consulo.language.editor.hint.HintColorUtil;
-import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -48,22 +39,21 @@ import java.util.function.Supplier;
  * @author peter
  */
 public abstract class NavigationGutterIconRenderer extends GutterIconRenderer implements GutterIconNavigationHandler<PsiElement> {
-    
     private final LocalizeValue myPopupTitle;
-    
+
     private final LocalizeValue myEmptyText;
-    private final Supplier<PsiElementListCellRenderer> myCellRenderer;
+    private final @Nullable TargetPresentationProvider<PsiElement> myPresentationProvider;
     private final Supplier<List<SmartPsiElementPointer>> myPointers;
 
     protected NavigationGutterIconRenderer(
         LocalizeValue popupTitle,
         LocalizeValue emptyText,
-        Supplier<PsiElementListCellRenderer> cellRenderer,
+        @Nullable TargetPresentationProvider<PsiElement> presentationProvider,
         Supplier<List<SmartPsiElementPointer>> pointers
     ) {
         myPopupTitle = popupTitle;
         myEmptyText = emptyText;
-        myCellRenderer = cellRenderer;
+        myPresentationProvider = presentationProvider;
         myPointers = pointers;
     }
 
@@ -108,35 +98,39 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
-                navigate((MouseEvent)e.getInputEvent(), null);
+                Component component = e.getData(Component.KEY);
+                Project project = e.getData(Project.KEY);
+                if (component == null || project == null) {
+                    return;
+                }
+
+                InputDetails inputDetails = e.getInputDetails();
+                navigate(inputDetails == null ? new ComponentEvent<>(component) : new ComponentEvent<>(component, inputDetails), project);
             }
         };
     }
 
     @Override
     @RequiredUIAccess
-    public void navigate(@Nullable MouseEvent event, @Nullable PsiElement elt) {
-        List<PsiElement> list = getTargetElements();
-        if (list.isEmpty()) {
-            if (myEmptyText.isNotEmpty() && event != null) {
-                JComponent label = HintUtil.createErrorLabel(myEmptyText.get());
-                label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
-                JBPopupFactory.getInstance()
-                    .createBalloonBuilder(label)
-                    .setFadeoutTime(3000)
-                    .setFillColor(TargetAWT.to(HintColorUtil.getErrorColor()))
-                    .createBalloon()
-                    .show(new RelativePoint(event), Balloon.Position.above);
-            }
-            return;
+    public void navigate(ComponentEvent<?> event, PsiElement elt) {
+        navigate(event, elt.getProject());
+    }
+
+    /**
+     * The pointers are dereferenced by the navigator inside a read action off the ui thread, never here.
+     */
+    @RequiredUIAccess
+    public void navigate(ComponentEvent<?> event, Project project) {
+        PsiTargetNavigator<PsiElement> navigator = Application.get().getInstance(PsiTargetNavigationService.class)
+            .<PsiElement>newNavigator(this::getTargetElements);
+
+        if (myPresentationProvider != null) {
+            navigator = navigator.presentationProvider(myPresentationProvider);
         }
-        if (list.size() == 1) {
-            PsiNavigateUtil.navigate(list.iterator().next());
-        }
-        else if (event != null) {
-            JBPopup popup =
-                PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.get(), myPopupTitle.get());
-            popup.show(new RelativePoint(event));
-        }
+
+        navigator
+            .title(myPopupTitle)
+            .emptyText(myEmptyText)
+            .navigate(event, project);
     }
 }

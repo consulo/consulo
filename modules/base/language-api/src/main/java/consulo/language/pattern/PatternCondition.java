@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 
@@ -71,6 +72,7 @@ public abstract class PatternCondition<T> {
     builder.append("]");
   }
 
+  @RequiredReadAction
   public abstract boolean accepts(T t, ProcessingContext context);
 
   @Override
@@ -88,7 +90,7 @@ public abstract class PatternCondition<T> {
   }
 
   private void appendParams(final StringBuilder builder, final String indent) {
-    processParameters(new BiPredicate<String, Object>() {
+    processParameters(new BiPredicate<>() {
       int count = 0;
       @Nullable String prevName = null;
       int prevOffset = 0;

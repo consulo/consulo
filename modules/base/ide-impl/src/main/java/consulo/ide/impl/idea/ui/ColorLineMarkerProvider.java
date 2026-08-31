@@ -19,28 +19,26 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.component.extension.ExtensionPoint;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.*;
-import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.ElementColorProvider;
 import consulo.language.psi.PsiElement;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ColorPickerBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awt.ColorChooser;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.inject.Inject;
 
-import java.awt.event.MouseEvent;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -64,28 +62,26 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
                 new GutterIconNavigationHandler<>() {
                     @Override
                     @RequiredUIAccess
-                    public void navigate(MouseEvent e, PsiElement elt) {
+                    public void navigate(ComponentEvent<?> e, PsiElement elt) {
                         if (!elt.isWritable()) {
                             return;
                         }
 
-                        Editor editor = PsiUtilBase.findEditor(element);
-                        assert editor != null;
+                        InputDetails inputDetails = e.getInputDetails();
 
-                        ColorChooser.chooseColor(
-                            editor.getComponent(),
-                            IdeLocalize.dialogTitleChooseColor(),
-                            TargetAWT.to(color),
-                            true,
-                            c -> {
+                        ColorPickerBuilder.create()
+                            .withTitle(IdeLocalize.dialogTitleChooseColor())
+                            .withColor(color)
+                            .withAlpha()
+                            .showPopupAsync(e.getComponent(), inputDetails.getX(), inputDetails.getY(), 0)
+                            .whenComplete((c, throwable) -> {
                                 if (c != null) {
                                     CommandProcessor.getInstance().newCommand()
                                         .project(element.getProject())
                                         .inWriteAction()
-                                        .run(() -> colorProvider.setColorTo(element, TargetAWT.from(c)));
+                                        .run(() -> colorProvider.setColorTo(element, c));
                                 }
-                            }
-                        );
+                            });
                     }
                 },
                 GutterIconRenderer.Alignment.LEFT

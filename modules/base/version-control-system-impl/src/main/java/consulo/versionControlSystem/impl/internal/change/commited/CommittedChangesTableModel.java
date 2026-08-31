@@ -15,11 +15,11 @@
  */
 package consulo.versionControlSystem.impl.internal.change.commited;
 
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.versionControlSystem.ChangeListColumn;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -30,18 +30,18 @@ import java.util.List;
  * @since 2006-10-03
  */
 public class CommittedChangesTableModel extends ListTableModel<CommittedChangeList> {
-  private final boolean myAsynchLoad;
+  private final boolean myAsyncLoad;
   private static final ChangeListColumn[] ourDefaultColumns = new ChangeListColumn[] { ChangeListColumn.DATE, ChangeListColumn.NAME };
   private RowSorter.SortKey mySortKey;
 
-  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, boolean asynchLoad) {
+  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, boolean asyncLoad) {
     super(buildColumnInfos(ourDefaultColumns), changeLists, 0);
-    myAsynchLoad = asynchLoad;
+    myAsyncLoad = asyncLoad;
   }
 
-  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, ChangeListColumn[] columns, boolean asynchLoad) {
+  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, ChangeListColumn[] columns, boolean asyncLoad) {
     super(buildColumnInfos(columns), changeLists, 0);
-    myAsynchLoad = asynchLoad;
+    myAsyncLoad = asyncLoad;
   }
 
   protected void setSortKey(RowSorter.SortKey sortKey) {
@@ -85,6 +85,6 @@ public class CommittedChangesTableModel extends ListTableModel<CommittedChangeLi
   }
 
   public boolean isAsynchLoad() {
-    return myAsynchLoad;
+    return myAsyncLoad;
   }
 }

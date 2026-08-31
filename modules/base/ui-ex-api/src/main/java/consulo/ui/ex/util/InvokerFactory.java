@@ -24,18 +24,24 @@ import consulo.ui.UIAccess;
 /**
  * @author VISTALL
  * @since 24-Feb-22
+ * @deprecated use {@link consulo.ui.ex.tree.ApplicationTreeExecutorFactory}
  */
+@Deprecated
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface InvokerFactory {
-  
+
   static InvokerFactory getInstance() {
     return Application.get().getInstance(InvokerFactory.class);
   }
 
-  
-  Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent);
+  /**
+   * The swing event dispatch thread - the foreground of {@code AsyncTreeModel}, which is the only tree stack
+   * this factory still serves. It is one thread for the whole application, so no {@link UIAccess} is taken
+   * or held.
+   */
+  Invoker forEventDispatchThread(Disposable parent);
 
-  
+
   Invoker forBackgroundPoolWithReadAction(Disposable parent);
 
   

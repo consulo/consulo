@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14:09/27.06.13
+ * @since 2013-06-27
  */
 public class LanguageVersionUtil {
   @RequiredReadAction

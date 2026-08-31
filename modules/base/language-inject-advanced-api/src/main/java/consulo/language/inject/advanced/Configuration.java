@@ -40,10 +40,10 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -283,9 +283,9 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         Collection<BaseInjection> newInjections
     ) {
         MultiValuesMap<InjectionPlace, BaseInjection> placeMap = new MultiValuesMap<>();
-        for (BaseInjection exising : existingInjections) {
-            for (InjectionPlace place : exising.getInjectionPlaces()) {
-                placeMap.put(place, exising);
+        for (BaseInjection existing : existingInjections) {
+            for (InjectionPlace place : existing.getInjectionPlaces()) {
+                placeMap.put(place, existing);
             }
         }
         main:

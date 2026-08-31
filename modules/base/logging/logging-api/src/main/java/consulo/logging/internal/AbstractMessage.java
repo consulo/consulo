@@ -15,16 +15,17 @@
  */
 package consulo.logging.internal;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Calendar;
 import java.util.Date;
 
 public abstract class AbstractMessage {
-
     private boolean myIsRead = false;
     private boolean myIsSubmitting = false;
-    private SubmittedReportInfo mySubmissionInfo;
-    private String myAdditionalInfo;
-    private Runnable myNotificationExpire;
+    private @Nullable SubmittedReportInfo mySubmissionInfo = null;
+    private @Nullable String myAdditionalInfo = null;
+    private @Nullable Runnable myNotificationExpire;
     private long myAssigneeId;
 
     private final Date myDate;
@@ -56,7 +57,7 @@ public abstract class AbstractMessage {
         mySubmissionInfo = info;
     }
 
-    public SubmittedReportInfo getSubmissionInfo() {
+    public @Nullable SubmittedReportInfo getSubmissionInfo() {
         return mySubmissionInfo;
     }
 
@@ -78,7 +79,7 @@ public abstract class AbstractMessage {
                 mySubmissionInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.DUPLICATE);
     }
 
-    public String getAdditionalInfo() {
+    public @Nullable String getAdditionalInfo() {
         return myAdditionalInfo;
     }
 

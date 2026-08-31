@@ -23,13 +23,14 @@ import consulo.application.ApplicationManager;
 import consulo.component.persist.scheme.SchemeProcessor;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 /**
  * @author traff
  */
 @Singleton
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION)
 @ServiceImpl
 public class ToolManager extends BaseToolManager<Tool> {
   public static ToolManager getInstance() {
@@ -37,7 +38,7 @@ public class ToolManager extends BaseToolManager<Tool> {
   }
 
   @Inject
-  public ToolManager(ActionManager actionManager, SchemeManagerFactory factory) {
+  public ToolManager(Provider<ActionManager> actionManager, SchemeManagerFactory factory) {
     super(actionManager, factory);
   }
 

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.internal.pom;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
@@ -142,6 +142,7 @@ public class TreeChangeEventImpl implements TreeChangeEvent {
     }
   }
 
+  @RequiredReadAction
   public void fireEvents() {
     Collection<TreeChangeImpl> changes = ContainerUtil.sorted(myChangedElements.values());
     for (TreeChangeImpl change : changes) {
@@ -161,5 +162,4 @@ public class TreeChangeEventImpl implements TreeChangeEvent {
   public String toString() {
     return new ArrayList<>(myChangedElements.values()).toString();
   }
-
 }

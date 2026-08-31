@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
-import consulo.ui.Size2D;
+import consulo.ui.WidthAndHeight;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -34,6 +34,9 @@ import org.jspecify.annotations.Nullable;
 public abstract class DialogDescriptor {
     private final LocalizeValue myTitle;
 
+    private Runnable myOkButtonStateUpdater = () -> {
+    };
+
     public DialogDescriptor(LocalizeValue title) {
         myTitle = title;
     }
@@ -42,7 +45,11 @@ public abstract class DialogDescriptor {
         return null;
     }
 
-    public @Nullable Size2D getInitialSize() {
+    public @Nullable WidthAndHeight getInitialSize() {
+        return null;
+    }
+
+    public @Nullable String getDimensionServiceKey() {
         return null;
     }
 
@@ -67,6 +74,20 @@ public abstract class DialogDescriptor {
 
     public boolean doUpdateOkButtonState() {
         return true;
+    }
+
+    /**
+     * Installed by the dialog implementation. The button row is expanded once and then only when the action ticker
+     * sees activity, which a frontend with no event queue behind its dialogs never raises - a descriptor whose
+     * {@link #doUpdateOkButtonState()} follows its content has to ask for the re-read itself.
+     */
+    public void setOkButtonStateUpdater(Runnable okButtonStateUpdater) {
+        myOkButtonStateUpdater = okButtonStateUpdater;
+    }
+
+    @RequiredUIAccess
+    public void updateOkButtonState() {
+        myOkButtonStateUpdater.run();
     }
 
     

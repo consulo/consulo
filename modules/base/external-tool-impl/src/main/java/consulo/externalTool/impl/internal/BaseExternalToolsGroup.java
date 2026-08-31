@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * @author Eugene Belyaev
  */
-public abstract class BaseExternalToolsGroup<T extends Tool> extends SimpleActionGroup implements DumbAware {
+public abstract class BaseExternalToolsGroup<T extends Tool> extends SimpleActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private static final Set<String> PROJECT_VIEWS = Set.of(
         ActionPlaces.PROJECT_VIEW_POPUP,
         ActionPlaces.COMMANDER_POPUP,

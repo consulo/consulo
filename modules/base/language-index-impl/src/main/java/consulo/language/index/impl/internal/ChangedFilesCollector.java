@@ -16,44 +16,52 @@
 package consulo.language.index.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
 import consulo.content.ContentIterator;
 import consulo.document.FileDocumentManager;
+import consulo.index.io.ID;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IndexableFileSet;
 import consulo.localHistory.LocalHistory;
+import consulo.logging.Logger;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @ExtensionImpl
 final class ChangedFilesCollector extends IndexedFilesListener {
-  final IntObjectMap<VirtualFile> myFilesToUpdate = IntMaps.newConcurrentIntObjectHashMap();
+  private static final Logger LOG = Logger.getInstance(ChangedFilesCollector.class);
+
+  static final boolean CLEAR_NON_INDEXABLE_FILE_DATA =
+    Boolean.parseBoolean(System.getProperty("idea.indexes.clear.non.indexable.file.data", "true"));
+
+  final ConcurrentIntObjectMap<VirtualFile> myFilesToUpdate = IntMaps.newConcurrentIntObjectHashMap();
   private final AtomicInteger myProcessedEventIndex = new AtomicInteger();
   private final Phaser myWorkersFinishedSync = new Phaser() {
     @Override
@@ -71,38 +79,31 @@ final class ChangedFilesCollector extends IndexedFilesListener {
   }
 
   @Override
-  protected void buildIndicesForFileRecursively(VirtualFile file, boolean contentChange) {
-    FileBasedIndexImpl.cleanProcessedFlag(file);
-    if (!contentChange) {
-      myManager.myUpdatingFiles.incrementAndGet();
-    }
-
-    super.buildIndicesForFileRecursively(file, contentChange);
-
-    if (!contentChange) {
-      if (myManager.myUpdatingFiles.decrementAndGet() == 0) {
-        myManager.myFilesModCount.incrementAndGet();
-      }
-    }
-  }
-
-  @Override
   protected void iterateIndexableFiles(VirtualFile file, ContentIterator iterator) {
-    for (IndexableFileSet set : myManager.myIndexableSets) {
-      if (set.isInSet(file)) {
-        set.iterateIndexableFilesIn(file, iterator);
-      }
+    if (myManager.belongsToIndexableFiles(file)) {
+      VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
+        @Override
+        public boolean visitFile(VirtualFile file11) {
+          if (!myManager.belongsToIndexableFiles(file11)) {
+            return false;
+          }
+          iterator.processFile(file11);
+          return true;
+        }
+      });
     }
   }
 
   void scheduleForUpdate(VirtualFile file) {
+    int fileId = Math.abs(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file));
     if (!(file instanceof DeletedVirtualFileStub)) {
-      IndexableFileSet setForFile = myManager.getIndexableSetForFile(file);
-      if (setForFile == null) {
+      Set<Project> projects = myManager.getContainingProjects(file);
+      if (projects.isEmpty()) {
+        removeNonIndexableFileData(file, fileId);
         return;
       }
     }
-    int fileId = Math.abs(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file));
+
     VirtualFile previousVirtualFile = myFilesToUpdate.put(fileId, file);
 
     if (previousVirtualFile instanceof DeletedVirtualFileStub && !previousVirtualFile.equals(file)) {
@@ -110,6 +111,21 @@ final class ChangedFilesCollector extends IndexedFilesListener {
       ((DeletedVirtualFileStub)previousVirtualFile).setResurrected(true);
       myFilesToUpdate.put(fileId, previousVirtualFile);
     }
+  }
+
+  private void removeNonIndexableFileData(VirtualFile file, int fileId) {
+    if (CLEAR_NON_INDEXABLE_FILE_DATA) {
+      Collection<ID<?, ?>> extensions = getIndexedContentDependentExtensions(fileId);
+      if (!extensions.isEmpty()) {
+        myManager.removeDataFromIndicesForFile(fileId, file);
+      }
+      FileBasedIndexImpl.cleanProcessedFlag(file);
+    }
+  }
+
+  private Collection<ID<?, ?>> getIndexedContentDependentExtensions(int fileId) {
+    List<ID<?, ?>> indexedStates = IndexingStamp.getNontrivialFileIndexedStates(fileId);
+    return ContainerUtil.intersection(indexedStates, myManager.myRequiringContentIndices);
   }
 
   void removeScheduledFileFromUpdate(VirtualFile file) {
@@ -183,37 +199,31 @@ final class ChangedFilesCollector extends IndexedFilesListener {
   }
 
   void ensureUpToDateAsync() {
-    if (getEventMerger().getApproximateChangesCount() >= 20 && myScheduledVfsEventsWorkers.compareAndSet(0, 1)) {
-      myVfsEventsExecutor.execute(() -> {
-        try {
-          processFilesInReadActionWithYieldingToWriteAction();
-        }
-        finally {
-          myScheduledVfsEventsWorkers.decrementAndGet();
-        }
-      });
+    if (getEventMerger().getApproximateChangesCount() < 20 || !myScheduledVfsEventsWorkers.compareAndSet(0, 1)) {
+      return;
+    }
 
-      if (Registry.is("try.starting.dumb.mode.where.many.files.changed")) {
-        Runnable startDumbMode = () -> {
+    myVfsEventsExecutor.execute(() -> {
+      try {
+        processFilesInReadActionWithYieldingToWriteAction();
+
+        if (Registry.is("try.starting.dumb.mode.where.many.files.changed")) {
           for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            DumbService dumbService = DumbService.getInstance(project);
-            DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project);
-
-            if (task != null) {
-              dumbService.queueTask(task);
+            try {
+              FileBasedIndexProjectHandler.scheduleReindexingInDumbMode(project);
+            }
+            catch (ProcessCanceledException ignored) {
+            }
+            catch (Exception e) {
+              LOG.error(e);
             }
           }
-        };
-
-        Application app = ApplicationManager.getApplication();
-        if (!app.isHeadlessEnvironment()  /*avoid synchronous ensureUpToDate to prevent deadlock*/ && app.isDispatchThread() && !LaterInvocator.isInModalContext()) {
-          startDumbMode.run();
-        }
-        else {
-          app.invokeLater(startDumbMode, ModalityState.nonModal());
         }
       }
-    }
+      finally {
+        myScheduledVfsEventsWorkers.decrementAndGet();
+      }
+    });
   }
 
   private void processFilesInReadAction(Project project) {
@@ -234,7 +244,6 @@ final class ChangedFilesCollector extends IndexedFilesListener {
             int fileId = info.getFileId();
             VirtualFile file = info.getFile();
             if (info.isTransientStateChanged()) myManager.doTransientStateChangeForFile(fileId, file);
-            if (info.isBeforeContentChanged()) myManager.doInvalidateIndicesForFile(fileId, file, true);
             if (info.isContentChanged()) myManager.scheduleFileForIndexing(project, fileId, file, true);
             if (info.isFileRemoved()) myManager.doInvalidateIndicesForFile(fileId, file, false);
             if (info.isFileAdded()) myManager.scheduleFileForIndexing(project, fileId, file, false);

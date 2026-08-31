@@ -37,7 +37,7 @@ public class ThreadLocalRandom {
    * given thread.
    */
   public static int advanceProbe(int probe) {
-    probe ^= probe << 13;   // xorshift
+    probe ^= probe << 13;   // xor-shift
     probe ^= probe >>> 17;
     probe ^= probe << 5;
     tlr.get().threadLocalRandomProbe = probe;

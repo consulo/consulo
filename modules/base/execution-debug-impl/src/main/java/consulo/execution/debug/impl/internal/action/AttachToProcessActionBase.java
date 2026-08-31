@@ -17,7 +17,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.popup.AWTListPopup;
@@ -40,7 +40,7 @@ import java.awt.event.InputEvent;
 import java.util.*;
 import java.util.function.Supplier;
 
-public abstract class AttachToProcessActionBase extends AnAction {
+public abstract class AttachToProcessActionBase extends LegacyAnAction {
     public static final NotificationGroup GROUP = NotificationGroup.balloonGroup("Attach to Process");
 
     private static final Key<Map<XAttachHost, LinkedHashSet<RecentItem>>> RECENT_ITEMS_KEY =

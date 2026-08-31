@@ -157,7 +157,7 @@ public final class Touchbar {
         return (AnAction) anAct;
     }
 
-    private static class MyAction extends DumbAwareAction implements ActionWithDelegate<Object> {
+    private static class MyAction extends LegacyDumbAwareAction implements ActionWithDelegate<Object> {
 
         final boolean useTextFromAction;
         final @Nullable Action action;

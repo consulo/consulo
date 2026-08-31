@@ -16,6 +16,9 @@
 package consulo.versionControlSystem.impl.internal.annotate;
 
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -24,17 +27,36 @@ import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class VcsAnnotateUtil {
-  
+
   public static List<Editor> getEditors(Project project, VirtualFile file) {
     FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(file);
     return ContainerUtil.mapNotNull(editors, fileEditor -> fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null);
   }
 
-  
+  public static @Nullable Editor getEditorFor(VirtualFile file, DataContext dataContext) {
+    Editor editor = dataContext.getData(Editor.KEY);
+    if (editor != null && isEditorForFile(editor, file)) {
+      return editor;
+    }
+
+    FileEditor fileEditor = dataContext.getData(FileEditor.KEY);
+    if (fileEditor instanceof TextEditor textEditor && file.equals(fileEditor.getFile())) {
+      return textEditor.getEditor();
+    }
+    return null;
+  }
+
+  public static boolean isEditorForFile(Editor editor, VirtualFile file) {
+    // Editor.getVirtualFile is not being set for many editors
+    Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+    return editor.getDocument().equals(document);
+  }
+
   public static BackgroundableActionLock getBackgroundableLock(Project project, VirtualFile file) {
     return BackgroundableActionLock.getLock(project, VcsBackgroundableActions.ANNOTATE, file.getPath());
   }

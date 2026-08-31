@@ -34,7 +34,7 @@ import java.net.URL;
 
 /**
  * @author VISTALL
- * @since 30/10/2021
+ * @since 2021-10-30
  */
 @ExtensionImpl
 public class SandConfigurable implements Configurable, ProjectConfigurable {
@@ -43,15 +43,16 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
     public @Nullable Component createUIComponent(Disposable parentDisposable) {
         VerticalLayout verticalLayout = VerticalLayout.create();
 
-        verticalLayout.add(Button.create(LocalizeValue.localizeTODO("&Click me"), event -> {
-            Alerts.okInfo(LocalizeValue.localizeTODO("Info")).showAsync(verticalLayout);
-        }));
+        verticalLayout.add(Button.create(
+            LocalizeValue.localizeTODO("&Click me"),
+            event -> Alerts.okInfo(LocalizeValue.localizeTODO("Info")).showAsync(verticalLayout)
+        ));
 
         verticalLayout.add(Button.create(LocalizeValue.localizeTODO("Open Me"), event -> {
             try {
                 new URL("https://consulo.io").openStream();
             }
-            catch (IOException e) {
+            catch (IOException ignored) {
             }
         }));
 
@@ -70,7 +71,6 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
 
     }
 
-    
     @Override
     public String getId() {
         return "sand.editor";
@@ -81,7 +81,6 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Sand Editor");

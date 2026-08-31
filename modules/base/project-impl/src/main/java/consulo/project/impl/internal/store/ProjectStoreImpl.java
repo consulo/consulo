@@ -20,6 +20,7 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.internal.StateComponent;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
 import consulo.component.store.impl.internal.*;
@@ -31,6 +32,12 @@ import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
+import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineStep;
+
+import java.util.function.Function;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.macro.ProjectPathMacroManager;
@@ -40,7 +47,9 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -79,47 +88,36 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  public void setProjectFilePath(String filePath) {
-    StateStorageManager stateStorageManager = getStateStorageManager();
-    LocalFileSystem fs = LocalFileSystem.getInstance();
-
-    File file = new File(filePath);
-
-    File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
-    String defaultFilePath = new File(dirStore, "misc.xml").getPath();
-    // deprecated
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
-    stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
-
-    File ws = new File(dirStore, "workspace.xml");
-    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
-
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
-
-    ApplicationManager.getApplication().invokeAndWait(() -> VirtualFileUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), IdeaModalityState.defaultModalityState());
-
-    myPresentableUrl = null;
+  public CoroutineContext createCoroutineContext() {
+    return myProject.coroutineContext();
   }
 
   @Override
-  public void setProjectFilePathNoUI(String filePath) {
+  protected CoroutineStep<Object, Object> applyStateStep(Function<Object, Object> function) {
+    return WriteLock.apply(function);
+  }
+
+  @Override
+  public void setProjectFilePath(String filePath) {
     StateStorageManager stateStorageManager = getStateStorageManager();
-    LocalFileSystem fs = LocalFileSystem.getInstance();
 
     File file = new File(filePath);
 
-    File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+    File dirStore = file.isDirectory()
+        ? new File(file, Project.DIRECTORY_STORE_FOLDER)
+        : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+
     String defaultFilePath = new File(dirStore, "misc.xml").getPath();
-    // deprecated
+
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
+
     stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
 
     File ws = new File(dirStore, "workspace.xml");
+
     stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
-
-    VirtualFileUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
 
     myPresentableUrl = null;
   }
@@ -221,7 +219,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   public void loadProjectFromTemplate(ProjectImpl defaultProject) {
-    defaultProject.save();
+    CoroutineScope scope = CoroutineScope.of(defaultProject.coroutineContext());
+    defaultProject.getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(scope, null);
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();
     if (element != null) {
@@ -249,7 +248,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   
   @Override
-  protected <T> Storage[] getComponentStorageSpecs(PersistentStateComponent<T> persistentStateComponent, State stateSpec, StateStorageOperation operation) {
+  protected Storage[] getComponentStorageSpecs(StateComponent persistentStateComponent, State stateSpec, StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;
@@ -285,8 +284,12 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       else {
         List<Pair<SaveSession, File>> oldList = new ArrayList<>(readonlyFiles);
         readonlyFiles.clear();
+        List<VFileEvent> retryEvents = new ArrayList<>();
         for (Pair<SaveSession, File> entry : oldList) {
-          executeSave(entry.first, false, readonlyFiles);
+          executeSave(entry.first, false, readonlyFiles, retryEvents);
+        }
+        if (!retryEvents.isEmpty()) {
+          RefreshQueue.getInstance().processEvents(retryEvents);
         }
 
         if (!readonlyFiles.isEmpty()) {

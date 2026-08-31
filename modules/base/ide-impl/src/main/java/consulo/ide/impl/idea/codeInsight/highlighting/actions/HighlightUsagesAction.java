@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.codeInsight.highlighting.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.internal.largeFileEditor.LargeEditorActionUtil;
@@ -27,13 +26,13 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 
 @ActionImpl(id = IdeActions.ACTION_HIGHLIGHT_USAGES_IN_FILE)
-public class HighlightUsagesAction extends AnAction implements DumbAware {
+public class HighlightUsagesAction extends LegacyDumbAwareAction {
     public HighlightUsagesAction() {
         super(ActionLocalize.actionHighlightusagesinfileText(), ActionLocalize.actionHighlightusagesinfileDescription());
         setInjectedContext(true);

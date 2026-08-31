@@ -19,8 +19,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -28,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
-    @Nullable VirtualFile[] getRootsForModule(Module module);
+    Path @Nullable [] getRootsForModule(Module module);
 
     boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
 }

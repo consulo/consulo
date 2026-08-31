@@ -18,12 +18,16 @@ package consulo.application.impl.internal.progress;
 import consulo.application.Application;
 import consulo.application.internal.ProgressDialog;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.Button;
 import consulo.ui.Label;
 import consulo.ui.Window;
 import consulo.ui.*;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +38,11 @@ import java.util.function.Predicate;
  * @since 2020-05-11
  */
 public class UnifiedProgressDialog implements ProgressDialog {
-    private final Project myProject;
+    /**
+     * Null while a project is being opened - the progress of the open itself belongs to no project yet, and
+     * the field is only ever a way to reach the application.
+     */
+    private final @Nullable Project myProject;
     private ProgressWindow myProgressWindow;
 
     private Window myWindow;
@@ -42,10 +50,28 @@ public class UnifiedProgressDialog implements ProgressDialog {
     private Label myTextLabel;
     private Label myTextLabel2;
     private ProgressBar myProgressBar;
+    private Button myCancelButton;
 
-    public UnifiedProgressDialog(Project project, ProgressWindow progressWindow) {
+    /**
+     * Every window access is scheduled on the ui thread, so a hide can be requested long before the scheduled show
+     * has run. Without this flag such a hide is a no-op and the window opens afterwards with nobody left to close
+     * it - on a modal ui backend that leaves the whole ui blocked.
+     */
+    private volatile boolean myHideRequested;
+
+    public UnifiedProgressDialog(@Nullable Project project, ProgressWindow progressWindow) {
         myProject = project;
         myProgressWindow = progressWindow;
+    }
+
+    private UIAccess uiAccess() {
+        if (myProject != null) {
+            return myProject.getUIAccess();
+        }
+
+        Window window = myWindow;
+        UIAccess windowAccess = window == null ? null : window.getUIAccess();
+        return windowAccess == null ? Application.get().getLastUIAccess() : windowAccess;
     }
 
     @Override
@@ -55,15 +81,20 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void hide() {
-        System.out.println("hide");
-        if (myWindow != null) {
-            myProject.getApplication().getLastUIAccess().give(() -> {
-                myWindow.close();
-                myWindow = null;
-                myTextLabel = null;
-                myTextLabel2 = null;
-            });
-        }
+        myHideRequested = true;
+
+        uiAccess().give(() -> {
+            if (myWindow == null) {
+                return;
+            }
+
+            myWindow.close();
+            myWindow = null;
+            myTextLabel = null;
+            myTextLabel2 = null;
+            myProgressBar = null;
+            myCancelButton = null;
+        });
     }
 
     @Override
@@ -73,36 +104,42 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void update() {
-        System.out.println("update");
+        uiAccess().give(() -> {
+            if (myWindow == null) {
+                return;
+            }
 
-        if (myWindow != null) {
-            myProject.getApplication().getLastUIAccess().give(() -> {
-                System.out.println(
-                    "update " + myProgressWindow.getText() + " " +
-                        myProgressWindow.getText2() + " " + myProgressWindow.getFraction()
-                );
-                myTextLabel.setText(myProgressWindow.getText());
-                myTextLabel2.setText(myProgressWindow.getText2());
-                myProgressBar.setValue((int) (myProgressWindow.getFraction() * 100));
-            });
-        }
+            myTextLabel.setText(myProgressWindow.getText());
+            myTextLabel2.setText(myProgressWindow.getText2());
+            myProgressBar.setValue((int) (myProgressWindow.getFraction() * 100));
+        });
     }
 
     @Override
     public void show() {
-        System.out.println("show");
-            
+        uiAccess().give(() -> {
+            if (myHideRequested || myWindow != null) {
+                return;
+            }
 
-        myProject.getApplication().getLastUIAccess().give(() -> {
             VerticalLayout verticalLayout = VerticalLayout.create();
 
             verticalLayout.add(myTextLabel = Label.create());
-            verticalLayout.add(myProgressBar = ProgressBar.create());
+
+            DockLayout progressLayout = DockLayout.create();
+            progressLayout.center(myProgressBar = ProgressBar.create());
+
+            if (myProgressWindow.myShouldShowCancel) {
+                myCancelButton = Button.create(CommonLocalize.buttonCancel(), event -> myProgressWindow.cancel());
+                progressLayout.right(myCancelButton);
+            }
+
+            verticalLayout.add(progressLayout);
             verticalLayout.add(myTextLabel2 = Label.create());
 
             myWindow = Window.create(
-                Application.get().getName().get(),
-                WindowOptions.builder().disableClose().disableResize().build()
+                "",
+                WindowOptions.builder().disableClose().disableResize().disableModal().build()
             );
             myWindow.setSize(new Size2D(288, 123));
             myWindow.setContent(verticalLayout);
@@ -117,12 +154,20 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void changeCancelButtonText(LocalizeValue text) {
-        System.out.println("changeCancelButtonText=" + text);
+        uiAccess().give(() -> {
+            if (myCancelButton != null) {
+                myCancelButton.setText(text);
+            }
+        });
     }
 
     @Override
     public void enableCancelButtonIfNeeded(boolean value) {
-        //System.out.println("enableCancelButtonIfNeeded=" + value);
+        uiAccess().give(() -> {
+            if (myCancelButton != null) {
+                myCancelButton.setEnabled(value);
+            }
+        });
     }
 
     @Override

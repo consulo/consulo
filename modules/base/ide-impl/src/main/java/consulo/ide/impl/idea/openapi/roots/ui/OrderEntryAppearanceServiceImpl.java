@@ -91,7 +91,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       return normalOrRedWaved(name, (icon != null ? icon : AllIcons.Nodes.PpLib), hasInvalidRoots);
     }
 
-    String[] files = library.getUrls(BinariesOrderRootType.getInstance());
+    String[] files = library.getUrls(BinariesOrderRootType.ID);
     if (files.length == 0) {
       return SimpleTextCellAppearance.invalid(ProjectLocalize.libraryEmptyLibraryItem().get(), AllIcons.Nodes.PpLib);
     }

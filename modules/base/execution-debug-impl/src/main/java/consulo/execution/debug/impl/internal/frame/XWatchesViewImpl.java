@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.frame;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebugSession;
@@ -34,11 +35,12 @@ import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
-import consulo.execution.debug.impl.internal.ui.tree.action.XWatchTransferable;
+import consulo.execution.debug.impl.internal.ui.tree.action.XCopyValueAction;
 import consulo.execution.debug.impl.internal.ui.tree.node.*;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDEvent;
@@ -51,7 +53,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -107,12 +108,10 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
-                Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
-                if (contents instanceof List) {
-                    for (Object item : ((List) contents)) {
-                        if (item instanceof XExpression) {
-                            addWatchExpression(((XExpression) item), -1, true);
-                        }
+                List<XExpression> expressions = CopyPasteManager.getInstance().getLocalContents().get(XCopyValueAction.WATCH_EXPRESSIONS);
+                if (expressions != null) {
+                    for (XExpression item : expressions) {
+                        addWatchExpression(item, -1, true);
                     }
                 }
             }
@@ -203,7 +202,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             @Override
             protected void addActions(ActionGroup.Builder builder, boolean showMultiline) {
                 AnAction addToWatchesAction =
-                    new DumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
+                    new LegacyDumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
                         @Override
                         @RequiredUIAccess
                         public void actionPerformed(AnActionEvent e) {
@@ -217,11 +216,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                             e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
                         }
 
-                        @Override
-                        
-                        public ActionUpdateThread getActionUpdateThread() {
-                            return ActionUpdateThread.BGT;
-                        }
                     };
 
                 super.addActions(builder, showMultiline);
@@ -234,11 +228,10 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             @Override
             protected void prepareEditor(EditorEx editor) {
                 super.prepareEditor(editor);
-                editor.setPlaceholder(XDebuggerBundle.message(
-                    "debugger.evaluate.expression.or.add.a.watch.hint",
+                editor.setPlaceholder(XDebuggerLocalize.debuggerEvaluateExpressionOrAddAWatchHint(
                     KeymapUtil.getShortcutText(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), null)),
                     KeymapUtil.getShortcutText(new KeyboardShortcut(XDebuggerEvaluationDialog.getAddWatchKeystroke(), null))
-                ));
+                ).get());
             }
         };
         ComboBoxStyle.makeBorderInline(myEvaluateComboBox.getComboBox());
@@ -338,7 +331,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         }
     }
 
-    
     private XExpression[] getExpressions() {
         XDebuggerTree tree = getTree();
         XDebugSession session = XDebugView.getSession(tree);
@@ -360,11 +352,9 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (XWatchesView.DATA_KEY == dataId) {
-            return this;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(XWatchesView.DATA_KEY, this);
     }
 
     @Override
@@ -421,7 +411,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             ((XDebugSessionImpl) session).setWatchExpressions(expressions);
         }
         else {
-            XDebugSessionData data = XDebugView.getData(XDebugSessionData.DATA_KEY, getTree());
+            XDebugSessionData data = DataManager.getInstance().getDataContext(getTree()).getData(XDebugSessionData.DATA_KEY);
             if (data != null) {
                 data.setWatchExpressions(expressions);
             }

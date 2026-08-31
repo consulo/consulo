@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.breakpoint.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -31,23 +32,25 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
   };
 
   private final String myId;
-  private final String myPresentableName;
+  private final LocalizeValue myPresentableName;
 
   public boolean isAlwaysEnabled() {
     return false;
   }
 
-  protected XBreakpointGroupingRule(String id, String presentableName) {
+  protected XBreakpointGroupingRule(String id, LocalizeValue presentableName) {
     myId = id;
     myPresentableName = presentableName;
   }
 
-  
-  public String getPresentableName() {
+  protected XBreakpointGroupingRule(String id, String presentableName) {
+    this(id, LocalizeValue.of(presentableName));
+  }
+
+  public LocalizeValue getPresentableName() {
     return myPresentableName;
   }
 
-  
   public String getId() {
     return myId;
   }

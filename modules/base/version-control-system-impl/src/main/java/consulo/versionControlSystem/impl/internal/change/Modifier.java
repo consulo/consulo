@@ -32,11 +32,11 @@ public class Modifier implements ChangeListsWriteOperations {
   private ChangeListWorker myWorker;
   private boolean myInsideUpdate;
   private final List<ChangeListCommand> myCommandQueue;
-  private final DelayedNotificator myNotificator;
+  private final DelayedNotificator myNotifier;
 
-  public Modifier(ChangeListWorker worker, DelayedNotificator notificator) {
+  public Modifier(ChangeListWorker worker, DelayedNotificator notifier) {
     myWorker = worker;
-    myNotificator = notificator;
+    myNotifier = notifier;
     myCommandQueue = new LinkedList<ChangeListCommand>();
   }
 
@@ -72,10 +72,10 @@ public class Modifier implements ChangeListsWriteOperations {
     command.apply(myWorker);
     if (myInsideUpdate) {
       myCommandQueue.add(command);
-      // notify after change lsist are synchronized
+      // notify after change lists are synchronized
     } else {
       // notify immediately
-      myNotificator.callNotify(command);
+      myNotifier.callNotify(command);
     }
   }
 
@@ -126,7 +126,7 @@ public class Modifier implements ChangeListsWriteOperations {
   private void apply(ChangeListWorker worker) {
     for (ChangeListCommand command : myCommandQueue) {
       command.apply(worker);
-      myNotificator.callNotify(command);
+      myNotifier.callNotify(command);
     }
   }
 

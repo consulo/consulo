@@ -21,6 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.util.concurrent.ActionCallback;
 import org.jspecify.annotations.Nullable;
@@ -66,7 +67,7 @@ public abstract class ActionManager {
      *
      * @param actionId Id of the registered action
      * @return Action associated with the specified actionId, <code>null</code> if
-     * there is no actions associated with the speicified actionId
+     * there is no actions associated with the specified actionId
      * @throws java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
      * @see IdeActions
      */
@@ -140,16 +141,13 @@ public abstract class ActionManager {
 
     public abstract AnAction getActionOrStub(String id);
 
-    public abstract void addTimerListener(int delay, TimerListener listener);
-
-    public abstract void removeTimerListener(TimerListener listener);
-
-    public abstract void addTransparentTimerListener(int delay, TimerListener listener);
-
-    public abstract void removeTransparentTimerListener(TimerListener listener);
-
+    /**
+     * @param inputEvent       the awt event behind the invocation, when there is one - an invocation driven by
+     *                         a unified event or by code has none
+     * @param contextComponent where to take the data context from; the focused component when {@code null}
+     */
     public abstract ActionCallback tryToExecute(
-        AnAction action, InputEvent inputEvent, @Nullable Component contextComponent,
+        AnAction action, @Nullable InputEvent inputEvent, @Nullable Component contextComponent,
         @Nullable String place, boolean now
     );
 
@@ -171,4 +169,7 @@ public abstract class ActionManager {
     }
 
     public abstract @Nullable KeyboardShortcut getKeyboardShortcut(String actionId);
+
+    @RequiredUIAccess
+    public abstract void performActionDumbAware(AnAction action, AnActionEvent e);
 }

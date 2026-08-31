@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  * from kotlin
  */
 @ActionImpl(id = "OpenInRightSplit")
-public class OpenInRightSplitAction extends DumbAwareAction {
+public class OpenInRightSplitAction extends LegacyDumbAwareAction {
     public OpenInRightSplitAction() {
         super(
             ActionLocalize.actionOpeninrightsplitText(),

@@ -39,27 +39,7 @@ public sealed interface FileStatusManager permits FileStatusManagerInternal {
 
     public abstract void fileStatusChanged(VirtualFile file);
 
-    public abstract void addFileStatusListener(FileStatusListener listener);
-
     public abstract void addFileStatusListener(FileStatusListener listener, Disposable parentDisposable);
-
-    public abstract void removeFileStatusListener(FileStatusListener listener);
-
-    /**
-     * @deprecated Use getStatus(file).getText()} instead
-     */
-    default String getStatusText(VirtualFile file) {
-        return getStatus(file).getText().get();
-    }
-
-    /**
-     * @deprecated Use getStatus(file).getColor()} instead
-     */
-    default ColorValue getStatusColor(VirtualFile file) {
-        return getStatus(file).getColor();
-    }
-
-    public abstract ColorValue getNotChangedDirectoryColor(VirtualFile vf);
 
     /**
      * @see VcsConfiguration#SHOW_DIRTY_RECURSIVELY

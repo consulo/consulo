@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.debug.breakpoint;
 
 import consulo.annotation.UsedInPlugin;
@@ -21,11 +20,12 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
@@ -61,11 +61,11 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
 
   @Override
   public String getDisplayText(XLineBreakpoint<P> breakpoint) {
-    return fileLineDisplayText(breakpoint.getPresentableFilePath(), breakpoint.getLine());
+    return fileLineDisplayText(breakpoint.getPresentableFilePath(), breakpoint.getLine()).get();
   }
 
-  private static String fileLineDisplayText(String path, int line) {
-    return XDebuggerBundle.message("xbreakpoint.default.display.text", line + 1, path);
+  private static LocalizeValue fileLineDisplayText(String path, int line) {
+    return XDebuggerLocalize.xbreakpointDefaultDisplayText(line + 1, path);
   }
 
   /**
@@ -78,7 +78,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
 
   @Override
   public String getShortText(XLineBreakpoint<P> breakpoint) {
-    return fileLineDisplayText(breakpoint.getShortFilePath(), breakpoint.getLine());
+    return fileLineDisplayText(breakpoint.getShortFilePath(), breakpoint.getLine()).get();
   }
 
   /**
@@ -93,7 +93,6 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     return Collections.emptyList();
   }
 
-  
   public Image getTemporaryIcon() {
     return ExecutionDebugIconGroup.breakpointBreakpoint();
   }
@@ -150,7 +149,6 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
       mySourcePosition = position;
     }
 
-    
     @RequiredReadAction
     @Override
     public String getText() {
@@ -171,8 +169,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
 
     @Override
     public @Nullable P createProperties() {
-      return createBreakpointProperties(mySourcePosition.getFile(),
-                                        mySourcePosition.getLine());
+      return createBreakpointProperties(mySourcePosition.getFile(), mySourcePosition.getLine());
     }
   }
 
@@ -192,7 +189,6 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
       return IconDescriptorUpdaters.getIcon(myElement, 0);
     }
 
-    
     @RequiredReadAction
     @Override
     public String getText() {

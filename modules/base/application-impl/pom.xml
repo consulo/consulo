@@ -33,6 +33,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-application-api</artifactId>
             <version>${project.version}</version>
@@ -111,13 +115,12 @@
             <artifactId>args4j</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- Test -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-util-collection-via-trove</artifactId>
+            <artifactId>consulo-util-collection-primitive</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
+        <!-- Test -->
         <!--<dependency>-->
             <!--<groupId>net.bytebuddy</groupId>-->
             <!--<artifactId>byte-buddy</artifactId>-->

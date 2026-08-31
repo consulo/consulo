@@ -15,6 +15,7 @@
  */
 package consulo.language.copyright.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
@@ -33,6 +34,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(
@@ -54,14 +58,18 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        boolean enabled = isEnabled(event);
-        event.getPresentation().setEnabled(enabled);
-        if (ActionPlaces.isPopupPlace(event.getPlace())) {
-            event.getPresentation().setVisible(enabled);
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, (presentation) -> {
+            boolean enabled = isEnabled(event);
+            presentation.setEnabled(enabled);
+
+            if (ActionPlaces.isPopupPlace(event.getPlace())) {
+                presentation.setVisible(enabled);
+            }
+        }).toCoroutine();
     }
 
+    @RequiredReadAction
     private static boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {

@@ -14,8 +14,7 @@
 package ch.qos.logback.classic.spi;
 
 public class EventArgUtil {
-
-    public static final Throwable extractThrowable(Object[] argArray) {
+    public static Throwable extractThrowable(Object[] argArray) {
         if (argArray == null || argArray.length == 0) {
             return null;
         }
@@ -36,11 +35,11 @@ public class EventArgUtil {
      */
     public static Object[] trimmedCopy(Object[] argArray) {
         if (argArray == null || argArray.length == 0) {
-            throw new IllegalStateException("non-sensical empty or null argument array");
+            throw new IllegalStateException("empty or null argument array");
         }
-        int trimemdLen = argArray.length - 1;
-        Object[] trimmed = new Object[trimemdLen];
-        System.arraycopy(argArray, 0, trimmed, 0, trimemdLen);
+        int trimmedLen = argArray.length - 1;
+        Object[] trimmed = new Object[trimmedLen];
+        System.arraycopy(argArray, 0, trimmed, 0, trimmedLen);
         return trimmed;
     }
 

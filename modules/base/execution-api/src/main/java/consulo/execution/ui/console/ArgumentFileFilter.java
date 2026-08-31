@@ -1,6 +1,7 @@
 package consulo.execution.ui.console;
 
 import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,7 +12,7 @@ import java.nio.file.Path;
 public class ArgumentFileFilter implements Filter {
   private volatile String myFilePath;
   private volatile String myFileText;
-  private boolean myTriggred;
+  private boolean myTriggered;
 
   public ArgumentFileFilter() {
   }
@@ -28,16 +29,16 @@ public class ArgumentFileFilter implements Filter {
 
   @Override
   public @Nullable Result applyFilter(String line, int entireLength) {
-    if(!myTriggred) {
+    if(!myTriggered) {
       String path = myFilePath;
       String text = myFileText;
       if(path == null || text == null) {
-        myTriggred = true;
+        myTriggered = true;
       }
       else {
         int p = line.indexOf(path);
         if(p > 0) {
-          myTriggred = true;
+          myTriggered = true;
           int offset = entireLength - line.length() + p;
           return new Result(offset, offset + path.length(), new ShowTextPopupHyperlinkInfo(path, text));
         }

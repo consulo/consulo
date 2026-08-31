@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,62 +17,20 @@ package consulo.component.internal.inject;
 
 import consulo.component.bind.InjectingBinding;
 
-import org.jspecify.annotations.Nullable;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 13-Jun-22
+ * @since 2026-04-23
  */
-public class InjectingBindingHolder {
-  private final Map<String, List<InjectingBinding>> myBindings = new HashMap<>();
-  private final AtomicBoolean myLocked;
-
-  public InjectingBindingHolder(AtomicBoolean locked) {
-    myLocked = locked;
-  }
-
-  public void clear() {
-    myBindings.clear();
-  }
-
-  public void addBinding(InjectingBinding binding) {
-    if (myLocked.get()) {
-      throw new IllegalArgumentException("locked");
-    }
-
-    myBindings.computeIfAbsent(binding.getApiClassName(), s -> new LinkedList<>()).add(binding);
-  }
-
-  
-  public Map<String, List<InjectingBinding>> getBindings() {
-    return Collections.unmodifiableMap(myBindings);
-  }
-
-  public static boolean isValid(InjectingBinding binding, int componentProfiles) {
-    int bindingComponentProfiles = binding.getComponentProfiles();
-    if (bindingComponentProfiles == 0) {
-      return true;
-    }
-    return (componentProfiles & bindingComponentProfiles) == bindingComponentProfiles;
-  }
-
-  public static @Nullable InjectingBinding findValid(List<InjectingBinding> bindings, int componentProfiles) {
-    InjectingBinding result = null;
-    //noinspection ForLoopReplaceableByForEach
-    for (int i = 0; i < bindings.size(); i++) {
-      InjectingBinding binding = bindings.get(i);
-
-      if (isValid(binding, componentProfiles)) {
-        // do not allow override services
-        if (result != null) {
-          return null;
+public interface InjectingBindingHolder {
+    InjectingBindingHolder EMPTY = new InjectingBindingHolder() {
+        @Override
+        public Map<String, List<InjectingBinding>> getBindings() {
+            return Map.of();
         }
-        result = binding;
-      }
-    }
+    };
 
-    return result;
-  }
+    Map<String, List<InjectingBinding>> getBindings();
 }

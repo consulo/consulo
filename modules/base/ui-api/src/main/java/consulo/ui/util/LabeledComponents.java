@@ -26,55 +26,55 @@ import consulo.util.lang.StringUtil;
 
 /**
  * @author VISTALL
- * @since 05-Nov-16
+ * @since 2016-11-05
  */
 @Deprecated
 @DeprecationInfo("See LabeledBuilder")
 public class LabeledComponents {
-  @RequiredUIAccess
-  public static Component left(String text, Component component) {
-    return left(text, () -> component);
-  }
-
-  @RequiredUIAccess
-  public static Component left(String text, PseudoComponent component) {
-    if (!StringUtil.endsWithChar(text, ':')) {
-      text += ": ";
+    @RequiredUIAccess
+    public static Component left(String text, Component component) {
+        return left(text, () -> component);
     }
 
-    HorizontalLayout horizontal = HorizontalLayout.create(5);
-    horizontal.add(Label.create(text));
-    horizontal.add(component);
-    return horizontal;
-  }
+    @RequiredUIAccess
+    public static Component left(String text, PseudoComponent component) {
+        if (!StringUtil.endsWithChar(text, ':')) {
+            text += ": ";
+        }
 
-  @RequiredUIAccess
-  public static Component leftFilled(String text, Component component) {
-    return leftFilled(text, () -> component);
-  }
-
-  @RequiredUIAccess
-  public static Component leftFilled(String text, PseudoComponent component) {
-    if (!StringUtil.endsWithChar(text, ':')) {
-      text += ": ";
+        HorizontalLayout horizontal = HorizontalLayout.create(5);
+        horizontal.add(Label.create(text));
+        horizontal.add(component);
+        return horizontal;
     }
 
-    DockLayout dock = DockLayout.create();
-    dock.left(Label.create(text));
-    dock.center(component);
-    return dock;
-  }
+    @RequiredUIAccess
+    public static Component leftFilled(String text, Component component) {
+        return leftFilled(text, () -> component);
+    }
 
-  @RequiredUIAccess
-  public static Component leftWithRight(String text, Component component) {
-    return leftWithRight(text, () -> component);
-  }
+    @RequiredUIAccess
+    public static Component leftFilled(String text, PseudoComponent component) {
+        if (!StringUtil.endsWithChar(text, ':')) {
+            text += ": ";
+        }
 
-  @RequiredUIAccess
-  public static Component leftWithRight(String text, PseudoComponent component) {
-    DockLayout dock = DockLayout.create();
-    dock.left(Label.create(text));
-    dock.right(component);
-    return dock;
-  }
+        DockLayout dock = DockLayout.create();
+        dock.left(Label.create(text));
+        dock.center(component);
+        return dock;
+    }
+
+    @RequiredUIAccess
+    public static Component leftWithRight(String text, Component component) {
+        return leftWithRight(text, () -> component);
+    }
+
+    @RequiredUIAccess
+    public static Component leftWithRight(String text, PseudoComponent component) {
+        DockLayout dock = DockLayout.create();
+        dock.left(Label.create(text));
+        dock.right(component);
+        return dock;
+    }
 }

@@ -96,7 +96,7 @@ public class RootDetectionUtil {
                                     String typeName = detector.getRootTypeName(type);
                                     LOG.assertTrue(
                                         typeName != null,
-                                        "Unexpected root type " + type.getType().getId() +
+                                        "Unexpected root type " + type.getType() +
                                             (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
                                             "detectors: " + detector
                                     );
@@ -134,7 +134,7 @@ public class RootDetectionUtil {
             Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
             for (OrderRootType type : rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
                 for (boolean isJarDirectory : new boolean[]{false, true}) {
-                    String typeName = detector.getRootTypeName(new LibraryRootType(type, isJarDirectory));
+                    String typeName = detector.getRootTypeName(new LibraryRootType(type.getId(), isJarDirectory));
                     if (typeName != null) {
                         types.put(typeName, Pair.create(type, isJarDirectory));
                     }
@@ -159,7 +159,7 @@ public class RootDetectionUtil {
             for (String rootType : dialog.showAndGetResult()) {
                 Pair<OrderRootType, Boolean> pair = types.get(rootType);
                 for (VirtualFile candidate : rootCandidates) {
-                    result.add(new OrderRoot(candidate, pair.getFirst(), pair.getSecond()));
+                    result.add(new OrderRoot(candidate, pair.getFirst().getId(), pair.getSecond()));
                 }
             }
         }

@@ -43,6 +43,7 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
     private final boolean isMac;
     private final boolean isLinux;
     private final boolean isFreeBSD;
+    private final boolean isHaiku;
 
     private final Function<String, String> getEnvFunc;
     private final Supplier<Map<String, String>> getEnvsSup;
@@ -63,12 +64,16 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         isMac = osNameLowered.startsWith("mac");
         isLinux = osNameLowered.startsWith("linux");
         isFreeBSD = osNameLowered.startsWith("freebsd");
+        isHaiku = osNameLowered.startsWith("haiku");
 
         if (isWindows) {
             myFileNamePrefix = "windows";
         }
         else if (isMac) {
             myFileNamePrefix = "mac";
+        }
+        else if (isHaiku) {
+            myFileNamePrefix = "haiku";
         }
         else {
             myFileNamePrefix = "linux";
@@ -80,7 +85,11 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return !isWindows && !isMac;
     }
 
-    
+    @Override
+    public boolean isHaiku() {
+        return isHaiku;
+    }
+
     @Override
     public String fileNamePrefix() {
         return myFileNamePrefix;
@@ -90,7 +99,6 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
     }
 
-    
     @Override
     public Collection<ProcessInfo> processes() {
         List<ProcessInfo> processInfos = new ArrayList<>();
@@ -141,13 +149,11 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return isLinux;
     }
 
-    
     @Override
     public String name() {
         return OS_NAME;
     }
 
-    
     @Override
     public String version() {
         return OS_VERSION;
@@ -158,13 +164,11 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return getEnvFunc.apply(key);
     }
 
-    
     @Override
     public Map<String, String> environmentVariables() {
         return getEnvsSup.get();
     }
 
-    
     @Override
     public String arch() {
         return myOSArch;

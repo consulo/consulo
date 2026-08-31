@@ -17,7 +17,6 @@ package consulo.project.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
@@ -27,10 +26,8 @@ import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StorableComponent;
-import consulo.component.store.internal.StoreUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.module.ModuleManager;
-import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.store.IProjectStore;
@@ -43,8 +40,10 @@ import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
@@ -55,8 +54,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx, StorableComponent {
@@ -68,15 +66,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     
     private final String myDirPath;
 
-    private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
+    private boolean myFullyInitialized;
 
-    private String myName;
+    private @Nullable String myName = null;
 
     public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
     public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
     private Supplier<StartupManager> myStartupManagerProvider = LazyValue.notNull(() -> getInstance(StartupManager.class));
-    private Supplier<ModuleManager> myModuleManagerProvider = LazyValue.notNull(() -> getInstance(ModuleManager.class));
     private Supplier<CoroutineContext> myCoroutineContext = LazyValue.notNull(() -> {
         Application application = getApplication();
         CoroutineContext context = application.coroutineContext().copy();
@@ -84,12 +81,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return context;
     });
 
-    public ProjectImpl(Application application,
-                       ProjectManager manager,
-                       String dirPath,
-                       String projectName,
-                       boolean noUIThread,
-                       ComponentBinding componentBinding) {
+    public ProjectImpl(
+        Application application,
+        ProjectManager manager,
+        String dirPath,
+        String projectName,
+        boolean noUIThread,
+        ComponentBinding componentBinding
+    ) {
         super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT, componentBinding);
         myDirPath = dirPath;
 
@@ -100,12 +99,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
 
         if (!isDefault()) {
-            if (noUIThread) {
-                getStateStore().setProjectFilePathNoUI(dirPath);
-            }
-            else {
-                getStateStore().setProjectFilePath(dirPath);
-            }
+            getStateStore().setProjectFilePath(dirPath);
         }
 
         myManager = (ProjectManagerEx) manager;
@@ -113,7 +107,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         myName = projectName;
     }
 
-    
     @Override
     public CoroutineContext coroutineContext() {
         return myCoroutineContext.get();
@@ -135,7 +128,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    
     public Application getApplication() {
         return (Application) myParent;
     }
@@ -146,18 +138,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
         if (!projectName.equals(name)) {
             myName = projectName;
-            myStartupManagerProvider.get().runWhenProjectIsInitialized(new DumbAwareRunnable() {
-                @Override
-                public void run() {
-                    if (isDisposed()) {
-                        return;
-                    }
+            myStartupManagerProvider.get().runWhenProjectIsInitialized(() -> {
+                if (isDisposed()) {
+                    return;
+                }
 
-                    JFrame frame = WindowManager.getInstance().getFrame(ProjectImpl.this);
-                    String title = FrameTitleBuilder.getInstance().getProjectTitle(ProjectImpl.this);
-                    if (frame != null && title != null) {
-                        frame.setTitle(title);
-                    }
+                JFrame frame = WindowManager.getInstance().getFrame(ProjectImpl.this);
+                String title = FrameTitleBuilder.getInstance().getProjectTitle(ProjectImpl.this);
+                if (frame != null && title != null) {
+                    frame.setTitle(title);
                 }
             });
         }
@@ -176,7 +165,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return (IProjectStore) super.getStateStore();
     }
 
-    
     @Override
     public IComponentStore getStateStoreImpl() {
         return getInstance(IProjectStore.class);
@@ -186,13 +174,21 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     protected void notifyAboutInitialization(float percentOfLoad, Object component) {
         ProgressIndicator indicator = getApplication().getProgressManager().getProgressIndicator();
         if (indicator != null) {
-            indicator.setText2(component.getClass().getName());
+            indicator.setText2(LocalizeValue.of(component.getClass().getName()));
         }
     }
 
     @Override
     public boolean isOpen() {
         return myManager.isProjectOpened(this);
+    }
+
+    public void setFullyInitialized(boolean fullyInitialized) {
+        myFullyInitialized = fullyInitialized;
+    }
+
+    public boolean isFullyInitialized() {
+        return myFullyInitialized;
     }
 
     @Override
@@ -204,12 +200,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    public boolean isModulesReady() {
-        return ((ModuleManagerImpl) myModuleManagerProvider.get()).isReady();
-    }
-
-    @Override
-    
     public String getProjectFilePath() {
         return getStateStore().getProjectFilePath();
     }
@@ -225,11 +215,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    public String getBasePath() {
+    public @Nullable String getBasePath() {
         return getStateStore().getProjectBasePath();
     }
 
-    
     @Override
     public String getName() {
         if (myName == null) {
@@ -243,7 +232,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return getStateStore().getPresentableUrl();
     }
 
-    
     @Override
     public String getLocationHash() {
         String str = getPresentableUrl();
@@ -263,116 +251,65 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     @Override
     public void initNotLazyServices() {
         long start = System.currentTimeMillis();
-//    ProfilingUtil.startCPUProfiling();
+//        ProfilingUtil.startCPUProfiling();
         super.initNotLazyServices();
-//    ProfilingUtil.captureCPUSnapshot();
+//        ProfilingUtil.captureCPUSnapshot();
         long time = System.currentTimeMillis() - start;
         LOG.info(getNotLazyServicesCount() + " project not-lazy servicers initialized in " + time + " ms");
     }
 
     @Override
-    public void save() {
+    public Coroutine<Object, Object> saveAsync(UIAccess uiAccess) {
         ApplicationEx application = (ApplicationEx) getApplication();
         if (application.isDoNotSave()) {
-            // no need to save
-            return;
+            return Coroutine.empty();
         }
 
-        if (!isModulesReady()) {
-            LOG.warn(new Exception("Calling Project#save() but modules not initialized"));
+        return createSaveChain()
+            .then(CodeExecution.<Object, Object>apply(input -> {
+                application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
+                return input;
+            }));
+    }
+
+    private Coroutine<Object, Object> createSaveChain() {
+        return Coroutine.<Object, Object>first(CodeExecution.<Object, Object>apply(input -> {
+                writeProjectNameFile();
+                return input;
+            }))
+            .then(CallSubroutine.call(getStateStore().createSaveCoroutine(new ArrayList<>())));
+    }
+
+    private void writeProjectNameFile() {
+        if (isDefault()) {
             return;
         }
-
-        if (!mySavingInProgress.compareAndSet(false, true)) {
+        String projectBasePath = getStateStore().getProjectBasePath();
+        if (projectBasePath == null) {
             return;
         }
-
-        try {
-            if (!isDefault()) {
-                String projectBasePath = getStateStore().getProjectBasePath();
-                if (projectBasePath != null) {
-                    File projectDir = new File(projectBasePath);
-                    File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-                    if (!projectDir.getName().equals(getName())) {
-                        try {
-                            FileUtil.writeToFile(nameFile, getName());
-                        }
-                        catch (IOException e) {
-                            LOG.error("Unable to store project name", e);
-                        }
-                    }
-                    else {
-                        FileUtil.delete(nameFile);
-                    }
-                }
+        File projectDir = new File(projectBasePath);
+        File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
+        if (!projectDir.getName().equals(getName())) {
+            try {
+                FileUtil.writeToFile(nameFile, getName());
             }
-
-            StoreUtil.save(getStateStore(), false, this);
-        }
-        finally {
-            mySavingInProgress.set(false);
-            application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
-        }
-    }
-
-    
-    @Override
-    public CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
-        return CompletableFuture.runAsync(() -> saveAsyncImpl(uiAccess));
-    }
-
-    private void saveAsyncImpl(UIAccess uiAccess) {
-        ApplicationEx application = (ApplicationEx) getApplication();
-
-        if (application.isDoNotSave()) {
-            // no need to save
-            return;
-        }
-
-        if (!mySavingInProgress.compareAndSet(false, true)) {
-            return;
-        }
-
-        //HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
-        try {
-            if (!isDefault()) {
-                String projectBasePath = getStateStore().getProjectBasePath();
-                if (projectBasePath != null) {
-                    File projectDir = new File(projectBasePath);
-                    File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-                    if (!projectDir.getName().equals(getName())) {
-                        try {
-                            FileUtil.writeToFile(nameFile, getName());
-                        }
-                        catch (IOException e) {
-                            LOG.error("Unable to store project name", e);
-                        }
-                    }
-                    else {
-                        FileUtil.delete(nameFile);
-                    }
-                }
+            catch (IOException e) {
+                LOG.error("Unable to store project name", e);
             }
-
-            StoreUtil.saveAsync(getStateStore(), uiAccess, this);
         }
-        finally {
-            mySavingInProgress.set(false);
-            application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
+        else {
+            FileUtil.delete(nameFile);
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void dispose() {
         ApplicationEx application = (ApplicationEx) getApplication();
 
-        UIAccess.assertIsUIThread();
-
         assert application.isWriteAccessAllowed();  // dispose must be under write action
 
-        // can call dispose only via consulo.ide.impl.idea.ide.impl.ProjectUtil.closeAndDispose()
+        // can call dispose only via ProjectManager#closeAndDisposeAsync
         LOG.assertTrue(application.isUnitTestMode() || !myManager.isProjectOpened(this));
 
         LOG.assertTrue(!isDisposed());
@@ -389,6 +326,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public String toString() {
-        return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") + (isDefault() ? " (Default)" : "") + " " + myName;
+        return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") +
+            (isDefault() ? " (Default)" : "") + " " + myName;
     }
 }

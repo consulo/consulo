@@ -686,6 +686,10 @@ prompt.open.project.in.new.frame:
     text: <html><body>New projects can either be opened in a new window or replace the project in the existing window.<br>How would you like to open the project?</body></html>
 recent.project.0.opened.action.text:
     text: '{0} (opened)'
+recent.project.remove.from.list.tooltip:
+    text: Remove from Recent Projects
+recent.projects.no.project.open.yet:
+    text: No Project Open Yet
 rename.message.prefix.module:
     text: Module
 rename.message.prefix.scope:

@@ -26,8 +26,8 @@ import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 /**
  * @author VISTALL
@@ -67,9 +67,9 @@ public interface CodeStyleInternalHelper {
 
     int nextTabStop(int x, Object editor);
 
-    int charWidth(char c, @JdkConstants.FontStyle int fontType, Object editor);
+    int charWidth(char c, @AWTConstants.FontStyle int fontType, Object editor);
 
-    int getSpaceWidth(@JdkConstants.FontStyle int fontType, Object editor);
+    int getSpaceWidth(@AWTConstants.FontStyle int fontType, Object editor);
 
     @RequiredUIAccess
     void showDetectIndentSettings(@Nullable Project project);

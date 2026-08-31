@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awtUnsafe;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.ui.Component;
 import consulo.ui.Window;
@@ -22,11 +23,11 @@ import consulo.ui.*;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,7 +54,6 @@ public final class TargetAWT {
         return point2D == null ? null : new Point(point2D.x(), point2D.y());
     }
 
-   
     public static java.awt.Color to(RGBColor color) {
         return ourFacade.to(color);
     }
@@ -85,9 +85,12 @@ public final class TargetAWT {
         return ourFacade.wrap(component);
     }
 
-   
     public static Image wrap(Icon icon) {
         return ourFacade.wrap(icon);
+    }
+
+    public static ComponentEvent<?> from(java.awt.event.MouseEvent event) {
+        return ourFacade.from(event);
     }
 
     @Contract("null -> null")
@@ -140,7 +143,6 @@ public final class TargetAWT {
         return ourFacade.from(icon);
     }
 
-   
     public static java.awt.Font to(Font font) {
         return ourFacade.to(font);
     }

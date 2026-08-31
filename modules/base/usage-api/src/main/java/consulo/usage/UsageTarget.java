@@ -15,11 +15,11 @@
  */
 package consulo.usage;
 
-import consulo.navigation.NavigationItem;
-import consulo.fileEditor.FileEditor;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.codeEditor.Editor;
+import consulo.fileEditor.FileEditor;
 import consulo.language.psi.PsiFile;
+import consulo.navigation.NavigationItem;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -34,7 +34,7 @@ public interface UsageTarget extends NavigationItem {
     void findUsages();
 
     /**
-     * Should look for usages in one specific editor. This typicaly shows other kind of dialog and doesn't
+     * Should look for usages in one specific editor. This typically shows other kind of dialog and doesn't
      * result in usage view display.
      */
     void findUsagesInEditor(FileEditor editor);

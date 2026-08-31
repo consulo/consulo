@@ -14,7 +14,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.event.DumbModeListener;
+import consulo.project.event.DumbModeListenerBackgroundable;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -43,8 +43,8 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
         MessageBus bus = project.getMessageBus();
         myPublisher = bus.syncPublisher(PsiModificationTrackerListener.class);
         bus.connect().subscribe(
-            DumbModeListener.class,
-            new DumbModeListener() {
+            DumbModeListenerBackgroundable.class,
+            new DumbModeListenerBackgroundable() {
                 private void doIncCounter() {
                     application.runWriteAction(() -> incCounter());
                 }

@@ -15,8 +15,8 @@
  */
 package consulo.virtualFileSystem.fileType;
 
-import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 
@@ -26,20 +26,17 @@ public class UnknownFileType implements FileType {
   private UnknownFileType() {}
 
   @Override
-  
   public String getId() {
     return "UNKNOWN";
   }
 
   @Override
-  
   public LocalizeValue getDescription() {
     return FileTypeLocalize.unknownFileTypeDescription();
   }
 
-  
   @Override
   public Image getIcon() {
-    return AllIcons.FileTypes.Unknown;
+    return PlatformIconGroup.filetypesUnknown();
   }
 }

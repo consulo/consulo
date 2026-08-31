@@ -17,18 +17,19 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 
+
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
  * @author nik
  */
 public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
-  private final Function<Project,AsyncResult<Void>> myNavigator;
+  private final Function<Project,CompletableFuture<?>> myNavigator;
   private final ProjectStructureElement myElement;
 
-  public PlaceInProjectStructureBase(@RequiredUIAccess Function<Project, AsyncResult<Void>> navigator, ProjectStructureElement element) {
+  public PlaceInProjectStructureBase(@RequiredUIAccess Function<Project, CompletableFuture<?>> navigator, ProjectStructureElement element) {
     myNavigator = navigator;
     myElement = element;
   }
@@ -46,7 +47,7 @@ public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
 
   
   @Override
-  public AsyncResult<Void> navigate(Project project) {
+  public CompletableFuture<?> navigate(Project project) {
     return myNavigator.apply(project);
   }
 }

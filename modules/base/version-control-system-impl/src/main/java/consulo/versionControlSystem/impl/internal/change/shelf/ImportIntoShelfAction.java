@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.AbstractVcsHelper;
@@ -44,7 +44,7 @@ import java.util.List;
  * @since 2011-02-25
  */
 @ActionImpl(id = "ShelvedChanges.ImportPatches")
-public class ImportIntoShelfAction extends DumbAwareAction {
+public class ImportIntoShelfAction extends LegacyDumbAwareAction {
     public ImportIntoShelfAction() {
         super(LocalizeValue.localizeTODO("Import patches..."), LocalizeValue.localizeTODO("Copies patch file to shelf"));
     }
@@ -59,7 +59,11 @@ public class ImportIntoShelfAction extends DumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
-        FileChooser.chooseFiles(descriptor, project, null).doWhenDone(files -> {
+        FileChooser.chooseFiles(descriptor, project, null).whenComplete((files, error) -> {
+            if (error != null) {
+                return;
+            }
+
             //gatherPatchFiles
             ProgressManager pm = ProgressManager.getInstance();
             ShelveChangesManagerImpl shelveChangesManager = ShelveChangesManagerImpl.getInstance(project);

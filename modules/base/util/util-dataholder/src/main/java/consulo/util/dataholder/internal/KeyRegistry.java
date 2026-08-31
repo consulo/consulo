@@ -17,8 +17,8 @@ package consulo.util.dataholder.internal;
 
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -46,7 +46,7 @@ public class KeyRegistry {
     }
 
     public @Nullable Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
-        for (IntObjectMap.IntObjectEntry<Key> key : myAllKeys.entrySet()) {
+        for (Int2ObjectMap.Entry<Key> key : myAllKeys.int2ObjectEntrySet()) {
             if (name.equals(nameFunc.apply(Objects.requireNonNull(key.getValue())))) {
                 return key.getValue();
             }

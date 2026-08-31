@@ -15,24 +15,24 @@
  */
 package consulo.localHistory.impl.internal.ui.action;
 
-import consulo.application.dumb.DumbAware;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.LocalHistoryImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.util.collection.Streams;
-import consulo.versionControlSystem.VcsDataKeys;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import static consulo.util.lang.ObjectUtil.notNull;
+import java.util.Objects;
 
-public abstract class LocalHistoryAction extends AnAction implements DumbAware {
+public abstract class LocalHistoryAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     protected LocalHistoryAction() {
     }
 
@@ -41,41 +41,43 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation p = e.getPresentation();
-
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         if (!e.hasData(Project.KEY)) {
-            p.setEnabledAndVisible(false);
+            e.getPresentation().setEnabledAndVisible(false);
+            return Coroutine.empty();
         }
-        else {
-            p.setVisible(true);
-            p.setText(getTextValue(e));
+
+        return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setVisible(true);
+            presentation.setText(getTextValue(e));
 
             LocalHistoryFacade vcs = getVcs();
             IdeaGateway gateway = getGateway();
-            p.setEnabled(vcs != null && gateway != null && isEnabled(vcs, gateway, e));
-        }
+            presentation.setEnabled(vcs != null && gateway != null && isEnabled(vcs, gateway, e));
+        }).toCoroutine();
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        actionPerformed(e.getRequiredData(Project.KEY), notNull(getGateway()), e);
+        actionPerformed(e.getRequiredData(Project.KEY), Objects.requireNonNull(getGateway()), e);
     }
 
-    
+
     protected LocalizeValue getTextValue(AnActionEvent e) {
         return e.getPresentation().getTextValue();
     }
 
+    @RequiredReadAction
     protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, AnActionEvent e) {
         return isEnabled(vcs, gw, getFile(e), e);
     }
 
     protected void actionPerformed(Project p, IdeaGateway gw, AnActionEvent e) {
-        actionPerformed(p, gw, notNull(getFile(e)), e);
+        actionPerformed(p, gw, Objects.requireNonNull(getFile(e)), e);
     }
 
+    @RequiredReadAction
     protected boolean isEnabled(
         LocalHistoryFacade vcs,
         IdeaGateway gw,
@@ -97,6 +99,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     }
 
     protected @Nullable VirtualFile getFile(AnActionEvent e) {
-        return Streams.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        return files != null && files.length == 1 ? files[0] : null;
     }
 }

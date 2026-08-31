@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffContext;
-import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.Wrapper;
 import org.jspecify.annotations.Nullable;
 
@@ -27,34 +27,25 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DiffPanelBase extends JPanel implements DataProvider {
+public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
   protected final @Nullable Project myProject;
-  
-  private final DataProvider myDataProvider;
-  
+  private final UiDataProvider myDataProvider;
   protected final DiffContext myContext;
 
-  
   private final List<JComponent> myPersistentNotifications = new ArrayList<JComponent>();
 
-  
   protected final JPanel myContentPanel;
-  
   protected final JPanel myNotificationsPanel;
 
-  
   private final Wrapper myNorthPanel;
-  
   private final Wrapper mySouthPanel;
 
-  
   protected final CardLayout myCardLayout;
 
-  
   protected String myCurrentCard;
 
   public DiffPanelBase(@Nullable Project project,
-                       DataProvider provider,
+                       UiDataProvider provider,
                        DiffContext context) {
     super(new BorderLayout());
     myProject = project;
@@ -75,7 +66,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     add(mySouthPanel, BorderLayout.SOUTH);
   }
 
-  public void setTopPanel(@Nullable JComponent component) {
+  public void setTopPanel(@jakarta.annotation.Nullable JComponent component) {
     myNorthPanel.setContent(component);
   }
 
@@ -98,8 +89,8 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
   }
 
   @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    return myDataProvider.getData(dataId);
+  public void uiDataSnapshot(DataSink sink) {
+    sink.uiDataSnapshot(myDataProvider);
   }
 
   //

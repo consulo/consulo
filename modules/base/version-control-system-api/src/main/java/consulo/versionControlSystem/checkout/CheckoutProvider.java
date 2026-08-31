@@ -17,35 +17,37 @@ package consulo.versionControlSystem.checkout;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
-import consulo.versionControlSystem.VcsKey;
-import org.jspecify.annotations.Nullable;
-
-import java.io.File;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * Implement this interface and register it as extension to checkoutProvider extension point in order to provide checkout
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CheckoutProvider {
-    void doCheckout(Project project, @Nullable Listener listener);
-
-    
     @Deprecated
     default String getVcsName() {
         return getClass().getSimpleName();
     }
 
-    
     default LocalizeValue getName() {
         return LocalizeValue.localizeTODO(TextWithMnemonic.parse(getVcsName()).getText());
     }
 
-    interface Listener {
-        void directoryCheckedOut(File directory, VcsKey vcs);
-
-        void checkoutCompleted();
+    default Image getIcon() {
+        return VersionControlSystemIconGroup.branch();
     }
+
+    default LocalizeValue getActionName() {
+        return VcsLocalize.checkoutButtonText();
+    }
+
+    @RequiredUIAccess
+    CheckoutPage createPage(Project project, Disposable uiDisposable);
 }

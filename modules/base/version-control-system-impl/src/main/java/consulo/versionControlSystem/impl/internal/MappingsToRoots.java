@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.content.FileIndexFacade;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
@@ -43,16 +43,16 @@ public class MappingsToRoots {
   public VirtualFile[] getRootsUnderVcs(AbstractVcs vcs) {
     List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
 
-    AbstractVcs.RootsConvertor convertor = vcs.getCustomConvertor();
-    if (convertor != null) {
-      result = convertor.convertRoots(result);
+    AbstractVcs.RootsConvertor converter = vcs.getCustomConvertor();
+    if (converter != null) {
+      result = converter.convertRoots(result);
     }
 
     Collections.sort(result, FilePathComparator.getInstance());
     if (! vcs.allowsNestedRoots()) {
       FileIndexFacade facade = myProject.getInstance(FileIndexFacade.class);
       List<VirtualFile> finalResult = result;
-      ApplicationManager.getApplication().runReadAction(() -> {
+      Application.get().runReadAction(() -> {
         int i=1;
         while(i < finalResult.size()) {
           VirtualFile previous = finalResult.get(i - 1);
@@ -89,7 +89,7 @@ public class MappingsToRoots {
     if (addInnerModules) {
       FileIndexFacade facade = myProject.getService(FileIndexFacade.class);
       Collection<VirtualFile> modules = DefaultVcsRootPolicy.getInstance(myProject).getDefaultVcsRoots(myMappings, vcsName);
-      ApplicationManager.getApplication().runReadAction(() -> {
+      Application.get().runReadAction(() -> {
         Iterator<VirtualFile> iterator = modules.iterator();
         while (iterator.hasNext()) {
           VirtualFile module = iterator.next();

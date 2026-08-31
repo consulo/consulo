@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -49,8 +48,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -68,7 +67,7 @@ import java.util.function.Supplier;
  * @since 2007-01-09
  */
 @ActionImpl(id = "ViewOfflineInspection")
-public class ViewOfflineResultsAction extends AnAction implements DumbAware {
+public class ViewOfflineResultsAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(ViewOfflineResultsAction.class);
     private static final String XML_EXTENSION = "xml";
 

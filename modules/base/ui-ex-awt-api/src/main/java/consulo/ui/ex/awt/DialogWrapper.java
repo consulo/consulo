@@ -55,10 +55,11 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.TimeoutUtil;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -913,7 +914,7 @@ public abstract class DialogWrapper {
 
     /**
      * Dispose the wrapped and releases all resources allocated be the wrapper to help
-     * more effecient garbage collection. You should never invoke this method twice or
+     * more efficient garbage collection. You should never invoke this method twice or
      * invoke any method of the wrapper after invocation of <code>dispose</code>.
      *
      * @throws IllegalStateException if the dialog is disposed not on the event dispatch thread
@@ -1368,7 +1369,7 @@ public abstract class DialogWrapper {
     }
 
     protected static void installEnterHook(JComponent root) {
-        new DumbAwareAction() {
+        new LegacyDumbAwareAction() {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
@@ -1716,8 +1717,8 @@ public abstract class DialogWrapper {
      * @return result callback
      */
     @RequiredUIAccess
-    public AsyncResult<Boolean> showAndGetOk() {
-        AsyncResult<Boolean> result = new AsyncResult<>();
+    public CompletableFuture<Boolean> showAndGetOk() {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
 
         ensureEventDispatchThread();
         registerKeyboardShortcuts();
@@ -1727,31 +1728,28 @@ public abstract class DialogWrapper {
             Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
         }
 
-        Disposer.register(myDisposable, () -> result.setDone(isOK()));
+        Disposer.register(myDisposable, () -> result.complete(isOK()));
 
         myPeer.show();
 
         return result;
     }
 
-    
     @RequiredUIAccess
-    public AsyncResult<Void> showAsync() {
-        UIAccess uiAccess = UIAccess.current();
-
-        AsyncResult<Void> result = AsyncResult.undefined();
-        showInternal().doWhenProcessed(() -> {
+    public CompletableFuture<Void> showAsync() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        showInternal().whenComplete((value, error) -> {
             if (isOK()) {
-                result.setDone();
+                result.complete(null);
             }
             else {
-                result.setRejected();
+                result.completeExceptionally(new CancellationException());
             }
         });
         return result;
     }
 
-    private AsyncResult<Void> showInternal() {
+    private CompletableFuture<?> showInternal() {
         ensureEventDispatchThread();
 
         registerKeyboardShortcuts();
@@ -1774,6 +1772,10 @@ public abstract class DialogWrapper {
 
     public void setInitialLocationCallback(Supplier<Point> callback) {
         myInitialLocationCallback = callback;
+    }
+
+    public @Nullable Dimension getInitialSize() {
+        return null;
     }
 
     private void registerKeyboardShortcuts() {

@@ -26,7 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 @ActionImpl(id = IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS)
-public class EditRunConfigurationsAction extends DumbAwareAction {
+public class EditRunConfigurationsAction extends LegacyDumbAwareAction {
     public EditRunConfigurationsAction() {
         super(ActionLocalize.actionEditrunconfigurationsText(), ActionLocalize.actionEditrunconfigurationsDescription());
     }

@@ -22,6 +22,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -46,12 +47,9 @@ public interface OrderRootTypeUIFactory {
     
     String getOrderRootTypeId();
 
-    
     SdkPathEditor createPathEditor(Sdk sdk);
 
-    
     Image getIcon();
 
-    
-    String getNodeText();
+    LocalizeValue getNodeText();
 }

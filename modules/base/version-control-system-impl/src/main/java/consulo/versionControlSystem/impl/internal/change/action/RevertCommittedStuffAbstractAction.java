@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.change.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -23,8 +22,8 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
@@ -46,16 +45,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-abstract class RevertCommittedStuffAbstractAction extends AnAction implements DumbAware {
-    private final Function<AnActionEvent, Change[]> myForUpdateConvertor;
-    private final Function<AnActionEvent, Change[]> myForPerformConvertor;
+abstract class RevertCommittedStuffAbstractAction extends LegacyDumbAwareAction {
+    private final Function<AnActionEvent, Change[]> myForUpdateConverter;
+    private final Function<AnActionEvent, Change[]> myForPerformConverter;
 
     public RevertCommittedStuffAbstractAction(
-        Function<AnActionEvent, Change[]> forUpdateConvertor,
-        Function<AnActionEvent, Change[]> forPerformConvertor
+        Function<AnActionEvent, Change[]> forUpdateConverter,
+        Function<AnActionEvent, Change[]> forPerformConverter
     ) {
-        myForUpdateConvertor = forUpdateConvertor;
-        myForPerformConvertor = forPerformConvertor;
+        myForUpdateConverter = forUpdateConverter;
+        myForPerformConverter = forPerformConverter;
     }
 
     @Override
@@ -64,7 +63,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
         final Project project = e.getRequiredData(Project.KEY);
         final VirtualFile baseDir = project.getBaseDir();
         assert baseDir != null;
-        Change[] changes = myForPerformConvertor.apply(e);
+        Change[] changes = myForPerformConverter.apply(e);
         if (changes == null || changes.length == 0) {
             return;
         }
@@ -127,7 +126,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
 
     @Override
     public void update(AnActionEvent e) {
-        Change[] changes = myForUpdateConvertor.apply(e);
+        Change[] changes = myForUpdateConverter.apply(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && changes != null && changes.length > 0);
     }
 }

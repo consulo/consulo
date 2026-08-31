@@ -17,9 +17,12 @@ package consulo.ide.impl.roots.ui.configuration.session.internal;
 
 import consulo.component.ComponentManager;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurableSession;
 import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.base.ConfigurableServiceImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,106 +31,113 @@ import java.util.EventListener;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 11/04/2021
  */
 public final class ConfigurableSessionImpl implements Disposable, ConfigurableSession {
-  private final Map<ConfigurableComponentKey, PersistentStateComponent<?>> myStateInstances = new ConcurrentHashMap<>();
-  private final Map<Class, Object> myInstances = new ConcurrentHashMap<>();
-  private final Map<Class, EventDispatcher> myListeners = new ConcurrentHashMap<>();
+    private final Map<ConfigurableComponentKey, PersistentStateComponent<?>> myStateInstances = new ConcurrentHashMap<>();
+    private final Map<Class, Object> myInstances = new ConcurrentHashMap<>();
+    private final Map<Class, EventDispatcher> myListeners = new ConcurrentHashMap<>();
 
-  private final Project myProject;
+    private final Project myProject;
+    private final Supplier<Configurable[]> myConfigurables;
 
-  public ConfigurableSessionImpl(Project project) {
-    myProject = project;
+    public ConfigurableSessionImpl(Project project, Supplier<Configurable[]> configurables) {
+        myProject = project;
+        myConfigurables = configurables;
 
-    if (ConfigurableSessionHolder.ourCurrentSession != null) {
-      throw new IllegalArgumentException("already initialized");
+        if (ConfigurableSessionHolder.ourCurrentSession != null) {
+            throw new IllegalArgumentException("already initialized");
+        }
+
+        ConfigurableSessionHolder.ourCurrentSession = this;
     }
 
-    ConfigurableSessionHolder.ourCurrentSession = this;
-  }
-
-  @RequiredUIAccess
-  public void commit() {
-    commitImpl();
-  }
-
-  @RequiredUIAccess
-  public void drop() {
-    ConfigurableSessionHolder.ourCurrentSession = null;
-
-    disposeWithTree();
-  }
-
-  
-  @Override
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  
-  @SuppressWarnings("unchecked")
-  public <T extends PersistentStateComponent<?>> T getOrCopy(ComponentManager componentManager, Class<T> clazz) {
-    return (T)myStateInstances.computeIfAbsent(new ConfigurableComponentKey(componentManager, clazz), key -> {
-      PersistentStateComponent<?> originalInstance = componentManager.getInstance(key.serviceKey());
-      Object originalState = originalInstance.getState();
-
-      PersistentStateComponent copyInstance = componentManager.getInjectingContainer().getUnbindedInstance(key.serviceKey());
-      copyInstance.loadState(originalState);
-      return copyInstance;
-    });
-  }
-
-  
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T get(Class<T> key, Function<Project, T> factory) {
-    return (T)myInstances.computeIfAbsent(key, it -> factory.apply(myProject));
-  }
-
-  
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T extends EventListener> T getListenerMulticaster(Class<T> listenerClass) {
-    return (T)myListeners.computeIfAbsent(listenerClass, EventDispatcher::create).getMulticaster();
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T extends EventListener> void addListener(Class<T> listenerClass, T listener) {
-    myListeners.computeIfAbsent(listenerClass, EventDispatcher::create).addListener(listener);
-  }
-
-  @SuppressWarnings("unchecked")
-  private void commitImpl() {
-    for (Map.Entry<ConfigurableComponentKey, PersistentStateComponent<?>> entry : myStateInstances.entrySet()) {
-      ConfigurableComponentKey key = entry.getKey();
-      PersistentStateComponent<?> value = entry.getValue();
-
-      Class<? extends PersistentStateComponent<?>> serviceKey = key.serviceKey();
-      ComponentManager component = key.component();
-
-      PersistentStateComponent originalInstance = component.getInstance(serviceKey);
-
-      Object copyState = value.getState();
-
-      originalInstance.loadState(copyState);
-    }
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public void dispose() {
-    for (PersistentStateComponent<?> component : myStateInstances.values()) {
-      if (component instanceof Disposable disposable) {
-        disposable.disposeWithTree();
-      }
+    @Override
+    public LocalizeValue getDisplayConfigurablePath(String configurableId) {
+        return LocalizeValue.lazy(() -> ConfigurableServiceImpl.buildDisplayPath(configurableId, myConfigurables.get()));
     }
 
-    myStateInstances.clear();
-  }
+    @RequiredUIAccess
+    public void commit() {
+        commitImpl();
+    }
+
+    @RequiredUIAccess
+    public void drop() {
+        ConfigurableSessionHolder.ourCurrentSession = null;
+
+        disposeWithTree();
+    }
+
+    @Override
+    public Project getProject() {
+        return myProject;
+    }
+
+    @Override
+
+    @SuppressWarnings("unchecked")
+    public <T extends PersistentStateComponent<?>> T getOrCopy(ComponentManager componentManager, Class<T> clazz) {
+        return (T) myStateInstances.computeIfAbsent(new ConfigurableComponentKey(componentManager, clazz), key -> {
+            PersistentStateComponent<?> originalInstance = componentManager.getInstance(key.serviceKey());
+            Object originalState = originalInstance.getState();
+
+            PersistentStateComponent copyInstance = componentManager.getInjectingContainer().getUnbindedInstance(key.serviceKey());
+            copyInstance.loadState(originalState);
+            return copyInstance;
+        });
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T get(Class<T> key, Function<Project, T> factory) {
+        return (T) myInstances.computeIfAbsent(key, it -> factory.apply(myProject));
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends EventListener> T getListenerMulticaster(Class<T> listenerClass) {
+        return (T) myListeners.computeIfAbsent(listenerClass, EventDispatcher::create).getMulticaster();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends EventListener> void addListener(Class<T> listenerClass, T listener) {
+        myListeners.computeIfAbsent(listenerClass, EventDispatcher::create).addListener(listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void commitImpl() {
+        for (Map.Entry<ConfigurableComponentKey, PersistentStateComponent<?>> entry : myStateInstances.entrySet()) {
+            ConfigurableComponentKey key = entry.getKey();
+            PersistentStateComponent<?> value = entry.getValue();
+
+            Class<? extends PersistentStateComponent<?>> serviceKey = key.serviceKey();
+            ComponentManager component = key.component();
+
+            PersistentStateComponent originalInstance = component.getInstance(serviceKey);
+
+            Object copyState = value.getState();
+
+            originalInstance.loadState(copyState);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void dispose() {
+        for (PersistentStateComponent<?> component : myStateInstances.values()) {
+            if (component instanceof Disposable disposable) {
+                disposable.disposeWithTree();
+            }
+        }
+
+        myStateInstances.clear();
+    }
 }

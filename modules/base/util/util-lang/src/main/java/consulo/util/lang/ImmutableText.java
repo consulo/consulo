@@ -387,7 +387,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     }
 
     private abstract static class Node implements CharSequence {
-        abstract void getChars(int start, int end, char[] dest, int destPos);
+        public abstract void getChars(int start, int end, char[] dest, int destPos);
 
         abstract Node subNode(int start, int end);
 
@@ -454,7 +454,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
         }
 
         @Override
-        void getChars(int start, int end, char[] dest, int destPos) {
+        public void getChars(int start, int end, char[] dest, int destPos) {
             if (start < 0 || end > length() || start > end) {
                 throw new IndexOutOfBoundsException();
             }
@@ -493,7 +493,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
         }
 
         @Override
-        void getChars(int start, int end, char[] dest, int destPos) {
+        public void getChars(int start, int end, char[] dest, int destPos) {
             if (start < 0 || end > length() || start > end) {
                 throw new IndexOutOfBoundsException();
             }
@@ -570,7 +570,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
         }
 
         @Override
-        void getChars(int start, int end, char[] dest, int destPos) {
+        public void getChars(int start, int end, char[] dest, int destPos) {
             int cesure = head.length();
             if (end <= cesure) {
                 head.getChars(start, end, dest, destPos);

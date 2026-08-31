@@ -107,7 +107,7 @@ public class CreateFileFromTemplateDialog  {
         }
       };
 
-      JBPopup popup = NewItemPopupUtil.createNewItemPopup(myTitle, contentPanel, (JComponent)TargetAWT.to(contentPanel.getNameField()));
+      JBPopup popup = NewItemPopupUtil.createNewItemPopup(myTitle, contentPanel.getComponent(), contentPanel.getNameField());
       if (myValidator != null) {
         contentPanel.addValidator(myValidator);
       }

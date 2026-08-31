@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.dialog;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
@@ -28,8 +27,8 @@ import consulo.application.util.Queryable;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.OwnerOptional;
@@ -37,13 +36,9 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
-import consulo.ui.ex.action.touchBar.TouchBarController;
-import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -56,9 +51,10 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
@@ -71,9 +67,9 @@ import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -84,6 +80,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     private static final Logger LOG = Logger.getInstance(DialogWrapperPeerImpl.class);
@@ -302,7 +299,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-    
     @Deprecated
     private AbstractDialog createDialog(@Nullable Window owner) {
         return createDialog(owner, DialogWrapper.IdeModalityType.IDE);
@@ -443,7 +439,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDialog.setResizable(resizable);
     }
 
-    
     @Override
     public Point getLocation() {
         return myDialog.getLocation();
@@ -522,10 +517,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         return result;
     }
 
-    
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> showAsync() {
+    public CompletableFuture<?> showAsync() {
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
         AnCancelAction anCancelAction = new AnCancelAction();
@@ -547,14 +541,12 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         UIAccess uiAccess = UIAccess.current();
 
-        AsyncResult<Void> result = AsyncResult.undefined();
-
         Disposable tb = TouchBarController.getInstance().showWindowActions(myDialog.getContentPane());
         if (tb != null) {
             myDisposeActions.add(() -> Disposer.dispose(tb));
         }
 
-        uiAccess.give(() -> {
+        return uiAccess.giveAsync(() -> {
             if (changeModalityState) {
                 commandProcessor.enterModal();
 
@@ -585,9 +577,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                     }
                 }
             }
-        }).notify(result);
-
-        return result;
+        });
     }
 
     //hopefully this whole code will go away
@@ -600,7 +590,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDisposeActions.add(() -> StackingPopupDispatcher.getInstance().restorePersistentPopups());
     }
 
-    private class AnCancelAction extends AnAction implements DumbAware {
+    private class AnCancelAction extends LegacyDumbAwareAction {
         @Override
         public void update(AnActionEvent e) {
             Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -649,7 +639,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, DataProvider, Queryable, AbstractDialog {
+    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, UiDataProvider, Queryable, AbstractDialog {
         private final WeakReference<DialogWrapper> myDialogWrapper;
 
         /**
@@ -709,16 +699,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
-        public Object getData(Key<?> dataId) {
+        public void uiDataSnapshot(DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
-            if (wrapper instanceof DataProvider dataProvider) {
-                return dataProvider.getData(dataId);
+            if (wrapper instanceof UiDataProvider uiProvider) {
+                sink.uiDataSnapshot(uiProvider);
             }
-            if (wrapper instanceof TypeSafeDataProvider) {
-                TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)wrapper);
-                return adapter.getData(dataId);
-            }
-            return null;
         }
 
         @Override
@@ -786,6 +771,14 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 }
 
                 if (myInitialSize == null) {
+                    Dimension initialSize = dialogWrapper.getInitialSize();
+                    if (initialSize != null) {
+                        myInitialSize = new Dimension(initialSize);
+                        _setSizeForLocation(myInitialSize.width, myInitialSize.height, location);
+                    }
+                }
+
+                if (myInitialSize == null) {
                     myInitialSize = getSize();
                 }
             }
@@ -837,7 +830,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             return SoftReference.dereference(myProject);
         }
 
-        
         @Override
         public IdeFocusManager getFocusManager() {
             Project project = getProject();
@@ -1011,7 +1003,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
         }
 
-        private class DialogRootPane extends JRootPane implements DataProvider {
+        private class DialogRootPane extends JRootPane implements UiDataProvider {
 
             private final boolean myGlassPaneIsSet;
 
@@ -1023,7 +1015,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 putClientProperty("DIALOG_ROOT_PANE", true);
             }
 
-            
             @Override
             protected JLayeredPane createLayeredPane() {
                 JLayeredPane p = new JBLayeredPane();
@@ -1069,18 +1060,19 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 super.setContentPane(contentPane);
                 if (contentPane != null) {
                     contentPane.addMouseMotionListener(new MouseMotionAdapter() {
-                    }); // listen to mouse motino events for a11y
+                    }); // listen to mouse motion events for a11y
                 }
             }
 
             @Override
-            public Object getData(Key<?> dataId) {
+            public void uiDataSnapshot(DataSink sink) {
                 DialogWrapper wrapper = myDialogWrapper.get();
-                return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
+                if (wrapper != null) {
+                    sink.lazy(PlatformDataKeys.UI_DISPOSABLE, () -> wrapper.getDisposable());
+                }
             }
         }
 
-        
         private static WindowStateService getWindowStateService(@Nullable Project project) {
             return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
         }

@@ -37,7 +37,7 @@ import org.jspecify.annotations.Nullable;
  * todo drop TW and EW, both are only for menu|Window tab/editor sub-menus.
  */
 @ActionImpl(id = IdeActions.ACTION_PIN_ACTIVE_TAB)
-public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
+public class PinActiveTabAction extends LegacyDumbAwareAction implements Toggleable {
     public static abstract class Handler {
         public final boolean isPinned;
         public final boolean isActiveTab;

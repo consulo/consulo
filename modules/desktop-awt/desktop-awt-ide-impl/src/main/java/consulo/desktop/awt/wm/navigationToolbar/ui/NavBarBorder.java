@@ -18,8 +18,9 @@ package consulo.desktop.awt.wm.navigationToolbar.ui;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.wm.navigationToolbar.NavBarRootPaneExtensionImpl;
 import consulo.ui.ex.Gray;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awt.AWTTitlelessDecorator;
 
 import javax.swing.border.Border;
 import java.awt.*;

@@ -4,7 +4,7 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.application.AllIcons;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;

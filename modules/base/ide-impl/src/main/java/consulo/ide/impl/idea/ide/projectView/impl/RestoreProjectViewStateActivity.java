@@ -1,0 +1,41 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ide.impl.idea.ide.projectView.impl;
+
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.project.startup.PostStartupActivity;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.internal.ProjectViewEx;
+import consulo.ui.UIAccess;
+
+/**
+ * @author VISTALL
+ * @since 2026-07-13
+ */
+@ExtensionImpl(order = "first")
+public class RestoreProjectViewStateActivity implements PostStartupActivity, DumbAware {
+    @Override
+    public void runActivity(Project project, UIAccess uiAccess) {
+        uiAccess.give(() -> {
+            ProjectView projectView = ProjectView.getInstance(project);
+            if (projectView instanceof ProjectViewEx projectViewEx) {
+                projectViewEx.reRestoreExpandedPaths();
+            }
+        });
+    }
+}

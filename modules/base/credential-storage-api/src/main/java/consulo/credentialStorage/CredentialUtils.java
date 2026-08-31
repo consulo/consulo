@@ -1,13 +1,12 @@
 package consulo.credentialStorage;
 
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 /**
  * Utility methods for evaluating Credentials.
  */
 public final class CredentialUtils {
-
     private CredentialUtils() {
     }
 

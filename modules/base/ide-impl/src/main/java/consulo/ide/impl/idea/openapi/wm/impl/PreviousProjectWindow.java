@@ -18,15 +18,14 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "PreviousProjectWindow")
-public class PreviousProjectWindow extends AnAction implements DumbAware {
+public class PreviousProjectWindow extends LegacyDumbAwareAction {
     
     private final ActionManager myActionManager;
 

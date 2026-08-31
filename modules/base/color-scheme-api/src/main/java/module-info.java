@@ -6,9 +6,6 @@ import org.jspecify.annotations.NullMarked;
  */
 @NullMarked
 module consulo.color.scheme.api {
-    // TODO obsolete dep
-    requires java.desktop;
-
     requires transitive consulo.application.api;
 
     exports consulo.colorScheme;
@@ -17,6 +14,12 @@ module consulo.color.scheme.api {
 
     exports consulo.colorScheme.internal to
         consulo.color.scheme.impl,
+        consulo.code.editor.impl,
+        consulo.execution.api,
+        consulo.execution.debug.impl,
+        consulo.language.editor.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 }

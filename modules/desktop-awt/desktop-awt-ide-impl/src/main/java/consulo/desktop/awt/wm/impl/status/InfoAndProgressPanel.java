@@ -40,6 +40,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
+import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.layout.LayoutStyle;
 import consulo.util.collection.*;
 import consulo.util.lang.Pair;
@@ -107,7 +108,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         progressBar.setIndeterminate(true);
 
         consulo.ui.layout.HorizontalLayout layout = consulo.ui.layout.HorizontalLayout.create();
-        layout.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+        layout.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
 
         layout.add(progressBar);
         layout.add(myMultiProcessLink = Label.create());
@@ -246,6 +247,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
 
             if (last) {
+                removeAll();
+                revalidate();
+                repaint();
+
                 if (myShouldClosePopupAndOnProcessFinish) {
                     hideProcessPopup();
                 }
@@ -482,7 +487,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
-        private class SuspendAction extends DumbAwareAction {
+        private class SuspendAction extends LegacyDumbAwareAction {
             public SuspendAction() {
                 super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.generalInspectionspause());
             }

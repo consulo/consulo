@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposer;
@@ -37,7 +38,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     public static final String ALL_CONTRIBUTORS_GROUP_ID = "SearchEverywhereContributor.All";
     private static final String LOCATION_SETTINGS_KEY = "search.everywhere.popup";

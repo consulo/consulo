@@ -15,70 +15,70 @@
  */
 package consulo.ui.ex.keymap;
 
+import consulo.component.util.pointer.Named;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
-import consulo.component.util.pointer.Named;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Map;
 
 public interface Keymap extends Named {
-  //think about name
-  String getName();
+    //think about name
+    String getName();
 
-  //think about name
-  String getPresentableName();
+    //think about name
+    String getPresentableName();
 
-  Keymap getParent();
+    Keymap getParent();
 
-  boolean canModify();
+    boolean canModify();
 
-  /**
-   * @return Action ids including ids of parent keymap
-   */
-  String[] getActionIds();
+    /**
+     * @return Action ids including ids of parent keymap
+     */
+    String[] getActionIds();
 
-  /**
-   * @return all keyboard shortcuts for the action with the specified <code>actionId</code>
-   * or an ampty array if the action doesn't have any keyboard shortcut.
-   */
-  Shortcut[] getShortcuts(String actionId);
+    /**
+     * @return all keyboard shortcuts for the action with the specified <code>actionId</code>
+     * or an empty array if the action doesn't have any keyboard shortcut.
+     */
+    Shortcut[] getShortcuts(String actionId);
 
-  /**
-   * @return all actions that have the specified first keystroke. If there are no
-   * such actions then the method returns an empty array.
-   */
-  String[] getActionIds(KeyStroke firstKeyStroke);
+    /**
+     * @return all actions that have the specified first keystroke. If there are no
+     * such actions then the method returns an empty array.
+     */
+    String[] getActionIds(KeyStroke firstKeyStroke);
 
-  /**
-   * @return all actions that have the specified first and second keystrokes. If there are no
-   * such actions then the method returns an empty array.
-   */
-  String[] getActionIds(KeyStroke firstKeyStroke, KeyStroke secondKeyStroke);
+    /**
+     * @return all actions that have the specified first and second keystrokes. If there are no
+     * such actions then the method returns an empty array.
+     */
+    String[] getActionIds(KeyStroke firstKeyStroke, KeyStroke secondKeyStroke);
 
-  String[] getActionIds(Shortcut shortcut);
+    String[] getActionIds(Shortcut shortcut);
 
-  /**
-   * @return all actions with specified mouse shortcut.  If there are no
-   * such action then the method returns an empty array.
-   */
-  String[] getActionIds(MouseShortcut shortcut);
+    /**
+     * @return all actions with specified mouse shortcut.  If there are no
+     * such action then the method returns an empty array.
+     */
+    String[] getActionIds(MouseShortcut shortcut);
 
-  void addShortcut(String actionId, Shortcut shortcut);
+    void addShortcut(String actionId, Shortcut shortcut);
 
-  void removeShortcut(String actionId, Shortcut shortcut);
+    void removeShortcut(String actionId, Shortcut shortcut);
 
-  Map<String, ArrayList<KeyboardShortcut>> getConflicts(String actionId, KeyboardShortcut keyboardShortcut);
+    Map<String, ArrayList<KeyboardShortcut>> getConflicts(String actionId, KeyboardShortcut keyboardShortcut);
 
-  void addShortcutChangeListener(Listener listener);
+    void addShortcutChangeListener(Listener listener);
 
-  void removeShortcutChangeListener(Listener listener);
+    void removeShortcutChangeListener(Listener listener);
 
-  void removeAllActionShortcuts(String actionId);
+    void removeAllActionShortcuts(String actionId);
 
-  interface Listener {
-    void onShortcutChanged(String actionId);
-  }
+    interface Listener {
+        void onShortcutChanged(String actionId);
+    }
 }

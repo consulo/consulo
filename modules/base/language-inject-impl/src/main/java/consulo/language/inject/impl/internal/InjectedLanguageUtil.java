@@ -2,6 +2,7 @@
 
 package consulo.language.inject.impl.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
@@ -53,7 +54,6 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -71,6 +71,7 @@ public class InjectedLanguageUtil {
   public static final Key<IElementType> INJECTED_FRAGMENT_TYPE = Key.create("INJECTED_FRAGMENT_TYPE");
   public static final Key<Boolean> FRANKENSTEIN_INJECTION = InjectedLanguageManager.FRANKENSTEIN_INJECTION;
 
+  @RequiredReadAction
   static PsiElement loadTree(PsiElement host, PsiFile containingFile) {
     if (containingFile instanceof DummyHolder) {
       PsiElement context = containingFile.getContext();
@@ -126,6 +127,7 @@ public class InjectedLanguageUtil {
    * @deprecated use {@link InjectedLanguageManager#enumerate(PsiElement, PsiLanguageInjectionHost.InjectedPsiVisitor)} instead
    */
   @Deprecated
+  @RequiredReadAction
   public static boolean enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     PsiFile containingFile = Objects.requireNonNull(host.getContainingFile());
     PsiUtilCore.ensureValid(containingFile);
@@ -261,10 +263,10 @@ public class InjectedLanguageUtil {
     if (!(document instanceof DocumentWindowImpl)) return hostEditor;
     DocumentWindowImpl documentWindow = (DocumentWindowImpl)document;
     if (hostCaret.hasSelection()) {
-      int selstart = hostCaret.getSelectionStart();
-      if (selstart != -1) {
-        int selend = Math.max(selstart, hostCaret.getSelectionEnd());
-        if (!documentWindow.containsRange(selstart, selend)) {
+      int selStart = hostCaret.getSelectionStart();
+      if (selStart != -1) {
+        int selEnd = Math.max(selStart, hostCaret.getSelectionEnd());
+        if (!documentWindow.containsRange(selStart, selEnd)) {
           // selection spreads out the injected editor range
           return hostEditor;
         }
@@ -373,7 +375,6 @@ public class InjectedLanguageUtil {
     }
   }
 
-  
   private static InjectionResult getEmptyInjectionResult(PsiFile host) {
     return LanguageCachedValueUtil.getCachedValue(host, () -> CachedValueProvider.Result.createSingleDependency(new InjectionResult(host, null, null), PsiModificationTracker.MODIFICATION_COUNT));
   }
@@ -382,6 +383,7 @@ public class InjectedLanguageUtil {
    * We can only inject into injection hosts or their ancestors, so if we're sure there are no PsiLanguageInjectionHost descendants,
    * we can skip that PSI safely.
    */
+  @RequiredReadAction
   private static @Nullable PsiElement skipNonInjectablePsi(PsiElement element, boolean probeUp) {
     if (!stopLookingForInjection(element) && element.getFirstChild() == null) {
       if (!probeUp) return null;
@@ -556,7 +558,6 @@ public class InjectedLanguageUtil {
     return containingFile;
   }
 
-  
   public static Editor getTopLevelEditor(Editor editor) {
     return EditorWindow.getTopLevelEditor(editor);
   }

@@ -15,10 +15,8 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -80,23 +78,5 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
             }
         }
         return Objects.requireNonNull(cachedFiles).contains(file);
-    }
-
-    @Override
-    public void iterateIndexableFilesIn(VirtualFile file, ContentIterator iterator) {
-        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
-            @Override
-            public boolean visitFile(VirtualFile file) {
-                if (!isInSet(file)) {
-                    return false;
-                }
-
-                if (!file.isDirectory()) {
-                    iterator.processFile(file);
-                }
-
-                return true;
-            }
-        });
     }
 }

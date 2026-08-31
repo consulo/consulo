@@ -21,9 +21,11 @@ import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.UIAction;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -34,14 +36,13 @@ import java.awt.event.KeyEvent;
  * Usually shown in View|Tool-windows sub-menu.
  * Dynamically registered in Settings|Keymap for each newly-registered tool window.
  */
-public class ActivateToolWindowAction extends DumbAwareAction {
+public class ActivateToolWindowAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     private final String myToolWindowId;
 
     private ActivateToolWindowAction(String toolWindowId) {
         myToolWindowId = toolWindowId;
     }
 
-    
     public String getToolWindowId() {
         return myToolWindowId;
     }
@@ -69,22 +70,26 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        Presentation presentation = e.getPresentation();
-        if (project == null || project.isDisposed()) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(myToolWindowId);
-        if (toolWindow == null) {
-            presentation.setEnabledAndVisible(false);
-        }
-        else {
-            presentation.setVisible(true);
-            presentation.setEnabled(toolWindow.isAvailable());
-            updatePresentation(presentation, toolWindow);
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Project project = e.getData(Project.KEY);
+            Presentation presentation = e.getPresentation();
+            if (project == null || project.isDisposed()) {
+                presentation.setEnabledAndVisible(false);
+                return null;
+            }
+
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(myToolWindowId);
+            if (toolWindow == null) {
+                presentation.setEnabledAndVisible(false);
+            }
+            else {
+                presentation.setVisible(true);
+                presentation.setEnabled(toolWindow.isAvailable());
+                updatePresentation(presentation, toolWindow);
+            }
+            return null;
+        }));
     }
 
     private void updatePresentation(Presentation presentation, ToolWindow toolWindow) {

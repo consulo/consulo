@@ -22,14 +22,14 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "EditSourceInNewWindow")
-public class EditSourceInNewWindowAction extends DumbAwareAction {
+public class EditSourceInNewWindowAction extends LegacyDumbAwareAction {
     public EditSourceInNewWindowAction() {
         super(ActionLocalize.actionEditsourceinnewwindowText(), ActionLocalize.actionEditsourceinnewwindowDescription());
     }

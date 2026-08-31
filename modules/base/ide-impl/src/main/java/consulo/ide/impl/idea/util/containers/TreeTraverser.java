@@ -45,7 +45,7 @@ import java.util.function.Function;
  *    / | \     f
  *   a  b  c       }</pre>
  *
- * <p>can be iterated over in preorder (hdabcegf), postorder (abcdefgh), or breadth-first order
+ * <p>can be iterated over in pre-order (hdabcegf), post-order (abcdefgh), or breadth-first order
  * (hdegabcf).
  *
  * <p>Null nodes are strictly forbidden.

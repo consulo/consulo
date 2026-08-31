@@ -36,14 +36,15 @@ import java.util.regex.Pattern;
 public abstract class PathMacrosService {
     public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 
-    
     public Set<String> getMacroNames(Element e) {
         return getMacroNames(
             e,
             new CompositePathMacroFilter(Application.get().getExtensionList(PathMacroFilter.class)),
-            PathMacros.getInstance()
+            getPathMacros()
         );
     }
+
+    public abstract PathMacros getPathMacros();
 
     public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros);
 }

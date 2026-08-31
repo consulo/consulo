@@ -23,6 +23,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
@@ -45,7 +46,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
-import consulo.web.internal.ui.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowInternalDecorator;
 import consulo.web.internal.wm.toolWindow.WebToolWindowPanelImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowStripeButtonImpl;
@@ -104,6 +105,9 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
         rootPanel.setCenterComponent(toolWindowPanel);
 
+        // the bottom stripe belongs to the status bar row, not to the tool window panel
+        ((UnifiedStatusBarImpl) myFrame.getStatusBar()).addToLeft(toolWindowPanel.getBottomStripe());
+
         ((WebIdeFrameImpl) myFrame).show();
     }
 
@@ -117,7 +121,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         Component editorComponent = getEditorComponent(myProject);
 
         setEditorComponent(editorComponent);
@@ -219,14 +223,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    public @Nullable Element getStateFromUI() {
+    protected @Nullable Element getStateImpl() {
         return new Element("state");
-    }
-
-    @Override
-    @RequiredUIAccess
-    public @Nullable Element getState(Element element) {
-        return element;
     }
 
     @Override

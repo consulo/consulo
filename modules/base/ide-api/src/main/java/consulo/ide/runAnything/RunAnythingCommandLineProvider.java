@@ -97,7 +97,7 @@ public abstract class RunAnythingCommandLineProvider extends RunAnythingNotifiab
         String helpCommand = helpPrefix[0];
         String command = helpPrefix[1];
 
-        // Parse the command's parameters.
+        // Parse the command parameters.
         List<String> parameters = ParametersListUtil.parse(command, true, true, true);
         String toComplete = parameters.isEmpty() ? "" : parameters.get(parameters.size() - 1);
 

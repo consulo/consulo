@@ -18,7 +18,7 @@ package consulo.colorScheme.impl.internal;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.ex.awt.AWTConstants;
 import org.jdom.Element;
 
 import java.awt.*;
@@ -121,10 +121,10 @@ class TextAttributesReader extends ValueElementReader {
     private final int myStyle;
 
     FontStyle(int style) {
-      this.myStyle = style;
+      myStyle = style;
     }
 
-    @JdkConstants.FontStyle
+    @AWTConstants.FontStyle
     static int read(TextAttributesReader reader, Element element) {
       FontStyle style = reader.readChild(FontStyle.class, element, FONT_TYPE);
       return style != null ? style.myStyle : Font.PLAIN;

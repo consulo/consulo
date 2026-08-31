@@ -27,19 +27,19 @@ import java.nio.file.Path;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PredefinedBundlesProvider {
-  public interface Context {
-    Sdk createSdkWithName(SdkType sdkType, String suggestName);
+    public interface Context {
+        Sdk createSdkWithName(SdkType sdkType, String suggestName);
 
-    Sdk createSdkWithName(BundleType bundleType, Path homePath, String suggestName);
+        Sdk createSdkWithName(PlatformAwareSdkType bundleType, Path homePath, String suggestName);
 
-    default Sdk createSdk(SdkType sdkType, String sdkHome) {
-      return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
+        default Sdk createSdk(SdkType sdkType, String sdkHome) {
+            return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
+        }
+
+        default Sdk createSdk(Platform platform, PlatformAwareSdkType sdkType, Path homePath) {
+            return createSdkWithName(sdkType, homePath, sdkType.suggestSdkName(platform, null, homePath));
+        }
     }
 
-    default Sdk createSdk(Platform platform, BundleType sdkType, Path homePath) {
-      return createSdkWithName(sdkType, homePath, sdkType.suggestSdkName(platform, null, homePath));
-    }
-  }
-
-  public abstract void createBundles(Context context);
+    public abstract void createBundles(Context context);
 }

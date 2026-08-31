@@ -20,6 +20,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.internal.RuntimeRootProvider;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -45,6 +46,7 @@ public class CompilerRuntimeRootProvider implements RuntimeRootProvider {
 
     @Override
     public @Nullable VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
-        return myModuleCompilerPathsManager.getCompilerOutput(contentFolderType);
+        String url = myModuleCompilerPathsManager.getCompilerOutputUrl(contentFolderType);
+        return url == null ? null : VirtualFileManager.getInstance().findFileByUrl(url);
     }
 }

@@ -16,7 +16,7 @@
 package consulo.codeEditor.action;
 
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -45,15 +45,17 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
 
   @Override
   @RequiredUIAccess
-  public void doExecute(final Editor editor, final @Nullable Caret caret, final DataContext dataContext) {
-    if (editor.isViewer()) return;
-
-    if (dataContext != null) {
-      Project project = dataContext.getData(Project.KEY);
-      if (project != null && !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) return;
+  public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    if (editor.isViewer()) {
+      return;
     }
 
-    ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
+    Project project = dataContext.getData(Project.KEY);
+    if (project != null && !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
+      return;
+    }
+
+    Application.get().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
       @Override
       public void run() {
         Document doc = editor.getDocument();
@@ -112,6 +114,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     }
 
     @Override
-    public abstract void executeWriteAction(Editor editor, @SuppressWarnings("NullableProblems") Caret caret, DataContext dataContext);
+    @RequiredWriteAction
+    public abstract void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext);
   }
 }

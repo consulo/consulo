@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -24,37 +23,33 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
+import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.CustomTooltipBuilder;
-import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.inject.Inject;
 
-import java.awt.event.KeyEvent;
 
 /**
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = IdeActions.ACTION_SEARCH_EVERYWHERE)
-public class SearchEverywhereAction extends AnAction implements DumbAware {
-    private final KeyMapSetting myKeyMapSetting;
-
+public class SearchEverywhereAction extends LegacyDumbAwareAction {
     @Inject
-    public SearchEverywhereAction(KeyMapSetting keyMapSetting, ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
+    public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
         super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.empty(), PlatformIconGroup.actionsFind());
-        myKeyMapSetting = keyMapSetting;
         setEnabledInModalContext(false);
 
-        modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
+        modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, Modifier.SHIFT, null);
     }
 
     @Override
@@ -88,12 +83,6 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        if (!myKeyMapSetting.isEnabledDoublePressShortcuts()
-            && e.getInputEvent() instanceof KeyEvent keyEvent
-            && keyEvent.getKeyCode() == KeyEvent.VK_SHIFT) {
-            return;
-        }
-
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

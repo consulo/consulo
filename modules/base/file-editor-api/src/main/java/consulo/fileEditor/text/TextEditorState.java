@@ -20,137 +20,134 @@ import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author Vladimir Kondratyev
  */
 public final class TextEditorState implements FileEditorState {
+    public CaretState @Nullable [] CARETS;
 
-  public CaretState[] CARETS;
+    public int RELATIVE_CARET_POSITION; // distance from primary caret to the top of editor's viewable area in pixels
 
-  public int RELATIVE_CARET_POSITION; // distance from primary caret to the top of editor's viewable area in pixels
+    /**
+     * State which describes how editor is folded.
+     * This field can be <code>null</code>.
+     */
+    private @Nullable CodeFoldingState myFoldingState = null;
+    private @Nullable Supplier<CodeFoldingState> myDelayedFoldInfoProducer = null;
 
-  /**
-   * State which describes how editor is folded.
-   * This field can be <code>null</code>.
-   */
-  private CodeFoldingState myFoldingState;
-  private @Nullable Supplier<CodeFoldingState> myDelayedFoldInfoProducer;
+    private static final int MIN_CHANGE_DISTANCE = 4;
 
-  private static final int MIN_CHANGE_DISTANCE = 4;
-
-  public TextEditorState() {
-  }
-
-  /**
-   * Folding state is more complex than, say, line/column number, that's why it's deserialization can be performed only when
-   * necessary pre-requisites are met (e.g. corresponding {@link Document} is created).
-   * <p/>
-   * However, we can't be sure that those conditions are met on IDE startup (when editor states are read). Current method allows
-   * to register a closure within the current state object which returns folding info if possible.
-   *
-   * @param producer delayed folding info producer
-   */
-  public void setDelayedFoldState(Supplier<CodeFoldingState> producer) {
-    myDelayedFoldInfoProducer = producer;
-  }
-
-  public @Nullable CodeFoldingState getFoldingState() {
-    // Assuming single-thread access here.
-    if (myFoldingState == null && myDelayedFoldInfoProducer != null) {
-      myFoldingState = myDelayedFoldInfoProducer.get();
-      if (myFoldingState != null) {
-        myDelayedFoldInfoProducer = null;
-      }
-    }
-    return myFoldingState;
-  }
-
-  public void setFoldingState(@Nullable CodeFoldingState foldingState) {
-    myFoldingState = foldingState;
-    myDelayedFoldInfoProducer = null;
-  }
-
-  public boolean equals(Object o) {
-    if (!(o instanceof TextEditorState)) {
-      return false;
+    public TextEditorState() {
     }
 
-    TextEditorState textEditorState = (TextEditorState)o;
+    /**
+     * Folding state is more complex than, say, line/column number, that's why it's deserialization can be performed only when
+     * necessary pre-requisites are met (e.g. corresponding {@link Document} is created).
+     * <p/>
+     * However, we can't be sure that those conditions are met on IDE startup (when editor states are read). Current method allows
+     * to register a closure within the current state object which returns folding info if possible.
+     *
+     * @param producer delayed folding info producer
+     */
+    public void setDelayedFoldState(Supplier<CodeFoldingState> producer) {
+        myDelayedFoldInfoProducer = producer;
+    }
 
-    if (!Arrays.equals(CARETS, textEditorState.CARETS)) return false;
-    if (RELATIVE_CARET_POSITION != textEditorState.RELATIVE_CARET_POSITION) return false;
-    CodeFoldingState localFoldingState = getFoldingState();
-    CodeFoldingState theirFoldingState = textEditorState.getFoldingState();
-    if (localFoldingState == null ? theirFoldingState != null : !localFoldingState.equals(theirFoldingState)) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    int result = 0;
-    if (CARETS != null) {
-      for (CaretState caretState : CARETS) {
-        if (caretState != null) {
-          result += caretState.hashCode();
+    public @Nullable CodeFoldingState getFoldingState() {
+        // Assuming single-thread access here.
+        if (myFoldingState == null && myDelayedFoldInfoProducer != null) {
+            myFoldingState = myDelayedFoldInfoProducer.get();
+            if (myFoldingState != null) {
+                myDelayedFoldInfoProducer = null;
+            }
         }
-      }
+        return myFoldingState;
     }
-    return result;
-  }
 
-  @Override
-  public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
-    if (!(otherState instanceof TextEditorState)) return false;
-    TextEditorState other = (TextEditorState)otherState;
-    return level == FileEditorStateLevel.NAVIGATION &&
-           CARETS != null &&
-           CARETS.length == 1 &&
-           other.CARETS != null &&
-           other.CARETS.length == 1 &&
-           Math.abs(CARETS[0].LINE - other.CARETS[0].LINE) < MIN_CHANGE_DISTANCE;
-  }
+    public void setFoldingState(@Nullable CodeFoldingState foldingState) {
+        myFoldingState = foldingState;
+        myDelayedFoldInfoProducer = null;
+    }
 
-  public String toString() {
-    return Arrays.toString(CARETS);
-  }
-
-  public static class CaretState {
-    public int LINE;
-    public int COLUMN;
-    public boolean LEAN_FORWARD;
-    public int SELECTION_START_LINE;
-    public int SELECTION_START_COLUMN;
-    public int SELECTION_END_LINE;
-    public int SELECTION_END_COLUMN;
-
+    @Override
     public boolean equals(Object o) {
-      if (!(o instanceof CaretState)) {
-        return false;
-      }
+        if (!(o instanceof TextEditorState that)) {
+            return false;
+        }
 
-      CaretState caretState = (CaretState)o;
-
-      if (COLUMN != caretState.COLUMN) return false;
-      if (LINE != caretState.LINE) return false;
-      if (LEAN_FORWARD != caretState.LEAN_FORWARD) return false;
-      if (SELECTION_START_LINE != caretState.SELECTION_START_LINE) return false;
-      if (SELECTION_START_COLUMN != caretState.SELECTION_START_COLUMN) return false;
-      if (SELECTION_END_LINE != caretState.SELECTION_END_LINE) return false;
-      if (SELECTION_END_COLUMN != caretState.SELECTION_END_COLUMN) return false;
-
-      return true;
+        return Arrays.equals(CARETS, that.CARETS)
+            && RELATIVE_CARET_POSITION == that.RELATIVE_CARET_POSITION
+            && Objects.equals(getFoldingState(), that.getFoldingState());
     }
 
     @Override
     public int hashCode() {
-      return LINE + COLUMN;
+        int result = 0;
+        if (CARETS != null) {
+            for (CaretState caretState : CARETS) {
+                if (caretState != null) {
+                    result += caretState.hashCode();
+                }
+            }
+        }
+        return result;
     }
 
-    public String toString() {
-      return "[" + LINE + "," + COLUMN + "]";
+    @Override
+    public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
+        if (!(otherState instanceof TextEditorState other)) {
+            return false;
+        }
+        return level == FileEditorStateLevel.NAVIGATION
+            && CARETS != null
+            && CARETS.length == 1
+            && other.CARETS != null
+            && other.CARETS.length == 1
+            && Math.abs(CARETS[0].LINE - other.CARETS[0].LINE) < MIN_CHANGE_DISTANCE;
     }
-  }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(CARETS);
+    }
+
+    public static class CaretState {
+        public int LINE;
+        public int COLUMN;
+        public boolean LEAN_FORWARD;
+        public int SELECTION_START_LINE;
+        public int SELECTION_START_COLUMN;
+        public int SELECTION_END_LINE;
+        public int SELECTION_END_COLUMN;
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (!(o instanceof CaretState that)) {
+                return false;
+            }
+
+            return COLUMN == that.COLUMN
+                && LINE == that.LINE
+                && LEAN_FORWARD == that.LEAN_FORWARD
+                && SELECTION_START_LINE == that.SELECTION_START_LINE
+                && SELECTION_START_COLUMN == that.SELECTION_START_COLUMN
+                && SELECTION_END_LINE == that.SELECTION_END_LINE
+                && SELECTION_END_COLUMN == that.SELECTION_END_COLUMN;
+        }
+
+        @Override
+        public int hashCode() {
+            return LINE + COLUMN;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + LINE + "," + COLUMN + "]";
+        }
+    }
 }

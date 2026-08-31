@@ -29,8 +29,6 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface IProjectStore extends IComponentStore {
-  void setProjectFilePathNoUI(String filePath);
-
   void setProjectFilePath(String filePath);
 
   @Nullable VirtualFile getProjectBaseDir();

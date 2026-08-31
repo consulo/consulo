@@ -22,7 +22,7 @@ import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.util.OrderEntryUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -72,7 +72,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
 
   
   @Override
-  public AsyncResult<Void> navigate(Project project) {
+  public CompletableFuture<?> navigate(Project project) {
     ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
     return showSettingsUtil.showProjectStructureDialog(project, projectStructureSelector -> {
       projectStructureSelector.selectOrderEntry(myModule, myOrderEntry);

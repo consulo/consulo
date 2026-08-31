@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,5 +30,5 @@ import org.jspecify.annotations.Nullable;
 public interface FindApiInternal {
   
   @RequiredUIAccess
-  AsyncResult<Void> openScopeConfigurable(Project project, @Nullable String selection);
+  CompletableFuture<?> openScopeConfigurable(Project project, @Nullable String selection);
 }

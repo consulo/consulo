@@ -29,7 +29,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 
 import java.awt.*;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -99,7 +99,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   @RequiredUIAccess
   
   @Override
-  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
+  public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
     Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
     Set<ArtifactPointer> pointers = new HashSet<>();
     for (Artifact artifact : artifacts) {
@@ -118,9 +118,9 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     builder.setCenterPanel(chooser);
     builder.setPreferredFocusComponent(chooser);
 
-    AsyncResult<Void> result = builder.showAsync();
-    result.doWhenDone(() -> task.setArtifactPointers(chooser.getMarkedElements()));
-    return result;
+    return builder.showAsync()
+      .toCompletableFuture()
+      .thenRun(() -> task.setArtifactPointers(chooser.getMarkedElements()));
   }
 
   @Override

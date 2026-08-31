@@ -17,11 +17,12 @@
 package consulo.compiler.artifact.element;
 
 import consulo.compiler.CompileContext;
-import consulo.virtualFileSystem.VirtualFile;
+
+import java.nio.file.Path;
 
 /**
  * @author nik
  */
 public abstract class PackagingFileFilter {
-  public abstract boolean accept(VirtualFile virtualFile, CompileContext context);
+    public abstract boolean accept(Path file, CompileContext context);
 }

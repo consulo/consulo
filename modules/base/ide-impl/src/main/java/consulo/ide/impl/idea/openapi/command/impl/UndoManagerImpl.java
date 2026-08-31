@@ -36,7 +36,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.UndoProvider;
@@ -294,9 +294,9 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
     }
 
     @Override
-    @RequiredWriteAction
+    @RequiredUIAccess
     public void undoableActionPerformed(UndoableAction action) {
-        Application.get().assertIsWriteThread();
+        UIAccess.assertIsUIThread();
         if (myProject != null && myProject.isDisposed()) {
             return;
         }
@@ -308,8 +308,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         if (myCommandLevel == 0) {
             LOG.assertTrue(
                 action instanceof NonUndoableAction,
-                "Undoable actions allowed inside commands only " +
-                    "(see consulo.ide.impl.idea.openapi.command.CommandProcessor.newCommand().execute())"
+                "Undoable actions allowed inside commands only CommandProcessor.newCommand().execute()"
             );
             commandStarted(UndoConfirmationPolicy.DEFAULT, false);
             myCurrentMerger.addAction(action);

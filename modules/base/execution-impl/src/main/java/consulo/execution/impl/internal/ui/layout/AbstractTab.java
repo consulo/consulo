@@ -17,11 +17,14 @@
 package consulo.execution.impl.internal.ui.layout;
 
 import consulo.ui.image.Image;
+import consulo.util.xml.serializer.annotation.Transient;
 
 abstract class AbstractTab {
 
   int myIndex;
   int myDefaultIndex = -1;
+
+  @Transient
   String myDisplayName;
   Image myIcon;
 

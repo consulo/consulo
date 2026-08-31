@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.SimpleListPopupStepBuilder;
@@ -37,7 +38,7 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 2025-08-13
  */
-public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements DumbAware {
+public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     private record Item<K>(LocalizeValue actionText, K value) {
     }
 
@@ -105,7 +106,6 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && isEnabled());
     }
 

@@ -16,8 +16,8 @@
 package consulo.externalSystem.model;
 
 import consulo.util.io.StreamUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.*;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -34,16 +34,13 @@ import java.util.*;
  * Not thread-safe.
  *
  * @author Denis Zhdanov
- * @since 4/12/13 11:53 AM
+ * @since 2013-04-12
  */
 public class DataNode<T> implements Serializable {
-
   private static final long serialVersionUID = 1L;
 
-  
   private final List<DataNode<?>> myChildren = new ArrayList<>();
 
-  
   private final Key<T> myKey;
   private transient T myData;
   private byte[] myRawData;
@@ -70,14 +67,12 @@ public class DataNode<T> implements Serializable {
     return myParent;
   }
 
-  
   public <T> DataNode<T> createChild(Key<T> key, T data) {
     DataNode<T> result = new DataNode<T>(key, data, this);
     myChildren.add(result);
     return result;
   }
 
-  
   public <T> DataNode<T> createOrReplaceChild(Key<T> key, T data) {
     for (Iterator<DataNode<?>> iterator = myChildren.iterator(); iterator.hasNext(); ) {
       DataNode<?> child = iterator.next();
@@ -89,12 +84,10 @@ public class DataNode<T> implements Serializable {
     return createChild(key, data);
   }
 
-  
   public Key<T> getKey() {
     return myKey;
   }
 
-  
   public T getData() {
     if (myData == null) {
       prepareData(getClass().getClassLoader(), Thread.currentThread().getContextClassLoader());
@@ -105,7 +98,7 @@ public class DataNode<T> implements Serializable {
   /**
    * This class is a generic holder for any kind of project data. That project data might originate from different locations, e.g.
    * core ide plugins, non-core ide plugins, third-party plugins etc. That means that when a service from a core plugin needs to
-   * unmarshall {@link DataNode} object, its content should not be unmarshalled as well because its class might be unavailable here.
+   * unmarshal {@link DataNode} object, its content should not be unmarshaled as well because its class might be unavailable here.
    * <p/>
    * That's why the content is delivered as a raw byte array and this method allows to build actual java object from it using
    * the right class loader.
@@ -235,7 +228,6 @@ public class DataNode<T> implements Serializable {
     myChildren.add(child);
   }
 
-  
   public Collection<DataNode<?>> getChildren() {
     return myChildren;
   }

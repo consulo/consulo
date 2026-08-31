@@ -12,7 +12,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.Content;
 import consulo.util.collection.JBIterable;
@@ -23,7 +23,7 @@ import static consulo.execution.impl.internal.dashboard.action.RunDashboardActio
  * @author konstantin.aleev
  */
 @ActionImpl(id = "RunDashboard.Stop")
-public final class StopAction extends DumbAwareAction {
+public final class StopAction extends LegacyDumbAwareAction {
   public StopAction() {
     super(ActionLocalize.actionRundashboardStopText(), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
   }

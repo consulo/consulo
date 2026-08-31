@@ -12,11 +12,15 @@ module consulo.project.ui.impl {
     
     exports consulo.project.ui.impl.internal to
         consulo.version.control.system.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.it;
 
     exports consulo.project.ui.impl.internal.wm to
-        consulo.desktop.swt.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.ide.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.it,
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.project.ui.impl.internal.wm.statusBar to
         consulo.ide.impl;
@@ -25,12 +29,16 @@ module consulo.project.ui.impl {
         consulo.util.xml.serializer,
         consulo.component.impl;
 
+    opens consulo.project.ui.impl.internal.wm to
+        consulo.util.xml.serializer,
+        consulo.component.impl;
+
     exports consulo.project.ui.impl.internal.action to
         consulo.ide.impl;
 
     exports consulo.project.ui.impl.internal.wm.action to
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     // TODO remove in future
     requires java.desktop;

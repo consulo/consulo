@@ -23,13 +23,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Objects;
 
 /**
  * @author zajac
  * @since 2012-05-09
  */
 public interface DetailView extends UserDataHolder {
-
   Editor getEditor();
 
   void navigateInPreviewEditor(PreviewEditorState editorState);
@@ -49,7 +49,6 @@ public interface DetailView extends UserDataHolder {
   void setCurrentItem(@Nullable ItemWrapper item);
 
   class PreviewEditorState {
-
     public static PreviewEditorState EMPTY = new PreviewEditorState(null, null, null);
 
     public static PreviewEditorState create(VirtualFile file, int line) {
@@ -61,45 +60,42 @@ public interface DetailView extends UserDataHolder {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      PreviewEditorState state = (PreviewEditorState)o;
+      PreviewEditorState that = (PreviewEditorState)o;
 
-      if (myAttributes != null ? !myAttributes.equals(state.myAttributes) : state.myAttributes != null) return false;
-      if (myFile != null ? !myFile.equals(state.myFile) : state.myFile != null) return false;
-      if (myNavigate != null ? !myNavigate.equals(state.myNavigate) : state.myNavigate != null) return false;
-
-      return true;
+      return Objects.equals(myAttributes, that.myAttributes)
+          && Objects.equals(myFile, that.myFile)
+          && Objects.equals(myNavigate, that.myNavigate);
     }
 
     @Override
     public int hashCode() {
-      int result = myFile != null ? myFile.hashCode() : 0;
-      result = 31 * result + (myNavigate != null ? myNavigate.hashCode() : 0);
-      result = 31 * result + (myAttributes != null ? myAttributes.hashCode() : 0);
+      int result = Objects.hashCode(myFile);
+      result = 31 * result + Objects.hashCode(myNavigate);
+      result = 31 * result + Objects.hashCode(myAttributes);
       return result;
     }
 
-    public VirtualFile getFile() {
+    public @Nullable VirtualFile getFile() {
       return myFile;
     }
 
-    public LogicalPosition getNavigate() {
+    public @Nullable LogicalPosition getNavigate() {
       return myNavigate;
     }
 
-    public TextAttributes getAttributes() {
+    public @Nullable TextAttributes getAttributes() {
       return myAttributes;
     }
 
-    private final VirtualFile myFile;
-    private final LogicalPosition myNavigate;
-    private final TextAttributes myAttributes;
+    private final @Nullable VirtualFile myFile;
+    private final @Nullable LogicalPosition myNavigate;
+    private final @Nullable TextAttributes myAttributes;
 
-    public PreviewEditorState(VirtualFile file, LogicalPosition navigate, TextAttributes attributes) {
-
+    public PreviewEditorState(@Nullable VirtualFile file, @Nullable LogicalPosition navigate, @Nullable TextAttributes attributes) {
       myFile = file;
       myNavigate = navigate;
       myAttributes = attributes;

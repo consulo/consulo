@@ -23,11 +23,9 @@ import consulo.util.dataholder.Key;
  * @author peter
  */
 public abstract class CompletionWeigher extends Weigher<LookupElement, CompletionLocation> {
-
   @Override
   public abstract Comparable weigh(LookupElement element, CompletionLocation location);
 
-  
   @Override
   public Key<?> getKey() {
     return CompletionService.RELEVANCE_KEY;

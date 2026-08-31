@@ -15,7 +15,7 @@
  */
 package consulo.execution.configuration.log;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.ui.ExecutionConsole;
@@ -48,97 +48,100 @@ import java.util.function.Supplier;
  * @since 2011-10-20
  */
 public class OutputFileUtil {
-  private static final String CONSOLE_OUTPUT_FILE_MESSAGE = "Console output is saving to: ";
+    private static final String CONSOLE_OUTPUT_FILE_MESSAGE = "Console output is saving to: ";
 
-  private OutputFileUtil() {
-  }
-
-  public static File getOutputFile(RunConfigurationBase configuration) {
-    String outputFilePath = configuration.getOutputFilePath();
-    if (outputFilePath != null) {
-      String filePath = FileUtil.toSystemDependentName(outputFilePath);
-      File file = new File(filePath);
-      if (configuration instanceof CommonProgramRunConfigurationParameters && !FileUtil.isAbsolute(filePath)) {
-        String directory = ((CommonProgramRunConfigurationParameters)configuration).getWorkingDirectory();
-        if (directory != null) {
-          file = new File(new File(directory), filePath);
-        }
-      }
-      return file;
+    private OutputFileUtil() {
     }
-    return null;
-  }
 
-  public static void attachDumpListener(final RunConfigurationBase base, final ProcessHandler startedProcess, ExecutionConsole console) {
-    if (base.isSaveOutputToFile()) {
-      String outputFilePath = base.getOutputFilePath();
-      if (outputFilePath != null) {
-        final String filePath = FileUtil.toSystemDependentName(outputFilePath);
-        startedProcess.addProcessListener(new ProcessAdapter() {
-          private PrintStream myOutput;
-
-          @Override
-          public void onTextAvailable(ProcessEvent event, Key outputType) {
-            if (base.collectOutputFromProcessHandler() && myOutput != null && outputType != ProcessOutputTypes.SYSTEM) {
-              myOutput.print(event.getText());
-            }
-          }
-
-          @Override
-          public void startNotified(ProcessEvent event) {
-            try {
-              myOutput = new PrintStream(new FileOutputStream(new File(filePath)));
-            }
-            catch (FileNotFoundException ignored) {
-            }
-            startedProcess.notifyTextAvailable(CONSOLE_OUTPUT_FILE_MESSAGE + filePath + "\n", ProcessOutputTypes.SYSTEM);
-          }
-
-          @Override
-          public void processTerminated(ProcessEvent event) {
-            startedProcess.removeProcessListener(this);
-            if (myOutput != null) {
-              myOutput.close();
-            }
-          }
-        });
-        if (console instanceof ConsoleView) {
-          ((ConsoleView)console).addMessageFilter(new ShowOutputFileFilter());
-        }
-      }
-    }
-  }
-
-  private static class ShowOutputFileFilter implements Filter {
-    @Override
-    public Result applyFilter(String line, int entireLength) {
-      if (line.startsWith(CONSOLE_OUTPUT_FILE_MESSAGE)) {
-        final String filePath = StringUtil.trimEnd(line.substring(CONSOLE_OUTPUT_FILE_MESSAGE.length()), "\n");
-
-        return new Result(entireLength - filePath.length() - 1, entireLength, new HyperlinkInfo() {
-          @RequiredUIAccess
-          @Override
-          public void navigate(final Project project) {
-            final VirtualFile file = ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
-              @Override
-              public @Nullable VirtualFile get() {
-                return LocalFileSystem.getInstance().refreshAndFindFileByPath(FileUtil.toSystemIndependentName(filePath));
-              }
-            });
-
-            if (file != null) {
-              file.refresh(false, false);
-              ApplicationManager.getApplication().runReadAction(new Runnable() {
-                @Override
-                public void run() {
-                  FileEditorManager.getInstance(project).openTextEditor(OpenFileDescriptorFactory.getInstance(project).builder(file).build(), true);
+    public static File getOutputFile(RunConfigurationBase configuration) {
+        String outputFilePath = configuration.getOutputFilePath();
+        if (outputFilePath != null) {
+            String filePath = FileUtil.toSystemDependentName(outputFilePath);
+            File file = new File(filePath);
+            if (configuration instanceof CommonProgramRunConfigurationParameters runConfigParams && !FileUtil.isAbsolute(filePath)) {
+                String directory = runConfigParams.getWorkingDirectory();
+                if (directory != null) {
+                    file = new File(new File(directory), filePath);
                 }
-              });
             }
-          }
-        });
-      }
-      return null;
+            return file;
+        }
+        return null;
     }
-  }
+
+    public static void attachDumpListener(final RunConfigurationBase base, final ProcessHandler startedProcess, ExecutionConsole console) {
+        if (base.isSaveOutputToFile()) {
+            String outputFilePath = base.getOutputFilePath();
+            if (outputFilePath != null) {
+                final String filePath = FileUtil.toSystemDependentName(outputFilePath);
+                startedProcess.addProcessListener(new ProcessAdapter() {
+                    private PrintStream myOutput;
+
+                    @Override
+                    public void onTextAvailable(ProcessEvent event, Key outputType) {
+                        if (base.collectOutputFromProcessHandler() && myOutput != null && outputType != ProcessOutputTypes.SYSTEM) {
+                            myOutput.print(event.getText());
+                        }
+                    }
+
+                    @Override
+                    public void startNotified(ProcessEvent event) {
+                        try {
+                            myOutput = new PrintStream(new FileOutputStream(new File(filePath)));
+                        }
+                        catch (FileNotFoundException ignored) {
+                        }
+                        startedProcess.notifyTextAvailable(CONSOLE_OUTPUT_FILE_MESSAGE + filePath + "\n", ProcessOutputTypes.SYSTEM);
+                    }
+
+                    @Override
+                    public void processTerminated(ProcessEvent event) {
+                        startedProcess.removeProcessListener(this);
+                        if (myOutput != null) {
+                            myOutput.close();
+                        }
+                    }
+                });
+                if (console instanceof ConsoleView consoleView) {
+                    consoleView.addMessageFilter(new ShowOutputFileFilter());
+                }
+            }
+        }
+    }
+
+    private static class ShowOutputFileFilter implements Filter {
+        @Override
+        public Result applyFilter(String line, int entireLength) {
+            if (line.startsWith(CONSOLE_OUTPUT_FILE_MESSAGE)) {
+                final String filePath = StringUtil.trimEnd(line.substring(CONSOLE_OUTPUT_FILE_MESSAGE.length()), "\n");
+
+                return new Result(
+                    entireLength - filePath.length() - 1,
+                    entireLength,
+                    new HyperlinkInfo() {
+                        @Override
+                        @RequiredUIAccess
+                        public void navigate(Project project) {
+                            VirtualFile file = Application.get().runWriteAction(new Supplier<VirtualFile>() {
+                                @Override
+                                public @Nullable VirtualFile get() {
+                                    return LocalFileSystem.getInstance()
+                                        .refreshAndFindFileByPath(FileUtil.toSystemIndependentName(filePath));
+                                }
+                            });
+
+                            if (file != null) {
+                                file.refresh(false, false);
+                                Application.get().runReadAction(() -> {
+                                    FileEditorManager.getInstance(project)
+                                        .openTextEditor(OpenFileDescriptorFactory.getInstance(project).newBuilder(file).build(), true);
+                                });
+                            }
+                        }
+                    }
+                );
+            }
+            return null;
+        }
+    }
 }

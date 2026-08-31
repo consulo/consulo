@@ -16,15 +16,14 @@
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 @ActionImpl(id = "ProductivityGude")
-public class ShowFeatureUsageStatisticsAction extends AnAction implements DumbAware {
+public class ShowFeatureUsageStatisticsAction extends LegacyDumbAwareAction {
     public ShowFeatureUsageStatisticsAction() {
         super(ActionLocalize.actionProductivitygudeText(), ActionLocalize.actionProductivitygudeDescription());
     }
@@ -37,7 +36,6 @@ public class ShowFeatureUsageStatisticsAction extends AnAction implements DumbAw
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

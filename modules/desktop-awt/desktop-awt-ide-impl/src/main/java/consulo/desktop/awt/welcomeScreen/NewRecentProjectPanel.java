@@ -15,264 +15,104 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.project.ProjectGroup;
-import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
-import consulo.project.internal.RecentProjectsManager;
-import consulo.ide.impl.idea.ide.ReopenProjectAction;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.application.util.UniqueNameBuilder;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
-import consulo.ui.ex.awt.JBDimension;
+import consulo.ide.impl.welcomeScreen.RecentProjectItemRender;
+import consulo.project.ProjectGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.image.IconLibraryManager;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.ui.style.Style;
-import consulo.ui.style.StyleManager;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FocusTraversalPolicy;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class NewRecentProjectPanel extends RecentProjectPanel {
-  private static final String WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP = "WelcomeScreenRecentProjectActionGroup";
 
-  public NewRecentProjectPanel(Disposable parentDisposable, boolean welcomeScreen) {
-    super(parentDisposable);
+    @RequiredUIAccess
+    public NewRecentProjectPanel(Disposable parentDisposable, boolean welcomeScreen) {
+        super(parentDisposable);
 
-    myRootPanel.setBorder(JBUI.Borders.empty());
-    if(welcomeScreen) {
-      myRootPanel.setBackground(UIUtil.getPanelBackground());
+        myRootPanel.setBorder(JBUI.Borders.empty());
+        myList.setBorder(JBUI.Borders.empty(4));
 
-      myScrollPane.setOpaque(false);
-      myScrollPane.getViewport().setOpaque(false);
-      myTargetComponent.setOpaque(false);
-      myList.setOpaque(false);
+        installGroupKeys();
 
-      JBDimension size = JBUI.size(400, 460);
-      myScrollPane.setSize(size);
-      myScrollPane.setMinimumSize(size);
-      myScrollPane.setPreferredSize(size);
+        if (welcomeScreen) {
+            myRootPanel.setBackground(UIUtil.getPanelBackground());
+
+            myScrollPane.setOpaque(false);
+            myScrollPane.getViewport().setOpaque(false);
+            myList.setOpaque(false);
+
+            myScrollLayout.setSize(RecentProjectItemRender.LIST_WIDTH, RecentProjectItemRender.LIST_HEIGHT);
+            myScrollLayout.setMinWidth(RecentProjectItemRender.LIST_WIDTH);
+            myScrollLayout.setMinHeight(RecentProjectItemRender.LIST_HEIGHT);
+        }
     }
-  }
 
-  @Override
-  protected Dimension getPreferredScrollableViewportSize() {
-    return null;
-  }
+    @Override
+    protected boolean isUseGroups() {
+        return true;
+    }
 
-  @Override
-  protected JBList<AnAction> createList(AnAction[] recentProjectActions, Dimension size) {
-    final JBList<AnAction> list = new MyList(size, recentProjectActions) {
-      @Override
-      protected void onActionClick(int index, MouseEvent e) {
-        ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
-        if (group != null) {
-          ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group).getComponent().show(this, e.getX(), e.getY());
-        }
-      }
-    };
-    list.setBorder(JBUI.Borders.empty(4));
+    private void installGroupKeys() {
+        myList.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                ProjectGroup group = myListBox.getValue() instanceof PopupProjectGroupActionGroup selected
+                    ? selected.getGroup()
+                    : null;
 
-    list.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        Object selected = list.getSelectedValue();
-        ProjectGroup group;
-        if (selected instanceof PopupProjectGroupActionGroup) {
-          group = ((PopupProjectGroupActionGroup)selected).getGroup();
-        }
-        else {
-          group = null;
-        }
+                int keyCode = e.getKeyCode();
+                if (keyCode == KeyEvent.VK_RIGHT) {
+                    if (group == null) {
+                        focusNext();
+                    }
+                    else if (!group.isExpanded()) {
+                        group.setExpanded(true);
 
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_RIGHT) {
-          if (group != null) {
-            if (!group.isExpanded()) {
-              group.setExpanded(true);
-              ListModel model = ((NameFilteringListModel)list.getModel()).getOriginalModel();
-              int index = list.getSelectedIndex();
-              RecentProjectsWelcomeScreenActionBase.rebuildRecentProjectDataModel((DefaultListModel)model);
-              list.setSelectedIndex(group.getProjects().isEmpty() ? index : index + 1);
-            }
-          }
-          else {
-            JFrame frame = UIUtil.getParentOfType(JFrame.class, list);
-            if (frame != null) {
-              FocusTraversalPolicy policy = frame.getFocusTraversalPolicy();
-              if (policy != null) {
-                Component next = policy.getComponentAfter(frame, list);
-                if (next != null) {
-                  IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(next);
+                        int index = myModel.indexOf(myListBox.getValue());
+                        RecentProjectsWelcomeScreenActionBase.rebuildRecentProjectDataModel(myModel);
+                        myListBox.setValueByIndex(group.getProjects().isEmpty() ? index : index + 1);
+                    }
                 }
-              }
-            }
-          }
-        }
-        else if (keyCode == KeyEvent.VK_LEFT) {
-          if (group != null && group.isExpanded()) {
-            group.setExpanded(false);
-            int index = list.getSelectedIndex();
-            ListModel model = ((NameFilteringListModel)list.getModel()).getOriginalModel();
-            RecentProjectsWelcomeScreenActionBase.rebuildRecentProjectDataModel((DefaultListModel)model);
-            list.setSelectedIndex(index);
-          }
-        }
-      }
-    });
-    list.addMouseListener(new PopupHandler() {
-      @Override
-      public void invokePopup(Component comp, int x, int y) {
-        int index = list.locationToIndex(new Point(x, y));
-        if (index != -1 && Arrays.binarySearch(list.getSelectedIndices(), index) < 0) {
-          list.setSelectedIndex(index);
-        }
-        ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
-        if (group != null) {
-          ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group).getComponent().show(comp, x, y);
-        }
-      }
-    });
-    return list;
-  }
+                else if (keyCode == KeyEvent.VK_LEFT && group != null && group.isExpanded()) {
+                    group.setExpanded(false);
 
-  @Override
-  protected boolean isUseGroups() {
-    return true;
-  }
-
-  @Override
-  protected ListCellRenderer<AnAction> createRenderer(UniqueNameBuilder<ReopenProjectAction> pathShortener) {
-    return new ListCellRenderer<> () {
-
-      JComponent spacer = new NonOpaquePanel() {
-        @Override
-        public Dimension getPreferredSize() {
-          return new Dimension(JBUI.scale(22), super.getPreferredSize().height);
-        }
-      };
-
-      @Override
-      public Component getListCellRendererComponent(JList list, final AnAction value, int index, final boolean isSelected, boolean cellHasFocus) {
-        Color fore = UIUtil.getListForeground(isSelected);
-        final Color back = UIUtil.getListBackground(isSelected);
-        final JLabel name = new JLabel();
-        final JLabel path = new JLabel();
-        name.setForeground(fore);
-        path.setForeground(isSelected ? fore : UIUtil.getInactiveTextColor());
-
-        return new JPanel() {
-          {
-            setLayout(new BorderLayout());
-            setOpaque(isSelected);
-            setBackground(back);
-
-            boolean isGroup = value instanceof PopupProjectGroupActionGroup;
-            boolean isInsideGroup = false;
-            if (value instanceof ReopenProjectAction) {
-              String path = ((ReopenProjectAction)value).getProjectPath();
-              for (ProjectGroup group : RecentProjectsManager.getInstance().getGroups()) {
-                List<String> projects = group.getProjects();
-                if (projects.contains(path)) {
-                  isInsideGroup = true;
-                  break;
+                    int index = myModel.indexOf(myListBox.getValue());
+                    RecentProjectsWelcomeScreenActionBase.rebuildRecentProjectDataModel(myModel);
+                    myListBox.setValueByIndex(index);
                 }
-              }
             }
+        });
+    }
 
-            Image moreImage;
-            if (isSelected) {
-              Style style = StyleManager.get().getCurrentStyle();
-              if (style.isDark()) {
-                moreImage = PlatformIconGroup.actionsMorevertical();
-              }
-              else {
-                moreImage = IconLibraryManager.get().inverseIcon(PlatformIconGroup.actionsMorevertical());
-              }
-            }
-            else {
-              moreImage = ImageEffects.transparent(PlatformIconGroup.actionsMorevertical(), 0.5f);
-            }
-            
-            JLabel moreActionLabel = new JBLabel(moreImage);
-            //moreActionLabel.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 1, 0, 0));
+    private void focusNext() {
+        JFrame frame = UIUtil.getParentOfType(JFrame.class, myList);
+        if (frame == null) {
+            return;
+        }
 
-            setBorder(JBUI.Borders.empty(5, 7));
-            if (isInsideGroup) {
-              add(spacer, BorderLayout.WEST);
-            }
-            if (isGroup) {
-              ProjectGroup group = ((PopupProjectGroupActionGroup)value).getGroup();
-              name.setText(" " + group.getName());
-              name.setIcon(TargetAWT.to(group.isExpanded() ? PlatformIconGroup.nodesFolderopened() : PlatformIconGroup.nodesFolder()));
-              name.setFont(name.getFont().deriveFont(Font.BOLD));
-              add(name);
+        FocusTraversalPolicy policy = frame.getFocusTraversalPolicy();
+        if (policy == null) {
+            return;
+        }
 
-              add(moreActionLabel, BorderLayout.EAST);
-            }
-            else if (value instanceof ReopenProjectAction) {
-              NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
-              name.setText(getTitle2Text(((ReopenProjectAction)value).getTemplatePresentation().getText(), name, JBUI.scale(55)));
-              path.setText(getTitle2Text(((ReopenProjectAction)value).getProjectPath(), path, JBUI.scale(isInsideGroup ? 80 : 60)));
+        Component next = policy.getComponentAfter(frame, myList);
+        if (next != null) {
+            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(next);
+        }
+    }
 
-              if (!isPathValid((((ReopenProjectAction)value).getProjectPath()))) {
-                path.setForeground(ColorUtil.mix(path.getForeground(), JBColor.red, .5));
-              }
-
-              p.add(name, BorderLayout.NORTH);
-              p.add(path, BorderLayout.SOUTH);
-
-              Image moduleMainIcon = ((ReopenProjectAction)value).getExtensionIcon();
-              JLabel projectIcon = new JLabel("", TargetAWT.to(moduleMainIcon), SwingConstants.LEFT) {
-                @Override
-                protected void paintComponent(Graphics g) {
-                  getIcon().paintIcon(this, g, 0, (getHeight() - getIcon().getIconHeight()) / 2);
-                }
-              };
-              projectIcon.setBorder(JBUI.Borders.emptyRight(8));
-              projectIcon.setVerticalAlignment(SwingConstants.CENTER);
-              NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
-              panel.add(p);
-              panel.add(projectIcon, BorderLayout.WEST);
-
-              panel.add(moreActionLabel, BorderLayout.EAST);
-              
-              add(panel);
-            }
-            AccessibleContextUtil.setCombinedName(this, name, " - ", path);
-            AccessibleContextUtil.setCombinedDescription(this, name, " - ", path);
-          }
-
-          @Override
-          public Dimension getPreferredSize() {
-            return new Dimension(super.getPreferredSize().width, JBUI.scale(44));
-          }
-        };
-      }
-    };
-  }
 }

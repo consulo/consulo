@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
@@ -39,7 +38,7 @@ import java.util.Collection;
 import java.util.List;
 
 @ActionImpl(id = "ChangesView.RemoveChangeList")
-public class RemoveChangeListAction extends AnAction implements DumbAware {
+public class RemoveChangeListAction extends LegacyDumbAwareAction {
     public RemoveChangeListAction() {
         super(
             ActionLocalize.actionChangesviewRemovechangelistText(),

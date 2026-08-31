@@ -11,8 +11,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Nikolay Matveev
  */
-public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElement> extends AnAction {
+public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElement> extends LegacyAnAction {
     
     protected final Class<T> myClass;
     

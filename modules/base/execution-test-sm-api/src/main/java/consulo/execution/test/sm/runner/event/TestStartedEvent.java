@@ -16,7 +16,6 @@
 package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestStarted;
-
 import org.jspecify.annotations.Nullable;
 
 public class TestStartedEvent extends BaseStartedNodeEvent {
@@ -26,13 +25,13 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
         this(testStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(testStarted));
     }
 
-    public TestStartedEvent(TestStarted testStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+    public TestStartedEvent(TestStarted testStarted, @Nullable String locationUrl, @Nullable String metaInfo) {
         super(
             testStarted.getTestName(),
             TreeNodeEvent.getNodeId(testStarted),
             BaseStartedNodeEvent.getParentNodeId(testStarted),
             locationUrl,
-            metainfo,
+            metaInfo,
             BaseStartedNodeEvent.getNodeType(testStarted),
             BaseStartedNodeEvent.getNodeArgs(testStarted),
             BaseStartedNodeEvent.isRunning(testStarted)
@@ -44,20 +43,20 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
         @Nullable String id,
         @Nullable String parentId,
         @Nullable String locationUrl,
-        @Nullable String metainfo,
+        @Nullable String metaInfo,
         @Nullable String nodeType,
         @Nullable String nodeArgs,
         boolean running
     ) {
-        super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
+        super(name, id, parentId, locationUrl, metaInfo, nodeType, nodeArgs, running);
     }
 
     public TestStartedEvent(String name, @Nullable String locationUrl) {
         this(name, locationUrl, null);
     }
 
-    public TestStartedEvent(String name, @Nullable String locationUrl, @Nullable String metainfo) {
-        super(name, null, null, locationUrl, metainfo, null, null, true);
+    public TestStartedEvent(String name, @Nullable String locationUrl, @Nullable String metaInfo) {
+        super(name, null, null, locationUrl, metaInfo, null, null, true);
     }
 
     public void setConfig(boolean config) {

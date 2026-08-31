@@ -28,13 +28,10 @@ public class ReferenceDescriptor {
 
   @Override
   public boolean equals(@Nullable Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ReferenceDescriptor)) return false;
-
-    ReferenceDescriptor that = (ReferenceDescriptor)o;
-
-    if (offset != that.offset) return false;
-    return file.equals(that.file);
+    return this == o
+      || o instanceof ReferenceDescriptor that
+      && offset == that.offset
+      && file.equals(that.file);
   }
 
   @Override

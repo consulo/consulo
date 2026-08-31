@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -72,7 +71,6 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
         myOriginalHandler = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ESCAPE;

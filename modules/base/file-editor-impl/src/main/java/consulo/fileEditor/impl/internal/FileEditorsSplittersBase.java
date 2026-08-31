@@ -25,6 +25,7 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.util.MergingProcessingQueueInUI;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -65,8 +66,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     protected final Set<W> myWindows = new CopyOnWriteArraySet<>();
     protected Element mySplittersElement;  // temporarily used during initialization
 
-    private final MergingProcessingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
-    private final MergingProcessingQueue<VirtualFile, EditorTablInfo> myFileNameUpdater;
+    private final MergingProcessingQueueInUI<VirtualFile, Pair<W, Image>> myIconUpdater;
+    private final MergingProcessingQueueInUI<VirtualFile, EditorTablInfo> myFileNameUpdater;
 
     protected FileEditorsSplittersBase(ApplicationConcurrency applicationConcurrency,
                                        Project project,
@@ -74,7 +75,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         myProject = project;
         myManager = manager;
 
-        myIconUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
+        myIconUpdater = new MergingProcessingQueueInUI<>(applicationConcurrency, project, 200) {
             @Override
             protected void calculateValue(Project project,
                                           VirtualFile key,
@@ -90,7 +91,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
             }
         };
 
-        myFileNameUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
+        myFileNameUpdater = new MergingProcessingQueueInUI<>(applicationConcurrency, project, 200) {
             @Override
             protected void calculateValue(Project project, VirtualFile key, Consumer<EditorTablInfo> consumer) {
                 String title = EditorTabPresentationUtil.getEditorTabTitle(myProject, key);

@@ -1,0 +1,127 @@
+/* owned by a single area of the frontend, keeps the theme files from colliding */
+
+/* the strip and the tab inside it are two independent metrics in awt - TabsUtil.getRealTabsHeight() is 30 for
+   the strip, TabsUtil.getTabsHeight() is 26 for the tab, the difference is TabsUtil.TAB_VERTICAL_PADDING on
+   each side. keeping them apart is what lets the tab change height without the strip following it */
+.web-tabbed-layout
+{
+  --web-tab-height: 26px;
+  --web-tab-strip-padding: 2px;
+  --web-tab-strip-height: calc(var(--web-tab-height) + var(--web-tab-strip-padding) * 2);
+}
+
+/* the part of the sheet that holds the tabs is named tabs-container, not tabs - tabs is the slot the
+   vaadin-tabs element sits in. a fixed height is what pins the strip, the tab inside is free to be shorter */
+.web-tabbed-layout::part(tabs-container)
+{
+  flex: 0 0 auto;
+  box-sizing: border-box;
+
+  height: var(--web-tab-strip-height);
+  padding: var(--web-tab-strip-padding) 0;
+  gap: 0;
+
+  /* aura sinks the strip into a container shade of its own, which drifts almost black on the dark themes -
+     the awt strip carries the tabbed pane background of the theme */
+  background-color: var(--consulo-tabbed-pane-background, var(--consulo-panel-background));
+}
+
+/* aura paints vaadin-tabs as a sunken surface - a filled bar with a shadow like edge behind the whole row.
+   an editor tab row is flat, only the selected tab carries a fill */
+.web-tabbed-layout > vaadin-tabs
+{
+  --vaadin-tabs-background: transparent;
+  --vaadin-tabs-padding: 0px;
+  --vaadin-tabs-gap: 0;
+}
+
+/* aura insets the scroller by 3px and pulls it back out with a negative margin, so the tabs bleed over the
+   edges of the strip */
+.web-tabbed-layout vaadin-tabs::part(tabs)
+{
+  padding: 0;
+  margin: 0;
+}
+
+.web-tabbed-layout vaadin-tab
+{
+  box-sizing: border-box;
+  height: var(--web-tab-height);
+  min-height: 0;
+
+  padding: 0 8px;
+
+  /* the corners are left to the platform - what a tab is rounded by is aura's, only what it is filled with
+     comes from the ide. the awt painter has a radius of its own, TabbedPane.tabArc, but that is the metric of
+     a swing tab and not something to press onto another toolkit */
+  margin: 0 2px;
+}
+
+/* aura marks the selected tab with its own accent by assigning the tokens the tab draws itself with:
+   vaadin-tab[selected] { --vaadin-tab-text-color: accent; --vaadin-tab-background: surface }. those are the
+   theme's colours, not the ide's. the same tokens are assigned here at higher specificity so every fill comes
+   from a TabbedPane.* key, and the platform still wins over both: --consulo-tab-foreground and
+   --consulo-tab-background, written on the tab itself by an EditorTabColorProvider, are the first fallback */
+.web-tabbed-layout vaadin-tab
+{
+  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--consulo-tabbed-pane-foreground, var(--vaadin-text-color)));
+  --vaadin-tab-background: var(--consulo-tab-background, transparent);
+}
+
+.web-tabbed-layout vaadin-tab:not([selected]):hover
+{
+  --vaadin-tab-background: var(--consulo-tab-background, var(--consulo-tabbed-pane-hover-color, transparent));
+}
+
+/* the selected tab is a filled pill, as the awt painter draws it - TabbedPane.selectedBackground. a file
+   which named its own colour keeps it, the fill of the selection is only what an unnamed tab falls back to */
+.web-tabbed-layout vaadin-tab[selected]
+{
+  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--consulo-tabbed-pane-foreground, var(--vaadin-text-color)));
+  --vaadin-tab-background: var(--consulo-tab-background, var(--consulo-tabbed-pane-selected-background, transparent));
+
+  /* the painter derives the border from the fill rather than from a key of its own - shift(fill, 0.9) on a
+     light fill, shift(fill, 1.2) on a dark one. mixing the fill toward the foreground of the theme lands in
+     the same place on either side, since the foreground is the far end of the contrast on both */
+  border: 1px solid color-mix(in srgb, var(--vaadin-tab-background) 88%, var(--consulo-tabbed-pane-foreground, currentColor));
+}
+
+/* a window which is not the active one draws its selected tab weaker - TabbedPane.inactiveSelectedBackground */
+.web-tabbed-layout:not(:focus-within) vaadin-tab[selected]
+{
+  --vaadin-tab-background: var(--consulo-tab-background, var(--consulo-tabbed-pane-inactive-selected-background, transparent));
+}
+
+/* a tabsheet with no selected panel stays [loading] forever and spins in the middle of the empty content
+   area - the panels here are always attached up front, so the spinner never stands for work in flight */
+.web-tabbed-layout::part(loader)
+{
+  display: none;
+}
+
+/* the label and the close cross are two separate children of the tab, without this they are laid out on the
+   text baseline and the cross sits below the label */
+vaadin-tab:has(> .web-tab-close)
+{
+  display: flex;
+  align-items: center;
+}
+
+.web-tab-close
+{
+  margin-inline-start: 6px;
+  padding: 0 2px;
+
+  /* the cross must not grow the tab when it appears, the glyph is narrower than the box it hovers in */
+  flex: 0 0 auto;
+  line-height: 1;
+
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.web-tab-close:hover
+{
+  opacity: 1;
+  background-color: var(--consulo-button-hover-background, gainsboro);
+}

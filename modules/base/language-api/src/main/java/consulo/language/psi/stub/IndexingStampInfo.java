@@ -20,11 +20,11 @@ import consulo.document.FileDocumentManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 /**
- * An informational object for debugging stub-mismatch related issues. Should be as small as possible since it's stored in files's attributes.
+ * An informational object for debugging stub-mismatch related issues.
+ * Should be as small as possible since it's stored in file's attributes.
  *
  * @author peter
  */

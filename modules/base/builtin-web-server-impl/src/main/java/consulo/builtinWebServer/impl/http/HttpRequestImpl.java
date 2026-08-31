@@ -25,6 +25,7 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 
 /**
@@ -84,6 +85,11 @@ public class HttpRequestImpl implements HttpRequest {
   @Override
   public @Nullable String getParameterValue(String parameter) {
     return ContainerUtil.getFirstItem(myQueryStringDecoder.parameters().get(parameter));
+  }
+
+  @Override
+  public int localPort() {
+    return myContext.channel().localAddress() instanceof InetSocketAddress address ? address.getPort() : -1;
   }
 
   @Override

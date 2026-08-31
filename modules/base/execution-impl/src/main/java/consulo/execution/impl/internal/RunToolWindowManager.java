@@ -16,12 +16,9 @@
 package consulo.execution.impl.internal;
 
 import consulo.application.HelpManager;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -38,7 +35,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
 import jakarta.inject.Provider;
 import org.jspecify.annotations.Nullable;
@@ -131,49 +127,26 @@ public class RunToolWindowManager {
         Executor executor = myProject.getApplication().getExtensionPoint(Executor.class)
             .findFirstSafe(e -> e.getToolWindowId().equals(toolWindowId));
         assert executor != null;
-        return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), executor.getToolWindowIconIfRunning(), null);
+        return registerToolWindow(executor);
     }
 
     @RequiredUIAccess
-    private ContentManager registerToolWindow(String toolWindowId,
-                                              Image toolWindowIcon,
-                                              Image toolWindowIconActive,
-                                              @Nullable Executor executor) {
+    private ContentManager registerToolWindow(Executor executor) {
+        String toolWindowId = executor.getToolWindowId();
         ToolWindowManager toolWindowManager = myToolWindowManager.get();
 
         if (toolWindowManager.getToolWindow(toolWindowId) != null) {
             throw new IllegalArgumentException("Already registered: " + toolWindowId);
         }
 
-        ToolWindow toolWindow =
-            toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
+        ToolWindow toolWindow = toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
         ContentManager contentManager = toolWindow.getContentManager();
-        contentManager.addDataProvider(new DataProvider() {
-            private int myInsideGetData = 0;
+        contentManager.addUiDataProvider(sink -> sink.set(HelpManager.HELP_ID, executor.getHelpId()));
 
-            @Override
-            public Object getData(Key<?> dataId) {
-                myInsideGetData++;
-                try {
-                    if (HelpManager.HELP_ID == dataId) {
-                        return executor != null ? executor.getHelpId() : null;
-                    }
-                    else {
-                        return myInsideGetData == 1
-                            ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId)
-                            : null;
-                    }
-                }
-                finally {
-                    myInsideGetData--;
-                }
-            }
-        });
-
-        toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
-        toolWindow.setIcon(toolWindowIcon);
+        toolWindow.setDisplayName(executor.getActionName());
+        toolWindow.setIcon(executor.getToolWindowIcon());
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
-        initToolWindow(executor, toolWindowId, toolWindowIcon, toolWindowIconActive, contentManager);
+        initToolWindow(null, toolWindowId, executor.getToolWindowIcon(), executor.getToolWindowIconIfRunning(), contentManager);
 
         return contentManager;
     }

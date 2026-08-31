@@ -17,20 +17,22 @@ package consulo.web.internal.wm.toolWindow;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import consulo.web.internal.ui.vaadin.AuraUtility;
-import consulo.annotation.DeprecationInfo;
+import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.*;
+import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
+import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.InitiableComponent;
-import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.vaadin.InitiableComponent;
+import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -47,17 +49,14 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent, FlexComponent {
         private Div myTopDiv = new Div();
         private Div myCenterDiv = new Div();
-        private Div myBottomDiv = new Div();
 
         public Vaadin() {
             add(myTopDiv);
             myTopDiv.setWidthFull();
             add(myCenterDiv);
             myCenterDiv.addClassName(AuraUtility.Display.FLEX);
-            myCenterDiv.setSizeFull();
+            myCenterDiv.setWidthFull();
             setFlexGrow(1, myCenterDiv);
-            add(myBottomDiv);
-            myBottomDiv.setWidthFull();
         }
 
         @Override
@@ -69,7 +68,6 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         public void init(String classPrefix) {
             myTopDiv.addClassName(classPrefix + "-top");
             myCenterDiv.addClassName(classPrefix + "-center");
-            myBottomDiv.addClassName(classPrefix + "-bottom");
         }
     }
 
@@ -161,7 +159,9 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         public final void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
 
-            setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
+            (myInfo.isSplit() ? myAnchor2Secondary : myAnchor2Primary).put(anchor, myDecorator);
+
+            updateAnchorComponent(anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
         }
     }
 
@@ -177,7 +177,11 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         @Override
         @RequiredUIAccess
         public final void run() {
-            setComponent(null, myInfo.getAnchor(), 0);
+            ToolWindowAnchor anchor = myInfo.getAnchor();
+
+            (myInfo.isSplit() ? myAnchor2Secondary : myAnchor2Primary).remove(anchor);
+
+            updateAnchorComponent(anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
         }
     }
 
@@ -207,10 +211,11 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     private final Map<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
     private final Map<WebToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
 
+    private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Primary = new HashMap<>();
+    private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Secondary = new HashMap<>();
+
     private ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
 
-    @Deprecated
-    @DeprecationInfo("Unsupported for now")
     private ThreeComponentSplitLayout myVerticalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
 
     private boolean myWidescreen;
@@ -218,13 +223,23 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     public WebToolWindowPanelImpl() {
         Vaadin vaadinComponent = getVaadinComponent();
 
-        vaadinComponent.myTopDiv.add(TargetVaddin.to(myTopStripe));
-        vaadinComponent.myCenterDiv.add(TargetVaddin.to(myLeftStripe));
-        VaadinSizeUtil.setWidthFull(myHorizontalSplitter);
-        com.vaadin.flow.component.Component splitter = TargetVaddin.to(myHorizontalSplitter);
+        vaadinComponent.myTopDiv.add(TargetVaadin.to(myTopStripe));
+        vaadinComponent.myCenterDiv.add(TargetVaadin.to(myLeftStripe));
+
+        // same nesting as the awt panel - the outer splitter holds the stripes of its own orientation,
+        // the inner one is placed in its center and ends up holding the editor
+        ThreeComponentSplitLayout rootSplitter = myWidescreen ? myHorizontalSplitter : myVerticalSplitter;
+        if (myWidescreen) {
+            myHorizontalSplitter.setCenterComponent(myVerticalSplitter);
+        }
+        else {
+            myVerticalSplitter.setCenterComponent(myHorizontalSplitter);
+        }
+
+        VaadinSizeUtil.setWidthFull(rootSplitter);
+        com.vaadin.flow.component.Component splitter = TargetVaadin.to(rootSplitter);
         vaadinComponent.myCenterDiv.add(splitter);
-        vaadinComponent.myCenterDiv.add(TargetVaddin.to(myRightStripe));
-        vaadinComponent.myBottomDiv.add(TargetVaddin.to(myBottomStripe));
+        vaadinComponent.myCenterDiv.add(TargetVaadin.to(myRightStripe));
 
         // tttttttttttttttttttttttttttttttt
         // l                              r
@@ -232,9 +247,15 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         // l            content           r
         // l                              r
         // l                              r
-        // bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+        //
+        // the bottom stripe is not part of the panel - the tool window manager hands it to the status bar,
+        // where it shares one row with the widgets, like the awt frame does
 
         splitter.addClassName("web-tool-window-content");
+    }
+
+    public WebToolWindowStripeImpl getBottomStripe() {
+        return myBottomStripe;
     }
 
     
@@ -243,30 +264,58 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         return new Vaadin();
     }
 
+    /**
+     * Rebuilds what sits at the anchor - a single decorator, or both of them inside a splitter when the
+     * anchor holds a primary and a split window at once, like the awt panel does.
+     */
     @RequiredUIAccess
-    private void setComponent(@Nullable ToolWindowInternalDecorator d, ToolWindowAnchor anchor, float weight) {
-        WebToolWindowInternalDecorator decorator = (WebToolWindowInternalDecorator) d;
+    private void updateAnchorComponent(ToolWindowAnchor anchor, float weight) {
+        WebToolWindowInternalDecorator primary = (WebToolWindowInternalDecorator) myAnchor2Primary.get(anchor);
+        WebToolWindowInternalDecorator secondary = (WebToolWindowInternalDecorator) myAnchor2Secondary.get(anchor);
 
-        consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
+        consulo.ui.Component component;
+        if (primary != null && secondary != null) {
+            ToolWindowBase toolWindow = (ToolWindowBase) primary.getToolWindow();
+            TwoComponentSplitLayout splitter = TwoComponentSplitLayout.create(
+                ToolWindowAnchorUtil.isSplitVertically(toolWindow.getToolWindowManager().getProject(), anchor)
+                    ? SplitLayoutPosition.VERTICAL
+                    : SplitLayoutPosition.HORIZONTAL
+            );
+            splitter.setFirstComponent(primary.getComponent());
+            splitter.setSecondComponent(secondary.getComponent());
+            splitter.setProportion(50);
 
+            component = splitter;
+        }
+        else if (primary != null) {
+            component = primary.getComponent();
+        }
+        else if (secondary != null) {
+            component = secondary.getComponent();
+        }
+        else {
+            component = null;
+        }
+
+        setComponent(component, anchor, weight);
+    }
+
+    @RequiredUIAccess
+    private void setComponent(consulo.ui.@Nullable Component component, ToolWindowAnchor anchor, float weight) {
         if (ToolWindowAnchor.TOP == anchor) {
-            //myVerticalSplitter.setFirstComponent(component);
-            //myVerticalSplitter.setFirstSize((int)(myLayeredPane.getHeight() * weight));
+            myVerticalSplitter.setFirstComponent(component);
         }
         else if (ToolWindowAnchor.LEFT == anchor) {
             myHorizontalSplitter.setFirstComponent(component);
-            //myHorizontalSplitter.setFirstSize((int)(myLayeredPane.getWidth() * weight));
         }
         else if (ToolWindowAnchor.BOTTOM == anchor) {
-            //myVerticalSplitter.setLastComponent(component);
-            //myVerticalSplitter.setLastSize((int)(myLayeredPane.getHeight() * weight));
+            myVerticalSplitter.setSecondComponent(component);
         }
         else if (ToolWindowAnchor.RIGHT == anchor) {
             myHorizontalSplitter.setSecondComponent(component);
-            //myHorizontalSplitter.setLastSize((int)(myLayeredPane.getWidth() * weight));
         }
         else {
-            //LOG.error("unknown anchor: " + anchor);
+            LOG.error("unknown anchor: " + anchor);
         }
     }
 
@@ -302,15 +351,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         myDecorator2Info.remove(decorator);
         myId2Decorator.remove(id);
 
-        WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
-
         if (info.isDocked()) {
-            if (sideInfo == null) {
-                new RemoveDockedComponentCmd(info, dirtyMode).run();
-            }
-            else {
-                //return new RemoveSplitAndDockedComponentCmd(info, dirtyMode, finishCallBack);
-            }
+            new RemoveDockedComponentCmd(info, dirtyMode).run();
         }
         else if (info.isSliding()) {
             //return new RemoveSlidingComponentCmd(decorator, info, dirtyMode, finishCallBack);
@@ -338,13 +380,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         myId2Decorator.put(id, decorator);
 
         if (info.isDocked()) {
-            WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
-            if (sideInfo == null) {
-                new AddDockedComponentCmd(decorator, (WindowInfoImpl) info, dirtyMode).run();
-            }
-            else {
-                //return new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
-            }
+            new AddDockedComponentCmd(decorator, copiedInfo, dirtyMode).run();
         }
         else if (info.isSliding()) {
             //return new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
@@ -352,16 +388,6 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         else {
             throw new IllegalArgumentException("Unknown window type: " + info.getType());
         }
-    }
-
-    private WindowInfoImpl getDockedInfoAt(ToolWindowAnchor anchor, boolean side) {
-        for (WindowInfoImpl info : myDecorator2Info.values()) {
-            if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
-                return info;
-            }
-        }
-
-        return null;
     }
 
     @Override

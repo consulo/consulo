@@ -16,7 +16,6 @@
 package consulo.externalSystem.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ExternalSystemInternalAWTHelper;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
@@ -27,8 +26,8 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import jakarta.inject.Inject;
 
 /**
@@ -36,7 +35,7 @@ import jakarta.inject.Inject;
  * @since 2013-06-14
  */
 @ActionImpl(id = "ExternalSystem.AttachProject")
-public class AttachExternalProjectAction extends AnAction implements DumbAware {
+public class AttachExternalProjectAction extends LegacyDumbAwareAction {
     private final ExternalSystemInternalAWTHelper myAwtHelper;
 
     @Inject

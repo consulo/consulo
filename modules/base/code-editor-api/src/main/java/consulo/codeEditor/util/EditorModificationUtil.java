@@ -25,6 +25,7 @@ import consulo.project.Project;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -79,7 +80,7 @@ public class EditorModificationUtil {
             while (caretStateIterator.hasNext()) {
                 CaretState state = caretStateIterator.next();
                 //noinspection ConstantConditions
-                if (state.getSelectionStart().equals(state.getSelectionEnd())) {
+                if (Objects.equals(state.getSelectionStart(), state.getSelectionEnd())) {
                     caretStateIterator.remove();
                 }
             }

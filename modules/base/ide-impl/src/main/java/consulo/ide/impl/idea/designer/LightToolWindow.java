@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.designer;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.awt.ThreeComponentsSplitter;
-import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
-import consulo.ide.impl.idea.ui.tabs.TabsUtil;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
+import consulo.ui.ex.awt.AnchoredButton;
+import consulo.ui.ex.awt.TabsUtil;
+import consulo.ui.ex.awt.paint.ToolwindowPaintUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;

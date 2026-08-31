@@ -23,13 +23,13 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingContext;
 import consulo.localize.LocalizeValue;
+import consulo.ide.runAnything.RunAnythingContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -52,8 +52,8 @@ import java.util.List;
 /**
  * from kotlin
  */
-public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware {
-    private abstract class ContextItem extends AnAction {
+public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
+    private abstract class ContextItem extends LegacyAnAction {
         protected RunAnythingContext context;
 
         private ContextItem(RunAnythingContext context) {
@@ -124,7 +124,11 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)
                 );
 
-                chooser.chooseAsync(project.getBaseDir()).doWhenDone(virtualFiles -> {
+                chooser.chooseAsync(project.getBaseDir()).whenComplete((virtualFiles, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     List<String> recentDirectories = RunAnythingContextRecentDirectoryCacheImpl.getInstance(project).getPaths();
 
                     String path = ArrayUtil.getFirstElement(virtualFiles).getPath();
@@ -170,7 +174,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     boolean isSelected
                 ) {
                     AnActionEvent event = ActionImplUtil.createEmptyEvent();
-                    ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
+                    ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event);
 
                     LocalizeValue description = event.getPresentation().getDescription();
                     if (description.isNotEmpty()) {
@@ -283,7 +287,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
 
         DataContext dataContext = e.getDataContext();
-        List<ActionPopupItem> actionItems = ActionPopupStep.createActionItems(
+        ActionPopupStep.createActionItems(
             new DefaultActionGroup(createItems()),
             dataContext,
             false,
@@ -292,12 +296,12 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             true,
             ActionPlaces.POPUP,
             new BasePresentationFactory()
-        );
-
-        ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
-        popup.setSize(new Dimension(300, 300));
-        popup.setRequestFocus(false);
-        popup.showUnderneathOf(component);
+        ).thenAccept(actionItems -> SwingUtilities.invokeLater(() -> {
+            ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
+            popup.setSize(new Dimension(300, 300));
+            popup.setRequestFocus(false);
+            popup.showUnderneathOf(component);
+        }));
     }
 
     private List<ContextItem> createItems() {

@@ -18,11 +18,15 @@ package consulo.codeEditor.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.action.RawTypedActionHandler;
+import consulo.codeEditor.action.TypedActionHandler;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 22-Jun-22
+ * @since 2022-06-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RawTypedActionHandlerInternal extends RawTypedActionHandler, OverrideTypedActionHandler {
+    @Override
+    void init(@Nullable TypedActionHandler delegate);
 }

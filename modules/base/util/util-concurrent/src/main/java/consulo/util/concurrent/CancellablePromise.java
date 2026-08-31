@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+@Deprecated
 public interface CancellablePromise<T> extends Promise<T>, Future<T> {
   @Override
   CancellablePromise<T> onSuccess(Consumer<? super T> handler);

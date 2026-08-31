@@ -128,7 +128,7 @@ public class RunContentBuilder extends RunTab {
       }
       initLogConsoles(profile, contentDescriptor, console);
     }
-    myUi.getOptions().setLeftToolbar(createActionToolbar(contentDescriptor), ActionPlaces.RUNNER_TOOLBAR);
+    myUi.getOptions().setTopToolbar(createActionToolbar(contentDescriptor), ActionPlaces.RUNNER_TOOLBAR);
 
     if (profile instanceof RunConfigurationBase) {
       if (console instanceof ObservableConsoleView && !ApplicationManager.getApplication().isUnitTestMode()) {

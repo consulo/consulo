@@ -31,7 +31,7 @@ import javax.swing.*;
  * provides a convenience method to register its shortcut on a component
  */
 @ActionImpl(id = IdeActions.ACTION_REFRESH)
-public class RefreshAction extends AnAction implements DumbAware {
+public class RefreshAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     @Inject
     public RefreshAction() {
         super(ActionLocalize.actionRefreshText());

@@ -19,6 +19,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 
@@ -58,6 +59,21 @@ public abstract class WindowManagerEx extends WindowManager {
   public abstract IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state);
 
   public abstract void releaseFrame(IdeFrameEx frame);
+
+  /**
+   * Moves the frame of an already opened project to the given ui, leaving the project itself untouched. Only
+   * called when {@link consulo.ui.UIAccess#supportsMultipleUI()}, where the ui the project was opened with can
+   * be a different one from the ui asking for it now.
+   */
+  @RequiredUIAccess
+  public void reattachFrame(Project project, UIAccess uiAccess) {
+    throw new UnsupportedOperationException();
+  }
+
+  public AutoCloseable withFrameReuseEnabled() {
+    return () -> {
+    };
+  }
 
   /**
    * @return focus owner of the specified window.

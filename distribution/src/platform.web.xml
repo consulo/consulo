@@ -16,33 +16,28 @@
 <component>
   <dependencySets>
     <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.web/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
+        <include>consulo:consulo-web-ui-impl</include>
+        <include>consulo:consulo-web-editor-impl</include>
         <include>consulo:consulo-web-ide</include>
 
         <include>org.jsoup:jsoup</include>
         <include>ar.com.hjg:pngj</include>
 
-        <include>org.eclipse.jetty:jetty-server</include>
-        <include>org.eclipse.jetty:jetty-servlet</include>
-        <include>org.eclipse.jetty:jetty-util</include>
-        <include>org.eclipse.jetty:jetty-http</include>
-        <include>org.eclipse.jetty:jetty-io</include>
-        <include>org.eclipse.jetty:jetty-security</include>
-        <include>org.eclipse.jetty:jetty-client</include>
-        <include>org.eclipse.jetty.websocket:websocket-servlet</include>
-        <include>org.eclipse.jetty.websocket:websocket-jakarta-server</include>
-        <include>org.eclipse.jetty.websocket:websocket-jakarta-client</include>
-        <include>org.eclipse.jetty.websocket:websocket-jakarta-common</include>
-        <include>org.eclipse.jetty.websocket:websocket-core-client</include>
-        <include>org.eclipse.jetty.websocket:websocket-core-server</include>
-        <include>org.eclipse.jetty.websocket:websocket-core-common</include>
+        <include>org.eclipse.jetty:*</include>
+        <include>org.eclipse.jetty.ee:*</include>
+        <include>org.eclipse.jetty.ee11:*</include>
+        <include>org.eclipse.jetty.ee11.websocket:*</include>
+        <include>org.eclipse.jetty.websocket:*</include>
+        <include>org.eclipse.jetty.compression:*</include>
+        <include>org.ow2.asm:*</include>
 
         <include>jakarta.servlet:jakarta.servlet-api</include>
-        <include>jakarta.websocket:jakarta.websocket-api</include>
+        <include>jakarta.websocket:*</include>
 
-        <include>commons-io:commons-io</include>
         <include>com.vaadin:flow-server</include>
         <include>com.vaadin:flow-client</include>
         <include>com.vaadin:flow-push</include>
@@ -50,13 +45,17 @@
         <include>com.vaadin:vaadin-flow-components-base</include>
         <include>com.vaadin.external:gentyref</include>
         <include>com.vaadin.external.atmosphere:atmosphere-runtime</include>
+        <include>com.vaadin:vaadin-accordion-flow</include>
+        <include>com.vaadin:vaadin-radio-button-flow</include>
         <include>com.vaadin:vaadin-dialog-flow</include>
+        <include>com.vaadin:vaadin-popover-flow</include>
         <include>com.vaadin:vaadin-button-flow</include>
         <include>com.vaadin:vaadin-renderer-flow</include>
         <include>com.helger.commons:ph-commons</include>
         <include>com.helger:ph-css</include>
         <include>com.vaadin:vaadin-core-internal</include>
         <include>com.vaadin:vaadin-list-box-flow</include>
+        <include>com.vaadin:vaadin-virtual-list-flow</include>
         <include>com.vaadin:vaadin-grid-flow</include>
         <include>com.vaadin:vaadin-context-menu-flow</include>
         <include>com.vaadin:flow-data</include>
@@ -69,10 +68,17 @@
         <include>com.vaadin:vaadin-combo-box-flow</include>
         <include>com.vaadin:vaadin-select-flow</include>
         <include>org.vaadin.stefan:html-table</include>
+        <include>org.vaadin.addons.tatu:colorpicker</include>
+        <include>com.vaadin:vaadin-custom-field-flow</include>
         <include>com.vaadin:vaadin-progress-bar-flow</include>
         <include>org.parttio:canvas-java</include>
         <include>com.vaadin:vaadin-menu-bar-flow</include>
         <include>com.vaadin:vaadin-tabs-flow</include>
+        <include>com.vaadin:vaadin-breadcrumbs-flow</include>
+        <include>com.vaadin:vaadin-details-flow</include>
+        <include>com.vaadin:vaadin-slider-flow</include>
+        <include>com.vaadin:vaadin-date-picker-flow</include>
+        <include>com.vaadin.componentfactory:togglebutton</include>
 
         <include>com.vaadin:vaadin-dev-server</include>
         <include>com.vaadin:vaadin-dev-bundle</include>
@@ -86,12 +92,12 @@
         <include>com.fasterxml.jackson.core:jackson-databind</include>
         <include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>
 
-        <include>tools.jackson.core:jackson-core</include>
         <include>tools.jackson.core:jackson-databind</include>
       </includes>
     </dependencySet>
 
     <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>

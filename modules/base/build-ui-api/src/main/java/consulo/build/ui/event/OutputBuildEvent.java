@@ -15,13 +15,13 @@
  */
 package consulo.build.ui.event;
 
+import consulo.localize.LocalizeValue;
+
 /**
  * @author Vladislav.Soroka
  */
 public interface OutputBuildEvent extends BuildEvent {
-  
-  @BuildEventsNls.Message
-  String getMessage();
+    LocalizeValue getMessage();
 
-  boolean isStdOut();
+    boolean isStdOut();
 }

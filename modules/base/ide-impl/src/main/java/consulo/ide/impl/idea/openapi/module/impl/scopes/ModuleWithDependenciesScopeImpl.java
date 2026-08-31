@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.module.impl.scopes;
 
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
@@ -120,8 +121,8 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
                 roots,
                 en.roots(
                     entry -> entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry
-                        ? SourcesOrderRootType.getInstance()
-                        : BinariesOrderRootType.getInstance()
+                        ? SourcesOrderRootType.ID
+                        : BinariesOrderRootType.ID
                 ).getRoots()
             );
         }
@@ -145,8 +146,12 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     
     @Override
     public String getDisplayName() {
-        return hasOption(COMPILE) ? PsiBundle.message("search.scope.module", myModule.getName())
-            : PsiBundle.message("search.scope.module.runtime", myModule.getName());
+        if (hasOption(COMPILE)) {
+            return LanguageLocalize.searchScopeModule(myModule.getName()).get();
+        }
+        else {
+            return LanguageLocalize.searchScopeModuleRuntime(myModule.getName()).get();
+        }
     }
 
     @Override

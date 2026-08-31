@@ -19,7 +19,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringHash;
-import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,9 +38,7 @@ public class UsedColors {
     }
   }
 
-  public static int getOrAddColorIndex(UserDataHolder context,
-                                       String name,
-                                       int colorsCount) {
+  public static int getOrAddColorIndex(UserDataHolder context, String name, int colorsCount) {
     int colorIndex;
     while (true) {
       Object data = context.getUserData(USED_COLOR);
@@ -100,7 +97,6 @@ public class UsedColors {
     return Math.abs(StringHash.murmur(name, 0x55AA)) % colorsCount;
   }
 
-  @Contract(pure = true)
   private static int indexOfMin(int[] values, int start, int end) {
     int min = Integer.MAX_VALUE;
     int minIndex = start;

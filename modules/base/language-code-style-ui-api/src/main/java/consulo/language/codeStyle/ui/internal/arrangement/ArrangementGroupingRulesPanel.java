@@ -16,13 +16,12 @@
 package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.application.ApplicationBundle;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.ui.ex.awt.GridBag;
-import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -32,9 +31,8 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 11/13/12 7:25 PM
  */
-public class ArrangementGroupingRulesPanel extends JPanel implements DataProvider {
+public class ArrangementGroupingRulesPanel extends JPanel implements UiDataProvider {
 
-  
   private final ArrangementGroupingRulesControl myControl;
 
   public ArrangementGroupingRulesPanel(ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
@@ -53,16 +51,12 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
     myControl.setRules(rules);
   }
 
-  
   public List<ArrangementGroupingRule> getRules() {
     return myControl.getRules();
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    if (ArrangementGroupingRulesControl.KEY == dataId) {
-      return myControl;
-    }
-    return null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(ArrangementGroupingRulesControl.KEY, myControl);
   }
 }

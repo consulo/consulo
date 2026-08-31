@@ -483,23 +483,17 @@ public interface Editor extends UserDataHolder {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
-    
     IndentsModel getIndentsModel();
 
-    
     InlayModel getInlayModel();
 
-    
     EditorKind getEditorKind();
 
     /**
      * Vertical distance, in pixels, between the top of visual line (corresponding coordinate is returned by {@link #visualLineToY(int)},
      * {@link #visualPositionToXY(VisualPosition)}, etc) and baseline of text in that visual line.
      */
-    default int getAscent() {
-        // actual implementation in EditorImpl is a bit more complex, but this gives an idea how it's constructed
-        return (int) (getContentComponent().getFontMetrics(getColorsScheme().getFont(EditorFontType.PLAIN)).getAscent() * getColorsScheme().getLineSpacing());
-    }
+    int getAscent();
 
     default void showPopupInBestPositionFor(JBPopup popup) {
         EditorPopupHelper.getInstance().showPopupInBestPositionFor(this, popup);
@@ -515,10 +509,8 @@ public interface Editor extends UserDataHolder {
         return getCaretModel().getOffset();
     }
 
-    
     DataContext getDataContext();
 
-    
     default EditorHighlighter getHighlighter() {
         return CodeEditorInternalHelper.getInstance().createEmptyHighlighter(getProject(), getDocument());
     }
