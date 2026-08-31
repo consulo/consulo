@@ -4283,8 +4283,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 || toolWindowIsNotEmpty();
             //noinspection ConstantConditions
             Component header = myHeaderPanel == null ? null : ArrayUtil.getFirstElement(myHeaderPanel.getComponents());
-            boolean paintTop =
-                thereIsSomethingAbove && header == null && UISettings.getInstance().getEditorTabPlacement() != SwingConstants.TOP;
+            int tabPlacement = UISettings.getInstance().getEditorTabPlacement();
+            boolean paintTop = thereIsSomethingAbove
+                && header == null
+                && tabPlacement != SwingConstants.TOP
+                && tabPlacement != UISettings.PLACEMENT_EDITOR_TAB_NONE;
             return splitters == null ? super.getBorderInsets(c) : JBUI.insetsTop(paintTop ? 1 : 0);
         }
 

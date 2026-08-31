@@ -1237,10 +1237,20 @@ public abstract class JBTabsImpl extends JComponent
         updateToolbar(tabInfo, myInfo2Toolbar, tabInfo.getSideComponent(), tabInfo.getGroup());
     }
 
+    private void removeIfNotNull(@Nullable Component component) {
+        if (component != null) {
+            remove(component);
+        }
+    }
+
     private void updateToolbar(TabInfo tabInfo, Map<TabInfo, Toolbar> toolbars, JComponent side, ActionGroup group) {
-        Toolbar old = toolbars.get(tabInfo);
+        Toolbar old = toolbars.remove(tabInfo);
         if (old != null) {
             remove(old);
+        }
+
+        if (side == null && group == null) {
+            return;
         }
 
         Toolbar toolbar = createToolbarComponent(tabInfo, side, group);
@@ -1591,9 +1601,9 @@ public abstract class JBTabsImpl extends JComponent
     public Insets getLayoutInsets() {
         Insets insets = getInsets();
         if (insets == null) {
-            insets = JBUI.emptyInsets();
+            return JBUI.emptyInsets();
         }
-        return insets;
+        return new Insets(insets.top, insets.left, insets.bottom, insets.right);
     }
 
     public void resetLayout(boolean resetLabels) {
@@ -1797,8 +1807,8 @@ public abstract class JBTabsImpl extends JComponent
 
     private void processRemove(TabInfo info, boolean forcedNow) {
         remove(myInfo2Label.get(info));
-        remove(myInfo2ForeToolbar.get(info));
-        remove(myInfo2Toolbar.get(info));
+        removeIfNotNull(myInfo2ForeToolbar.get(info));
+        removeIfNotNull(myInfo2Toolbar.get(info));
 
         JComponent tabComponent = info.getComponent();
 
