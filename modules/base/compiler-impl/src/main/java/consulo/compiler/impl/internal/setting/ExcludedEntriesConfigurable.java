@@ -133,10 +133,10 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
           }
           ExcludeEntryDescription description;
           if (chosenFile.isDirectory()) {
-            description = new ExcludeEntryDescription(chosenFile, true, false, myProject);
+            description = new ExcludeEntryDescription(chosenFile.getUrl(), true, false, myProject);
           }
           else {
-            description = new ExcludeEntryDescription(chosenFile, false, true, myProject);
+            description = new ExcludeEntryDescription(chosenFile.getUrl(), false, true, myProject);
           }
           myExcludeEntryDescriptions.add(selected, description);
           selected++;
@@ -151,11 +151,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
 
     private boolean isFileExcluded(VirtualFile file) {
       for (ExcludeEntryDescription description : myExcludeEntryDescriptions) {
-        VirtualFile descriptionFile = description.getVirtualFile();
-        if (descriptionFile == null) {
-          continue;
-        }
-        if (file.equals(descriptionFile)) {
+        if (file.getUrl().equals(description.getUrl())) {
           return true;
         }
       }

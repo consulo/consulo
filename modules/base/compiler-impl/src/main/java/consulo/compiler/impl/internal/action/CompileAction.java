@@ -41,6 +41,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,7 +64,11 @@ public class CompileAction extends CompileActionBase implements AnActionWithAsyn
         else {
             VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
             if (files.length > 0) {
-                CompilerManager.getInstance(project).compile(files, null);
+                List<Path> paths = new ArrayList<>(files.length);
+                for (VirtualFile file : files) {
+                    paths.add(file.toNioPath());
+                }
+                CompilerManager.getInstance(project).compile(paths, null);
             }
         }
     }
@@ -178,7 +183,7 @@ public class CompileAction extends CompileActionBase implements AnActionWithAsyn
     }
 
     private static boolean isCompilableResourceFile(Project project, VirtualFile file) {
-        if (!ResourceCompilerConfiguration.getInstance(project).isResourceFile(file)) {
+        if (!ResourceCompilerConfiguration.getInstance(project).isResourceFile(file.toNioPath())) {
             return false;
         }
         Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);

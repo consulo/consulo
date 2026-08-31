@@ -18,7 +18,6 @@ package consulo.compiler.artifact;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.component.util.pointer.Named;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Collection;
@@ -40,8 +39,6 @@ public interface Artifact extends UserDataHolder, Named {
   Collection<? extends ArtifactPropertiesProvider> getPropertiesProviders();
 
   ArtifactProperties<?> getProperties(ArtifactPropertiesProvider propertiesProvider);
-
-  @Nullable VirtualFile getOutputFile();
 
   @Nullable String getOutputFilePath();
 }

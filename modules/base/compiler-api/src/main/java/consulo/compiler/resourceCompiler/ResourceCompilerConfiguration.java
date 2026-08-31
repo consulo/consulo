@@ -25,7 +25,6 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.module.content.ProjectRootManager;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -36,15 +35,13 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.InvalidDataException;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -102,8 +99,13 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         myProject = project;
     }
 
-    public boolean isResourceFile(VirtualFile virtualFile) {
-        return isResourceFile(virtualFile.getName(), virtualFile.getParent());
+    public boolean isResourceFile(Path file) {
+        Path fileName = file.getFileName();
+        Path parent = file.getParent();
+        return isResourceFile(
+            fileName == null ? "" : fileName.toString(),
+            parent == null ? null : FileUtil.toSystemIndependentName(parent.toString())
+        );
     }
 
     public List<String> getResourceFilePatterns() {
@@ -114,11 +116,10 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         removeWildcardPatterns();
     }
 
-    private boolean isResourceFile(String name, @Nullable VirtualFile parent) {
-        SimpleReference<String> parentRef = SimpleReference.create(null);
+    private boolean isResourceFile(String name, @Nullable String parentPath) {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < myCompiledPatterns.size(); i++) {
-            if (matches(name, parent, parentRef, myCompiledPatterns.get(i))) {
+            if (matches(name, parentPath, myCompiledPatterns.get(i))) {
                 return true;
             }
         }
@@ -129,35 +130,27 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < myNegatedCompiledPatterns.size(); i++) {
-            if (matches(name, parent, parentRef, myNegatedCompiledPatterns.get(i))) {
+            if (matches(name, parentPath, myNegatedCompiledPatterns.get(i))) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean matches(String name, VirtualFile parent, SimpleReference<String> parentRef, CompiledPattern pair) {
+    private boolean matches(String name, @Nullable String parentPath, CompiledPattern pair) {
         if (!matches(name, pair.fileName)) {
             return false;
         }
 
-        if (parent != null && (pair.dir != null || pair.srcRoot != null)) {
-            VirtualFile srcRoot = ProjectRootManager.getInstance(myProject).getFileIndex().getSourceRootForFile(parent);
-            if (pair.dir != null) {
-                String parentPath = parentRef.get();
-                if (parentPath == null) {
-                    parentRef.set(parentPath = srcRoot == null ? parent.getPath() : VirtualFileUtil.getRelativePath(parent, srcRoot, '/'));
-                }
-                if (parentPath == null || !matches("/" + parentPath, pair.dir)) {
-                    return false;
-                }
+        if (pair.dir != null || pair.srcRoot != null) {
+            if (parentPath == null) {
+                return false;
             }
-
+            if (pair.dir != null && !matches("/" + StringUtil.trimStart(parentPath, "/"), pair.dir)) {
+                return false;
+            }
             if (pair.srcRoot != null) {
-                String srcRootName = srcRoot == null ? null : srcRoot.getName();
-                if (srcRootName == null || !matches(srcRootName, pair.srcRoot)) {
-                    return false;
-                }
+                return false;
             }
         }
 

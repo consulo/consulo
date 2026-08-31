@@ -20,7 +20,7 @@ import consulo.compiler.FileProcessingCompiler;
 import consulo.compiler.ValidityState;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author Eugene Zhuravlev
@@ -51,6 +51,6 @@ public class FileProcessingCompilerAdapter {
         return myCompiler;
     }
 
-    public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
+    public void processOutdatedItem(CompileContext context, Path file, @Nullable ValidityState state) {
     }
 }

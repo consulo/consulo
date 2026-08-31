@@ -15,38 +15,37 @@
  */
 package consulo.compiler.generic;
 
-import consulo.compiler.generic.CompileItem;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.compiler.util.CompilerUtil;
+import consulo.util.io.FileUtil;
+
+import java.nio.file.Path;
 
 /**
  * @author nik
  */
-public abstract class VirtualFileCompileItem<OutputState> extends CompileItem<String, VirtualFilePersistentState, OutputState> {
-    protected final VirtualFile myFile;
+public abstract class PathCompileItem<OutputState> extends CompileItem<String, VirtualFilePersistentState, OutputState> {
+    protected final Path myFile;
 
-    public VirtualFileCompileItem(VirtualFile file) {
+    public PathCompileItem(Path file) {
         myFile = file;
     }
 
-    
-    public VirtualFile getFile() {
+    public Path getFile() {
         return myFile;
     }
 
-    
     @Override
     public VirtualFilePersistentState computeSourceState() {
-        return new VirtualFilePersistentState(myFile.getTimeStamp());
+        return new VirtualFilePersistentState(CompilerUtil.lastModified(myFile));
     }
 
     @Override
     public boolean isSourceUpToDate(VirtualFilePersistentState state) {
-        return myFile.getTimeStamp() == state.getSourceTimestamp();
+        return CompilerUtil.lastModified(myFile) == state.getSourceTimestamp();
     }
 
-    
     @Override
     public String getKey() {
-        return myFile.getUrl();
+        return FileUtil.toSystemIndependentName(myFile.toString());
     }
 }

@@ -44,10 +44,6 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import java.io.*;
 import java.util.*;
 
@@ -143,9 +139,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     private void collectItems(Artifact artifact, String outputPath) {
         CompositePackagingElement<?> rootElement = artifact.getRootElement();
-        VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
-        CopyToDirectoryInstructionCreator instructionCreator =
-            new CopyToDirectoryInstructionCreator(myBuilderContext, outputPath, outputFile);
+        CopyToDirectoryInstructionCreator instructionCreator = new CopyToDirectoryInstructionCreator(myBuilderContext, outputPath);
         PackagingElementResolvingContext resolvingContext = ArtifactManager.getInstance(getProject()).getResolvingContext();
         FULL_LOG.debug("Collecting items for " + artifact.getName());
         rootElement.computeIncrementalCompilerInstructions(
@@ -183,30 +177,29 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                 ArtifactCompilerCompileItem sourceItem = item.getItem();
                 myContext.getProgressIndicator().checkCanceled();
 
-                ReadAction.run(() -> {
-                    VirtualFile sourceFile = sourceItem.getFile();
-                    for (DestinationInfo destination : sourceItem.getDestinations()) {
-                        if (destination instanceof ExplodedDestinationInfo) {
-                            ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo) destination;
-                            File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
-                            if (sourceFile.isInLocalFileSystem()) {
-                                File ioFromFile = VirtualFileUtil.virtualToIoFile(sourceFile);
-                                if (ioFromFile.exists()) {
-                                    DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
-                                }
-                                else {
-                                    LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");
-                                }
+                String sourcePath = sourceItem.getSourcePath();
+                boolean isArchiveEntry = sourcePath.contains(URLUtil.ARCHIVE_SEPARATOR);
+                for (DestinationInfo destination : sourceItem.getDestinations()) {
+                    if (destination instanceof ExplodedDestinationInfo) {
+                        ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo) destination;
+                        File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
+                        if (!isArchiveEntry) {
+                            File ioFromFile = new File(FileUtil.toSystemDependentName(sourcePath));
+                            if (ioFromFile.exists()) {
+                                DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
                             }
                             else {
-                                extractFile(sourceFile, toFile, writtenPaths, fileFilter);
+                                LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");
                             }
                         }
                         else {
-                            changedJars.add(((ArchiveDestinationInfo) destination).getArchivePackageInfo());
+                            extractFile(sourcePath, toFile, writtenPaths, fileFilter);
                         }
                     }
-                });
+                    else {
+                        changedJars.add(((ArchiveDestinationInfo) destination).getArchivePackageInfo());
+                    }
+                }
 
                 myContext.getProgressIndicator().setFraction(++i * 1.0 / changedItems.size());
                 processedItems.add(sourceItem);
@@ -221,13 +214,13 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                 return false;
             }
 
-            Set<VirtualFile> recompiledSources = new HashSet<>();
+            Set<String> recompiledSources = new HashSet<>();
             for (ArchivePackageInfo info : builder.getArchivesToBuild()) {
-                for (Pair<String, VirtualFile> pair : info.getPackedFiles()) {
+                for (Pair<String, String> pair : info.getPackedFiles()) {
                     recompiledSources.add(pair.getSecond());
                 }
             }
-            for (VirtualFile source : recompiledSources) {
+            for (String source : recompiledSources) {
                 ArtifactCompilerCompileItem item = myBuilderContext.getItemBySource(source);
                 LOG.assertTrue(item != null, source);
                 processedItems.add(item);
@@ -249,7 +242,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         return true;
     }
 
-    private void extractFile(VirtualFile sourceFile, File toFile, Set<String> writtenPaths, FileFilter fileFilter) throws IOException {
+    private void extractFile(String sourcePath, File toFile, Set<String> writtenPaths, FileFilter fileFilter) throws IOException {
         if (!writtenPaths.add(toFile.getPath())) {
             return;
         }
@@ -259,15 +252,12 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
             return;
         }
 
-        InputStream input = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext).getFirst();
-        if (input == null) {
+        ArtifactCompilerUtil.ArchiveEntryData entryData = ArtifactCompilerUtil.getArchiveEntry(sourcePath, myContext);
+        if (entryData == null) {
             return;
         }
-        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile))) {
+        try (InputStream input = entryData.stream(); BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile))) {
             FileUtil.copy(input, output);
-        }
-        finally {
-            input.close();
         }
     }
 

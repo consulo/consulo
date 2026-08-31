@@ -19,10 +19,10 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,9 +44,9 @@ public class CompositeDependencyCache implements DependencyCache {
     public void findDependentFiles(
         CompileContext context,
         SimpleReference<CacheCorruptedException> exceptionRef,
-        Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,
-        Set<VirtualFile> dependentFiles,
-        Set<VirtualFile> compiledWithErrors
+        Function<Pair<int[], Set<Path>>, Pair<int[], Set<Path>>> filter,
+        Set<Path> dependentFiles,
+        Set<Path> compiledWithErrors
     ) throws CacheCorruptedException, ExitException {
         for (DependencyCache dependencyCache : myDependencyCaches) {
             dependencyCache.findDependentFiles(context, exceptionRef, filter, dependentFiles, compiledWithErrors);

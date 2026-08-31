@@ -33,14 +33,16 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -49,6 +51,15 @@ import java.util.*;
  */
 public class CompilerUtil {
     private static final Logger LOG = Logger.getInstance(CompilerUtil.class);
+
+    public static long lastModified(Path file) {
+        try {
+            return Files.getLastModifiedTime(file).toMillis();
+        }
+        catch (IOException ignored) {
+            return -1L;
+        }
+    }
 
     public static String quotePath(String path) {
         if (path != null && path.indexOf(' ') != -1) {
@@ -73,29 +84,23 @@ public class CompilerUtil {
         }
     }
 
-    public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(CompileContext context, VirtualFile[] files) {
-        return buildModuleToFilesMap(context, Arrays.asList(files));
-    }
-
-    public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(CompileContext context, List<VirtualFile> files) {
+    public static Map<Module, List<Path>> buildModuleToFilesMap(CompileContext context, Collection<Path> files) {
         //assertion: all files are different
-        Map<Module, List<VirtualFile>> map = new HashMap<>();
-        Application.get().runReadAction(() -> {
-            for (VirtualFile file : files) {
-                Module module = context.getModuleByFile(file);
+        Map<Module, List<Path>> map = new HashMap<>();
+        for (Path file : files) {
+            Module module = context.getModuleByFile(file);
 
-                if (module == null) {
-                    continue; // looks like file invalidated
-                }
-
-                List<VirtualFile> moduleFiles = map.get(module);
-                if (moduleFiles == null) {
-                    moduleFiles = new ArrayList<>();
-                    map.put(module, moduleFiles);
-                }
-                moduleFiles.add(file);
+            if (module == null) {
+                continue; // looks like file invalidated
             }
-        });
+
+            List<Path> moduleFiles = map.get(module);
+            if (moduleFiles == null) {
+                moduleFiles = new ArrayList<>();
+                map.put(module, moduleFiles);
+            }
+            moduleFiles.add(file);
+        }
         return map;
     }
 
@@ -109,23 +114,8 @@ public class CompilerUtil {
     }
 
     public static void refreshIODirectories(Collection<File> files) {
-        LocalFileSystem lfs = LocalFileSystem.getInstance();
-        List<VirtualFile> filesToRefresh = new ArrayList<>();
-        for (File file : files) {
-            VirtualFile virtualFile = lfs.refreshAndFindFileByIoFile(file);
-            if (virtualFile != null) {
-                filesToRefresh.add(virtualFile);
-            }
-        }
-        if (!filesToRefresh.isEmpty()) {
-            RefreshQueue.getInstance().refresh(false, true, null, filesToRefresh);
-        }
-    }
-
-    public static void refreshIOFile(File file) {
-        VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
-        if (vFile != null) {
-            vFile.refresh(false, false);
+        if (!files.isEmpty()) {
+            LocalFileSystem.getInstance().refreshIoFiles(files, false, true, null);
         }
     }
 
@@ -203,14 +193,16 @@ public class CompilerUtil {
     }
 
     @RequiredReadAction
-    public static void computeIntersectingPaths(Project project, Collection<VirtualFile> outputPaths, Collection<VirtualFile> result) {
+    public static void computeIntersectingPaths(Project project, Collection<Path> outputPaths, Collection<Path> result) {
         for (Module module : ModuleManager.getInstance(project).getModules()) {
             ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-            VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
-            for (VirtualFile outputPath : outputPaths) {
-                for (VirtualFile sourceRoot : sourceRoots) {
-                    if (VirtualFileUtil.isAncestor(outputPath, sourceRoot, true)
-                        || VirtualFileUtil.isAncestor(sourceRoot, outputPath, false)) {
+            String[] sourceRootUrls = rootManager.getContentFolderUrls(LanguageContentFolderScopes.productionAndTest());
+            for (Path outputPath : outputPaths) {
+                String outputPathString = FileUtil.toSystemIndependentName(outputPath.toString());
+                for (String sourceRootUrl : sourceRootUrls) {
+                    String sourceRootPath = VirtualFileUtil.urlToPath(sourceRootUrl);
+                    if (FileUtil.isAncestor(outputPathString, sourceRootPath, true)
+                        || FileUtil.isAncestor(sourceRootPath, outputPathString, false)) {
                         result.add(outputPath);
                     }
                 }
@@ -219,13 +211,13 @@ public class CompilerUtil {
     }
 
     @RequiredUIAccess
-    public static boolean askUserToContinueWithNoClearing(Project project, Collection<VirtualFile> affectedOutputPaths) {
+    public static boolean askUserToContinueWithNoClearing(Project project, Collection<Path> affectedOutputPaths) {
         StringBuilder paths = new StringBuilder();
-        for (VirtualFile affectedOutputPath : affectedOutputPaths) {
+        for (Path affectedOutputPath : affectedOutputPaths) {
             if (paths.length() > 0) {
                 paths.append(",\n");
             }
-            paths.append(affectedOutputPath.getPath().replace('/', File.separatorChar));
+            paths.append(FileUtil.toSystemDependentName(affectedOutputPath.toString()));
         }
         int answer = Messages.showOkCancelDialog(project,
             CompilerLocalize.warningSourcesUnderOutputPaths(paths.toString()).get(),

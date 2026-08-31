@@ -15,34 +15,31 @@
  */
 package consulo.compiler;
 
-import consulo.application.Application;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.scope.CompileScope;
 import consulo.index.io.data.IOUtil;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Compiler which copies the compiled files to a different directory.
  */
 public abstract class CopyingCompiler implements PackagingCompiler {
-    public abstract VirtualFile[] getFilesToCopy(CompileContext context);
+    public abstract Path[] getFilesToCopy(CompileContext context);
 
-    public abstract String getDestinationPath(CompileContext context, VirtualFile sourceFile);
+    public abstract String getDestinationPath(CompileContext context, Path sourceFile);
 
     @Override
-    public final void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
+    public final void processOutdatedItem(CompileContext context, Path file, @Nullable ValidityState state) {
         if (state != null) {
             String destinationPath = ((DestinationFileInfo) state).getDestinationPath();
             new File(destinationPath).delete();
@@ -50,17 +47,14 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     }
 
     @Override
-    
     public final ProcessingItem[] getProcessingItems(CompileContext context) {
-        return Application.get().runReadAction((Supplier<ProcessingItem[]>) () -> {
-            VirtualFile[] filesToCopy = getFilesToCopy(context);
-            ProcessingItem[] items = new ProcessingItem[filesToCopy.length];
-            for (int idx = 0; idx < filesToCopy.length; idx++) {
-                VirtualFile file = filesToCopy[idx];
-                items[idx] = new CopyItem(file, getDestinationPath(context, file));
-            }
-            return items;
-        });
+        Path[] filesToCopy = getFilesToCopy(context);
+        ProcessingItem[] items = new ProcessingItem[filesToCopy.length];
+        for (int idx = 0; idx < filesToCopy.length; idx++) {
+            Path file = filesToCopy[idx];
+            items[idx] = new CopyItem(file, getDestinationPath(context, file));
+        }
+        return items;
     }
 
     @Override
@@ -71,16 +65,16 @@ public abstract class CopyingCompiler implements PackagingCompiler {
             String toPath = copyItem.getDestinationPath();
             try {
                 if (isDirectoryCopying()) {
-                    FileUtil.copyDir(copyItem.getFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
+                    FileUtil.copyDir(copyItem.getFile().toFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
                 }
                 else {
-                    FileUtil.copy(copyItem.getFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
+                    FileUtil.copy(copyItem.getFile().toFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
                 }
 
                 successfullyProcessed.add(copyItem);
             }
             catch (IOException e) {
-                context.newError(CompilerLocalize.errorCopying(item.getFile().getPath(), toPath, e.getMessage())).add();
+                context.newError(CompilerLocalize.errorCopying(item.getFile().toString(), toPath, e.getMessage())).add();
             }
         }
         return successfullyProcessed.toArray(new ProcessingItem[successfullyProcessed.size()]);
@@ -106,17 +100,16 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     }
 
     private static class CopyItem implements FileProcessingCompiler.ProcessingItem {
-        private final File myFile;
+        private final Path myFile;
         private final DestinationFileInfo myInfo;
 
-        public CopyItem(VirtualFile file, String destinationPath) {
-            myFile = VirtualFileUtil.virtualToIoFile(file);
+        public CopyItem(Path file, String destinationPath) {
+            myFile = file;
             myInfo = new DestinationFileInfo(destinationPath, new File(destinationPath).exists());
         }
 
         @Override
-        
-        public File getFile() {
+        public Path getFile() {
             return myFile;
         }
 

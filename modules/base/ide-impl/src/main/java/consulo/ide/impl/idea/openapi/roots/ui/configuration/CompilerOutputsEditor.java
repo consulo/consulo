@@ -37,7 +37,6 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -143,15 +142,9 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
             for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(myFilter)) {
                 CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
 
-                VirtualFile compilerOutputPath = moduleCompilerPathsManager.getCompilerOutput(contentFolderTypeProvider);
-                if (compilerOutputPath != null) {
-                    commitableFieldPanel.setValue(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
-                }
-                else {
-                    String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
-                    if (compilerOutputUrl != null) {
-                        commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(compilerOutputUrl)));
-                    }
+                String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+                if (compilerOutputUrl != null) {
+                    commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(compilerOutputUrl)));
                 }
             }
         }

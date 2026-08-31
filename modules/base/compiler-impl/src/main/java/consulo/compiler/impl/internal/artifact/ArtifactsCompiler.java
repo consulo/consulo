@@ -41,7 +41,7 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
     private static final Key<Set<Artifact>> CHANGED_ARTIFACTS = Key.create("affected_artifacts");
 
     public ArtifactsCompiler() {
-        super("artifacts_compiler", 0, GenericCompiler.CompileOrderPlace.PACKAGING);
+        super("artifacts_compiler", 1, GenericCompiler.CompileOrderPlace.PACKAGING);
     }
 
     public static @Nullable ArtifactsCompiler getInstance(Project project) {

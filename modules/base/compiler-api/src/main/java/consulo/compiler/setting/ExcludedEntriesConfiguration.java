@@ -19,10 +19,12 @@ package consulo.compiler.setting;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -101,27 +103,26 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
         }
     }
 
-    public boolean isExcluded(VirtualFile virtualFile) {
+    public boolean isExcluded(Path file) {
+        String filePath = FileUtil.toSystemIndependentName(file.toString());
         for (ExcludeEntryDescription entryDescription : getExcludeEntryDescriptions()) {
-            VirtualFile descriptionFile = entryDescription.getVirtualFile();
-            if (descriptionFile == null) {
-                continue;
-            }
+            String descriptionPath = VirtualFileUtil.urlToPath(entryDescription.getUrl());
             if (entryDescription.isFile()) {
-                if (descriptionFile.equals(virtualFile)) {
+                if (FileUtil.pathsEqual(descriptionPath, filePath)) {
                     return true;
                 }
             }
             else if (entryDescription.isIncludeSubdirectories()) {
-                if (VirtualFileUtil.isAncestor(descriptionFile, virtualFile, false)) {
+                if (FileUtil.isAncestor(descriptionPath, filePath, false)) {
                     return true;
                 }
             }
             else {
-                if (virtualFile.isDirectory()) {
+                if (Files.isDirectory(file)) {
                     continue;
                 }
-                if (descriptionFile.equals(virtualFile.getParent())) {
+                Path parent = file.getParent();
+                if (parent != null && FileUtil.pathsEqual(descriptionPath, FileUtil.toSystemIndependentName(parent.toString()))) {
                     return true;
                 }
             }

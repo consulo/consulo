@@ -17,7 +17,6 @@
 package consulo.compiler.artifact.element;
 
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -27,58 +26,57 @@ import java.util.List;
  * @author nik
  */
 public class ArchivePackageInfo {
-  private final List<Pair<String, VirtualFile>> myPackedFiles;
-  private final LinkedHashSet<Pair<String, ArchivePackageInfo>> myPackedArchives;
-  private final List<DestinationInfo> myDestinations;
-  private final ArchivePackageWriter<?> myPackageWriter;
+    private final List<Pair<String, String>> myPackedFiles;
+    private final LinkedHashSet<Pair<String, ArchivePackageInfo>> myPackedArchives;
+    private final List<DestinationInfo> myDestinations;
+    private final ArchivePackageWriter<?> myPackageWriter;
 
-  public ArchivePackageInfo(ArchivePackageWriter<?> packageWriter) {
-    myPackageWriter = packageWriter;
-    myDestinations = new ArrayList<>();
-    myPackedFiles = new ArrayList<>();
-    myPackedArchives = new LinkedHashSet<>();
-  }
-
-  public void addDestination(DestinationInfo info) {
-    myDestinations.add(info);
-    if (info instanceof ArchiveDestinationInfo) {
-      ArchiveDestinationInfo destinationInfo = (ArchiveDestinationInfo)info;
-      destinationInfo.getArchivePackageInfo().myPackedArchives.add(Pair.create(destinationInfo.getPathInJar(), this));
+    public ArchivePackageInfo(ArchivePackageWriter<?> packageWriter) {
+        myPackageWriter = packageWriter;
+        myDestinations = new ArrayList<>();
+        myPackedFiles = new ArrayList<>();
+        myPackedArchives = new LinkedHashSet<>();
     }
-  }
 
-  public void addContent(String pathInJar, VirtualFile sourceFile) {
-    myPackedFiles.add(Pair.create(pathInJar, sourceFile));
-  }
-
-  public List<Pair<String, VirtualFile>> getPackedFiles() {
-    return myPackedFiles;
-  }
-
-  public LinkedHashSet<Pair<String, ArchivePackageInfo>> getPackedArchives() {
-    return myPackedArchives;
-  }
-
-  
-  public ArchivePackageWriter<?> getPackageWriter() {
-    return myPackageWriter;
-  }
-
-  public List<ArchiveDestinationInfo> getArchiveDestinations() {
-    ArrayList<ArchiveDestinationInfo> list = new ArrayList<>();
-    for (DestinationInfo destination : myDestinations) {
-      if (destination instanceof ArchiveDestinationInfo) {
-        list.add((ArchiveDestinationInfo)destination);
-      }
+    public void addDestination(DestinationInfo info) {
+        myDestinations.add(info);
+        if (info instanceof ArchiveDestinationInfo) {
+            ArchiveDestinationInfo destinationInfo = (ArchiveDestinationInfo) info;
+            destinationInfo.getArchivePackageInfo().myPackedArchives.add(Pair.create(destinationInfo.getPathInJar(), this));
+        }
     }
-    return list;
-  }
 
-  public List<DestinationInfo> getAllDestinations() {
-    return myDestinations;
-  }
+    public void addContent(String pathInJar, String sourcePath) {
+        myPackedFiles.add(Pair.create(pathInJar, sourcePath));
+    }
 
-  public String getPresentableDestination() {
-    return !myDestinations.isEmpty() ? myDestinations.get(0).getOutputPath() : "";
-  }
+    public List<Pair<String, String>> getPackedFiles() {
+        return myPackedFiles;
+    }
+
+    public LinkedHashSet<Pair<String, ArchivePackageInfo>> getPackedArchives() {
+        return myPackedArchives;
+    }
+
+    public ArchivePackageWriter<?> getPackageWriter() {
+        return myPackageWriter;
+    }
+
+    public List<ArchiveDestinationInfo> getArchiveDestinations() {
+        List<ArchiveDestinationInfo> list = new ArrayList<>();
+        for (DestinationInfo destination : myDestinations) {
+            if (destination instanceof ArchiveDestinationInfo) {
+                list.add((ArchiveDestinationInfo) destination);
+            }
+        }
+        return list;
+    }
+
+    public List<DestinationInfo> getAllDestinations() {
+        return myDestinations;
+    }
+
+    public String getPresentableDestination() {
+        return !myDestinations.isEmpty() ? myDestinations.get(0).getOutputPath() : "";
+    }
 }

@@ -20,27 +20,16 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.pointer.LightFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -54,8 +43,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
 
     private final Project myProject;
     private final ModuleManager myModuleManager;
-    private VirtualFilePointer myOutputDirPointer;
-    private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
+    private @Nullable String myOutputDirUrl;
 
     @Inject
     public CompilerConfigurationImpl(Project project, ModuleManager moduleManager) {
@@ -64,76 +52,25 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     }
 
     @Override
-    public @Nullable VirtualFile getCompilerOutput() {
-        if (myOutputDirPointer == null) {
-            VirtualFile baseDir = myProject.getBaseDir();
-            if (baseDir == null) {
-                return null;
-            }
-            VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
-
-            return outDir == null ? null : outDir;
-        }
-        return myOutputDirPointer.getFile();
-    }
-
-    
-    @RequiredReadAction
-    protected Set<String> getRootsToWatch() {
-        Set<String> rootsToWatch = new HashSet<>();
-        ModuleManager moduleManager = ModuleManager.getInstance(myProject);
-        for (Module module : moduleManager.getModules()) {
-            ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
-
-            for (ContentFolderTypeProvider folderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.all(false))) {
-                String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(folderType);
-                assert compilerOutputUrl != null : module.getName() + ":" + folderType + " url is null";
-                rootsToWatch.add(ProjectRootManagerEx.extractLocalPath(compilerOutputUrl));
-            }
-        }
-
-        rootsToWatch.add(ProjectRootManagerEx.extractLocalPath(getCompilerOutputUrl()));
-        return rootsToWatch;
-    }
-
-    
-    @Override
     public String getCompilerOutputUrl() {
-        if (myOutputDirPointer == null) {
+        if (myOutputDirUrl == null) {
             return VirtualFileManager.constructUrl(
                 URLUtil.FILE_PROTOCOL,
                 FileUtil.toSystemIndependentName(myProject.getBasePath()) + "/" + DEFAULT_OUTPUT_URL
             );
         }
-        return myOutputDirPointer.getUrl();
-    }
-
-    @Override
-    public VirtualFilePointer getCompilerOutputPointer() {
-        if (myOutputDirPointer == null) {
-            return new LightFilePointer(getCompilerOutputUrl());
-        }
-        return myOutputDirPointer;
+        return myOutputDirUrl;
     }
 
     @Override
     public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
-        myOutputDirPointer =
-            compilerOutputUrl == null ? null : VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
-
-        myCompilerOutputWatchRequest =
-            compilerOutputUrl == null ? null : LocalFileSystem.getInstance()
-                .replaceWatchedRoot(
-                    myCompilerOutputWatchRequest,
-                    ProjectRootManagerEx.extractLocalPath(compilerOutputUrl),
-                    true
-                );
+        myOutputDirUrl = compilerOutputUrl;
     }
 
     @RequiredReadAction
     public void getState(Element stateElement) {
-        if (myOutputDirPointer != null) {
-            stateElement.setAttribute(URL, myOutputDirPointer.getUrl());
+        if (myOutputDirUrl != null) {
+            stateElement.setAttribute(URL, myOutputDirUrl);
         }
 
         for (Module module : myModuleManager.getModules()) {

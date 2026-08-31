@@ -18,23 +18,23 @@ package consulo.compiler.impl.internal;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-class DependentClassesCumulativeFilter implements Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> {
+class DependentClassesCumulativeFilter implements Function<Pair<int[], Set<Path>>, Pair<int[], Set<Path>>> {
     private final IntSet myProcessedNames = IntSets.newHashSet();
-    private final Set<VirtualFile> myProcessedFiles = new HashSet<>();
+    private final Set<Path> myProcessedFiles = new HashSet<>();
 
     @Override
-    public Pair<int[], Set<VirtualFile>> apply(Pair<int[], Set<VirtualFile>> deps) {
+    public Pair<int[], Set<Path>> apply(Pair<int[], Set<Path>> deps) {
         IntSet currentDeps = IntSets.newHashSet(deps.getFirst());
         currentDeps.removeAll(myProcessedNames.toArray());
         myProcessedNames.addAll(deps.getFirst());
 
-        Set<VirtualFile> depFiles = new HashSet<>(deps.getSecond());
+        Set<Path> depFiles = new HashSet<>(deps.getSecond());
         depFiles.removeAll(myProcessedFiles);
         myProcessedFiles.addAll(deps.getSecond());
         return Pair.create(currentDeps.toArray(), depFiles);

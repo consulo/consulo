@@ -15,8 +15,6 @@
  */
 package consulo.compiler;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.application.Application;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.module.Module;
@@ -27,14 +25,13 @@ import consulo.project.Project;
 import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.OrderedSet;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.PathsList;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
@@ -42,18 +39,18 @@ import java.util.function.Supplier;
  */
 public class ModuleChunk extends Chunk<Module> {
     private final CompileContextEx myContext;
-    private final Map<Module, List<VirtualFile>> myModuleToFilesMap = new HashMap<>();
-    private final Map<VirtualFile, VirtualFile> myTransformedToOriginalMap = new HashMap<>();
+    private final Map<Module, List<Path>> myModuleToFilesMap = new HashMap<>();
+    private final Map<Path, Path> myTransformedToOriginalMap = new HashMap<>();
     private int mySourcesFilter = ALL_SOURCES;
 
-    public ModuleChunk(CompileContextEx context, Chunk<Module> chunk, Map<Module, List<VirtualFile>> moduleToFilesMap) {
+    public ModuleChunk(CompileContextEx context, Chunk<Module> chunk, Map<Module, List<Path>> moduleToFilesMap) {
         super(chunk.getNodes());
         myContext = context;
         for (Module module : chunk.getNodes()) {
-            List<VirtualFile> files = moduleToFilesMap.get(module);
+            List<Path> files = moduleToFilesMap.get(module);
             // Important!!! Collections in the myModuleToFilesMap must be modifiable copies of the corresponding collections
             // from the moduleToFilesMap. This is needed to support SourceTransforming compilers
-            myModuleToFilesMap.put(module, files == null ? Collections.<VirtualFile>emptyList() : new ArrayList<>(files));
+            myModuleToFilesMap.put(module, files == null ? Collections.<Path>emptyList() : new ArrayList<>(files));
         }
     }
 
@@ -69,43 +66,41 @@ public class ModuleChunk extends Chunk<Module> {
         return mySourcesFilter;
     }
 
-    public void substituteWithTransformedVersion(Module module, int fileIndex, VirtualFile transformedFile) {
-        List<VirtualFile> moduleFiles = getFilesToCompile(module);
-        VirtualFile currentFile = moduleFiles.get(fileIndex);
+    public void substituteWithTransformedVersion(Module module, int fileIndex, Path transformedFile) {
+        List<Path> moduleFiles = getFilesToCompile(module);
+        Path currentFile = moduleFiles.get(fileIndex);
         moduleFiles.set(fileIndex, transformedFile);
-        VirtualFile originalFile = myTransformedToOriginalMap.remove(currentFile);
+        Path originalFile = myTransformedToOriginalMap.remove(currentFile);
         if (originalFile == null) {
             originalFile = currentFile;
         }
         myTransformedToOriginalMap.put(transformedFile, originalFile);
     }
 
-    public VirtualFile getOriginalFile(VirtualFile file) {
-        VirtualFile original = myTransformedToOriginalMap.get(file);
+    public Path getOriginalFile(Path file) {
+        Path original = myTransformedToOriginalMap.get(file);
         return original != null ? original : file;
     }
 
-    
-    public List<VirtualFile> getFilesToCompile(Module forModule) {
+    public List<Path> getFilesToCompile(Module forModule) {
         return myModuleToFilesMap.get(forModule);
     }
 
-    
-    public List<VirtualFile> getFilesToCompile() {
+    public List<Path> getFilesToCompile() {
         if (getModuleCount() == 0) {
             return Collections.emptyList();
         }
         Set<Module> modules = getNodes();
 
-        List<VirtualFile> filesToCompile = new ArrayList<>();
+        List<Path> filesToCompile = new ArrayList<>();
         for (Module module : modules) {
-            List<VirtualFile> moduleCompilableFiles = getFilesToCompile(module);
+            List<Path> moduleCompilableFiles = getFilesToCompile(module);
             if (mySourcesFilter == ALL_SOURCES) {
                 filesToCompile.addAll(moduleCompilableFiles);
             }
             else {
-                for (VirtualFile file : moduleCompilableFiles) {
-                    VirtualFile originalFile = myTransformedToOriginalMap.get(file);
+                for (Path file : moduleCompilableFiles) {
+                    Path originalFile = myTransformedToOriginalMap.get(file);
                     if (originalFile == null) {
                         originalFile = file;
                     }
@@ -123,38 +118,28 @@ public class ModuleChunk extends Chunk<Module> {
         return filesToCompile;
     }
 
-    
-    public VirtualFile[] getSourceRoots() {
+    public Path[] getSourceRoots() {
         return getSourceRoots(mySourcesFilter);
     }
 
-    
-    public VirtualFile[] getSourceRoots(int sourcesFilter) {
+    public Path[] getSourceRoots(int sourcesFilter) {
         if (getModuleCount() == 0) {
-            return VirtualFile.EMPTY_ARRAY;
+            return new Path[0];
         }
 
-        return Application.get().runReadAction((Supplier<VirtualFile[]>) () -> filterRoots(
-            getAllSourceRoots(),
-            getNodes().iterator().next().getProject(),
-            sourcesFilter
-        ));
+        return filterRoots(getAllSourceRoots(), getNodes().iterator().next().getProject(), sourcesFilter);
     }
 
-    public VirtualFile[] getSourceRoots(Module module) {
+    public Path[] getSourceRoots(Module module) {
         if (!getNodes().contains(module)) {
-            return VirtualFile.EMPTY_ARRAY;
+            return new Path[0];
         }
-        return Application.get().runReadAction((Supplier<VirtualFile[]>) () -> filterRoots(
-            myContext.getSourceRoots(module),
-            module.getProject(),
-            mySourcesFilter
-        ));
+        return filterRoots(myContext.getSourceRoots(module), module.getProject(), mySourcesFilter);
     }
 
-    private VirtualFile[] filterRoots(VirtualFile[] roots, Project project, int sourcesFilter) {
-        List<VirtualFile> filteredRoots = new ArrayList<>(roots.length);
-        for (VirtualFile root : roots) {
+    private Path[] filterRoots(Path[] roots, Project project, int sourcesFilter) {
+        List<Path> filteredRoots = new ArrayList<>(roots.length);
+        for (Path root : roots) {
             if (sourcesFilter != ALL_SOURCES) {
                 if (myContext.isInTestSourceContent(root)) {
                     if ((sourcesFilter & TEST_SOURCES) == 0) {
@@ -170,33 +155,33 @@ public class ModuleChunk extends Chunk<Module> {
             }
             filteredRoots.add(root);
         }
-        return VirtualFileUtil.toVirtualFileArray(filteredRoots);
+        return filteredRoots.toArray(new Path[filteredRoots.size()]);
     }
 
-    private VirtualFile[] getAllSourceRoots() {
+    private Path[] getAllSourceRoots() {
         Set<Module> modules = getNodes();
-        Set<VirtualFile> roots = new HashSet<>();
+        Set<Path> roots = new HashSet<>();
         for (Module module : modules) {
             ContainerUtil.addAll(roots, myContext.getSourceRoots(module));
         }
-        return VirtualFileUtil.toVirtualFileArray(roots);
+        return roots.toArray(new Path[roots.size()]);
     }
 
     public String getCompilationClasspath(SdkType sdkType) {
-        OrderedSet<VirtualFile> cpFiles = getCompilationClasspathFiles(sdkType);
+        OrderedSet<Path> cpFiles = getCompilationClasspathFiles(sdkType);
         return convertToStringPath(cpFiles);
     }
 
-    public OrderedSet<VirtualFile> getCompilationClasspathFiles(SdkType sdkType) {
+    public OrderedSet<Path> getCompilationClasspathFiles(SdkType sdkType) {
         return getCompilationClasspathFiles(sdkType, true);
     }
 
-    public OrderedSet<VirtualFile> getCompilationClasspathFiles(SdkType sdkType, boolean exportedOnly) {
+    public OrderedSet<Path> getCompilationClasspathFiles(SdkType sdkType, boolean exportedOnly) {
         Set<Module> modules = getNodes();
 
-        OrderedSet<VirtualFile> cpFiles = new OrderedSet<>();
+        OrderedSet<Path> cpFiles = new OrderedSet<>();
         for (Module module : modules) {
-            Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new AfterSdkOrderEntryCondition(sdkType)).getClassesRoots());
+            addClassesUrls(cpFiles, orderEnumerator(module, exportedOnly, new AfterSdkOrderEntryCondition(sdkType)).classes().getUrls());
         }
         return cpFiles;
     }
@@ -214,29 +199,45 @@ public class ModuleChunk extends Chunk<Module> {
         return convertToStringPath(getCompilationBootClasspathFiles(sdkType));
     }
 
-    public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType) {
+    public OrderedSet<Path> getCompilationBootClasspathFiles(SdkType sdkType) {
         return getCompilationBootClasspathFiles(sdkType, true);
     }
 
-    public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType, boolean exportedOnly) {
+    public OrderedSet<Path> getCompilationBootClasspathFiles(SdkType sdkType, boolean exportedOnly) {
         Set<Module> modules = getNodes();
-        OrderedSet<VirtualFile> cpFiles = new OrderedSet<>();
-        OrderedSet<VirtualFile> jdkFiles = new OrderedSet<>();
+        OrderedSet<Path> cpFiles = new OrderedSet<>();
+        OrderedSet<Path> jdkFiles = new OrderedSet<>();
         for (Module module : modules) {
-            Collections.addAll(
+            addClassesUrls(
                 cpFiles,
-                orderEnumerator(module, exportedOnly, new BeforeSdkOrderEntryCondition(sdkType, module)).getClassesRoots()
+                orderEnumerator(module, exportedOnly, new BeforeSdkOrderEntryCondition(sdkType, module)).classes().getUrls()
             );
-            Collections.addAll(jdkFiles, OrderEnumerator.orderEntries(module).sdkOnly().getClassesRoots());
+            addClassesUrls(jdkFiles, OrderEnumerator.orderEntries(module).sdkOnly().classes().getUrls());
         }
         cpFiles.addAll(jdkFiles);
         return cpFiles;
     }
 
-    private static String convertToStringPath(OrderedSet<VirtualFile> cpFiles) {
-        PathsList classpath = new PathsList();
-        classpath.addVirtualFiles(cpFiles);
-        return classpath.getPathsString();
+    private static void addClassesUrls(Collection<Path> container, String[] urls) {
+        for (String url : urls) {
+            String path = VirtualFileUtil.urlToPath(url);
+            int archiveSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+            if (archiveSeparatorIndex >= 0) {
+                path = path.substring(0, archiveSeparatorIndex);
+            }
+            container.add(Path.of(path));
+        }
+    }
+
+    private static String convertToStringPath(OrderedSet<Path> cpFiles) {
+        StringBuilder builder = new StringBuilder();
+        for (Path cpFile : cpFiles) {
+            if (builder.length() > 0) {
+                builder.append(File.pathSeparatorChar);
+            }
+            builder.append(cpFile.toString());
+        }
+        return builder.toString();
     }
 
     public int getModuleCount() {
@@ -252,33 +253,6 @@ public class ModuleChunk extends Chunk<Module> {
         return getNodes().iterator().next();
     }
 
-    @Deprecated
-    @DeprecationInfo("use #getSourceRoots(), and process virtual files as you want")
-    public String getSourcePath() {
-        return getSourcePath(mySourcesFilter);
-    }
-
-    @Deprecated
-    @DeprecationInfo("use #getSourceRoots(int), and process virtual files as you want")
-    public String getSourcePath(int sourcesFilter) {
-        VirtualFile[] filteredRoots = getSourceRoots(sourcesFilter);
-        if (filteredRoots.length == 0) {
-            return "";
-        }
-
-        StringBuilder buffer = new StringBuilder();
-        Application.get().runReadAction(() -> {
-            for (VirtualFile root : filteredRoots) {
-                if (buffer.length() > 0) {
-                    buffer.append(File.pathSeparatorChar);
-                }
-                buffer.append(root.getPath().replace('/', File.separatorChar));
-            }
-        });
-        return buffer.toString();
-    }
-
-    
     public Project getProject() {
         return myContext.getProject();
     }

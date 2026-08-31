@@ -48,15 +48,16 @@ public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
     public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
         VirtualFile vFile = PsiUtilCore.getVirtualFile(element);
 
-        if (vFile != null && myFileIndexFacade.isInSource(vFile) && myCompilerManager.isExcludedFromCompilation(vFile)) {
+        if (vFile != null && vFile.isInLocalFileSystem() && myFileIndexFacade.isInSource(vFile)
+            && myCompilerManager.isExcludedFromCompilation(vFile.toNioPath())) {
             iconDescriptor.addLayerIcon(PlatformIconGroup.nodesExcludedfromcompile());
         }
     }
 
     @Deprecated
     public static boolean isExcluded(VirtualFile vFile, Project project) {
-        return vFile != null &&
+        return vFile != null && vFile.isInLocalFileSystem() &&
             FileIndexFacade.getInstance(project).isInSource(vFile) &&
-            CompilerManager.getInstance(project).isExcludedFromCompilation(vFile);
+            CompilerManager.getInstance(project).isExcludedFromCompilation(vFile.toNioPath());
     }
 }

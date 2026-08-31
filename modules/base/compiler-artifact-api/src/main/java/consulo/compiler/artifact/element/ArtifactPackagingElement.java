@@ -22,11 +22,13 @@ import consulo.compiler.artifact.ui.ArtifactElementPresentation;
 import consulo.compiler.artifact.ui.DelegatedPackagingElementPresentation;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,21 +90,22 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
       return;
     }
 
-    VirtualFile outputFile = artifact.getOutputFile();
-    if (outputFile == null) {
+    String outputFilePath = artifact.getOutputFilePath();
+    if (outputFilePath == null) {
       LOG.debug("Output file for " + artifact + " not found");
       return;
     }
-    if (!outputFile.isValid()) {
-      LOG.debug("Output file for " + artifact + "(" + outputFile + ") is not valid");
+    Path outputFile = Path.of(FileUtil.toSystemDependentName(outputFilePath));
+    if (!Files.exists(outputFile)) {
+      LOG.debug("Output file for " + artifact + "(" + outputFile + ") does not exist");
       return;
     }
 
-    if (outputFile.isDirectory()) {
+    if (Files.isDirectory(outputFile)) {
       creator.addDirectoryCopyInstructions(outputFile);
     }
     else {
-      creator.addFileCopyInstruction(outputFile, outputFile.getName());
+      creator.addFileCopyInstruction(outputFile, outputFile.getFileName().toString());
     }
   }
 

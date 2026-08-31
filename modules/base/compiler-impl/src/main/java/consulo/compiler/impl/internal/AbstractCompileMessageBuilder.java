@@ -19,7 +19,6 @@ import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -31,7 +30,7 @@ public abstract class AbstractCompileMessageBuilder implements CompileContext.Me
     protected final LocalizeValue myMessage;
 
     protected @Nullable Navigatable myNavigatable = null;
-    protected @Nullable VirtualFile myFile = null;
+    protected @Nullable String myUrl = null;
     protected int myRow = -1;
     protected int myColumn = -1;
 
@@ -40,8 +39,8 @@ public abstract class AbstractCompileMessageBuilder implements CompileContext.Me
         myMessage = message;
     }
 
-    protected CompileContext.MessageBuilder optionalFile(@Nullable VirtualFile file) {
-        myFile = file;
+    protected CompileContext.MessageBuilder assignUrl(@Nullable String url) {
+        myUrl = url;
         return this;
     }
 

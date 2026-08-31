@@ -15,11 +15,10 @@
  */
 package consulo.compiler.impl.internal.artifact;
 
-import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.compiler.artifact.element.ArchiveDestinationInfo;
 import consulo.compiler.artifact.element.ArchivePackageInfo;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
+import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
 
 /**
@@ -42,10 +41,10 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
     }
 
     @Override
-    public void addFileCopyInstruction(VirtualFile file, String outputFileName) {
+    protected void addFileCopyInstruction(String sourcePath, String outputFileName) {
         String pathInJar = childPathInJar(outputFileName);
-        if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
-            myArchivePackageInfo.addContent(pathInJar, file);
+        if (myContext.addDestination(sourcePath, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
+            myArchivePackageInfo.addContent(pathInJar, sourcePath);
         }
     }
 
@@ -58,7 +57,6 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
         return new PackIntoArchiveInstructionCreator(myContext, myArchivePackageInfo, childPathInJar(directoryName), myDestinationInfo);
     }
 
-    
     @Override
     public IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter) {
         ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);

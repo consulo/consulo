@@ -15,11 +15,14 @@
  */
 package consulo.mcpServer;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.project.Project;
 import consulo.ui.UIAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
@@ -41,15 +44,15 @@ public final class McpToolActions {
     /** The first step takes no input, but the coroutine entry point still wants a value. */
     private static final Object NO_INPUT = new Object();
 
-    public static CompletableFuture<McpToolCallResult> readAction(Project project, Supplier<McpToolCallResult> supplier) {
+    public static CompletableFuture<McpToolCallResult> readAction(Project project, @RequiredReadAction Supplier<McpToolCallResult> supplier) {
         return run(project, ReadLock.<Object, McpToolCallResult>apply(ignored -> supplier.get()));
     }
 
-    public static CompletableFuture<McpToolCallResult> writeAction(Project project, Supplier<McpToolCallResult> supplier) {
+    public static CompletableFuture<McpToolCallResult> writeAction(Project project, @RequiredWriteAction Supplier<McpToolCallResult> supplier) {
         return run(project, WriteLock.<Object, McpToolCallResult>apply(ignored -> supplier.get()));
     }
 
-    public static CompletableFuture<McpToolCallResult> uiAction(Project project, Supplier<McpToolCallResult> supplier) {
+    public static CompletableFuture<McpToolCallResult> uiAction(Project project, @RequiredUIAccess Supplier<McpToolCallResult> supplier) {
         return run(project, UIAction.<Object, McpToolCallResult>apply(ignored -> supplier.get()));
     }
 

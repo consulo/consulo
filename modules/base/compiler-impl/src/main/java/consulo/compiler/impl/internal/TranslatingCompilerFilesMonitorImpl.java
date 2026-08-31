@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,51 +18,40 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
-import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.compiler.*;
+import consulo.compiler.impl.internal.state.OutputSourceInfo;
+import consulo.compiler.impl.internal.state.ProjectCompilerState;
+import consulo.compiler.util.CompilerUtil;
 import consulo.component.extension.ExtensionPoint;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.index.io.data.DataOutputStream;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.file.FileTypeManager;
-import consulo.language.psi.stub.FileBasedIndex;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.collection.SLRUCache;
-import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
-import consulo.util.collection.primitive.ints.IntSet;
-import consulo.util.collection.primitive.ints.IntSets;
-import consulo.util.dataholder.Key;
+import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
-import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * <p>
@@ -80,291 +69,132 @@ import java.util.function.Supplier;
  */
 @Singleton
 @ServiceImpl
-public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
+public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor {
     private static final Logger LOG = Logger.getInstance(TranslatingCompilerFilesMonitorImpl.class);
 
-    public static final boolean DEBUG_MODE = false;
+    private final Object myDataLock = new Object();
+    private final Set<Project> mySuspendedProjects = new HashSet<>();
 
-    private static final Key<Map<String, VirtualFile>> SOURCE_FILES_CACHE = Key.create("_source_url_to_vfile_cache_");
-
-    protected final Object myDataLock = new Object();
-
-    private final Set<Integer> mySuspendedProjects = new HashSet<>(); // projectId for all projects that should not be monitored
-
-    protected final IntObjectMap<IntSet> mySourcesToRecompile = IntMaps.newIntObjectHashMap();
-
-    // Map: projectId -> Map{output path -> [sourceUrl; className]}
-    protected final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<>(3, 3) {
-        @Override
-        public Outputs getIfCached(Integer key) {
-            Outputs value = super.getIfCached(key);
-            if (value != null) {
-                value.allocate();
-            }
-            return value;
-        }
-
-        @Override
-        public Outputs get(Integer key) {
-            Outputs value = super.get(key);
-            value.allocate();
-            return value;
-        }
-
-        @Override
-        public Outputs createValue(Integer projectId) {
-            VirtualFile projectDir = VirtualFileManager.getInstance().findFileById(projectId);
-            if (projectDir == null) {
-                return new Outputs(null, new LinkedHashMap<>());
-            }
-
-            Project project = null;
-            for (Project temp : ProjectManager.getInstance().getOpenProjects()) {
-                if (projectDir.equals(temp.getBaseDir())) {
-                    project = temp;
-                    break;
-                }
-            }
-            if (project == null) {
-                return new Outputs(null, new LinkedHashMap<>());
-            }
-
-            File compilerCacheDir = CompilerPaths.getCacheStoreDirectory(project);
-            File storeFile = compilerCacheDir.exists() ? new File(compilerCacheDir, "paths_to_delete.dat") : null;
-            return new Outputs(storeFile, loadPathsToDelete(storeFile));
-        }
-
-        @Override
-        protected void onDropFromCache(Integer key, Outputs value) {
-            value.release();
-        }
-    };
-
-    private final SLRUCache<Project, File> myGeneratedDataPaths = new SLRUCache<>(8, 8) {
-        @Override
-        
-        public File createValue(Project project) {
-            Disposer.register(project, () -> myGeneratedDataPaths.remove(project));
-            return CompilerPaths.getGeneratedDataDirectory(project);
-        }
-    };
-
-    private final Map<Integer, Integer> myInitInProgress = new HashMap<>(); // projectId for successfully initialized projects
+    private final Map<Project, Integer> myInitInProgress = new HashMap<>();
     private final Object myAsyncScanLock = new Object();
-
-    protected boolean myForceCompiling;
 
     @Inject
     public TranslatingCompilerFilesMonitorImpl() {
     }
 
+    public static String normalizePath(String path) {
+        return FileUtil.toSystemIndependentName(path);
+    }
+
+    public static String pathOf(VirtualFile file) {
+        return normalizePath(file.getPath());
+    }
+
     @Override
     public void suspendProject(Project project) {
-        int projectId = getProjectId(project);
-
         synchronized (myDataLock) {
-            if (!mySuspendedProjects.add(projectId)) {
+            if (!mySuspendedProjects.add(project)) {
                 return;
             }
             FileUtil.createIfDoesntExist(CompilerPaths.getRebuildMarkerFile(project));
-            // cleanup internal structures to free memory
-            mySourcesToRecompile.remove(projectId);
-            myOutputsToDelete.remove(projectId);
-            myGeneratedDataPaths.remove(project);
+
+            ProjectCompilerState.getInstance(project).clearDirty();
 
             TranslationCompilerProjectMonitor.getInstance(project).removeCompileOutputInfoFile();
         }
     }
 
-    public @Nullable File getGeneratedPath(Project project) {
-        return myGeneratedDataPaths.get(project);
+    public File getGeneratedPath(Project project) {
+        return CompilerPaths.getGeneratedDataDirectory(project);
     }
 
     @Override
     public void watchProject(Project project) {
         synchronized (myDataLock) {
-            mySuspendedProjects.remove(getProjectId(project));
+            mySuspendedProjects.remove(project);
         }
     }
 
     @Override
     public boolean isSuspended(Project project) {
-        return isSuspended(getProjectId(project));
-    }
-
-    @Override
-    public boolean isSuspended(int projectId) {
         synchronized (myDataLock) {
-            return mySuspendedProjects.contains(projectId);
+            return mySuspendedProjects.contains(project);
         }
-    }
-
-    public static @Nullable VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
-        TranslationOutputFileInfo outputFileInfo = TranslationOutputFileInfo.loadOutputInfo(outputFile);
-        if (outputFileInfo != null) {
-            return outputFileInfo.getSourceFile();
-        }
-        return null;
     }
 
     @Override
     public void collectFiles(
         CompileContext context,
         TranslatingCompiler compiler,
-        Iterator<VirtualFile> scopeSrcIterator,
+        Iterator<Path> scopeSrcIterator,
         boolean forceCompile,
         boolean isRebuild,
-        Collection<VirtualFile> toCompile,
+        Collection<Path> toCompile,
         Collection<Trinity<File, String, Boolean>> toDelete
     ) {
         Project project = context.getProject();
-        int projectId = getProjectId(project);
+        ProjectCompilerState state = ProjectCompilerState.getInstance(project);
         CompilerManager configuration = CompilerManager.getInstance(project);
-        boolean _forceCompile = forceCompile || isRebuild || myForceCompiling;
-        Set<VirtualFile> selectedForRecompilation = new HashSet<>();
-        synchronized (myDataLock) {
-            IntSet pathsToRecompile = mySourcesToRecompile.get(projectId);
-            if (_forceCompile || pathsToRecompile != null && !pathsToRecompile.isEmpty()) {
-                if (DEBUG_MODE) {
-                    System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
+        boolean force = forceCompile || isRebuild;
+        Set<String> selectedForRecompilation = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
+
+        if (force || state.hasDirtyPaths()) {
+            while (scopeSrcIterator.hasNext()) {
+                Path file = scopeSrcIterator.next();
+                String path = normalizePath(file.toString());
+                boolean dirty = state.isDirty(path);
+                if (force || dirty) {
+                    if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
+                        toCompile.add(file);
+                        selectedForRecompilation.add(path);
+                        if (!dirty) {
+                            state.markSourceDirty(path);
+                        }
+                    }
                 }
-                while (scopeSrcIterator.hasNext()) {
-                    VirtualFile file = scopeSrcIterator.next();
-                    if (!file.isValid()) {
-                        if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                            LOG.debug("Skipping invalid file " + file.getPresentableUrl());
-                            if (DEBUG_MODE) {
-                                System.out.println("\t SKIPPED(INVALID) " + file.getPresentableUrl());
+            }
+        }
+
+        // it is important that files to delete are collected after the files to compile (see what happens if forceCompile == true)
+        if (!isRebuild) {
+            List<String> zombieEntries = new ArrayList<>();
+            for (Pair<String, OutputSourceInfo> entry : state.getOutputsToDelete()) {
+                String outputPath = entry.getFirst();
+                OutputSourceInfo info = entry.getSecond();
+                String sourcePath = info.sourcePath();
+
+                boolean sourcePresent = Files.exists(Path.of(sourcePath));
+                if (sourcePresent) {
+                    if (!compiler.isCompilableFile(Path.of(sourcePath), context)) {
+                        continue; // do not collect files that were compiled by another compiler
+                    }
+                    if (!selectedForRecompilation.contains(sourcePath)) {
+                        if (!state.isDirty(sourcePath)) {
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("Found zombie entry (output is marked, but source is present and up-to-date): " + outputPath);
                             }
+                            zombieEntries.add(outputPath);
                         }
                         continue;
                     }
-                    int fileId = getFileId(file);
-                    if (_forceCompile) {
-                        if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
-                            toCompile.add(file);
-                            if (DEBUG_MODE) {
-                                System.out.println("\t INCLUDED " + file.getPresentableUrl());
-                            }
-                            selectedForRecompilation.add(file);
-                            if (pathsToRecompile == null || !pathsToRecompile.contains(fileId)) {
-                                loadInfoAndAddSourceForRecompilation(projectId, file);
-                            }
-                        }
-                        else {
-                            if (DEBUG_MODE) {
-                                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
-                            }
-                        }
+                }
+                if (Files.exists(Path.of(outputPath))) {
+                    toDelete.add(new Trinity<>(new File(outputPath), info.className(), sourcePresent));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Found file to delete: " + outputPath);
                     }
-                    else if (pathsToRecompile.contains(fileId)) {
-                        if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
-                            toCompile.add(file);
-                            if (DEBUG_MODE) {
-                                System.out.println("\t INCLUDED " + file.getPresentableUrl());
-                            }
-                            selectedForRecompilation.add(file);
-                        }
-                        else {
-                            if (DEBUG_MODE) {
-                                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
-                            }
-                        }
+                }
+                else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Found zombie entry marked for deletion: " + outputPath);
                     }
-                    else {
-                        if (DEBUG_MODE) {
-                            System.out.println("\t NOT INCLUDED " + file.getPresentableUrl());
-                        }
-                    }
+                    zombieEntries.add(outputPath);
                 }
             }
-            // it is important that files to delete are collected after the files to compile (see what happens if forceCompile == true)
-            if (!isRebuild) {
-                Outputs outputs = myOutputsToDelete.get(projectId);
-                try {
-                    VirtualFileManager vfm = VirtualFileManager.getInstance();
-                    LocalFileSystem lfs = LocalFileSystem.getInstance();
-                    List<String> zombieEntries = new ArrayList<>();
-                    Map<String, VirtualFile> srcFileCache = getFileCache(context);
-                    for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.getEntries()) {
-                        String outputPath = entry.getKey();
-                        SourceUrlClassNamePair classNamePair = entry.getValue();
-                        String sourceUrl = classNamePair.getSourceUrl();
-
-                        VirtualFile srcFile;
-                        if (srcFileCache.containsKey(sourceUrl)) {
-                            srcFile = srcFileCache.get(sourceUrl);
-                        }
-                        else {
-                            srcFile = vfm.findFileByUrl(sourceUrl);
-                            srcFileCache.put(sourceUrl, srcFile);
-                        }
-
-                        boolean sourcePresent = srcFile != null;
-                        if (sourcePresent) {
-                            if (!compiler.isCompilableFile(srcFile, context)) {
-                                continue; // do not collect files that were compiled by another compiler
-                            }
-                            if (!selectedForRecompilation.contains(srcFile)) {
-                                if (!isMarkedForRecompilation(projectId, getFileId(srcFile))) {
-                                    if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                        String message =
-                                            "Found zombie entry (output is marked, but source is present and up-to-date): " + outputPath;
-                                        LOG.debug(message);
-                                        if (DEBUG_MODE) {
-                                            System.out.println(message);
-                                        }
-                                    }
-                                    zombieEntries.add(outputPath);
-                                }
-                                continue;
-                            }
-                        }
-                        if (lfs.findFileByPath(outputPath) != null) {
-                            //noinspection UnnecessaryBoxing
-                            File file = new File(outputPath);
-                            toDelete.add(new Trinity<>(file, classNamePair.getClassName(), sourcePresent));
-                            if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                String message = "Found file to delete: " + file;
-                                LOG.debug(message);
-                                if (DEBUG_MODE) {
-                                    System.out.println(message);
-                                }
-                            }
-                        }
-                        else {
-                            if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                String message = "Found zombie entry marked for deletion: " + outputPath;
-                                LOG.debug(message);
-                                if (DEBUG_MODE) {
-                                    System.out.println(message);
-                                }
-                            }
-                            // must be garbage entry, should cleanup
-                            zombieEntries.add(outputPath);
-                        }
-                    }
-                    for (String path : zombieEntries) {
-                        unmarkOutputPathForDeletion(projectId, path);
-                    }
-                }
-                finally {
-                    outputs.release();
-                }
+            for (String path : zombieEntries) {
+                state.unscheduleOutputDeletion(path);
             }
         }
-    }
-
-    private static Map<String, VirtualFile> getFileCache(CompileContext context) {
-        Map<String, VirtualFile> cache = context.getUserData(SOURCE_FILES_CACHE);
-        if (cache == null) {
-            context.putUserData(SOURCE_FILES_CACHE, cache = new HashMap<>());
-        }
-        return cache;
-    }
-
-    public static int getFileId(VirtualFile file) {
-        return FileBasedIndex.getFileId(file);
     }
 
     @Override
@@ -372,296 +202,202 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         CompileContext context,
         @Nullable String outputRoot,
         Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
-        VirtualFile[] filesToRecompile
+        Collection<Path> filesToRecompile
     ) throws IOException {
-        myForceCompiling = false;
         Project project = context.getProject();
-        DependencyCache dependencyCache = ((CompileContextEx) context).getDependencyCache();
-        int projectId = getProjectId(project);
-        if (!successfullyCompiled.isEmpty()) {
-            LocalFileSystem lfs = LocalFileSystem.getInstance();
-            IOException[] exceptions = {null};
-            // need read action here to ensure that no modifications were made to VFS while updating file attributes
-            Application.get().runReadAction(() -> {
-                try {
-                    Map<VirtualFile, TranslationSourceFileInfo> compiledSources = new HashMap<>();
-                    Set<VirtualFile> forceRecompile = new HashSet<>();
+        ProjectCompilerState state = ProjectCompilerState.getInstance(project);
 
-                    for (TranslatingCompiler.OutputItem item : successfullyCompiled) {
-                        VirtualFile sourceFile = item.getSourceFile();
-                        boolean isSourceValid = sourceFile.isValid();
-                        TranslationSourceFileInfo srcInfo = compiledSources.get(sourceFile);
-                        if (isSourceValid && srcInfo == null) {
-                            srcInfo = TranslationSourceFileInfo.loadSourceInfo(sourceFile);
-                            if (srcInfo != null) {
-                                srcInfo.clearPaths(projectId);
+        if (!successfullyCompiled.isEmpty()) {
+            DependencyCache dependencyCache = ((CompileContextEx) context).getDependencyCache();
+            String normalizedOutputRoot = outputRoot == null ? null : normalizePath(outputRoot);
+
+            Map<String, Map<String, String>> perSourceOutputs = new LinkedHashMap<>();
+            Map<String, Path> sourceFiles = new HashMap<>();
+            Set<String> forceRecompile = new HashSet<>();
+
+            for (TranslatingCompiler.OutputItem item : successfullyCompiled) {
+                Path sourceFile = item.sourceFile();
+                boolean isSourceValid = Files.exists(sourceFile);
+                String sourcePath = normalizePath(sourceFile.toString());
+
+                if (isSourceValid && !perSourceOutputs.containsKey(sourcePath)) {
+                    perSourceOutputs.put(sourcePath, new LinkedHashMap<>());
+                    sourceFiles.put(sourcePath, sourceFile);
+                }
+
+                String rawOutputPath = item.outputPath();
+                if (rawOutputPath != null) { // can be null for package-info
+                    String outputPath = normalizePath(rawOutputPath);
+                    if (!FileUtil.pathsEqual(outputPath, sourcePath)) {
+                        String className = normalizedOutputRoot == null
+                            ? null
+                            : dependencyCache.relativePathToQName(outputPath.substring(normalizedOutputRoot.length()), '/');
+                        if (isSourceValid) {
+                            if (Files.exists(Path.of(outputPath))) {
+                                perSourceOutputs.get(sourcePath).put(outputPath, className);
                             }
                             else {
-                                srcInfo = new TranslationSourceFileInfo();
-                            }
-                            compiledSources.put(sourceFile, srcInfo);
-                        }
-
-                        String outputPath = item.getOutputPath();
-                        if (outputPath != null) { // can be null for package-info
-                            VirtualFile outputFile = lfs.findFileByPath(outputPath);
-
-                            //assert outputFile != null : "Virtual file was not found for \"" + outputPath + "\"";
-
-                            if (outputFile != null) {
-                                if (!sourceFile.equals(outputFile)) {
-                                    String className = outputRoot == null ? null : dependencyCache.relativePathToQName(
-                                        outputPath.substring(outputRoot.length()),
-                                        '/'
-                                    );
-                                    if (isSourceValid) {
-                                        srcInfo.addOutputPath(projectId, outputFile);
-                                        TranslationOutputFileInfo.saveOutputInfo(
-                                            outputFile,
-                                            new TranslationOutputFileInfo(sourceFile, className)
-                                        );
-                                    }
-                                    else {
-                                        markOutputPathForDeletion(projectId, outputFile, className, sourceFile.getUrl());
-                                    }
-                                }
-                            }
-                            else {  // output file was not found
-                                LOG.warn("TranslatingCompilerFilesMonitor.update():  Virtual file was not found for \"" + outputPath + "\"");
-                                if (isSourceValid) {
-                                    forceRecompile.add(sourceFile);
-                                }
+                                LOG.warn("TranslatingCompilerFilesMonitor.update(): output file does not exist \"" + outputPath + "\"");
+                                forceRecompile.add(sourcePath);
                             }
                         }
-                    }
-                    long compilationStartStamp = ((CompileContextEx) context).getStartCompilationStamp();
-                    for (Map.Entry<VirtualFile, TranslationSourceFileInfo> entry : compiledSources.entrySet()) {
-                        TranslationSourceFileInfo info = entry.getValue();
-                        VirtualFile file = entry.getKey();
-
-                        long fileStamp = file.getTimeStamp();
-                        info.updateTimestamp(projectId, fileStamp);
-                        TranslationSourceFileInfo.saveSourceInfo(file, info);
-                        if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                            String message = "Unschedule recompilation (successfully compiled) " + file.getPresentableUrl();
-                            LOG.debug(message);
-                            if (DEBUG_MODE) {
-                                System.out.println(message);
-                            }
-                        }
-                        removeSourceForRecompilation(projectId, Math.abs(getFileId(file)));
-                        if (fileStamp > compilationStartStamp && !((CompileContextEx) context).isGenerated(file)
-                            || forceRecompile.contains(file)) {
-                            // changes were made during compilation, need to re-schedule compilation
-                            // it is important to invoke removeSourceForRecompilation() before this call to make sure
-                            // the corresponding output paths will be scheduled for deletion
-                            addSourceForRecompilation(projectId, file, info);
+                        else {
+                            state.scheduleOutputDeletion(outputPath, sourcePath, className);
                         }
                     }
                 }
-                catch (IOException e) {
-                    exceptions[0] = e;
+            }
+
+            long compilationStartStamp = ((CompileContextEx) context).getStartCompilationStamp();
+            for (Map.Entry<String, Map<String, String>> entry : perSourceOutputs.entrySet()) {
+                String sourcePath = entry.getKey();
+                Path sourceFile = sourceFiles.get(sourcePath);
+
+                long fileStamp = CompilerUtil.lastModified(sourceFile);
+                state.setCompiled(sourcePath, fileStamp, entry.getValue());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Unschedule recompilation (successfully compiled) " + sourcePath);
                 }
-            });
-            if (exceptions[0] != null) {
-                throw exceptions[0];
+                if (fileStamp > compilationStartStamp && !((CompileContextEx) context).isGenerated(sourceFile)
+                    || forceRecompile.contains(sourcePath)) {
+                    // changes were made during compilation, need to re-schedule compilation
+                    state.markSourceDirty(sourcePath);
+                }
             }
         }
 
-        if (filesToRecompile.length > 0) {
-            Application.get().runReadAction(() -> {
-                for (VirtualFile file : filesToRecompile) {
-                    if (file.isValid()) {
-                        loadInfoAndAddSourceForRecompilation(projectId, file);
-                    }
-                }
-            });
+        for (Path file : filesToRecompile) {
+            if (Files.exists(file)) {
+                state.markSourceDirty(normalizePath(file.toString()));
+            }
         }
     }
 
-    @Override
     @RequiredReadAction
     public void updateOutputRootsLayout(Project project) {
         TranslationCompilerProjectMonitor.getInstance(project).updateCompileOutputInfoFile();
     }
 
-    private static File getFilePathsFile() {
-        return new File(CompilerPaths.getCompilerSystemDirectory(), "file_paths.dat");
-    }
-
-    private static Map<String, SourceUrlClassNamePair> loadPathsToDelete(@Nullable File file) {
-        Map<String, SourceUrlClassNamePair> map = new HashMap<>();
-        try {
-            if (file != null && file.length() > 0) {
-                try (DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-                    int size = is.readInt();
-                    for (int i = 0; i < size; i++) {
-                        String _outputPath = CompilerIOUtil.readString(is);
-                        String srcUrl = CompilerIOUtil.readString(is);
-                        String className = CompilerIOUtil.readString(is);
-                        map.put(FileUtil.toSystemIndependentName(_outputPath), new SourceUrlClassNamePair(srcUrl, className));
-                    }
-                }
-            }
-        }
-        catch (FileNotFoundException ignored) {
-        }
-        catch (IOException e) {
-            LOG.info(e);
-        }
-        return map;
-    }
-
-    private void close() {
-    }
-
-    protected void invalidate() {
-    }
-
     @Override
-    public void dispose() {
-        synchronized (myDataLock) {
-            myOutputsToDelete.clear();
-        }
-
-        close();
+    public List<String> getCompiledClassNames(Path srcFile, Project project) {
+        return ProjectCompilerState.getInstance(project).getClassNames(normalizePath(srcFile.toString()));
     }
 
-    private static void savePathsToDelete(File file, Map<String, SourceUrlClassNamePair> outputs) {
-        try {
-            FileUtil.createParentDirs(file);
-            DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            try {
-                if (outputs != null) {
-                    os.writeInt(outputs.size());
-                    for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.entrySet()) {
-                        CompilerIOUtil.writeString(entry.getKey(), os);
-                        SourceUrlClassNamePair pair = entry.getValue();
-                        CompilerIOUtil.writeString(pair.getSourceUrl(), os);
-                        CompilerIOUtil.writeString(pair.getClassName(), os);
-                    }
-                }
-                else {
-                    os.writeInt(0);
-                }
-            }
-            finally {
-                os.close();
-            }
-        }
-        catch (IOException e) {
-            LOG.error(e);
-        }
-    }
-
-    public int getProjectId(Project project) {
-        VirtualFile baseDir = project.getBaseDir();
-        if (baseDir == null) {
-            throw new IllegalArgumentException("there no base directory: " + project.getBasePath());
-        }
-
-        return FileBasedIndex.getFileId(baseDir);
-    }
-
-    @Override
-    public List<String> getCompiledClassNames(VirtualFile srcFile, Project project) {
-        TranslationSourceFileInfo info = TranslationSourceFileInfo.loadSourceInfo(srcFile);
-        if (info == null) {
-            return Collections.emptyList();
-        }
-
-        ArrayList<String> result = new ArrayList<>();
-
-        info.processOutputPaths(
-            getProjectId(project),
-            (projectId, clsFile) -> {
-                if (clsFile != null) {
-                    TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(clsFile);
-                    if (outputInfo != null) {
-                        ContainerUtil.addIfNotNull(result, outputInfo.getClassName());
-                    }
-                }
-                return true;
-            }
-        );
-        return result;
-    }
-
-    @Override
     public void scanSourceContent(
         ProjectRef projectRef,
-        Collection<VirtualFile> roots,
+        Collection<Path> roots,
         int totalRootCount,
         boolean isNewRoots
     ) {
         if (roots.isEmpty()) {
             return;
         }
-        int projectId = getProjectId(projectRef.get());
+        Project project = projectRef.get();
+        ProjectCompilerState state = ProjectCompilerState.getInstance(project);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Scanning source content for project projectId=" + projectId + "; url=" + projectRef.get().getPresentableUrl());
+            LOG.debug("Scanning source content for project url=" + project.getPresentableUrl());
         }
 
-        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(projectRef.get()).getFileIndex();
+        Set<String> excludedPaths = isNewRoots ? AccessRule.read(() -> CompilerPathsEx.getExcludedPaths(projectRef.get())) : Set.of();
+
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         int processed = 0;
-        for (VirtualFile srcRoot : roots) {
+        for (Path srcRoot : roots) {
+            projectRef.get();
             if (indicator != null) {
-                projectRef.get();
-                indicator.setText2(LocalizeValue.ofNullable(srcRoot.getPresentableUrl()));
+                indicator.setText2(LocalizeValue.of(srcRoot.toString()));
                 indicator.setFraction(++processed / (double) totalRootCount);
             }
             if (isNewRoots) {
-                fileIndex.iterateContentUnderDirectory(
-                    srcRoot,
-                    file -> {
-                        if (!file.isDirectory()) {
-                            if (!isMarkedForRecompilation(projectId, Math.abs(getFileId(file)))) {
-                                TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
-                                if (srcInfo == null || srcInfo.getTimestamp(projectId) != file.getTimeStamp()) {
-                                    addSourceForRecompilation(projectId, file, srcInfo);
-                                }
-                            }
-                        }
-                        else {
-                            projectRef.get();
-                        }
-                        return true;
-                    }
-                );
+                scanRoot(state, srcRoot, excludedPaths);
             }
             else {
-                FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-                VirtualFileUtil.visitChildrenRecursively(srcRoot, new VirtualFileVisitor() {
-                    @Override
-                    public boolean visitFile(VirtualFile file) {
-                        if (fileTypeManager.isFileIgnored(file)) {
-                            return false;
-                        }
-                        int fileId = getFileId(file);
-                        if (fileId > 0 /*file is valid*/) {
-                            if (file.isDirectory()) {
-                                projectRef.get();
-                            }
-                            else if (!isMarkedForRecompilation(projectId, fileId)) {
-                                TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
-                                if (srcInfo != null) {
-                                    addSourceForRecompilation(projectId, file, srcInfo);
-                                }
-                            }
-                        }
-                        return true;
+                String rootPrefix = normalizePath(srcRoot.toString());
+                List<String> knownSources = new ArrayList<>();
+                state.processSourcePaths(path -> {
+                    if (FileUtil.startsWith(path, rootPrefix)) {
+                        knownSources.add(path);
                     }
+                    return true;
                 });
+                for (String path : knownSources) {
+                    state.markSourceDirty(path);
+                }
             }
         }
     }
 
-    @Override
+    private static void scanRoot(ProjectCompilerState state, Path root, Set<String> excludedPaths) {
+        if (!Files.isDirectory(root)) {
+            return;
+        }
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        try {
+            Files.walkFileTree(root, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                    Path name = dir.getFileName();
+                    if (name != null && fileTypeManager.isFileIgnored(name.toString())) {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    if (excludedPaths.contains(normalizePath(dir.toString()))) {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    if (fileTypeManager.isFileIgnored(file.getFileName().toString())) {
+                        return FileVisitResult.CONTINUE;
+                    }
+                    processScannedFile(state, normalizePath(file.toString()), attrs.lastModifiedTime().toMillis());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        catch (IOException e) {
+            LOG.warn("Failed to scan root " + root, e);
+        }
+    }
+
+    private static void processScannedFile(ProjectCompilerState state, String path, long diskStamp) {
+        if (state.isDirty(path)) {
+            return;
+        }
+        if (state.getStamp(path) != diskStamp) {
+            state.markSourceDirty(path);
+            return;
+        }
+        for (String output : state.getOutputs(path)) {
+            if (!Files.exists(Path.of(output))) {
+                state.markSourceDirty(path);
+                return;
+            }
+        }
+    }
+
+    private static void detectDeletedSources(ProjectCompilerState state) {
+        List<String> deleted = new ArrayList<>();
+        state.processSourcePaths(path -> {
+            if (!Files.exists(Path.of(path))) {
+                deleted.add(path);
+            }
+            return true;
+        });
+        for (String path : deleted) {
+            state.removeSource(path, null);
+        }
+    }
+
     public void ensureInitializationCompleted(Project project, ProgressIndicator indicator) {
-        int id = getProjectId(project);
         synchronized (myAsyncScanLock) {
-            while (myInitInProgress.containsKey(id)) {
+            while (myInitInProgress.containsKey(project)) {
                 if (!project.isOpen() || project.isDisposed() || (indicator != null && indicator.isCanceled())) {
                     // makes no sense to continue waiting
                     break;
@@ -677,12 +413,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     protected void markOldOutputRoots(ProjectRef projRef, Map<String, Couple<String>> currentLayout) {
-        int projectId = getProjectId(projRef.get());
+        Project project = projRef.get();
+        ProjectCompilerState state = ProjectCompilerState.getInstance(project);
 
-        Set<VirtualFile> rootsToMark = new HashSet<>();
+        Set<String> rootsToMark = new LinkedHashSet<>();
 
         Map<String, Couple<String>> lastOutputRootsLayout =
-            TranslationCompilerProjectMonitor.getInstance(projRef.get()).getLastOutputRootsLayout();
+            TranslationCompilerProjectMonitor.getInstance(project).getLastOutputRootsLayout();
 
         for (Map.Entry<String, Couple<String>> last : lastOutputRootsLayout.entrySet()) {
             Couple<String> current = currentLayout.get(last.getKey());
@@ -705,47 +442,42 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             }
         }
 
-        for (VirtualFile outputRoot : rootsToMark) {
-            processOldOutputRoot(projectId, outputRoot);
+        for (String outputRoot : rootsToMark) {
+            processOldOutputRoot(state, outputRoot);
         }
     }
 
-    private static void addIfDirectoryExists(String url, Set<VirtualFile> rootsToRemove) {
+    private static void addIfDirectoryExists(@Nullable String url, Set<String> rootsToMark) {
         if (url == null) {
             return;
         }
-
-        VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(url);
-        if (fileByUrl != null) {
-            rootsToRemove.add(fileByUrl);
+        String path = normalizePath(VirtualFileUtil.urlToPath(url));
+        if (Files.isDirectory(Path.of(path))) {
+            rootsToMark.add(path);
         }
     }
 
-    private void processOldOutputRoot(int projectId, VirtualFile outputRoot) {
-        // recursively mark all corresponding sources for recompilation
-        VirtualFileUtil.visitChildrenRecursively(outputRoot, new VirtualFileVisitor() {
-            @Override
-            public boolean visitFile(VirtualFile file) {
-                if (!file.isDirectory()) {
-                    // todo: possible optimization - process only those outputs that are not marked for deletion yet
-                    TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
-                    if (outputInfo != null) {
-                        VirtualFile srcFile = outputInfo.getSourceFile();
-                        if (srcFile != null) {
-                            loadInfoAndAddSourceForRecompilation(projectId, srcFile);
-                        }
+    private static void processOldOutputRoot(ProjectCompilerState state, String outputRootPath) {
+        try {
+            Files.walkFileTree(Path.of(outputRootPath), new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    OutputSourceInfo info = state.getOutputInfo(normalizePath(file.toString()));
+                    if (info != null) {
+                        state.markSourceDirty(info.sourcePath());
                     }
+                    return FileVisitResult.CONTINUE;
                 }
-                return true;
-            }
-        });
+            });
+        }
+        catch (IOException e) {
+            LOG.warn("Failed to scan old output root " + outputRootPath, e);
+        }
     }
 
-    @RequiredReadAction
     public void runScan(ProgressIndicator indicator, Project project) {
-        int projectId = getProjectId(project);
-
-        if (isSuspended(projectId)) {
+        if (isSuspended(project)) {
+            terminateAsyncScan(project, false);
             return;
         }
 
@@ -753,13 +485,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
         ProjectRef projRef = new ProjectRef(project);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
+            LOG.debug("Initial sources scan for project url=" + projRef.get().getPresentableUrl());
         }
         try {
             IntermediateOutputCompiler[] compilers =
                 CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
 
-            Set<VirtualFile> intermediateRoots = new HashSet<>();
+            Set<Path> intermediateRoots = new LinkedHashSet<>();
             if (compilers.length > 0) {
                 Module[] modules = AccessRule.read(() -> ModuleManager.getInstance(projRef.get()).getModules());
                 for (IntermediateOutputCompiler compiler : compilers) {
@@ -767,62 +499,51 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         if (module.isDisposed() || module.getModuleDirUrl() == null) {
                             continue;
                         }
-                        VirtualFile outputRoot = LocalFileSystem.getInstance()
-                            .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
-                        if (outputRoot != null) {
-                            intermediateRoots.add(outputRoot);
-                        }
-                        VirtualFile testsOutputRoot = LocalFileSystem.getInstance()
-                            .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
-                        if (testsOutputRoot != null) {
-                            intermediateRoots.add(testsOutputRoot);
-                        }
+                        intermediateRoots.add(Path.of(CompilerPaths.getGenerationOutputPath(compiler, module, false)));
+                        intermediateRoots.add(Path.of(CompilerPaths.getGenerationOutputPath(compiler, module, true)));
                     }
                 }
             }
 
-            List<VirtualFile> projectRoots = Arrays.asList(getRootsForScan(projRef.get()));
+            List<Path> projectRoots = AccessRule.read(() -> getRootsForScan(projRef.get()));
             int totalRootsCount = projectRoots.size() + intermediateRoots.size();
             scanSourceContent(projRef, projectRoots, totalRootsCount, true);
 
             if (!intermediateRoots.isEmpty()) {
-                Consumer<VirtualFile> processor = file -> {
-                    if (!isMarkedForRecompilation(projectId, Math.abs(getFileId(file)))) {
-                        TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
-                        if (srcInfo == null || srcInfo.getTimestamp(projectId) != file.getTimeStamp()) {
-                            addSourceForRecompilation(projectId, file, srcInfo);
-                        }
-                    }
-                };
+                ProjectCompilerState state = ProjectCompilerState.getInstance(projRef.get());
                 int processed = projectRoots.size();
-                for (VirtualFile root : intermediateRoots) {
+                for (Path root : intermediateRoots) {
                     projRef.get();
-                    indicator.setText2(LocalizeValue.ofNullable(root.getPresentableUrl()));
+                    indicator.setText2(LocalizeValue.of(root.toString()));
                     indicator.setFraction(++processed / (double) totalRootsCount);
 
-                    TranslationCompilerFilesMonitorVfsListener.processRecursively(root, false, processor);
+                    scanRoot(state, root, Set.of());
                 }
             }
 
-            markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
+            detectDeletedSources(ProjectCompilerState.getInstance(projRef.get()));
+
+            markOldOutputRoots(projRef, AccessRule.read(
+                () -> TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout()));
         }
         catch (ProjectRef.ProjectClosedException ignored) {
         }
         finally {
-            terminateAsyncScan(projectId, false);
+            terminateAsyncScan(project, false);
         }
     }
 
-    protected void terminateAsyncScan(int projectId, boolean clearCounter) {
+    protected void terminateAsyncScan(Project project, boolean clearCounter) {
         synchronized (myAsyncScanLock) {
-            Integer counter = ObjectUtil.notNull(myInitInProgress.remove(projectId), 0);
+            Integer removed = myInitInProgress.remove(project);
+            int counter = removed == null ? 0 : removed;
 
             if (clearCounter) {
                 myAsyncScanLock.notifyAll();
             }
             else {
                 if (--counter > 0) {
-                    myInitInProgress.put(projectId, counter);
+                    myInitInProgress.put(project, counter);
                 }
                 else {
                     myAsyncScanLock.notifyAll();
@@ -832,248 +553,37 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     public void startAsyncScan(Project project) {
-        startAsyncScan(getProjectId(project));
-    }
-
-    protected void startAsyncScan(int projectId) {
         synchronized (myAsyncScanLock) {
-            int counter = myInitInProgress.getOrDefault(projectId, 0);
+            int counter = myInitInProgress.getOrDefault(project, 0);
             counter = (counter > 0) ? counter + 1 : 1;
-            myInitInProgress.put(projectId, counter);
+            myInitInProgress.put(project, counter);
             myAsyncScanLock.notifyAll();
         }
     }
 
-    public boolean isIgnoredOrUnderIgnoredDirectory(ProjectManager projectManager, VirtualFile file) {
-        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-        if (fileTypeManager.isFileIgnored(file)) {
-            return true;
-        }
-
-        //optimization: if file is in content of some project it's definitely not ignored
-        boolean isInContent = Application.get().runReadAction((Supplier<Boolean>) () -> {
-            for (Project project : projectManager.getOpenProjects()) {
-                if (project.isInitialized() && ProjectRootManager.getInstance(project).getFileIndex().isInContent(file)) {
-                    return true;
-                }
-            }
-            return false;
-        });
-        if (isInContent) {
-            return false;
-        }
-
-        VirtualFile current = file.getParent();
-        while (current != null) {
-            if (fileTypeManager.isFileIgnored(current)) {
-                return true;
-            }
-            current = current.getParent();
-        }
-        return false;
-    }
-
-    public void loadInfoAndAddSourceForRecompilation(int projectId, VirtualFile srcFile) {
-        addSourceForRecompilation(projectId, srcFile, TranslationSourceFileInfo.loadSourceInfo(srcFile));
-    }
-
-    public void addSourceForRecompilation(
-        int projectId,
-        VirtualFile srcFile,
-        @Nullable TranslationSourceFileInfo srcInfo
-    ) {
-        boolean alreadyMarked;
-        synchronized (myDataLock) {
-            IntSet set = mySourcesToRecompile.get(projectId);
-            if (set == null) {
-                set = IntSets.newHashSet();
-                mySourcesToRecompile.put(projectId, set);
-            }
-            alreadyMarked = !set.add(Math.abs(getFileId(srcFile)));
-            if (!alreadyMarked && (LOG.isDebugEnabled() || DEBUG_MODE)) {
-                String message = "Scheduled recompilation " + srcFile.getPresentableUrl();
-                LOG.debug(message);
-                if (DEBUG_MODE) {
-                    System.out.println(message);
-                }
-            }
-        }
-
-        if (!alreadyMarked && srcInfo != null) {
-            srcInfo.updateTimestamp(projectId, -1L);
-            srcInfo.processOutputPaths(projectId, new ScheduleOutputsForDeletionProc(srcFile.getUrl()));
-            TranslationSourceFileInfo.saveSourceInfo(srcFile, srcInfo);
-        }
-    }
-
-    public void removeSourceForRecompilation(int projectId, int srcId) {
-        synchronized (myDataLock) {
-            IntSet set = mySourcesToRecompile.get(projectId);
-            if (set != null) {
-                set.remove(srcId);
-                if (set.isEmpty()) {
-                    mySourcesToRecompile.remove(projectId);
-                }
-            }
-        }
-    }
-
     @RequiredReadAction
-    protected VirtualFile[] getRootsForScan(Project project) {
-        List<VirtualFile> list = new ArrayList<>();
+    protected List<Path> getRootsForScan(Project project) {
+        List<Path> list = new ArrayList<>();
         Module[] modules = ModuleManager.getInstance(project).getModules();
         ExtensionPoint<TranslatingCompilerFilesMonitorHelper> extensionPoint =
             project.getApplication().getExtensionPoint(TranslatingCompilerFilesMonitorHelper.class);
         for (Module module : modules) {
             extensionPoint.forEach(extension -> {
-                VirtualFile[] rootsForModule = extension.getRootsForModule(module);
+                Path[] rootsForModule = extension.getRootsForModule(module);
                 if (rootsForModule != null) {
                     Collections.addAll(list, rootsForModule);
                 }
             });
 
-            VirtualFile[] contentFolderFiles =
-                ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.all(false));
-            Collections.addAll(list, contentFolderFiles);
+            for (String url : ModuleRootManager.getInstance(module).getContentFolderUrls(LanguageContentFolderScopes.all(false))) {
+                list.add(Path.of(VirtualFileUtil.urlToPath(url)));
+            }
         }
-        return VirtualFileUtil.toVirtualFileArray(list);
+        return list;
     }
 
     @Override
-    public boolean isMarkedForCompilation(Project project, VirtualFile file) {
-        return isMarkedForRecompilation(getProjectId(project), getFileId(file));
-    }
-
-    private boolean isMarkedForRecompilation(int projectId, int srcId) {
-        synchronized (myDataLock) {
-            IntSet set = mySourcesToRecompile.get(projectId);
-            return set != null && set.contains(srcId);
-        }
-    }
-
-    @FunctionalInterface
-    public interface Proc {
-        boolean execute(int projectId, VirtualFile outputPath);
-    }
-
-    public class ScheduleOutputsForDeletionProc implements Proc {
-        private final String mySrcUrl;
-        private final LocalFileSystem myFileSystem;
-        private @Nullable VirtualFile myRootBeingDeleted;
-
-        public ScheduleOutputsForDeletionProc(String srcUrl) {
-            mySrcUrl = srcUrl;
-            myFileSystem = LocalFileSystem.getInstance();
-        }
-
-        public void setRootBeingDeleted(@Nullable VirtualFile rootBeingDeleted) {
-            myRootBeingDeleted = rootBeingDeleted;
-        }
-
-        @Override
-        public boolean execute(int projectId, VirtualFile outFile) {
-            if (outFile != null) { // not deleted yet
-                if (myRootBeingDeleted != null && VirtualFileUtil.isAncestor(myRootBeingDeleted, outFile, false)) {
-                    unmarkOutputPathForDeletion(projectId, outFile.getPath());
-                }
-                else {
-                    TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(outFile);
-                    String className = outputInfo != null ? outputInfo.getClassName() : null;
-                    markOutputPathForDeletion(projectId, outFile, className, mySrcUrl);
-                }
-            }
-            return true;
-        }
-    }
-
-    private void markOutputPathForDeletion(int projectId, VirtualFile outputPath, String className, String srcUrl) {
-        SourceUrlClassNamePair pair = new SourceUrlClassNamePair(srcUrl, className);
-        synchronized (myDataLock) {
-            Outputs outputs = myOutputsToDelete.get(projectId);
-            try {
-                outputs.put(outputPath.getPath(), pair);
-                if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                    String message = "ADD path to delete: " + outputPath + "; source: " + srcUrl;
-                    LOG.debug(message);
-                    if (DEBUG_MODE) {
-                        System.out.println(message);
-                    }
-                }
-            }
-            finally {
-                outputs.release();
-            }
-        }
-    }
-
-    public void unmarkOutputPathForDeletion(int projectId, String outputPath) {
-        synchronized (myDataLock) {
-            Outputs outputs = myOutputsToDelete.get(projectId);
-            try {
-                SourceUrlClassNamePair val = outputs.remove(outputPath);
-                if (val != null) {
-                    if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                        String message = "REMOVE path to delete: " + outputPath;
-                        LOG.debug(message);
-                        if (DEBUG_MODE) {
-                            System.out.println(message);
-                        }
-                    }
-                }
-            }
-            finally {
-                outputs.release();
-            }
-        }
-    }
-
-    private static class Outputs {
-        private boolean myIsDirty = false;
-        private final @Nullable File myStoreFile;
-        private final Map<String, SourceUrlClassNamePair> myMap;
-        private final AtomicInteger myRefCount = new AtomicInteger(1);
-
-        Outputs(@Nullable File storeFile, Map<String, SourceUrlClassNamePair> map) {
-            myStoreFile = storeFile;
-            myMap = map;
-        }
-
-        public Set<Map.Entry<String, SourceUrlClassNamePair>> getEntries() {
-            return Collections.unmodifiableSet(myMap.entrySet());
-        }
-
-        public void put(String outputPath, SourceUrlClassNamePair pair) {
-            if (myStoreFile == null) {
-                return;
-            }
-            if (pair == null) {
-                remove(outputPath);
-            }
-            else {
-                myMap.put(outputPath, pair);
-                myIsDirty = true;
-            }
-        }
-
-        public SourceUrlClassNamePair remove(String outputPath) {
-            if (myStoreFile == null) {
-                return null;
-            }
-            SourceUrlClassNamePair removed = myMap.remove(outputPath);
-            myIsDirty |= removed != null;
-            return removed;
-        }
-
-        void allocate() {
-            myRefCount.incrementAndGet();
-        }
-
-        public void release() {
-            if (myRefCount.decrementAndGet() == 0) {
-                if (myIsDirty && myStoreFile != null) {
-                    savePathsToDelete(myStoreFile, myMap);
-                }
-            }
-        }
+    public boolean isMarkedForCompilation(Project project, Path file) {
+        return ProjectCompilerState.getInstance(project).isDirty(normalizePath(file.toString()));
     }
 }

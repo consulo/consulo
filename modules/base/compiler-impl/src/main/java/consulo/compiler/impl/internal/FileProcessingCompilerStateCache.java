@@ -17,12 +17,20 @@ package consulo.compiler.impl.internal;
 
 import consulo.compiler.ValidityState;
 import consulo.compiler.ValidityStateFactory;
+import consulo.compiler.util.CompilerUtil;
 import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
 
 import org.jspecify.annotations.Nullable;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
@@ -50,25 +58,21 @@ public class FileProcessingCompilerStateCache {
         };
     }
 
-    public void update(File file, ValidityState extState) throws IOException {
-        myCache.update(file, new MyState(file.lastModified(), extState));
+    public void update(Path file, ValidityState extState) throws IOException {
+        myCache.update(pathOf(file), new MyState(CompilerUtil.lastModified(file), extState));
     }
 
-    public void remove(File url) throws IOException {
-        myCache.remove(url);
+    public void remove(Path file) throws IOException {
+        myCache.remove(pathOf(file));
     }
 
-    public long getTimestamp(File url) throws IOException {
-        Serializable savedState = myCache.getState(url);
-        if (savedState != null) {
-            LOG.assertTrue(savedState instanceof MyState);
-        }
-        MyState state = (MyState) savedState;
+    public long getTimestamp(Path file) throws IOException {
+        MyState state = myCache.getState(pathOf(file));
         return (state != null) ? state.getTimestamp() : -1L;
     }
 
-    public ValidityState getExtState(File url) throws IOException {
-        MyState state = myCache.getState(url);
+    public ValidityState getExtState(Path file) throws IOException {
+        MyState state = myCache.getState(pathOf(file));
         return (state != null) ? state.getExtState() : null;
     }
 
@@ -76,8 +80,12 @@ public class FileProcessingCompilerStateCache {
         myCache.force();
     }
 
-    public Collection<File> getFiles() throws IOException {
-        return myCache.getFiles();
+    public Collection<Path> getFiles() throws IOException {
+        List<Path> result = new ArrayList<>();
+        for (String path : myCache.getPaths()) {
+            result.add(Path.of(path));
+        }
+        return result;
     }
 
     public boolean wipe() {
@@ -93,7 +101,11 @@ public class FileProcessingCompilerStateCache {
         }
     }
 
-    private static class MyState implements Serializable {
+    private static String pathOf(Path file) {
+        return FileUtil.toSystemIndependentName(file.toString());
+    }
+
+    private static class MyState {
         private final long myTimestamp;
         private final ValidityState myExtState;
 

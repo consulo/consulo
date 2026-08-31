@@ -20,7 +20,7 @@ import consulo.compiler.PackagingCompiler;
 import consulo.compiler.ValidityState;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class PackagingCompilerAdapter extends FileProcessingCompilerAdapter {
     private final PackagingCompiler myCompiler;
@@ -31,7 +31,7 @@ public class PackagingCompilerAdapter extends FileProcessingCompilerAdapter {
     }
 
     @Override
-    public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
+    public void processOutdatedItem(CompileContext context, Path file, @Nullable ValidityState state) {
         myCompiler.processOutdatedItem(context, file, state);
     }
 }

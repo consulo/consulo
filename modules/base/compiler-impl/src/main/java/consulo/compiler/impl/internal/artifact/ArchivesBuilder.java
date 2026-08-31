@@ -26,10 +26,9 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.*;
@@ -170,14 +169,14 @@ public class ArchivesBuilder {
 
         try {
             Set<String> writtenPaths = new HashSet<>();
-            for (Pair<String, VirtualFile> pair : archive.getPackedFiles()) {
-                VirtualFile sourceFile = pair.getSecond();
-                if (sourceFile.isInLocalFileSystem()) {
-                    File file = VirtualFileUtil.virtualToIoFile(sourceFile);
+            for (Pair<String, String> pair : archive.getPackedFiles()) {
+                String sourcePath = pair.getSecond();
+                if (!sourcePath.contains(URLUtil.ARCHIVE_SEPARATOR)) {
+                    File file = new File(FileUtil.toSystemDependentName(sourcePath));
                     addFileToArchive(archiveFile, packageWriter, file, pair.getFirst(), writtenPaths);
                 }
                 else {
-                    extractFileAndAddToArchive(archiveFile, packageWriter, sourceFile, pair.getFirst(), writtenPaths);
+                    extractFileAndAddToArchive(archiveFile, packageWriter, sourcePath, pair.getFirst(), writtenPaths);
                 }
             }
 
@@ -202,33 +201,23 @@ public class ArchivesBuilder {
     private <T> void extractFileAndAddToArchive(
         T archiveObject,
         ArchivePackageWriter<T> writer,
-        VirtualFile sourceFile,
+        String sourcePath,
         String relativePath,
         Set<String> writtenPaths
     ) throws IOException {
-        relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
-        myContext.getProgressIndicator().setText2(LocalizeValue.of(relativePath));
-        if (!writtenPaths.add(relativePath)) {
+        String adjustedPath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
+        myContext.getProgressIndicator().setText2(LocalizeValue.of(adjustedPath));
+        if (!writtenPaths.add(adjustedPath)) {
             return;
         }
 
-        Pair<InputStream, Long> streamLongPair = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext);
-        InputStream input = streamLongPair.getFirst();
-        if (input == null) {
+        ArtifactCompilerUtil.ArchiveEntryData entryData = ArtifactCompilerUtil.getArchiveEntry(sourcePath, myContext);
+        if (entryData == null) {
             return;
         }
 
-        try {
-            writer.addFile(
-                archiveObject,
-                input,
-                relativePath,
-                streamLongPair.getSecond(),
-                ArtifactCompilerUtil.getArchiveFile(sourceFile).lastModified()
-            );
-        }
-        finally {
-            input.close();
+        try (InputStream input = entryData.stream()) {
+            writer.addFile(archiveObject, input, adjustedPath, entryData.size(), entryData.timestamp());
         }
     }
 

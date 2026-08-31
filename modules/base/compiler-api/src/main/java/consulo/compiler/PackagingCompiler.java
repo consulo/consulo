@@ -17,7 +17,7 @@ package consulo.compiler;
 
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * A tag interface indicating that the compiler will package the compiled Java classes.
@@ -36,5 +36,5 @@ public interface PackagingCompiler extends FileProcessingCompiler {
      * @param file    a file in the output directory which will be recompiled.
      * @param state   the validity state of the file specified by <code>url</code>.
      */
-    void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state);
+    void processOutdatedItem(CompileContext context, Path file, @Nullable ValidityState state);
 }

@@ -17,12 +17,12 @@ package consulo.compiler.setting;
 
 import consulo.disposer.Disposable;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 /**
@@ -42,10 +42,6 @@ public class ExcludeEntryDescription implements Disposable {
         myIsFile = isFile;
     }
 
-    public ExcludeEntryDescription(VirtualFile virtualFile, boolean includeSubdirectories, boolean isFile, Disposable parent) {
-        this(virtualFile.getUrl(), includeSubdirectories, isFile, parent);
-    }
-
     public ExcludeEntryDescription copy(Disposable parent) {
         return new ExcludeEntryDescription(getUrl(), myIncludeSubdirectories, myIsFile, parent);
     }
@@ -53,9 +49,9 @@ public class ExcludeEntryDescription implements Disposable {
     public void setPresentableUrl(String newUrl) {
         myFilePointer = VirtualFilePointerManager.getInstance()
             .create(VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(newUrl)), myParentDisposable, null);
-        VirtualFile file = getVirtualFile();
-        if (file != null) {
-            myIsFile = !file.isDirectory();
+        Path file = Path.of(FileUtil.toSystemDependentName(newUrl));
+        if (Files.exists(file)) {
+            myIsFile = !Files.isDirectory(file);
         }
     }
 
@@ -77,10 +73,6 @@ public class ExcludeEntryDescription implements Disposable {
 
     public void setIncludeSubdirectories(boolean includeSubdirectories) {
         myIncludeSubdirectories = includeSubdirectories;
-    }
-
-    public @Nullable VirtualFile getVirtualFile() {
-        return myFilePointer.getFile();
     }
 
     public boolean isValid() {

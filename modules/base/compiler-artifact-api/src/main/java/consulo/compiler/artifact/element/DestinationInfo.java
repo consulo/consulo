@@ -15,44 +15,23 @@
  */
 package consulo.compiler.artifact.element;
 
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.LocalFileSystem;
-import org.jspecify.annotations.Nullable;
-
 /**
  * @author nik
  */
 public abstract class DestinationInfo {
-  private VirtualFile myOutputFile;
-  private final String myOutputPath;
-  private final String myOutputFilePath;
+    private final String myOutputPath;
+    private final String myOutputFilePath;
 
-  protected DestinationInfo(String outputPath, @Nullable VirtualFile outputFile, String outputFilePath) {
-    myOutputFilePath = outputFilePath;
-    myOutputFile = outputFile;
-    myOutputPath = outputPath;
-  }
-
-  
-  public String getOutputPath() {
-    return myOutputPath;
-  }
-
-  public @Nullable VirtualFile getOutputFile() {
-    return myOutputFile;
-  }
-
-  
-  public String getOutputFilePath() {
-    return myOutputFilePath;
-  }
-
-  public void update() {
-    if (myOutputFile != null && !myOutputFile.isValid()) {
-      myOutputFile = null;
+    protected DestinationInfo(String outputPath, String outputFilePath) {
+        myOutputFilePath = outputFilePath;
+        myOutputPath = outputPath;
     }
-    if (myOutputFile == null) {
-      myOutputFile = LocalFileSystem.getInstance().findFileByPath(myOutputFilePath);
+
+    public String getOutputPath() {
+        return myOutputPath;
     }
-  }
+
+    public String getOutputFilePath() {
+        return myOutputFilePath;
+    }
 }

@@ -15,9 +15,10 @@
  */
 package consulo.compiler.impl.internal.artifact;
 
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
+
+import java.nio.file.Path;
 
 /**
  * @author nik
@@ -28,7 +29,11 @@ public class SkipAllInstructionCreator extends IncrementalCompilerInstructionCre
     }
 
     @Override
-    public void addFileCopyInstruction(VirtualFile file, String outputFileName) {
+    protected void addFileCopyInstruction(String sourcePath, String outputFileName) {
+    }
+
+    @Override
+    public void addExtractDirectoryInstruction(Path jarFile, String pathInJar) {
     }
 
     @Override
@@ -36,7 +41,6 @@ public class SkipAllInstructionCreator extends IncrementalCompilerInstructionCre
         return this;
     }
 
-    
     @Override
     public IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter) {
         return this;

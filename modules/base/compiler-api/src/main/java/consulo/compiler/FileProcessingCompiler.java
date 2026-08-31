@@ -17,7 +17,7 @@ package consulo.compiler;
 
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * A base interface describing shared functionality for various types of file processing compilers.
@@ -40,7 +40,7 @@ public interface FileProcessingCompiler extends Compiler, ValidityStateFactory {
          *
          * @return a file to be processed; cannot be null
          */
-        File getFile();
+        Path getFile();
 
         /**
          * @return an object describing dependencies of the instrumented file (can be null).
