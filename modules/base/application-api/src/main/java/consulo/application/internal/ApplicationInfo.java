@@ -15,13 +15,11 @@
  */
 package consulo.application.internal;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.component.util.BuildNumber;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.ClassPathUtil;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 
 import java.nio.file.Files;
@@ -34,144 +32,113 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- * I don't think changed random thread name is good idea.
+ * I don't think changing random thread name is good idea.
  * <p>
+ * <pre>{@code
  * Thread currentThread = Thread.currentThread();
  * currentThread.setName(getFullApplicationName());
+ * }</pre>
  */
 public class ApplicationInfo {
-  private static final Supplier<ApplicationInfo> ourValue = LazyValue.notNull(ApplicationInfo::new);
+    private static final Supplier<ApplicationInfo> ourValue = LazyValue.notNull(ApplicationInfo::new);
 
-  public static ApplicationInfo getInstance() {
-    return ourValue.get();
-  }
+    public static ApplicationInfo getInstance() {
+        return ourValue.get();
+    }
 
-  private final BuildNumber myBuild;
-  private final Calendar myBuildDate;
+    private final BuildNumber myBuild;
+    private final Calendar myBuildDate;
 
-  private ApplicationInfo() {
-    String jarPathForClass = ClassPathUtil.getJarPathForClass(Application.class);
+    private ApplicationInfo() {
+        String jarPathForClass = ClassPathUtil.getJarPathForClass(Application.class);
 
-    BuildNumber build = null;
-    Calendar buildDate = null;
+        BuildNumber build = null;
+        Calendar buildDate = null;
 
-    try {
-      String buildNumberFromJvm = Platform.current().jvm().getRuntimeProperty("consulo.build.number");
-      if (buildNumberFromJvm != null) {
-        build = BuildNumber.fromString(buildNumberFromJvm);
-      }
-
-      // when running from exploded classes (tests), the class 'jar' is a directory - there is no manifest to read
-      if (jarPathForClass != null && Files.isRegularFile(Path.of(jarPathForClass))) {
-        try (JarFile jarFile = new JarFile(jarPathForClass)) {
-          Manifest manifest = jarFile.getManifest();
-
-          Attributes attributes = manifest.getMainAttributes();
-
-          if (build == null) {
-            String buildNumber = attributes.getValue("Consulo-Build-Number");
-            if (buildNumber != null) {
-              build = BuildNumber.fromString(buildNumber);
+        try {
+            String buildNumberFromJvm = Platform.current().jvm().getRuntimeProperty("consulo.build.number");
+            if (buildNumberFromJvm != null) {
+                build = BuildNumber.fromString(buildNumberFromJvm);
             }
-          }
 
-          // yyyyMMddHHmm
-          String rawBuildDate = attributes.getValue("Consulo-Build-Date");
-          if (rawBuildDate != null) {
-            buildDate = parseDate(rawBuildDate);
-          }
+            // when running from exploded classes (tests), the class 'jar' is a directory - there is no manifest to read
+            if (jarPathForClass != null && Files.isRegularFile(Path.of(jarPathForClass))) {
+                try (JarFile jarFile = new JarFile(jarPathForClass)) {
+                    Manifest manifest = jarFile.getManifest();
+
+                    Attributes attributes = manifest.getMainAttributes();
+
+                    if (build == null) {
+                        String buildNumber = attributes.getValue("Consulo-Build-Number");
+                        if (buildNumber != null) {
+                            build = BuildNumber.fromString(buildNumber);
+                        }
+                    }
+
+                    // yyyyMMddHHmm
+                    String rawBuildDate = attributes.getValue("Consulo-Build-Date");
+                    if (rawBuildDate != null) {
+                        buildDate = parseDate(rawBuildDate);
+                    }
+                }
+            }
         }
-      }
-    }
-    catch (Throwable e) {
-      Logger.getInstance(ApplicationInfo.class).error(e);
-    }
+        catch (Throwable e) {
+            Logger.getInstance(ApplicationInfo.class).error(e);
+        }
 
-    myBuild = build != null ? build : BuildNumber.fallback();
-    myBuildDate = buildDate != null ? buildDate : Calendar.getInstance();
-  }
-
-  private static GregorianCalendar parseDate(String dateString) {
-    int year = 0, month = 0, day = 0, hour = 0, minute = 0;
-    try {
-      year = Integer.parseInt(dateString.substring(0, 4));
-      month = Integer.parseInt(dateString.substring(4, 6));
-      day = Integer.parseInt(dateString.substring(6, 8));
-      if (dateString.length() > 8) {
-        hour = Integer.parseInt(dateString.substring(8, 10));
-        minute = Integer.parseInt(dateString.substring(10, 12));
-      }
-    }
-    catch (Exception ignore) {
-    }
-    if (month > 0) month--;
-    return new GregorianCalendar(year, month, day, hour, minute);
-  }
-
-  public Calendar getBuildDate() {
-    return myBuildDate;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #getBuild()")
-  public String getBuildNumber() {
-    return getBuild().asString();
-  }
-
-  public BuildNumber getBuild() {
-    return myBuild;
-  }
-
-  public final String getMajorVersion() {
-    return String.valueOf(myBuildDate.get(Calendar.YEAR));
-  }
-
-  public final String getMinorVersion() {
-    return String.valueOf(myBuildDate.get(Calendar.MONTH) + 1);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #getName()")
-  public String getVersionName() {
-    return getName();
-  }
-
-  public final String getFullApplicationName() {
-    StringBuilder buffer = new StringBuilder();
-    buffer.append(getName());
-    buffer.append(" ");
-    buffer.append(getMajorVersion());
-
-    String minorVersion = getMinorVersion();
-    if (!StringUtil.isEmpty(minorVersion)) {
-      buffer.append(".");
-      buffer.append(getMinorVersion());
+        myBuild = build != null ? build : BuildNumber.fallback();
+        myBuildDate = buildDate != null ? buildDate : Calendar.getInstance();
     }
 
-    return buffer.toString();
-  }
-
-  public final String getName() {
-    return "Consulo";
-  }
-
-  public final String getCompanyName() {
-    return "consulo.io";
-  }
-
-  public String getFullVersion() {
-    String majorVersion = getMajorVersion();
-    if (majorVersion.trim().length() > 0) {
-      String minorVersion = getMinorVersion();
-      if (minorVersion.trim().length() > 0) {
-        return majorVersion + "." + minorVersion;
-      }
-      else {
-        return majorVersion + ".0";
-      }
+    private static GregorianCalendar parseDate(String dateString) {
+        int year = 0, month = 0, day = 0, hour = 0, minute = 0;
+        try {
+            year = Integer.parseInt(dateString.substring(0, 4));
+            month = Integer.parseInt(dateString.substring(4, 6));
+            day = Integer.parseInt(dateString.substring(6, 8));
+            if (dateString.length() > 8) {
+                hour = Integer.parseInt(dateString.substring(8, 10));
+                minute = Integer.parseInt(dateString.substring(10, 12));
+            }
+        }
+        catch (Exception ignore) {
+        }
+        if (month > 0) {
+            month--;
+        }
+        return new GregorianCalendar(year, month, day, hour, minute);
     }
-    else {
-      return getName();
+
+    public Calendar getBuildDate() {
+        return myBuildDate;
     }
-  }
+
+    public BuildNumber getBuild() {
+        return myBuild;
+    }
+
+    public final String getMajorVersion() {
+        return String.valueOf(myBuildDate.get(Calendar.YEAR));
+    }
+
+    public final String getMinorVersion() {
+        return String.valueOf(myBuildDate.get(Calendar.MONTH) + 1);
+    }
+
+    public final String getName() {
+        return "Consulo";
+    }
+
+    public final String getCompanyName() {
+        return "consulo.io";
+    }
+
+    public final String getFullApplicationName() {
+        return getName() + ' ' + getMajorVersion() + '.' + getMinorVersion();
+    }
+
+    public String getFullVersion() {
+        return getMajorVersion() + '.' + getMinorVersion();
+    }
 }

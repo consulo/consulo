@@ -321,7 +321,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             catch (ModuleWithNameAlreadyExistsException | ModuleDirIsNotExistsException e) {
                 LOG.warn(e);
 
-                errors.add(ModuleLoadingErrorDescription.create(LocalizeValue.ofNullable(e.getMessage()), moduleLoadItem, this));
+                errors.add(ModuleLoadingErrorDescription.create(LocalizeValue.of(e), moduleLoadItem, this));
             }
             catch (Exception e) {
                 LOG.warn(e);

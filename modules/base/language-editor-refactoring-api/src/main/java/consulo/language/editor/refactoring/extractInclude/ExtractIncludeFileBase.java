@@ -256,7 +256,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                     catch (IncorrectOperationException e) {
                         CommonRefactoringUtil.showErrorMessage(
                             getRefactoringName(),
-                            LocalizeValue.ofNullable(e.getMessage()),
+                            LocalizeValue.of(e),
                             null,
                             project
                         );

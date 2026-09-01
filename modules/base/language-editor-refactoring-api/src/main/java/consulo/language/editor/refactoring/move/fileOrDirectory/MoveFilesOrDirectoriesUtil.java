@@ -197,7 +197,7 @@ public class MoveFilesOrDirectoriesUtil {
                     catch (IncorrectOperationException e) {
                         CommonRefactoringUtil.showErrorMessage(
                             RefactoringLocalize.errorTitle(),
-                            LocalizeValue.ofNullable(e.getMessage()),
+                            LocalizeValue.of(e),
                             "refactoring.moveFile",
                             project
                         );
