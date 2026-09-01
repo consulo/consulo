@@ -229,12 +229,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             }
         }
         catch (IncorrectOperationException e) {
-            CommonRefactoringUtil.showErrorMessage(
-                RefactoringLocalize.renameTitle(),
-                LocalizeValue.of(e),
-                getHelpID(),
-                myProject
-            );
+            LOG.warn("Rename failed", e);
+            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle(), LocalizeValue.of(e), getHelpID(), myProject);
             return false;
         }
 
@@ -412,6 +408,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                 RenameUtil.doRename(element, newName, infos.toArray(new UsageInfo[infos.size()]), myProject, elementListener);
             }
             catch (IncorrectOperationException e) {
+                LOG.warn("Rename failed", e);
                 RenameUtil.showErrorMessage(e, element, myProject);
                 return;
             }

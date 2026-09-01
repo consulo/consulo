@@ -144,6 +144,8 @@ public class PluginDownloader {
                     throw e;
                 }
                 catch (Throwable e) {
+                    LOG.warn("Failed to download plugin " + myPluginId, e);
+
                     myFile = null;
                     errorMessage = LocalizeValue.of(e);
 
@@ -159,6 +161,8 @@ public class PluginDownloader {
                 throw e;
             }
             catch (Throwable e) {
+                LOG.warn("Failed to download plugin " + myPluginId, e);
+
                 myFile = null;
                 errorMessage = LocalizeValue.of(e);
             }

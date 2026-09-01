@@ -364,14 +364,13 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     @Override
     public LocalizeValue fromException(Throwable t) {
         if (t instanceof IOException || t instanceof UncheckedIOException || t instanceof IOError) {
-            return fromIoError(t);
+            return fromIoException(t);
         }
 
-        String message = t.getLocalizedMessage();
-        return LocalizeValue.of(StringUtil.isEmptyOrSpaces(message) ? t.toString() : message);
+        return fromGenericException(t);
     }
 
-    private LocalizeValue fromIoError(Throwable t) {
+    private LocalizeValue fromIoException(Throwable t) {
         if (t instanceof UncheckedIOException || t instanceof IOError) {
             Throwable cause = t.getCause();
             if (cause != null) {
@@ -381,30 +380,43 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
         String message = t.getLocalizedMessage();
         if (StringUtil.isEmptyOrSpaces(message)) {
-            return CoreLocalize.ioErrorUnknown();
+            Throwable cause = t.getCause();
+            return cause != null ? fromException(cause) : CoreLocalize.errorIoUnknown();
         }
 
         return switch (t) {
-            case AccessDeniedException _ -> CoreLocalize.ioErrorAccessDenied(message);
-            case DirectoryNotEmptyException _ -> CoreLocalize.ioErrorDirNotEmpty(message);
-            case FileAlreadyExistsException _ -> CoreLocalize.ioErrorAlreadyExists(message);
-            case NoSuchFileException _ -> CoreLocalize.ioErrorNoSuchFile(message);
-            case NotDirectoryException _ -> CoreLocalize.ioErrorNotDir(message);
-            case NotLinkException _ -> CoreLocalize.ioErrorNotLink(message);
-            case FileSystemLoopException _ -> CoreLocalize.ioErrorLoop(message);
-            case FileSystemException _ -> CoreLocalize.ioErrorSuberror(t.getClass().getSimpleName(), message);
-            case IOException e when e.getCause() != null -> {
-                Throwable cause = e.getCause();
-                if (message.equals(cause.toString())) {
-                    yield fromException(cause);
-                }
-                if (!Objects.equals(message, cause.getLocalizedMessage())) {
-                    yield CoreLocalize.ioErrorSuberror(message, fromException(cause));
-                }
-                yield LocalizeValue.of(message);
-            }
-            default -> LocalizeValue.of(message);
+            case AccessDeniedException _ -> CoreLocalize.errorIoAccessDenied(message);
+            case DirectoryNotEmptyException _ -> CoreLocalize.errorIoDirNotEmpty(message);
+            case FileAlreadyExistsException _ -> CoreLocalize.errorIoAlreadyExists(message);
+            case NoSuchFileException _ -> CoreLocalize.errorIoNoSuchFile(message);
+            case NotDirectoryException _ -> CoreLocalize.errorIoNotDir(message);
+            case NotLinkException _ -> CoreLocalize.errorIoNotLink(message);
+            case FileSystemLoopException _ -> CoreLocalize.errorIoLoop(message);
+            case FileSystemException _ -> CoreLocalize.errorTypeAndMessage(t.getClass().getSimpleName(), message);
+            default -> fromGenericException(t);
         };
+    }
+
+    private LocalizeValue fromGenericException(Throwable t) {
+        String message = t.getLocalizedMessage();
+        Throwable cause = t.getCause();
+
+        if (messageRepeatsCause(message, cause)) {
+            return fromException(cause);
+        }
+
+        if (StringUtil.isEmptyOrSpaces(message)) {
+            message = t.toString();
+        }
+
+        return cause != null
+            ? CoreLocalize.errorSuberror(message, fromException(cause))
+            : LocalizeValue.of(message);
+    }
+
+    private boolean messageRepeatsCause(@Nullable String message, @Nullable Throwable cause) {
+        return cause != null
+            && (StringUtil.isEmptyOrSpaces(message) || message.equals(cause.getLocalizedMessage()) || message.equals(cause.toString()));
     }
 
     @Override

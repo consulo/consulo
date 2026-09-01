@@ -240,7 +240,10 @@ public class RenameUtil {
         }
         project.getApplication().invokeLater(() -> {
             String helpID = RenamePsiElementProcessor.forElement(element).getHelpID(element);
-            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle(), LocalizeValue.of(e), helpID, project);
+            LocalizeValue message = StringUtil.isEmptyOrSpaces(e.getMessage())
+                ? RefactoringLocalize.renameNotSupported()
+                : LocalizeValue.of(e);
+            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle(), message, helpID, project);
         });
     }
 
