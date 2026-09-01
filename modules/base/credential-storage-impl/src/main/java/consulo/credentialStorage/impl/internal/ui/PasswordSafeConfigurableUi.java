@@ -271,7 +271,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
                         throw new ConfigurationException(CredentialStorageLocalize.settingsPasswordPackageLibsecret10IsNotInstalled());
                     }
                     else {
-                        throw new ConfigurationException(LocalizeValue.ofNullable(e.getMessage()));
+                        throw new ConfigurationException(LocalizeValue.of(e));
                     }
                 }
             }

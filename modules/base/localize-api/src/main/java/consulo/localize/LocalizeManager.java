@@ -40,6 +40,8 @@ public abstract class LocalizeManager {
      */
     public abstract LocalizeValue fromStringKey(String localizeKeyInfo);
 
+    public abstract LocalizeValue fromException(Throwable t);
+
     /**
      * Return unformatted localize text
      *
@@ -57,7 +59,7 @@ public abstract class LocalizeManager {
     public abstract Locale getAutoDetectedLocale();
 
     public abstract boolean isDefaultLocale();
-    public abstract Set<Locale> getAvaliableLocales();
+    public abstract Set<Locale> getAvailableLocales();
 
     public abstract void addListener(LocalizeManagerListener listener, Disposable disposable);
 

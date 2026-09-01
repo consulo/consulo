@@ -23,7 +23,6 @@ import consulo.localize.LocalizeValue;
  * @since 2021-11-23
  */
 public class PluginDownloadFailedException extends Exception {
-    
     private final PluginId myPluginId;
     
     private final String myPluginName;
@@ -37,17 +36,14 @@ public class PluginDownloadFailedException extends Exception {
         myMessage = message;
     }
 
-    
     public LocalizeValue getLocalizeMessage() {
         return myMessage;
     }
 
-    
     public PluginId getPluginId() {
         return myPluginId;
     }
 
-    
     public String getPluginName() {
         return myPluginName;
     }

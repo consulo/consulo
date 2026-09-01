@@ -38,7 +38,7 @@ public class ServerTaskExecutorImpl implements ServerTaskExecutor {
             }
             catch (Throwable e) {
                 LOG.info(e);
-                callback.errorOccurred(LocalizeValue.ofNullable(e.getMessage()));
+                callback.errorOccurred(LocalizeValue.of(e));
             }
         });
     }

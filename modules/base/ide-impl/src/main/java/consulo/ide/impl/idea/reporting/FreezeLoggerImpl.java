@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.reporting;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ApplicationManager;
@@ -30,84 +31,88 @@ import consulo.ui.ex.awt.util.Alarm;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 
 @Singleton
 @ServiceImpl
 public class FreezeLoggerImpl extends FreezeLogger {
+    private static final Logger LOG = Logger.getInstance(FreezeLoggerImpl.class);
+    private static final Alarm ALARM = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, ApplicationManager.getApplication());
+    private static final int MAX_ALLOWED_TIME = 500;
 
-  private static final Logger LOG = Logger.getInstance(FreezeLoggerImpl.class);
-  private static final Alarm ALARM = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, ApplicationManager.getApplication());
-  private static final int MAX_ALLOWED_TIME = 500;
+    @Override
+    public void runUnderPerformanceMonitor(@Nullable ComponentManager project, Runnable action) {
+        if (!shouldReport() || isUnderDebug() || Application.get().isUnitTestMode()) {
+            action.run();
+            return;
+        }
 
-  @Override
-  public void runUnderPerformanceMonitor(@Nullable ComponentManager project, Runnable action) {
-    if (!shouldReport() || isUnderDebug() || ApplicationManager.getApplication().isUnitTestMode()) {
-      action.run();
-      return;
+        IdeaModalityState initial = IdeaModalityState.current();
+        ALARM.cancelAllRequests();
+        ALARM.addRequest(() -> dumpThreads(project, initial), MAX_ALLOWED_TIME);
+
+        try {
+            action.run();
+        }
+        finally {
+            ALARM.cancelAllRequests();
+        }
     }
 
-    IdeaModalityState initial = IdeaModalityState.current();
-    ALARM.cancelAllRequests();
-    ALARM.addRequest(() -> dumpThreads(project, initial), MAX_ALLOWED_TIME);
-
-    try {
-      action.run();
-    }
-    finally {
-      ALARM.cancelAllRequests();
-    }
-  }
-
-  private static boolean shouldReport() {
-    return Registry.is("typing.freeze.report.dumps");
-  }
-
-  private static void dumpThreads(@Nullable ComponentManager project, IdeaModalityState initialState) {
-    ThreadInfo[] infos = ThreadDumper.getThreadInfos();
-    String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
-    if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {
-      return;
+    private static boolean shouldReport() {
+        return Registry.is("typing.freeze.report.dumps");
     }
 
-    boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb((Project)project);
+    private static void dumpThreads(@Nullable ComponentManager project, IdeaModalityState initialState) {
+        ThreadInfo[] infos = ThreadDumper.getThreadInfos();
+        String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
+        if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {
+            return;
+        }
 
-    ApplicationManager.getApplication().invokeLater(() -> {
-      if (!initialState.equals(IdeaModalityState.current())) return;
-      sendDumpsInBackground(infos, isInDumbMode);
-    }, IdeaModalityState.any());
-  }
+        boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb((Project) project);
 
-  private static void sendDumpsInBackground(ThreadInfo[] infos, boolean isInDumbMode) {
-    //FIXME [VISTALL] we need this?
-    /*ApplicationManager.getApplication().executeOnPooledThread(() -> {
-      ThreadDumpInfo info = new ThreadDumpInfo(infos, isInDumbMode);
-      String report = ReporterKt.createReportLine("typing-freeze-dumps", info);
-      if (!StatsSender.INSTANCE.send(report, true)) {
-        LOG.debug("Error while reporting thread dump");
-      }
-    }); */
-  }
+        Application.get().invokeLater(
+            () -> {
+                if (!initialState.equals(IdeaModalityState.current())) {
+                    return;
+                }
+                sendDumpsInBackground(infos, isInDumbMode);
+            },
+            IdeaModalityState.any()
+        );
+    }
 
-  private static boolean isUnderDebug() {
-    return ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
-  }
+    private static void sendDumpsInBackground(ThreadInfo[] infos, boolean isInDumbMode) {
+        //FIXME [VISTALL] we need this?
+        /*ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            ThreadDumpInfo info = new ThreadDumpInfo(infos, isInDumbMode);
+            String report = ReporterKt.createReportLine("typing-freeze-dumps", info);
+            if (!StatsSender.INSTANCE.send(report, true)) {
+                LOG.debug("Error while reporting thread dump");
+            }
+        });*/
+    }
 
+    private static boolean isUnderDebug() {
+        return ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+    }
 }
 
 class ThreadDumpInfo {
-  public final ThreadInfo[] threadInfos;
-  public final String version;
-  public final String product;
-  public final String buildNumber;
-  public final boolean isInDumbMode;
+    public final ThreadInfo[] threadInfos;
+    public final String version;
+    public final String product;
+    public final String buildNumber;
+    public final boolean isInDumbMode;
 
-  public ThreadDumpInfo(ThreadInfo[] threadInfos, boolean isInDumbMode) {
-    this.threadInfos = threadInfos;
-    this.product = ApplicationInfo.getInstance().getVersionName();
-    this.version = ApplicationInfo.getInstance().getFullVersion();
-    this.buildNumber = ApplicationInfo.getInstance().getBuild().toString();
-    this.isInDumbMode = isInDumbMode;
-  }
+    public ThreadDumpInfo(ThreadInfo[] threadInfos, boolean isInDumbMode) {
+        this.threadInfos = threadInfos;
+        this.product = ApplicationInfo.getInstance().getName();
+        this.version = ApplicationInfo.getInstance().getFullVersion();
+        this.buildNumber = ApplicationInfo.getInstance().getBuild().toString();
+        this.isInDumbMode = isInDumbMode;
+    }
 }

@@ -162,7 +162,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                 CommonRefactoringUtil.showErrorHint(
                     project,
                     null,
-                    LocalizeValue.ofNullable(e.getMessage()),
+                    LocalizeValue.of(e),
                     CommonLocalize.titleError(),
                     null
                 );
