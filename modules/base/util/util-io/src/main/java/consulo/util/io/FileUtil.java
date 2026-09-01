@@ -23,6 +23,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.ref.SimpleReference;
 import org.intellij.lang.annotations.RegExp;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -992,29 +993,34 @@ public class FileUtil {
         });
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     static void performDeleteNIO2(Path path) throws IOException {
+        SimpleReference<IOException> cause = SimpleReference.create();
         Boolean result = doIOOperation(lastAttempt -> {
             try {
                 Files.deleteIfExists(path);
                 return Boolean.TRUE;
             }
-            catch (AccessDeniedException ignored) {
+            catch (AccessDeniedException e) {
                 // file is read-only: fallback to standard java.io API
                 File file = path.toFile();
-                if (file == null) {
-                    return Boolean.FALSE;
-                }
                 if (file.delete() || !file.exists()) {
                     return Boolean.TRUE;
                 }
+                if (lastAttempt) {
+                    cause.set(e);
+                }
             }
-            catch (IOException ignored) {
+            catch (IOException e) {
+                if (lastAttempt) {
+                    cause.set(e);
+                }
             }
             return lastAttempt ? Boolean.FALSE : null;
         });
 
         if (!Boolean.TRUE.equals(result)) {
-            throw new IOException("Failed to delete " + path) {
+            throw new IOException("Failed to delete " + path, cause.get()) {
                 @Override
                 public synchronized Throwable fillInStackTrace() {
                     // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result

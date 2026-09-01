@@ -17,7 +17,6 @@ package consulo.ui;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 
 import java.util.function.Function;

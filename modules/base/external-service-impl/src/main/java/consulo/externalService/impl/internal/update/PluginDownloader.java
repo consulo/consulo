@@ -39,16 +39,15 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
-import org.jspecify.annotations.Nullable;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -189,38 +188,52 @@ public class PluginDownloader {
 
             String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
-            Path platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory().toPath();
+            Path platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory().toPath().normalize();
 
             try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
                 TarArchiveEntry tempEntry;
                 while ((tempEntry = ais.getNextEntry()) != null) {
                     String name = tempEntry.getName();
-                    // we interest only in new build
-                    if (name.startsWith(prefix) && name.length() != prefix.length()) {
-                        Path targetFile = platformDirectory.resolve(name.substring(prefix.length(), name.length()));
+                    if (!name.startsWith(prefix) || name.length() == prefix.length()) {
+                        // we're interested only in the new build
+                        continue;
+                    }
+                    Path targetFile = platformDirectory.resolve(name.substring(prefix.length())).normalize();
+                    if (!targetFile.startsWith(platformDirectory)) {
+                        throw new IOException("TAR entry escapes the platform directory: " + name);
+                    }
 
-                        if (tempEntry.isDirectory()) {
-                            Files.createDirectories(targetFile);
+                    if (tempEntry.isDirectory()) {
+                        Files.createDirectories(targetFile);
+                    }
+                    else if (tempEntry.isSymbolicLink()) {
+                        Path linkTarget = targetFile.resolveSibling(tempEntry.getLinkName()).normalize();
+                        if (!linkTarget.startsWith(platformDirectory)) {
+                            throw new IOException("TAR symlink escapes the platform directory: " + name);
                         }
-                        else if (tempEntry.isSymbolicLink()) {
-                            Files.createDirectories(targetFile.getParent());
-                            Files.createSymbolicLink(targetFile, Paths.get(tempEntry.getLinkName()));
-                        }
-                        else {
-                            Files.createDirectories(targetFile.getParent());
-                            try (OutputStream stream = Files.newOutputStream(targetFile)) {
-                                StreamUtil.copyStreamContent(ais, stream);
-                            }
 
+                        Files.createDirectories(targetFile.getParent());
+                        Files.createSymbolicLink(targetFile, Path.of(tempEntry.getLinkName()));
+                    }
+                    else {
+                        Files.createDirectories(targetFile.getParent());
+                        try (OutputStream stream = Files.newOutputStream(targetFile)) {
+                            StreamUtil.copyStreamContent(ais, stream);
+                        }
+
+                        try {
                             Files.setLastModifiedTime(targetFile, FileTime.fromMillis(tempEntry.getLastModifiedDate().getTime()));
+                        }
+                        catch (IOException e) {
+                            LOG.warn("Failed to set last modified time of " + targetFile, e);
+                        }
 
-                            // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
-                            if (tempEntry.getMode() == 0b111_101_101) {
-                                NioPathUtil.setPosixFilePermissions(
-                                    targetFile,
-                                    NioPathUtil.convertModeToFilePermissions(tempEntry.getMode())
-                                );
-                            }
+                        // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
+                        if (tempEntry.getMode() == 0b111_101_101) {
+                            NioPathUtil.setPosixFilePermissions(
+                                targetFile,
+                                NioPathUtil.convertModeToFilePermissions(tempEntry.getMode())
+                            );
                         }
                     }
                 }

@@ -1938,10 +1938,6 @@ public final class StringUtil {
         return isEmpty(s) ? defaultValue : s;
     }
 
-    public static String notNullizeIfEmptyOrSpaces(@Nullable String s, String defaultValue) {
-        return isEmptyOrSpaces(s) ? defaultValue : s;
-    }
-
     public static @Nullable String nullize(@Nullable String s) {
         return nullize(s, false);
     }

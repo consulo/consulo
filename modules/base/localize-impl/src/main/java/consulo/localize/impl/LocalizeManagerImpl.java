@@ -372,29 +372,37 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     private LocalizeValue fromIoError(Throwable t) {
+        if (t instanceof UncheckedIOException || t instanceof IOError) {
+            Throwable cause = t.getCause();
+            if (cause != null) {
+                t = cause;
+            }
+        }
+
         String message = t.getLocalizedMessage();
         if (StringUtil.isEmptyOrSpaces(message)) {
             return CoreLocalize.ioErrorUnknown();
         }
 
-        if (t instanceof UncheckedIOException || t instanceof IOError) {
-            t = t.getCause();
-        }
-
         return switch (t) {
-            case AccessDeniedException ade -> {
-                String reason = ade.getReason();
-                yield reason != null
-                    ? CoreLocalize.ioErrorAccessDeniedReason(message, reason)
-                    : CoreLocalize.ioErrorAccessDenied(message);
+            case AccessDeniedException _ -> CoreLocalize.ioErrorAccessDenied(message);
+            case DirectoryNotEmptyException _ -> CoreLocalize.ioErrorDirNotEmpty(message);
+            case FileAlreadyExistsException _ -> CoreLocalize.ioErrorAlreadyExists(message);
+            case NoSuchFileException _ -> CoreLocalize.ioErrorNoSuchFile(message);
+            case NotDirectoryException _ -> CoreLocalize.ioErrorNotDir(message);
+            case NotLinkException _ -> CoreLocalize.ioErrorNotLink(message);
+            case FileSystemLoopException _ -> CoreLocalize.ioErrorLoop(message);
+            case FileSystemException _ -> CoreLocalize.ioErrorSuberror(t.getClass().getSimpleName(), message);
+            case IOException e when e.getCause() != null -> {
+                Throwable cause = e.getCause();
+                if (message.equals(cause.toString())) {
+                    yield fromException(cause);
+                }
+                if (!Objects.equals(message, cause.getLocalizedMessage())) {
+                    yield CoreLocalize.ioErrorSuberror(message, fromException(cause));
+                }
+                yield LocalizeValue.of(message);
             }
-            case DirectoryNotEmptyException e -> CoreLocalize.ioErrorDirNotEmpty(message);
-            case FileAlreadyExistsException e -> CoreLocalize.ioErrorAlreadyExists(message);
-            case NoSuchFileException e -> CoreLocalize.ioErrorNoSuchFile(message);
-            case NotDirectoryException e -> CoreLocalize.ioErrorNotDir(message);
-            case NotLinkException e -> CoreLocalize.ioErrorNotLink(message);
-            case FileSystemException fse when message.equals(fse.getFile()) ->
-                LocalizeValue.of(t.getClass().getSimpleName() + ": " + message);
             default -> LocalizeValue.of(message);
         };
     }

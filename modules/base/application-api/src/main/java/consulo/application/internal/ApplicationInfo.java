@@ -15,13 +15,11 @@
  */
 package consulo.application.internal;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.component.util.BuildNumber;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.ClassPathUtil;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 
 import java.nio.file.Files;
@@ -116,12 +114,6 @@ public class ApplicationInfo {
         return myBuildDate;
     }
 
-    @Deprecated
-    @DeprecationInfo("Use #getBuild()")
-    public String getBuildNumber() {
-        return getBuild().asString();
-    }
-
     public BuildNumber getBuild() {
         return myBuild;
     }
@@ -134,26 +126,6 @@ public class ApplicationInfo {
         return String.valueOf(myBuildDate.get(Calendar.MONTH) + 1);
     }
 
-    @Deprecated
-    @DeprecationInfo("Use #getName()")
-    public String getVersionName() {
-        return getName();
-    }
-
-    public final String getFullApplicationName() {
-        StringBuilder buffer = new StringBuilder()
-            .append(getName())
-            .append(" ")
-            .append(getMajorVersion());
-
-        String minorVersion = getMinorVersion();
-        if (!StringUtil.isEmptyOrSpaces(minorVersion)) {
-            buffer.append(".").append(getMinorVersion());
-        }
-
-        return buffer.toString();
-    }
-
     public final String getName() {
         return "Consulo";
     }
@@ -162,10 +134,11 @@ public class ApplicationInfo {
         return "consulo.io";
     }
 
+    public final String getFullApplicationName() {
+        return getName() + ' ' + getMajorVersion() + '.' + getMinorVersion();
+    }
+
     public String getFullVersion() {
-        String majorVersion = getMajorVersion();
-        return StringUtil.isEmptyOrSpaces(majorVersion)
-            ? getName()
-            : majorVersion + "." + StringUtil.notNullizeIfEmptyOrSpaces(getMinorVersion(), "0");
+        return getMajorVersion() + '.' + getMinorVersion();
     }
 }
