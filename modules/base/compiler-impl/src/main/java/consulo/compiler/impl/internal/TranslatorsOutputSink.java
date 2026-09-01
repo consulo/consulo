@@ -142,7 +142,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
         }
         catch (IOException e) {
             LOG.info(e);
-            myContext.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
+            myContext.requestRebuildNextTime(LocalizeValue.of(e));
         }
     }
 
@@ -170,7 +170,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
         }
         catch (IOException e) {
             LOG.info(e);
-            myContext.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
+            myContext.requestRebuildNextTime(LocalizeValue.of(e));
         }
     }
 }

@@ -145,7 +145,7 @@ public class PluginDownloader {
                 }
                 catch (Throwable e) {
                     myFile = null;
-                    errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
+                    errorMessage = LocalizeValue.of(e);
 
                     TimeoutUtil.sleep(5000L);
                 }
@@ -160,7 +160,7 @@ public class PluginDownloader {
             }
             catch (Throwable e) {
                 myFile = null;
-                errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
+                errorMessage = LocalizeValue.of(e);
             }
         }
 

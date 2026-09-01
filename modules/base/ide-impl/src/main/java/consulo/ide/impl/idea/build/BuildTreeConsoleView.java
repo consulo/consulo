@@ -615,7 +615,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         LocalizeValue message = failure.getMessage().orIfEmpty(failure.getDescription());
         if (message.isEmpty()) {
             Throwable error = failure.getError();
-            message = error != null ? LocalizeValue.ofNullable(error.getMessage()) : defaultFailureMessage;
+            message = error != null ? LocalizeValue.of(error) : defaultFailureMessage;
         }
         LocalizeValue failureNodeName = message.map(BuildConsoleUtils::getMessageTitle);
         Navigatable failureNavigatable = failure.getNavigatable();

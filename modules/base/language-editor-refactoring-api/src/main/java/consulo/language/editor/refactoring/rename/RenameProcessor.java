@@ -231,7 +231,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         catch (IncorrectOperationException e) {
             CommonRefactoringUtil.showErrorMessage(
                 RefactoringLocalize.renameTitle(),
-                LocalizeValue.ofNullable(e.getMessage()),
+                LocalizeValue.of(e),
                 getHelpID(),
                 myProject
             );

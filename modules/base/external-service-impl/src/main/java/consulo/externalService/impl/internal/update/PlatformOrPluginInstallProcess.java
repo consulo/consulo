@@ -100,7 +100,7 @@ public final class PlatformOrPluginInstallProcess {
                     downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
                 }
                 catch (PluginDownloadFailedException e) {
-                    LOG.warn(e);
+                    LOG.warn("Download failed", e);
                     uiAccess.give(() -> Alerts.okError(e).showAsync());
                     return;
                 }

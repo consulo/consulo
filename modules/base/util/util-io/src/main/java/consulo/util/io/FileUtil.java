@@ -123,10 +123,8 @@ public class FileUtil {
             //noinspection SSBasedInspection
             file.deleteOnExit();
         }
-        if (!create) {
-            if (!file.delete() && file.exists()) {
-                throw new IOException("Cannot delete a file: " + file);
-            }
+        if (!create && !file.delete() && file.exists()) {
+            throw new IOException("Cannot delete a file: " + file);
         }
         return file;
     }
@@ -192,7 +190,12 @@ public class FileUtil {
                 int size = children == null ? 0 : children.length;
                 maxFileNumber = Math.max(10, size * 10); // if too many files are in tmp dir, we need a bigger random range than meager 10
                 if (attempts > MAX_ATTEMPTS) {
-                    throw exception != null ? exception : new IOException("Unable to create a temporary file " + f + "\nDirectory '" + dir + "' list (" + size + " children): " + Arrays.toString(children));
+                    throw exception != null
+                        ? exception
+                        : new IOException(
+                            "Unable to create a temporary file " + f +
+                                "\nDirectory '" + dir + "' list (" + size + " children): " + Arrays.toString(children)
+                    );
                 }
             }
 
