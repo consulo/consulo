@@ -302,13 +302,6 @@ public class UIUtil {
     public static final String JSLIDER_ISFILLED = "JSlider.isFilled";
     public static final String ARIAL_FONT_NAME = "Arial";
     public static final String TABLE_FOCUS_CELL_BACKGROUND_PROPERTY = "Table.focusCellBackground";
-    /**
-     * Prevent component DataContext from returning parent editor
-     * Useful for components that are manually painted over the editor to prevent shortcuts from falling-through to editor
-     * <p>
-     * Usage: {@code component.putClientProperty(HIDE_EDITOR_FROM_DATA_CONTEXT_PROPERTY, Boolean.TRUE)}
-     */
-    public static final String HIDE_EDITOR_FROM_DATA_CONTEXT_PROPERTY = "AuxEditorComponent";
     public static final String CENTER_TOOLTIP_DEFAULT = "ToCenterTooltip";
     public static final String CENTER_TOOLTIP_STRICT = "ToCenterTooltip.default";
 

@@ -541,7 +541,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
         UIUtil.addUndoRedoActions(textComponent);
 
-        textComponent.putClientProperty(UIUtil.HIDE_EDITOR_FROM_DATA_CONTEXT_PROPERTY, Boolean.TRUE);
         textComponent.setBackground(UIUtil.getTextFieldBackground());
         textComponent.addFocusListener(new FocusListener() {
             @Override

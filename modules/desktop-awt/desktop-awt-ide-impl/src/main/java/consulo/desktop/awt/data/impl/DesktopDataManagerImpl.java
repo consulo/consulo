@@ -21,16 +21,17 @@ import consulo.application.Application;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
+import consulo.desktop.awt.editor.impl.internal.EditorComponentImpl;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.facade.FromSwingWindowWrapper;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.ide.impl.dataContext.PreCachedDataContext;
 import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
@@ -47,6 +48,7 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 @Singleton
@@ -89,11 +91,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
                 return (T) (component != null ? ModalityState.nonModal() : ModalityState.nonModal());
             }
 
-            Object data = calcData(dataId, component);
-            if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
-                return (T) validateEditor((Editor) data);
-            }
-            return (T) data;
+            return (T) calcData(dataId, component);
         }
 
         protected Object calcData(Key<?> dataId, Component component) {
@@ -112,18 +110,42 @@ public class DesktopDataManagerImpl extends BaseDataManager {
 
     private @Nullable <T> T getData(Key<T> dataId, Component focusedComponent) {
         try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
-            for (Component c = focusedComponent; c != null; c = c.getParent()) {
-                DataProvider dataProvider = getDataProviderEx(c);
-                if (dataProvider == null) {
-                    continue;
-                }
-                T data = getDataFromProvider(dataProvider, dataId, null);
-                if (data != null) {
-                    return data;
-                }
-            }
+            return captureAwtHierarchy(focusedComponent, false).resolve(dataId);
         }
-        return null;
+    }
+
+    /**
+     * The ui hierarchy of this frontend cannot be walked on its own - only the awt one below it can - so every
+     * capture asked for in terms of ui components is answered by walking awt.
+     */
+    @Override
+    protected PreCachedDataContext.Capture captureHierarchy(consulo.ui.@Nullable Component focusedComponent, boolean forAsync) {
+        return captureAwtHierarchy(TargetAWT.to(focusedComponent), forAsync);
+    }
+
+    /**
+     * Captures the awt hierarchy above the component, the focused one first.
+     */
+    public PreCachedDataContext.Capture captureAwtHierarchy(@Nullable Component focusedComponent, boolean forAsync) {
+        PreCachedDataContext.Capture capture =
+            forAsync ? PreCachedDataContext.captureForAsync(myApplication) : PreCachedDataContext.capture(myApplication);
+        for (Component c = focusedComponent; c != null; c = c.getParent()) {
+            hideParentEditorIfNeeded(capture, c);
+            capture.collect(getDataProviderEx(c));
+        }
+        return capture;
+    }
+
+    /**
+     * A text field stands for the editor it sits in: the find and replace fields of the editor header are
+     * inside one, and were it answered above them the editor would claim the keystrokes typed into the field
+     * through the copy, cut and paste providers a rule derives from it.
+     */
+    private static void hideParentEditorIfNeeded(PreCachedDataContext.Capture capture, Component component) {
+        if (!(component instanceof JTextComponent) || component instanceof EditorComponentImpl) {
+            return;
+        }
+        capture.hide(Editor.KEY);
     }
 
     @Override
@@ -253,17 +275,5 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
     protected <T> T getData(Key<T> dataId, consulo.ui.@Nullable Component focusedComponent) {
         return getData(dataId, TargetAWT.to(focusedComponent));
-    }
-
-    public static @Nullable Editor validateEditor(Editor editor) {
-        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (focusOwner instanceof JComponent) {
-            JComponent jComponent = (JComponent) focusOwner;
-            if (jComponent.getClientProperty("AuxEditorComponent") != null) {
-                return null; // Hack for EditorSearchComponent
-            }
-        }
-
-        return editor;
     }
 }
