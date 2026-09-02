@@ -306,8 +306,6 @@ public final class NameUtil {
   }
 
   public static String capitalizeAndUnderscore(String name) {
-    // NullAway problem: StringUtil::toUpperCase is conditionally nullable: it returns null only if argument is null
-    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
     return splitWords(name, '_', String::toUpperCase);
   }
 

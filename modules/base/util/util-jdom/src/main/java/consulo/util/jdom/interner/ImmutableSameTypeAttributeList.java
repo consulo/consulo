@@ -77,7 +77,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     @Override
     public int indexOf(Object o) {
         for (int i = 0; i < size(); i++) {
-            if (Objects.equals(0, get(i))) {
+            if (Objects.equals(o, get(i))) {
                 return i;
             }
         }
@@ -87,7 +87,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     @Override
     public int lastIndexOf(Object o) {
         for (int i = size() - 1; i >= 0; i--) {
-            if (Objects.equals(0, get(i))) {
+            if (Objects.equals(o, get(i))) {
                 return i;
             }
         }

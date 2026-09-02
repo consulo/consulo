@@ -17,6 +17,7 @@ package consulo.util.collection;
 
 import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.collection.impl.SingletonIterator;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
@@ -163,11 +164,9 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
             @Override
             public Iterator<E> iterator() {
                 return new JBIterator<>() {
-                    @Nullable
-                    E cur1 = first1;
+                    @Nullable E cur1 = first1;
 
-                    @Nullable
-                    E cur2 = first2;
+                    @Nullable E cur2 = first2;
 
                     @Override
                     public @Nullable E nextImpl() {
@@ -295,10 +294,10 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
         }
         Iterable<E> itt = asIterable();
         if (itt == null) {
-            return Objects.equals(content, element);
+            return Comparing.equal(content, element);
         }
         for (E e : itt) {
-            if (Objects.equals(e, element)) {
+            if (Comparing.equal(e, element)) {
                 return true;
             }
         }

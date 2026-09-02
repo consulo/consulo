@@ -24,15 +24,10 @@ import java.util.function.Function;
  * @since 2022-06-23
  */
 public final class ExtensionPointCacheKey<E, R> {
-    
-    public static <E1, R1> ExtensionPointCacheKey<E1, R1> create(
-        String keyName,
-        Function<ExtensionWalker<E1>, R1> factory
-    ) {
+    public static <E1, R1> ExtensionPointCacheKey<E1, R1> create(String keyName, Function<ExtensionWalker<E1>, R1> factory) {
         return new ExtensionPointCacheKey<>(keyName, factory);
     }
 
-    
     public static <E1, K1> ExtensionPointCacheKey<E1, Map<K1, E1>> groupBy(String keyName, Function<E1, K1> keyMapper) {
         return create(
             keyName,
@@ -52,12 +47,10 @@ public final class ExtensionPointCacheKey<E, R> {
         myFactory = factory;
     }
 
-    
     public String getKeyName() {
         return myKeyName;
     }
 
-    
     public Function<ExtensionWalker<E>, R> getFactory() {
         return myFactory;
     }
