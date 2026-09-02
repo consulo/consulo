@@ -21,11 +21,9 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.content.ContentIterator;
 import consulo.index.io.ID;
-import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
-import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
 import consulo.logging.Logger;
-import consulo.module.Module;
+import consulo.document.util.FileContentUtilCore;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -33,23 +31,24 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Invalidation entry point: on {@code rootsChanged} iterate project files, diff stored
  * options-meta against current providers, and request reindex for any file whose options
- * no longer match what was indexed.
+ * no longer match what was indexed. The staleness decision itself lives in
+ * {@link ModuleAwareIndexMetaRecorder#isStale} — one implementation shared by the stub
+ * read path and this bulk path.
  *
  * <p>Runs off-EDT in smart mode on a pooled thread — project walks can be large. Reindex
- * uses {@link FileBasedIndex#requestReindex} which is coarse (reindexes all indexes for
- * the file). Targeted per-index reindex is a TODO once we have the internal API.</p>
+ * uses {@link ModuleAwareIndexMetaRecorder#requestReindexOnce} which reindexes all indexes
+ * of the file, deliberately: drifted options change the file's interpretation, so indexes
+ * not listing the provider may be stale too. Full-file reindex never under-invalidates and
+ * matches the pushed-properties drift behaviour.</p>
  */
 @TopicImpl(ComponentScope.PROJECT)
 public final class ModuleAwareIndexRootChangeListener implements ModuleRootListener {
@@ -91,63 +90,34 @@ public final class ModuleAwareIndexRootChangeListener implements ModuleRootListe
     private void scan(List<FileBasedIndexExtension<?, ?>> optionsSensitive) {
         ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(myProject);
         ModuleAwareIndexMetaStorage storage = myStorage.get();
-        FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
 
+        List<VirtualFile> stale = new ArrayList<>();
         ContentIterator processor = file -> {
             if (!(file instanceof VirtualFileWithId withId)) {
                 return true;
             }
-            int fileId = withId.getId();
-            Module module = fileIndex.getModuleForFile(file);
-            if (module == null) {
-                return true;
-            }
-            FileType fileType = file.getFileType();
 
             for (FileBasedIndexExtension<?, ?> ext : optionsSensitive) {
-                revalidateOne(ext, fileId, file, module, fileType, storage, fileBasedIndex);
+                ID<?, ?> indexId = ext.getName();
+                if (ModuleAwareIndexMetaRecorder.isStale(indexId, file, myProject)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Module-aware reindex: " + indexId + " for " + file);
+                    }
+                    ModuleAwareIndexMetaRecorder.requestReindexOnce(file);
+                    storage.delete(indexId, withId.getId());
+                    stale.add(file);
+                }
             }
             return true;
         };
 
         ReadAction.run(() -> fileIndex.iterateContent(processor));
-    }
 
-    private static void revalidateOne(FileBasedIndexExtension<?, ?> ext,
-                                      int fileId,
-                                      VirtualFile file,
-                                      Module module,
-                                      FileType fileType,
-                                      ModuleAwareIndexMetaStorage storage,
-                                      FileBasedIndex fileBasedIndex) {
-        List<String> requestedIds = ext.getOptionProviderIds();
-        if (requestedIds.isEmpty()) {
-            return;
-        }
-
-        Set<String> requested = new HashSet<>(requestedIds);
-        List<ModuleAwareIndexOptionProvider> applicable = new ArrayList<>();
-        for (ModuleAwareIndexOptionProvider provider : ModuleAwareIndexOptionRegistry.getApplicableProviders(fileType)) {
-            if (requested.contains(provider.getId())) {
-                applicable.add(provider);
-            }
-        }
-        if (applicable.isEmpty()) {
-            return;
-        }
-
-        ID<?, ?> indexId = ext.getName();
-        OptionsMeta stored = storage.get(indexId, fileId);
-        if (stored == null) {
-            return;
-        }
-
-        if (OptionsRevalidator.needsReindex(ext.getVersion(), stored, applicable, module, file)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Module-aware reindex: " + indexId + " for " + file);
-            }
-            fileBasedIndex.requestReindex(file);
-            storage.delete(indexId, fileId);
+        if (!stale.isEmpty()) {
+            // options may steer the parse itself (preprocessor seeding), so a drifted file
+            // needs its tree rebuilt, not only its index entries
+            Application application = Application.get();
+            application.invokeLater(() -> application.runWriteAction(() -> FileContentUtilCore.reparseFiles(stale)));
         }
     }
 }

@@ -20,12 +20,12 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.NamedStubBase;
 import consulo.language.psi.stub.StubElement;
 import consulo.sandboxPlugin.lang.psi.SandClass;
-
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author VISTALL
- * @since 2022-07-09
+ * Under the preprocessor model only the enabled variant of a declaration is ever parsed and
+ * stubbed, so the stub carries no guard condition — the seed decides existence before the
+ * parse.
  */
 public class SandClassStub extends NamedStubBase<SandClass> {
   protected SandClassStub(@Nullable StubElement parent, IStubElementType elementType, @Nullable StringRef name) {

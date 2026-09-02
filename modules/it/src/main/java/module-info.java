@@ -8,6 +8,8 @@ module consulo.it {
     requires consulo.container.api;
     requires consulo.application.api;
     requires consulo.application.impl;
+    requires consulo.application.ui.api;
+    requires consulo.datacontext.api;
     requires consulo.component.api;
     requires consulo.component.impl;
     requires consulo.component.store.api;
@@ -24,6 +26,7 @@ module consulo.it {
     requires consulo.module.content.api;
     requires consulo.document.api;
     requires consulo.code.editor.api;
+    requires consulo.code.editor.impl;
     requires consulo.language.api;
     requires consulo.language.impl;
     requires consulo.language.editor.api;
@@ -48,6 +51,62 @@ module consulo.it {
     exports consulo.it;
 
     provides consulo.container.internal.PluginManagerInternal with consulo.it.internal.HeadlessPluginManager;
+    provides consulo.logging.attachment.AttachmentFactory with consulo.it.internal.HeadlessAttachmentFactory;
     provides consulo.platform.internal.PlatformInternal with consulo.it.internal.HeadlessPlatformInternal;
     provides consulo.ui.internal.UIInternal with consulo.it.internal.HeadlessUIInternal;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

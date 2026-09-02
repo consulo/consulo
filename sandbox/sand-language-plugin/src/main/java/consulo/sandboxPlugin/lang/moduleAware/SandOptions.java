@@ -18,10 +18,11 @@ package consulo.sandboxPlugin.lang.moduleAware;
 import java.util.Set;
 
 /**
- * Sample module-aware options payload for Sand files. Intentionally minimal — a set of
- * preprocessor-like symbols plus a target tag. Exists to validate the end-to-end
- * module-aware indexing pipeline (record equality, deterministic serialisation,
- * provider dispatch, write-path recording, rootsChanged revalidation).
+ * Module-aware options payload for Sand files — the standalone-file mechanism: options
+ * known statically per module, guarded by drift-reindex. Inclusion contexts are NOT part
+ * of the payload — usage-dependent variability is carried by condition-annotated stubs and
+ * applied as a query/resolve-time environment, because reindexing is impossible during
+ * resolution.
  *
  * <p>Must be a record so {@code T extends Record} on
  * {@link consulo.language.psi.stub.IndexOption#sharablePerOption} is satisfied.</p>

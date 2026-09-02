@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.impl.file.impl;
+package consulo.language.impl.internal.file;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
@@ -11,12 +11,10 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.FileContentUtilCore;
-import consulo.fileEditor.impl.internal.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.document.internal.RecomputeFileTypeMarker;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.internal.file.FileManagerImpl;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.psi.*;
@@ -41,7 +39,9 @@ import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -592,7 +592,7 @@ public class PsiVFSListener implements BulkFileListener {
             FileViewProvider viewProvider = myFileManager.findCachedViewProvider(file);
             if (viewProvider != null) {
                 runExternalAction(() -> {
-                    if (FileDocumentManagerImpl.recomputeFileTypeIfNecessary(file)) {
+                    if (RecomputeFileTypeMarker.recomputeFileTypeIfNecessary(file)) {
                         myFileManager.forceReload(file);
                     }
                     else {
@@ -668,7 +668,7 @@ public class PsiVFSListener implements BulkFileListener {
             (event1, event2) -> event1 instanceof VFileDeleteEvent && event2 instanceof VFileDeleteEvent
                 || event1 instanceof VFileMoveEvent && event2 instanceof VFileMoveEvent;
 
-        ContainerUtil.groupAndRuns(events, check, it -> fireForGrouped(it));
+        groupAndRuns(events, check, it -> fireForGrouped(it));
     }
 
     @RequiredWriteAction
@@ -699,5 +699,52 @@ public class PsiVFSListener implements BulkFileListener {
             }
         }
     }
-}
 
+    private static <T> void groupAndRuns(List<? extends T> values, BiPredicate<T, T> func, Consumer<List<? extends T>> consumer) {
+        if (values.isEmpty()) {
+            return;
+        }
+
+        if (values.size() == 1) {
+            consumer.accept(values);
+            return;
+        }
+
+        T prev = values.get(0);
+        int startIndex = -1;
+
+        for (int i = 1; i < values.size(); i++) {
+            T event = values.get(i);
+
+            try {
+                if (func.test(prev, event)) {
+                    if (startIndex == -1) {
+                        startIndex = i - 1;
+                    }
+                }
+                else if (i == 1) {
+                    consumer.accept(Collections.singletonList(prev));
+
+                    startIndex = i;
+                }
+                else if (startIndex == -1) {
+                    startIndex = i;
+                }
+                else {
+                    List<? extends T> subList = values.subList(startIndex, i);
+                    consumer.accept(subList);
+
+                    startIndex = i;
+                }
+            }
+            finally {
+                prev = event;
+            }
+        }
+
+        if (startIndex != -1) {
+            List<? extends T> list = values.subList(startIndex, values.size());
+            consumer.accept(list);
+        }
+    }
+}

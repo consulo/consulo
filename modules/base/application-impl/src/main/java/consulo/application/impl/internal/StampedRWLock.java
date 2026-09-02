@@ -77,6 +77,34 @@ public final class StampedRWLock implements RWLock {
         myLock.unlockWrite(stamp);
     }
 
+    /**
+     * Executes {@code action} on the executor's thread with this lock's write authority
+     * temporarily re-assigned to it — the {@link ReadMostlyRWLock#transferWriteAction}
+     * analog. The calling thread must hold the write lock and blocks until the action
+     * finishes; nested write acquisitions inside the action are reentrant no-ops.
+     */
+    public void transferWriteAction(Runnable action, java.util.function.Consumer<Runnable> executor) {
+        Thread owner = Thread.currentThread();
+        if (owner != myWriteThread) {
+            throw new IllegalStateException("Write action transfer requires holding the write lock");
+        }
+        java.util.concurrent.CompletableFuture<Void> done = new java.util.concurrent.CompletableFuture<>();
+        executor.accept(() -> {
+            myWriteThread = Thread.currentThread();
+            try {
+                action.run();
+                done.complete(null);
+            }
+            catch (Throwable t) {
+                done.completeExceptionally(t);
+            }
+            finally {
+                myWriteThread = owner;
+            }
+        });
+        done.join();
+    }
+
     @Override
     public void writeIntentLock() {
         writeLock();

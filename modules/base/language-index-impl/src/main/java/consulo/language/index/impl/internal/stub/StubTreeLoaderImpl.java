@@ -133,7 +133,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     }
 
     if (ModuleAwareIndexMetaRecorder.isStale(StubUpdatingIndex.INDEX_ID, vFile, project)) {
-      FileBasedIndex.getInstance().requestReindex(vFile);
+      ModuleAwareIndexMetaRecorder.requestReindexOnce(vFile);
       return null;
     }
 

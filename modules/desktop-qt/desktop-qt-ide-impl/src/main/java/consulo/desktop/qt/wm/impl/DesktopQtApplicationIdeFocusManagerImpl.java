@@ -16,20 +16,8 @@
 package consulo.desktop.qt.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ui.wm.ApplicationIdeFocusManager;
-import consulo.application.ui.wm.ExpirableRunnable;
-import consulo.application.ui.wm.FocusableFrame;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.component.ComponentManager;
-import consulo.dataContext.DataContext;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ModalityState;
-import consulo.util.concurrent.AsyncResult;
+import consulo.application.ui.wm.PassThroughApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
-import org.jspecify.annotations.Nullable;
-
-import javax.swing.JComponent;
-import java.awt.Component;
 
 /**
  * @author VISTALL
@@ -37,94 +25,5 @@ import java.awt.Component;
  */
 @Singleton
 @ServiceImpl
-public class DesktopQtApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
-    @Override
-    public AsyncResult<Void> requestFocus(Component c, boolean forced) {
-        return AsyncResult.resolved();
-    }
-
-    @Override
-    public AsyncResult<Void> requestFocus(consulo.ui.Component c, boolean forced) {
-        return AsyncResult.resolved();
-    }
-
-    @Override
-    public JComponent getFocusTargetFor(JComponent comp) {
-        return null;
-    }
-
-    @Override
-    public void doWhenFocusSettlesDown(Runnable runnable) {
-        runnable.run();
-    }
-
-    @Override
-    public void doWhenFocusSettlesDown(Runnable runnable, ModalityState modality) {
-        runnable.run();
-    }
-
-    @Override
-    public void doWhenFocusSettlesDown(ExpirableRunnable runnable) {
-        if (!runnable.isExpired()) {
-            runnable.run();
-        }
-    }
-
-    @Override
-    public Component getFocusedDescendantFor(Component c) {
-        return null;
-    }
-
-    @Override
-    public AsyncResult<Void> requestDefaultFocus(boolean forced) {
-        return AsyncResult.resolved();
-    }
-
-    @Override
-    public boolean isFocusTransferEnabled() {
-        return true;
-    }
-
-    @Override
-    public Component getFocusOwner() {
-        return null;
-    }
-
-    @Override
-    public void runOnOwnContext(DataContext context, Runnable runnable) {
-        runnable.run();
-    }
-
-    @Override
-    public Component getLastFocusedFor(FocusableFrame frame) {
-        return null;
-    }
-
-    @Override
-    public IdeFrame getLastFocusedFrame() {
-        return null;
-    }
-
-    @Override
-    public void toFront(JComponent c) {
-    }
-
-    @Override
-    public void dispose() {
-    }
-
-    @Override
-    public IdeFocusManager findInstanceByComponent(Component c) {
-        return this;
-    }
-
-    @Override
-    public IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
-        return this;
-    }
-
-    @Override
-    public IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager) {
-        return this;
-    }
+public class DesktopQtApplicationIdeFocusManagerImpl extends PassThroughApplicationIdeFocusManager {
 }

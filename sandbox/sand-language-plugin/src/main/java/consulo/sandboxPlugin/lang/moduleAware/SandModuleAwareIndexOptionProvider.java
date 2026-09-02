@@ -20,6 +20,7 @@ import consulo.language.psi.stub.IndexOption;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
+import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.sandboxPlugin.lang.Sand2FileType;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,13 +29,15 @@ import consulo.virtualFileSystem.fileType.FileType;
 import java.util.Set;
 
 /**
- * Sample module-aware options provider for the Sand sandbox language. Demonstrates the
- * intended plugin-side integration pattern: implement
+ * Module-aware options provider for the Sand sandbox language — the reference
+ * implementation of the standalone-file mechanism: implement
  * {@link ModuleAwareIndexOptionProvider}, return a {@link IndexOption#sharablePerOption}
  * whose payload is a {@code record} with a matching {@link consulo.index.io.data.DataExternalizer}.
  *
- * <p>Per-module options are synthesised from the module name for the sandbox — a real
- * plugin would read from a {@code ModuleExtension} or external build-system config.</p>
+ * <p>The payload carries only statically-known per-module options; usage-dependent
+ * inclusion contexts never belong here — they are served by condition-annotated stubs
+ * filtered at query time. For sand the module flags do not actually change the (pure)
+ * parse; the provider exists to exercise the platform drift machinery end to end.</p>
  */
 @ExtensionImpl
 public final class SandModuleAwareIndexOptionProvider implements ModuleAwareIndexOptionProvider {
@@ -47,7 +50,7 @@ public final class SandModuleAwareIndexOptionProvider implements ModuleAwareInde
 
     @Override
     public int getVersion() {
-        return 1;
+        return 3;
     }
 
     @Override
@@ -57,11 +60,11 @@ public final class SandModuleAwareIndexOptionProvider implements ModuleAwareInde
 
     @Override
     public IndexOption getOptions(Module module, VirtualFile file) {
-        String moduleName = module.getName();
-        SandOptions options = new SandOptions(
-            Set.of(moduleName.toUpperCase() + "_DEBUG"),
-            "sandbox");
-        LocalizeValue label = LocalizeValue.of("sandbox / " + moduleName);
+        SandModuleExtension extension = module.getExtension(SandModuleExtension.class);
+        Set<String> symbols = extension == null ? Set.of() : extension.getFlags();
+
+        SandOptions options = new SandOptions(symbols, "sandbox");
+        LocalizeValue label = LocalizeValue.of("sandbox / " + module.getName());
         return IndexOption.sharablePerOption(options, SandOptionsExternalizer.INSTANCE, label);
     }
 }

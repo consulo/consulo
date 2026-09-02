@@ -27,6 +27,9 @@ import consulo.ui.layout.VerticalLayout;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * @author VISTALL
  * @since 19.03.14
@@ -55,8 +58,12 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
     myIsEnabled = val;
   }
 
+  public void setFlags(Set<String> flags) {
+    myFlags = new TreeSet<>(flags);
+  }
+
   @Override
   public boolean isModified(SandModuleExtension originalExtension) {
-    return myIsEnabled != originalExtension.isEnabled();
+    return myIsEnabled != originalExtension.isEnabled() || !getFlags().equals(originalExtension.getFlags());
   }
 }

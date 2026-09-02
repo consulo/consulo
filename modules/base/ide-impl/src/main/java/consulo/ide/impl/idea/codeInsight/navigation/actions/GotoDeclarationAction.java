@@ -37,7 +37,14 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.application.AccessToken;
+import consulo.fileEditor.EditorNotifications;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
+import consulo.language.editor.navigation.NavigationContexts;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
@@ -99,8 +106,10 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     public void invoke(Project project, Editor editor, PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
+        List<Object> navigationContexts = NavigationContexts.collect(project, editor, file, editor.getCaretModel().getOffset());
+
         DumbService.getInstance(project).setAlternativeResolveEnabled(true);
-        try {
+        try (AccessToken ignored = NavigationContexts.withContexts(navigationContexts)) {
             int offset = editor.getCaretModel().getOffset();
             Pair<PsiElement[], GotoDeclarationHandler> elementsInfo = findAllTargetElementsInfo(project, editor, offset);
             PsiElement[] elements = elementsInfo.getFirst();
@@ -116,7 +125,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
                         return;
                     }
                 }
-                chooseAmbiguousTarget(editor, offset, elements, calcElementRender(elementsInfo.getSecond(), elements));
+                chooseAmbiguousTarget(editor, offset, elements, calcElementRender(elementsInfo.getSecond(), elements), navigationContexts);
                 return;
             }
 
@@ -154,10 +163,14 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         Editor editor,
         int offset,
         PsiElement[] elements,
-        @Nullable PsiElementListCellRenderer<PsiElement> render
+        @Nullable PsiElementListCellRenderer<PsiElement> render,
+        List<Object> navigationContexts
     ) {
         PsiElementProcessor<PsiElement> navigateProcessor = element -> {
-            gotoTargetElement(element);
+            // the popup navigates after the gesture's scope ended - restore the captured contexts
+            try (AccessToken ignored = NavigationContexts.withContexts(navigationContexts)) {
+                gotoTargetElement(element);
+            }
             return true;
         };
         boolean found = chooseAmbiguousTarget(
@@ -177,7 +190,28 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         Navigatable navigatable = element instanceof Navigatable nav ? nav : EditSourceUtil.getDescriptor(element);
         if (navigatable != null && navigatable.canNavigate()) {
             navigatable.navigate(true);
+            stampNavigationContexts(element);
         }
+    }
+
+    private static void stampNavigationContexts(PsiElement element) {
+        List<Object> contexts = NavigationContexts.currentContexts();
+        if (contexts.isEmpty()) {
+            return;
+        }
+
+        PsiFile targetPsiFile = element.getContainingFile();
+        VirtualFile targetFile = targetPsiFile == null ? null : targetPsiFile.getOriginalFile().getVirtualFile();
+        if (targetFile == null) {
+            return;
+        }
+
+        Project project = element.getProject();
+        for (FileEditor fileEditor : FileEditorManager.getInstance(project).getEditors(targetFile)) {
+            fileEditor.putUserData(NavigationContexts.NAVIGATION_CONTEXTS, contexts);
+        }
+        EditorNotifications.getInstance(project).updateNotifications(targetFile);
+        DaemonCodeAnalyzer.getInstance(project).restart(targetPsiFile.getOriginalFile());
     }
 
     @RequiredReadAction

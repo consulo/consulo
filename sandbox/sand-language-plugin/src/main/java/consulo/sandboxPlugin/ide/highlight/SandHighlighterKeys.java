@@ -25,4 +25,5 @@ import consulo.colorScheme.TextAttributesKey;
 public interface SandHighlighterKeys {
   TextAttributesKey KEYWORD = TextAttributesKey.createTextAttributesKey("SAND_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
   TextAttributesKey LINE_COMMENT = TextAttributesKey.createTextAttributesKey("SAND_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+  TextAttributesKey INACTIVE_BRANCH = TextAttributesKey.createTextAttributesKey("SAND_INACTIVE_BRANCH", DefaultLanguageHighlighterColors.LINE_COMMENT);
 }

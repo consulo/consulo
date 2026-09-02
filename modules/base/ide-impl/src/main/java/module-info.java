@@ -498,7 +498,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.psi.codeStyle.statusbar;
     exports consulo.ide.impl.psi.impl;
     exports consulo.ide.impl.psi.impl.cache.impl.id;
-    exports consulo.ide.impl.psi.impl.file.impl;
     exports consulo.ide.impl.psi.impl.search;
     exports consulo.ide.impl.psi.impl.source.codeStyle;
     exports consulo.ide.impl.psi.impl.source.resolve.reference;
