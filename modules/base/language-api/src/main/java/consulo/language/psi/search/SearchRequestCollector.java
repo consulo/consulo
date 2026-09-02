@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.search;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.content.scope.SearchScope;
@@ -80,8 +79,6 @@ public class SearchRequestCollector {
         Collection<PsiSearchRequest> requests = null;
         if (searchTarget != null && searchScope instanceof GlobalSearchScope
             && ((searchContext & UsageSearchContext.IN_CODE) != 0 || searchContext == UsageSearchContext.ANY)) {
-            @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
-            @SuppressWarnings("NullAway")
             SearchScope restrictedCodeUsageSearchScope = ReadAction.compute(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(
                 Application.get().getExtensionList(ScopeOptimizer.class),
                 searchTarget
@@ -126,8 +123,6 @@ public class SearchRequestCollector {
         searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), searchTarget, processor);
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     private static @Nullable String getContainerName(PsiElement target) {
         return ReadAction.compute(() -> {
             PsiElement container = getContainer(target);

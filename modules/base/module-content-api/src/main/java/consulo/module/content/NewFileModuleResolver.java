@@ -15,17 +15,13 @@
  */
 package consulo.module.content;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
-
-import java.util.function.Function;
 
 /**
  * If module is not directory based, creating new files will have problem for selecting module (which module use as owner)
@@ -36,10 +32,9 @@ import java.util.function.Function;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NewFileModuleResolver {
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     static @Nullable Module resolveModule(Project project, VirtualFile parent, FileType newFileType) {
         return project.getExtensionPoint(NewFileModuleResolver.class)
-            .computeSafeIfAny((Function<NewFileModuleResolver, @Nullable Module>) it -> it.resolveModule(parent, newFileType));
+            .computeSafeIfAny(it -> it.resolveModule(parent, newFileType));
     }
 
     @Nullable Module resolveModule(VirtualFile directory, FileType fileType);
