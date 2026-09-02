@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.LoggerAssert;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -27,270 +28,295 @@ import java.util.List;
 import java.util.Objects;
 
 public class WeakReferenceArray<T> {
-  private static final Logger LOG = LoggerFactory.getLogger(WeakReferenceArray.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WeakReferenceArray.class);
 
-  static final int MINIMUM_CAPACITY = 5;
-  private final ReferenceQueue<T> myQueue = new TReferenceQueue<T>();
-  private MyWeakReference[] myReferences;
-  private int mySize = 0;
-  private int myCorpseCounter = 0;
+    static final int MINIMUM_CAPACITY = 5;
+    private final ReferenceQueue<T> myQueue = new TReferenceQueue<>();
+    private MyWeakReference[] myReferences;
+    private int mySize = 0;
+    private int myCorpseCounter = 0;
 
-  public WeakReferenceArray() {
-    this(MINIMUM_CAPACITY);
-  }
-
-  public WeakReferenceArray(int size) {
-    myReferences = new MyWeakReference[size];
-  }
-
-  public @Nullable T remove(int index) {
-    checkRange(index);
-    T result = getImpl(index);
-    removeReference(index);
-    return result;
-  }
-
-  private void checkRange(int index) {
-    if (index >= mySize) {
-      throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
+    public WeakReferenceArray() {
+        this(MINIMUM_CAPACITY);
     }
-  }
 
-  public int getCorpseCount() {
-    flushQueue();
-    return myCorpseCounter;
-  }
-
-  private void flushQueue() {
-    Reference nextRef;
-    while ((nextRef = myQueue.poll()) != null) {
-      if (!(nextRef instanceof MyWeakReference)) continue; // With 1.4 sometimes queue contains other references ?!?
-      MyWeakReference reference = (MyWeakReference)nextRef;
-      reference.setNull(myReferences);
-      myCorpseCounter++;
+    public WeakReferenceArray(int size) {
+        myReferences = new MyWeakReference[size];
     }
-  }
 
-  public void add(@Nullable T object) {
-    ensureCapacity(mySize + 1);
-    MyWeakReference.createAt(myReferences, mySize, object, myQueue);
-    mySize++;
-  }
-
-  public void add(int index, @Nullable T element) {
-    ensureCapacity(mySize + 1);
-    if (index < 0 || index > mySize) {
-      throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
+    public @Nullable T remove(int index) {
+        checkRange(index);
+        T result = getImpl(index);
+        removeReference(index);
+        return result;
     }
-    for (int i = mySize - 1; i >= index; i--) {
-      MyWeakReference aliveReference = MyWeakReference.getFrom(myReferences, i);
-      if (aliveReference != null) {
-        aliveReference.putTo(myReferences, i + 1);
-      }
-    }
-    MyWeakReference.createAt(myReferences, index, element, myQueue);
-    mySize++;
-  }
 
-  private void ensureCapacity(int size) {
-    if (size != 0 && myReferences.length < MINIMUM_CAPACITY) {
-      growTo(Math.max(MINIMUM_CAPACITY, size));
-      return;
-    }
-    if (size <= myReferences.length) return;
-    if (size - myReferences.length <= getCorpseCount()) {
-      compress(-1);
-      if (mySize < myReferences.length - 1) return;
-    }
-    int newCapacity = 2 * myReferences.length;
-    growTo(newCapacity);
-  }
-
-  private void growTo(int newCapacity) {
-    MyWeakReference[] references = new MyWeakReference[newCapacity];
-    System.arraycopy(myReferences, 0, references, 0, myReferences.length);
-    myReferences = references;
-  }
-
-  public int size() {
-    return mySize;
-  }
-
-  public int compress(int trackIndex) {
-    if (getCorpseCount() == 0) return trackIndex;
-    return doCompress(myReferences, trackIndex);
-  }
-
-  private int doCompress(MyWeakReference[] references, int trackIndex) {
-    myCorpseCounter = 0;
-    int validIndex = 0;
-    int newIndex = -1;
-    boolean trackingDone = false;
-    for (int i = nextValid(-1); i < size(); i = nextValid(i)) {
-      if (!trackingDone) {
-        if (i == trackIndex) {
-          newIndex = validIndex;
-          trackingDone = true;
+    private void checkRange(int index) {
+        if (index >= mySize) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
-        if (i > trackIndex) {
-          newIndex = -validIndex - 1;
-          trackingDone = true;
+    }
+
+    public int getCorpseCount() {
+        flushQueue();
+        return myCorpseCounter;
+    }
+
+    private void flushQueue() {
+        Reference nextRef;
+        while ((nextRef = myQueue.poll()) != null) {
+            if (!(nextRef instanceof MyWeakReference)) {
+                continue; // With 1.4 sometimes queue contains other references ?!?
+            }
+            MyWeakReference reference = (MyWeakReference) nextRef;
+            reference.setNull(myReferences);
+            myCorpseCounter++;
         }
-      }
-      MyWeakReference aliveReference = MyWeakReference.getFrom(myReferences, i);
-      if (validIndex < i) {
-        performRemoveAt(validIndex);
-        //myReferences[i] = null;
-      }
-      else {
-        LoggerAssert.assertTrue(LOG, validIndex == i);
-      }
-      Objects.requireNonNull(aliveReference).moveTo(myReferences, references, validIndex);
-      validIndex++;
     }
 
-    if (newIndex == -1) newIndex = -validIndex - 1;
-    for (int i = validIndex; i < mySize; i++) {
-      performRemoveAt(i);
-    }
-    for (int i = validIndex; i < myReferences.length; i++) {
-      LoggerAssert.assertTrue(LOG, myReferences[i] == null);
+    public void add(@Nullable T object) {
+        ensureCapacity(mySize + 1);
+        MyWeakReference.createAt(myReferences, mySize, object, myQueue);
+        mySize++;
     }
 
-    flushQueue();
-    mySize = validIndex;
-
-    return newIndex;
-  }
-
-  private void performRemoveAt(int index) {
-    if (removeReference(index)) {
-      myCorpseCounter--;
-      flushQueue();
-      if (myCorpseCounter < 0) LOG.error(String.valueOf(myCorpseCounter));
-    }
-  }
-
-  int nextValid(int index) {
-    index++;
-    while (index < size()) {
-      if (getImpl(index) != null) return index;
-      index++;
-    }
-    return size();
-  }
-
-  private @Nullable T getImpl(int index) {
-    MyWeakReference<T> reference = MyWeakReference.getFrom(myReferences, index);
-    return reference == null ? null : reference.get();
-  }
-
-  public int getCapacity() {
-    return myReferences.length;
-  }
-
-  public @Nullable T get(int index) {
-    checkRange(index);
-    return getImpl(index);
-  }
-
-  public int reduceCapacity(int trackIndex) {
-    int aliveSize = getNotBuriedCount();
-    if (myReferences.length / 4 >= aliveSize) {
-      MyWeakReference[] references = new MyWeakReference[aliveSize * 2];
-      int newIndex = doCompress(references, trackIndex);
-      myReferences = references;
-      return newIndex;
-    }
-    return trackIndex;
-  }
-
-  private int getNotBuriedCount() {
-    flushQueue();
-    int counter = 0;
-    for (MyWeakReference myReference : myReferences) {
-      if (myReference != null) counter++;
-    }
-    return counter;
-  }
-
-  public int getAliveCount() {
-    return size() - getCorpseCount();
-  }
-
-  // For testing only
-  WeakReference[] getReferences() {
-    return myReferences;
-  }
-
-  boolean removeReference(int index) {
-    MyWeakReference reference = MyWeakReference.getFrom(myReferences, index);
-    return reference != null && reference.removeFrom(myReferences);
-  }
-
-  public void toStrongCollection(List<T> result) {
-    for (MyWeakReference reference : myReferences) {
-      T deref = reference != null ? (T)reference.get() : null;
-      if (deref != null) {
-        result.add(deref);
-      }
-    }
-  }
-
-  private static class MyWeakReference<E> extends WeakReference<E> {
-    private int myIndex = -1;
-
-    private MyWeakReference(@Nullable E e, ReferenceQueue<E> referenceQueue) {
-      super(e, referenceQueue);
+    public void add(int index, @Nullable T element) {
+        ensureCapacity(mySize + 1);
+        if (index < 0 || index > mySize) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
+        }
+        for (int i = mySize - 1; i >= index; i--) {
+            MyWeakReference aliveReference = MyWeakReference.getFrom(myReferences, i);
+            if (aliveReference != null) {
+                aliveReference.putTo(myReferences, i + 1);
+            }
+        }
+        MyWeakReference.createAt(myReferences, index, element, myQueue);
+        mySize++;
     }
 
-    public static <E> void createAt(MyWeakReference[] array, int index, @Nullable E element, ReferenceQueue<E> queue) {
-      new MyWeakReference<E>(element, queue).putTo(array, index);
+    private void ensureCapacity(int size) {
+        if (size != 0 && myReferences.length < MINIMUM_CAPACITY) {
+            growTo(Math.max(MINIMUM_CAPACITY, size));
+            return;
+        }
+        if (size <= myReferences.length) {
+            return;
+        }
+        if (size - myReferences.length <= getCorpseCount()) {
+            compress(-1);
+            if (mySize < myReferences.length - 1) {
+                return;
+            }
+        }
+        int newCapacity = 2 * myReferences.length;
+        growTo(newCapacity);
     }
 
-    public static @Nullable <E> MyWeakReference<E> getFrom(MyWeakReference[] array, int index) {
-      MyWeakReference<E> reference = array[index];
-      if (reference == null) {
-        return null;
-      }
-      LoggerAssert.assertTrue(LOG, index == reference.myIndex);
-      return reference;
+    private void growTo(int newCapacity) {
+        MyWeakReference[] references = new MyWeakReference[newCapacity];
+        System.arraycopy(myReferences, 0, references, 0, myReferences.length);
+        myReferences = references;
     }
 
-    private void putTo(MyWeakReference[] array, int index) {
-      array[index] = this;
-      myIndex = index;
+    public int size() {
+        return mySize;
     }
 
-    public boolean removeFrom(@Nullable MyWeakReference[] array) {
-      LoggerAssert.assertTrue(LOG, array[myIndex] == this);
-      clear();
-      array[myIndex] = null;
-      myIndex = -1;
-      return enqueue();
+    public int compress(int trackIndex) {
+        if (getCorpseCount() == 0) {
+            return trackIndex;
+        }
+        return doCompress(myReferences, trackIndex);
     }
 
-    public void moveTo(@Nullable MyWeakReference[] fromArray, @Nullable MyWeakReference[] toArray, int newIndex) {
-      LoggerAssert.assertTrue(LOG, fromArray[myIndex] == this);
-      fromArray[myIndex] = null;
-      LoggerAssert.assertTrue(LOG, toArray[newIndex] == null);
-      toArray[newIndex] = this;
-      myIndex = newIndex;
+    private int doCompress(MyWeakReference[] references, int trackIndex) {
+        myCorpseCounter = 0;
+        int validIndex = 0;
+        int newIndex = -1;
+        boolean trackingDone = false;
+        for (int i = nextValid(-1); i < size(); i = nextValid(i)) {
+            if (!trackingDone) {
+                if (i == trackIndex) {
+                    newIndex = validIndex;
+                    trackingDone = true;
+                }
+                if (i > trackIndex) {
+                    newIndex = -validIndex - 1;
+                    trackingDone = true;
+                }
+            }
+            MyWeakReference aliveReference = MyWeakReference.getFrom(myReferences, i);
+            if (validIndex < i) {
+                performRemoveAt(validIndex);
+                //myReferences[i] = null;
+            }
+            else {
+                LoggerAssert.assertTrue(LOG, validIndex == i);
+            }
+            Objects.requireNonNull(aliveReference).moveTo(myReferences, references, validIndex);
+            validIndex++;
+        }
+
+        if (newIndex == -1) {
+            newIndex = -validIndex - 1;
+        }
+        for (int i = validIndex; i < mySize; i++) {
+            performRemoveAt(i);
+        }
+        for (int i = validIndex; i < myReferences.length; i++) {
+            LoggerAssert.assertTrue(LOG, myReferences[i] == null);
+        }
+
+        flushQueue();
+        mySize = validIndex;
+
+        return newIndex;
     }
 
-    public void setNull(@Nullable MyWeakReference[] array) {
-      LoggerAssert.assertTrue(LOG, get() == null);
-      if (myIndex == -1) return;
-      LoggerAssert.assertTrue(LOG, array[myIndex] == this);
-      array[myIndex] = null;
+    private void performRemoveAt(int index) {
+        if (removeReference(index)) {
+            myCorpseCounter--;
+            flushQueue();
+            if (myCorpseCounter < 0) {
+                LOG.error(String.valueOf(myCorpseCounter));
+            }
+        }
     }
-  }
 
-  private static class TReferenceQueue<T> extends ReferenceQueue<T> {
-    @Override
-    public Reference<? extends T> poll() {
-      Reference<? extends T> reference = super.poll();
-      return reference;
+    int nextValid(int index) {
+        index++;
+        while (index < size()) {
+            if (getImpl(index) != null) {
+                return index;
+            }
+            index++;
+        }
+        return size();
     }
-  }
+
+    private @Nullable T getImpl(int index) {
+        MyWeakReference<T> reference = MyWeakReference.getFrom(myReferences, index);
+        return reference == null ? null : reference.get();
+    }
+
+    public int getCapacity() {
+        return myReferences.length;
+    }
+
+    public @Nullable T get(int index) {
+        checkRange(index);
+        return getImpl(index);
+    }
+
+    public int reduceCapacity(int trackIndex) {
+        int aliveSize = getNotBuriedCount();
+        if (myReferences.length / 4 >= aliveSize) {
+            MyWeakReference[] references = new MyWeakReference[aliveSize * 2];
+            int newIndex = doCompress(references, trackIndex);
+            myReferences = references;
+            return newIndex;
+        }
+        return trackIndex;
+    }
+
+    private int getNotBuriedCount() {
+        flushQueue();
+        int counter = 0;
+        for (MyWeakReference myReference : myReferences) {
+            if (myReference != null) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    public int getAliveCount() {
+        return size() - getCorpseCount();
+    }
+
+    // For testing only
+    WeakReference[] getReferences() {
+        return myReferences;
+    }
+
+    boolean removeReference(int index) {
+        MyWeakReference reference = MyWeakReference.getFrom(myReferences, index);
+        return reference != null && reference.removeFrom(myReferences);
+    }
+
+    public void toStrongCollection(List<T> result) {
+        for (MyWeakReference reference : myReferences) {
+            @SuppressWarnings("unchecked")
+            T deref = reference != null ? (T) reference.get() : null;
+            if (deref != null) {
+                result.add(deref);
+            }
+        }
+    }
+
+    private static class MyWeakReference<E> extends WeakReference<E> {
+        private int myIndex = -1;
+
+        private MyWeakReference(@Nullable E e, ReferenceQueue<E> referenceQueue) {
+            super(e, referenceQueue);
+        }
+
+        public static <E> void createAt(MyWeakReference[] array, int index, @Nullable E element, ReferenceQueue<E> queue) {
+            new MyWeakReference<>(element, queue).putTo(array, index);
+        }
+
+        public static <E> @Nullable MyWeakReference<E> getFrom(MyWeakReference[] array, int index) {
+            MyWeakReference<E> reference = array[index];
+            if (reference == null) {
+                return null;
+            }
+            LoggerAssert.assertTrue(LOG, index == reference.myIndex);
+            return reference;
+        }
+
+        private void putTo(MyWeakReference[] array, int index) {
+            array[index] = this;
+            myIndex = index;
+        }
+
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1800", todo = "Remove NullAway suppression")
+        @SuppressWarnings("NullAway")
+        public boolean removeFrom(@Nullable MyWeakReference[] array) {
+            LoggerAssert.assertTrue(LOG, array[myIndex] == this);
+            clear();
+            array[myIndex] = null;
+            myIndex = -1;
+            return enqueue();
+        }
+
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1800", todo = "Remove NullAway suppression")
+        @SuppressWarnings("NullAway")
+        public void moveTo(@Nullable MyWeakReference[] fromArray, @Nullable MyWeakReference[] toArray, int newIndex) {
+            LoggerAssert.assertTrue(LOG, fromArray[myIndex] == this);
+            fromArray[myIndex] = null;
+            LoggerAssert.assertTrue(LOG, toArray[newIndex] == null);
+            toArray[newIndex] = this;
+            myIndex = newIndex;
+        }
+
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1800", todo = "Remove NullAway suppression")
+        @SuppressWarnings("NullAway")
+        public void setNull(@Nullable MyWeakReference[] array) {
+            LoggerAssert.assertTrue(LOG, get() == null);
+            if (myIndex == -1) {
+                return;
+            }
+            LoggerAssert.assertTrue(LOG, array[myIndex] == this);
+            array[myIndex] = null;
+        }
+    }
+
+    private static class TReferenceQueue<T> extends ReferenceQueue<T> {
+        @Override
+        public Reference<? extends T> poll() {
+            Reference<? extends T> reference = super.poll();
+            return reference;
+        }
+    }
 }

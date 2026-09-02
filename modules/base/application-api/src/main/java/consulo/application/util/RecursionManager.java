@@ -273,7 +273,7 @@ public class RecursionManager {
                 LOG.error("Inconsistent depth after computation; depth=" + depth + "; map=" + progressMap);
             }
 
-            Integer value = progressMap.remove(realKey);
+            int value = Objects.requireNonNull(progressMap.remove(realKey));
             depth--;
             if (!preventions.isEmpty()) {
                 preventions.remove(realKey);

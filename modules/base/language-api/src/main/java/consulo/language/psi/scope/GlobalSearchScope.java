@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.scope;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.content.scope.BaseSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.language.content.FileIndexFacade;
@@ -164,7 +163,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
         return GlobalSearchScope.this.isSearchInLibraries();
       }
 
-      
+
       @Override
       public String toString() {
         return "UnionToLocal: (" + GlobalSearchScope.this.toString() + ", " + scope + ")";
@@ -261,7 +260,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
   }
 
-  
+
   public static GlobalSearchScope moduleContentScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleContentScope();
   }
@@ -320,7 +319,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
   public static GlobalSearchScope fileScope(Project project, final VirtualFile virtualFile, final @Nullable String displayName) {
     return new FileScope(project, virtualFile) {
-      
+
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
@@ -335,7 +334,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
   public static GlobalSearchScope filesScope(Project project, Collection<VirtualFile> files, final @Nullable String displayName) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return files.size() == 1 ? fileScope(project, files.iterator().next(), displayName) : new FilesScope(project, files) {
-      
+
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
@@ -456,15 +455,13 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       this(new GlobalSearchScope[]{scope1, scope2});
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     private UnionScope(GlobalSearchScope[] scopes) {
-      super(ContainerUtil.getFirstItem(ContainerUtil.mapNotNull(scopes, scope -> scope.getProject()), null));
+      super(ContainerUtil.getFirstItem(ContainerUtil.mapNotNull(scopes, GlobalSearchScope::getProject), null));
       assert scopes.length > 1 : Arrays.asList(scopes);
       myScopes = scopes;
       int[] nested = {0};
       for (GlobalSearchScope scope : scopes) {
-        nested[0] = Math.max(nested[0], scope instanceof UnionScope ? ((UnionScope)scope).myNestingLevel : 0);
+        nested[0] = Math.max(nested[0], scope instanceof UnionScope unionScope ? unionScope.myNestingLevel : 0);
       }
       myNestingLevel = 1 + nested[0];
       if (myNestingLevel > 1000) {

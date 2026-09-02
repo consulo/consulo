@@ -20,9 +20,11 @@ import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -30,56 +32,50 @@ import java.util.function.Supplier;
  * @author Dmitry Avdeev
  */
 public class PathReference {
-  public static final Function<PathReference, @Nullable Image> NULL_ICON = (p) -> null;
+    public static final Function<PathReference, @Nullable Image> NULL_ICON = p -> null;
 
-  private final String myPath;
-  private final Supplier<Image> myIcon;
+    private final String myPath;
+    private final Supplier<@Nullable Image> myIcon;
 
-  public PathReference(String path, Function<PathReference, @Nullable Image> icon) {
-    myPath = path;
-    myIcon = LazyValue.nullable(() -> icon.apply(PathReference.this));
-  }
-
-  public String getPath() {
-    return myPath;
-  }
-
-  public String getTrimmedPath() {
-    return trimPath(myPath);
-  }
-
-  public @Nullable Image getIcon() {
-    return myIcon.get();
-  }
-
-  public @Nullable PsiElement resolve() {
-    return null;
-  }
-
-  public static String trimPath(String url) {
-    for (int i = 0; i < url.length(); i++) {
-      switch (url.charAt(i)) {
-        case '?':
-        case '#':
-          return url.substring(0, i);
-      }
-    }
-    return url;
-  }
-
-  public static class ResolveFunction implements Function<PathReference, @Nullable Image> {
-    public static final ResolveFunction NULL_RESOLVE_FUNCTION = new ResolveFunction(null);
-    private final @Nullable Image myDefaultIcon;
-
-    public ResolveFunction(@Nullable Image defaultValue) {
-      myDefaultIcon = defaultValue;
+    public PathReference(String path, Function<PathReference, @Nullable Image> icon) {
+        myPath = path;
+        myIcon = LazyValue.nullable(() -> icon.apply(PathReference.this));
     }
 
-    @Override
-    @RequiredReadAction
-    public @Nullable Image apply(PathReference pathReference) {
-      PsiElement element = pathReference.resolve();
-      return element == null ? myDefaultIcon : IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS);
+    public String getPath() {
+        return myPath;
     }
-  }
+
+    public String getTrimmedPath() {
+        return trimPath(myPath);
+    }
+
+    public @Nullable Image getIcon() {
+        return myIcon.get();
+    }
+
+    public @Nullable PsiElement resolve() {
+        return null;
+    }
+
+    public static String trimPath(String url) {
+        int i = StringUtil.indexOfAny(url, "?#");
+        return i >= 0 ? url.substring(0, i) : url;
+    }
+
+    public static class ResolveFunction implements Function<PathReference, @Nullable Image> {
+        public static final ResolveFunction NULL_RESOLVE_FUNCTION = new ResolveFunction(null);
+        private final @Nullable Image myDefaultIcon;
+
+        public ResolveFunction(@Nullable Image defaultValue) {
+            myDefaultIcon = defaultValue;
+        }
+
+        @Override
+        @RequiredReadAction
+        public @Nullable Image apply(PathReference pathReference) {
+            PsiElement element = pathReference.resolve();
+            return element == null ? myDefaultIcon : IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS);
+        }
+    }
 }

@@ -172,7 +172,9 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
      *
      * @param continuation The continuation of the execution
      */
+    @SuppressWarnings("NullAway")
     public void terminate(Continuation<?> continuation) {
+        // Passing null as potentially non-nullable value is never a valid code for NullAway
         Objects.requireNonNull(getRequiredCode().getLastStep())
             .runAsync(CompletableFuture.supplyAsync(() -> null, continuation), null, continuation);
     }
@@ -184,7 +186,6 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
      * @author eso
      */
     static class FinishStep<T> extends CoroutineStep<T, T> {
-
         /**
          * {@inheritDoc}
          */
@@ -206,7 +207,6 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
      * @author eso
      */
     static class StepChain<I, T, O> extends CoroutineStep<I, O> {
-
         CoroutineStep<I, T> step;
 
         @Nullable CoroutineStep<T, O> next;
@@ -226,11 +226,7 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
          * {@inheritDoc}
          */
         @Override
-        public void runAsync(
-            CompletableFuture<I> previousExecution,
-            @Nullable CoroutineStep<O, ?> nextStep,
-            Continuation<?> continuation
-        ) {
+        public void runAsync(CompletableFuture<I> previousExecution, @Nullable CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
             if (!continuation.isCancelled()) {
                 try {
                     ((ContinuationImpl<?>) continuation).trace(step);
@@ -283,12 +279,7 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
          * @return The last step
          */
         @Nullable CoroutineStep<?, ?> getLastStep() {
-            if (next instanceof StepChain) {
-                return ((StepChain<?, ?, ?>) next).getLastStep();
-            }
-            else {
-                return next;
-            }
+            return next instanceof StepChain<?, ?, ?> stepChain ? stepChain.getLastStep() : next;
         }
 
         /**
@@ -302,10 +293,10 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
         <R> StepChain<I, T, R> then(CoroutineStep<O, R> step) {
             StepChain<I, T, R> aChainedInvocation = new StepChain<>(this.step, null);
 
-            if (next instanceof StepChain) {
+            if (next instanceof StepChain stepChain) {
                 // Chains need to be accessed as raw types because the
                 // intermediate type of the chain in rNextStep is unknown
-                aChainedInvocation.next = ((StepChain) next).then(step);
+                aChainedInvocation.next = stepChain.then(step);
             }
             else {
                 // rNextStep is either another StepChain (see above) or else the
@@ -328,10 +319,10 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
         <R> StepChain<I, T, R> withLastStep(CoroutineStep<?, R> step) {
             StepChain<I, T, R> aChainedInvocation = new StepChain<>(this.step, null);
 
-            if (next instanceof StepChain) {
+            if (next instanceof StepChain stepChain) {
                 // Chains need to be accessed as raw types because the
                 // intermediate type of the chain in rNextStep is unknown
-                aChainedInvocation.next = ((StepChain) next).withLastStep(step);
+                aChainedInvocation.next = stepChain.withLastStep(step);
             }
             else {
                 // step needs to be cast because the actual types at the end of

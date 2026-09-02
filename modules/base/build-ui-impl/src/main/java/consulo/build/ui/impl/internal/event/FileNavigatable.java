@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  */
 public class FileNavigatable implements Navigatable {
     private final Project myProject;
-    private final Supplier<OpenFileDescriptor> myValue;
+    private final Supplier<@Nullable OpenFileDescriptor> myValue;
     private final FilePosition myFilePosition;
 
     public FileNavigatable(Project project, FilePosition filePosition) {
@@ -42,20 +42,14 @@ public class FileNavigatable implements Navigatable {
     @RequiredReadAction
     public boolean canNavigate() {
         Navigatable descriptor = getFileDescriptor();
-        if (descriptor != null) {
-            return descriptor.canNavigate();
-        }
-        return false;
+        return descriptor != null && descriptor.canNavigate();
     }
 
     @Override
     @RequiredReadAction
     public boolean canNavigateToSource() {
         Navigatable descriptor = getFileDescriptor();
-        if (descriptor != null) {
-            return descriptor.canNavigateToSource();
-        }
-        return false;
+        return descriptor != null && descriptor.canNavigateToSource();
     }
 
     public @Nullable OpenFileDescriptor getFileDescriptor() {
