@@ -27,71 +27,71 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2022-06-28
  */
-public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Function<Class, E>> {
-  private static class GetterImpl<S> implements Function<Class, @Nullable S> {
-    private final Map<Class, S> myExtensionsByClass = new ConcurrentHashMap<>();
+public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Function<Class, @Nullable E>> {
+    private static class GetterImpl<S> implements Function<Class, @Nullable S> {
+        private final Map<Class, S> myExtensionsByClass = new ConcurrentHashMap<>();
 
-    public GetterImpl(ExtensionWalker<S> walker, Function<S, Class> getClassFunc) {
-      walker.walk(extension -> myExtensionsByClass.put(getClassFunc.apply(extension), extension));
+        public GetterImpl(ExtensionWalker<S> walker, Function<S, Class> getClassFunc) {
+            walker.walk(extension -> myExtensionsByClass.put(getClassFunc.apply(extension), extension));
+        }
+
+        @Override
+        public @Nullable S apply(Class aClass) {
+            S extension = myExtensionsByClass.get(aClass);
+            // we found it by class
+            if (extension != null) {
+                return extension;
+            }
+
+            S valueFromSuper = processUntil(aClass, new HashSet<>(), myExtensionsByClass::get);
+            if (valueFromSuper != null) {
+                myExtensionsByClass.put(aClass, valueFromSuper);
+                return valueFromSuper;
+            }
+            return null;
+        }
+
+        protected <S> @Nullable S processUntil(Class baseClass, Set<Class> processed, Function<Class, @Nullable S> getter) {
+            if (!processed.add(baseClass)) {
+                return null;
+            }
+
+            S value = getter.apply(baseClass);
+            if (value != null) {
+                return value;
+            }
+
+            Class superclass = baseClass.getSuperclass();
+            if (superclass != null) {
+                value = processUntil(superclass, processed, getter);
+                if (value != null) {
+                    return value;
+                }
+            }
+
+            for (Class interfaceClass : baseClass.getInterfaces()) {
+                value = processUntil(interfaceClass, processed, getter);
+                if (value != null) {
+                    return value;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    public static <K> Function<ExtensionWalker<K>, Function<Class, @Nullable K>> build(Function<K, Class> getClassFunc) {
+        return new ByClassGrouper<>(getClassFunc);
+    }
+
+    private final Function<E, Class> myGetClassFunc;
+
+    private ByClassGrouper(Function<E, Class> getClassFunc) {
+        myGetClassFunc = getClassFunc;
     }
 
     @Override
-    public @Nullable S apply(Class aClass) {
-      S extension = myExtensionsByClass.get(aClass);
-      // we found it by class
-      if (extension != null) {
-        return extension;
-      }
-
-      S valueFromSuper = processUntil(aClass, new HashSet<>(), myExtensionsByClass::get);
-      if (valueFromSuper != null) {
-        myExtensionsByClass.put(aClass, valueFromSuper);
-        return valueFromSuper;
-      }
-      return null;
+    public Function<Class, @Nullable E> apply(ExtensionWalker<E> walker) {
+        return new GetterImpl<>(walker, myGetClassFunc);
     }
-
-    protected <S> @Nullable S processUntil(Class baseClass, Set<Class> processed, Function<Class, @Nullable S> getter) {
-      if (!processed.add(baseClass)) {
-        return null;
-      }
-
-      S value = getter.apply(baseClass);
-      if (value != null) {
-        return value;
-      }
-
-      Class superclass = baseClass.getSuperclass();
-      if (superclass != null) {
-        value = processUntil(superclass, processed, getter);
-        if (value != null) {
-          return value;
-        }
-      }
-
-      for (Class interfaceClass : baseClass.getInterfaces()) {
-        value = processUntil(interfaceClass, processed, getter);
-        if (value != null) {
-          return value;
-        }
-      }
-
-      return null;
-    }
-  }
-
-  public static <K> Function<ExtensionWalker<K>, Function<Class, K>> build(Function<K, Class> getClassFunc) {
-    return new ByClassGrouper<>(getClassFunc);
-  }
-
-  private final Function<E, Class> myGetClassFunc;
-
-  private ByClassGrouper(Function<E, Class> getClassFunc) {
-    myGetClassFunc = getClassFunc;
-  }
-
-  @Override
-  public Function<Class, E> apply(ExtensionWalker<E> walker) {
-    return new GetterImpl<>(walker, myGetClassFunc);
-  }
 }

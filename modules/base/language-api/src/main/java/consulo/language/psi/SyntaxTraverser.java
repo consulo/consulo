@@ -1,6 +1,5 @@
 package consulo.language.psi;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.*;
@@ -212,8 +211,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             return JBIterable.generate(node, TO_NEXT);
         }
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit generics in constructor")
-        private final Function<T, @Nullable T> TO_NEXT = new Function<T, @Nullable T>() {
+        private final Function<T, @Nullable T> TO_NEXT = new Function<>() {
             @Override
             public @Nullable T apply(T t) {
                 return next(t);

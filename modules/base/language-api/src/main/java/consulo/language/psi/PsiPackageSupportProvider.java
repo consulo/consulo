@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.ContentFolderTypeProvider;
@@ -38,8 +37,6 @@ public interface PsiPackageSupportProvider {
         return true;
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression: strange floating problem")
-    @SuppressWarnings("NullAway")
     default boolean acceptVirtualFile(Module module, VirtualFile virtualFile) {
         ContentFolderTypeProvider type = ProjectFileIndex.getInstance(module.getProject()).getContentFolderTypeForFile(virtualFile);
         return ProductionContentFolderTypeProvider.getInstance().equals(type) || TestContentFolderTypeProvider.getInstance().equals(type);

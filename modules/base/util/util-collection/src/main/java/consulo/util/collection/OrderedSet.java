@@ -15,139 +15,143 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 // have to extend ArrayList because otherwise the spliterator() methods declared in Set and List are in conflict
-public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess {
-  private final Set<T> myHashSet;
+public class OrderedSet<T extends @Nullable Object> extends ArrayList<T> implements Set<T>, RandomAccess {
+    private final Set<T> myHashSet;
 
-  public OrderedSet() {
-    this(HashingStrategy.canonical());
-  }
-
-  public OrderedSet(Collection<T> set) {
-    super(set.size());
-
-    myHashSet = new HashSet<T>(set.size());
-    addAll(set);
-  }
-
-  public OrderedSet(HashingStrategy<T> hashingStrategy) {
-    this(hashingStrategy, 4);
-  }
-
-  public OrderedSet(HashingStrategy<T> hashingStrategy, int capacity) {
-    super(capacity);
-    myHashSet = Sets.newHashSet(capacity, hashingStrategy);
-  }
-
-  public OrderedSet(int capacity) {
-    this(HashingStrategy.canonical(), capacity);
-  }
-
-  @Override
-  public boolean removeAll(Collection<?> c) {
-    boolean removed = false;
-    for (Object o : c) {
-      removed |= remove(o);
+    public OrderedSet() {
+        this(HashingStrategy.canonical());
     }
-    return removed;
-  }
 
-  @Override
-  public boolean retainAll(Collection<?> c) {
-    boolean removed = false;
-    for (int i = size() - 1; i >= 0; i--) {
-      Object o = get(i);
-      if (!c.contains(o)) {
-        removed |= remove(o);
-      }
+    public OrderedSet(Collection<T> set) {
+        super(set.size());
+
+        myHashSet = new HashSet<>(set.size());
+        addAll(set);
     }
-    return removed;
-  }
 
-  @Override
-  public List<T> subList(int fromIndex, int toIndex) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean contains(Object o) {
-    return myHashSet.contains(o);
-  }
-
-  @Override
-  public boolean addAll(Collection<? extends T> c) {
-    boolean result = false;
-    for (T t : c) {
-      result |= add(t);
+    public OrderedSet(HashingStrategy<T> hashingStrategy) {
+        this(hashingStrategy, 4);
     }
-    return result;
-  }
 
-  @Override
-  public boolean add(T o) {
-    if (myHashSet.add(o)) {
-      super.add(o);
-      return true;
+    public OrderedSet(HashingStrategy<T> hashingStrategy, int capacity) {
+        super(capacity);
+        myHashSet = Sets.newHashSet(capacity, hashingStrategy);
     }
-    return false;
-  }
 
-  @Override
-  public boolean remove(Object o) {
-    if (myHashSet.remove(o)) {
-      super.remove(o);
-      return true;
+    public OrderedSet(int capacity) {
+        this(HashingStrategy.canonical(), capacity);
     }
-    return false;
-  }
 
-  @Override
-  public void clear() {
-    myHashSet.clear();
-    super.clear();
-  }
-
-  @Override
-  public boolean addAll(int index, Collection<? extends T> c) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public T set(int index, T element) {
-    T removed = remove(index);
-    add(index, element);
-    return removed;
-  }
-
-  @Override
-  public void add(int index, T element) {
-    if (myHashSet.add(element)) {
-      super.add(index, element);
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        boolean removed = false;
+        for (Object o : c) {
+            removed |= remove(o);
+        }
+        return removed;
     }
-  }
 
-  @Override
-  public T remove(int index) {
-    T t = super.remove(index);
-    myHashSet.remove(t);
-    return t;
-  }
-
-  @Override
-  public int indexOf(Object o) {
-    if (myHashSet.contains(o)) {
-      return super.indexOf(o);
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        boolean removed = false;
+        for (int i = size() - 1; i >= 0; i--) {
+            Object o = get(i);
+            if (!c.contains(o)) {
+                removed |= remove(o);
+            }
+        }
+        return removed;
     }
-    return -1;
-  }
 
-  @Override
-  public int lastIndexOf(Object o) {
-    if (myHashSet.contains(o)) {
-      return super.lastIndexOf(o);
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
+        throw new UnsupportedOperationException();
     }
-    return -1;
-  }
+
+    @Override
+    public boolean contains(Object o) {
+        return myHashSet.contains(o);
+    }
+
+    @Override
+    @SuppressWarnings("NullAway")
+    public boolean addAll(Collection<? extends T> c) {
+        boolean result = false;
+        for (T t : c) {
+            // Nullability of t depends on declared nullability of T and can't be checked uniformly, disabling NullAway checks here
+            result |= add(t);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean add(T o) {
+        if (myHashSet.add(o)) {
+            super.add(o);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean remove(@Nullable Object o) {
+        if (myHashSet.remove(o)) {
+            super.remove(o);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        myHashSet.clear();
+        super.clear();
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public T set(int index, T element) {
+        T removed = remove(index);
+        add(index, element);
+        return removed;
+    }
+
+    @Override
+    public void add(int index, T element) {
+        if (myHashSet.add(element)) {
+            super.add(index, element);
+        }
+    }
+
+    @Override
+    public T remove(int index) {
+        T t = super.remove(index);
+        myHashSet.remove(t);
+        return t;
+    }
+
+    @Override
+    public int indexOf(@Nullable Object o) {
+        if (myHashSet.contains(o)) {
+            return super.indexOf(o);
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(@Nullable Object o) {
+        if (myHashSet.contains(o)) {
+            return super.lastIndexOf(o);
+        }
+        return -1;
+    }
 }

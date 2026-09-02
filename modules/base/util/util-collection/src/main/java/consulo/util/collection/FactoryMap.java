@@ -20,6 +20,7 @@ import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.ObjectUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,164 +32,168 @@ import java.util.function.Supplier;
  */
 @Deprecated
 @DeprecationInfo("Use map#computeIfAbsent() method")
-public abstract class FactoryMap<K, V> implements Map<K, V> {
-  private @Nullable Map<K, V> myMap;
+public abstract class FactoryMap<K extends @Nullable Object, V extends @Nullable Object> implements Map<K, V> {
+    private @Nullable Map<K, V> myMap;
 
-  /**
-   * @deprecated Use {@link #create(Function)} instead
-   */
-  @Deprecated
-  public FactoryMap() {
-    DeprecatedMethodException.report("Use FactoryMap.create*() instead");
-  }
-
-  private FactoryMap(boolean safe) {
-  }
-
-  protected Map<K, V> createMap() {
-    return new HashMap<>();
-  }
-
-  protected abstract @Nullable V create(K key);
-
-  @Override
-  public @Nullable V get(Object key) {
-    Map<K, V> map = getMap();
-    K k = notNull(key);
-    V value = map.get(k);
-    if (value == null) {
-      value = create((K)key);
-      V v = notNull(value);
-      map.put(k, v);
+    /**
+     * @deprecated Use {@link #create(Function)} instead
+     */
+    @Deprecated
+    public FactoryMap() {
+        DeprecatedMethodException.report("Use FactoryMap.create*() instead");
     }
-    return value == null ? null : nullize(value);
-  }
 
-  private Map<K, V> getMap() {
-    Map<K, V> map = myMap;
-    if (map == null) {
-      myMap = map = createMap();
+    private FactoryMap(boolean safe) {
     }
-    return map;
-  }
 
-  private static <T> T FAKE_NULL() {
-    //noinspection unchecked
-    return (T)ObjectUtil.NULL;
-  }
-
-  private static <T> T notNull(@Nullable Object key) {
-    //noinspection unchecked
-    return key == null ? FAKE_NULL() : (T)key;
-  }
-
-  @SuppressWarnings("NullAway")
-  private static <T> T nullize(T value) {
-    // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
-    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
-    return value == FAKE_NULL() ? null : value;
-  }
-
-  @Override
-  public final boolean containsKey(Object key) {
-    return getMap().containsKey(notNull(key));
-  }
-
-  @Override
-  public @Nullable V put(K key, V value) {
-    K k = notNull(key);
-    V v = notNull(value);
-    v = getMap().put(k, v);
-    return nullize(v);
-  }
-
-  @Override
-  public @Nullable V remove(Object key) {
-    V v = getMap().remove(key);
-    return nullize(v);
-  }
-
-  @Override
-  public Set<K> keySet() {
-    Set<K> ts = getMap().keySet();
-    K nullKey = FAKE_NULL();
-    if (ts.contains(nullKey)) {
-      Set<K> hashSet = new HashSet<>(ts);
-      hashSet.remove(nullKey);
-      hashSet.add(null);
-      return hashSet;
+    protected Map<K, V> createMap() {
+        return new HashMap<>();
     }
-    return ts;
-  }
 
-  public boolean removeValue(Object value) {
-    Object t = notNull(value);
-    //noinspection SuspiciousMethodCalls
-    return getMap().values().remove(t);
-  }
+    protected abstract V create(K key);
 
-  @Override
-  public void clear() {
-    getMap().clear();
-  }
-
-  @Override
-  public int size() {
-    return getMap().size();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return getMap().isEmpty();
-  }
-
-  @Override
-  public boolean containsValue(Object value) {
-    return getMap().containsValue(value);
-  }
-
-  @Override
-  public void putAll(Map<? extends K, ? extends V> m) {
-    for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
-      put(entry.getKey(), entry.getValue());
+    @Override
+    @SuppressWarnings("unchecked")
+    public @Nullable V get(Object key) {
+        Map<K, V> map = getMap();
+        K k = notNull(key);
+        V value = map.get(k);
+        if (value == null) {
+            value = create((K) key);
+            V v = notNull(value);
+            map.put(k, v);
+        }
+        return value == null ? null : nullize(value);
     }
-  }
 
-  @Override
-  @SuppressWarnings("deprecation")
-  public Collection<V> values() {
-    return ContainerUtil.map(getMap().values(), FactoryMap::nullize);
-  }
+    private Map<K, V> getMap() {
+        Map<K, V> map = myMap;
+        if (map == null) {
+            myMap = map = createMap();
+        }
+        return map;
+    }
 
-  @Override
-  public Set<Entry<K, V>> entrySet() {
-    return ContainerUtil.map2Set(
-      getMap().entrySet(),
-      entry -> new AbstractMap.SimpleEntry<>(nullize(entry.getKey()), nullize(entry.getValue()))
-    );
-  }
+    private static <T> T FAKE_NULL() {
+        //noinspection unchecked
+        return (T) ObjectUtil.NULL;
+    }
 
-  public static <K, V> Map<K, V> create(final Function<? super K, ? extends V> computeValue) {
-    return new FactoryMap<K, V>(true) {
-      @Override
-      protected @Nullable V create(K key) {
-        return computeValue.apply(key);
-      }
-    };
-  }
+    private static <T> T notNull(@Nullable Object key) {
+        //noinspection unchecked
+        return key == null ? FAKE_NULL() : (T) key;
+    }
 
-  public static <K, V>
-  Map<K, V> createMap(final Function<? super K, ? extends V> computeValue, final Supplier<? extends Map<K, V>> mapCreator) {
-    return new FactoryMap<K, V>(true) {
-      @Override
-      protected @Nullable V create(K key) {
-        return computeValue.apply(key);
-      }
+    @SuppressWarnings("NullAway")
+    private static <T extends @Nullable Object> T nullize(T value) {
+        // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
+        // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
+        return value == FAKE_NULL() ? null : value;
+    }
 
-      @Override
-      protected Map<K, V> createMap() {
-        return mapCreator.get();
-      }
-    };
-  }
+    @Override
+    public final boolean containsKey(Object key) {
+        return getMap().containsKey(notNull(key));
+    }
+
+    @Override
+    public @Nullable V put(K key, V value) {
+        K k = notNull(key);
+        V v = notNull(value);
+        v = getMap().put(k, v);
+        return nullize(v);
+    }
+
+    @Override
+    public @Nullable V remove(Object key) {
+        V v = getMap().remove(key);
+        return nullize(v);
+    }
+
+    @Override
+    public Set<K> keySet() {
+        Set<K> ts = getMap().keySet();
+        K nullKey = FAKE_NULL();
+        if (ts.contains(nullKey)) {
+            Set<K> hashSet = new HashSet<>(ts);
+            hashSet.remove(nullKey);
+            hashSet.add(null);
+            return hashSet;
+        }
+        return ts;
+    }
+
+    public boolean removeValue(Object value) {
+        Object t = notNull(value);
+        //noinspection SuspiciousMethodCalls
+        return getMap().values().remove(t);
+    }
+
+    @Override
+    public void clear() {
+        getMap().clear();
+    }
+
+    @Override
+    public int size() {
+        return getMap().size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getMap().isEmpty();
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return getMap().containsValue(value);
+    }
+
+    @Override
+    public void putAll(Map<? extends K, ? extends V> m) {
+        for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public Collection<V> values() {
+        return ContainerUtil.map(getMap().values(), FactoryMap::nullize);
+    }
+
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        return ContainerUtil.map2Set(
+            getMap().entrySet(),
+            entry -> new AbstractMap.SimpleEntry<>(nullize(entry.getKey()), nullize(entry.getValue()))
+        );
+    }
+
+    @SuppressWarnings("deprecation")
+    public static <K extends @Nullable Object, V extends @Nullable Object>
+    Map<K, V> create(final Function<? super K, ? extends V> computeValue) {
+        return new FactoryMap<>(true) {
+            @Override
+            protected V create(K key) {
+                return computeValue.apply(key);
+            }
+        };
+    }
+
+    @SuppressWarnings("deprecation")
+    public static <K extends @Nullable Object, V extends @Nullable Object>
+    Map<K, V> createMap(final Function<? super K, ? extends V> computeValue, final Supplier<? extends Map<K, V>> mapCreator) {
+        return new FactoryMap<>(true) {
+            @Override
+            protected V create(K key) {
+                return computeValue.apply(key);
+            }
+
+            @Override
+            protected Map<K, V> createMap() {
+                return mapCreator.get();
+            }
+        };
+    }
 }
