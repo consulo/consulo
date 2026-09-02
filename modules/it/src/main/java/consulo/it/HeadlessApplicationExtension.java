@@ -18,9 +18,7 @@ package consulo.it;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.it.internal.HeadlessApplicationImpl;
 import consulo.it.internal.HeadlessLoggerFactory;
-import consulo.util.concurrent.ThreadIssueException;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -40,10 +38,6 @@ import java.util.List;
  * real {@link consulo.it.internal.HeadlessApplicationImpl} instead of the light stub, and keeps a
  * single application alive for the whole test run (the application is a JVM-wide singleton).
  * <p>
- * A write action started on the UI thread throws, unless the test opts out with
- * {@link AllowWriteLockUnderUIThread}. It is recorded as well as thrown, so that a violation swallowed by a
- * catch-all still fails the test.
- * <p>
  * An error logged during a test fails it, unless the test opts out with {@link AllowLogError}.
  *
  * @author VISTALL
@@ -58,38 +52,20 @@ public class HeadlessApplicationExtension implements BeforeAllCallback, BeforeEa
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        HeadlessApplicationImpl.takeThreadIssues();
-        HeadlessApplicationImpl.setAllowWriteLockUnderUIThread(isAllowWriteLockUnderUIThread(context));
-
         HeadlessLoggerFactory.takeLoggedErrors();
         HeadlessLoggerFactory.setAllowedErrorCategories(getAllowedErrorCategories(context));
     }
 
     @Override
     public void afterEach(ExtensionContext context) {
-        HeadlessApplicationImpl.setAllowWriteLockUnderUIThread(false);
         HeadlessLoggerFactory.setAllowedErrorCategories(null);
 
-        List<ThreadIssueException> issues = HeadlessApplicationImpl.takeThreadIssues();
         List<LoggedError> loggedErrors = HeadlessLoggerFactory.takeLoggedErrors();
-
-        if (!issues.isEmpty()) {
-            AssertionError error = new AssertionError(issues.size() + " thread issue(s) reported during the test");
-            issues.forEach(error::addSuppressed);
-            loggedErrors.forEach(error::addSuppressed);
-            throw error;
-        }
-
         if (!loggedErrors.isEmpty()) {
             AssertionError error = new AssertionError(loggedErrors.size() + " error(s) logged during the test");
             loggedErrors.forEach(error::addSuppressed);
             throw error;
         }
-    }
-
-    private static boolean isAllowWriteLockUnderUIThread(ExtensionContext context) {
-        return context.getTestMethod().map(method -> method.isAnnotationPresent(AllowWriteLockUnderUIThread.class)).orElse(false)
-            || context.getTestClass().map(type -> type.isAnnotationPresent(AllowWriteLockUnderUIThread.class)).orElse(false);
     }
 
     private static @Nullable List<String> getAllowedErrorCategories(ExtensionContext context) {

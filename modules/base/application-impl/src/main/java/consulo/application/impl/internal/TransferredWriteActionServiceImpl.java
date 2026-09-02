@@ -23,6 +23,11 @@ public class TransferredWriteActionServiceImpl implements TransferredWriteAction
         }
 
         RWLock lock = application.myLock;
+        if (lock instanceof StampedRWLock stampedLock) {
+            UIAccess uiAccess = application.getLastUIAccess();
+            stampedLock.transferWriteAction(action, uiAccess::give);
+            return;
+        }
         if (!(lock instanceof ReadMostlyRWLock rwLock)) {
             application.getLastUIAccess().giveAndWait(action);
             return;

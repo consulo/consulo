@@ -15,10 +15,18 @@
  */
 package consulo.execution.debug.frame;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 22/10/2022
  */
 public interface XStackFrameWithSeparatorAbove {
   boolean hasSeparatorAbove();
+
+  @Nullable
+  String getCaptionAboveOf();
+
+  default void setWithSeparator(boolean withSeparator) {
+  }
 }

@@ -102,6 +102,26 @@ public abstract class StubIndex {
     return result;
   }
 
+  /**
+   * The correct default view over a condition-annotated index: every declaration variant is
+   * stored (all conditional branches, guards in the stubs), and this query keeps only the
+   * variants active in some context of their declaring file — as decided by the language's
+   * {@link StubVariantFilter}. Languages without a filter see all elements unchanged.
+   */
+  public static <Key, Psi extends PsiElement> Collection<Psi> getActiveElements(StubIndexKey<Key, Psi> indexKey,
+                                                                               Key key,
+                                                                               Project project,
+                                                                               @Nullable ProjectAwareSearchScope scope,
+                                                                               Class<Psi> requiredClass) {
+    List<Psi> result = new ArrayList<>();
+    for (Psi element : getElements(indexKey, key, project, scope, requiredClass)) {
+      if (StubVariantFilter.isActiveVariant(project, element)) {
+        result.add(element);
+      }
+    }
+    return result;
+  }
+
   public abstract <Key> IdIterator getContainingIds(StubIndexKey<Key, ?> indexKey, Key dataKey, Project project, ProjectAwareSearchScope scope);
 
   public abstract void forceRebuild(Throwable e);

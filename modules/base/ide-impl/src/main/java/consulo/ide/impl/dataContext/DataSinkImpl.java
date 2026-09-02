@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -275,11 +276,21 @@ public class DataSinkImpl implements DataSink {
             && !Registry.is("actionSystem.update.actions.suppress.dataRules.on.edt", false);
     }
 
+    private static final Set<String> ourReportedUiThreadKeys = ConcurrentHashMap.newKeySet();
+
+    /**
+     * Reported once per key per session, the JB {@code PreCachedDataContext} shape — the skip itself
+     * is the sanctioned behavior of the no-rules update section, so repeating the nudge on every
+     * update pass is pure noise.
+     */
     private void reportLazyValueRequestedOnUiThread(Key<?> key) {
         if (!Registry.is("actionSystem.update.actions.warn.dataRules.on.edt", true)) {
             return;
         }
         if (!myLazyData.containsKey(key) && !myLazyValueData.containsKey(key)) {
+            return;
+        }
+        if (!ourReportedUiThreadKeys.add(key.toString())) {
             return;
         }
         Throwable throwable = new Throwable();

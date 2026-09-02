@@ -27,5 +27,6 @@ module consulo.undo.redo.api {
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.diff.api,
         consulo.diff.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.it;
 }

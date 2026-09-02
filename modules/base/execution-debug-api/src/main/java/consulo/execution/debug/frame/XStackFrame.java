@@ -71,4 +71,12 @@ public abstract class XStackFrame extends XValueContainer {
       component.append(XDebuggerLocalize.invalidFrame(), SimpleTextAttributes.ERROR_ATTRIBUTES);
     }
   }
+
+  /**
+   * Customize the text presentation of the stack frame, which is used when the frame is rendered as text,
+   * not as a visible UI component. "Copy Stack" is one of the prominent examples.
+   */
+  public void customizeTextPresentation(ColoredTextContainer component) {
+    customizePresentation(component);
+  }
 }

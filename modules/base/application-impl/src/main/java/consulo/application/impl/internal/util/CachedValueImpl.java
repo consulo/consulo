@@ -26,7 +26,7 @@ public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValu
         this(provider, false, factory);
     }
 
-    CachedValueImpl(CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
+    public CachedValueImpl(CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
         super(trackValue, factory);
         myProvider = provider;
     }

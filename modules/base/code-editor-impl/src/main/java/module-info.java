@@ -24,7 +24,7 @@ module consulo.code.editor.impl {
         consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.language.editor.impl,
         consulo.execution.debug.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl, consulo.it;
 
     exports consulo.codeEditor.impl.util to
         consulo.ide.impl,
