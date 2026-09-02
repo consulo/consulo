@@ -162,8 +162,8 @@ public abstract class RefHashMap<K, V extends @Nullable Object> extends Abstract
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public boolean containsKey(@Nullable Object key) {
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
+    public boolean containsKey(Object key) {
         if (key == null) {
             return false;
         }
@@ -180,7 +180,8 @@ public abstract class RefHashMap<K, V extends @Nullable Object> extends Abstract
     }
 
     @Override
-    public @Nullable V get(@Nullable Object key) {
+    @SuppressWarnings("ConstantConditions")
+    public @Nullable V get(Object key) {
         if (key == null) {
             return null;
         }
@@ -198,12 +199,11 @@ public abstract class RefHashMap<K, V extends @Nullable Object> extends Abstract
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public @Nullable V remove(Object key) {
         processQueue();
 
-        // optimization:
-        //noinspection unchecked
-        myHardKeyInstance.set((K) key);
+        myHardKeyInstance.set((K) Objects.requireNonNull(key));
         V result = myMap.remove(myHardKeyInstance);
         myHardKeyInstance.clear();
         return result;

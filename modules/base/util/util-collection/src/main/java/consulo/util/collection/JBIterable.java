@@ -82,7 +82,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
     /**
      * Lambda-friendly construction method.
      */
-    public static <E> JBIterable<E> create(final @Nullable Supplier<Iterator<E>> producer) {
+    public static <E> JBIterable<E> create(@Nullable Supplier<Iterator<E>> producer) {
         if (producer == null) {
             return empty();
         }
@@ -866,7 +866,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
      * @see JBIterable#collect(Collection)
      */
     public final JBIterable<E> sorted(Comparator<E> comparator) {
-        ArrayList<E> list = addAllTo(new ArrayList<>());
+        List<E> list = addAllTo(new ArrayList<>());
         Collections.sort(list, comparator);
         return from(list);
     }

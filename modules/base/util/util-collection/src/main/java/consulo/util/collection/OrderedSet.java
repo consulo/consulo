@@ -74,7 +74,7 @@ public class OrderedSet<T extends @Nullable Object> extends ArrayList<T> impleme
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(@Nullable Object o) {
         return myHashSet.contains(o);
     }
 
