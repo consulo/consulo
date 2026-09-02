@@ -32,11 +32,13 @@ import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
 import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
 import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -72,10 +74,16 @@ public class XDebuggerFramesList extends DebuggerFramesList {
             ColoredStringBuilder coloredTextContainer = new ColoredStringBuilder();
             htmlBuf.append("<html>\n<body>\n<ul>\n");
             for (Object value : values) {
+                if (value instanceof XStackFrameWithSeparatorAbove item && item.hasSeparatorAbove()) {
+                    String caption = " - " + StringUtil.notNullize(item.getCaptionAboveOf());
+                    plainBuf.append(caption).append('\n');
+                    htmlBuf.append("  <li>").append(caption).append("</li>\n");
+                }
+
                 htmlBuf.append("  <li>");
                 if (value != null) {
                     if (value instanceof XStackFrame) {
-                        ((XStackFrame) value).customizePresentation(coloredTextContainer);
+                        ((XStackFrame) value).customizeTextPresentation(coloredTextContainer);
                         coloredTextContainer.appendTo(plainBuf, htmlBuf);
                     }
                     else {
@@ -154,11 +162,23 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     private class XDebuggerGroupedFrameListRenderer extends GroupedItemsListRenderer<Object> {
         private final XDebuggerFrameListRenderer myOriginalRenderer = new XDebuggerFrameListRenderer(myProject);
 
+        /**
+         * Consulo popups render separators as their own list items, so the shared {@link GroupedItemsListRenderer} has no
+         * "separator above" component. The frames list still needs one: it is the "Async stack trace" caption above the
+         * first frame of an asynchronous part of the stack.
+         */
+        private SeparatorWithText mySeparatorComponent;
+
         public XDebuggerGroupedFrameListRenderer() {
             super(new ListItemDescriptorAdapter<>() {
                 @Override
                 public @Nullable String getTextFor(Object value) {
                     return null;
+                }
+
+                @Override
+                public @Nullable String getCaptionAboveOf(Object value) {
+                    return value instanceof XStackFrameWithSeparatorAbove frameWithSeparatorAbove ? frameWithSeparatorAbove.getCaptionAboveOf() : null;
                 }
 
                 @Override
@@ -169,9 +189,21 @@ public class XDebuggerFramesList extends DebuggerFramesList {
         }
 
         @Override
+        protected void layout() {
+            super.layout();
+
+            mySeparatorComponent = createSeparator();
+            mySeparatorComponent.setCaptionCentered(false);
+            myRendererComponent.add(mySeparatorComponent, BorderLayout.NORTH);
+        }
+
+        @Override
         @SuppressWarnings("unchecked")
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (myDescriptor.hasSeparatorAboveOf(value)) {
+                mySeparatorComponent.setFont(list.getFont());
+                mySeparatorComponent.setCaption(myDescriptor.getCaptionAboveOf(value));
+                mySeparatorComponent.setVisible(true);
                 Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 ((XDebuggerFrameListRenderer) myComponent).getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 return component;
