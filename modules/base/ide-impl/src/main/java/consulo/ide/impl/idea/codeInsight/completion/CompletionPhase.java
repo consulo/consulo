@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.event.ApplicationListener;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -35,6 +34,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.hint.HintListener;
 import consulo.util.lang.ThreeState;
@@ -194,11 +194,18 @@ public abstract class CompletionPhase implements Disposable {
 
         public BgCalculation(final CompletionProgressIndicator indicator) {
             super(indicator);
-            Application.get().addApplicationListener(new ApplicationListener() {
+            Application application = Application.get();
+            application.addApplicationListener(new ApplicationListener() {
                 @Override
                 public void beforeWriteActionStart(Object action) {
                     if (!indicator.getLookup().isLookupDisposed() && !indicator.isCanceled()) {
-                        indicator.scheduleRestart();
+                        if (UIAccess.isUIThread()) {
+                            indicator.scheduleRestart();
+                        }
+                        else {
+                            application.invokeLater(indicator::scheduleRestart, () ->
+                                CompletionServiceImpl.getCurrentCompletionProgressIndicator() != indicator);
+                        }
                     }
                 }
             }, this);
