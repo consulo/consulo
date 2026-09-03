@@ -3,6 +3,8 @@
  */
 package consulo.language.editor.internal;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.RadioGroup;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -27,7 +29,11 @@ public interface ModelScopeItemPresenter {
   int getScopeId();
 
   
-  RadioButton getButton(ModelScopeItem model);
+  /**
+   * The label of this option. The button itself is made by the group which owns every option of the dialog, so
+   * that choosing one unchooses the rest.
+   */
+  LocalizeValue getButtonText(ModelScopeItem model);
 
   @RequiredUIAccess
   default @Nullable Component getAdditionalComponents(RadioButton button, ModelScopeItem model, Disposable dialogDisposable) {
@@ -45,14 +51,16 @@ public interface ModelScopeItemPresenter {
 
   
   @RequiredUIAccess
-  static List<ModelScopeItemView> createOrderedViews(List<? extends ModelScopeItem> models, Disposable dialogDisposable) {
+  static List<ModelScopeItemView> createOrderedViews(RadioGroup<Integer> group,
+                                                    List<? extends ModelScopeItem> models,
+                                                    Disposable dialogDisposable) {
     List<ModelScopeItemView> result = new ArrayList<>();
     for (ModelScopeItemPresenter presenter : EP_NAME.getExtensionList()) {
       for (ModelScopeItem model : models) {
         if (presenter.isApplicable(model)) {
-          RadioButton button = presenter.getButton(model);
-          Component additionalComponent = presenter.getAdditionalComponents(button, model, dialogDisposable);
           int id = presenter.getScopeId();
+          RadioButton button = group.newButton(presenter.getButtonText(model), id);
+          Component additionalComponent = presenter.getAdditionalComponents(button, model, dialogDisposable);
           result.add(new ModelScopeItemView(button, additionalComponent, model, id));
           break;
         }

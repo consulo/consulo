@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.conflict;
 
+import consulo.ui.RadioGroup;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
@@ -27,7 +28,6 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
 import consulo.ui.RadioButton;
-import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
@@ -115,42 +115,20 @@ public class ChangelistConflictConfigurable extends SimpleConfigurableByProperti
         optionsLayout.setEnabledRecursive(options.TRACKING_ENABLED);
 
         VerticalLayout emptyChangelistLayout = VerticalLayout.create();
-        RadioButton showConfirmationBox = RadioButton.create(VcsLocalize.settingsShowOptionsBeforeRemoving());
-        RadioButton removeSilentlyBox = RadioButton.create(VcsLocalize.settingsRemoveSilently());
-        RadioButton doNotRemoveBox = RadioButton.create(VcsLocalize.settingsDoNotRemove());
-        ValueGroup.createBool().add(showConfirmationBox).add(removeSilentlyBox).add(doNotRemoveBox);
+        RadioGroup<VcsShowConfirmationOption.Value> group = RadioGroup.create();
 
-        List<RadioButton> buttons = List.of(showConfirmationBox, removeSilentlyBox, doNotRemoveBox);
+        emptyChangelistLayout.add(group.newButton(VcsLocalize.settingsShowOptionsBeforeRemoving(), VcsShowConfirmationOption.Value.SHOW_CONFIRMATION));
+        emptyChangelistLayout.add(group.newButton(VcsLocalize.settingsRemoveSilently(), VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY));
+        emptyChangelistLayout.add(group.newButton(VcsLocalize.settingsDoNotRemove(), VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY));
+
         propertyBuilder.add(
-            () -> selectedValue(buttons),
-            value -> selectValue(buttons, value),
+            group,
             () -> settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS,
             value -> settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS = value
         );
-        buttons.forEach(emptyChangelistLayout::add);
         root.add(LabeledLayout.create(VcsLocalize.settingsWhenEmptyChangelistBecomesInactive(), emptyChangelistLayout));
 
         return root;
-    }
-
-    private static VcsShowConfirmationOption.Value selectedValue(List<RadioButton> buttons) {
-        if (Boolean.TRUE.equals(buttons.get(0).getValue())) {
-            return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
-        }
-        if (Boolean.TRUE.equals(buttons.get(1).getValue())) {
-            return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
-        }
-        return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
-    }
-
-    @RequiredUIAccess
-    private static void selectValue(List<RadioButton> buttons, VcsShowConfirmationOption.Value value) {
-        int index = switch (value) {
-            case SHOW_CONFIRMATION -> 0;
-            case DO_ACTION_SILENTLY -> 1;
-            case DO_NOTHING_SILENTLY -> 2;
-        };
-        buttons.get(index).setValue(Boolean.TRUE);
     }
 
     @RequiredUIAccess

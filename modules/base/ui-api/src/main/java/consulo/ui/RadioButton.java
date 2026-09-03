@@ -15,29 +15,32 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
 /**
+ * A label the user can choose, drawn the way the platform draws one of a set of choices.
+ * <p/>
+ * A button made by {@link #create} is on its own, and stays that way: choosing it does not unchoose anything, and
+ * nothing keeps track of which of several is chosen. All of that is the caller's to do - it is only worth making
+ * one directly where that is what is wanted, such as a single option a plugin contributes to a dialog which
+ * arranges the rest itself.
+ * <p/>
+ * <b>For a set of choices, use a {@link RadioGroup}.</b> Its {@link RadioGroup#newButton} hands back buttons which
+ * unchoose one another, and the group is read and written as the type the choice actually means, rather than as
+ * one boolean per option which the caller has to tell apart. The boolean here is then only the drawn state, and
+ * setting it is the group's business.
+ *
  * @author VISTALL
  * @since 2016-06-14
  */
 public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
-    @Deprecated
-    @DeprecationInfo("Use with LocalizeValue parameter")
-    static RadioButton create(String text) {
-        return create(text, false);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use with LocalizeValue parameter")
-    static RadioButton create(String text, boolean selected) {
-        return create(LocalizeValue.of(text), selected);
-    }
-
+    /**
+     * A button which belongs to nothing. Whether it is chosen, and what that means, is the caller's to keep - see
+     * {@link RadioGroup} for the case where the platform should keep it instead.
+     */
     static RadioButton create(LocalizeValue textValue) {
         return create(textValue, false);
     }
@@ -63,9 +66,4 @@ public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
 
     @RequiredUIAccess
     void setLabelText(LocalizeValue text);
-
-    default RadioButton toGroup(ValueGroup<Boolean> group) {
-        group.add(this);
-        return this;
-    }
 }

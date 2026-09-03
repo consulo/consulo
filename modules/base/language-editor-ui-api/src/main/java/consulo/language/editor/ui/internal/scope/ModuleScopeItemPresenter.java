@@ -1,6 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.ui.internal.scope;
 
+import consulo.localize.LocalizeValue;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.internal.ModelScopeItem;
 import consulo.language.editor.internal.ModelScopeItemPresenter;
@@ -21,9 +22,9 @@ public final class ModuleScopeItemPresenter implements ModelScopeItemPresenter {
 
   @Override
   
-  public RadioButton getButton(ModelScopeItem m) {
+  public LocalizeValue getButtonText(ModelScopeItem m) {
     ModuleScopeItem model = (ModuleScopeItem)m;
-    return RadioButton.create(AnalysisScopeLocalize.scopeOptionModuleWithMnemonic(model.Module.getName()));
+    return AnalysisScopeLocalize.scopeOptionModuleWithMnemonic(model.Module.getName());
   }
 
   @Override

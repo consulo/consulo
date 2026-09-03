@@ -203,7 +203,7 @@ public abstract class UIInternal {
 
     public abstract MenuSeparator _MenuSeparator_create();
 
-    public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
+    public abstract <V> RadioGroup<V> _Components_radioGroup();
 
     public abstract MenuBar _MenuItems_menuBar();
 

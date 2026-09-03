@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
@@ -385,10 +386,6 @@ public class DesktopQtUIInternalImpl extends UIInternal {
         return new DesktopQtSeparatorImpl(style);
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new DesktopQtBoolValueGroup();
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -501,4 +498,10 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
         return new FlatDataModelImpl<>(list);
     }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new DesktopQtRadioGroupImpl<>();
+    }
+
 }

@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal;
 
+import consulo.ui.RadioGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.vaadin.flow.component.UI;
@@ -341,20 +342,6 @@ public class WebUIInternalImpl extends UIInternal {
         return new WebSeparatorImpl(style);
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new ValueGroup<>() {
-            @Override
-            @RequiredUIAccess
-            public void clearValues() {
-            }
-
-            @Override
-            public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
-                return this;
-            }
-        };
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -572,4 +559,10 @@ public class WebUIInternalImpl extends UIInternal {
     private RuntimeException notSupported() {
         return new UnsupportedOperationException();
     }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new WebRadioGroupImpl<>();
+    }
+
 }

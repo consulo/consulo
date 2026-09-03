@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.internal.UIInternal;
+import consulo.ui.RadioButton;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.internal.BaseRadioGroup;
+
+import javax.swing.*;
 
 /**
+ * Swing announces buttons as one set to a screen reader, and walks between them with the arrow keys, only for the
+ * ones it was handed as a group of its own.
+ *
  * @author VISTALL
- * @since 2017-05-03
+ * @since 03-May-17
  */
-public class ValueGroups {
-    public static ValueGroup<Boolean> boolGroup() {
-        return UIInternal.get()._ValueGroups_boolGroup();
+public class DesktopRadioGroupImpl<V> extends BaseRadioGroup<V> {
+    private final ButtonGroup myGroup = new ButtonGroup();
+
+    @Override
+    protected void attach(RadioButton button) {
+        myGroup.add((AbstractButton) TargetAWT.to(button));
     }
 }

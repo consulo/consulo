@@ -15,6 +15,8 @@
  */
 package consulo.it.internal;
 
+import consulo.ui.internal.BaseRadioGroup;
+import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.it.internal.ui.*;
 import consulo.localize.LocalizeValue;
@@ -197,10 +199,6 @@ public class HeadlessUIInternal extends UIInternal {
         return new HeadlessMenuSeparator();
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new HeadlessValueGroup<>();
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -276,4 +274,10 @@ public class HeadlessUIInternal extends UIInternal {
     public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
         return new FlatDataModelImpl<>(list);
     }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new BaseRadioGroup<>();
+    }
+
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.ui.RadioGroup;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.configurable.*;
@@ -61,9 +62,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         private CheckBox myChkReopenLastProject;
         private CheckBox myConfirmExit;
 
-        private RadioButton myOpenProjectInNewWindow;
-        private RadioButton myOpenProjectInSameWindow;
-        private RadioButton myConfirmWindowToOpenProject;
+        private RadioGroup<Integer> myOpenProject;
 
         private IntBox myRecentProjectsLimit;
 
@@ -77,9 +76,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
         private ComboBox<Locale> myLocaleBox;
 
-        private RadioButton myTerminateProcessRadioButton;
-        private RadioButton myDisconnectRadioButton;
-        private RadioButton myAskRadioButton;
+        private RadioGroup<ProcessCloseConfirmation> myProcessClose;
 
         private ComboBox<FileOperateDialogProvider> myFileChooseDialogBox;
         private ComboBox<FileOperateDialogProvider> myFileSaveDialogBox;
@@ -102,19 +99,19 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Startup/Shutdown"), startupOrShutdownLayout));
 
             VerticalLayout projectReopeningLayout = VerticalLayout.create();
-            ValueGroup<Boolean> projectOpenGroup = ValueGroup.createBool();
-            projectReopeningLayout.add(
-                myOpenProjectInNewWindow = RadioButton.create(LocalizeValue.localizeTODO("Open project in new window"))
-                    .toGroup(projectOpenGroup)
-            );
-            projectReopeningLayout.add(
-                myOpenProjectInSameWindow = RadioButton.create(LocalizeValue.localizeTODO("Open project in the same window"))
-                    .toGroup(projectOpenGroup)
-            );
-            projectReopeningLayout.add(
-                myConfirmWindowToOpenProject = RadioButton.create(LocalizeValue.localizeTODO("Confirm window to open project in"))
-                    .toGroup(projectOpenGroup)
-            );
+            myOpenProject = RadioGroup.create();
+            projectReopeningLayout.add(myOpenProject.newButton(
+                LocalizeValue.localizeTODO("Open project in new window"),
+                GeneralSettings.OPEN_PROJECT_NEW_WINDOW
+            ));
+            projectReopeningLayout.add(myOpenProject.newButton(
+                LocalizeValue.localizeTODO("Open project in the same window"),
+                GeneralSettings.OPEN_PROJECT_SAME_WINDOW
+            ));
+            projectReopeningLayout.add(myOpenProject.newButton(
+                LocalizeValue.localizeTODO("Confirm window to open project in"),
+                GeneralSettings.OPEN_PROJECT_ASK
+            ));
 
             myRecentProjectsLimit = IntBox.create(RecentProjectsManager.DEFAULT_RECENT_PROJECTS_LIMIT);
             myRecentProjectsLimit.setRange(0, Integer.MAX_VALUE);
@@ -175,10 +172,10 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Localization"), localizeLayout));
 
             VerticalLayout processLayout = VerticalLayout.create();
-            ValueGroup<Boolean> processGroup = ValueGroup.createBool();
-            processLayout.add(myTerminateProcessRadioButton = RadioButton.create(IdeLocalize.radioProcessCloseTerminate()).toGroup(processGroup));
-            processLayout.add(myDisconnectRadioButton = RadioButton.create(IdeLocalize.radioProcessCloseDisconnect()).toGroup(processGroup));
-            processLayout.add(myAskRadioButton = RadioButton.create(IdeLocalize.radioProcessCloseAsk()).toGroup(processGroup));
+            myProcessClose = RadioGroup.create();
+            processLayout.add(myProcessClose.newButton(IdeLocalize.radioProcessCloseTerminate(), ProcessCloseConfirmation.TERMINATE));
+            processLayout.add(myProcessClose.newButton(IdeLocalize.radioProcessCloseDisconnect(), ProcessCloseConfirmation.DISCONNECT));
+            processLayout.add(myProcessClose.newButton(IdeLocalize.radioProcessCloseAsk(), ProcessCloseConfirmation.ASK));
 
             myRootLayout.add(LabeledLayout.create(IdeLocalize.groupSettingsProcessTabClose(), processLayout));
 
@@ -382,28 +379,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         component.myConfirmExit.setValue(settings.isConfirmExit());
         component.myRecentProjectsLimit.setValue(recentProjectsManager.getRecentProjectsLimit());
 
-        switch (settings.getProcessCloseConfirmation()) {
-            case TERMINATE:
-                component.myTerminateProcessRadioButton.setValue(true);
-                break;
-            case DISCONNECT:
-                component.myDisconnectRadioButton.setValue(true);
-                break;
-            case ASK:
-                component.myAskRadioButton.setValue(true);
-                break;
-        }
-        switch (settings.getConfirmOpenNewProject()) {
-            case GeneralSettings.OPEN_PROJECT_ASK:
-                component.myConfirmWindowToOpenProject.setValue(true);
-                break;
-            case GeneralSettings.OPEN_PROJECT_NEW_WINDOW:
-                component.myOpenProjectInNewWindow.setValue(true);
-                break;
-            case GeneralSettings.OPEN_PROJECT_SAME_WINDOW:
-                component.myOpenProjectInSameWindow.setValue(true);
-                break;
-        }
+        component.myProcessClose.setValue(settings.getProcessCloseConfirmation());
+        component.myOpenProject.setValue(settings.getConfirmOpenNewProject());
 
         FileOperateDialogSettings dialogSettings = myFileOperateDialogSettings.get();
 
@@ -428,27 +405,11 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
 
     private static int getConfirmOpenNewProject(MyComponent component) {
-        if (component.myConfirmWindowToOpenProject.getValue()) {
-            return GeneralSettings.OPEN_PROJECT_ASK;
-        }
-        else if (component.myOpenProjectInNewWindow.getValue()) {
-            return GeneralSettings.OPEN_PROJECT_NEW_WINDOW;
-        }
-        else {
-            return GeneralSettings.OPEN_PROJECT_SAME_WINDOW;
-        }
+        return component.myOpenProject.getValueOrError();
     }
 
     private static ProcessCloseConfirmation getProcessCloseConfirmation(MyComponent component) {
-        if (component.myTerminateProcessRadioButton.getValue()) {
-            return ProcessCloseConfirmation.TERMINATE;
-        }
-        else if (component.myDisconnectRadioButton.getValue()) {
-            return ProcessCloseConfirmation.DISCONNECT;
-        }
-        else {
-            return ProcessCloseConfirmation.ASK;
-        }
+        return component.myProcessClose.getValueOrError();
     }
 
     

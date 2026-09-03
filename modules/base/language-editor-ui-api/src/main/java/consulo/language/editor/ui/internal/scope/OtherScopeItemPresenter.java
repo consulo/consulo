@@ -23,13 +23,9 @@ public final class OtherScopeItemPresenter implements ModelScopeItemPresenter {
 
   
   @Override
-  public RadioButton getButton(ModelScopeItem m) {
+  public LocalizeValue getButtonText(ModelScopeItem m) {
     OtherScopeItem model = (OtherScopeItem)m;
-    AnalysisScope scope = model.getScope();
-    RadioButton button = RadioButton.create(LocalizeValue.of(scope.getShortenName()));
-    String name = scope.getShortenName();
-    // TODO button.setMnemonic(name.charAt(getSelectedScopeMnemonic(name)));
-    return button;
+    return LocalizeValue.of(model.getScope().getShortenName());
   }
 
   @Override

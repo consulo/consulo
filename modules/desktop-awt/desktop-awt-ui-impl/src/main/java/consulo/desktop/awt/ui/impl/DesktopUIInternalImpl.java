@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
+import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
@@ -240,10 +241,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return DesktopMenuSeparatorImpl.INSTANCE;
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new DesktopBoolValueGroup();
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -592,4 +589,10 @@ public class DesktopUIInternalImpl extends UIInternal {
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         return new DesktopDatePickerImpl(datePattern);
     }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new DesktopRadioGroupImpl<>();
+    }
+
 }

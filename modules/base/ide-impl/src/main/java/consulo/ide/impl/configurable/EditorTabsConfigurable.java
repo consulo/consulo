@@ -143,63 +143,21 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
 
     tabClosingPolicyLayout.add(Label.create(ApplicationLocalize.labelWhenNumberOfOpenedEditorsExceedsTabLimit()));
 
-    RadioButton closeNotModifiedFiles = RadioButton.create(ApplicationLocalize.radioCloseNonModifiedFilesFirst());
-    RadioButton closeLessFrequentlyFiles = RadioButton.create(ApplicationLocalize.radioCloseLessFrequentlyUsedFiles());
+    RadioGroup<Boolean> closingPolicy = RadioGroup.create();
 
-    propertyBuilder.add(() -> {
-      if (closeNotModifiedFiles.getValueOrError()) {
-        return true;
-      }
+    propertyBuilder.add(closingPolicy, () -> uiSettings.CLOSE_NON_MODIFIED_FILES_FIRST, v -> uiSettings.CLOSE_NON_MODIFIED_FILES_FIRST = v);
 
-      if (closeLessFrequentlyFiles.getValueOrError()) {
-        return false;
-      }
-
-      throw new IllegalArgumentException();
-    }, v -> {
-      if (v) {
-        closeNotModifiedFiles.setValue(true);
-      }
-      else {
-        closeLessFrequentlyFiles.setValue(true);
-      }
-    }, () -> uiSettings.CLOSE_NON_MODIFIED_FILES_FIRST, v -> uiSettings.CLOSE_NON_MODIFIED_FILES_FIRST = v);
-
-    ValueGroup.createBool().add(closeNotModifiedFiles).add(closeLessFrequentlyFiles);
-
-    VerticalLayout leftIndent = VerticalLayout.create().add(closeNotModifiedFiles).add(closeLessFrequentlyFiles);
+    VerticalLayout leftIndent = VerticalLayout.create()
+      .add(closingPolicy.newButton(ApplicationLocalize.radioCloseNonModifiedFilesFirst(), true))
+      .add(closingPolicy.newButton(ApplicationLocalize.radioCloseLessFrequentlyUsedFiles(), false));
     leftIndent.paddingBuilder().leftSet(Space.X_LARGE).apply();
     tabClosingPolicyLayout.add(leftIndent);
 
     tabClosingPolicyLayout.add(Label.create(ApplicationLocalize.labelWhenClosingActiveEditor()));
 
-    RadioButton activeLeft = RadioButton.create(ApplicationLocalize.radioActivateLeftNeighbouringTab());
-    RadioButton activeRight = RadioButton.create(ApplicationLocalize.radioActivateRightNeighbouringTab());
-    RadioButton activeMost = RadioButton.create(ApplicationLocalize.radioActivateMostRecentlyOpenedTab());
+    RadioGroup<ActiveTabState> activeTab = RadioGroup.create();
 
-    ValueGroup.createBool().add(activeLeft).add(activeRight).add(activeMost);
-
-    propertyBuilder.add(() -> {
-      if (activeLeft.getValueOrError()) {
-        return ActiveTabState.LEFT;
-      }
-      else if (activeRight.getValueOrError()) {
-        return ActiveTabState.RIGHT;
-      }
-      return ActiveTabState.MOST_RECENT;
-    }, activeTabState -> {
-      switch (activeTabState) {
-        case LEFT:
-          activeLeft.setValue(true);
-          break;
-        case RIGHT:
-          activeRight.setValue(true);
-          break;
-        case MOST_RECENT:
-          activeMost.setValue(true);
-          break;
-      }
-    }, () -> {
+    propertyBuilder.add(activeTab, () -> {
       if (uiSettings.ACTIVATE_MRU_EDITOR_ON_CLOSE) {
         return ActiveTabState.MOST_RECENT;
       }
@@ -213,7 +171,10 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
       uiSettings.ACTIVATE_RIGHT_EDITOR_ON_CLOSE = t == ActiveTabState.RIGHT;
     });
 
-    leftIndent = VerticalLayout.create().add(activeLeft).add(activeRight).add(activeMost);
+    leftIndent = VerticalLayout.create()
+      .add(activeTab.newButton(ApplicationLocalize.radioActivateLeftNeighbouringTab(), ActiveTabState.LEFT))
+      .add(activeTab.newButton(ApplicationLocalize.radioActivateRightNeighbouringTab(), ActiveTabState.RIGHT))
+      .add(activeTab.newButton(ApplicationLocalize.radioActivateMostRecentlyOpenedTab(), ActiveTabState.MOST_RECENT));
     leftIndent.paddingBuilder().leftSet(Space.X_LARGE).apply();
     tabClosingPolicyLayout.add(leftIndent);
 

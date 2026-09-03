@@ -1,6 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.ui.awt.scope;
 
+import consulo.ui.RadioGroup;
 import consulo.find.FindSettings;
 import consulo.language.editor.internal.ModelScopeItem;
 import consulo.language.editor.internal.ModelScopeItemPresenter;
@@ -41,6 +42,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     private final List<RadioButton> radioButtons = new ArrayList<>();
     private CheckBox myInspectTestSource;
     private CheckBox myAnalyzeInjectedCode;
+    private RadioGroup<Integer> myScopeGroup;
     private final List<ModelScopeItemView> myViewItems;
 
     /**
@@ -111,7 +113,8 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         myScopeTitle = scopeTitle;
         myProject = project;
 
-        myViewItems = ModelScopeItemPresenter.createOrderedViews(items, getDisposable());
+        myScopeGroup = RadioGroup.create();
+        myViewItems = ModelScopeItemPresenter.createOrderedViews(myScopeGroup, items, getDisposable());
         myOptions = options;
         myRememberScope = rememberScope;
         myShowInspectTestSource = showInspectTestSource;
@@ -143,13 +146,11 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 //        );
 
         VerticalLayout layout = VerticalLayout.create();
-        ValueGroup<Boolean> group = ValueGroups.boolGroup();
         for (ModelScopeItemView viewItem : myViewItems) {
             DockLayout dockLayout = DockLayout.create();
             RadioButton button = viewItem.button();
             dockLayout.left(button);
 
-            group.add(button);
             radioButtons.add(button);
 
             Component additionalComponent = viewItem.additionalComponent();

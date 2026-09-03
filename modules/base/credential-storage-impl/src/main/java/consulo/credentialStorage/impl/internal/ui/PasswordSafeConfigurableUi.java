@@ -1,5 +1,6 @@
 package consulo.credentialStorage.impl.internal.ui;
 
+import consulo.ui.RadioGroup;
 import consulo.application.dumb.DumbAware;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.IdeaConfigurableUi;
@@ -94,7 +95,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
     private static final String DB_FILE_NAME = "keepass.kdbx";
 
-    private Map<ProviderType, RadioButton> myProviderButtons = new HashMap<>();
+    private final RadioGroup<ProviderType> myProviderGroup = RadioGroup.create();
 
     public PasswordSafeConfigurableUi(PasswordSafeSettings settings) {
         this.settings = settings;
@@ -116,10 +117,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
         usePgpKey.setLabelText(usePgpKeyText());
 
-        RadioButton button = myProviderButtons.get(settings.getProviderType());
-        if (button != null) {
-            button.setValue(true);
-        }
+        myProviderGroup.setValue(settings.getProviderType());
 
         if (keePassDbFile != null) {
             String keepassDb = settings.getKeepassDb();
@@ -141,12 +139,8 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
     }
 
     private ProviderType getActiveProviderType() {
-        for (Map.Entry<ProviderType, RadioButton> entry : myProviderButtons.entrySet()) {
-            if (entry.getValue().getValueOrError()) {
-                return entry.getKey();
-            }
-        }
-        return CredentialStoreManager.getInstance().defaultProvider();
+        ProviderType providerType = myProviderGroup.getValue();
+        return providerType == null ? CredentialStoreManager.getInstance().defaultProvider() : providerType;
     }
 
     
@@ -160,16 +154,18 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
         VerticalLayout buttonsLayout = VerticalLayout.create();
 
-        ValueGroup<Boolean> group = ValueGroups.boolGroup();
-
-        RadioButton nativeKeychainButton = RadioButton.create(CredentialStorageLocalize.passwordsafeconfigurableInNativeKeychain());
+        RadioButton nativeKeychainButton = myProviderGroup.newButton(
+            CredentialStorageLocalize.passwordsafeconfigurableInNativeKeychain(),
+            ProviderType.KEYCHAIN
+        );
         nativeKeychainButton.setVisible(credentialStoreManager.isSupported(ProviderType.KEYCHAIN));
 
-        myProviderButtons.put(ProviderType.KEYCHAIN, nativeKeychainButton);
-        group.add(nativeKeychainButton);
         buttonsLayout.add(nativeKeychainButton);
 
-        RadioButton keePassButton = RadioButton.create(CredentialStorageLocalize.passwordsafeconfigurableInKeepass());
+        RadioButton keePassButton = myProviderGroup.newButton(
+            CredentialStorageLocalize.passwordsafeconfigurableInKeepass(),
+            ProviderType.KEEPASS
+        );
         keePassButton.setVisible(CredentialStoreManager.getInstance().isSupported(ProviderType.KEEPASS));
 
         VerticalLayout keePassPanel = VerticalLayout.create();
@@ -210,18 +206,17 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         });
         keePassPanel.add(DockLayout.create().left(usePgpKey).center(pgpKeyCombo));
 
-        myProviderButtons.put(ProviderType.KEEPASS, keePassButton);
-        group.add(keePassButton);
         buttonsLayout.add(keePassButton);
         buttonsLayout.add(keePassPanel);
 
         keePassPanel.setEnabledRecursive(false);
 
-        RadioButton doNotSaveButton = RadioButton.create(CredentialStorageLocalize.passwordsafeconfigurableDoNotSave());
+        RadioButton doNotSaveButton = myProviderGroup.newButton(
+            CredentialStorageLocalize.passwordsafeconfigurableDoNotSave(),
+            ProviderType.MEMORY_ONLY
+        );
         doNotSaveButton.setVisible(CredentialStoreManager.getInstance().isSupported(ProviderType.MEMORY_ONLY));
 
-        myProviderButtons.put(ProviderType.MEMORY_ONLY, doNotSaveButton);
-        group.add(doNotSaveButton);
         buttonsLayout.add(doNotSaveButton);
 
         LabeledLayout labeledLayout = LabeledLayout.create(CredentialStorageLocalize.passwordsafeconfigurableSavePassword(), buttonsLayout);

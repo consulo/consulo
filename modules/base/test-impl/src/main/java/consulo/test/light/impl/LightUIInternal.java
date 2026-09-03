@@ -15,6 +15,8 @@
  */
 package consulo.test.light.impl;
 
+import consulo.ui.internal.BaseRadioGroup;
+import consulo.ui.RadioGroup;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -187,10 +189,6 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  @Override
-  public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-    return null;
-  }
 
   @Override
   public MenuBar _MenuItems_menuBar() {
@@ -270,4 +268,10 @@ public class LightUIInternal extends UIInternal {
     public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
         return null;
     }
+
+  @Override
+  public <V> RadioGroup<V> _Components_radioGroup() {
+    return new BaseRadioGroup<>();
+  }
+
 }

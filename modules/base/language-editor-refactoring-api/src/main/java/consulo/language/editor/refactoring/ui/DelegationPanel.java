@@ -15,10 +15,10 @@
  */
 package consulo.language.editor.refactoring.ui;
 
+import consulo.ui.RadioGroup;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.ui.Label;
 import consulo.ui.RadioButton;
-import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
 
@@ -31,26 +31,23 @@ public class DelegationPanel {
   protected final RadioButton myRbModifyCalls;
   protected final RadioButton myRbGenerateDelegate;
 
-  protected final ValueGroup<Boolean> myValueGroup;
+  protected final RadioGroup<Boolean> myValueGroup;
 
   @RequiredUIAccess
   public DelegationPanel() {
     myLayout = HorizontalLayout.create();
     myLayout.add(Label.create(RefactoringLocalize.delegationPanelMethodCallsLabel()));
 
-    myValueGroup = ValueGroup.createBool();
+    myValueGroup = RadioGroup.create();
 
-    myRbModifyCalls = RadioButton.create(RefactoringLocalize.delegationPanelModifyRadio());
-    myRbGenerateDelegate = RadioButton.create(RefactoringLocalize.delegationPanelDelegateViaOverloadingMethod());
-    myRbModifyCalls.setValue(true);
+    myRbModifyCalls = myValueGroup.newButton(RefactoringLocalize.delegationPanelModifyRadio(), true);
+    myRbGenerateDelegate = myValueGroup.newButton(RefactoringLocalize.delegationPanelDelegateViaOverloadingMethod(), false);
+    myValueGroup.setValue(true);
 
     myLayout.add(myRbModifyCalls);
     myLayout.add(myRbGenerateDelegate);
 
-    myValueGroup.add(myRbModifyCalls).add(myRbGenerateDelegate);
-
-    myRbModifyCalls.addValueListener(e -> stateModified());
-    myRbGenerateDelegate.addValueListener(e -> stateModified());
+    myValueGroup.addValueListener(value -> stateModified());
   }
 
   public final HorizontalLayout getComponent() {
@@ -62,11 +59,11 @@ public class DelegationPanel {
 
   @RequiredUIAccess
   public boolean isModifyCalls() {
-    return myRbModifyCalls.getValueOrError();
+    return myValueGroup.getValueOrError();
   }
 
   @RequiredUIAccess
   public boolean isGenerateDelegate() {
-    return myRbGenerateDelegate.getValueOrError();
+    return !myValueGroup.getValueOrError();
   }
 }

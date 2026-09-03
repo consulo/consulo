@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.qt.ui.impl;
+package consulo.web.ui.impl.internal;
 
-import consulo.ui.ValueComponent;
-import consulo.ui.ValueGroup;
-import consulo.ui.annotation.RequiredUIAccess;
-import io.qt.widgets.QButtonGroup;
+import consulo.ui.RadioButton;
+import consulo.ui.internal.BaseRadioGroup;
+
+import java.util.UUID;
 
 /**
+ * The browser already knows how to keep radios of one name exclusive, and how to walk them with the arrow keys,
+ * so the buttons of a group are given a name of their own and it does the rest.
+ *
  * @author VISTALL
- * @since 2026-08-16
+ * @since 2026-09-03
  */
-public class DesktopQtBoolValueGroup extends QButtonGroup implements ValueGroup<Boolean> {
-    @RequiredUIAccess
-    @Override
-    public void clearValues() {
-    }
+public class WebRadioGroupImpl<V> extends BaseRadioGroup<V> {
+    private final String myName = UUID.randomUUID().toString();
 
     @Override
-    public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
-        return this;
+    protected void attach(RadioButton button) {
+        if (button instanceof WebRadioButtonImpl webButton) {
+            webButton.setGroupName(myName);
+        }
     }
 }

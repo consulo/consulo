@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.impl.internal.wm;
 
+import consulo.ui.RadioGroup;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.configurable.ConfigurationException;
@@ -37,7 +38,6 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.TextAttribute;
-import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -98,52 +98,22 @@ public class ToolWindowSettingsConfigurable extends SimpleConfigurableByProperti
         root.add(alwaysShowButtonsBox);
         propertyBuilder.add(alwaysShowButtonsBox, settings::isAlwaysShowWindowButtons, settings::setAlwaysShowWindowButtons);
 
-        RadioButton iconAndTextRadio = RadioButton.create(ProjectUILocalize.toolwindowSettingsDisplayIconAndText());
-        RadioButton iconRadio = RadioButton.create(ProjectUILocalize.toolwindowSettingsDisplayIcon());
-        RadioButton largeIconRadio = RadioButton.create(ProjectUILocalize.toolwindowSettingsDisplayLargeIcon());
-        RadioButton textRadio = RadioButton.create(ProjectUILocalize.toolwindowSettingsDisplayText());
-
-        ValueGroup<Boolean> displayGroup = ValueGroup.createBool();
-        displayGroup.add(iconAndTextRadio);
-        displayGroup.add(iconRadio);
-        displayGroup.add(largeIconRadio);
-        displayGroup.add(textRadio);
+        RadioGroup<ButtonDisplay> displayGroup = RadioGroup.create();
 
         VerticalLayout displayLayout = VerticalLayout.create();
-        displayLayout.add(iconAndTextRadio);
-        displayLayout.add(iconRadio);
-        displayLayout.add(largeIconRadio);
+        displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayIconAndText(), ButtonDisplay.ICON_AND_TEXT));
+        displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayIcon(), ButtonDisplay.ICON));
+        displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayLargeIcon(), ButtonDisplay.LARGE_ICON));
         AdvancedLabel largeIconNote = AdvancedLabel.create();
         largeIconNote.updatePresentation(presentation -> presentation.append(
             ProjectUILocalize.toolwindowSettingsLargeIconNote(),
             TextAttribute.GRAYED
         ));
         displayLayout.add(largeIconNote);
-        displayLayout.add(textRadio);
+        displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayText(), ButtonDisplay.TEXT));
         root.add(LabeledLayout.create(ProjectUILocalize.toolwindowSettingsButtonsGroup(), displayLayout));
 
-        propertyBuilder.add(
-            () -> {
-                if (iconRadio.getValue() == Boolean.TRUE) {
-                    return ButtonDisplay.ICON;
-                }
-                if (largeIconRadio.getValue() == Boolean.TRUE) {
-                    return ButtonDisplay.LARGE_ICON;
-                }
-                if (textRadio.getValue() == Boolean.TRUE) {
-                    return ButtonDisplay.TEXT;
-                }
-                return ButtonDisplay.ICON_AND_TEXT;
-            },
-            display -> {
-                iconAndTextRadio.setValue(display == ButtonDisplay.ICON_AND_TEXT);
-                iconRadio.setValue(display == ButtonDisplay.ICON);
-                largeIconRadio.setValue(display == ButtonDisplay.LARGE_ICON);
-                textRadio.setValue(display == ButtonDisplay.TEXT);
-            },
-            settings::getButtonDisplay,
-            settings::setButtonDisplay
-        );
+        propertyBuilder.add(displayGroup, settings::getButtonDisplay, settings::setButtonDisplay);
 
         return root;
     }

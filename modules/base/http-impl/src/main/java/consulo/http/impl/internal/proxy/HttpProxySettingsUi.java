@@ -15,6 +15,7 @@
  */
 package consulo.http.impl.internal.proxy;
 
+import consulo.ui.RadioGroup;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.io.HostAndPort;
 import com.google.common.net.InetAddresses;
@@ -54,6 +55,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
+    private static final int PROXY_NONE = 0;
+    private static final int PROXY_AUTO_DETECT = 1;
+    private static final int PROXY_MANUAL = 2;
+
     private static final Pattern PROXY_EXCLUDES_DELIM_PATTERN = Pattern.compile(",\\s*");
 
     private JPanel myMainPanel;
@@ -69,6 +74,9 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     private Label myProxyPasswordLabel;
     private Label myHostNameLabel;
     private Label myPortNumberLabel;
+    private final RadioGroup<Integer> myProxyModeGroup = RadioGroup.create();
+    private final RadioGroup<Boolean> myProxyTypeGroup = RadioGroup.create();
+
     private RadioButton myAutoDetectProxyRb;
     private RadioButton myUseHTTPProxyRb;
     private Label mySystemProxyDefined;
@@ -111,16 +119,8 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     public HttpProxySettingsUi(HttpProxyManagerImpl settings) {
         $$$setupUI$$$();
 
-        ValueGroup<Boolean> group = ValueGroup.createBool();
-        group.add(myUseHTTPProxyRb);
-        group.add(myAutoDetectProxyRb);
-        group.add(myNoProxyRb);
-        myNoProxyRb.setValue(true);
-
-        ValueGroup<Boolean> proxyTypeGroup = ValueGroup.createBool();
-        proxyTypeGroup.add(myHTTP);
-        proxyTypeGroup.add(mySocks);
-        myHTTP.setValue(true);
+        myProxyModeGroup.setValue(PROXY_NONE);
+        myProxyTypeGroup.setValue(false);
 
         Boolean property = Boolean.getBoolean(JavaProxyProperty.USE_SYSTEM_PROXY);
         mySystemProxyDefined.setVisible(Boolean.TRUE.equals(property));
@@ -679,7 +679,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                 false
             )
         );
-        myAutoDetectProxyRb = RadioButton.create(HttpLocalize.proxyPacRb());
+        myAutoDetectProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyPacRb(), PROXY_AUTO_DETECT);
         myAutoDetectProxyRb.setToolTipText(HttpLocalize.proxyPacRbTt());
         myMainPanel.add(
             TargetAWT.to(myAutoDetectProxyRb),
@@ -699,7 +699,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                 false
             )
         );
-        myUseHTTPProxyRb = RadioButton.create(HttpLocalize.proxyManualRb());
+        myUseHTTPProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyManualRb(), PROXY_MANUAL);
         myMainPanel.add(
             TargetAWT.to(myUseHTTPProxyRb),
             new GridConstraints(
@@ -739,7 +739,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                 false
             )
         );
-        myNoProxyRb = RadioButton.create(HttpLocalize.proxyDirectRb());
+        myNoProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyDirectRb(), PROXY_NONE);
         myMainPanel.add(
             TargetAWT.to(myNoProxyRb),
             new GridConstraints(
@@ -778,7 +778,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                 false
             )
         );
-        myHTTP = RadioButton.create(HttpLocalize.proxyManualTypeHttp());
+        myHTTP = myProxyTypeGroup.newButton(HttpLocalize.proxyManualTypeHttp(), false);
         panel2.add(
             TargetAWT.to(myHTTP),
             new GridConstraints(
@@ -797,7 +797,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                 false
             )
         );
-        mySocks = RadioButton.create(HttpLocalize.proxyManualTypeSocks());
+        mySocks = myProxyTypeGroup.newButton(HttpLocalize.proxyManualTypeSocks(), true);
         panel2.add(
             TargetAWT.to(mySocks),
             new GridConstraints(
