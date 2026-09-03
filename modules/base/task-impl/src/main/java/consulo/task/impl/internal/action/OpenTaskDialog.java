@@ -20,8 +20,6 @@ import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.task.*;
 import consulo.task.impl.internal.TaskManagerImpl;
-import consulo.ui.ex.awt.binding.BindControl;
-import consulo.ui.ex.awt.binding.ControlBinder;
 import consulo.task.impl.internal.ui.TaskStateCombo;
 import consulo.task.localize.TaskLocalize;
 import consulo.task.ui.TaskDialogPanel;
@@ -47,7 +45,6 @@ public class OpenTaskDialog extends DialogWrapper {
     private static final String UPDATE_STATE_ENABLED = "tasks.open.task.update.state.enabled";
 
     private JPanel myPanel;
-    @BindControl(value = "clearContext", instant = true)
     private JCheckBox myClearContext;
     private JLabel myTaskNameLabel;
     private JBCheckBox myUpdateState;
@@ -67,9 +64,6 @@ public class OpenTaskDialog extends DialogWrapper {
         myTaskNameLabel.setIcon(TargetAWT.to(task.getIcon()));
 
         TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(myProject);
-        ControlBinder binder = new ControlBinder(taskManager.getState());
-        binder.bindAnnotations(this);
-        binder.reset();
 
         if (!TaskStateCombo.stateUpdatesSupportedFor(task)) {
             myUpdateState.setVisible(false);
@@ -88,6 +82,8 @@ public class OpenTaskDialog extends DialogWrapper {
 
         TaskManagerImpl.Config state = taskManager.getState();
         myClearContext.setSelected(state.clearContext);
+        // the old binding wrote through on every toggle, so the checkbox keeps doing that itself
+        myClearContext.addActionListener(e -> state.clearContext = myClearContext.isSelected());
 
         updateFields();
         if (myUpdateState.isSelected()) {

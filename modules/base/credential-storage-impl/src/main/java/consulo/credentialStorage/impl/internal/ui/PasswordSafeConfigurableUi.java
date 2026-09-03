@@ -3,7 +3,6 @@ package consulo.credentialStorage.impl.internal.ui;
 import consulo.ui.RadioGroup;
 import consulo.application.dumb.DumbAware;
 import consulo.configurable.ConfigurationException;
-import consulo.configurable.IdeaConfigurableUi;
 import consulo.credentialStorage.CredentialStore;
 import consulo.credentialStorage.PasswordSafe;
 import consulo.credentialStorage.impl.internal.*;
@@ -32,10 +31,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.JBRadioButton;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
@@ -47,7 +44,6 @@ import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,7 +55,7 @@ import java.util.function.Supplier;
 
 import static consulo.credentialStorage.impl.internal.keePass.KeePassCredentialStore.getDefaultDbFile;
 
-public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSafeSettings> {
+public class PasswordSafeConfigurableUi {
     private static class GearActionGroup extends DefaultActionGroup implements DumbAware {
         public GearActionGroup() {
         }
@@ -82,7 +78,6 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
     private CheckBox usePgpKey;
     private ComboBox<PgpKey> pgpKeyCombo;
-    private JRadioButton keepassRadioButton;
     private FileChooserTextBoxBuilder.Controller keePassDbFile;
 
     private final MutableFlatDataModel<PgpKey> pgpListModel = FlatDataModel.of(List.of());
@@ -97,11 +92,12 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
     private final RadioGroup<ProviderType> myProviderGroup = RadioGroup.create();
 
+    private @Nullable VerticalLayout myKeePassPanel;
+
     public PasswordSafeConfigurableUi(PasswordSafeSettings settings) {
         this.settings = settings;
     }
 
-    @Override
     @RequiredUIAccess
     public void reset(PasswordSafeSettings settings) {
         List<PgpKey> secretKeys;
@@ -117,7 +113,19 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
         usePgpKey.setLabelText(usePgpKeyText());
 
-        myProviderGroup.setValue(settings.getProviderType());
+        CredentialStoreManager credentialStoreManager = CredentialStoreManager.getInstance();
+
+        // a config written when the provider was still selectable can name one this build does not offer
+        ProviderType providerType = settings.getProviderType();
+        if (!credentialStoreManager.isSupported(providerType)) {
+            providerType = credentialStoreManager.defaultProvider();
+        }
+
+        myProviderGroup.setValue(providerType);
+
+        if (myKeePassPanel != null) {
+            myKeePassPanel.setEnabledRecursive(providerType == ProviderType.KEEPASS);
+        }
 
         if (keePassDbFile != null) {
             String keepassDb = settings.getKeepassDb();
@@ -125,7 +133,6 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         }
     }
 
-    @Override
     public boolean isModified(PasswordSafeSettings settings) {
         if (getActiveProviderType() != settings.getProviderType()) {
             return true;
@@ -144,11 +151,8 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
     }
 
     
-    @Override
     @RequiredUIAccess
-    public JComponent getComponent(Disposable disposable) {
-
-        keepassRadioButton = new JBRadioButton();
+    public Component createUIComponent(Disposable disposable) {
 
         CredentialStoreManager credentialStoreManager = CredentialStoreManager.getInstance();
 
@@ -162,15 +166,20 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
         buttonsLayout.add(nativeKeychainButton);
 
+        boolean keePassSupported = credentialStoreManager.isSupported(ProviderType.KEEPASS);
+
         RadioButton keePassButton = myProviderGroup.newButton(
             CredentialStorageLocalize.passwordsafeconfigurableInKeepass(),
             ProviderType.KEEPASS
         );
-        keePassButton.setVisible(CredentialStoreManager.getInstance().isSupported(ProviderType.KEEPASS));
+        keePassButton.setVisible(keePassSupported);
 
         VerticalLayout keePassPanel = VerticalLayout.create();
         keePassPanel.paddingBuilder().leftSet(Space.XX_LARGE).apply();
+        // the rows below only mean anything under the KeePass option, so they follow it out of the page
+        keePassPanel.setVisible(keePassSupported);
         keePassButton.addValueListener(event -> keePassPanel.setEnabledRecursive(event.getValue()));
+        myKeePassPanel = keePassPanel;
 
         GearActionGroup gearActionGroup = new GearActionGroup();
         gearActionGroup.addAll(
@@ -209,29 +218,28 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         buttonsLayout.add(keePassButton);
         buttonsLayout.add(keePassPanel);
 
-        keePassPanel.setEnabledRecursive(false);
+        keePassPanel.setEnabledRecursive(getActiveProviderType() == ProviderType.KEEPASS);
 
         RadioButton doNotSaveButton = myProviderGroup.newButton(
             CredentialStorageLocalize.passwordsafeconfigurableDoNotSave(),
             ProviderType.MEMORY_ONLY
         );
-        doNotSaveButton.setVisible(CredentialStoreManager.getInstance().isSupported(ProviderType.MEMORY_ONLY));
+        doNotSaveButton.setVisible(credentialStoreManager.isSupported(ProviderType.MEMORY_ONLY));
 
         buttonsLayout.add(doNotSaveButton);
 
         LabeledLayout labeledLayout = LabeledLayout.create(CredentialStorageLocalize.passwordsafeconfigurableSavePassword(), buttonsLayout);
 
-        return (JComponent) TargetAWT.to(labeledLayout);
+        return labeledLayout;
     }
 
     @RequiredUIAccess
     private boolean isKeepassFileLocationChanged(PasswordSafeSettings settings) {
         String newDb = getNewDbFileAsString();
         String currentDb = settings.getKeepassDb();
-        return keepassRadioButton.isSelected() && !StringUtil.equals(newDb, currentDb);
+        return getActiveProviderType() == ProviderType.KEEPASS && !StringUtil.equals(newDb, currentDb);
     }
 
-    @Override
     @RequiredUIAccess
     public void apply(PasswordSafeSettings settings) throws ConfigurationException {
         String newPgpKeyId = (getNewPgpKey() != null) ? getNewPgpKey().getKeyId() : null;

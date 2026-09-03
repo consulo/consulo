@@ -114,6 +114,34 @@ popup.title.switch.to.task:
     text: Switch to Task
 separator.recently.closed.tasks:
     text: Recently Closed Tasks
+settings.always.display.task.combo:
+    text: Always &display task combo in toolbar
+settings.cache.settings:
+    text: Cache settings
+settings.changelist.name.format:
+    text: 'Changelist name &format:'
+settings.connection.timeout:
+    text: 'Connection &timeout:'
+settings.enable.issue.cache:
+    text: Enable issue &cache
+settings.enable.time.tracking:
+    text: '&Enable Time Tracking'
+settings.issues.every:
+    text: issues e&very
+settings.milliseconds:
+    text: milliseconds
+settings.minutes:
+    text: minutes
+settings.save.context.on.commit:
+    text: '&Save context on commit'
+settings.seconds:
+    text: seconds
+settings.suspend.delay:
+    text: 'Suspend delay:'
+settings.task.history.length:
+    text: 'Task history &length:'
+settings.update:
+    text: '&Update'
 task.clear.context.action.name:
     text: Clear context
 task.save.context.action.message:

@@ -70,6 +70,8 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
 
     private final boolean myInitSelected;
 
+    private boolean myFireListeners = true;
+
     public DesktopRadioButtonImpl(LocalizeValue textValue, boolean selected) {
         myInitSelected = selected;
         myInitText = textValue;
@@ -81,7 +83,13 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
         component.setSelected(myInitSelected);
         component.setLabelText(myInitText);
         component.updateLabelText();
-        component.addChangeListener(e -> fireListeners());
+        // an item event is the selection actually changing - a change event also arrives on armed,
+        // pressed and rollover, so merely hovering a radio would re-dispatch every value listener
+        component.addItemListener(e -> {
+            if (myFireListeners) {
+                fireListeners();
+            }
+        });
         return component;
     }
 
@@ -94,9 +102,21 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
     @RequiredUIAccess
     @Override
     public void setValue(Boolean value, boolean fireListeners) {
-        toAWTComponent().setSelected(value);
+        boolean selected = value != null && value;
+        boolean changed = toAWTComponent().isSelected() != selected;
 
-        if (fireListeners) {
+        // the widget answers a programmatic set with the same item event a click raises, so the guard
+        // is what keeps a reset writing the stored value back from reading as the user's choice
+        myFireListeners = fireListeners;
+        try {
+            toAWTComponent().setSelected(selected);
+        }
+        finally {
+            myFireListeners = true;
+        }
+
+        // an unchanged value raises no item event, so a caller which asked for listeners still gets them
+        if (fireListeners && !changed) {
             fireListeners();
         }
     }

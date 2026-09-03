@@ -28,7 +28,6 @@ module consulo.ui.ex.awt.api {
     exports consulo.ui.ex.awt;
     exports consulo.ui.ex.awt.action;
     exports consulo.ui.ex.awt.accessibility;
-    exports consulo.ui.ex.awt.binding;
     exports consulo.ui.ex.awt.event;
     exports consulo.ui.ex.awt.hint;
     exports consulo.ui.ex.awt.html;
