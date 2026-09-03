@@ -297,7 +297,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new DesktopDockLayoutImpl(gapInPixels);
     }
 
@@ -307,12 +307,12 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new DesktopVerticalLayoutImpl(vGap);
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return new DesktopVerticalLayoutImpl(vGap, alignment);
     }
 
@@ -413,7 +413,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
         return new DesktopHorizontalLayoutImpl(gapInPixels);
     }
 

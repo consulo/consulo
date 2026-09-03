@@ -24,8 +24,10 @@ import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.BorderBuilder;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
@@ -68,15 +70,15 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
-        throw new UnsupportedOperationException();
+    public BorderBuilder borderBuilder() {
+        return BorderBuilderImpl.NOOP;
     }
 
-    @RequiredUIAccess
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        throw new UnsupportedOperationException();
+    public PaddingBuilder paddingBuilder() {
+        return PaddingBuilderImpl.NOOP;
     }
+
 
     @Override
     public boolean isVisible() {

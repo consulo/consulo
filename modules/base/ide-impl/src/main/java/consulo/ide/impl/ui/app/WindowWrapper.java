@@ -19,9 +19,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -97,7 +96,7 @@ public abstract class WindowWrapper {
   @RequiredUIAccess
   protected Layout buildButtonsLayout() {
     DockLayout dockLayout = DockLayout.create();
-    dockLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
+    dockLayout.borderBuilder().topSet().apply();
 
     HorizontalLayout bottomLayout = HorizontalLayout.create();
     myOkButton = Button.create(CommonLocalize.buttonOk(), e -> doOKAction());
@@ -110,7 +109,7 @@ public abstract class WindowWrapper {
     Button cancelButton = Button.create(CommonLocalize.buttonCancel(), e -> doCancelAction());
     bottomLayout.add(cancelButton);
 
-    bottomLayout.addBorders(BorderStyle.EMPTY, null, 5);
+    bottomLayout.paddingBuilder().allSet(Space.MEDIUM).apply();
 
     return dockLayout.right(bottomLayout);
   }

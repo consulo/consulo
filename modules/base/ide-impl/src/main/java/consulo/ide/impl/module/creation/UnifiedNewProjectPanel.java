@@ -33,22 +33,21 @@ import consulo.module.creation.scratch.NewModuleContextItem;
 import consulo.module.creation.scratch.NewModuleContextNode;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.util.ProjectUtil;
-import consulo.ui.Length;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
+import consulo.ui.Length;
 import consulo.ui.Size2D;
+import consulo.ui.Space;
 import consulo.ui.TextAttribute;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
@@ -234,19 +233,19 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
         });
 
         WrappedLayout southPanel = WrappedLayout.create(myMoreViaPlugins);
-        southPanel.addBorders(BorderStyle.EMPTY, null, 8);
+        southPanel.paddingBuilder().allSet(Space.LARGE).apply();
 
         DockLayout leftPanel = DockLayout.create();
         leftPanel.center(ScrollableLayout.create(tree));
         leftPanel.bottom(southPanel);
-        leftPanel.addBorder(BorderPosition.RIGHT, BorderStyle.LINE, ComponentColors.BORDER, 1);
+        leftPanel.borderBuilder().rightSet().apply();
         leftPanel.setSize(new Size2D(300, -1));
         return leftPanel;
     }
 
     @RequiredUIAccess
     private Layout buildEmptyPanel() {
-        VerticalLayout layout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout layout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
         layout.add(Label.create(myModuleHome == null
             ? LocalizeValue.localizeTODO("Please select project type")
             : LocalizeValue.localizeTODO("Please select module type")));
@@ -255,7 +254,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
     @RequiredUIAccess
     protected @Nullable Component buildSouthPanel() {
-        HorizontalLayout buttonsPanel = HorizontalLayout.create(5);
+        HorizontalLayout buttonsPanel = HorizontalLayout.create();
 
         myCancelButton = Button.create(CommonLocalize.buttonCancel());
         myCancelButton.addClickListener(e -> doCancelAction());
@@ -269,7 +268,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
         DockLayout south = DockLayout.create();
         south.right(buttonsPanel);
-        south.addBorders(BorderStyle.EMPTY, null, 8);
+        south.paddingBuilder().allSet(Space.LARGE).apply();
         return south;
     }
 
@@ -326,7 +325,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
         myStepLayout.register(id, () -> {
             WrappedLayout layout = WrappedLayout.create(step.getComponent(myWizardContext, myParentDisposable));
-            layout.addBorders(BorderStyle.EMPTY, null, 5);
+            layout.paddingBuilder().allSet(Space.MEDIUM).apply();
             return layout;
         });
         myStepLayout.swipeLeftTo(id);

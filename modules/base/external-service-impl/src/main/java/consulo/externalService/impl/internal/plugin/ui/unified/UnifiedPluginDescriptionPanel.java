@@ -39,9 +39,9 @@ import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.Label;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.ScrollableLayout;
@@ -89,7 +89,7 @@ public class UnifiedPluginDescriptionPanel {
         myNameLabel = Label.create(LocalizeValue.empty());
         myVersionLabel = Label.create(LocalizeValue.empty());
 
-        HorizontalLayout titleLine = HorizontalLayout.create(5);
+        HorizontalLayout titleLine = HorizontalLayout.create();
         titleLine.add(myNameLabel);
         titleLine.add(myVersionLabel);
 
@@ -104,14 +104,14 @@ public class UnifiedPluginDescriptionPanel {
         myDownloadsLabel = Label.create(LocalizeValue.empty());
         myDownloadsLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
 
-        HorizontalLayout actionLine = HorizontalLayout.create(8);
+        HorizontalLayout actionLine = HorizontalLayout.create(Space.LARGE);
         actionLine.add(myActionButton);
         actionLine.add(myDownloadsLabel);
 
-        DockLayout header = DockLayout.create(0);
+        DockLayout header = DockLayout.create(Space.NONE);
         header.center(titleLine);
         header.right(actionLine);
-        header.addBorders(BorderStyle.EMPTY, null, 5);
+        header.paddingBuilder().allSet(Space.MEDIUM).apply();
 
         myDescription = HtmlView.create();
         myDescription.addHyperlinkListener(event -> {
@@ -124,7 +124,7 @@ public class UnifiedPluginDescriptionPanel {
             }
         });
 
-        myRoot = DockLayout.create(0);
+        myRoot = DockLayout.create(Space.NONE);
         myRoot.top(header);
         myRoot.center(ScrollableLayout.create(myDescription));
     }

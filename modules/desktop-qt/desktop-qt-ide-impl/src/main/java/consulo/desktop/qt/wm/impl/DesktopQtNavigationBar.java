@@ -47,6 +47,7 @@ import consulo.ui.LightPopup;
 import consulo.ui.ListBox;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -92,10 +93,10 @@ public class DesktopQtNavigationBar implements Disposable {
     private final Project myProject;
     private final Component myContextComponent;
 
-    private final HorizontalLayout myCrumbsLayout = HorizontalLayout.create(0);
+    private final HorizontalLayout myCrumbsLayout = HorizontalLayout.create(Space.NONE);
 
     // the row is a dock so that the empty center takes the free width and keeps the toolbar flush right
-    private final DockLayout myRowLayout = DockLayout.create(0);
+    private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
 
     private final @Nullable UnifiedActionToolbarImpl myToolbar;
 

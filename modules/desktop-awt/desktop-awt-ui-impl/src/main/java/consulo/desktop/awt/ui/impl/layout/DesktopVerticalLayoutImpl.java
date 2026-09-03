@@ -15,9 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.DesktopSpace;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.Space;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
@@ -29,12 +30,12 @@ import javax.swing.*;
  * @since 2016-06-11
  */
 public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements VerticalLayout {
-    public DesktopVerticalLayoutImpl(int vGap) {
-        initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
+    public DesktopVerticalLayoutImpl(Space vGap) {
+        initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(DesktopSpace.toPixels(vGap)));
     }
 
-    public DesktopVerticalLayoutImpl(int vGap, HorizontalAlignment alignment) {
-        initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap), switch (alignment) {
+    public DesktopVerticalLayoutImpl(Space vGap, HorizontalAlignment alignment) {
+        initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(DesktopSpace.toPixels(vGap), switch (alignment) {
             case LEFT -> SwingConstants.LEFT;
             case CENTER -> SwingConstants.CENTER;
             case RIGHT -> SwingConstants.RIGHT;

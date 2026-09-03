@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
+import consulo.ui.Length;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
@@ -26,7 +27,6 @@ import consulo.ui.*;
 import consulo.ui.Button;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -64,7 +64,7 @@ public class ShowBalloonTestAction extends DumbAwareAction {
         @RequiredUIAccess
         protected @Nullable JComponent createCenterPanel() {
             VerticalLayout layout = VerticalLayout.create();
-            layout.addBorders(BorderStyle.EMPTY, null, 150);
+            layout.setMinWidth(Length.ofPixel(600));
 
             ComboBox<MessageType> typeComboBox = ComboBox.<MessageType>builder()
                 .add(MessageType.INFO, LocalizeValue.of("INFO"))

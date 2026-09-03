@@ -84,7 +84,7 @@ class VcsUpdateInfoScopeFilterConfigurable implements NamedScopesHolder.ScopeLis
             }
         });
 
-        return HorizontalLayout.create(5).add(checkBox).add(comboBox).add(editScopes);
+        return HorizontalLayout.create().add(checkBox).add(comboBox).add(editScopes);
     }
 
     @RequiredUIAccess

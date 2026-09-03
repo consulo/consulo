@@ -18,9 +18,9 @@ package consulo.ui.layout;
 import consulo.ui.Component;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
 
 /**
@@ -33,11 +33,11 @@ import consulo.ui.internal.UIInternal;
  */
 public interface HorizontalLayout extends Layout<StaticPosition>, HasComponentStyle<HorizontalLayoutStyle> {
     static HorizontalLayout create() {
-        return create(UIConstant.DEFAULT_SPACING_PX);
+        return create(Space.MEDIUM);
     }
 
-    static HorizontalLayout create(int gapInPixels) {
-        return UIInternal.get()._Layouts_horizontal(gapInPixels);
+    static HorizontalLayout create(Space gap) {
+        return UIInternal.get()._Layouts_horizontal(gap);
     }
 
     @RequiredUIAccess

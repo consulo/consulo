@@ -70,7 +70,7 @@ public class ChromeSettingsConfigurable implements Configurable {
                 ParametersListUtil.DEFAULT_LINE_JOINER
             );
 
-            myLayout.add(Indenter.indent(myCommandLineOptionsBox, 1));
+            myLayout.add(Indenter.indent(myCommandLineOptionsBox));
             myUseCustomProfileCheckBox = CheckBox.create(LocalizeValue.localizeTODO("&Use custom profile directory:"));
             myLayout.add(myUseCustomProfileCheckBox);
 
@@ -80,7 +80,7 @@ public class ChromeSettingsConfigurable implements Configurable {
             builder.dialogDescription(LocalizeValue.localizeTODO("Specifies the directory that user data (your \"profile\") is kept in"));
 
             myUserDataDirBox = builder.build();
-            myLayout.add(Indenter.indent(myUserDataDirBox.getComponent(), 1));
+            myLayout.add(Indenter.indent(myUserDataDirBox.getComponent()));
 
             myUseCustomProfileCheckBox.addValueListener(event -> myUserDataDirBox.getComponent().setEnabled(event.getValue()));
         }

@@ -29,9 +29,7 @@ import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.impl.*;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.awt.ComponentValidator;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.util.lang.ref.SoftReference;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
@@ -53,17 +51,17 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.*;
 import consulo.ui.Button;
 import consulo.ui.Label;
-import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;
-import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.ComponentValidator;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
@@ -90,6 +88,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.*;
+import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -830,7 +829,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myNavigationHintLabel.setEnabled(false);
 
         DockLayout bottomLayout = DockLayout.create();
-        bottomLayout.addBorders(BorderStyle.EMPTY, null, 4);
+        bottomLayout.paddingBuilder().allSet(Space.SMALL).apply();
         bottomLayout.left(openOnNewTabBox);
 
         HorizontalLayout rightBottomPanel = HorizontalLayout.create();
@@ -887,7 +886,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
         DockLayout borderWrapper = DockLayout.create();
         borderWrapper.center(bottomLayout);
-        borderWrapper.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER);
+        borderWrapper.borderBuilder().topSet().apply();
 
         add(TargetAWT.to(borderWrapper), "pushx, growx, dock south, sx 10");
 

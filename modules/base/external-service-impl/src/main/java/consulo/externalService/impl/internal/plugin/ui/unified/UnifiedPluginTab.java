@@ -20,6 +20,7 @@ import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
+import consulo.ui.Space;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
@@ -64,7 +65,7 @@ public abstract class UnifiedPluginTab implements Disposable {
 
         // the awt and qt lists only scroll inside a scroll layout; the web list scrolls itself and fills the
         // layout, which then never overflows
-        DockLayout listSide = DockLayout.create(0);
+        DockLayout listSide = DockLayout.create(Space.NONE);
         listSide.top(myFilterBox);
         listSide.center(ScrollableLayout.create(myList));
 
@@ -73,7 +74,7 @@ public abstract class UnifiedPluginTab implements Disposable {
         split.setFirstComponent(listSide);
         split.setSecondComponent(myDescriptionPanel.getComponent());
 
-        myContent = DockLayout.create(0);
+        myContent = DockLayout.create(Space.NONE);
         myContent.center(split);
     }
 

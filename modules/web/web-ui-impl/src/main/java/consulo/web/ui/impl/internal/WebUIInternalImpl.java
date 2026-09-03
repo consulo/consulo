@@ -81,7 +81,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new WebDockLayoutImpl(gapInPixels);
     }
 
@@ -91,12 +91,12 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new WebVerticalLayoutImpl(vGap);
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return new WebVerticalLayoutImpl(vGap, alignment);
     }
 
@@ -225,7 +225,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixesl) {
         return new WebHorizontalLayoutImpl(gapInPixesl);
     }
 

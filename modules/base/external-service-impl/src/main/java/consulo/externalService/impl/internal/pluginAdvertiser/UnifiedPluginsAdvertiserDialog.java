@@ -23,6 +23,7 @@ import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ListBox;
 import consulo.ui.Size2D;
+import consulo.ui.Space;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -61,7 +62,7 @@ public class UnifiedPluginsAdvertiserDialog {
         myWindow = Window.create(LocalizeValue.localizeTODO("Choose Plugins to Install").get(), WindowOptions.builder().build());
         myWindow.setSize(new Size2D(600, 500));
 
-        myLoadingLayout = LoadingLayout.create(DockLayout.create(0), myWindow);
+        myLoadingLayout = LoadingLayout.create(DockLayout.create(Space.NONE), myWindow);
         myWindow.setContent(myLoadingLayout);
     }
 

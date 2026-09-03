@@ -36,8 +36,8 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.swing.SwingMutableModuleExtension;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
@@ -181,9 +181,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
             if (component != null) {
                 if (component instanceof Layout) {
-                    component.removeBorders();
-
-                    component.addBorders(BorderStyle.EMPTY, null, 5);
+                    component.borderBuilder().allReset().apply();
+                    component.paddingBuilder().allSet(Space.MEDIUM).apply();
                 }
 
                 result = (JComponent)TargetAWT.to(component);

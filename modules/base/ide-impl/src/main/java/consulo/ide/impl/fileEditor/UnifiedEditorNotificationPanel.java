@@ -26,17 +26,16 @@ import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.NotificationType;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.TabsUtil;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
@@ -163,9 +162,9 @@ public class UnifiedEditorNotificationPanel implements EditorNotificationBuilder
 
         Label label = Label.create(myText);
         label.setImage(myIcon);
-        root.center(HorizontalLayout.create(0).add(label));
+        root.center(HorizontalLayout.create(Space.NONE).add(label));
 
-        HorizontalLayout links = HorizontalLayout.create(5);
+        HorizontalLayout links = HorizontalLayout.create();
         for (ActionInfo action : myActions) {
             links.add(createLink(action));
         }
@@ -177,8 +176,7 @@ public class UnifiedEditorNotificationPanel implements EditorNotificationBuilder
         root.right(links);
 
         root.setMinHeight(TabsUtil.getTabsHeight());
-        root.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 10);
-        root.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 10);
+        root.paddingBuilder().horizontalSet(Space.LARGE).apply();
 
         root.setBackgroundColor(myEditorColorsManager.getGlobalScheme().getColor(myBackgroundKey));
         return root;

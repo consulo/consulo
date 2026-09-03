@@ -28,6 +28,7 @@ import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.localize.UILocalize;
@@ -58,7 +59,7 @@ public class UnifiedToolWindowInternalDecorator implements ToolWindowInternalDec
     private final RemoveStripeButtonAction myHideStripeButtonAction = new RemoveStripeButtonAction();
     private final ActionGroup myToggleToolbarGroup;
 
-    private final DockLayout myLayout = DockLayout.create(0);
+    private final DockLayout myLayout = DockLayout.create(Space.NONE);
     private final UnifiedToolWindowHeader myHeader;
 
     private WindowInfoImpl myInfo;

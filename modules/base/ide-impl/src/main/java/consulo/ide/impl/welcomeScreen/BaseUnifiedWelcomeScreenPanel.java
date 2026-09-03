@@ -25,11 +25,11 @@ import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.ImageBox;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -38,7 +38,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.internal.LogoImage;
 import consulo.ui.ex.localize.UILocalize;
@@ -107,7 +106,7 @@ public abstract class BaseUnifiedWelcomeScreenPanel implements UnifiedWelcomeScr
         DockLayout layout = DockLayout.create();
 
         Component leftComponent = createLeftComponent(myParentDisposable);
-        leftComponent.addBorder(BorderPosition.RIGHT, BorderStyle.LINE, ComponentColors.BORDER, 1);
+        leftComponent.borderBuilder().rightSet().apply();
         myTitlelessDecorator.makeLeftComponentLower(leftComponent);
         layout.left(leftComponent);
 
@@ -123,20 +122,19 @@ public abstract class BaseUnifiedWelcomeScreenPanel implements UnifiedWelcomeScr
     protected Component createRightComponent() {
         // the awt screen stacks the logo and every entry in a single column and centres each of them on the
         // width of the widest, rather than stretching them
-        VerticalLayout rightLayout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout rightLayout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
 
         ImageBox logo = ImageBox.create(LogoImage.create(8, StandardColors.GRAY));
         // the insets the awt screen keeps around its logo
-        logo.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, 53);
-        logo.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, null, 45);
+        logo.paddingBuilder().verticalSet(Space.XXX_LARGE).apply();
         rightLayout.add(logo);
 
-        VerticalLayout actionLayout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout actionLayout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
         rightLayout.add(actionLayout);
 
         // quick start is filled once the platform has answered which of its actions are visible, so it is a
         // layout of its own - otherwise it would land after the two group entries
-        VerticalLayout quickStartLayout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout quickStartLayout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
         actionLayout.add(quickStartLayout);
 
         addActionGroup(quickStartLayout, IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);

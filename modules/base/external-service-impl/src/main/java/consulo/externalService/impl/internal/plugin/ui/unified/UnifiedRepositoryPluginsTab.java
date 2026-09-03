@@ -22,6 +22,7 @@ import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.update.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LoadingLayout;
@@ -40,7 +41,7 @@ public class UnifiedRepositoryPluginsTab extends UnifiedPluginTab {
     @RequiredUIAccess
     public UnifiedRepositoryPluginsTab(Disposable parentDisposable) {
         super(false);
-        myLoadingLayout = LoadingLayout.create(DockLayout.create(0), parentDisposable);
+        myLoadingLayout = LoadingLayout.create(DockLayout.create(Space.NONE), parentDisposable);
     }
 
     @Override

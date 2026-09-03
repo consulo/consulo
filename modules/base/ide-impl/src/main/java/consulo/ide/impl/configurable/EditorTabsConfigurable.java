@@ -25,9 +25,8 @@ import consulo.disposer.Disposable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
@@ -169,7 +168,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     ValueGroup.createBool().add(closeNotModifiedFiles).add(closeLessFrequentlyFiles);
 
     VerticalLayout leftIndent = VerticalLayout.create().add(closeNotModifiedFiles).add(closeLessFrequentlyFiles);
-    leftIndent.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 15);
+    leftIndent.paddingBuilder().leftSet(Space.X_LARGE).apply();
     tabClosingPolicyLayout.add(leftIndent);
 
     tabClosingPolicyLayout.add(Label.create(ApplicationLocalize.labelWhenClosingActiveEditor()));
@@ -215,7 +214,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     });
 
     leftIndent = VerticalLayout.create().add(activeLeft).add(activeRight).add(activeMost);
-    leftIndent.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 15);
+    leftIndent.paddingBuilder().leftSet(Space.X_LARGE).apply();
     tabClosingPolicyLayout.add(leftIndent);
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupTabClosingPolicy(), tabClosingPolicyLayout));

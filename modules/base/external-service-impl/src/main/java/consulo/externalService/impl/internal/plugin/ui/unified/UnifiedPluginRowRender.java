@@ -26,13 +26,12 @@ import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.externalService.impl.internal.plugin.ui.PluginsPanel;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Length;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.Length;
 import consulo.ui.RenderItem;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -72,14 +71,14 @@ public class UnifiedPluginRowRender {
     ) {
         PluginDescriptor descriptor = item.getValue();
 
-        DockLayout row = DockLayout.create(0);
+        DockLayout row = DockLayout.create(Space.NONE);
         if (descriptor == null) {
             return row;
         }
 
         Label iconLabel = Label.create(LocalizeValue.empty());
         iconLabel.setImage(PluginIconHolder.get(descriptor));
-        iconLabel.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+        iconLabel.paddingBuilder().rightSet(Space.MEDIUM).apply();
 
         Label nameLabel = Label.create(LocalizeValue.of(StringUtil.notNullize(descriptor.getName())));
 
@@ -95,7 +94,7 @@ public class UnifiedPluginRowRender {
             }
         }
 
-        VerticalLayout text = VerticalLayout.create(0);
+        VerticalLayout text = VerticalLayout.create(Space.NONE);
         text.add(nameLabel);
 
         String under = secondLine != null

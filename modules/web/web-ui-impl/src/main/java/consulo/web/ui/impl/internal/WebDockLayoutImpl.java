@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal;
 
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
@@ -23,6 +24,7 @@ import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.vaadin.BorderLayoutEx;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
+import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,7 +32,10 @@ import org.jspecify.annotations.Nullable;
  * @since 2023-05-27
  */
 public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, StaticPosition> implements DockLayout {
-    public WebDockLayoutImpl(int gapInPixels) {
+    public WebDockLayoutImpl(Space gap) {
+        if (gap != Space.NONE) {
+            toVaadinComponent().setGapClass(WebSpace.toGapClass(gap));
+        }
     }
 
     public class Vaadin extends BorderLayoutEx implements FromVaadinComponentWrapper {

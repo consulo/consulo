@@ -27,9 +27,8 @@ import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.image.Image;
@@ -114,7 +113,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         formBuilder.addBottom(myCbExcludeOutput);
 
         Component bottom = formBuilder.build();
-        bottom.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE);
+        bottom.paddingBuilder().leftSet(Space.X_LARGE).apply();
         panel.add(bottom);
 
         //// fill with data
@@ -126,7 +125,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         myPerModuleCompilerOutput.setValue(!outputPathInherited);
         enableCompilerSettings(!outputPathInherited);
 
-        panel.addBorders(BorderStyle.EMPTY, null, 5);
+        panel.paddingBuilder().allSet(Space.MEDIUM).apply();
         return panel;
     }
 

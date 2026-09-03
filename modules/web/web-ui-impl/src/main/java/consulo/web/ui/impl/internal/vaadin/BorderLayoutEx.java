@@ -29,6 +29,15 @@ import org.jspecify.annotations.Nullable;
  * @since 30/05/2023
  */
 public class BorderLayoutEx extends VerticalLayout {
+  /**
+   * The dock is three rows with a row of its own in the middle, so a gap has to reach both the rows and what
+   * stands beside the center - setting it on the outer layout alone would leave west and east flush.
+   */
+  public void setGapClass(String gapClass) {
+    addClassName(gapClass);
+    myCenterLayout.addClassName(gapClass);
+  }
+
   public enum Constraint {
     NORTH,
     WEST,

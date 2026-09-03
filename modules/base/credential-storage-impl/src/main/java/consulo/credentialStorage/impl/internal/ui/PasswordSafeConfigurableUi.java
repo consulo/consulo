@@ -25,9 +25,8 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -174,7 +173,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         keePassButton.setVisible(CredentialStoreManager.getInstance().isSupported(ProviderType.KEEPASS));
 
         VerticalLayout keePassPanel = VerticalLayout.create();
-        keePassPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 24);
+        keePassPanel.paddingBuilder().leftSet(Space.XX_LARGE).apply();
         keePassButton.addValueListener(event -> keePassPanel.setEnabledRecursive(event.getValue()));
 
         GearActionGroup gearActionGroup = new GearActionGroup();

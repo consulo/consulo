@@ -15,7 +15,9 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
+import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.ui.HorizontalAlignment;
+import consulo.ui.Space;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
 import io.qt.core.Qt;
@@ -28,14 +30,14 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-16
  */
 public class DesktopQtVerticalLayoutImpl extends DesktopQtBoxLayoutComponent<LayoutConstraint> implements VerticalLayout {
-    private final int myVGap;
+    private final Space myVGap;
     private final @Nullable HorizontalAlignment myAlignment;
 
-    public DesktopQtVerticalLayoutImpl(int vGap) {
+    public DesktopQtVerticalLayoutImpl(Space vGap) {
         this(vGap, null);
     }
 
-    public DesktopQtVerticalLayoutImpl(int vGap, @Nullable HorizontalAlignment alignment) {
+    public DesktopQtVerticalLayoutImpl(Space vGap, @Nullable HorizontalAlignment alignment) {
         myVGap = vGap;
         myAlignment = alignment;
     }
@@ -43,7 +45,7 @@ public class DesktopQtVerticalLayoutImpl extends DesktopQtBoxLayoutComponent<Lay
     @Override
     protected QBoxLayout createBoxLayout() {
         QVBoxLayout layout = new QVBoxLayout();
-        layout.setSpacing(myVGap);
+        layout.setSpacing(DesktopQtSpace.toPixels(myVGap));
         return layout;
     }
 

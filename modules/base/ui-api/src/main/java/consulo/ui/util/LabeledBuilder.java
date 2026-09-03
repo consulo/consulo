@@ -41,7 +41,7 @@ public class LabeledBuilder {
 
     @RequiredUIAccess
     public static Component simple(LocalizeValue localizeValue, PseudoComponent component) {
-        HorizontalLayout horizontal = HorizontalLayout.create(5);
+        HorizontalLayout horizontal = HorizontalLayout.create();
         Label label = Label.create(localizeValue.map(SEMICOLON_APPENDER));
         horizontal.add(label);
         horizontal.add(component);

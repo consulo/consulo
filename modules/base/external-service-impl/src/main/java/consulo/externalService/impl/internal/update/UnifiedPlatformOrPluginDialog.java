@@ -32,11 +32,10 @@ import consulo.ui.Label;
 import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
 import consulo.ui.Size2D;
+import consulo.ui.Space;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.ScrollableLayout;
@@ -143,16 +142,16 @@ public class UnifiedPlatformOrPluginDialog {
         });
         Button cancelButton = Button.create(CommonLocalize.buttonCancel(), event -> close());
 
-        HorizontalLayout buttons = HorizontalLayout.create(5);
+        HorizontalLayout buttons = HorizontalLayout.create();
         buttons.add(okButton);
         buttons.add(cancelButton);
 
-        DockLayout south = DockLayout.create(0);
+        DockLayout south = DockLayout.create(Space.NONE);
         south.left(Label.create(ExternalServiceLocalize.pluginFollowingWillBeDownloadedLabel()));
         south.right(buttons);
-        south.addBorders(BorderStyle.EMPTY, null, 8);
+        south.paddingBuilder().allSet(Space.LARGE).apply();
 
-        DockLayout root = DockLayout.create(0);
+        DockLayout root = DockLayout.create(Space.NONE);
         root.center(ScrollableLayout.create(list));
         root.bottom(south);
 

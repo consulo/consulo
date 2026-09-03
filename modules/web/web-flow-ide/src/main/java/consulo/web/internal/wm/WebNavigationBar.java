@@ -17,25 +17,25 @@ package consulo.web.internal.wm;
 
 import com.vaadin.flow.component.breadcrumbs.Breadcrumbs;
 import com.vaadin.flow.component.breadcrumbs.BreadcrumbsItem;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.navigationBar.NavBarService;
+import consulo.navigationBar.impl.internal.NavBarVmImpl;
 import consulo.navigationBar.model.NavBarItemPresentationData;
 import consulo.navigationBar.model.NavBarItemVm;
 import consulo.navigationBar.model.NavBarVmItem;
 import consulo.navigationBar.model.NavBarVmListener;
-import consulo.navigationBar.impl.internal.NavBarVmImpl;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerEvent;
-import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.CaretListener;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -46,6 +46,7 @@ import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.web.ui.impl.internal.WebFocusManagerImpl;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -108,7 +109,7 @@ public class WebNavigationBar implements Disposable {
     private final BarComponent myComponent = new BarComponent();
 
     // the row is a dock so that the empty center takes the free width and keeps the toolbar flush right
-    private final DockLayout myRowLayout = DockLayout.create(0);
+    private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
 
     private final @Nullable UnifiedActionToolbarImpl myToolbar;
 

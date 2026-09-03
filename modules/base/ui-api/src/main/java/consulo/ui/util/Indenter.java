@@ -16,10 +16,8 @@
 package consulo.ui.util;
 
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
-import consulo.ui.image.Image;
 import consulo.ui.layout.WrappedLayout;
 
 /**
@@ -28,9 +26,9 @@ import consulo.ui.layout.WrappedLayout;
  */
 public class Indenter {
     @RequiredUIAccess
-    public static Component indent(Component target, int count) {
+    public static Component indent(Component target) {
         WrappedLayout layout = WrappedLayout.create().set(target);
-        layout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE * count);
+        layout.paddingBuilder().leftSet(Space.X_LARGE).apply();
         return layout;
     }
 }

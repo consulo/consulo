@@ -15,25 +15,26 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import consulo.desktop.awt.ui.impl.facade.ToSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.DesktopLength;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.facade.ToSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
 import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyPressedListener;
 import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyReleasedListener;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
+import consulo.ui.BorderBuilder;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
 import consulo.ui.HasSize;
 import consulo.ui.Length;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.*;
@@ -41,8 +42,10 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
-import consulo.ui.impl.BorderInfo;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
+import consulo.ui.internal.BorderPosition;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -296,31 +299,18 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         return dataObject().getDispatcher(eventClass);
     }
 
-    @Override
     @RequiredUIAccess
-    public void addBorders(BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
-        for (BorderPosition position : BorderPosition.values()) {
-            dataObject().addBorder(position, borderStyle, colorKey, width);
-        }
-
-        bordersChanged();
+    @Override
+    public BorderBuilder borderBuilder() {
+        return new BorderBuilderImpl(dataObject(), this::bordersChanged);
     }
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
-        dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
-
-        bordersChanged();
+    public PaddingBuilder paddingBuilder() {
+        return new PaddingBuilderImpl(dataObject(), this::bordersChanged);
     }
 
-    @RequiredUIAccess
-    @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        dataObject().removeBorder(borderPosition);
-
-        bordersChanged();
-    }
 
     @Override
     public @Nullable ColorValue getBackgroundColor() {
@@ -365,12 +355,13 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
         component.setBorder(JBUI.Borders.empty());
 
-        Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
-        if (borders.isEmpty()) {
+        Map<BorderPosition, ColorValue> borders = dataObject().getBorders();
+        Map<BorderPosition, Space> paddings = dataObject().getPaddings();
+        if (borders.isEmpty() && paddings.isEmpty()) {
             return;
         }
 
-        component.setBorder(new UIComponentBorder(borders));
+        component.setBorder(new UIComponentBorder(borders, paddings));
     }
 
     protected UIDataObject dataObject() {

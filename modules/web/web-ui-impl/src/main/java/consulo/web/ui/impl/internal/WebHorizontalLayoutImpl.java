@@ -17,12 +17,14 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
+import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -44,12 +46,12 @@ public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutIm
         }
     }
 
-    public WebHorizontalLayoutImpl(int gap) {
+    public WebHorizontalLayoutImpl(Space gap) {
         VaadinSizeUtil.setWidthFull(this);
         toVaadinComponent().setAlignItems(FlexComponent.Alignment.CENTER);
 
-        if (gap > 0) {
-            toVaadinComponent().getStyle().set("gap", gap + "px");
+        if (gap != Space.NONE) {
+            toVaadinComponent().addClassName(WebSpace.toGapClass(gap));
         }
     }
 

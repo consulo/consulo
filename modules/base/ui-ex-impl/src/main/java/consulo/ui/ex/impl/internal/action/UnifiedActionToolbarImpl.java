@@ -18,8 +18,8 @@ package consulo.ui.ex.impl.internal.action;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
@@ -36,7 +36,7 @@ import java.util.function.Supplier;
  * @since 2020-05-11
  */
 public class UnifiedActionToolbarImpl implements ActionToolbar {
-    private static final int PADDING = 4;
+    private static final Space PADDING = Space.SMALL;
 
     private final ActionGroup myGroup;
 
@@ -64,7 +64,7 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
         // a toolbar is a band of its own and must not sit flush against what stands around it, while an inplace
         // row is a part of the widget it belongs to - awt drops the border of its toolbar in the very same case
         if (style != Style.INPLACE) {
-            myRow.getComponent().addBorders(BorderStyle.EMPTY, null, PADDING);
+            myRow.getComponent().paddingBuilder().allSet(PADDING).apply();
         }
     }
 

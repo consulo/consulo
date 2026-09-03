@@ -62,16 +62,16 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract DockLayout _Layouts_dock(int gapInPixels);
+    public abstract DockLayout _Layouts_dock(Space gap);
 
     public abstract WrappedLayout _Layouts_wrapped();
 
-    public abstract VerticalLayout _Layouts_vertical(int vGap);
+    public abstract VerticalLayout _Layouts_vertical(Space vGap);
 
     /**
      * A backend which cannot place children at a side of the layout still has to answer a layout.
      */
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return _Layouts_vertical(vGap);
     }
 
@@ -93,7 +93,7 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixels);
+    public abstract HorizontalLayout _Layouts_horizontal(Space gap);
 
     public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
 

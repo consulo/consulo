@@ -53,7 +53,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new HeadlessDockLayout();
     }
 
@@ -63,7 +63,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new HeadlessVerticalLayout();
     }
 
@@ -93,7 +93,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
         return new HeadlessHorizontalLayout();
     }
 

@@ -19,8 +19,10 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.HasSize;
 import consulo.ui.Size2D;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.BorderBuilder;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
@@ -63,13 +65,15 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     }
 
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
-        myDataObject.addBorder(borderPosition, borderStyle, colorValue, width);
+    public BorderBuilder borderBuilder() {
+        return new BorderBuilderImpl(myDataObject, () -> {
+        });
     }
 
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        myDataObject.removeBorder(borderPosition);
+    public PaddingBuilder paddingBuilder() {
+        return new PaddingBuilderImpl(myDataObject, () -> {
+        });
     }
 
     @Override

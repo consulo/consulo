@@ -21,9 +21,8 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.ScrollableLayout;
 
 /**
@@ -40,10 +39,7 @@ public class UnifiedConfigurableContext implements Disposable {
       configurable.reset();
 
       if(!ConfigurableWrapper.isNoMargin(configurable)) {
-          uiComponent.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, 5);
-          uiComponent.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, 5);
-          uiComponent.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 8);
-          uiComponent.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 8);
+          uiComponent.paddingBuilder().verticalSet(Space.MEDIUM).horizontalSet(Space.LARGE).apply();
       }
 
       if (ConfigurableWrapper.isNoScroll(configurable)) {

@@ -20,8 +20,8 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
@@ -81,8 +81,8 @@ public class UnifiedProcessPopup {
             return;
         }
 
-        VerticalLayout content = VerticalLayout.create(5);
-        content.addBorders(BorderStyle.EMPTY, null, 5);
+        VerticalLayout content = VerticalLayout.create();
+        content.paddingBuilder().allSet(Space.MEDIUM).apply();
         for (InlineProgressIndicator indicator : myIndicators) {
             content.add(indicator.getUIComponent());
         }

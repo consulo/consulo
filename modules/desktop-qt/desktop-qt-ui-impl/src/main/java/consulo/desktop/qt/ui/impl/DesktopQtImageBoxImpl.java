@@ -18,9 +18,9 @@ package consulo.desktop.qt.ui.impl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.ImageBox;
+import consulo.ui.Space;
 import consulo.ui.image.Image;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.impl.BorderInfo;
+import consulo.ui.internal.BorderPosition;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QPixmap;
@@ -54,8 +54,14 @@ public class DesktopQtImageBoxImpl extends QtComponentDelegate<QLabel> implement
     }
 
     private int borderSpace(BorderPosition position) {
-        BorderInfo info = myDataObject.getBorders().get(position);
-        return info == null ? 0 : info.getWidth();
+        int size = myDataObject.getBorders().containsKey(position) ? 1 : 0;
+
+        Space space = myDataObject.getPaddings().get(position);
+        if (space != null) {
+            size += DesktopQtSpace.toPixels(space);
+        }
+
+        return size;
     }
 
     @Override

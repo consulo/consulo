@@ -64,7 +64,7 @@ public class CacheSettingsPanel {
 
         root.add(DockLayout.create()
             .left(myRefreshCheckBox)
-            .right(HorizontalLayout.create(5).add(myRefreshBox).add(Label.create(VcsLocalize.changesMinutes()))));
+            .right(HorizontalLayout.create().add(myRefreshBox).add(Label.create(VcsLocalize.changesMinutes()))));
 
         return root;
     }

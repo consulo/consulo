@@ -42,7 +42,7 @@ public class LabeledComponents {
             text += ": ";
         }
 
-        HorizontalLayout horizontal = HorizontalLayout.create(5);
+        HorizontalLayout horizontal = HorizontalLayout.create();
         horizontal.add(Label.create(text));
         horizontal.add(component);
         return horizontal;

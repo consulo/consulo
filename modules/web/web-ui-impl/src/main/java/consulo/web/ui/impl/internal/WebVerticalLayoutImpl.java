@@ -18,6 +18,7 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
+import consulo.ui.Space;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
@@ -25,6 +26,7 @@ import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
+import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -46,15 +48,15 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
         }
     }
 
-    public WebVerticalLayoutImpl(int vGap) {
+    public WebVerticalLayoutImpl(Space vGap) {
         this(vGap, null);
     }
 
-    public WebVerticalLayoutImpl(int vGap, @Nullable HorizontalAlignment alignment) {
+    public WebVerticalLayoutImpl(Space vGap, @Nullable HorizontalAlignment alignment) {
         VaadinSizeUtil.setWidthFull(this);
 
-        if (vGap > 0) {
-            toVaadinComponent().getStyle().set("gap", vGap + "px");
+        if (vGap != Space.NONE) {
+            toVaadinComponent().addClassName(WebSpace.toGapClass(vGap));
         }
 
         if (alignment != null) {

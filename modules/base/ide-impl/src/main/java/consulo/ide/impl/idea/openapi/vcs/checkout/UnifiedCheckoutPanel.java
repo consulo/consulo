@@ -31,10 +31,9 @@ import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.ListBox;
 import consulo.ui.Size2D;
+import consulo.ui.Space;
 import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.layout.DockLayout;
@@ -45,10 +44,10 @@ import consulo.ui.layout.SwipeLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.checkout.CheckoutPage;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
@@ -150,26 +149,26 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
         );
 
         WrappedLayout southPanel = WrappedLayout.create(moreViaPlugins);
-        southPanel.addBorders(BorderStyle.EMPTY, null, 8);
+        southPanel.paddingBuilder().allSet(Space.LARGE).apply();
 
         DockLayout leftPanel = DockLayout.create();
         leftPanel.center(ScrollableLayout.create(listBox));
         leftPanel.bottom(southPanel);
-        leftPanel.addBorder(BorderPosition.RIGHT, BorderStyle.LINE, ComponentColors.BORDER, 1);
+        leftPanel.borderBuilder().rightSet().apply();
         leftPanel.setSize(new Size2D(300, -1));
         return leftPanel;
     }
 
     @RequiredUIAccess
     private Layout buildEmptyPanel() {
-        VerticalLayout layout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout layout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
         layout.add(Label.create(VcsLocalize.checkoutSelectVcsPrompt()));
         return layout;
     }
 
     @RequiredUIAccess
     protected @Nullable Component buildSouthPanel() {
-        HorizontalLayout buttonsPanel = HorizontalLayout.create(5);
+        HorizontalLayout buttonsPanel = HorizontalLayout.create();
 
         Button cancelButton = Button.create(CommonLocalize.buttonCancel());
         cancelButton.addClickListener(e -> doCancelAction());
@@ -183,7 +182,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
 
         DockLayout south = DockLayout.create();
         south.right(buttonsPanel);
-        south.addBorders(BorderStyle.EMPTY, null, 8);
+        south.paddingBuilder().allSet(Space.LARGE).apply();
         return south;
     }
 
@@ -226,7 +225,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
         });
 
         WrappedLayout layout = WrappedLayout.create(form);
-        layout.addBorders(BorderStyle.EMPTY, null, 5);
+        layout.paddingBuilder().allSet(Space.MEDIUM).apply();
         return layout;
     }
 

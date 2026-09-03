@@ -47,7 +47,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public DockLayout _Layouts_dock(int gapInPixels) {
+  public DockLayout _Layouts_dock(Space gapInPixels) {
     return null;
   }
 
@@ -57,7 +57,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public VerticalLayout _Layouts_vertical(int vGap) {
+  public VerticalLayout _Layouts_vertical(Space vGap) {
     return null;
   }
 
@@ -87,7 +87,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+  public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
     return null;
   }
 

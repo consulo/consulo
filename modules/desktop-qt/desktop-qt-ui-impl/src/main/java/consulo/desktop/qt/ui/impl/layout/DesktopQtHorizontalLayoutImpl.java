@@ -15,7 +15,9 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
+import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.HorizontalLayoutStyle;
@@ -27,16 +29,16 @@ import io.qt.widgets.QHBoxLayout;
  * @since 2026-08-16
  */
 public class DesktopQtHorizontalLayoutImpl extends DesktopQtBoxLayoutComponent<StaticPosition> implements HorizontalLayout {
-    private final int myGap;
+    private final Space myGap;
 
-    public DesktopQtHorizontalLayoutImpl(int gapInPixels) {
-        myGap = gapInPixels;
+    public DesktopQtHorizontalLayoutImpl(Space gap) {
+        myGap = gap;
     }
 
     @Override
     protected QBoxLayout createBoxLayout() {
         QHBoxLayout layout = new QHBoxLayout();
-        layout.setSpacing(myGap);
+        layout.setSpacing(DesktopQtSpace.toPixels(myGap));
         return layout;
     }
 

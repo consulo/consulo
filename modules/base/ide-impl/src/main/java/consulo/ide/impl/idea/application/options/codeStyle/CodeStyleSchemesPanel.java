@@ -21,7 +21,6 @@ import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.model.FlatDataModel;
@@ -69,7 +68,7 @@ public class CodeStyleSchemesPanel {
             }
         });
         myLayout.add(mySchemeComboBox);
-        myLayout.addMirrorBorders(BorderStyle.EMPTY, null, 5, 8);
+        myLayout.paddingBuilder().verticalSet(Space.MEDIUM).horizontalSet(Space.LARGE).apply();
 
         Button manageButton = Button.create(LocalizeValue.localizeTODO("&Manage..."));
         manageButton.addClickListener(event -> showManageSchemesDialog());

@@ -23,9 +23,8 @@ import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -58,7 +57,7 @@ public class VcsShelfConfigurable extends SimpleConfigurableByProperties impleme
             VcsLocalize.settingsFileTextsBiggerThanNotStored(VcsConfiguration.ourMaximumFileForBaseRevisionSize / 1000)
         );
         noteLabel.setForegroundColor(ComponentColors.INFO_FOREGROUND);
-        noteLabel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 20);
+        noteLabel.paddingBuilder().leftSet(Space.XX_LARGE).apply();
         root.add(noteLabel);
 
         return root;

@@ -15,7 +15,9 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
+import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.DockLayout;
 import io.qt.widgets.QGridLayout;
@@ -38,16 +40,16 @@ public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosi
     private static final GridCell RIGHT_CELL = new GridCell(1, 2, 1, 1);
     private static final GridCell BOTTOM_CELL = new GridCell(2, 0, 1, 3);
 
-    private final int myGap;
+    private final Space myGap;
 
-    public DesktopQtDockLayoutImpl(int gapInPixels) {
-        myGap = gapInPixels;
+    public DesktopQtDockLayoutImpl(Space gap) {
+        myGap = gap;
     }
 
     @Override
     protected @Nullable QLayout createLayout() {
         QGridLayout layout = new QGridLayout();
-        layout.setSpacing(myGap);
+        layout.setSpacing(DesktopQtSpace.toPixels(myGap));
         layout.setRowStretch(1, 1);
         layout.setColumnStretch(1, 1);
         return layout;

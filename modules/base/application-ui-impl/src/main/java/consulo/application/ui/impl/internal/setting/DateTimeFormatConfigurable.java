@@ -23,9 +23,8 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -97,7 +96,7 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
     });
 
     VerticalLayout overrideLayout = VerticalLayout.create();
-    overrideLayout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE);
+    overrideLayout.paddingBuilder().leftSet(Space.X_LARGE).apply();
 
     overrideLayout.add(DockLayout.create().left(HorizontalLayout.create().add(dateFormatLabel).add(formatLink)).right(dateFormatBox));
     overrideLayout.add(use24HoursBox);
@@ -111,7 +110,7 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
     HtmlLabel prettyPrintBoxComment = HtmlLabel.create(LocalizeValue.localizeTODO("Replace numeric date with <i>Today</i>, <i>Yesterday</i>, and <i>10 minutes ago</i>"));
     prettyPrintBoxComment.setForegroundColor(StandardColors.GRAY);
     HorizontalLayout prettyCommentLayout = HorizontalLayout.create();
-    prettyCommentLayout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE);
+    prettyCommentLayout.paddingBuilder().leftSet(Space.X_LARGE).apply();
     prettyCommentLayout.add(prettyPrintBoxComment);
     layout.add(prettyCommentLayout);
     return layout;

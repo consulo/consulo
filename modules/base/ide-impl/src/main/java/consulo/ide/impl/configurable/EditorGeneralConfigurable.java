@@ -17,6 +17,7 @@ package consulo.ide.impl.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
 import consulo.codeEditor.Editor;
@@ -42,13 +43,11 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
@@ -213,7 +212,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         });
 
         DockLayout customSoftWrapLayout = DockLayout.create();
-        customSoftWrapLayout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 15);
+        customSoftWrapLayout.paddingBuilder().leftSet(Space.X_LARGE).apply();
         customSoftWrapLayout.left(useCustomSoftWrapIndent);
         customSoftWrapLayout.right(customSoftWrapIndent);
         virtualSpaceLayout.add(customSoftWrapLayout);
@@ -446,7 +445,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         otherLayout.add(
             DockLayout.create()
                 .left(showQuickDocOnMouseMove)
-                .right(HorizontalLayout.create(5).add(delayMs).add(tooltipDelay))
+                .right(HorizontalLayout.create().add(delayMs).add(tooltipDelay))
         );
 
         layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Other"), otherLayout));

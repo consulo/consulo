@@ -42,7 +42,7 @@ public final class VcsSettingsRows {
         valueBox.setEnabled(gate.getValueOrError());
         gate.addValueListener(event -> valueBox.setEnabled(event.getValue()));
 
-        HorizontalLayout right = HorizontalLayout.create(5).add(valueBox);
+        HorizontalLayout right = HorizontalLayout.create().add(valueBox);
         if (suffix.isNotEmpty()) {
             right.add(Label.create(suffix));
         }

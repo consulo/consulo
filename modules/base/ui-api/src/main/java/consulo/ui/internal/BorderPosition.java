@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,13 @@
  */
 package consulo.ui.internal;
 
-public interface UIConstant {
-    static int DEFAULT_SPACING_PX = 5;
+/**
+ * @author VISTALL
+ * @since 2017-09-15
+ */
+public enum BorderPosition {
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT
 }

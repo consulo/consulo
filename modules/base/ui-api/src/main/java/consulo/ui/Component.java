@@ -18,13 +18,10 @@ package consulo.ui;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.*;
 import consulo.ui.font.Font;
-import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
@@ -52,64 +49,18 @@ public interface Component extends UserDataHolder {
         return null;
     }
 
+    /**
+     * The lines along this component's edges. Nothing changes until {@link BorderBuilder#apply()}.
+     */
     @RequiredUIAccess
-    default void addBorder(BorderPosition borderPosition) {
-        addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
-    }
+    BorderBuilder borderBuilder();
 
+    /**
+     * The room between this component's edges and what it draws. Nothing changes until
+     * {@link PaddingBuilder#apply()}.
+     */
     @RequiredUIAccess
-    default void addBorder(BorderPosition borderPosition, BorderStyle borderStyle) {
-        addBorder(borderPosition, borderStyle, ComponentColors.BORDER, 1);
-    }
-
-    @RequiredUIAccess
-    default void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorKey) {
-        addBorder(borderPosition, borderStyle, colorKey, 1);
-    }
-
-    @RequiredUIAccess
-    default void addBorders(BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
-        for (BorderPosition position : BorderPosition.values()) {
-            addBorder(position, borderStyle, colorKey, width);
-        }
-    }
-
-    @RequiredUIAccess
-    default void addDefaultBorders() {
-        for (BorderPosition position : BorderPosition.values()) {
-            addBorder(position);
-        }
-    }
-
-    @RequiredUIAccess
-    default void addMirrorBorders(BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
-        if (topBottom > 0) {
-            addBorder(BorderPosition.TOP, borderStyle, colorValue, topBottom);
-            addBorder(BorderPosition.BOTTOM, borderStyle, colorValue, topBottom);
-        }
-        if (leftRight > 0) {
-            addBorder(BorderPosition.LEFT, borderStyle, colorValue, leftRight);
-            addBorder(BorderPosition.RIGHT, borderStyle, colorValue, leftRight);
-        }
-    }
-
-    @RequiredUIAccess
-    default void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, int width) {
-        addBorder(borderPosition, borderStyle, null, width);
-    }
-
-    @RequiredUIAccess
-    void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width);
-
-    @RequiredUIAccess
-    default void removeBorders() {
-        for (BorderPosition position : BorderPosition.values()) {
-            removeBorder(position);
-        }
-    }
-
-    @RequiredUIAccess
-    void removeBorder(BorderPosition borderPosition);
+    PaddingBuilder paddingBuilder();
 
     boolean isVisible();
 
