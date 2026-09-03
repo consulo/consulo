@@ -64,9 +64,6 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
 
     @Override
     public void verify(String host, X509Certificate cert) throws SSLException {
-        if (!HttpCertificateManagerImpl.getInstance().getState().CHECK_HOSTNAME) {
-            return;
-        }
         try {
             myVerifier.verify(host, cert);
         }

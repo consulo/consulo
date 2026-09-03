@@ -39,13 +39,14 @@ import java.util.List;
 public class PresentationData implements ColoredItemPresentation, ComparableObject, LocationPresentation {
     protected final List<PresentableNodeDescriptor.ColoredFragment> myColoredText = Lists.newLockFreeCopyOnWriteList();
 
-    private Image myIcon;
+    private @Nullable Color myBackground;
+    private @Nullable Image myIcon;
 
-    private String myLocationString;
-    private String myPresentableText;
+    private @Nullable String myLocationString;
+    private LocalizeValue myPresentableText;
 
-    private String myTooltip;
-    private TextAttributesKey myAttributesKey;
+    private @Nullable String myTooltip;
+    private @Nullable TextAttributesKey myAttributesKey;
 
     private ColorValue myForcedTextForeground;
 
@@ -72,13 +73,13 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      */
     public PresentationData(
         LocalizeValue presentableText,
-        String locationString,
-        Image icon,
+        @Nullable String locationString,
+        @Nullable Image icon,
         @Nullable TextAttributesKey attributesKey
     ) {
         myIcon = icon;
         myLocationString = locationString;
-        myPresentableText = presentableText.get();
+        myPresentableText = presentableText;
         myAttributesKey = attributesKey;
     }
 
@@ -93,11 +94,13 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *                        in a non-tree view.
      * @param attributesKey   the attributes for rendering the item text.
      */
-    public PresentationData(String presentableText, String locationString, Image icon, @Nullable TextAttributesKey attributesKey) {
-        myIcon = icon;
-        myLocationString = locationString;
-        myPresentableText = presentableText;
-        myAttributesKey = attributesKey;
+    public PresentationData(
+        @Nullable String presentableText,
+        @Nullable String locationString,
+        @Nullable Image icon,
+        @Nullable TextAttributesKey attributesKey
+    ) {
+        this(LocalizeValue.ofNullable(presentableText), locationString, icon, attributesKey);
     }
 
     /**
@@ -106,8 +109,12 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     public PresentationData() {
     }
 
+    public @Nullable Color getBackground() {
+        return myBackground;
+    }
+
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 
@@ -128,13 +135,17 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     @Override
-    public String getLocationString() {
+    public @Nullable String getLocationString() {
         return myLocationString;
     }
 
     @Override
-    public String getPresentableText() {
-        return myPresentableText;
+    public @Nullable String getPresentableText() {
+        return myPresentableText.getNullIfEmpty();
+    }
+
+    public void setBackground(@Nullable Color background) {
+        myBackground = background;
     }
 
     public void setIcon(Image icon) {
@@ -167,7 +178,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      * @param presentableText the name of the object.
      */
     public void setPresentableText(LocalizeValue presentableText) {
-        myPresentableText = presentableText.get();
+        myPresentableText = presentableText;
     }
 
     /**
@@ -175,8 +186,8 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *
      * @param presentableText the name of the object.
      */
-    public void setPresentableText(String presentableText) {
-        myPresentableText = presentableText;
+    public void setPresentableText(@Nullable String presentableText) {
+        myPresentableText = LocalizeValue.ofNullable(presentableText);
     }
 
     /**
@@ -239,7 +250,6 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myChanged = changed;
     }
 
-    
     public List<PresentableNodeDescriptor.ColoredFragment> getColoredText() {
         return myColoredText;
     }
@@ -268,7 +278,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myFont = null;
         myForcedTextForeground = null;
         myLocationString = null;
-        myPresentableText = null;
+        myPresentableText = LocalizeValue.empty();
         myTooltip = null;
         myChanged = false;
         mySeparatorAbove = false;
@@ -277,9 +287,20 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     @Override
-    
     public Object[] getEqualityObjects() {
-        return new Object[]{myBackground, myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
+        return new Object[]{
+            myBackground,
+            myIcon,
+            myColoredText,
+            myAttributesKey,
+            myFont,
+            myForcedTextForeground,
+            myPresentableText,
+            myLocationString,
+            mySeparatorAbove,
+            myLocationPrefix,
+            myLocationSuffix
+        };
     }
 
     @Override
@@ -288,7 +309,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return ComparableObjectCheck.equals(this, obj);
     }
 
@@ -321,6 +342,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     public void applyFrom(PresentationData from) {
         myBackground = getValue(myBackground, from.myBackground);
         myAttributesKey = getValue(myAttributesKey, from.myAttributesKey);
+        myBackground = getValue(myBackground, from.myBackground);
         myIcon = getValue(myIcon, from.myIcon);
 
         if (myColoredText.isEmpty()) {

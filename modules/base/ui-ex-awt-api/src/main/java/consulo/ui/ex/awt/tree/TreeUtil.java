@@ -41,6 +41,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -1409,11 +1410,7 @@ public final class TreeUtil {
         }
     }
 
-    public static <T extends TreeNode> int indexedBinarySearch(
-        T parent,
-        T key,
-        Comparator<? super T> comparator
-    ) {
+    public static <T extends TreeNode> int indexedBinarySearch(T parent, T key, Comparator<? super T> comparator) {
         return ObjectUtil.binarySearch(0, parent.getChildCount(), mid -> comparator.compare((T)parent.getChildAt(mid), key));
     }
 
@@ -1571,12 +1568,7 @@ public final class TreeUtil {
         return promise;
     }
 
-    
-    private static Promise<TreePath> promiseMakeVisible(
-        JTree tree,
-        TreeVisitor visitor,
-        AsyncPromise<?> promise
-    ) {
+    private static Promise<TreePath> promiseMakeVisible(JTree tree, TreeVisitor visitor, AsyncPromise<?> promise) {
         return promiseVisit(tree, path -> {
             if (promise.isCancelled()) {
                 return SKIP_SIBLINGS;
@@ -1734,6 +1726,56 @@ public final class TreeUtil {
         return promiseSelect(tree, path -> !tree.isRootVisible() && path.getParentPath() == null ? CONTINUE : INTERRUPT);
     }
 
+
+    /**
+     * Promises to select the first leaf node in the specified tree.
+     * <strong>NB!:</strong>
+     * The returned promise may be resolved immediately,
+     * if this method is called on inappropriate background thread.
+     *
+     * @param tree a tree, which node should be selected
+     * @return a promise that will be succeeded when first leaf node is made visible and selected
+     */
+    public static Promise<TreePath> promiseSelectFirstLeaf(JTree tree) {
+        AtomicReference<TreePath> reference = new AtomicReference<>();
+        AsyncPromise<TreePath> promise = new AsyncPromise<>();
+        promiseMakeVisible(
+            tree,
+            path -> {
+                TreePath parent = reference.getAndSet(path);
+                if (getPathCount(parent) == getPathCount(path.getParentPath())) {
+                    return TreeVisitor.Action.CONTINUE;
+                }
+                internalSelect(tree, parent);
+                promise.setResult(parent);
+                return TreeVisitor.Action.INTERRUPT;
+            },
+            promise
+        )
+            .onError(promise::setError)
+            .onSuccess(path -> {
+                if (!promise.isDone()) {
+                    TreePath tail = reference.get();
+                    if (tail == null || isHiddenRoot(tree, tail)) {
+                        promise.cancel();
+                    }
+                    else {
+                        internalSelect(tree, tail);
+                        promise.setResult(tail);
+                    }
+                }
+            });
+        return promise;
+    }
+
+    private static boolean isHiddenRoot(JTree tree, TreePath path) {
+        return !tree.isRootVisible() && path.getParentPath() == null;
+    }
+
+    private static int getPathCount(@Nullable TreePath path) {
+        return path == null ? 0 : path.getPathCount();
+    }
+
     /**
      * Processes nodes in the specified tree.
      *
@@ -1878,11 +1920,7 @@ public final class TreeUtil {
      * @param mapper   a function to convert a visible tree path to a corresponding object
      * @param consumer a visible path processor
      */
-    public static <T> void visitVisibleRows(
-        JTree tree,
-        Function<? super TreePath, ? extends T> mapper,
-        Consumer<? super T> consumer
-    ) {
+    public static <T> void visitVisibleRows(JTree tree, Function<? super TreePath, ? extends T> mapper, Consumer<? super T> consumer) {
         visitVisibleRows(tree, path -> {
             T object = mapper.apply(path);
             if (object != null) {
