@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurableHit;
@@ -69,8 +70,11 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
     private static final Pattern REG_EXP = Pattern.compile("[\\W&&[^-]]+");
 
+    private final Application myApplication;
+
     @Inject
-    public SearchableOptionsRegistrarImpl() {
+    public SearchableOptionsRegistrarImpl(Application application) {
+        myApplication = application;
         try {
             //stop words
             String text =
@@ -98,14 +102,10 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
             Document document = JDOMUtil.loadDocument(indexResource);
             Element root = document.getRootElement();
-            List configurables = root.getChildren("configurable");
-            for (Object o : configurables) {
-                Element configurable = (Element)o;
+            for (Element configurable : root.getChildren("configurable")) {
                 String id = configurable.getAttributeValue("id");
                 String groupName = configurable.getAttributeValue("configurable_name");
-                List options = configurable.getChildren("option");
-                for (Object o1 : options) {
-                    Element optionElement = (Element)o1;
+                for (Element optionElement : configurable.getChildren("option")) {
                     String option = optionElement.getAttributeValue("name");
                     String path = optionElement.getAttributeValue("path");
                     String hit = optionElement.getAttributeValue("hit");
@@ -116,14 +116,10 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
             //synonyms
             document = JDOMUtil.loadDocument(ResourceUtil.getResource(SearchableOptionsRegistrar.class, "/search/", "synonyms.xml"));
             root = document.getRootElement();
-            configurables = root.getChildren("configurable");
-            for (Object o : configurables) {
-                Element configurable = (Element)o;
+            for (Element configurable : root.getChildren("configurable")) {
                 String id = configurable.getAttributeValue("id");
                 String groupName = configurable.getAttributeValue("configurable_name");
-                List synonyms = configurable.getChildren("synonym");
-                for (Object o1 : synonyms) {
-                    Element synonymElement = (Element)o1;
+                for (Element synonymElement : configurable.getChildren("synonym")) {
                     String synonym = synonymElement.getTextNormalize();
                     if (synonym != null) {
                         Set<String> words = getProcessedWords(synonym);
@@ -132,13 +128,9 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                         }
                     }
                 }
-                List options = configurable.getChildren("option");
-                for (Object o1 : options) {
-                    Element optionElement = (Element)o1;
+                for (Element optionElement : configurable.getChildren("option")) {
                     String option = optionElement.getAttributeValue("name");
-                    List list = optionElement.getChildren("synonym");
-                    for (Object o2 : list) {
-                        Element synonymElement = (Element)o2;
+                    for (Element synonymElement : optionElement.getChildren("synonym")) {
                         String synonym = synonymElement.getTextNormalize();
                         if (synonym != null) {
                             Set<String> words = getProcessedWords(synonym);
@@ -146,12 +138,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                                 putOptionWithHelpId(word, id, groupName, synonym, null);
                             }
                             Couple<String> key = Couple.of(option, id);
-                            Set<String> foundSynonyms = myHighlightOption2Synonym.get(key);
-                            if (foundSynonyms == null) {
-                                foundSynonyms = new HashSet<>();
-                                myHighlightOption2Synonym.put(key, foundSynonyms);
-                            }
-                            foundSynonyms.add(synonym);
+                            myHighlightOption2Synonym.computeIfAbsent(key, k -> new HashSet<>()).add(synonym);
                         }
                     }
                 }
@@ -172,8 +159,8 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
             }
         });
 
-        for (SearchableOptionContributor contributor : SearchableOptionContributor.EP_NAME.getExtensionList()) {
-            contributor.processOptions(new SearchableOptionProcessor() {
+        myApplication.getExtensionPoint(SearchableOptionContributor.class).forEach(
+            contributor -> contributor.processOptions(new SearchableOptionProcessor() {
                 @Override
                 public void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName) {
                     SearchableOptionsRegistrarImpl.this.addOption(option, path, hit, configurableId, configurableDisplayName);
@@ -188,8 +175,8 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                 public Set<String> getProcessedWords(String text) {
                     return SearchableOptionsRegistrarImpl.this.getProcessedWords(text);
                 }
-            });
-        }
+            })
+        );
     }
 
     private synchronized void putOptionWithHelpId(String option, String id, String groupName, String hit, String path) {
@@ -225,7 +212,6 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    
     public ConfigurableHit getConfigurables(
         Configurable[] allConfigurables,
         boolean changed,
