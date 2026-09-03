@@ -20,6 +20,7 @@ import consulo.ui.*;
 import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
@@ -27,6 +28,7 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+
 import java.util.Comparator;
 import java.util.function.Function;
 
@@ -38,9 +40,10 @@ import java.util.function.Function;
  * @since 2020-09-15
  */
 public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value> implements TableColumn<Item, Value> {
+    private final DesktopTableImpl<Item> myTable;
     private final Function<Item, Value> myValueProvider;
 
-    private TextItemRender<Value> myTextRender = TextItemRender.defaultRender();
+    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
 
     /**
      * A table asks for a renderer per row, so the bridge is held here instead of being built per call - a
@@ -55,8 +58,9 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     private boolean myResizable = true;
     private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
 
-    public DesktopTableColumnImpl(LocalizeValue header, Function<Item, Value> valueProvider) {
+    public DesktopTableColumnImpl(DesktopTableImpl<Item> table, LocalizeValue header, Function<Item, Value> valueProvider) {
         super(header);
+        myTable = table;
         myValueProvider = valueProvider;
     }
 
@@ -73,7 +77,14 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
 
     @Override
     public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myTextRender = render;
+        myRender = TableItemRender.of(render);
+        myComponentRenderer = null;
+        return this;
+    }
+
+    @Override
+    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
+        myRender = render;
         myComponentRenderer = null;
         return this;
     }
@@ -142,7 +153,17 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
             @Override
             protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
                 setTextAlign(toSwingAlignment(myAlignment));
-                myTextRender.render(new DesktopTextItemPresentationImpl(this), RenderItem.of(valueOf(item), selected));
+
+                // the band belongs to the row, so it is painted under every column - a selected row keeps the
+                // selection fill, which is the one the user is actually looking for
+                if (!selected) {
+                    ColorValue rowBackground = myTable.getRowBackground(item);
+                    if (rowBackground != null) {
+                        setBackground(TargetAWT.to(rowBackground));
+                    }
+                }
+
+                myRender.render(new DesktopTextItemPresentationImpl(this), RenderItem.of(valueOf(item), selected), item);
             }
         };
     }

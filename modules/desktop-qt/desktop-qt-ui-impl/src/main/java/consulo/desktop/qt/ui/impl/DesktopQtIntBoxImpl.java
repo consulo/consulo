@@ -31,6 +31,7 @@ public class DesktopQtIntBoxImpl extends QtComponentDelegate<QSpinBox> implement
     private int myInitValue;
     private int myInitMin;
     private int myInitMax = Integer.MAX_VALUE;
+    private int myInitStep = 1;
 
     public DesktopQtIntBoxImpl(int initValue) {
         myInitValue = initValue;
@@ -50,6 +51,17 @@ public class DesktopQtIntBoxImpl extends QtComponentDelegate<QSpinBox> implement
         else {
             myInitMin = min;
             myInitMax = max;
+        }
+    }
+
+    @Override
+    public void setStep(int step) {
+        QSpinBox spinBox = toQtComponent();
+        if (spinBox != null) {
+            spinBox.setSingleStep(step);
+        }
+        else {
+            myInitStep = step;
         }
     }
 
@@ -93,6 +105,7 @@ public class DesktopQtIntBoxImpl extends QtComponentDelegate<QSpinBox> implement
 
         component.setMinimum(myInitMin);
         component.setMaximum(myInitMax);
+        component.setSingleStep(myInitStep);
         component.setValue(myInitValue);
     }
 }

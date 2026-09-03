@@ -15,17 +15,34 @@
  */
 package consulo.versionControlSystem.impl.internal.configurable;
 
-import consulo.application.util.registry.Registry;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.HtmlLabel;
+import consulo.ui.SelectionMode;
+import consulo.ui.Table;
+import consulo.ui.TableItemEditor;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.EditAction;
+import consulo.ui.ex.toolbar.RemoveAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.ex.toolbar.UpMoveAction;
+import consulo.ui.font.Font;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.style.StandardColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.io.FileUtil;
@@ -40,47 +57,32 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.*;
 
-import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
-import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 import static consulo.versionControlSystem.VcsConfiguration.getInstance;
-import static consulo.versionControlSystem.VcsConfiguration.ourMaximumFileForBaseRevisionSize;
 
 /**
  * @author yole
  */
-public class VcsDirectoryConfigurationPanel extends JPanel {
+public class VcsDirectoryConfigurationPanel {
+    private static final TextAttribute SEPARATOR_ATTRIBUTES = TextAttribute.REGULAR_BOLD;
+    private static final TextAttribute INVALID_ATTRIBUTES = TextAttribute.ERROR;
+    private static final TextAttribute UNREGISTERED_ATTRIBUTES = new TextAttribute(Font.BOLD, StandardColors.GRAY);
+
     private final Project myProject;
-    private final String myProjectMessage;
+    private final LocalizeValue myProjectMessage;
     private final ProjectLevelVcsManager myVcsManager;
-    private final TableView<MapInfo> myDirectoryMappingTable;
-    private final ComboBox<VcsDescriptor> myVcsComboBox = new ComboBox<>();
     private final List<ModuleVcsListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    private final MyDirectoryRenderer myDirectoryRenderer;
-    private final ColumnInfo<MapInfo, MapInfo> DIRECTORY;
-    private final JCheckBox myBaseRevisionTexts;
-    private ListTableModel<MapInfo> myModel;
     private final Map<String, VcsDescriptor> myAllVcss;
-    private VcsContentAnnotationConfigurable myRecentlyChangedConfigurable;
     private final boolean myIsDisabled;
     private final VcsConfiguration myVcsConfiguration;
-    private final
-    
-    Map<String, VcsRootChecker> myCheckers;
-    private JCheckBox myShowChangedRecursively;
-    private final VcsLimitHistoryConfigurable myLimitHistory;
+    private final Map<String, VcsRootChecker> myCheckers;
     private final VcsUpdateInfoScopeFilterConfigurable myScopeFilterConfig;
-    private VcsCommitMessageMarginConfigurable myCommitMessageMarginConfigurable;
-    private JCheckBox myShowUnversionedFiles;
-    private JCheckBox myCheckCommitMessageSpelling;
+
+    private final MutableFlatDataModel<MapInfo> myModel = FlatDataModel.of(List.of());
 
     private static class MapInfo {
         static final MapInfo SEPARATOR = new MapInfo(new VcsDirectoryMapping("SEPARATOR", "SEP"), Type.SEPARATOR);
@@ -121,236 +123,244 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
             this.mapping = mapping;
             this.type = type;
         }
-    }
 
-    private static class MyDirectoryRenderer extends ColoredTableCellRenderer {
-        private final Project myProject;
-
-        public MyDirectoryRenderer(Project project) {
-            myProject = project;
-        }
-
-        @Override
-        protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
-            if (value instanceof MapInfo) {
-                MapInfo info = (MapInfo) value;
-
-                if (!selected && (info == MapInfo.SEPARATOR || info.type == MapInfo.Type.UNREGISTERED)) {
-                    setBackground(getUnregisteredRootBackground());
-                }
-
-                if (info == MapInfo.SEPARATOR) {
-                    append("Unregistered roots:", getAttributes(info));
-                    return;
-                }
-
-                if (info.mapping.isDefaultMapping()) {
-                    append(VcsDirectoryMapping.PROJECT_CONSTANT, getAttributes(info));
-                    return;
-                }
-
-                String directory = info.mapping.getDirectory();
-                VirtualFile baseDir = myProject.getBaseDir();
-                if (baseDir != null) {
-                    File directoryFile = new File(StringUtil.trimEnd(UriUtil.trimTrailingSlashes(directory), "\\") + "/");
-                    File ioBase = new File(baseDir.getPath());
-                    if (directoryFile.isAbsolute() && !FileUtil.isAncestor(ioBase, directoryFile, false)) {
-                        append(new File(directory).getPath(), getAttributes(info));
-                        return;
-                    }
-                    String relativePath = FileUtil.getRelativePath(ioBase, directoryFile);
-                    if (".".equals(relativePath) || relativePath == null) {
-                        append(ioBase.getPath(), getAttributes(info));
-                    }
-                    else {
-                        append(relativePath, getAttributes(info));
-                        append(" (" + ioBase + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-                    }
-                }
-            }
+        boolean isSetApart() {
+            return this == SEPARATOR || type == Type.UNREGISTERED;
         }
     }
 
-    
-    private static Color getUnregisteredRootBackground() {
-        return new JBColor(UIUtil.getLabelBackground(), new Color(0x45494A));
-    }
-
-    
-    private static SimpleTextAttributes getAttributes(MapInfo info) {
-        if (info == MapInfo.SEPARATOR) {
-            return new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD | SimpleTextAttributes.STYLE_SMALLER, null);
-        }
-        else if (info.type == MapInfo.Type.INVALID) {
-            return new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBColor.RED);
-        }
-        else if (info.type == MapInfo.Type.UNREGISTERED) {
-            return new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, JBColor.GRAY);
-        }
-        else {
-            return SimpleTextAttributes.REGULAR_ATTRIBUTES;
-        }
-    }
-
-    private final ColumnInfo<MapInfo, String> VCS_SETTING = new ColumnInfo<>(VcsBundle.message("column.name.configure.vcses.vcs")) {
-        @Override
-        public String valueOf(MapInfo object) {
-            return object.mapping.getVcs();
-        }
-
-        @Override
-        public boolean isCellEditable(MapInfo info) {
-            return info != MapInfo.SEPARATOR && info.type != MapInfo.Type.UNREGISTERED;
-        }
-
-        @Override
-        public void setValue(MapInfo o, String aValue) {
-            Collection<AbstractVcs> activeVcses = getActiveVcses();
-            o.mapping.setVcs(aValue);
-            checkNotifyListeners(activeVcses);
-        }
-
-        @Override
-        public TableCellRenderer getRenderer(final MapInfo info) {
-            return new ColoredTableCellRenderer() {
-                @Override
-                protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
-                    if (info == MapInfo.SEPARATOR) {
-                        if (!selected) {
-                            setBackground(getUnregisteredRootBackground());
-                        }
-                        return;
-                    }
-
-                    if (info.type == MapInfo.Type.UNREGISTERED && !selected) {
-                        setBackground(getUnregisteredRootBackground());
-                    }
-
-                    String vcsName = info.mapping.getVcs();
-                    LocalizeValue text;
-                    if (vcsName.length() == 0) {
-                        text = VcsLocalize.noneVcsPresentation();
-                    }
-                    else {
-                        VcsDescriptor vcs = myAllVcss.get(vcsName);
-                        if (vcs != null) {
-                            text = vcs.getDisplayName();
-                        }
-                        else {
-                            text = VcsLocalize.unknownVcsPresentation(vcsName);
-                        }
-                    }
-                    append(text.get(), getAttributes(info));
-                }
-            };
-        }
-
-        @Override
-        public TableCellEditor getEditor(MapInfo o) {
-            return new AbstractTableCellEditor() {
-                @Override
-                public Object getCellEditorValue() {
-                    VcsDescriptor selectedVcs = (VcsDescriptor) myVcsComboBox.getSelectedItem();
-                    return ((selectedVcs == null) || selectedVcs.isNone()) ? "" : selectedVcs.getId();
-                }
-
-                @Override
-                public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-                    String vcsName = (String) value;
-                    myVcsComboBox.setSelectedItem(myAllVcss.get(vcsName));
-                    return myVcsComboBox;
-                }
-            };
-        }
-
-        @Override
-        public @Nullable String getMaxStringValue() {
-            String maxString = null;
-            for (String name : myAllVcss.keySet()) {
-                if (maxString == null || maxString.length() < name.length()) {
-                    maxString = name;
-                }
-            }
-            return maxString;
-        }
-
-        @Override
-        public int getAdditionalWidth() {
-            return DEFAULT_HGAP;
-        }
-    };
-
-    public VcsDirectoryConfigurationPanel(Project project, Disposable uiDisposable) {
+    public VcsDirectoryConfigurationPanel(Project project) {
         myProject = project;
         myVcsConfiguration = getInstance(myProject);
-        myProjectMessage = XmlStringUtil.wrapInHtml(
+        myProjectMessage = LocalizeValue.of(XmlStringUtil.wrapInHtml(
             XmlStringUtil.escapeText(VcsDirectoryMapping.PROJECT_CONSTANT) + " - " +
                 DefaultVcsRootPolicy.getInstance(myProject).getProjectConfigurationMessage(myProject).replace('\n', ' ')
-        );
+        ));
         myIsDisabled = myProject.isDefault();
         myVcsManager = ProjectLevelVcsManager.getInstance(project);
-        VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
+
         myAllVcss = new HashMap<>();
-        for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
+        for (VcsDescriptor vcsDescriptor : myVcsManager.getAllVcss()) {
             myAllVcss.put(vcsDescriptor.getId(), vcsDescriptor);
         }
 
-        myDirectoryMappingTable = new TableView<>();
-        myDirectoryMappingTable.setIntercellSpacing(JBUI.emptySize());
-
-        myBaseRevisionTexts = new JCheckBox("Store on shelf base revision texts for files under DVCS");
-        myLimitHistory = new VcsLimitHistoryConfigurable(myProject);
         myScopeFilterConfig = new VcsUpdateInfoScopeFilterConfigurable(myProject, myVcsConfiguration);
 
         myCheckers = new HashMap<>();
         updateRootCheckers();
+    }
 
-        setLayout(new BorderLayout());
-        add(createMainComponent(uiDisposable));
+    @RequiredUIAccess
+    public Component createComponent(Disposable uiDisposable) {
+        Table<MapInfo> table = Table.create(myModel);
+        table.setSelectionMode(SelectionMode.MULTIPLE);
+        table.setRowBackgroundGetter(VcsDirectoryConfigurationPanel::rowBackground);
+        table.setEnabled(!myIsDisabled);
 
-        myDirectoryRenderer = new MyDirectoryRenderer(myProject);
-        DIRECTORY = new ColumnInfo<>(VcsBundle.message("column.info.configure.vcses.directory")) {
-            @Override
-            public MapInfo valueOf(MapInfo mapping) {
-                return mapping;
-            }
+        table.addColumn(VcsLocalize.columnInfoConfigureVcsesDirectory(), info -> info)
+            .setRender((presentation, value) -> renderDirectory(presentation, value.getValue()));
 
-            @Override
-            public TableCellRenderer getRenderer(MapInfo vcsDirectoryMapping) {
-                return myDirectoryRenderer;
-            }
-        };
-        initializeModel();
+        table.addColumn(VcsLocalize.columnNameConfigureVcsesVcs(), info -> info.mapping.getVcs())
+            .setRender((presentation, value, info) -> renderVcs(presentation, info))
+            .setEditor(new VcsColumnEditor());
 
-        myVcsComboBox.setModel(buildVcsWrappersModel(myProject));
-        myVcsComboBox.addItemListener(e -> {
-            if (myDirectoryMappingTable.isEditing()) {
-                myDirectoryMappingTable.stopEditing();
-            }
-        });
+        Component decorated = ToolbarDecoratorBuilderFactory.getInstance()
+            .create(table)
+            .addOrReplaceAction(new MappingAddAction())
+            .addOrReplaceAction(new MappingEditAction())
+            .addOrReplaceAction(new MappingRemoveAction())
+            .disableAction(UpMoveAction.class)
+            .disableAction(DownMoveAction.class)
+            .build();
 
-        myDirectoryMappingTable.setRowHeight(myVcsComboBox.getPreferredSize().height);
-        if (myIsDisabled) {
-            myDirectoryMappingTable.setEnabled(false);
+        DockLayout bottom = DockLayout.create();
+        bottom.top(HtmlLabel.create(myProjectMessage));
+        bottom.bottom(myScopeFilterConfig.createComponent(uiDisposable));
+
+        DockLayout root = DockLayout.create();
+        root.center(decorated);
+        root.bottom(bottom);
+        return root;
+    }
+
+    private static @Nullable ColorValue rowBackground(MapInfo info) {
+        return info.isSetApart() ? ComponentColors.LAYOUT : null;
+    }
+
+    private static TextAttribute attributes(MapInfo info) {
+        if (info == MapInfo.SEPARATOR) {
+            return SEPARATOR_ATTRIBUTES;
         }
+        if (info.type == MapInfo.Type.INVALID) {
+            return INVALID_ATTRIBUTES;
+        }
+        if (info.type == MapInfo.Type.UNREGISTERED) {
+            return UNREGISTERED_ATTRIBUTES;
+        }
+        return TextAttribute.REGULAR;
+    }
+
+    @RequiredUIAccess
+    private void renderDirectory(TextItemPresentation presentation, @Nullable MapInfo info) {
+        if (info == null) {
+            return;
+        }
+
+        if (info == MapInfo.SEPARATOR) {
+            presentation.append(VcsLocalize.settingsUnregisteredRoots(), attributes(info));
+            return;
+        }
+
+        if (info.mapping.isDefaultMapping()) {
+            presentation.append(VcsDirectoryMapping.PROJECT_CONSTANT, attributes(info));
+            return;
+        }
+
+        String directory = info.mapping.getDirectory();
+        VirtualFile baseDir = myProject.getBaseDir();
+        if (baseDir == null) {
+            return;
+        }
+
+        File directoryFile = new File(StringUtil.trimEnd(UriUtil.trimTrailingSlashes(directory), "\\") + "/");
+        File ioBase = new File(baseDir.getPath());
+        if (directoryFile.isAbsolute() && !FileUtil.isAncestor(ioBase, directoryFile, false)) {
+            presentation.append(new File(directory).getPath(), attributes(info));
+            return;
+        }
+
+        String relativePath = FileUtil.getRelativePath(ioBase, directoryFile);
+        if (".".equals(relativePath) || relativePath == null) {
+            presentation.append(ioBase.getPath(), attributes(info));
+        }
+        else {
+            presentation.append(relativePath, attributes(info));
+            presentation.append(" (" + ioBase + ")", TextAttribute.GRAYED);
+        }
+    }
+
+    @RequiredUIAccess
+    private void renderVcs(TextItemPresentation presentation, MapInfo info) {
+        if (info == MapInfo.SEPARATOR) {
+            return;
+        }
+
+        presentation.append(vcsPresentation(info.mapping.getVcs()), attributes(info));
+    }
+
+    private LocalizeValue vcsPresentation(String vcsName) {
+        if (vcsName.isEmpty()) {
+            return VcsLocalize.noneVcsPresentation();
+        }
+
+        VcsDescriptor vcs = myAllVcss.get(vcsName);
+        return vcs != null ? vcs.getDisplayName() : VcsLocalize.unknownVcsPresentation(vcsName);
+    }
+
+    private class VcsColumnEditor implements TableItemEditor<MapInfo, String> {
+        @RequiredUIAccess
+        @Override
+        public ValueComponent<String> createComponent(MapInfo item) {
+            ComboBox.Builder<String> builder = ComboBox.builder();
+            builder.add("", VcsLocalize.noneVcsPresentation());
+            for (VcsDescriptor descriptor : myVcsManager.getAllVcss()) {
+                builder.add(descriptor.getId(), descriptor.getDisplayName());
+            }
+            return builder.build();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void commit(MapInfo item, @Nullable String value) {
+            Collection<AbstractVcs> activeVcses = getActiveVcses();
+            item.mapping.setVcs(value == null ? "" : value);
+            checkNotifyListeners(activeVcses);
+        }
+
+        @Override
+        public boolean isEditable(MapInfo item) {
+            return !myIsDisabled && item != MapInfo.SEPARATOR && item.type != MapInfo.Type.UNREGISTERED;
+        }
+    }
+
+    private class MappingAddAction extends AddAction<MapInfo> {
+        @RequiredUIAccess
+        @Override
+        protected void doAdd(AnActionEvent e) {
+            if (myIsDisabled || !rootsOfOneKindInSelection(getSelectedValues(e))) {
+                return;
+            }
+
+            List<MapInfo> unregistered = ContainerUtil.filter(getSelectedValues(e), info -> info.type == MapInfo.Type.UNREGISTERED);
+            if (unregistered.isEmpty()) {
+                addMapping();
+            }
+            else {
+                addSelectedUnregisteredMappings(unregistered);
+            }
+            updateRootCheckers();
+        }
+
+    }
+
+    private class MappingEditAction extends EditAction<MapInfo> {
+        @RequiredUIAccess
+        @Override
+        protected void doEdit(MapInfo value, AnActionEvent e) {
+            if (myIsDisabled || !onlyRegisteredRootsInSelection(getSelectedValues(e))) {
+                return;
+            }
+
+            editMapping(value);
+            updateRootCheckers();
+        }
+
+    }
+
+    private class MappingRemoveAction extends RemoveAction<MapInfo> {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            if (myIsDisabled || !onlyRegisteredRootsInSelection(getSelectedValues(e))) {
+                return;
+            }
+
+            removeMappings(getSelectedValues(e));
+            updateRootCheckers();
+        }
+
+    }
+
+    private static boolean rootsOfOneKindInSelection(List<MapInfo> selection) {
+        if (selection.isEmpty()) {
+            return true;
+        }
+        if (selection.size() == 1 && selection.get(0) == MapInfo.SEPARATOR) {
+            return false;
+        }
+        int registered = ContainerUtil.filter(selection, info -> info.type.isRegistered()).size();
+        return registered == selection.size() || registered == 0;
+    }
+
+    private static boolean onlyRegisteredRootsInSelection(List<MapInfo> selection) {
+        return !selection.isEmpty() && ContainerUtil.filter(selection, info -> info.type.isRegistered()).size() == selection.size();
     }
 
     private void updateRootCheckers() {
         myCheckers.clear();
-        List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
-        for (VcsRootChecker checker : checkers) {
+        for (VcsRootChecker checker : VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList()) {
             VcsKey key = checker.getSupportedVcs();
-            AbstractVcs vcs = myVcsManager.findVcsByName(key.getName());
-            if (vcs == null) {
+            if (myVcsManager.findVcsByName(key.getName()) == null) {
                 continue;
             }
             myCheckers.put(key.getName(), checker);
         }
     }
 
+    @RequiredUIAccess
     private void initializeModel() {
         List<MapInfo> mappings = new ArrayList<>();
-        for (VcsDirectoryMapping mapping : ProjectLevelVcsManager.getInstance(myProject).getDirectoryMappings()) {
+        for (VcsDirectoryMapping mapping : myVcsManager.getDirectoryMappings()) {
             mappings.add(MapInfo.registered(
                 new VcsDirectoryMapping(mapping.getDirectory(), mapping.getVcs(), mapping.getRootSettings()),
                 isMappingValid(mapping)
@@ -365,20 +375,10 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
             }
         }
 
-        myModel = new ListTableModel<>(new ColumnInfo[]{DIRECTORY, VCS_SETTING}, mappings, 0);
-        myDirectoryMappingTable.setModelAndUpdateColumns(myModel);
-
-        myRecentlyChangedConfigurable.reset();
-        myLimitHistory.reset();
+        myModel.replaceAll(mappings);
         myScopeFilterConfig.reset();
-        myBaseRevisionTexts.setSelected(myVcsConfiguration.INCLUDE_TEXT_INTO_SHELF);
-        myShowChangedRecursively.setSelected(myVcsConfiguration.SHOW_DIRTY_RECURSIVELY);
-        myCommitMessageMarginConfigurable.reset();
-        myShowUnversionedFiles.setSelected(myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT);
-        myCheckCommitMessageSpelling.setSelected(myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING);
     }
 
-    
     private Collection<VcsRootError> findUnregisteredRoots() {
         return ContainerUtil.filter(
             VcsRootErrorsFinder.getInstance(myProject).find(),
@@ -389,45 +389,50 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     private boolean isMappingValid(VcsDirectoryMapping mapping) {
         String vcs = mapping.getVcs();
         VcsRootChecker checker = myCheckers.get(vcs);
-        return checker == null || (mapping.isDefaultMapping() ? checker.isRoot(myProject.getBasePath()) : checker.isRoot(mapping.getDirectory()));
+        return checker == null
+            || (mapping.isDefaultMapping() ? checker.isRoot(myProject.getBasePath()) : checker.isRoot(mapping.getDirectory()));
     }
 
-    public static DefaultComboBoxModel buildVcsWrappersModel(Project project) {
-        VcsDescriptor[] vcsDescriptors = ProjectLevelVcsManager.getInstance(project).getAllVcss();
-        VcsDescriptor[] result = new VcsDescriptor[vcsDescriptors.length + 1];
-        result[0] = VcsDescriptor.createFictive();
-        System.arraycopy(vcsDescriptors, 0, result, 1, vcsDescriptors.length);
-        return new DefaultComboBoxModel(result);
+    private List<MapInfo> currentItems() {
+        List<MapInfo> items = new ArrayList<>();
+        for (MapInfo info : myModel) {
+            items.add(info);
+        }
+        return items;
     }
 
+    @RequiredUIAccess
     private void addMapping() {
-        VcsMappingConfigurationDialog dlg = new VcsMappingConfigurationDialog(myProject, VcsBundle.message("directory.mapping.add.title"));
+        VcsMappingConfigurationDialog dialog =
+            new VcsMappingConfigurationDialog(myProject, VcsLocalize.directoryMappingAddTitle().get());
         // due to wonderful UI designer bug
-        dlg.initProjectMessage();
-        if (dlg.showAndGet()) {
-            addMapping(dlg.getMapping());
+        dialog.initProjectMessage();
+        if (dialog.showAndGet()) {
+            addMapping(dialog.getMapping());
         }
     }
 
+    @RequiredUIAccess
     private void addMapping(VcsDirectoryMapping mapping) {
-        List<MapInfo> items = new ArrayList<>(myModel.getItems());
+        List<MapInfo> items = currentItems();
         items.add(MapInfo.registered(
             new VcsDirectoryMapping(mapping.getDirectory(), mapping.getVcs(), mapping.getRootSettings()),
             isMappingValid(mapping)
         ));
-        Collections.sort(items, MapInfo.COMPARATOR);
-        myModel.setItems(items);
+        items.sort(MapInfo.COMPARATOR);
+        myModel.replaceAll(items);
         checkNotifyListeners(getActiveVcses());
     }
 
+    @RequiredUIAccess
     private void addSelectedUnregisteredMappings(List<MapInfo> infos) {
-        List<MapInfo> items = new ArrayList<>(myModel.getItems());
+        List<MapInfo> items = currentItems();
         for (MapInfo info : infos) {
             items.remove(info);
             items.add(MapInfo.registered(info.mapping, isMappingValid(info.mapping)));
         }
         sortAndAddSeparatorIfNeeded(items);
-        myModel.setItems(items);
+        myModel.replaceAll(items);
         checkNotifyListeners(getActiveVcses());
     }
 
@@ -448,227 +453,78 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         else if (hasUnregistered && !hasSeparator) {
             items.add(MapInfo.SEPARATOR);
         }
-        Collections.sort(items, MapInfo.COMPARATOR);
+        items.sort(MapInfo.COMPARATOR);
     }
 
-    private void editMapping() {
-        VcsMappingConfigurationDialog dlg = new VcsMappingConfigurationDialog(myProject, VcsBundle.message("directory.mapping.remove.title"));
-        int row = myDirectoryMappingTable.getSelectedRow();
-        VcsDirectoryMapping mapping = myDirectoryMappingTable.getRow(row).mapping;
-        dlg.setMapping(mapping);
-        if (dlg.showAndGet()) {
-            setMapping(row, dlg.getMapping());
+    @RequiredUIAccess
+    private void editMapping(MapInfo info) {
+        VcsMappingConfigurationDialog dialog =
+            new VcsMappingConfigurationDialog(myProject, VcsLocalize.directoryMappingRemoveTitle().get());
+        dialog.setMapping(info.mapping);
+        if (!dialog.showAndGet()) {
+            return;
         }
-    }
 
-    private void setMapping(int row, VcsDirectoryMapping mapping) {
-        List<MapInfo> items = new ArrayList<>(myModel.getItems());
-        items.set(row, MapInfo.registered(mapping, isMappingValid(mapping)));
-        Collections.sort(items, MapInfo.COMPARATOR);
-        myModel.setItems(items);
+        List<MapInfo> items = currentItems();
+        int index = items.indexOf(info);
+        if (index < 0) {
+            return;
+        }
+
+        VcsDirectoryMapping mapping = dialog.getMapping();
+        items.set(index, MapInfo.registered(mapping, isMappingValid(mapping)));
+        items.sort(MapInfo.COMPARATOR);
+        myModel.replaceAll(items);
         checkNotifyListeners(getActiveVcses());
     }
 
-    private void removeMapping() {
-        Collection<AbstractVcs> activeVcses = getActiveVcses();
-        ArrayList<MapInfo> mappings = new ArrayList<>(myModel.getItems());
-        int index = myDirectoryMappingTable.getSelectionModel().getMinSelectionIndex();
-        Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
-        mappings.removeAll(selection);
+    @RequiredUIAccess
+    private void removeMappings(List<MapInfo> selection) {
+        if (selection.isEmpty()) {
+            return;
+        }
 
+        Collection<AbstractVcs> activeVcses = getActiveVcses();
+        List<MapInfo> items = currentItems();
+        items.removeAll(selection);
+
+        // a root the platform can still see is not gone, only unregistered - it comes back below the separator
         Collection<MapInfo> removedValidRoots = ContainerUtil.mapNotNull(
             selection,
-            info -> info.type == MapInfo.Type.NORMAL && myCheckers.get(info.mapping.getVcs()) != null ? MapInfo
-                .unregistered(info.mapping.getDirectory(), info.mapping.getVcs()) : null
+            info -> info.type == MapInfo.Type.NORMAL && myCheckers.get(info.mapping.getVcs()) != null
+                ? MapInfo.unregistered(info.mapping.getDirectory(), info.mapping.getVcs())
+                : null
         );
-        mappings.addAll(removedValidRoots);
-        sortAndAddSeparatorIfNeeded(mappings);
+        items.addAll(removedValidRoots);
+        sortAndAddSeparatorIfNeeded(items);
 
-        myModel.setItems(mappings);
-        if (mappings.size() > 0) {
-            if (index >= mappings.size()) {
-                index = mappings.size() - 1;
-            }
-            myDirectoryMappingTable.getSelectionModel().setSelectionInterval(index, index);
-        }
+        myModel.replaceAll(items);
         checkNotifyListeners(activeVcses);
     }
 
     @RequiredUIAccess
-    protected JComponent createMainComponent(Disposable uiDisposable) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBag gb = new GridBag().setDefaultInsets(JBUI.insets(0, 0, DEFAULT_VGAP, DEFAULT_HGAP))
-            .setDefaultWeightX(1)
-            .setDefaultFill(GridBagConstraints.HORIZONTAL);
-
-        panel.add(createMappingsTable(), gb.nextLine().next().fillCell().weighty(1.0));
-        panel.add(createProjectMappingDescription(), gb.nextLine().next());
-        panel.add(myLimitHistory.createComponent(uiDisposable), gb.nextLine().next());
-        panel.add(createShowRecursivelyDirtyOption(), gb.nextLine().next());
-        panel.add(createStoreBaseRevisionOption(), gb.nextLine().next());
-        panel.add(createShowChangedOption(uiDisposable), gb.nextLine().next());
-        panel.add(myScopeFilterConfig.createComponent(uiDisposable), gb.nextLine().next());
-        panel.add(createUseCommitMessageRightMargin(uiDisposable), gb.nextLine().next().fillCellHorizontally());
-        createShowUnversionedFilesOption();
-        if (Registry.is("vcs.unversioned.files.in.commit")) {
-            panel.add(myShowUnversionedFiles, gb.nextLine().next());
-        }
-        panel.add(createCheckCommitMessageSpelling(), gb.nextLine().next());
-        return panel;
-    }
-
-    private JComponent createMappingsTable() {
-        JPanel panelForTable = ToolbarDecorator.createDecorator(myDirectoryMappingTable, null)
-            .setAddAction(button -> {
-                if (onlyRegisteredRootsInSelection()) {
-                    addMapping();
-                }
-                else {
-                    addSelectedUnregisteredMappings(getSelectedUnregisteredRoots());
-                }
-                updateRootCheckers();
-            })
-            .setEditAction(button -> {
-                editMapping();
-                updateRootCheckers();
-            })
-            .setRemoveAction(button -> {
-                removeMapping();
-                updateRootCheckers();
-            })
-            .setAddActionUpdater(e -> !myIsDisabled && rootsOfOneKindInSelection())
-            .setEditActionUpdater(e -> !myIsDisabled && onlyRegisteredRootsInSelection())
-            .setRemoveActionUpdater(e -> !myIsDisabled && onlyRegisteredRootsInSelection())
-            .disableUpDownActions()
-            .createPanel();
-        panelForTable.setPreferredSize(new Dimension(-1, 200));
-        return panelForTable;
-    }
-
-    private List<MapInfo> getSelectedUnregisteredRoots() {
-        return ContainerUtil.filter(myDirectoryMappingTable.getSelection(), info -> info.type == MapInfo.Type.UNREGISTERED);
-    }
-
-    private boolean rootsOfOneKindInSelection() {
-        Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
-        if (selection.isEmpty()) {
-            return true;
-        }
-        if (selection.size() == 1 && selection.iterator().next().type == MapInfo.Type.SEPARATOR) {
-            return false;
-        }
-        List<MapInfo> selectedRegisteredRoots = getSelectedRegisteredRoots();
-        return selectedRegisteredRoots.size() == selection.size() || selectedRegisteredRoots.size() == 0;
-    }
-
-    private List<MapInfo> getSelectedRegisteredRoots() {
-        Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
-        return ContainerUtil.filter(selection, info -> info.type == MapInfo.Type.NORMAL || info.type == MapInfo.Type.INVALID);
-    }
-
-    private boolean onlyRegisteredRootsInSelection() {
-        return getSelectedRegisteredRoots().size() == myDirectoryMappingTable.getSelection().size();
-    }
-
-    private JComponent createProjectMappingDescription() {
-        JBLabel label = new JBLabel(myProjectMessage);
-        label.setComponentStyle(UIUtil.ComponentStyle.SMALL);
-        label.setFontColor(UIUtil.FontColor.BRIGHTER);
-        label.setBorder(JBUI.Borders.empty(2, 5, 2, 0));
-        return label;
-    }
-
-    private JComponent createStoreBaseRevisionOption() {
-        JBLabel noteLabel = new JBLabel("File texts bigger than " + ourMaximumFileForBaseRevisionSize / 1000 + "K are not stored");
-        noteLabel.setComponentStyle(UIUtil.ComponentStyle.SMALL);
-        noteLabel.setFontColor(UIUtil.FontColor.BRIGHTER);
-        noteLabel.setBorder(JBUI.Borders.empty(2, 25, 5, 0));
-
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(myBaseRevisionTexts, BorderLayout.NORTH);
-        panel.add(noteLabel, BorderLayout.SOUTH);
-        return panel;
-    }
-
-    @RequiredUIAccess
-    private JComponent createShowChangedOption(Disposable uiDisposable) {
-        myRecentlyChangedConfigurable = new VcsContentAnnotationConfigurable(myProject);
-        JComponent component = myRecentlyChangedConfigurable.createComponent(uiDisposable);
-        assert component != null;
-        return component;
-    }
-
-    @RequiredUIAccess
-    private JComponent createUseCommitMessageRightMargin(Disposable uiDisposable) {
-        myCommitMessageMarginConfigurable = new VcsCommitMessageMarginConfigurable(myProject, myVcsConfiguration);
-        return myCommitMessageMarginConfigurable.createComponent(uiDisposable);
-    }
-
-    private JComponent createShowRecursivelyDirtyOption() {
-        myShowChangedRecursively = new JCheckBox("Show directories with changed descendants", myVcsConfiguration.SHOW_DIRTY_RECURSIVELY);
-        return myShowChangedRecursively;
-    }
-
-    private JComponent createShowUnversionedFilesOption() {
-        myShowUnversionedFiles =
-            new JCheckBox("Show unversioned files in Commit dialog", myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT);
-        return myShowUnversionedFiles;
-    }
-
-    private JComponent createCheckCommitMessageSpelling() {
-        myCheckCommitMessageSpelling = new JBCheckBox("Check commit message spelling", myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING);
-        return myCheckCommitMessageSpelling;
-    }
-
     public void reset() {
         initializeModel();
     }
 
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         myVcsManager.setDirectoryMappings(getModelMappings());
-        myRecentlyChangedConfigurable.apply();
-        myLimitHistory.apply();
         myScopeFilterConfig.apply();
-        myVcsConfiguration.INCLUDE_TEXT_INTO_SHELF = myBaseRevisionTexts.isSelected();
-        myVcsConfiguration.SHOW_DIRTY_RECURSIVELY = myShowChangedRecursively.isSelected();
-        myCommitMessageMarginConfigurable.apply();
-        myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT = myShowUnversionedFiles.isSelected();
-        myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING = myCheckCommitMessageSpelling.isSelected();
         initializeModel();
     }
 
+    @RequiredUIAccess
     public boolean isModified() {
-        if (myRecentlyChangedConfigurable.isModified()) {
-            return true;
-        }
-        if (myLimitHistory.isModified()) {
-            return true;
-        }
         if (myScopeFilterConfig.isModified()) {
-            return true;
-        }
-        if (myVcsConfiguration.INCLUDE_TEXT_INTO_SHELF != myBaseRevisionTexts.isSelected()) {
-            return true;
-        }
-        if (myVcsConfiguration.SHOW_DIRTY_RECURSIVELY != myShowChangedRecursively.isSelected()) {
-            return true;
-        }
-        if (myCommitMessageMarginConfigurable.isModified()) {
-            return true;
-        }
-        if (myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT != myShowUnversionedFiles.isSelected()) {
-            return true;
-        }
-        if (myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING != myCheckCommitMessageSpelling.isSelected()) {
             return true;
         }
         return !getModelMappings().equals(myVcsManager.getDirectoryMappings());
     }
 
-    
     private List<VcsDirectoryMapping> getModelMappings() {
         return ContainerUtil.mapNotNull(
-            myModel.getItems(),
+            currentItems(),
             info -> info == MapInfo.SEPARATOR || info.type == MapInfo.Type.UNREGISTERED ? null : info.mapping
         );
     }
@@ -693,7 +549,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     public Collection<AbstractVcs> getActiveVcses() {
         Set<AbstractVcs> vcses = new HashSet<>();
         for (VcsDirectoryMapping mapping : getModelMappings()) {
-            if (mapping.getVcs().length() > 0) {
+            if (!mapping.getVcs().isEmpty()) {
                 vcses.add(myVcsManager.findVcsByName(mapping.getVcs()));
             }
         }

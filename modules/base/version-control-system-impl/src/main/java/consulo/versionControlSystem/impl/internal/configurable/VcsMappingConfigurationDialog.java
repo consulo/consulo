@@ -58,6 +58,14 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     private ProjectLevelVcsManager myVcsManager;
     private final Map<String, VcsDescriptor> myVcses;
 
+    private static DefaultComboBoxModel buildVcsWrappersModel(Project project) {
+        VcsDescriptor[] vcsDescriptors = ProjectLevelVcsManager.getInstance(project).getAllVcss();
+        VcsDescriptor[] result = new VcsDescriptor[vcsDescriptors.length + 1];
+        result[0] = VcsDescriptor.createFictive();
+        System.arraycopy(vcsDescriptors, 0, result, 1, vcsDescriptors.length);
+        return new DefaultComboBoxModel(result);
+    }
+
     public VcsMappingConfigurationDialog(Project project, String title) {
         super(project, false);
         myProject = project;
@@ -67,7 +75,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
             myVcses.put(vcsDescriptor.getId(), vcsDescriptor);
         }
-        myVCSComboBox.setModel(VcsDirectoryConfigurationPanel.buildVcsWrappersModel(project));
+        myVCSComboBox.setModel(buildVcsWrappersModel(project));
         myDirectoryTextField.addActionListener(new MyBrowseFolderListener(
             "Select Directory",
             "Select directory to map to a VCS",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,114 +18,196 @@ package consulo.versionControlSystem.impl.internal.change.conflict;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.binding.BindControl;
-import consulo.ui.ex.awt.binding.BindableConfigurable;
-import consulo.ui.ex.awt.binding.ControlBinder;
-import consulo.util.collection.ArrayUtil;
+import consulo.project.Project;
+import consulo.ui.Button;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.ListBox;
+import consulo.ui.RadioButton;
+import consulo.ui.ValueGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
-public class ChangelistConflictConfigurable extends BindableConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class ChangelistConflictConfigurable extends SimpleConfigurableByProperties
+    implements SearchableConfigurable, Configurable.NoScroll {
 
-  private JPanel myPanel;
-  private JPanel myOptionsPanel;
+    private final Project myProject;
+    private final ChangelistConflictTracker myConflictTracker;
 
-  @BindControl("TRACKING_ENABLED")
-  private JCheckBox myEnableCheckBox;
+    private @Nullable MutableFlatDataModel<String> myIgnoredFilesModel;
+    private @Nullable Button myClearButton;
 
-  @BindControl("SHOW_DIALOG")
-  private JCheckBox myShowDialogCheckBox;
+    private boolean myIgnoredFilesCleared;
 
-  @BindControl("HIGHLIGHT_CONFLICTS")
-  private JCheckBox myHighlightConflictsCheckBox;
-
-  @BindControl("HIGHLIGHT_NON_ACTIVE_CHANGELIST")
-  private JCheckBox myHighlightNonActiveCheckBox;
-
-  private JBList myIgnoredFiles;
-  private JButton myClearButton;
-  private boolean myIgnoredFilesCleared;
-
-  private final ChangelistConflictTracker myConflictTracker;
-
-  public ChangelistConflictConfigurable(ChangeListManagerImpl manager) {
-    super(new ControlBinder(manager.getConflictTracker().getOptions()));
-    
-    myEnableCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        UIUtil.setEnabled(myOptionsPanel, myEnableCheckBox.isSelected(), true);
-      }
-    });
-    myConflictTracker = manager.getConflictTracker();
-
-    myClearButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myIgnoredFiles.setModel(new DefaultListModel());
-        myIgnoredFilesCleared = true;
-        myClearButton.setEnabled(false);
-      }
-    });
-
-    myIgnoredFiles.getEmptyText().setText(VcsLocalize.noIgnoredFiles());
-  }
-
-  @Override
-  public JComponent createComponent() {
-    getBinder().bindAnnotations(this);
-    return myPanel;
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    Collection<String> conflicts = myConflictTracker.getIgnoredConflicts();
-    myIgnoredFiles.setListData(ArrayUtil.toStringArray(conflicts));
-    myClearButton.setEnabled(!conflicts.isEmpty());
-    UIUtil.setEnabled(myOptionsPanel, myEnableCheckBox.isSelected(), true);    
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-    super.apply();
-    if (myIgnoredFilesCleared) {
-      for (ChangelistConflictTracker.Conflict conflict : myConflictTracker.getConflicts().values()) {
-        conflict.ignored = false;        
-      }
+    public ChangelistConflictConfigurable(ChangeListManagerImpl manager) {
+        myProject = manager.getProject();
+        myConflictTracker = manager.getConflictTracker();
     }
-    myConflictTracker.optionsChanged();
-  }
 
-  @Override
-  public boolean isModified() {
-    return super.isModified() || myIgnoredFiles.getModel().getSize() != myConflictTracker.getIgnoredConflicts().size();
-  }
+    @RequiredUIAccess
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
+        ChangelistConflictTracker.Options options = myConflictTracker.getOptions();
+        VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
 
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Changelist Conflicts");
-  }
+        VerticalLayout root = VerticalLayout.create();
 
-  @Override
-  
-  public String getId() {
-    return "project.propVCSSupport.ChangelistConflict";
-  }
+        CheckBox enableBox =
+            CheckBox.create(VcsLocalize.settingsEnableChangelistConflictTracking(), options.TRACKING_ENABLED);
+        propertyBuilder.add(enableBox, () -> options.TRACKING_ENABLED, value -> options.TRACKING_ENABLED = value);
+        root.add(enableBox);
 
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
-  }
+        VerticalLayout optionsLayout = VerticalLayout.create();
+
+        CheckBox showDialogBox = CheckBox.create(VcsLocalize.settingsShowConflictResolvingDialog());
+        propertyBuilder.add(showDialogBox, () -> options.SHOW_DIALOG, value -> options.SHOW_DIALOG = value);
+        optionsLayout.add(showDialogBox);
+
+        CheckBox highlightConflictsBox = CheckBox.create(VcsLocalize.settingsHighlightFilesWithConflicts());
+        propertyBuilder.add(highlightConflictsBox, () -> options.HIGHLIGHT_CONFLICTS, value -> options.HIGHLIGHT_CONFLICTS = value);
+        optionsLayout.add(highlightConflictsBox);
+
+        CheckBox highlightNonActiveBox = CheckBox.create(VcsLocalize.settingsHighlightFilesFromNonActiveChangelists());
+        propertyBuilder.add(
+            highlightNonActiveBox,
+            () -> options.HIGHLIGHT_NON_ACTIVE_CHANGELIST,
+            value -> options.HIGHLIGHT_NON_ACTIVE_CHANGELIST = value
+        );
+        optionsLayout.add(highlightNonActiveBox);
+
+        MutableFlatDataModel<String> ignoredFilesModel = FlatDataModel.of(List.of());
+        myIgnoredFilesModel = ignoredFilesModel;
+        ListBox<String> ignoredFilesBox = ListBox.create(ignoredFilesModel);
+
+        Button clearButton = Button.create(VcsLocalize.settingsClearIgnoredConflicts());
+        clearButton.addClickListener(event -> {
+            ignoredFilesModel.removeAll();
+            myIgnoredFilesCleared = true;
+            clearButton.setEnabled(false);
+        });
+        myClearButton = clearButton;
+
+        optionsLayout.add(LabeledLayout.create(
+            VcsLocalize.settingsFilesWithIgnoredConflicts(),
+            DockLayout.create().center(ignoredFilesBox).bottom(clearButton)
+        ));
+
+        root.add(optionsLayout);
+        enableBox.addValueListener(event -> optionsLayout.setEnabledRecursive(event.getValue()));
+        optionsLayout.setEnabledRecursive(options.TRACKING_ENABLED);
+
+        VerticalLayout emptyChangelistLayout = VerticalLayout.create();
+        RadioButton showConfirmationBox = RadioButton.create(VcsLocalize.settingsShowOptionsBeforeRemoving());
+        RadioButton removeSilentlyBox = RadioButton.create(VcsLocalize.settingsRemoveSilently());
+        RadioButton doNotRemoveBox = RadioButton.create(VcsLocalize.settingsDoNotRemove());
+        ValueGroup.createBool().add(showConfirmationBox).add(removeSilentlyBox).add(doNotRemoveBox);
+
+        List<RadioButton> buttons = List.of(showConfirmationBox, removeSilentlyBox, doNotRemoveBox);
+        propertyBuilder.add(
+            () -> selectedValue(buttons),
+            value -> selectValue(buttons, value),
+            () -> settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS,
+            value -> settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS = value
+        );
+        buttons.forEach(emptyChangelistLayout::add);
+        root.add(LabeledLayout.create(VcsLocalize.settingsWhenEmptyChangelistBecomesInactive(), emptyChangelistLayout));
+
+        return root;
+    }
+
+    private static VcsShowConfirmationOption.Value selectedValue(List<RadioButton> buttons) {
+        if (Boolean.TRUE.equals(buttons.get(0).getValue())) {
+            return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
+        }
+        if (Boolean.TRUE.equals(buttons.get(1).getValue())) {
+            return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
+        }
+        return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
+    }
+
+    @RequiredUIAccess
+    private static void selectValue(List<RadioButton> buttons, VcsShowConfirmationOption.Value value) {
+        int index = switch (value) {
+            case SHOW_CONFIRMATION -> 0;
+            case DO_ACTION_SILENTLY -> 1;
+            case DO_NOTHING_SILENTLY -> 2;
+        };
+        buttons.get(index).setValue(Boolean.TRUE);
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected boolean isModified(LayoutWrapper component) {
+        if (super.isModified(component)) {
+            return true;
+        }
+        return myIgnoredFilesModel != null
+            && myIgnoredFilesModel.getSize() != myConflictTracker.getIgnoredConflicts().size();
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void apply(LayoutWrapper component) throws ConfigurationException {
+        super.apply(component);
+
+        if (myIgnoredFilesCleared) {
+            for (ChangelistConflictTracker.Conflict conflict : myConflictTracker.getConflicts().values()) {
+                conflict.ignored = false;
+            }
+            myIgnoredFilesCleared = false;
+        }
+        myConflictTracker.optionsChanged();
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void reset(LayoutWrapper component) {
+        super.reset(component);
+
+        Collection<String> conflicts = myConflictTracker.getIgnoredConflicts();
+        if (myIgnoredFilesModel != null) {
+            myIgnoredFilesModel.replaceAll(conflicts);
+        }
+        if (myClearButton != null) {
+            myClearButton.setEnabled(!conflicts.isEmpty());
+        }
+        myIgnoredFilesCleared = false;
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void disposeUIResources(LayoutWrapper component) {
+        super.disposeUIResources(component);
+
+        myIgnoredFilesModel = null;
+        myClearButton = null;
+    }
+
+    @Override
+    public LocalizeValue getDisplayName() {
+        return VcsLocalize.settingsChangelistConflictsConfigurableName();
+    }
+
+    @Override
+    public String getId() {
+        return "project.propVCSSupport.ChangelistConflict";
+    }
 }

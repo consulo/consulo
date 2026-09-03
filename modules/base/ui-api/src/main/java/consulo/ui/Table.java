@@ -22,6 +22,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.internal.UIInternal;
+import consulo.ui.color.ColorValue;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
@@ -62,6 +63,13 @@ public interface Table<Item> extends Component, HasSpeedSearch<Item>, HasItemSiz
     void deselectAll();
 
     void setShowHeader(boolean show);
+
+    /**
+     * The fill of a row as a whole, behind every column - the band an unregistered or otherwise set apart row
+     * carries. {@code null}, and a {@code null} answer from the getter, leave the row on the host default.
+     * A frontend with nowhere to put a row band ignores it rather than failing.
+     */
+    void setRowBackgroundGetter(@Nullable Function<Item, ColorValue> getter);
 
     @RequiredUIAccess
     void scrollTo(Item item);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,28 @@ package consulo.versionControlSystem.impl.internal.configurable;
 
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.util.lang.Comparing;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.IntBox;
+import consulo.ui.RadioButton;
+import consulo.ui.ValueGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.contentAnnotation.VcsContentAnnotationSettings;
+import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
+import consulo.versionControlSystem.impl.internal.contentAnnotation.VcsContentAnnotationSettingsState;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
@@ -34,291 +47,324 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeSet;
 
-public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
+public class VcsGeneralConfigurationPanel extends SimpleConfigurableByProperties implements SearchableConfigurable {
+    private final Project myProject;
 
-  private JCheckBox myForceNonEmptyComment;
-  private JCheckBox myShowReadOnlyStatusDialog;
+    private final Map<VcsShowOptionsSettingImpl, CheckBox> myPromptOptions = new LinkedHashMap<>();
+    private final List<ConfirmationGroup> myConfirmationGroups = new ArrayList<>();
 
-  private JRadioButton myShowDialogOnAddingFile;
-  private JRadioButton myPerformActionOnAddingFile;
-  private JRadioButton myDoNothingOnAddingFile;
+    private Collection<AbstractVcs> myActiveVcses = List.of();
 
-  private JRadioButton myShowDialogOnRemovingFile;
-  private JRadioButton myPerformActionOnRemovingFile;
-  private JRadioButton myDoNothingOnRemovingFile;
-
-  private JPanel myPanel;
-
-  private final JRadioButton[] myOnFileAddingGroup;
-  private final JRadioButton[] myOnFileRemovingGroup;
-
-  private final Project myProject;
-  private JPanel myPromptsPanel;
-
-  Map<VcsShowOptionsSettingImpl, JCheckBox> myPromptOptions = new LinkedHashMap<>();
-  private JPanel myRemoveConfirmationPanel;
-  private JPanel myAddConfirmationPanel;
-  private JCheckBox myCbOfferToMoveChanges;
-  private JComboBox myFailedCommitChangelistCombo;
-  private JComboBox myOnPatchCreation;
-  private JCheckBox myClearInitialCommitMessage;
-  private ButtonGroup myEmptyChangelistRemovingGroup;
-
-  public VcsGeneralConfigurationPanel(Project project) {
-
-    myProject = project;
-
-    myOnFileAddingGroup = new JRadioButton[]{
-      myShowDialogOnAddingFile,
-      myPerformActionOnAddingFile,
-      myDoNothingOnAddingFile
-    };
-
-    myOnFileRemovingGroup = new JRadioButton[]{
-      myShowDialogOnRemovingFile,
-      myPerformActionOnRemovingFile,
-      myDoNothingOnRemovingFile
-    };
-
-    myPromptsPanel.setLayout(new GridLayout(3, 0));
-
-    List<VcsShowOptionsSettingImpl> options = ProjectLevelVcsManagerEx.getInstanceEx(project).getAllOptions();
-
-    for (VcsShowOptionsSettingImpl setting : options) {
-      if (!setting.getApplicableVcses().isEmpty() || project.isDefault()) {
-        JCheckBox checkBox = new JCheckBox(setting.getDisplayName());
-        myPromptsPanel.add(checkBox);
-        myPromptOptions.put(setting, checkBox);
-      }
+    private record ConfirmationGroup(VcsConfiguration.StandardConfirmation confirmation, List<RadioButton> buttons) {
     }
 
-    myPromptsPanel.setSize(myPromptsPanel.getPreferredSize());                           // todo check text!
-    myOnPatchCreation.setName(
-      (Platform.current().os().isMac() ? "Reveal patch in" : "Show patch in ") +
-        Platform.current().fileManagerName() + " after creation:"
-    );
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-
-    VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
-
-    settings.FORCE_NON_EMPTY_COMMENT = myForceNonEmptyComment.isSelected();
-    settings.CLEAR_INITIAL_COMMIT_MESSAGE = myClearInitialCommitMessage.isSelected();
-    settings.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT = myCbOfferToMoveChanges.isSelected();
-    settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS = getSelected(myEmptyChangelistRemovingGroup);
-    settings.MOVE_TO_FAILED_COMMIT_CHANGELIST = getFailedCommitConfirm();
-
-    for (VcsShowOptionsSettingImpl setting : myPromptOptions.keySet()) {
-      setting.setValue(myPromptOptions.get(setting).isSelected());
+    public VcsGeneralConfigurationPanel(Project project) {
+        myProject = project;
     }
 
-    getAddConfirmation().setValue(getSelected(myOnFileAddingGroup));
-    getRemoveConfirmation().setValue(getSelected(myOnFileRemovingGroup));
-    applyPatchOption(settings);
+    @RequiredUIAccess
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
+        VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
+        ProjectLevelVcsManagerEx vcsManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject);
 
-    getReadOnlyStatusHandler().setShowDialog(myShowReadOnlyStatusDialog.isSelected());
-  }
+        myPromptOptions.clear();
+        myConfirmationGroups.clear();
 
-  private void applyPatchOption(VcsConfiguration settings) {
-    settings.SHOW_PATCH_IN_EXPLORER = getShowPatchValue();
-  }
-  
-  private @Nullable Boolean getShowPatchValue() {
-    int index = myOnPatchCreation.getSelectedIndex();
-    if (index == 0) {
-      return null;
-    } else {
-      return index == 1;
-    }
-  }
+        VerticalLayout root = VerticalLayout.create();
 
-  private VcsShowConfirmationOption.Value getFailedCommitConfirm() {
-    switch(myFailedCommitChangelistCombo.getSelectedIndex()) {
-      case 0: return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
-      case 1: return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
-      default: return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
-    }
-  }
+        root.add(LabeledLayout.create(
+            VcsLocalize.settingsWhenFilesAreCreated(),
+            confirmationGroup(
+                propertyBuilder,
+                vcsManager,
+                VcsConfiguration.StandardConfirmation.ADD,
+                VcsLocalize.radioAfterCreationShowOptions(),
+                VcsLocalize.radioAfterCreationAddSilently(),
+                VcsLocalize.radioAfterCreationDoNotAdd()
+            )
+        ));
 
-  private VcsShowConfirmationOption getAddConfirmation() {
-    return ProjectLevelVcsManagerEx.getInstanceEx(myProject)
-      .getConfirmation(VcsConfiguration.StandardConfirmation.ADD);
-  }
+        root.add(LabeledLayout.create(
+            VcsLocalize.settingsWhenFilesAreDeleted(),
+            confirmationGroup(
+                propertyBuilder,
+                vcsManager,
+                VcsConfiguration.StandardConfirmation.REMOVE,
+                VcsLocalize.radioAfterDeletionShowOptions(),
+                VcsLocalize.radioAfterDeletionRemoveSilently(),
+                VcsLocalize.radioAfterDeletionDoNotRemove()
+            )
+        ));
 
-  private VcsShowConfirmationOption getRemoveConfirmation() {
-    return ProjectLevelVcsManagerEx.getInstanceEx(myProject)
-      .getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
-  }
+        VerticalLayout promptsLayout = VerticalLayout.create();
+        for (VcsShowOptionsSettingImpl setting : vcsManager.getAllOptions()) {
+            if (!setting.getApplicableVcses().isEmpty() || myProject.isDefault()) {
+                CheckBox checkBox = CheckBox.create(LocalizeValue.of(setting.getDisplayName()));
+                propertyBuilder.add(checkBox, setting::getValue, setting::setValue);
+                promptsLayout.add(checkBox);
+                myPromptOptions.put(setting, checkBox);
+            }
+        }
+        root.add(LabeledLayout.create(VcsLocalize.borderDisplayDialogWhenCommandsInvoked(), promptsLayout));
 
-  private static VcsShowConfirmationOption.Value getSelected(JRadioButton[] group) {
-    if (group[0].isSelected()) return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
-    if (group[1].isSelected()) return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
-    return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
-  }
+        VerticalLayout otherLayout = VerticalLayout.create();
 
-  private static VcsShowConfirmationOption.Value getSelected(ButtonGroup group) {
-    switch (UIUtil.getSelectedButton(group)) {
-      case 0:
-        return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
-      case 1:
-        return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
-    }
-    return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
-  }
+        CheckBox offerToMoveChangesBox = CheckBox.create(VcsLocalize.checkboxChangelistMoveOffer());
+        propertyBuilder.add(
+            offerToMoveChangesBox,
+            () -> settings.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT,
+            value -> settings.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT = value
+        );
+        otherLayout.add(offerToMoveChangesBox);
 
-  private ReadonlyStatusHandlerInternal getReadOnlyStatusHandler() {
-    return ((ReadonlyStatusHandlerInternal)ReadonlyStatusHandler.getInstance(myProject));
-  }
+        CheckBox forceNonEmptyCommentBox = CheckBox.create(VcsLocalize.checkboxForceNonEmptyMessages());
+        propertyBuilder.add(
+            forceNonEmptyCommentBox,
+            () -> settings.FORCE_NON_EMPTY_COMMENT,
+            value -> settings.FORCE_NON_EMPTY_COMMENT = value
+        );
+        otherLayout.add(forceNonEmptyCommentBox);
 
-  @Override
-  public boolean isModified() {
+        ReadonlyStatusHandlerInternal readonlyStatusHandler =
+            (ReadonlyStatusHandlerInternal)ReadonlyStatusHandler.getInstance(myProject);
+        CheckBox showReadOnlyStatusDialogBox = CheckBox.create(VcsLocalize.checkboxShowClearReadOnlyStatusDialog());
+        propertyBuilder.add(showReadOnlyStatusDialogBox, readonlyStatusHandler::isShowDialog, readonlyStatusHandler::setShowDialog);
+        otherLayout.add(showReadOnlyStatusDialogBox);
 
-    VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
-    if (settings.FORCE_NON_EMPTY_COMMENT != myForceNonEmptyComment.isSelected()){
-      return true;
-    }
-    if (settings.CLEAR_INITIAL_COMMIT_MESSAGE != myClearInitialCommitMessage.isSelected()){
-      return true;
-    }
-    if (settings.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT != myCbOfferToMoveChanges.isSelected()){
-      return true;
-    }
-    if (settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS != getSelected(myEmptyChangelistRemovingGroup)){
-      return true;
-    }
+        ComboBox<VcsShowConfirmationOption.Value> failedCommitBox = ComboBox.<VcsShowConfirmationOption.Value>builder()
+            .add(VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY, VcsLocalize.settingsConfirmationYes())
+            .add(VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY, VcsLocalize.settingsConfirmationNo())
+            .add(VcsShowConfirmationOption.Value.SHOW_CONFIRMATION, VcsLocalize.settingsConfirmationAsk())
+            .build();
+        propertyBuilder.add(
+            failedCommitBox,
+            () -> settings.MOVE_TO_FAILED_COMMIT_CHANGELIST,
+            value -> settings.MOVE_TO_FAILED_COMMIT_CHANGELIST = value
+        );
+        otherLayout.add(LabeledBuilder.sided(VcsLocalize.createChangelistOnFailedCommit(), failedCommitBox));
 
-    if (!Comparing.equal(getFailedCommitConfirm(), settings.MOVE_TO_FAILED_COMMIT_CHANGELIST)) {
-      return true;
-    }
+        ComboBox<PatchPlacement> patchPlacementBox = ComboBox.<PatchPlacement>builder()
+            .add(PatchPlacement.ASK, VcsLocalize.settingsConfirmationAsk())
+            .add(PatchPlacement.SHOW, VcsLocalize.settingsConfirmationYes())
+            .add(PatchPlacement.DO_NOT_SHOW, VcsLocalize.settingsConfirmationNo())
+            .build();
+        propertyBuilder.add(
+            patchPlacementBox,
+            () -> PatchPlacement.of(settings.SHOW_PATCH_IN_EXPLORER),
+            value -> settings.SHOW_PATCH_IN_EXPLORER = value.myValue
+        );
+        LocalizeValue fileManagerName = LocalizeValue.of(Platform.current().fileManagerName());
+        otherLayout.add(LabeledBuilder.sided(
+            Platform.current().os().isMac()
+                ? VcsLocalize.settingsRevealPatchInAfterCreation(fileManagerName)
+                : VcsLocalize.settingsShowPatchInAfterCreation(fileManagerName),
+            patchPlacementBox
+        ));
 
-    if (getReadOnlyStatusHandler().isShowDialog() != myShowReadOnlyStatusDialog.isSelected()) {
-      return true;
-    }
+        root.add(otherLayout);
 
-    for (VcsShowOptionsSettingImpl setting : myPromptOptions.keySet()) {
-      if (setting.getValue() != myPromptOptions.get(setting).isSelected()) return true;
-    }
+        root.add(LabeledLayout.create(VcsLocalize.settingsGroupChanges(), createChangesLayout(propertyBuilder, settings)));
 
-    if (getSelected(myOnFileAddingGroup) != getAddConfirmation().getValue()) return true;
-    if (getSelected(myOnFileRemovingGroup) != getRemoveConfirmation().getValue()) return true;
-    if (! Comparing.equal(settings.SHOW_PATCH_IN_EXPLORER, getShowPatchValue())) return true;
-
-    return false;
-  }
-
-  @Override
-  public void reset() {
-    VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
-    myForceNonEmptyComment.setSelected(settings.FORCE_NON_EMPTY_COMMENT);
-    myClearInitialCommitMessage.setSelected(settings.CLEAR_INITIAL_COMMIT_MESSAGE);
-    myCbOfferToMoveChanges.setSelected(settings.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT);
-    int id = settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS.getId();
-    UIUtil.setSelectedButton(myEmptyChangelistRemovingGroup, id == 0 ? 0 : id == 1 ? 2 : 1);
-    myShowReadOnlyStatusDialog.setSelected(getReadOnlyStatusHandler().isShowDialog());
-    if (settings.MOVE_TO_FAILED_COMMIT_CHANGELIST == VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY) {
-      myFailedCommitChangelistCombo.setSelectedIndex(0);
-    }
-    else if (settings.MOVE_TO_FAILED_COMMIT_CHANGELIST == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
-      myFailedCommitChangelistCombo.setSelectedIndex(1);
-    }
-    else {
-      myFailedCommitChangelistCombo.setSelectedIndex(2);
+        return root;
     }
 
-    for (VcsShowOptionsSettingImpl setting : myPromptOptions.keySet()) {
-      myPromptOptions.get(setting).setSelected(setting.getValue());
+    @RequiredUIAccess
+    private Component createChangesLayout(PropertyBuilder propertyBuilder, VcsConfiguration settings) {
+        VerticalLayout changesLayout = VerticalLayout.create();
+
+        CheckBox limitHistoryBox = CheckBox.create(VcsLocalize.settingsLimitHistoryBy(), settings.LIMIT_HISTORY);
+        propertyBuilder.add(limitHistoryBox, () -> settings.LIMIT_HISTORY, value -> settings.LIMIT_HISTORY = value);
+
+        IntBox historyRowsBox = IntBox.create(settings.MAXIMUM_HISTORY_ROWS).withRange(10, 1000000).withStep(10);
+        propertyBuilder.add(historyRowsBox, () -> settings.MAXIMUM_HISTORY_ROWS, value -> settings.MAXIMUM_HISTORY_ROWS = value);
+        changesLayout.add(VcsSettingsRows.gated(limitHistoryBox, historyRowsBox, VcsLocalize.settingsRows()));
+
+        CheckBox showDirtyRecursivelyBox =
+            CheckBox.create(VcsLocalize.settingsShowDirectoriesWithChangedDescendants(), settings.SHOW_DIRTY_RECURSIVELY);
+        propertyBuilder.add(
+            showDirtyRecursivelyBox,
+            () -> settings.SHOW_DIRTY_RECURSIVELY,
+            value -> settings.SHOW_DIRTY_RECURSIVELY = value
+        );
+        changesLayout.add(showDirtyRecursivelyBox);
+
+        VcsContentAnnotationSettings annotationSettings = VcsContentAnnotationSettings.getInstance(myProject);
+
+        CheckBox showChangedInLastBox = CheckBox.create(VcsLocalize.settingsShowChangedInLast(), annotationSettings.isShow());
+        propertyBuilder.add(showChangedInLastBox, annotationSettings::isShow, annotationSettings::setShow);
+
+        IntBox changedInLastDaysBox =
+            IntBox.create(annotationSettings.getLimitDays()).withRange(1, VcsContentAnnotationSettingsState.ourMaxDays);
+        propertyBuilder.add(changedInLastDaysBox, annotationSettings::getLimitDays, annotationSettings::setLimit);
+        changesLayout.add(VcsSettingsRows.gated(showChangedInLastBox, changedInLastDaysBox, VcsLocalize.settingsDays()));
+
+        if (!myProject.isDefault()) {
+            CheckBox trackChangedOnServerBox = CheckBox.create(
+                VcsLocalize.vcsConfigTrackChangedOnServer(),
+                settings.CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND
+            );
+            propertyBuilder.add(
+                trackChangedOnServerBox,
+                () -> settings.CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND,
+                value -> settings.CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND = value
+            );
+
+            IntBox intervalBox = IntBox.create(settings.CHANGED_ON_SERVER_INTERVAL).withRange(5, 48 * 10 * 60).withStep(5);
+            propertyBuilder.add(
+                intervalBox,
+                () -> settings.CHANGED_ON_SERVER_INTERVAL,
+                value -> settings.CHANGED_ON_SERVER_INTERVAL = value
+            );
+            changesLayout.add(VcsSettingsRows.gated(trackChangedOnServerBox, intervalBox, VcsLocalize.changesMinutes()));
+        }
+
+        return changesLayout;
     }
 
-    selectInGroup(myOnFileAddingGroup, getAddConfirmation());
-    selectInGroup(myOnFileRemovingGroup, getRemoveConfirmation());
-    if (settings.SHOW_PATCH_IN_EXPLORER == null) {
-      myOnPatchCreation.setSelectedIndex(0);
-    } else if (Boolean.TRUE.equals(settings.SHOW_PATCH_IN_EXPLORER)) {
-      myOnPatchCreation.setSelectedIndex(1);
-    } else {
-      myOnPatchCreation.setSelectedIndex(2);
-    }
-  }
+    @RequiredUIAccess
+    private Component confirmationGroup(
+        PropertyBuilder propertyBuilder,
+        ProjectLevelVcsManagerEx vcsManager,
+        VcsConfiguration.StandardConfirmation confirmation,
+        LocalizeValue showConfirmationText,
+        LocalizeValue doActionText,
+        LocalizeValue doNothingText
+    ) {
+        VcsShowConfirmationOptionImpl option = vcsManager.getConfirmation(confirmation);
 
-  private static void selectInGroup(JRadioButton[] group, VcsShowConfirmationOption confirmation) {
-    VcsShowConfirmationOption.Value value = confirmation.getValue();
-    int index;
-    //noinspection EnumSwitchStatementWhichMissesCases
-    switch(value) {
-      case SHOW_CONFIRMATION: index = 0; break;
-      case DO_ACTION_SILENTLY: index = 1; break;
-      default: index = 2;
-    }
-    group[index].setSelected(true);
-  }
+        RadioButton showConfirmationBox = RadioButton.create(showConfirmationText);
+        RadioButton doActionBox = RadioButton.create(doActionText);
+        RadioButton doNothingBox = RadioButton.create(doNothingText);
 
-  public JComponent getPanel() {
-    return myPanel;
-  }
+        ValueGroup.createBool().add(showConfirmationBox).add(doActionBox).add(doNothingBox);
 
-  public void updateAvailableOptions(Collection<AbstractVcs> activeVcses) {
-    for (VcsShowOptionsSettingImpl setting : myPromptOptions.keySet()) {
-      JCheckBox checkBox = myPromptOptions.get(setting);
-      checkBox.setEnabled(setting.isApplicableTo(activeVcses) || myProject.isDefault());
-      if (!myProject.isDefault()) {
-        checkBox.setToolTipText(VcsLocalize.tooltipTextActionApplicableToVcses(composeText(setting.getApplicableVcses())).get());
-      }
+        List<RadioButton> buttons = List.of(showConfirmationBox, doActionBox, doNothingBox);
+        propertyBuilder.add(
+            () -> selectedValue(buttons),
+            value -> selectValue(buttons, value),
+            option::getValue,
+            option::setValue
+        );
+        myConfirmationGroups.add(new ConfirmationGroup(confirmation, buttons));
+
+        VerticalLayout layout = VerticalLayout.create();
+        buttons.forEach(layout::add);
+        return layout;
     }
 
-    if (!myProject.isDefault()) {
-      ProjectLevelVcsManagerEx vcsManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject);
-      VcsShowConfirmationOptionImpl addConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.ADD);
-      UIUtil.setEnabled(myAddConfirmationPanel, addConfirmation.isApplicableTo(activeVcses), true);
-      myAddConfirmationPanel.setToolTipText(
-        VcsLocalize.tooltipTextActionApplicableToVcses(composeText(addConfirmation.getApplicableVcses())).get()
-      );
-
-      VcsShowConfirmationOptionImpl removeConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
-      UIUtil.setEnabled(myRemoveConfirmationPanel, removeConfirmation.isApplicableTo(activeVcses), true);
-      myRemoveConfirmationPanel.setToolTipText(
-        VcsLocalize.tooltipTextActionApplicableToVcses(composeText(removeConfirmation.getApplicableVcses())).get()
-      );
+    private static VcsShowConfirmationOption.Value selectedValue(List<RadioButton> buttons) {
+        if (Boolean.TRUE.equals(buttons.get(0).getValue())) {
+            return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
+        }
+        if (Boolean.TRUE.equals(buttons.get(1).getValue())) {
+            return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
+        }
+        return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
     }
-  }
 
-  private static String composeText(List<AbstractVcs> applicableVcses) {
-    TreeSet<String> result = new TreeSet<>();
-    for (AbstractVcs abstractVcs : applicableVcses) {
-      result.add(abstractVcs.getDisplayName().get());
+    @RequiredUIAccess
+    private static void selectValue(List<RadioButton> buttons, VcsShowConfirmationOption.Value value) {
+        int index = switch (value) {
+            case SHOW_CONFIRMATION -> 0;
+            case DO_ACTION_SILENTLY -> 1;
+            case DO_NOTHING_SILENTLY -> 2;
+        };
+        buttons.get(index).setValue(Boolean.TRUE);
     }
-    return StringUtil.join(result, ", ");
-  }
 
-  
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Confirmation");
-  }
+    @RequiredUIAccess
+    @Override
+    protected void apply(LayoutWrapper component) throws ConfigurationException {
+        VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
+        boolean oldTrackChangedOnServer = settings.CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND;
 
-  @Override
-  public JComponent createComponent() {
-    return getPanel();
-  }
+        super.apply(component);
 
-  @Override
-  public void disposeUIResources() {
-  }
+        if (!myProject.isDefault()) {
+            RemoteRevisionsCache.getInstance(myProject).updateAutomaticRefreshAlarmState(
+                oldTrackChangedOnServer != settings.CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND
+            );
+        }
+    }
 
-  @Override
-  
-  public String getId() {
-    return "project.propVCSSupport.Confirmation";
-  }
+    @RequiredUIAccess
+    @Override
+    protected void reset(LayoutWrapper component) {
+        super.reset(component);
 
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
-  }
+        updateAvailableOptions(myActiveVcses);
+    }
+
+    @RequiredUIAccess
+    public void updateAvailableOptions(Collection<AbstractVcs> activeVcses) {
+        myActiveVcses = activeVcses;
+
+        for (Map.Entry<VcsShowOptionsSettingImpl, CheckBox> entry : myPromptOptions.entrySet()) {
+            VcsShowOptionsSettingImpl setting = entry.getKey();
+            CheckBox checkBox = entry.getValue();
+            checkBox.setEnabled(setting.isApplicableTo(activeVcses) || myProject.isDefault());
+            if (!myProject.isDefault()) {
+                checkBox.setToolTipText(VcsLocalize.tooltipTextActionApplicableToVcses(composeText(setting.getApplicableVcses())));
+            }
+        }
+
+        if (myProject.isDefault()) {
+            return;
+        }
+
+        ProjectLevelVcsManagerEx vcsManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject);
+        for (ConfirmationGroup group : myConfirmationGroups) {
+            VcsShowConfirmationOptionImpl option = vcsManager.getConfirmation(group.confirmation());
+            LocalizeValue tooltip = VcsLocalize.tooltipTextActionApplicableToVcses(composeText(option.getApplicableVcses()));
+            for (RadioButton button : group.buttons()) {
+                button.setEnabled(option.isApplicableTo(activeVcses));
+                button.setToolTipText(tooltip);
+            }
+        }
+    }
+
+    private static String composeText(List<AbstractVcs> applicableVcses) {
+        TreeSet<String> result = new TreeSet<>();
+        for (AbstractVcs abstractVcs : applicableVcses) {
+            result.add(abstractVcs.getDisplayName().get());
+        }
+        return StringUtil.join(result, ", ");
+    }
+
+    private enum PatchPlacement {
+        ASK(null),
+        SHOW(Boolean.TRUE),
+        DO_NOT_SHOW(Boolean.FALSE);
+
+        private final @Nullable Boolean myValue;
+
+        PatchPlacement(@Nullable Boolean value) {
+            myValue = value;
+        }
+
+        static PatchPlacement of(@Nullable Boolean value) {
+            if (value == null) {
+                return ASK;
+            }
+            return value ? SHOW : DO_NOT_SHOW;
+        }
+    }
+
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Confirmation");
+    }
+
+    @Override
+    public String getId() {
+        return "project.propVCSSupport.Confirmation";
+    }
 }

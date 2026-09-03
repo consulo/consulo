@@ -26,10 +26,12 @@ import consulo.ui.TableColumn;
 import consulo.ui.TableItemEditor;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.model.FlatDataModel;
 import io.qt.core.QSize;
+import io.qt.gui.QBrush;
 import io.qt.core.Qt;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QHeaderView;
@@ -50,6 +52,7 @@ import java.util.function.Function;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> implements Table<Item> {
     private final FlatDataModel<Item> myModel;
+    private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
 
     private final List<DesktopQtTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
@@ -69,6 +72,13 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         myModel = model;
 
         rebuildRows();
+
+        // rows added or dropped after the table was built have to reach the widget - the sort a clicked header
+        // put on them is dropped with them, since the item it ordered around may be one of the rows that went
+        model.addListener(event -> {
+            rebuildRows();
+            updateRows();
+        });
     }
 
     @Override
@@ -116,6 +126,12 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
     @Override
     public FlatDataModel<Item> getDataModel() {
         return myModel;
+    }
+
+    @Override
+    public void setRowBackgroundGetter(@Nullable Function<Item, ColorValue> getter) {
+        myRowBackgroundGetter = getter;
+        updateRows();
     }
 
     @Override
@@ -235,11 +251,20 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         component.removeCellWidget(row, index);
 
         DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-        column.getTextRender().render(presentation, RenderItem.of(value, isSelected(row)));
+        column.getRender().render(presentation, RenderItem.of(value, isSelected(row)), item);
 
         QTableWidgetItem cell = new QTableWidgetItem(presentation.toString());
         cell.setFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable);
         cell.setTextAlignment(toAlignment(column.getAlignment()));
+
+        // the band belongs to the row, so it goes under every column; a selected row keeps the selection fill
+        Function<Item, ColorValue> rowBackgroundGetter = myRowBackgroundGetter;
+        if (rowBackgroundGetter != null && !isSelected(row)) {
+            ColorValue rowBackground = rowBackgroundGetter.apply(item);
+            if (rowBackground != null) {
+                cell.setBackground(new QBrush(TargetQt.to(rowBackground)));
+            }
+        }
 
         component.setItem(row, index, cell);
     }

@@ -31,6 +31,12 @@ public interface TableColumn<Item, Value> {
 
     TableColumn<Item, Value> setRender(ComponentItemRender<Value> render);
 
+    /**
+     * Render which is handed the row as well as the value, for a column whose look follows the kind of row
+     * it sits in. Mutually exclusive with the other renders - the last one set wins.
+     */
+    TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render);
+
     TableColumn<Item, Value> setWidth(int pixels);
 
     TableColumn<Item, Value> setResizable(boolean resizable);

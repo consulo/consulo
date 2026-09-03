@@ -23,6 +23,7 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
+import consulo.versionControlSystem.impl.internal.configurable.VcsDirectoryMappingsConfigurable;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -177,7 +178,7 @@ public final class VcsRootProblemNotifier {
                 if (!myProject.isDisposed()) {
                     ShowConfigurableService configurableService = Application.get().getInstance(ShowConfigurableService.class);
 
-                    configurableService.showAndSelect(myProject, StandardConfigurableIds.VCS_GROUP).whenComplete((o, throwable) -> {
+                    configurableService.showAndSelect(myProject, VcsDirectoryMappingsConfigurable.class).whenComplete((o, throwable) -> {
                         BackgroundTaskUtil.executeOnPooledThread(myProject, () -> {
                             Collection<VcsRootError> errorsAfterPossibleFix = new VcsRootProblemNotifier(myProject).scan();
                             if (errorsAfterPossibleFix.isEmpty() && !notification.isExpired()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,104 +22,117 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kirill Likhodedov
  */
 class VcsUpdateInfoScopeFilterConfigurable implements NamedScopesHolder.ScopeListener {
-  
-  private final JCheckBox myCheckbox;
-  private final JComboBox myComboBox;
-  private final Project myProject;
-  private final VcsConfiguration myVcsConfiguration;
-  private final NamedScopesHolder[] myNamedScopeHolders;
+    private final Project myProject;
+    private final VcsConfiguration myVcsConfiguration;
+    private final NamedScopesHolder[] myNamedScopeHolders;
 
-  VcsUpdateInfoScopeFilterConfigurable(Project project, VcsConfiguration vcsConfiguration) {
-    myProject = project;
-    myVcsConfiguration = vcsConfiguration;
-    myCheckbox = new JCheckBox(VcsLocalize.settingsFilterUpdateProjectInfoByScope().get());
-    myComboBox = new JComboBox();
-    
-    myComboBox.setEnabled(myCheckbox.isSelected());
-    myCheckbox.addChangeListener(e -> myComboBox.setEnabled(myCheckbox.isSelected()));
+    private final MutableFlatDataModel<String> myScopeModel = FlatDataModel.of(List.of());
 
-    myNamedScopeHolders = NamedScopesHolder.getAllNamedScopeHolders(myProject);
-    for (NamedScopesHolder holder : myNamedScopeHolders) {
-      holder.addScopeListener(this);
-    }
-  }
-  
-  @Override
-  public void scopesChanged() {
-    reset();
-  }
-  
+    private @Nullable CheckBox myCheckBox;
+    private @Nullable ComboBox<String> myComboBox;
 
-  @RequiredUIAccess
-  public @Nullable JComponent createComponent(Disposable uiDisposable) {
-    JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-    panel.add(myCheckbox);
-    panel.add(myComboBox);
-    panel.add(Box.createHorizontalStrut(UIUtil.DEFAULT_HGAP));
-    panel.add(new LinkLabel<>("Edit scopes", null, (aSource, aLinkData) -> {
-      Settings optionsEditor = DataManager.getInstance().getDataContext(panel).getData(Settings.KEY);
-      if (optionsEditor != null) {
-        optionsEditor.select("project.scopes");
-      }
-    }));
-    return panel;
-  }
+    VcsUpdateInfoScopeFilterConfigurable(Project project, VcsConfiguration vcsConfiguration) {
+        myProject = project;
+        myVcsConfiguration = vcsConfiguration;
 
-  @RequiredUIAccess
-  public boolean isModified() {
-    return !Comparing.equal(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME, getScopeFilterName());
-  }
-
-  @RequiredUIAccess
-  public void apply() throws ConfigurationException {
-    myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME = getScopeFilterName();
-  }
-
-  @RequiredUIAccess
-  public void reset() {
-    myComboBox.removeAllItems();
-    boolean selection = false;
-    for (NamedScopesHolder holder : myNamedScopeHolders) {
-      for (NamedScope scope : holder.getEditableScopes()) {
-        myComboBox.addItem(scope.getName());
-        if (!selection && scope.getName().equals(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME)) {
-          selection = true;
+        myNamedScopeHolders = NamedScopesHolder.getAllNamedScopeHolders(myProject);
+        for (NamedScopesHolder holder : myNamedScopeHolders) {
+            holder.addScopeListener(this);
         }
-      }
     }
-    if (selection) {
-      myComboBox.setSelectedItem(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME);
-    }
-    myCheckbox.setSelected(selection);
-  }
 
-  @RequiredUIAccess
-  public void disposeUIResources() {
-    for (NamedScopesHolder holder : myNamedScopeHolders) {
-      holder.removeScopeListener(this);
+    @Override
+    public void scopesChanged() {
+        reset();
     }
-  }
-  
-  private String getScopeFilterName() {
-    if (!myCheckbox.isSelected()) {
-      return null;
-    }
-    return (String)myComboBox.getSelectedItem();
-  }
 
+    @RequiredUIAccess
+    public Component createComponent(Disposable uiDisposable) {
+        CheckBox checkBox = CheckBox.create(VcsLocalize.settingsFilterUpdateProjectInfoByScope());
+        ComboBox<String> comboBox = ComboBox.create(myScopeModel);
+
+        comboBox.setEnabled(checkBox.getValueOrError());
+        checkBox.addValueListener(event -> comboBox.setEnabled(event.getValue()));
+
+        myCheckBox = checkBox;
+        myComboBox = comboBox;
+
+        Hyperlink editScopes = Hyperlink.create(VcsLocalize.settingsEditScopes(), event -> {
+            Settings settings = DataManager.getInstance().getDataContext(comboBox).getData(Settings.KEY);
+            if (settings != null) {
+                settings.select("project.scopes");
+            }
+        });
+
+        return HorizontalLayout.create(5).add(checkBox).add(comboBox).add(editScopes);
+    }
+
+    @RequiredUIAccess
+    public boolean isModified() {
+        return !Comparing.equal(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME, getScopeFilterName());
+    }
+
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME = getScopeFilterName();
+    }
+
+    @RequiredUIAccess
+    public void reset() {
+        if (myCheckBox == null || myComboBox == null) {
+            return;
+        }
+
+        List<String> scopes = new ArrayList<>();
+        for (NamedScopesHolder holder : myNamedScopeHolders) {
+            for (NamedScope scope : holder.getEditableScopes()) {
+                scopes.add(scope.getName());
+            }
+        }
+        myScopeModel.replaceAll(scopes);
+
+        boolean selection = scopes.contains(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME);
+        if (selection) {
+            myComboBox.setValue(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME);
+        }
+        myCheckBox.setValue(selection);
+        myComboBox.setEnabled(selection);
+    }
+
+    @RequiredUIAccess
+    public void disposeUIResources() {
+        for (NamedScopesHolder holder : myNamedScopeHolders) {
+            holder.removeScopeListener(this);
+        }
+        myCheckBox = null;
+        myComboBox = null;
+    }
+
+    @RequiredUIAccess
+    private @Nullable String getScopeFilterName() {
+        if (myCheckBox == null || myComboBox == null || !myCheckBox.getValueOrError()) {
+            return null;
+        }
+        return myComboBox.getValue();
+    }
 }

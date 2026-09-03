@@ -15,52 +15,39 @@
  */
 package consulo.versionControlSystem.impl.internal.configurable;
 
-import consulo.configurable.UnnamedConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.contentAnnotation.VcsContentAnnotationSettings;
 import consulo.versionControlSystem.impl.internal.contentAnnotation.VcsContentAnnotationSettingsState;
-
-import javax.swing.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author Irina.Chernushina
  * @since 2011-08-04
  */
-public class VcsContentAnnotationConfigurable extends VcsCheckBoxWithSpinnerConfigurable implements UnnamedConfigurable {
-  public VcsContentAnnotationConfigurable(Project project) {
-    super(project, "Show changed in last", "days");
-  }
+public class VcsContentAnnotationConfigurable extends SimpleConfigurableByProperties {
+    private final Project myProject;
 
-  @Override
-  protected SpinnerNumberModel createSpinnerModel() {
-    return new SpinnerNumberModel(1, 1, VcsContentAnnotationSettingsState.ourMaxDays, 1);
-  }
+    public VcsContentAnnotationConfigurable(Project project) {
+        myProject = project;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    VcsContentAnnotationSettings settings = VcsContentAnnotationSettings.getInstance(myProject);
-    if (myHighlightRecentlyChanged.isSelected() != settings.isShow()) return true;
-    if (!Comparing.equal(myHighlightInterval.getValue(), settings.getLimitDays())) return true;
-    return false;
-  }
+    @RequiredUIAccess
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
+        VcsContentAnnotationSettings settings = VcsContentAnnotationSettings.getInstance(myProject);
 
-  @RequiredUIAccess
-  @Override
-  public void apply() {
-    VcsContentAnnotationSettings settings = VcsContentAnnotationSettings.getInstance(myProject);
-    settings.setShow(myHighlightRecentlyChanged.isSelected());
-    settings.setLimit(((Number)myHighlightInterval.getValue()).intValue());
-  }
+        CheckBox showBox = CheckBox.create(VcsLocalize.settingsShowChangedInLast(), settings.isShow());
+        propertyBuilder.add(showBox, settings::isShow, settings::setShow);
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    VcsContentAnnotationSettings settings = VcsContentAnnotationSettings.getInstance(myProject);
-    myHighlightRecentlyChanged.setSelected(settings.isShow());
-    myHighlightInterval.setValue(settings.getLimitDays());
-    myHighlightInterval.setEnabled(myHighlightRecentlyChanged.isSelected());
-  }
+        IntBox daysBox = IntBox.create(settings.getLimitDays()).withRange(1, VcsContentAnnotationSettingsState.ourMaxDays);
+        propertyBuilder.add(daysBox, settings::getLimitDays, settings::setLimit);
+
+        return VcsSettingsRows.gated(showBox, daysBox, VcsLocalize.settingsDays());
+    }
 }

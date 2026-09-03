@@ -67,6 +67,10 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
     }
 
     @Override
+    public void setStep(int step) {
+    }
+
+    @Override
     public Disposable addValidator(Validator<Integer> validator) {
         return () -> {
         };

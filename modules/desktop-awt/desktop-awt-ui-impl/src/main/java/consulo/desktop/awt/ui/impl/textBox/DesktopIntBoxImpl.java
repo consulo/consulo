@@ -34,8 +34,8 @@ import java.util.Objects;
  */
 public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopIntBoxImpl.MyJSpinner> implements IntBox {
     class MyJSpinner extends JSpinner implements FromSwingComponentWrapper {
-        public void setRange(int value, int min, int max) {
-            setModel(new SpinnerNumberModel(value, min, max, 1));
+        public void updateModel(int value, int min, int max, int step) {
+            setModel(new SpinnerNumberModel(Math.min(Math.max(value, min), max), min, max, step));
         }
 
         
@@ -47,6 +47,10 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
 
     private final int startValue;
 
+    private int myMin = Integer.MIN_VALUE;
+    private int myMax = Integer.MAX_VALUE;
+    private int myStep = 1;
+
     public DesktopIntBoxImpl(int value) {
         this.startValue = value;
     }
@@ -54,7 +58,7 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
     @Override
     protected MyJSpinner createComponent() {
         MyJSpinner field = new MyJSpinner();
-        field.setRange(startValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        field.updateModel(startValue, myMin, myMax, myStep);
         field.addChangeListener(e -> {
             MyJSpinner source = (MyJSpinner) e.getSource();
             valueChanged(getValue(source));
@@ -73,7 +77,16 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
     @Override
     @RequiredUIAccess
     public void setRange(int min, int max) {
-        toAWTComponent().setRange(getValue(), min, max);
+        myMin = min;
+        myMax = max;
+        toAWTComponent().updateModel(getValue(), myMin, myMax, myStep);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setStep(int step) {
+        myStep = step;
+        toAWTComponent().updateModel(getValue(), myMin, myMax, myStep);
     }
 
     @Override

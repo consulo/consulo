@@ -121,6 +121,13 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
                 return;
             }
 
+            if (!isMnemonicParsed()) {
+                setText(myTextValue.get());
+                setDisplayedMnemonicIndex(-1);
+                setDisplayedMnemonic(0);
+                return;
+            }
+
             TextWithMnemonic mnemonicInfo = LocalizeValueWithMnemonic.get(myTextValue);
             if (!mnemonicInfo.hasMnemonic()) {
                 setText(mnemonicInfo.getText());
@@ -133,6 +140,14 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
                 setDisplayedMnemonic(mnemonicInfo.getMnemonic());
             }
         }
+    }
+
+    /**
+     * Whether an {@code &} in the text marks the mnemonic. False for html, where an ampersand opens a
+     * character entity - {@code &lt;} is text the label has to keep, not a mnemonic on the {@code l}.
+     */
+    protected boolean isMnemonicParsed() {
+        return true;
     }
 
     private final LocalizeValue myInitText;

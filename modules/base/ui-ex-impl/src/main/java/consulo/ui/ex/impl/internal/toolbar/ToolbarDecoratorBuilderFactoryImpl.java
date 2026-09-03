@@ -37,7 +37,7 @@ public class ToolbarDecoratorBuilderFactoryImpl implements ToolbarDecoratorBuild
 
     @Override
     public <E> ToolbarDecoratorBuilder<E> create(Table<E> table) {
-        return new ToolbarDecoratorBuilderImpl<>(table, null);
+        return new ToolbarDecoratorBuilderImpl<>(table, new TableToolbarExecutor<>(table));
     }
 
     @Override

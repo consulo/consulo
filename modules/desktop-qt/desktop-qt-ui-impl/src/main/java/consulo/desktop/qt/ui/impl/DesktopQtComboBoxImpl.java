@@ -21,6 +21,7 @@ import consulo.ui.ComponentItemRender;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.FlatDataModel;
 import io.qt.widgets.QComboBox;
 import io.qt.widgets.QWidget;
@@ -38,6 +39,7 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
     private final FlatDataModel<E> myModel;
 
     private int mySelectedIndex = 0;
+    private boolean myFireListeners = true;
 
     public DesktopQtComboBoxImpl(FlatDataModel<E> model) {
         myModel = model;
@@ -62,7 +64,14 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
 
         component.setCurrentIndex(mySelectedIndex);
 
-        component.currentIndexChanged.connect(index -> mySelectedIndex = index);
+        component.currentIndexChanged.connect(index -> {
+            mySelectedIndex = index;
+
+            if (myFireListeners) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, getValue(), DesktopQtCurrentInput.current(component)));
+            }
+        });
     }
 
     @Override
@@ -77,22 +86,37 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
 
     @Override
     public void setValueByIndex(int index) {
+        setValueByIndex(index, true);
+    }
+
+    private void setValueByIndex(int index, boolean fireListeners) {
         mySelectedIndex = index;
 
-        if (myComponent != null) {
-            myComponent.setCurrentIndex(index);
+        QComboBox component = myComponent;
+        if (component == null) {
+            return;
+        }
+
+        // the widget answers a set index with the same signal a click raises, so the guard is what keeps a
+        // programmatic set - a reset writing the stored value back - from reading as a user's choice
+        myFireListeners = fireListeners;
+        try {
+            component.setCurrentIndex(index);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 
     @Override
     public @Nullable E getValue() {
-        return myModel.get(mySelectedIndex);
+        return mySelectedIndex >= 0 && mySelectedIndex < myModel.getSize() ? myModel.get(mySelectedIndex) : null;
     }
 
     @Override
     @RequiredUIAccess
     public void setValue(E value, boolean fireListeners) {
-        setValueByIndex(myModel.indexOf(value));
+        setValueByIndex(myModel.indexOf(value), fireListeners);
     }
 
     @Override

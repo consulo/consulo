@@ -32,6 +32,7 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.color.ColorValue;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
@@ -64,6 +65,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     private boolean myShowHeader = true;
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private @Nullable Function<Item, Length> myItemHeightGetter;
+    private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
 
     public DesktopTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -165,7 +167,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
 
     @Override
     public <Value> TableColumn<Item, Value> addColumn(LocalizeValue header, Function<Item, Value> valueProvider) {
-        DesktopTableColumnImpl<Item, Value> column = new DesktopTableColumnImpl<>(header, valueProvider);
+        DesktopTableColumnImpl<Item, Value> column = new DesktopTableColumnImpl<>(this, header, valueProvider);
         myColumns.add(column);
 
         if (isInitialized()) {
@@ -208,6 +210,24 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     @Override
     public void deselectAll() {
         toAWTComponent().clearSelection();
+    }
+
+    @Override
+    public void setRowBackgroundGetter(@Nullable Function<Item, ColorValue> getter) {
+        myRowBackgroundGetter = getter;
+
+        if (isInitialized()) {
+            toAWTComponent().repaint();
+        }
+    }
+
+    /**
+     * Read by the columns while they paint - the band is one rule over the row, not a copy per column.
+     */
+    @Nullable
+    ColorValue getRowBackground(Item item) {
+        Function<Item, ColorValue> getter = myRowBackgroundGetter;
+        return getter == null ? null : getter.apply(item);
     }
 
     @Override
