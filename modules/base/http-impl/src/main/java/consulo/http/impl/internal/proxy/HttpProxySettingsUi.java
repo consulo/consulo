@@ -15,53 +15,44 @@
  */
 package consulo.http.impl.internal.proxy;
 
-import consulo.ui.RadioGroup;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.util.io.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.google.common.net.InternetDomainName;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import consulo.application.Application;
-import consulo.application.ui.wm.FocusableFrame;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.configurable.IdeaConfigurableUi;
-import consulo.disposer.Disposable;
 import consulo.http.HttpRequests;
 import consulo.http.localize.HttpLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.Button;
-import consulo.ui.Label;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ComponentEventListener;
-import consulo.ui.ex.awt.JBUI;
+import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.Layout;
+import consulo.ui.layout.TableLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.Indenter;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.util.io.HostAndPort;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.Component;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
+class HttpProxySettingsUi implements Supplier<Layout> {
     private static final int PROXY_NONE = 0;
     private static final int PROXY_AUTO_DETECT = 1;
     private static final int PROXY_MANUAL = 2;
 
     private static final Pattern PROXY_EXCLUDES_DELIM_PATTERN = Pattern.compile(",\\s*");
 
-    private JPanel myMainPanel;
+    private Layout myRoot;
 
     private TextBox myProxyLoginTextField;
     private PasswordBox myProxyPasswordTextField;
@@ -79,14 +70,14 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
     private RadioButton myAutoDetectProxyRb;
     private RadioButton myUseHTTPProxyRb;
-    private Label mySystemProxyDefined;
+    private HtmlLabel mySystemProxyDefined;
     private RadioButton myNoProxyRb;
     private RadioButton myHTTP;
     private RadioButton mySocks;
     private Button myClearPasswordsButton;
     private Label myErrorLabel;
     private Button myCheckButton;
-    private Label myOtherWarning;
+    private HtmlLabel myOtherWarning;
     private Label myProxyExceptionsLabel;
     private TextBoxWithExpandAction myProxyExceptions;
     private Label myNoProxyForLabel;
@@ -94,7 +85,6 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     private TextBox myPacUrlTextField;
     private volatile boolean myConnectionCheckInProgress;
 
-    @Override
     public boolean isModified(HttpProxyManagerImpl settings) {
         if (!isValid()) {
             return false;
@@ -117,7 +107,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
     @RequiredUIAccess
     public HttpProxySettingsUi(HttpProxyManagerImpl settings) {
-        $$$setupUI$$$();
+        myRoot = buildLayout();
 
         myProxyModeGroup.setValue(PROXY_NONE);
         myProxyTypeGroup.setValue(false);
@@ -129,19 +119,15 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 //            RelativeFont.BOLD.install(mySystemProxyDefined);
         }
 
-        myProxyAuthCheckBox.addClickListener(e -> enableProxyAuthentication(myProxyAuthCheckBox.getValue()));
-        myPacUrlCheckBox.addClickListener(e -> myPacUrlTextField.setEnabled(myPacUrlCheckBox.getValue()));
+        myProxyAuthCheckBox.addValueListener(e -> enableProxyAuthentication(myProxyAuthCheckBox.getValue()));
+        myPacUrlCheckBox.addValueListener(e -> myPacUrlTextField.setEnabled(myPacUrlCheckBox.getValue()));
 
-        ComponentEventListener<consulo.ui.Component, ClickEvent> listener = e -> enableProxy(myUseHTTPProxyRb.getValue());
-        myUseHTTPProxyRb.addClickListener(listener);
-        myAutoDetectProxyRb.addClickListener(listener);
-        myNoProxyRb.addClickListener(listener);
+        myProxyModeGroup.addValueListener(e -> enableProxy(myUseHTTPProxyRb.getValue()));
 
         myClearPasswordsButton.addClickListener(e -> {
             settings.clearGenericPasswords();
             //noinspection DialogTitleCapitalization
             Messages.showMessageDialog(
-                myMainPanel,
                 "Proxy passwords were cleared.",
                 "Auto-detected Proxy",
                 UIUtil.getInformationIcon()
@@ -161,7 +147,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
         myCheckButton.addClickListener(e -> {
             String title = "Check Proxy Settings";
             String answer = Messages.showInputDialog(
-                myMainPanel,
+                (Project) null,
                 "Warning: your settings will be saved.\n\nEnter any URL to check connection to:",
                 title,
                 UIUtil.getQuestionIcon(),
@@ -174,6 +160,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
             HttpProxyManagerImpl settings = HttpProxyManagerImpl.getInstance();
             apply(settings);
+            UIAccess uiAccess = UIAccess.current();
             AtomicReference<IOException> exceptionReference = new AtomicReference<>();
             myCheckButton.setEnabled(false);
             myCheckButton.setText(LocalizeValue.localizeTODO("Check connection (in progress...)"));
@@ -190,34 +177,22 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                     exceptionReference.set(e1);
                 }
 
-                //noinspection SSBasedInspection
-                SwingUtilities.invokeLater(() -> {
+                uiAccess.give(() -> {
                     myConnectionCheckInProgress = false;
                     reset(settings);  // since password might have been set
-                    Component parent;
-                    if (myMainPanel.isShowing()) {
-                        parent = myMainPanel;
-                        myCheckButton.setText(HttpLocalize.proxyTestButton());
-                        myCheckButton.setEnabled(canEnableConnectionCheck());
-                    }
-                    else {
-                        FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
-                        if (frame == null) {
-                            return;
-                        }
-                        parent = frame.getComponent();
-                    }
-                    //noinspection ThrowableResultOfMethodCallIgnored
+                    myCheckButton.setText(HttpLocalize.proxyTestButton());
+                    myCheckButton.setEnabled(canEnableConnectionCheck());
+
                     IOException exception = exceptionReference.get();
                     if (exception == null) {
-                        Messages.showMessageDialog(parent, "Connection successful", title, UIUtil.getInformationIcon());
+                        Messages.showMessageDialog("Connection successful", title, UIUtil.getInformationIcon());
                     }
                     else {
                         String message = StringUtil.notNullize(exception.getMessage(), "N/A");
                         if (settings.getState().USE_HTTP_PROXY) {
                             settings.getState().LAST_ERROR = message;
                         }
-                        Messages.showErrorDialog(parent, errorText(message).get());
+                        Messages.showErrorDialog(errorText(message).get(), title);
                     }
                 });
             });
@@ -228,7 +203,6 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
         return !myNoProxyRb.getValue() && !myConnectionCheckInProgress;
     }
 
-    @Override
     @RequiredUIAccess
     public void reset(HttpProxyManagerImpl settings) {
         HttpProxyManagerState state = settings.getState();
@@ -305,7 +279,6 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
         return true;
     }
 
-    @Override
     public void apply(HttpProxyManagerImpl settings) {
         if (!isValid()) {
             return;
@@ -334,10 +307,6 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
     private static @Nullable String getText(TextBox textBox) {
         return StringUtil.nullize(textBox.getValue(), true);
-    }
-
-    private static @Nullable String getText(JTextField field) {
-        return StringUtil.nullize(field.getText(), true);
     }
 
     @RequiredUIAccess
@@ -373,591 +342,95 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
         myRememberProxyPasswordCheckBox.setEnabled(enabled);
     }
 
-    @Override
-    public JComponent getComponent(Disposable disposable) {
-        return myMainPanel;
-    }
-
-    /**
-     * Method generated by Consulo GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     */
     @RequiredUIAccess
-    private void $$$setupUI$$$() {
-        myMainPanel = new JPanel();
-        myMainPanel.setLayout(new GridLayoutManager(12, 1, JBUI.emptyInsets(), -1, -1));
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(8, 2, JBUI.emptyInsets(), -1, -1));
-        myMainPanel.add(
-            panel1,
-            new GridConstraints(
-                8,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_BOTH,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myProxyPortTextField = IntBox.create().withRange(0, 65535);
-        panel1.add(
-            TargetAWT.to(myProxyPortTextField),
-            new GridConstraints(
-                1,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myProxyLoginTextField = TextBox.create("");
-        panel1.add(
-            TargetAWT.to(myProxyLoginTextField),
-            new GridConstraints(
-                5,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_WANT_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                new Dimension(150, -1),
-                null,
-                0,
-                false
-            )
-        );
-        myProxyPasswordTextField = PasswordBox.create();
-        panel1.add(
-            TargetAWT.to(myProxyPasswordTextField),
-            new GridConstraints(
-                6,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_WANT_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                new Dimension(150, -1),
-                null,
-                0,
-                false
-            )
-        );
-        myProxyExceptionsLabel = Label.create(HttpLocalize.proxyManualExcludeExample());
-        panel1.add(
-            TargetAWT.to(myProxyExceptionsLabel),
-            new GridConstraints(
-                3,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myProxyHostTextField = TextBox.create();
-        panel1.add(
-            TargetAWT.to(myProxyHostTextField),
-            new GridConstraints(
-                0,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_WANT_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                new Dimension(150, -1),
-                null,
-                0,
-                false
-            )
-        );
-        myRememberProxyPasswordCheckBox = CheckBox.create(CommonLocalize.checkboxRememberPassword());
-        panel1.add(
-            TargetAWT.to(myRememberProxyPasswordCheckBox),
-            new GridConstraints(
-                7,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
+    private Layout buildLayout() {
+        VerticalLayout root = VerticalLayout.create();
+
+        mySystemProxyDefined = HtmlLabel.create(HttpLocalize.proxySystemLabel());
+        myOtherWarning = HtmlLabel.create(LocalizeValue.empty());
+        root.add(mySystemProxyDefined);
+        root.add(myOtherWarning);
+
+        myNoProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyDirectRb(), PROXY_NONE);
+        root.add(myNoProxyRb);
+
+        myAutoDetectProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyPacRb(), PROXY_AUTO_DETECT);
+        myAutoDetectProxyRb.setToolTipText(HttpLocalize.proxyPacRbTt());
+        root.add(myAutoDetectProxyRb);
+
+        myPacUrlCheckBox = CheckBox.create(HttpLocalize.proxyPacUrlLabel());
+        myPacUrlTextField = TextBox.create();
+        myClearPasswordsButton = Button.create(HttpLocalize.proxyPacPwClearButton());
+
+        VerticalLayout autoDetect = VerticalLayout.create();
+        autoDetect.add(DockLayout.create(Space.SMALL).left(myPacUrlCheckBox).center(myPacUrlTextField));
+        autoDetect.add(DockLayout.create().left(myClearPasswordsButton));
+        root.add(Indenter.indent(autoDetect));
+
+        myUseHTTPProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyManualRb(), PROXY_MANUAL);
+        root.add(myUseHTTPProxyRb);
+
+        myHTTP = myProxyTypeGroup.newButton(HttpLocalize.proxyManualTypeHttp(), false);
+        mySocks = myProxyTypeGroup.newButton(HttpLocalize.proxyManualTypeSocks(), true);
+
         myHostNameLabel = Label.create(HttpLocalize.proxyManualHost());
-        panel1.add(
-            TargetAWT.to(myHostNameLabel),
-            new GridConstraints(
-                0,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
+        myProxyHostTextField = TextBox.create();
         myPortNumberLabel = Label.create(HttpLocalize.proxyManualPort());
-        panel1.add(
-            TargetAWT.to(myPortNumberLabel),
-            new GridConstraints(
-                1,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
-        myProxyAuthCheckBox = CheckBox.create(HttpLocalize.proxyManualAuth());
-        myProxyAuthCheckBox.setValue(false);
-        panel1.add(
-            TargetAWT.to(myProxyAuthCheckBox),
-            new GridConstraints(
-                4,
-                0,
-                1,
-                2,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
-        myProxyLoginLabel = Label.create(CommonLocalize.editboxLogin());
-        panel1.add(
-            TargetAWT.to(myProxyLoginLabel),
-            new GridConstraints(
-                5,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                4,
-                false
-            )
-        );
-        myProxyPasswordLabel = Label.create(CommonLocalize.editboxPassword());
-        panel1.add(
-            TargetAWT.to(myProxyPasswordLabel),
-            new GridConstraints(
-                6,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                4,
-                false
-            )
-        );
+        myProxyPortTextField = IntBox.create().withRange(0, 65535);
+        myNoProxyForLabel = Label.create(HttpLocalize.proxyManualExclude());
         myProxyExceptions = TextBoxWithExpandAction.create(
             PlatformIconGroup.generalExpandcomponent(),
             "",
             string -> Arrays.asList(PROXY_EXCLUDES_DELIM_PATTERN.split(string)),
             strings -> StringUtil.join(strings, ", ")
         );
-        panel1.add(
-            TargetAWT.to(myProxyExceptions),
-            new GridConstraints(
-                2,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myNoProxyForLabel = Label.create(HttpLocalize.proxyManualExclude());
-        panel1.add(
-            TargetAWT.to(myNoProxyForLabel),
-            new GridConstraints(
-                2,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
-        Spacer spacer1 = new Spacer();
-        myMainPanel.add(
-            spacer1,
-            new GridConstraints(
-                11,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_VERTICAL,
-                1,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myAutoDetectProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyPacRb(), PROXY_AUTO_DETECT);
-        myAutoDetectProxyRb.setToolTipText(HttpLocalize.proxyPacRbTt());
-        myMainPanel.add(
-            TargetAWT.to(myAutoDetectProxyRb),
-            new GridConstraints(
-                3,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myUseHTTPProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyManualRb(), PROXY_MANUAL);
-        myMainPanel.add(
-            TargetAWT.to(myUseHTTPProxyRb),
-            new GridConstraints(
-                6,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        mySystemProxyDefined = Label.create(HttpLocalize.proxySystemLabel());
-//        mySystemProxyDefined.setVerticalAlignment(0);
-//        mySystemProxyDefined.setVerticalTextPosition(1);
-        myMainPanel.add(
-            TargetAWT.to(mySystemProxyDefined),
-            new GridConstraints(
-                0,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myNoProxyRb = myProxyModeGroup.newButton(HttpLocalize.proxyDirectRb(), PROXY_NONE);
-        myMainPanel.add(
-            TargetAWT.to(myNoProxyRb),
-            new GridConstraints(
-                2,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
-        myMainPanel.add(
-            panel2,
-            new GridConstraints(
-                7,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_VERTICAL,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myHTTP = myProxyTypeGroup.newButton(HttpLocalize.proxyManualTypeHttp(), false);
-        panel2.add(
-            TargetAWT.to(myHTTP),
-            new GridConstraints(
-                0,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
-        mySocks = myProxyTypeGroup.newButton(HttpLocalize.proxyManualTypeSocks(), true);
-        panel2.add(
-            TargetAWT.to(mySocks),
-            new GridConstraints(
-                0,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
-        myErrorLabel = Label.create();
-        myMainPanel.add(
-            TargetAWT.to(myErrorLabel),
-            new GridConstraints(
-                10,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myCheckButton = Button.create(HttpLocalize.proxyTestButton());
-        myMainPanel.add(
-            TargetAWT.to(myCheckButton),
-            new GridConstraints(
-                9,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myOtherWarning = Label.create();
-//        myOtherWarning.setVerticalTextPosition(1);
-        myMainPanel.add(
-            TargetAWT.to(myOtherWarning),
-            new GridConstraints(
-                1,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
-        myMainPanel.add(
-            panel3,
-            new GridConstraints(
-                4,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_BOTH,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                null,
-                null,
-                null,
-                0,
-                false
-            )
-        );
-        myPacUrlCheckBox = CheckBox.create(HttpLocalize.proxyPacUrlLabel());
-        panel3.add(
-            TargetAWT.to(myPacUrlCheckBox),
-            new GridConstraints(
-                0,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
-        myPacUrlTextField = TextBox.create();
-        panel3.add(
-            TargetAWT.to(myPacUrlTextField),
-            new GridConstraints(
-                0,
-                1,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_WANT_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                new Dimension(150, -1),
-                null,
-                0,
-                false
-            )
-        );
-        myClearPasswordsButton = Button.create(HttpLocalize.proxyPacPwClearButton());
-        myMainPanel.add(
-            TargetAWT.to(myClearPasswordsButton),
-            new GridConstraints(
-                5,
-                0,
-                1,
-                1,
-                GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED,
-                null,
-                null,
-                null,
-                2,
-                false
-            )
-        );
+        myProxyExceptionsLabel = Label.create(HttpLocalize.proxyManualExcludeExample());
+        myProxyAuthCheckBox = CheckBox.create(HttpLocalize.proxyManualAuth());
+        myProxyLoginLabel = Label.create(CommonLocalize.editboxLogin());
+        myProxyLoginTextField = TextBox.create();
+        myProxyPasswordLabel = Label.create(CommonLocalize.editboxPassword());
+        myProxyPasswordTextField = PasswordBox.create();
+        myRememberProxyPasswordCheckBox = CheckBox.create(CommonLocalize.checkboxRememberPassword());
+
+        // one table rather than a row of layouts each sizing itself: the fields share a column, so the host
+        // and the port are the same width, and so are the login and the password
+        TableLayout fields = TableLayout.create(StaticPosition.TOP);
+        fields.add(myHostNameLabel, TableLayout.cell(0, 0));
+        fields.add(myProxyHostTextField, TableLayout.cell(0, 1).fill());
+        fields.add(myPortNumberLabel, TableLayout.cell(1, 0));
+        fields.add(myProxyPortTextField, TableLayout.cell(1, 1).fill());
+        fields.add(myNoProxyForLabel, TableLayout.cell(2, 0));
+        fields.add(myProxyExceptions, TableLayout.cell(2, 1).fill());
+        fields.add(myProxyExceptionsLabel, TableLayout.cell(3, 1));
+        fields.add(myProxyAuthCheckBox, TableLayout.cell(4, 0));
+        fields.add(myProxyLoginLabel, TableLayout.cell(5, 0));
+        fields.add(myProxyLoginTextField, TableLayout.cell(5, 1).fill());
+        fields.add(myProxyPasswordLabel, TableLayout.cell(6, 0));
+        fields.add(myProxyPasswordTextField, TableLayout.cell(6, 1).fill());
+        fields.add(myRememberProxyPasswordCheckBox, TableLayout.cell(7, 1));
+
+        VerticalLayout manual = VerticalLayout.create();
+        manual.add(HorizontalLayout.create(Space.SMALL).add(myHTTP).add(mySocks));
+        manual.add(fields);
+
+        root.add(Indenter.indent(manual));
+
         myHostNameLabel.setTarget(myProxyHostTextField);
         myPortNumberLabel.setTarget(myProxyPortTextField);
         myProxyLoginLabel.setTarget(myProxyLoginTextField);
         myProxyPasswordLabel.setTarget(myProxyPasswordTextField);
+
+        myCheckButton = Button.create(HttpLocalize.proxyTestButton());
+        root.add(DockLayout.create().left(myCheckButton));
+
+        myErrorLabel = Label.create();
+        root.add(myErrorLabel);
+
+        return root;
     }
 
-    public JComponent $$$getRootComponent$$$() {
-        return myMainPanel;
+    @Override
+    public Layout get() {
+        return myRoot;
     }
 }
