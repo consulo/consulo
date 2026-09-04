@@ -18,7 +18,6 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.componentfactory.ToggleButton;
 import consulo.ui.Component;
 import consulo.ui.ToggleSwitch;
-import consulo.ui.event.ValueComponentEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.vaadin.WebBooleanValueComponentBase;
 import org.jspecify.annotations.Nullable;
@@ -35,15 +34,8 @@ public class WebToggleSwitchImpl extends WebBooleanValueComponentBase<WebToggleS
         }
     }
 
-    @SuppressWarnings("unchecked")
     public WebToggleSwitchImpl(boolean selected) {
         super(selected);
-
-        getVaadinComponent().addValueChangeListener(event -> {
-            if (event.isFromClient()) {
-                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent<>(this, event.getValue()));
-            }
-        });
     }
 
     @Override

@@ -95,7 +95,12 @@ public class WebFontBoxImpl extends VaadinComponentDelegate<WebFontBoxImpl.Vaadi
         component.setRenderer(new ComponentRenderer<>(item -> {
             Span span = new Span(item.toString());
             if (item instanceof String family) {
-                span.getStyle().set("font-family", toCssFamily(family));
+                // a row off the screen is not laid out, so the family it names is not instantiated until it
+                // is scrolled to - the list holds every row at once and a machine can have hundreds
+                span.getStyle()
+                    .set("font-family", toCssFamily(family))
+                    .set("content-visibility", "auto")
+                    .set("contain-intrinsic-size", "auto 12em auto 1.5em");
             }
             else {
                 span.getStyle().set("font-style", "italic");
@@ -117,7 +122,7 @@ public class WebFontBoxImpl extends VaadinComponentDelegate<WebFontBoxImpl.Vaadi
 
             myRequestedValue = event.getValue() instanceof String family ? family : null;
 
-            fireListeners();
+            fireListeners(myRequestedValue);
         });
 
         myTypefaces = WebFontManagerImpl.getBundledTypefaces();
@@ -263,7 +268,9 @@ public class WebFontBoxImpl extends VaadinComponentDelegate<WebFontBoxImpl.Vaadi
         pushItemsWhenLocked();
 
         if (fireListeners) {
-            fireListeners();
+            // the widget write may still be queued, so what is reported is what was stored rather than what
+            // the widget would answer, which is still the family before this call
+            fireListeners(value);
         }
     }
 
@@ -285,7 +292,7 @@ public class WebFontBoxImpl extends VaadinComponentDelegate<WebFontBoxImpl.Vaadi
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    private void fireListeners() {
-        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
+    private void fireListeners(@Nullable String value) {
+        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, value));
     }
 }

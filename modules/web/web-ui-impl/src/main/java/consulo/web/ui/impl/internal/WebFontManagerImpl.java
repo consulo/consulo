@@ -86,6 +86,7 @@ public class WebFontManagerImpl implements FontManager {
           const context = document.createElement('canvas').getContext('2d');
           const seen = new Set();
           const families = [];
+          let measured = 0;
           for (const font of fonts) {
             const name = font.family;
             if (seen.has(name)) {
@@ -96,6 +97,11 @@ public class WebFontManagerImpl implements FontManager {
             const narrow = context.measureText('l').width;
             const wide = context.measureText('W').width;
             families.push({name: name, monospaced: narrow > 0 && Math.abs(narrow - wide) < 0.01});
+            // naming a family to the canvas makes the engine instantiate it, and a machine with several
+            // hundred installed would hold the main thread for seconds - so the loop lets go regularly
+            if (++measured % 25 === 0) {
+              await new Promise(resolve => setTimeout(resolve));
+            }
           }
           families.sort((one, two) => one.name.localeCompare(two.name));
           return families;
@@ -120,12 +126,18 @@ public class WebFontManagerImpl implements FontManager {
 
         UI ui = ((WebUIAccessImpl) uiAccess).getUI();
 
-        uiAccess.give(() -> ui.getPage()
+        // through giveAsync rather than give: give is void and drops the work on a detached ui with only a
+        // warning, which would leave this future pending for the life of the session
+        uiAccess.giveAsync(() -> ui.getPage()
             .executeJs(QUERY_FONTS)
             .then(
                 node -> result.complete(readTypefaces(node)),
                 error -> result.complete(getBundledTypefaces())
-            ));
+            )).whenComplete((ignored, e) -> {
+            if (e != null) {
+                result.complete(getBundledTypefaces());
+            }
+        });
 
         return result;
     }
@@ -140,13 +152,17 @@ public class WebFontManagerImpl implements FontManager {
 
         UI ui = ((WebUIAccessImpl) uiAccess).getUI();
 
-        uiAccess.give(() -> ui.getPage()
+        uiAccess.giveAsync(() -> ui.getPage()
             .executeJs(QUERY_STATE)
             .then(
                 String.class,
                 state -> result.complete(readPermission(state)),
                 error -> result.complete(LocalFontsPermission.UNSUPPORTED)
-            ));
+            )).whenComplete((ignored, e) -> {
+            if (e != null) {
+                result.complete(LocalFontsPermission.UNSUPPORTED);
+            }
+        });
 
         return result;
     }
