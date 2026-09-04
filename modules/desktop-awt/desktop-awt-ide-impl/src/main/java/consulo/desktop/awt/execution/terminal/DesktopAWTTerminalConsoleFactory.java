@@ -27,7 +27,7 @@ import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
 import consulo.logging.Logger;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -69,7 +69,7 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
         }
         catch (ExecutionException e) {
             LOG.warn("Error connecting terminal", e);
-            Alerts.okError(e).showAsync();
+            MessageBoxes.okError(e).showAsync();
         }
 
         return widget;

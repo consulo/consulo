@@ -8,7 +8,7 @@ import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
@@ -330,7 +330,7 @@ class UniversalFileChooserPanel {
             }
             Exception failReason = activeFileView.getFileTree().createNewFolder(parent, newFolderName);
             if (failReason != null) {
-                Alerts.okError(FileChooserLocalize.createNewFolderCouldNotCreateFolderErrorMessage(newFolderName)).showAsync();
+                MessageBoxes.okError(FileChooserLocalize.createNewFolderCouldNotCreateFolderErrorMessage(newFolderName)).showAsync();
             }
         });
     }

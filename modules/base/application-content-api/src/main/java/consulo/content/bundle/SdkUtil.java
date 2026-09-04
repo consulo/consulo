@@ -23,7 +23,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author VISTALL
@@ -171,11 +172,14 @@ public class SdkUtil {
             LOG.warn(e);
             if (!silent) {
                 uiAccess.give(
-                    () -> Alerts.okError(
-                            "Error configuring SDK: " + e.getMessage() + ".\n" +
-                                "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type."
+                    () -> MessageBoxes.okError(
+                            LocalizeValue.localizeTODO(
+                                "Error configuring SDK: " + e.getMessage() + ".\n" +
+                                    "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) +
+                                    " is a valid home path for this SDK type."
+                            )
                         )
-                        .title("Error Configuring SDK")
+                        .title(LocalizeValue.localizeTODO("Error Configuring SDK"))
                         .showAsync()
                 );
             }
@@ -221,11 +225,14 @@ public class SdkUtil {
             LOG.warn(e);
             if (!silent) {
                 uiAccess.give(
-                    () -> Alerts.okError(
-                            "Error configuring SDK: " + e.getMessage() + ".\n" +
-                                "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type."
+                    () -> MessageBoxes.okError(
+                            LocalizeValue.localizeTODO(
+                                "Error configuring SDK: " + e.getMessage() + ".\n" +
+                                    "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) +
+                                    " is a valid home path for this SDK type."
+                            )
                         )
-                        .title("Error Configuring SDK")
+                        .title(LocalizeValue.localizeTODO("Error Configuring SDK"))
                         .showAsync()
                 );
             }

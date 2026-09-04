@@ -26,7 +26,7 @@ import consulo.component.store.internal.StreamProvider;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FileAttributes;
@@ -378,7 +378,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       Application.get().invokeLater(() -> {
         String msg = "Cannot read scheme " + file.getName() + "  from '" + myFileSpec + "': " + e.getMessage();
         LOG.info(msg, e);
-        Alerts.okError(LocalizeValue.localizeTODO(msg)).title(LocalizeValue.localizeTODO("Load Settings")).showAsync();
+        MessageBoxes.okError(LocalizeValue.localizeTODO(msg)).title(LocalizeValue.localizeTODO("Load Settings")).showAsync();
       });
       return null;
     }
@@ -480,7 +480,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
         LOG.error("Cannot write scheme " + scheme.getName() + " in '" + myFileSpec + "': " + e.getLocalizedMessage(), e);
 
         Application.get().invokeLater(
-          () -> Alerts.okError(LocalizeValue.localizeTODO("Cannot save scheme '" + scheme.getName() + "': " + e.getMessage()))
+          () -> MessageBoxes.okError(LocalizeValue.localizeTODO("Cannot save scheme '" + scheme.getName() + "': " + e.getMessage()))
             .title(LocalizeValue.localizeTODO("Save Settings"))
             .showAsync()
         );

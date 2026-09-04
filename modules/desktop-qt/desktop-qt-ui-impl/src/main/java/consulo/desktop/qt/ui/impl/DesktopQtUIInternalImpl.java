@@ -57,6 +57,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import consulo.desktop.qt.ui.impl.messagebox.DesktopQtMessageBoxBuilderImpl;
+import consulo.desktop.qt.ui.impl.messagebox.DesktopQtInputBoxBuilderImpl;
+import consulo.ui.ex.impl.internal.UnifiedInputBoxBuilderImpl;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
@@ -509,4 +513,30 @@ public class DesktopQtUIInternalImpl extends UIInternal {
         return new DesktopQtRadioGroupImpl<>();
     }
 
+
+    @Override
+    public <T> MessageBoxBuilder<T> _MessageBox_create() {
+        return new DesktopQtMessageBoxBuilderImpl<>();
+    }
+
+    @Override
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.TEXT, TextBox::create);
+    }
+
+    @Override
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.INTEGER, IntBox::create);
+    }
+
+    @Override
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        List<V> copy = new ArrayList<>(items);
+        return new UnifiedInputBoxBuilderImpl<>(() -> ComboBox.create(copy));
+    }
+
+    @Override
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
+        return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.PASSWORD, PasswordBox::create);
+    }
 }

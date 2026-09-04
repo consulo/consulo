@@ -348,4 +348,24 @@ public abstract class UIInternal {
     public ColorPickerBuilder _ColorPicker_create() {
         throw new UnsupportedOperationException();
     }
+
+    public <V> MessageBoxBuilder<V> _MessageBox_create() {
+        throw new UnsupportedOperationException();
+    }
+
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        throw new UnsupportedOperationException();
+    }
+
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        throw new UnsupportedOperationException();
+    }
+
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        throw new UnsupportedOperationException();
+    }
+
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
+        throw new UnsupportedOperationException();
+    }
 }

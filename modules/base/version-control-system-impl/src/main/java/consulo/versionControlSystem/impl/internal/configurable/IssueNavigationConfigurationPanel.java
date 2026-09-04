@@ -24,7 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.Table;
@@ -186,7 +186,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
                 return;
             }
 
-            Alerts.okCancel()
+            MessageBoxes.okCancel()
                 .asQuestion()
                 .text(VcsLocalize.issueLinkDeletePrompt())
                 .title(VcsLocalize.issueLinkDeleteTitle())

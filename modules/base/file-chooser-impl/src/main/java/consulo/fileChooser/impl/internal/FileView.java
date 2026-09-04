@@ -7,7 +7,7 @@ import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
@@ -158,7 +158,7 @@ class FileView {
             ? FileChooserLocalize.universalFileChooserActionDeleteConfirmDirectory(presentableName)
             : FileChooserLocalize.universalFileChooserActionDeleteConfirm(presentableName);
 
-        Alerts.yesNo()
+        MessageBoxes.yesNo()
             .asWarning()
             .title(FileChooserLocalize.universalFileChooserActionDeleteText())
             .text(confirmMessage)

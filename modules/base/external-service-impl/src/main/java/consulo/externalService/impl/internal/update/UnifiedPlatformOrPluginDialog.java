@@ -25,7 +25,7 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -217,7 +217,7 @@ public class UnifiedPlatformOrPluginDialog {
             .orElse(null);
 
         if (brokenPlugin != null) {
-            Alerts.okCancel()
+            MessageBoxes.okCancel()
                 .asWarning()
                 .text(ExternalServiceLocalize.messageIdeaFewPluginsWillBeNotUpdated())
                 .showAsync()

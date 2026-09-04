@@ -22,7 +22,7 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -220,7 +220,7 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
         }
 
         if (success) {
-            Alerts.okInfo(DistributedVcsLocalize.cloneTestSuccessMessage(url)).showAsync();
+            MessageBoxes.okInfo(DistributedVcsLocalize.cloneTestSuccessMessage(url)).showAsync();
         }
 
         validate(context);

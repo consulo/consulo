@@ -36,6 +36,7 @@ import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;
 import jakarta.inject.Inject;
+import consulo.ui.MessageBoxes;
 
 /**
  * @author VISTALL
@@ -91,11 +92,11 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
                     Credentials credentials = myPasswordSafe.get(attributes);
                     if (credentials == null) {
-                        Alerts.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
+                        MessageBoxes.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
                     }
                     else {
                         String password = credentials.getPasswordAsString();
-                        Alerts.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
+                        MessageBoxes.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
                     }
                 }
             );

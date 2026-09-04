@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.RecentProjectsManager;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -93,7 +93,7 @@ public class NewProjectAction extends DumbAwareAction {
         File location = new File(context.getPath());
         int childCount = location.exists() ? location.list().length : 0;
         if (!location.exists() && !location.mkdirs()) {
-            Alerts.okError(LocalizeValue.localizeTODO("Cannot create directory '" + location + "'")).showAsync();
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Cannot create directory '" + location + "'")).showAsync();
             return;
         }
 
@@ -101,14 +101,14 @@ public class NewProjectAction extends DumbAwareAction {
 
         VirtualFile baseDir = LocalFileSystem.getInstance().findFileByIoFile(location);
         if (baseDir == null) {
-            Alerts.okError(LocalizeValue.localizeTODO("Directory '" + location + "' is not resolved.")).showAsync();
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Directory '" + location + "' is not resolved.")).showAsync();
             return;
         }
 
         baseDir.refresh(false, true);
 
         if (childCount > 0) {
-            Alerts.yesNo()
+            MessageBoxes.yesNo()
                 .text(LocalizeValue.localizeTODO("The directory '" + location + "' is not empty. Continue?"))
                 .showAsync()
                 .whenComplete((confirmed, error) -> {

@@ -34,7 +34,7 @@ import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
@@ -201,7 +201,7 @@ public class UnifiedPluginDescriptionPanel {
     @RequiredUIAccess
     private void install(PluginDescriptor plugin) {
         if (plugin.isExperimental()) {
-            Alerts.yesNo()
+            MessageBoxes.yesNo()
                 .asWarning()
                 .title(Application.get().getName())
                 .text(LocalizeValue.localizeTODO(
@@ -274,7 +274,7 @@ public class UnifiedPluginDescriptionPanel {
 
     @RequiredUIAccess
     private void uninstall(PluginDescriptor plugin) {
-        Alerts.yesNo()
+        MessageBoxes.yesNo()
             .asQuestion()
             .title(ExternalServiceLocalize.titlePluginUninstall())
             .text(ExternalServiceLocalize.promptUninstallPlugin(plugin.getName()))
@@ -296,7 +296,7 @@ public class UnifiedPluginDescriptionPanel {
         );
 
         if (!dependent.isEmpty()) {
-            Alerts.yesNo()
+            MessageBoxes.yesNo()
                 .asQuestion()
                 .title(ExternalServiceLocalize.titlePluginUninstall())
                 .text(ExternalServiceLocalize.severalPluginsDependOn0ContinueToRemove(plugin.getName()))

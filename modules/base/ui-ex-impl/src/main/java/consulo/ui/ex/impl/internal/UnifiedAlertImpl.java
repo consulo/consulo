@@ -66,7 +66,7 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
             return CompletableFuture.completedFuture(remembered);
         }
 
-        Window window = Window.create(myTitle.get(), WindowOptions.builder().owner(owner).build());
+        Window window = Window.create(resolvedTitle().get(), WindowOptions.builder().owner(owner).build());
 
         CheckBox rememberBox = myRemember == null
             ? null

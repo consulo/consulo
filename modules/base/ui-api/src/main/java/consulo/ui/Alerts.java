@@ -25,6 +25,8 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-06-09
  */
+@Deprecated
+@DeprecationInfo("Use MessageBoxBuilder/MessageBoxes from ui-api")
 public final class Alerts {
     private static final Object ourStableNull = new Object();
 

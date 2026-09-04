@@ -18,12 +18,12 @@ package consulo.project.impl.internal;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.internal.ProjectOpenSetting;
-import consulo.ui.Alert;
-import consulo.ui.AlertValueRemember;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxRemember;
 import consulo.ui.ex.awt.DialogWrapper;
 import org.jspecify.annotations.Nullable;
 
-public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption, AlertValueRemember<Integer> {
+public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption, MessageBoxRemember<Integer> {
     public static final ProjectNewWindowDoNotAskOption INSTANCE = new ProjectNewWindowDoNotAskOption();
 
     @Override
@@ -55,10 +55,6 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
 
     @Override
     public void setValue(Integer value) {
-        if (value == Alert.CANCEL) {
-            return;
-        }
-
         ProjectOpenSetting.getInstance().setConfirmOpenNewProject(value);
     }
 
@@ -71,9 +67,8 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
         return confirmOpenNewProject;
     }
 
-    
     @Override
-    public String getMessageBoxText() {
-        return CommonLocalize.dialogOptionsDoNotAsk().get();
+    public LocalizeValue getMessageText() {
+        return CommonLocalize.dialogOptionsDoNotAsk();
     }
 }

@@ -22,7 +22,7 @@ import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,7 +45,7 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
 
         verticalLayout.add(Button.create(
             LocalizeValue.localizeTODO("&Click me"),
-            event -> Alerts.okInfo(LocalizeValue.localizeTODO("Info")).showAsync(verticalLayout)
+            event -> MessageBoxes.okInfo(LocalizeValue.localizeTODO("Info")).showAsync(verticalLayout)
         ));
 
         verticalLayout.add(Button.create(LocalizeValue.localizeTODO("Open Me"), event -> {

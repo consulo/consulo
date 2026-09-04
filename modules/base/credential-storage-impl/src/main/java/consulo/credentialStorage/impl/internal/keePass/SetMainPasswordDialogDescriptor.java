@@ -29,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
+import consulo.ui.MessageBoxes;
 
 /**
  * @author VISTALL
@@ -54,7 +55,7 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
         if (value instanceof NewMasterPasswordResult newMasterPasswordResult) {
             LocalizeValue error = myOkHandler.apply(newMasterPasswordResult.password());
             if (error.isNotEmpty())  {
-                Alerts.okError(error).showAsync(window);
+                MessageBoxes.okError(error).showAsync(window);
                 return false;
             }
         }

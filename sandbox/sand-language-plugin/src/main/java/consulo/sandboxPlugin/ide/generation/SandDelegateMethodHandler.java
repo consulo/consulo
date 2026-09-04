@@ -23,7 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
@@ -40,7 +40,7 @@ public class SandDelegateMethodHandler implements DelegateMethodHandler {
     @Override
     @RequiredUIAccess
     public void invoke(Project project, Editor editor, PsiFile file) {
-        Alerts.okInfo(LocalizeValue.localizeTODO("delegate methods called")).showAsync();
+        MessageBoxes.okInfo(LocalizeValue.localizeTODO("delegate methods called")).showAsync();
     }
 
     @Override

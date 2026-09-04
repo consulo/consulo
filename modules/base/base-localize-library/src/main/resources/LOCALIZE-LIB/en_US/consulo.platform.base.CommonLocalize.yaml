@@ -40,6 +40,8 @@ button.cancel:
     text: Cancel
 button.close:
     text: '&Close'
+button.details:
+    text: '&Details'
 button.continue:
     text: Con&tinue
 button.copy:

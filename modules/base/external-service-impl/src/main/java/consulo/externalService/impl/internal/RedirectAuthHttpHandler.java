@@ -28,7 +28,7 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.http.HttpMethod;
 import consulo.http.HttpRequests;
 import consulo.logging.Logger;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.util.io.StreamUtil;
 
@@ -90,12 +90,12 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
                     externalServiceConfiguration.updateIcon();
 
-                    uiAccess.give(() -> Alerts.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(username)).showAsync());
+                    uiAccess.give(() -> MessageBoxes.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(username)).showAsync());
                 }
                 catch (IOException e) {
                     LOG.warn("Exception while receiving OAuth token", e);
 
-                    uiAccess.give(() -> Alerts.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync());
+                    uiAccess.give(() -> MessageBoxes.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync());
                 }
             }
         );

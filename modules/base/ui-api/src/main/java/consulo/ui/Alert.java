@@ -30,6 +30,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2017-10-01
  */
+@Deprecated
+@DeprecationInfo("Use MessageBoxBuilder/MessageBoxes from ui-api")
 public interface Alert<V> {
     int OK = 1000;
     int CANCEL = 1001;
