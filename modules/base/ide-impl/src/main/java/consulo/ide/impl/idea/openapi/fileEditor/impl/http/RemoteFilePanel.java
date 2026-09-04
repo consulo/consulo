@@ -15,22 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.http.HttpProxySettingService;
+import consulo.http.localize.HttpLocalize;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.Button;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -40,9 +47,9 @@ import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
 import consulo.virtualFileSystem.http.event.FileDownloadingListener;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,13 +63,13 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private static final String DOWNLOADING_CARD = "downloading";
     private static final String EDITOR_CARD = "editor";
     private JPanel myMainPanel;
-    private JLabel myProgressLabel;
+    private Label myProgressLabel;
     private JProgressBar myProgressBar;
-    private JButton myCancelButton;
+    private Button myCancelButton;
     private JPanel myContentPanel;
-    private JLabel myErrorLabel;
-    private JButton myTryAgainButton;
-    private JButton myChangeProxySettingsButton;
+    private Label myErrorLabel;
+    private Button myTryAgainButton;
+    private Button myChangeProxySettingsButton;
     private JPanel myEditorPanel;
     private JTextField myUrlTextField;
     private JPanel myToolbarPanel;
@@ -74,9 +81,11 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private @Nullable TextEditor myFileEditor;
 
     public RemoteFilePanel(Project project, HttpVirtualFile virtualFile) {
+        $$$setupUI$$$();
+
         myProject = project;
         myVirtualFile = virtualFile;
-        myErrorLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
+        myErrorLabel.setImage(PlatformIconGroup.generalError());
         myUrlTextField.setText(virtualFile.getUrl());
         myProgressUpdatesQueue = new MergingUpdateQueue("downloading progress updates", 300, false, myMainPanel);
         initToolbar(project);
@@ -84,13 +93,13 @@ public class RemoteFilePanel implements PropertyChangeListener {
         RemoteFileInfo remoteFileInfo = virtualFile.getFileInfo();
         myDownloadingListener = new MyDownloadingListener();
         remoteFileInfo.addDownloadingListener(myDownloadingListener);
-        myCancelButton.addActionListener(e -> remoteFileInfo.cancelDownloading());
+        myCancelButton.addClickListener(e -> remoteFileInfo.cancelDownloading());
 
-        myTryAgainButton.addActionListener(e -> {
+        myTryAgainButton.addClickListener(e -> {
             showCard(DOWNLOADING_CARD);
             remoteFileInfo.restartDownloading();
         });
-        myChangeProxySettingsButton.addActionListener(
+        myChangeProxySettingsButton.addClickListener(
             e -> Application.get().getInstance(HttpProxySettingService.class).showSettings(project)
         );
         showCard(DOWNLOADING_CARD);
@@ -109,6 +118,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private void initToolbar(Project project) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new RefreshRemoteFileAction(myVirtualFile));
+
         for (RemoteFileEditorActionProvider actionProvider : RemoteFileEditorActionProvider.EP_NAME.getExtensionList()) {
             group.addAll(actionProvider.createToolbarActions(project, myVirtualFile));
         }
@@ -117,13 +127,13 @@ public class RemoteFilePanel implements PropertyChangeListener {
     }
 
     private void showCard(String name) {
-        ((CardLayout)myContentPanel.getLayout()).show(myContentPanel, name);
+        ((CardLayout) myContentPanel.getLayout()).show(myContentPanel, name);
     }
 
     private void switchEditor() {
         LOG.debug("Switching editor...");
         Application.get().invokeLater(() -> {
-            TextEditor textEditor = (TextEditor)TextEditorProvider.getInstance().createEditor(myProject, myVirtualFile);
+            TextEditor textEditor = (TextEditor) TextEditorProvider.getInstance().createEditor(myProject, myVirtualFile);
             textEditor.addPropertyChangeListener(RemoteFilePanel.this);
             myEditorPanel.removeAll();
             myEditorPanel.add(textEditor.getComponent(), BorderLayout.CENTER);
@@ -180,6 +190,320 @@ public class RemoteFilePanel implements PropertyChangeListener {
         myDispatcher.getMulticaster().propertyChange(evt);
     }
 
+    /**
+     * Method generated by Consulo GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     */
+    private void $$$setupUI$$$() {
+        myMainPanel = new JPanel();
+        myMainPanel.setLayout(new GridLayoutManager(3, 1, JBUI.emptyInsets(), -1, 0));
+        myContentPanel = new JPanel();
+        myContentPanel.setLayout(new CardLayout(0, 0));
+        myMainPanel.add(
+            myContentPanel,
+            new GridConstraints(
+                1,
+                0,
+                2,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(3, 1, JBUI.insets(5), -1, -1));
+        myContentPanel.add(panel1, "downloading");
+        myProgressLabel = Label.create(HttpLocalize.downloadingFileStarted());
+        panel1.add(
+            TargetAWT.to(myProgressLabel),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
+        panel1.add(
+            panel2,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                new Dimension(241, 28),
+                null,
+                1,
+                false
+            )
+        );
+        myProgressBar = new JProgressBar();
+        panel2.add(
+            myProgressBar,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myCancelButton = Button.create(CommonLocalize.buttonCancel());
+        panel2.add(
+            TargetAWT.to(myCancelButton),
+            new GridConstraints(
+                0,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer1 = new Spacer();
+        panel1.add(
+            spacer1,
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_VERTICAL,
+                1,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(3, 1, JBUI.insets(5), -1, -1));
+        myContentPanel.add(panel3, "error");
+        myErrorLabel = Label.create();
+        panel3.add(
+            TargetAWT.to(myErrorLabel),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(1, 3, JBUI.emptyInsets(), -1, -1));
+        panel3.add(
+            panel4,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myChangeProxySettingsButton = Button.create(HttpLocalize.downloadingFileChangeHttpProxySettings());
+        panel4.add(
+            TargetAWT.to(myChangeProxySettingsButton),
+            new GridConstraints(
+                0,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer2 = new Spacer();
+        panel4.add(
+            spacer2,
+            new GridConstraints(
+                0,
+                2,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                1,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myTryAgainButton = Button.create(HttpLocalize.downloadingFileTryAgainButton());
+        panel4.add(
+            TargetAWT.to(myTryAgainButton),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer3 = new Spacer();
+        panel3.add(
+            spacer3,
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_VERTICAL,
+                1,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myEditorPanel = new JPanel();
+        myEditorPanel.setLayout(new BorderLayout(0, 0));
+        myContentPanel.add(myEditorPanel, "editor");
+        JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridLayoutManager(1, 2, JBUI.insets(3, 3, 0, 3), 0, -1));
+        myMainPanel.add(
+            panel5,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                1,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myUrlTextField = new JTextField();
+        myUrlTextField.setEditable(false);
+        panel5.add(
+            myUrlTextField,
+            new GridConstraints(
+                0,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                new Dimension(150, -1),
+                null,
+                0,
+                false
+            )
+        );
+        myToolbarPanel = new JPanel();
+        myToolbarPanel.setLayout(new BorderLayout(0, 0));
+        panel5.add(
+            myToolbarPanel,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+    }
+
+    public JComponent $$$getRootComponent$$$() {
+        return myMainPanel;
+    }
+
     private class MyDownloadingListener implements FileDownloadingListener {
         @Override
         public void fileDownloaded(VirtualFile localFile) {
@@ -193,7 +517,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
                     showCard(EDITOR_CARD);
                 }
                 else {
-                    myErrorLabel.setText("Downloading cancelled");
+                    myErrorLabel.setText(HttpLocalize.downloadingFileCancelled());
                     showCard(ERROR_CARD);
                 }
             });
@@ -207,7 +531,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         @Override
         public void errorOccurred(LocalizeValue errorMessage) {
             Application.get().invokeLater(() -> {
-                myErrorLabel.setText(errorMessage.getNullIfEmpty());
+                myErrorLabel.setText(errorMessage);
                 showCard(ERROR_CARD);
             });
         }
@@ -216,8 +540,9 @@ public class RemoteFilePanel implements PropertyChangeListener {
         public void progressMessageChanged(boolean indeterminate, LocalizeValue message) {
             myProgressUpdatesQueue.queue(new Update("progress text") {
                 @Override
+                @RequiredUIAccess
                 public void run() {
-                    myProgressLabel.setText(message.getNullIfEmpty());
+                    myProgressLabel.setText(message);
                 }
             });
         }
@@ -227,7 +552,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
             myProgressUpdatesQueue.queue(new Update("fraction") {
                 @Override
                 public void run() {
-                    myProgressBar.setValue((int)Math.round(100 * fraction));
+                    myProgressBar.setValue((int) Math.round(100 * fraction));
                 }
             });
         }

@@ -1,3 +1,39 @@
+certificate.accept.non.trusted.certificates.automatically:
+    text: Accept non-trusted certificates &automatically
+certificate.accepted.certificates:
+    text: Accepted certificates
+certificate.cannot.add.certificate:
+    text: Cannot Add Certificate
+certificate.cannot.add.certificate.for:
+    text: Cannot add certificate for {0}
+certificate.cannot.remove.certificate:
+    text: Cannot Remove Certificate
+certificate.cannot.remove.certificate.for:
+    text: Cannot remove certificate for {0}
+certificate.certificate.already.exists:
+    text: Certificate already exists
+certificate.choose.certificate:
+    text: Choose Certificate
+certificate.display.name:
+    text: Server Certificates
+certificate.label.root:
+    text: <root>
+certificate.malformed.x509.server.certificate:
+    text: Malformed X509 server certificate
+certificate.no.certificate.selected:
+    text: No certificate selected
+certificate.no.certificates:
+    text: No certificates
+certificate.not.imported:
+    text: Not Imported
+downloading.file.cancelled:
+    text: Downloading cancelled
+downloading.file.change.http.proxy.settings:
+    text: Change HTTP &Proxy Settings…
+downloading.file.started:
+    text: Downloading started
+downloading.file.try.again.button:
+    text: Tr&y Again
 error.connection.failed.redirects:
     text: 'Connection failed: too many redirects'
 error.connection.failed.with.http.code.N:
