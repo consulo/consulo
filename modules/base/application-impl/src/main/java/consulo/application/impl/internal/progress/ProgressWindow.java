@@ -155,9 +155,13 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
                 showDialog();
             }
             else {
+                boolean popupWasShown = isPopupWasShown();
+
                 Disposer.dispose(this);
 
-                ProjectWindowFocuser.getInstance().requestDefaultFocus(myProject);
+                if (popupWasShown) {
+                    ProjectWindowFocuser.getInstance().requestDefaultFocus(myProject);
+                }
             }
         }, getModalityState(), myDelayInMillis, TimeUnit.MILLISECONDS);
     }
