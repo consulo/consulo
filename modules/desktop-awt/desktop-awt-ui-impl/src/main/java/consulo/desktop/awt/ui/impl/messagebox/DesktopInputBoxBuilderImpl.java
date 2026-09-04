@@ -51,6 +51,7 @@ public class DesktopInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
     }
 
     private class DialogImpl extends DialogWrapper {
+        private final CompletableFuture<V> myResult = new CompletableFuture<>();
         private final C myEditor;
 
         DialogImpl(java.awt.@Nullable Component parent, C editor) {
@@ -140,8 +141,28 @@ public class DesktopInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
             setOKActionEnabled(problem == null || !problem.blocksConfirm());
         }
 
-        C editor() {
-            return myEditor;
+        /**
+         * Whatever closed the box ends here, so a dismissal is settled in one place rather than
+         * read back out of how the dialog framed the close.
+         */
+        @Override
+        protected void dispose() {
+            if (!myResult.isDone()) {
+                V value = isOK() ? normalize(myEditor.getValue()) : null;
+
+                if (value != null) {
+                    myResult.complete(value);
+                }
+                else {
+                    myResult.completeExceptionally(new DialogCancelledException());
+                }
+            }
+
+            super.dispose();
+        }
+
+        CompletableFuture<V> result() {
+            return myResult;
         }
     }
 
@@ -159,23 +180,8 @@ public class DesktopInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
         // the initial state has to reflect the validator, which a change listener alone never does
         editor.addValueListener(event -> dialog.revalidate());
 
-        CompletableFuture<V> result = new CompletableFuture<>();
+        dialog.showAsync();
 
-        dialog.showAsync().whenComplete((ignored, error) -> {
-            if (error != null) {
-                result.completeExceptionally(error);
-                return;
-            }
-
-            V value = dialog.isOK() ? normalize(dialog.editor().getValue()) : null;
-            if (value != null) {
-                result.complete(value);
-            }
-            else {
-                result.completeExceptionally(new DialogCancelledException());
-            }
-        });
-
-        return result;
+        return dialog.result();
     }
 }

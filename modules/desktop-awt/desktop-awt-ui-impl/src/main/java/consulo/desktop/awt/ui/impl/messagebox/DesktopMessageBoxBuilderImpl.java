@@ -56,6 +56,7 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
     private static final int DETAIL_ROWS = 8;
 
     private class DialogImpl extends DialogWrapper {
+        private final CompletableFuture<V> myResult = new CompletableFuture<>();
         private @Nullable ButtonImpl<V> myPressed;
         private @Nullable DesktopCheckBoxImpl myRememberBox;
         private @Nullable JComponent myDetailPane;
@@ -229,9 +230,27 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
             return panel;
         }
 
-        @Nullable
-        ButtonImpl<V> pressed() {
-            return myPressed;
+        /**
+         * Whatever closed the box - a button, the escape key, the window's own close - ends here,
+         * so the answer is settled in one place rather than read back out of how the dialog framed
+         * the close.
+         */
+        @Override
+        protected void dispose() {
+            if (!myResult.isDone()) {
+                ButtonImpl<V> pressed = myPressed;
+                V value = pressed != null ? pressed.myValue.get() : exitValueOrNull();
+
+                storeRemembered(pressed, rememberChecked(), value);
+
+                myResult.complete(value);
+            }
+
+            super.dispose();
+        }
+
+        CompletableFuture<V> result() {
+            return myResult;
         }
 
         boolean rememberChecked() {
@@ -256,7 +275,7 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
         java.awt.Window awtOwner = owner != null ? TargetAWT.to(owner) : null;
         DialogImpl dialog = awtOwner != null ? new DialogImpl(awtOwner) : new DialogImpl();
 
-        CompletableFuture<V> result = new CompletableFuture<>();
+        CompletableFuture<V> result = dialog.result();
 
         // resolved here, on the ui thread - a cancel arrives on whichever thread asked for it
         UIAccess uiAccess = UIAccess.current();
@@ -266,19 +285,7 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
             }
         });
 
-        dialog.showAsync().whenComplete((ignored, error) -> {
-            if (error != null) {
-                result.completeExceptionally(error);
-                return;
-            }
-
-            ButtonImpl<V> pressed = dialog.pressed();
-            V value = pressed != null ? pressed.myValue.get() : exitValueOrNull();
-
-            storeRemembered(pressed, dialog.rememberChecked(), value);
-
-            result.complete(value);
-        });
+        dialog.showAsync();
 
         return result;
     }
