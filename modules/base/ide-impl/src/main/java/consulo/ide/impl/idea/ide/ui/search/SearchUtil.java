@@ -24,11 +24,13 @@ import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.OptionDescription;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -97,11 +99,7 @@ public class SearchUtil {
         }
     }
 
-    private static void _processComponent(
-        Configurable configurable,
-        Set<OptionDescription> configurableOptions,
-        JComponent component
-    ) {
+    private static void _processComponent(Configurable configurable, Set<OptionDescription> configurableOptions, JComponent component) {
         if (component == null) {
             return;
         }
@@ -183,7 +181,6 @@ public class SearchUtil {
         }
     }
 
-    
     public static Runnable lightOptions(
         SearchableConfigurable configurable,
         JComponent component,
@@ -237,69 +234,58 @@ public class SearchUtil {
         String option,
         boolean force
     ) {
-
         rootComponent.putClientProperty(HIGHLIGHT_WITH_BORDER, null);
 
-        if (option == null || option.trim().length() == 0) {
+        if (StringUtil.isEmptyOrSpaces(option)) {
             return false;
         }
         boolean highlight = false;
-        if (rootComponent instanceof JCheckBox) {
-            JCheckBox checkBox = ((JCheckBox) rootComponent);
+        if (rootComponent instanceof JCheckBox checkBox) {
             if (isComponentHighlighted(checkBox.getText(), option, force, configurable)) {
                 highlight = true;
                 glassPanel.addSpotlight(checkBox);
             }
         }
-        else if (rootComponent instanceof JRadioButton) {
-            JRadioButton radioButton = ((JRadioButton) rootComponent);
+        else if (rootComponent instanceof JRadioButton radioButton) {
             if (isComponentHighlighted(radioButton.getText(), option, force, configurable)) {
                 highlight = true;
                 glassPanel.addSpotlight(radioButton);
             }
         }
-        else if (rootComponent instanceof JLabel) {
-            JLabel label = ((JLabel) rootComponent);
+        else if (rootComponent instanceof JLabel label) {
             if (isComponentHighlighted(label.getText(), option, force, configurable)) {
                 highlight = true;
                 glassPanel.addSpotlight(label);
             }
         }
-        else if (rootComponent instanceof JButton) {
-            JButton button = ((JButton) rootComponent);
+        else if (rootComponent instanceof JButton button) {
             if (isComponentHighlighted(button.getText(), option, force, configurable)) {
                 highlight = true;
                 glassPanel.addSpotlight(button);
             }
         }
-        else if (rootComponent instanceof JTabbedPane) {
-            JTabbedPane tabbedPane = (JTabbedPane) rootComponent;
+        else if (rootComponent instanceof JTabbedPane tabbedPane) {
             String path = SearchableOptionsRegistrar.getInstance().getInnerPath(configurable, option);
             if (path != null) {
                 int index = getSelection(path, tabbedPane);
-                if (index > -1 && index < tabbedPane.getTabCount()) {
-                    if (tabbedPane.getTabComponentAt(index) instanceof JComponent) {
-                        glassPanel.addSpotlight((JComponent) tabbedPane.getTabComponentAt(index));
-                    }
+                if (0 <= index && index < tabbedPane.getTabCount()
+                    && tabbedPane.getTabComponentAt(index) instanceof JComponent componentAtIndex) {
+                    glassPanel.addSpotlight(componentAtIndex);
                 }
             }
         }
 
         Component[] components = rootComponent.getComponents();
         for (Component component : components) {
-            if (component instanceof JComponent) {
-                boolean innerHighlight = traverseComponentsTree(configurable, glassPanel, (JComponent) component, option, force);
+            if (component instanceof JComponent jComponent) {
+                boolean innerHighlight = traverseComponentsTree(configurable, glassPanel, jComponent, option, force);
 
-                if (!highlight && !innerHighlight) {
-                    Border border = rootComponent.getBorder();
-                    if (border instanceof TitledBorder) {
-                        String title = ((TitledBorder) border).getTitle();
-                        if (isComponentHighlighted(title, option, force, configurable)) {
-                            highlight = true;
-                            glassPanel.addSpotlight(rootComponent);
-                            rootComponent.putClientProperty(HIGHLIGHT_WITH_BORDER, Boolean.TRUE);
-                        }
-                    }
+                if (!highlight && !innerHighlight
+                    && rootComponent.getBorder() instanceof TitledBorder titledBorder
+                    && isComponentHighlighted(titledBorder.getTitle(), option, force, configurable)) {
+                    highlight = true;
+                    glassPanel.addSpotlight(rootComponent);
+                    rootComponent.putClientProperty(HIGHLIGHT_WITH_BORDER, Boolean.TRUE);
                 }
 
                 if (innerHighlight) {
@@ -311,14 +297,13 @@ public class SearchUtil {
     }
 
     public static boolean isComponentHighlighted(String text, String option, boolean force, SearchableConfigurable configurable) {
-        if (text == null || option == null || option.length() == 0) {
+        if (text == null || StringUtil.isEmpty(option)) {
             return false;
         }
         SearchableOptionsRegistrar searchableOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
         Set<String> words = searchableOptionsRegistrar.getProcessedWords(option);
-        Set<String> options =
-            configurable != null ? searchableOptionsRegistrar.replaceSynonyms(words, configurable) : words;
-        if (options == null || options.isEmpty()) {
+        Set<String> options = configurable != null ? searchableOptionsRegistrar.replaceSynonyms(words, configurable) : words;
+        if (ContainerUtil.isEmpty(options)) {
             return text.toLowerCase().contains(option.toLowerCase());
         }
         Set<String> tokens = searchableOptionsRegistrar.getProcessedWords(text);
@@ -443,26 +428,29 @@ public class SearchUtil {
         if (text == null) {
             return;
         }
-        if (filter == null || filter.length() == 0) {
-            textRenderer.append(text, new SimpleTextAttributes(background, foreground, JBColor.RED, style));
+
+        ColorValue bgColor = TargetAWT.from(background);
+        ColorValue fgColor = TargetAWT.from(foreground);
+        if (StringUtil.isEmpty(filter)) {
+            textRenderer.append(text, SimpleTextAttributes.of(bgColor, fgColor, TargetAWT.from(JBColor.RED), style));
         }
         else { //markup
             Set<String> quoted = new HashSet<>();
             filter = processFilter(quoteStrictOccurrences(text, filter), quoted);
-            Map<Integer, String> indx = new TreeMap<>();
+            Map<Integer, String> fragmentsByIndex = new TreeMap<>();
             for (String stripped : quoted) {
                 int beg = 0;
-                int idx;
-                while ((idx = StringUtil.indexOfIgnoreCase(text, stripped, beg)) != -1) {
-                    indx.put(idx, text.substring(idx, idx + stripped.length()));
-                    beg = idx + stripped.length();
+                int index;
+                while ((index = StringUtil.indexOfIgnoreCase(text, stripped, beg)) != -1) {
+                    fragmentsByIndex.put(index, text.substring(index, index + stripped.length()));
+                    beg = index + stripped.length();
                 }
             }
 
             List<String> selectedWords = new ArrayList<>();
             int pos = 0;
-            for (Integer index : indx.keySet()) {
-                String stripped = indx.get(index);
+            for (Integer index : fragmentsByIndex.keySet()) {
+                String stripped = fragmentsByIndex.get(index);
                 int start = index;
                 if (pos > start) {
                     String highlighted = selectedWords.get(selectedWords.size() - 1);
@@ -483,18 +471,18 @@ public class SearchUtil {
             for (String word : selectedWords) {
                 text = text.substring(idx);
                 String before = text.substring(0, text.indexOf(word));
-                if (before.length() > 0) {
-                    textRenderer.append(before, new SimpleTextAttributes(background, foreground, null, style));
+                if (!before.isEmpty()) {
+                    textRenderer.append(before, SimpleTextAttributes.of(bgColor, fgColor, null, style));
                 }
                 idx = text.indexOf(word) + word.length();
                 textRenderer.append(
                     text.substring(idx - word.length(), idx),
-                    new SimpleTextAttributes(background, foreground, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH)
+                    SimpleTextAttributes.of(bgColor, fgColor, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH)
                 );
             }
-            String after = text.substring(idx, text.length());
-            if (after.length() > 0) {
-                textRenderer.append(after, new SimpleTextAttributes(background, foreground, null, style));
+            String after = text.substring(idx);
+            if (!after.isEmpty()) {
+                textRenderer.append(after, SimpleTextAttributes.of(bgColor, fgColor, null, style));
             }
         }
     }
@@ -525,14 +513,13 @@ public class SearchUtil {
         Project project,
         int down
     ) {
-
         String filter = searchField.getText();
-        if (filter == null || filter.length() == 0) {
+        if (StringUtil.isEmpty(filter)) {
             return null;
         }
         Map<String, Set<String>> hints = SearchableOptionsRegistrar.getInstance().findPossibleExtension(filter, project);
-        DefaultListModel model = new DefaultListModel();
-        JList list = new JBList(model);
+        DefaultListModel<Object> model = new DefaultListModel<>();
+        JList<Object> list = new JBList<>(model);
         for (String groupName : hints.keySet()) {
             model.addElement(groupName);
             Set<String> descriptions = hints.get(groupName);
@@ -552,8 +539,8 @@ public class SearchUtil {
                 if (value instanceof String) {
                     setText("------ " + value + " ------");
                 }
-                else if (value instanceof OptionDescription) {
-                    setText(((OptionDescription) value).getHit());
+                else if (value instanceof OptionDescription optionDescription) {
+                    setText(optionDescription.getHit());
                 }
                 return rendererComponent;
             }
@@ -769,9 +756,8 @@ public class SearchUtil {
     }
 
     private static void addChildren(Configurable configurable, List<Configurable> list) {
-        if (configurable instanceof Configurable.Composite) {
-            Configurable[] kids = ((Configurable.Composite) configurable).getConfigurables();
-            for (Configurable eachKid : kids) {
+        if (configurable instanceof Configurable.Composite composite) {
+            for (Configurable eachKid : composite.getConfigurables()) {
                 list.add(eachKid);
                 addChildren(eachKid, list);
             }
