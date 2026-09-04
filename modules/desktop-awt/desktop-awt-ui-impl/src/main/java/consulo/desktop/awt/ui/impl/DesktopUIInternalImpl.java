@@ -425,6 +425,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public FontBox _Components_fontBox() {
+        return new DesktopFontBoxImpl();
+    }
+
+    @Override
     public ColorPickerBuilder _ColorPicker_create() {
         return new DesktopAWTColorPickerBuilder();
     }

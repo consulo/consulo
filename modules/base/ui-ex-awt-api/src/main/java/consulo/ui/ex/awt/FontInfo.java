@@ -116,6 +116,14 @@ public final class FontInfo {
              : LazyListByName.LIST;
   }
 
+  /**
+   * Enumerates the families now, rather than answering with the shared list {@link #getAll} keeps from its
+   * first use - for a caller which has to see the families installed at this moment.
+   */
+  public static List<FontInfo> getAllUncached() {
+    return GraphicsEnvironment.isHeadless() ? Collections.<FontInfo>emptyList() : byName();
+  }
+
   private static FontInfo find(List<FontInfo> list, String name) {
     for (FontInfo info : list) {
       if (info.toString().equalsIgnoreCase(name)) {

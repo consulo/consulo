@@ -145,6 +145,11 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
+    public FontBox _Components_fontBox() {
+        return new HeadlessFontBox();
+    }
+
+    @Override
     public Image _Image_lazy(Supplier<Image> imageSupplier) {
         return new HeadlessImage();
     }

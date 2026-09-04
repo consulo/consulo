@@ -15,15 +15,16 @@
  */
 package consulo.desktop.qt.ui.impl.font;
 
-import consulo.desktop.qt.ui.impl.DesktopQtUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
+import consulo.ui.font.Typeface;
+import consulo.ui.impl.font.TypefaceImpl;
 import io.qt.gui.QFontDatabase;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author VISTALL
@@ -38,17 +39,8 @@ public class DesktopQtFontManagerImpl implements FontManager {
     }
 
     @Override
-    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
-        return DesktopQtUIAccess.INSTANCE.giveAsync(DesktopQtFontManagerImpl::readFamilies);
-    }
-
-    @Override
-    public Set<String> getAvailableFontNames() {
-        AtomicReference<Set<String>> result = new AtomicReference<>(Set.of());
-
-        DesktopQtUIAccess.INSTANCE.giveAndWait(() -> result.set(readFamilies()));
-
-        return result.get();
+    public CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess) {
+        return uiAccess.giveAsync(DesktopQtFontManagerImpl::readTypefaces);
     }
 
     @Override
@@ -56,7 +48,11 @@ public class DesktopQtFontManagerImpl implements FontManager {
         return new DesktopQtFontImpl(fontName, fontSize, fontStyle);
     }
 
-    private static Set<String> readFamilies() {
-        return new LinkedHashSet<>(QFontDatabase.families());
+    private static List<Typeface> readTypefaces() {
+        List<Typeface> typefaces = new ArrayList<>();
+        for (String family : QFontDatabase.families()) {
+            typefaces.add(new TypefaceImpl(family, QFontDatabase.isFixedPitch(family)));
+        }
+        return typefaces;
     }
 }

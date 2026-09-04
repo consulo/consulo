@@ -32,8 +32,26 @@ import java.util.Objects;
  * @since 2019-02-19
  */
 public abstract class WebBooleanValueComponentBase<E extends Component & HasValue<?, Boolean> & FromVaadinComponentWrapper> extends VaadinComponentDelegate<E> implements ValueComponent<Boolean> {
+    /**
+     * A value written from java raises the browser's own event as well, and that event is the one reported -
+     * without this the write would be reported twice, and a write which asked not to be reported once.
+     */
+    private boolean myFireListeners = true;
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public WebBooleanValueComponentBase(boolean value) {
-        getVaadinComponent().setValue(value);
+        E component = getVaadinComponent();
+
+        component.setValue(value);
+
+        // the listener is what a press in the browser arrives through - reporting only the writes made from java
+        // left a checkbox the user ticked telling nobody, and the pages which enable a field from one never saw it
+        ((HasValue) component).addValueChangeListener(event -> {
+            if (myFireListeners) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent<>(this, (Boolean) ((HasValue.ValueChangeEvent) event).getValue()));
+            }
+        });
     }
 
     @Override
@@ -58,12 +76,13 @@ public abstract class WebBooleanValueComponentBase<E extends Component & HasValu
     }
 
     @RequiredUIAccess
-    @SuppressWarnings("unchecked")
     protected void setValueImpl(@Nullable Boolean value, boolean fireEvents) {
-        getVaadinComponent().setValue(value);
-
-        if (fireEvents) {
-            getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent<>(this, value));
+        myFireListeners = fireEvents;
+        try {
+            getVaadinComponent().setValue(value);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 }

@@ -113,7 +113,28 @@ public class BundledFontRegistry {
         new BundledFont("Roboto-Light.ttf", "Roboto", 300, false, "Roboto Light")
     );
 
+    /**
+     * The bundled typefaces whose glyphs are all of one width. A family outside this set is a text face, and
+     * offering it as an editor font would break the alignment an editor is drawn on.
+     */
+    private static final Set<String> ourMonospacedFamilies =
+        Set.of("JetBrains Mono", "Fira Code", "Source Code Pro", "Inconsolata");
+
     private BundledFontRegistry() {
+    }
+
+    /**
+     * Whether a bundled family is monospaced, named either by its own name or by the split name the jdk
+     * reports for one of its weights.
+     */
+    public static boolean isMonospaced(String familyName) {
+        for (BundledFont font : ourFonts) {
+            if (familyName.equals(font.family()) || familyName.equals(font.awtFamily())) {
+                return ourMonospacedFamilies.contains(font.family());
+            }
+        }
+
+        return false;
     }
 
     public static List<BundledFont> getBundledFonts() {

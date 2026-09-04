@@ -33,6 +33,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
+import consulo.ui.FontBox;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibrary;
@@ -64,7 +65,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     public static class LayoutImpl implements Supplier<Layout> {
         private VerticalLayout myPanel;
 
-        private ComboBox<String> myFontCombo;
+        private FontBox myFontCombo;
         private TextBoxWithHistory myFontSizeCombo;
         private CheckBox myAnimateWindowsCheckBox;
         private ComboBox<Style> myStyleComboBox;
@@ -135,8 +136,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
             HorizontalLayout useCustomFontLine = HorizontalLayout.create();
             useCustomFontLine.add(myOverrideLAFFonts = CheckBox.create(IdeLocalize.checkboxOverrideDefaultLafFonts()));
-            Set<String> availableFontNames = FontManager.get().getAvailableFontNames();
-            useCustomFontLine.add(myFontCombo = ComboBox.create(availableFontNames));
+            useCustomFontLine.add(myFontCombo = FontBox.create());
             useCustomFontLine.add(LabeledBuilder.simple(
                 IdeLocalize.labelFontSize(),
                 myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())

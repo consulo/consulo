@@ -241,6 +241,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public FontBox _Components_fontBox() {
+        return new WebFontBoxImpl();
+    }
+
+    @Override
     public ColorPickerBuilder _ColorPicker_create() {
         return new WebColorPickerBuilderImpl();
     }

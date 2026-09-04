@@ -141,6 +141,10 @@ public abstract class UIInternal {
 
     public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
+    public FontBox _Components_fontBox() {
+        throw new UnsupportedOperationException();
+    }
+
     public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         throw new UnsupportedOperationException();
     }

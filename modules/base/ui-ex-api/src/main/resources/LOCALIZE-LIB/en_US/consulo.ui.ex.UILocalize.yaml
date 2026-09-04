@@ -116,6 +116,10 @@ file.is.read.only.message.text:
     text: File ''{0}'' is read-only.
 files.are.read.only.message.text:
     text: Files {0} are read-only.
+font.box.loading:
+    text: Loading…
+font.box.request.fonts:
+    text: Request Fonts…
 go.to.line.command.double.click:
     text: Click to go to line
 go.to.line.command.name:

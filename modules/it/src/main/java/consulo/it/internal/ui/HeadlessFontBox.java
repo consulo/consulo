@@ -15,32 +15,45 @@
  */
 package consulo.it.internal.ui;
 
-import consulo.ui.UIAccess;
-import consulo.ui.font.Font;
-import consulo.ui.font.FontManager;
-import consulo.ui.font.Typeface;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import consulo.ui.FontBox;
 
 /**
- * Dummy-but-creatable headless {@link FontManager}.
+ * Dummy-but-creatable headless {@link FontBox}.
  *
  * @author VISTALL
  */
-public class HeadlessFontManager implements FontManager {
+public class HeadlessFontBox extends HeadlessValueComponentBase<String> implements FontBox {
+    private boolean myMonospacedOnly;
+
+    public HeadlessFontBox() {
+        super(null);
+    }
+
     @Override
-    public boolean isRequiredPermission() {
+    public void setMonospacedOnly(boolean monospacedOnly) {
+        myMonospacedOnly = monospacedOnly;
+    }
+
+    @Override
+    public boolean isMonospacedOnly() {
+        return myMonospacedOnly;
+    }
+
+    @Override
+    public boolean hasFocus() {
         return false;
     }
 
     @Override
-    public CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess) {
-        return CompletableFuture.completedFuture(List.of());
+    public void focus() {
     }
 
     @Override
-    public Font createFont(String fontName, int fontSize, int fontStyle) {
-        return new HeadlessFont(fontName, fontSize, fontStyle);
+    public void setFocusable(boolean focusable) {
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return false;
     }
 }

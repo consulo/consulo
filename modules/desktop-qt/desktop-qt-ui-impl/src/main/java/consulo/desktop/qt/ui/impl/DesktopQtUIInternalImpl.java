@@ -290,6 +290,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public FontBox _Components_fontBox() {
+        return new DesktopQtFontBoxImpl();
+    }
+
+    @Override
     public Image _Image_fromUrl(URL url) throws IOException {
         return DesktopQtBytesImageImpl.fromUrl(url);
     }
