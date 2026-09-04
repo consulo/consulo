@@ -1,5 +1,6 @@
 package consulo.http.impl.internal.ssl;
 
+import consulo.http.localize.HttpLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.Tree;
@@ -219,7 +220,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
 
         @Override
         protected void update(PresentationData presentation) {
-            presentation.addText("<root>", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            presentation.addText(HttpLocalize.certificateLabelRoot(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
     }
 

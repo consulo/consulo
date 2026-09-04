@@ -81,7 +81,6 @@ open module consulo.ide.impl {
     requires consulo.project.impl;
     requires consulo.project.ui.impl;
     requires consulo.language.code.style.ui.api;
-    requires consulo.http.impl;
     requires consulo.http.adapter.httpclient4;
     requires consulo.file.editor.impl;
     requires consulo.execution.impl;
@@ -477,7 +476,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.util.indexing;
     exports consulo.ide.impl.idea.util.io;
     exports consulo.ide.impl.idea.util.net;
-    exports consulo.ide.impl.idea.util.net.ssl;
     exports consulo.ide.impl.idea.util.properties;
     exports consulo.ide.impl.idea.util.text;
     exports consulo.ide.impl.idea.util.ui;
