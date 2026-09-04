@@ -40,8 +40,26 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
 
     public WebScrollLayoutImpl(Component component, ScrollableLayoutOptions options) {
         HasSize content = (HasSize) TargetVaadin.to(component);
-        content.setSizeFull();
-        getVaadinComponent().add((com.vaadin.flow.component.Component) content);
+
+        // full width but its own height: pinning the height to the box would make the content exactly as tall
+        // as what it is scrolled inside, so there would never be anything to scroll to
+        content.setWidthFull();
+
+        Vaadin vaadin = getVaadinComponent();
+        vaadin.setSizeFull();
+        vaadin.getStyle()
+            .set("overflow-x", toCssOverflow(options.getHorizontalScrollPolicy()))
+            .set("overflow-y", toCssOverflow(options.getVerticalScrollPolicy()));
+
+        vaadin.add((com.vaadin.flow.component.Component) content);
+    }
+
+    private static String toCssOverflow(ScrollableLayoutOptions.ScrollPolicy policy) {
+        return switch (policy) {
+            case ALWAYS -> "scroll";
+            case NEVER -> "hidden";
+            default -> "auto";
+        };
     }
 
     @Override
