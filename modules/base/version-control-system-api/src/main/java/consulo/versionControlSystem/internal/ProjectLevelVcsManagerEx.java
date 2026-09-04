@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.content.ContentManager;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -31,7 +32,7 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
     public abstract ContentManager getContentManager();
 
-    public abstract CheckoutCallback getCompositeCheckoutCallback();
+    public abstract CheckoutCallback getCompositeCheckoutCallback(UIAccess uiAccess, boolean importProject);
 
     public abstract VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option);
 

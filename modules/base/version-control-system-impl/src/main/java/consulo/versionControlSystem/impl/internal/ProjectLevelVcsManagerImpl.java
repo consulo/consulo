@@ -37,6 +37,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
@@ -58,6 +59,7 @@ import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.versionControlSystem.impl.internal.change.VcsAnnotationLocalChangesListenerImpl;
 import consulo.versionControlSystem.impl.internal.checkout.CompositeCheckoutCallback;
+import consulo.versionControlSystem.impl.internal.checkout.OpenProjectCheckoutCallback;
 import consulo.versionControlSystem.impl.internal.update.UpdateInfoTreeImpl;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -764,7 +766,10 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public CheckoutCallback getCompositeCheckoutCallback() {
+    public CheckoutCallback getCompositeCheckoutCallback(UIAccess uiAccess, boolean openProject) {
+        if (openProject) {
+            return new OpenProjectCheckoutCallback(uiAccess);
+        }
         return new CompositeCheckoutCallback(myProject);
     }
 

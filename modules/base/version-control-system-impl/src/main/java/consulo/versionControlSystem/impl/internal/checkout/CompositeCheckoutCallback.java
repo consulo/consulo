@@ -51,33 +51,10 @@ public class CompositeCheckoutCallback implements CheckoutCallback {
     public void directoryCheckedOut(File directory, VcsKey vcs) {
         myVcsKey = vcs;
         if (!myFoundProject) {
-            VirtualFile virtualFile = refreshVFS(directory);
-            if (virtualFile != null) {
-                if (myFirstDirectory == null) {
-                    myFirstDirectory = directory;
-                }
-                notifyCheckoutListeners(directory, PreCheckoutListener.class);
-            }
-        }
-    }
+            myFirstDirectory = directory;
 
-    @RequiredUIAccess
-    private static VirtualFile refreshVFS(File directory) {
-        SimpleReference<VirtualFile> result = new SimpleReference<>();
-        Application.get().runWriteAction(() -> {
-            LocalFileSystem lfs = LocalFileSystem.getInstance();
-            VirtualFile vDir = lfs.refreshAndFindFileByIoFile(directory);
-            result.set(vDir);
-            if (vDir != null) {
-                LocalFileSystem.WatchRequest watchRequest = lfs.addRootToWatch(vDir.getPath(), true);
-                ((NewVirtualFile)vDir).markDirtyRecursively();
-                vDir.refresh(false, true);
-                if (watchRequest != null) {
-                    lfs.removeWatchedRoot(watchRequest);
-                }
-            }
-        });
-        return result.get();
+            notifyCheckoutListeners(directory, PreCheckoutListener.class);
+        }
     }
 
     private void notifyCheckoutListeners(File directory, Class<? extends CheckoutListener> checkoutListenerEP) {
