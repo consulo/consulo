@@ -1206,6 +1206,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myReplaceSelectedButton.setVisible(isReplaceState);
     }
 
+    @RequiredUIAccess
     private void updateControls() {
         myReplaceAllButton.setVisible(myHelper.isReplaceState());
         myReplaceSelectedButton.setVisible(myHelper.isReplaceState());
@@ -1248,7 +1249,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         if (mySearchRescheduleOnCancellationsAlarm == null || mySearchRescheduleOnCancellationsAlarm.isDisposed()) {
             return;
         }
-        updateControls();
+        myProject.getUIAccess().give(() -> updateControls());
         mySearchRescheduleOnCancellationsAlarm.cancelAllRequests();
         mySearchRescheduleOnCancellationsAlarm.addRequest(this::findSettingsChanged, 100);
     }
