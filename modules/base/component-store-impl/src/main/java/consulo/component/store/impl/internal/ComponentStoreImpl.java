@@ -75,6 +75,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
 
+  private static final Set<String> ourReportedLegacyStorageComponents = ConcurrentHashMap.newKeySet();
+
   private final Provider<ApplicationDefaultStoreCache> myApplicationDefaultStoreCache;
 
   protected ComponentStoreImpl(Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
@@ -146,7 +148,25 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       mySettingsSavingComponents.add((SettingsSavingComponent)component);
     }
 
-    return StateComponentInfo.build(component, getProject());
+    StateComponentInfo componentInfo = StateComponentInfo.build(component, getProject());
+    if (componentInfo != null) {
+      reportLegacyStorageExtensions(component.getClass(), componentInfo.getState());
+    }
+    return componentInfo;
+  }
+
+  @SuppressWarnings("deprecation")
+  private static void reportLegacyStorageExtensions(Class<?> componentClass, State stateSpec) {
+    if (!ourReportedLegacyStorageComponents.add(componentClass.getName())) {
+      return;
+    }
+
+    for (Storage storage : stateSpec.storages()) {
+      String value = StringUtil.isEmpty(storage.file()) ? storage.value() : storage.file();
+      if (StorageUtil.hasLegacyExtension(value)) {
+        LOG.warn("Legacy @Storage(\"" + value + "\") in " + componentClass.getName() + ", use \"" + StorageUtil.stripLegacyExtension(value) + "\"");
+      }
+    }
   }
 
   private void loadSyncStateReportingErrors(StateComponentInfo componentInfo) {

@@ -23,7 +23,6 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.*;
-import consulo.component.store.impl.internal.storage.DirectoryStorageData;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.component.store.internal.*;
 import consulo.container.boot.ContainerPathManager;
@@ -105,7 +104,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Override
   public void setOptionsPath(String path) {
     myStateStorageManager.addMacro(StoragePathMacros.APP_CONFIG, path);
-    myStateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, path + "/other" + DirectoryStorageData.DEFAULT_EXT);
+    myStateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, path + "/other");
   }
 
   @Override

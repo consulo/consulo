@@ -33,7 +33,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-29
  */
 @Singleton
-@State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_OS))
+@State(name = "LafManager", storages = @Storage(value = "laf", roamingType = RoamingType.PER_OS))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class StyleManagerService implements PersistentStateComponent<StyleManagerState>, Disposable {

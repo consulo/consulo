@@ -138,6 +138,12 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       
       @Override
+      public String resolveStorageFilePath(String fileSpec) {
+        throw new UnsupportedOperationException("Method resolveStorageFilePath not implemented in " + getClass());
+      }
+
+      
+      @Override
       public String collapseMacros(String path) {
         throw new UnsupportedOperationException("Method collapseMacros not implemented in " + getClass());
       }
