@@ -66,10 +66,6 @@ crumbs.calculating.tooltip:
     text: Calculating…
 delete.dialog.title:
     text: Delete
-downloading.file.change.http.proxy.settings:
-    text: Change HTTP &Proxy Settings…
-downloading.file.try.again.button:
-    text: Tr&y Again
 error.dialog.title:
     text: Error
 errortree.prefix.line:

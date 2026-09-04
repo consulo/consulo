@@ -23,6 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.http.HttpProxySettingService;
+import consulo.http.localize.HttpLocalize;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -31,6 +32,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Button;
 import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
@@ -40,7 +42,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
@@ -62,7 +63,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private static final String DOWNLOADING_CARD = "downloading";
     private static final String EDITOR_CARD = "editor";
     private JPanel myMainPanel;
-    private JLabel myProgressLabel;
+    private Label myProgressLabel;
     private JProgressBar myProgressBar;
     private Button myCancelButton;
     private JPanel myContentPanel;
@@ -117,6 +118,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private void initToolbar(Project project) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new RefreshRemoteFileAction(myVirtualFile));
+
         for (RemoteFileEditorActionProvider actionProvider : RemoteFileEditorActionProvider.EP_NAME.getExtensionList()) {
             group.addAll(actionProvider.createToolbarActions(project, myVirtualFile));
         }
@@ -219,10 +221,9 @@ public class RemoteFilePanel implements PropertyChangeListener {
         JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(3, 1, JBUI.insets(5), -1, -1));
         myContentPanel.add(panel1, "downloading");
-        myProgressLabel = new JLabel();
-        myProgressLabel.setText("Downloading started");
+        myProgressLabel = Label.create(HttpLocalize.downloadingFileStarted());
         panel1.add(
-            myProgressLabel,
+            TargetAWT.to(myProgressLabel),
             new GridConstraints(
                 0,
                 0,
@@ -319,7 +320,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(3, 1, JBUI.insets(5), -1, -1));
         myContentPanel.add(panel3, "error");
-        myErrorLabel = Label.create(LocalizeValue.localizeTODO("Label"));
+        myErrorLabel = Label.create();
         panel3.add(
             TargetAWT.to(myErrorLabel),
             new GridConstraints(
@@ -358,7 +359,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
                 false
             )
         );
-        myChangeProxySettingsButton = Button.create(UILocalize.downloadingFileChangeHttpProxySettings());
+        myChangeProxySettingsButton = Button.create(HttpLocalize.downloadingFileChangeHttpProxySettings());
         panel4.add(
             TargetAWT.to(myChangeProxySettingsButton),
             new GridConstraints(
@@ -396,7 +397,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
                 false
             )
         );
-        myTryAgainButton = Button.create(UILocalize.downloadingFileTryAgainButton());
+        myTryAgainButton = Button.create(HttpLocalize.downloadingFileTryAgainButton());
         panel4.add(
             TargetAWT.to(myTryAgainButton),
             new GridConstraints(
@@ -516,7 +517,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
                     showCard(EDITOR_CARD);
                 }
                 else {
-                    myErrorLabel.setText("Downloading cancelled");
+                    myErrorLabel.setText(HttpLocalize.downloadingFileCancelled());
                     showCard(ERROR_CARD);
                 }
             });
@@ -539,8 +540,9 @@ public class RemoteFilePanel implements PropertyChangeListener {
         public void progressMessageChanged(boolean indeterminate, LocalizeValue message) {
             myProgressUpdatesQueue.queue(new Update("progress text") {
                 @Override
+                @RequiredUIAccess
                 public void run() {
-                    myProgressLabel.setText(message.getNullIfEmpty());
+                    myProgressLabel.setText(message);
                 }
             });
         }
