@@ -27,5 +27,7 @@ module consulo.component.impl {
   exports consulo.component.impl.internal.messagebus to consulo.ide.impl, consulo.test.impl;
   exports consulo.component.impl.internal.macro to consulo.component.store.impl, consulo.application.impl, consulo.ide.impl, consulo.module.impl, consulo.project.impl;
 
+  opens consulo.component.impl.internal to consulo.util.xml.serializer;
+  
   provides consulo.component.internal.inject.RootInjectingContainerFactory with DefaultRootInjectingContainerFactory;
 }

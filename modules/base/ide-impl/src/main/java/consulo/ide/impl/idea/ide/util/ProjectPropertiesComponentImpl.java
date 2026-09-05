@@ -26,6 +26,6 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
-@State(name = "PropertiesComponent", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
+@State(name = "PropertiesComponent", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class ProjectPropertiesComponentImpl extends BasePropertiesComponent implements ProjectPropertiesComponent, PropertiesComponent {
 }

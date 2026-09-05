@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -39,4 +40,6 @@ public interface PluginClassLoader {
     Enumeration<URL> findOwnResources(String name) throws IOException;
 
     @Nullable Map<URL, Set<String>> getUrlsIndex();
+
+    <T> T getOrCreateData(ClassLoaderDataKey<T> key, Supplier<T> factory);
 }

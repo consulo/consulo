@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.util;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.application.AllIcons;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -25,6 +26,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
+@CompiledJson
 public enum HighlightingLevel {
     INSPECTIONS(
         DiffLocalize.optionHighlightingLevelInspections(),

@@ -29,13 +29,15 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Anton Katilin
@@ -43,103 +45,108 @@ import java.util.*;
  */
 @Singleton
 @ServiceImpl
-@State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager.xml", roamingType = RoamingType.DISABLED))
+@State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager", roamingType = RoamingType.DISABLED))
 public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerState> {
 
-  private final Application myApplication;
+    private final Application myApplication;
 
-  private FileEditorProviderManagerState myState = new FileEditorProviderManagerState();
+    private FileEditorProviderManagerState myState = new FileEditorProviderManagerState();
 
-  @Inject
-  public FileEditorProviderManagerImpl(Application application) {
-    myApplication = application;
-  }
-
-  @Override
-  
-  public FileEditorProvider[] getProviders(Project project, VirtualFile file) {
-    // Collect all possible editors
-    List<FileEditorProvider> sharedProviders = new ArrayList<>();
-    boolean doNotShowTextEditor = false;
-    for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
-      ThrowableComputable<Boolean, RuntimeException> action = () -> {
-        if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
-          return false;
-        }
-        return provider.accept(project, file);
-      };
-      if (AccessRule.read(action)) {
-        sharedProviders.add(provider);
-        doNotShowTextEditor |= provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR;
-      }
-    }
-
-    // Throw out default editors provider if necessary
-    if (doNotShowTextEditor) {
-      ContainerUtil.retainAll(sharedProviders, provider -> !(provider instanceof TextEditorProvider));
-    }
-
-    // Sort editors according policies
-    Collections.sort(sharedProviders, MyComparator.ourInstance);
-
-    return sharedProviders.toArray(new FileEditorProvider[sharedProviders.size()]);
-  }
-
-  @Override
-  public @Nullable FileEditorProvider getProvider(String editorTypeId) {
-    for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
-      if (provider.getEditorTypeId().equals(editorTypeId)) {
-        return provider;
-      }
-    }
-    return null;
-  }
-
-  
-  @Override
-  public FileEditorProviderManagerState getState() {
-    return myState;
-  }
-
-  @Override
-  public void loadState(FileEditorProviderManagerState state) {
-    XmlSerializerUtil.copyBean(this, myState);
-  }
-
-  public void providerSelected(FileEditorComposite composite) {
-    if (!(composite instanceof FileEditorWithProviderComposite)) return;
-    FileEditorProvider[] providers = ((FileEditorWithProviderComposite)composite).getProviders();
-    if (providers.length < 2) return;
-    myState.getSelectedProviders().put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
-  }
-
-  private static String computeKey(FileEditorProvider[] providers) {
-    return StringUtil.join(ContainerUtil.map(providers, FileEditorProvider::getEditorTypeId), ",");
-  }
-
-  public @Nullable FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
-    FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
-    if (provider != null || providers.length < 2) {
-      return provider;
-    }
-    String id = myState.getSelectedProviders().get(computeKey(providers));
-    return id == null ? null : getProvider(id);
-  }
-
-  private static final class MyComparator implements Comparator<FileEditorProvider> {
-    public static final MyComparator ourInstance = new MyComparator();
-
-    private static double getWeight(FileEditorProvider provider) {
-      return provider instanceof WeighedFileEditorProvider ? ((WeighedFileEditorProvider)provider).getWeight() : Double.MAX_VALUE;
+    @Inject
+    public FileEditorProviderManagerImpl(Application application) {
+        myApplication = application;
     }
 
     @Override
-    public int compare(FileEditorProvider provider1, FileEditorProvider provider2) {
-      int i1 = provider1.getPolicy().ordinal();
-      int i2 = provider2.getPolicy().ordinal();
-      if (i1 != i2) return i1 - i2;
-      double value = getWeight(provider1) - getWeight(provider2);
-      return value > 0 ? 1 : value < 0 ? -1 : 0;
+    public FileEditorProvider[] getProviders(Project project, VirtualFile file) {
+        // Collect all possible editors
+        List<FileEditorProvider> sharedProviders = new ArrayList<>();
+        boolean doNotShowTextEditor = false;
+        for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
+            ThrowableComputable<Boolean, RuntimeException> action = () -> {
+                if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
+                    return false;
+                }
+                return provider.accept(project, file);
+            };
+            if (AccessRule.read(action)) {
+                sharedProviders.add(provider);
+                doNotShowTextEditor |= provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+            }
+        }
+
+        // Throw out default editors provider if necessary
+        if (doNotShowTextEditor) {
+            ContainerUtil.retainAll(sharedProviders, provider -> !(provider instanceof TextEditorProvider));
+        }
+
+        // Sort editors according policies
+        Collections.sort(sharedProviders, MyComparator.ourInstance);
+
+        return sharedProviders.toArray(new FileEditorProvider[sharedProviders.size()]);
     }
-  }
+
+    @Override
+    public @Nullable FileEditorProvider getProvider(String editorTypeId) {
+        for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
+            if (provider.getEditorTypeId().equals(editorTypeId)) {
+                return provider;
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public FileEditorProviderManagerState getState() {
+        return myState;
+    }
+
+    @Override
+    public void loadState(FileEditorProviderManagerState state) {
+        myState = state;
+    }
+
+    public void providerSelected(FileEditorComposite composite) {
+        if (!(composite instanceof FileEditorWithProviderComposite)) {
+            return;
+        }
+        FileEditorProvider[] providers = ((FileEditorWithProviderComposite) composite).getProviders();
+        if (providers.length < 2) {
+            return;
+        }
+        myState.getSelectedProviders().put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
+    }
+
+    private static String computeKey(FileEditorProvider[] providers) {
+        return StringUtil.join(ContainerUtil.map(providers, FileEditorProvider::getEditorTypeId), ",");
+    }
+
+    public @Nullable FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
+        FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
+        if (provider != null || providers.length < 2) {
+            return provider;
+        }
+        String id = myState.getSelectedProviders().get(computeKey(providers));
+        return id == null ? null : getProvider(id);
+    }
+
+    private static final class MyComparator implements Comparator<FileEditorProvider> {
+        public static final MyComparator ourInstance = new MyComparator();
+
+        private static double getWeight(FileEditorProvider provider) {
+            return provider instanceof WeighedFileEditorProvider ? ((WeighedFileEditorProvider) provider).getWeight() : Double.MAX_VALUE;
+        }
+
+        @Override
+        public int compare(FileEditorProvider provider1, FileEditorProvider provider2) {
+            int i1 = provider1.getPolicy().ordinal();
+            int i2 = provider2.getPolicy().ordinal();
+            if (i1 != i2) {
+                return i1 - i2;
+            }
+            double value = getWeight(provider1) - getWeight(provider2);
+            return value > 0 ? 1 : value < 0 ? -1 : 0;
+        }
+    }
 }

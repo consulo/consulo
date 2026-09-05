@@ -37,6 +37,8 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -192,7 +194,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
  
   private StateStorage createFileStateStorage(String fileSpec, @Nullable RoamingType roamingType) {
-    String filePath = resolveStorageFilePath(fileSpec);
+    String filePath = expandStorageBasePath(fileSpec);
 
     if (roamingType == RoamingType.DEFAULT && fileSpec.equals(StoragePathMacros.WORKSPACE_FILE)) {
       roamingType = RoamingType.DISABLED;
@@ -222,7 +224,17 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Override
   public String resolveStorageFilePath(String fileSpec) {
-    return FileUtil.toSystemIndependentName(expandMacros(fileSpec)) + DirectoryStorageData.DEFAULT_EXT;
+    String basePath = expandStorageBasePath(fileSpec);
+
+    String jsonPath = basePath + StorageFormat.JSON_EXTENSION;
+    if (Files.exists(Path.of(jsonPath))) {
+      return jsonPath;
+    }
+    return basePath + StorageFormat.XML_EXTENSION;
+  }
+
+  private String expandStorageBasePath(String fileSpec) {
+    return FileUtil.toSystemIndependentName(expandMacros(fileSpec));
   }
 
   private static final Pattern MACRO_PATTERN = Pattern.compile("(\\$[^\\$]*\\$)");

@@ -18,6 +18,7 @@ package consulo.component.store.impl.internal.storage;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.DefaultStateSerializer;
+import consulo.component.store.impl.internal.json.StateJsonBinder;
 import consulo.component.store.internal.PathMacrosService;
 import consulo.component.store.internal.StateStorageException;
 import consulo.component.store.internal.StreamProvider;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
   
@@ -63,9 +65,31 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
   protected abstract @Nullable Element loadLocalData();
 
+  protected @Nullable byte[] loadLocalJsonData() {
+    return null;
+  }
+
+  protected boolean isJsonSupported() {
+    return false;
+  }
+
   @Override
   protected @Nullable Element getStateAndArchive(StorageData storageData, String componentName) {
     return storageData.getStateAndArchive(componentName);
+  }
+
+  @Override
+  public @Nullable <S> S getState(@Nullable Object component, String componentName, Class<S> stateClass) {
+    byte[] json = getStorageData().getJsonState(componentName);
+    if (json != null) {
+      try {
+        return StateJsonBinder.deserialize(stateClass, json);
+      }
+      catch (IOException e) {
+        throw new StateStorageException(e);
+      }
+    }
+    return super.getState(component, componentName, stateClass);
   }
 
   @Override
@@ -96,6 +120,21 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       catch (Exception e) {
         LOG.warn(e);
       }
+    }
+
+    byte[] json = loadLocalJsonData();
+    if (json != null) {
+      try {
+        if (myPathMacroSubstitutor != null) {
+          json = StateJsonBinder.substituteStrings(json, myPathMacroSubstitutor::expandPath);
+        }
+
+        result.getJsonStates().putAll(StateJsonBinder.readEnvelope(json));
+      }
+      catch (IOException e) {
+        LOG.warn("Failed to read json storage " + myFileSpec, e);
+      }
+      return result;
     }
 
     Element element = loadLocalData();
@@ -183,6 +222,8 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
     private final Map<String, Element> myNewLiveStates = new HashMap<String, Element>();
 
+    private final Map<String, byte[]> myNewJsonStates = new HashMap<String, byte[]>();
+
     public XmlElementStorageSaveSession(StorageData storageData) {
       myOriginalStorageData = storageData;
     }
@@ -216,6 +257,70 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       else {
         myCopiedStorageData.setState(componentName, element, myNewLiveStates);
       }
+
+      collectJsonState(componentName, state);
+    }
+
+    private void collectJsonState(String componentName, @Nullable Object state) {
+      if (!isJsonSupported() || state == null || !StateJsonBinder.isJsonCapable(state.getClass())) {
+        dropJsonState(componentName);
+        return;
+      }
+
+      try {
+        byte[] content = StateJsonBinder.serialize(state);
+        if (StateJsonBinder.isEmptyState(content)) {
+          dropJsonState(componentName);
+        }
+        else {
+          myNewJsonStates.put(componentName, content);
+        }
+      }
+      catch (Throwable e) {
+        StateJsonBinder.markNotSerializable(state.getClass(), e);
+        dropJsonState(componentName);
+      }
+    }
+
+    private void dropJsonState(String componentName) {
+      myNewJsonStates.remove(componentName);
+
+      if (myCopiedStorageData != null) {
+        myCopiedStorageData.removeJsonState(componentName);
+      }
+    }
+
+    private @Nullable Map<String, byte[]> electJsonStates(@Nullable StorageData storageData) {
+      if (!isJsonSupported() || storageData == null) {
+        return null;
+      }
+
+      if (myStreamProvider != null && myStreamProvider.isEnabled() && myStreamProvider.isApplicable(myFileSpec, myRoamingType)) {
+        return null;
+      }
+
+      Set<String> componentNames = storageData.getComponentNames();
+      if (componentNames.isEmpty()) {
+        return null;
+      }
+
+      Map<String, byte[]> result = new TreeMap<>();
+      for (String componentName : componentNames) {
+        byte[] content = myNewJsonStates.get(componentName);
+        if (content == null) {
+          content = storageData.getJsonState(componentName);
+        }
+
+        if (content == null) {
+          if (!storageData.getJsonStates().isEmpty()) {
+            LOG.warn("Storage " + myFileSpec + " stays xml - component " + componentName + " is not json capable");
+          }
+          return null;
+        }
+
+        result.put(componentName, content);
+      }
+      return result;
     }
 
     @Override
@@ -225,11 +330,19 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       }
 
       try {
-        Element element = force
-          ? getElement(myOriginalStorageData, isCollapsePathsOnSave(), Map.of())
-          : getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates);
+        StorageData storageData = force ? myOriginalStorageData : myCopiedStorageData;
 
-        doSave(element, events);
+        Map<String, byte[]> jsonStates = electJsonStates(storageData);
+        if (jsonStates != null) {
+          doSaveJson(StateJsonBinder.prettyPrint(collapseJsonPaths(StateJsonBinder.writeEnvelope(jsonStates))), events);
+        }
+        else {
+          Element element = force
+            ? getElement(myOriginalStorageData, isCollapsePathsOnSave(), Map.of())
+            : getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates);
+
+          doSave(element, events);
+        }
 
         if (!force) {
           myLoadedData = myCopiedStorageData;
@@ -245,7 +358,24 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       return true;
     }
 
+    private byte[] collapseJsonPaths(byte[] content) throws IOException {
+      if (myPathMacroSubstitutor == null || !isCollapsePathsOnSave()) {
+        return content;
+      }
+
+      try {
+        return StateJsonBinder.substituteStrings(content, myPathMacroSubstitutor::collapsePath);
+      }
+      finally {
+        myPathMacroSubstitutor.reset();
+      }
+    }
+
     protected abstract void doSave(@Nullable Element element, @Nullable List<VFileEvent> events) throws IOException;
+
+    protected void doSaveJson(byte[] content, @Nullable List<VFileEvent> events) throws IOException {
+      throw new UnsupportedOperationException("json storage is not supported by " + getClass().getName());
+    }
 
     protected void saveForProvider(@Nullable byte[] content, @Nullable Element element) throws IOException {
       if (!myStreamProvider.isApplicable(myFileSpec, myRoamingType)) {

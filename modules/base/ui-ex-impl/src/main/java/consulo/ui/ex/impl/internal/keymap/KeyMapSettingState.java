@@ -15,12 +15,16 @@
  */
 package consulo.ui.ex.impl.internal.keymap;
 
+import com.dslplatform.json.CompiledJson;
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 2025-09-13
  */
+@CompiledJson
 public class KeyMapSettingState {
-    public Boolean useUnicodeCharactersForShortcuts;
+    public @Nullable Boolean useUnicodeCharactersForShortcuts;
 
     public boolean enabledDoublePressShortcuts = true;
 }

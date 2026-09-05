@@ -15,9 +15,11 @@
  */
 package consulo.diff.internal;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.diff.localize.DiffLocalize;
 import consulo.localize.LocalizeValue;
 
+@CompiledJson
 public enum HighlightPolicy {
     DO_NOT_HIGHLIGHT(DiffLocalize.optionHighlightingPolicyNone()),
     BY_LINE(DiffLocalize.optionHighlightingPolicyLines()),

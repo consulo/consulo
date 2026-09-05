@@ -19,17 +19,13 @@ import consulo.component.PropertiesComponent;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class BasePropertiesComponent implements PropertiesComponent, PersistentStateComponent<Element> {
+public class BasePropertiesComponent implements PropertiesComponent, PersistentStateComponent<PropertiesState> {
     private final Map<String, String> myMap = new LinkedHashMap<>();
-    private static final String ELEMENT_PROPERTY = "property";
-    private static final String ATTRIBUTE_NAME = "name";
-    private static final String ATTRIBUTE_VALUE = "value";
 
     @TestOnly
     @Deprecated
@@ -38,28 +34,19 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public Element getState() {
-        Element parentNode = new Element("state");
-        for (String key : myMap.keySet()) {
-            String value = myMap.get(key);
-            if (value != null) {
-                Element element = new Element(ELEMENT_PROPERTY);
-                element.setAttribute(ATTRIBUTE_NAME, key);
-                element.setAttribute(ATTRIBUTE_VALUE, value);
-                parentNode.addContent(element);
-            }
+    public PropertiesState getState() {
+        PropertiesState state = new PropertiesState();
+        for (Map.Entry<String, String> entry : myMap.entrySet()) {
+            state.properties.put(entry.getKey(), entry.getValue());
         }
-        return parentNode;
+        return state;
     }
 
     @Override
-    public void loadState(Element parentNode) {
+    public void loadState(PropertiesState state) {
         myMap.clear();
-        for (Element e : parentNode.getChildren(ELEMENT_PROPERTY)) {
-            String name = e.getAttributeValue(ATTRIBUTE_NAME);
-            if (name != null) {
-                myMap.put(name, e.getAttributeValue(ATTRIBUTE_VALUE));
-            }
+        for (Map.Entry<String, String> entry : state.properties.entrySet()) {
+            myMap.put(entry.getKey(), entry.getValue());
         }
     }
 

@@ -37,7 +37,7 @@ public abstract class StateStorageBase<T extends StorageDataBase> implements Sta
   }
 
   @Override
-  public final @Nullable <S> S getState(Object component, String componentName, Class<S> stateClass) throws StateStorageException {
+  public @Nullable <S> S getState(Object component, String componentName, Class<S> stateClass) throws StateStorageException {
     return DefaultStateSerializer.deserializeState(getStateAndArchive(getStorageData(), componentName), stateClass);
   }
 

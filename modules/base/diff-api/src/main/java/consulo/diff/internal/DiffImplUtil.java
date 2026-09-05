@@ -18,7 +18,6 @@ package consulo.diff.internal;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.*;
-import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataProvider;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffTool;
@@ -77,7 +76,7 @@ import java.util.function.Predicate;
 public class DiffImplUtil {
     private static final Logger LOG = Logger.getInstance(DiffImplUtil.class);
 
-    public static final String DIFF_CONFIG = StoragePathMacros.APP_CONFIG + "/diff.xml";
+    public static final String DIFF_CONFIG = "diff.xml";
     public static final JBValue TITLE_GAP = new JBValue.Float(2);
 
     //

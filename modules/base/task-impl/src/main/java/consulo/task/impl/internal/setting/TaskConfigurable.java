@@ -16,12 +16,7 @@
 package consulo.task.impl.internal.setting;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.NonDefaultProjectConfigurable;
-import consulo.configurable.ProjectConfigurable;
-import consulo.configurable.SimpleConfigurableByProperties;
-import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -29,12 +24,7 @@ import consulo.task.TaskManager;
 import consulo.task.TaskSettings;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.localize.TaskLocalize;
-import consulo.ui.CheckBox;
-import consulo.ui.Component;
-import consulo.ui.IntBox;
-import consulo.ui.Label;
-import consulo.ui.Space;
-import consulo.ui.TextBox;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -56,7 +46,7 @@ public class TaskConfigurable extends SimpleConfigurableByProperties
     }
 
     private TaskManagerImpl.Config getConfig() {
-        return ((TaskManagerImpl)TaskManager.getManager(myProject)).getState();
+        return ((TaskManagerImpl) TaskManager.getManager(myProject)).getState();
     }
 
     @RequiredUIAccess
@@ -84,13 +74,13 @@ public class TaskConfigurable extends SimpleConfigurableByProperties
         CheckBox alwaysDisplayComboBox = CheckBox.create(TaskLocalize.settingsAlwaysDisplayTaskCombo());
         propertyBuilder.add(
             alwaysDisplayComboBox,
-            () -> settings.ALWAYS_DISPLAY_COMBO,
-            value -> settings.ALWAYS_DISPLAY_COMBO = value
+            settings::isAlwaysDisplayCombo,
+            settings::setAlwaysDisplayCombo
         );
         root.add(alwaysDisplayComboBox);
 
-        IntBox connectionTimeoutBox = IntBox.create(settings.CONNECTION_TIMEOUT).withRange(0, Integer.MAX_VALUE);
-        propertyBuilder.add(connectionTimeoutBox, () -> settings.CONNECTION_TIMEOUT, value -> settings.CONNECTION_TIMEOUT = value);
+        IntBox connectionTimeoutBox = IntBox.create(settings.getConnectionTimeout()).withRange(0, Integer.MAX_VALUE);
+        propertyBuilder.add(connectionTimeoutBox, settings::getConnectionTimeout, settings::setConnectionTimeout);
         root.add(DockLayout.create()
             .left(Label.create(TaskLocalize.settingsConnectionTimeout()))
             .right(HorizontalLayout.create(Space.SMALL)

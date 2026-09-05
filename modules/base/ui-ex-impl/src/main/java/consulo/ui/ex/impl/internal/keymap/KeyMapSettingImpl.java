@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl
-@State(name = "KeyMapSetting", storages = @Storage("keyboard.xml"))
+@State(name = "KeyMapSetting", storages = @Storage("keyboard"))
 public class KeyMapSettingImpl implements KeyMapSetting, PersistentStateComponent<KeyMapSettingState> {
     private KeyMapSettingState myState = new KeyMapSettingState();
 

@@ -93,7 +93,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
   
   protected RequestConfig createRequestConfig() {
     TaskSettings tasksSettings = TaskSettings.getInstance();
-    RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(tasksSettings.CONNECTION_TIMEOUT);
+    RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(tasksSettings.getConnectionTimeout());
     if (isUseProxy()) {
         HttpClient4Proxy.setProxyForUrlIfEnabled(builder, getUrl());
     }

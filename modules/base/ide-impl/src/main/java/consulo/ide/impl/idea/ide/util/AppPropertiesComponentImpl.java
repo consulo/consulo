@@ -25,6 +25,6 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
-@State(name = "PropertiesComponent", storages = @Storage("options.xml"))
+@State(name = "PropertiesComponent", storages = @Storage("options"))
 public class AppPropertiesComponentImpl extends BasePropertiesComponent implements ApplicationPropertiesComponent, PropertiesComponent {
 }

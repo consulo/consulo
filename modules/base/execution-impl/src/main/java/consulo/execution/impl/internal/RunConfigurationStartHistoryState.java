@@ -25,11 +25,11 @@ import java.util.LinkedHashSet;
  */
 @CompiledJson
 public class RunConfigurationStartHistoryState {
-    public LinkedHashSet<String> myHistory = new LinkedHashSet<>();
+    private LinkedHashSet<String> myHistory = new LinkedHashSet<>();
 
-    public LinkedHashSet<String> myPinned = new LinkedHashSet<>();
+    private LinkedHashSet<String> myPinned = new LinkedHashSet<>();
 
-    public boolean myAllConfigurationsExpanded;
+    private boolean myAllConfigurationsExpanded;
 
     public LinkedHashSet<String> getHistory() {
         return myHistory;

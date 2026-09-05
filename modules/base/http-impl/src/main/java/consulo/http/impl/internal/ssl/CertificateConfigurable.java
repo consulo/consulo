@@ -161,7 +161,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     @Override
     @RequiredUIAccess
     public boolean isModified() {
-        HttpCertificateManagerImpl.Config state = HttpCertificateManagerImpl.getInstance().getState();
+        HttpCertificateManagerState state = HttpCertificateManagerImpl.getInstance().getState();
         return myAcceptAutomatically.getValue() != state.ACCEPT_AUTOMATICALLY
             || !myCertificates.equals(new HashSet<>(myTrustManager.getCertificates()));
     }
@@ -194,7 +194,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
                 );
             }
         }
-        HttpCertificateManagerImpl.Config state = HttpCertificateManagerImpl.getInstance().getState();
+        HttpCertificateManagerState state = HttpCertificateManagerImpl.getInstance().getState();
 
         state.ACCEPT_AUTOMATICALLY = myAcceptAutomatically.getValue();
     }
@@ -220,7 +220,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
             myTreeBuilder.selectFirstCertificate();
         }
 
-        HttpCertificateManagerImpl.Config state = HttpCertificateManagerImpl.getInstance().getState();
+        HttpCertificateManagerState state = HttpCertificateManagerImpl.getInstance().getState();
         myAcceptAutomatically.setValue(state.ACCEPT_AUTOMATICALLY);
     }
 

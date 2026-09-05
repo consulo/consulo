@@ -24,36 +24,23 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "ExternalDiffSettings", storages = @Storage(file = DiffImplUtil.DIFF_CONFIG))
-public class ExternalDiffSettings implements PersistentStateComponent<ExternalDiffSettings.State> {
-  public static class State {
-    public boolean DIFF_ENABLED = false;
-    public boolean DIFF_DEFAULT = false;
-    public @Nullable String DIFF_EXE_PATH = "";
-    public @Nullable String DIFF_PARAMETERS = "%1 %2 %3";
+@State(name = "ExternalDiffSettings", storages = @Storage(DiffImplUtil.DIFF_CONFIG))
+public class ExternalDiffSettings implements PersistentStateComponent<ExternalDiffSettingsState> {
 
-    public boolean MERGE_ENABLED = false;
-    public @Nullable String MERGE_EXE_PATH = "";
-    public @Nullable String MERGE_PARAMETERS = "%1 %2 %3 %4";
-
-    public boolean MERGE_TRUST_EXIT_CODE = false;
-  }
-
-  private State myState = new State();
+    private ExternalDiffSettingsState myState = new ExternalDiffSettingsState();
 
   @Override
-  public State getState() {
+  public ExternalDiffSettingsState getState() {
     return myState;
   }
 
   @Override
-  public void loadState(State state) {
+  public void loadState(ExternalDiffSettingsState state) {
     myState = state;
   }
 

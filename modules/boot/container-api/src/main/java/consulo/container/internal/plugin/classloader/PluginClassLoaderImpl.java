@@ -2,6 +2,7 @@
 package consulo.container.internal.plugin.classloader;
 
 import consulo.container.PluginException;
+import consulo.container.classloader.ClassLoaderDataKey;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -34,6 +35,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     private final File myNativeDirectory;
 
     private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<>();
+
+    private final ConcurrentMap<ClassLoaderDataKey<?>, Object> myData = new ConcurrentHashMap<>();
 
     public PluginClassLoaderImpl(List<URL> urls, @Nullable Map<URL, Set<String>> urlsIndex, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
         super(
@@ -336,6 +339,12 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     @Override
     public String toString() {
         return "PluginClassLoader[" + myPluginDescriptor.getPluginId() + ", " + myPluginDescriptor.getVersion() + "] " + super.toString();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getOrCreateData(ClassLoaderDataKey<T> key, java.util.function.Supplier<T> factory) {
+        return (T)myData.computeIfAbsent(key, it -> factory.get());
     }
 
     @Override

@@ -123,6 +123,6 @@ public class ToolWindowSettingsImpl implements ToolWindowSettings, PersistentSta
 
     @Override
     public void loadState(ToolWindowSettingsState state) {
-        XmlSerializerUtil.copyBean(state, myState);
+        myState = state;
     }
 }

@@ -37,13 +37,11 @@ public class UnifiedFileSaveDialogProvider implements FileSaveDialogProvider {
     throw new UnsupportedOperationException();
   }
 
-  
   @Override
   public String getId() {
     return APPLICATION_ID;
   }
 
-  
   @Override
   public String getName() {
     return "application";

@@ -18,15 +18,12 @@ package consulo.ide.impl.fileChooser;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.fileChooser.provider.FileOperateDialogProvider;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -36,43 +33,38 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.file.dialog.xml", roamingType = RoamingType.PER_OS))
-public class FileOperateDialogSettings implements PersistentStateComponent<FileOperateDialogSettings.State> {
-  public static class State {
-    public String myFileChooseDialogId = FileOperateDialogProvider.APPLICATION_ID;
-    public String myFileSaveDialogId = FileOperateDialogProvider.APPLICATION_ID;
-  }
+@State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.file.dialog", roamingType = RoamingType.PER_OS))
+public class FileOperateDialogSettings implements PersistentStateComponent<FileOperateDialogSettingsState> {
 
-  private State myState = new State();
+    private FileOperateDialogSettingsState myState = new FileOperateDialogSettingsState();
 
-  
-  public static FileOperateDialogSettings getInstance() {
-    return ServiceManager.getService(FileOperateDialogSettings.class);
-  }
+    public static FileOperateDialogSettings getInstance() {
+        return Application.get().getService(FileOperateDialogSettings.class);
+    }
 
-  public String getFileChooseDialogId() {
-    return myState.myFileChooseDialogId;
-  }
+    public String getFileChooseDialogId() {
+        return myState.myFileChooseDialogId;
+    }
 
-  public void setFileChooseDialogId(String fileChooseDialogId) {
-    myState.myFileChooseDialogId = fileChooseDialogId;
-  }
+    public void setFileChooseDialogId(String fileChooseDialogId) {
+        myState.myFileChooseDialogId = fileChooseDialogId;
+    }
 
-  public String getFileSaveDialogId() {
-    return myState.myFileSaveDialogId;
-  }
+    public String getFileSaveDialogId() {
+        return myState.myFileSaveDialogId;
+    }
 
-  public void setFileSaveDialogId(String fileSaveDialogId) {
-    myState.myFileSaveDialogId = fileSaveDialogId;
-  }
+    public void setFileSaveDialogId(String fileSaveDialogId) {
+        myState.myFileSaveDialogId = fileSaveDialogId;
+    }
 
-  @Override
-  public @Nullable State getState() {
-    return myState;
-  }
+    @Override
+    public @Nullable FileOperateDialogSettingsState getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(State state) {
-    XmlSerializerUtil.copyBean(state, myState);
-  }
+    @Override
+    public void loadState(FileOperateDialogSettingsState state) {
+        myState = state;
+    }
 }

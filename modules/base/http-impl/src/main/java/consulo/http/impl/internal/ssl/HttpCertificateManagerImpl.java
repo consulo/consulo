@@ -62,9 +62,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Mikhail Golubev
  */
 @Singleton
-@State(name = "CertificateManagerImpl", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
+@State(name = "CertificateManagerImpl", storages = @Storage("other"))
 @ServiceImpl
-public class HttpCertificateManagerImpl implements HttpCertificateManager, PersistentStateComponent<HttpCertificateManagerImpl.Config> {
+public class HttpCertificateManagerImpl implements HttpCertificateManager, PersistentStateComponent<HttpCertificateManagerState> {
     private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
     private static final String DEFAULT_PASSWORD = "changeit";
 
@@ -88,7 +88,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
 
     private final String myCacertsPath;
     private final String myPassword;
-    private final Config myConfig;
+    private HttpCertificateManagerState myConfig = new HttpCertificateManagerState();
 
     private final HttpConfirmingTrustManagerImplHttp myTrustManager;
 
@@ -103,7 +103,6 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
     public HttpCertificateManagerImpl() {
         myCacertsPath = DEFAULT_PATH;
         myPassword = DEFAULT_PASSWORD;
-        myConfig = new Config();
         myTrustManager = HttpConfirmingTrustManagerImplHttp.createForStorage(myCacertsPath, myPassword);
         initComponent();
     }
@@ -328,19 +327,12 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
 
     
     @Override
-    public Config getState() {
+    public HttpCertificateManagerState getState() {
         return myConfig;
     }
 
     @Override
-    public void loadState(Config state) {
-        XmlSerializerUtil.copyBean(state, myConfig);
-    }
-
-    public static class Config {
-        /**
-         * Do not show the dialog and accept untrusted certificates automatically.
-         */
-        public boolean ACCEPT_AUTOMATICALLY = false;
+    public void loadState(HttpCertificateManagerState state) {
+        myConfig = state;
     }
 }
