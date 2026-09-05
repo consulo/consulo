@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,11 @@
  */
 package consulo.platform.os;
 
-import consulo.platform.PlatformOperatingSystem;
-
 /**
  * @author VISTALL
- * @since 2024-12-25
+ * @since 2026-09-05
  */
-public interface UnixOperationSystem extends PlatformOperatingSystem {
-    boolean isKDE();
-
-    boolean isGNOME();
-
-    boolean isXfce();
-
-    boolean isI3();
-
-    default boolean isX11() {
-        return UnixDisplayProtocol.X11.equals(displayProtocol());
-    }
-
-    default boolean isWayland() {
-        return UnixDisplayProtocol.WAYLAND.equals(displayProtocol());
-    }
-
-    UnixDisplayProtocol displayProtocol();
+public record UnixDisplayProtocol(String name) {
+    public static final UnixDisplayProtocol WAYLAND = new UnixDisplayProtocol("Wayland");
+    public static final UnixDisplayProtocol X11 = new UnixDisplayProtocol("X11");
 }

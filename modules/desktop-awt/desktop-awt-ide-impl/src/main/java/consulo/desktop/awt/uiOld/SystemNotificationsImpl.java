@@ -23,7 +23,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import consulo.platform.os.UnixOperationSystem;
 import consulo.platform.os.WindowsOperatingSystem;
 import consulo.ui.ex.SystemNotifications;
 import jakarta.inject.Inject;
@@ -69,7 +68,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
             if (os.isMac()) {
                 return MountainLionNotifications.getInstance();
             }
-            else if (os instanceof UnixOperationSystem unix && unix.isXWindow()) {
+            else if (os.isUnix()) {
                 return LibNotifyWrapper.getInstance();
             }
             else if (os instanceof WindowsOperatingSystem win && win.isWindows10OrNewer()) {

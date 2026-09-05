@@ -38,16 +38,18 @@ public final class X11Hacking {
     private static final SystemInfo INSTANCE = new SystemInfo();
 
     public boolean isAny64Bit;
-    public boolean isXWindow;
+    public boolean isUnix;
+    public boolean isX11;
 
     private SystemInfo() {
       Platform platform = Platform.current();
       isAny64Bit = platform.jvm().isAny64Bit();
       PlatformOperatingSystem os = platform.os();
+      isUnix = os.isUnix();
       if (os instanceof UnixOperationSystem) {
-        isXWindow = ((UnixOperationSystem) os).isXWindow();
+        isX11 = ((UnixOperationSystem) os).isX11();
       } else {
-        isXWindow = false;
+        isX11 = false;
       }
     }
   }
@@ -97,7 +99,7 @@ public final class X11Hacking {
 
     private static @Nullable Xlib getInstance() {
       Class<? extends Toolkit> toolkitClass = Toolkit.getDefaultToolkit().getClass();
-      if (!SystemInfo.INSTANCE.isXWindow || !"sun.awt.X11.XToolkit".equals(toolkitClass.getName())) {
+      if (!SystemInfo.INSTANCE.isX11 || !"sun.awt.X11.XToolkit".equals(toolkitClass.getName())) {
         return null;
       }
 
@@ -278,12 +280,12 @@ public final class X11Hacking {
   }
 
   public static boolean isWSL() {
-    return SystemInfo.INSTANCE.isXWindow && System.getenv("WSL_DISTRO_NAME") != null;
+    return SystemInfo.INSTANCE.isUnix && System.getenv("WSL_DISTRO_NAME") != null;
   }
 
   public static boolean isTileWM() {
     String desktop = System.getenv("XDG_CURRENT_DESKTOP");
-    return SystemInfo.INSTANCE.isXWindow && desktop != null && TILE_WM.contains(desktop.toLowerCase(Locale.ENGLISH));
+    return SystemInfo.INSTANCE.isUnix && desktop != null && TILE_WM.contains(desktop.toLowerCase(Locale.ENGLISH));
   }
 
   private static boolean hasWindowProperty(JFrame frame, long name, long expected) {

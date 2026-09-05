@@ -24,7 +24,10 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.MultiResolutionImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -33,11 +36,28 @@ import java.io.File;
 public class AppIconUtil {
   private static final int MIN_ICON_SIZE = 32;
 
+  private static final int[] WINDOW_ICON_SIZES = {16, 32, 64, 128};
+
   public static void updateWindowIcon(Window window) {
-    window.setIconImage(loadWindowIcon());
+    window.setIconImages(loadWindowIcons());
   }
 
-  
+  public static List<Image> loadWindowIcons() {
+    Image icon = loadWindowIcon();
+    if (!(icon instanceof MultiResolutionImage multiResolutionImage)) {
+      return List.of(icon);
+    }
+
+    List<Image> images = new ArrayList<>(WINDOW_ICON_SIZES.length);
+    for (int size : WINDOW_ICON_SIZES) {
+      Image variant = multiResolutionImage.getResolutionVariant(size, size);
+      if (variant != null) {
+        images.add(variant);
+      }
+    }
+    return images.isEmpty() ? List.of(icon) : images;
+  }
+
   public static Image loadWindowIcon() {
     boolean sandbox = ApplicationProperties.isInSandbox();
     ImageKey x16Key = sandbox ? PlatformIconGroup.icon16_sandbox() : PlatformIconGroup.icon16();

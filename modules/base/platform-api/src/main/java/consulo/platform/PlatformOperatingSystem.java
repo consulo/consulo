@@ -15,7 +15,6 @@
  */
 package consulo.platform;
 
-import consulo.platform.os.UnixOperationSystem;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -40,11 +39,6 @@ public interface PlatformOperatingSystem {
 
     boolean isUnix();
 
-    @Deprecated
-    default boolean isXWindow() {
-        return this instanceof UnixOperationSystem linux && linux.isXWindow();
-    }
-
     default LineSeparator lineSeparator() {
         return LineSeparator.LF;
     }
@@ -57,7 +51,8 @@ public interface PlatformOperatingSystem {
 
     Map<String, String> environmentVariables();
 
-    @Nullable String getEnvironmentVariable(String key);
+    @Nullable
+    String getEnvironmentVariable(String key);
 
     String fileNamePrefix();
 

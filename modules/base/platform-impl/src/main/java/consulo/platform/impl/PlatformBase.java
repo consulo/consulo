@@ -71,7 +71,13 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
             return createMacOperatingSystem(jvmProperties, System::getenv, System::getenv);
         }
 
-        return new UnixOperationSystemImpl(jvmProperties, System::getenv, System::getenv);
+        return createUnixOperatingSystem(jvmProperties, System::getenv, System::getenv);
+    }
+
+    protected UnixOperationSystemImpl createUnixOperatingSystem(Map<String, String> jvmProperties,
+                                                                Function<String, String> getEnvFunc,
+                                                                Supplier<Map<String, String>> getEnvsSup) {
+        return new UnixOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
     }
 
     protected MacOperatingSystemImpl createMacOperatingSystem(Map<String, String> jvmProperties,

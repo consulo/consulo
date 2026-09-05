@@ -23,7 +23,7 @@ public class Patches {
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6322854.
    * java.lang.NullPointerException: Failed to retrieve atom name.
    */
-  public static final boolean SUN_BUG_ID_6322854 = Platform.current().os().isXWindow();
+  public static final boolean SUN_BUG_ID_6322854 = Platform.current().os().isUnix();
 
   /**
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4818143.
@@ -36,7 +36,7 @@ public class Patches {
    * Desktop API support on X Window is limited to GNOME (and even there it may work incorrectly).
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6486393.
    */
-  public static final boolean SUN_BUG_ID_6486393 = Platform.current().os().isXWindow();
+  public static final boolean SUN_BUG_ID_6486393 = Platform.current().os().isUnix();
 
   /**
    * JDK on Mac detects font style for system fonts based only on their name (PostScript name).

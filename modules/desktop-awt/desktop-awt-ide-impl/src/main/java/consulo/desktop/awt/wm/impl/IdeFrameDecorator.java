@@ -19,6 +19,7 @@ import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.hacking.X11Hacking;
 import consulo.disposer.Disposable;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Window;
@@ -40,8 +41,14 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   @ReviewAfterMigrationToJRE(9)
   public static @Nullable IdeFrameDecorator decorate(IdeFrameEx frame) {
-    if (Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported()) {
-      return new EWMHFrameDecorator(frame);
+    if (Platform.current().os() instanceof UnixOperationSystem unix) {
+      if (unix.isX11() && X11UiUtil.isFullScreenSupported()) {
+        return new EWMHFrameDecorator(frame);
+      }
+
+      if (unix.isWayland() && isFullScreenSupportedByDefaultDevice()) {
+        return new WLFrameDecorator(frame);
+      }
     }
 
     if (Platform.current().os().isMac()) {
@@ -49,6 +56,10 @@ public abstract class IdeFrameDecorator implements Disposable {
     }
 
     return new AWTFrameDecorator(frame);
+  }
+
+  public static boolean isFullScreenSupportedByDefaultDevice() {
+    return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isFullScreenSupported();
   }
 
   protected IdeFrameEx myIdeFrame;
@@ -163,6 +174,35 @@ public abstract class IdeFrameDecorator implements Disposable {
         myRequestedState = state;
         X11Hacking.toggleFullScreenMode(jFrame);
       }
+      return ActionCallback.DONE;
+    }
+  }
+
+  private static class WLFrameDecorator extends IdeFrameDecorator {
+    private static final String FULL_SCREEN = "ide.frame.full.screen";
+
+    private WLFrameDecorator(IdeFrameEx frame) {
+      super(frame);
+    }
+
+    @Override
+    public boolean isInFullScreen() {
+      JFrame jFrame = getJFrame();
+      return jFrame != null && Boolean.TRUE.equals(jFrame.getRootPane().getClientProperty(FULL_SCREEN));
+    }
+
+    @Override
+    public ActionCallback toggleFullScreen(boolean state) {
+      JFrame jFrame = getJFrame();
+      if (jFrame == null) {
+        return ActionCallback.REJECTED;
+      }
+
+      GraphicsDevice device = jFrame.getGraphicsConfiguration().getDevice();
+      device.setFullScreenWindow(isInFullScreen() ? null : jFrame);
+      jFrame.getRootPane().putClientProperty(FULL_SCREEN, state);
+
+      myIdeFrame.storeFullScreenStateIfNeeded(state);
       return ActionCallback.DONE;
     }
   }

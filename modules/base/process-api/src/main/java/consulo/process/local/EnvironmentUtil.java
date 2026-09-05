@@ -6,7 +6,6 @@ import consulo.component.util.NativeFileLoader;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import consulo.platform.os.UnixOperationSystem;
 import consulo.process.internal.UnixProcessManager;
 import consulo.process.internal.WinProcessManager;
 import consulo.process.io.BaseOutputReader;
@@ -158,7 +157,7 @@ public final class EnvironmentUtil {
         if (os.isWindows()) {
             return Collections.unmodifiableMap(Maps.newHashMap(System.getenv(), HashingStrategy.caseInsensitive()));
         }
-        else if (os instanceof UnixOperationSystem unix && unix.isXWindow()) {
+        else if (os.isUnix()) {
             // DESKTOP_STARTUP_ID variable can be set by an application launcher in X Window environment.
             // It shouldn't be passed to child processes as per 'Startup notification protocol'
             // (https://specifications.freedesktop.org/startup-notification-spec/startup-notification-latest.txt).

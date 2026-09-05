@@ -45,6 +45,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -569,7 +570,10 @@ public class IdeEventQueue extends EventQueue {
 
     
     private static AWTEvent mapEvent(AWTEvent e) {
-        return Platform.current().os().isXWindow() && e instanceof MouseEvent me && me.getButton() > 3 ? mapXWindowMouseEvent(me) : e;
+        return Platform.current().os() instanceof UnixOperationSystem unix
+            && unix.isX11()
+            && e instanceof MouseEvent me
+            && me.getButton() > 3 ? mapXWindowMouseEvent(me) : e;
     }
 
     

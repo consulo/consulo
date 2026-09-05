@@ -1496,7 +1496,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     private PopupComponent.Factory getFactory(boolean forceHeavyweight, boolean forceDialog) {
         if (Registry.is("allow.dialog.based.popups")) {
             boolean noFocus = !myFocusable || !myRequestFocus;
-            boolean cannotBeDialog = noFocus; // && Platform.current().os().isXWindow()
+            boolean cannotBeDialog = noFocus;
 
             if (!cannotBeDialog && (isPersistent() || forceDialog)) {
                 return new PopupComponent.Factory.Dialog();

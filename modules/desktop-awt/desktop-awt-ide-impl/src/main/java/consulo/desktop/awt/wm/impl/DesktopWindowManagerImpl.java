@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -48,10 +49,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -143,7 +144,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-   
+
     public DesktopIdeFrameImpl[] getAllProjectFrames() {
         Collection<DesktopIdeFrameImpl> ideFrames = myProject2Frame.values();
         return ideFrames.toArray(new DesktopIdeFrameImpl[ideFrames.size()]);
@@ -550,7 +551,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @RequiredUIAccess
-   
+
     @Override
     public final IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state) {
         LOG.assertTrue(!myProject2Frame.containsKey(project));
@@ -715,9 +716,20 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     @Override
     public boolean isFullScreenSupportedInCurrentOS() {
-        return Platform.current().os().isMac()
-            || Platform.current().os().isWindows()
-            || Platform.current().os() instanceof UnixOperationSystem os && os.isXWindow() && X11UiUtil.isFullScreenSupported();
+        PlatformOperatingSystem os = Platform.current().os();
+        if (os.isWindows() || os.isMac()) {
+            return true;
+        }
+        else if (os instanceof UnixOperationSystem unix) {
+            if (unix.isX11() && X11UiUtil.isFullScreenSupported()) {
+                return true;
+            }
+
+            if (unix.isWayland() && IdeFrameDecorator.isFullScreenSupportedByDefaultDevice()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

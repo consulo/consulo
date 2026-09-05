@@ -67,7 +67,7 @@ public class ClipboardSynchronizer implements Disposable {
     else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os().isMac()) {
       myClipboardHandler = new MacClipboardHandler();
     }
-    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os() instanceof UnixOperationSystem os && os.isXWindow()) {
+    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os() instanceof UnixOperationSystem os && os.isX11()) {
       myClipboardHandler = new XWinClipboardHandler();
     }
     else {

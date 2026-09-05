@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.Html;
@@ -171,7 +172,7 @@ public class UIUtil {
     };
 
     private static final Supplier<Boolean> X_RENDER_ACTIVE = LazyValue.atomicNotNull(() -> {
-        if (!Platform.current().os().isXWindow()) {
+        if (!(Platform.current().os() instanceof UnixOperationSystem unix && unix.isX11())) {
             return false;
         }
         try {
