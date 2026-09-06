@@ -26,7 +26,6 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.internal.ActionTicker;
 import consulo.ui.ex.internal.TimerListener;
@@ -412,11 +411,17 @@ public class DefaultIdeMenuBar extends JMenuBar implements IdeMenuBar, Predicate
   }
 
   private CompletableFuture<List<AnAction>> expandActionGroupAsync(DataContext context, ActionManager actionManager) {
-    ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
-    if (mainActionGroup == null) {
-      return CompletableFuture.completedFuture(new ArrayList<>());
-    }
+    return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_MENU)
+      .thenCompose(mainActionGroup -> mainActionGroup == null
+        ? CompletableFuture.completedFuture(new ArrayList<>())
+        : doExpandActionGroupAsync(mainActionGroup, context, actionManager));
+  }
 
+  private CompletableFuture<List<AnAction>> doExpandActionGroupAsync(
+    ActionGroup mainActionGroup,
+    DataContext context,
+    ActionManager actionManager
+  ) {
     AnAction[] children = mainActionGroup.getChildren(null, myActionManager);
     List<AnAction> groups = new ArrayList<>();
     List<AnActionEvent> events = new ArrayList<>();

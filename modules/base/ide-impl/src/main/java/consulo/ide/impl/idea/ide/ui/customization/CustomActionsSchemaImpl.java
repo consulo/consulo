@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
@@ -35,6 +35,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -46,6 +49,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author anna
@@ -54,7 +58,7 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 @State(name = "CustomActionsSchema", storages = @Storage("customization.xml"))
-public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentStateComponent<Element> {
+public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentStateComponentAsync<Element> {
     private static final String ACTIONS_SCHEMA = "custom_actions_schema";
     private static final String ACTIVE = "active";
     private static final String ELEMENT_ACTION = "action";
@@ -97,8 +101,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         });
     }
 
-    public static CustomActionsSchemaImpl getInstance() {
-        return (CustomActionsSchemaImpl)CustomActionsSchema.getInstance();
+    public static CompletableFuture<CustomActionsSchemaImpl> getInstanceAsync() {
+        return CustomActionsSchema.getInstanceAsync().thenApply(CustomActionsSchemaImpl.class::cast);
     }
 
     public void addAction(ActionUrl url) {
@@ -121,14 +125,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         myIconCustomizations.clear();
 
         for (ActionUrl actionUrl : result.myActions) {
-            ActionUrl url = new ActionUrl(
-                new ArrayList<>(actionUrl.getGroupPath()),
-                actionUrl.getComponent(),
-                actionUrl.getActionType(),
-                actionUrl.getAbsolutePosition()
-            );
-            url.setInitialPosition(actionUrl.getInitialPosition());
-            myActions.add(url);
+            myActions.add(actionUrl.copy());
         }
         resortActions();
 
@@ -161,7 +158,27 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     @Override
-    public void loadState(Element element) {
+    public Coroutine<?, ?> loadState(Element element) {
+        return Coroutine.<Object, Object>first(CodeExecution.apply(input -> {
+                readState(element);
+                return null;
+            }))
+            .then(CompletableFutureStep.await(input -> resolveActionUrlsAsync()));
+    }
+
+    /**
+     * Expands the group of every url read from the storage. Deserialization only records group ids, since
+     * walking an action group is asynchronous.
+     */
+    private CompletableFuture<?> resolveActionUrlsAsync() {
+        CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
+        for (ActionUrl actionUrl : myActions) {
+            chain = chain.thenCompose(ignored -> actionUrl.resolveComponentAsync());
+        }
+        return chain;
+    }
+
+    private void readState(Element element) {
         Element schElement = element;
         String activeName = element.getAttributeValue(ACTIVE);
         if (activeName != null) {
@@ -185,11 +202,13 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     @Override
-    public @Nullable Element getState() {
-        Element element = new Element("state");
-        writeActions(element);
-        writeIcons(element);
-        return element;
+    public Coroutine<?, @Nullable Element> getState() {
+        return Coroutine.first(CodeExecution.apply(input -> {
+            Element element = new Element("state");
+            writeActions(element);
+            writeIcons(element);
+            return element;
+        }));
     }
 
     private void writeActions(Element element) throws WriteExternalException {
@@ -228,14 +247,24 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         }
     }
 
-    public void fillActionGroups(DefaultMutableTreeNode root) {
+    /**
+     * Builds the tree nodes of every customizable group. The nodes are returned instead of attached, so
+     * the caller can add them to a live model on the UI thread once the walk finished.
+     */
+    public CompletableFuture<List<DefaultMutableTreeNode>> createActionGroupNodesAsync() {
         ActionManager actionManager = ActionManager.getInstance();
+        List<DefaultMutableTreeNode> nodes = new ArrayList<>();
+        CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
         for (Map.Entry<String, LocalizeValue> entry : myIdToNameList.entrySet()) {
             ActionGroup actionGroup = (ActionGroup)actionManager.getAction(entry.getKey());
-            if (actionGroup != null) {
-                root.add(ActionsTreeUtil.createNode(KeymapUtil.createGroup(actionGroup, entry.getValue(), null, null, true, null, false)));
+            if (actionGroup == null) {
+                continue;
             }
+            chain = chain.thenCompose(ignored ->
+                KeymapUtil.createGroupAsync(actionGroup, entry.getValue(), null, null, true, null, false)
+                    .thenAccept(group -> nodes.add(ActionsTreeUtil.createNode(group))));
         }
+        return chain.thenApply(ignored -> nodes);
     }
 
     public boolean isCorrectActionGroup(ActionGroup group, String defaultGroupName) {

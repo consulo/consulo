@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.wm.impl;
 
+import consulo.logging.Logger;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
@@ -75,6 +76,8 @@ import java.util.List;
  * @since 2026-08-16
  */
 public class DesktopQtNavigationBar implements Disposable {
+    private static final Logger LOG = Logger.getInstance(DesktopQtNavigationBar.class);
+
     /**
      * Group of the toolbar the awt nav bar carries on its east side, see
      * {@code NavBarRootPaneExtensionImpl#toggleRunPanel}.
@@ -98,7 +101,7 @@ public class DesktopQtNavigationBar implements Disposable {
     // the row is a dock so that the empty center takes the free width and keeps the toolbar flush right
     private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
 
-    private final @Nullable UnifiedActionToolbarImpl myToolbar;
+    private volatile @Nullable UnifiedActionToolbarImpl myToolbar;
 
     /**
      * The crumb of every item of the model, by the index the item has in it - an item with nothing to show is left
@@ -121,14 +124,23 @@ public class DesktopQtNavigationBar implements Disposable {
 
         myRowLayout.left(myCrumbsLayout);
 
-        myToolbar = createToolbar();
-        if (myToolbar != null) {
+        CustomActionsSchema.getCorrectedGroupAsync(TOOLBAR_GROUP_ID).whenComplete((group, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the navigation bar toolbar group", throwable);
+                return;
+            }
+            uiAccess.giveIfNeed(() -> {
+            if (group == null) {
+                return;
+            }
+            myToolbar = new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL);
             // the actions have to be updated against the scope the user last worked in, the same context the bar
             // itself reads - ActionToolbar can only be pointed at a component, and the bar is never focused
             myToolbar.setDataContextSupplier(this::createDataContext);
 
             myRowLayout.right(myToolbar.getUIComponent());
-        }
+        });
+        });
 
         navBarService().defaultModel().whenCompleteAsync((item, throwable) -> {
             if (throwable != null || item == null || myVm != null) {
@@ -204,14 +216,6 @@ public class DesktopQtNavigationBar implements Disposable {
 
     private NavBarService navBarService() {
         return myProject.getInstance(NavBarService.class);
-    }
-
-    private static @Nullable UnifiedActionToolbarImpl createToolbar() {
-        AnAction group = CustomActionsSchema.getInstance().getCorrectedAction(TOOLBAR_GROUP_ID);
-
-        return group instanceof ActionGroup actionGroup
-            ? new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, actionGroup, ActionToolbar.Style.HORIZONTAL)
-            : null;
     }
 
     /**

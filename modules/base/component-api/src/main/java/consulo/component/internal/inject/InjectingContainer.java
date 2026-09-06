@@ -19,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
@@ -40,6 +41,13 @@ public interface InjectingContainer {
   <T> T getInstance(Class<T> clazz);
 
   <T> @Nullable T getInstanceIfCreated(Class<T> clazz);
+
+  /**
+   * Resolves an instance without blocking the calling thread. A component whose state is loaded through
+   * coroutines cannot be created on the UI thread, so this is the only way to reach it from there. Returns an
+   * already completed future once the instance exists.
+   */
+  <T> CompletableFuture<T> getInstanceAsync(Class<T> clazz);
 
   
   <T> T getUnbindedInstance(Class<T> clazz);

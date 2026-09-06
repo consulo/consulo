@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.ActionStubBase;
@@ -28,6 +29,7 @@ import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -35,7 +37,9 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 import static consulo.ui.ex.action.util.ShortcutUtil.getKeystrokeText;
@@ -293,7 +297,7 @@ public class KeymapUtil {
         return false;
     }
 
-    public static KeymapGroup createGroup(
+    public static CompletableFuture<KeymapGroup> createGroupAsync(
         ActionGroup actionGroup,
         LocalizeValue groupName,
         Image icon,
@@ -301,10 +305,10 @@ public class KeymapUtil {
         boolean ignore,
         Predicate<AnAction> filtered
     ) {
-        return createGroup(actionGroup, groupName, icon, openIcon, ignore, filtered, true);
+        return createGroupAsync(actionGroup, groupName, icon, openIcon, ignore, filtered, true);
     }
 
-    public static KeymapGroup createGroup(
+    public static CompletableFuture<KeymapGroup> createGroupAsync(
         ActionGroup actionGroup,
         LocalizeValue groupName,
         Image icon,
@@ -313,16 +317,109 @@ public class KeymapUtil {
         Predicate<AnAction> filtered,
         boolean normalizeSeparators
     ) {
+        return createGroupAsync(actionGroup, groupName, icon, openIcon, ignore, filtered, normalizeSeparators, currentUIAccess());
+    }
+
+    private static CompletableFuture<KeymapGroup> createGroupAsync(
+        ActionGroup actionGroup,
+        LocalizeValue groupName,
+        Image icon,
+        Image openIcon,
+        boolean ignore,
+        Predicate<AnAction> filtered,
+        boolean normalizeSeparators,
+        @Nullable UIAccess uiAccess
+    ) {
         ActionManager actionManager = ActionManager.getInstance();
         KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(groupName, actionManager.getId(actionGroup), icon);
-        AnAction[] children = actionGroup instanceof DefaultActionGroup defaultActionGroup
-            ? defaultActionGroup.getChildActionsOrStubs()
-            : actionGroup.getChildren(null);
 
-        for (AnAction action : children) {
+        return getChildrenAsync(actionGroup, uiAccess).thenCompose(children -> {
+            CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
+
+            for (AnAction action : children) {
+                LOG.assertTrue(action != null, groupName + " contains null actions");
+
+                if (action instanceof ActionGroup childActionGroup) {
+                    chain = chain.thenCompose(ignored ->
+                        createGroupAsync(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators, uiAccess)
+                            .thenAccept(subGroup -> {
+                                if (subGroup.getSize() > 0) {
+                                    if (!ignore && !childActionGroup.isPopup()) {
+                                        group.addAll(subGroup);
+                                    }
+                                    else {
+                                        group.addGroup(subGroup);
+                                    }
+                                }
+                                else if (filtered == null || filtered.test(actionGroup)) {
+                                    group.addGroup(subGroup);
+                                }
+                            })
+                    );
+                }
+                else if (action instanceof AnSeparator) {
+                    group.addSeparator();
+                }
+                else {
+                    String id = action instanceof ActionStubBase actionStubBase
+                        ? actionStubBase.getId()
+                        : actionManager.getId(action);
+                    if (id != null && !id.startsWith(TOOL_ACTION_PREFIX) && (filtered == null || filtered.test(action))) {
+                        group.addActionId(id);
+                    }
+                }
+            }
+
+            return chain.thenApply(ignored -> {
+                if (normalizeSeparators) {
+                    group.normalizeSeparators();
+                }
+                return group;
+            });
+        });
+    }
+
+    public static CompletableFuture<KeymapGroup> createGroupAsync(
+        ActionGroup actionGroup,
+        boolean ignore,
+        Predicate<AnAction> filtered
+    ) {
+        return createGroupAsync(actionGroup, getName(actionGroup), null, null, ignore, filtered);
+    }
+
+    /**
+     * Resolves the children of a group without an action event. Groups exposing their children statically are
+     * read directly; any other group is reported as having no children, since expanding it would require a data
+     * context which does not exist while a keymap tree is built.
+     */
+    public static List<AnAction> getChildren(ActionGroup actionGroup) {
+        return actionGroup instanceof DefaultActionGroup defaultActionGroup
+            ? List.of(defaultActionGroup.getChildActionsOrStubs())
+            : List.of();
+    }
+
+    public static KeymapGroup createGroup(ActionGroup actionGroup, boolean ignore, @Nullable Predicate<AnAction> filtered) {
+        return createGroup(actionGroup, getName(actionGroup), null, null, ignore, filtered, true);
+    }
+
+    public static KeymapGroup createGroup(
+        ActionGroup actionGroup,
+        LocalizeValue groupName,
+        @Nullable Image icon,
+        @Nullable Image openIcon,
+        boolean ignore,
+        @Nullable Predicate<AnAction> filtered,
+        boolean normalizeSeparators
+    ) {
+        ActionManager actionManager = ActionManager.getInstance();
+        KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(groupName, actionManager.getId(actionGroup), icon);
+
+        for (AnAction action : getChildren(actionGroup)) {
             LOG.assertTrue(action != null, groupName + " contains null actions");
+
             if (action instanceof ActionGroup childActionGroup) {
-                KeymapGroup subGroup = createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
+                KeymapGroup subGroup =
+                    createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
                 if (subGroup.getSize() > 0) {
                     if (!ignore && !childActionGroup.isPopup()) {
                         group.addAll(subGroup);
@@ -338,31 +435,56 @@ public class KeymapUtil {
             else if (action instanceof AnSeparator) {
                 group.addSeparator();
             }
-            else if (action != null) {
+            else {
                 String id = action instanceof ActionStubBase actionStubBase
                     ? actionStubBase.getId()
                     : actionManager.getId(action);
-                if (id != null) {
-                    if (id.startsWith(TOOL_ACTION_PREFIX)) {
-                        continue;
-                    }
-                    if (filtered == null || filtered.test(action)) {
-                        group.addActionId(id);
-                    }
+                if (id != null && !id.startsWith(TOOL_ACTION_PREFIX) && (filtered == null || filtered.test(action))) {
+                    group.addActionId(id);
                 }
             }
         }
+
         if (normalizeSeparators) {
             group.normalizeSeparators();
         }
         return group;
     }
 
-    public static KeymapGroup createGroup(ActionGroup actionGroup, boolean ignore, Predicate<AnAction> filtered) {
-        return createGroup(actionGroup, getName(actionGroup), null, null, ignore, filtered);
+    /**
+     * Resolves the children of a group for tree building. Groups exposing their children statically are
+     * read directly, any other group is expanded through its asynchronous contract without an action
+     * event, since no data context exists while a keymap or customization tree is built.
+     */
+    public static CompletableFuture<List<AnAction>> getChildrenAsync(ActionGroup actionGroup) {
+        return getChildrenAsync(actionGroup, currentUIAccess());
     }
 
-    
+    private static CompletableFuture<List<AnAction>> getChildrenAsync(ActionGroup actionGroup, @Nullable UIAccess uiAccess) {
+        if (actionGroup instanceof DefaultActionGroup defaultActionGroup) {
+            return CompletableFuture.completedFuture(List.of(defaultActionGroup.getChildActionsOrStubs()));
+        }
+
+        Application application = Application.get();
+        CoroutineScope scope = CoroutineScope.of(application.coroutineContext());
+        if (uiAccess != null) {
+            scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+        }
+
+        return actionGroup.getChildrenAsync(null)
+            .runAsync(scope, null)
+            .toFuture()
+            .thenApply(children -> children == null ? List.<AnAction>of() : children);
+    }
+
+    /**
+     * The walk starts on the UI thread and continues on the coroutine executor, so the access a group may need to
+     * hop back to the UI has to be taken while there still is one - asking for it later throws.
+     */
+    private static @Nullable UIAccess currentUIAccess() {
+        return UIAccess.isUIThread() ? UIAccess.current() : null;
+    }
+
     private static LocalizeValue getName(AnAction action) {
         LocalizeValue name = action.getTemplatePresentation().getTextValue();
         if (name.isNotEmpty()) {

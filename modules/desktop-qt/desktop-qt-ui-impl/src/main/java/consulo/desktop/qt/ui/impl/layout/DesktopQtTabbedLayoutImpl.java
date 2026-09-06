@@ -34,6 +34,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -144,12 +145,10 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
             position -> {
                 DesktopQtTabImpl tab = tabAt(tabBar, position);
                 if (tab == null || tab.getPopupGroupId() == null) {
-                    return null;
+                    return CompletableFuture.completedFuture(null);
                 }
 
-                return CustomActionsSchema.getInstance().getCorrectedAction(tab.getPopupGroupId()) instanceof ActionGroup group
-                    ? group
-                    : null;
+                return CustomActionsSchema.getCorrectedGroupAsync(tab.getPopupGroupId());
             },
             ActionPlaces.EDITOR_TAB_POPUP,
             position -> {

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl.internal;
 
+import consulo.logging.Logger;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import com.jetbrains.FontExtensions;
 import com.jetbrains.JBR;
@@ -38,7 +39,6 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
 import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -104,6 +104,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -138,6 +139,8 @@ import java.util.function.Supplier;
  * </ul>
  */
 public class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, UiDataProvider, Accessible {
+    private static final Logger LOG = Logger.getInstance(EditorGutterComponentImpl.class);
+
     private static Supplier<@Nullable FontExtensions> FONT_EXTENSIONS = LazyValue.nullable(() -> JBR.getFontExtensions());
 
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
@@ -2576,14 +2579,26 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 }
             }
             else {
-                ActionGroup group = myCustomGutterPopupGroup;
-                if (group == null && myShowDefaultGutterPopup) {
-                    group = (ActionGroup) CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER);
-                }
-                if (group != null) {
-                    ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_GUTTER_POPUP, group);
-                    popupMenu.getComponent().show(this, e.getX(), e.getY());
-                }
+                ActionGroup customGroup = myCustomGutterPopupGroup;
+                CompletableFuture<@Nullable ActionGroup> groupFuture = customGroup != null
+                    ? CompletableFuture.completedFuture(customGroup)
+                    : myShowDefaultGutterPopup
+                    ? CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_EDITOR_GUTTER)
+                    : CompletableFuture.completedFuture(null);
+
+                UIAccess uiAccess = UIAccess.current();
+                groupFuture.whenComplete((group, throwable) -> {
+                    if (throwable != null) {
+                        LOG.error("Failed to resolve the gutter popup group", throwable);
+                        return;
+                    }
+                    uiAccess.giveIfNeed(() -> {
+                    if (group != null) {
+                        ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_GUTTER_POPUP, group);
+                        popupMenu.getComponent().show(this, e.getX(), e.getY());
+                    }
+                });
+                });
                 e.consume();
             }
         }

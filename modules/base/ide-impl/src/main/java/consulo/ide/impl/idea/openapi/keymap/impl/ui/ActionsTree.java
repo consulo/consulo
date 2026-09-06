@@ -23,16 +23,21 @@ import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ui.ex.action.QuickList;
 import consulo.ui.ex.impl.internal.keymap.KeymapImpl;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeVisitor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
@@ -48,9 +53,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 
 public class ActionsTree {
+    private static final Logger LOG = Logger.getInstance(ActionsTree.class);
+
     private class MyRenderer extends CellRendererPanel implements TreeCellRenderer {
         final KeymapsRenderer myNodeRender = new KeymapsRenderer();
         final JPanel myShortcutPanel = new NonOpaquePanel(new HorizontalLayout(6));
@@ -79,7 +87,7 @@ public class ActionsTree {
             myNodeRender.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
             myNodeRender.setFont(tree.getFont());
 
-            Object data = TreeUtil.getUserObject(value);
+            Object data = unwrap(value);
             Shortcut[] shortcuts;
             if (data instanceof String actionId) {
                 shortcuts = myKeymap.getShortcuts(actionId);
@@ -115,26 +123,25 @@ public class ActionsTree {
     private static final Image CLOSE_ICON = PlatformIconGroup.nodesFolder();
 
     private final JTree myTree;
-    private DefaultMutableTreeNode myRoot;
     private final JScrollPane myComponent;
     private Keymap myKeymap;
     private KeymapGroupImpl myMainGroup = new KeymapGroupImpl(LocalizeValue.empty());
     private boolean myShowBoundActions = Registry.is("keymap.show.alias.actions");
 
-    private static final String ROOT = "ROOT";
+    private static final String PATH_SEPARATOR = " | ";
 
     private String myFilter = null;
-    private final DefaultTreeModel myModel;
+    private final KeymapTreeStructure myStructure;
+    private final StructureTreeModel<KeymapTreeStructure> myStructureTreeModel;
 
     public ActionsTree(Disposable disposable) {
         this(disposable, ShortcutUtil::isUseUnicodeShortcuts);
     }
 
     public ActionsTree(Disposable disposable, BooleanSupplier useUnicodeCharactersForShortcutsGetter) {
-        myRoot = new DefaultMutableTreeNode(ROOT);
-
-        myModel = new DefaultTreeModel(myRoot);
-        myTree = new Tree(new AsyncTreeModel(myModel, disposable));
+        myStructure = new KeymapTreeStructure(myMainGroup);
+        myStructureTreeModel = new StructureTreeModel<>(myStructure, disposable);
+        myTree = new Tree(new AsyncTreeModel(myStructureTreeModel, disposable));
         myTree.setRootVisible(false);
         myTree.setShowsRootHandles(true);
 
@@ -161,12 +168,19 @@ public class ActionsTree {
         myTree.getSelectionModel().addTreeSelectionListener(l);
     }
 
+    private static @Nullable KeymapTreeElement asElement(@Nullable Object node) {
+        return TreeUtil.getUserObject(node) instanceof NodeDescriptor<?> descriptor
+            && descriptor.getElement() instanceof KeymapTreeElement element ? element : null;
+    }
+
+    public static @Nullable Object unwrap(@Nullable Object node) {
+        KeymapTreeElement element = asElement(node);
+        return element == null ? null : element.getValue();
+    }
+
     private @Nullable Object getSelectedObject() {
         TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath == null) {
-            return null;
-        }
-        return ((DefaultMutableTreeNode) selectionPath.getLastPathComponent()).getUserObject();
+        return selectionPath == null ? null : unwrap(selectionPath.getLastPathComponent());
     }
 
     public @Nullable String getSelectedActionId() {
@@ -184,8 +198,8 @@ public class ActionsTree {
         return getSelectedObject() instanceof QuickList quickList ? quickList : null;
     }
 
-    public void reset(Keymap keymap, QuickList[] allQuickLists) {
-        reset(keymap, allQuickLists, myFilter, null);
+    public CompletableFuture<?> reset(Keymap keymap, QuickList[] allQuickLists) {
+        return reset(keymap, allQuickLists, myFilter, null);
     }
 
     public KeymapGroupImpl getMainGroup() {
@@ -196,22 +210,27 @@ public class ActionsTree {
         return myTree;
     }
 
-    public void filter(String filter, QuickList[] currentQuickListIds) {
+    public CompletableFuture<?> filter(String filter, QuickList[] currentQuickListIds) {
         myFilter = filter;
-        reset(myKeymap, currentQuickListIds, filter, null);
+        return reset(myKeymap, currentQuickListIds, filter, null);
     }
 
-    private void reset(Keymap keymap, QuickList[] allQuickLists, String filter, @Nullable KeyboardShortcut shortcut) {
+    private CompletableFuture<?> reset(
+        Keymap keymap,
+        QuickList[] allQuickLists,
+        String filter,
+        @Nullable KeyboardShortcut shortcut
+    ) {
         myKeymap = keymap;
 
         PathsKeeper pathsKeeper = new PathsKeeper();
         pathsKeeper.storePaths();
 
-        myRoot.removeAllChildren();
-
         ActionManager actionManager = ActionManager.getInstance();
         Project project = DataManager.getInstance().getDataContext(myComponent).getData(Project.KEY);
-        KeymapGroupImpl mainGroup = ActionsTreeUtil.createMainGroup(
+        UIAccess uiAccess = UIAccess.current();
+
+        return ActionsTreeUtil.createMainGroupAsync(
             project,
             myKeymap,
             allQuickLists,
@@ -220,29 +239,34 @@ public class ActionsTree {
             filter != null && filter.length() > 0
                 ? ActionsTreeUtil.isActionFiltered(filter, true)
                 : shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null
-        );
-        if ((filter != null && filter.length() > 0 || shortcut != null) && mainGroup.initIds().isEmpty()) {
-            mainGroup = ActionsTreeUtil.createMainGroup(
-                project,
-                myKeymap,
-                allQuickLists,
-                filter,
-                false,
-                filter != null && filter.length() > 0
-                    ? ActionsTreeUtil.isActionFiltered(filter, false)
-                    : ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut)
-            );
-        }
-        myRoot = ActionsTreeUtil.createNode(mainGroup);
-        myMainGroup = mainGroup;
-        myModel.setRoot(myRoot);
-        myModel.nodeStructureChanged(myRoot);
-
-        pathsKeeper.restorePaths();
+        ).thenCompose(mainGroup -> {
+            if ((filter != null && filter.length() > 0 || shortcut != null) && mainGroup.initIds().isEmpty()) {
+                return ActionsTreeUtil.createMainGroupAsync(
+                    project,
+                    myKeymap,
+                    allQuickLists,
+                    filter,
+                    false,
+                    filter != null && filter.length() > 0
+                        ? ActionsTreeUtil.isActionFiltered(filter, false)
+                        : ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut)
+                );
+            }
+            return CompletableFuture.completedFuture(mainGroup);
+        }).thenCompose(mainGroup -> uiAccess.giveAsync(() -> {
+            myMainGroup = mainGroup;
+            myStructure.setRootGroup(mainGroup);
+            myStructureTreeModel.invalidate()
+                .onSuccess(ignored -> uiAccess.giveAsync(pathsKeeper::restorePaths));
+        })).whenComplete((ignored, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to build the keymap action tree", throwable);
+            }
+        });
     }
 
-    public void filterTree(KeyboardShortcut keyboardShortcut, QuickList[] currentQuickListIds) {
-        reset(myKeymap, currentQuickListIds, myFilter, keyboardShortcut);
+    public CompletableFuture<?> filterTree(KeyboardShortcut keyboardShortcut, QuickList[] currentQuickListIds) {
+        return reset(myKeymap, currentQuickListIds, myFilter, keyboardShortcut);
     }
 
     private static boolean isActionChanged(String actionId, Keymap oldKeymap, Keymap newKeymap) {
@@ -282,58 +306,45 @@ public class ActionsTree {
     }
 
     public void selectAction(String actionId) {
-        JTree tree = myTree;
-
         String path = myMainGroup.getActionQualifiedPath(actionId);
         if (path == null) {
             return;
         }
-        DefaultMutableTreeNode node = getNodeForPath(path);
-        if (node == null) {
-            return;
-        }
-
-        TreeUtil.selectInTree(node, true, tree);
+        TreeUtil.promiseSelect(myTree, pathVisitor(path));
     }
 
-    private @Nullable DefaultMutableTreeNode getNodeForPath(String path) {
-        Enumeration enumeration = ((DefaultMutableTreeNode) myTree.getModel().getRoot()).preorderEnumeration();
-        while (enumeration.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
-            if (Comparing.equal(getPath(node), path)) {
-                return node;
+    private TreeVisitor pathVisitor(String target) {
+        return treePath -> {
+            String candidate = getPath(treePath.getLastPathComponent());
+            if (StringUtil.isEmpty(candidate)) {
+                return TreeVisitor.Action.CONTINUE;
             }
-        }
-        return null;
-    }
-
-    private List<DefaultMutableTreeNode> getNodesByPaths(List<String> paths) {
-        List<DefaultMutableTreeNode> result = new ArrayList<>();
-        Enumeration enumeration = ((DefaultMutableTreeNode) myTree.getModel().getRoot()).preorderEnumeration();
-        while (enumeration.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
-            String path = getPath(node);
-            if (paths.contains(path)) {
-                result.add(node);
+            if (target.equals(candidate)) {
+                return TreeVisitor.Action.INTERRUPT;
             }
-        }
-        return result;
+            return target.startsWith(candidate + PATH_SEPARATOR)
+                ? TreeVisitor.Action.CONTINUE
+                : TreeVisitor.Action.SKIP_CHILDREN;
+        };
     }
 
-    private @Nullable String getPath(DefaultMutableTreeNode node) {
-        Object userObject = node.getUserObject();
-        if (userObject instanceof String actionId) {
-            if (node.getParent() instanceof DefaultMutableTreeNode defaultMutableTreeNode
-                && defaultMutableTreeNode.getUserObject() instanceof KeymapGroupImpl keymapGroup) {
+    private @Nullable String getPath(@Nullable Object node) {
+        KeymapTreeElement element = asElement(node);
+        if (element == null) {
+            return null;
+        }
+        Object value = element.getValue();
+        if (value instanceof String actionId) {
+            KeymapTreeElement parent = element.getParent();
+            if (parent != null && parent.getValue() instanceof KeymapGroupImpl keymapGroup) {
                 return keymapGroup.getActionQualifiedPath(actionId);
             }
-
             return myMainGroup.getActionQualifiedPath(actionId);
         }
-        if (userObject instanceof KeymapGroupImpl keymapGroup) {
+        if (value instanceof KeymapGroupImpl keymapGroup) {
             return keymapGroup.getQualifiedPath();
         }
-        if (userObject instanceof QuickList quickList) {
+        if (value instanceof QuickList quickList) {
             return quickList.getDisplayName();
         }
         return null;
@@ -347,72 +358,53 @@ public class ActionsTree {
     }
 
     private class PathsKeeper {
-        private List<String> myPathsToExpand;
-        private List<String> mySelectionPaths;
+        private List<String> myPathsToExpand = new ArrayList<>();
+        private List<String> mySelectionPaths = new ArrayList<>();
 
         public void storePaths() {
             myPathsToExpand = new ArrayList<>();
             mySelectionPaths = new ArrayList<>();
 
-            DefaultMutableTreeNode root = (DefaultMutableTreeNode) myTree.getModel().getRoot();
-
-            TreePath path = new TreePath(root.getPath());
-            if (myTree.isPathSelected(path)) {
-                addPathToList(root, mySelectionPaths);
+            Object root = myTree.getModel().getRoot();
+            if (root == null) {
+                return;
             }
-            if (myTree.isExpanded(path) || root.getChildCount() == 0) {
-                addPathToList(root, myPathsToExpand);
-                _storePaths(root);
+
+            Enumeration<TreePath> expanded = myTree.getExpandedDescendants(new TreePath(root));
+            if (expanded != null) {
+                while (expanded.hasMoreElements()) {
+                    addPathToList(expanded.nextElement(), myPathsToExpand);
+                }
+            }
+
+            TreePath[] selection = myTree.getSelectionPaths();
+            if (selection != null) {
+                for (TreePath treePath : selection) {
+                    addPathToList(treePath, mySelectionPaths);
+                }
             }
         }
 
-        private void addPathToList(DefaultMutableTreeNode root, List<String> list) {
-            String path = getPath(root);
+        private void addPathToList(TreePath treePath, List<String> list) {
+            String path = getPath(treePath.getLastPathComponent());
             if (!StringUtil.isEmpty(path)) {
                 list.add(path);
             }
         }
 
-        private void _storePaths(DefaultMutableTreeNode root) {
-            List<TreeNode> childNodes = childrenToArray(root);
-            for (Object childNode1 : childNodes) {
-                DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) childNode1;
-                TreePath path = new TreePath(childNode.getPath());
-                if (myTree.isPathSelected(path)) {
-                    addPathToList(childNode, mySelectionPaths);
-                }
-                if ((myTree.isExpanded(path) || childNode.getChildCount() == 0) && !childNode.isLeaf()) {
-                    addPathToList(childNode, myPathsToExpand);
-                    _storePaths(childNode);
-                }
-            }
-        }
-
         public void restorePaths() {
-            List<DefaultMutableTreeNode> nodesToExpand = getNodesByPaths(myPathsToExpand);
-            for (DefaultMutableTreeNode node : nodesToExpand) {
-                myTree.expandPath(new TreePath(node.getPath()));
+            if (!myPathsToExpand.isEmpty()) {
+                TreeUtil.promiseExpand(myTree, myPathsToExpand.stream().map(ActionsTree.this::pathVisitor));
             }
 
             if (myTree.getSelectionModel().getSelectionCount() == 0) {
-                List<DefaultMutableTreeNode> nodesToSelect = getNodesByPaths(mySelectionPaths);
-                if (!nodesToSelect.isEmpty()) {
-                    for (DefaultMutableTreeNode node : nodesToSelect) {
-                        TreeUtil.selectInTree(node, false, myTree);
-                    }
+                if (mySelectionPaths.isEmpty()) {
+                    TreeUtil.promiseSelectFirst(myTree);
                 }
                 else {
-                    myTree.setSelectionRow(0);
+                    TreeUtil.promiseSelect(myTree, mySelectionPaths.stream().map(ActionsTree.this::pathVisitor));
                 }
             }
-        }
-
-        private List<TreeNode> childrenToArray(DefaultMutableTreeNode node) {
-            List<TreeNode> list = new ArrayList<>();
-            for (int i = 0; i < node.getChildCount(); i++) {
-                list.add(node.getChildAt(i));
-            }
-            return list;
         }
     }
 
@@ -436,9 +428,12 @@ public class ActionsTree {
             Image icon = null;
             String text;
             boolean bound = false;
-            Object userObject = defaultMutableTreeNode.getUserObject();
+            Object userObject = unwrap(defaultMutableTreeNode);
 
             boolean changed;
+            if (userObject == null) {
+                return;
+            }
             if (userObject instanceof KeymapGroupImpl group) {
                 text = group.getName();
 

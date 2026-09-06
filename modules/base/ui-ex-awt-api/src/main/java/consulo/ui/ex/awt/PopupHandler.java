@@ -15,7 +15,9 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.logging.Logger;
 import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 
 import org.jspecify.annotations.Nullable;
@@ -31,6 +33,8 @@ import java.util.Arrays;
  * @author Eugene Belyaev
  */
 public abstract class PopupHandler extends MouseAdapter {
+    private static final Logger LOG = Logger.getInstance(PopupHandler.class);
+
   public abstract void invokePopup(Component comp, int x, int y);
 
   @Override
@@ -143,9 +147,17 @@ public abstract class PopupHandler extends MouseAdapter {
     PopupHandler popupHandler = new PopupHandler() {
       @Override
       public void invokePopup(Component comp, int x, int y) {
-        ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(groupId);
-        ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(place, group);
-        popupMenu.getComponent().show(comp, x, y);
+        UIAccess uiAccess = UIAccess.current();
+        CustomActionsSchema.getCorrectedGroupAsync(groupId).whenComplete((group, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the popup group", throwable);
+                return;
+            }
+            uiAccess.giveIfNeed(() -> {
+          ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(place, group);
+          popupMenu.getComponent().show(comp, x, y);
+        });
+        });
       }
     };
     component.addMouseListener(popupHandler);

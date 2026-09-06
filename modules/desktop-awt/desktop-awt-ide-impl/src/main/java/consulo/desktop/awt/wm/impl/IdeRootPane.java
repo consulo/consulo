@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.logging.Logger;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -28,12 +29,12 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ide.actions.CustomizeUIAction;
 import consulo.ide.impl.idea.ide.actions.ViewToolbarAction;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.*;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.*;
@@ -55,6 +56,8 @@ import java.util.Map;
  * @author Vladimir Kondratyev
  */
 public class IdeRootPane extends JRootPane implements Disposable, UISettingsListener {
+    private static final Logger LOG = Logger.getInstance(IdeRootPane.class);
+
     /**
      * Toolbar and status bar.
      */
@@ -248,7 +251,22 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     }
 
     private JComponent createToolbar() {
-        ActionGroup group = (ActionGroup) CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_TOOLBAR);
+        // the schema loads asynchronously, so the toolbar starts empty and fills in once the group resolves
+        DefaultActionGroup group = new DefaultActionGroup();
+        UIAccess uiAccess = UIAccess.current();
+        CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_TOOLBAR)
+            .whenComplete((corrected, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to resolve the main toolbar group", throwable);
+                    return;
+                }
+                uiAccess.giveIfNeed(() -> {
+                if (corrected != null) {
+                    group.add(corrected);
+                }
+            });
+            });
+
         ActionToolbar toolBar = myActionManager.createActionToolbar(
             ActionPlaces.MAIN_TOOLBAR,
             group,

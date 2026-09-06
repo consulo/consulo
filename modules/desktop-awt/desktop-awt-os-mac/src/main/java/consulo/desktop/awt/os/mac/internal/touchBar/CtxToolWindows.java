@@ -5,6 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.ToolWindowManagerEx;
@@ -76,18 +77,27 @@ final class CtxToolWindows {
         pbc.subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
             @Override
             public void toolWindowsRegistered(List<String> ids, ToolWindowManager toolWindowManager) {
+                UIAccess uiAccess = UIAccess.current();
                 for (String id : ids) {
-                    @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(id);
-                    if (actions == null || actions.first.get(0L) == null) {
-                        LOG.debug("null action group (or it doesn't contain main-layout) for tool window: %s", id);
-                        continue;
-                    }
+                    ActionsLoader.getToolWindowActionGroupAsync(id).whenComplete((actions, throwable) -> {
+                        if (throwable != null) {
+                            LOG.error("Failed to resolve the tool window touchbar actions", throwable);
+                            return;
+                        }
+                        uiAccess.giveIfNeed(() -> {
+                        if (actions == null || actions.first.get(0L) == null) {
+                            LOG.debug("null action group (or it doesn't contain main-layout) for tool window: %s", id);
+                            return;
+                        }
 
-                    ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
-                    if (toolWindow == null)
-                        continue;
-                    TouchBarsManager.register(toolWindow.getComponent(), actions.first, actions.second);
-                    LOG.debug("register tool-window '%s' for component: %s", id, toolWindow.getComponent());
+                        ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
+                        if (toolWindow == null) {
+                            return;
+                        }
+                        TouchBarsManager.register(toolWindow.getComponent(), actions.first, actions.second);
+                        LOG.debug("register tool-window '%s' for component: %s", id, toolWindow.getComponent());
+                    });
+                    });
                 }
             }
 
@@ -109,14 +119,22 @@ final class CtxToolWindows {
                 if (tw == null)
                     return;
 
-                @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(tw.getId());
-                if (actions == null || actions.first.get(0L) == null) {
-                    LOG.debug("reloaded null action group (or it doesn't contain main-layout) for tool window: %s", tw.getId());
-                    return;
-                }
+                UIAccess uiAccess = UIAccess.current();
+                ActionsLoader.getToolWindowActionGroupAsync(tw.getId()).whenComplete((actions, throwable) -> {
+                    if (throwable != null) {
+                        LOG.error("Failed to reload the tool window touchbar actions", throwable);
+                        return;
+                    }
+                    uiAccess.giveIfNeed(() -> {
+                    if (actions == null || actions.first.get(0L) == null) {
+                        LOG.debug("reloaded null action group (or it doesn't contain main-layout) for tool window: %s", tw.getId());
+                        return;
+                    }
 
-                TouchBarsManager.register(tw.getComponent(), actions.first, actions.second);
-                LOG.debug("re-register tool-window '%s' for component: %s", tw.getId(), tw.getComponent());
+                    TouchBarsManager.register(tw.getComponent(), actions.first, actions.second);
+                    LOG.debug("re-register tool-window '%s' for component: %s", tw.getId(), tw.getComponent());
+                });
+                });
             });
         }
     }

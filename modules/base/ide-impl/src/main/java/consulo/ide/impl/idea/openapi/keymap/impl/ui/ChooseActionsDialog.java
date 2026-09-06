@@ -104,16 +104,12 @@ public class ChooseActionsDialog extends DialogWrapper {
 
         List<String> actions = new ArrayList<>();
         for (TreePath path : paths) {
-            Object node = path.getLastPathComponent();
-            if (node instanceof DefaultMutableTreeNode) {
-                DefaultMutableTreeNode defNode = (DefaultMutableTreeNode) node;
-                Object userObject = defNode.getUserObject();
-                if (userObject instanceof String actionId) {
-                    actions.add(actionId);
-                }
-                else if (userObject instanceof QuickList quickList) {
-                    actions.add(quickList.getActionId());
-                }
+            Object userObject = ActionsTree.unwrap(path.getLastPathComponent());
+            if (userObject instanceof String actionId) {
+                actions.add(actionId);
+            }
+            else if (userObject instanceof QuickList quickList) {
+                actions.add(quickList.getActionId());
             }
         }
         return ArrayUtil.toStringArray(actions);

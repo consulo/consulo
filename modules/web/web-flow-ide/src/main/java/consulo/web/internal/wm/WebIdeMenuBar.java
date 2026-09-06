@@ -21,7 +21,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.MenuSeparator;
@@ -162,12 +161,10 @@ public class WebIdeMenuBar {
     }
 
     private CompletableFuture<List<MenuNode>> expandMainMenuAsync(DataContext context, UIAccess uiAccess, ProgressIndicator indicator) {
-        AnAction mainMenuAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
-        if (!(mainMenuAction instanceof ActionGroup mainMenuGroup)) {
-            return CompletableFuture.completedFuture(List.of());
-        }
-
-        return expandGroupAsync(mainMenuGroup, context, uiAccess, indicator, 0);
+        return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_MENU)
+            .thenCompose(mainMenuGroup -> mainMenuGroup == null
+                ? CompletableFuture.completedFuture(List.of())
+                : expandGroupAsync(mainMenuGroup, context, uiAccess, indicator, 0));
     }
 
     private CompletableFuture<List<MenuNode>> expandGroupAsync(

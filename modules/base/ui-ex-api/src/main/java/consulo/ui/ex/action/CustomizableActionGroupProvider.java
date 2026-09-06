@@ -21,7 +21,7 @@ import consulo.localize.LocalizeValue;
 
 /**
  * This extension allows to add an action group to the list of customizable actions in Settings | Menus and Toolbars.
- * Use {@code CustomActionsSchema.getInstance().getCorrectedAction(id)} to get customized version of a group.
+ * Use {@code CustomActionsSchema.getCorrectedActionAsync(id)} to get customized version of a group.
  *
  * @author nik
  */

@@ -1,15 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor;
 
-import com.uber.nullaway.annotations.Contract;
+import consulo.logging.Logger;
 import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
-import consulo.util.lang.ObjectUtil;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Implementation of {@link EditorPopupHandler} showing a context menu for some {@link ActionGroup} (which can depend on click location).
@@ -17,37 +19,50 @@ import java.awt.event.MouseEvent;
  * @since 2019.1
  */
 public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
-  public abstract @Nullable ActionGroup getActionGroup(EditorMouseEvent event);
+    private static final Logger LOG = Logger.getInstance(ContextMenuPopupHandler.class);
+
+  public abstract CompletableFuture<@Nullable ActionGroup> getActionGroupAsync(EditorMouseEvent event);
 
   @Override
   public boolean handlePopup(EditorMouseEvent event) {
-    ActionGroup group = getActionGroup(event);
-    if (group != null) {
-      ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, group);
-
-      InputDetails inputDetails = event.getInputDetails();
-      if (inputDetails != null) {
-        consulo.ui.Component uiComponent = event.getEditor().getUIComponent();
-
-        popupMenu.show(uiComponent, inputDetails.getX(), inputDetails.getY());
-      }
-      // obsolete implementation
-      else {
-        MouseEvent e = event.getMouseEvent();
-        Component c = e.getComponent();
-        if (c != null && c.isShowing()) {
-          popupMenu.getComponent().show(c, e.getX(), e.getY());
+    UIAccess uiAccess = UIAccess.current();
+    getActionGroupAsync(event).whenComplete((group, throwable) -> {
+        if (throwable != null) {
+            LOG.error("Failed to resolve the editor context menu group", throwable);
+            return;
         }
-      }
-
-      event.consume();
-    }
+        uiAccess.giveIfNeed(() -> showPopup(event, group));
+    });
     return true;
   }
 
-  @Contract("null -> null; !null -> !null")
-  private static @Nullable ActionGroup getGroupForId(@Nullable String groupId) {
-    return groupId == null ? null : ObjectUtil.tryCast(CustomActionsSchema.getInstance().getCorrectedAction(groupId), ActionGroup.class);
+  @RequiredUIAccess
+  private static void showPopup(EditorMouseEvent event, @Nullable ActionGroup group) {
+    if (group == null) {
+      return;
+    }
+    ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, group);
+
+    InputDetails inputDetails = event.getInputDetails();
+    if (inputDetails != null) {
+      consulo.ui.Component uiComponent = event.getEditor().getUIComponent();
+
+      popupMenu.show(uiComponent, inputDetails.getX(), inputDetails.getY());
+    }
+    // obsolete implementation
+    else {
+      MouseEvent e = event.getMouseEvent();
+      Component c = e.getComponent();
+      if (c != null && c.isShowing()) {
+        popupMenu.getComponent().show(c, e.getX(), e.getY());
+      }
+    }
+
+    event.consume();
+  }
+
+  private static CompletableFuture<@Nullable ActionGroup> getGroupForIdAsync(@Nullable String groupId) {
+    return groupId == null ? CompletableFuture.completedFuture(null) : CustomActionsSchema.getCorrectedGroupAsync(groupId);
   }
 
   /**
@@ -55,8 +70,8 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
    */
   public abstract static class ById extends ContextMenuPopupHandler {
     @Override
-    public @Nullable ActionGroup getActionGroup(EditorMouseEvent event) {
-      return ContextMenuPopupHandler.getGroupForId(getActionGroupId(event));
+    public CompletableFuture<@Nullable ActionGroup> getActionGroupAsync(EditorMouseEvent event) {
+      return ContextMenuPopupHandler.getGroupForIdAsync(getActionGroupId(event));
     }
 
     public abstract @Nullable String getActionGroupId(EditorMouseEvent event);
@@ -66,19 +81,24 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
    * Popup handler which always shows context menu for the same action group (regardless of mouse click location).
    */
   public static class Simple extends ContextMenuPopupHandler {
-    private final ActionGroup myActionGroup;
+    private final @Nullable ActionGroup myActionGroup;
+    private final @Nullable String myGroupId;
 
-    public Simple(ActionGroup actionGroup) {
+    public Simple(@Nullable ActionGroup actionGroup) {
       myActionGroup = actionGroup;
+      myGroupId = null;
     }
 
-    public Simple(String groupId) {
-      this(ContextMenuPopupHandler.getGroupForId(groupId));
+    public Simple(@Nullable String groupId) {
+      myActionGroup = null;
+      myGroupId = groupId;
     }
 
     @Override
-    public @Nullable ActionGroup getActionGroup(EditorMouseEvent event) {
-      return myActionGroup;
+    public CompletableFuture<@Nullable ActionGroup> getActionGroupAsync(EditorMouseEvent event) {
+      return myActionGroup != null
+        ? CompletableFuture.completedFuture(myActionGroup)
+        : ContextMenuPopupHandler.getGroupForIdAsync(myGroupId);
     }
   }
 }

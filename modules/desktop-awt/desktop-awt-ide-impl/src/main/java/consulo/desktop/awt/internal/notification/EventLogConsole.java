@@ -57,6 +57,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author peter
@@ -116,9 +117,9 @@ class EventLogConsole {
 
         editor.installPopupHandler(new ContextMenuPopupHandler() {
             @Override
-            public @Nullable ActionGroup getActionGroup(EditorMouseEvent event) {
+            public CompletableFuture<@Nullable ActionGroup> getActionGroupAsync(EditorMouseEvent event) {
                 ActionManager actionManager = ActionManager.getInstance();
-                return createPopupActions(actionManager, clearLog, editor, event);
+                return CompletableFuture.completedFuture(createPopupActions(actionManager, clearLog, editor, event));
             }
         });
         return editor;

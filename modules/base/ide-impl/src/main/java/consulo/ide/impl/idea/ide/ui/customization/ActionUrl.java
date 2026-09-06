@@ -35,6 +35,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author anna
@@ -53,6 +54,8 @@ public class ActionUrl implements JDOMExternalizable {
     private int myAbsolutePosition;
 
     public int myInitialPosition = -1;
+
+    private @Nullable String myUnresolvedGroupId;
 
     private static final String IS_GROUP = "is_group";
     private static final String SEPARATOR = "seperator";
@@ -140,10 +143,8 @@ public class ActionUrl implements JDOMExternalizable {
             myComponent = AnSeparator.getInstance();
         }
         else if (element.getAttributeValue(IS_GROUP) != null) {
-            AnAction action = ActionManager.getInstance().getAction(attributeValue);
-            myComponent = action instanceof ActionGroup actionGroup
-                ? KeymapUtil.createGroup(actionGroup, true, null)
-                : new KeymapGroupImpl(attributeValue, attributeValue, null);
+            myComponent = new KeymapGroupImpl(attributeValue, attributeValue, null);
+            myUnresolvedGroupId = attributeValue;
         }
         myActionType = Integer.parseInt(element.getAttributeValue(ACTION_TYPE));
         myAbsolutePosition = Integer.parseInt(element.getAttributeValue(POSITION));
@@ -173,6 +174,31 @@ public class ActionUrl implements JDOMExternalizable {
         element.setAttribute(ACTION_TYPE, Integer.toString(myActionType));
         element.setAttribute(POSITION, Integer.toString(myAbsolutePosition));
         DefaultJDOMExternalizer.writeExternal(this, element);
+    }
+
+    public ActionUrl copy() {
+        ActionUrl copy = new ActionUrl(new ArrayList<>(myGroupPath), myComponent, myActionType, myAbsolutePosition);
+        copy.myInitialPosition = myInitialPosition;
+        copy.myUnresolvedGroupId = myUnresolvedGroupId;
+        return copy;
+    }
+
+    /**
+     * Expands the group this url points at. Deserialization only records the group id, since building a
+     * group walks the action tree asynchronously; call this before the url is applied to a tree.
+     */
+    public CompletableFuture<?> resolveComponentAsync() {
+        String groupId = myUnresolvedGroupId;
+        if (groupId == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        myUnresolvedGroupId = null;
+
+        AnAction action = ActionManager.getInstance().getAction(groupId);
+        if (!(action instanceof ActionGroup actionGroup)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return KeymapUtil.createGroupAsync(actionGroup, true, null).thenAccept(group -> myComponent = group);
     }
 
     public boolean isGroupContainsInPath(ActionGroup group) {

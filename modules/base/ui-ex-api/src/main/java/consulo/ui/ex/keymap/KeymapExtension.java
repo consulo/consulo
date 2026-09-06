@@ -21,6 +21,7 @@ import consulo.component.ComponentManager;
 import consulo.ui.ex.action.AnAction;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -29,5 +30,5 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface KeymapExtension {
-    @Nullable KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project);
+    CompletableFuture<@Nullable KeymapGroup> createGroupAsync(Predicate<AnAction> filtered, ComponentManager project);
 }

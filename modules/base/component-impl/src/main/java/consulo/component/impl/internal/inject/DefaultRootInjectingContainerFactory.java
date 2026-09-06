@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
@@ -40,6 +41,11 @@ public class DefaultRootInjectingContainerFactory implements RootInjectingContai
 
     @Override
     public <T> @Nullable T getInstanceIfCreated(Class<T> clazz) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> CompletableFuture<T> getInstanceAsync(Class<T> clazz) {
       throw new UnsupportedOperationException();
     }
 

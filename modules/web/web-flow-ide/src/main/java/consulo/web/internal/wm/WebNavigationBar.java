@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.wm;
 
+import consulo.logging.Logger;
 import com.vaadin.flow.component.breadcrumbs.Breadcrumbs;
 import com.vaadin.flow.component.breadcrumbs.BreadcrumbsItem;
 import consulo.codeEditor.EditorFactory;
@@ -56,6 +57,7 @@ import consulo.web.ui.impl.internal.image.WebImageConverter;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Navigation bar, rendered with the vaadin breadcrumbs component and driven by {@link NavBarVmImpl}, mirroring the
@@ -64,6 +66,8 @@ import java.util.List;
  * @author VISTALL
  */
 public class WebNavigationBar implements Disposable {
+    private static final Logger LOG = Logger.getInstance(WebNavigationBar.class);
+
     public static class Vaadin extends Breadcrumbs implements FromVaadinComponentWrapper {
         private consulo.ui.Component myComponent;
 
@@ -111,7 +115,7 @@ public class WebNavigationBar implements Disposable {
     // the row is a dock so that the empty center takes the free width and keeps the toolbar flush right
     private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
 
-    private final @Nullable UnifiedActionToolbarImpl myToolbar;
+    private volatile @Nullable UnifiedActionToolbarImpl myToolbar;
 
     private @Nullable NavBarVmImpl myVm;
 
@@ -126,14 +130,23 @@ public class WebNavigationBar implements Disposable {
 
         myRowLayout.left(myComponent);
 
-        myToolbar = createToolbar();
-        if (myToolbar != null) {
+        createToolbarAsync().whenComplete((toolbar, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the navigation bar toolbar group", throwable);
+                return;
+            }
+            uiAccess.giveIfNeed(() -> {
+            if (toolbar == null) {
+                return;
+            }
+            myToolbar = toolbar;
             // the actions have to be updated against the scope the user last worked in, the same context the bar
             // itself reads - ActionToolbar can only be pointed at a component, and the browser has no focus owner
-            myToolbar.setDataContextSupplier(this::createDataContext);
+            toolbar.setDataContextSupplier(this::createDataContext);
 
-            myRowLayout.right(myToolbar.getUIComponent());
-        }
+            myRowLayout.right(toolbar.getUIComponent());
+        });
+        });
 
         navBarService().defaultModel().whenCompleteAsync((item, throwable) -> {
             if (throwable != null || item == null || myVm != null) {
@@ -204,12 +217,10 @@ public class WebNavigationBar implements Disposable {
         return myProject.getInstance(NavBarService.class);
     }
 
-    private static @Nullable UnifiedActionToolbarImpl createToolbar() {
-        AnAction group = CustomActionsSchema.getInstance().getCorrectedAction(TOOLBAR_GROUP_ID);
-
-        return group instanceof ActionGroup actionGroup
-            ? new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, actionGroup, ActionToolbar.Style.HORIZONTAL)
-            : null;
+    private static CompletableFuture<@Nullable UnifiedActionToolbarImpl> createToolbarAsync() {
+        return CustomActionsSchema.getCorrectedGroupAsync(TOOLBAR_GROUP_ID).thenApply(group -> group == null
+            ? null
+            : new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL));
     }
 
     /**

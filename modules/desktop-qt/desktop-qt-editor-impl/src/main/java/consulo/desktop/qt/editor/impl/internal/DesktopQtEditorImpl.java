@@ -46,6 +46,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -129,7 +130,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
             // policy set on the viewport is never the one consulted
             DesktopQtActionContextMenu.installOn(
                 surface,
-                position -> contextMenuGroup(),
+                position -> contextMenuGroupAsync(),
                 ActionPlaces.EDITOR_POPUP,
                 position -> getDataContext()
             );
@@ -140,13 +141,13 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      * Looked up per click rather than kept: a plugin may replace what the id stands for, and the corrected action
      * is what honours a menu the user has customised - the raw action would ignore that.
      */
-    private @Nullable ActionGroup contextMenuGroup() {
+    private CompletableFuture<@Nullable ActionGroup> contextMenuGroupAsync() {
         String groupId = getContextMenuGroupId();
         if (groupId == null) {
-            return null;
+            return CompletableFuture.completedFuture(null);
         }
 
-        return CustomActionsSchema.getInstance().getCorrectedAction(groupId) instanceof ActionGroup group ? group : null;
+        return CustomActionsSchema.getCorrectedGroupAsync(groupId);
     }
 
     private void repaintRange(@Nullable TextRange range) {

@@ -29,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -63,6 +64,14 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
 
     default @Nullable <T> T getInstanceIfCreated(Class<T> clazz) {
         return getInjectingContainer().getInstanceIfCreated(clazz);
+    }
+
+    /**
+     * Resolves a service without blocking the calling thread. Required for a service whose state is loaded
+     * through coroutines, since creating one on the UI thread is illegal.
+     */
+    default <T> CompletableFuture<T> getInstanceAsync(Class<T> clazz) {
+        return getInjectingContainer().getInstanceAsync(clazz);
     }
 
     
