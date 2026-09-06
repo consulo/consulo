@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.junit.jupiter.api.Test;
@@ -143,8 +144,8 @@ public class DirtyFilesTest {
         int changedId = ((VirtualFileWithId) changed).getId();
         int untouchedId = ((VirtualFileWithId) findFile(src.resolve("file1.sand"))).getId();
 
-        Files.writeString(src.resolve("file0.sand"), "class Dirty0 {}");
-        changed.refresh(false, false);
+        Files.writeString(src.resolve("file0.sand"), "class Dirty0 { int changedOnDisk; }");
+        VirtualFileUtil.markDirtyAndRefresh(false, false, false, changed);
 
         waitFor(
             "the change must be recorded in the project dirty files",

@@ -28,6 +28,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -211,7 +212,7 @@ public class ProjectReopenSkipsFullScanTest {
                 .isEmpty();
 
             VirtualFile srcFile = findFile(src);
-            srcFile.refresh(false, true);
+            VirtualFileUtil.markDirtyAndRefresh(false, true, true, srcFile);
 
             waitFor(
                 "the file edited while the project was closed must be re-indexed on reopen",
