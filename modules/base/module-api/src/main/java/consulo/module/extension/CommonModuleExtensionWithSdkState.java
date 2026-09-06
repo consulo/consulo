@@ -16,6 +16,7 @@
 package consulo.module.extension;
 
 import consulo.util.xml.serializer.annotation.Attribute;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -23,8 +24,8 @@ import consulo.util.xml.serializer.annotation.Attribute;
  */
 public abstract class CommonModuleExtensionWithSdkState extends ModuleExtensionState {
     @Attribute("sdk-name")
-    public String sdkName;
+    public @Nullable String sdkName;
 
     @Attribute("sdk-module-name")
-    public String sdkModuleName;
+    public @Nullable String sdkModuleName;
 }

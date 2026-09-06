@@ -16,6 +16,7 @@
 package consulo.module.extension;
 
 import consulo.util.xml.serializer.annotation.Attribute;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -23,7 +24,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
  */
 public abstract class ModuleExtensionState {
     @Attribute
-    public String id;
+    public @Nullable String id;
 
     @Attribute
     public boolean enabled;
