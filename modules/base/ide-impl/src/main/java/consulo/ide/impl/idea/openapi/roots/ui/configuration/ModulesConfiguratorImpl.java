@@ -27,7 +27,8 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.module.creation.NewProjectDialog;
+import consulo.ide.impl.module.creation.NewProjectDialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.ide.impl.module.importing.ModuleImportProcessor;
 import consulo.module.creation.NewOrImportModuleUtil;
@@ -391,27 +392,35 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
                     return;
                 }
 
-                NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
+                NewProjectDialogDescriptor descriptor = new NewProjectDialogDescriptor(moduleDir);
 
-                dialog.showAsync().whenComplete((value, dialogError) -> {
-                    if (dialogError != null) {
-                        promise.setError("dialog canceled");
-                        return;
-                    }
+                Application.get().getInstance(DialogService.class)
+                    .build(myProject, descriptor)
+                    .showAsync()
+                    .whenComplete((value, dialogError) -> {
+                        if (dialogError != null) {
+                            promise.setError("dialog canceled");
+                            return;
+                        }
 
-                    NewProjectWizardData panel = dialog.getProjectPanel();
+                        NewProjectWizardData panel = descriptor.getWizardData();
 
-                    Module newModule =
-                        NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), myModuleModel, moduleDir, false);
+                        Module newModule = NewOrImportModuleUtil.doCreate(
+                            panel.getProcessor(),
+                            panel.getWizardContext(),
+                            myModuleModel,
+                            moduleDir,
+                            false
+                        );
 
-                    getOrCreateModuleEditor(newModule);
+                        getOrCreateModuleEditor(newModule);
 
-                    Collections.sort(myModuleEditors, myModuleEditorComparator);
+                        Collections.sort(myModuleEditors, myModuleEditorComparator);
 
-                    processModuleCountChanged();
+                        processModuleCountChanged();
 
-                    promise.setResult(Collections.singletonList(newModule));
-                });
+                        promise.setResult(Collections.singletonList(newModule));
+                    });
             });
 
             return promise;

@@ -18,7 +18,7 @@ package consulo.ide.impl.newProject.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.ide.impl.module.creation.NewProjectDialog;
+import consulo.ide.impl.module.creation.NewProjectDialogDescriptor;
 import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -35,6 +35,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -64,11 +66,19 @@ public class NewProjectAction extends DumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        NewProjectDialog dialog = new NewProjectDialog(project, null);
 
-        if (dialog.showAndGet()) {
-            generateProject(project, dialog.getProjectPanel());
-        }
+        NewProjectDialogDescriptor descriptor = new NewProjectDialogDescriptor(null);
+
+        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        Dialog dialog = project != null ? dialogService.build(project, descriptor) : dialogService.build(descriptor);
+
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error != null) {
+                return;
+            }
+
+            generateProject(project, descriptor.getWizardData());
+        });
     }
 
     @RequiredUIAccess

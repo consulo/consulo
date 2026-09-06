@@ -125,6 +125,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     private @Nullable NewModuleBuilderProcessor<NewModuleWizardContext> myProcessor;
 
     private final TitlelessDecorator myTitlelessDecorator;
+    private final boolean myWithSouthPanel;
 
     private @Nullable DockLayout myRoot;
     private SwipeLayout myStepLayout;
@@ -138,7 +139,10 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     private @Nullable Runnable myDefaultOkAction;
     private @Nullable Runnable myDefaultCancelAction;
 
+    private @Nullable Runnable myPresentationListener;
+
     private int myStepCounter;
+    private boolean myFinished;
 
     public UnifiedNewProjectPanel(Disposable parentDisposable, @Nullable VirtualFile moduleHome) {
         this(parentDisposable, moduleHome, TitlelessDecorator.NOTHING);
@@ -149,9 +153,19 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
         @Nullable VirtualFile moduleHome,
         TitlelessDecorator titlelessDecorator
     ) {
+        this(parentDisposable, moduleHome, titlelessDecorator, true);
+    }
+
+    public UnifiedNewProjectPanel(
+        Disposable parentDisposable,
+        @Nullable VirtualFile moduleHome,
+        TitlelessDecorator titlelessDecorator,
+        boolean withSouthPanel
+    ) {
         myParentDisposable = parentDisposable;
         myModuleHome = moduleHome;
         myTitlelessDecorator = titlelessDecorator;
+        myWithSouthPanel = withSouthPanel;
     }
 
     public void setDefaultOkAction(@Nullable @RequiredUIAccess Runnable okAction) {
@@ -201,7 +215,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
         DockLayout rightPanel = DockLayout.create();
         rightPanel.center(myStepLayout);
 
-        Component southPanel = buildSouthPanel();
+        Component southPanel = myWithSouthPanel ? buildSouthPanel() : null;
         if (southPanel != null) {
             rightPanel.bottom(southPanel);
         }
@@ -253,7 +267,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     }
 
     @RequiredUIAccess
-    protected @Nullable Component buildSouthPanel() {
+    private DockLayout buildSouthPanel() {
         HorizontalLayout buttonsPanel = HorizontalLayout.create();
 
         myCancelButton = Button.create(CommonLocalize.buttonCancel());
@@ -275,7 +289,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     @RequiredUIAccess
     private void nodeSelected(@Nullable NewModuleContextNode value) {
         if (myWizardSession != null) {
-            myWizardSession.finish();
+            finish();
             myWizardSession.dispose();
             myWizardSession = null;
         }
@@ -303,9 +317,10 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             myProcessor.buildSteps(steps::add, myWizardContext);
 
             myWizardSession = new WizardSession<>(myWizardContext, steps);
+            myFinished = false;
 
             if (myWizardSession.hasNext()) {
-                showStep(myWizardSession.next());
+                showStep(myWizardSession.next(), true);
             }
             else {
                 LOG.error("There no visible steps for " + value);
@@ -320,7 +335,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     }
 
     @RequiredUIAccess
-    private void showStep(WizardStep<NewModuleWizardContext> step) {
+    private void showStep(WizardStep<NewModuleWizardContext> step, boolean forward) {
         String id = "step-" + (++myStepCounter);
 
         myStepLayout.register(id, () -> {
@@ -328,7 +343,13 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             layout.paddingBuilder().allSet(Space.MEDIUM).apply();
             return layout;
         });
-        myStepLayout.swipeLeftTo(id);
+
+        if (forward) {
+            myStepLayout.swipeLeftTo(id);
+        }
+        else {
+            myStepLayout.swipeRightTo(id);
+        }
     }
 
     @RequiredUIAccess
@@ -342,7 +363,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             if (hasNext) {
                 setOKActionText(CommonLocalize.buttonNext());
                 setOKAction(() -> {
-                    showStep(wizardSession.next());
+                    showStep(wizardSession.next(), true);
                     updateButtonPresentation();
                 });
             }
@@ -354,7 +375,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             int currentStepIndex = wizardSession.getCurrentStepIndex();
             if (currentStepIndex != 0) {
                 setCancelAction(() -> {
-                    showStep(wizardSession.prev());
+                    showStep(wizardSession.prev(), false);
                     updateButtonPresentation();
                 });
                 setCancelText(CommonLocalize.buttonBack());
@@ -377,39 +398,81 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
             myMoreViaPlugins.setVisible(true);
         }
+
+        if (myPresentationListener != null) {
+            myPresentationListener.run();
+        }
+    }
+
+    public void setPresentationListener(@Nullable Runnable listener) {
+        myPresentationListener = listener;
+    }
+
+    public boolean isTypeSelected() {
+        return myProcessor != null && myWizardSession != null;
+    }
+
+    public boolean hasNextStep() {
+        return myWizardSession != null && myWizardSession.hasNext();
+    }
+
+    public boolean hasPrevStep() {
+        return myWizardSession != null && myWizardSession.getCurrentStepIndex() != 0;
     }
 
     @RequiredUIAccess
-    public void setOKActionEnabled(boolean enabled) {
+    public void goNextStep() {
+        WizardSession<NewModuleWizardContext> wizardSession = myWizardSession;
+        if (wizardSession == null || !wizardSession.hasNext()) {
+            return;
+        }
+
+        showStep(wizardSession.next(), true);
+        updateButtonPresentation();
+    }
+
+    @RequiredUIAccess
+    public void goPrevStep() {
+        WizardSession<NewModuleWizardContext> wizardSession = myWizardSession;
+        if (wizardSession == null || wizardSession.getCurrentStepIndex() == 0) {
+            return;
+        }
+
+        showStep(wizardSession.prev(), false);
+        updateButtonPresentation();
+    }
+
+    @RequiredUIAccess
+    private void setOKActionEnabled(boolean enabled) {
         if (myOkButton != null) {
             myOkButton.setEnabled(enabled);
         }
     }
 
     @RequiredUIAccess
-    public void setOKActionText(LocalizeValue text) {
+    private void setOKActionText(LocalizeValue text) {
         if (myOkButton != null) {
             myOkButton.setText(text);
         }
     }
 
     @RequiredUIAccess
-    public void setCancelText(LocalizeValue text) {
+    private void setCancelText(LocalizeValue text) {
         if (myCancelButton != null) {
             myCancelButton.setText(text);
         }
     }
 
-    public void setOKAction(@Nullable Runnable action) {
+    private void setOKAction(@Nullable Runnable action) {
         myOkAction = action;
     }
 
-    public void setCancelAction(@Nullable Runnable action) {
+    private void setCancelAction(@Nullable Runnable action) {
         myCancelAction = action;
     }
 
     @RequiredUIAccess
-    public void doOkAction() {
+    private void doOkAction() {
         if (myOkAction != null) {
             myOkAction.run();
         }
@@ -419,7 +482,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     }
 
     @RequiredUIAccess
-    public void doCancelAction() {
+    private void doCancelAction() {
         if (myCancelAction != null) {
             myCancelAction.run();
         }
@@ -430,15 +493,18 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
     @Override
     public void finish() {
-        if (myWizardSession != null) {
-            myWizardSession.finish();
+        if (myFinished || myWizardSession == null) {
+            return;
         }
+
+        myFinished = true;
+        myWizardSession.finish();
     }
 
     @Override
     public void dispose() {
         if (myWizardSession != null) {
-            myWizardSession.finish();
+            finish();
             myWizardSession.dispose();
             myWizardSession = null;
         }
