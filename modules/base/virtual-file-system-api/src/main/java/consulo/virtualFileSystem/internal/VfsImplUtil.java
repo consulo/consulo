@@ -148,6 +148,73 @@ public class VfsImplUtil {
         return file;
     }
 
+    /**
+     * An experimental refresh-and-find routine that doesn't require a write-lock (and hence EDT).
+     */
+    public static void refreshAndFindFileByPath(
+        NewVirtualFileSystem vfs,
+        String path,
+        Consumer<? super @Nullable NewVirtualFile> consumer
+    ) {
+        Application.get().executeOnPooledThread(() -> {
+            Pair<NewVirtualFile, Iterable<String>> rootAndPath = prepare(vfs, path);
+            if (rootAndPath == null) {
+                consumer.accept(null);
+            }
+            else {
+                refreshAndFindFileByPath(rootAndPath.first, rootAndPath.second.iterator(), FileNavigator.POSIX_LIGHT, consumer);
+            }
+        });
+    }
+
+    private static void refreshAndFindFileByPath(
+        @Nullable NewVirtualFile root,
+        Iterator<String> pathSegments,
+        FileNavigator<NewVirtualFile> navigator,
+        Consumer<? super @Nullable NewVirtualFile> consumer
+    ) {
+        if (root == null || !pathSegments.hasNext()) {
+            consumer.accept(root);
+            return;
+        }
+
+        String pathSegment = pathSegments.next();
+        if (pathSegment.isEmpty() || ".".equals(pathSegment)) {
+            refreshAndFindFileByPath(root, pathSegments, navigator, consumer);
+            return;
+        }
+
+        if ("..".equals(pathSegment)) {
+            NewVirtualFile parent = navigator.parentOf(root);
+            if (parent == null) {
+                consumer.accept(null);
+            }
+            else {
+                String rootPathCanonicalized = parent.getPath();
+                refreshAndFindFileByPath(
+                    root.getFileSystem(),
+                    rootPathCanonicalized,
+                    canonicalFile -> refreshAndFindFileByPath(canonicalFile, pathSegments, navigator, consumer)
+                );
+            }
+        }
+        else {
+            NewVirtualFile child = navigator.childOf(root, pathSegment);
+            if (child != null) {
+                refreshAndFindFileByPath(child, pathSegments, navigator, consumer);
+            }
+            else {
+                root.refresh(
+                    /*async: */ true,
+                    /*recursive: */ false,
+                    () -> Application.get().executeOnPooledThread(
+                        () -> refreshAndFindFileByPath(navigator.childOf(root, pathSegment), pathSegments, navigator, consumer)
+                    )
+                );
+            }
+        }
+    }
+
     private static @Nullable Pair<NewVirtualFile, Iterable<String>> prepare(NewVirtualFileSystem vfs, String path) {
         String normalizedPath = normalize(vfs, path);
         if (StringUtil.isEmptyOrSpaces(normalizedPath)) {
