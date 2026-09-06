@@ -1,37 +1,42 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.module.content.internal;
 
-import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.project.Project;
+import consulo.project.RootsChangeRescanningInfo;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
- *  @author dsl
+ * This is an internal class, use {@link ProjectRootManagerEx#makeRootsChange(Runnable, RootsChangeRescanningInfo)}
+ * to fire {@code rootsChanged} event.
  */
 public class ModuleRootEventImpl extends ModuleRootEvent {
-  private final boolean myFiletypes;
+    private final boolean myFiletypes;
+    private final List<? extends RootsChangeRescanningInfo> myInfos;
 
-  public ModuleRootEventImpl(Project project, boolean filetypes) {
-    super(project);
-    myFiletypes = filetypes;
-  }
+    public ModuleRootEventImpl(Project project, boolean filetypes) {
+        this(project, filetypes, Collections.singletonList(RootsChangeRescanningInfo.TOTAL_RESCAN));
+    }
 
-  @Override
-  public boolean isCausedByFileTypesChange() {
-    return myFiletypes;
-  }
+    public ModuleRootEventImpl(Project project, boolean filetypes, List<? extends RootsChangeRescanningInfo> indexingInfos) {
+        super(project);
+        myFiletypes = filetypes;
+        myInfos = indexingInfos;
+    }
+
+    @Override
+    public boolean isCausedByFileTypesChange() {
+        return myFiletypes;
+    }
+
+    /**
+     * Always `Collections.singletonList(RootsChangeRescanningInfo.TOTAL_REINDEX)` for beforeRootsChangedEvent;
+     * provided meaningfully only for rootsChangedEvent.
+     * Full reindex is detected by having {@link RootsChangeRescanningInfo#TOTAL_RESCAN} in list
+     */
+    public List<? extends RootsChangeRescanningInfo> getInfos() {
+        return myInfos;
+    }
 }

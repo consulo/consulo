@@ -22,7 +22,7 @@ import consulo.index.io.IndexExtension;
 import consulo.index.io.InvertedIndex;
 import consulo.index.io.StorageException;
 import consulo.language.psi.stub.IdFilter;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.stub.IndexedFile;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
@@ -35,7 +35,7 @@ import java.util.function.Predicate;
 /**
  * @author Eugene Zhuravlev
  */
-public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key, Value, Input> {
+public interface UpdatableIndex<Key, Value, Input, FileIndexMetaData> extends InvertedIndex<Key, Value, Input> {
 
   boolean processAllKeys(Predicate<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 
@@ -51,11 +51,25 @@ public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key, Va
   
   Map<Key, Value> getIndexedFileData(int fileId) throws StorageException;
 
-  void setIndexedStateForFile(int fileId, VirtualFile file);
+  /**
+   * Goal of {@code getFileIndexMetaData()} is to allow
+   * saving important data to a cache to use later without read lock in analog of {@link UpdatableIndex#setIndexedStateForFile(int, IndexedFile, boolean)}
+   */
+  @Nullable FileIndexMetaData getFileIndexMetaData(IndexedFile file);
 
-  void resetIndexedStateForFile(int fileId);
+  default void setIndexedStateForFileOnFileIndexMetaData(int fileId,
+                                                         @Nullable FileIndexMetaData fileIndexMetaData,
+                                                         boolean isProvidedByInfrastructureExtension) {
+  }
 
-  boolean isIndexedStateForFile(int fileId, VirtualFile file);
+  default void setIndexedStateForFile(int fileId, IndexedFile file, boolean isProvidedByInfrastructureExtension) {
+  }
+
+  void invalidateIndexedStateForFile(int fileId);
+
+  void setUnindexedStateForFile(int fileId);
+
+  FileIndexingStateWithExplanation getIndexingStateForFile(int fileId, IndexedFile file);
 
   long getModificationStamp();
 

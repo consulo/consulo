@@ -24,8 +24,11 @@ import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.util.concurrent.coroutine.ObservableValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -34,9 +37,12 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightDumbService extends DumbService implements ModificationTracker {
+    private static final DumbState SMART = () -> false;
+
     private long modificationTracker;
 
     private final Project myProject;
+    private final ObservableValue<DumbState> myState = ObservableValue.of(SMART);
 
     @Inject
     public LightDumbService(Project project) {
@@ -62,6 +68,11 @@ public class LightDumbService extends DumbService implements ModificationTracker
     }
 
     @Override
+    public boolean waitForSmartMode(long timeoutMillis) {
+        return true;
+    }
+
+    @Override
     public void smartInvokeLater(Runnable runnable) {
     }
 
@@ -82,6 +93,10 @@ public class LightDumbService extends DumbService implements ModificationTracker
     }
 
     @Override
+    public void cancelAllTasksAndWait() {
+    }
+
+    @Override
     public void showDumbModeNotification(LocalizeValue message) {
     }
 
@@ -99,15 +114,33 @@ public class LightDumbService extends DumbService implements ModificationTracker
         return false;
     }
 
-    
     @Override
-    public AccessToken startHeavyActivityStarted(LocalizeValue activityName) {
+    public void suspendIndexingAndRun(LocalizeValue activityName, Runnable activity) {
+        activity.run();
+    }
+
+    @Override
+    public AccessToken runWithWaitForSmartModeDisabled() {
         return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 
     @Override
-    public boolean isSuspendedDumbMode() {
-        return false;
+    public <T> T runInDumbMode(String debugReason, Supplier<T> block) {
+        return block.get();
+    }
+
+    @Override
+    public void unsafeRunWhenSmart(Runnable runnable) {
+    }
+
+    @Override
+    public ObservableValue<DumbState> getState() {
+        return myState;
+    }
+
+    @Override
+    public boolean canRunSmart() {
+        return true;
     }
 
     @Override

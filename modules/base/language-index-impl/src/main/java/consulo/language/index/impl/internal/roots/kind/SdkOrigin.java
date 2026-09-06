@@ -2,7 +2,12 @@
 package consulo.language.index.impl.internal.roots.kind;
 
 import consulo.content.bundle.Sdk;
+import consulo.virtualFileSystem.VirtualFile;
+
+import java.util.Collection;
 
 public interface SdkOrigin extends IndexableSetOrigin {
     Sdk getSdk();
+
+    Collection<VirtualFile> getRootsToIndex();
 }

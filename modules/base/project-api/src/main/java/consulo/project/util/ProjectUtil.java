@@ -72,7 +72,11 @@ public class ProjectUtil {
         return baseDir.resolve(getProjectCacheFileName(project, forceNameUse, hashSeparator));
     }
 
-    private static String getProjectCacheFileName(Project project, boolean forceNameUse, String hashSeparator) {
+    public static String getProjectCacheFileName(Project project) {
+        return getProjectCacheFileName(project, false, ".");
+    }
+
+    public static String getProjectCacheFileName(Project project, boolean forceNameUse, String hashSeparator) {
         String presentableUrl = project.getPresentableUrl();
         String name = forceNameUse || presentableUrl == null ? project.getName() : PathUtil.getFileName(presentableUrl).toLowerCase(Locale.US);
 

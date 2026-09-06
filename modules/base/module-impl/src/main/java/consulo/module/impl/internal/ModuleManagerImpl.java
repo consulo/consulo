@@ -34,6 +34,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.*;
+import consulo.module.content.internal.BuildableRootsChangeRescanningInfo;
 import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.internal.ModuleIconService;
@@ -45,6 +46,7 @@ import consulo.module.localize.ModuleLocalize;
 import consulo.module.macro.ModulePathMacroManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.RootsChangeRescanningInfo;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -57,7 +59,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -561,7 +562,12 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @RequiredWriteAction
     public static void commitModelWithRunnable(ModifiableModuleModel model, Runnable runnable) {
-        ((ModuleModelImpl) model).commitWithRunnable(runnable);
+        commitModelWithRunnable(model, runnable, List.of());
+    }
+
+    @RequiredWriteAction
+    public static void commitModelWithRunnable(ModifiableModuleModel model, Runnable runnable, Collection<Module> changedRootModules) {
+        ((ModuleModelImpl) model).commitWithRunnable(runnable, changedRootModules);
     }
 
     
@@ -824,8 +830,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @RequiredWriteAction
-        public void commitWithRunnable(Runnable runnable) {
-            commitModel(this, runnable);
+        public void commitWithRunnable(Runnable runnable, Collection<Module> changedRootModules) {
+            commitModel(this, runnable, changedRootModules);
             clearRenamingStuff();
         }
 
@@ -898,7 +904,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     }
 
     @RequiredWriteAction
-    private void commitModel(ModuleModelImpl moduleModel, Runnable runnable) {
+    private void commitModel(ModuleModelImpl moduleModel, Runnable runnable, Collection<Module> changedRootModules) {
         myModuleModel.myModulesCache = null;
         myModificationCount++;
         myProject.getApplication().assertWriteAccessAllowed();
@@ -908,6 +914,24 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         removedModules.removeAll(newModules);
         List<Module> addedModules = new ArrayList<>(newModules);
         addedModules.removeAll(oldModules);
+
+        RootsChangeRescanningInfo info;
+        if (!addedModules.isEmpty() || !changedRootModules.isEmpty()) {
+            BuildableRootsChangeRescanningInfo builder = BuildableRootsChangeRescanningInfo.newInstance();
+            for (Module addedModule : addedModules) {
+                builder.addModule(addedModule);
+            }
+            for (Module changedRootModule : changedRootModules) {
+                builder.addModule(changedRootModule);
+            }
+            info = builder.buildInfo();
+        }
+        else if (!removedModules.isEmpty()) {
+            info = RootsChangeRescanningInfo.NO_RESCAN_NEEDED;
+        }
+        else {
+            info = RootsChangeRescanningInfo.TOTAL_RESCAN;
+        }
 
         ProjectRootManagerEx.getInstanceEx(myProject).makeRootsChange(
             () -> {
@@ -959,8 +983,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 fireModulesRenamed(modules);
                 cleanCachedStuff();
             },
-            false,
-            true
+            info
         );
     }
 

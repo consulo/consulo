@@ -21,6 +21,8 @@ module consulo.virtual.file.system.impl {
     requires consulo.ui.ex.awt.api;
     requires forms.rt;
 
+    exports consulo.virtualFileSystem.impl.internal to consulo.language.index.impl;
+
     // FIXME used by AtomicFieldUpdater - maybe replace it?
     opens consulo.virtualFileSystem.impl.internal.entry to consulo.util.concurrent;
 

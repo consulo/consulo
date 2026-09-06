@@ -6,14 +6,13 @@ import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.ID;
 import consulo.index.io.KeyDescriptor;
+import consulo.language.index.impl.internal.hints.AcceptAllRegularFilesIndexingHint;
 import consulo.language.internal.SubstitutedFileType;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.ScalarIndexExtension;
-import consulo.project.Project;
 import consulo.util.lang.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeDetector;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
@@ -25,7 +24,8 @@ import java.util.Collections;
 import java.util.Map;
 
 @ExtensionImpl
-public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> implements FileBasedIndex.InputFilter, KeyDescriptor<FileType>, DataIndexer<FileType, Void, FileContent> {
+public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType>
+    implements KeyDescriptor<FileType>, DataIndexer<FileType, Void, FileContent> {
     static final ID<FileType, Void> NAME = FileTypeIndex.NAME;
 
     
@@ -49,7 +49,7 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
     
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
-        return this;
+        return AcceptAllRegularFilesIndexingHint.INSTANCE;
     }
 
     @Override
@@ -70,11 +70,6 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
             version += detector.getVersion();
         }
         return version;
-    }
-
-    @Override
-    public boolean acceptInput(Project project, VirtualFile file) {
-        return !file.isDirectory();
     }
 
     @Override

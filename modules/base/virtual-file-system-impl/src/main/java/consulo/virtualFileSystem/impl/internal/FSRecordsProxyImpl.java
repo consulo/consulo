@@ -21,6 +21,7 @@ import consulo.virtualFileSystem.internal.FSRecordsProxy;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
@@ -45,5 +46,25 @@ public class FSRecordsProxyImpl implements FSRecordsProxy {
     @Override
     public @Nullable DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
         return FSRecords.readAttributeWithLock(fileId, att);
+    }
+
+    @Override
+    public long getCreationTimestamp() {
+        return FSRecords.getCreationTimestamp();
+    }
+
+    @Override
+    public int getMaxId() {
+        return FSRecords.getMaxId();
+    }
+
+    @Override
+    public void addCloseable(Closeable closeable) {
+        FSRecords.addCloseable(closeable);
+    }
+
+    @Override
+    public void addFileIdIndexedStorage(FileIdIndexedStorage storage) {
+        FSRecords.addFileIdIndexedStorage(storage);
     }
 }

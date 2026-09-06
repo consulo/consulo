@@ -111,6 +111,38 @@ public class InitialVfsRefreshService implements Disposable {
         });
     }
 
+    public void runInitialVfsRefresh() {
+        if (myStarted.getAndSet(true)) {
+            return;
+        }
+
+        String projectId = myProject.getLocationHash();
+        Application application = myProject.getApplication();
+        if (Boolean.getBoolean("ij.indexes.skip.initial.refresh") || application.isUnitTestMode()) {
+            LOG.debug(projectId + ": initial VFS refresh skipped");
+            myJob.complete(null);
+            return;
+        }
+
+        try {
+            LOG.info(projectId + ": marking roots for initial VFS refresh");
+            List<VirtualFile> roots = application.runReadAction(
+                (Supplier<List<VirtualFile>>) () -> ProjectRootManagerEx.getInstanceEx(myProject).markRootsForRefresh()
+            );
+            LOG.info(projectId + ": starting initial VFS refresh of " + roots.size() + " roots");
+            RefreshSession session = RefreshQueue.getInstance().createSession(false, true, null);
+            mySessionId = session.getId();
+            session.addAllFiles(roots);
+            long t = System.nanoTime();
+            session.launch();
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t);
+            LOG.info(projectId + ": initial VFS refresh finished in " + duration + " ms");
+        }
+        finally {
+            myJob.complete(null);
+        }
+    }
+
     public boolean isInitialVfsRefreshFinished() {
         return myJob.isDone();
     }

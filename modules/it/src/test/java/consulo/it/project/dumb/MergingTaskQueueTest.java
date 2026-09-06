@@ -270,7 +270,7 @@ public class MergingTaskQueueTest {
 
         runAllTasks();
         assertEquals(Collections.singletonList("0 1 2"), childLog, "The last child task should run, but were: " + childLog);
-        assertEquals(3, disposeLog.size(), "All tasks must be disposed, but were: " + disposeLog);
+        assertEquals(List.of("0", "1", "0 1", "2", "0 1 2"), disposeLog, "All tasks must be disposed, but were: " + disposeLog);
     }
 
     @Test

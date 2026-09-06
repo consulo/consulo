@@ -2,10 +2,12 @@
 package consulo.virtualFileSystem.internal;
 
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 public class CachedFileType {
   private static final ConcurrentMap<FileType, CachedFileType> ourInterner = new ConcurrentHashMap<>();
@@ -29,6 +31,14 @@ public class CachedFileType {
     synchronized (ourInterner) {
       return ourInterner.computeIfAbsent(fileType, CachedFileType::new);
     }
+  }
+
+  /**
+   * @return result that returns true if no files changed their types since method invocation
+   */
+  public static Supplier<Boolean> getFileTypeChangeChecker() {
+    CachedFileType type = forType(UnknownFileType.INSTANCE);
+    return () -> type.getUpToDateOrNull() != null;
   }
 
   public static void clearCache() {

@@ -13,5 +13,5 @@ import java.io.IOException;
  */
 public interface CustomImplementationFileBasedIndexExtension<K, V> {
   
-  UpdatableIndex<K, V, FileContent> createIndexImplementation(FileBasedIndexExtension<K, V> extension, IndexStorage<K, V> storage) throws StorageException, IOException;
+  UpdatableIndex<K, V, FileContent, ?> createIndexImplementation(FileBasedIndexExtension<K, V> extension, IndexStorage<K, V> storage) throws StorageException, IOException;
 }

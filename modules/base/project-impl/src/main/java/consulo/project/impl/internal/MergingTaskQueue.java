@@ -1,9 +1,11 @@
-// Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.project.impl.internal;
 
+import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ProgressIndicatorEx;
-import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -16,8 +18,42 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
+    public static final class SubmissionReceipt {
+        private final long mySubmittedTaskCount;
+
+        private SubmissionReceipt(long submittedTaskCount) {
+            mySubmittedTaskCount = submittedTaskCount;
+        }
+
+        public boolean isAfter(SubmissionReceipt other) {
+            return mySubmittedTaskCount > other.mySubmittedTaskCount;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            return mySubmittedTaskCount == ((SubmissionReceipt) o).mySubmittedTaskCount;
+        }
+
+        @Override
+        public int hashCode() {
+            return Long.hashCode(mySubmittedTaskCount);
+        }
+
+        @Override
+        public String toString() {
+            return "SubmissionReceipt{" + mySubmittedTaskCount + '}';
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(MergingTaskQueue.class);
 
     private final Object myLock = new Object();
@@ -26,6 +62,7 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
 
     //includes running tasks too
     private final Map<T, ProgressIndicatorBase> myProgresses = new HashMap<>();
+    private final AtomicLong mySubmittedTasksCount = new AtomicLong();
 
     /**
      * Disposes tasks, cancel underlying progress indicators, clears tasks queue
@@ -47,6 +84,8 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
         disposeSafe(disposeQueue);
     }
 
+    // This method is not public because it cannot cancel tasks paused by ProgressSuspender.
+    // Use methods from appropriate executor instead (e.g. MergingQueueGuiExecutor#cancelAllTasks)
     public void cancelAllTasks() {
         List<ProgressIndicatorEx> tasks;
         synchronized (myLock) {
@@ -69,9 +108,17 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
         }
     }
 
-    public void addTask(T task) {
+    /**
+     * Adds a task to the queue. Added task can be merged with one of the existing tasks.
+     *
+     * @param task to add
+     * @return receipt that later can be used to handle concurrent operations. Note that addTask may produce duplicate receipt if new task
+     * does not modify queue state (e.g. when new task is merged into one of the existing tasks)
+     */
+    public SubmissionReceipt addTask(T task) {
         List<T> disposeQueue = new ArrayList<>(1);
         T newTask = task;
+        SubmissionReceipt receipt;
 
         synchronized (myLock) {
             for (int i = myTasksQueue.size() - 1; i >= 0; i--) {
@@ -84,7 +131,8 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
                     continue;
                 }
 
-                // note that parent may know nothing about children, so the following may happen (just like in case with `equals` with inheritance):
+                // note that parent may know nothing about children, so the following may happen
+                // (just like in case with `equals` with inheritance):
                 //     class Parent; class Child extends Parent
                 //     parent.tryMergeWith(child) != child.tryMergeWith(parent)
                 // At the moment we prevent accidental errors by forcing tasks' class equality.
@@ -106,6 +154,9 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
                     newTask = mergedTask;
                     myTasksQueue.remove(i);
                     disposeQueue.add(oldTask);
+                    if (mergedTask != task) {
+                        disposeQueue.add(task);
+                    }
                     break;
                 }
             }
@@ -114,6 +165,7 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
             T taskToAdd = newTask;
             if (taskToAdd != null) {
                 myTasksQueue.add(taskToAdd);
+                mySubmittedTasksCount.incrementAndGet();
                 ProgressIndicatorBase progress = new ProgressIndicatorBase();
                 myProgresses.put(taskToAdd, progress);
                 Disposer.register(taskToAdd, () -> {
@@ -124,9 +176,23 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
                     progress.cancel();
                 });
             }
+
+            receipt = new SubmissionReceipt(mySubmittedTasksCount.get());
         }
 
         disposeSafe(disposeQueue);
+        return receipt;
+    }
+
+    /**
+     * @return receipt that equals to the latest receipt returned by {@linkplain #addTask(MergeableQueueTask)}
+     */
+    public SubmissionReceipt getLatestSubmissionReceipt() {
+        synchronized (myLock) {
+            // don't be fooled by AtomicLong. We need "synchronized" to make sure that mySubmittedTaskCount and myTasksQueue
+            // are changing together
+            return new SubmissionReceipt(mySubmittedTasksCount.get());
+        }
     }
 
     public @Nullable QueuedTask<T> extractNextTask() {
@@ -227,20 +293,35 @@ public class MergingTaskQueue<T extends MergeableQueueTask<T>> {
             executeTask(null, trace);
         }
 
-        public void executeTask(@Nullable ProgressIndicator customIndicator, Exception trace) {
-            //this is the cancellation check
+        public void executeTask(@Nullable ProgressIndicatorEx visibleIndicator, Exception trace) {
+            // this is the cancellation check
             myIndicator.checkCanceled();
-            myIndicator.setIndeterminate(true);
-
-            if (customIndicator == null) {
-                customIndicator = myIndicator;
-            }
-            else {
-                customIndicator.checkCanceled();
-            }
 
             beforeTask();
-            myTask.perform(customIndicator, trace);
+            if (visibleIndicator != null) {
+                myIndicator.addStateDelegate(new AbstractProgressIndicatorExBase() {
+                    @Override
+                    protected void delegateProgressChange(IndicatorAction action) {
+                        super.delegateProgressChange(action);
+                        action.execute(visibleIndicator);
+                    }
+                });
+            }
+            myIndicator.setIndeterminate(true);
+
+            try {
+                ProgressManager.getInstance().runProcess(() -> myTask.perform(myIndicator, trace), myIndicator);
+            }
+            catch (ProcessCanceledException e) {
+                throw e;
+            }
+            catch (Throwable e) {
+                if (myIndicator.isCanceled()) {
+                    LOG.warn("Exception during cancellation of Dumb Task: " + e.getMessage(), e);
+                    myIndicator.checkCanceled();
+                }
+                throw e;
+            }
         }
 
         String getInfoString() {

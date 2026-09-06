@@ -28,6 +28,7 @@ import consulo.virtualFileSystem.impl.internal.entry.VfsDependentEnum;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualDirectoryImpl;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.internal.CachedFileType;
+import consulo.virtualFileSystem.internal.FSRecordsProxy;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.NameId;
 import consulo.virtualFileSystem.internal.PersistentFS;
@@ -41,7 +42,10 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -117,6 +121,9 @@ public class FSRecords {
 
     private static volatile int ourLocalModificationCount;
     private static volatile boolean ourIsDisposed;
+
+    private static final Set<Closeable> ourCloseables = new HashSet<>();
+    private static final CopyOnWriteArraySet<FSRecordsProxy.FileIdIndexedStorage> ourFileIdIndexedStorages = new CopyOnWriteArraySet<>();
 
     private static final int FREE_RECORD_FLAG = 0x100;
     private static final int ALL_VALID_FLAGS = PersistentFS.ALL_VALID_FLAGS | FREE_RECORD_FLAG;
@@ -624,6 +631,9 @@ public class FSRecords {
                 if (lazyVfsDataCleaning) {
                     deleteContentAndAttributes(free);
                 }
+                for (FSRecordsProxy.FileIdIndexedStorage storage : ourFileIdIndexedStorages) {
+                    storage.clear(free);
+                }
                 DbConnection.cleanRecord(free);
                 return free;
             }
@@ -724,7 +734,7 @@ public class FSRecords {
         setFlags(id, FREE_RECORD_FLAG, false);
     }
 
-    private static final int ROOT_RECORD_ID = 1;
+    public static final int ROOT_FILE_ID = 1;
 
     @TestOnly
     static int[] listRoots() {
@@ -747,7 +757,7 @@ public class FSRecords {
                 return result.toArray();
             }
 
-            try (DataInputStream input = readAttribute(ROOT_RECORD_ID, ourChildrenAttr)) {
+            try (DataInputStream input = readAttribute(ROOT_FILE_ID, ourChildrenAttr)) {
                 if (input == null) {
                     return ArrayUtil.EMPTY_INT_ARRAY;
                 }
@@ -815,7 +825,7 @@ public class FSRecords {
 
             int[] names = ArrayUtil.EMPTY_INT_ARRAY;
             int[] ids = ArrayUtil.EMPTY_INT_ARRAY;
-            try (final DataInputStream input = readAttribute(ROOT_RECORD_ID, ourChildrenAttr)) {
+            try (final DataInputStream input = readAttribute(ROOT_FILE_ID, ourChildrenAttr)) {
                 if (input != null) {
                     int count = DataInputOutputUtil.readINT(input);
                     names = ArrayUtil.newIntArray(count);
@@ -840,7 +850,7 @@ public class FSRecords {
             root = getNames().enumerate(rootUrl);
 
             int id;
-            try (DataOutputStream output = writeAttribute(ROOT_RECORD_ID, ourChildrenAttr)) {
+            try (DataOutputStream output = writeAttribute(ROOT_FILE_ID, ourChildrenAttr)) {
                 id = createRecord();
 
                 int index = Arrays.binarySearch(ids, id);
@@ -885,7 +895,7 @@ public class FSRecords {
 
             int[] names;
             int[] ids;
-            try (final DataInputStream input = readAttribute(ROOT_RECORD_ID, ourChildrenAttr)) {
+            try (final DataInputStream input = readAttribute(ROOT_FILE_ID, ourChildrenAttr)) {
                 assert input != null;
                 int count = DataInputOutputUtil.readINT(input);
 
@@ -907,7 +917,7 @@ public class FSRecords {
             names = ArrayUtil.remove(names, index);
             ids = ArrayUtil.remove(ids, index);
 
-            try (DataOutputStream output = writeAttribute(ROOT_RECORD_ID, ourChildrenAttr)) {
+            try (DataOutputStream output = writeAttribute(ROOT_FILE_ID, ourChildrenAttr)) {
                 saveNameIdSequenceWithDeltas(names, ids, output);
             }
         });
@@ -1807,9 +1817,39 @@ public class FSRecords {
         }
     }
 
+    /** Adds an object which must be closed during VFS close process */
+    public static synchronized void addCloseable(Closeable closeable) {
+        ourCloseables.add(closeable);
+    }
+
+    /**
+     * Registers a storage keeping some data by fileId.
+     * Since we reuse fileId of removed files, we need to be sure all data attached to the re-used fileId was
+     * cleaned before re-use -- hence a storage that keeps such data should implement
+     * {@link FSRecordsProxy.FileIdIndexedStorage} interface, and should be registered with that method
+     * (or invent own method to keep track of removed files)
+     */
+    public static void addFileIdIndexedStorage(FSRecordsProxy.FileIdIndexedStorage storage) {
+        ourFileIdIndexedStorages.add(storage);
+    }
+
+    private static synchronized void closeRegisteredCloseables() {
+        for (Closeable toClose : ourCloseables) {
+            try {
+                toClose.close();
+            }
+            catch (Exception e) {
+                LOG.warn("Can't close " + toClose, e);
+            }
+        }
+        ourCloseables.clear();
+        ourFileIdIndexedStorages.clear();
+    }
+
     static void dispose() {
         writeAndHandleErrors(() -> {
             try {
+                closeRegisteredCloseables();
                 DbConnection.doForce();
                 DbConnection.closeFiles();
             }

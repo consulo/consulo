@@ -16,13 +16,13 @@
 package consulo.language.index.impl.internal;
 
 import consulo.content.scope.SearchScope;
+import consulo.language.index.impl.internal.events.FileIndexingRequest;
 import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
 
 import java.util.function.Predicate;
 
-class ProjectFilesCondition implements Predicate<VirtualFile> {
+class ProjectFilesCondition implements Predicate<FileIndexingRequest> {
     private static final int MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT = 2;
     private final VirtualFile myRestrictedTo;
     private final SearchScope myFilter;
@@ -44,8 +44,13 @@ class ProjectFilesCondition implements Predicate<VirtualFile> {
     }
 
     @Override
-    public boolean test(VirtualFile file) {
-        int fileId = ((VirtualFileWithId)file).getId();
+    public boolean test(FileIndexingRequest request) {
+        if (request.isDeleteRequest()) {
+            return true;
+        }
+
+        VirtualFile file = request.getFile();
+        int fileId = request.getFileId();
         if (myIndexableFilesFilter != null && fileId > 0 && !myIndexableFilesFilter.containsFileId(fileId)) {
             if (myFilesFromOtherProjects >= MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT) {
                 return false;
@@ -54,10 +59,6 @@ class ProjectFilesCondition implements Predicate<VirtualFile> {
             return true;
         }
 
-        if (fileId < 0 && file instanceof DeletedVirtualFileStub) {
-            //file = ((FileBasedIndexImpl.MyLightVirtualFile)file).getOriginalFile();
-            return true;
-        }
         if (FileBasedIndexImpl.belongsToScope(file, myRestrictedTo, myFilter)) {
             return true;
         }

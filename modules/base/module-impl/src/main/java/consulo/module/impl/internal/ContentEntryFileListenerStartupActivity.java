@@ -28,7 +28,7 @@ import jakarta.inject.Inject;
  * @author VISTALL
  * @since 2024-11-15
  */
-@ExtensionImpl(order = "after FileBasedIndexProjectHandlerActivity")
+@ExtensionImpl
 public class ContentEntryFileListenerStartupActivity implements PostStartupActivity, DumbAware {
     private final ProjectLocator myProjectLocator;
     private final VirtualFileManager myVirtualFileManager;

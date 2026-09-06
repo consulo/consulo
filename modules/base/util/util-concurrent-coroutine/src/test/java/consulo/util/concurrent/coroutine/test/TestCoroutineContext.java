@@ -18,6 +18,7 @@ package consulo.util.concurrent.coroutine.test;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.internal.Coroutines;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
@@ -26,7 +27,11 @@ import java.util.concurrent.Executors;
  */
 public class TestCoroutineContext {
     public static CoroutineContext newSilent() {
-        CoroutineContext context = CoroutineContext.of(Executors.newSingleThreadExecutor(), Executors.newSingleThreadScheduledExecutor());
+        return newSilent(Executors.newSingleThreadExecutor());
+    }
+
+    public static CoroutineContext newSilent(Executor executor) {
+        CoroutineContext context = CoroutineContext.of(executor, Executors.newSingleThreadScheduledExecutor());
         context.putCopyableUserData(Coroutines.EXCEPTION_HANDLER, t -> {
         });
         return context;

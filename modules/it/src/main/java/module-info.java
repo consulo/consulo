@@ -26,6 +26,7 @@ module consulo.it {
     requires consulo.code.editor.api;
     requires consulo.language.api;
     requires consulo.language.impl;
+    requires consulo.language.index.impl;
     requires consulo.language.editor.api;
     requires consulo.platform.api;
     requires consulo.platform.impl;
@@ -51,3 +52,7 @@ module consulo.it {
     provides consulo.platform.internal.PlatformInternal with consulo.it.internal.HeadlessPlatformInternal;
     provides consulo.ui.internal.UIInternal with consulo.it.internal.HeadlessUIInternal;
 }
+
+
+
+

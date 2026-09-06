@@ -20,6 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.content.ContentIterator;
+import consulo.language.index.impl.internal.events.FileIndexingRequest;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
 import consulo.language.index.impl.internal.roots.IndexableFilesIterator;
 import consulo.language.index.impl.internal.roots.kind.IndexableSetOrigin;
@@ -34,7 +35,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -69,15 +69,17 @@ public final class FileBasedIndexProjectHandler {
                 if (file.isValid() && !file.isDirectory()) {
                     sizeOfFilesToBeIndexed += file.getLength();
                 }
-                return filesInProjectToBeIndexed < ourMinFilesToStartDumMode && sizeOfFilesToBeIndexed < ourMinFilesSizeToStartDumMode && System.currentTimeMillis() < start + 100;
+                return filesInProjectToBeIndexed < ourMinFilesToStartDumMode
+                    && sizeOfFilesToBeIndexed < ourMinFilesSizeToStartDumMode
+                    && System.currentTimeMillis() < start + 100;
             }
         });
     }
 
-    private static class ProjectChangedFilesScanner extends DumbModeTask {
+    static final class ProjectChangedFilesScanner extends DumbModeTask {
         private final Project myProject;
 
-        private ProjectChangedFilesScanner(Project project) {
+        ProjectChangedFilesScanner(Project project) {
             myProject = project;
         }
 
@@ -86,20 +88,15 @@ public final class FileBasedIndexProjectHandler {
             indicator.setIndeterminate(false);
             indicator.setText(IndexingLocalize.progressIndexingUpdating());
 
-            Map<IndexableFilesIterator, Collection<VirtualFile>> files = scan();
-
-            if (files.isEmpty()) {
-                LOG.info("Finished for " + myProject.getName() + ". No files to index.");
-                return;
-            }
-
-            // We would like to use UnindexedFilesIndexer.queue (instead of UnindexedFilesIndexer.indexFiles), but this will lead to redundant scanning tasks.
+            // We would like to use UnindexedFilesIndexer.queue (instead of UnindexedFilesIndexer.indexFiles), but this will lead to
+            // redundant scanning tasks.
             // Consider the following situation (we use the following notation: [executing] + [queued] + [new tasks] ; comment):
             //
             // [] + [] + [scanning] ; some thread submitted scanning task
             // [] + [scanning] + []
             // [scanning] + [] + []
-            // [scanning] + [] + [scanning]  ; some thread submitted scanning task while the other scanning task is in progress. They are not merged in this case
+            // [scanning] + [] + [scanning]  ; some thread submitted scanning task while the other scanning task is in progress.
+            //                                 They are not merged in this case
             // [scanning] + [scanning] + []
             // [scanning] + [scanning] + [indexing]    ; first scanning task is about to complete and submitted an indexing task
             // [] + [scanning, indexing] + []          ; first scanning task finished. We denote this state as (A)
@@ -110,23 +107,23 @@ public final class FileBasedIndexProjectHandler {
             // [scanning] + [scanning, indexing] + []         ; indexing tasks are merged, merged task in inserted at the end of the queue
             // [] + [scanning, indexing] + []                 ; scanning task finished. This is exactly the same state as (A) 5 lines above
             //
-            // Fair amount of FileBasedIndexProjectHandler.scheduleReindexingInDumbMode invocations are observed during massive refresh (e.g. branch change).
+            // Fair amount of FileBasedIndexProjectHandler.scheduleReindexingInDumbMode invocations are observed during massive refresh
+            // (e.g. branch change).
             // In practice, we observe 2-3 scanning tasks followed by a single indexing task.
-            new UnindexedFilesIndexer(myProject, files).indexFiles(indicator);
+            new UnindexedFilesIndexer(myProject, "On refresh of files in " + myProject.getName()).indexFiles(indicator);
         }
 
-        private Map<IndexableFilesIterator, Collection<VirtualFile>> scan() {
+        Collection<FileIndexingRequest> scan() {
             long refreshedFilesCalcDuration = System.nanoTime();
-            Collection<VirtualFile> files = Collections.emptyList();
+            Collection<FileIndexingRequest> files = Collections.emptyList();
             try {
                 FileBasedIndexImpl fileBasedIndex = (FileBasedIndexImpl) FileBasedIndex.getInstance();
                 files = fileBasedIndex.getFilesToUpdate(myProject);
-                IndexableFilesIterator provider = new IndexableFilesIteratorForRefreshedFiles(myProject);
-                return Collections.singletonMap(provider, files);
+                return files;
             }
             finally {
                 refreshedFilesCalcDuration = System.nanoTime() - refreshedFilesCalcDuration;
-                LOG.info("Scanning refreshed files of " + myProject.getName() + " : " + files.size() + " to update, " +
+                LOG.info("Retrieving changed during indexing files of " + myProject.getName() + " : " + files.size() + " to update, " +
                     "calculated in " + TimeUnit.NANOSECONDS.toMillis(refreshedFilesCalcDuration) + "ms");
             }
         }
@@ -140,10 +137,10 @@ public final class FileBasedIndexProjectHandler {
         }
     }
 
-    private static class IndexableFilesIteratorForRefreshedFiles implements IndexableFilesIterator {
+    static final class IndexableFilesIteratorForRefreshedFiles implements IndexableFilesIterator {
         private final Project myProject;
 
-        private IndexableFilesIteratorForRefreshedFiles(Project project) {
+        IndexableFilesIteratorForRefreshedFiles(Project project) {
             myProject = project;
         }
 
@@ -174,8 +171,8 @@ public final class FileBasedIndexProjectHandler {
 
         @Override
         public boolean equals(Object o) {
-            // We need equals because otherwise UnindexedFilesIndexer will not be able to merge files (it merges files per provider, not globally,
-            // i.e. the same file assigned to different providers may be indexed twice)
+            // We need equals because otherwise UnindexedFilesIndexer will not be able to merge files (it merges files per provider,
+            // not globally, i.e. the same file assigned to different providers may be indexed twice)
             if (this == o) {
                 return true;
             }

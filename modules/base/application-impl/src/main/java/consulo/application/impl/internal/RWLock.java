@@ -15,6 +15,8 @@
  */
 package consulo.application.impl.internal;
 
+import java.util.function.Consumer;
+
 import consulo.application.AccessToken;
 
 /**
@@ -51,4 +53,6 @@ public interface RWLock {
     void writeIntentLock();
 
     void writeIntentUnlock();
+
+    void transferWriteAction(boolean runOnEdt, Runnable action, Consumer<Runnable> scheduleTarget);
 }

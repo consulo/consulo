@@ -12,6 +12,8 @@ indexable.files.provider.indexing.additional.dependencies:
     text: Indexing dependencies
 indexable.files.provider.indexing.fileOrDir.name:
     text: Indexing ''{0}''
+indexable.files.provider.indexing.files.from.previous.ide.session:
+    text: Indexing files from previous IDE session
 indexable.files.provider.indexing.internal.module.name:
     text: Indexing
 indexable.files.provider.indexing.library.name:
@@ -47,11 +49,17 @@ notification.group.ide.caches:
 progress.indexing:
     text: Updating indexes
 progress.indexing.scanning:
-    text: Scanning files to index...
+    text: Scanning files…
+progress.indexing.scanning.paused:
+    text: Scanning paused
 progress.indexing.started.as.suspended:
     text: Press the button to start indexing
 progress.indexing.updating:
-    text: Indexing...
+    text: Analyzing project…
+progress.indexing.waiting.for.scanning.to.complete:
+    text: Waiting for "Scanning" to complete…
+progress.text.loading.indexes:
+    text: Loading indexes…
 psi.scanning.files.progress:
     text: Scanning files...
 psi.search.for.word.progress:

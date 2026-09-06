@@ -33,6 +33,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
+import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -128,7 +129,8 @@ public class SandStubIndexTest {
 
         // a full rescan resets and repopulates the per-project filter which gates stub index queries;
         // up-to-date files must stay visible afterwards
-        dumbService.queueTask(new UnindexedFilesScanner(project));
+        new UnindexedFilesScanner(project, "test").queue();
+        awaitScanningFinished(project);
         awaitSmart(dumbService);
 
         waitFor(() -> !findClasses(project, "Bar5").isEmpty());
@@ -144,6 +146,11 @@ public class SandStubIndexTest {
                 return List.of();
             }
         });
+    }
+
+    private static void awaitScanningFinished(Project project) throws Exception {
+        UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
+        waitFor(() -> !executor.isRunning().get() && !executor.hasQueuedTasks());
     }
 
     private static void awaitSmart(DumbService dumbService) throws InterruptedException {

@@ -76,7 +76,7 @@ public class NewExtensionAreaImpl {
     
     @SuppressWarnings("unchecked")
     public <T> ExtensionPoint<T> getExtensionPoint(Class<T> extensionClass) {
-        NewExtensionPointImpl point = myExtensionPoints.computeIfAbsent(extensionClass.getName(), e -> {
+        NewExtensionPointImpl point = myExtensionPoints.computeIfAbsent(extensionClass.getCanonicalName(), e -> {
             if (!extensionClass.isAnnotationPresent(ExtensionAPI.class)) {
                 throw new IllegalArgumentException(extensionClass.getName() + " is not annotated by @ExtensionAPI");
             }

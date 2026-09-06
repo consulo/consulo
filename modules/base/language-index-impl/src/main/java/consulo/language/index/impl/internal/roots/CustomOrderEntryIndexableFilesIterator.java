@@ -40,6 +40,10 @@ public class CustomOrderEntryIndexableFilesIterator implements IndexableFilesIte
         myOrderEntry = orderEntry;
     }
 
+    public static CustomOrderEntryIndexableFilesIterator createIterator(OrderEntry orderEntry) {
+        return new CustomOrderEntryIndexableFilesIterator(orderEntry);
+    }
+
     @Override
     public String getDebugName() {
         return "Order entry " + myOrderEntry.getPresentableName();

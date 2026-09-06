@@ -15,4 +15,20 @@ class ProjectFileOrDirOriginImpl implements ProjectFileOrDirOrigin {
     public VirtualFile getFileOrDir() {
         return myFileOrDir;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ProjectFileOrDirOriginImpl other)) {
+            return false;
+        }
+        return myFileOrDir.equals(other.myFileOrDir);
+    }
+
+    @Override
+    public int hashCode() {
+        return myFileOrDir.hashCode();
+    }
 }

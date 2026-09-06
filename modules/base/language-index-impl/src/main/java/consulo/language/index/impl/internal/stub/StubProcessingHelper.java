@@ -30,7 +30,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
     StubIndexKey<Key, Psi> indexKey,
     Key key,
     VirtualFile file,
-    UpdatableIndex<Integer, SerializedStubTree, FileContent> stubUpdatingIndex,
+    UpdatableIndex<Integer, SerializedStubTree, FileContent, ?> stubUpdatingIndex,
     boolean failOnMissedKeys
   ) {
     int id = FileBasedIndex.getFileId(file);

@@ -31,6 +31,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
+import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -137,7 +138,8 @@ public class ExternalChangesReindexTest {
 
         // a full rescan resets and repopulates the per-project filter; up-to-date files must survive it,
         // otherwise index queries silently lose them ("indexed but not resolved")
-        dumbService.queueTask(new UnindexedFilesScanner(project));
+        new UnindexedFilesScanner(project, "test").queue();
+        awaitScanningFinished(project);
         awaitSmart(dumbService);
 
         IdFilter projectFilter = FileBasedIndex.getInstance().createProjectIndexableFiles(project);
@@ -147,6 +149,11 @@ public class ExternalChangesReindexTest {
         assertThat(projectFilter.containsFileId(((VirtualFileWithId) sample).getId()))
             .as("up-to-date project file must stay in the indexable files filter after a rescan")
             .isTrue();
+    }
+
+    private static void awaitScanningFinished(Project project) throws Exception {
+        UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
+        waitFor(() -> !executor.isRunning().get() && !executor.hasQueuedTasks());
     }
 
     private static void awaitSmart(DumbService dumbService) throws InterruptedException {

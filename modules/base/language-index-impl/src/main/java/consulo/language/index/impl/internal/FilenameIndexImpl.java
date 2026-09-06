@@ -21,6 +21,7 @@ import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.ID;
 import consulo.index.io.KeyDescriptor;
+import consulo.language.index.impl.internal.hints.AcceptAllFilesAndDirectoriesIndexingHint;
 import consulo.language.psi.search.FilenameIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
@@ -53,7 +54,7 @@ public class FilenameIndexImpl extends ScalarIndexExtension<String> {
   
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
-    return (project, file) -> true;
+    return AcceptAllFilesAndDirectoriesIndexingHint.INSTANCE;
   }
 
   @Override

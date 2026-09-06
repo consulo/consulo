@@ -27,6 +27,7 @@ import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
@@ -279,6 +280,10 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                     .then(WriteLock.apply((o, c) -> {
                         ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
                         moduleManager.loadModulesNew(ProgressIndicator.from(c));
+                        return o;
+                    }))
+                    .then(CodeExecution.supply((o) -> {
+                        ((DumbServiceImpl) DumbService.getInstance(project)).queueStartupActivitiesRequiredForSmartMode();
                         return o;
                     }));
 

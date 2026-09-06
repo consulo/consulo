@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.index.impl.internal.roots;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
@@ -26,6 +27,7 @@ import java.util.function.Predicate;
 
 @ExtensionImpl
 public class DefaultProjectIndexableFilesContributor implements IndexableFilesContributor {
+    @RequiredReadAction
     @Override
     public List<IndexableFilesIterator> getIndexableFiles(Project project) {
         Set<Library> seenLibraries = new HashSet<>();
@@ -42,19 +44,19 @@ public class DefaultProjectIndexableFilesContributor implements IndexableFilesCo
                 if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
                     Library library = libraryOrderEntry.getLibrary();
                     if (library != null && seenLibraries.add(library)) {
-                        providers.add(new LibraryIndexableFilesIteratorImpl(library));
+                        providers.addAll(LibraryIndexableFilesIteratorImpl.createIterators(library));
                     }
                 }
                 else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
                     Sdk sdk = sdkOrderEntry.getSdk();
                     if (sdk != null && seenSdks.add(sdk)) {
-                        providers.add(new SdkIndexableFilesIteratorImpl(sdk));
+                        providers.addAll(SdkIndexableFilesIteratorImpl.createIterators(sdk));
                     }
                 }
                 else if (orderEntry instanceof OrderEntryWithTracking tracking) {
                     Object equalObject = tracking.getEqualObject();
                     if (equalObject == null || seenTrackedEntries.add(equalObject)) {
-                        providers.add(new CustomOrderEntryIndexableFilesIterator(orderEntry));
+                        providers.add(CustomOrderEntryIndexableFilesIterator.createIterator(orderEntry));
                     }
                 }
             }

@@ -15,4 +15,20 @@ class IndexableSetContributorOriginImpl implements IndexableSetContributorOrigin
     public IndexableSetContributor getIndexableSetContributor() {
         return myIndexableSetContributor;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof IndexableSetContributorOriginImpl other)) {
+            return false;
+        }
+        return myIndexableSetContributor.equals(other.myIndexableSetContributor);
+    }
+
+    @Override
+    public int hashCode() {
+        return myIndexableSetContributor.hashCode();
+    }
 }

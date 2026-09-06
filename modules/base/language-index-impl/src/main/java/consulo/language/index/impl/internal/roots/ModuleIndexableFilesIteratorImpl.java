@@ -36,11 +36,13 @@ public class ModuleIndexableFilesIteratorImpl implements ModuleIndexableFilesIte
     private final Module myModule;
     private final List<VirtualFile> myRoots;
     private final boolean myShouldPrintSingleRootInDebugName;
+    private final ModuleRootOrigin myOrigin;
 
     ModuleIndexableFilesIteratorImpl(Module module, List<VirtualFile> roots, boolean shouldPrintSingleRootInDebugName) {
         myModule = module;
         myRoots = roots;
         myShouldPrintSingleRootInDebugName = shouldPrintSingleRootInDebugName;
+        myOrigin = new ModuleRootOriginImpl(module, roots);
     }
 
     public static Collection<ModuleIndexableFilesIteratorImpl> getModuleIterators(Module module) {
@@ -81,7 +83,7 @@ public class ModuleIndexableFilesIteratorImpl implements ModuleIndexableFilesIte
 
     @Override
     public ModuleRootOrigin getOrigin() {
-        return new ModuleRootOriginImpl(myModule, myRoots);
+        return myOrigin;
     }
 
     @Override

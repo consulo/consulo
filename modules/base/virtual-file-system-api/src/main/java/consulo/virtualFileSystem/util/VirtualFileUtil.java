@@ -17,6 +17,7 @@ package consulo.virtualFileSystem.util;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.WriteAction;
+import consulo.application.progress.ProgressManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -681,6 +682,7 @@ public final class VirtualFileUtil {
 
     @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
     public static VirtualFileVisitor.Result visitChildrenRecursively(VirtualFile file, VirtualFileVisitor<?> visitor) throws VirtualFileVisitor.VisitorException {
+        ProgressManager.checkCanceled();
         boolean pushed = false;
         try {
             boolean visited = visitor.allowVisitFile(file);

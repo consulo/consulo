@@ -15,6 +15,7 @@ import consulo.language.internal.psi.stub.IdIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.IdFilter;
+import consulo.language.psi.stub.IndexedFile;
 import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
@@ -22,7 +23,6 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.io.ByteArraySequence;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
@@ -37,7 +37,8 @@ import java.util.function.Predicate;
 /**
  * @author Eugene Zhuravlev
  */
-public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Key, Value, Input> implements UpdatableIndex<Key, Value, Input> {
+public class VfsAwareMapReduceIndex<Key, Value, Input, FileIndexMetaData> extends MapReduceIndex<Key, Value, Input>
+  implements UpdatableIndex<Key, Value, Input, FileIndexMetaData> {
   private static final Logger LOG = Logger.getInstance(VfsAwareMapReduceIndex.class);
 
   static {
@@ -65,9 +66,6 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
                                 @Nullable ForwardIndexAccessor<Key, Value> forwardIndexAccessor,
                                 @Nullable ReadWriteLock lock) {
     super(extension, storage, forwardIndexMap, forwardIndexAccessor, lock);
-    if (myIndexId instanceof ID) {
-      SharedIndicesData.registerIndex((ID<Key, Value>)myIndexId, extension);
-    }
     mySingleEntryIndex = extension instanceof SingleEntryFileBasedIndexExtension;
     installMemoryModeListener();
   }
@@ -106,17 +104,34 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  public void setIndexedStateForFile(int fileId, VirtualFile file) {
-    IndexingStamp.setFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId);
+  public @Nullable FileIndexMetaData getFileIndexMetaData(IndexedFile file) {
+    return null;
   }
 
   @Override
-  public void resetIndexedStateForFile(int fileId) {
+  public void setIndexedStateForFileOnFileIndexMetaData(int fileId,
+                                                        @Nullable FileIndexMetaData fileIndexMetaData,
+                                                        boolean isProvidedByInfrastructureExtension) {
+    IndexingStamp.setFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId, isProvidedByInfrastructureExtension);
+  }
+
+  @Override
+  public void setIndexedStateForFile(int fileId, IndexedFile file, boolean isProvidedByInfrastructureExtension) {
+    IndexingStamp.setFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId, isProvidedByInfrastructureExtension);
+  }
+
+  @Override
+  public void invalidateIndexedStateForFile(int fileId) {
     IndexingStamp.setFileIndexedStateOutdated(fileId, (ID<?, ?>)myIndexId);
   }
 
   @Override
-  public boolean isIndexedStateForFile(int fileId, VirtualFile file) {
+  public void setUnindexedStateForFile(int fileId) {
+    IndexingStamp.setFileIndexedStateUnindexed(fileId, (ID<?, ?>)myIndexId);
+  }
+
+  @Override
+  public FileIndexingStateWithExplanation getIndexingStateForFile(int fileId, IndexedFile file) {
     return IndexingStamp.isFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId);
   }
 
