@@ -32,6 +32,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +44,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -1117,5 +1119,16 @@ public final class VirtualFileUtil {
         return rawFileLoader.isTooLarge(file.getLength())
             ? FileUtil.loadFirstAndClose(file.getInputStream(), rawFileLoader.getLargeFilePreviewSize())
             : file.contentsToByteArray();
+    }
+
+    /**
+     * An experimental refresh-and-find routine that doesn't require a write-lock (and hence EDT).
+     */
+    public static void refreshAndFindFileByPath(
+        NewVirtualFileSystem vfs,
+        String path,
+        Consumer<? super @Nullable NewVirtualFile> consumer
+    ) {
+        VfsImplUtil.refreshAndFindFileByPath(vfs, path, consumer);
     }
 }
