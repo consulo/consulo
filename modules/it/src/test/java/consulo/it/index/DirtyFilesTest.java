@@ -27,6 +27,9 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.ManagingFS;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -36,6 +39,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
@@ -144,8 +150,35 @@ public class DirtyFilesTest {
         int changedId = ((VirtualFileWithId) changed).getId();
         int untouchedId = ((VirtualFileWithId) findFile(src.resolve("file1.sand"))).getId();
 
-        Files.writeString(src.resolve("file0.sand"), "class Dirty0 { int changedOnDisk; }");
-        VirtualFileUtil.markDirtyAndRefresh(false, false, false, changed);
+        List<String> observedVfsChanges = Collections.synchronizedList(new ArrayList<>());
+        MessageBusConnection vfsConnection = application.getMessageBus().connect();
+        vfsConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
+            @Override
+            public void after(List<? extends VFileEvent> events) {
+                for (VFileEvent event : events) {
+                    VirtualFile eventFile = event.getFile();
+                    if (eventFile != null) {
+                        observedVfsChanges.add(eventFile.getPath());
+                    }
+                }
+            }
+        });
+
+        try {
+            Files.writeString(src.resolve("file0.sand"), "class Dirty0 { int changedOnDisk; }");
+            VirtualFileUtil.markDirtyAndRefresh(false, false, false, changed);
+
+            // the headless application runs without a file watcher, so the explicit refresh above is the only thing
+            // that can turn the write into a VFS event; if it does not, nothing downstream can see the change
+            waitFor(
+                "the explicit refresh must make the VFS report the content change",
+                () -> observedVfsChanges.contains(changed.getPath()),
+                () -> "observedVfsChanges=" + observedVfsChanges + " vfsLength=" + changed.getLength()
+            );
+        }
+        finally {
+            vfsConnection.disconnect();
+        }
 
         waitFor(
             "the change must be recorded in the project dirty files",
@@ -155,6 +188,8 @@ public class DirtyFilesTest {
                 + " orphanDirtyIds=" + fileBasedIndex.getAllDirtyFiles(null)
                 + " inFilter=" + fileBasedIndex.getIndexableFilesFilterHolder().findProjectsForFile(changedId)
                 + " vfsLength=" + changed.getLength()
+                + " vfsTimeStamp=" + changed.getTimeStamp()
+                + " filesToUpdate=" + fileBasedIndex.getFilesToUpdateCollector().getDirtyFiles().getProjectDirtyFiles(first)
         );
 
         closeProject(first);
