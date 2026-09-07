@@ -27,6 +27,9 @@ import consulo.module.ModuleManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.language.index.impl.internal.FileBasedIndexImpl;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.junit.jupiter.api.Test;
@@ -216,7 +219,17 @@ public class ProjectReopenSkipsFullScanTest {
 
             waitFor(
                 "the file edited while the project was closed must be re-indexed on reopen",
-                () -> !findClasses(second, "After5").isEmpty() && findClasses(second, "Before5").isEmpty()
+                () -> !findClasses(second, "After5").isEmpty() && findClasses(second, "Before5").isEmpty(),
+                () -> {
+                    VirtualFile edited = findFile(src.resolve("file5.sand"));
+                    FileBasedIndexImpl index = (FileBasedIndexImpl) FileBasedIndex.getInstance();
+                    return "after5=" + findClasses(second, "After5").size()
+                        + " before5=" + findClasses(second, "Before5").size()
+                        + " vfsLength=" + edited.getLength()
+                        + " editedId=" + ((VirtualFileWithId) edited).getId()
+                        + " projectDirtyIds=" + index.getAllDirtyFiles(second)
+                        + " orphanDirtyIds=" + index.getAllDirtyFiles(null);
+                }
             );
 
             assertThat(findClasses(second, "Before4"))

@@ -72,6 +72,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -203,6 +204,14 @@ public final class ScanningTestSupport {
     }
 
     public static void waitFor(String description, BooleanSupplier condition) throws Exception {
+        waitFor(description, condition, () -> "");
+    }
+
+    /**
+     * The diagnostics supplier is evaluated only when the wait times out; it exists so a failure on a machine the
+     * author cannot reach reports the state that was actually observed rather than just "expected true but was false".
+     */
+    public static void waitFor(String description, BooleanSupplier condition, Supplier<String> diagnostics) throws Exception {
         long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS);
         while (System.currentTimeMillis() < deadline) {
             if (condition.getAsBoolean()) {
@@ -210,7 +219,15 @@ public final class ScanningTestSupport {
             }
             Thread.sleep(20);
         }
-        assertThat(condition.getAsBoolean()).as("timed out: %s", description).isTrue();
+
+        String details;
+        try {
+            details = diagnostics.get();
+        }
+        catch (Throwable e) {
+            details = "diagnostics failed: " + e;
+        }
+        assertThat(condition.getAsBoolean()).as("timed out: %s [%s]", description, details).isTrue();
     }
 
     public static Collection<SandClass> findClasses(Project project, String name) {

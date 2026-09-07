@@ -149,7 +149,12 @@ public class DirtyFilesTest {
 
         waitFor(
             "the change must be recorded in the project dirty files",
-            () -> fileBasedIndex.getAllDirtyFiles(first).contains(changedId)
+            () -> fileBasedIndex.getAllDirtyFiles(first).contains(changedId),
+            () -> "changedId=" + changedId
+                + " projectDirtyIds=" + fileBasedIndex.getAllDirtyFiles(first)
+                + " orphanDirtyIds=" + fileBasedIndex.getAllDirtyFiles(null)
+                + " inFilter=" + fileBasedIndex.getIndexableFilesFilterHolder().findProjectsForFile(changedId)
+                + " vfsLength=" + changed.getLength()
         );
 
         closeProject(first);
