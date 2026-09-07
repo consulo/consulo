@@ -305,7 +305,6 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             .setCancelKeyEnabled(false)
             .setDimensionServiceKey(null, getDimensionServiceKey(), true)
             .setCancelCallback(() -> myCanClose)
-            .setNormalWindowLevel(true)
             .createPopup();
 
         Disposer.register(myPopup, this);
