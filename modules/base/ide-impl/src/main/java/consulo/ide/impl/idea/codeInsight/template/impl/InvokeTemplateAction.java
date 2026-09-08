@@ -2,11 +2,13 @@
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -18,7 +20,7 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,10 +43,11 @@ public class InvokeTemplateAction extends AnAction {
         Set<Character> usedMnemonicsSet,
         @Nullable Runnable afterInvocationCallback
     ) {
-        super(extractMnemonic(
-            template.getKey(),
-            usedMnemonicsSet
-        ) + (StringUtil.isEmptyOrSpaces(template.getDescription()) ? "" : ". " + template.getDescription()));
+        String mnemonic = extractMnemonic(template.getKey(), usedMnemonicsSet), description = template.getDescription();
+        LocalizeValue title = StringUtil.isEmptyOrSpaces(description)
+            ? LocalizeValue.of(mnemonic)
+            : CodeInsightLocalize.actionInvokeLiveTemplateActionTextMnemonicAndDescription(mnemonic, description);
+        super(title);
         myTemplate = template;
         myProject = project;
         myEditor = editor;
@@ -56,7 +59,7 @@ public class InvokeTemplateAction extends AnAction {
             return "";
         }
 
-        for (int i = 0; i < caption.length(); i++) {
+        for (int i = 0, n = caption.length(); i < n; i++) {
             char c = caption.charAt(i);
             if (usedMnemonics.add(Character.toUpperCase(c))) {
                 return caption.substring(0, i) + UIUtil.MNEMONIC + caption.substring(i);
@@ -81,7 +84,7 @@ public class InvokeTemplateAction extends AnAction {
         Document document = myEditor.getDocument();
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file != null
-            && ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(Collections.singletonList(file)).hasReadonlyFiles()) {
+            && ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(List.of(file)).hasReadonlyFiles()) {
             return;
         }
 
@@ -89,32 +92,38 @@ public class InvokeTemplateAction extends AnAction {
             .project(myProject)
             .name(CodeInsightLocalize.commandWrapWithTemplate())
             .groupId("Wrap with template " + myTemplate.getKey())
-            .run(() -> {
-                myEditor.getCaretModel().runForEachCaret(__ -> {
-                    // adjust the selection so that it starts with a non-whitespace character (to make sure that the template is inserted
-                    // at a meaningful position rather than at indent 0)
-                    if (myEditor.getSelectionModel().hasSelection() && myTemplate.isToReformat()) {
-                        int offset = myEditor.getSelectionModel().getSelectionStart();
-                        int selectionEnd = myEditor.getSelectionModel().getSelectionEnd();
-                        int lineEnd = document.getLineEndOffset(document.getLineNumber(offset));
-                        while (offset < lineEnd && offset < selectionEnd && (document.getCharsSequence()
-                            .charAt(offset) == ' ' || document.getCharsSequence().charAt(offset) == '\t')) {
-                            offset++;
-                        }
-                        // avoid extra line break after $SELECTION$ in case when selection ends with a complete line
-                        if (selectionEnd == document.getLineStartOffset(document.getLineNumber(selectionEnd))) {
-                            selectionEnd--;
-                        }
-                        if (offset < lineEnd && offset < selectionEnd) {  // found non-WS character in first line of selection
-                            myEditor.getSelectionModel().setSelection(offset, selectionEnd);
-                        }
-                    }
-                    String selectionString = myEditor.getSelectionModel().getSelectedText();
-                    TemplateManager.getInstance(myProject).startTemplate(myEditor, selectionString, myTemplate);
-                });
-                if (myCallback != null) {
-                    myCallback.run();
+            .run(this::performInCommand);
+    }
+
+    private void performInCommand() {
+        Document document = myEditor.getDocument();
+
+        myEditor.getCaretModel().runForEachCaret(__ -> {
+            // adjust the selection so that it starts with a non-whitespace character (to make sure that the template is inserted
+            // at a meaningful position rather than at indent 0)
+            SelectionModel selectionModel = myEditor.getSelectionModel();
+            if (selectionModel.hasSelection() && myTemplate.isToReformat()) {
+                int offset = selectionModel.getSelectionStart();
+                int selectionEnd = selectionModel.getSelectionEnd();
+                int lineEnd = document.getLineEndOffset(document.getLineNumber(offset));
+                CharSequence text = document.getCharsSequence();
+                while (offset < lineEnd && offset < selectionEnd && StringUtil.containsChar(" \t", text.charAt(offset))) {
+                    offset++;
                 }
-            });
+                // avoid extra line break after $SELECTION$ in case when selection ends with a complete line
+                if (selectionEnd == document.getLineStartOffset(document.getLineNumber(selectionEnd))) {
+                    selectionEnd--;
+                }
+                if (offset < lineEnd && offset < selectionEnd) {  // found non-WS character in first line of selection
+                    selectionModel.setSelection(offset, selectionEnd);
+                }
+            }
+            String selectionString = selectionModel.getSelectedText();
+            TemplateManager.getInstance(myProject).startTemplate(myEditor, selectionString, myTemplate);
+        });
+
+        if (myCallback != null) {
+            myCallback.run();
+        }
     }
 }

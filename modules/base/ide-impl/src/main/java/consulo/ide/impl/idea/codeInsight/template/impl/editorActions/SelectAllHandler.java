@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -30,30 +29,29 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class SelectAllHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
+    private EditorActionHandler myOriginalHandler;
 
-  @Override
-  public void execute(Editor editor, DataContext dataContext) {
-    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-    if (templateState != null && !templateState.isFinished()) {
-      TextRange range = templateState.getCurrentVariableRange();
-      int caretOffset = editor.getCaretModel().getOffset();
-      if (range != null && range.getStartOffset() <= caretOffset && caretOffset <= range.getEndOffset()) {
-        editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
-        return;
-      }
+    @Override
+    public void execute(Editor editor, DataContext dataContext) {
+        TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+        if (templateState != null && !templateState.isFinished()) {
+            TextRange range = templateState.getCurrentVariableRange();
+            int caretOffset = editor.getCaretModel().getOffset();
+            if (range != null && range.getStartOffset() <= caretOffset && caretOffset <= range.getEndOffset()) {
+                editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
+                return;
+            }
+        }
+        myOriginalHandler.execute(editor, dataContext);
     }
-    myOriginalHandler.execute(editor, dataContext);
-  }
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
+    }
 
-  
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_SELECT_ALL;
-  }
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_SELECT_ALL;
+    }
 }

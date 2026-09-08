@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
@@ -48,10 +49,11 @@ public class ExpandLiveTemplateCustomAction extends EditorAction {
             }
 
             @Override
+            @RequiredReadAction
             protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
                 Project project = editor.getProject();
-                return project != null &&
-                    ((TemplateManagerImpl) TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;
+                return project != null
+                    && ((TemplateManagerImpl) TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;
             }
         };
     }

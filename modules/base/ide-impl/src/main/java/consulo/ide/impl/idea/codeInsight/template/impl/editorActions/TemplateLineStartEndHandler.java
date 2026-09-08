@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.codeEditor.Caret;
@@ -31,58 +30,61 @@ import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 public abstract class TemplateLineStartEndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
-  private final boolean myIsHomeHandler;
-  private final boolean myWithSelection;
+    private EditorActionHandler myOriginalHandler;
+    private final boolean myIsHomeHandler;
+    private final boolean myWithSelection;
 
-  public TemplateLineStartEndHandler(boolean isHomeHandler, boolean withSelection) {
-    super(true);
-    myIsHomeHandler = isHomeHandler;
-    myWithSelection = withSelection;
-  }
-
-  @Override
-  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
-    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-    if (templateState != null && !templateState.isFinished()) {
-      TextRange range = templateState.getCurrentVariableRange();
-      int caretOffset = editor.getCaretModel().getOffset();
-      if (range != null && range.containsOffset(caretOffset)) return true;
+    public TemplateLineStartEndHandler(boolean isHomeHandler, boolean withSelection) {
+        super(true);
+        myIsHomeHandler = isHomeHandler;
+        myWithSelection = withSelection;
     }
-    return myOriginalHandler.isEnabled(editor, caret, dataContext);
-  }
 
-  @Override
-  @RequiredUIAccess
-  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-    if (templateState != null && !templateState.isFinished()) {
-      TextRange range = templateState.getCurrentVariableRange();
-      int caretOffset = editor.getCaretModel().getOffset();
-      if (range != null && shouldStayInsideVariable(range, caretOffset)) {
-        int selectionOffset = editor.getSelectionModel().getLeadSelectionOffset();
-        int offsetToMove = myIsHomeHandler ? range.getStartOffset() : range.getEndOffset();
-        LogicalPosition logicalPosition = editor.offsetToLogicalPosition(offsetToMove).leanForward(myIsHomeHandler);
-        editor.getCaretModel().moveToLogicalPosition(logicalPosition);
-        EditorModificationUtil.scrollToCaret(editor);
-        if (myWithSelection) {
-          editor.getSelectionModel().setSelection(selectionOffset, offsetToMove);
+    @Override
+    protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
+        TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+        if (templateState != null && !templateState.isFinished()) {
+            TextRange range = templateState.getCurrentVariableRange();
+            int caretOffset = editor.getCaretModel().getOffset();
+            if (range != null && range.containsOffset(caretOffset)) {
+                return true;
+            }
         }
-        else {
-          editor.getSelectionModel().removeSelection();
-        }
-        return;
-      }
+        return myOriginalHandler.isEnabled(editor, caret, dataContext);
     }
-    myOriginalHandler.execute(editor, caret, dataContext);
-  }
 
-  private boolean shouldStayInsideVariable(TextRange varRange, int caretOffset) {
-    return varRange.containsOffset(caretOffset) && caretOffset != (myIsHomeHandler ? varRange.getStartOffset() : varRange.getEndOffset());
-  }
+    @Override
+    @RequiredUIAccess
+    protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+        if (templateState != null && !templateState.isFinished()) {
+            TextRange range = templateState.getCurrentVariableRange();
+            int caretOffset = editor.getCaretModel().getOffset();
+            if (range != null && shouldStayInsideVariable(range, caretOffset)) {
+                int selectionOffset = editor.getSelectionModel().getLeadSelectionOffset();
+                int offsetToMove = myIsHomeHandler ? range.getStartOffset() : range.getEndOffset();
+                LogicalPosition logicalPosition = editor.offsetToLogicalPosition(offsetToMove).leanForward(myIsHomeHandler);
+                editor.getCaretModel().moveToLogicalPosition(logicalPosition);
+                EditorModificationUtil.scrollToCaret(editor);
+                if (myWithSelection) {
+                    editor.getSelectionModel().setSelection(selectionOffset, offsetToMove);
+                }
+                else {
+                    editor.getSelectionModel().removeSelection();
+                }
+                return;
+            }
+        }
+        myOriginalHandler.execute(editor, caret, dataContext);
+    }
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+    private boolean shouldStayInsideVariable(TextRange varRange, int caretOffset) {
+        return varRange.containsOffset(caretOffset)
+            && caretOffset != (myIsHomeHandler ? varRange.getStartOffset() : varRange.getEndOffset());
+    }
+
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
+    }
 }

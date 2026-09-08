@@ -18,44 +18,50 @@ import java.util.Collections;
 import java.util.Set;
 
 public class WrapWithCustomTemplateAction extends AnAction {
-  private final CustomLiveTemplate myTemplate;
-  private final Editor myEditor;
-  private final @Nullable Runnable myAfterExecutionCallback;
-  private final PsiFile myFile;
+    private final CustomLiveTemplate myTemplate;
+    private final Editor myEditor;
+    private final @Nullable Runnable myAfterExecutionCallback;
+    private final PsiFile myFile;
 
-  public WrapWithCustomTemplateAction(CustomLiveTemplate template, Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
-    this(template, editor, file, usedMnemonicsSet, null);
-  }
-
-  public WrapWithCustomTemplateAction(CustomLiveTemplate template, Editor editor, PsiFile file, Set<Character> usedMnemonicsSet, @Nullable Runnable afterExecutionCallback) {
-    super(InvokeTemplateAction.extractMnemonic(template.getTitle(), usedMnemonicsSet));
-    myTemplate = template;
-    myFile = file;
-    myEditor = editor;
-    myAfterExecutionCallback = afterExecutionCallback;
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    perform();
-  }
-
-  public void perform() {
-    Document document = myEditor.getDocument();
-    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-    if (file != null) {
-      ReadonlyStatusHandler.getInstance(myFile.getProject()).ensureFilesWritable(Collections.singletonList(file));
+    public WrapWithCustomTemplateAction(CustomLiveTemplate template, Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
+        this(template, editor, file, usedMnemonicsSet, null);
     }
 
-    String selection = myEditor.getSelectionModel().getSelectedText(true);
-
-    if (selection != null) {
-      selection = selection.trim();
-      PsiDocumentManager.getInstance(myFile.getProject()).commitAllDocuments();
-      myTemplate.wrap(selection, new CustomTemplateCallback(myEditor, myFile));
-      if (myAfterExecutionCallback != null) {
-        myAfterExecutionCallback.run();
-      }
+    public WrapWithCustomTemplateAction(
+        CustomLiveTemplate template,
+        Editor editor,
+        PsiFile file,
+        Set<Character> usedMnemonicsSet,
+        @Nullable Runnable afterExecutionCallback
+    ) {
+        super(InvokeTemplateAction.extractMnemonic(template.getTitle(), usedMnemonicsSet));
+        myTemplate = template;
+        myFile = file;
+        myEditor = editor;
+        myAfterExecutionCallback = afterExecutionCallback;
     }
-  }
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        perform();
+    }
+
+    public void perform() {
+        Document document = myEditor.getDocument();
+        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+        if (file != null) {
+            ReadonlyStatusHandler.getInstance(myFile.getProject()).ensureFilesWritable(Collections.singletonList(file));
+        }
+
+        String selection = myEditor.getSelectionModel().getSelectedText(true);
+
+        if (selection != null) {
+            selection = selection.trim();
+            PsiDocumentManager.getInstance(myFile.getProject()).commitAllDocuments();
+            myTemplate.wrap(selection, new CustomTemplateCallback(myEditor, myFile));
+            if (myAfterExecutionCallback != null) {
+                myAfterExecutionCallback.run();
+            }
+        }
+    }
 }

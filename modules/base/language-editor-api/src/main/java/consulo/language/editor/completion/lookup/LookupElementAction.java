@@ -15,43 +15,42 @@
  */
 package consulo.language.editor.completion.lookup;
 
-import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public abstract class LookupElementAction {
-  private final Image myIcon;
-  private final String myText;
+    private final Image myIcon;
+    private final LocalizeValue myText;
 
-  protected LookupElementAction(@Nullable Image icon, String text) {
-    myIcon = icon;
-    myText = text;
-  }
-
-  public @Nullable Image getIcon() {
-    return myIcon;
-  }
-
-  public String getText() {
-    return myText;
-  }
-
-  public abstract Result performLookupAction();
-
-  public static class Result {
-    public static final Result HIDE_LOOKUP = new Result();
-    public static final Result REFRESH_ITEM = new Result();
-
-    public static class ChooseItem extends Result {
-      public final LookupElement item;
-
-      public ChooseItem(LookupElement item) {
-        this.item = item;
-      }
+    protected LookupElementAction(@Nullable Image icon, LocalizeValue text) {
+        myIcon = icon;
+        myText = text;
     }
-  }
+
+    public @Nullable Image getIcon() {
+        return myIcon;
+    }
+
+    public LocalizeValue getText() {
+        return myText;
+    }
+
+    public abstract Result performLookupAction();
+
+    public static class Result {
+        public static final Result HIDE_LOOKUP = new Result();
+        public static final Result REFRESH_ITEM = new Result();
+
+        public static class ChooseItem extends Result {
+            public final LookupElement item;
+
+            public ChooseItem(LookupElement item) {
+                this.item = item;
+            }
+        }
+    }
 }
