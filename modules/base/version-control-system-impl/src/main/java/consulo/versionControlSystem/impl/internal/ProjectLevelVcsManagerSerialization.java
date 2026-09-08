@@ -15,22 +15,14 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
-import org.jdom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectLevelVcsManagerSerialization {
-  private static final String OPTIONS_SETTING = "OptionsSetting";
-  private static final String CONFIRMATIONS_SETTING = "ConfirmationsSetting";
-  private static final String VALUE_ATTRIBUTE = "value";
-  private static final String ID_ATTRIBUTE = "id";
-
   // read-only can be kept here
   private final Map<String, VcsShowConfirmationOption.Value> myReadValue;
 
@@ -45,52 +37,41 @@ public class ProjectLevelVcsManagerSerialization {
     return options.get(actionName);
   }
 
-  public void readExternalUtil(Element element, OptionsAndConfirmations optionsAndConfirmations) throws InvalidDataException {
+  public void readExternalUtil(ProjectLevelVcsManagerState state, OptionsAndConfirmations optionsAndConfirmations) {
     Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
-    for (Element subElement : element.getChildren(OPTIONS_SETTING)) {
-      String id = subElement.getAttributeValue(ID_ATTRIBUTE);
-      String value = subElement.getAttributeValue(VALUE_ATTRIBUTE);
-      if (id != null && value != null) {
-        try {
-          getOrCreateOption(options, id).setValue(Boolean.parseBoolean(value));
-        }
-        catch (Exception ignored) {
-        }
+    for (VcsOptionsSettingState settingState : state.options) {
+      if (settingState.id != null) {
+        getOrCreateOption(options, settingState.id).setValue(settingState.value);
       }
     }
+
     myReadValue.clear();
-    for (Element subElement : element.getChildren(CONFIRMATIONS_SETTING)) {
-      String id = subElement.getAttributeValue(ID_ATTRIBUTE);
-      String value = subElement.getAttributeValue(VALUE_ATTRIBUTE);
-      if (id != null && value != null) {
-        try {
-          myReadValue.put(id, VcsShowConfirmationOption.Value.fromString(value));
-        }
-        catch (Exception ignored) {
-        }
+    for (VcsConfirmationsSettingState settingState : state.confirmations) {
+      if (settingState.id != null && settingState.value != null) {
+        myReadValue.put(settingState.id, VcsShowConfirmationOption.Value.fromString(settingState.value));
       }
     }
   }
 
-  public void writeExternalUtil(Element element, OptionsAndConfirmations optionsAndConfirmations) throws WriteExternalException {
+  public void writeExternalUtil(ProjectLevelVcsManagerState state, OptionsAndConfirmations optionsAndConfirmations) {
     Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
     Map<String, VcsShowConfirmationOptionImpl> confirmations = optionsAndConfirmations.getConfirmations();
 
     for (VcsShowOptionsSettingImpl setting : options.values()) {
       if (!setting.getValue()) {
-        Element settingElement = new Element(OPTIONS_SETTING);
-        element.addContent(settingElement);
-        settingElement.setAttribute(VALUE_ATTRIBUTE, Boolean.toString(setting.getValue()));
-        settingElement.setAttribute(ID_ATTRIBUTE, setting.getDisplayName());
+        VcsOptionsSettingState settingState = new VcsOptionsSettingState();
+        settingState.value = setting.getValue();
+        settingState.id = setting.getDisplayName();
+        state.options.add(settingState);
       }
     }
 
     for (VcsShowConfirmationOptionImpl setting : confirmations.values()) {
       if (setting.getValue() != VcsShowConfirmationOption.Value.SHOW_CONFIRMATION) {
-        Element settingElement = new Element(CONFIRMATIONS_SETTING);
-        element.addContent(settingElement);
-        settingElement.setAttribute(VALUE_ATTRIBUTE, setting.getValue().toString());
-        settingElement.setAttribute(ID_ATTRIBUTE, setting.getDisplayName());
+        VcsConfirmationsSettingState settingState = new VcsConfirmationsSettingState();
+        settingState.value = setting.getValue().toString();
+        settingState.id = setting.getDisplayName();
+        state.confirmations.add(settingState);
       }
     }
   }

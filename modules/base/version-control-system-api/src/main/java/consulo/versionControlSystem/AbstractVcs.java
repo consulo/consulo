@@ -441,10 +441,14 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * @param mapping the mapping being configured
      * @return the configurable instance, or null if no configuration is required.
      */
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("Per root VCS settings are not stored anymore")
     public @Nullable UnnamedConfigurable getRootConfigurable(VcsDirectoryMapping mapping) {
         return null;
     }
 
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("Per root VCS settings are not stored anymore")
     public @Nullable VcsRootSettings createEmptyVcsRootSettings() {
         return null;
     }

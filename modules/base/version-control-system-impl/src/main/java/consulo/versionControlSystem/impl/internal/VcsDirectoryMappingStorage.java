@@ -25,16 +25,15 @@ import consulo.component.persist.Storage;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 
 /**
  * @author yole
  */
-@State(name = "VcsDirectoryMappings", storages = @Storage("vcs.xml"))
+@State(name = "VcsDirectoryMappings", storages = @Storage("vcs"))
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class VcsDirectoryMappingStorage implements PersistentStateComponent<Element> {
+public class VcsDirectoryMappingStorage implements PersistentStateComponent<VcsDirectoryMappingsState> {
   private final ProjectLevelVcsManager myVcsManager;
 
   @Inject
@@ -43,14 +42,14 @@ public class VcsDirectoryMappingStorage implements PersistentStateComponent<Elem
   }
 
   @Override
-  public Element getState() {
-    Element e = new Element("state");
-    ((ProjectLevelVcsManagerImpl)myVcsManager).writeDirectoryMappings(e);
-    return e;
+  public VcsDirectoryMappingsState getState() {
+    VcsDirectoryMappingsState state = new VcsDirectoryMappingsState();
+    ((ProjectLevelVcsManagerImpl)myVcsManager).writeDirectoryMappings(state);
+    return state;
   }
 
   @Override
-  public void loadState(Element state) {
+  public void loadState(VcsDirectoryMappingsState state) {
     ((ProjectLevelVcsManagerImpl)myVcsManager).readDirectoryMappings(state);
   }
 }

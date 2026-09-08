@@ -49,8 +49,6 @@ import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevisionCache;
@@ -64,7 +62,6 @@ import consulo.versionControlSystem.impl.internal.update.UpdateInfoTreeImpl;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.root.VcsRoot;
-import consulo.versionControlSystem.root.VcsRootSettings;
 import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
@@ -76,9 +73,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Attribute;
-import org.jdom.DataConversionException;
-import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -91,9 +85,8 @@ import java.util.function.Predicate;
 @State(name = "ProjectLevelVcsManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl
-public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements PersistentStateComponent<Element>, Disposable {
+public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements PersistentStateComponent<ProjectLevelVcsManagerState>, Disposable {
     private static final Logger LOG = Logger.getInstance(ProjectLevelVcsManagerImpl.class);
-    private static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
 
     private final ProjectLevelVcsManagerSerialization mySerialization;
     private final OptionsAndConfirmations myOptionsAndConfirmations;
@@ -114,12 +107,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         }
     };
 
-    private static final String ELEMENT_MAPPING = "mapping";
-    private static final String ATTRIBUTE_DIRECTORY = "directory";
-    private static final String ATTRIBUTE_VCS = "vcs";
-    private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
-    private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
-    private static final String ATTRIBUTE_CLASS = "class";
 
     private boolean myMappingsLoaded;
     private boolean myHaveLegacyVcsConfiguration;
@@ -543,26 +530,17 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public @Nullable Element getState() {
-        Element element = new Element("state");
-        mySerialization.writeExternalUtil(element, myOptionsAndConfirmations);
-        if (myHaveLegacyVcsConfiguration) {
-            element.setAttribute(SETTINGS_EDITED_MANUALLY, "true");
-        }
-        return element;
+    public ProjectLevelVcsManagerState getState() {
+        ProjectLevelVcsManagerState state = new ProjectLevelVcsManagerState();
+        mySerialization.writeExternalUtil(state, myOptionsAndConfirmations);
+        state.settingsEditedManually = myHaveLegacyVcsConfiguration;
+        return state;
     }
 
     @Override
-    public void loadState(Element state) {
+    public void loadState(ProjectLevelVcsManagerState state) {
         mySerialization.readExternalUtil(state, myOptionsAndConfirmations);
-        Attribute attribute = state.getAttribute(SETTINGS_EDITED_MANUALLY);
-        if (attribute != null) {
-            try {
-                myHaveLegacyVcsConfiguration = attribute.getBooleanValue();
-            }
-            catch (DataConversionException ignored) {
-            }
-        }
+        myHaveLegacyVcsConfiguration = state.settingsEditedManually;
     }
 
     @Override
@@ -677,69 +655,35 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         myMappings.activateActiveVcses();
     }
 
-    void readDirectoryMappings(Element element) {
+    void readDirectoryMappings(VcsDirectoryMappingsState state) {
         List<VcsDirectoryMapping> mappingsList = new ArrayList<>();
         boolean haveNonEmptyMappings = false;
-        for (Element child : element.getChildren(ELEMENT_MAPPING)) {
-            String vcs = child.getAttributeValue(ATTRIBUTE_VCS);
+        for (VcsDirectoryMappingState mappingState : state.mappings) {
+            String vcs = mappingState.vcs;
             if (vcs != null && !vcs.isEmpty()) {
                 haveNonEmptyMappings = true;
             }
-            VcsDirectoryMapping mapping = new VcsDirectoryMapping(child.getAttributeValue(ATTRIBUTE_DIRECTORY), vcs);
-            mappingsList.add(mapping);
-
-            Element rootSettingsElement = child.getChild(ELEMENT_ROOT_SETTINGS);
-            if (rootSettingsElement != null) {
-                String className = rootSettingsElement.getAttributeValue(ATTRIBUTE_CLASS);
-                AbstractVcs vcsInstance = findVcsByName(mapping.getVcs());
-                if (vcsInstance != null && className != null) {
-                    VcsRootSettings rootSettings = vcsInstance.createEmptyVcsRootSettings();
-                    if (rootSettings != null) {
-                        try {
-                            rootSettings.readExternal(rootSettingsElement);
-                            mapping.setRootSettings(rootSettings);
-                        }
-                        catch (InvalidDataException e) {
-                            LOG.error("Failed to load VCS root settings class " + className + " for VCS " + vcsInstance.getClass()
-                                .getName(), e);
-                        }
-                    }
-                }
-            }
+            mappingsList.add(new VcsDirectoryMapping(mappingState.directory, vcs));
         }
-        boolean defaultProject = Boolean.TRUE.toString().equals(element.getAttributeValue(ATTRIBUTE_DEFAULT_PROJECT));
         // run autodetection if there's no VCS in default project and
-        if (haveNonEmptyMappings || !defaultProject) {
+        if (haveNonEmptyMappings || !state.defaultProject) {
             myMappingsLoaded = true;
         }
         myMappings.setDirectoryMappings(mappingsList);
     }
 
-    void writeDirectoryMappings(Element element) {
-        if (myProject.isDefault()) {
-            element.setAttribute(ATTRIBUTE_DEFAULT_PROJECT, Boolean.TRUE.toString());
-        }
+    void writeDirectoryMappings(VcsDirectoryMappingsState state) {
+        state.defaultProject = myProject.isDefault();
+
         for (VcsDirectoryMapping mapping : getDirectoryMappings()) {
-            VcsRootSettings rootSettings = mapping.getRootSettings();
-            if (rootSettings == null && StringUtil.isEmpty(mapping.getDirectory()) && StringUtil.isEmpty(mapping.getVcs())) {
+            if (StringUtil.isEmpty(mapping.getDirectory()) && StringUtil.isEmpty(mapping.getVcs())) {
                 continue;
             }
 
-            Element child = new Element(ELEMENT_MAPPING);
-            child.setAttribute(ATTRIBUTE_DIRECTORY, mapping.getDirectory());
-            child.setAttribute(ATTRIBUTE_VCS, mapping.getVcs());
-            if (rootSettings != null) {
-                Element rootSettingsElement = new Element(ELEMENT_ROOT_SETTINGS);
-                rootSettingsElement.setAttribute(ATTRIBUTE_CLASS, rootSettings.getClass().getName());
-                try {
-                    rootSettings.writeExternal(rootSettingsElement);
-                    child.addContent(rootSettingsElement);
-                }
-                catch (WriteExternalException e) {
-                    // don't add element
-                }
-            }
-            element.addContent(child);
+            VcsDirectoryMappingState mappingState = new VcsDirectoryMappingState();
+            mappingState.directory = mapping.getDirectory();
+            mappingState.vcs = mapping.getVcs();
+            state.mappings.add(mappingState);
         }
     }
 

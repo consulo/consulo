@@ -41,6 +41,7 @@ module consulo.version.control.system.impl {
     exports consulo.versionControlSystem.impl.internal.patch.apply to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
     exports consulo.versionControlSystem.impl.internal.patch.tool to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
+    opens consulo.versionControlSystem.impl.internal to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.commited to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.contentAnnotation to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.conflict to consulo.util.xml.serializer, consulo.ui.ex.awt.api;
