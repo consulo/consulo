@@ -75,6 +75,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         myInheritCompilerOutput = myInheritedOutput.newButton(ProjectLocalize.projectInheritCompileOutputPath(), true);
         myPerModuleCompilerOutput = myInheritedOutput.newButton(ProjectLocalize.projectModuleCompileOutputPath(), false);
 
+        myInheritedOutput.setValue(true);
+
         myInheritedOutput.addValueListener(inherited -> enableCompilerSettings(!Boolean.TRUE.equals(inherited)));
 
         for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
