@@ -22,10 +22,28 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-09-06
  */
-public abstract class CommonModuleExtensionWithSdkState extends ModuleExtensionState {
+public abstract class CommonModuleExtensionWithSdkState extends ModuleExtensionState implements ModuleInheritableNamePointerStateProvider {
     @Attribute("sdk-name")
     public @Nullable String sdkName;
 
     @Attribute("sdk-module-name")
     public @Nullable String sdkModuleName;
+
+    @Override
+    public void setState(String id, State state) {
+        switch (id) {
+            case DEFAULT_SDK_POINTER -> {
+                sdkName = state.name();
+                sdkModuleName = state.moduleName();
+            }
+        }
+    }
+
+    @Override
+    public @Nullable State getState(String id) {
+        return switch (id) {
+            case DEFAULT_SDK_POINTER -> new State(sdkName, sdkModuleName);
+            default -> null;
+        };
+    }
 }

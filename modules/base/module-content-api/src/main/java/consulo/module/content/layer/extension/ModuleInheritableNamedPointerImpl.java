@@ -21,6 +21,7 @@ import consulo.component.util.pointer.NamedPointer;
 import consulo.module.Module;
 import consulo.module.content.internal.ModuleRootLayerEx;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.extension.ModuleInheritableNamePointerStateProvider;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.util.lang.StringUtil;
@@ -37,11 +38,11 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     private @Nullable NamedPointer<Module> myModulePointer;
     private @Nullable NamedPointer<T> myTargetPointer;
     private final ModuleRootLayer myRootLayer;
-    private final String myXmlPrefix;
+    private final String myPointerId;
 
-    protected ModuleInheritableNamedPointerImpl(ModuleRootLayer layer, String xmlPrefix) {
+    protected ModuleInheritableNamedPointerImpl(ModuleRootLayer layer, String pointerId) {
         myRootLayer = layer;
-        myXmlPrefix = xmlPrefix;
+        myPointerId = pointerId;
     }
 
     public abstract @Nullable String getItemNameFromModule(Module module);
@@ -132,22 +133,33 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         }
     }
 
+    public ModuleInheritableNamePointerStateProvider.State getState() {
+        if (myModulePointer != null) {
+            return new ModuleInheritableNamePointerStateProvider.State(null, myModulePointer.getName());
+        }
+
+        if (myTargetPointer != null) {
+            return new ModuleInheritableNamePointerStateProvider.State(myTargetPointer.getName(), null);
+        }
+        return new ModuleInheritableNamePointerStateProvider.State(null, null);
+    }
+
     public void toXml(Element element) {
         if (myModulePointer != null) {
-            element.setAttribute(myXmlPrefix + "-module-name", myModulePointer.getName());
+            element.setAttribute(myPointerId + "-module-name", myModulePointer.getName());
         }
         else if (myTargetPointer != null) {
-            element.setAttribute(myXmlPrefix + "-name", myTargetPointer.getName());
+            element.setAttribute(myPointerId + "-name", myTargetPointer.getName());
         }
     }
 
     @RequiredReadAction
     public void fromXml(Element element) {
-        String moduleName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-module-name"));
+        String moduleName = StringUtil.nullize(element.getAttributeValue(myPointerId + "-module-name"));
         if (moduleName != null) {
             myModulePointer = createModulePointer(moduleName);
         }
-        String itemName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-name"));
+        String itemName = StringUtil.nullize(element.getAttributeValue(myPointerId + "-name"));
         if (itemName != null) {
             myTargetPointer = getPointer(myRootLayer, itemName);
         }
