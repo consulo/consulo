@@ -18,12 +18,10 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
@@ -35,14 +33,7 @@ import java.util.Map;
  */
 @Singleton
 @ServiceImpl
-public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element> {
-    private static final String MODULE_OUTPUT_TAG = "module";
-    private static final String EXCLUDE = "exclude";
-    private static final String NAME = "name";
-    private static final String URL = "url";
-    private static final String TYPE = "type";
-    private static final String OUTPUT_TAG = "output";
-
+public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager {
     private final Module myModule;
 
     private boolean myInheritOutput = true;
@@ -101,37 +92,30 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         return myCompilerConfiguration.getCompilerOutputUrl() + "/" + getRelativePathForProvider(contentFolderType, myModule);
     }
 
-    @Override
-    public @Nullable Element getState() {
+    public @Nullable CompilerManagerModuleState getState() {
         if (myInheritOutput) {
             return null;
         }
 
-        Element moduleElement = new Element(MODULE_OUTPUT_TAG);
-        moduleElement.setAttribute(NAME, myModule.getName());
-        if (!isExcludeOutput()) {
-            moduleElement.setAttribute(EXCLUDE, String.valueOf(isExcludeOutput()));
-        }
+        CompilerManagerModuleState moduleState = new CompilerManagerModuleState();
+        moduleState.name = myModule.getName();
+        moduleState.exclude = isExcludeOutput();
 
         for (Map.Entry<String, String> tempEntry : myOutputUrls.entrySet()) {
-            Element elementForOutput = new Element(OUTPUT_TAG);
-            elementForOutput.setAttribute(URL, tempEntry.getValue());
-            elementForOutput.setAttribute(TYPE, tempEntry.getKey());
-            moduleElement.addContent(elementForOutput);
+            CompilerManagerOutputState outputState = new CompilerManagerOutputState();
+            outputState.url = tempEntry.getValue();
+            outputState.type = tempEntry.getKey();
+            moduleState.outputs.add(outputState);
         }
 
-        return moduleElement;
+        return moduleState;
     }
 
-    @Override
-    public void loadState(Element element) {
+    public void loadState(CompilerManagerModuleState moduleState) {
         myInheritOutput = false;
-        myExcludeOutput = Boolean.valueOf(element.getAttributeValue(EXCLUDE, "true"));
-        for (Element child2 : element.getChildren()) {
-            String moduleUrl = child2.getAttributeValue(URL);
-            String type = child2.getAttributeValue(TYPE);
-
-            myOutputUrls.put(type, moduleUrl);
+        myExcludeOutput = moduleState.exclude;
+        for (CompilerManagerOutputState outputState : moduleState.outputs) {
+            myOutputUrls.put(outputState.type, outputState.url);
         }
     }
 }

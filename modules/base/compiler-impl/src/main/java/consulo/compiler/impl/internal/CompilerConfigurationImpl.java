@@ -28,7 +28,6 @@ import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -39,7 +38,6 @@ import org.jspecify.annotations.Nullable;
 @ServiceImpl
 public class CompilerConfigurationImpl extends CompilerConfiguration {
     private static final String DEFAULT_OUTPUT_URL = "out";
-    private static final String URL = "url";
 
     private final Project myProject;
     private final ModuleManager myModuleManager;
@@ -68,29 +66,26 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     }
 
     @RequiredReadAction
-    public void getState(Element stateElement) {
-        if (myOutputDirUrl != null) {
-            stateElement.setAttribute(URL, myOutputDirUrl);
-        }
+    public void getState(CompilerManagerState state) {
+        state.url = myOutputDirUrl;
 
         for (Module module : myModuleManager.getModules()) {
             ModuleCompilerPathsManagerImpl moduleCompilerPathsManager =
                 (ModuleCompilerPathsManagerImpl) ModuleCompilerPathsManager.getInstance(module);
-            Element state = moduleCompilerPathsManager.getState();
-            if (state != null) {
-                stateElement.addContent(state);
+            CompilerManagerModuleState moduleState = moduleCompilerPathsManager.getState();
+            if (moduleState != null) {
+                state.modules.add(moduleState);
             }
         }
     }
 
-    public void loadState(Element element) {
-        String url = element.getAttributeValue(URL);
-        if (url != null) {
-            setCompilerOutputUrl(url);
+    public void loadState(CompilerManagerState state) {
+        if (state.url != null) {
+            setCompilerOutputUrl(state.url);
         }
 
-        for (Element moduleElement : element.getChildren("module")) {
-            String name = moduleElement.getAttributeValue("name");
+        for (CompilerManagerModuleState moduleState : state.modules) {
+            String name = moduleState.name;
             if (name == null) {
                 continue;
             }
@@ -98,7 +93,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
             if (module != null) {
                 ModuleCompilerPathsManagerImpl moduleCompilerPathsManager =
                     (ModuleCompilerPathsManagerImpl) ModuleCompilerPathsManager.getInstance(module);
-                moduleCompilerPathsManager.loadState(moduleElement);
+                moduleCompilerPathsManager.loadState(moduleState);
             }
         }
     }
