@@ -46,7 +46,6 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -58,7 +57,7 @@ import java.util.stream.Collectors;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 @State(name = "Encoding", storages = @Storage("encodings.xml"))
-public final class EncodingProjectManagerImpl implements EncodingProjectManager, PersistentStateComponent<Element>, Disposable {
+public final class EncodingProjectManagerImpl implements EncodingProjectManager, PersistentStateComponent<EncodingProjectManagerState>, Disposable {
     private static final String PROJECT_URL = "PROJECT";
     private final Project myProject;
     private final EncodingManagerImpl myIdeEncodingManager;
@@ -92,54 +91,50 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public Element getState() {
-        Element element = new Element("x");
+    public EncodingProjectManagerState getState() {
+        EncodingProjectManagerState state = new EncodingProjectManagerState();
+
         if (!myMapping.isEmpty()) {
             List<Map.Entry<VirtualFilePointer, Charset>> mappings = new ArrayList<>(myMapping.entrySet());
             Lists.quickSort(mappings, Comparator.comparing(e -> e.getKey().getUrl()));
             for (Map.Entry<VirtualFilePointer, Charset> mapping : mappings) {
-                VirtualFilePointer file = mapping.getKey();
-                Charset charset = mapping.getValue();
-                Element child = new Element("file");
-                element.addContent(child);
-                child.setAttribute("url", file.getUrl());
-                child.setAttribute("charset", charset.name());
+                state.files.add(newFileState(mapping.getKey().getUrl(), mapping.getValue()));
             }
         }
         if (myProjectCharset != null) {
-            Element child = new Element("file");
-            element.addContent(child);
-            child.setAttribute("url", PROJECT_URL);
-            child.setAttribute("charset", myProjectCharset.name());
+            state.files.add(newFileState(PROJECT_URL, myProjectCharset));
         }
 
-        if (myNative2AsciiForPropertiesFiles) {
-            element.setAttribute("native2AsciiForPropertiesFiles", Boolean.toString(true));
-        }
+        state.native2AsciiForPropertiesFiles = myNative2AsciiForPropertiesFiles;
 
         if (myDefaultCharsetForPropertiesFiles != null) {
-            element.setAttribute("defaultCharsetForPropertiesFiles", myDefaultCharsetForPropertiesFiles.name());
+            state.defaultCharsetForPropertiesFiles = myDefaultCharsetForPropertiesFiles.name();
         }
         if (myDefaultConsoleCharset != null) {
-            element.setAttribute("defaultCharsetForConsole", myDefaultConsoleCharset.name());
+            state.defaultCharsetForConsole = myDefaultConsoleCharset.name();
         }
         if (myBomForNewUtf8Files != BOMForNewUTF8Files.NEVER) {
-            element.setAttribute("addBOMForNewFiles", myBomForNewUtf8Files.name());
+            state.addBOMForNewFiles = myBomForNewUtf8Files.name();
         }
 
-        return element;
+        return state;
+    }
+
+    private static EncodingFileState newFileState(String url, Charset charset) {
+        EncodingFileState fileState = new EncodingFileState();
+        fileState.url = url;
+        fileState.charset = charset.name();
+        return fileState;
     }
 
     @Override
-    public void loadState(Element element) {
+    public void loadState(EncodingProjectManagerState state) {
         myMapping.clear();
-        List<Element> files = element.getChildren("file");
-        if (!files.isEmpty()) {
+        if (!state.files.isEmpty()) {
             Map<VirtualFilePointer, Charset> mapping = new HashMap<>();
-            for (Element fileElement : files) {
-                String url = fileElement.getAttributeValue("url");
-                String charsetName = fileElement.getAttributeValue("charset");
-                Charset charset = CharsetToolkit.forName(charsetName);
+            for (EncodingFileState fileState : state.files) {
+                String url = fileState.url;
+                Charset charset = CharsetToolkit.forName(fileState.charset);
                 if (charset == null) {
                     continue;
                 }
@@ -155,10 +150,10 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             myMapping.putAll(mapping);
         }
 
-        myNative2AsciiForPropertiesFiles = Boolean.parseBoolean(element.getAttributeValue("native2AsciiForPropertiesFiles"));
-        myDefaultCharsetForPropertiesFiles = CharsetToolkit.forName(element.getAttributeValue("defaultCharsetForPropertiesFiles"));
-        myDefaultConsoleCharset = CharsetToolkit.forName(element.getAttributeValue("defaultCharsetForConsole"));
-        myBomForNewUtf8Files = BOMForNewUTF8Files.getByNameOrDefault(element.getAttributeValue("addBOMForNewFiles"));
+        myNative2AsciiForPropertiesFiles = state.native2AsciiForPropertiesFiles;
+        myDefaultCharsetForPropertiesFiles = CharsetToolkit.forName(state.defaultCharsetForPropertiesFiles);
+        myDefaultConsoleCharset = CharsetToolkit.forName(state.defaultCharsetForConsole);
+        myBomForNewUtf8Files = BOMForNewUTF8Files.getByNameOrDefault(state.addBOMForNewFiles);
 
         myModificationTracker.incModificationCount();
     }
