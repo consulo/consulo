@@ -19,65 +19,71 @@ package consulo.externalTool.impl.internal;
 import consulo.dataContext.DataContext;
 import consulo.pathMacro.MacroManager;
 import consulo.process.event.ProcessListener;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
  * @author Eugene Belyaev
  */
-public class ToolAction extends LegacyDumbAwareAction {
-  private final String myActionId;
+public class ToolAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
+    private final String myActionId;
 
-  public ToolAction(Tool tool) {
-    myActionId = tool.getActionId();
-    getTemplatePresentation().setText(tool.getName(), false);
-    getTemplatePresentation().setDescription(tool.getDescription());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    runTool(myActionId, e.getDataContext(), e, 0L, null);
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    Tool tool = findTool(myActionId, e.getDataContext());
-    if (tool != null) {
-      e.getPresentation().setText(ToolRunProfile.expandMacrosInName(tool, e.getDataContext()));
+    public ToolAction(Tool tool) {
+        myActionId = tool.getActionId();
+        getTemplatePresentation().setText(tool.getName(), false);
+        getTemplatePresentation().setDescription(tool.getDescription());
     }
-  }
 
-  private static Tool findTool(String actionId, DataContext context) {
-    MacroManager.getInstance().cacheMacrosPreview(context);
-    for (Tool tool : getAllTools()) {
-      if (actionId.equals(tool.getActionId())) {
-        return tool;
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        runTool(myActionId, e.getDataContext(), e, 0L, null);
     }
-    return null;
-  }
 
-  protected static List<Tool> getAllTools() {
-    return ToolsProvider.getAllTools();
-  }
-
-  static void runTool(String actionId, DataContext context) {
-    runTool(actionId, context, null, 0L, null);
-  }
-
-  /**
-   * @return <code>true</code> if task has been started successfully
-   */
-  static boolean runTool(String actionId, DataContext context, @Nullable AnActionEvent e, long executionId, @Nullable ProcessListener processListener) {
-    Tool tool = findTool(actionId, context);
-    if (tool != null) {
-      return tool.execute(e, new HackyDataContext(context, e), executionId, processListener);
+    @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return UIAction.apply(i -> {
+            Tool tool = findTool(myActionId, e.getDataContext());
+            if (tool != null) {
+                e.getPresentation().setText(ToolRunProfile.expandMacrosInName(tool, e.getDataContext()));
+            }
+            return null;
+        }).toCoroutine();
     }
-    return false;
-  }
+    
+    private static Tool findTool(String actionId, DataContext context) {
+        MacroManager.getInstance().cacheMacrosPreview(context);
+        for (Tool tool : getAllTools()) {
+            if (actionId.equals(tool.getActionId())) {
+                return tool;
+            }
+        }
+        return null;
+    }
+
+    protected static List<Tool> getAllTools() {
+        return ToolsProvider.getAllTools();
+    }
+
+    static void runTool(String actionId, DataContext context) {
+        runTool(actionId, context, null, 0L, null);
+    }
+
+    /**
+     * @return <code>true</code> if task has been started successfully
+     */
+    static boolean runTool(String actionId, DataContext context, @Nullable AnActionEvent e, long executionId, @Nullable ProcessListener processListener) {
+        Tool tool = findTool(actionId, context);
+        if (tool != null) {
+            return tool.execute(e, new HackyDataContext(context, e), executionId, processListener);
+        }
+        return false;
+    }
 }
