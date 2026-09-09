@@ -68,38 +68,6 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return true;
     }
 
-    private Set<VirtualFile> getRootsToIterate(Module module) {
-        return AccessRule.read(() -> {
-            if (module.isDisposed()) {
-                return Collections.emptySet();
-            }
-
-            Set<VirtualFile> result = new LinkedHashSet<>();
-            for (VirtualFile[] roots : getModuleContentAndSourceRoots(module)) {
-                for (VirtualFile root : roots) {
-                    DirectoryInfo info = getInfoForFileOrDirectory(root);
-                    if (!info.isInProject(root)) {
-                        continue; // is excluded or ignored
-                    }
-                    if (!module.equals(info.getModule())) {
-                        continue; // maybe 2 modules have the same content root?
-                    }
-
-                    VirtualFile parent = root.getParent();
-                    if (parent != null) {
-                        DirectoryInfo parentInfo = getInfoForFileOrDirectory(parent);
-                        if (isFileInContent(parent, parentInfo)) {
-                            continue;
-                        }
-                    }
-                    result.add(root);
-                }
-            }
-
-            return result;
-        });
-    }
-
     @Override
     public boolean isExcluded(VirtualFile file) {
         DirectoryInfo info = getInfoForFileOrDirectory(file);
@@ -247,10 +215,6 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
     @Override
     public boolean isInContent(VirtualFile fileOrDir) {
         return isFileInContent(fileOrDir, getInfoForFileOrDirectory(fileOrDir));
-    }
-
-    public static boolean isFileInContent(VirtualFile fileOrDir, DirectoryInfo info) {
-        return info.isInProject(fileOrDir) && info.getContentRoot() != null;
     }
 
     @Override

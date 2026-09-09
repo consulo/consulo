@@ -56,41 +56,23 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
 
     @Override
     public boolean iterateContent(ContentIterator processor, @Nullable VirtualFileFilter filter) {
-        DirectoryIndex directoryIndex = myDirectoryIndexProvider.get();
-
-        Set<VirtualFile> contentRoots = AccessRule.read(() -> {
-            if (myModule.isDisposed()) {
-                return Collections.emptySet();
-            }
-
-            Set<VirtualFile> result = new LinkedHashSet<>();
-            VirtualFile[][] allRoots = getModuleContentAndSourceRoots(myModule);
-            for (VirtualFile[] roots : allRoots) {
-                for (VirtualFile root : roots) {
-                    DirectoryInfo info = getInfoForFileOrDirectory(root);
-                    if (!info.isInProject(root)) {
-                        continue;
-                    }
-
-                    VirtualFile parent = root.getParent();
-                    if (parent != null) {
-                        DirectoryInfo parentInfo = directoryIndex.getInfoForFile(parent);
-                        if (parentInfo.isInProject(parent) && myModule.equals(parentInfo.getModule())) {
-                            continue; // inner content - skip it
-                        }
-                    }
-                    result.add(root);
-                }
-            }
-
-            return result;
-        });
+        Set<VirtualFile> contentRoots = getRootsToIterate(myModule);
         for (VirtualFile contentRoot : contentRoots) {
             if (!iterateContentUnderDirectory(contentRoot, processor, filter)) {
                 return false;
             }
         }
         return true;
+    }
+
+    @Override
+    protected boolean isRootOwnedByModule(Module module, DirectoryInfo info) {
+        return true;
+    }
+
+    @Override
+    protected boolean isParentAlreadyIterated(Module module, VirtualFile parent, DirectoryInfo parentInfo) {
+        return parentInfo.isInProject(parent) && module.equals(parentInfo.getModule());
     }
 
     @Override

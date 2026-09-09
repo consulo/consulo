@@ -24,6 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.internal.FileIndexBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
@@ -46,15 +47,9 @@ public class ModuleIndexableFilesIteratorImpl implements ModuleIndexableFilesIte
     }
 
     public static Collection<ModuleIndexableFilesIteratorImpl> getModuleIterators(Module module) {
-        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-        ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(module.getProject());
+        FileIndexBase fileIndex = (FileIndexBase) ProjectFileIndex.getInstance(module.getProject());
 
-        List<VirtualFile> moduleRoots = new ArrayList<>();
-        for (VirtualFile contentRoot : rootManager.getContentRoots()) {
-            if (module.equals(projectFileIndex.getModuleForFile(contentRoot))) {
-                moduleRoots.add(contentRoot);
-            }
-        }
+        List<VirtualFile> moduleRoots = new ArrayList<>(fileIndex.getRootsToIterate(module));
         if (moduleRoots.isEmpty()) {
             return List.of();
         }
