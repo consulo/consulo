@@ -86,5 +86,11 @@
             <groupId>consulo</groupId>
             <artifactId>kava.beans</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -32,6 +32,8 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.update;
     exports consulo.ui.ex.content.event;
     exports consulo.ui.ex.tree;
+
+    opens consulo.ui.ex.tree to consulo.util.xml.serializer;
     exports consulo.ui.ex.util;
     exports consulo.ui.ex.event;
     exports consulo.ui.ex.awtUnsafe;
