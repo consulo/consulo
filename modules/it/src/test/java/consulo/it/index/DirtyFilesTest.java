@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
@@ -180,16 +181,25 @@ public class DirtyFilesTest {
             vfsConnection.disconnect();
         }
 
+        AtomicBoolean everRecorded = new AtomicBoolean();
         waitFor(
             "the change must be recorded in the project dirty files",
-            () -> fileBasedIndex.getAllDirtyFiles(first).contains(changedId),
+            () -> {
+                boolean recorded = fileBasedIndex.getAllDirtyFiles(first).contains(changedId)
+                    || fileBasedIndex.getAllDirtyFiles(null).contains(changedId);
+                everRecorded.compareAndSet(false, recorded);
+                return fileBasedIndex.getAllDirtyFiles(first).contains(changedId);
+            },
             () -> "changedId=" + changedId
+                + " everRecordedInAnyQueue=" + everRecorded.get()
+                + " observedVfsChanges=" + observedVfsChanges
                 + " projectDirtyIds=" + fileBasedIndex.getAllDirtyFiles(first)
                 + " orphanDirtyIds=" + fileBasedIndex.getAllDirtyFiles(null)
                 + " inFilter=" + fileBasedIndex.getIndexableFilesFilterHolder().findProjectsForFile(changedId)
                 + " vfsLength=" + changed.getLength()
                 + " vfsTimeStamp=" + changed.getTimeStamp()
-                + " filesToUpdate=" + fileBasedIndex.getFilesToUpdateCollector().getDirtyFiles().getProjectDirtyFiles(first)
+                + " scheduledForUpdate=" + fileBasedIndex.getAllFilesToUpdate().stream().anyMatch(
+                    request -> request.getFile() instanceof VirtualFileWithId withId && withId.getId() == changedId)
         );
 
         closeProject(first);

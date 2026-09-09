@@ -52,7 +52,3 @@ module consulo.it {
     provides consulo.platform.internal.PlatformInternal with consulo.it.internal.HeadlessPlatformInternal;
     provides consulo.ui.internal.UIInternal with consulo.it.internal.HeadlessUIInternal;
 }
-
-
-
-
