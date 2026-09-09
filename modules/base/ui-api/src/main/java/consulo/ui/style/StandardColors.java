@@ -19,6 +19,8 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 
 /**
+ * If you use these colors for interface elements, prefer semantic colors from {@link ComponentColors} which are defined by themes.
+ *
  * @author VISTALL
  * @since 2017-06-22
  */
@@ -26,7 +28,6 @@ public enum StandardColors implements StyleColorValue {
     WHITE(new RGBColor(255, 255, 255)),
 
     /**
-     * Prefer semantic colors.
      * @see ComponentColors#TEXT_FOREGROUND
      */
     BLACK(new RGBColor(0, 0, 0)),
@@ -39,7 +40,6 @@ public enum StandardColors implements StyleColorValue {
     ORANGE(new RGBColor(255, 200, 0)),
 
     /**
-     * Prefer semantic colors.
      * @see ComponentColors#ERROR_FOREGROUND
      */
     RED(new RGBColor(255, 0, 0)),
@@ -48,13 +48,11 @@ public enum StandardColors implements StyleColorValue {
     LIGHT_GREEN(new RGBColor(238, 255, 238)),
 
     /**
-     * Prefer semantic colors.
      * @see ComponentColors#LINK_FOREGROUND
      */
     BLUE(new RGBColor(0, 0, 255)),
 
     /**
-     * Prefer semantic colors.
      * @see ComponentColors#DISABLED_TEXT
      */
     GRAY(new RGBColor(128, 128, 128)),
