@@ -35,6 +35,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -182,6 +183,48 @@ public class SourceRootUnderExcludedTest {
         assertThat(moduleRoots)
             .as("the nested source root must be offered as a root of its own, since the walk cannot reach it from above")
             .contains(nestedSourceFile);
+    }
+
+    /**
+     * The excluded folder keeps its type, so exclusion stays dynamic: a file created under it later is excluded without
+     * anything recomputing the folder, while a file created later under the nested source root is still indexed. A
+     * representation that instead expanded the excluded folder into per-child exclusions would cover only the children
+     * that existed when it was expanded.
+     */
+    @Test
+    public void filesCreatedLaterFollowTheFolderTypes(Application application, ProjectManager projectManager) throws Exception {
+        Path directory = Files.createTempDirectory("consulo-it-source-under-excluded-later");
+        Path excluded = directory.resolve("excluded");
+        Path nestedSource = excluded.resolve("src");
+        Files.createDirectories(nestedSource);
+        Files.writeString(nestedSource.resolve("Nested.sand"), "class NestedBeforeTheChange {}");
+
+        Project project = openProject(application, projectManager, directory);
+        declareNestedSourceRoot(project, directory, excluded, nestedSource);
+
+        awaitSmart(DumbService.getInstance(project));
+        awaitIdle(project);
+        waitFor("the initial scan must index the nested source root", () -> !findClasses(project, "NestedBeforeTheChange").isEmpty());
+
+        Files.writeString(excluded.resolve("LateHidden.sand"), "class LateHiddenInExcluded {}");
+        Files.createDirectories(excluded.resolve("late"));
+        Files.writeString(excluded.resolve("late").resolve("LateHidden2.sand"), "class LateHiddenInNewExcludedChild {}");
+        Files.writeString(nestedSource.resolve("LateNested.sand"), "class LateNestedUnderExcluded {}");
+
+        VirtualFileUtil.markDirtyAndRefresh(false, true, true, findFile(directory));
+        awaitIdle(project);
+
+        waitFor(
+            "a file created later under the nested source root must be indexed",
+            () -> !findClasses(project, "LateNestedUnderExcluded").isEmpty()
+        );
+
+        assertThat(findClasses(project, "LateHiddenInExcluded"))
+            .as("a file created later directly in the excluded folder must stay unindexed")
+            .isEmpty();
+        assertThat(findClasses(project, "LateHiddenInNewExcludedChild"))
+            .as("a directory created later under the excluded folder must be excluded too")
+            .isEmpty();
     }
 
     private static Module declareNestedSourceRoot(Project project, Path directory, Path excluded, Path nestedSource) throws Exception {
