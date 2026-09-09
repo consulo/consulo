@@ -38,10 +38,8 @@ import org.jspecify.annotations.Nullable;
 public interface TemplateContextType {
     public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create(TemplateContextType.class);
 
-    
     LocalizeValue getPresentableName();
 
-    
     String getContextId();
 
     default boolean isInContext(TemplateActionContext templateActionContext) {

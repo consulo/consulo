@@ -300,7 +300,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         panel.add(TargetAWT.to(myCbReformat), gbConstraints);
 
         for (TemplateOptionalProcessor processor : myOptions.keySet()) {
-            if (!processor.isVisible(myTemplate)) {
+            if (!processor.isVisible(myTemplate, myContext)) {
                 continue;
             }
             gbConstraints.gridy++;

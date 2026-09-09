@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.template;
 
+import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
@@ -87,15 +87,8 @@ public class TemplateEditorUtil {
     }
 
     public static void setHighlighter(Editor editor, TemplateContext templateContext) {
-        SyntaxHighlighter baseHighlighter = null;
-        for (TemplateContextType type : TemplateContextType.EP_NAME.getExtensionList()) {
-            if (templateContext.isEnabled(type)) {
-                baseHighlighter = type.createHighlighter();
-                if (baseHighlighter != null) {
-                    break;
-                }
-            }
-        }
+        SyntaxHighlighter baseHighlighter = Application.get().getExtensionPoint(TemplateContextType.class)
+            .computeSafeIfAny(type -> templateContext.isEnabled(type) ? type.createHighlighter() : null);
         if (baseHighlighter == null) {
             baseHighlighter = new DefaultSyntaxHighlighter();
         }

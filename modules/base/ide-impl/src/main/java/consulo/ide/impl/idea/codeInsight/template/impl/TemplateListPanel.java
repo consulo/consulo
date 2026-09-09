@@ -451,7 +451,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     private Map<TemplateOptionalProcessor, Boolean> createOptions(TemplateImpl template) {
         Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<>();
         Application.get().getExtensionPoint(TemplateOptionalProcessor.class).forEachExtensionSafe(processor -> {
-            if (processor.isVisible(template)) {
+            if (processor.isVisible(template, myTemplateContext.get(getKey(template)))) {
                 context.put(processor, processor.isEnabled(template));
             }
         });

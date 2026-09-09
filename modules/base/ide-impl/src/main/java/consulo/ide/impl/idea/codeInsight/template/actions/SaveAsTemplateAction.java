@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorKeys;
@@ -161,9 +162,9 @@ public class SaveAsTemplateAction extends LegacyAnAction {
         Set<TemplateContextType> applicable = TemplateManager.getInstance(project)
             .getApplicableContextTypes(TemplateActionContext.expanding(copy.getFile(), copy.getOffsets().getOffset(startKey)));
 
-        for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
-            template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));
-        }
+        Application.get().getExtensionPoint(TemplateContextType.class).forEach(
+            contextType -> template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType))
+        );
 
         LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
         ShowSettingsUtil.getInstance()
@@ -175,11 +176,6 @@ public class SaveAsTemplateAction extends LegacyAnAction {
         Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);
         PsiFile file = e.getData(PsiFile.KEY);
 
-        if (file == null || editor == null) {
-            e.getPresentation().setEnabled(false);
-        }
-        else {
-            e.getPresentation().setEnabled(editor.getSelectionModel().hasSelection());
-        }
+        e.getPresentation().setEnabled(file != null && editor != null && editor.getSelectionModel().hasSelection());
     }
 }

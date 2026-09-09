@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
@@ -21,21 +20,22 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.language.editor.template.context.TemplateContextType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.KeyWithDefaultValue;
+
+import java.util.Map;
 
 /**
  * @author yole
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateOptionalProcessor {
-    
     KeyWithDefaultValue<Boolean> getKey();
 
     void processText(Project project, Template template, Document document, RangeMarker templateRange, Editor editor);
 
-    
     LocalizeValue getOptionText();
 
     default boolean isEnabled(Template template) {
@@ -46,7 +46,7 @@ public interface TemplateOptionalProcessor {
         template.setOption(getKey(), value);
     }
 
-    default boolean isVisible(Template template) {
-        return template.containsOption(getKey());
+    default boolean isVisible(Template template, Map<TemplateContextType, Boolean> context) {
+        return true;
     }
 }

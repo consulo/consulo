@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.template;
 
+import consulo.application.Application;
 import consulo.component.persist.scheme.SchemeElement;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.internal.TemplateConstants;
@@ -423,7 +423,8 @@ public class TemplateImpl implements Template, SchemeElement {
 
     public Map<TemplateContextType, Boolean> createContext() {
         Map<TemplateContextType, Boolean> context = new LinkedHashMap<>();
-        TemplateContextType.EP_NAME.forEachExtensionSafe(it -> context.put(it, getTemplateContext().isEnabled(it)));
+        Application.get().getExtensionPoint(TemplateContextType.class)
+            .forEach(it -> context.put(it, getTemplateContext().isEnabled(it)));
         return context;
     }
 
