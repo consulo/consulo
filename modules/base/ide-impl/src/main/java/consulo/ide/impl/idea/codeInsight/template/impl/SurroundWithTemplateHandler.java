@@ -25,56 +25,71 @@ import consulo.ui.ex.popup.ListPopup;
 import java.util.*;
 
 public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
-  @Override
-  public boolean startInWriteAction() {
-    return false;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void invoke(Project project, Editor editor, PsiFile file) {
-    if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
-    if (!editor.getSelectionModel().hasSelection()) {
-      SurroundWithHandler.selectLogicalLineContentsAtCaret(editor);
-      if (!editor.getSelectionModel().hasSelection()) return;
+    @Override
+    public boolean startInWriteAction() {
+        return false;
     }
 
-    List<AnAction> group = createActionGroup(editor, file, new HashSet<>());
-    if (group.isEmpty()) {
-      HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesSurroundNoDefined());
-      return;
+    @Override
+    @RequiredUIAccess
+    public void invoke(Project project, Editor editor, PsiFile file) {
+        if (!EditorModificationUtil.checkModificationAllowed(editor)) {
+            return;
+        }
+        if (!editor.getSelectionModel().hasSelection()) {
+            SurroundWithHandler.selectLogicalLineContentsAtCaret(editor);
+            if (!editor.getSelectionModel().hasSelection()) {
+                return;
+            }
+        }
+
+        List<AnAction> group = createActionGroup(editor, file, new HashSet<>());
+        if (group.isEmpty()) {
+            HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesSurroundNoDefined());
+            return;
+        }
+
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+            CodeInsightLocalize.templatesSelectTemplateChooserTitle().get(),
+            new DefaultActionGroup(group),
+            DataManager.getInstance().getDataContext(editor.getContentComponent()),
+            JBPopupFactory.ActionSelectionAid.MNEMONICS,
+            false
+        );
+
+        editor.showPopupInBestPositionFor(popup);
     }
 
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-      CodeInsightLocalize.templatesSelectTemplateChooserTitle().get(),
-      new DefaultActionGroup(group),
-      DataManager.getInstance().getDataContext(editor.getContentComponent()),
-      JBPopupFactory.ActionSelectionAid.MNEMONICS,
-      false
-    );
+    @RequiredReadAction
+    public static List<AnAction> createActionGroup(Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
+        TemplateActionContext templateActionContext = TemplateActionContext.surrounding(file, editor);
+        List<CustomLiveTemplate> customTemplates = TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext);
+        List<? extends Template> templates = TemplateManager.getInstance(file.getProject()).listApplicableTemplates(templateActionContext);
+        if (templates.isEmpty() && customTemplates.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-    editor.showPopupInBestPositionFor(popup);
-  }
+        List<AnAction> group = new ArrayList<>();
 
-  @RequiredReadAction
-  public static List<AnAction> createActionGroup(Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
-    TemplateActionContext templateActionContext = TemplateActionContext.surrounding(file, editor);
-    List<CustomLiveTemplate> customTemplates = TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext);
-    List<? extends Template> templates = TemplateManager.getInstance(file.getProject()).listApplicableTemplates(templateActionContext);
-    if (templates.isEmpty() && customTemplates.isEmpty()) {
-      return Collections.emptyList();
+        for (Template template : templates) {
+            group.add(new InvokeTemplateAction(
+                template,
+                editor,
+                file.getProject(),
+                usedMnemonicsSet,
+                () -> SurroundWithLogger.logTemplate(template, file.getLanguage(), file.getProject())
+            ));
+        }
+
+        for (CustomLiveTemplate customTemplate : customTemplates) {
+            group.add(new WrapWithCustomTemplateAction(
+                customTemplate,
+                editor,
+                file,
+                usedMnemonicsSet,
+                () -> SurroundWithLogger.logCustomTemplate(customTemplate, file.getLanguage(), file.getProject())
+            ));
+        }
+        return group;
     }
-
-    List<AnAction> group = new ArrayList<>();
-
-    for (Template template : templates) {
-      group.add(new InvokeTemplateAction(template, editor, file.getProject(), usedMnemonicsSet, () -> SurroundWithLogger.logTemplate(template, file.getLanguage(), file.getProject())));
-    }
-
-    for (CustomLiveTemplate customTemplate : customTemplates) {
-      group.add(new WrapWithCustomTemplateAction(customTemplate, editor, file, usedMnemonicsSet, () -> SurroundWithLogger.
-              logCustomTemplate(customTemplate, file.getLanguage(), file.getProject())));
-    }
-    return group;
-  }
 }

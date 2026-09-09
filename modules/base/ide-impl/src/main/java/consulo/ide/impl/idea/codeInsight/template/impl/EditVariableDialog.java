@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.application.HelpManager;
@@ -49,7 +48,7 @@ class EditVariableDialog extends DialogWrapper {
     private Editor myEditor;
     private final List<TemplateContextType> myContextTypes;
 
-    public EditVariableDialog(Editor editor, Component parent, ArrayList<Variable> variables, List<TemplateContextType> contextTypes) {
+    public EditVariableDialog(Editor editor, Component parent, List<Variable> variables, List<TemplateContextType> contextTypes) {
         super(parent, true);
         myContextTypes = contextTypes;
         myVariables = variables;
@@ -59,7 +58,6 @@ class EditVariableDialog extends DialogWrapper {
         setOKButtonText(CommonLocalize.buttonOk());
     }
 
-    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -110,7 +108,7 @@ class EditVariableDialog extends DialogWrapper {
             myTable.getSelectionModel().setSelectionInterval(0, 0);
         }
 
-        JComboBox comboField = new JComboBox();
+        JComboBox<String> comboField = new JComboBox<>();
         Macro[] macros = MacroFactory.getMacros();
         Arrays.sort(macros, (m1, m2) -> m1.getPresentableName().compareTo(m2.getPresentableName()));
         eachMacro:
@@ -157,20 +155,17 @@ class EditVariableDialog extends DialogWrapper {
         super.doOKAction();
     }
 
-    /*private void showCellPopup(final JTextField field,int x,int y) {
+    /*private void showCellPopup(JTextField field, int x, int y) {
         JPopupMenu menu = new JPopupMenu();
-        final Macro[] macros = MacroFactory.getMacros();
-        for (int i = 0; i < macros.length; i++) {
-            final Macro macro = macros[i];
+        Macro[] macros = MacroFactory.getMacros();
+        for (Macro macro : macros) {
             JMenuItem item = new JMenuItem(macro.getName());
-            item.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        field.saveToString().insertString(field.getCaretPosition(), macro.getName() + "()", null);
-                    }
-                    catch (BadLocationException e1) {
-                        LOG.error(e1);
-                    }
+            item.addActionListener(e -> {
+                try {
+                    field.saveToString().insertString(field.getCaretPosition(), macro.getName() + "()", null);
+                }
+                catch (BadLocationException e1) {
+                    LOG.error(e1);
                 }
             });
             menu.add(item);

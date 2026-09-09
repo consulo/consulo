@@ -26,12 +26,13 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 @ExtensionImpl(id = "space")
 public class SpaceHandler extends TypedHandlerDelegate {
-  @Override
-  public Result beforeCharTyped(char charTyped, Project project, Editor editor, PsiFile file, FileType fileType) {
-    if (charTyped == TemplateSettingsImpl.SPACE_CHAR && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.SPACE_CHAR)) {
-      return Result.STOP;
-    }
+    @Override
+    public Result beforeCharTyped(char charTyped, Project project, Editor editor, PsiFile file, FileType fileType) {
+        if (charTyped == TemplateSettingsImpl.SPACE_CHAR
+            && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.SPACE_CHAR)) {
+            return Result.STOP;
+        }
 
-    return super.beforeCharTyped(charTyped, project, editor, file, fileType);
-  }
+        return super.beforeCharTyped(charTyped, project, editor, file, fileType);
+    }
 }
