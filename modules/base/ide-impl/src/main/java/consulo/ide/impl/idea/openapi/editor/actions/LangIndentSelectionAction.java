@@ -43,7 +43,7 @@ public class LangIndentSelectionAction extends IndentSelectionAction {
         }
 
         PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-        return psiFile == null || !NextPrevParameterAction.hasSutablePolicy(editor, psiFile);
+        return psiFile == null || !NextPrevParameterAction.hasSuitablePolicy(editor, psiFile);
     }
 
     protected boolean wantSelection() {

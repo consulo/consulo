@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.template;
 
+import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
@@ -80,28 +80,20 @@ public class TemplateEditorUtil {
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file != null) {
             EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(file, scheme, project);
-            ((EditorEx)editor).setHighlighter(highlighter);
+            ((EditorEx) editor).setHighlighter(highlighter);
         }
 
         return editor;
     }
 
     public static void setHighlighter(Editor editor, TemplateContext templateContext) {
-        SyntaxHighlighter baseHighlighter = null;
-        for (TemplateContextType type : TemplateContextType.EP_NAME.getExtensionList()) {
-            if (templateContext.isEnabled(type)) {
-                baseHighlighter = type.createHighlighter();
-                if (baseHighlighter != null) {
-                    break;
-                }
-            }
-        }
-        if (baseHighlighter == null) {
-            baseHighlighter = new DefaultSyntaxHighlighter();
-        }
+        SyntaxHighlighter baseHighlighter = Application.get().getExtensionPoint(TemplateContextType.class).computeSafeIfAny(
+            type -> templateContext.isEnabled(type) ? type.createHighlighter() : null,
+            DefaultSyntaxHighlighter.INSTANCE
+        );
 
         SyntaxHighlighter highlighter = createTemplateTextHighlighter(baseHighlighter);
-        ((EditorEx)editor).setHighlighter(new LexerEditorHighlighter(highlighter, EditorColorsManager.getInstance().getGlobalScheme()));
+        ((EditorEx) editor).setHighlighter(new LexerEditorHighlighter(highlighter, EditorColorsManager.getInstance().getGlobalScheme()));
     }
 
     private final static TokenSet TOKENS_TO_MERGE = TokenSet.create(TemplateTokenType.TEXT);
@@ -123,24 +115,17 @@ public class TemplateEditorUtil {
             myLexer = new CompositeLexer(originalLexer, templateLexer) {
                 @Override
                 protected IElementType getCompositeTokenType(IElementType type1, IElementType type2) {
-                    if (type2 == TemplateTokenType.VARIABLE) {
-                        return type2;
-                    }
-                    else {
-                        return type1;
-                    }
+                    return type2 == TemplateTokenType.VARIABLE ? type2 : type1;
                 }
             };
         }
 
         @Override
-        
         public Lexer getHighlightingLexer() {
             return myLexer;
         }
 
         @Override
-        
         public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
             if (tokenType == TemplateTokenType.VARIABLE) {
                 return SyntaxHighlighterBase.pack(

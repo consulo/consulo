@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
@@ -26,6 +27,8 @@ import consulo.language.psi.PsiFile;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplatePreprocessor {
+    @Deprecated
+    @DeprecationInfo("Use Application.get().getExtensionPoint(TemplatePreprocessor.class)")
     ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create(TemplatePreprocessor.class);
 
     void preprocessTemplate(Editor editor, PsiFile file, int caretOffset, String textToInsert, String templateText);

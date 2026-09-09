@@ -68,10 +68,8 @@ public final class ChunkExtractor {
     private abstract static class WeakFactory<T> {
         private WeakReference<T> myRef;
 
-        
         protected abstract T create();
 
-        
         public T getValue() {
             T cur = SoftReference.dereference(myRef);
             if (cur != null) {
@@ -97,13 +95,11 @@ public final class ChunkExtractor {
             }
         };
 
-    
     @RequiredReadAction
     public static TextChunk[] extractChunks(PsiFile file, UsageInfo2UsageAdapter usageAdapter) {
         return getExtractor(file).extractChunks(usageAdapter, file);
     }
 
-    
     public static ChunkExtractor getExtractor(PsiFile file) {
         return ourExtractors.get().getValue().get(file);
     }
@@ -116,7 +112,7 @@ public final class ChunkExtractor {
         LOG.assertTrue(myDocument != null);
         FileType fileType = file.getFileType();
         SyntaxHighlighter highlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, file.getVirtualFile());
-        highlighter = highlighter == null ? new DefaultSyntaxHighlighter() : highlighter;
+        highlighter = highlighter == null ? DefaultSyntaxHighlighter.INSTANCE : highlighter;
         myHighlighter = new SyntaxHighlighterOverEditorHighlighter(highlighter, file.getVirtualFile(), project);
         myDocumentStamp = -1;
     }
@@ -197,7 +193,6 @@ public final class ChunkExtractor {
         return createTextChunks(usageInfo2UsageAdapter, chars, fragmentToShowStart, fragmentToShowEnd, true, result);
     }
 
-    
     @RequiredReadAction
     public TextChunk[] createTextChunks(
         UsageInfo2UsageAdapter usageInfo2UsageAdapter,
@@ -362,7 +357,6 @@ public final class ChunkExtractor {
         return s2 < s1 && s1 < e2 || s2 < e1 && e1 < e2 || s1 < s2 && s2 < e1 || s1 < e2 && e2 < e1 || s1 == s2 && e1 == e2;
     }
 
-    
     private TextAttributes convertAttributes(TextAttributesKey[] keys) {
         TextAttributes attrs = myColorsScheme.getAttributes(HighlighterColors.TEXT);
 

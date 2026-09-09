@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.application.Application;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.CodeInsightAction;
 import consulo.codeEditor.Editor;
@@ -38,7 +39,6 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
         myNext = next;
     }
 
-    
     @Override
     public CodeInsightActionHandler getHandler() {
         return new Handler();
@@ -46,20 +46,21 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
 
     @Override
     protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
-        return hasSutablePolicy(editor, file);
+        return hasSuitablePolicy(editor, file);
     }
 
-    public static boolean hasSutablePolicy(Editor editor, PsiFile file) {
+    public static boolean hasSuitablePolicy(Editor editor, PsiFile file) {
         return findSuitableTraversalPolicy(editor, file) != null;
     }
 
+    @Deprecated(forRemoval = true)
+    public static boolean hasSutablePolicy(Editor editor, PsiFile file) {
+        return hasSuitablePolicy(editor, file);
+    }
+
     private static @Nullable TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
-        for (TemplateParameterTraversalPolicy policy : TemplateParameterTraversalPolicy.EP_NAME.getExtensionList()) {
-            if (policy.isValidForFile(editor, file)) {
-                return policy;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(TemplateParameterTraversalPolicy.class)
+            .findFirstSafe(policy -> policy.isValidForFile(editor, file));
     }
 
     private class Handler implements CodeInsightActionHandler {

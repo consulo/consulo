@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -25,6 +26,8 @@ import consulo.component.extension.ExtensionPointName;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateCompletionProcessor {
+    @Deprecated
+    @DeprecationInfo("Use Application.get().getExtensionPoint(TemplateCompletionProcessor.class)")
     ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create(TemplateCompletionProcessor.class);
 
     boolean nextTabOnItemSelected(ExpressionContext context, LookupElement item);

@@ -33,69 +33,64 @@ import consulo.localize.LocalizeValue;
  */
 @ExtensionImpl
 public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight {
-  @Override
-  
-  public LocalizeValue getDisplayName() {
-    return XDebuggerLocalize.xdebuggerColorsPageName();
-  }
+    @Override
+    public LocalizeValue getDisplayName() {
+        return XDebuggerLocalize.xdebuggerColorsPageName();
+    }
 
-  @Override
-  
-  public AttributesDescriptor[] getAttributeDescriptors() {
-    return new AttributesDescriptor[] {
-      new AttributesDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorBreakpointLine(),
-        DebuggerColors.BREAKPOINT_ATTRIBUTES
-      ),
-      new AttributesDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorExecutionPoint(),
-        DebuggerColors.EXECUTIONPOINT_ATTRIBUTES
-      ),
-      new AttributesDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorNotTopFrame(),
-        DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES
-      ),
-      new AttributesDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValues(),
-        DebuggerColors.INLINED_VALUES
-      ),
-      new AttributesDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValuesModified(),
-        DebuggerColors.INLINED_VALUES_MODIFIED
-      ),
-      new AttributesDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValuesExecutionLine(),
-        DebuggerColors.INLINED_VALUES_EXECUTION_LINE
-      ),
-    };
-  }
+    @Override
+    public AttributesDescriptor[] getAttributeDescriptors() {
+        return new AttributesDescriptor[]{
+            new AttributesDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorBreakpointLine(),
+                DebuggerColors.BREAKPOINT_ATTRIBUTES
+            ),
+            new AttributesDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorExecutionPoint(),
+                DebuggerColors.EXECUTIONPOINT_ATTRIBUTES
+            ),
+            new AttributesDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorNotTopFrame(),
+                DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES
+            ),
+            new AttributesDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValues(),
+                DebuggerColors.INLINED_VALUES
+            ),
+            new AttributesDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValuesModified(),
+                DebuggerColors.INLINED_VALUES_MODIFIED
+            ),
+            new AttributesDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValuesExecutionLine(),
+                DebuggerColors.INLINED_VALUES_EXECUTION_LINE
+            ),
+        };
+    }
 
-  @Override
-  
-  public ColorDescriptor[] getColorDescriptors() {
-    return new ColorDescriptor[] {
-      new ColorDescriptor(
-        ConfigurableLocalize.optionsJavaAttributeDescriptorRecursiveCall(),
-        DebuggerColors.RECURSIVE_CALL_ATTRIBUTES,
-        ColorDescriptor.Kind.BACKGROUND
-      )
-    };
-  }
+    @Override
+    public ColorDescriptor[] getColorDescriptors() {
+        return new ColorDescriptor[]{
+            new ColorDescriptor(
+                ConfigurableLocalize.optionsJavaAttributeDescriptorRecursiveCall(),
+                DebuggerColors.RECURSIVE_CALL_ATTRIBUTES,
+                ColorDescriptor.Kind.BACKGROUND
+            )
+        };
+    }
 
-  @Override
-  
-  public SyntaxHighlighter getHighlighter() {
-    return new DefaultSyntaxHighlighter();
-  }
+    @Override
+    public SyntaxHighlighter getHighlighter() {
+        return DefaultSyntaxHighlighter.INSTANCE;
+    }
 
-  @Override
-  
-  public String getDemoText() {
-    return " ";
-  }
+    @Override
+    public String getDemoText() {
+        return " ";
+    }
 
-  @Override
-  public int getConfigurableWeight() {
-    return ColorPageWeights.DEBUGGER;
-  }
+    @Override
+    public int getConfigurableWeight() {
+        return ColorPageWeights.DEBUGGER;
+    }
 }
