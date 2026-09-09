@@ -159,7 +159,7 @@ public class DirtyFilesTest {
                 for (VFileEvent event : events) {
                     VirtualFile eventFile = event.getFile();
                     if (eventFile != null) {
-                        observedVfsChanges.add(eventFile.getPath());
+                        observedVfsChanges.add(event.getClass().getSimpleName() + ":" + eventFile.getPath());
                     }
                 }
             }
@@ -173,7 +173,7 @@ public class DirtyFilesTest {
             // that can turn the write into a VFS event; if it does not, nothing downstream can see the change
             waitFor(
                 "the explicit refresh must make the VFS report the content change",
-                () -> observedVfsChanges.contains(changed.getPath()),
+                () -> observedVfsChanges.stream().anyMatch(observed -> observed.endsWith(":" + changed.getPath())),
                 () -> "observedVfsChanges=" + observedVfsChanges + " vfsLength=" + changed.getLength()
             );
         }
