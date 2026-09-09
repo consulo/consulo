@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.VirtualFile;
@@ -43,6 +44,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.it.internal.HeadlessApplicationImpl;
+import consulo.it.internal.HeadlessLoggerFactory;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
@@ -152,6 +158,7 @@ public class DirtyFilesTest {
         int untouchedId = ((VirtualFileWithId) findFile(src.resolve("file1.sand"))).getId();
 
         List<String> observedVfsChanges = Collections.synchronizedList(new ArrayList<>());
+        List<String> asyncListenerTrace = Collections.synchronizedList(new ArrayList<>());
         MessageBusConnection vfsConnection = application.getMessageBus().connect();
         vfsConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
@@ -165,42 +172,81 @@ public class DirtyFilesTest {
             }
         });
 
-        try {
-            Files.writeString(src.resolve("file0.sand"), "class Dirty0 { int changedOnDisk; }");
-            VirtualFileUtil.markDirtyAndRefresh(false, false, false, changed);
+        Disposable asyncProbe = Disposable.newDisposable();
+        VirtualFileManager.getInstance().addAsyncFileListener(events -> {
+            List<String> matching = new ArrayList<>();
+            for (VFileEvent event : events) {
+                VirtualFile eventFile = event.getFile();
+                if (eventFile != null && changed.getPath().equals(eventFile.getPath())) {
+                    matching.add(event.getClass().getSimpleName());
+                }
+            }
+            if (matching.isEmpty()) {
+                return null;
+            }
+            asyncListenerTrace.add("prepareChange" + matching + "@" + Thread.currentThread().getName());
+            return new AsyncFileListener.ChangeApplier() {
+                @Override
+                public void beforeVfsChange() {
+                    asyncListenerTrace.add("beforeVfsChange@" + Thread.currentThread().getName());
+                }
 
-            // the headless application runs without a file watcher, so the explicit refresh above is the only thing
-            // that can turn the write into a VFS event; if it does not, nothing downstream can see the change
+                @Override
+                public void afterVfsChange() {
+                    asyncListenerTrace.add("afterVfsChange@" + Thread.currentThread().getName());
+                }
+            };
+        }, asyncProbe);
+
+        try {
+            try {
+                Files.writeString(src.resolve("file0.sand"), "class Dirty0 { int changedOnDisk; }");
+                VirtualFileUtil.markDirtyAndRefresh(false, false, false, changed);
+
+                // the headless application runs without a file watcher, so the explicit refresh above is the only thing
+                // that can turn the write into a VFS event; if it does not, nothing downstream can see the change
+                waitFor(
+                    "the explicit refresh must make the VFS report the content change",
+                    () -> observedVfsChanges.stream().anyMatch(observed -> observed.endsWith(":" + changed.getPath())),
+                    () -> "observedVfsChanges=" + observedVfsChanges + " vfsLength=" + changed.getLength()
+                );
+            }
+            finally {
+                vfsConnection.disconnect();
+            }
+
+            AtomicBoolean everRecorded = new AtomicBoolean();
             waitFor(
-                "the explicit refresh must make the VFS report the content change",
-                () -> observedVfsChanges.stream().anyMatch(observed -> observed.endsWith(":" + changed.getPath())),
-                () -> "observedVfsChanges=" + observedVfsChanges + " vfsLength=" + changed.getLength()
+                "the change must be recorded in the project dirty files",
+                () -> {
+                    boolean recorded = fileBasedIndex.getAllDirtyFiles(first).contains(changedId)
+                        || fileBasedIndex.getAllDirtyFiles(null).contains(changedId);
+                    everRecorded.compareAndSet(false, recorded);
+                    return fileBasedIndex.getAllDirtyFiles(first).contains(changedId);
+                },
+                () -> "changedId=" + changedId
+                    + " everRecordedInAnyQueue=" + everRecorded.get()
+                    + " asyncListenerTrace=" + asyncListenerTrace
+                    + " observedVfsChanges=" + observedVfsChanges
+                    + " projectDirtyIds=" + fileBasedIndex.getAllDirtyFiles(first)
+                    + " orphanDirtyIds=" + fileBasedIndex.getAllDirtyFiles(null)
+                    + " inFilter=" + fileBasedIndex.getIndexableFilesFilterHolder().findProjectsForFile(changedId)
+                    + " vfsLength=" + changed.getLength()
+                    + " vfsTimeStamp=" + changed.getTimeStamp()
+                    + " asyncListeners=" + application.getExtensionPoint(AsyncFileListener.class)
+                        .getExtensionList()
+                        .stream()
+                        .map(listener -> listener.getClass().getSimpleName())
+                        .toList()
+                    + " scheduledForUpdate=" + fileBasedIndex.getAllFilesToUpdate().stream().anyMatch(
+                        request -> request.getFile() instanceof VirtualFileWithId withId && withId.getId() == changedId)
+                    + " loggedErrors=" + HeadlessLoggerFactory.peekLoggedErrors().stream().map(Throwable::getMessage).toList()
+                    + " threadIssues=" + HeadlessApplicationImpl.peekThreadIssues().stream().map(Throwable::getMessage).toList()
             );
         }
         finally {
-            vfsConnection.disconnect();
+            Disposer.dispose(asyncProbe);
         }
-
-        AtomicBoolean everRecorded = new AtomicBoolean();
-        waitFor(
-            "the change must be recorded in the project dirty files",
-            () -> {
-                boolean recorded = fileBasedIndex.getAllDirtyFiles(first).contains(changedId)
-                    || fileBasedIndex.getAllDirtyFiles(null).contains(changedId);
-                everRecorded.compareAndSet(false, recorded);
-                return fileBasedIndex.getAllDirtyFiles(first).contains(changedId);
-            },
-            () -> "changedId=" + changedId
-                + " everRecordedInAnyQueue=" + everRecorded.get()
-                + " observedVfsChanges=" + observedVfsChanges
-                + " projectDirtyIds=" + fileBasedIndex.getAllDirtyFiles(first)
-                + " orphanDirtyIds=" + fileBasedIndex.getAllDirtyFiles(null)
-                + " inFilter=" + fileBasedIndex.getIndexableFilesFilterHolder().findProjectsForFile(changedId)
-                + " vfsLength=" + changed.getLength()
-                + " vfsTimeStamp=" + changed.getTimeStamp()
-                + " scheduledForUpdate=" + fileBasedIndex.getAllFilesToUpdate().stream().anyMatch(
-                    request -> request.getFile() instanceof VirtualFileWithId withId && withId.getId() == changedId)
-        );
 
         closeProject(first);
 

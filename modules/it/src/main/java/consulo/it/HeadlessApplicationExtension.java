@@ -73,6 +73,9 @@ public class HeadlessApplicationExtension implements BeforeAllCallback, BeforeEa
         List<ThreadIssueException> issues = HeadlessApplicationImpl.takeThreadIssues();
         List<LoggedError> loggedErrors = HeadlessLoggerFactory.takeLoggedErrors();
 
+        printRecorded(context, "thread issue", issues);
+        printRecorded(context, "logged error", loggedErrors);
+
         if (!issues.isEmpty()) {
             AssertionError error = new AssertionError(issues.size() + " thread issue(s) reported during the test");
             issues.forEach(error::addSuppressed);
@@ -84,6 +87,17 @@ public class HeadlessApplicationExtension implements BeforeAllCallback, BeforeEa
             AssertionError error = new AssertionError(loggedErrors.size() + " error(s) logged during the test");
             loggedErrors.forEach(error::addSuppressed);
             throw error;
+        }
+    }
+
+    @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
+    private static void printRecorded(ExtensionContext context, String kind, List<? extends Throwable> recorded) {
+        if (recorded.isEmpty()) {
+            return;
+        }
+        System.err.println(recorded.size() + " " + kind + "(s) recorded during " + context.getDisplayName());
+        for (Throwable throwable : recorded) {
+            throwable.printStackTrace();
         }
     }
 

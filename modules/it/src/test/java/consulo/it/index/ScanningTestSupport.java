@@ -73,6 +73,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -227,7 +228,25 @@ public final class ScanningTestSupport {
         catch (Throwable e) {
             details = "diagnostics failed: " + e;
         }
+        dumpThreads(description);
         assertThat(condition.getAsBoolean()).as("timed out: %s [%s]", description, details).isTrue();
+    }
+
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
+    private static void dumpThreads(String description) {
+        StringBuilder dump = new StringBuilder();
+        dump.append("=== thread dump at timeout of: ").append(description)
+            .append(" [availableProcessors=").append(Runtime.getRuntime().availableProcessors()).append("]\n");
+        for (Map.Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
+            Thread thread = entry.getKey();
+            dump.append('"').append(thread.getName()).append("\" ").append(thread.getState()).append('\n');
+            StackTraceElement[] frames = entry.getValue();
+            for (int i = 0; i < Math.min(frames.length, 30); i++) {
+                dump.append("    at ").append(frames[i]).append('\n');
+            }
+        }
+        dump.append("=== end of thread dump\n");
+        System.err.print(dump);
     }
 
     public static Collection<SandClass> findClasses(Project project, String name) {
