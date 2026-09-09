@@ -31,6 +31,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
@@ -1018,10 +1019,9 @@ public class TemplateStateImpl implements TemplateState {
     public void considerNextTabOnLookupItemSelected(LookupElement item) {
         if (item != null) {
             ExpressionContext context = getCurrentExpressionContext();
-            for (TemplateCompletionProcessor processor : TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
-                if (!processor.nextTabOnItemSelected(context, item)) {
-                    return;
-                }
+            ExtensionPoint<TemplateCompletionProcessor> processors = Application.get().getExtensionPoint(TemplateCompletionProcessor.class);
+            if (!processors.allMatchSafe(processor -> processor.nextTabOnItemSelected(context, item))) {
+                return;
             }
         }
         TextRange range = getCurrentVariableRange();

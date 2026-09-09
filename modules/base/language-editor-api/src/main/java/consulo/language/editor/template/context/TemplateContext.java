@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template.context;
 
+import consulo.application.Application;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
@@ -41,13 +41,13 @@ public class TemplateContext {
         synchronized (myContextStates) {
             //noinspection NestedSynchronizedStatement
             synchronized (defaultContext == null ? myContextStates : defaultContext.myContextStates) {
-                for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensions()) {
+                Application.get().getExtensionPoint(TemplateContextType.class).forEach(contextType -> {
                     String context = contextType.getContextId();
                     Boolean myStateInContext = myContextStates.get(context);
                     if (myStateInContext != null && differsFromDefault(defaultContext, context, myStateInContext)) {
                         result.put(contextType, myStateInContext);
                     }
-                }
+                });
             }
         }
         return result;

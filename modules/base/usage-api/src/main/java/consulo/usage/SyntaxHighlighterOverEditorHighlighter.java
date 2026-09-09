@@ -37,7 +37,7 @@ public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter
 
     public SyntaxHighlighterOverEditorHighlighter(SyntaxHighlighter _highlighter, VirtualFile file, Project project) {
         if (file.getFileType() == PlainTextFileType.INSTANCE) { // optimization for large files, PlainTextSyntaxHighlighterFactory is slow
-            myHighlighter = new DefaultSyntaxHighlighter();
+            myHighlighter = DefaultSyntaxHighlighter.INSTANCE;
             myLexer = myHighlighter.getHighlightingLexer();
         }
         else {
@@ -59,13 +59,11 @@ public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter
         }
     }
 
-    
     @Override
     public Lexer getHighlightingLexer() {
         return myLexer;
     }
 
-    
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         SyntaxHighlighter activeSyntaxHighlighter =

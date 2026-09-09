@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template.macro;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -32,6 +32,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class Macro {
+    @Deprecated
+    @DeprecationInfo("Use Application.get().getExtensionPoint(Macro.class)")
     public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create(Macro.class);
 
     public abstract String getName();

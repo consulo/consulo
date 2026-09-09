@@ -318,7 +318,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
     }
 
     private List<TemplateContextType> getApplicableContexts() {
-        ArrayList<TemplateContextType> result = new ArrayList<>();
+        List<TemplateContextType> result = new ArrayList<>();
         for (TemplateContextType type : myContext.keySet()) {
             if (myContext.get(type)) {
                 result.add(type);

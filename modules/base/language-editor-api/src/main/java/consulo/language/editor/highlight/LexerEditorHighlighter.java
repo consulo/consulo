@@ -97,12 +97,10 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         return document != null && isInSyncWithDocument() && Comparing.equal(document.getImmutableCharSequence(), sequence);
     }
 
-    
     public EditorColorsScheme getScheme() {
         return myScheme;
     }
 
-    
     protected Lexer getLexer() {
         return myLexer;
     }
@@ -119,7 +117,6 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         myAttributesMap.clear();
     }
 
-    
     @Override
     public HighlighterIterator createIterator(int startOffset) {
         synchronized (this) {
@@ -481,17 +478,14 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         }
     }
 
-    
     protected TokenProcessor createTokenProcessor(int startIndex, SegmentArrayWithData segments, CharSequence myText) {
         return (tokenIndex, startOffset, endOffset, data, tokenType) -> segments.setElementAt(tokenIndex, startOffset, endOffset, data);
     }
 
-    
     public SyntaxHighlighter getSyntaxHighlighter() {
         return myHighlighter;
     }
 
-    
     private TextAttributes getAttributes(IElementType tokenType) {
         TextAttributes attrs = myAttributesMap.get(tokenType);
         if (attrs == null) {
@@ -502,7 +496,6 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         return attrs;
     }
 
-    
     private TextAttributesKey[] getAttributesKeys(IElementType tokenType) {
         TextAttributesKey[] attributesKeys = myKeysMap.get(tokenType);
         if (attributesKeys == null) {
@@ -512,7 +505,6 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         return attributesKeys;
     }
 
-    
     public synchronized List<TextAttributes> getAttributesForPreviousAndTypedChars(Document document, int offset, char c) {
         CharSequence text = document.getImmutableCharSequence();
 
@@ -644,7 +636,6 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         return result;
     }
 
-    
     TextAttributes convertAttributes(TextAttributesKey[] keys) {
         return LayeredTextAttributes.create(myScheme, keys);
     }

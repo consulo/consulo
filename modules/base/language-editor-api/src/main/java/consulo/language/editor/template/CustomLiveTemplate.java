@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -26,20 +27,22 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomLiveTemplate {
-  ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create(CustomLiveTemplate.class);
+    @Deprecated
+    @DeprecationInfo("Use Application.get().getExtensionPoint(CustomLiveTemplate.class)")
+    ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create(CustomLiveTemplate.class);
 
-  @Nullable String computeTemplateKey(CustomTemplateCallback callback);
+    @Nullable
+    String computeTemplateKey(CustomTemplateCallback callback);
 
-  boolean isApplicable(CustomTemplateCallback callback, int offset, boolean wrapping);
+    boolean isApplicable(CustomTemplateCallback callback, int offset, boolean wrapping);
 
-  boolean supportsWrapping();
+    boolean supportsWrapping();
 
-  void expand(String key, CustomTemplateCallback callback);
+    void expand(String key, CustomTemplateCallback callback);
 
-  void wrap(String selection, CustomTemplateCallback callback);
+    void wrap(String selection, CustomTemplateCallback callback);
 
-  
-  String getTitle();
+    String getTitle();
 
-  char getShortcut();
+    char getShortcut();
 }

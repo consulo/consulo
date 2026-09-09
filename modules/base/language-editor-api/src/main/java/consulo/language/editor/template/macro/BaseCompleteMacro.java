@@ -18,6 +18,7 @@ package consulo.language.editor.template.macro;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPoint;
 import consulo.document.util.TextRange;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -121,10 +122,9 @@ public abstract class BaseCompleteMacro extends Macro {
                 return;
             }
 
-            for (TemplateCompletionProcessor processor : TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
-                if (!processor.nextTabOnItemSelected(myContext, item)) {
-                    return;
-                }
+            ExtensionPoint<TemplateCompletionProcessor> processors = Application.get().getExtensionPoint(TemplateCompletionProcessor.class);
+            if (!processors.allMatchSafe(processor -> processor.nextTabOnItemSelected(myContext, item))) {
+                return;
             }
 
             Project project = myContext.getProject();

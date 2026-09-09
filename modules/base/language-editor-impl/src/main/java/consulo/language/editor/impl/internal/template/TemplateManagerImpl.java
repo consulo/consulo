@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -47,13 +46,12 @@ import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -87,7 +85,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @TestOnly
     public static void setTemplateTesting(Project project, Disposable parentDisposable) {
-        TemplateManagerImpl instance = (TemplateManagerImpl)getInstance(project);
+        TemplateManagerImpl instance = (TemplateManagerImpl) getInstance(project);
         instance.myTemplateTesting = true;
         Disposer.register(parentDisposable, () -> instance.myTemplateTesting = false);
     }
@@ -178,14 +176,15 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         if (listener != null) {
             templateState.addTemplateStateListener(listener);
         }
-        @RequiredUIAccess Runnable r = () -> {
+        @RequiredUIAccess
+        Runnable r = () -> {
             if (selectionString != null) {
-                Application.get().runWriteAction(() -> EditorModificationUtil.deleteSelectedText(editor));
+                myProject.getApplication().runWriteAction(() -> EditorModificationUtil.deleteSelectedText(editor));
             }
             else {
                 editor.getSelectionModel().removeSelection();
             }
-            templateState.start((TemplateImpl)template, processor, predefinedVarValues);
+            templateState.start((TemplateImpl) template, processor, predefinedVarValues);
         };
         if (inSeparateCommand) {
             CommandProcessor.getInstance().newCommand()
@@ -203,7 +202,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     public boolean shouldSkipInTests() {
-        return Application.get().isUnitTestMode() && !myTemplateTesting;
+        return myProject.getApplication().isUnitTestMode() && !myTemplateTesting;
     }
 
     @Override
@@ -275,8 +274,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         Map<Template, String> template2argument = findMatchingTemplates(file, editor, shortcutChar, TemplateSettingsImpl.getInstanceImpl());
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
         boolean multiCaretMode = editor.getCaretModel().getCaretCount() > 1;
-        List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(
-            CustomLiveTemplate.EP_NAME.getExtensionList(),
+        List<CustomLiveTemplate> customCandidates = myProject.getApplication().getExtensionPoint(CustomLiveTemplate.class).collectFiltered(
             customLiveTemplate -> shortcutChar == customLiveTemplate.getShortcut()
                 && (!multiCaretMode || supportsMultiCaretMode(customLiveTemplate))
                 && isApplicable(customLiveTemplate, templateActionContext)
@@ -405,7 +403,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         boolean hasArgument
     ) {
         List<TemplateImpl> candidates = Collections.emptyList();
-        for (int i = ((TemplateSettingsImpl)settings).getMaxKeyLength(); i >= 1; i--) {
+        TemplateSettingsImpl settingsImpl = (TemplateSettingsImpl) settings;
+        for (int i = settingsImpl.getMaxKeyLength(); i >= 1; i--) {
             int wordStart = caretOffset - i;
             if (wordStart < 0) {
                 continue;
@@ -417,7 +416,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
                 }
             }
 
-            candidates = ((TemplateSettingsImpl)settings).collectMatchingCandidates(key, shortcutChar, hasArgument);
+            candidates = settingsImpl.collectMatchingCandidates(key, shortcutChar, hasArgument);
             if (!candidates.isEmpty()) {
                 break;
             }
@@ -468,15 +467,12 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
                     predefinedVarValues = new HashMap<>();
                     predefinedVarValues.put(TemplateImpl.ARG, argument);
                 }
-                templateState.start((TemplateImpl)template, processor, predefinedVarValues);
+                templateState.start((TemplateImpl) template, processor, predefinedVarValues);
             });
     }
 
     @RequiredReadAction
-    private List<TemplateImpl> filterApplicableCandidates(
-        TemplateActionContext templateActionContext,
-        List<TemplateImpl> candidates
-    ) {
+    private List<TemplateImpl> filterApplicableCandidates(TemplateActionContext templateActionContext, List<TemplateImpl> candidates) {
         if (candidates.isEmpty()) {
             return candidates;
         }
@@ -524,11 +520,11 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     private static Set<TemplateContextType> getDirectlyApplicableContextTypes(TemplateActionContext templateActionContext) {
         LinkedHashSet<TemplateContextType> set = new LinkedHashSet<>();
-        for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(TemplateContextType.class).forEach(contextType -> {
             if (contextType.isInContext(templateActionContext)) {
                 set.add(contextType);
             }
-        }
+        });
 
         removeBases:
         while (true) {
@@ -572,10 +568,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
      * @implNote custom templates and callbacks require additional work. There is a single place where offset provided externally, instead
      * of using one from the callback and this is probably a mistake. If this is the case, action context may be included into the callback.
      */
-    public static boolean isApplicable(
-        CustomLiveTemplate customLiveTemplate,
-        TemplateActionContext templateActionContext
-    ) {
+    public static boolean isApplicable(CustomLiveTemplate customLiveTemplate, TemplateActionContext templateActionContext) {
         CustomTemplateCallback callback =
             new CustomTemplateCallback(Objects.requireNonNull(templateActionContext.getEditor()), templateActionContext.getFile());
         return customLiveTemplate.isApplicable(callback, callback.getOffset(), templateActionContext.isSurrounding());
@@ -613,17 +606,16 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     public static List<CustomLiveTemplate> listApplicableCustomTemplates(TemplateActionContext templateActionContext) {
         List<CustomLiveTemplate> result = new ArrayList<>();
-        for (CustomLiveTemplate template : CustomLiveTemplate.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(CustomLiveTemplate.class).forEach(template -> {
             if ((!templateActionContext.isSurrounding() || template.supportsWrapping()) && isApplicable(template, templateActionContext)) {
                 result.add(template);
             }
-        }
+        });
         return result;
     }
 
-    @RequiredReadAction
-    
     @Override
+    @RequiredReadAction
     public Set<TemplateContextType> getApplicableContextTypes(TemplateActionContext templateActionContext) {
         Set<TemplateContextType> result = getDirectlyApplicableContextTypes(templateActionContext);
 
@@ -686,7 +678,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         assert docRange.contains(editRange) : docRange + " doesn't contain " + editRange;
     }
 
-    
     public static OffsetsInFile copyWithDummyIdentifier(OffsetsInFile offsetMap, int startOffset, int endOffset, String replacement) {
         offsetMap.getOffsets().addOffset(START_OFFSET, startOffset);
         offsetMap.getOffsets().addOffset(END_OFFSET, endOffset);

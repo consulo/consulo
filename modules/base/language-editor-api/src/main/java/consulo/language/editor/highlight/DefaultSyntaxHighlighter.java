@@ -22,17 +22,17 @@ import consulo.language.lexer.EmptyLexer;
 import consulo.language.lexer.Lexer;
 
 public class DefaultSyntaxHighlighter implements SyntaxHighlighter {
-  private static final TextAttributesKey[] ATTRS = new TextAttributesKey[] {HighlighterColors.TEXT};
+    private static final TextAttributesKey[] ATTRS = new TextAttributesKey[]{HighlighterColors.TEXT};
 
-  @Override
-  
-  public Lexer getHighlightingLexer() {
-    return new EmptyLexer();
-  }
+    public static final DefaultSyntaxHighlighter INSTANCE = new DefaultSyntaxHighlighter();
 
-  @Override
-  
-  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-    return ATTRS;
-  }
+    @Override
+    public Lexer getHighlightingLexer() {
+        return new EmptyLexer();
+    }
+
+    @Override
+    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+        return ATTRS;
+    }
 }
