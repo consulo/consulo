@@ -82,6 +82,6 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
     
     @Override
     public String getTextFor(LookupElementAction value) {
-        return value.getText();
+        return value.getText().get();
     }
 }

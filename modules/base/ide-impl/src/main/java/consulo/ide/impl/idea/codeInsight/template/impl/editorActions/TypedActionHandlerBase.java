@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.codeEditor.Editor;
@@ -26,17 +25,17 @@ import consulo.dataContext.DataContext;
 import org.jspecify.annotations.Nullable;
 
 public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, OverrideTypedActionHandler {
-  protected @Nullable TypedActionHandler myOriginalHandler;
+    protected @Nullable TypedActionHandler myOriginalHandler;
 
-  @Override
-  public void init(@Nullable TypedActionHandler delegate) {
-    myOriginalHandler = delegate;
-  }
-
-  @Override
-  public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
-    if (myOriginalHandler instanceof TypedActionHandlerEx typedActionHandlerEx) {
-      typedActionHandlerEx.beforeExecute(editor, c, context, plan);
+    @Override
+    public void init(@Nullable TypedActionHandler delegate) {
+        myOriginalHandler = delegate;
     }
-  }
+
+    @Override
+    public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
+        if (myOriginalHandler instanceof TypedActionHandlerEx typedActionHandlerEx) {
+            typedActionHandlerEx.beforeExecute(editor, c, context, plan);
+        }
+    }
 }

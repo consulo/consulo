@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
@@ -40,15 +40,15 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.Button;
-import consulo.ui.ComboBox;
-import consulo.ui.Label;
 import consulo.ui.*;
+import consulo.ui.Button;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.GridBag;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -59,6 +59,9 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.update.Activatable;
+import consulo.ui.layout.Layout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.style.ComponentColors;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
@@ -70,9 +73,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class LiveTemplateSettingsEditor extends JPanel {
     private static enum ExpandByKey {
@@ -102,7 +104,6 @@ public class LiveTemplateSettingsEditor extends JPanel {
             return myTitle;
         }
 
-        
         public static ExpandByKey valueOfShortcutChar(char shortcutChar) {
             for (ExpandByKey value : values()) {
                 if (value.getShortcutChar() == shortcutChar) {
@@ -183,6 +184,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         return myTemplate;
     }
 
+    @RequiredReadAction
     public void dispose() {
         Project project = myTemplateEditor.getProject();
         if (project != null) {
@@ -214,7 +216,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
         panel.add(createTemplateOptionsPanel(), gb.nextLine().next().next().coverColumn(2).weighty(1));
 
-        panel.add(createShortContextPanel(allowNoContexts), gb.nextLine().next().weighty(0).fillCellNone().anchor(GridBagConstraints.WEST));
+        panel.add(TargetAWT.to(createShortContextPanel(allowNoContexts)), gb.nextLine().next().weighty(0).fillCellNone().anchor(GridBagConstraints.WEST));
 
         myTemplateEditor.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
@@ -246,7 +248,6 @@ public class LiveTemplateSettingsEditor extends JPanel {
         myTemplate.parseSegments();
     }
 
-    
     private JComponent createNorthPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -326,17 +327,13 @@ public class LiveTemplateSettingsEditor extends JPanel {
         return result;
     }
 
-    private JPanel createShortContextPanel(boolean allowNoContexts) {
-        JPanel panel = new JPanel(new BorderLayout());
+    @RequiredUIAccess
+    private Layout createShortContextPanel(boolean allowNoContexts) {
+        Label ctxLabel = Label.create();
+        Hyperlink change = Hyperlink.create(CodeInsightLocalize.linkLiveTemplateChangeContext());
 
-        JLabel ctxLabel = new JLabel();
-        final JLabel change = new JLabel();
-        change.setForeground(JBColor.BLUE);
-        change.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        panel.add(ctxLabel, BorderLayout.CENTER);
-        panel.add(change, BorderLayout.EAST);
-
-        final Runnable updateLabel = () -> {
+        @RequiredUIAccess
+        Runnable updateLabel = () -> {
             StringBuilder sb = new StringBuilder();
             String oldPrefix = "";
             for (TemplateContextType type : getApplicableContexts()) {
@@ -360,47 +357,52 @@ public class LiveTemplateSettingsEditor extends JPanel {
                 sb.append(ownName);
             }
             boolean hasContexts = !sb.isEmpty();
-            ctxLabel.setText(
-                hasContexts
-                    ? CodeInsightLocalize.dialogEditTemplateApplicableInContexts(sb).get()
-                    : allowNoContexts
-                    ? CodeInsightLocalize.dialogEditTemplateNoApplicableContexts().get()
-                    : CodeInsightLocalize.dialogEditTemplateNoApplicableContextsYet().get()
-            );
-            ctxLabel.setForeground(hasContexts ? allowNoContexts ? JBColor.GRAY : JBColor.RED : UIUtil.getLabelForeground());
-            change.setText(hasContexts ? CodeInsightLocalize.linkDefineContext().get() : CodeInsightLocalize.linkChangeContext().get());
+            if (hasContexts) {
+                ctxLabel.setText(CodeInsightLocalize.dialogEditTemplateApplicableInContexts(sb));
+                ctxLabel.setForegroundColor(null);
+                change.setText(CodeInsightLocalize.linkLiveTemplateChangeContext());
+            }
+            else {
+                if (allowNoContexts) {
+                    ctxLabel.setText(CodeInsightLocalize.dialogEditTemplateNoApplicableContexts());
+                    ctxLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
+                }
+                else {
+                    ctxLabel.setText(CodeInsightLocalize.dialogEditTemplateNoApplicableContextsYet());
+                    ctxLabel.setForegroundColor(ComponentColors.ERROR_FOREGROUND);
+                }
+                change.setText(CodeInsightLocalize.linkLiveTemplateDefineContext());
+            }
         };
 
-        new ClickListener() {
-            @Override
-            public boolean onClick(MouseEvent e, int clickCount) {
-                if (disposeContextPopup()) {
-                    return false;
-                }
-
-                final JPanel content = createPopupContextPanel(updateLabel);
-                Dimension prefSize = content.getPreferredSize();
-                if (myLastSize != null && (myLastSize.width > prefSize.width || myLastSize.height > prefSize.height)) {
-                    content.setPreferredSize(new Dimension(
-                        Math.max(prefSize.width, myLastSize.width),
-                        Math.max(prefSize.height, myLastSize.height)
-                    ));
-                }
-                myContextPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(content, null).setResizable(true).createPopup();
-                myContextPopup.show(new RelativePoint(change, new Point(change.getWidth(), -content.getPreferredSize().height - 10)));
-                myContextPopup.addListener(new JBPopupAdapter() {
-                    @Override
-                    public void onClosed(LightweightWindowEvent event) {
-                        myLastSize = content.getSize();
-                    }
-                });
-                return true;
+        change.addHyperlinkListener(event -> {
+            if (disposeContextPopup()) {
+                return;
             }
-        }.installOn(change);
+
+            JPanel content = createPopupContextPanel(updateLabel);
+            Dimension prefSize = content.getPreferredSize();
+            if (myLastSize != null && (myLastSize.width > prefSize.width || myLastSize.height > prefSize.height)) {
+                content.setPreferredSize(new Dimension(
+                    Math.max(prefSize.width, myLastSize.width),
+                    Math.max(prefSize.height, myLastSize.height)
+                ));
+            }
+            myContextPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(content, null).setResizable(true).createPopup();
+            myContextPopup.showBy(change, event.getInputDetails());
+            myContextPopup.addListener(new JBPopupAdapter() {
+                @Override
+                public void onClosed(LightweightWindowEvent event) {
+                    myLastSize = content.getSize();
+                }
+            });
+        });
 
         updateLabel.run();
 
-        return panel;
+        return VerticalLayout.create()
+            .add(ctxLabel)
+            .add(change);
     }
 
     private boolean disposeContextPopup() {
@@ -433,9 +435,9 @@ public class LiveTemplateSettingsEditor extends JPanel {
                     int row,
                     boolean hasFocus
                 ) {
-                    Object o = ((DefaultMutableTreeNode)value).getUserObject();
+                    Object o = ((DefaultMutableTreeNode) value).getUserObject();
                     if (o instanceof Pair pair) {
-                        getTextRenderer().append((String)pair.second);
+                        getTextRenderer().append((String) pair.second);
                     }
                 }
             },
@@ -444,7 +446,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             @Override
             @RequiredUIAccess
             protected void onNodeStateChanged(CheckedTreeNode node) {
-                TemplateContextType type = (TemplateContextType)((Pair)node.getUserObject()).first;
+                TemplateContextType type = (TemplateContextType) ((Pair) node.getUserObject()).first;
                 if (type != null) {
                     myContext.put(type, node.isChecked());
                 }
@@ -458,12 +460,12 @@ public class LiveTemplateSettingsEditor extends JPanel {
             addContextNode(hierarchy, root, type);
         }
 
-        ((DefaultTreeModel)checkboxTree.getModel()).nodeStructureChanged(root);
+        ((DefaultTreeModel) checkboxTree.getModel()).nodeStructureChanged(root);
 
         TreeUtil.traverse(
             root,
             _node -> {
-                CheckedTreeNode node = (CheckedTreeNode)_node;
+                CheckedTreeNode node = (CheckedTreeNode) _node;
                 if (node.isChecked()) {
                     checkboxTree.expandPath(new TreePath(node.getPath()).getParentPath());
                 }
@@ -521,7 +523,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             TemplateEditorUtil.setHighlighter(myTemplateEditor, contextByType);
             return;
         }
-        ((EditorEx)myTemplateEditor).repaint(0, myTemplateEditor.getDocument().getTextLength());
+        ((EditorEx) myTemplateEditor).repaint(0, myTemplateEditor.getDocument().getTextLength());
     }
 
     @RequiredUIAccess
@@ -554,7 +556,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     @RequiredUIAccess
     private void editVariables() {
-        ArrayList<Variable> newVariables = updateVariablesByTemplateText();
+        List<Variable> newVariables = updateVariablesByTemplateText();
 
         EditVariableDialog editVariableDialog =
             new EditVariableDialog(myTemplateEditor, TargetAWT.to(myEditVariablesButton), newVariables, getApplicableContexts());
@@ -564,16 +566,16 @@ public class LiveTemplateSettingsEditor extends JPanel {
         }
     }
 
-    private ArrayList<Variable> updateVariablesByTemplateText() {
+    private List<Variable> updateVariablesByTemplateText() {
         List<Variable> oldVariables = getCurrentVariables();
 
         Set<String> oldVariableNames = ContainerUtil.map2Set(oldVariables, Variable::getName);
 
-        ArrayList<Variable> parsedVariables = parseVariables(myTemplateEditor.getDocument().getCharsSequence());
+        List<Variable> parsedVariables = parseVariables(myTemplateEditor.getDocument().getCharsSequence());
 
         Map<String, String> newVariableNames = new HashMap<>();
         for (Object parsedVariable : parsedVariables) {
-            Variable newVariable = (Variable)parsedVariable;
+            Variable newVariable = (Variable) parsedVariable;
             String name = newVariable.getName();
             newVariableNames.put(name, name);
         }
@@ -623,10 +625,11 @@ public class LiveTemplateSettingsEditor extends JPanel {
         //TODO[peter,kirillk] without these invokeLaters this requestFocus conflicts with
         // consulo.ide.impl.idea.openapi.ui.impl.DialogWrapperPeerImpl.MyDialog.MyWindowListener.windowOpened()
         IdeFocusManager.findInstanceByComponent(myKeyField).requestFocus(myKeyField, true);
-        ModalityState modalityState = Application.get().getModalityStateForComponent(myKeyField);
-        Application.get().invokeLater(
-            () -> Application.get().invokeLater(
-                () -> Application.get().invokeLater(
+        Application application = Application.get();
+        ModalityState modalityState = application.getModalityStateForComponent(myKeyField);
+        application.invokeLater(
+            () -> application.invokeLater(
+                () -> application.invokeLater(
                     () -> IdeFocusManager.findInstanceByComponent(myKeyField).requestFocus(myKeyField, true),
                     modalityState
                 ),
@@ -636,8 +639,8 @@ public class LiveTemplateSettingsEditor extends JPanel {
         );
     }
 
-    private static ArrayList<Variable> parseVariables(CharSequence text) {
-        ArrayList<Variable> variables = new ArrayList<>();
+    private static List<Variable> parseVariables(CharSequence text) {
+        List<Variable> variables = new ArrayList<>();
         TemplateImplUtil.parseVariables(text, variables, Template.INTERNAL_VARS_SET);
         return variables;
     }

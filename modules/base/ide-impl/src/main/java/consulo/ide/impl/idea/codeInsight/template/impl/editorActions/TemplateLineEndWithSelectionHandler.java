@@ -20,13 +20,12 @@ import consulo.ui.ex.action.IdeActions;
 
 @ExtensionImpl
 public class TemplateLineEndWithSelectionHandler extends TemplateLineStartEndHandler {
-  public TemplateLineEndWithSelectionHandler() {
-    super(false, true);
-  }
+    public TemplateLineEndWithSelectionHandler() {
+        super(false, true);
+    }
 
-  
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_LINE_END_WITH_SELECTION;
-  }
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_MOVE_LINE_END_WITH_SELECTION;
+    }
 }

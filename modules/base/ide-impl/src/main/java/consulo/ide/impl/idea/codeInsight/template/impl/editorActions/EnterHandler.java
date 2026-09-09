@@ -33,38 +33,38 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "templateEnter", order = "before editorEnter")
 public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
+    private EditorActionHandler myOriginalHandler;
 
-  @Inject
-  public EnterHandler() {
-    super(true);
-  }
-
-  @Override
-  public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
-    return myOriginalHandler.isEnabled(editor, caret, dataContext);
-  }
-
-  @Override
-  @RequiredWriteAction
-  public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    Project project = editor.getProject();
-    if (project != null && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.ENTER_CHAR)) {
-      return;
+    @Inject
+    public EnterHandler() {
+        super(true);
     }
 
-    if (myOriginalHandler != null) {
-      myOriginalHandler.execute(editor, caret, dataContext);
+    @Override
+    public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
+        return myOriginalHandler.isEnabled(editor, caret, dataContext);
     }
-  }
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+    @Override
+    @RequiredWriteAction
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        Project project = editor.getProject();
+        if (project != null && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.ENTER_CHAR)) {
+            return;
+        }
 
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_ENTER;
-  }
+        if (myOriginalHandler != null) {
+            myOriginalHandler.execute(editor, caret, dataContext);
+        }
+    }
+
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
+    }
+
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_ENTER;
+    }
 }

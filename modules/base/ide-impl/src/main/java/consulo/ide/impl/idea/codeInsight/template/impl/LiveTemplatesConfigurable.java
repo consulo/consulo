@@ -26,55 +26,53 @@ import javax.swing.*;
 
 @ExtensionImpl
 public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
-  private TemplateListPanel myPanel;
+    private TemplateListPanel myPanel;
 
-  @Override
-  public boolean isModified() {
-    return myPanel != null && myPanel.isModified();
-  }
-
-  @Override
-  public JComponent createComponent() {
-    myPanel = new TemplateListPanel();
-    return myPanel;
-  }
-
-  @Override
-  public @Nullable String getParentId() {
-    return StandardConfigurableIds.EDITOR_GROUP;
-  }
-
-  
-  @Override
-  public LocalizeValue getDisplayName() {
-    return CodeInsightLocalize.templatesSettingsPageTitle();
-  }
-
-  @Override
-  public void reset() {
-    myPanel.reset();
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-    myPanel.apply();
-  }
-
-  @Override
-  public void disposeUIResources() {
-    if (myPanel != null) {
-      Disposer.dispose(myPanel);
+    @Override
+    public boolean isModified() {
+        return myPanel != null && myPanel.isModified();
     }
-    myPanel = null;
-  }
 
-  @Override
-  
-  public String getId() {
-    return "editing.templates";
-  }
+    @Override
+    public JComponent createComponent() {
+        myPanel = new TemplateListPanel();
+        return myPanel;
+    }
 
-  public TemplateListPanel getTemplateListPanel() {
-    return myPanel;
-  }
+    @Override
+    public @Nullable String getParentId() {
+        return StandardConfigurableIds.EDITOR_GROUP;
+    }
+
+    @Override
+    public LocalizeValue getDisplayName() {
+        return CodeInsightLocalize.templatesSettingsPageTitle();
+    }
+
+    @Override
+    public void reset() {
+        myPanel.reset();
+    }
+
+    @Override
+    public void apply() throws ConfigurationException {
+        myPanel.apply();
+    }
+
+    @Override
+    public void disposeUIResources() {
+        if (myPanel != null) {
+            Disposer.dispose(myPanel);
+        }
+        myPanel = null;
+    }
+
+    @Override
+    public String getId() {
+        return "editing.templates";
+    }
+
+    public TemplateListPanel getTemplateListPanel() {
+        return myPanel;
+    }
 }

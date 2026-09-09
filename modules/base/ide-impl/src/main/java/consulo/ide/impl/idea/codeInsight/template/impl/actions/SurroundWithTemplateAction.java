@@ -30,7 +30,6 @@ public class SurroundWithTemplateAction extends BaseCodeInsightAction {
         super(ActionLocalize.actionSurroundwithlivetemplateText(), ActionLocalize.actionSurroundwithlivetemplateDescription());
     }
 
-    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new SurroundWithTemplateHandler();

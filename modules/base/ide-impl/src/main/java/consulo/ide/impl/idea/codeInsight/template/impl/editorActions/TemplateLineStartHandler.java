@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -24,13 +23,12 @@ import consulo.ui.ex.action.IdeActions;
  */
 @ExtensionImpl
 public class TemplateLineStartHandler extends TemplateLineStartEndHandler {
-  public TemplateLineStartHandler() {
-    super(true, false);
-  }
+    public TemplateLineStartHandler() {
+        super(true, false);
+    }
 
-  
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_LINE_START;
-  }
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_MOVE_LINE_START;
+    }
 }

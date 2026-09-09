@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-09-04T10:55:29.019017062Z",
+  "generatedAt" : "2026-09-04T19:25:04.644496013Z",
   "documents" : {
     "consulo.ai.AILocalize" : {
       "source" : {
@@ -117,7 +117,7 @@
     },
     "consulo.http.HttpLocalize" : {
       "source" : {
-        "sig" : "6d305d45513abf06527ded5fae86d0bd"
+        "sig" : "3bd0db0f5440fbca55dddd973f8a9d44"
       }
     },
     "consulo.ide.IdeLocalize" : {
@@ -247,7 +247,7 @@
     },
     "consulo.platform.base.CommonLocalize" : {
       "source" : {
-        "sig" : "4cf68d7f68b3afc595f49794e18b0c95"
+        "sig" : "6aa3961b063c0c5fde4e4f0737a63d74"
       }
     },
     "consulo.platform.base.RepositoryTagLocalize" : {
@@ -292,7 +292,7 @@
     },
     "consulo.ui.ex.UILocalize" : {
       "source" : {
-        "sig" : "fa25e7502af42b900eddd9db0c89f47e"
+        "sig" : "b3045acd2370814f083b0d2a8fa497a6"
       }
     },
     "consulo.ui.ex.UnicodeShortcutLocalize" : {

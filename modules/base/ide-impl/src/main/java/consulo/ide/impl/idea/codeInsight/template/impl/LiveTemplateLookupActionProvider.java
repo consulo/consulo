@@ -25,6 +25,7 @@ import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.language.editor.impl.internal.template.LiveTemplateLookupElementImpl;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Template;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -38,44 +39,48 @@ import java.util.function.Consumer;
 public class LiveTemplateLookupActionProvider implements LookupActionProvider {
     @Override
     public void fillActions(LookupElement element, final Lookup lookup, Consumer<LookupElementAction> consumer) {
-        if (element instanceof LiveTemplateLookupElementImpl lookupElement) {
-            final Template template = lookupElement.getTemplate();
-            final TemplateImpl templateFromSettings =
-                TemplateSettingsImpl.getInstanceImpl().getTemplate(template.getKey(), template.getGroupName());
+        if (!(element instanceof LiveTemplateLookupElementImpl lookupElement)) {
+            return;
+        }
+        Template template = lookupElement.getTemplate();
+        TemplateImpl templateFromSettings =
+            TemplateSettingsImpl.getInstanceImpl().getTemplate(template.getKey(), template.getGroupName());
 
-            if (templateFromSettings != null) {
-                consumer.accept(new LookupElementAction(PlatformIconGroup.actionsEdit(), "Edit live template settings") {
-                    @Override
-                    public Result performLookupAction() {
-                        Project project = lookup.getEditor().getProject();
-                        assert project != null;
-                        project.getApplication().invokeLater(() -> {
-                            if (project.isDisposed()) {
-                                return;
-                            }
+        if (templateFromSettings != null) {
+            consumer.accept(new LookupElementAction(
+                PlatformIconGroup.actionsEdit(),
+                CodeInsightLocalize.actionTextEditLiveTemplateSettings()
+            ) {
+                @Override
+                public Result performLookupAction() {
+                    Project project = lookup.getEditor().getProject();
+                    assert project != null;
+                    project.getApplication().invokeLater(() -> {
+                        if (project.isDisposed()) {
+                            return;
+                        }
 
-                            LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
-                            ShowSettingsUtil.getInstance().editConfigurable(
-                                project,
-                                configurable,
-                                () -> configurable.getTemplateListPanel().editTemplate((TemplateImpl) template)
-                            );
-                        });
-                        return Result.HIDE_LOOKUP;
-                    }
-                });
+                        LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
+                        ShowSettingsUtil.getInstance().editConfigurable(
+                            project,
+                            configurable,
+                            () -> configurable.getTemplateListPanel().editTemplate((TemplateImpl) template)
+                        );
+                    });
+                    return Result.HIDE_LOOKUP;
+                }
+            });
 
-                consumer.accept(new LookupElementAction(
-                    PlatformIconGroup.actionsCancel(),
-                    String.format("Disable '%s' template", template.getKey())
-                ) {
-                    @Override
-                    public Result performLookupAction() {
-                        Application.get().invokeLater(() -> templateFromSettings.setDeactivated(true));
-                        return Result.HIDE_LOOKUP;
-                    }
-                });
-            }
+            consumer.accept(new LookupElementAction(
+                PlatformIconGroup.actionsCancel(),
+                CodeInsightLocalize.actionTextDisableLiveTemplate(template.getKey())
+            ) {
+                @Override
+                public Result performLookupAction() {
+                    Application.get().invokeLater(() -> templateFromSettings.setDeactivated(true));
+                    return Result.HIDE_LOOKUP;
+                }
+            });
         }
     }
 }

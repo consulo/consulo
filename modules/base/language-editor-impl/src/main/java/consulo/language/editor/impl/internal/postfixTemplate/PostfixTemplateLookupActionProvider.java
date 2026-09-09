@@ -16,12 +16,12 @@
 package consulo.language.editor.impl.internal.postfixTemplate;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -33,11 +33,13 @@ import java.util.function.Consumer;
 public class PostfixTemplateLookupActionProvider implements LookupActionProvider {
     @Override
     public void fillActions(LookupElement element, final Lookup lookup, Consumer<LookupElementAction> consumer) {
-        if (element instanceof PostfixTemplateLookupElement) {
-            final PostfixTemplateLookupElement templateLookupElement = (PostfixTemplateLookupElement) element;
-            final PostfixTemplate template = templateLookupElement.getPostfixTemplate();
+        if (element instanceof PostfixTemplateLookupElement templateLookupElement) {
+            PostfixTemplate template = templateLookupElement.getPostfixTemplate();
 
-            consumer.accept(new LookupElementAction(PlatformIconGroup.actionsEdit(), "Edit postfix templates settings") {
+            consumer.accept(new LookupElementAction(
+                PlatformIconGroup.actionsEdit(),
+                CodeInsightLocalize.actionTextEditPostfixTemplatesSettings()
+            ) {
                 @Override
                 public Result performLookupAction() {
                     Project project = lookup.getEditor().getProject();
@@ -49,11 +51,16 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
 
                         // TODO show correct settings
                         //PostfixTemplatesConfigurable configurable = new PostfixTemplatesConfigurable();
-                        //PostfixTemplatesChildConfigurable childConfigurable = configurable.findConfigurable(templateLookupElement.getProvider());
-                        //if(childConfigurable == null) {
-                        //  return;
+                        //PostfixTemplatesChildConfigurable childConfigurable =
+                        //    configurable.findConfigurable(templateLookupElement.getProvider());
+                        //if (childConfigurable == null) {
+                        //    return;
                         //}
-                        //ShowSettingsUtil.getInstance().editConfigurable(project, childConfigurable, () -> childConfigurable.focusTemplate(template));
+                        //ShowSettingsUtil.getInstance().editConfigurable(
+                        //    project,
+                        //    childConfigurable,
+                        //    () -> childConfigurable.focusTemplate(template)
+                        //);
                     });
                     return Result.HIDE_LOOKUP;
                 }
@@ -61,10 +68,13 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
 
             final PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
             if (settings.isTemplateEnabled(template, templateLookupElement.getProvider())) {
-                consumer.accept(new LookupElementAction(AllIcons.Actions.Cancel, String.format("Disable '%s' template", template.getKey())) {
+                consumer.accept(new LookupElementAction(
+                    PlatformIconGroup.actionsCancel(),
+                    CodeInsightLocalize.actionTextDisablePostfixTemplate(template.getKey())
+                ) {
                     @Override
                     public Result performLookupAction() {
-                        ApplicationManager.getApplication().invokeLater(() -> settings.disableTemplate(template, templateLookupElement.getProvider()));
+                        Application.get().invokeLater(() -> settings.disableTemplate(template, templateLookupElement.getProvider()));
                         return Result.HIDE_LOOKUP;
                     }
                 });

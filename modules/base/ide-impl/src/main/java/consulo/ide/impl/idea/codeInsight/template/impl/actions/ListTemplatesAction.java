@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -28,7 +27,6 @@ public class ListTemplatesAction extends BaseCodeInsightAction {
         super(ActionLocalize.actionInsertlivetemplateText(), ActionLocalize.actionInsertlivetemplateDescription());
     }
 
-    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ListTemplatesHandler();
