@@ -146,7 +146,11 @@ public class SaveAsTemplateAction extends LegacyAnAction {
                 }
             });
 
-        TemplateImpl template = new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);
+        TemplateImpl template = new TemplateImpl(
+            TemplateListPanel.ABBREVIATION.get(),
+            document.getText(),
+            TemplateSettingsImpl.USER_GROUP_NAME
+        );
         template.setToReformat(true);
 
         OffsetKey startKey = OffsetKey.create("pivot");
