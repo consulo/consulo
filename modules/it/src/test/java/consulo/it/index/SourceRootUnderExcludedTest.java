@@ -49,6 +49,7 @@ import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createModule;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
+import static consulo.it.index.ScanningTestSupport.indexingDebug;
 import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -206,6 +207,7 @@ public class SourceRootUnderExcludedTest {
         awaitIdle(project);
         waitFor("the initial scan must index the nested source root", () -> !findClasses(project, "NestedBeforeTheChange").isEmpty());
 
+        indexingDebug(true);
         Files.writeString(excluded.resolve("LateHidden.sand"), "class LateHiddenInExcluded {}");
         Files.createDirectories(excluded.resolve("late"));
         Files.writeString(excluded.resolve("late").resolve("LateHidden2.sand"), "class LateHiddenInNewExcludedChild {}");
@@ -225,6 +227,8 @@ public class SourceRootUnderExcludedTest {
         assertThat(findClasses(project, "LateHiddenInNewExcludedChild"))
             .as("a directory created later under the excluded folder must be excluded too")
             .isEmpty();
+
+        indexingDebug(false);
     }
 
     private static Module declareNestedSourceRoot(Project project, Path directory, Path excluded, Path nestedSource) throws Exception {

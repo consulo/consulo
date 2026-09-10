@@ -23,7 +23,6 @@ import consulo.language.index.impl.internal.roots.kind.ModuleRootOrigin;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.internal.FileIndexBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -47,7 +46,7 @@ public class ModuleIndexableFilesIteratorImpl implements ModuleIndexableFilesIte
     }
 
     public static Collection<ModuleIndexableFilesIteratorImpl> getModuleIterators(Module module) {
-        FileIndexBase fileIndex = (FileIndexBase) ProjectFileIndex.getInstance(module.getProject());
+        FileIndexBase fileIndex = (FileIndexBase) ModuleRootManager.getInstance(module).getFileIndex();
 
         List<VirtualFile> moduleRoots = new ArrayList<>(fileIndex.getRootsToIterate(module));
         if (moduleRoots.isEmpty()) {

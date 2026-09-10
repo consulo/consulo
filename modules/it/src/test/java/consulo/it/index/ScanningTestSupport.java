@@ -85,6 +85,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 public final class ScanningTestSupport {
+    public static final String INDEXING_DEBUG_PROPERTY = "consulo.indexing.dirty.files.debug";
+
     public static final long TIMEOUT_SECONDS = 60;
 
     private ScanningTestSupport() {
@@ -202,6 +204,19 @@ public final class ScanningTestSupport {
     public static void awaitScanningFinished(Project project) throws Exception {
         UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
         waitFor("scanning must finish", () -> !executor.isRunning().get() && !executor.hasQueuedTasks());
+    }
+
+    /**
+     * Turns on the platform's dirty-file logging for the duration of a test. The tests run the platform in their own
+     * process, so setting the property here reaches the indexing code directly and needs nothing from the command line.
+     */
+    public static void indexingDebug(boolean enabled) {
+        if (enabled) {
+            System.setProperty(INDEXING_DEBUG_PROPERTY, "true");
+        }
+        else {
+            System.clearProperty(INDEXING_DEBUG_PROPERTY);
+        }
     }
 
     public static void waitFor(String description, BooleanSupplier condition) throws Exception {

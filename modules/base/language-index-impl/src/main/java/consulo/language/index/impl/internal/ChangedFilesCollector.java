@@ -143,7 +143,17 @@ final class ChangedFilesCollector extends IndexedFilesListener {
         }
 
         int fileId = virtualFileWithId.getId();
-        myDirtyFiles.addFile(myManager.getIndexableFilesFilterHolder().findProjectsForFile(fileId), fileId);
+        List<Project> projects = myManager.getIndexableFilesFilterHolder().findProjectsForFile(fileId);
+        myDirtyFiles.addFile(projects, fileId);
+
+        if (Boolean.getBoolean(DEBUG_PROPERTY)) {
+            LOG.warn("DIRTY-DEBUG addToDirtyFiles id=" + fileId
+                + " file=" + fileOrDir.getPath()
+                + " projectsFromFilter=" + projects
+                + " projectsInQueue=" + myDirtyFiles.getProjects()
+                + " collector=" + System.identityHashCode(this)
+                + " thread=" + Thread.currentThread().getName());
+        }
     }
 
     @Override
@@ -259,6 +269,11 @@ final class ChangedFilesCollector extends IndexedFilesListener {
                     throw t;
                 }
                 finally {
+                    if (Boolean.getBoolean(DEBUG_PROPERTY)) {
+                        LOG.warn("DIRTY-DEBUG consumed id=" + fileId
+                            + " collector=" + System.identityHashCode(ChangedFilesCollector.this)
+                            + " thread=" + Thread.currentThread().getName());
+                    }
                     myDirtyFiles.removeFile(fileId);
                 }
                 return true;

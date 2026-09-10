@@ -57,6 +57,7 @@ import static consulo.it.index.ScanningTestSupport.closeProject;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
+import static consulo.it.index.ScanningTestSupport.indexingDebug;
 import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.saveProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
@@ -172,6 +173,7 @@ public class DirtyFilesTest {
             }
         });
 
+        indexingDebug(true);
         Disposable asyncProbe = Disposable.newDisposable();
         VirtualFileManager.getInstance().addAsyncFileListener(events -> {
             List<String> matching = new ArrayList<>();
@@ -193,7 +195,11 @@ public class DirtyFilesTest {
 
                 @Override
                 public void afterVfsChange() {
-                    asyncListenerTrace.add("afterVfsChange@" + Thread.currentThread().getName());
+                    // the extension listeners run before the manually registered ones, so the indexing collector has
+                    // already had its turn by now: this samples the queues at the one instant polling cannot miss
+                    asyncListenerTrace.add("afterVfsChange@" + Thread.currentThread().getName()
+                        + " projectDirtyNow=" + fileBasedIndex.getAllDirtyFiles(first).contains(changedId)
+                        + " orphanDirtyNow=" + fileBasedIndex.getAllDirtyFiles(null).contains(changedId));
                 }
             };
         }, asyncProbe);
@@ -240,12 +246,20 @@ public class DirtyFilesTest {
                         .toList()
                     + " scheduledForUpdate=" + fileBasedIndex.getAllFilesToUpdate().stream().anyMatch(
                         request -> request.getFile() instanceof VirtualFileWithId withId && withId.getId() == changedId)
-                    + " loggedErrors=" + HeadlessLoggerFactory.peekLoggedErrors().stream().map(Throwable::getMessage).toList()
+                    + " collectorFromIndex=" + System.identityHashCode(fileBasedIndex.getChangedFilesCollector())
+                + " collectorsInExtensionPoint=" + application.getExtensionPoint(AsyncFileListener.class)
+                    .getExtensionList()
+                    .stream()
+                    .filter(listener -> "ChangedFilesCollector".equals(listener.getClass().getSimpleName()))
+                    .map(System::identityHashCode)
+                    .toList()
+                + " loggedErrors=" + HeadlessLoggerFactory.peekLoggedErrors().stream().map(Throwable::getMessage).toList()
                     + " threadIssues=" + HeadlessApplicationImpl.peekThreadIssues().stream().map(Throwable::getMessage).toList()
             );
         }
         finally {
             Disposer.dispose(asyncProbe);
+            indexingDebug(false);
         }
 
         closeProject(first);

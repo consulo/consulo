@@ -46,6 +46,7 @@ import static consulo.it.index.ScanningTestSupport.closeProject;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
+import static consulo.it.index.ScanningTestSupport.indexingDebug;
 import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.recordScansOfNextOpenedProject;
 import static consulo.it.index.ScanningTestSupport.saveProject;
@@ -202,6 +203,7 @@ public class ProjectReopenSkipsFullScanTest {
 
         Files.writeString(src.resolve("file5.sand"), "class After5 {}");
 
+        indexingDebug(true);
         Disposable disposable = Disposable.newDisposable();
         try {
             OpenScans scans = recordScansOfNextOpenedProject(application, disposable);
@@ -238,6 +240,7 @@ public class ProjectReopenSkipsFullScanTest {
         }
         finally {
             Disposer.dispose(disposable);
+            indexingDebug(false);
         }
     }
 }
