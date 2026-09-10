@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-09-09T11:58:44.481437312Z",
+  "generatedAt" : "2026-09-10T08:37:09.199488335Z",
   "documents" : {
     "consulo.ai.AILocalize" : {
       "source" : {
@@ -152,7 +152,7 @@
     },
     "consulo.language.editor.CodeInsightLocalize" : {
       "source" : {
-        "sig" : "a805f82d9ea728d057dc5cd4d2c8ca88"
+        "sig" : "05148a99ae652384ec66bf01c36ac765"
       }
     },
     "consulo.language.editor.CommonQuickFixLocalize" : {
