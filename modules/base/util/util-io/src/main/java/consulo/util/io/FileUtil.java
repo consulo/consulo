@@ -23,6 +23,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.ref.SimpleReference;
 import org.intellij.lang.annotations.RegExp;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -122,10 +123,8 @@ public class FileUtil {
             //noinspection SSBasedInspection
             file.deleteOnExit();
         }
-        if (!create) {
-            if (!file.delete() && file.exists()) {
-                throw new IOException("Cannot delete a file: " + file);
-            }
+        if (!create && !file.delete() && file.exists()) {
+            throw new IOException("Cannot delete a file: " + file);
         }
         return file;
     }
@@ -191,7 +190,12 @@ public class FileUtil {
                 int size = children == null ? 0 : children.length;
                 maxFileNumber = Math.max(10, size * 10); // if too many files are in tmp dir, we need a bigger random range than meager 10
                 if (attempts > MAX_ATTEMPTS) {
-                    throw exception != null ? exception : new IOException("Unable to create a temporary file " + f + "\nDirectory '" + dir + "' list (" + size + " children): " + Arrays.toString(children));
+                    throw exception != null
+                        ? exception
+                        : new IOException(
+                            "Unable to create a temporary file " + f +
+                                "\nDirectory '" + dir + "' list (" + size + " children): " + Arrays.toString(children)
+                    );
                 }
             }
 
@@ -596,11 +600,11 @@ public class FileUtil {
     }
 
     public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-        if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
-            try (FileChannel fromChannel = ((FileInputStream) inputStream).getChannel()) {
-                try (FileChannel toChannel = ((FileOutputStream) outputStream).getChannel()) {
-                    fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
-                }
+        if (USE_FILE_CHANNELS
+            && inputStream instanceof FileInputStream fileInputStream
+            && outputStream instanceof FileOutputStream fileOutputStream) {
+            try (FileChannel fromChannel = fileInputStream.getChannel(); FileChannel toChannel = fileOutputStream.getChannel()) {
+                fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
             }
         }
         else {
@@ -992,29 +996,34 @@ public class FileUtil {
         });
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     static void performDeleteNIO2(Path path) throws IOException {
+        SimpleReference<IOException> cause = SimpleReference.create();
         Boolean result = doIOOperation(lastAttempt -> {
             try {
                 Files.deleteIfExists(path);
                 return Boolean.TRUE;
             }
-            catch (IOException e) {
+            catch (AccessDeniedException e) {
                 // file is read-only: fallback to standard java.io API
-                if (e instanceof AccessDeniedException) {
-                    File file = path.toFile();
-                    if (file == null) {
-                        return Boolean.FALSE;
-                    }
-                    if (file.delete() || !file.exists()) {
-                        return Boolean.TRUE;
-                    }
+                File file = path.toFile();
+                if (file.delete() || !file.exists()) {
+                    return Boolean.TRUE;
+                }
+                if (lastAttempt) {
+                    cause.set(e);
+                }
+            }
+            catch (IOException e) {
+                if (lastAttempt) {
+                    cause.set(e);
                 }
             }
             return lastAttempt ? Boolean.FALSE : null;
         });
 
         if (!Boolean.TRUE.equals(result)) {
-            throw new IOException("Failed to delete " + path) {
+            throw new IOException("Failed to delete " + path, cause.get()) {
                 @Override
                 public synchronized Throwable fillInStackTrace() {
                     // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result

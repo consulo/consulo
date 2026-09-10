@@ -34,8 +34,8 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.Alert;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
@@ -44,6 +44,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
+import consulo.ui.MessageButtonRole;
 
 /**
  * The download and install work behind the update and install dialogs, shared by the frontends - a dialog only
@@ -100,8 +101,8 @@ public final class PlatformOrPluginInstallProcess {
                     downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
                 }
                 catch (PluginDownloadFailedException e) {
-                    LOG.warn(e);
-                    uiAccess.give(() -> Alerts.okError(e).showAsync());
+                    LOG.warn("Download failed", e);
+                    uiAccess.give(() -> MessageBoxes.okError(e).showAsync());
                     return;
                 }
             }
@@ -135,8 +136,8 @@ public final class PlatformOrPluginInstallProcess {
                     installed.add(pluginDescriptor);
                 }
                 catch (IOException e) {
-                    LOG.warn(e);
-                    uiAccess.give(() -> Alerts.okError(e).showAsync());
+                    LOG.warn("Installation failed", e);
+                    uiAccess.give(() -> MessageBoxes.okError(e).showAsync());
                     return;
                 }
             }
@@ -214,7 +215,7 @@ public final class PlatformOrPluginInstallProcess {
 
         boolean restartCapable = application.isRestartCapable();
 
-        Alert<Boolean> alert = Alert.create();
+        MessageBoxBuilder<Boolean> alert = MessageBoxBuilder.create();
         alert.asQuestion();
         alert.title(ExternalServiceLocalize.titlePluginsChanged());
         alert.text(
@@ -224,12 +225,13 @@ public final class PlatformOrPluginInstallProcess {
         );
 
         alert.button(
+            MessageButtonRole.YES,
             restartCapable ? ExternalServiceLocalize.actionRestartText() : ExternalServiceLocalize.actionShutdownText(),
-            () -> Boolean.TRUE
+            Boolean.TRUE
         );
         alert.asDefaultButton();
 
-        alert.button(ExternalServiceLocalize.actionPostponeText(), () -> Boolean.FALSE);
+        alert.button(MessageButtonRole.NO, ExternalServiceLocalize.actionPostponeText(), Boolean.FALSE);
         alert.asExitButton();
 
         alert.showAsync().whenComplete((agreed, error) -> {

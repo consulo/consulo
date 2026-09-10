@@ -320,13 +320,11 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
     }
 
     @Override
-    
     public LocalizeValue getDisplayName() {
         return ConfigurableLocalize.optionsGeneralDisplayName();
     }
 
     @Override
-    
     public AttributesDescriptor[] getAttributeDescriptors() {
         List<AttributesDescriptor> descriptors = new ArrayList<>(ATT_DESCRIPTORS);
 
@@ -374,25 +372,21 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
         return descriptors.toArray(AttributesDescriptor[]::new);
     }
 
-    
     private static String toDisplayName(TextAttributesKey attributesKey) {
         return StringUtil.capitalize(attributesKey.getExternalName().toLowerCase().replaceAll("_", " "));
     }
 
     @Override
-    
     public ColorDescriptor[] getColorDescriptors() {
         return COLOR_DESCRIPTORS;
     }
 
     @Override
-    
     public SyntaxHighlighter getHighlighter() {
-        return new DefaultSyntaxHighlighter();
+        return DefaultSyntaxHighlighter.INSTANCE;
     }
 
     @Override
-    
     public String getDemoText() {
         return IdeLocalize.colorGeneral().get() + getCustomSeveritiesDemoText();
     }

@@ -21,11 +21,10 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.internal.FontPreferences;
 import consulo.colorScheme.internal.ModifiableFontPreferences;
 import consulo.ide.impl.idea.application.options.OptionsConstants;
-import consulo.ide.impl.idea.ui.FontComboBox;
-import consulo.ide.impl.idea.ui.FontInfoRenderer;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
+import consulo.ui.FontBox;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -41,12 +40,6 @@ import java.util.Locale;
 import java.util.Set;
 
 public class FontOptions implements OptionsPanel {
-    private static final FontInfoRenderer RENDERER = new FontInfoRenderer() {
-        @Override
-        protected boolean isEditorFont() {
-            return true;
-        }
-    };
     private static final String HELP_URL = "https://confluence.jetbrains.com/display/IDEADEV/Support+for+Ligatures+in+Editor";
 
     private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
@@ -58,11 +51,11 @@ public class FontOptions implements OptionsPanel {
     private final JTextField myEditorFontSizeField = new JTextField(4);
     
     private final JTextField myLineSpacingField = new JTextField(4);
-    private final FontComboBox myPrimaryCombo = new FontComboBox();
+    private final FontBox myPrimaryCombo = FontBox.create();
     private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationLocalize.secondaryFont().get());
     private final JCheckBox myEnableLigaturesCheckbox = new JCheckBox(ApplicationLocalize.useLigatures().get());
     private final JLabel myLigaturesInfoLinkLabel;
-    private final FontComboBox mySecondaryCombo = new FontComboBox();
+    private final FontBox mySecondaryCombo = FontBox.create();
 
     
     private final JBCheckBox myOnlyMonospacedCheckBox = new JBCheckBox(ApplicationLocalize.checkboxShowOnlyMonospacedFonts().get());
@@ -86,7 +79,7 @@ public class FontOptions implements OptionsPanel {
         primaryFontPanel.setBorder(JBUI.Borders.emptyLeft(20));
         mainPanel.add(primaryFontPanel);
 
-        primaryFontPanel.add(LabeledComponent.left(myPrimaryCombo, ApplicationLocalize.primaryFont().get()));
+        primaryFontPanel.add(LabeledComponent.left((JComponent)TargetAWT.to(myPrimaryCombo), ApplicationLocalize.primaryFont().get()));
         primaryFontPanel.add(LabeledComponent.left(myEditorFontSizeField, ApplicationLocalize.editboxFontSize().get()));
         primaryFontPanel.add(LabeledComponent.left(myLineSpacingField, ApplicationLocalize.editboxLineSpacing().get()));
 
@@ -99,7 +92,7 @@ public class FontOptions implements OptionsPanel {
         mainPanel.add(secondFontPanel);
 
         secondFontPanel.add(myUseSecondaryFontCheckbox);
-        secondFontPanel.add(mySecondaryCombo);
+        secondFontPanel.add(TargetAWT.to(mySecondaryCombo));
 
         JPanel ligaturesPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
         ligaturesPanel.setEnabled(true);
@@ -125,26 +118,15 @@ public class FontOptions implements OptionsPanel {
             mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
         });
         myPrimaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
-        myPrimaryCombo.setRenderer(RENDERER);
 
         mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
-        mySecondaryCombo.setRenderer(RENDERER);
 
         myUseSecondaryFontCheckbox.addActionListener(e -> {
             mySecondaryCombo.setEnabled(myUseSecondaryFontCheckbox.isSelected());
             FontOptions.this.syncFontFamilies();
         });
-        ItemListener itemListener = e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                FontOptions.this.syncFontFamilies();
-            }
-        };
-        myPrimaryCombo.addItemListener(itemListener);
-        mySecondaryCombo.addItemListener(itemListener);
-
-        ActionListener actionListener = e -> FontOptions.this.syncFontFamilies();
-        myPrimaryCombo.addActionListener(actionListener);
-        mySecondaryCombo.addActionListener(actionListener);
+        myPrimaryCombo.addValueListener(event -> syncFontFamilies());
+        mySecondaryCombo.addValueListener(event -> syncFontFamilies());
 
         myEditorFontSizeField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
@@ -152,7 +134,7 @@ public class FontOptions implements OptionsPanel {
                 if (myIsInSchemeChange || !SwingUtilities.isEventDispatchThread()) {
                     return;
                 }
-                String selectedFont = myPrimaryCombo.getFontName();
+                String selectedFont = myPrimaryCombo.getValue();
                 if (selectedFont != null) {
                     ModifiableFontPreferences fontPreferences = getFontPreferences();
                     fontPreferences.register(selectedFont, getFontSizeFromField());
@@ -246,8 +228,8 @@ public class FontOptions implements OptionsPanel {
         }
         ModifiableFontPreferences fontPreferences = getFontPreferences();
         fontPreferences.clearFonts();
-        String primaryFontFamily = myPrimaryCombo.getFontName();
-        String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getFontName() : null;
+        String primaryFontFamily = myPrimaryCombo.getValue();
+        String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getValue() : null;
         int fontSize = getFontSizeFromField();
         if (primaryFontFamily != null) {
             if (!FontPreferences.DEFAULT_FONT_NAME.equals(primaryFontFamily)) {
@@ -291,10 +273,10 @@ public class FontOptions implements OptionsPanel {
         myLineSpacingField.setText(Float.toString(getLineSpacing()));
         FontPreferences fontPreferences = getFontPreferences();
         List<String> fontFamilies = fontPreferences.getEffectiveFontFamilies();
-        myPrimaryCombo.setFontName(fontPreferences.getFontFamily());
+        myPrimaryCombo.setValue(fontPreferences.getFontFamily(), false);
         boolean isThereSecondaryFont = fontFamilies.size() > 1;
         myUseSecondaryFontCheckbox.setSelected(isThereSecondaryFont);
-        mySecondaryCombo.setFontName(isThereSecondaryFont ? fontFamilies.get(1) : null);
+        mySecondaryCombo.setValue(isThereSecondaryFont ? fontFamilies.get(1) : null, false);
         myEditorFontSizeField.setText(String.valueOf(fontPreferences.getSize(fontPreferences.getFontFamily())));
 
         boolean readOnly = ColorAndFontOptions.isReadOnly(myOptions.getSelectedScheme());

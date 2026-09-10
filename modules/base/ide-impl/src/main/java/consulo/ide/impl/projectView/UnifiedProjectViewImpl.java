@@ -98,7 +98,9 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.TreeStructureWrappenModel;
+import consulo.logging.Logger;
 import consulo.ui.ex.tree.UITreeState;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.ui.layout.WrappedLayout;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
@@ -112,6 +114,7 @@ import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -121,6 +124,8 @@ import java.util.*;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable {
+    private static final Logger LOG = Logger.getInstance(UnifiedProjectViewImpl.class);
+
     private final class MyDataProvider implements UiDataProvider {
         /**
          * The selection lives in the consulo.ui tree, and reading it means touching the ui component. Every
@@ -781,10 +786,18 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         myReadTreeState = treeState;
     }
 
-    private void restoreExpandedPaths() {
-        if (myTree != null && myReadTreeState != null) {
-            myReadTreeState.applyTo(myTree);
+    private void onRestoreFinished(@Nullable Object ignored, @Nullable Throwable error) {
+        if (error != null) {
+            LOG.warn("Failed to restore expanded paths of " + getPaneId(), error);
         }
+    }
+
+    private CompletableFuture<?> restoreExpandedPaths() {
+        if (myTree == null || myReadTreeState == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return myReadTreeState.applyTo(myTree);
     }
 
     /**
@@ -817,7 +830,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
         if (myReadTreeState != null) {
             Element subPane = new Element(ELEMENT_SUB_PANE);
-            myReadTreeState.writeExternal(subPane);
+            XmlSerializer.serializeInto(myReadTreeState, subPane);
             pane.addContent(subPane);
         }
 
@@ -889,8 +902,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         Element pane = panes == null ? null : findPane(panes);
         Element subPane = pane == null ? null : pane.getChild(ELEMENT_SUB_PANE);
 
-        UITreeState treeState = UITreeState.createFrom(subPane);
-        myReadTreeState = treeState.isEmpty() ? null : treeState;
+        UITreeState treeState = subPane == null ? null : XmlSerializer.deserialize(subPane, UITreeState.class);
+        myReadTreeState = treeState == null || treeState.isEmpty() ? null : treeState;
     }
 
     private @Nullable Element findPane(Element panes) {
@@ -1165,7 +1178,9 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
         saveExpandedPaths();
 
-        myTree.refreshAll().thenRun(this::restoreExpandedPaths);
+        myTree.refreshAll()
+            .thenCompose(ignored -> restoreExpandedPaths())
+            .whenComplete(this::onRestoreFinished);
     }
 
     @Override
@@ -1180,7 +1195,9 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             return;
         }
 
-        tree.refreshAll().thenRunAsync(this::restoreExpandedPaths, UIAccess.current());
+        tree.refreshAll()
+            .thenComposeAsync(ignored -> restoreExpandedPaths(), UIAccess.current())
+            .whenComplete(this::onRestoreFinished);
     }
 
     @Override

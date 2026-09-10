@@ -46,12 +46,11 @@ public class KeyboardShortcutDialog extends DialogWrapper {
     private final String myActionId;
     private final KeymapGroupImpl myMainGroup;
 
-    public KeyboardShortcutDialog(Component component, String actionId, QuickList[] quickLists) {
+    public KeyboardShortcutDialog(Component component, String actionId, KeymapGroupImpl mainGroup) {
         super(component, true);
         setTitle(KeyMapLocalize.keyboardShortcutDialogTitle());
         myActionId = actionId;
-        Project project = DataManager.getInstance().getDataContext(component).getData(Project.KEY);
-        myMainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, quickLists, null, false, null); //without current filter
+        myMainGroup = mainGroup;
         myEnableSecondKeystroke = new JCheckBox();
         UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myEnableSecondKeystroke);
         myEnableSecondKeystroke.setBorder(new EmptyBorder(4, 0, 0, 2));

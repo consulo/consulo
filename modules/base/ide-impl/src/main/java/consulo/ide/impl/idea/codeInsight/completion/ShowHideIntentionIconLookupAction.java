@@ -17,25 +17,31 @@ package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.application.util.registry.Registry;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ShowHideIntentionIconLookupAction extends LookupElementAction {
-  static final String KEY = "completion.show.intention.icon";
+    static final String KEY = "completion.show.intention.icon";
 
-  public ShowHideIntentionIconLookupAction() {
-    super(PlatformIconGroup.actionsIntentionbulb(), (shouldShowLookupHint() ? "Never show" : "Show") + " intention icon");
-  }
+    public ShowHideIntentionIconLookupAction() {
+        super(
+            PlatformIconGroup.actionsIntentionbulb(),
+            shouldShowLookupHint()
+                ? CodeInsightLocalize.actionTextNeverShowIntentionIcon()
+                : CodeInsightLocalize.actionTextShowIntentionIcon()
+        );
+    }
 
-  public static boolean shouldShowLookupHint() {
-    return Registry.is(KEY);
-  }
+    public static boolean shouldShowLookupHint() {
+        return Registry.is(KEY);
+    }
 
-  @Override
-  public Result performLookupAction() {
-    Registry.get(KEY).setValue(!shouldShowLookupHint());
-    return Result.REFRESH_ITEM;
-  }
+    @Override
+    public Result performLookupAction() {
+        Registry.get(KEY).setValue(!shouldShowLookupHint());
+        return Result.REFRESH_ITEM;
+    }
 }

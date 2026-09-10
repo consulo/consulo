@@ -22,8 +22,6 @@ import consulo.platform.PlatformOperatingSystem;
  * @since 2024-12-25
  */
 public interface UnixOperationSystem extends PlatformOperatingSystem {
-    boolean isXWindow();
-
     boolean isKDE();
 
     boolean isGNOME();
@@ -32,5 +30,13 @@ public interface UnixOperationSystem extends PlatformOperatingSystem {
 
     boolean isI3();
 
-    boolean isWayland();
+    default boolean isX11() {
+        return UnixDisplayProtocol.X11.equals(displayProtocol());
+    }
+
+    default boolean isWayland() {
+        return UnixDisplayProtocol.WAYLAND.equals(displayProtocol());
+    }
+
+    UnixDisplayProtocol displayProtocol();
 }

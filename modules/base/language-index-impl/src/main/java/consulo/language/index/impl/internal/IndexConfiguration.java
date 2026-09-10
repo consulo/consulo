@@ -26,23 +26,23 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 class IndexConfiguration {
-  private final Map<ID<?, ?>, Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter>> myIndices = new HashMap<>();
+  private final Map<ID<?, ?>, Pair<UpdatableIndex<?, ?, FileContent, ?>, FileBasedIndex.InputFilter>> myIndices = new HashMap<>();
   private final TObjectIntHashMap<ID<?, ?>> myIndexIdToVersionMap = new TObjectIntHashMap<>();
   private final List<ID<?, ?>> myIndicesWithoutFileTypeInfo = new ArrayList<>();
   private final Map<FileType, List<ID<?, ?>>> myFileType2IndicesWithFileTypeInfoMap = new HashMap<>();
   private volatile boolean myFreezed;
 
-  <K, V> UpdatableIndex<K, V, FileContent> getIndex(ID<K, V> indexId) {
+  <K, V> UpdatableIndex<K, V, FileContent, ?> getIndex(ID<K, V> indexId) {
     assert myFreezed;
-    Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
+    Pair<UpdatableIndex<?, ?, FileContent, ?>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 
     //noinspection unchecked
-    return pair != null ? (UpdatableIndex<K, V, FileContent>)pair.getFirst() : null;
+    return pair != null ? (UpdatableIndex<K, V, FileContent, ?>)pair.getFirst() : null;
   }
 
   FileBasedIndex.InputFilter getInputFilter(ID<?, ?> indexId) {
     assert myFreezed;
-    Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
+    Pair<UpdatableIndex<?, ?, FileContent, ?>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 
     assert pair != null : "Index data is absent for index " + indexId;
 
@@ -54,7 +54,7 @@ class IndexConfiguration {
   }
 
   <K, V> void registerIndex(ID<K, V> name,
-                            UpdatableIndex<K, V, FileContent> index,
+                            UpdatableIndex<K, V, FileContent, ?> index,
                             FileBasedIndex.InputFilter inputFilter,
                             int version,
                             @Nullable Collection<? extends FileType> associatedFileTypes) {
@@ -73,7 +73,7 @@ class IndexConfiguration {
         myIndicesWithoutFileTypeInfo.add(name);
       }
 
-      Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> old = myIndices.put(name, new Pair<>(index, inputFilter));
+      Pair<UpdatableIndex<?, ?, FileContent, ?>, FileBasedIndex.InputFilter> old = myIndices.put(name, new Pair<>(index, inputFilter));
       if (old != null) {
         throw new IllegalStateException("Index " + old.first + " already registered for the name '" + name + "'");
       }

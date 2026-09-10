@@ -52,4 +52,11 @@ public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, 
         setRange(min, max);
         return this;
     }
+
+    void setStep(int step);
+
+    default IntBox withStep(int step) {
+        setStep(step);
+        return this;
+    }
 }

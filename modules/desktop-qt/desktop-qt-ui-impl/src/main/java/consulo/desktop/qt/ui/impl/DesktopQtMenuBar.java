@@ -22,8 +22,10 @@ import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.BorderBuilder;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.ComponentEvent;
@@ -132,12 +134,14 @@ public class DesktopQtMenuBar implements MenuBar {
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
+    public BorderBuilder borderBuilder() {
+        return BorderBuilderImpl.NOOP;
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
+    public PaddingBuilder paddingBuilder() {
+        return PaddingBuilderImpl.NOOP;
     }
 
     @Override

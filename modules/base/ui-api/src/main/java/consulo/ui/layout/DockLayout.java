@@ -17,9 +17,9 @@ package consulo.ui.layout;
 
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
 
 /**
@@ -28,11 +28,11 @@ import consulo.ui.internal.UIInternal;
  */
 public interface DockLayout extends Layout<StaticPosition> {
     static DockLayout create() {
-        return create(UIConstant.DEFAULT_SPACING_PX);
+        return create(Space.MEDIUM);
     }
 
-    static DockLayout create(int gapInPixels) {
-        return UIInternal.get()._Layouts_dock(gapInPixels);
+    static DockLayout create(Space gap) {
+        return UIInternal.get()._Layouts_dock(gap);
     }
 
     @RequiredUIAccess

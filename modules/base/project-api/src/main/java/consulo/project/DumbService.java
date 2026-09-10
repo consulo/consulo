@@ -24,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.ModalityState;
+import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
@@ -439,11 +440,7 @@ public abstract class DumbService {
      *
      * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
      */
-    public void suspendIndexingAndRun(LocalizeValue activityName, Runnable activity) {
-        try (AccessToken ignore = startHeavyActivityStarted(activityName)) {
-            activity.run();
-        }
-    }
+    public abstract void suspendIndexingAndRun(LocalizeValue activityName, Runnable activity);
 
     /**
      * Runs a heavy activity and suspends indexing (if any) for this time. The user still can manually pause and resume the indexing.
@@ -458,30 +455,59 @@ public abstract class DumbService {
     }
 
     /**
-     * Suspend indexing. The user still can manually pause and resume the indexing. In that case, indexing won't be
-     * resumed automatically after the activity finishes.
-     *
-     * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
+     * Disables {@link #waitForSmartMode()} for the current thread: an attempt to wait for smart mode from a thread that must not block
+     * (e.g. a background startup activity) fails fast instead of hanging.
      */
-    public abstract AccessToken startHeavyActivityStarted(LocalizeValue activityName);
+    public abstract AccessToken runWithWaitForSmartModeDisabled();
 
     /**
-     * Suspend indexing. The user still can manually pause and resume the indexing. In that case, indexing won't be
-     * resumed automatically after the activity finishes.
+     * Executes the runnable in dumb mode without a visible progress. The project becomes dumb before {@code block} starts
+     * and leaves dumb mode (unless other dumb tasks keep it dumb) after {@code block} completes.
      *
-     * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
+     * @param debugReason a description of the reason to be written to the log
      */
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    
-    public AccessToken startHeavyActivityStarted(String activityName) {
-        return startHeavyActivityStarted(LocalizeValue.of(activityName));
+    public abstract <T> T runInDumbMode(String debugReason, Supplier<T> block);
+
+    /**
+     * @see #runInDumbMode(String, Supplier)
+     */
+    public void runInDumbMode(String debugReason, Runnable block) {
+        runInDumbMode(debugReason, () -> {
+            block.run();
+            return null;
+        });
     }
 
     /**
-     * Checks whether {@link #isDumb()} is true for the current project and if it's currently suspended by user
-     * or a {@link #suspendIndexingAndRun} call. This should be called inside read action. The momentary system state is returned:
-     * there are no guarantees that the result won't change in the next line of the calling code.
+     * Same as {@link #runWhenSmart(Runnable)} but the runnable may be executed before the project is fully initialized.
      */
-    public abstract boolean isSuspendedDumbMode();
+    public abstract void unsafeRunWhenSmart(Runnable runnable);
+
+    /**
+     * @return current dumb state of the project. The value changes each time the project enters or leaves dumb mode.
+     */
+    public abstract ObservableValue<DumbState> getState();
+
+    /**
+     * @return true if the project is neither dumb nor scanning files to index, i.e. {@link #runWhenSmart(Runnable)} runnables can run now
+     */
+    public abstract boolean canRunSmart();
+
+    /**
+     * Pause the current thread until dumb mode ends or the timeout elapses.
+     *
+     * @return true if the project is smart, false if the timeout elapsed first
+     * @see #waitForSmartMode()
+     */
+    public abstract boolean waitForSmartMode(long timeoutMillis);
+
+    /**
+     * Cancels all queued and running dumb tasks and waits until the running one has finished.
+     * Must be called from the UI thread without a write action.
+     */
+    public abstract void cancelAllTasksAndWait();
+
+    public interface DumbState {
+        boolean isDumb();
+    }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 18/04/2023
  */
+@CompiledJson
 public class FileEditorProviderManagerState {
   private final Map<String, String> mySelectedProviders = new HashMap<>();
 

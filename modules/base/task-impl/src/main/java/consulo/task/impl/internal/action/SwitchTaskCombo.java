@@ -56,7 +56,7 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
             LocalTask activeTask = taskManager.getActiveTask();
             presentation.setEnabledAndVisible(true);
 
-            if (isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().ALWAYS_DISPLAY_COMBO) {
+            if (isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().isAlwaysDisplayCombo()) {
                 presentation.setVisible(false);
             }
             else {

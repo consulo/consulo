@@ -197,7 +197,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         );
         result.setCloseable(false);
 
-        ActionGroup group = DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.VARIABLES_TREE_TOOLBAR_GROUP);
+        ActionGroup group = DebuggerSessionTabBase.customizedActionGroup(XDebuggerActions.VARIABLES_TREE_TOOLBAR_GROUP);
         result.setActions(group, ActionPlaces.DEBUGGER_TOOLBAR, variablesView.getTree());
         return result;
     }
@@ -255,7 +255,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             }
             leftToolbar.addAll(session.getExtraActions());
         }
-        leftToolbar.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_LEFT_TOOLBAR_GROUP));
+        DebuggerSessionTabBase.addCustomizedActions(leftToolbar, XDebuggerActions.TOOL_WINDOW_LEFT_TOOLBAR_GROUP);
 
         for (AnAction action : session.getExtraStopActions()) {
             leftToolbar.add(action, new Constraints(Anchor.AFTER, IdeActions.ACTION_STOP_PROGRAM));
@@ -268,10 +268,10 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
         MoreActionGroup more = new MoreActionGroup(false);
         more.setPopup(true);
-        more.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_EXTRA_GROUP));
+        DebuggerSessionTabBase.addCustomizedActions(more, XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_EXTRA_GROUP);
 
         DefaultActionGroup topToolbar = new DefaultActionGroup();
-        topToolbar.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP));
+        DebuggerSessionTabBase.addCustomizedActions(topToolbar, XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP);
 
         session.getDebugProcess().registerAdditionalActions(more, topToolbar, settings);
 

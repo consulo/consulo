@@ -20,8 +20,10 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.BorderBuilder;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
@@ -49,15 +51,15 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
-        throw new UnsupportedOperationException();
+    public BorderBuilder borderBuilder() {
+        return BorderBuilderImpl.NOOP;
     }
 
-    @RequiredUIAccess
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        throw new UnsupportedOperationException();
+    public PaddingBuilder paddingBuilder() {
+        return PaddingBuilderImpl.NOOP;
     }
+
 
     @Override
     public boolean isVisible() {

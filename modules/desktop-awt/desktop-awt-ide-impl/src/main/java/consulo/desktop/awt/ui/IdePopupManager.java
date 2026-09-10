@@ -5,6 +5,7 @@ import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -24,6 +25,8 @@ import java.util.function.Predicate;
 
 public final class IdePopupManager implements Predicate<AWTEvent> {
   private static final Logger LOG = Logger.getInstance(IdePopupManager.class);
+
+  private static final int FOCUS_TRANSFER_DELAY = 100;
 
   private final List<IdePopupEventDispatcher> myDispatchStack = Lists.newLockFreeCopyOnWriteList();
   private boolean myIgnoreNextKeyTypedEvent;
@@ -45,32 +48,25 @@ public final class IdePopupManager implements Predicate<AWTEvent> {
     if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS || e.getID() == WindowEvent.WINDOW_DEACTIVATED) {
       if (!isPopupActive()) return false;
 
-      Window focused = ((WindowEvent)e).getOppositeWindow();
-      if (focused == null) {
-        focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-      }
-
-      Component ultimateParentForFocusedComponent = UIUtil.findUltimateParent(focused);
       Window sourceWindow = ((WindowEvent)e).getWindow();
-      Component ultimateParentForEventWindow = UIUtil.findUltimateParent(sourceWindow);
-
-      boolean shouldCloseAllPopup = false;
-      if (ultimateParentForEventWindow == null || ultimateParentForFocusedComponent == null) {
-        shouldCloseAllPopup = true;
+      if (Platform.current().os().isLinux() && !sourceWindow.isShowing()) {
+        return false;
       }
 
-      consulo.ui.Window uiWindow = TargetAWT.from((Window)ultimateParentForEventWindow);
-      IdeFrame ultimateParentWindowForEvent = IdeFrameUtil.findRootIdeFrame(uiWindow);
-
-      if (!shouldCloseAllPopup && ultimateParentWindowForEvent != null) {
-        if (ultimateParentWindowForEvent.isInFullScreen() && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
-          shouldCloseAllPopup = true;
-        }
+      Window oppositeWindow = ((WindowEvent)e).getOppositeWindow();
+      if (oppositeWindow == null && isWaylandToolkit()) {
+        Timer timer = new Timer(FOCUS_TRANSFER_DELAY, event -> {
+          if (isPopupActive()) {
+            maybeCloseAllPopups(null, sourceWindow);
+          }
+        });
+        timer.setRepeats(false);
+        timer.start();
+        return false;
       }
 
-      if (shouldCloseAllPopup) {
-        closeAllPopups();
-      }
+      maybeCloseAllPopups(oppositeWindow, sourceWindow);
+      return false;
     }
     else if (e instanceof KeyEvent) {
       // the following is copied from IdeKeyEventDispatcher
@@ -97,6 +93,38 @@ public final class IdePopupManager implements Predicate<AWTEvent> {
     }
 
     return false;
+  }
+
+  private static boolean isWaylandToolkit() {
+    return Platform.current().os() instanceof UnixOperationSystem os && os.isWayland();
+  }
+
+  private void maybeCloseAllPopups(Window focused, Window sourceWindow) {
+    if (focused == null) {
+      focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+    }
+
+    Component ultimateParentForFocusedComponent = UIUtil.findUltimateParent(focused);
+    Component ultimateParentForEventWindow = UIUtil.findUltimateParent(sourceWindow);
+
+    boolean shouldCloseAllPopup = false;
+    if (ultimateParentForEventWindow == null || ultimateParentForFocusedComponent == null) {
+      shouldCloseAllPopup = true;
+    }
+
+    if (!shouldCloseAllPopup && ultimateParentForEventWindow instanceof Window window) {
+      IdeFrame ultimateParentWindowForEvent = IdeFrameUtil.findRootIdeFrame(TargetAWT.from(window));
+
+      if (ultimateParentWindowForEvent != null
+          && ultimateParentWindowForEvent.isInFullScreen()
+          && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
+        shouldCloseAllPopup = true;
+      }
+    }
+
+    if (shouldCloseAllPopup) {
+      closeAllPopups();
+    }
   }
 
   public void push(IdePopupEventDispatcher dispatcher) {

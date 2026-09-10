@@ -76,7 +76,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
                             myInnerApplied = true;
                         }
                         catch (ConfigurationException e) {
-                            setConnectionStatus(true, false, LocalizeValue.ofNullable(e.getMessage()));
+                            setConnectionStatus(true, false, LocalizeValue.of(e));
                         }
                     }
                 }

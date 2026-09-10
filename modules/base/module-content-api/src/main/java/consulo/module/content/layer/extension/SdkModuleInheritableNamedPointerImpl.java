@@ -21,6 +21,7 @@ import consulo.module.Module;
 import consulo.module.content.internal.ModuleRootLayerEx;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.ModuleInheritableNamePointerStateProvider;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,33 +29,33 @@ import org.jspecify.annotations.Nullable;
  * @since 2013-06-15
  */
 public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamedPointerImpl<Sdk> {
-  private final String myExtensionId;
+    private final String myExtensionId;
 
-  public SdkModuleInheritableNamedPointerImpl(ModuleRootLayer layer, String id) {
-    super(layer, "sdk");
-    myExtensionId = id;
-  }
-
-  @Override
-  public @Nullable String getItemNameFromModule(Module module) {
-    ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)module.getExtension(myExtensionId);
-    if (extension != null) {
-      return extension.getInheritableSdk().getName();
+    public SdkModuleInheritableNamedPointerImpl(ModuleRootLayer layer, String id) {
+        super(layer, ModuleInheritableNamePointerStateProvider.DEFAULT_SDK_POINTER);
+        myExtensionId = id;
     }
-    return null;
-  }
 
-  @Override
-  public @Nullable Sdk getItemFromModule(Module module) {
-    ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)module.getExtension(myExtensionId);
-    if (extension != null) {
-      return extension.getInheritableSdk().get();
+    @Override
+    public @Nullable String getItemNameFromModule(Module module) {
+        ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk) module.getExtension(myExtensionId);
+        if (extension != null) {
+            return extension.getInheritableSdk().getName();
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public NamedPointer<Sdk> getPointer(ModuleRootLayer layer, String name) {
-    return ((ModuleRootLayerEx)layer).getConfigurationAccessor().getSdkPointer(name);
-  }
+    @Override
+    public @Nullable Sdk getItemFromModule(Module module) {
+        ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk) module.getExtension(myExtensionId);
+        if (extension != null) {
+            return extension.getInheritableSdk().get();
+        }
+        return null;
+    }
+
+    @Override
+    public NamedPointer<Sdk> getPointer(ModuleRootLayer layer, String name) {
+        return ((ModuleRootLayerEx) layer).getConfigurationAccessor().getSdkPointer(name);
+    }
 }

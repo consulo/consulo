@@ -27,4 +27,9 @@ class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel {
   public DesktopHtmlLabelImpl(LocalizeValue localizeValue, LabelOptions options) {
     super(localizeValue.map(value -> "<html><body>" + value + "</body></html>"), options);
   }
+
+  @Override
+  protected boolean isMnemonicParsed() {
+    return false;
+  }
 }

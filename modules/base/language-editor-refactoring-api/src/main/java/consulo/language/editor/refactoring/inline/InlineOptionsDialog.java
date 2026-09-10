@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.inline;
 
+import consulo.ui.RadioGroup;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
@@ -28,7 +29,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.RadioButton;
-import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.VerticalLayout;
@@ -36,6 +36,7 @@ import consulo.ui.layout.VerticalLayout;
 import javax.swing.*;
 
 public abstract class InlineOptionsDialog extends RefactoringDialog implements InlineOptions {
+    protected RadioGroup<Boolean> myInlineGroup;
     protected RadioButton myRbInlineAll;
     protected RadioButton myRbInlineThisOnly;
     protected boolean myInvokedOnReference;
@@ -70,15 +71,13 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
     protected VerticalLayout createCenterUIComponent() {
         VerticalLayout layout = VerticalLayout.create();
 
-        myRbInlineAll = RadioButton.create(getInlineAllText());
-        myRbInlineAll.setValue(true);
-        myRbInlineThisOnly = RadioButton.create(getInlineThisText());
+        myInlineGroup = RadioGroup.create();
+        myRbInlineAll = myInlineGroup.newButton(getInlineAllText(), true);
+        myRbInlineThisOnly = myInlineGroup.newButton(getInlineThisText(), false);
+        myInlineGroup.setValue(true);
 
         layout.add(myRbInlineAll);
         layout.add(myRbInlineThisOnly);
-        ValueGroup<Boolean> bg = ValueGroup.createBool();
-        bg.add(myRbInlineAll);
-        bg.add(myRbInlineThisOnly);
         RadioUpDownListener.registerListener(myRbInlineAll, myRbInlineThisOnly);
 
         myRbInlineThisOnly.setEnabled(myInvokedOnReference);

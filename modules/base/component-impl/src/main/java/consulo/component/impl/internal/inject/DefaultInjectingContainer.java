@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -85,6 +86,12 @@ public class DefaultInjectingContainer implements InjectingContainer {
     }
 
     return (T)myContainer.getComponentInstanceIfCreated(clazz);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> CompletableFuture<T> getInstanceAsync(Class<T> clazz) {
+    return (CompletableFuture<T>)myContainer.getComponentInstanceAsync(clazz);
   }
 
   

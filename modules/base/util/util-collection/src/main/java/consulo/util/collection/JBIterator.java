@@ -31,12 +31,12 @@ import java.util.function.Predicate;
  *
  * <h3>Supported contracts:</h3>
  * <ul>
- *   <li>Classic iterator: hasNext() / next()</li>
- *   <li>Cursor: advance() / current()</li>
- *   <li>One-time iterable: cursor()</li>
+ * <li>Classic iterator: hasNext() / next()</li>
+ * <li>Cursor: advance() / current()</li>
+ * <li>One-time iterable: cursor()</li>
  * </ul>
  *
- * Implementors should provide nextImpl() method which can call stop()/skip().
+ * Implementers should provide nextImpl() method which can call stop()/skip().
  *
  * @see JBIterable#map(Function)
  * @see JBIterable#filter(Predicate)
@@ -46,312 +46,331 @@ import java.util.function.Predicate;
  *
  * @noinspection unchecked, TypeParameterHidesVisibleType, AssignmentToForLoopParameter
  */
-public abstract class JBIterator<E> implements Iterator<E> {
-
-  public static <E extends JBIterator<?>> JBIterable<E> cursor(E iterator) {
-    return JBIterable.<E>generate(iterator, Functions.<E>id()).intercept(CURSOR_NEXT);
-  }
-
-  public static <E> JBIterator<E> from(Iterator<E> it) {
-    return it instanceof JBIterator ? (JBIterator<E>)it : wrap(it);
-  }
-
-  static <E> JBIterator<E> wrap(final Iterator<E> it) {
-    return new JBIterator<E>() {
-      @Override
-      protected @Nullable E nextImpl() {
-        return it.hasNext() ? it.next() : stop();
-      }
-    };
-  }
-
-  private enum Do {
-    INIT,
-    STOP,
-    SKIP
-  }
-  private Object myCurrent = Do.INIT;
-  private Object myNext = Do.INIT;
-
-  private Op myFirstOp = new NextOp();
-  private Op myLastOp = myFirstOp;
-
-  /**
-   * Returns the next element if any; otherwise calls stop() or skip().
-   */
-  protected abstract @Nullable E nextImpl();
-
-  /**
-   * Called right after the new current value is set.
-   */
-  protected void currentChanged() { }
-
-  /**
-   * Notifies the iterator that there's no more elements.
-   */
-  protected final @Nullable E stop() {
-    myNext = Do.STOP;
-    return null;
-  }
-
-  /**
-   * Notifies the iterator to skip and re-invoke nextImpl().
-   */
-  protected final @Nullable E skip() {
-    myNext = Do.SKIP;
-    return null;
-  }
-
-  @Override
-  public final boolean hasNext() {
-    peekNext();
-    return myNext != Do.STOP;
-  }
-
-  @Override
-  public final E next() {
-    advance();
-    return current();
-  }
-
-  /**
-   * Proceeds to the next element if any and returns true; otherwise false.
-   */
-  public final boolean advance() {
-    myCurrent = Do.INIT;
-    peekNext();
-    if (myNext == Do.STOP) return false;
-    myCurrent = myNext;
-    myNext = Do.INIT;
-    if (myFirstOp instanceof JBIterator.CursorOp) {
-      ((CursorOp)myFirstOp).advance(myCurrent);
+public abstract class JBIterator<E extends @Nullable Object> implements Iterator<E> {
+    public static <E extends JBIterator<?>> JBIterable<E> cursor(E iterator) {
+        return JBIterable.<E>generate(iterator, Functions.<E>id()).intercept(CURSOR_NEXT);
     }
-    currentChanged();
-    return true;
-  }
 
-  /**
-   * Returns the current element if any; otherwise throws exception.
-   */
-  public final E current() {
-    if (myCurrent == Do.INIT) {
-      throw new NoSuchElementException();
+    public static <E> JBIterator<E> from(Iterator<E> it) {
+        return it instanceof JBIterator ? (JBIterator<E>) it : wrap(it);
     }
-    return (E) Objects.requireNonNull(myCurrent);
-  }
 
-  private void peekNext() {
-    if (myNext != Do.INIT) return;
-    Object o = Do.INIT;
-    for (Op op = myFirstOp; op != null; op = op == null ? myFirstOp : op.nextOp) {
-      o = op.apply(op.impl == null ? nextImpl() : o);
-      if (myNext == Do.STOP) return;
-      if (myNext == Do.SKIP) {
-        o = myNext = Do.INIT;
-        if (op.impl == null) {
-          // rollback all prepended takeWhile conditions if nextImpl() votes SKIP
-          for (Op op2 = myFirstOp; op2 != null && op2.impl instanceof CountDown; op2 = op2.nextOp) {
-            ((CountDown)op2.impl).cur++;
-          }
-        }
-        op = null;
-      }
+    static <E> JBIterator<E> wrap(final Iterator<E> it) {
+        return new JBIterator<>() {
+            @Override
+            protected @Nullable E nextImpl() {
+                return it.hasNext() ? it.next() : stop();
+            }
+        };
     }
-    myNext = Objects.requireNonNull(o);
-  }
 
-  public final <T> JBIterator<T> map(Function<? super E, T> function) {
-    return addOp(true, new TransformOp<E, T>(function));
-  }
-
-  public final JBIterator<E> filter(Predicate<? super E> condition) {
-    return addOp(true, new FilterOp<E>(condition));
-  }
-
-  public final JBIterator<E> take(int count) {
-    // add first so that the underlying iterator stay on 'count' position
-    return addOp(!(myLastOp instanceof NextOp), new WhileOp<E>(new CountDown<E>(count)));
-  }
-
-  public final JBIterator<E> takeWhile(Predicate<? super E> condition) {
-    return addOp(true, new WhileOp<E>(condition));
-  }
-
-  public final JBIterator<E> skip(int count) {
-    return skipWhile(new CountDown<E>(count));
-  }
-
-  public final JBIterator<E> skipWhile(Predicate<? super E> condition) {
-    return addOp(true, new SkipOp<E>(condition));
-  }
-
-  private <T> T addOp(boolean last, Op op) {
-    if (op.impl == null) {
-      myFirstOp = myLastOp = op;
+    private enum Do {
+        INIT,
+        STOP,
+        SKIP
     }
-    else if (last) {
-      myLastOp.nextOp = op;
-      myLastOp = myLastOp.nextOp;
+
+    private Object myCurrent = Do.INIT;
+    private Object myNext = Do.INIT;
+
+    private Op myFirstOp = new NextOp();
+    private Op myLastOp = myFirstOp;
+
+    /**
+     * Returns the next element if any; otherwise calls stop() or skip().
+     */
+    protected abstract @Nullable E nextImpl();
+
+    /**
+     * Called right after the new current value is set.
+     */
+    protected void currentChanged() {
     }
-    else {
-      op.nextOp = myFirstOp;
-      myFirstOp = op;
+
+    /**
+     * Notifies the iterator that there's no more elements.
+     */
+    protected final @Nullable E stop() {
+        myNext = Do.STOP;
+        return null;
     }
-    return (T)this;
-  }
 
-  @Override
-  public final void remove() {
-    throw new UnsupportedOperationException();
-  }
-
-  public final List<E> toList() {
-    return Collections.unmodifiableList(ContainerUtil.newArrayList(JBIterable.once(this)));
-  }
-
-  @Override
-  public String toString() {
-    List<Op> ops = operationsImpl().toList();
-    return "{cur=" + myCurrent + "; next=" + myNext + (ops.size() < 2 ? "" : "; ops=" + ops) + "}";
-  }
-
-  public final JBIterable<Function<Object, Object>> getTransformations() {
-    return (JBIterable<Function<Object, Object>>)(JBIterable)operationsImpl().map(op -> op.impl).filter(Function.class);
-  }
-
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
-  @SuppressWarnings("NullAway")
-  private JBIterable<Op> operationsImpl() {
-    return JBIterable.generate(myFirstOp, op -> op.nextOp);
-  }
-
-  static String toShortString(Object o) {
-    String name = o.getClass().getName();
-    int idx = name.lastIndexOf('$');
-    if (idx > 0 && idx < name.length() && StringUtil.isJavaIdentifierStart(name.charAt(idx + 1))) {
-      return name.substring(idx + 1);
+    /**
+     * Notifies the iterator to skip and re-invoke nextImpl().
+     */
+    protected final @Nullable E skip() {
+        myNext = Do.SKIP;
+        return null;
     }
-    return name.substring(name.lastIndexOf('.') + 1);
-  }
 
-  private static final MonoFunction CURSOR_NEXT = new MonoFunction<JBIterator<?>>() {
     @Override
-    public JBIterator<?> apply(JBIterator<?> iterator) {
-      return iterator.addOp(false, iterator.new CursorOp());
-    }
-  };
-
-  private static class Op<T extends @Nullable Object> {
-    final T impl;
-
-    @Nullable Op nextOp = null;
-
-    public Op(T impl) {
-      this.impl = impl;
+    public final boolean hasNext() {
+        peekNext();
+        return myNext != Do.STOP;
     }
 
-    @Nullable Object apply(@Nullable Object o) {
-      throw new UnsupportedOperationException();
+    @Override
+    public final E next() {
+        advance();
+        return current();
+    }
+
+    /**
+     * Proceeds to the next element if any and returns true; otherwise false.
+     */
+    public final boolean advance() {
+        myCurrent = Do.INIT;
+        peekNext();
+        if (myNext == Do.STOP) {
+            return false;
+        }
+        myCurrent = myNext;
+        myNext = Do.INIT;
+        if (myFirstOp instanceof JBIterator.CursorOp) {
+            ((CursorOp) myFirstOp).advance(myCurrent);
+        }
+        currentChanged();
+        return true;
+    }
+
+    /**
+     * Returns the current element if any; otherwise throws exception.
+     */
+    public final E current() {
+        if (myCurrent == Do.INIT) {
+            throw new NoSuchElementException();
+        }
+        return (E) Objects.requireNonNull(myCurrent);
+    }
+
+    private void peekNext() {
+        if (myNext != Do.INIT) {
+            return;
+        }
+        Object o = Do.INIT;
+        for (Op op = myFirstOp; op != null; op = op == null ? myFirstOp : op.nextOp) {
+            o = op.apply(op.impl == null ? nextImpl() : o);
+            if (myNext == Do.STOP) {
+                return;
+            }
+            if (myNext == Do.SKIP) {
+                o = myNext = Do.INIT;
+                if (op.impl == null) {
+                    // rollback all prepended takeWhile conditions if nextImpl() votes SKIP
+                    for (Op op2 = myFirstOp; op2 != null && op2.impl instanceof CountDown; op2 = op2.nextOp) {
+                        ((CountDown) op2.impl).cur++;
+                    }
+                }
+                op = null;
+            }
+        }
+        myNext = Objects.requireNonNull(o);
+    }
+
+    public final <T> JBIterator<T> map(Function<? super E, T> function) {
+        return addOp(true, new TransformOp<E, T>(function));
+    }
+
+    public final JBIterator<E> filter(Predicate<? super E> condition) {
+        return addOp(true, new FilterOp<E>(condition));
+    }
+
+    public final JBIterator<E> take(int count) {
+        // add first so that the underlying iterator stay on 'count' position
+        return addOp(!(myLastOp instanceof NextOp), new WhileOp<>(new CountDown<E>(count)));
+    }
+
+    public final JBIterator<E> takeWhile(Predicate<? super E> condition) {
+        return addOp(true, new WhileOp<E>(condition));
+    }
+
+    public final JBIterator<E> skip(int count) {
+        return skipWhile(new CountDown<>(count));
+    }
+
+    public final JBIterator<E> skipWhile(Predicate<? super E> condition) {
+        return addOp(true, new SkipOp<E>(condition));
+    }
+
+    private <T> T addOp(boolean last, Op op) {
+        if (op.impl == null) {
+            myFirstOp = myLastOp = op;
+        }
+        else if (last) {
+            myLastOp.nextOp = op;
+            myLastOp = myLastOp.nextOp;
+        }
+        else {
+            op.nextOp = myFirstOp;
+            myFirstOp = op;
+        }
+        return (T) this;
+    }
+
+    @Override
+    public final void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public final List<E> toList() {
+        return Collections.unmodifiableList(ContainerUtil.newArrayList(JBIterable.once(this)));
     }
 
     @Override
     public String toString() {
-      return toShortString(impl == null ? this : impl);
-    }
-  }
-
-  private static class CountDown<A> implements Predicate<A> {
-    int cur;
-
-    public CountDown(int count) {
-      cur = count;
+        List<Op> ops = operationsImpl().toList();
+        return "{cur=" + myCurrent + "; next=" + myNext + (ops.size() < 2 ? "" : "; ops=" + ops) + "}";
     }
 
-    @Override
-    public boolean test(A a) {
-      return cur > 0 && cur-- != 0;
-    }
-  }
-
-  private static class TransformOp<E, T> extends Op<Function<? super E, T>> {
-    TransformOp(Function<? super E, T> function) {
-      super(function);
+    public final JBIterable<Function<Object, Object>> getTransformations() {
+        return (JBIterable<Function<Object, Object>>) (JBIterable) operationsImpl()
+            .map(op -> op.impl).filter(Function.class);
     }
 
-    @Override
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1802", todo = "Remove NullAway suppression")
     @SuppressWarnings("NullAway")
-    @Nullable Object apply(@Nullable Object o) {
-      // NullAway problem: parameter is nullable by method contract but in actual usage parameter can be null only if E is nullable.
-      // We cannot explain this to the static validator, so suppressing NullAway validation.
-      return Objects.requireNonNull(impl).apply((E)o);
-    }
-  }
-
-  private class FilterOp<E> extends Op<Predicate<? super E>> {
-    FilterOp(Predicate<? super E> condition) {
-      super(condition);
+    private JBIterable<Op> operationsImpl() {
+        return JBIterable.generate(myFirstOp, op -> op.nextOp);
     }
 
-    @Override
-    @Nullable Object apply(@Nullable Object o) {
-      return Objects.requireNonNull(impl).test((E)o) ? o : skip();
-    }
-  }
-
-  private class WhileOp<E> extends Op<Predicate<? super E>> {
-    WhileOp(Predicate<? super E> condition) {
-      super(condition);
+    static String toShortString(Object o) {
+        String name = o.getClass().getName();
+        int idx = name.lastIndexOf('$');
+        if (idx > 0 && idx < name.length() && StringUtil.isJavaIdentifierStart(name.charAt(idx + 1))) {
+            return name.substring(idx + 1);
+        }
+        return name.substring(name.lastIndexOf('.') + 1);
     }
 
-    @Override
-    @Nullable Object apply(@Nullable Object o) {
-      return Objects.requireNonNull(impl).test((E)o) ? o : stop();
-    }
-  }
+    private static final MonoFunction CURSOR_NEXT = new MonoFunction<JBIterator<?>>() {
+        @Override
+        public JBIterator<?> apply(JBIterator<?> iterator) {
+            return iterator.addOp(false, iterator.new CursorOp());
+        }
+    };
 
-  private class SkipOp<E> extends Op<Predicate<? super E>> {
-    boolean active = true;
+    private static class Op<T extends @Nullable Object> {
+        final T impl;
 
-    SkipOp(Predicate<? super E> condition) {
-      super(condition);
-    }
+        @Nullable
+        Op nextOp = null;
 
-    @Override
-    @Nullable Object apply(@Nullable Object o) {
-      if (active && Objects.requireNonNull(impl).test((E)o)) return skip();
-      active = false;
-      return o;
-    }
-  }
+        public Op(T impl) {
+            this.impl = impl;
+        }
 
-  private static class NextOp extends Op<@Nullable Void> {
-    NextOp() {
-      super(null);
-    }
+        @Nullable
+        Object apply(@Nullable Object o) {
+            throw new UnsupportedOperationException();
+        }
 
-    @Override
-    @Nullable Object apply(@Nullable Object o) {
-      return o;
-    }
-  }
-
-  private class CursorOp extends Op<@Nullable Void> {
-    boolean advanced;
-
-    CursorOp() {
-      super(null);
+        @Override
+        public String toString() {
+            return toShortString(impl == null ? this : impl);
+        }
     }
 
-    @Override
-    @Nullable Object apply(@Nullable Object o) {
-      JBIterator<?> it = (JBIterator<?>)Objects.requireNonNull(o);
-      return ((advanced = nextOp != null) ? it.advance() : it.hasNext()) ? it : stop();
+    private static class CountDown<A> implements Predicate<A> {
+        int cur;
+
+        public CountDown(int count) {
+            cur = count;
+        }
+
+        @Override
+        public boolean test(A a) {
+            return cur > 0 && cur-- != 0;
+        }
     }
 
-    void advance(Object o) {
-      if (advanced || !(o instanceof JBIterator)) return;
-      ((JBIterator)o).advance();
-      advanced = true;
+    private static class TransformOp<E, T> extends Op<Function<? super E, T>> {
+        TransformOp(Function<? super E, T> function) {
+            super(function);
+        }
+
+        @Override
+        @SuppressWarnings("NullAway")
+        @Nullable
+        Object apply(@Nullable Object o) {
+            // NullAway problem: parameter is nullable by method contract but in actual usage parameter can be null only if E is nullable.
+            // We cannot explain this to the static validator, so suppressing NullAway validation.
+            return Objects.requireNonNull(impl).apply((E) o);
+        }
     }
-  }
+
+    private class FilterOp<E> extends Op<Predicate<? super E>> {
+        FilterOp(Predicate<? super E> condition) {
+            super(condition);
+        }
+
+        @Override
+        @Nullable
+        Object apply(@Nullable Object o) {
+            return Objects.requireNonNull(impl).test((E) o) ? o : skip();
+        }
+    }
+
+    private class WhileOp<E> extends Op<Predicate<? super E>> {
+        WhileOp(Predicate<? super E> condition) {
+            super(condition);
+        }
+
+        @Override
+        @Nullable
+        Object apply(@Nullable Object o) {
+            return Objects.requireNonNull(impl).test((E) o) ? o : stop();
+        }
+    }
+
+    private class SkipOp<E> extends Op<Predicate<? super E>> {
+        boolean active = true;
+
+        SkipOp(Predicate<? super E> condition) {
+            super(condition);
+        }
+
+        @Override
+        @Nullable
+        Object apply(@Nullable Object o) {
+            if (active && Objects.requireNonNull(impl).test((E) o)) {
+                return skip();
+            }
+            active = false;
+            return o;
+        }
+    }
+
+    private static class NextOp extends Op<@Nullable Void> {
+        NextOp() {
+            super(null);
+        }
+
+        @Override
+        @Nullable
+        Object apply(@Nullable Object o) {
+            return o;
+        }
+    }
+
+    private class CursorOp extends Op<@Nullable Void> {
+        boolean advanced;
+
+        CursorOp() {
+            super(null);
+        }
+
+        @Override
+        @Nullable
+        Object apply(@Nullable Object o) {
+            JBIterator<?> it = (JBIterator<?>) Objects.requireNonNull(o);
+            return ((advanced = nextOp != null) ? it.advance() : it.hasNext()) ? it : stop();
+        }
+
+        void advance(Object o) {
+            if (!advanced && o instanceof JBIterator iterator) {
+                iterator.advance();
+                advanced = true;
+            }
+        }
+    }
 }

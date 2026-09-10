@@ -38,17 +38,15 @@ public abstract class PersistentFS extends ManagingFS {
         return (PersistentFS) ManagingFS.getInstance();
     }
 
-    
-    public <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function) {
+    @Override
+    public <P, R extends @Nullable Object> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function) {
         return new DiskQueryRelay<>(function)::accessDiskWithCheckCanceled;
     }
 
     public abstract void clearIdCache();
 
-    
     public abstract String[] listPersisted(VirtualFile parent);
 
-    
     public abstract NameId[] listAll(VirtualFile parent);
 
     public abstract int getId(VirtualFile parent, String childName, NewVirtualFileSystem delegate);
@@ -94,10 +92,8 @@ public abstract class PersistentFS extends ManagingFS {
 
     public abstract int storeUnlinkedContent(byte[] bytes);
 
-    
     public abstract byte[] contentsToByteArray(int contentId) throws IOException;
 
-    
     public abstract byte[] contentsToByteArray(VirtualFile file, boolean cacheContent) throws IOException;
 
     public abstract int acquireContent(VirtualFile file);
@@ -111,7 +107,6 @@ public abstract class PersistentFS extends ManagingFS {
     // true if FS persisted at least one child or it has never been queried for children
     public abstract boolean mayHaveChildren(int id);
 
-    
     public static FileAttributes toFileAttributes(int attributes) {
         boolean isDirectory = isSet(attributes, IS_DIRECTORY_FLAG);
         boolean isSpecial = isSet(attributes, IS_SPECIAL);

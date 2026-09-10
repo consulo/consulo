@@ -24,9 +24,8 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
@@ -123,10 +122,10 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
             // bottom panel
             DockLayout panel = DockLayout.create();
-            panel.addBorder(BorderPosition.TOP, BorderStyle.LINE, 1);
+            panel.borderBuilder().topSet().apply();
 
             HorizontalLayout buttonsPanel = HorizontalLayout.create();
-            buttonsPanel.addBorders(BorderStyle.EMPTY, null, 5);
+            buttonsPanel.paddingBuilder().allSet(Space.MEDIUM).apply();
 
             Button applyButton = Button.create(CommonLocalize.buttonApply(), event -> doSave());
             applyButton.addStyle(ButtonStyle.PRIMARY);

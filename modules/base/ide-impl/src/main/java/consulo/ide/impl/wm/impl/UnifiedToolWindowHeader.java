@@ -37,11 +37,7 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionRow;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ComponentColors;
-import consulo.ui.style.Style;
-import consulo.ui.style.StyleManager;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import org.jspecify.annotations.Nullable;
@@ -65,9 +61,9 @@ public class UnifiedToolWindowHeader implements Disposable {
     private final ToolWindowInternalDecorator myDecorator;
     private final Supplier<ActionGroup> myGearProducer;
 
-    private final DockLayout myLayout = DockLayout.create(0);
-    private final HorizontalLayout myWestLayout = HorizontalLayout.create(4);
-    private final HorizontalLayout myTabsLayout = HorizontalLayout.create(2);
+    private final DockLayout myLayout = DockLayout.create(Space.NONE);
+    private final HorizontalLayout myWestLayout = HorizontalLayout.create(Space.SMALL);
+    private final HorizontalLayout myTabsLayout = HorizontalLayout.create(Space.X_SMALL);
 
     private final DefaultActionGroup myTitleActions = new DefaultActionGroup();
     private final DefaultActionGroup myTabActions = new DefaultActionGroup();
@@ -201,8 +197,6 @@ public class UnifiedToolWindowHeader implements Disposable {
 
     @RequiredUIAccess
     private Component createTab(ContentManager contentManager, Content content, boolean selected) {
-        Style style = StyleManager.get().getCurrentStyle();
-
         Button tab = Button.create(LocalizeValue.of(content.getTabName()));
         tab.setIcon(content.getIcon());
         // never the primary style - that paints the accent color of the toolkit, which is not a color of the theme.
@@ -215,9 +209,9 @@ public class UnifiedToolWindowHeader implements Disposable {
             myToolWindow.fireActivated();
         });
 
-        // the label and the cross are one tab, so the underline of the selection has to be drawn under both of
-        // them rather than under the label alone
-        HorizontalLayout tabLayout = HorizontalLayout.create(0);
+        // the label and the cross are one tab, so what marks the selection has to cover both of them rather
+        // than the label alone
+        HorizontalLayout tabLayout = HorizontalLayout.create(Space.NONE);
         tabLayout.add(tab);
 
         if (isCloseable(contentManager, content)) {
@@ -231,12 +225,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         }
 
         if (selected) {
-            tabLayout.addBorder(
-                BorderPosition.BOTTOM,
-                BorderStyle.LINE,
-                style.getColorValue(ComponentColors.TABBED_LAYOUT_UNDERLINE),
-                2
-            );
+            tabLayout.setBackgroundColor(ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND);
         }
 
         return tabLayout;

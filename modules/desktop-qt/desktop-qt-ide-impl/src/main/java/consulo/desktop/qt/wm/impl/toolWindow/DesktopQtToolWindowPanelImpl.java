@@ -21,6 +21,7 @@ import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
@@ -153,7 +154,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
     private final ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
     private final ThreeComponentSplitLayout myVerticalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
 
-    private final DockLayout myRoot = DockLayout.create(0);
+    private final DockLayout myRoot = DockLayout.create(Space.NONE);
 
     private boolean myWidescreen;
 

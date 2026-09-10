@@ -1,5 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -12,6 +11,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.codeEditor.impl.internal.action.BaseEnterHandler;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.dataContext.DataManager;
@@ -20,7 +21,6 @@ import consulo.document.RangeMarker;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
@@ -326,6 +326,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
      * @return new offset in the {@code document} after commit-free indent adjustment or
      * {@code -1} if commit-free indent adjustment is unavailable in position.
      */
+    @RequiredWriteAction
     public static int adjustLineIndentNoCommit(Language language, Document document, Editor editor, int offset) {
         CharSequence docChars = document.getCharsSequence();
         int indentStart = CharArrayUtil.shiftBackwardUntil(docChars, offset - 1, "\n") + 1;
@@ -343,7 +344,6 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     }
 
     private static class DoEnterAction implements Runnable {
-
         private final DataContext myDataContext;
         private final PsiFile myFile;
         private int myOffset;

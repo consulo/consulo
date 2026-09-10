@@ -18,6 +18,7 @@ package consulo.it.project.dumb;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
+import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
@@ -67,6 +68,7 @@ public class DumbServiceTest {
     private record Event(String name, boolean underWriteAction) {
     }
 
+    @AllowWriteLockUnderUIThread
     @Test
     public void queueTaskFromUiThreadEntersAndExitsDumbMode(Application application, ProjectManager projectManager)
         throws Exception {
@@ -119,8 +121,9 @@ public class DumbServiceTest {
         assertThat(events).as("no unpaired dumb mode events left").isEmpty();
     }
 
+    @AllowWriteLockUnderUIThread
     @Test
-    public void queueTaskInsideWriteActionPublishesBeforeItReturns(Application application, ProjectManager projectManager)
+    public void queueTaskInsideWriteActionOnUiThreadPublishesBeforeItReturns(Application application, ProjectManager projectManager)
         throws Exception {
         Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
@@ -130,16 +133,49 @@ public class DumbServiceTest {
         AtomicBoolean dumbOnReturn = new AtomicBoolean();
         AtomicBoolean publishedOnReturn = new AtomicBoolean();
 
-        WriteAction.run(() -> {
-            dumbService.queueTask(task(performed));
-            dumbOnReturn.set(dumbService.isDumb());
-            publishedOnReturn.set(!events.isEmpty());
-        });
+        application.getLastUIAccess().giveAsync(() -> {
+            WriteAction.run(() -> {
+                dumbService.queueTask(task(performed));
+                dumbOnReturn.set(dumbService.isDumb());
+                publishedOnReturn.set(!events.isEmpty());
+            });
+            return null;
+        }).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
-        assertThat(dumbOnReturn.get()).as("queueTask must enter dumb mode before it returns").isTrue();
+        assertThat(dumbOnReturn.get()).as("queueTask on the UI thread must enter dumb mode before it returns").isTrue();
         assertThat(publishedOnReturn.get())
             .as("entering dumb mode must be published before queueTask returns, or isDumb and the listeners disagree")
             .isTrue();
+
+        take(events, ENTERED, 0);
+        awaitTask(performed, 0);
+        take(events, EXITED, 0);
+
+        assertThat(events).as("no unpaired dumb mode events left").isEmpty();
+    }
+
+    @Test
+    public void queueTaskInsideWriteActionOnBackgroundThreadEntersDumbModeAsynchronously(
+        Application application,
+        ProjectManager projectManager
+    ) throws Exception {
+        Project project = openProject(application, projectManager);
+        DumbService dumbService = DumbService.getInstance(project);
+        BlockingQueue<Event> events = subscribe(application, project, dumbService);
+
+        assertThat(application.isDispatchThread()).as("this test must queue from a non-UI thread").isFalse();
+
+        CountDownLatch performed = new CountDownLatch(1);
+        AtomicBoolean publishedInsideWriteAction = new AtomicBoolean();
+
+        WriteAction.run(() -> {
+            dumbService.queueTask(task(performed));
+            publishedInsideWriteAction.set(!events.isEmpty());
+        });
+
+        assertThat(publishedInsideWriteAction.get())
+            .as("a background queueTask enters dumb mode through its own write action, never inside the caller's one")
+            .isFalse();
 
         take(events, ENTERED, 0);
         awaitTask(performed, 0);

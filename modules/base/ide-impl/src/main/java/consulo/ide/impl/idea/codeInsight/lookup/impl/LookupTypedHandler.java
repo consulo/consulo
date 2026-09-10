@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
@@ -20,11 +21,11 @@ import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -51,7 +52,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
             return;
         }
 
-        if (!EditorModificationUtil.checkModificationAllowed(originalEditor)) {
+        if (!LanguageEditorUtil.checkModificationAllowed(originalEditor)) {
             return;
         }
 
@@ -96,7 +97,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
 
             if (!lookup.performGuardedChange(() -> {
                 lookup.fireBeforeAppendPrefix(charTyped);
-                EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(originalEditor, String.valueOf(charTyped), true);
+                EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(originalEditor, String.valueOf(charTyped));
             })) {
                 return true;
             }

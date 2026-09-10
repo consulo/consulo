@@ -15,12 +15,16 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-01-16
  */
+@Deprecated
+@DeprecationInfo("Use MessageBoxBuilder/MessageBoxes from ui-api")
 public interface AlertValueRemember<V> {
     void setValue(V value);
 

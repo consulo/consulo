@@ -33,11 +33,12 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
-import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -87,7 +88,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
     String file = storage.file();
     if (!StringUtil.isEmpty(file)) {
-      return file;
+      return StorageUtil.stripLegacyExtension(file);
     }
 
     String value = storage.value();
@@ -101,7 +102,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
         || value.equals(StoragePathMacros.PROJECT_FILE)) {
       return value;
     }
-    return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
+    return getConfigurationMacro(directorySpec) + "/" + StorageUtil.stripLegacyExtension(value) + (directorySpec ? "/" : "");
   }
 
  
@@ -193,11 +194,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
  
   private StateStorage createFileStateStorage(String fileSpec, @Nullable RoamingType roamingType) {
-    String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
-
-    if (PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
-      throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);
-    }
+    String filePath = expandStorageBasePath(fileSpec);
 
     if (roamingType == RoamingType.DEFAULT && fileSpec.equals(StoragePathMacros.WORKSPACE_FILE)) {
       roamingType = RoamingType.DISABLED;
@@ -223,6 +220,21 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   protected TrackingPathMacroSubstitutor getMacroSubstitutor(String fileSpec) {
     return myPathMacroSubstitutor;
+  }
+
+  @Override
+  public String resolveStorageFilePath(String fileSpec) {
+    String basePath = expandStorageBasePath(fileSpec);
+
+    String jsonPath = basePath + StorageFormat.JSON_EXTENSION;
+    if (Files.exists(Path.of(jsonPath))) {
+      return jsonPath;
+    }
+    return basePath + StorageFormat.XML_EXTENSION;
+  }
+
+  private String expandStorageBasePath(String fileSpec) {
+    return FileUtil.toSystemIndependentName(expandMacros(fileSpec));
   }
 
   private static final Pattern MACRO_PATTERN = Pattern.compile("(\\$[^\\$]*\\$)");

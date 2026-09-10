@@ -200,7 +200,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
       return publisher;
     }
 
-    Collection<InjectingBinding> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass.getName());
+    Collection<InjectingBinding> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass.getCanonicalName());
     if (listenerDescriptors != null) {
       List<Object> listeners = new ArrayList<>(listenerDescriptors.size());
       for (InjectingBinding binding : listenerDescriptors) {

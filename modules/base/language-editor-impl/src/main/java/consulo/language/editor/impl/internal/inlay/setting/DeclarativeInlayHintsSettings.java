@@ -12,38 +12,13 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @State(name = "DeclarativeInlayHintsSettings", storages = @Storage("editor.xml"))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @Singleton
-public class DeclarativeInlayHintsSettings implements PersistentStateComponentWithModificationTracker<DeclarativeInlayHintsSettings.HintsState> {
-
-    public static class HintsState {
-        private Map<String, Boolean> enabledOptions = new HashMap<>();
-        private Map<String, Boolean> providerIdToEnabled = new HashMap<>();
-
-        
-        public Map<String, Boolean> getEnabledOptions() {
-            return enabledOptions;
-        }
-
-        public void setEnabledOptions(Map<String, Boolean> options) {
-            this.enabledOptions = options;
-        }
-
-        
-        public Map<String, Boolean> getProviderIdToEnabled() {
-            return providerIdToEnabled;
-        }
-
-        public void setProviderIdToEnabled(Map<String, Boolean> mapping) {
-            this.providerIdToEnabled = mapping;
-        }
-    }
+public class DeclarativeInlayHintsSettings implements PersistentStateComponentWithModificationTracker<DeclarativeInlayHintsSettingsState> {
 
     public static DeclarativeInlayHintsSettings getInstance() {
         return ApplicationManager.getApplication()
@@ -52,22 +27,21 @@ public class DeclarativeInlayHintsSettings implements PersistentStateComponentWi
 
     private long myModificationCount;
 
-    private HintsState myState = new HintsState();
+    private DeclarativeInlayHintsSettingsState myState = new DeclarativeInlayHintsSettingsState();
 
     @Override
     public long getStateModificationCount() {
         return myModificationCount;
     }
 
-    
     @Override
-    public HintsState getState() {
+    public DeclarativeInlayHintsSettingsState getState() {
         return myState;
     }
 
     @Override
-    public void loadState(HintsState state) {
-        XmlSerializerUtil.copyBean(state, myState);
+    public void loadState(DeclarativeInlayHintsSettingsState state) {
+        myState = state;
     }
 
     public Boolean isOptionEnabled(String optionId, String providerId) {

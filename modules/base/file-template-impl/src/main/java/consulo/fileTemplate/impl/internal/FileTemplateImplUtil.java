@@ -25,7 +25,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -105,7 +105,7 @@ public class FileTemplateImplUtil {
         catch (VelocityException e) {
             LOG.error("Error evaluating template:\n" + templateContent, e);
             Application.get().invokeLater(
-                () -> Alerts.okError(FileTemplateLocalize.errorParsingFileTemplate(e.getMessage())).showAsync()
+                () -> MessageBoxes.okError(FileTemplateLocalize.errorParsingFileTemplate(e.getMessage())).showAsync()
             );
         }
         String result = stringWriter.toString();

@@ -25,10 +25,6 @@ import java.util.Collection;
  * @since 2025-06-20
  */
 public abstract class InternalNewVirtualFile extends NewVirtualFile {
-    public abstract void setFileIndexed(boolean value);
-
-    public abstract boolean isFileIndexed();
-
     public abstract void markDirtyInternal();
 
     public abstract int getNameId();

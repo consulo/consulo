@@ -15,11 +15,12 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.UIAccess;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
+import consulo.ui.font.Typeface;
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -34,13 +35,8 @@ public class HeadlessFontManager implements FontManager {
     }
 
     @Override
-    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
-        return CompletableFuture.completedFuture(Set.of());
-    }
-
-    @Override
-    public Set<String> getAvailableFontNames() {
-        return Set.of();
+    public CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess) {
+        return CompletableFuture.completedFuture(List.of());
     }
 
     @Override

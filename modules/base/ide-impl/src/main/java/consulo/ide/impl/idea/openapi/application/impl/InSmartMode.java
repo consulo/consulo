@@ -31,7 +31,7 @@ public class InSmartMode implements ConstrainedExecution.ContextConstraint {
 
   @Override
   public boolean isCorrectContext() {
-    return !DumbService.getInstance(myProject).isDumb();
+    return DumbService.getInstance(myProject).canRunSmart();
   }
 
   @Override

@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;
-import consulo.ui.Alert;
+import consulo.ui.MessageBoxBuilder;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -49,6 +49,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import consulo.ui.MessageButtonRole;
 
 /**
  * @author VISTALL
@@ -170,10 +171,10 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     });
   }
 
-  private Alert<ThreeState> createReimportAlert(ImportRequest request) {
+  private MessageBoxBuilder<ThreeState> createReimportAlert(ImportRequest request) {
     File ioPath = VirtualFileUtil.virtualToIoFile(request.file);
 
-    Alert<ThreeState> alert = Alert.create();
+    MessageBoxBuilder<ThreeState> alert = MessageBoxBuilder.create();
     alert.title(IdeLocalize.titleOpenProject());
     alert.text(IdeLocalize.projectImportOpenExisting(
       "an existing project",
@@ -182,12 +183,12 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     ));
     alert.asQuestion();
 
-    alert.button(IdeLocalize.projectImportOpenExistingOpenexisting().get(), ThreeState.YES);
+    alert.button(MessageButtonRole.YES, IdeLocalize.projectImportOpenExistingOpenexisting(), ThreeState.YES);
     alert.asDefaultButton();
 
-    alert.button(IdeLocalize.projectImportOpenExistingReimport().get(), ThreeState.NO);
+    alert.button(MessageButtonRole.NO, IdeLocalize.projectImportOpenExistingReimport(), ThreeState.NO);
 
-    alert.button(Alert.CANCEL, ThreeState.UNSURE);
+    alert.button(MessageButtonRole.CANCEL, ThreeState.UNSURE);
     alert.asExitButton();
     return alert;
   }

@@ -18,10 +18,9 @@ package consulo.ui.util;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -75,7 +74,7 @@ public class FormBuilder {
         }
 
         Label label = Label.create(labelText);
-        label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+        label.paddingBuilder().rightSet(Space.MEDIUM).apply();
 
         myLayout.add(label, TableLayout.cell(myLineCount, 0));
         myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
@@ -90,7 +89,7 @@ public class FormBuilder {
             throw new IllegalArgumentException("Can't add labeled after adding bottom components");
         }
 
-        label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+        label.paddingBuilder().rightSet(Space.MEDIUM).apply();
 
         myLayout.add(label, TableLayout.cell(myLineCount, 0));
         myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());

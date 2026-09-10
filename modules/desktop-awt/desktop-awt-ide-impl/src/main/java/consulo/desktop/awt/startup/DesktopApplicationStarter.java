@@ -175,8 +175,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         SwingUtilities.invokeLater(() -> {
             if (myPlatform.os() instanceof UnixOperationSystem os) {
-                if (os.isXWindow()) {
+                if (os.isX11()) {
                     X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
+                }
+                else if (os.isWayland()) {
+                    System.setProperty("awt.app.id", ApplicationStarter.getFrameClass());
                 }
 
                 // enable by default since we use FlatLaf always

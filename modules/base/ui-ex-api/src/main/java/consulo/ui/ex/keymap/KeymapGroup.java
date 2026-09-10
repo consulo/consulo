@@ -21,6 +21,7 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -52,7 +53,7 @@ public interface KeymapGroup {
         CreatingBuilder addAction(AnAction action, boolean forceNonPopup);
 
         
-        KeymapGroup build();
+        CompletableFuture<KeymapGroup> build();
     }
 
     void addActionId(String id);

@@ -15,10 +15,12 @@
  */
 package consulo.diff.internal;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.localize.DiffLocalize;
 import consulo.localize.LocalizeValue;
 
+@CompiledJson
 public enum IgnorePolicy {
     DEFAULT(ComparisonPolicy.DEFAULT, DiffLocalize.optionIgnorePolicyNone()),
     TRIM_WHITESPACES(ComparisonPolicy.TRIM_WHITESPACES, DiffLocalize.optionIgnorePolicyTrim()),

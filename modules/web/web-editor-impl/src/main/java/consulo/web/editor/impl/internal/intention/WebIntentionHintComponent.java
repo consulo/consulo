@@ -18,8 +18,8 @@ package consulo.web.editor.impl.internal.intention;
 import com.vaadin.flow.dom.Element;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.VisibleAreaEvent;
-import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.internal.CaretPixelLocationProvider.CaretPixelLocation;
+import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.disposer.Disposable;
 import consulo.language.editor.impl.internal.intention.IntentionListStep;
 import consulo.language.editor.internal.intention.CachedIntentions;
@@ -30,6 +30,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ImageBox;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.internal.AnchoredPopup;
 import consulo.ui.ex.popup.JBPopup;
@@ -111,7 +112,7 @@ public class WebIntentionHintComponent implements Disposable {
         ImageBox arrow = ImageBox.create(PlatformIconGroup.generalArrowdown());
         arrow.setVisible(false);
 
-        HorizontalLayout content = HorizontalLayout.create(0);
+        HorizontalLayout content = HorizontalLayout.create(Space.NONE);
         content.add(bulb);
         content.add(arrow);
 

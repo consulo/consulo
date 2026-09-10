@@ -24,12 +24,6 @@ action.Anonymous.text.add.keyboard.shortcut:
     text: Add Keyboard Shortcut
 action.Anonymous.text.add.mouse.shortcut:
     text: Add Mouse Shortcut
-action.Anonymous.text.live.templates:
-    text: Live Templates
-action.Anonymous.text.new.group:
-    text: New group…
-action.Anonymous.text.rename:
-    text: Rename
 action.Anonymous.text.reset.shortcuts:
     text: Reset Shortcuts
 action.DumbAware.BuildView.text.stop:

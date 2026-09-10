@@ -20,12 +20,15 @@ import consulo.platform.PlatformFeature;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformUser;
 import consulo.platform.impl.PlatformBase;
+import consulo.platform.impl.UnixOperationSystemImpl;
 import consulo.ui.UIAccess;
 import consulo.webBrowser.BrowserUtil;
 
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -40,7 +43,6 @@ class DesktopAWTPlatformImpl extends PlatformBase {
     public void openInBrowser(URL url) {
         BrowserUtil.browse(url);
     }
-
     
     @Override
     public String fileManagerName() {
@@ -49,12 +51,9 @@ class DesktopAWTPlatformImpl extends PlatformBase {
 
     @Override
     public boolean supportsFeature(PlatformFeature feature) {
-        switch (feature) {
-            case OPEN_DIRECTORY_IN_FILE_MANAGER:
-            case OPEN_FILE_IN_FILE_MANAGER:
-                return FileManagerProxy.isSupported();
-        }
-        return false;
+        return switch (feature) {
+            case OPEN_DIRECTORY_IN_FILE_MANAGER, OPEN_FILE_IN_FILE_MANAGER -> FileManagerProxy.isSupported();
+        };
     }
 
     @Override
@@ -66,16 +65,21 @@ class DesktopAWTPlatformImpl extends PlatformBase {
     public void openDirectoryInFileManager(File file, UIAccess uiAccess) {
         FileManagerProxy.openDirectory(file, uiAccess);
     }
-
     
     @Override
     protected PlatformUser createUser(Map<String, String> jvmProperties) {
         return new DesktopPlatformUserImpl(this, jvmProperties);
     }
-
     
     @Override
     protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
         return new DesktopAWTFileSystemImpl(this, jvmProperties);
+    }
+
+    @Override
+    protected UnixOperationSystemImpl createUnixOperatingSystem(Map<String, String> jvmProperties,
+                                                                Function<String, String> getEnvFunc,
+                                                                Supplier<Map<String, String>> getEnvsSup) {
+        return new DesktopAWTUnixOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
     }
 }

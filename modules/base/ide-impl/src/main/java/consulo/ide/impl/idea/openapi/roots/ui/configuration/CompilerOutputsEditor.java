@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.ui.RadioGroup;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.disposer.Disposable;
@@ -27,9 +28,8 @@ import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.image.Image;
@@ -52,6 +52,7 @@ import java.util.function.Predicate;
  * @since 2006-06-28
  */
 public class CompilerOutputsEditor extends ModuleElementsEditor {
+    private RadioGroup<Boolean> myInheritedOutput;
     private RadioButton myInheritCompilerOutput;
     private RadioButton myPerModuleCompilerOutput;
 
@@ -70,16 +71,13 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @RequiredUIAccess
     public Component createUIComponentImpl(Disposable parentUIDisposable) {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
-        myPerModuleCompilerOutput = RadioButton.create(ProjectLocalize.projectModuleCompileOutputPath());
+        myInheritedOutput = RadioGroup.create();
+        myInheritCompilerOutput = myInheritedOutput.newButton(ProjectLocalize.projectInheritCompileOutputPath(), true);
+        myPerModuleCompilerOutput = myInheritedOutput.newButton(ProjectLocalize.projectModuleCompileOutputPath(), false);
 
-        ValueGroups.boolGroup().add(myInheritCompilerOutput).add(myPerModuleCompilerOutput);
+        myInheritedOutput.setValue(true);
 
-        ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> listener =
-            e -> enableCompilerSettings(!myInheritCompilerOutput.getValueOrError());
-
-        myInheritCompilerOutput.addValueListener(listener);
-        myPerModuleCompilerOutput.addValueListener(listener);
+        myInheritedOutput.addValueListener(inherited -> enableCompilerSettings(!Boolean.TRUE.equals(inherited)));
 
         for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
             CommitableFieldPanel panel = createOutputPathPanel(
@@ -114,7 +112,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         formBuilder.addBottom(myCbExcludeOutput);
 
         Component bottom = formBuilder.build();
-        bottom.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE);
+        bottom.paddingBuilder().leftSet(Space.X_LARGE).apply();
         panel.add(bottom);
 
         //// fill with data
@@ -122,11 +120,10 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         //
         ////compiler settings
         boolean outputPathInherited = moduleCompilerPathsManager.isInheritedCompilerOutput();
-        myInheritCompilerOutput.setValue(outputPathInherited);
-        myPerModuleCompilerOutput.setValue(!outputPathInherited);
+        myInheritedOutput.setValue(outputPathInherited);
         enableCompilerSettings(!outputPathInherited);
 
-        panel.addBorders(BorderStyle.EMPTY, null, 5);
+        panel.paddingBuilder().allSet(Space.MEDIUM).apply();
         return panel;
     }
 
@@ -196,7 +193,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @RequiredUIAccess
     public boolean isModified() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        if (myInheritCompilerOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+        if (myInheritedOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
             return true;
         }
         for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
@@ -238,7 +235,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @Override
     @RequiredUIAccess
     public void moduleCompileOutputChanged(String baseUrl, String moduleName) {
-        if (myInheritCompilerOutput.getValueOrError()) {
+        if (myInheritedOutput.getValueOrError()) {
             if (baseUrl != null) {
                 for (Map.Entry<ContentFolderTypeProvider, CommitableFieldPanel> entry : myOutputFields.entrySet()) {
                     ContentFolderTypeProvider key = entry.getKey();

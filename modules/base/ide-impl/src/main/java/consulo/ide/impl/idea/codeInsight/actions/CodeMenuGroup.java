@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementD
 import consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementUpAction;
 import consulo.ide.impl.idea.codeInsight.folding.impl.actions.FoldingGroup;
 import consulo.ide.impl.idea.codeInsight.generation.actions.CommentGroup;
-import consulo.ide.impl.idea.codeInsight.generation.actions.SurroundWithAction;
+import consulo.ide.impl.idea.codeInsight.generation.surroundWith.actions.SurroundWithAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.ListTemplatesAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.SurroundWithTemplateAction;
 import consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction;

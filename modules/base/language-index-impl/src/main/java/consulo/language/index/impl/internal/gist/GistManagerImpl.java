@@ -2,6 +2,7 @@
 package consulo.language.index.impl.internal.gist;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.concurrent.ApplicationConcurrency;
@@ -39,24 +40,31 @@ public final class GistManagerImpl extends GistManager {
     private final AtomicInteger myReindexCount = new AtomicInteger(ApplicationPropertiesComponent.getInstance().getInt(ourPropertyName, 0));
     private final AtomicBoolean myDropCachesQueued = new AtomicBoolean();
     private final MergingProcessingQueue<Object> myDropCachesQueue;
+    private final AtomicInteger myMergingDropCachesRequestors = new AtomicInteger();
+    private final AtomicBoolean myMergedDropCachesRequested = new AtomicBoolean();
+    private final CoroutineScope myCoroutineScope;
 
     @Inject
     public GistManagerImpl(Application application, ApplicationConcurrency applicationConcurrency) {
+        myCoroutineScope = CoroutineScope.of(application.coroutineContext());
         myDropCachesQueue = new MergingProcessingQueue<>(applicationConcurrency, 500) {
             @Override
             protected void process(Object key) {
                 myDropCachesQueued.set(false);
-
-                WriteLock.apply((o, continuation) -> {
-                        for (Project openProject : ProjectManager.getInstance().getOpenProjects()) {
-                            PsiManager.getInstance(openProject).dropPsiCaches();
-                        }
-                        return null;
-                    })
-                    .toCoroutine()
-                    .runAsync(CoroutineScope.of(application.coroutineContext()), null);
+                dropCaches();
             }
         };
+    }
+
+    private void dropCaches() {
+        WriteLock.apply((o, continuation) -> {
+                for (Project openProject : ProjectManager.getInstance().getOpenProjects()) {
+                    PsiManager.getInstance(openProject).dropPsiCaches();
+                }
+                return null;
+            })
+            .toCoroutine()
+            .runAsync(myCoroutineScope, null);
     }
 
     @Override
@@ -93,8 +101,35 @@ public final class GistManagerImpl extends GistManager {
     }
 
     private void invalidateDependentCaches() {
-        if (myDropCachesQueued.compareAndSet(false, true)) {
-            myDropCachesQueue.queueAdd(DROP_CACHES_KEY);
+        if (myMergingDropCachesRequestors.get() == 0) {
+            if (myDropCachesQueued.compareAndSet(false, true)) {
+                myDropCachesQueue.queueAdd(DROP_CACHES_KEY);
+            }
+        }
+        else {
+            myMergedDropCachesRequested.set(true);
+        }
+    }
+
+    public AccessToken mergeDependentCacheInvalidations() {
+        myMergingDropCachesRequestors.incrementAndGet();
+        return new AccessToken() {
+            private final AtomicBoolean alreadyFinished = new AtomicBoolean(false);
+
+            @Override
+            public void finish() {
+                if (alreadyFinished.compareAndSet(false, true)) {
+                    if (myMergingDropCachesRequestors.decrementAndGet() == 0 && myMergedDropCachesRequested.compareAndSet(true, false)) {
+                        dropCaches();
+                    }
+                }
+            }
+        };
+    }
+
+    public void runWithMergingDependentCacheInvalidations(Runnable runnable) {
+        try (AccessToken ignored = mergeDependentCacheInvalidations()) {
+            runnable.run();
         }
     }
 

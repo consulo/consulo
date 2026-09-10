@@ -17,11 +17,9 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Inject;
 
@@ -31,12 +29,12 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl
 final class EncodingProjectManagerStartUpActivity implements PostStartupActivity, DumbAware {
-  @Inject
-  EncodingProjectManagerStartUpActivity() {
-  }
+    @Inject
+    EncodingProjectManagerStartUpActivity() {
+    }
 
-  @Override
-  public void runActivity(Project project, UIAccess uiAccess) {
-    GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments(), IdeaModalityState.nonModal(), project.getDisposed());
-  }
+    @Override
+    public void runActivity(Project project, UIAccess uiAccess) {
+        uiAccess.give(() -> ((EncodingProjectManagerImpl) EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments());
+    }
 }

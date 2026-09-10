@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.logging.Logger;
 import consulo.application.HelpManager;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.ui.UISettings;
@@ -35,7 +36,6 @@ import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.desktop.awt.ui.impl.tabs.JBEditorTabs;
@@ -84,12 +84,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
 public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedContainer, Disposable, CloseAction.CloseTarget {
+    private static final Logger LOG = Logger.getInstance(DesktopAWTEditorTabbedContainer.class);
+
     private final DesktopFileEditorWindow myWindow;
     private final Project myProject;
     private final JBEditorTabs myTabs;
@@ -124,9 +127,20 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         myTabs.setTransferHandler(new MyTransferHandler());
         myTabs.setFirstTabOffset(3);
 
+        // the schema loads asynchronously, so the group is fetched once and read from the cache at popup time
+        AtomicReference<ActionGroup> tabPopupGroup = new AtomicReference<>();
+        CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_EDITOR_TAB_POPUP)
+            .whenComplete((group, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to resolve the editor tab popup group", throwable);
+                    return;
+                }
+                tabPopupGroup.set(group);
+            });
+
         myTabs.setDataProvider(new MyDataProvider())
             .setPopupGroup(
-                () -> (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP),
+                tabPopupGroup::get,
                 ActionPlaces.EDITOR_TAB_POPUP,
                 false
             )

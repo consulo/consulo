@@ -15,6 +15,7 @@
  */
 package consulo.platform.impl;
 
+import consulo.platform.os.UnixDisplayProtocol;
 import consulo.platform.os.UnixOperationSystem;
 
 import java.util.Map;
@@ -26,23 +27,30 @@ import java.util.function.Supplier;
  * @since 2024-12-25
  */
 public class UnixOperationSystemImpl extends PlatformOperatingSystemImpl implements UnixOperationSystem {
-    private boolean isWayland;
     private boolean isGNOME;
     private boolean isI3;
     private boolean isKDE;
     private boolean isXfce;
+
+    private final UnixDisplayProtocol myDisplayProtocol;
 
     public UnixOperationSystemImpl(Map<String, String> jvmProperties,
                                    Function<String, String> getEnvFunc,
                                    Supplier<Map<String, String>> getEnvsSup) {
         super(jvmProperties, getEnvFunc, getEnvsSup);
 
-        isWayland = getEnvFunc.apply("WAYLAND_DISPLAY") != null;
+        myDisplayProtocol = detectDisplayProtocol(jvmProperties);
+
         String desktop = getEnvFunc.apply("XDG_CURRENT_DESKTOP"), gdmSession = getEnvFunc.apply("GDMSESSION");
         isGNOME = desktop != null && desktop.contains("GNOME") || gdmSession != null && gdmSession.contains("gnome");
         isKDE = !isGNOME && (desktop != null && desktop.contains("KDE") || getEnvFunc.apply("KDE_FULL_SESSION") != null);
         isXfce = !isGNOME && !isKDE && (desktop != null && desktop.contains("XFCE"));
         isI3 = !isGNOME && !isKDE && !isXfce && (desktop != null && desktop.contains("i3"));
+    }
+
+    private static UnixDisplayProtocol detectDisplayProtocol(Map<String, String> jvmProperties) {
+        String toolkitName = jvmProperties.get("awt.toolkit.name");
+        return "WLToolkit".equals(toolkitName) ? UnixDisplayProtocol.WAYLAND : UnixDisplayProtocol.X11;
     }
 
     @Override
@@ -56,8 +64,8 @@ public class UnixOperationSystemImpl extends PlatformOperatingSystemImpl impleme
     }
 
     @Override
-    public boolean isXWindow() {
-        return true; // always true? sure?
+    public UnixDisplayProtocol displayProtocol() {
+        return myDisplayProtocol;
     }
 
     @Override
@@ -73,10 +81,5 @@ public class UnixOperationSystemImpl extends PlatformOperatingSystemImpl impleme
     @Override
     public boolean isI3() {
         return isI3;
-    }
-
-    @Override
-    public boolean isWayland() {
-        return isWayland;
     }
 }

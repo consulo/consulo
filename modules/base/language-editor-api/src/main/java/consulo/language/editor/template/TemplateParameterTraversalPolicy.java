@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
@@ -27,6 +28,8 @@ import consulo.language.psi.PsiFile;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateParameterTraversalPolicy {
+    @Deprecated
+    @DeprecationInfo("Use Application.get().getExtensionPoint(TemplateParameterTraversalPolicy.class)")
     ExtensionPointName<TemplateParameterTraversalPolicy> EP_NAME = ExtensionPointName.create(TemplateParameterTraversalPolicy.class);
 
     boolean isValidForFile(Editor editor, PsiFile file);

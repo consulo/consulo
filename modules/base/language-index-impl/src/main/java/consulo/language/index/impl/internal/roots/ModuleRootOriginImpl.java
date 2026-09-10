@@ -6,6 +6,7 @@ import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;
+import java.util.Objects;
 
 class ModuleRootOriginImpl implements ModuleRootOrigin {
     private final Module myModule;
@@ -24,5 +25,21 @@ class ModuleRootOriginImpl implements ModuleRootOrigin {
     @Override
     public List<VirtualFile> getRoots() {
         return myRoots;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ModuleRootOriginImpl other)) {
+            return false;
+        }
+        return myModule.equals(other.myModule) && myRoots.equals(other.myRoots);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myModule, myRoots);
     }
 }

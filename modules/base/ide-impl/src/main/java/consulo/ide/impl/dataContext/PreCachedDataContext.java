@@ -20,57 +20,130 @@ import consulo.application.Application;
 import consulo.application.internal.SlowOperations;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.UiDataRule;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
+import consulo.ui.Component;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * A pre-cached async data context that captures data providers on EDT
- * and allows safe data resolution from background threads.
+ * A pre-cached async data context that captures the answers of a component hierarchy on EDT and allows safe
+ * data resolution from background threads.
  * <p>
- * For {@link UiDataProvider} components, the snapshot is pre-collected on EDT
- * via {@link DataSinkImpl}, and lazy values are resolved under {@code tryRunReadAction}.
- * <p>
- * For legacy {@link DataProvider} components,
- * providers are captured on EDT and wrapped for background-safe access.
+ * The hierarchy is captured into one snapshot rather than kept as a chain to walk per key: every component is
+ * collected from the focused one upwards, so the nearest one to answer for a key wins, and the
+ * {@link UiDataRule}s run once over the result. A rule therefore reads the hierarchy the way an action does,
+ * and a component which {@link DataSink#setNull stands for a key itself} hides it from the
+ * components above it together with everything the rules would have derived from it.
  */
 public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
     private static final Logger LOG = Logger.getInstance(PreCachedDataContext.class);
 
     private static boolean ourIsCapturingSnapshot;
 
-    private final BaseDataManager myDataManager;
-    private final List<DataProvider> myProviders;
-    private final consulo.ui.@Nullable Component myComponent;
+    private final DataSinkImpl mySnapshot;
+    private final @Nullable Component myComponent;
     private Map<Key, Object> myUserData;
 
-    /**
-     * Creates a pre-cached async data context from a list of providers
-     * already resolved on EDT.
-     *
-     * @param dataManager the data manager for rule resolution
-     * @param providers   providers in hierarchy order (child-first)
-     */
-    public PreCachedDataContext(BaseDataManager dataManager, List<DataProvider> providers) {
-        this(dataManager, providers, null);
+    public PreCachedDataContext(DataSinkImpl snapshot) {
+        this(snapshot, null);
     }
 
     public PreCachedDataContext(
-        BaseDataManager dataManager,
-        List<DataProvider> providers,
-        consulo.ui.@Nullable Component component
+        DataSinkImpl snapshot,
+        @Nullable Component component
     ) {
-        myDataManager = dataManager;
-        myProviders = providers;
+        mySnapshot = snapshot;
         myComponent = component;
+    }
+
+    /**
+     * Captures a component hierarchy to answer from right away. Every walk of the platform builds its snapshot
+     * through this, so the order of the components - and what one of them hides from the ones above - is the
+     * only thing a frontend has to describe.
+     */
+    public static Capture capture(Application application) {
+        return new Capture(application, false);
+    }
+
+    /**
+     * Captures a component hierarchy to be read later from a background thread. The providers are held to the
+     * rule that they answer without slow work, since the answers are taken here and not when they are read.
+     */
+    public static Capture captureForAsync(Application application) {
+        return new Capture(application, true);
+    }
+
+    public static class Capture {
+        private final Application myApplication;
+        private final DataSinkImpl mySink;
+        private final boolean myForAsync;
+
+        private Capture(Application application, boolean forAsync) {
+            myApplication = application;
+            mySink = new DataSinkImpl(application);
+            myForAsync = forAsync;
+        }
+
+        /**
+         * This component of the hierarchy stands for the key itself - nothing above it answers for it.
+         */
+        public Capture hide(Key<?> key) {
+            mySink.setNull(key);
+            return this;
+        }
+
+        public Capture collect(@Nullable DataProvider provider) {
+            if (provider == null) {
+                return this;
+            }
+
+            if (!myForAsync) {
+                mySink.collectFrom(logSlow(provider));
+                return this;
+            }
+
+            ourIsCapturingSnapshot = true;
+            try (AccessToken ignore = SlowOperations.startSection(SlowOperations.FORCE_ASSERT)) {
+                mySink.collectFrom(logSlow(provider));
+            }
+            finally {
+                ourIsCapturingSnapshot = false;
+            }
+            return this;
+        }
+
+        /**
+         * Closes the snapshot by running the rules over everything the hierarchy answered.
+         */
+        public DataSinkImpl snapshot() {
+            mySink.applyRules(myApplication.getExtensionPoint(UiDataRule.class));
+            return mySink;
+        }
+
+        /**
+         * Closes the snapshot and answers one key from it, which is what a context built per key needs.
+         */
+        public <T> @Nullable T resolve(Key<T> key) {
+            DataSinkImpl snapshot = snapshot();
+            T data = snapshot.resolve(key);
+            return data == null ? null : BaseDataManager.validated(data, key, snapshot);
+        }
+
+        public PreCachedDataContext build(BaseDataManager dataManager) {
+            return build(dataManager, null);
+        }
+
+        public PreCachedDataContext build(BaseDataManager dataManager, @Nullable Component component) {
+            return new PreCachedDataContext(snapshot(), component);
+        }
     }
 
     @Override
@@ -80,21 +153,15 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
             LOG.error("DataContext must not be queried during another DataContext creation");
         }
 
-
-        for (DataProvider provider : myProviders) {
-            T data = myDataManager.getDataFromProvider(provider, dataId, null);
-            if (data != null) {
-                return data;
-            }
-        }
-
         // the component the context was built from is the last word on what it is, so a provider which names a
         // component of its own - the tree inside the panel the provider hangs off - is answered first
-        if (myComponent != null && (consulo.ui.Component.KEY == dataId || PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId)) {
+        if (myComponent != null && (Component.KEY == dataId || PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId)) {
             //noinspection unchecked
             return (T) myComponent;
         }
-        return null;
+
+        T data = mySnapshot.resolve(dataId);
+        return data == null ? null : BaseDataManager.validated(data, dataId, mySnapshot);
     }
 
     @Override
@@ -116,44 +183,24 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
     }
 
     /**
-     * Initializes a data provider for async (background) use.
-     * <p>
-     * For {@link UiDataProvider}: pre-collects snapshot via {@link DataSinkImpl}
-     * on EDT, returns a provider that resolves from the pre-collected sink.
-     * <p>
-     * For other providers: wraps with slow-access logging.
-     *
-     * @param provider the original provider from the component
-     * @return a background-safe data provider
+     * A provider which has not been migrated to {@link UiDataProvider} is asked per key
+     * rather than for a snapshot, and is the one which can be slow. Saying so is all this does.
      */
-    public static DataProvider initProviderForAsync(Application application, DataProvider provider) {
-        // UiDataProviderAdapter already handles UiDataProvider via DataSinkImpl,
-        // but for async context we want to pre-collect the sink on EDT
-        if (provider instanceof UiDataProviderAdapter uiAdapter) {
-            DataSinkImpl sink = new DataSinkImpl(application);
-            ourIsCapturingSnapshot = true;
-            try (AccessToken ignore = SlowOperations.startSection(SlowOperations.FORCE_ASSERT)) {
-                sink.collectFromProvider(uiAdapter.getProvider(), application.getExtensionPoint(UiDataRule.class));
-            }
-            finally {
-                ourIsCapturingSnapshot = false;
-            }
-            return sink::resolve;
+    private static DataProvider logSlow(DataProvider provider) {
+        if (provider instanceof UiDataProviderAdapter) {
+            return provider;
         }
 
-        return new DataProvider() {
-            @Override
-            public @Nullable Object getData(Key<?> dataKey) {
-                long start = System.currentTimeMillis();
-                try {
-                    return provider.getData(dataKey);
-                }
-                finally {
-                    long elapsed = System.currentTimeMillis() - start;
-                    if (elapsed > 100) {
-                        LOG.warn("Slow data provider " + provider + " took " + elapsed + "ms on " + dataKey +
-                            ". Consider implementing UiDataProvider.");
-                    }
+        return dataKey -> {
+            long start = System.currentTimeMillis();
+            try {
+                return provider.getData(dataKey);
+            }
+            finally {
+                long elapsed = System.currentTimeMillis() - start;
+                if (elapsed > 100) {
+                    LOG.warn("Slow data provider " + provider + " took " + elapsed + "ms on " + dataKey +
+                        ". Consider implementing UiDataProvider.");
                 }
             }
         };

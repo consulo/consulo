@@ -28,7 +28,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.internal.UIConstant;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
@@ -86,12 +85,12 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
 
     @RequiredUIAccess
     public ColorAndFontDescriptionPanel() {
-        myPanel = new JPanel(new VerticalLayout(UIConstant.DEFAULT_SPACING_PX));
+        myPanel = new JPanel(new VerticalLayout(5));
 
         myCbBold = new JBCheckBox(ApplicationBundle.message("checkbox.font.bold"));
         myCbItalic = new JBCheckBox(ApplicationBundle.message("checkbox.font.italic"));
 
-        JPanel leftFontLine = new JPanel(new HorizontalLayout(UIConstant.DEFAULT_SPACING_PX * 2));
+        JPanel leftFontLine = new JPanel(new HorizontalLayout(10));
         leftFontLine.add(myCbBold);
         leftFontLine.add(myCbItalic);
         myPanel.add(new BorderLayoutPanel().addToRight(leftFontLine));

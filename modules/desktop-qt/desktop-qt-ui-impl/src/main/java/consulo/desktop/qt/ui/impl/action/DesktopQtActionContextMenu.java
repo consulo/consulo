@@ -37,6 +37,7 @@ import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -55,7 +56,7 @@ public final class DesktopQtActionContextMenu extends QObject {
     private static final Logger LOG = Logger.getInstance(DesktopQtActionContextMenu.class);
 
     private final QWidget myWidget;
-    private final Function<QPoint, ActionGroup> myGroupSupplier;
+    private final Function<QPoint, CompletableFuture<ActionGroup>> myGroupSupplier;
     private final String myPlace;
     private final Function<QPoint, DataContext> myContextSupplier;
     private final MenuItemPresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
@@ -65,7 +66,7 @@ public final class DesktopQtActionContextMenu extends QObject {
 
     public static void install(
         Component component,
-        Supplier<ActionGroup> groupSupplier,
+        Supplier<CompletableFuture<ActionGroup>> groupSupplier,
         String place,
         Supplier<DataContext> contextSupplier
     ) {
@@ -85,7 +86,7 @@ public final class DesktopQtActionContextMenu extends QObject {
      */
     public static void installOn(
         QWidget widget,
-        Function<QPoint, ActionGroup> groupSupplier,
+        Function<QPoint, CompletableFuture<ActionGroup>> groupSupplier,
         String place,
         Function<QPoint, DataContext> contextSupplier
     ) {
@@ -94,7 +95,7 @@ public final class DesktopQtActionContextMenu extends QObject {
 
     private DesktopQtActionContextMenu(
         QWidget widget,
-        Function<QPoint, ActionGroup> groupSupplier,
+        Function<QPoint, CompletableFuture<ActionGroup>> groupSupplier,
         String place,
         Function<QPoint, DataContext> contextSupplier
     ) {
@@ -123,7 +124,18 @@ public final class DesktopQtActionContextMenu extends QObject {
 
     @RequiredUIAccess
     private void showMenu(QPoint position) {
-        ActionGroup group = myGroupSupplier.apply(position);
+        UIAccess menuAccess = UIAccess.current();
+        myGroupSupplier.apply(position).whenComplete((group, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the context menu group", throwable);
+                return;
+            }
+            menuAccess.giveIfNeed(() -> showMenu(position, group));
+        });
+    }
+
+    @RequiredUIAccess
+    private void showMenu(QPoint position, @Nullable ActionGroup group) {
         if (group == null) {
             // a right click that produces nothing is indistinguishable from one that never arrived, and the two
             // are fixed in different places - so say which it was

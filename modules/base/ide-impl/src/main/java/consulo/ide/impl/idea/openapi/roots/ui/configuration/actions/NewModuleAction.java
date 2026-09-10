@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -25,10 +26,13 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.module.creation.NewProjectDialog;
+import consulo.application.Application;
+import consulo.ide.impl.module.creation.NewProjectDialogDescriptor;
 import consulo.ide.impl.module.creation.NewProjectWizardData;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
+import jakarta.inject.Inject;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -38,8 +42,12 @@ import java.util.concurrent.CompletableFuture;
  */
 @ActionImpl(id = "NewModule")
 public class NewModuleAction extends LegacyDumbAwareAction {
-    public NewModuleAction() {
+    private final DialogService myDialogService;
+
+    @Inject
+    public NewModuleAction(DialogService dialogService) {
         super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription());
+        myDialogService = dialogService;
     }
 
     @Override
@@ -67,24 +75,30 @@ public class NewModuleAction extends LegacyDumbAwareAction {
         };
         fileChooserDescriptor.withTitle(ProjectLocalize.chooseModuleHome());
 
+        UIAccess uiAccess = UIAccess.current();
+
         CompletableFuture<VirtualFile> chooseAsync =
             FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
-        chooseAsync.whenComplete((moduleDir, error) -> {
+
+        chooseAsync.whenCompleteAsync((moduleDir, error) -> {
             if (error != null) {
                 return;
             }
 
-            NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
+            NewProjectDialogDescriptor descriptor = new NewProjectDialogDescriptor(moduleDir);
 
-            dialog.showAsync().whenComplete((value, dialogError) -> {
-                if (dialogError != null) {
-                    return;
-                }
+            myDialogService
+                .build(project, descriptor)
+                .showAsync()
+                .whenCompleteAsync((value, dialogError) -> {
+                    if (dialogError != null) {
+                        return;
+                    }
 
-                NewProjectWizardData panel = dialog.getProjectPanel();
-                NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
-            });
-        });
+                    NewProjectWizardData panel = descriptor.getWizardData();
+                    NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
+                }, uiAccess);
+        }, uiAccess);
     }
 
     @Override

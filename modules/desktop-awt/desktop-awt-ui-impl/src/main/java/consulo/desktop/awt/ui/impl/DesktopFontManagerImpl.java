@@ -15,13 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.FontInfo;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
+import consulo.ui.font.Typeface;
+import consulo.ui.impl.font.TypefaceImpl;
 
-import java.awt.*;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -31,45 +34,36 @@ import java.util.concurrent.CompletableFuture;
 public class DesktopFontManagerImpl implements FontManager {
     public static final DesktopFontManagerImpl ourInstance = new DesktopFontManagerImpl();
 
-    private static final Logger LOG = Logger.getInstance(DesktopFontManagerImpl.class);
-
     @Override
     public boolean isRequiredPermission() {
         return false;
     }
 
+    /**
+     * Reads the families by name, which also settles the pitch of each - asking the graphics environment for
+     * every face instead would be markedly slower and would answer with face names, which is not what a family
+     * is. That enumeration is the call worth keeping off the ui thread, and it orders itself for a chooser,
+     * monospaced first, so it is sorted back into plain alphabetical order here.
+     */
     @Override
-    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
-        return CompletableFuture.supplyAsync(() -> {
-            GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Set<String> fontNames = new TreeSet<>();
-            try {
-                java.awt.Font[] fonts = environment.getAllFonts();
-                for (java.awt.Font font : fonts) {
-                    fontNames.add(font.getFontName());
-                }
-            }
-            catch (Exception e) {
-                LOG.error(e);
-            }
-            return fontNames;
-        });
-    }
+    public CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess) {
+        CompletableFuture<List<Typeface>> result = new CompletableFuture<>();
 
-    @Override
-    public Set<String> getAvailableFontNames() {
-        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Set<String> fontNames = new TreeSet<>();
-        try {
-            java.awt.Font[] fonts = environment.getAllFonts();
-            for (java.awt.Font font : fonts) {
-                fontNames.add(font.getFontName());
+        Thread.ofVirtual().start(() -> {
+            try {
+                List<Typeface> typefaces = new ArrayList<>();
+                for (FontInfo fontInfo : FontInfo.getAllUncached()) {
+                    typefaces.add(new TypefaceImpl(fontInfo.toString(), fontInfo.isMonospaced()));
+                }
+                typefaces.sort(Comparator.comparing(Typeface::getName));
+                result.complete(typefaces);
             }
-        }
-        catch (Exception e) {
-            LOG.error(e);
-        }
-        return fontNames;
+            catch (Throwable e) {
+                result.completeExceptionally(e);
+            }
+        });
+
+        return result;
     }
 
     @Override

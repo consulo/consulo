@@ -83,14 +83,14 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
         myConflictsPanel.setVisible(0 < myConflictsContainer.getComponentCount());
     }
 
-    T showAndGet(String id, Keymap keymap, QuickList... lists) {
-        return showAndGet(id, keymap, null, lists);
+    T showAndGet(String id, Keymap keymap, KeymapGroup mainGroup) {
+        return showAndGet(id, keymap, mainGroup, null);
     }
 
-    T showAndGet(String id, Keymap keymap, @Nullable T selectedShortcut, QuickList... lists) {
+    T showAndGet(String id, Keymap keymap, KeymapGroup mainGroup, @Nullable T selectedShortcut) {
         myActionId = id;
         myKeymap = keymap;
-        myGroup = ActionsTreeUtil.createMainGroup(myProject, keymap, lists, null, false, null);
+        myGroup = mainGroup;
         addSystemActionsIfPresented(myGroup);
         fill(myAction, id, getActionPath(id));
         if (selectedShortcut == null) {

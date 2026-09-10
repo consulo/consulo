@@ -21,7 +21,7 @@ import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.util.ProjectUtil;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -92,7 +92,7 @@ public class SandCheckoutPage implements CheckoutPage {
     @Override
     @RequiredUIAccess
     public void doCheckout(CheckoutCallback listener) {
-        Alerts.okInfo(LocalizeValue.localizeTODO("Sand clone of '" + getUrl() + "' into '" + getDirectory() + "'")).showAsync();
+        MessageBoxes.okInfo(LocalizeValue.localizeTODO("Sand clone of '" + getUrl() + "' into '" + getDirectory() + "'")).showAsync();
 
         listener.checkoutCompleted();
     }

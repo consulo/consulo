@@ -15,7 +15,8 @@ module consulo.project.impl {
     exports consulo.project.impl.internal to
         consulo.ide.impl,
         consulo.it,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.language.index.impl;
 
     exports consulo.project.impl.internal.store to consulo.ide.impl, consulo.it;
 

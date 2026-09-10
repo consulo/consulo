@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.root;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsDirectoryMapping;
@@ -25,5 +26,7 @@ import consulo.versionControlSystem.VcsDirectoryMapping;
  * @see AbstractVcs#getRootConfigurable(VcsDirectoryMapping)
  * @see VcsDirectoryMapping#getRootSettings()
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Per root VCS settings are not stored anymore. Interface has no implementations")
 public interface VcsRootSettings extends JDOMExternalizable {
 }

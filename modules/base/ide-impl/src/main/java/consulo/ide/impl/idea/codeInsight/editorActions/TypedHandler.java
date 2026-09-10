@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
@@ -15,6 +16,7 @@ import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.DocumentWindow;
@@ -22,7 +24,6 @@ import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -36,6 +37,7 @@ import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;
 import consulo.language.editor.inject.InjectedEditorManager;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.LanguageFileType;
 import consulo.language.inject.InjectedLanguageManager;
@@ -141,7 +143,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             return;
         }
 
-        if (!EditorModificationUtil.checkModificationAllowed(originalEditor)) {
+        if (!LanguageEditorUtil.checkModificationAllowed(originalEditor)) {
             return;
         }
 
@@ -253,8 +255,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         });
     }
 
+    @RequiredWriteAction
     private static void type(Editor editor, char charTyped) {
-        CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingInEditorCommandName().get());
+        CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingInEditorCommandName());
         EditorModificationUtil.insertStringAtCaret(editor, String.valueOf(charTyped), true, true);
     }
 
@@ -325,12 +328,12 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         return false;
     }
 
-    
+    @RequiredReadAction
     public static Editor injectedEditorIfCharTypedIsSignificant(char charTyped, Editor editor, PsiFile oldFile) {
         return injectedEditorIfCharTypedIsSignificant((int)charTyped, editor, oldFile);
     }
 
-    
+    @RequiredReadAction
     public static Editor injectedEditorIfCharTypedIsSignificant(int charTyped, Editor editor, PsiFile oldFile) {
         int offset = editor.getCaretModel().getOffset();
         // even for uncommitted document try to retrieve injected fragment that has been there recently
@@ -487,6 +490,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         return true;
     }
 
+    @RequiredWriteAction
     private static boolean handleQuote(Editor editor, char quote, PsiFile file) {
         if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_QUOTE) {
             return false;

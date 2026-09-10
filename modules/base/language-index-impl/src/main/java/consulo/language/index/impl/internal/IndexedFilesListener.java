@@ -2,6 +2,7 @@
 package consulo.language.index.impl.internal;
 
 import consulo.application.progress.ProgressManager;
+import consulo.logging.Logger;
 import consulo.content.ContentIterator;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
@@ -16,6 +17,10 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import java.util.List;
 
 abstract class IndexedFilesListener implements AsyncFileListener {
+  static final String DEBUG_PROPERTY = "consulo.indexing.dirty.files.debug";
+
+  private static final Logger LOG = Logger.getInstance(IndexedFilesListener.class);
+
   private final VfsEventsMerger myEventMerger = new VfsEventsMerger();
 
   VfsEventsMerger getEventMerger() {
@@ -23,17 +28,16 @@ abstract class IndexedFilesListener implements AsyncFileListener {
   }
 
   public void scheduleForIndexingRecursively(VirtualFile file, boolean onlyContentDependent) {
-    FileBasedIndexImpl.cleanProcessedFlag(file);
     if (file.isDirectory()) {
       ContentIterator iterator = fileOrDir -> {
-        myEventMerger.recordFileEvent(fileOrDir, onlyContentDependent);
+        recordFileEvent(fileOrDir, onlyContentDependent);
         return true;
       };
 
       iterateIndexableFiles(file, iterator);
     }
     else {
-      myEventMerger.recordFileEvent(file, onlyContentDependent);
+      recordFileEvent(file, onlyContentDependent);
     }
   }
 
@@ -74,7 +78,7 @@ abstract class IndexedFilesListener implements AsyncFileListener {
       @Override
       public void beforeVfsChange() {
         for (VirtualFile file : deletedFiles.values()) {
-          myEventMerger.recordFileRemovedEvent(file);
+          recordFileRemovedEvent(file);
         }
       }
 
@@ -83,6 +87,14 @@ abstract class IndexedFilesListener implements AsyncFileListener {
         processAfterEvents(events);
       }
     };
+  }
+
+  protected void recordFileEvent(VirtualFile fileOrDir, boolean onlyContentDependent) {
+    myEventMerger.recordFileEvent(fileOrDir, onlyContentDependent);
+  }
+
+  protected void recordFileRemovedEvent(VirtualFile file) {
+    myEventMerger.recordFileRemovedEvent(file);
   }
 
   private void processAfterEvents(List<? extends VFileEvent> events) {
@@ -121,6 +133,15 @@ abstract class IndexedFilesListener implements AsyncFileListener {
         else if (propertyName.equals(VirtualFile.PROP_ENCODING)) {
           fileToIndex = pce.getFile();
         }
+      }
+
+      if (Boolean.getBoolean(DEBUG_PROPERTY)) {
+        VirtualFile eventFile = event.getFile();
+        LOG.warn("DIRTY-DEBUG processAfterEvents event=" + event.getClass().getSimpleName()
+          + " file=" + (eventFile == null ? null : eventFile.getPath())
+          + " fileToIndex=" + (fileToIndex == null ? null : fileToIndex.getPath())
+          + " listener=" + getClass().getSimpleName() + "@" + System.identityHashCode(this)
+          + " thread=" + Thread.currentThread().getName());
       }
 
       if (fileToIndex != null) {

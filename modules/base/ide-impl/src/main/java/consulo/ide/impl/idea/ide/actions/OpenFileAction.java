@@ -72,12 +72,6 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
         FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
             @Override
-            @RequiredUIAccess
-            public boolean isFileSelectable(VirtualFile file) {
-                return super.isFileSelectable(file) || (!file.isDirectory() && showFiles && !FileElement.isArchive(file));
-            }
-
-            @Override
             public boolean isPathSelectable(Path path) {
                 return super.isPathSelectable(path) || showFiles && !Files.isDirectory(path) && !isArchive(path);
             }

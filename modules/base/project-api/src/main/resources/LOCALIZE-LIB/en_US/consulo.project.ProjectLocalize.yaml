@@ -468,10 +468,16 @@ path.0.is.invalid.error.message:
     text: Path ''{0}'' is invalid
 popup.recent.projects.title:
     text: Recent Projects
+progress.file.system.changes:
+    text: file system changes
 progress.indexing:
-    text: Updating indices...
+    text: Analyzing project to enable smart features
+progress.indexing.paused:
+    text: Analyzing paused
 progress.indexing.scanning:
     text: Scanning files to index...
+progress.indexing.title:
+    text: Analyzing Project to Enable Smart Features
 progress.indexing.updating:
     text: Indexing...
 progress.performing.indexing.tasks:

@@ -21,14 +21,28 @@ import consulo.application.Application;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author VISTALL
  * @since 20-Mar-22
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface CustomActionsSchema {
-  static CustomActionsSchema getInstance() {
-    return Application.get().getInstance(CustomActionsSchema.class);
+  /**
+   * The schema loads its state through coroutines, so it can never be created on the UI thread. The returned
+   * future is already completed once the schema exists, which is the case for every call after the first.
+   */
+  static CompletableFuture<CustomActionsSchema> getInstanceAsync() {
+    return Application.get().getInstanceAsync(CustomActionsSchema.class);
+  }
+
+  static CompletableFuture<@Nullable AnAction> getCorrectedActionAsync(String id) {
+    return getInstanceAsync().thenApply(schema -> schema.getCorrectedAction(id));
+  }
+
+  static CompletableFuture<@Nullable ActionGroup> getCorrectedGroupAsync(String id) {
+    return getCorrectedActionAsync(id).thenApply(action -> action instanceof ActionGroup group ? group : null);
   }
 
   @Nullable AnAction getCorrectedAction(String id);

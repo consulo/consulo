@@ -24,6 +24,8 @@ import consulo.ui.ex.internal.ToolbarExecutor;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 2026-08-07
@@ -39,5 +41,15 @@ public abstract sealed class ToolbarAction<E> extends AnAction implements DumbAw
     protected final @Nullable E getSelectedValue(AnActionEvent e) {
         ToolbarExecutor<E> executor = e.getData(ToolbarExecutor.KEY);
         return executor == null ? null : executor.getSelectedValue();
+    }
+
+    /**
+     * The whole selection, for an action which acts on more than the lead row.
+     */
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    protected final List<E> getSelectedValues(AnActionEvent e) {
+        ToolbarExecutor<E> executor = e.getData(ToolbarExecutor.KEY);
+        return executor == null ? List.of() : executor.getSelectedValues();
     }
 }

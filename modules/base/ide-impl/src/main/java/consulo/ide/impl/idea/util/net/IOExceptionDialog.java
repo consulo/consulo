@@ -17,15 +17,12 @@ package consulo.ide.impl.idea.util.net;
 
 import consulo.application.Application;
 import consulo.http.HttpProxySettingService;
-import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 

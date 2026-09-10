@@ -21,83 +21,77 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.lang.Pair;
-
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 26/01/2023
  */
-@State(name = "UIFontManager", storages = @Storage(value = "ui.font.xml", roamingType = RoamingType.PER_OS))
-public abstract class UIFontManagerImpl implements UIFontManager, PersistentStateComponent<UIFontManagerImpl.State> {
-  public static class State {
-    public String fontName;
-    public int fontSize;
-    public boolean overrideFont;
-  }
+@State(name = "UIFontManager", storages = @Storage(value = "ui.font", roamingType = RoamingType.PER_OS))
+public abstract class UIFontManagerImpl implements UIFontManager, PersistentStateComponent<UIFontManagerState> {
 
-  private final State myState = new State();
+    private final UIFontManagerState myState = new UIFontManagerState();
 
-  private Pair<String, Integer> mySystemFontInfo;
+    private Pair<String, Integer> mySystemFontInfo;
 
-  @Override
-  public boolean isOverrideFont() {
-    return myState.overrideFont;
-  }
-
-  
-  @Override
-  public String getFontName() {
-    String fontName = myState.fontName;
-    if (!myState.overrideFont || fontName == null) {
-      return initSystemFontInfo().getFirst();
+    @Override
+    public boolean isOverrideFont() {
+        return myState.overrideFont;
     }
-    return fontName;
-  }
 
-  @Override
-  public int getFontSize() {
-    if (!myState.overrideFont ||myState.fontSize == 0) {
-      return initSystemFontInfo().getSecond();
+
+    @Override
+    public String getFontName() {
+        String fontName = myState.fontName;
+        if (!myState.overrideFont || fontName == null) {
+            return initSystemFontInfo().getFirst();
+        }
+        return fontName;
     }
-    return myState.fontSize;
-  }
 
-  @Override
-  public void setFontName(@Nullable String fontName) {
-    myState.fontName = fontName;
-  }
-
-  @Override
-  public void setFontSize(int fontSize) {
-    myState.fontSize = fontSize;
-  }
-
-  @Override
-  public void setOverrideFont(boolean overrideFont) {
-    myState.overrideFont = overrideFont;
-  }
-
-  @Override
-  public @Nullable State getState() {
-    return myState;
-  }
-
-  @Override
-  public void loadState(State state) {
-    myState.fontName = state.fontName;
-    myState.fontSize = state.fontSize;
-    myState.overrideFont = state.overrideFont;
-  }
-
-  
-  private Pair<String, Integer> initSystemFontInfo() {
-    if (mySystemFontInfo == null) {
-      mySystemFontInfo = resolveSystemFontData();
+    @Override
+    public int getFontSize() {
+        if (!myState.overrideFont || myState.fontSize == 0) {
+            return initSystemFontInfo().getSecond();
+        }
+        return myState.fontSize;
     }
-    return mySystemFontInfo;
-  }
 
-  
-  protected abstract Pair<String, Integer> resolveSystemFontData();
+    @Override
+    public void setFontName(@Nullable String fontName) {
+        myState.fontName = fontName;
+    }
+
+    @Override
+    public void setFontSize(int fontSize) {
+        myState.fontSize = fontSize;
+    }
+
+    @Override
+    public void setOverrideFont(boolean overrideFont) {
+        myState.overrideFont = overrideFont;
+    }
+
+    @Override
+    public @Nullable UIFontManagerState getState() {
+        return myState;
+    }
+
+    @Override
+    public void loadState(UIFontManagerState state) {
+        myState.fontName = state.fontName;
+        myState.fontSize = state.fontSize;
+        myState.overrideFont = state.overrideFont;
+    }
+
+
+    private Pair<String, Integer> initSystemFontInfo() {
+        if (mySystemFontInfo == null) {
+            mySystemFontInfo = resolveSystemFontData();
+        }
+        return mySystemFontInfo;
+    }
+
+
+    protected abstract Pair<String, Integer> resolveSystemFontData();
 }

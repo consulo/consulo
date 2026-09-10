@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.configurable;
 
 import consulo.annotation.component.ComponentScope;
@@ -35,12 +34,13 @@ public abstract class SearchableOptionsRegistrar {
         return Application.get().getInstance(SearchableOptionsRegistrar.class);
     }
 
-    
-    public abstract ConfigurableHit getConfigurables(Configurable[] allConfigurables,
-                                                     boolean changed,
-                                                     Set<Configurable> configurables,
-                                                     String option,
-                                                     Project project);
+    public abstract ConfigurableHit getConfigurables(
+        Configurable[] allConfigurables,
+        boolean changed,
+        Set<Configurable> configurables,
+        String option,
+        Project project
+    );
 
     public abstract @Nullable String getInnerPath(SearchableConfigurable configurable, String option);
 
@@ -57,5 +57,4 @@ public abstract class SearchableOptionsRegistrar {
     public abstract Set<String> getProcessedWordsWithoutStemming(String text);
 
     public abstract Set<String> getProcessedWords(String text);
-
 }

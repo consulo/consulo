@@ -37,6 +37,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -90,6 +91,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
@@ -1231,6 +1233,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         myWindowListener = new MyWindowListener();
         window.addWindowListener(myWindowListener);
+        window.addComponentListener(myWindowListener);
 
         if (myWindow != null) {
             // dialog wrapper-based popups do this internally through peer,
@@ -1496,7 +1499,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     private PopupComponent.Factory getFactory(boolean forceHeavyweight, boolean forceDialog) {
         if (Registry.is("allow.dialog.based.popups")) {
             boolean noFocus = !myFocusable || !myRequestFocus;
-            boolean cannotBeDialog = noFocus; // && Platform.current().os().isXWindow()
+            boolean cannotBeDialog = noFocus;
 
             if (!cannotBeDialog && (isPersistent() || forceDialog)) {
                 return new PopupComponent.Factory.Dialog();
@@ -1730,6 +1733,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myWindow != null && getWndManager() != null) {
             getWndManager().resetWindow(myWindow);
             if (myWindowListener != null) {
+                myWindow.removeComponentListener(myWindowListener);
                 myWindow.removeWindowListener(myWindowListener);
             }
 
@@ -1977,7 +1981,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         mySpeedSearchAlwaysShown = true;
     }
 
-    private class MyWindowListener extends WindowAdapter {
+    private class MyWindowListener extends WindowAdapter implements ComponentListener {
 
         @Override
         public void windowOpened(WindowEvent e) {
@@ -1986,6 +1990,29 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         @Override
         public void windowClosing(WindowEvent e) {
+            close();
+        }
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+            if (isWaylandToolkit()) {
+                close();
+            }
+        }
+
+        private void close() {
             resetWindow();
             cancel();
         }
@@ -2306,14 +2333,27 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     /**
-     * @return {@code true} if focus moved to a popup window or its child window
+     * Tells whether the popup should be closed when some window becomes activated/focused
      */
-    private static boolean isCancelNeeded(WindowEvent event, Window window) {
-        if (window == null) {
+    private boolean isCancelNeeded(WindowEvent event, @Nullable Window popup) {
+        Window window = event.getWindow();
+        if (window == null || popup == null) {
             return true;
         }
-        Window focused = event.getWindow();
-        return focused != window && (focused == null || window != focused.getOwner());
+
+        if (SwingUtilities.isDescendingFrom(window, popup) || !myFocusable && SwingUtilities.isDescendingFrom(popup, window)) {
+            return false;
+        }
+
+        if (isWaylandToolkit()) {
+            return !Objects.equals(window, popup.getOwner());
+        }
+
+        return true;
+    }
+
+    private static boolean isWaylandToolkit() {
+        return Platform.current().os() instanceof UnixOperationSystem os && os.isWayland();
     }
 
     private @Nullable Point getStoredLocation() {

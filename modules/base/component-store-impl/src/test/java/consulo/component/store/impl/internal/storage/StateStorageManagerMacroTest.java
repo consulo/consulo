@@ -45,9 +45,9 @@ public class StateStorageManagerMacroTest {
         };
 
         myManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, "/x/.consulo");
-        myManager.addMacro(StoragePathMacros.DEFAULT_FILE, "/x/.consulo/misc.xml");
-        myManager.addMacro(StoragePathMacros.PROJECT_FILE, "/x/.consulo/misc.xml");
-        myManager.addMacro(StoragePathMacros.WORKSPACE_FILE, "/x/.consulo/workspace.xml");
+        myManager.addMacro(StoragePathMacros.DEFAULT_FILE, "/x/.consulo/misc");
+        myManager.addMacro(StoragePathMacros.PROJECT_FILE, "/x/.consulo/misc");
+        myManager.addMacro(StoragePathMacros.WORKSPACE_FILE, "/x/.consulo/workspace");
     }
 
     @Test
@@ -60,14 +60,39 @@ public class StateStorageManagerMacroTest {
     @Test
     public void defaultFileExpandsToSinglePath() {
         String spec = myManager.buildFileSpec(storage(StoragePathMacros.DEFAULT_FILE));
-        assertThat(myManager.expandMacros(spec)).isEqualTo("/x/.consulo/misc.xml");
+        assertThat(myManager.expandMacros(spec)).isEqualTo("/x/.consulo/misc");
+        assertThat(myManager.resolveStorageFilePath(spec)).isEqualTo("/x/.consulo/misc.xml");
     }
 
     @Test
     public void relativeValueIsWrappedWithConfigDir() {
-        String spec = myManager.buildFileSpec(storage("misc.xml"));
-        assertThat(spec).isEqualTo(StoragePathMacros.PROJECT_CONFIG_DIR + "/misc.xml");
-        assertThat(myManager.expandMacros(spec)).isEqualTo("/x/.consulo/misc.xml");
+        String spec = myManager.buildFileSpec(storage("misc"));
+        assertThat(spec).isEqualTo(StoragePathMacros.PROJECT_CONFIG_DIR + "/misc");
+        assertThat(myManager.expandMacros(spec)).isEqualTo("/x/.consulo/misc");
+        assertThat(myManager.resolveStorageFilePath(spec)).isEqualTo("/x/.consulo/misc.xml");
+    }
+
+    @Test
+    public void legacyExtensionIsStrippedAndResolvesToSameFile() {
+        String legacy = myManager.buildFileSpec(storage("misc.xml"));
+        String modern = myManager.buildFileSpec(storage("misc"));
+
+        assertThat(legacy).isEqualTo(modern);
+        assertThat(myManager.resolveStorageFilePath(legacy)).isEqualTo("/x/.consulo/misc.xml");
+    }
+
+    @Test
+    public void legacyExtensionIsStrippedOnlyAtTheEnd() {
+        assertThat(myManager.buildFileSpec(storage("window.manager.xml")))
+            .isEqualTo(StoragePathMacros.PROJECT_CONFIG_DIR + "/window.manager");
+        assertThat(myManager.buildFileSpec(storage("window.manager")))
+            .isEqualTo(StoragePathMacros.PROJECT_CONFIG_DIR + "/window.manager");
+    }
+
+    @Test
+    public void directorySpecKeepsTrailingSlash() {
+        String spec = myManager.buildFileSpec(directoryStorage("runConfigurations"));
+        assertThat(spec).isEqualTo(StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/");
     }
 
     @Test
@@ -82,6 +107,17 @@ public class StateStorageManagerMacroTest {
     }
 
     private static Storage storage(String value) {
+        return storage(value, StateSplitterEx.class);
+    }
+
+    private static Storage directoryStorage(String value) {
+        return storage(value, TestSplitter.class);
+    }
+
+    private abstract static class TestSplitter extends StateSplitterEx {
+    }
+
+    private static Storage storage(String value, Class<? extends StateSplitterEx> splitter) {
         return new Storage() {
             @Override
             public Class<? extends Annotation> annotationType() {
@@ -110,7 +146,7 @@ public class StateStorageManagerMacroTest {
 
             @Override
             public Class<? extends StateSplitterEx> stateSplitter() {
-                return StateSplitterEx.class;
+                return splitter;
             }
         };
     }

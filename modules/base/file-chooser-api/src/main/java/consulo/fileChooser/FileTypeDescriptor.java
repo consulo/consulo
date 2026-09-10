@@ -16,6 +16,7 @@
 package consulo.fileChooser;
 
 import consulo.fileChooser.util.FileChooserUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -27,44 +28,43 @@ import java.util.stream.Collectors;
  * @author Konstantin Bulenkov
  */
 public class FileTypeDescriptor extends FileChooserDescriptor {
+    private final List<String> myExtensions;
 
-  private final List<String> myExtensions;
+    public FileTypeDescriptor(LocalizeValue title, String... extensions) {
+        super(true, false, false, true, false, false);
+        assert extensions.length > 0 : "There should be at least one extension";
+        myExtensions = Arrays.stream(extensions).map(ext -> {
+            if (ext.startsWith(".")) {
+                return ext;
+            }
+            return "." + ext;
+        }).collect(Collectors.toList());
 
-  public FileTypeDescriptor(String title, String... extensions) {
-    super(true, false, false, true, false, false);
-    assert extensions.length > 0 : "There should be at least one extension";
-    myExtensions = Arrays.stream(extensions).map(ext -> {
-      if (ext.startsWith(".")) {
-        return ext;
-      }
-      return "." + ext;
-    }).collect(Collectors.toList());
-
-    setTitle(title);
-  }
-
-  @Override
-  public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {        
-    if (!showHiddenFiles && FileChooserUtil.isFileHidden(file)) {
-      return false;
-    }
-    
-    if (file.isDirectory()) {
-      return true;
+        withTitle(title);
     }
 
-    String name = file.getName();
-    for (String extension : myExtensions) {
-      if (name.endsWith(extension)) {
-        return true;
-      }
-    }
-    return false;
-  }
+    @Override
+    public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
+        if (!showHiddenFiles && FileChooserUtil.isFileHidden(file)) {
+            return false;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isFileSelectable(VirtualFile file) {
-    return !file.isDirectory() && isFileVisible(file, true);
-  }
+        if (file.isDirectory()) {
+            return true;
+        }
+
+        String name = file.getName();
+        for (String extension : myExtensions) {
+            if (name.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean isFileSelectable(VirtualFile file) {
+        return !file.isDirectory() && isFileVisible(file, true);
+    }
 }

@@ -22,7 +22,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.lang.SandFileType;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -64,7 +64,7 @@ public abstract class BaseSandEditorNotificationProvider implements EditorNotifi
             IPopupChooserBuilder<Object> chooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(List.of("Value 1", "Value 2"));
             chooserBuilder.createPopup().showBy(e);
         });
-        builder.withGearAction((e) -> Alerts.okInfo(LocalizeValue.localizeTODO("Hello World")).showAsync());
+        builder.withGearAction((e) -> MessageBoxes.okInfo(LocalizeValue.localizeTODO("Hello World")).showAsync());
         return builder;
     }
 }

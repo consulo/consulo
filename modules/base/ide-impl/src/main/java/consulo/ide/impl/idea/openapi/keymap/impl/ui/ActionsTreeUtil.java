@@ -42,6 +42,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 public class ActionsTreeUtil {
@@ -147,9 +148,7 @@ public class ActionsTreeUtil {
     }
 
     private static void fillGroupIgnorePopupFlag(ActionGroup actionGroup, KeymapGroupImpl group, Predicate<AnAction> filtered) {
-        AnAction[] mainMenuTopGroups = actionGroup instanceof DefaultActionGroup defaultActionGroup
-            ? defaultActionGroup.getChildActionsOrStubs() : actionGroup.getChildren(null);
-        for (AnAction action : mainMenuTopGroups) {
+        for (AnAction action : KeymapUtil.getChildren(actionGroup)) {
             if (!(action instanceof ActionGroup topActionGroup)) {
                 continue;
             }
@@ -214,8 +213,12 @@ public class ActionsTreeUtil {
         }
     }
 
-    private static KeymapGroupImpl createExtensionGroup(Predicate<AnAction> filtered, Project project, KeymapExtension provider) {
-        return (KeymapGroupImpl) provider.createGroup(filtered, project);
+    private static CompletableFuture<KeymapGroupImpl> createExtensionGroupAsync(
+        Predicate<AnAction> filtered,
+        Project project,
+        KeymapExtension provider
+    ) {
+        return provider.createGroupAsync(filtered, project).thenApply(group -> (KeymapGroupImpl) group);
     }
 
     private static KeymapGroupImpl createMacrosGroup(Predicate<AnAction> filtered) {
@@ -359,11 +362,11 @@ public class ActionsTreeUtil {
         return node;
     }
 
-    public static KeymapGroupImpl createMainGroup(Project project, Keymap keymap, QuickList[] quickLists) {
-        return createMainGroup(project, keymap, quickLists, null, false, null);
+    public static CompletableFuture<KeymapGroupImpl> createMainGroupAsync(Project project, Keymap keymap, QuickList[] quickLists) {
+        return createMainGroupAsync(project, keymap, quickLists, null, false, null);
     }
 
-    public static KeymapGroupImpl createMainGroup(
+    public static CompletableFuture<KeymapGroupImpl> createMainGroupAsync(
         Project project,
         Keymap keymap,
         QuickList[] quickLists,
@@ -374,27 +377,44 @@ public class ActionsTreeUtil {
         Predicate<AnAction> wrappedFilter = wrapFilter(filtered, keymap, ActionManager.getInstance());
         KeymapGroupImpl mainGroup = new KeymapGroupImpl(KeyMapLocalize.allActionsGroupTitle());
         mainGroup.addGroup(createEditorActionsGroup(wrappedFilter));
+
         mainGroup.addGroup(createMainMenuGroup(wrappedFilter));
-        Application.get().getExtensionPoint(KeymapExtension.class).forEach(extension -> {
-            KeymapGroupImpl group = createExtensionGroup(wrappedFilter, project, extension);
-            if (group != null) {
-                mainGroup.addGroup(group);
-            }
-        });
-        mainGroup.addGroup(createMacrosGroup(wrappedFilter));
-        mainGroup.addGroup(createQuickListsGroup(wrappedFilter, filter, forceFiltering, quickLists));
-        mainGroup.addGroup(createPluginsActionsGroup(wrappedFilter));
-        mainGroup.addGroup(createOtherGroup(wrappedFilter, mainGroup, keymap));
-        if (!StringUtil.isEmpty(filter) || filtered != null) {
-            List list = mainGroup.getChildren();
-            for (Iterator i = list.iterator(); i.hasNext(); ) {
-                if (i.next() instanceof KeymapGroupImpl group && group.getSize() == 0
-                    && !SearchUtil.isComponentHighlighted(group.getName(), filter, forceFiltering, null)) {
-                    i.remove();
+
+        // one extension must not take the whole tree down with it - forEach answers a failing extension by
+        // logging it and moving on, and a group which fails later is answered with no group at all
+        List<CompletableFuture<KeymapGroupImpl>> extensionGroups = new ArrayList<>();
+        Application.get().getExtensionPoint(KeymapExtension.class).forEach(extension -> extensionGroups.add(
+            createExtensionGroupAsync(wrappedFilter, project, extension).exceptionally(throwable -> {
+                LOG.error("Failed to build the keymap group of " + extension.getClass().getName(), throwable);
+                return null;
+            })));
+
+        CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
+
+        for (CompletableFuture<KeymapGroupImpl> extensionGroup : extensionGroups) {
+            chain = chain.thenCompose(ignored -> extensionGroup.thenAccept(group -> {
+                if (group != null) {
+                    mainGroup.addGroup(group);
+                }
+            }));
+        }
+
+        return chain.thenApply(ignored -> {
+            mainGroup.addGroup(createMacrosGroup(wrappedFilter));
+            mainGroup.addGroup(createQuickListsGroup(wrappedFilter, filter, forceFiltering, quickLists));
+            mainGroup.addGroup(createPluginsActionsGroup(wrappedFilter));
+            mainGroup.addGroup(createOtherGroup(wrappedFilter, mainGroup, keymap));
+            if (!StringUtil.isEmpty(filter) || filtered != null) {
+                List list = mainGroup.getChildren();
+                for (Iterator i = list.iterator(); i.hasNext(); ) {
+                    if (i.next() instanceof KeymapGroupImpl group && group.getSize() == 0
+                        && !SearchUtil.isComponentHighlighted(group.getName(), filter, forceFiltering, null)) {
+                        i.remove();
+                    }
                 }
             }
-        }
-        return mainGroup;
+            return mainGroup;
+        });
     }
 
     public static Predicate<AnAction> isActionFiltered(String filter, boolean force) {

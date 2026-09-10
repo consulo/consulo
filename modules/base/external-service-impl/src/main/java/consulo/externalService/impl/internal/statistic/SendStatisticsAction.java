@@ -16,12 +16,13 @@
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import consulo.localize.LocalizeValue;
 
 public class SendStatisticsAction extends DumbAwareAction {
     private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponent;
@@ -46,6 +47,6 @@ public class SendStatisticsAction extends DumbAwareAction {
 
         myStatisticsSendManager.get().sendNow(myUsageStatisticsPersistenceComponent.get());
 
-        Alerts.okInfo("Sent").showAsync();
+        MessageBoxes.okInfo(LocalizeValue.localizeTODO("Sent")).showAsync();
     }
 }

@@ -17,6 +17,7 @@ package consulo.configurable;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.RadioGroup;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -79,6 +80,10 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
     public <T> void add(ValueComponent<T> valueComponent, Supplier<T> getter, Consumer<T> setter) {
       add(valueComponent::getValue, valueComponent::setValue, getter, setter);
+    }
+
+    public <T> void add(RadioGroup<T> radioGroup, Supplier<T> getter, Consumer<T> setter) {
+      add(radioGroup::getValue, radioGroup::setValue, getter, setter);
     }
 
     public <T> void add(Supplier<T> uiGetter, @RequiredUIAccess Consumer<T> uiSetter, Supplier<T> getter, Consumer<T> setter) {

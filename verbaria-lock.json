@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-08-26T20:53:39.599395146Z",
+  "generatedAt" : "2026-09-10T15:08:52.130477843Z",
   "documents" : {
     "consulo.ai.AILocalize" : {
       "source" : {
@@ -67,7 +67,7 @@
     },
     "consulo.execution.debug.XDebuggerLocalize" : {
       "source" : {
-        "sig" : "ae61393d863b9dded0707ebbe2416972"
+        "sig" : "566d5881c7df0f889f2dfcc0d5321f93"
       }
     },
     "consulo.execution.test.ExecutionTestLocalize" : {
@@ -117,12 +117,12 @@
     },
     "consulo.http.HttpLocalize" : {
       "source" : {
-        "sig" : "6d305d45513abf06527ded5fae86d0bd"
+        "sig" : "3bd0db0f5440fbca55dddd973f8a9d44"
       }
     },
     "consulo.ide.IdeLocalize" : {
       "source" : {
-        "sig" : "583caf99761e35684c0b5b5dc4696d7b"
+        "sig" : "468e895eda614e94cdf634eafd4df5ef"
       }
     },
     "consulo.ide.tipOfDay.impl.TipOfDayLocalize" : {
@@ -152,7 +152,7 @@
     },
     "consulo.language.editor.CodeInsightLocalize" : {
       "source" : {
-        "sig" : "fa7b9d6b355b5faa0c8319a52d428897"
+        "sig" : "d393c045d1da14e5afd1dfd0d7a960d7"
       }
     },
     "consulo.language.editor.CommonQuickFixLocalize" : {
@@ -162,7 +162,7 @@
     },
     "consulo.language.editor.DaemonLocalize" : {
       "source" : {
-        "sig" : "d8db6b7caade0c252bcb4ef0c10d54c5"
+        "sig" : "e8b6fba7122eb7368d0b06973f7dbabc"
       }
     },
     "consulo.language.editor.LanguageEditorLocalize" : {
@@ -197,7 +197,7 @@
     },
     "consulo.language.index.impl.internal.IndexingLocalize" : {
       "source" : {
-        "sig" : "d6dae6271c547506f685a01859e4daca"
+        "sig" : "afa354f9d875602fba851a91c9df4f76"
       }
     },
     "consulo.language.inject.advanced.LanguageInjectAdvancedLocalize" : {
@@ -208,6 +208,11 @@
     "consulo.localHistory.LocalHistoryLocalize" : {
       "source" : {
         "sig" : "f6ab5d2dda6bf3d3f7841787b1a01554"
+      }
+    },
+    "consulo.localize.CoreLocalize" : {
+      "source" : {
+        "sig" : "326132dbe52453689b2926370911534e"
       }
     },
     "consulo.mcpServer.McpServerLocalize" : {
@@ -242,7 +247,7 @@
     },
     "consulo.platform.base.CommonLocalize" : {
       "source" : {
-        "sig" : "4cf68d7f68b3afc595f49794e18b0c95"
+        "sig" : "6aa3961b063c0c5fde4e4f0737a63d74"
       }
     },
     "consulo.platform.base.RepositoryTagLocalize" : {
@@ -257,12 +262,12 @@
     },
     "consulo.project.ProjectLocalize" : {
       "source" : {
-        "sig" : "52671b00981761aa1311eb7efe7765cf"
+        "sig" : "6468f810ab72fd0c1704ad91f0da7b08"
       }
     },
     "consulo.project.ui.ProjectUILocalize" : {
       "source" : {
-        "sig" : "65867c59e8af17eaa84a89c4a8aa9113"
+        "sig" : "079592eef99ad56d331a6041060e7607"
       }
     },
     "consulo.project.ui.view.ProjectUIViewLocalize" : {
@@ -277,7 +282,7 @@
     },
     "consulo.task.TaskLocalize" : {
       "source" : {
-        "sig" : "a18aed8e9c4073ce869daff444add464"
+        "sig" : "c619dbde13fee2d925431aaf51d3af3a"
       }
     },
     "consulo.ui.ex.ShortcutLocalize" : {
@@ -287,7 +292,7 @@
     },
     "consulo.ui.ex.UILocalize" : {
       "source" : {
-        "sig" : "fe8b95b8e4a5ffd87039766a86ad833a"
+        "sig" : "b3045acd2370814f083b0d2a8fa497a6"
       }
     },
     "consulo.ui.ex.UnicodeShortcutLocalize" : {
@@ -297,7 +302,7 @@
     },
     "consulo.ui.ex.keymap.KeyMapLocalize" : {
       "source" : {
-        "sig" : "7a3233f643d3b269c37812f963760802"
+        "sig" : "c67d8867532839b1089849dd16067e6d"
       }
     },
     "consulo.usage.UsageLocalize" : {
@@ -307,7 +312,7 @@
     },
     "consulo.versionControlSystem.VcsLocalize" : {
       "source" : {
-        "sig" : "f445d3e2221ec0c8f366e2ad7578f459"
+        "sig" : "0c16ff3e4ff45d6b52278b9d226da4c1"
       }
     },
     "consulo.versionControlSystem.distributed.DistributedVcsLocalize" : {

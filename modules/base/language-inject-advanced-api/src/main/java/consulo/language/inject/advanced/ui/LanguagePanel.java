@@ -25,6 +25,7 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.inject.advanced.BaseInjection;
 import consulo.language.inject.advanced.InjectedLanguage;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
@@ -34,7 +35,6 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +53,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
 
         myLanguage.setModel(new DefaultComboBoxModel(languageIDs));
         myLanguage.setRenderer(new ColoredListCellRenderer<String>() {
-            final Set<String> IDs = new HashSet<String>(Arrays.asList(languageIDs));
+            final Set<String> IDs = new HashSet<>(Arrays.asList(languageIDs));
 
             @Override
             protected void customizeCellRenderer(JList<? extends String> jList, String s, int i, boolean b, boolean b1) {
@@ -71,12 +71,9 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
                 }
             }
         });
-        myLanguage.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    updateHighlighters();
-                }
+        myLanguage.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                updateHighlighters();
             }
         });
 
@@ -107,8 +104,8 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
 
         Language language = InjectedLanguage.findLanguageById(getLanguage());
         if (language == null) {
-            editor.setHighlighter(new LexerEditorHighlighter(new DefaultSyntaxHighlighter(), editor.getColorsScheme()));
-            editor2.setHighlighter(new LexerEditorHighlighter(new DefaultSyntaxHighlighter(), editor.getColorsScheme()));
+            editor.setHighlighter(new LexerEditorHighlighter(DefaultSyntaxHighlighter.INSTANCE, editor.getColorsScheme()));
+            editor2.setHighlighter(new LexerEditorHighlighter(DefaultSyntaxHighlighter.INSTANCE, editor.getColorsScheme()));
         }
         else {
             SyntaxHighlighter s1 = SyntaxHighlighterFactory.getSyntaxHighlighter(language, getProject(), null);
@@ -136,6 +133,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
         return myPrefix.getText();
     }
 
+    @RequiredUIAccess
     public void setPrefix(String s) {
         if (!myPrefix.getText().equals(s)) {
             myPrefix.setText(s);
@@ -146,6 +144,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
         return mySuffix.getText();
     }
 
+    @RequiredUIAccess
     public void setSuffix(String s) {
         if (!mySuffix.getText().equals(s)) {
             mySuffix.setText(s);
@@ -153,6 +152,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
     }
 
     @Override
+    @RequiredUIAccess
     protected void resetImpl() {
         BaseInjection origInjection = getOrigInjection();
         setLanguage(origInjection.getInjectedLanguageId());

@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template.macro;
 
+import consulo.application.Application;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 
@@ -22,27 +23,25 @@ import java.util.Collection;
 import java.util.List;
 
 public class MacroFactory {
-    private static final MultiMap<String, Macro> myMacroTable = init();
+    private static final MultiMap<String, Macro> ourMacroTable = init();
 
     public static Macro createMacro(String name) {
-        return ContainerUtil.getFirstItem(myMacroTable.get(name));
+        return ContainerUtil.getFirstItem(ourMacroTable.get(name));
     }
 
     public static List<Macro> getMacros(String name) {
-        return (List<Macro>)myMacroTable.get(name);
+        return (List<Macro>) ourMacroTable.get(name);
     }
 
     public static Macro[] getMacros() {
-        Collection<? extends Macro> values = myMacroTable.values();
+        Collection<? extends Macro> values = ourMacroTable.values();
         return values.toArray(new Macro[values.size()]);
     }
 
     private static MultiMap<String, Macro> init() {
         MultiMap<String, Macro> result = MultiMap.create();
-        for (Macro macro : Macro.EP_NAME.getExtensionList()) {
-            result.putValue(macro.getName(), macro);
-        }
+        Application.get().getExtensionPoint(Macro.class)
+            .forEach(macro -> result.putValue(macro.getName(), macro));
         return result;
     }
 }
-

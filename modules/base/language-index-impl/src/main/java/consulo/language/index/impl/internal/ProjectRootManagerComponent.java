@@ -29,23 +29,24 @@ import consulo.content.OrderRootType;
 import consulo.disposer.Disposable;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.LibraryScopeCache;
-import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.internal.EntityIndexingService;
 import consulo.module.content.internal.ModuleScopeProviderInternal;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.scope.ModuleScopeProvider;
-import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.RootsChangeRescanningInfo;
 import consulo.project.content.WatchedRootsProvider;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
@@ -226,21 +227,14 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Override
-    protected void doSynchronizeRoots() {
-        if (!myStartupActivityPerformed) {
-            return;
-        }
+    protected void fireRootsChangedEvent(boolean fileTypes, List<? extends RootsChangeRescanningInfo> indexingInfos) {
+        super.fireRootsChangedEvent(fileTypes, indexingInfos);
 
-        if (myDoLogCachesUpdate) {
-            LOG.debug(new Throwable("sync roots"));
-        }
-        else if (!myProject.getApplication().isUnitTestMode()) {
-            LOG.info("project roots have changed");
-        }
-
-        DumbService dumbService = DumbService.getInstance(myProject);
-        if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
-            dumbService.queueTask(new UnindexedFilesScanner(myProject));
+        if (myStartupActivityPerformed) {
+            if (myDoLogCachesUpdate) {
+                LOG.debug(new Throwable("sync roots"));
+            }
+            EntityIndexingService.getInstance().indexChanges(myProject, indexingInfos);
         }
     }
 
@@ -306,6 +300,21 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     private final VirtualFilePointerListener myRootsChangedListener = new VirtualFilePointerListener() {
+        private RootsChangeRescanningInfo getPointersChanges(VirtualFilePointer[] pointers) {
+            RootsChangeRescanningInfo result = null;
+            for (VirtualFilePointer pointer : pointers) {
+                if (pointer.isValid()) {
+                    return RootsChangeRescanningInfo.TOTAL_RESCAN;
+                }
+                else {
+                    if (result == null) {
+                        result = RootsChangeRescanningInfo.NO_RESCAN_NEEDED;
+                    }
+                }
+            }
+            return ObjectUtil.notNull(result, RootsChangeRescanningInfo.TOTAL_RESCAN);
+        }
+
         @Override
         @RequiredWriteAction
         public void beforeValidityChanged(VirtualFilePointer[] pointers) {
@@ -328,12 +337,14 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         @Override
         @RequiredWriteAction
         public void validityChanged(VirtualFilePointer[] pointers) {
+            RootsChangeRescanningInfo changeInfo = getPointersChanges(pointers);
+
             if (myProject.isDisposed()) {
                 return;
             }
 
             if (isInsideWriteAction()) {
-                myRootsChanged.rootsChanged();
+                myRootsChanged.rootsChanged(changeInfo);
             }
             else {
                 clearScopesCaches();
@@ -344,8 +355,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
             return myInsideWriteAction == 0;
         }
     };
-    
-    
+
     @Override
     public VirtualFilePointerListener getRootsValidityChangedListener() {
         return myRootsChangedListener;

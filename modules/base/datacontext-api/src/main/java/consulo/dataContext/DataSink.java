@@ -43,6 +43,13 @@ public interface DataSink {
     <T> void set(Key<T> key, @Nullable T data);
 
     /**
+     * Answers for the key with nothing, and keeps the components above this one in the hierarchy from answering
+     * for it - a text field stands this way for the editor it sits in, so the editor does not claim what is
+     * typed into the field. Everything a {@link UiDataRule} derives from the key is derived from this nothing.
+     */
+    <T> void setNull(Key<T> key);
+
+    /**
      * Registers a lazy data supplier that will be resolved later under read access.
      * Use for data requiring PSI or other read-action-protected resources.
      *

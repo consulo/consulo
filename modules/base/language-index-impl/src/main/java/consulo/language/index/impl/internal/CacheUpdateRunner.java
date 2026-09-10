@@ -8,7 +8,6 @@ import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -27,7 +26,6 @@ import java.util.function.Consumer;
 public class CacheUpdateRunner {
     private static final Logger LOG = Logger.getInstance(CacheUpdateRunner.class);
     private static final Key<Boolean> FAILED_TO_INDEX = Key.create("FAILED_TO_INDEX");
-    private static final int PROC_COUNT = Runtime.getRuntime().availableProcessors();
 
     private static final long MIN_CONTENTION_BACKOFF_NANOS = 100_000;
     private static final long MAX_CONTENTION_BACKOFF_NANOS = 5_000_000;
@@ -78,16 +76,11 @@ public class CacheUpdateRunner {
     }
 
     public static int indexingThreadCount() {
-        int threadsCount = Registry.intValue("caches.indexerThreadsCount");
-        if (threadsCount > 0) {
-            return threadsCount;
-        }
-        int coresToLeaveForOtherActivity = ApplicationManager.getApplication().isCommandLine() ? 0 : 1;
-        return Math.max(1, PROC_COUNT - coresToLeaveForOtherActivity);
+        return UnindexedFilesUpdater.getNumberOfIndexingThreads();
     }
 
     public static int scanningThreadCount() {
-        return Math.max(1, Math.min(indexingThreadCount(), 4));
+        return UnindexedFilesUpdater.getNumberOfScanningThreads();
     }
 
     private static void waitForAll(List<Future<?>> futures) {

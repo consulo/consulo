@@ -23,7 +23,7 @@ import consulo.language.index.impl.internal.roots.kind.ModuleRootOrigin;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.internal.FileIndexBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
@@ -36,23 +36,19 @@ public class ModuleIndexableFilesIteratorImpl implements ModuleIndexableFilesIte
     private final Module myModule;
     private final List<VirtualFile> myRoots;
     private final boolean myShouldPrintSingleRootInDebugName;
+    private final ModuleRootOrigin myOrigin;
 
     ModuleIndexableFilesIteratorImpl(Module module, List<VirtualFile> roots, boolean shouldPrintSingleRootInDebugName) {
         myModule = module;
         myRoots = roots;
         myShouldPrintSingleRootInDebugName = shouldPrintSingleRootInDebugName;
+        myOrigin = new ModuleRootOriginImpl(module, roots);
     }
 
     public static Collection<ModuleIndexableFilesIteratorImpl> getModuleIterators(Module module) {
-        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-        ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(module.getProject());
+        FileIndexBase fileIndex = (FileIndexBase) ModuleRootManager.getInstance(module).getFileIndex();
 
-        List<VirtualFile> moduleRoots = new ArrayList<>();
-        for (VirtualFile contentRoot : rootManager.getContentRoots()) {
-            if (module.equals(projectFileIndex.getModuleForFile(contentRoot))) {
-                moduleRoots.add(contentRoot);
-            }
-        }
+        List<VirtualFile> moduleRoots = new ArrayList<>(fileIndex.getRootsToIterate(module));
         if (moduleRoots.isEmpty()) {
             return List.of();
         }
@@ -81,7 +77,7 @@ public class ModuleIndexableFilesIteratorImpl implements ModuleIndexableFilesIte
 
     @Override
     public ModuleRootOrigin getOrigin() {
-        return new ModuleRootOriginImpl(myModule, myRoots);
+        return myOrigin;
     }
 
     @Override

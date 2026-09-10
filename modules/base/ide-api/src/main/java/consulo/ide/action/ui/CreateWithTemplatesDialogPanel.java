@@ -6,8 +6,6 @@ import consulo.ui.ImageBox;
 import consulo.ui.TextBox;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
 import org.jspecify.annotations.Nullable;

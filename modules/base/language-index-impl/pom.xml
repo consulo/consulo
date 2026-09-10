@@ -85,6 +85,25 @@
             <artifactId>consulo-local-history-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-project-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-virtual-file-system-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dynatrace.hash4j</groupId>
+            <artifactId>hash4j</artifactId>
+        </dependency>
 
         <!--TODO remove !-->
         <dependency>

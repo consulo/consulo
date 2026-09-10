@@ -18,6 +18,7 @@ package consulo.ui.ex.action;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -58,5 +59,5 @@ public abstract class AsyncActionGroup extends ActionGroup {
         throw new UnsupportedOperationException("Must call async version");
     }
 
-    public abstract Coroutine<?, List<AnAction>> getChildrenAsync(AnActionEvent e);
+    public abstract Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e);
 }

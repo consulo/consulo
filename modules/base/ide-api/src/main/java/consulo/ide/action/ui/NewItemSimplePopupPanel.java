@@ -6,10 +6,9 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ui.Component;
 import consulo.ui.HasValidator;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.layout.DockLayout;
@@ -30,8 +29,7 @@ public class NewItemSimplePopupPanel implements PseudoComponent, Disposable {
         myTextField = createTextField();
 
         WrappedLayout textFieldLayout = WrappedLayout.create(myTextField);
-        textFieldLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE);
-        textFieldLayout.addBorder(BorderPosition.BOTTOM, BorderStyle.LINE);
+        textFieldLayout.borderBuilder().topSet().bottomSet().apply();
 
         myRootLayout = DockLayout.create();
         myRootLayout.top(textFieldLayout);
@@ -64,7 +62,7 @@ public class NewItemSimplePopupPanel implements PseudoComponent, Disposable {
 
         res.setVisibleLength(30);
 
-        res.addBorders(BorderStyle.EMPTY, null, 6);
+        res.paddingBuilder().allSet(Space.MEDIUM).apply();
 
         res.setPlaceholder(IdeLocalize.actionCreateNewClassNameField());
         res.addKeyPressedListener(e -> {

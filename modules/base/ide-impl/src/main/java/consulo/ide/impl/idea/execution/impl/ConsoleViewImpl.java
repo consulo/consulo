@@ -975,8 +975,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
             LOG.assertTrue(UndoUtil.isUndoDisabledFor(editor.getDocument()));
             editor.installPopupHandler(new ContextMenuPopupHandler() {
                 @Override
-                public ActionGroup getActionGroup(EditorMouseEvent event) {
-                    return getPopupGroup(event.getMouseEvent());
+                public CompletableFuture<ActionGroup> getActionGroupAsync(EditorMouseEvent event) {
+                    return CompletableFuture.completedFuture(getPopupGroup(event.getMouseEvent()));
                 }
             });
 

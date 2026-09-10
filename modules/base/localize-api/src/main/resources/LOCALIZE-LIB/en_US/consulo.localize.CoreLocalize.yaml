@@ -1,0 +1,20 @@
+error.io.access.denied:
+    text: 'Access denied: {0}'
+error.io.already.exists:
+    text: 'File already exists: {0}'
+error.io.dir.not.empty:
+    text: 'Directory is not empty: {0}'
+error.io.loop:
+    text: 'Loop in the file system: {0}'
+error.io.no.such.file:
+    text: 'File does not exist: {0}'
+error.io.not.dir:
+    text: 'Not a directory: {0}'
+error.io.not.link:
+    text: 'Not a symbolic link: {0}'
+error.io.unknown:
+    text: Unknown I/O error
+error.suberror:
+    text: '{0}: {1}'
+error.type.and.message:
+    text: '{0}: {1}'

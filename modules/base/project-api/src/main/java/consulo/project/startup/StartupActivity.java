@@ -16,6 +16,8 @@
 package consulo.project.startup;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
@@ -31,6 +33,14 @@ public interface StartupActivity {
   @Deprecated
   @DeprecationInfo("Use consulo.application.dumb.DumbAware")
   interface DumbAware extends StartupActivity, consulo.application.dumb.DumbAware {
+  }
+
+  /**
+   * Represents a startup activity that should be executed before {@link consulo.project.DumbService} switches to the "smart mode".
+   */
+  @ExtensionAPI(ComponentScope.PROJECT)
+  interface RequiredForSmartMode {
+    void runActivity(Project project);
   }
 
   void runActivity(Project project, UIAccess uiAccess);

@@ -21,10 +21,9 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.Space;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.WrappedLayout;
 
@@ -73,10 +72,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
       myOptionsPanel = WrappedLayout.create();
       myWholePanel.center(myOptionsPanel);
 
-      myNameLayout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 10);
-      myNameLayout.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, null, 10);
-      myNameLayout.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, 10);
-      myNameLayout.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, null, 6);
+      myNameLayout.paddingBuilder().horizontalSet(Space.LARGE).topSet(Space.LARGE).bottomSet(Space.MEDIUM).apply();
     }
   }
 

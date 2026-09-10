@@ -16,7 +16,6 @@
 package consulo.ui.ex.impl.internal.keymap;
 
 import consulo.platform.Platform;
-import consulo.platform.os.UnixOperationSystem;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.keymap.Keymap;
@@ -45,8 +44,7 @@ class DefaultKeymapImpl extends KeymapImpl {
     public void readExternal(Element keymapElement, Keymap[] existingKeymaps) throws InvalidDataException {
         super.readExternal(keymapElement, existingKeymaps);
 
-        if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName())
-            && !(Platform.current().os() instanceof UnixOperationSystem os && os.isXWindow())) {
+        if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName()) && !Platform.current().os().isUnix()) {
             addShortcut(IdeActions.ACTION_GOTO_DECLARATION, new MouseShortcut(MouseEvent.BUTTON2, 0, 1));
         }
     }

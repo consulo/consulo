@@ -28,6 +28,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
@@ -137,7 +138,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
 
             rowPanel.add(createFolderComponent(folder, foregroundColor), BorderLayout.CENTER);
 
-            HorizontalLayout buttonsLayout = HorizontalLayout.create(0);
+            HorizontalLayout buttonsLayout = HorizontalLayout.create(Space.NONE);
             buttonsLayout.add(createChangeOptionsAction(folder, editor));
             buttonsLayout.add(createFolderDeleteAction(folder, editor));
 

@@ -20,7 +20,6 @@ import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.internal.Coroutines;
 import consulo.util.concurrent.coroutine.step.ChannelReceive;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.Iteration;
 import consulo.util.concurrent.coroutine.step.Loop;
 import consulo.util.dataholder.CopyableUserDataHolder;
@@ -316,7 +315,7 @@ public class CoroutineTest {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
         Coroutine<String, String> cr =
-            Coroutine.first(apply((String s) -> s.toUpperCase()))
+            Coroutine.first(apply((Function<String, String>) String::toUpperCase))
                 .then(setScopeParameter(TEXT));
 
         @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")

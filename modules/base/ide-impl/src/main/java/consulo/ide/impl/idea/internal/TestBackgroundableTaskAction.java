@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.internal;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -56,10 +56,10 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
         future.whenCompleteAsync(
             (s, throwable) -> {
                 if (throwable != null) {
-                    Alerts.okError(throwable).showAsync(project);
+                    MessageBoxes.okError(throwable).showAsync(project);
                 }
                 else {
-                    Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
+                    MessageBoxes.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
                 }
             },
             uiAccess

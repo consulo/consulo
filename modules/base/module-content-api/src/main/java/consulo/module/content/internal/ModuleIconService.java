@@ -15,7 +15,6 @@
  */
 package consulo.module.content.internal;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -29,9 +28,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jspecify.annotations.Nullable;
-
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -66,13 +62,8 @@ public class ModuleIconService {
         );
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     private Image requestIcon(Module module) {
-        Image image = myProject.getExtensionPoint(ModuleIconProvider.class)
-            .computeSafeIfAny((Function<ModuleIconProvider, @Nullable Image>) it -> it.getIcon(module));
-        if (image != null) {
-            return image;
-        }
-        return PlatformIconGroup.nodesModule();
+        Image image = myProject.getExtensionPoint(ModuleIconProvider.class).computeSafeIfAny(it -> it.getIcon(module));
+        return image != null ? image : PlatformIconGroup.nodesModule();
     }
 }

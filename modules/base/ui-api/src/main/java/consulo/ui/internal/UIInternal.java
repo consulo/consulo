@@ -62,16 +62,16 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract DockLayout _Layouts_dock(int gapInPixels);
+    public abstract DockLayout _Layouts_dock(Space gap);
 
     public abstract WrappedLayout _Layouts_wrapped();
 
-    public abstract VerticalLayout _Layouts_vertical(int vGap);
+    public abstract VerticalLayout _Layouts_vertical(Space vGap);
 
     /**
      * A backend which cannot place children at a side of the layout still has to answer a layout.
      */
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return _Layouts_vertical(vGap);
     }
 
@@ -93,7 +93,7 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixels);
+    public abstract HorizontalLayout _Layouts_horizontal(Space gap);
 
     public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
 
@@ -140,6 +140,10 @@ public abstract class UIInternal {
     public abstract ImageBox _Components_imageBox(Image image);
 
     public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
+
+    public FontBox _Components_fontBox() {
+        throw new UnsupportedOperationException();
+    }
 
     public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         throw new UnsupportedOperationException();
@@ -203,7 +207,7 @@ public abstract class UIInternal {
 
     public abstract MenuSeparator _MenuSeparator_create();
 
-    public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
+    public abstract <V> RadioGroup<V> _Components_radioGroup();
 
     public abstract MenuBar _MenuItems_menuBar();
 
@@ -342,6 +346,26 @@ public abstract class UIInternal {
     }
 
     public ColorPickerBuilder _ColorPicker_create() {
+        throw new UnsupportedOperationException();
+    }
+
+    public <V> MessageBoxBuilder<V> _MessageBox_create() {
+        throw new UnsupportedOperationException();
+    }
+
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        throw new UnsupportedOperationException();
+    }
+
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        throw new UnsupportedOperationException();
+    }
+
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        throw new UnsupportedOperationException();
+    }
+
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
         throw new UnsupportedOperationException();
     }
 }

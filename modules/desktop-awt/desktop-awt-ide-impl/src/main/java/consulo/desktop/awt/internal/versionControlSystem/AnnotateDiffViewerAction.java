@@ -239,7 +239,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
                             Notification notification = NotificationService.getInstance()
                                 .newError(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
                                 .title(LocalizeValue.localizeTODO("Can't Load Annotations"))
-                                .content(LocalizeValue.of(exception.getMessage()))
+                                .content(LocalizeValue.of(exception))
                                 .create();
                             showNotification(viewer, notification);
                             LOG.warn(exception);

@@ -30,7 +30,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
@@ -103,7 +103,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
         }
         catch (IOException e) {
             LOG.warn(e);
-            project.getUIAccess().giveIfNeed(() -> Alerts.okError(e).showAsync());
+            project.getUIAccess().giveIfNeed(() -> MessageBoxes.okError(e).showAsync());
         }
     }
 

@@ -14,8 +14,8 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
- * Represents a non-linear operation which is executed before indexing process
- * is started {@link PushedFilePropertiesUpdater#pushAllPropertiesNow()}.
+ * Represents a non-linear operation which is executed before an indexing process
+ * is started.
  * <br />
  * During this process any pusher is allowed to set some properties to any of files being indexed.
  * <br />

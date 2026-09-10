@@ -12,7 +12,7 @@ class PersistentIndicesConfiguration {
   static void saveConfiguration() {
     try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(indicesConfigurationFile())))) {
       DataInputOutputUtil.writeINT(out, INDICES_CONFIGURATION_VERSION);
-      IndexingStamp.savePersistentIndexStamp(out);
+      IndexVersion.savePersistentIndexStamp(out);
     }
     catch (IOException ignored) {
     }
@@ -21,7 +21,7 @@ class PersistentIndicesConfiguration {
   static void loadConfiguration() {
     try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(indicesConfigurationFile())))) {
       if (DataInputOutputUtil.readINT(in) == INDICES_CONFIGURATION_VERSION) {
-        IndexingStamp.initPersistentIndexStamp(in);
+        IndexVersion.initPersistentIndexStamp(in);
       }
     }
     catch (IOException ignored) {

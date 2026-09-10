@@ -34,6 +34,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.FileUtil;
 import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -201,5 +202,13 @@ public class StorageUtil {
 
   public static boolean isProjectOrModuleFile(String fileSpec) {
     return fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR);
+  }
+
+  public static boolean hasLegacyExtension(String fileSpec) {
+    return StringUtil.endsWithIgnoreCase(fileSpec, DirectoryStorageData.DEFAULT_EXT);
+  }
+
+  public static String stripLegacyExtension(String fileSpec) {
+    return hasLegacyExtension(fileSpec) ? fileSpec.substring(0, fileSpec.length() - DirectoryStorageData.DEFAULT_EXT.length()) : fileSpec;
   }
 }

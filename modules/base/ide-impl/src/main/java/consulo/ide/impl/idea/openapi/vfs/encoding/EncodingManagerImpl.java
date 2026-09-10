@@ -51,37 +51,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 @State(name = "Encoding", storages = @Storage("encoding.xml"))
-public class EncodingManagerImpl implements PersistentStateComponent<EncodingManagerImpl.State>, ApplicationEncodingManager, Disposable {
+public class EncodingManagerImpl implements PersistentStateComponent<EncodingManagerState>, ApplicationEncodingManager, Disposable {
     private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
 
-    static final class State {
-        
-        private EncodingReference myDefaultEncoding = new EncodingReference(StandardCharsets.UTF_8);
-        
-        private EncodingReference myDefaultConsoleEncoding = EncodingReference.DEFAULT;
-
-        @Attribute("default_encoding")
-        
-        public String getDefaultCharsetName() {
-            return myDefaultEncoding.getCharset() == null ? "" : myDefaultEncoding.getCharset().name();
-        }
-
-        public void setDefaultCharsetName(String name) {
-            myDefaultEncoding = new EncodingReference(StringUtil.nullize(name));
-        }
-
-        @Attribute("default_console_encoding")
-        
-        public String getDefaultConsoleEncodingName() {
-            return myDefaultConsoleEncoding.getCharset() == null ? "" : myDefaultConsoleEncoding.getCharset().name();
-        }
-
-        public void setDefaultConsoleEncodingName(String name) {
-            myDefaultConsoleEncoding = new EncodingReference(StringUtil.nullize(name));
-        }
-    }
-
-    private State myState = new State();
+    private EncodingManagerState myState = new EncodingManagerState();
 
     private static final Key<Charset> CACHED_CHARSET_FROM_CONTENT = Key.create("CACHED_CHARSET_FROM_CONTENT");
 
@@ -238,18 +211,16 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    
-    public State getState() {
+    public EncodingManagerState getState() {
         return myState;
     }
 
     @Override
-    public void loadState(State state) {
+    public void loadState(EncodingManagerState state) {
         myState = state;
     }
 
     @Override
-    
     public Collection<Charset> getFavorites() {
         Collection<Charset> result = new HashSet<>();
         Project[] projects = ProjectManager.getInstance().getOpenProjects();

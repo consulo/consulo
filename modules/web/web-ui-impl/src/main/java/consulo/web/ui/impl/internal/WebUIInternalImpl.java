@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal;
 
+import consulo.ui.RadioGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.vaadin.flow.component.UI;
@@ -61,6 +62,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import consulo.ui.ex.impl.internal.UnifiedMessageBoxBuilderImpl;
+import consulo.ui.ex.impl.internal.UnifiedInputBoxBuilderImpl;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
@@ -81,7 +85,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new WebDockLayoutImpl(gapInPixels);
     }
 
@@ -91,12 +95,12 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new WebVerticalLayoutImpl(vGap);
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return new WebVerticalLayoutImpl(vGap, alignment);
     }
 
@@ -225,7 +229,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixesl) {
         return new WebHorizontalLayoutImpl(gapInPixesl);
     }
 
@@ -237,6 +241,11 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
         return new WebColorBoxImpl(colorValue);
+    }
+
+    @Override
+    public FontBox _Components_fontBox() {
+        return new WebFontBoxImpl();
     }
 
     @Override
@@ -341,20 +350,6 @@ public class WebUIInternalImpl extends UIInternal {
         return new WebSeparatorImpl(style);
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new ValueGroup<>() {
-            @Override
-            @RequiredUIAccess
-            public void clearValues() {
-            }
-
-            @Override
-            public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
-                return this;
-            }
-        };
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -571,5 +566,37 @@ public class WebUIInternalImpl extends UIInternal {
 
     private RuntimeException notSupported() {
         return new UnsupportedOperationException();
+    }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new WebRadioGroupImpl<>();
+    }
+
+
+    @Override
+    public <T> MessageBoxBuilder<T> _MessageBox_create() {
+        return new UnifiedMessageBoxBuilderImpl<>();
+    }
+
+    @Override
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        return new UnifiedInputBoxBuilderImpl<>(TextBox::create);
+    }
+
+    @Override
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        return new UnifiedInputBoxBuilderImpl<>(IntBox::create);
+    }
+
+    @Override
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        List<V> copy = new ArrayList<>(items);
+        return new UnifiedInputBoxBuilderImpl<>(() -> ComboBox.create(copy));
+    }
+
+    @Override
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
+        return new UnifiedInputBoxBuilderImpl<>(PasswordBox::create);
     }
 }

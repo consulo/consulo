@@ -12,14 +12,11 @@ import consulo.component.ProcessCanceledException;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ConcurrentList;
 import consulo.util.collection.Lists;
-import consulo.util.lang.ExceptionUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
@@ -58,10 +55,7 @@ public final class ReadMostlyRWLock implements RWLock {
     // (we have to reduce frequency of this "dead readers GC" activity because Thread.isAlive() turned out to be too expensive)
     private volatile long deadReadersGCStamp;
 
-    private final AtomicReference<Transfer> myPendingTransfer = new AtomicReference<>();
-
-    private record Transfer(boolean runOnEdt, Runnable trampoline) {
-    }
+    private final WriteActionTransfer myTransfer = new WriteActionTransfer(thread -> writeThread = thread);
 
     public ReadMostlyRWLock(@Nullable Thread writeThread) {
         this.writeThread = writeThread;
@@ -249,7 +243,7 @@ public final class ReadMostlyRWLock implements RWLock {
             }
 
             if (iter > SPIN_TO_WAIT_FOR_LOCK) {
-                pollPendingTransfer();
+                myTransfer.poll();
                 LockSupport.parkNanos(this, 1_000_000);  // unparked by writeIntentUnlock
             }
             else {
@@ -258,52 +252,16 @@ public final class ReadMostlyRWLock implements RWLock {
         }
     }
 
+    @Override
     public void transferWriteAction(boolean runOnEdt, Runnable action, Consumer<Runnable> scheduleTarget) {
         Thread source = Thread.currentThread();
         if (source != writeThread) {
-            throw new IllegalStateException("Write action can be transferred only from the write thread: " + source + "; current write thread: " + writeThread);
+            throw new IllegalStateException(
+                "Write action can be transferred only from the write thread: " + source + "; current write thread: " + writeThread
+            );
         }
 
-        CountDownLatch finished = new CountDownLatch(1);
-        AtomicReference<Throwable> error = new AtomicReference<>();
-
-        Runnable trampoline = () -> {
-            writeThread = Thread.currentThread();
-            try {
-                action.run();
-            }
-            catch (Throwable t) {
-                error.set(t);
-            }
-            finally {
-                writeThread = source;
-                finished.countDown();
-                LockSupport.unpark(source);
-            }
-        };
-
-        myPendingTransfer.set(new Transfer(runOnEdt, trampoline));
-        scheduleTarget.accept(this::pollPendingTransfer);
-
-        while (finished.getCount() != 0) {
-            LockSupport.parkNanos(this, 1_000_000);
-        }
-
-        Throwable t = error.get();
-        if (t != null) {
-            ExceptionUtil.rethrow(t);
-        }
-    }
-
-    private void pollPendingTransfer() {
-        Transfer transfer = myPendingTransfer.get();
-        if (transfer == null) {
-            return;
-        }
-        boolean edt = UIAccess.isUIThread();
-        if (transfer.runOnEdt() == edt && myPendingTransfer.compareAndSet(transfer, null)) {
-            transfer.trampoline().run();
-        }
+        myTransfer.transfer(runOnEdt, action, scheduleTarget);
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.rename;
 
+import consulo.ui.RadioGroup;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
@@ -25,8 +26,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.RadioButton;
 import consulo.ui.ValueComponent;
-import consulo.ui.ValueGroup;
-import consulo.ui.ValueGroups;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
@@ -149,22 +148,17 @@ public class RenameHandlerRegistry {
         protected JComponent createNorthPanel() {
             VerticalLayout radioPanel = VerticalLayout.create();
 
-            ValueGroup<Boolean> bg = ValueGroups.boolGroup();
-            boolean selected = true;
+            RadioGroup<LocalizeValue> group = RadioGroup.create();
+            group.addValueListener(renamer -> mySelection = renamer);
+
             int rIdx = 0;
             for (LocalizeValue renamer : myRenamers) {
-                RadioButton rb = RadioButton.create(renamer, selected);
+                RadioButton rb = group.newButton(renamer, renamer);
                 myRButtons[rIdx++] = rb;
-                ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> listener = event -> {
-                    if (rb.getValueOrError()) {
-                        mySelection = renamer;
-                    }
-                };
-                rb.addValueListener(listener);
-                selected = false;
-                bg.add(rb);
                 radioPanel.add(rb);
             }
+
+            group.setValue(myRenamers[0]);
 
             RadioUpDownListener.registerListener(myRButtons);
 

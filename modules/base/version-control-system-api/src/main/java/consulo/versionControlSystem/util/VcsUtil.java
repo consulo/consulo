@@ -23,7 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -708,7 +708,7 @@ public class VcsUtil {
      */
     public static void showErrorMessage(Project project, String message, String title) {
         @RequiredUIAccess
-        Runnable task = () -> Alerts.okError(LocalizeValue.localizeTODO(message)).title(title).showAsync();
+        Runnable task = () -> MessageBoxes.okError(LocalizeValue.localizeTODO(message)).title(LocalizeValue.localizeTODO(title)).showAsync();
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
     }
 

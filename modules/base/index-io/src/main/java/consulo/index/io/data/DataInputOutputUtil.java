@@ -196,6 +196,21 @@ public class DataInputOutputUtil {
     }
   }
 
+  public static void writeTIME(ByteBuffer buffer, long timestamp) {
+    long relStamp = timestamp - timeBase;
+    if (relStamp < 0 || relStamp >= 0xFF00000000L) {
+      buffer.put((byte)255);
+      buffer.putLong(timestamp);
+    }
+    else {
+      buffer.put((byte)(relStamp >> 32));
+      buffer.put((byte)(relStamp >> 24));
+      buffer.put((byte)(relStamp >> 16));
+      buffer.put((byte)(relStamp >> 8));
+      buffer.put((byte)(relStamp));
+    }
+  }
+
   public static long readTIME(DataInput record) throws IOException {
     int first = record.readUnsignedByte();
     if (first == 255) {
@@ -207,6 +222,21 @@ public class DataInputOutputUtil {
       int third = record.readUnsignedByte() << 16;
       int fourth = record.readUnsignedByte() << 8;
       int fifth = record.readUnsignedByte();
+      return ((((long)((first << 8) | second)) << 24) | (third | fourth | fifth)) + timeBase;
+    }
+  }
+
+  public static long readTIME(ByteBuffer buffer) {
+    int first = Byte.toUnsignedInt(buffer.get());
+    if (first == 0xFF) {
+      return buffer.getLong();
+    }
+    else {
+      int second = Byte.toUnsignedInt(buffer.get());
+
+      int third = Byte.toUnsignedInt(buffer.get()) << 16;
+      int fourth = Byte.toUnsignedInt(buffer.get()) << 8;
+      int fifth = Byte.toUnsignedInt(buffer.get());
       return ((((long)((first << 8) | second)) << 24) | (third | fourth | fifth)) + timeBase;
     }
   }

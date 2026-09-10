@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.*;
 import consulo.codeEditor.localize.CodeEditorLocalize;
@@ -36,159 +37,180 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class EditorModificationUtil {
-  private EditorModificationUtil() {
-  }
+    private EditorModificationUtil() {
+    }
 
-  public static void deleteSelectedText(Editor editor) {
-    consulo.codeEditor.util.EditorModificationUtil.deleteSelectedText(editor);
-  }
+    public static void deleteSelectedText(Editor editor) {
+        consulo.codeEditor.util.EditorModificationUtil.deleteSelectedText(editor);
+    }
 
-  public static void zeroWidthBlockSelectionAtCaretColumn(Editor editor, int startLine, int endLine) {
-    int caretColumn = editor.getCaretModel().getLogicalPosition().column;
-    editor.getSelectionModel().setBlockSelection(new LogicalPosition(startLine, caretColumn), new LogicalPosition(endLine, caretColumn));
-  }
+    public static void zeroWidthBlockSelectionAtCaretColumn(Editor editor, int startLine, int endLine) {
+        int caretColumn = editor.getCaretModel().getLogicalPosition().column;
+        editor.getSelectionModel()
+            .setBlockSelection(new LogicalPosition(startLine, caretColumn), new LogicalPosition(endLine, caretColumn));
+    }
 
-  public static void insertStringAtCaret(Editor editor, String s) {
-    insertStringAtCaret(editor, s, false, true);
-  }
+    @RequiredWriteAction
+    public static void insertStringAtCaret(Editor editor, String s) {
+        consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s);
+    }
 
-  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode) {
-    return insertStringAtCaret(editor, s, toProcessOverwriteMode, s.length());
-  }
+    @RequiredWriteAction
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode) {
+        return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode);
+    }
 
-  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
-    return insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, s.length());
-  }
+    @RequiredWriteAction
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
+        return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret);
+    }
 
-  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, int caretShift) {
-    return insertStringAtCaret(editor, s, toProcessOverwriteMode, true, caretShift);
-  }
+    @RequiredWriteAction
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, int caretShift) {
+        return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, caretShift);
+    }
 
-  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
-    return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
-  }
+    @RequiredWriteAction
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
+        return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(
+            editor,
+            s,
+            toProcessOverwriteMode,
+            toMoveCaret,
+            caretShift
+        );
+    }
 
-  @RequiredUIAccess
-  public static void pasteTransferableAsBlock(Editor editor, @Nullable Supplier<Transferable> producer) {
-    UIAccess uiAccess = UIAccess.current();
+    @RequiredUIAccess
+    public static void pasteTransferableAsBlock(Editor editor, @Nullable Supplier<Transferable> producer) {
+        UIAccess uiAccess = UIAccess.current();
 
-    Supplier<DataTransfer> transferProducer = producer == null
-      ? null
-      : () -> DataTransfer.builder().put(EditorImplUtil.TRANSFERABLE, producer.get()).build();
+        Supplier<DataTransfer> transferProducer = producer == null
+            ? null
+            : () -> DataTransfer.builder().put(EditorImplUtil.TRANSFERABLE, producer.get()).build();
 
-    EditorImplUtil.getContentsToPasteToEditor(transferProducer)
-      .whenCompleteAsync((transfer, throwable) -> {
-        if (throwable == null && transfer != null) {
-          pasteAsBlock(editor, transfer);
+        EditorImplUtil.getContentsToPasteToEditor(transferProducer)
+            .whenCompleteAsync((transfer, throwable) -> {
+                if (throwable == null && transfer != null) {
+                    pasteAsBlock(editor, transfer);
+                }
+            }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private static void pasteAsBlock(Editor editor, DataTransfer transfer) {
+        Transferable content = transfer.get(EditorImplUtil.TRANSFERABLE);
+        String text = content != null ? getStringContent(content) : transfer.get(DataTransferType.TEXT);
+        if (text == null) {
+            return;
         }
-      }, uiAccess);
-  }
 
-  @RequiredUIAccess
-  private static void pasteAsBlock(Editor editor, DataTransfer transfer) {
-    Transferable content = transfer.get(EditorImplUtil.TRANSFERABLE);
-    String text = content != null ? getStringContent(content) : transfer.get(DataTransferType.TEXT);
-    if (text == null) return;
+        int caretLine = editor.getCaretModel().getLogicalPosition().line;
 
-    int caretLine = editor.getCaretModel().getLogicalPosition().line;
+        LogicalPosition caretToRestore = editor.getCaretModel().getLogicalPosition();
 
-    LogicalPosition caretToRestore = editor.getCaretModel().getLogicalPosition();
+        String[] lines = LineTokenizer.tokenize(text.toCharArray(), false);
+        int longestLineLength = 0;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            longestLineLength = Math.max(longestLineLength, line.length());
+            editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(caretLine + i, caretToRestore.column));
+            insertStringAtCaret(editor, line, false, true);
+        }
+        caretToRestore = new LogicalPosition(caretLine, caretToRestore.column + longestLineLength);
 
-    String[] lines = LineTokenizer.tokenize(text.toCharArray(), false);
-    int longestLineLength = 0;
-    for (int i = 0; i < lines.length; i++) {
-      String line = lines[i];
-      longestLineLength = Math.max(longestLineLength, line.length());
-      editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(caretLine + i, caretToRestore.column));
-      insertStringAtCaret(editor, line, false, true);
-    }
-    caretToRestore = new LogicalPosition(caretLine, caretToRestore.column + longestLineLength);
-
-    editor.getCaretModel().moveToLogicalPosition(caretToRestore);
-    zeroWidthBlockSelectionAtCaretColumn(editor, caretLine, caretLine);
-  }
-
-  public static @Nullable String getStringContent(Transferable content) {
-    RawText raw = RawText.fromTransferable(content);
-    if (raw != null) return raw.rawText;
-
-    try {
-      return (String)content.getTransferData(DataFlavor.stringFlavor);
-    }
-    catch (UnsupportedFlavorException | IOException ignore) {
+        editor.getCaretModel().moveToLogicalPosition(caretToRestore);
+        zeroWidthBlockSelectionAtCaretColumn(editor, caretLine, caretLine);
     }
 
-    return null;
-  }
+    public static @Nullable String getStringContent(Transferable content) {
+        RawText raw = RawText.fromTransferable(content);
+        if (raw != null) {
+            return raw.rawText;
+        }
 
-  /**
-   * Calculates difference in columns between current editor caret position and end of the logical line fragment displayed
-   * on a current visual line.
-   *
-   * @param editor target editor
-   * @return difference in columns between current editor caret position and end of the logical line fragment displayed
-   * on a current visual line
-   */
-  public static int calcAfterLineEnd(Editor editor) {
-    return consulo.codeEditor.util.EditorModificationUtil.calcAfterLineEnd(editor);
-  }
+        try {
+            return (String) content.getTransferData(DataFlavor.stringFlavor);
+        }
+        catch (UnsupportedFlavorException | IOException ignore) {
+        }
 
-  public static String calcStringToFillVirtualSpace(Editor editor) {
-    return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor);
-  }
-
-  public static String calcStringToFillVirtualSpace(Editor editor, int afterLineEnd) {
-    return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor, afterLineEnd);
-  }
-
-  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str) {
-    consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
-  }
-
-  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, int caretShift) {
-    consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
-  }
-
-  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, boolean toProcessOverwriteMode) {
-    consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
-  }
-
-  public static void moveAllCaretsRelatively(Editor editor, int caretShift) {
-    consulo.codeEditor.util.EditorModificationUtil.moveAllCaretsRelatively(editor, caretShift);
-  }
-
-  public static void moveCaretRelatively(Editor editor, int caretShift) {
-    consulo.codeEditor.util.EditorModificationUtil.moveCaretRelatively(editor, caretShift);
-  }
-
-  /**
-   * This method is safe to run both in and out of {@link CaretModel#runForEachCaret(CaretAction)} context.
-   * It scrolls to primary caret in both cases, and, in the former case, avoids performing excessive scrolling in case of large number
-   * of carets.
-   */
-  public static void scrollToCaret(Editor editor) {
-    consulo.codeEditor.util.EditorModificationUtil.scrollToCaret(editor);
-  }
-
-  
-  public static List<CaretState> calcBlockSelectionState(Editor editor, LogicalPosition blockStart, LogicalPosition blockEnd) {
-    return consulo.codeEditor.util.EditorModificationUtil.calcBlockSelectionState(editor, blockStart, blockEnd);
-  }
-
-  @RequiredUIAccess
-  public static boolean requestWriting(Editor editor) {
-    if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
-      HintManager.getInstance().showInformationHint(editor, CodeEditorLocalize.editingReadOnlyFileHint());
-      return false;
+        return null;
     }
-    return true;
-  }
 
-  /**
-   * @return true when not viewer
-   * false otherwise, additionally information hint with warning would be shown
-   */
-  public static boolean checkModificationAllowed(Editor editor) {
-    return LanguageEditorUtil.checkModificationAllowed(editor);
-  }
+    /**
+     * Calculates difference in columns between current editor caret position and end of the logical line fragment displayed
+     * on a current visual line.
+     *
+     * @param editor target editor
+     * @return difference in columns between current editor caret position and end of the logical line fragment displayed
+     * on a current visual line
+     */
+    public static int calcAfterLineEnd(Editor editor) {
+        return consulo.codeEditor.util.EditorModificationUtil.calcAfterLineEnd(editor);
+    }
+
+    public static String calcStringToFillVirtualSpace(Editor editor) {
+        return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor);
+    }
+
+    public static String calcStringToFillVirtualSpace(Editor editor, int afterLineEnd) {
+        return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor, afterLineEnd);
+    }
+
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str) {
+        consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
+    }
+
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, int caretShift) {
+        consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
+    }
+
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, boolean toProcessOverwriteMode) {
+        consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(
+            editor,
+            str,
+            toProcessOverwriteMode,
+            str.length()
+        );
+    }
+
+    public static void moveAllCaretsRelatively(Editor editor, int caretShift) {
+        consulo.codeEditor.util.EditorModificationUtil.moveAllCaretsRelatively(editor, caretShift);
+    }
+
+    public static void moveCaretRelatively(Editor editor, int caretShift) {
+        consulo.codeEditor.util.EditorModificationUtil.moveCaretRelatively(editor, caretShift);
+    }
+
+    /**
+     * This method is safe to run both in and out of {@link CaretModel#runForEachCaret(CaretAction)} context.
+     * It scrolls to primary caret in both cases, and, in the former case, avoids performing excessive scrolling in case of large number
+     * of carets.
+     */
+    public static void scrollToCaret(Editor editor) {
+        consulo.codeEditor.util.EditorModificationUtil.scrollToCaret(editor);
+    }
+
+    public static List<CaretState> calcBlockSelectionState(Editor editor, LogicalPosition blockStart, LogicalPosition blockEnd) {
+        return consulo.codeEditor.util.EditorModificationUtil.calcBlockSelectionState(editor, blockStart, blockEnd);
+    }
+
+    @RequiredUIAccess
+    public static boolean requestWriting(Editor editor) {
+        if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
+            HintManager.getInstance().showInformationHint(editor, CodeEditorLocalize.editingReadOnlyFileHint());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return true when not viewer
+     * false otherwise, additionally information hint with warning would be shown
+     */
+    @RequiredUIAccess
+    public static boolean checkModificationAllowed(Editor editor) {
+        return LanguageEditorUtil.checkModificationAllowed(editor);
+    }
 }

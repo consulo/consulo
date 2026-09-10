@@ -18,7 +18,7 @@ package consulo.ide.impl.newProject.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.ide.impl.module.creation.NewProjectDialog;
+import consulo.ide.impl.module.creation.NewProjectDialogDescriptor;
 import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -30,11 +30,13 @@ import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.RecentProjectsManager;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -64,11 +66,19 @@ public class NewProjectAction extends DumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        NewProjectDialog dialog = new NewProjectDialog(project, null);
 
-        if (dialog.showAndGet()) {
-            generateProject(project, dialog.getProjectPanel());
-        }
+        NewProjectDialogDescriptor descriptor = new NewProjectDialogDescriptor(null);
+
+        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        Dialog dialog = project != null ? dialogService.build(project, descriptor) : dialogService.build(descriptor);
+
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error != null) {
+                return;
+            }
+
+            generateProject(project, descriptor.getWizardData());
+        });
     }
 
     @RequiredUIAccess
@@ -93,7 +103,7 @@ public class NewProjectAction extends DumbAwareAction {
         File location = new File(context.getPath());
         int childCount = location.exists() ? location.list().length : 0;
         if (!location.exists() && !location.mkdirs()) {
-            Alerts.okError(LocalizeValue.localizeTODO("Cannot create directory '" + location + "'")).showAsync();
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Cannot create directory '" + location + "'")).showAsync();
             return;
         }
 
@@ -101,14 +111,14 @@ public class NewProjectAction extends DumbAwareAction {
 
         VirtualFile baseDir = LocalFileSystem.getInstance().findFileByIoFile(location);
         if (baseDir == null) {
-            Alerts.okError(LocalizeValue.localizeTODO("Directory '" + location + "' is not resolved.")).showAsync();
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Directory '" + location + "' is not resolved.")).showAsync();
             return;
         }
 
         baseDir.refresh(false, true);
 
         if (childCount > 0) {
-            Alerts.yesNo()
+            MessageBoxes.yesNo()
                 .text(LocalizeValue.localizeTODO("The directory '" + location + "' is not empty. Continue?"))
                 .showAsync()
                 .whenComplete((confirmed, error) -> {

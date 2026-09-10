@@ -33,22 +33,21 @@ import consulo.module.creation.scratch.NewModuleContextItem;
 import consulo.module.creation.scratch.NewModuleContextNode;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.util.ProjectUtil;
-import consulo.ui.Length;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
+import consulo.ui.Length;
 import consulo.ui.Size2D;
+import consulo.ui.Space;
 import consulo.ui.TextAttribute;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
@@ -126,6 +125,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     private @Nullable NewModuleBuilderProcessor<NewModuleWizardContext> myProcessor;
 
     private final TitlelessDecorator myTitlelessDecorator;
+    private final boolean myWithSouthPanel;
 
     private @Nullable DockLayout myRoot;
     private SwipeLayout myStepLayout;
@@ -139,7 +139,10 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     private @Nullable Runnable myDefaultOkAction;
     private @Nullable Runnable myDefaultCancelAction;
 
+    private @Nullable Runnable myPresentationListener;
+
     private int myStepCounter;
+    private boolean myFinished;
 
     public UnifiedNewProjectPanel(Disposable parentDisposable, @Nullable VirtualFile moduleHome) {
         this(parentDisposable, moduleHome, TitlelessDecorator.NOTHING);
@@ -150,9 +153,19 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
         @Nullable VirtualFile moduleHome,
         TitlelessDecorator titlelessDecorator
     ) {
+        this(parentDisposable, moduleHome, titlelessDecorator, true);
+    }
+
+    public UnifiedNewProjectPanel(
+        Disposable parentDisposable,
+        @Nullable VirtualFile moduleHome,
+        TitlelessDecorator titlelessDecorator,
+        boolean withSouthPanel
+    ) {
         myParentDisposable = parentDisposable;
         myModuleHome = moduleHome;
         myTitlelessDecorator = titlelessDecorator;
+        myWithSouthPanel = withSouthPanel;
     }
 
     public void setDefaultOkAction(@Nullable @RequiredUIAccess Runnable okAction) {
@@ -202,7 +215,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
         DockLayout rightPanel = DockLayout.create();
         rightPanel.center(myStepLayout);
 
-        Component southPanel = buildSouthPanel();
+        Component southPanel = myWithSouthPanel ? buildSouthPanel() : null;
         if (southPanel != null) {
             rightPanel.bottom(southPanel);
         }
@@ -234,19 +247,19 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
         });
 
         WrappedLayout southPanel = WrappedLayout.create(myMoreViaPlugins);
-        southPanel.addBorders(BorderStyle.EMPTY, null, 8);
+        southPanel.paddingBuilder().allSet(Space.LARGE).apply();
 
         DockLayout leftPanel = DockLayout.create();
         leftPanel.center(ScrollableLayout.create(tree));
         leftPanel.bottom(southPanel);
-        leftPanel.addBorder(BorderPosition.RIGHT, BorderStyle.LINE, ComponentColors.BORDER, 1);
+        leftPanel.borderBuilder().rightSet().apply();
         leftPanel.setSize(new Size2D(300, -1));
         return leftPanel;
     }
 
     @RequiredUIAccess
     private Layout buildEmptyPanel() {
-        VerticalLayout layout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout layout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
         layout.add(Label.create(myModuleHome == null
             ? LocalizeValue.localizeTODO("Please select project type")
             : LocalizeValue.localizeTODO("Please select module type")));
@@ -254,8 +267,8 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     }
 
     @RequiredUIAccess
-    protected @Nullable Component buildSouthPanel() {
-        HorizontalLayout buttonsPanel = HorizontalLayout.create(5);
+    private DockLayout buildSouthPanel() {
+        HorizontalLayout buttonsPanel = HorizontalLayout.create();
 
         myCancelButton = Button.create(CommonLocalize.buttonCancel());
         myCancelButton.addClickListener(e -> doCancelAction());
@@ -269,14 +282,14 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
         DockLayout south = DockLayout.create();
         south.right(buttonsPanel);
-        south.addBorders(BorderStyle.EMPTY, null, 8);
+        south.paddingBuilder().allSet(Space.LARGE).apply();
         return south;
     }
 
     @RequiredUIAccess
     private void nodeSelected(@Nullable NewModuleContextNode value) {
         if (myWizardSession != null) {
-            myWizardSession.finish();
+            finish();
             myWizardSession.dispose();
             myWizardSession = null;
         }
@@ -304,9 +317,10 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             myProcessor.buildSteps(steps::add, myWizardContext);
 
             myWizardSession = new WizardSession<>(myWizardContext, steps);
+            myFinished = false;
 
             if (myWizardSession.hasNext()) {
-                showStep(myWizardSession.next());
+                showStep(myWizardSession.next(), true);
             }
             else {
                 LOG.error("There no visible steps for " + value);
@@ -321,15 +335,21 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     }
 
     @RequiredUIAccess
-    private void showStep(WizardStep<NewModuleWizardContext> step) {
+    private void showStep(WizardStep<NewModuleWizardContext> step, boolean forward) {
         String id = "step-" + (++myStepCounter);
 
         myStepLayout.register(id, () -> {
             WrappedLayout layout = WrappedLayout.create(step.getComponent(myWizardContext, myParentDisposable));
-            layout.addBorders(BorderStyle.EMPTY, null, 5);
+            layout.paddingBuilder().allSet(Space.MEDIUM).apply();
             return layout;
         });
-        myStepLayout.swipeLeftTo(id);
+
+        if (forward) {
+            myStepLayout.swipeLeftTo(id);
+        }
+        else {
+            myStepLayout.swipeRightTo(id);
+        }
     }
 
     @RequiredUIAccess
@@ -343,7 +363,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             if (hasNext) {
                 setOKActionText(CommonLocalize.buttonNext());
                 setOKAction(() -> {
-                    showStep(wizardSession.next());
+                    showStep(wizardSession.next(), true);
                     updateButtonPresentation();
                 });
             }
@@ -355,7 +375,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             int currentStepIndex = wizardSession.getCurrentStepIndex();
             if (currentStepIndex != 0) {
                 setCancelAction(() -> {
-                    showStep(wizardSession.prev());
+                    showStep(wizardSession.prev(), false);
                     updateButtonPresentation();
                 });
                 setCancelText(CommonLocalize.buttonBack());
@@ -378,39 +398,81 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
             myMoreViaPlugins.setVisible(true);
         }
+
+        if (myPresentationListener != null) {
+            myPresentationListener.run();
+        }
+    }
+
+    public void setPresentationListener(@Nullable Runnable listener) {
+        myPresentationListener = listener;
+    }
+
+    public boolean isTypeSelected() {
+        return myProcessor != null && myWizardSession != null;
+    }
+
+    public boolean hasNextStep() {
+        return myWizardSession != null && myWizardSession.hasNext();
+    }
+
+    public boolean hasPrevStep() {
+        return myWizardSession != null && myWizardSession.getCurrentStepIndex() != 0;
     }
 
     @RequiredUIAccess
-    public void setOKActionEnabled(boolean enabled) {
+    public void goNextStep() {
+        WizardSession<NewModuleWizardContext> wizardSession = myWizardSession;
+        if (wizardSession == null || !wizardSession.hasNext()) {
+            return;
+        }
+
+        showStep(wizardSession.next(), true);
+        updateButtonPresentation();
+    }
+
+    @RequiredUIAccess
+    public void goPrevStep() {
+        WizardSession<NewModuleWizardContext> wizardSession = myWizardSession;
+        if (wizardSession == null || wizardSession.getCurrentStepIndex() == 0) {
+            return;
+        }
+
+        showStep(wizardSession.prev(), false);
+        updateButtonPresentation();
+    }
+
+    @RequiredUIAccess
+    private void setOKActionEnabled(boolean enabled) {
         if (myOkButton != null) {
             myOkButton.setEnabled(enabled);
         }
     }
 
     @RequiredUIAccess
-    public void setOKActionText(LocalizeValue text) {
+    private void setOKActionText(LocalizeValue text) {
         if (myOkButton != null) {
             myOkButton.setText(text);
         }
     }
 
     @RequiredUIAccess
-    public void setCancelText(LocalizeValue text) {
+    private void setCancelText(LocalizeValue text) {
         if (myCancelButton != null) {
             myCancelButton.setText(text);
         }
     }
 
-    public void setOKAction(@Nullable Runnable action) {
+    private void setOKAction(@Nullable Runnable action) {
         myOkAction = action;
     }
 
-    public void setCancelAction(@Nullable Runnable action) {
+    private void setCancelAction(@Nullable Runnable action) {
         myCancelAction = action;
     }
 
     @RequiredUIAccess
-    public void doOkAction() {
+    private void doOkAction() {
         if (myOkAction != null) {
             myOkAction.run();
         }
@@ -420,7 +482,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
     }
 
     @RequiredUIAccess
-    public void doCancelAction() {
+    private void doCancelAction() {
         if (myCancelAction != null) {
             myCancelAction.run();
         }
@@ -431,15 +493,18 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
     @Override
     public void finish() {
-        if (myWizardSession != null) {
-            myWizardSession.finish();
+        if (myFinished || myWizardSession == null) {
+            return;
         }
+
+        myFinished = true;
+        myWizardSession.finish();
     }
 
     @Override
     public void dispose() {
         if (myWizardSession != null) {
-            myWizardSession.finish();
+            finish();
             myWizardSession.dispose();
             myWizardSession = null;
         }

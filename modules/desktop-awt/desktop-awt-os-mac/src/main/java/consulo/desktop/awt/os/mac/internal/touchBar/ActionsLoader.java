@@ -13,6 +13,7 @@ import org.jspecify.annotations.Nullable;
 import java.awt.event.InputEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 final class ActionsLoader {
     private static final Logger LOG = Logger.getInstance(ActionsLoader.class);
@@ -55,13 +56,18 @@ final class ActionsLoader {
 
     private static final int RUN_CONFIG_POPOVER_WIDTH = 143;
 
-    static @Nullable Pair<Map<Long, ActionGroup>, Customizer> getProjectDefaultActionGroup() {
+    static CompletableFuture<@Nullable Pair<Map<Long, ActionGroup>, Customizer>> getProjectDefaultActionGroupAsync() {
         if (ENABLE_FN_MODE) {
             LOG.debug("use FN-actions group for default actions");
-            return getFnActionGroup();
+            return CompletableFuture.completedFuture(getFnActionGroup());
         }
 
-        @Nullable Map<Long, ActionGroup> defaultGroup = getActionGroup(DEFAULT_ACTION_GROUP);
+        return getActionGroupAsync(DEFAULT_ACTION_GROUP).thenApply(ActionsLoader::createProjectDefaultCustomizer);
+    }
+
+    private static @Nullable Pair<Map<Long, ActionGroup>, Customizer> createProjectDefaultCustomizer(
+        @Nullable Map<Long, ActionGroup> defaultGroup
+    ) {
         if (defaultGroup == null) {
             return null;
         }
@@ -99,34 +105,40 @@ final class ActionsLoader {
         return Pair.create(defaultGroup, customizer);
     }
 
-    static @Nullable Pair<Map<Long, ActionGroup>, Customizer> getToolWindowActionGroup(String toolWindowId) {
-        if ("Services".equals(toolWindowId)) {
+    static CompletableFuture<@Nullable Pair<Map<Long, ActionGroup>, Customizer>> getToolWindowActionGroupAsync(String toolWindowId) {
+        String id = "Services".equals(toolWindowId) ? "Debug" : toolWindowId;
+        if (!id.equals(toolWindowId)) {
             LOG.debug("Services tool-window will use action-group from debug tool window");
-            toolWindowId = "Debug";
-        }
-        @Nullable Map<Long, ActionGroup> actions = getActionGroup(IdeActions.GROUP_TOUCHBAR + toolWindowId);
-        if (actions == null || actions.get(0L) == null) {
-            LOG.debug("null action group (or it doesn't contain main-layout) for tool window: %s", toolWindowId);
-            return null;
         }
 
-        Customizer customizer = new Customizer(
-            TOOLWINDOW_CROSS_ESC ? new TBPanel.CrossEscInfo(TOOLWINDOW_EMULATE_ESC, TOOLWINDOW_PERSISTENT) : null,
-            getAutoCloseActions(toolWindowId)
-        );
-        return Pair.create(actions, customizer);
+        return getActionGroupAsync(IdeActions.GROUP_TOUCHBAR + id).thenApply(actions -> {
+            if (actions == null || actions.get(0L) == null) {
+                LOG.debug("null action group (or it doesn't contain main-layout) for tool window: %s", id);
+                return null;
+            }
+
+            Customizer customizer = new Customizer(
+                TOOLWINDOW_CROSS_ESC ? new TBPanel.CrossEscInfo(TOOLWINDOW_EMULATE_ESC, TOOLWINDOW_PERSISTENT) : null,
+                getAutoCloseActions(id)
+            );
+            return Pair.create(actions, customizer);
+        });
     }
 
-    static @Nullable Map<Long, ActionGroup> getActionGroup(String groupId) {
+    static CompletableFuture<@Nullable Map<Long, ActionGroup>> getActionGroupAsync(String groupId) {
+        return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_TOUCHBAR)
+            .thenApply(allTouchbarActions -> {
+                if (allTouchbarActions == null) {
+                    LOG.debug("can't create touchbar because ActionGroup isn't defined: %s", IdeActions.GROUP_TOUCHBAR);
+                    return null;
+                }
+                return doGetActionGroup(groupId, allTouchbarActions);
+            });
+    }
+
+    private static @Nullable Map<Long, ActionGroup> doGetActionGroup(String groupId, ActionGroup allTouchbarActions) {
         // 1. build full name of group
         String fullGroupId = groupId.startsWith(IdeActions.GROUP_TOUCHBAR) ? groupId : IdeActions.GROUP_TOUCHBAR + groupId;
-
-        // 2. read touchbar-actions from CustomActionsSchema and select proper child
-        ActionGroup allTouchbarActions = (ActionGroup) CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_TOUCHBAR);
-        if (allTouchbarActions == null) {
-            LOG.debug("can't create touchbar because ActionGroup isn't defined: %s", IdeActions.GROUP_TOUCHBAR);
-            return null;
-        }
 
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup actionGroup = null;

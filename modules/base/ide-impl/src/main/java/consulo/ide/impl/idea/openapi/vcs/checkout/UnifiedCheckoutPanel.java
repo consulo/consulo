@@ -17,46 +17,24 @@ package consulo.ide.impl.idea.openapi.vcs.checkout;
 
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
-import consulo.disposer.Disposable;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ide.impl.welcomeScreen.WelcomeSlide;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.Button;
-import consulo.ui.ButtonStyle;
-import consulo.ui.Component;
-import consulo.ui.HorizontalAlignment;
-import consulo.ui.Hyperlink;
-import consulo.ui.Label;
-import consulo.ui.ListBox;
-import consulo.ui.Size2D;
-import consulo.ui.TextAttribute;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.Layout;
-import consulo.ui.layout.ScrollableLayout;
-import consulo.ui.layout.SwipeLayout;
-import consulo.ui.layout.VerticalLayout;
-import consulo.ui.layout.WrappedLayout;
-import consulo.ui.style.ComponentColors;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
+import consulo.ui.layout.*;
 import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.checkout.CheckoutPage;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -68,7 +46,6 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
     private final Project myProject;
     private final TitlelessDecorator myTitlelessDecorator;
     private final List<CheckoutProvider> myProviders;
-    private final CheckoutCallback myListener;
 
     private final Map<CheckoutProvider, String> myProviderIds = new HashMap<>();
     private final Map<CheckoutProvider, Boolean> myProviderStates = new HashMap<>();
@@ -78,6 +55,8 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
     private SwipeLayout myProviderLayout;
     private @Nullable Button myOkButton;
 
+    private CheckBox myOpenProjectFromDirectory;
+
     private @Nullable Runnable myCloseAction;
 
     private @Nullable CheckoutProvider myCurrentProvider;
@@ -86,7 +65,6 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
     public UnifiedCheckoutPanel(Application application, Project project, TitlelessDecorator titlelessDecorator) {
         myProject = project;
         myTitlelessDecorator = titlelessDecorator;
-        myListener = ProjectLevelVcsManagerEx.getInstanceEx(project).getCompositeCheckoutCallback();
 
         myProviders = new ArrayList<>(application.getExtensionPoint(CheckoutProvider.class).getExtensionList());
         myProviders.sort(Comparator.comparing(provider -> provider.getName().map(Presentation.NO_MNEMONIC).get()));
@@ -150,26 +128,26 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
         );
 
         WrappedLayout southPanel = WrappedLayout.create(moreViaPlugins);
-        southPanel.addBorders(BorderStyle.EMPTY, null, 8);
+        southPanel.paddingBuilder().allSet(Space.LARGE).apply();
 
         DockLayout leftPanel = DockLayout.create();
         leftPanel.center(ScrollableLayout.create(listBox));
         leftPanel.bottom(southPanel);
-        leftPanel.addBorder(BorderPosition.RIGHT, BorderStyle.LINE, ComponentColors.BORDER, 1);
+        leftPanel.borderBuilder().rightSet().apply();
         leftPanel.setSize(new Size2D(300, -1));
         return leftPanel;
     }
 
     @RequiredUIAccess
     private Layout buildEmptyPanel() {
-        VerticalLayout layout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
+        VerticalLayout layout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
         layout.add(Label.create(VcsLocalize.checkoutSelectVcsPrompt()));
         return layout;
     }
 
     @RequiredUIAccess
     protected @Nullable Component buildSouthPanel() {
-        HorizontalLayout buttonsPanel = HorizontalLayout.create(5);
+        HorizontalLayout buttonsPanel = HorizontalLayout.create();
 
         Button cancelButton = Button.create(CommonLocalize.buttonCancel());
         cancelButton.addClickListener(e -> doCancelAction());
@@ -183,7 +161,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
 
         DockLayout south = DockLayout.create();
         south.right(buttonsPanel);
-        south.addBorders(BorderStyle.EMPTY, null, 8);
+        south.paddingBuilder().allSet(Space.LARGE).apply();
         return south;
     }
 
@@ -225,8 +203,16 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
             }
         });
 
-        WrappedLayout layout = WrappedLayout.create(form);
-        layout.addBorders(BorderStyle.EMPTY, null, 5);
+        DockLayout layout = DockLayout.create();
+        layout.center(form);
+
+        myOpenProjectFromDirectory = CheckBox.create(LocalizeValue.localizeTODO("Open Project From Directory"));
+        myOpenProjectFromDirectory.setValue(true);
+
+        layout.bottom(myOpenProjectFromDirectory);
+
+        layout.paddingBuilder().allSet(Space.MEDIUM).apply();
+
         return layout;
     }
 
@@ -248,7 +234,12 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
     public void doOkAction() {
         CheckoutPage page = myProviderPages.get(myCurrentProvider);
         if (page != null) {
-            page.doCheckout(myListener);
+            UIAccess uiAccess = UIAccess.current();
+
+            CheckoutCallback callback =
+                ProjectLevelVcsManagerEx.getInstanceEx(myProject).getCompositeCheckoutCallback(uiAccess, myOpenProjectFromDirectory.getValueOrError());
+
+            page.doCheckout(callback);
         }
 
         doCancelAction();

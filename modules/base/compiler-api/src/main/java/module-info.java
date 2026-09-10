@@ -28,4 +28,7 @@ module consulo.compiler.api {
 
     opens consulo.compiler.resourceCompiler to
         consulo.util.xml.serializer;
+
+    opens consulo.compiler.setting to
+        consulo.util.xml.serializer;
 }

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.completion.CodeCompletionFeatures;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.WriteAction;
@@ -11,6 +11,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
@@ -20,7 +21,6 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.actions.BaseCodeCompletionAction;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.editor.CodeInsightSettings;
@@ -29,11 +29,13 @@ import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.impl.internal.completion.CompletionAssertions;
 import consulo.language.editor.impl.internal.completion.CompletionAssertions.WatchingInsertionContext;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.impl.internal.psi.stub.StubTextInconsistencyException;
 import consulo.language.psi.PsiDocumentManager;
@@ -46,7 +48,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.TestOnly;
@@ -147,7 +148,7 @@ public class CodeCompletionHandlerBase {
         int offset = editor.getCaretModel().getOffset();
         if (editor.isViewer() || editor.getDocument().getRangeGuard(offset, offset) != null) {
             editor.getDocument().fireReadOnlyModificationAttempt();
-            EditorModificationUtil.checkModificationAllowed(editor);
+            LanguageEditorUtil.checkModificationAllowed(editor);
             return;
         }
 
@@ -286,6 +287,7 @@ public class CodeCompletionHandlerBase {
         }
     }
 
+    @RequiredUIAccess
     private void scheduleContributorsAfterAsyncCommit(
         CompletionInitializationContextImpl initContext,
         CompletionProgressIndicator indicator,
@@ -388,6 +390,7 @@ public class CodeCompletionHandlerBase {
         }
     }
 
+    @RequiredUIAccess
     private static void checkNotSync(CompletionProgressIndicator indicator, List<LookupElement> allItems) {
         if (CompletionServiceImpl.isPhase(CompletionPhase.Synchronous.class)) {
             LOG.error(
@@ -546,6 +549,7 @@ public class CodeCompletionHandlerBase {
         }
     }
 
+    @RequiredUIAccess
     private static WatchingInsertionContext insertItemHonorBlockSelection(
         CompletionProcessEx indicator,
         LookupElement item,
@@ -631,6 +635,7 @@ public class CodeCompletionHandlerBase {
             : CompletionInitializationContext.calcDefaultIdentifierEnd(indicator.getEditor(), indicator.getCaret().getOffset());
     }
 
+    @RequiredReadAction
     private static void checkPsiTextConsistency(CompletionProcessEx indicator) {
         PsiFile psiFile =
             PsiUtilBase.getPsiFileInEditor(EditorWindow.getTopLevelEditor(indicator.getEditor()), indicator.getProject());

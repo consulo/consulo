@@ -19,38 +19,95 @@ package consulo.language.index.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.language.index.impl.internal.roots.IndexableFilesIterator;
+import consulo.application.progress.ProgressManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.lang.Pair;
+import consulo.util.concurrent.coroutine.Mutex;
+import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Supplier;
 
-/**
- * Collects files found by the scanner ({@link UnindexedFilesScanner}) to be indexed later in one batch.
- */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class PerProjectIndexingQueue {
-    /** Not thread safe */
-    public interface PerProviderSink {
-        void addFile(VirtualFile file);
+public final class PerProjectIndexingQueue {
+    public static final class QueuedFiles {
+        // Files that will be re-indexed
+        private final Set<VirtualFile> myRequestsSoFar = ConcurrentHashMap.newKeySet();
 
-        void commit();
+        private final ObservableValue<Integer> myEstimatedFilesCount = ObservableValue.of(0);
+
+        // Ids of scannings from which [filesSoFar] came
+        private final Set<Long> myScanningIdsSoFar = createSetForScanningIds();
+
+        int currentFilesCount() {
+            return myRequestsSoFar.size();
+        }
+
+        ObservableValue<Integer> getEstimatedFilesCount() {
+            return myEstimatedFilesCount;
+        }
+
+        public int getSize() {
+            return myRequestsSoFar.size();
+        }
+
+        public boolean isEmpty() {
+            return myRequestsSoFar.isEmpty();
+        }
+
+        public Set<VirtualFile> getRequests() {
+            return Collections.unmodifiableSet(myRequestsSoFar);
+        }
+
+        public Set<Long> getScanningIds() {
+            return Collections.unmodifiableSet(myScanningIdsSoFar);
+        }
+
+        void addFile(VirtualFile file, long scanningId) {
+            myScanningIdsSoFar.add(scanningId);
+            if (myRequestsSoFar.add(file)) {
+                myEstimatedFilesCount.update(count -> count + 1);
+            }
+        }
+
+        @Deprecated
+        void addRequests(Collection<VirtualFile> files, Collection<Long> scanningId) {
+            myScanningIdsSoFar.addAll(scanningId);
+            int added = 0;
+            for (VirtualFile file : files) {
+                if (myRequestsSoFar.add(file)) {
+                    added++;
+                }
+            }
+            if (added > 0) {
+                int delta = added;
+                myEstimatedFilesCount.update(count -> count + delta);
+            }
+        }
+
+        @Deprecated
+        public static QueuedFiles fromFilesCollection(Collection<VirtualFile> files, Collection<Long> scanningIds) {
+            QueuedFiles res = new QueuedFiles();
+            res.addRequests(files, scanningIds);
+            return res;
+        }
     }
 
     private static final Logger LOG = Logger.getInstance(PerProjectIndexingQueue.class);
+
+    private static final String INDEXING_MUTEX_OWNER = "indexing";
 
     public static PerProjectIndexingQueue getInstance(Project project) {
         return project.getInstance(PerProjectIndexingQueue.class);
@@ -58,101 +115,146 @@ public class PerProjectIndexingQueue {
 
     private final Project myProject;
 
-    // guarded by [myLock]. Must be in consistent state under write lock (see [myLock] comment)
-    // Total count of VirtualFile in myFilesSoFar. This is (arguable) performance optimization
-    private final AtomicInteger myCntFilesSoFar = new AtomicInteger();
+    private final ObservableValue<QueuedFiles> myQueuedFiles = ObservableValue.of(new QueuedFiles());
+    private final ReadWriteLock myQueuedFilesLock = new ReentrantReadWriteLock();
 
-    // guarded by [myLock]. Must be in consistent state under write lock (see [myLock] comment)
-    // Files that will be re-indexed
-    private volatile ConcurrentMap<IndexableFilesIterator, Collection<VirtualFile>> myFilesSoFar = new ConcurrentHashMap<>();
+    private final ObservableValue<Integer> myEstimatedFilesCount = ObservableValue.of(0);
+    private @Nullable Runnable myEstimatedFilesCountSubscription;
 
-    // Code under read lock still runs in parallel, so all the counters and collections still have
-    // to be thread-safe. It is only required that the state must be consistent under write lock (e.g. myCntFilesSoFar corresponds to total
-    // count of files in myFilesSoFar)
-    private final ReentrantReadWriteLock myLock = new ReentrantReadWriteLock();
+    private volatile boolean myAllowFlushing = true;
+
+    private final Mutex myScanningIndexingMutex = new Mutex();
 
     @Inject
     public PerProjectIndexingQueue(Project project) {
         myProject = project;
+        subscribeToEstimatedFilesCount(myQueuedFiles.get());
+        myQueuedFiles.addListener(this::subscribeToEstimatedFilesCount);
     }
 
-    // `private` because we want clients to use [PerProviderSink] which forces them to report files one by one.
-    private void addFiles(IndexableFilesIterator iterator, List<VirtualFile> files) {
-        myLock.readLock().lock();
+    private synchronized void subscribeToEstimatedFilesCount(QueuedFiles queuedFiles) {
+        Runnable previousSubscription = myEstimatedFilesCountSubscription;
+        if (previousSubscription != null) {
+            previousSubscription.run();
+        }
+        ObservableValue<Integer> count = queuedFiles.getEstimatedFilesCount();
+        myEstimatedFilesCountSubscription = count.addListener(myEstimatedFilesCount::set);
+        myEstimatedFilesCount.set(count.get());
+    }
+
+    public boolean flushNow(String reason) {
+        if (!myAllowFlushing) {
+            LOG.info("Flushing is not allowed at the moment");
+            return false;
+        }
+
+        int queuedFilesCount;
+        myQueuedFilesLock.readLock().lock();
         try {
-            myFilesSoFar.compute(iterator, (i, old) -> {
-                if (old == null) {
-                    return new ArrayList<>(files);
-                }
-                Collection<VirtualFile> merged = new ArrayList<>(old);
-                merged.addAll(files);
-                return merged;
-            });
-            myCntFilesSoFar.addAndGet(files.size());
+            // note: read lock only ensures that reference to queuedFiles does change during the operation,
+            // so we can safely invoke queuedFiles.value. List of queued files may change (currentFilesCount may change)
+            // In order to prevent currentFilesCount changing, we need a write lock. At the moment this is not a problem, because
+            // currentFilesCount may only grow, and it is expected that this number may change immediately after we release the lock.
+            queuedFilesCount = myQueuedFiles.get().currentFilesCount();
         }
         finally {
-            myLock.readLock().unlock();
+            myQueuedFilesLock.readLock().unlock();
         }
-    }
 
-    public void flushNow() {
-        Pair<ConcurrentMap<IndexableFilesIterator, Collection<VirtualFile>>, Integer> queued = getAndResetQueuedFiles();
-        if (queued.getSecond() > 0) {
-            new UnindexedFilesIndexer(myProject, queued.getFirst()).queue(myProject);
+        if (queuedFilesCount > 0) {
+            // note that DumbModeWhileScanningTrigger will not finish dumb mode until scanning is finished
+            new UnindexedFilesIndexer(myProject, reason).queue(myProject);
+            return true;
         }
         else {
-            LOG.info("Finished for " + myProject.getName() + ". No files to index with loading content.");
+            LOG.info("Finished for [" + myProject.getName() + "]. No files to index with loading content.");
+            return false;
         }
     }
 
-    public void flushNowSync(ProgressIndicator indicator) {
-        Pair<ConcurrentMap<IndexableFilesIterator, Collection<VirtualFile>>, Integer> queued = getAndResetQueuedFiles();
-        if (queued.getSecond() > 0) {
-            new UnindexedFilesIndexer(myProject, queued.getFirst()).indexFiles(indicator);
-        }
-        else {
-            LOG.info("Finished for " + myProject.getName() + ". No files to index with loading content.");
-        }
+    public void clear() {
+        getAndResetQueuedFiles();
     }
 
-    private Pair<ConcurrentMap<IndexableFilesIterator, Collection<VirtualFile>>, Integer> getAndResetQueuedFiles() {
-        myLock.writeLock().lock();
+    @TestOnly
+    public <T> T disableFlushingDuring(Supplier<T> block) {
+        myAllowFlushing = false;
         try {
-            ConcurrentMap<IndexableFilesIterator, Collection<VirtualFile>> filesInQueue = myFilesSoFar;
-            myFilesSoFar = new ConcurrentHashMap<>();
-            int totalFiles = myCntFilesSoFar.getAndSet(0);
-            return Pair.create(filesInQueue, totalFiles);
+            return block.get();
         }
         finally {
-            myLock.writeLock().unlock();
+            myAllowFlushing = true;
         }
     }
 
-    public PerProviderSink getSink(IndexableFilesIterator provider) {
-        return new PerProviderSinkImpl(provider);
+    @TestOnly
+    public QueuedFiles getQueuedFiles() {
+        myQueuedFilesLock.readLock().lock();
+        try {
+            return myQueuedFiles.get();
+        }
+        finally {
+            myQueuedFilesLock.readLock().unlock();
+        }
     }
 
-    private class PerProviderSinkImpl implements PerProviderSink {
-        private final IndexableFilesIterator myIterator;
-        private final List<VirtualFile> myFiles = new ArrayList<>();
-        private boolean myCommitted;
+    QueuedFiles getAndResetQueuedFiles() {
+        myQueuedFilesLock.writeLock().lock();
+        try {
+            return myQueuedFiles.getAndUpdate(files -> new QueuedFiles());
+        }
+        finally {
+            myQueuedFilesLock.writeLock().unlock();
+        }
+    }
 
-        PerProviderSinkImpl(IndexableFilesIterator iterator) {
-            myIterator = iterator;
+    /**
+     * Will throw {@link consulo.component.ProcessCanceledException} if the queue is suspended via cancelAllTasksAndWait
+     */
+    public void addFile(VirtualFile vFile, long scanningId) {
+        // readLock here is to make sure that queuedFiles does not change during the operation
+        myQueuedFilesLock.readLock().lock();
+        try {
+            // .value for each file, because we want to put files into a new queue after getAndResetQueuedFiles invocation
+            myQueuedFiles.get().addFile(vFile, scanningId);
+        }
+        finally {
+            myQueuedFilesLock.readLock().unlock();
+        }
+    }
+
+    public ObservableValue<Integer> estimatedFilesCount() {
+        return myEstimatedFilesCount;
+    }
+
+    Mutex getScanningIndexingMutex() {
+        return myScanningIndexingMutex;
+    }
+
+    void wrapIndexing(Runnable indexingRoutine) {
+        myScanningIndexingMutex.lockCancellable(INDEXING_MUTEX_OWNER, ProgressManager::checkCanceled);
+        try {
+            indexingRoutine.run();
+        }
+        finally {
+            myScanningIndexingMutex.unlock(INDEXING_MUTEX_OWNER);
+        }
+    }
+
+    private static Set<Long> createSetForScanningIds() {
+        return ConcurrentHashMap.newKeySet(4);
+    }
+
+    @TestOnly
+    public static final class TestCompanion {
+        private final PerProjectIndexingQueue myQueue;
+
+        public TestCompanion(PerProjectIndexingQueue queue) {
+            myQueue = queue;
         }
 
-        @Override
-        public void addFile(VirtualFile file) {
-            LOG.assertTrue(!myCommitted, "Should not invoke 'addFile' after 'commit'");
-            myFiles.add(file);
-        }
-
-        @Override
-        public void commit() {
-            myCommitted = true;
-            if (!myFiles.isEmpty()) {
-                addFiles(myIterator, myFiles);
-            }
+        public QueuedFiles getAndResetQueuedFiles() {
+            return myQueue.getAndResetQueuedFiles();
         }
     }
 }

@@ -81,7 +81,6 @@ open module consulo.ide.impl {
     requires consulo.project.impl;
     requires consulo.project.ui.impl;
     requires consulo.language.code.style.ui.api;
-    requires consulo.http.impl;
     requires consulo.http.adapter.httpclient4;
     requires consulo.file.editor.impl;
     requires consulo.execution.impl;
@@ -220,7 +219,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.codeInsight.folding.impl.actions;
     exports consulo.ide.impl.idea.codeInsight.generation;
     exports consulo.ide.impl.idea.codeInsight.generation.actions;
-    exports consulo.ide.impl.idea.codeInsight.generation.surroundWith;
     exports consulo.ide.impl.idea.codeInsight.highlighting;
     exports consulo.ide.impl.idea.codeInsight.highlighting.actions;
     exports consulo.ide.impl.idea.codeInsight.hint;
@@ -237,10 +235,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.codeInsight.navigation.actions;
     exports consulo.ide.impl.idea.codeInsight.preview;
     exports consulo.ide.impl.idea.codeInsight.problems;
-    exports consulo.ide.impl.idea.codeInsight.template.actions;
-    exports consulo.ide.impl.idea.codeInsight.template.impl;
-    exports consulo.ide.impl.idea.codeInsight.template.impl.actions;
-    exports consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
     exports consulo.ide.impl.idea.codeInsight.unwrap;
     exports consulo.ide.impl.idea.codeInspection;
     exports consulo.ide.impl.idea.codeInspection.actions;
@@ -477,7 +471,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.util.indexing;
     exports consulo.ide.impl.idea.util.io;
     exports consulo.ide.impl.idea.util.net;
-    exports consulo.ide.impl.idea.util.net.ssl;
     exports consulo.ide.impl.idea.util.properties;
     exports consulo.ide.impl.idea.util.text;
     exports consulo.ide.impl.idea.util.ui;

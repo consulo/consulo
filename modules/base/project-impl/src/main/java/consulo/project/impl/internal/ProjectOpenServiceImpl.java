@@ -27,6 +27,7 @@ import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
@@ -40,7 +41,7 @@ import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.Alert;
+import consulo.ui.MessageBoxBuilder;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
@@ -59,6 +60,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import consulo.ui.MessageButtonRole;
 
 /**
  * Unified project open service. Handles the full project opening flow:
@@ -279,6 +281,10 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                         ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
                         moduleManager.loadModulesNew(ProgressIndicator.from(c));
                         return o;
+                    }))
+                    .then(CodeExecution.supply((o) -> {
+                        ((DumbServiceImpl) DumbService.getInstance(project)).queueStartupActivitiesRequiredForSmartMode();
+                        return o;
                     }));
 
                 init = init.then(CodeExecution.supply((o) -> {
@@ -345,18 +351,18 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         // ASK: show dialog
         CompletableFuture<OpenContext> result = new CompletableFuture<>();
 
-        Alert<Integer> alert = Alert.create();
+        MessageBoxBuilder<Integer> alert = MessageBoxBuilder.create();
         alert.asQuestion();
         alert.remember(ProjectNewWindowDoNotAskOption.INSTANCE);
         alert.title(ProjectLocalize.titleOpenProject());
         alert.text(ProjectLocalize.promptOpenProjectInNewFrame());
 
-        alert.button(ProjectLocalize.buttonExistingframe(), () -> ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW);
+        alert.button(MessageButtonRole.YES, ProjectLocalize.buttonExistingframe(), ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW);
         alert.asDefaultButton();
 
-        alert.button(ProjectLocalize.buttonNewframe(), () -> ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW);
+        alert.button(MessageButtonRole.NO, ProjectLocalize.buttonNewframe(), ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW);
 
-        alert.button(Alert.CANCEL, Alert.CANCEL);
+        alert.button(MessageButtonRole.CANCEL, ProjectOpenSetting.OPEN_PROJECT_ASK);
         alert.asExitButton();
 
         uiAccess.give(() -> {
@@ -364,6 +370,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             if (projectToClose != null) {
                 alert.showAsync(projectToClose).whenComplete((exitCode, error) -> {
                     if (error != null) {
+                        result.completeExceptionally(error);
                         return;
                     }
 
@@ -373,6 +380,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             else {
                 alert.showAsync().whenComplete((exitCode, error) -> {
                     if (error != null) {
+                        result.completeExceptionally(error);
                         return;
                     }
 

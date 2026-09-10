@@ -15,6 +15,8 @@
  */
 package consulo.it.internal;
 
+import consulo.ui.internal.BaseRadioGroup;
+import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.it.internal.ui.*;
 import consulo.localize.LocalizeValue;
@@ -38,6 +40,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import consulo.ui.impl.ScriptedMessageBoxBuilder;
+import consulo.ui.impl.ScriptedInputBoxBuilder;
 
 /**
  * Headless {@link UIInternal}: real UI-thread / modality resolution for integration tests, plus
@@ -53,7 +57,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new HeadlessDockLayout();
     }
 
@@ -63,7 +67,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new HeadlessVerticalLayout();
     }
 
@@ -93,7 +97,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
         return new HeadlessHorizontalLayout();
     }
 
@@ -140,6 +144,11 @@ public class HeadlessUIInternal extends UIInternal {
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
         return new HeadlessColorBox(colorValue);
+    }
+
+    @Override
+    public FontBox _Components_fontBox() {
+        return new HeadlessFontBox();
     }
 
     @Override
@@ -197,10 +206,6 @@ public class HeadlessUIInternal extends UIInternal {
         return new HeadlessMenuSeparator();
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new HeadlessValueGroup<>();
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -275,5 +280,36 @@ public class HeadlessUIInternal extends UIInternal {
     @Override
     public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
         return new FlatDataModelImpl<>(list);
+    }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new BaseRadioGroup<>();
+    }
+
+
+    @Override
+    public <T> MessageBoxBuilder<T> _MessageBox_create() {
+        return new ScriptedMessageBoxBuilder<>();
+    }
+
+    @Override
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        return new ScriptedInputBoxBuilder<>();
+    }
+
+    @Override
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        return new ScriptedInputBoxBuilder<>();
+    }
+
+    @Override
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        return new ScriptedInputBoxBuilder<>();
+    }
+
+    @Override
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
+        return new ScriptedInputBoxBuilder<>();
     }
 }

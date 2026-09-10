@@ -21,8 +21,10 @@ import consulo.ui.HasFocus;
 import consulo.ui.HasSize;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.BorderBuilder;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
@@ -44,15 +46,15 @@ class TempComponentWrapper implements Component, HasSize, ToSwingComponentWrappe
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
-        throw new UnsupportedOperationException();
+    public BorderBuilder borderBuilder() {
+        return BorderBuilderImpl.NOOP;
     }
 
-    @RequiredUIAccess
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        throw new UnsupportedOperationException();
+    public PaddingBuilder paddingBuilder() {
+        return PaddingBuilderImpl.NOOP;
     }
+
 
     @Override
     public boolean isVisible() {

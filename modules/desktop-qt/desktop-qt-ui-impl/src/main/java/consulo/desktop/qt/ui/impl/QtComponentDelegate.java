@@ -19,28 +19,31 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.BorderBuilder;
 import consulo.ui.Component;
-import consulo.ui.Length;
 import consulo.ui.HasFocus;
 import consulo.ui.HasSize;
+import consulo.ui.Length;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.cursor.StandardCursors;
 import consulo.ui.event.AttachEvent;
+import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
-import consulo.ui.event.DetachEvent;
-import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ContextMenuEvent;
+import consulo.ui.event.DetachEvent;
 import consulo.ui.event.KeyPressedEvent;
 import consulo.ui.event.KeyReleasedEvent;
-import consulo.ui.impl.BorderInfo;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
+import consulo.ui.internal.BorderPosition;
 import consulo.util.dataholder.Key;
 import io.qt.core.QEvent;
 import io.qt.core.QMargins;
@@ -56,6 +59,7 @@ import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -76,6 +80,12 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     /** the two blocks of the style sheet of the widget, so either of them can be rewritten on its own */
     private String myOwnStyleSheet = "";
+    private static final int HAIRLINE = 1;
+    private static final int ARC = 4;
+
+    private final Map<BorderPosition, Integer> myExtraPadding = new EnumMap<>(BorderPosition.class);
+
+
     private String myBorderStyleSheet = "";
 
     protected UIDataObject myDataObject = new UIDataObject();
@@ -210,19 +220,27 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
-        myDataObject.addBorder(borderPosition, borderStyle, colorValue, width);
-
-        applyBorders();
+    public BorderBuilder borderBuilder() {
+        return new BorderBuilderImpl(myDataObject, this::applyBorders);
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        myDataObject.removeBorder(borderPosition);
+    public PaddingBuilder paddingBuilder() {
+        return new PaddingBuilderImpl(myDataObject, this::applyBorders);
+    }
+
+    /**
+     * Room this frontend measured for itself - the bar a window manager drew over the top of a window - rather
+     * than a step of the scale a screen asked for.
+     */
+    @RequiredUIAccess
+    public void addPaddingInPixels(BorderPosition borderPosition, int pixels) {
+        myExtraPadding.put(borderPosition, pixels);
 
         applyBorders();
     }
+
 
     /**
      * The style sheet a component writes for itself - a flat button dropping its frame. It is kept apart from the
@@ -254,30 +272,44 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             return;
         }
 
-        Map<BorderPosition, BorderInfo> borders = myDataObject.getBorders();
+        Map<BorderPosition, ColorValue> borders = myDataObject.getBorders();
+        Map<BorderPosition, Space> paddings = myDataObject.getPaddings();
 
         int[] space = new int[BorderPosition.values().length];
 
         StringBuilder rules = new StringBuilder();
 
         for (BorderPosition position : BorderPosition.values()) {
-            BorderInfo info = borders.get(position);
-            if (info == null) {
+            Space padding = paddings.get(position);
+            if (padding != null) {
+                space[position.ordinal()] = DesktopQtSpace.toPixels(padding);
+            }
+
+            Integer extra = myExtraPadding.get(position);
+            if (extra != null) {
+                space[position.ordinal()] += extra;
+            }
+
+            ColorValue colorValue = borders.get(position);
+            if (colorValue == null) {
                 continue;
             }
 
-            space[position.ordinal()] = info.getWidth();
+            space[position.ordinal()] += HAIRLINE;
 
-            if (info.getBorderStyle() == BorderStyle.LINE) {
-                rules.append("border-")
-                    .append(toCssEdge(position))
-                    .append(": ")
-                    .append(info.getWidth())
-                    .append("px solid ")
-                    .append(toCssColor(info.getColorValue()))
-                    .append("; ");
-            }
+            rules.append("border-")
+                .append(toCssEdge(position))
+                .append(": ")
+                .append(HAIRLINE)
+                .append("px solid ")
+                .append(toCssColor(colorValue))
+                .append("; ");
         }
+
+        if (borders.size() == BorderPosition.values().length) {
+            rules.append("border-radius: ").append(ARC).append("px; ");
+        }
+
 
         // a widget keeps drawing the frame of its style until the style sheet drops it, and a single edge on its
         // own is not enough to make it do so

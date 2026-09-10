@@ -32,6 +32,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.localize.ModuleLocalize;
 import consulo.project.Project;
+import consulo.project.RootsChangeRescanningInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -91,7 +92,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                     fireModuleAdded(module);
                 }
             });
-        }, false, true);
+        }, RootsChangeRescanningInfo.TOTAL_RESCAN);
 
         stat.dump("ModulesManager", LOG::info);
     }

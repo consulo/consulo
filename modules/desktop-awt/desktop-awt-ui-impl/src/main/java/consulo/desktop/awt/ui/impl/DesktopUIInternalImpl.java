@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
+import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
@@ -79,6 +80,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import consulo.desktop.awt.ui.impl.messagebox.DesktopMessageBoxBuilderImpl;
+import consulo.desktop.awt.ui.impl.messagebox.DesktopInputBoxBuilderImpl;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
@@ -240,10 +244,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return DesktopMenuSeparatorImpl.INSTANCE;
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new DesktopBoolValueGroup();
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -297,7 +297,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new DesktopDockLayoutImpl(gapInPixels);
     }
 
@@ -307,12 +307,12 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new DesktopVerticalLayoutImpl(vGap);
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return new DesktopVerticalLayoutImpl(vGap, alignment);
     }
 
@@ -413,7 +413,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
         return new DesktopHorizontalLayoutImpl(gapInPixels);
     }
 
@@ -425,6 +425,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
         return new DesktopColorBoxImpl(colorValue);
+    }
+
+    @Override
+    public FontBox _Components_fontBox() {
+        return new DesktopFontBoxImpl();
     }
 
     @Override
@@ -591,5 +596,37 @@ public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         return new DesktopDatePickerImpl(datePattern);
+    }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new DesktopRadioGroupImpl<>();
+    }
+
+
+    @Override
+    public <T> MessageBoxBuilder<T> _MessageBox_create() {
+        return new DesktopMessageBoxBuilderImpl<>();
+    }
+
+    @Override
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        return new DesktopInputBoxBuilderImpl<>(TextBox::create);
+    }
+
+    @Override
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        return new DesktopInputBoxBuilderImpl<>(IntBox::create);
+    }
+
+    @Override
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        List<V> copy = new ArrayList<>(items);
+        return new DesktopInputBoxBuilderImpl<>(() -> ComboBox.create(copy));
+    }
+
+    @Override
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
+        return new DesktopInputBoxBuilderImpl<>(PasswordBox::create);
     }
 }

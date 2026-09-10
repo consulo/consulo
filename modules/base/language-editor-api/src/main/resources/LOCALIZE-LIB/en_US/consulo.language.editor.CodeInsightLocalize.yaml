@@ -4,12 +4,32 @@ action.ToggleInlineHintsAction.description:
     text: Toggle parameter name hints
 action.ToggleInlineHintsAction.text:
     text: Toggle Parameter Name Hints
+action.invoke.live.template.action.text.mnemonic.and.description:
+    text: '{0}. {1}'
 action.show.dependencies.on.target.on.scope.text:
     text: Analyze Dependencies of Module ''{0}'' on {1}
 action.show.dependencies.on.target.text:
     text: Analyze Dependencies on Specified Target
+action.text.disable.live.template:
+    text: Disable ''{0}'' template
+action.text.disable.postfix.template:
+    text: Disable ''{0}'' template
+action.text.edit.live.template.settings:
+    text: Edit live template settings
+action.text.edit.postfix.templates.settings:
+    text: Edit postfix templates settings
+action.text.live.templates:
+    text: Live Templates
 action.text.move:
     text: Move
+action.text.never.show.intention.icon:
+    text: Never show intention icon
+action.text.new.group:
+    text: New group…
+action.text.rename:
+    text: Rename
+action.text.show.intention.icon:
+    text: Show intention icon
 block.comment.intersects.existing.comment:
     text: Selected region intersects existing comment
 block.comment.nested.comment:
@@ -637,90 +657,18 @@ label.enter.the.new.group.name:
     text: 'Enter the new group name:'
 lightbulb.tooltip:
     text: Click or press {0}
-link.change.context:
+link.live.template.change.context:
     text: Change
-link.define.context:
+link.live.template.define.context:
     text: Define
-livetemplate.description.geti:
-    text: Inserts singleton method getInstance
-livetemplate.description.if.not.null:
-    text: Inserts ''if not null'' statement
-livetemplate.description.if.null:
-    text: Inserts ''if null'' statement
-livetemplate.description.inst:
-    text: Checks object type with instanceof and down-casts it
-livetemplate.description.itar:
-    text: Iterate elements of array
-livetemplate.description.itco:
-    text: Iterate elements of java.util.Collection
-livetemplate.description.iten:
-    text: Iterate java.util.Enumeration
-livetemplate.description.iter:
-    text: Iterate Iterable | Array in J2SDK 5.0 syntax
-livetemplate.description.itit:
-    text: Iterate java.util.Iterator
-livetemplate.description.itli:
-    text: Iterate elements of java.util.List
-livetemplate.description.itover:
-    text: Iterate over an Iterable or Array selection in J2SDK 5.0 syntax
-livetemplate.description.ittok:
-    text: Iterate tokens from String
-livetemplate.description.itve:
-    text: Iterate elements of java.util.Vector
-livetemplate.description.lazy:
-    text: Performs lazy initialization
-livetemplate.description.lst:
-    text: Fetches last element of an array
-livetemplate.description.mn:
-    text: Sets lesser value to a variable
-livetemplate.description.mx:
-    text: Sets greater value to a variable
-livetemplate.description.psf:
-    text: public static final
-livetemplate.description.psfi:
-    text: public static final int
-livetemplate.description.psfs:
-    text: public static final String
-livetemplate.description.psvm:
-    text: main() method declaration
-livetemplate.description.ritar:
-    text: Iterate elements of array in reverse order
-livetemplate.description.serr:
-    text: Prints a string to System.err
-livetemplate.description.souf:
-    text: Prints a formatted string to System.out
-livetemplate.description.sout:
-    text: Prints a string to System.out
-livetemplate.description.soutm:
-    text: Prints current class and method names to System.out
-livetemplate.description.soutp:
-    text: Prints method parameter names and values to System.out
-livetemplate.description.soutv:
-    text: Prints a value to System.out
-livetemplate.description.st:
-    text: String
-livetemplate.description.surround.braces:
-    text: Surround with '{''}'
+livetemplate.abbreviation.placeholder:
+    text: <abbreviation>
 livetemplate.description.surround.cdata.in.xmlorhtmlorjsp:
     text: Surround with CDATA section
-livetemplate.description.surround.parens:
-    text: Surround with ()
 livetemplate.description.surround.tag:
     text: Surround with <tag></tag>
 livetemplate.description.surround.tag.in.htmlorjsp:
     text: Surround with <tag></tag> in HTML/JSP
-livetemplate.description.surround.with.callable:
-    text: Surround with Callable
-livetemplate.description.surround.with.read.lock:
-    text: Surround with ReadWriteLock.readLock
-livetemplate.description.surround.with.write.lock:
-    text: Surround with ReadWriteLock.writeLock
-livetemplate.description.tag.pair:
-    text: Tag pair
-livetemplate.description.thr:
-    text: throw new
-livetemplate.description.toar:
-    text: Stores elements of java.util.Collection into array
 macro.array.variable:
     text: arrayVariable()
 macro.capitalize.string:

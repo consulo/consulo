@@ -35,7 +35,7 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
     private final Function<Item, Value> myValueProvider;
     private final Grid.Column<Item> myColumn;
 
-    private TextItemRender<Value> myTextRender = TextItemRender.defaultRender();
+    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
     private @Nullable ComponentItemRender<Value> myComponentRender;
     private @Nullable TableItemEditor<Item, Value> myEditor;
 
@@ -76,7 +76,13 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
         }
 
         WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-        myTextRender.render(presentation, renderItem);
+
+        // the band belongs to the row, so it goes under every column; a selected row keeps the selection fill
+        if (!renderItem.isSelected()) {
+            presentation.withBackgroundColor(myTable.getRowBackground(item));
+        }
+
+        myRender.render(presentation, renderItem, item);
         return presentation.toComponent();
     }
 
@@ -87,8 +93,15 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
     }
 
     @Override
+    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
+        myRender = render;
+        myComponentRender = null;
+        return this;
+    }
+
+    @Override
     public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myTextRender = render;
+        myRender = TableItemRender.of(render);
         myComponentRender = null;
         return this;
     }

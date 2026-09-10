@@ -16,19 +16,17 @@
 package consulo.ide.impl.idea.application.options;
 
 import consulo.application.PowerSaveMode;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.util.lang.StringUtil;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeValue;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.image.Image;
@@ -38,6 +36,7 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -100,7 +99,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
     }
 
     VerticalLayout complGroup = VerticalLayout.create();
-    complGroup.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, Image.DEFAULT_ICON_SIZE);
+    complGroup.paddingBuilder().leftSet(Space.X_LARGE).apply();
     complGroup.add(myCbOnCodeCompletion2);
     complGroup.add(myCbOnSmartTypeCompletion2);
     completionOptions.add(complGroup);
@@ -120,7 +119,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
     myCbSelectByChars2.setEnabled(false);
 
     VerticalLayout indentChars = VerticalLayout.create().add(myCbSelectByChars2);
-    indentChars.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, Image.DEFAULT_ICON_SIZE);
+    indentChars.paddingBuilder().leftSet(Space.X_LARGE).apply();
     completionOptions.add(indentChars);
 
     DockLayout autoPopuDocLine = DockLayout.create();

@@ -29,4 +29,20 @@ class OrderEntryOriginImpl implements OrderEntryOrigin {
     public OrderEntry getOrderEntry() {
         return myOrderEntry;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OrderEntryOriginImpl other)) {
+            return false;
+        }
+        return myOrderEntry.equals(other.myOrderEntry);
+    }
+
+    @Override
+    public int hashCode() {
+        return myOrderEntry.hashCode();
+    }
 }

@@ -20,9 +20,8 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.ui.view.tree.ApplicationFileColorManager;
-import consulo.util.xml.serializer.XmlSerializerUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,55 +29,48 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl
-@State(name = "ApplicationFileColorManage", storages = @Storage("file.colors.xml"))
-public class ApplicationFileColorManagerImpl implements ApplicationFileColorManager, PersistentStateComponent<ApplicationFileColorManagerImpl.State> {
-  public static class State {
-    public boolean enabled = true;
+@State(name = "ApplicationFileColorManager", storages = @Storage("file.colors"))
+public class ApplicationFileColorManagerImpl implements ApplicationFileColorManager, PersistentStateComponent<ApplicationFileColorManagerState> {
 
-    public boolean enabledForTabs = true;
+    private ApplicationFileColorManagerState myState = new ApplicationFileColorManagerState();
 
-    public boolean enabledForProjectView = true;
-  }
+    @Override
+    public @Nullable ApplicationFileColorManagerState getState() {
+        return myState;
+    }
 
-  private final State myState = new State();
+    @Override
+    public void loadState(ApplicationFileColorManagerState state) {
+        myState = state;
+    }
 
-  @Override
-  public @Nullable State getState() {
-    return myState;
-  }
+    @Override
+    public boolean isEnabled() {
+        return myState.enabled;
+    }
 
-  @Override
-  public void loadState(State state) {
-    XmlSerializerUtil.copyBean(state, myState);
-  }
+    @Override
+    public void setEnabled(boolean enabled) {
+        myState.enabled = enabled;
+    }
 
-  @Override
-  public boolean isEnabled() {
-    return myState.enabled;
-  }
+    @Override
+    public boolean isEnabledForTabs() {
+        return myState.enabledForTabs;
+    }
 
-  @Override
-  public void setEnabled(boolean enabled) {
-    myState.enabled = enabled;
-  }
+    @Override
+    public void setEnabledForTabs(boolean enabled) {
+        myState.enabledForTabs = enabled;
+    }
 
-  @Override
-  public boolean isEnabledForTabs() {
-    return myState.enabledForTabs;
-  }
+    @Override
+    public boolean isEnabledForProjectView() {
+        return myState.enabledForProjectView;
+    }
 
-  @Override
-  public void setEnabledForTabs(boolean enabled) {
-    myState.enabledForTabs = enabled;
-  }
-
-  @Override
-  public boolean isEnabledForProjectView() {
-    return myState.enabledForProjectView;
-  }
-
-  @Override
-  public void setEnabledForProjectView(boolean enabled) {
-    myState.enabledForProjectView = enabled;
-  }
+    @Override
+    public void setEnabledForProjectView(boolean enabled) {
+        myState.enabledForProjectView = enabled;
+    }
 }

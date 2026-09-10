@@ -33,10 +33,9 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.Label;
 import consulo.ui.NotificationType;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
@@ -118,7 +117,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
         sink.set(StatusBar.KEY, this);
     });
 
-    myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
+    myComponent.borderBuilder().topSet().apply();
   }
 
   /**
@@ -185,8 +184,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
         }
 
         WrappedLayout layout = WrappedLayout.create(component);
-        layout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 4);
-        layout.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, null, 4);
+        layout.paddingBuilder().horizontalSet(Space.SMALL).apply();
         return layout;
 
       };

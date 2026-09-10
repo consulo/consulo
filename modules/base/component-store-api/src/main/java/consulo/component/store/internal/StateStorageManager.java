@@ -24,7 +24,6 @@ import java.util.List;
 
 public interface StateStorageManager {
   void addMacro(String macro, String expansion);
-
   
   String buildFileSpec(Storage storage);
 
@@ -33,18 +32,17 @@ public interface StateStorageManager {
   @Nullable StateStorage getStateStorage(Storage storageSpec);
 
   @Nullable StateStorage getStateStorage(String fileSpec, RoamingType roamingType);
-
   
   Collection<String> getStorageFileNames();
 
   void clearStateStorage(String file);
 
   @Nullable ExternalizationSession startExternalization();
-
   
   String expandMacros(String file);
 
-  
+  String resolveStorageFilePath(String fileSpec);
+
   String collapseMacros(String path);
 
   void setStreamProvider(@Nullable StreamProvider streamProvider);

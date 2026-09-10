@@ -1,5 +1,6 @@
 package consulo.execution.coverage.impl.internal;
 
+import consulo.ui.RadioGroup;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
@@ -11,7 +12,6 @@ import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
-import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -29,13 +29,15 @@ import java.util.function.Supplier;
 @ExtensionImpl
 public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel>
     implements ProjectConfigurable, SearchableConfigurable, Configurable.NoScroll {
+    private static final int REPLACE = 0;
+    private static final int ADD = 1;
+    private static final int DO_NOT_APPLY = 2;
+    private static final int SHOW_OPTIONS = 3;
+
     public static class Panel implements Supplier<Component> {
         private final Disposable myUiDisposable;
 
-        private RadioButton myShowOptionsRB;
-        private RadioButton myReplaceRB;
-        private RadioButton myAddRB;
-        private RadioButton myDoNotApplyRB;
+        private RadioGroup<Integer> myOptionToReplace;
 
         private CheckBox myActivateCoverageViewCB;
 
@@ -49,24 +51,16 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
 
             myWholePanel = VerticalLayout.create();
 
-            ValueGroup<Boolean> group = ValueGroup.createBool();
+            myOptionToReplace = RadioGroup.create();
             VerticalLayout primaryGroup = VerticalLayout.create();
 
-            myShowOptionsRB = RadioButton.create(ExecutionCoverageLocalize.settingsCoverageShowOptionsBeforeApplyingCoverageToTheEditor());
-            primaryGroup.add(myShowOptionsRB);
-            group.add(myShowOptionsRB);
-
-            myDoNotApplyRB = RadioButton.create(ExecutionCoverageLocalize.coverageDoNotApplyCollectedCoverage());
-            primaryGroup.add(myDoNotApplyRB);
-            group.add(myDoNotApplyRB);
-
-            myReplaceRB = RadioButton.create(ExecutionCoverageLocalize.settingsCoverageReplaceActiveSuitesWithTheNewOne());
-            primaryGroup.add(myReplaceRB);
-            group.add(myReplaceRB);
-
-            myAddRB = RadioButton.create(ExecutionCoverageLocalize.settingsCoverageAddToTheActiveSuites());
-            primaryGroup.add(myAddRB);
-            group.add(myAddRB);
+            primaryGroup.add(myOptionToReplace.newButton(
+                ExecutionCoverageLocalize.settingsCoverageShowOptionsBeforeApplyingCoverageToTheEditor(),
+                SHOW_OPTIONS
+            ));
+            primaryGroup.add(myOptionToReplace.newButton(ExecutionCoverageLocalize.coverageDoNotApplyCollectedCoverage(), DO_NOT_APPLY));
+            primaryGroup.add(myOptionToReplace.newButton(ExecutionCoverageLocalize.settingsCoverageReplaceActiveSuitesWithTheNewOne(), REPLACE));
+            primaryGroup.add(myOptionToReplace.newButton(ExecutionCoverageLocalize.settingsCoverageAddToTheActiveSuites(), ADD));
 
             myActivateCoverageViewCB = CheckBox.create(ExecutionCoverageLocalize.settingsCoverageActivateCoverageView());
             primaryGroup.add(myActivateCoverageViewCB);
@@ -142,12 +136,10 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     @RequiredUIAccess
     protected void reset(Panel panel) {
         int addOrReplace = myManager.getOptionToReplace();
-        switch (addOrReplace) {
-            case 0 -> panel.myReplaceRB.setValue(true);
-            case 1 -> panel.myAddRB.setValue(true);
-            case 2 -> panel.myDoNotApplyRB.setValue(true);
-            default -> panel.myShowOptionsRB.setValue(true);
-        }
+        panel.myOptionToReplace.setValue(switch (addOrReplace) {
+            case REPLACE, ADD, DO_NOT_APPLY -> addOrReplace;
+            default -> SHOW_OPTIONS;
+        });
 
         panel.myActivateCoverageViewCB.setValue(myManager.activateViewOnRun());
 
@@ -185,15 +177,6 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     }
 
     private int getSelectedValue(Panel panel) {
-        if (panel.myReplaceRB.getValueOrError()) {
-            return 0;
-        }
-        else if (panel.myAddRB.getValueOrError()) {
-            return 1;
-        }
-        else if (panel.myDoNotApplyRB.getValueOrError()) {
-            return 2;
-        }
-        return 3;
+        return panel.myOptionToReplace.getValueOrError();
     }
 }

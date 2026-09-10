@@ -49,6 +49,8 @@
         </plugins>
     </build>
 
+
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -83,6 +85,12 @@
         <dependency>
             <groupId>consulo</groupId>
             <artifactId>kava.beans</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

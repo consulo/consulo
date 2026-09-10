@@ -18,7 +18,6 @@ package consulo.ide.impl.dataContext;
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.*;
 import consulo.dataContext.internal.DataManagerEx;
 import consulo.language.editor.PlatformDataKeys;
@@ -142,11 +141,6 @@ public abstract class BaseDataManager implements DataManagerEx {
             if (ModalityState.KEY == dataId) {
                 return (T) ModalityState.nonModal(); //FIXME [VISTALL] stub
             }
-            if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
-                Editor editor = (Editor) getDataManager().getData(dataId, component);
-                //return (T)validateEditor(editor);   //FIXME [VISTALL] stub
-                return (T) editor;
-            }
             return getDataManager().getData(dataId, component);
         }
     }
@@ -185,24 +179,6 @@ public abstract class BaseDataManager implements DataManagerEx {
         return result;
     }
 
-    public @Nullable <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
-        if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
-            return null;
-        }
-        try {
-            T data = provider.getDataUnchecked(dataId);
-            if (data != null) {
-                return validated(data, dataId, provider);
-            }
-            return null;
-        }
-        finally {
-            if (alreadyComputedIds != null) {
-                alreadyComputedIds.remove(dataId);
-            }
-        }
-    }
-
     protected static @Nullable <T> T validated(T data, Key<T> dataId, Object dataSource) {
         T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
         if (invalidData != null) {
@@ -235,14 +211,24 @@ public abstract class BaseDataManager implements DataManagerEx {
     }
 
     protected <T> T getData(Key<T> dataId, consulo.ui.@Nullable Component focusedComponent) {
+        return captureHierarchy(focusedComponent).resolve(dataId);
+    }
+
+    /**
+     * Captures the hierarchy above the component, the focused one first, so what it answers is read as one
+     * snapshot rather than one component at a time.
+     */
+    protected PreCachedDataContext.Capture captureHierarchy(consulo.ui.@Nullable Component focusedComponent) {
+        return captureHierarchy(focusedComponent, false);
+    }
+
+    protected PreCachedDataContext.Capture captureHierarchy(consulo.ui.@Nullable Component focusedComponent, boolean forAsync) {
+        PreCachedDataContext.Capture capture =
+            forAsync ? PreCachedDataContext.captureForAsync(myApplication) : PreCachedDataContext.capture(myApplication);
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
-            DataProvider dataProvider = getDataProviderForComponent(c);
-            T data = getDataFromProvider(dataProvider, dataId, null);
-            if (data != null) {
-                return data;
-            }
+            capture.collect(getDataProviderForComponent(c));
         }
-        return null;
+        return capture;
     }
 
     protected DataProvider getDataProviderForComponent(consulo.ui.Component component) {
@@ -263,12 +249,7 @@ public abstract class BaseDataManager implements DataManagerEx {
     @Override
     public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
         consulo.ui.Component component = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
-        List<DataProvider> providers = new ArrayList<>();
-        for (consulo.ui.Component c = component; c != null; c = c.getParent()) {
-            DataProvider provider = getDataProviderForComponent(c);
-            providers.add(PreCachedDataContext.initProviderForAsync(myApplication, provider));
-        }
-        return new PreCachedDataContext(this, providers, component);
+        return captureHierarchy(component, true).build(this, component);
     }
 
     @Override

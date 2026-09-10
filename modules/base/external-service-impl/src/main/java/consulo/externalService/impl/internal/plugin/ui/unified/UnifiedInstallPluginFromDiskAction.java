@@ -27,7 +27,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -86,24 +86,24 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
         }
         catch (IOException ex) {
             LOG.warn(ex);
-            Alerts.okError(ex).showAsync();
+            MessageBoxes.okError(ex).showAsync();
             return;
         }
 
         if (pluginDescriptor == null) {
-            Alerts.okError(LocalizeValue.localizeTODO("Fail to load plugin descriptor from file " + file.getName())).showAsync();
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Fail to load plugin descriptor from file " + file.getName())).showAsync();
             return;
         }
 
         if (PluginValidator.isIncompatible(pluginDescriptor)) {
-            Alerts.okError(LocalizeValue.localizeTODO("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation"))
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation"))
                 .showAsync();
             return;
         }
 
         InstalledPluginsState state = InstalledPluginsState.getInstance();
         if (state.getAllPlugins().contains(pluginDescriptor)) {
-            Alerts.okInfo(LocalizeValue.localizeTODO("Plugin " + pluginDescriptor.getName() + " was already installed")).showAsync();
+            MessageBoxes.okInfo(LocalizeValue.localizeTODO("Plugin " + pluginDescriptor.getName() + " was already installed")).showAsync();
             return;
         }
 
@@ -125,7 +125,7 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
         }
         catch (IOException ex) {
             LOG.warn(ex);
-            Alerts.okError(ex).showAsync();
+            MessageBoxes.okError(ex).showAsync();
             return;
         }
 

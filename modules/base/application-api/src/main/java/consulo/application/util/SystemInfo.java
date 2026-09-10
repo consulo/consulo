@@ -71,7 +71,6 @@ public class SystemInfo {
   public static final boolean isWin8OrNewer = isWindows && isOsVersionAtLeast("6.2");
   public static final boolean isWin10OrNewer = isWindows && isOsVersionAtLeast("10.0");
 
-  public static final boolean isXWindow = isUnix && !isMac;
 
   // http://www.freedesktop.org/software/systemd/man/os-release.html
   private static Supplier<Map<String, String>> ourOsReleaseInfo = LazyValue.atomicNotNull(() -> {

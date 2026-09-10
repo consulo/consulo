@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui;
 
+import consulo.logging.Logger;
 import consulo.application.ApplicationManager;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfigurationBase;
@@ -36,17 +37,21 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.CustomActionsSchema;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
  */
 public abstract class DebuggerSessionTabBase extends RunTab {
+    private static final Logger LOG = Logger.getInstance(DebuggerSessionTabBase.class);
+
   protected ExecutionConsole myConsole;
 
   public DebuggerSessionTabBase(Project project, String runnerId, String sessionName, GlobalSearchScope searchScope) {
@@ -57,8 +62,30 @@ public abstract class DebuggerSessionTabBase extends RunTab {
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
   }
 
-  public static ActionGroup getCustomizedActionGroup(String id) {
-    return (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(id);
+  public static CompletableFuture<@Nullable ActionGroup> getCustomizedActionGroupAsync(String id) {
+    return CustomActionsSchema.getCorrectedGroupAsync(id);
+  }
+
+  /**
+   * Fills a toolbar group from the customization schema, which resolves asynchronously. The target group is
+   * returned right away and filled once the schema answers, so the toolbar picks the actions up on its next update.
+   */
+  public static DefaultActionGroup customizedActionGroup(String id) {
+    DefaultActionGroup group = new DefaultActionGroup();
+    addCustomizedActions(group, id);
+    return group;
+  }
+
+  public static void addCustomizedActions(DefaultActionGroup target, String id) {
+    getCustomizedActionGroupAsync(id).whenComplete((group, throwable) -> {
+      if (throwable != null) {
+        LOG.error("Failed to resolve a debugger toolbar group", throwable);
+        return;
+      }
+      if (group != null) {
+        target.addAll(group);
+      }
+    });
   }
 
   protected void attachNotificationTo(Content content) {

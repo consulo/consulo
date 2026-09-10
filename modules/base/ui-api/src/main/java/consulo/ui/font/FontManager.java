@@ -15,10 +15,10 @@
  */
 package consulo.ui.font;
 
+import consulo.ui.UIAccess;
 import consulo.ui.internal.UIInternal;
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -31,17 +31,21 @@ public interface FontManager {
     }
 
     /**
-     * Env can't return font and sync call, also require ask user for permission before call {@link #getAvailableFontNames()}
+     * Whether the environment enumerates its families only once the user has agreed to it, as the browser
+     * does. Until that is granted such a frontend answers with whatever it can render anyway rather than
+     * with nothing.
      */
     boolean isRequiredPermission();
 
     /**
-     * Return list of fonts which is installed in env, but can return if not checked {@link #isRequiredPermission()}
+     * The families installed in the environment, read afresh on every call rather than remembered - what is
+     * installed changes while the application runs, and on a frontend which
+     * {@link #isRequiredPermission() asks first} so does the answer once the user agrees. Enumerating them is
+     * slow enough to be worth keeping off the ui thread everywhere, and it is this call that does the asking,
+     * so it is handed the ui doing it rather than reaching for a current one - a frontend can be serving
+     * several at once.
      */
-    CompletableFuture<Set<String>> getAvailableFontNamesAsync();
-
-    @Deprecated
-    Set<String> getAvailableFontNames();
+    CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess);
 
     Font createFont(String fontName, int fontSize, int fontStyles);
 }

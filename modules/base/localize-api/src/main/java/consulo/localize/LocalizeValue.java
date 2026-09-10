@@ -61,6 +61,10 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return new ConstantLocalizeValue(String.valueOf(c));
     }
 
+    static LocalizeValue of(Throwable t) {
+        return LocalizeManager.get().fromException(t);
+    }
+
     static LocalizeValue ofNullable(@Nullable String text) {
         return text == null ? empty() : of(text);
     }

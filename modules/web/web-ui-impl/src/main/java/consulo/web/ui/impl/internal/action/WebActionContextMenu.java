@@ -175,16 +175,30 @@ public final class WebActionContextMenu {
     @RequiredUIAccess
     public void refresh() {
         ActionGroup group = myOverrideGroup != null ? myOverrideGroup : myGroup;
-        if (group == null) {
-            // the customization schema is what turns the id into the group the user actually configured
-            AnAction correctedAction = CustomActionsSchema.getInstance().getCorrectedAction(myGroupId);
-            if (!(correctedAction instanceof ActionGroup corrected)) {
+        if (group != null) {
+            doRefresh(group);
+            return;
+        }
+
+        // the customization schema is what turns the id into the group the user actually configured
+        UIAccess schemaAccess = UIAccess.current();
+        CustomActionsSchema.getCorrectedGroupAsync(myGroupId).whenComplete((corrected, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the context menu group", throwable);
+                return;
+            }
+            schemaAccess.giveIfNeed(() -> {
+            if (corrected == null) {
                 myOpenRequested = false;
                 return;
             }
-            group = corrected;
-        }
+            doRefresh(corrected);
+        });
+        });
+    }
 
+    @RequiredUIAccess
+    private void doRefresh(ActionGroup group) {
         UIAccess uiAccess = UIAccess.current();
 
         ProgressIndicator previousIndicator = myUpdateIndicator;

@@ -38,8 +38,8 @@ import java.util.Locale;
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "KeyboardSettings", storages = @Storage("keyboard.xml"))
-public class KeyboardSettingsExternalizable implements PersistentStateComponent<KeyboardSettingsExternalizable.OptionSet> {
+@State(name = "KeyboardSettings", storages = @Storage("keyboard"))
+public class KeyboardSettingsExternalizable implements PersistentStateComponent<KeyboardSettingsExternalizableState> {
 
   private static final String[] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
 
@@ -70,11 +70,7 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
     return locale == null ? null : locale.getDisplayLanguage();
   }
 
-  public static final class OptionSet {
-    public boolean USE_NON_ENGLISH_KEYBOARD = false;
-  }
-
-  private OptionSet myOptions = new OptionSet();
+    private KeyboardSettingsExternalizableState myOptions = new KeyboardSettingsExternalizableState();
 
   public static KeyboardSettingsExternalizable getInstance() {
     if (ApplicationManager.getApplication().isDisposed()) {
@@ -86,12 +82,12 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
   }
 
   @Override
-  public @Nullable OptionSet getState() {
+  public @Nullable KeyboardSettingsExternalizableState getState() {
     return myOptions;
   }
 
   @Override
-  public void loadState(OptionSet state) {
+  public void loadState(KeyboardSettingsExternalizableState state) {
     myOptions = state;
   }
 

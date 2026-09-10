@@ -22,13 +22,14 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.ModalityState;
 import consulo.ui.PopupMenu;
 import consulo.ui.Separator;
 import consulo.ui.SeparatorStyle;
+import consulo.ui.Space;
 import consulo.ui.ToggleButton;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -62,10 +63,10 @@ import java.util.function.Supplier;
 public class UnifiedActionRow {
     private static final Logger LOG = Logger.getInstance(UnifiedActionRow.class);
 
-    private static final int GAP = 2;
+    private static final Space GAP = Space.X_SMALL;
     // a labeled button is as wide as its text, and two of them standing 2px apart read as one control - the gap
     // which suits a band of 24x24 icons is not enough for the ok/cancel row of a dialog
-    private static final int BUTTON_GAP = 8;
+    private static final Space BUTTON_GAP = Space.LARGE;
 
     private final Supplier<ActionGroup> myGroupSupplier;
     private final Supplier<DataContext> myContextSupplier;
@@ -110,7 +111,7 @@ public class UnifiedActionRow {
         myPresentationFactory = presentationFactory;
         myStyle = style;
 
-        int gap = style == ActionToolbar.Style.BUTTON ? BUTTON_GAP : GAP;
+        Space gap = style == ActionToolbar.Style.BUTTON ? BUTTON_GAP : GAP;
         myLayout = style.isHorizontal() ? HorizontalLayout.create(gap) : VerticalLayout.create(gap);
 
         myLayout.addAttachListener(event -> startTicking());

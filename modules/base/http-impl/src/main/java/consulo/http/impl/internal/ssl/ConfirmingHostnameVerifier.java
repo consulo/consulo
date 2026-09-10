@@ -64,20 +64,17 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
 
     @Override
     public void verify(String host, X509Certificate cert) throws SSLException {
-        if (!HttpCertificateManagerImpl.getInstance().getState().CHECK_HOSTNAME) {
-            return;
-        }
-        try {
-            myVerifier.verify(host, cert);
-        }
-        catch (SSLException e) {
-            //noinspection ConstantConditions
-            if (!accepted(host, cert)) {
-                throw e;
-            }
-            // TODO: inclusion in some kind of persistent settings
-            // Read/Write lock to protect storage?
-        }
+//        try {
+//            myVerifier.verify(host, cert);
+//        }
+//        catch (SSLException e) {
+//            //noinspection ConstantConditions
+//            if (!accepted(host, cert)) {
+//                throw e;
+//            }
+//            // TODO: inclusion in some kind of persistent settings
+//            // Read/Write lock to protect storage?
+//        }
     }
 
     private static boolean accepted(String host, X509Certificate cert) {

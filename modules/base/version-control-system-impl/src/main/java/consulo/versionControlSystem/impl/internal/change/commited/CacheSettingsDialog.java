@@ -17,7 +17,9 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
 import javax.swing.*;
@@ -27,21 +29,22 @@ import javax.swing.*;
  */
 public class CacheSettingsDialog extends DialogWrapper {
     private final CacheSettingsPanel myPanel;
-    private final Project myProject;
+    private final JComponent myCenterPanel;
 
+    @RequiredUIAccess
     public CacheSettingsDialog(Project project) {
         super(project, false);
-        myProject = project;
         setTitle(VcsLocalize.cacheSettingsDialogTitle());
         myPanel = new CacheSettingsPanel();
         myPanel.initPanel(project);
+        myCenterPanel = (JComponent)TargetAWT.to(myPanel.createComponent());
         myPanel.reset();
         init();
     }
 
     @Override
     protected JComponent createCenterPanel() {
-        return myPanel.getPanel();
+        return myCenterPanel;
     }
 
     @Override
@@ -55,12 +58,10 @@ public class CacheSettingsDialog extends DialogWrapper {
         super.doOKAction();
     }
 
+    @RequiredUIAccess
     public static boolean showSettingsDialog(Project project) {
         CacheSettingsDialog dialog = new CacheSettingsDialog(project);
         dialog.show();
-        if (!dialog.isOK()) {
-            return false;
-        }
-        return true;
+        return dialog.isOK();
     }
 }

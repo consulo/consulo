@@ -52,6 +52,14 @@ public class HeadlessLoggerFactory implements LoggerFactory {
         return errors;
     }
 
+    /**
+     * The errors recorded so far, left in place so that {@link #takeLoggedErrors()} at the end of the test still
+     * fails it: for a diagnostic printed while the test is running.
+     */
+    public static List<LoggedError> peekLoggedErrors() {
+        return List.copyOf(ourLoggedErrors);
+    }
+
     private static void record(String category, String message, @Nullable Throwable t) {
         List<String> allowed = ourAllowedCategories;
         if (allowed != null && (allowed.isEmpty() || allowed.stream().anyMatch(category::startsWith))) {

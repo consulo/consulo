@@ -23,6 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -58,7 +59,14 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         public void setText(LocalizeValue text) {
             myLabel.setText(text.getValue());
         }
+
+        public Input getInput() {
+            return myInput;
+        }
     }
+
+    private static final String CHECKED = "checked";
+    private static final String NAME = "name";
 
     private LocalizeValue myText = LocalizeValue.empty();
 
@@ -66,6 +74,7 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
     public WebRadioButtonImpl(boolean selected, LocalizeValue text) {
         setLabelText(text);
         setValue(selected);
+        listenChecked();
     }
 
     @Override
@@ -75,14 +84,41 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
 
     @Override
     public Boolean getValue() {
-        // TODO
-        return Boolean.FALSE;
+        return getVaadinComponent().getInput().getElement().getProperty(CHECKED, false);
     }
 
     @Override
     @RequiredUIAccess
     public void setValue(Boolean value, boolean fireListeners) {
-        // TODO
+        UIAccess.assertIsUIThread();
+
+        boolean selected = Boolean.TRUE.equals(value);
+        if (selected == getValue()) {
+            return;
+        }
+
+        getVaadinComponent().getInput().getElement().setProperty(CHECKED, selected);
+
+        if (fireListeners) {
+            fireValueChanged(selected);
+        }
+    }
+
+    /**
+     * The browser keeps radios of one name exclusive by unchecking the others itself, and says nothing about the
+     * ones it unchecked - so every button of the group is asked to report its own property back.
+     */
+    private void listenChecked() {
+        getVaadinComponent().getInput().getElement()
+            .addPropertyChangeListener(CHECKED, "change", event -> fireValueChanged(getValue()));
+    }
+
+    private void fireValueChanged(boolean selected) {
+        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent<>(this, selected));
+    }
+
+    public void setGroupName(String name) {
+        getVaadinComponent().getInput().getElement().setAttribute(NAME, name);
     }
 
     @Override

@@ -15,12 +15,15 @@
  */
 package consulo.language.editor.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -42,32 +45,37 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 04-Aug-22
+ * @since 2022-08-04
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageEditorInternalHelper {
-
     static LanguageEditorInternalHelper getInstance() {
         return Application.get().getInstance(LanguageEditorInternalHelper.class);
     }
 
-    void doWrapLongLinesIfNecessary(Editor editor,
-                                    Project project,
-                                    Language language,
-                                    Document document,
-                                    int startOffset,
-                                    int endOffset,
-                                    List<? extends TextRange> enabledRanges);
+    @RequiredUIAccess
+    void doWrapLongLinesIfNecessary(
+        Editor editor,
+        Project project,
+        Language language,
+        Document document,
+        int startOffset,
+        int endOffset,
+        List<? extends TextRange> enabledRanges
+    );
 
-    default void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,
-                                               String text,
-                                               SimpleTextAttributes attributes,
-                                               boolean selected,
-                                               ColoredTextContainer simpleColoredComponent) {
+    default void appendFragmentsForSpeedSearch(
+        JComponent speedSearchEnabledComponent,
+        String text,
+        SimpleTextAttributes attributes,
+        boolean selected,
+        ColoredTextContainer simpleColoredComponent
+    ) {
         // [VISTALL] hack due we don't have hard dependency to AWT impl
     }
 
@@ -79,15 +87,17 @@ public interface LanguageEditorInternalHelper {
     default void showInspectionsSettings(Project project) {
     }
 
-
-    default List<Annotation> runAnnotator(Language language,
-                                          Annotator annotator,
-                                          PsiFile file,
-                                          PsiElement context,
-                                          boolean batchMode) {
+    default List<Annotation> runAnnotator(
+        Language language,
+        Annotator annotator,
+        PsiFile file,
+        PsiElement context,
+        boolean batchMode
+    ) {
         return List.of();
     }
 
+    @RequiredWriteAction
     default int adjustLineIndentNoCommit(Language language, Document document, Editor editor, int offset) {
         return -1;
     }
@@ -97,28 +107,43 @@ public interface LanguageEditorInternalHelper {
     }
 
     @RequiredUIAccess
-    default void setHighlightersToEditor(Project project,
-                                         Document document,
-                                         int startOffset,
-                                         int endOffset,
-                                         Collection<HighlightInfo> highlights,
-                                         // if null global scheme will be used
-                                         @Nullable EditorColorsScheme colorsScheme,
-                                         int group) {
+    default void setHighlightersToEditor(
+        Project project,
+        Document document,
+        int startOffset,
+        int endOffset,
+        Collection<HighlightInfo> highlights,
+        // if null global scheme will be used
+        @Nullable EditorColorsScheme colorsScheme,
+        int group
+    ) {
     }
 
     @RequiredUIAccess
-    default void highlightRanges(Project project,
-                                 Editor editor,
-                                 TextAttributesKey attributesKey,
-                                 boolean clearHighlights,
-                                 List<TextRange> textRanges) {
-
+    default void highlightRanges(
+        Project project,
+        Editor editor,
+        TextAttributesKey attributesKey,
+        boolean clearHighlights,
+        List<TextRange> textRanges
+    ) {
     }
 
-    default void startFindUsages(Editor editor,
-                                 Project project,
-                                 PsiElement element,
-                                 @Nullable RelativePoint2D point) {
+    @RequiredUIAccess
+    default void startFindUsages(Editor editor, Project project, PsiElement element, @Nullable RelativePoint2D point) {
+    }
+
+    @RequiredUIAccess
+    default <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(@Nullable Project project, Class<T> toSelect) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @RequiredUIAccess
+    default CompletableFuture<Void> editConfigurable(
+        Project project,
+        Configurable configurable,
+        @RequiredUIAccess Runnable advancedInitialization
+    ) {
+        return CompletableFuture.completedFuture(null);
     }
 }

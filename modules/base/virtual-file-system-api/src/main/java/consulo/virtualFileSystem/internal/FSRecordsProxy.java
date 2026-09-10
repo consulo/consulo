@@ -22,8 +22,10 @@ import consulo.application.Application;
 import consulo.virtualFileSystem.FileAttribute;
 import org.jspecify.annotations.Nullable;
 
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -41,4 +43,29 @@ public interface FSRecordsProxy {
     DataOutputStream writeAttribute(int fileId, FileAttribute att);
 
     @Nullable DataInputStream readAttributeWithLock(int fileId, FileAttribute att);
+
+    long getCreationTimestamp();
+
+    int getMaxId();
+
+    /** Adds an object which must be closed during VFS close process */
+    void addCloseable(Closeable closeable);
+
+    /**
+     * Registers a storage keeping some data by fileId.
+     * Since we reuse fileId of removed files, we need to be sure all data attached to the re-used fileId was
+     * cleaned before re-use -- hence a storage that keeps such data should implement {@link FileIdIndexedStorage}
+     * interface, and should be registered with that method (or invent own method to keep track of removed files)
+     */
+    void addFileIdIndexedStorage(FileIdIndexedStorage storage);
+
+    /**
+     * Any storage keeping some data by fileId.
+     * Since we reuse fileId of removed files, we need to be sure all data attached to the re-used fileId was
+     * cleaned before re-use -- hence every storage that keeps such data should implement this interface, and
+     * should be registered {@link #addFileIdIndexedStorage(FileIdIndexedStorage)}
+     */
+    interface FileIdIndexedStorage {
+        void clear(int fileId) throws IOException;
+    }
 }

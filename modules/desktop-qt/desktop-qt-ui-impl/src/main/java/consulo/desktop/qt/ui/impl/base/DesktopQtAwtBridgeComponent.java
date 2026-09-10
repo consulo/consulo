@@ -29,6 +29,7 @@ import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -86,20 +87,17 @@ public class DesktopQtAwtBridgeComponent extends JComponent implements ActionPop
     @Override
     @RequiredUIAccess
     public void installActionPopupMenu(ActionGroup group, String place) {
-        installActionPopupMenu(() -> group, place);
+        installActionPopupMenu(() -> CompletableFuture.completedFuture(group), place);
     }
 
     @Override
     @RequiredUIAccess
     public void installActionPopupMenu(String groupId, String place) {
-        installActionPopupMenu(
-            () -> CustomActionsSchema.getInstance().getCorrectedAction(groupId) instanceof ActionGroup group ? group : null,
-            place
-        );
+        installActionPopupMenu(() -> CustomActionsSchema.getCorrectedGroupAsync(groupId), place);
     }
 
     @RequiredUIAccess
-    private void installActionPopupMenu(Supplier<ActionGroup> groupSupplier, String place) {
+    private void installActionPopupMenu(Supplier<CompletableFuture<ActionGroup>> groupSupplier, String place) {
         if (myPopupMenuInstalled) {
             return;
         }

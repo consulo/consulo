@@ -36,7 +36,6 @@ public class DefaultSearchableConfigurable implements Configurable {
         myDelegate = delegate;
     }
 
-    
     @Override
     public String getId() {
         return myDelegate.getId();
@@ -52,7 +51,6 @@ public class DefaultSearchableConfigurable implements Configurable {
         }
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return myDelegate.getDisplayName();

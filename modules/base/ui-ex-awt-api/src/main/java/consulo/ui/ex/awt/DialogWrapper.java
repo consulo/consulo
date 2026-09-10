@@ -30,7 +30,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.CheckBox;
 import consulo.ui.UIAccess;
@@ -504,11 +504,12 @@ public abstract class DialogWrapper {
         JPanel panel = new JPanel(new BorderLayout());
 
         JPanel buttonsPanel = null;
+        JPanel leftButtonsPanel = null;
 
         if (actions.length > 0 || leftSideActions.length > 0) {
             int gridX = 0;
             if (leftSideActions.length > 0) {
-                buttonsPanel = createButtons(leftSideActions, buttonMap);
+                leftButtonsPanel = createButtons(leftSideActions, buttonMap);
             }
 
             if (actions.length > 0) {
@@ -546,7 +547,19 @@ public abstract class DialogWrapper {
             helpButton.putClientProperty("JButton.buttonType", "help");
             helpButton.setText("");
             helpButton.setToolTipText(ActionLocalize.actionHelptopicsDescription().get());
+        }
+
+        if (helpButton != null && leftButtonsPanel != null) {
+            JPanel westPanel = new JPanel(new BorderLayout());
+            westPanel.add(helpButton, BorderLayout.WEST);
+            westPanel.add(leftButtonsPanel, BorderLayout.CENTER);
+            panel.add(westPanel, BorderLayout.WEST);
+        }
+        else if (helpButton != null) {
             panel.add(helpButton, BorderLayout.WEST);
+        }
+        else if (leftButtonsPanel != null) {
+            panel.add(leftButtonsPanel, BorderLayout.WEST);
         }
 
         String targetButtonPosition = BorderLayout.EAST;
@@ -1586,7 +1599,7 @@ public abstract class DialogWrapper {
                 HelpManager.getInstance().invokeHelp(helpId);
             }
             else {
-                Alerts.okInfo(UILocalize.thereIsNoHelpForThisDialogErrorMessage())
+                MessageBoxes.okInfo(UILocalize.thereIsNoHelpForThisDialogErrorMessage())
                     .title(UILocalize.noHelpAvailableDialogTitle())
                     .showAsync();
             }

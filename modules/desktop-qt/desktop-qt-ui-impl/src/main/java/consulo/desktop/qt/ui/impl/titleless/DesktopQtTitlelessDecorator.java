@@ -16,8 +16,8 @@
 package consulo.desktop.qt.ui.impl.titleless;
 
 import consulo.ui.Component;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.ui.internal.BorderPosition;
 import consulo.ui.ex.TitlelessDecorator;
 
 /**
@@ -33,13 +33,23 @@ public class DesktopQtTitlelessDecorator implements TitlelessDecorator {
 
     @Override
     public void makeLeftComponentLower(Component component) {
-        component.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, myTopPadding);
+        addTopPadding(component);
     }
 
     @Override
     public Component modifyRightComponent(Component parent, Component rightComponent) {
-        rightComponent.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, myTopPadding);
+        addTopPadding(rightComponent);
         return rightComponent;
+    }
+
+    /**
+     * The bar the window manager drew is measured, not a step of a scale, so it is set in pixels on the widget
+     * rather than asked for through the public api.
+     */
+    private void addTopPadding(Component component) {
+        if (component instanceof QtComponentDelegate<?> delegate) {
+            delegate.addPaddingInPixels(BorderPosition.TOP, myTopPadding);
+        }
     }
 
     @Override

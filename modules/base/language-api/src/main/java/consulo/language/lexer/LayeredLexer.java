@@ -16,12 +16,14 @@
 package consulo.language.lexer;
 
 import com.uber.nullaway.annotations.EnsuresNonNullIf;
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author max
@@ -98,8 +100,6 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     public @Nullable IElementType getTokenType() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             return myCurrentBaseTokenType;
@@ -108,8 +108,6 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     public int getTokenStart() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             return myLayerLeftPart;
@@ -118,8 +116,6 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     public int getTokenEnd() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             return myBaseTokenEnd;
@@ -128,8 +124,6 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     public void advance() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             myState = super.getState();

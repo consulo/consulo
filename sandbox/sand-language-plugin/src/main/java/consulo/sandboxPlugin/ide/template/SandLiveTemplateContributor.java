@@ -38,13 +38,11 @@ public class SandLiveTemplateContributor implements LiveTemplateContributor {
         }
     }
 
-    
     @Override
     public String groupId() {
         return "SAND";
     }
 
-    
     @Override
     public LocalizeValue groupName() {
         return SAND;

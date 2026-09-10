@@ -43,9 +43,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Hyperlink;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.*;
@@ -544,8 +543,7 @@ public class RunConfigurable extends BaseConfigurable {
             myAddAction.showAddPopup(true, false,TargetAWT.to(event.getComponent()));
         });
         hyperlink.setIcon(PlatformIconGroup.generalAdd());
-        hyperlink.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 5);
-        hyperlink.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+        hyperlink.paddingBuilder().horizontalSet(Space.MEDIUM).apply();
 
         panel.add(TargetAWT.to(hyperlink));
 

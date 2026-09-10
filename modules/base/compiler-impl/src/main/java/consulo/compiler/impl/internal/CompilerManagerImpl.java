@@ -43,7 +43,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -54,7 +53,7 @@ import java.util.function.Predicate;
 @Singleton
 @State(name = "CompilerManager", storages = @Storage("compiler.xml"))
 @ServiceImpl
-public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
+public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<CompilerManagerState> {
     private class ListenerNotifier implements CompileStatusNotification {
         private final @Nullable CompileStatusNotification myDelegate;
 
@@ -304,28 +303,25 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
     @Override
     @RequiredReadAction
-    public @Nullable Element getState() {
-        Element state = new Element("state");
+    public CompilerManagerState getState() {
+        CompilerManagerState state = new CompilerManagerState();
         CompilerConfigurationImpl configuration = (CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject);
         configuration.getState(state);
 
         if (!myExcludedEntriesConfiguration.isEmpty()) {
-            Element element = new Element("exclude-from-compilation");
-            myExcludedEntriesConfiguration.writeExternal(element);
-            state.addContent(element);
+            state.excludeFromCompilation = myExcludedEntriesConfiguration.getState();
         }
         return state;
     }
 
     @Override
-    public void loadState(Element state) {
+    public void loadState(CompilerManagerState state) {
         if (!myProject.isInitialized()) {
             throw new IllegalArgumentException("Project is not initialized yet. Please do not call CompilerManager inside #initCompoment()");
         }
 
-        Element exclude = state.getChild("exclude-from-compilation");
-        if (exclude != null) {
-            myExcludedEntriesConfiguration.readExternal(exclude);
+        if (state.excludeFromCompilation != null) {
+            myExcludedEntriesConfiguration.loadState(state.excludeFromCompilation);
         }
 
         CompilerConfigurationImpl configuration = (CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject);

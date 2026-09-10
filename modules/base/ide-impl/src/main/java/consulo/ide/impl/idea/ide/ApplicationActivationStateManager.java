@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.application.Application;
+import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
@@ -38,6 +40,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ApplicationActivationStateManager {
 
   private static final Logger LOG = Logger.getInstance(ApplicationActivationStateManager.class);
+
+  private static final int FOCUS_TRANSFER_DELAY = 100;
 
   private static AtomicLong requestToDeactivateTime = new AtomicLong(System.currentTimeMillis());
 
@@ -84,45 +88,64 @@ public class ApplicationActivationStateManager {
       }
     }
     else if (windowEvent.getID() == WindowEvent.WINDOW_DEACTIVATED && windowEvent.getOppositeWindow() == null) {
-      requestToDeactivateTime.getAndSet(System.currentTimeMillis());
-
-      // For stuff that cannot wait windowEvent notify about deactivation immediately
-      if (state.isActive()) {
-
-        IdeFrame ideFrame = getIdeFrameFromWindow(windowEvent.getWindow());
-        if (ideFrame != null) {
-          application.getMessageBus().syncPublisher(ApplicationActivationListener.class).applicationDeactivated(ideFrame);
-        }
+      if (isWaylandToolkit()) {
+        Timer focusTransferTimer = new Timer(FOCUS_TRANSFER_DELAY, evt -> {
+          if (KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow() == null) {
+            deactivate(application, windowEvent);
+          }
+        });
+        focusTransferTimer.setRepeats(false);
+        focusTransferTimer.start();
+        return true;
       }
 
-      // We do not know for sure that application is going to be inactive,
-      // windowEvent could just be showing a popup or another transient window.
-      // So let's postpone the application deactivation for a while
-      state = State.DEACTIVATING;
-      LOG.debug("The app is in the deactivating state");
-
-      Timer timer = new Timer(1500, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-          if (state.equals(State.DEACTIVATING)) {
-
-            state = State.DEACTIVATED;
-            LOG.debug("The app is in the deactivated state");
-
-            IdeFrame ideFrame = getIdeFrameFromWindow(windowEvent.getWindow());
-            if (ideFrame != null) {
-              application.getMessageBus().syncPublisher(ApplicationActivationListener.class).delayedApplicationDeactivated(ideFrame);
-            }
-          }
-
-        }
-      });
-
-      timer.setRepeats(false);
-      timer.start();
-      return true;
+      return deactivate(application, windowEvent);
     }
     return false;
+  }
+
+  private static boolean isWaylandToolkit() {
+    return Platform.current().os() instanceof UnixOperationSystem os && os.isWayland();
+  }
+
+  private static boolean deactivate(Application application, WindowEvent windowEvent) {
+    requestToDeactivateTime.getAndSet(System.currentTimeMillis());
+
+    // For stuff that cannot wait windowEvent notify about deactivation immediately
+    if (state.isActive()) {
+
+      IdeFrame ideFrame = getIdeFrameFromWindow(windowEvent.getWindow());
+      if (ideFrame != null) {
+        application.getMessageBus().syncPublisher(ApplicationActivationListener.class).applicationDeactivated(ideFrame);
+      }
+    }
+
+    // We do not know for sure that application is going to be inactive,
+    // windowEvent could just be showing a popup or another transient window.
+    // So let's postpone the application deactivation for a while
+    state = State.DEACTIVATING;
+    LOG.debug("The app is in the deactivating state");
+
+    Timer timer = new Timer(1500, new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+        if (state.equals(State.DEACTIVATING)) {
+
+          state = State.DEACTIVATED;
+          LOG.debug("The app is in the deactivated state");
+
+          IdeFrame ideFrame = getIdeFrameFromWindow(windowEvent.getWindow());
+          if (ideFrame != null) {
+            application.getMessageBus().syncPublisher(ApplicationActivationListener.class).delayedApplicationDeactivated(ideFrame);
+          }
+        }
+
+      }
+    });
+
+    timer.setRepeats(false);
+    timer.start();
+    return true;
   }
 
   private static boolean setActive(Application application, Window window) {

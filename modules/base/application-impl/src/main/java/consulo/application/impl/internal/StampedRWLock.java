@@ -19,7 +19,9 @@ import consulo.application.AccessToken;
 import consulo.application.util.ApplicationUtil;
 import consulo.ui.UIAccess;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.StampedLock;
+import java.util.function.Consumer;
 
 /**
  * Application read-write lock based on {@link StampedLock}.
@@ -49,6 +51,7 @@ public final class StampedRWLock implements RWLock {
 
     private final ThreadLocal<Long> myReadStamp = new ThreadLocal<>();
     private final ThreadLocal<Boolean> myImpatientReads = ThreadLocal.withInitial(() -> Boolean.FALSE);
+    private final WriteActionTransfer myTransfer = new WriteActionTransfer(thread -> myWriteThread = thread);
 
     // ── Write ──
 
@@ -59,19 +62,34 @@ public final class StampedRWLock implements RWLock {
         if (Thread.currentThread() == myWriteThread) {
             return;
         }
-        long stamp = myLock.writeLock();
+        boolean interrupted = false;
+        long stamp = myLock.tryWriteLock();
+        while (stamp == 0) {
+            myTransfer.poll();
+            try {
+                stamp = myLock.tryWriteLock(1, TimeUnit.MILLISECONDS);
+            }
+            catch (InterruptedException e) {
+                interrupted = true;
+            }
+        }
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
         myWriteStamp = stamp;
         myWriteThread = Thread.currentThread();
     }
 
     @Override
     public void writeUnlock() {
-        long stamp = myWriteStamp;
         // tolerate a second unlock: in the writeIntentLock -> startWrite/endWrite -> writeIntentUnlock
-        // nesting the exclusive lock is acquired once but released twice (endWrite then writeIntentUnlock)
-        if (stamp == 0) {
+        // nesting the exclusive lock is acquired once but released twice (endWrite then writeIntentUnlock).
+        // The owner check is what makes the second unlock a no-op even when another thread has meanwhile
+        // acquired the lock and published its own stamp
+        if (Thread.currentThread() != myWriteThread) {
             return;
         }
+        long stamp = myWriteStamp;
         myWriteThread = null;
         myWriteStamp = 0;
         myLock.unlockWrite(stamp);
@@ -113,6 +131,18 @@ public final class StampedRWLock implements RWLock {
     @Override
     public void writeIntentUnlock() {
         writeUnlock();
+    }
+
+    @Override
+    public void transferWriteAction(boolean runOnEdt, Runnable action, Consumer<Runnable> scheduleTarget) {
+        Thread source = Thread.currentThread();
+        if (source != myWriteThread) {
+            throw new IllegalStateException(
+                "Write action can be transferred only from the write thread: " + source + "; current write thread: " + myWriteThread
+            );
+        }
+
+        myTransfer.transfer(runOnEdt, action, scheduleTarget);
     }
 
     @Override

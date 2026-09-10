@@ -23,6 +23,7 @@ import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -31,7 +32,7 @@ import java.util.function.Predicate;
 @ExtensionImpl
 public class VcsKeymapExtension implements KeymapExtension {
     @Override
-    public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
+    public CompletableFuture<KeymapGroup> createGroupAsync(Predicate<AnAction> filtered, ComponentManager project) {
         return KeymapGroupFactory.getInstance().newBuilder()
             .root(KeyMapLocalize.versionControlGroupTitle())
             .filter(filtered)

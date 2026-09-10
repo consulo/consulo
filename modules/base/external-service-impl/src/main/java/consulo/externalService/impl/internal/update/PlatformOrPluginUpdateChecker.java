@@ -43,8 +43,8 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
-import consulo.ui.Alert;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
@@ -142,7 +142,7 @@ public class PlatformOrPluginUpdateChecker {
 
         if (showErrorDialog) {
             uiAccess.give(() -> {
-                Alert<Object> alert = Alerts.okError(e);
+                MessageBoxBuilder<Object> alert = MessageBoxes.okError(e);
                 if (project != null) {
                     alert.showAsync(project);
                 }

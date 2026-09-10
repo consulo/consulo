@@ -24,127 +24,108 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.diff.DiffPlaces;
 import consulo.util.dataholder.Key;
-import consulo.util.xml.serializer.annotation.MapAnnotation;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Singleton
-@State(name = "DiffSettings", storages = @Storage(file = DiffImplUtil.DIFF_CONFIG))
+@State(name = "DiffSettings", storages = @Storage(DiffImplUtil.DIFF_CONFIG))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class DiffSettingsHolder implements PersistentStateComponent<DiffSettingsHolder.State> {
-  public static final Key<DiffSettings> KEY = Key.create("DiffSettings");
+public class DiffSettingsHolder implements PersistentStateComponent<DiffSettingsHolderState> {
+    public static final Key<DiffSettings> KEY = Key.create("DiffSettings");
 
-  private static class SharedSettings {
-    public boolean GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE = true;
-    public boolean SHOW_DIFF_IN_EDITOR_SETTING = true;
-  }
+    public static class DiffSettings {
 
-  private static class PlaceSettings {
-    
-    public List<String> DIFF_TOOLS_ORDER = new ArrayList<>();
-    public boolean SYNC_BINARY_EDITOR_SETTINGS = true;
-  }
+        public DiffSharedSettings SHARED_SETTINGS = new DiffSharedSettings();
 
-  public static class DiffSettings {
-    
-    public SharedSettings SHARED_SETTINGS = new SharedSettings();
-    
-    public PlaceSettings PLACE_SETTINGS = new PlaceSettings();
+        public DiffPlaceSettings PLACE_SETTINGS = new DiffPlaceSettings();
 
-    public DiffSettings() {
+        public DiffSettings() {
+        }
+
+        public DiffSettings(DiffSharedSettings SHARED_SETTINGS, DiffPlaceSettings PLACE_SETTINGS) {
+            this.SHARED_SETTINGS = SHARED_SETTINGS;
+            this.PLACE_SETTINGS = PLACE_SETTINGS;
+        }
+
+
+        public List<String> getDiffToolsOrder() {
+            return PLACE_SETTINGS.DIFF_TOOLS_ORDER;
+        }
+
+        public boolean isShowDiffInEditor() {
+            return SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING;
+        }
+
+        public void setShowDiffInEditor(boolean value) {
+            SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING = value;
+        }
+
+        public void setDiffToolsOrder(List<String> order) {
+            PLACE_SETTINGS.DIFF_TOOLS_ORDER = order;
+        }
+
+        public boolean isGoToNextFileOnNextDifference() {
+            return SHARED_SETTINGS.GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE;
+        }
+
+        public void setGoToNextFileOnNextDifference(boolean value) {
+            SHARED_SETTINGS.GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE = value;
+        }
+
+        public boolean isSyncBinaryEditorSettings() {
+            return PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS;
+        }
+
+        public void setSyncBinaryEditorSettings(boolean value) {
+            PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS = value;
+        }
+
+        //
+        // Impl
+        //
+
+
+        public static DiffSettings getSettings() {
+            return getSettings(null);
+        }
+
+
+        public static DiffSettings getSettings(@Nullable String place) {
+            return getInstance().getSettings(place);
+        }
     }
 
-    public DiffSettings(SharedSettings SHARED_SETTINGS, PlaceSettings PLACE_SETTINGS) {
-      this.SHARED_SETTINGS = SHARED_SETTINGS;
-      this.PLACE_SETTINGS = PLACE_SETTINGS;
+
+    public DiffSettings getSettings(@Nullable String place) {
+        if (place == null) {
+            place = DiffPlaces.DEFAULT;
+        }
+
+        DiffPlaceSettings placeSettings = myState.PLACES_MAP.get(place);
+        if (placeSettings == null) {
+            placeSettings = new DiffPlaceSettings();
+            myState.PLACES_MAP.put(place, placeSettings);
+        }
+        return new DiffSettings(myState.SHARED_SETTINGS, placeSettings);
     }
 
-    
-    public List<String> getDiffToolsOrder() {
-      return PLACE_SETTINGS.DIFF_TOOLS_ORDER;
+    private DiffSettingsHolderState myState = new DiffSettingsHolderState();
+
+
+    @Override
+    public DiffSettingsHolderState getState() {
+        return myState;
     }
 
-    public boolean isShowDiffInEditor() {
-      return SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING;
+    @Override
+    public void loadState(DiffSettingsHolderState state) {
+        myState = state;
     }
 
-    public void setShowDiffInEditor(boolean value) {
-      SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING = value;
+    public static DiffSettingsHolder getInstance() {
+        return Application.get().getInstance(DiffSettingsHolder.class);
     }
-
-    public void setDiffToolsOrder(List<String> order) {
-      PLACE_SETTINGS.DIFF_TOOLS_ORDER = order;
-    }
-
-    public boolean isGoToNextFileOnNextDifference() {
-      return SHARED_SETTINGS.GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE;
-    }
-
-    public void setGoToNextFileOnNextDifference(boolean value) {
-      SHARED_SETTINGS.GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE = value;
-    }
-
-    public boolean isSyncBinaryEditorSettings() {
-      return PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS;
-    }
-
-    public void setSyncBinaryEditorSettings(boolean value) {
-      PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS = value;
-    }
-
-    //
-    // Impl
-    //
-
-    
-    public static DiffSettings getSettings() {
-      return getSettings(null);
-    }
-
-    
-    public static DiffSettings getSettings(@Nullable String place) {
-      return getInstance().getSettings(place);
-    }
-  }
-
-  
-  public DiffSettings getSettings(@Nullable String place) {
-    if (place == null) place = DiffPlaces.DEFAULT;
-
-    PlaceSettings placeSettings = myState.PLACES_MAP.get(place);
-    if (placeSettings == null) {
-      placeSettings = new PlaceSettings();
-      myState.PLACES_MAP.put(place, placeSettings);
-    }
-    return new DiffSettings(myState.SHARED_SETTINGS, placeSettings);
-  }
-
-  public static class State {
-    @MapAnnotation(surroundWithTag = false, surroundKeyWithTag = false, surroundValueWithTag = false)
-    public Map<String, PlaceSettings> PLACES_MAP = new HashMap<>();
-    public SharedSettings SHARED_SETTINGS = new SharedSettings();
-  }
-
-  private State myState = new State();
-
-  
-  @Override
-  public State getState() {
-    return myState;
-  }
-
-  @Override
-  public void loadState(State state) {
-    myState = state;
-  }
-
-  public static DiffSettingsHolder getInstance() {
-    return Application.get().getInstance(DiffSettingsHolder.class);
-  }
 }

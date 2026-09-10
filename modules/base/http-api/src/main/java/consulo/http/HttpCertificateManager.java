@@ -40,8 +40,10 @@ import javax.net.ssl.SSLContext;
  *    <ol>
  *      <li>{@code useSystemProperties()} methods makes {@code HttpClient} use "Default" SSL context again</li>
  *      <li>{@code setSSLContext()} and pass result of the {@link #getSslContext()}</li>
- *      <li>{@code setSSLSocketFactory()} and specify instance {@code SSLConnectionSocketFactory} which uses result of {@link #getSslContext()}.</li>
- *      <li>{@code setConnectionManager} and initialize it with {@code Registry} that binds aforementioned {@code SSLConnectionSocketFactory} to HTTPS protocol</li>
+ *      <li>{@code setSSLSocketFactory()} and specify instance {@code SSLConnectionSocketFactory}
+ *          which uses result of {@link #getSslContext()}.</li>
+ *      <li>{@code setConnectionManager} and initialize it with {@code Registry} that binds aforementioned
+ *          {@code SSLConnectionSocketFactory} to HTTPS protocol</li>
  *      </ol>
  *    </li>
  * </ol>
@@ -51,35 +53,32 @@ import javax.net.ssl.SSLContext;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface HttpCertificateManager {
-  static HttpCertificateManager getInstance() {
-    return Application.get().getInstance(HttpCertificateManager.class);
-  }
+    static HttpCertificateManager getInstance() {
+        return Application.get().getInstance(HttpCertificateManager.class);
+    }
 
-  /**
-   * Creates special kind of {@code SSLContext}, which X509TrustManager first checks certificate presence in
-   * in default system-wide trust store (usually located at {@code ${JAVA_HOME}/lib/security/cacerts} or specified by
-   * {@code javax.net.ssl.trustStore} property) and when in the one specified by field {@link #myCacertsPath}.
-   * If certificate wasn't found in either, manager will ask user, whether it can be
-   * accepted (like web-browsers do) and then, if it does, certificate will be added to specified trust store.
-   * <p/>
-   * If any error occurred during creation its message will be logged and system default SSL context will be returned
-   * so clients don't have to deal with awkward JSSE errors.
-   * </p>
-   * This method may be used for transition to HttpClient 4.x (see {@code HttpClientBuilder#setSslContext(SSLContext)})
-   * and {@code org.apache.http.conn.ssl.SSLConnectionSocketFactory()}.
-   *
-   * @return instance of SSLContext with described behavior or default SSL context in case of error
-   */
-  SSLContext getSslContext();
+    /**
+     * Creates special kind of {@code SSLContext}, which X509TrustManager first checks certificate presence in
+     * default system-wide trust store (usually located at {@code ${JAVA_HOME}/lib/security/cacerts} or specified by
+     * {@code javax.net.ssl.trustStore} property) and when in the one specified by the implementation's cacerts path.
+     * If certificate wasn't found in either, manager will ask user, whether it can be
+     * accepted (like web-browsers do) and then, if it does, certificate will be added to specified trust store.
+     * <p/>
+     * If any error occurred during creation its message will be logged and system default SSL context will be returned
+     * so clients don't have to deal with awkward JSSE errors.
+     * </p>
+     * This method may be used for transition to HttpClient 4.x (see {@code HttpClientBuilder#setSslContext(SSLContext)})
+     * and {@code org.apache.http.conn.ssl.SSLConnectionSocketFactory()}.
+     *
+     * @return instance of SSLContext with described behavior or default SSL context in case of error
+     */
+    SSLContext getSslContext();
 
-  
-  SSLContext getSystemSslContext();
+    SSLContext getSystemSslContext();
 
-  
-  HostnameVerifier getHostnameVerifier();
+    HostnameVerifier getHostnameVerifier();
 
-  
-  HttpConfirmingTrustManagerHttp getTrustManager();
+    HttpConfirmingTrustManagerHttp getTrustManager();
 
-  KeyManager[] getDefaultKeyManagers();
+    KeyManager[] getDefaultKeyManagers();
 }

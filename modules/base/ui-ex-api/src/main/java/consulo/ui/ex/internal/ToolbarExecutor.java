@@ -17,6 +17,8 @@ package consulo.ui.ex.internal;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+
+import java.util.List;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,6 +31,17 @@ public interface ToolbarExecutor<E> {
     @RequiredUIAccess
     @Nullable
     E getSelectedValue();
+
+    /**
+     * The whole selection, for an action which acts on more than the lead row - a remove over a multi row
+     * selection, a rule which has to see every selected row before it can say whether it applies. A widget
+     * which only ever holds one selected value answers with that one.
+     */
+    @RequiredUIAccess
+    default List<E> getSelectedValues() {
+        E value = getSelectedValue();
+        return value == null ? List.of() : List.of(value);
+    }
 
     @RequiredUIAccess
     boolean canAdd();

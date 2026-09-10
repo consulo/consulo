@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.path;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiFileSystemItem;
@@ -34,47 +33,45 @@ import java.util.Collections;
 
 @ExtensionImpl(order = "last")
 public class NullFileReferenceHelper extends FileReferenceHelper {
-  public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
+    public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
 
-  @Override
-  @RequiredReadAction
-  public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
-    ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-    VirtualFile contentRootForFile = index.getContentRootForFile(file);
+    @Override
+    @RequiredReadAction
+    public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
+        ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+        VirtualFile contentRootForFile = index.getContentRootForFile(file);
 
-    return contentRootForFile != null ? PsiManager.getInstance(project).findDirectory(contentRootForFile) : null;
-  }
-
-  @Override
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
-  @SuppressWarnings("NullAway")
-  public Collection<PsiFileSystemItem> getRoots(Module module) {
-    return ContainerUtil.mapNotNull(
-      ModuleRootManager.getInstance(module).getContentRoots(),
-        virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile)
-    );
-  }
-
-  @Override
-  @RequiredReadAction
-  public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
-    PsiFileSystemItem item = getPsiFileSystemItem(project, file);
-    if (item != null) {
-      PsiFileSystemItem parent = item.getParent();
-      if (parent != null) {
-        return Collections.singleton(parent);
-      }
+        return contentRootForFile != null ? PsiManager.getInstance(project).findDirectory(contentRootForFile) : null;
     }
-    return Collections.emptyList();
-  }
 
-  @Override
-  public boolean isMine(Project project, VirtualFile file) {
-    return ProjectRootManager.getInstance(project).getFileIndex().isInContent(file);
-  }
+    @Override
+    public Collection<PsiFileSystemItem> getRoots(Module module) {
+        return ContainerUtil.mapNotNull(
+            ModuleRootManager.getInstance(module).getContentRoots(),
+            virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile)
+        );
+    }
 
-  @Override
-  public boolean isFallback() {
-    return true;
-  }
+    @Override
+    @RequiredReadAction
+    public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
+        PsiFileSystemItem item = getPsiFileSystemItem(project, file);
+        if (item != null) {
+            PsiFileSystemItem parent = item.getParent();
+            if (parent != null) {
+                return Collections.singleton(parent);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isMine(Project project, VirtualFile file) {
+        return ProjectRootManager.getInstance(project).getFileIndex().isInContent(file);
+    }
+
+    @Override
+    public boolean isFallback() {
+        return true;
+    }
 }

@@ -20,6 +20,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
@@ -130,8 +132,13 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
           return false;
         }
 
-        Rectangle bounds = new Rectangle(content.getLocationOnScreen(), content.getSize());
-        if (bounds.contains(point) || !popup.isCancelOnClickOutside()) {
+        if (!isWaylandToolkit()) {
+          Rectangle bounds = new Rectangle(content.getLocationOnScreen(), content.getSize());
+          if (bounds.contains(point) || !popup.isCancelOnClickOutside()) {
+            return false;
+          }
+        }
+        else if (window == popup.getPopupWindow() || !popup.isCancelOnClickOutside()) {
           return false;
         }
 
@@ -156,6 +163,10 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
         myStack.pop();
       }
     }
+  }
+
+  private static boolean isWaylandToolkit() {
+    return Platform.current().os() instanceof UnixOperationSystem os && os.isWayland();
   }
 
   private @Nullable JBPopup findPopup() {

@@ -34,6 +34,7 @@ import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Button;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -63,6 +64,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author anna
@@ -78,6 +80,14 @@ public class CustomizableActionsPanel implements Disposable {
     private Button myMoveActionUpButton;
     private final JPanel myPanel;
     private final JTree myActionsTree;
+
+    private List<DefaultMutableTreeNode> myDefaultGroupNodes = List.of();
+
+    /**
+     * The application schema, resolved once by {@link #reset()}. It loads asynchronously, and the sync
+     * {@code Configurable} methods below cannot wait for it.
+     */
+    private @Nullable CustomActionsSchemaImpl myApplicationSchema;
     private Button myAddSeparatorButton;
 
     private CustomActionsSchemaImpl mySelectedSchema;
@@ -276,9 +286,10 @@ public class CustomizableActionsPanel implements Disposable {
                 mySelectedSchema.addAction(otherAction);
             }
             List<TreePath> treePaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            patchActionsTreeCorrespondingToSchema(root);
-            restorePathsAfterTreeOptimization(treePaths);
-            myRestoreDefaultButton.setEnabled(false);
+            patchActionsTreeCorrespondingToSchema(root).thenRun(() -> {
+                restorePathsAfterTreeOptimization(treePaths);
+                myRestoreDefaultButton.setEnabled(false);
+            });
         });
 
         patchActionsTreeCorrespondingToSchema(root);
@@ -424,12 +435,16 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     public void apply() throws ConfigurationException {
+        if (myApplicationSchema == null) {
+            return;
+        }
+
         List<TreePath> treePaths = TreeUtil.collectExpandedPaths(myActionsTree);
         if (mySelectedSchema != null) {
-            CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema);
+            CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema, myDefaultGroupNodes);
         }
         restorePathsAfterTreeOptimization(treePaths);
-        CustomActionsSchemaImpl.getInstance().copyFrom(mySelectedSchema);
+        myApplicationSchema.copyFrom(mySelectedSchema);
         setCustomizationSchemaForCurrentProjects();
     }
 
@@ -442,27 +457,72 @@ public class CustomizableActionsPanel implements Disposable {
     @RequiredUIAccess
     public void reset() {
         Application application = Application.get();
+        UIAccess uiAccess = UIAccess.current();
 
-        mySelectedSchema = new CustomActionsSchemaImpl(application);
-        mySelectedSchema.copyFrom(CustomActionsSchemaImpl.getInstance());
-        patchActionsTreeCorrespondingToSchema((DefaultMutableTreeNode)myModel.getRoot());
-        myRestoreAllDefaultButton.setEnabled(mySelectedSchema.isModified(new CustomActionsSchemaImpl(application)));
+        CustomActionsSchemaImpl.getInstanceAsync().whenComplete((schema, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to load the customization schema", throwable);
+                return;
+            }
+
+            uiAccess.giveIfNeed(() -> {
+                myApplicationSchema = schema;
+
+                mySelectedSchema = new CustomActionsSchemaImpl(application);
+                mySelectedSchema.copyFrom(schema);
+                patchActionsTreeCorrespondingToSchema((DefaultMutableTreeNode)myModel.getRoot());
+                myRestoreAllDefaultButton.setEnabled(mySelectedSchema.isModified(new CustomActionsSchemaImpl(application)));
+            });
+        });
     }
 
     public boolean isModified() {
-        CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema);
-        return CustomActionsSchemaImpl.getInstance().isModified(mySelectedSchema);
+        if (myApplicationSchema == null) {
+            return false;
+        }
+        CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema, myDefaultGroupNodes);
+        return myApplicationSchema.isModified(mySelectedSchema);
     }
 
-    private void patchActionsTreeCorrespondingToSchema(DefaultMutableTreeNode root) {
+    @RequiredUIAccess
+    private CompletableFuture<?> patchActionsTreeCorrespondingToSchema(DefaultMutableTreeNode root) {
         root.removeAllChildren();
-        if (mySelectedSchema != null) {
-            mySelectedSchema.fillActionGroups(root);
-            for (ActionUrl actionUrl : mySelectedSchema.getActions()) {
-                ActionUrl.changePathInActionsTree(myActionsTree, actionUrl);
-            }
+        if (mySelectedSchema == null) {
+            myModel.reload();
+            return CompletableFuture.completedFuture(null);
         }
-        myModel.reload();
+
+        CustomActionsSchemaImpl schema = mySelectedSchema;
+        UIAccess uiAccess = UIAccess.current();
+
+        return schema.createActionGroupNodesAsync()
+            .thenCompose(nodes -> schema.createActionGroupNodesAsync().thenApply(defaultNodes -> {
+                myDefaultGroupNodes = defaultNodes;
+                return nodes;
+            }))
+            .thenCompose(nodes -> resolveActionUrlsAsync(schema).thenApply(ignored -> nodes))
+            .thenCompose(nodes -> uiAccess.giveAsync(() -> {
+                for (DefaultMutableTreeNode node : nodes) {
+                    root.add(node);
+                }
+                for (ActionUrl actionUrl : schema.getActions()) {
+                    ActionUrl.changePathInActionsTree(myActionsTree, actionUrl);
+                }
+                myModel.reload();
+            }))
+            .whenComplete((ignored, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to build the customization tree", throwable);
+                }
+            });
+    }
+
+    private static CompletableFuture<?> resolveActionUrlsAsync(CustomActionsSchemaImpl schema) {
+        CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
+        for (ActionUrl actionUrl : schema.getActions()) {
+            chain = chain.thenCompose(ignored -> actionUrl.resolveComponentAsync());
+        }
+        return chain;
     }
 
     @Override
@@ -701,13 +761,20 @@ public class CustomizableActionsPanel implements Disposable {
         @Override
         @RequiredUIAccess
         protected JComponent createCenterPanel() {
-            KeymapGroupImpl rootGroup =
-                ActionsTreeUtil.createMainGroup(null, null, QuickListsManager.getInstance().getAllQuickLists());
-            DefaultMutableTreeNode root = ActionsTreeUtil.createNode(rootGroup);
-            DefaultTreeModel model = new DefaultTreeModel(root);
+            DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode());
             myTree = new Tree();
             myTree.setModel(model);
             myTree.setCellRenderer(new MyTreeCellRenderer());
+
+            UIAccess uiAccess = UIAccess.current();
+            ActionsTreeUtil.createMainGroupAsync(null, null, QuickListsManager.getInstance().getAllQuickLists())
+                .whenComplete((rootGroup, throwable) -> {
+                    if (throwable != null) {
+                        LOG.error("Failed to build the action tree", throwable);
+                        return;
+                    }
+                    uiAccess.giveIfNeed(() -> model.setRoot(ActionsTreeUtil.createNode(rootGroup)));
+                });
             ActionManager actionManager = ActionManager.getInstance();
 
             mySetIconButton = new JButton(IdeLocalize.buttonSetIcon().get());

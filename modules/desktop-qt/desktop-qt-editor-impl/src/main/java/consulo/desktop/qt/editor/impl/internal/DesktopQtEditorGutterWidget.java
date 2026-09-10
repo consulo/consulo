@@ -77,6 +77,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -152,7 +153,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     private void installPopupMenu() {
         DesktopQtActionContextMenu.installOn(
             this,
-            this::gutterPopupGroup,
+            this::gutterPopupGroupAsync,
             ActionPlaces.EDITOR_GUTTER_POPUP,
             this::gutterDataContext
         );
@@ -163,13 +164,13 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * breakpoint, not the gutter. Only when nothing on the row answers does the menu of the gutter itself apply,
      * which is the order the web frontend resolves it in.
      */
-    private @Nullable ActionGroup gutterPopupGroup(QPoint position) {
+    private CompletableFuture<@Nullable ActionGroup> gutterPopupGroupAsync(QPoint position) {
         for (GutterMark mark : myEditor.getGutterComponentEx().getGutterRenderers(visualLineAt(position.y()))) {
             if (mark instanceof GutterIconRenderer renderer) {
                 ActionGroup rendererGroup = renderer.getPopupMenuActions();
 
                 if (rendererGroup != null) {
-                    return rendererGroup;
+                    return CompletableFuture.completedFuture(rendererGroup);
                 }
             }
         }
@@ -178,16 +179,14 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         ActionGroup custom = gutter.getGutterPopupGroup();
         if (custom != null) {
-            return custom;
+            return CompletableFuture.completedFuture(custom);
         }
 
         if (!gutter.isShowDefaultGutterPopup()) {
-            return null;
+            return CompletableFuture.completedFuture(null);
         }
 
-        return CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER) instanceof ActionGroup group
-            ? group
-            : null;
+        return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_EDITOR_GUTTER);
     }
 
     /**

@@ -38,6 +38,10 @@ public class HeadlessIntBox extends HeadlessValueComponentBase<Integer> implemen
     }
 
     @Override
+    public void setStep(int step) {
+    }
+
+    @Override
     public Disposable addValidator(Validator<Integer> validator) {
         return () -> {
         };

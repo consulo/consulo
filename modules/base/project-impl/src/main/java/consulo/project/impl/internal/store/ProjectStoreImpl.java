@@ -107,13 +107,13 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
         ? new File(file, Project.DIRECTORY_STORE_FOLDER)
         : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
 
-    String defaultFilePath = new File(dirStore, "misc.xml").getPath();
+    String defaultFilePath = new File(dirStore, "misc").getPath();
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
 
     stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
 
-    File ws = new File(dirStore, "workspace.xml");
+    File ws = new File(dirStore, "workspace");
 
     stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
 

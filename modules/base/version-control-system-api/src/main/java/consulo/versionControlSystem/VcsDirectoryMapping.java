@@ -16,6 +16,7 @@
 
 package consulo.versionControlSystem;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.root.VcsRootSettings;
 
@@ -46,6 +47,8 @@ public class VcsDirectoryMapping {
     myVcs = vcs;
   }
 
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Per root VCS settings are not stored anymore")
   public VcsDirectoryMapping(String directory, String vcs, VcsRootSettings rootSettings) {
     setDirectory(directory);
     myVcs = vcs;
@@ -91,6 +94,8 @@ public class VcsDirectoryMapping {
    * @return VCS-specific settings, or null if none have been defined.
    * @see AbstractVcs#getRootConfigurable(VcsDirectoryMapping)
    */
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Per root VCS settings are not stored anymore")
   public @Nullable VcsRootSettings getRootSettings() {
     return myRootSettings;
   }
@@ -100,6 +105,8 @@ public class VcsDirectoryMapping {
    *
    * @param rootSettings the VCS-specific settings.
    */
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Per root VCS settings are not stored anymore")
   public void setRootSettings(VcsRootSettings rootSettings) {
     myRootSettings = rootSettings;
   }

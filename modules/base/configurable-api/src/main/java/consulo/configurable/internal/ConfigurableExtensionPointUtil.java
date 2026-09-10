@@ -39,7 +39,7 @@ public class ConfigurableExtensionPointUtil {
         Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<>();
         for (Configurable configurable : extensions) {
             // do not disable if disable
-            if (configurable instanceof OptionalConfigurable && !((OptionalConfigurable) configurable).needDisplay()) {
+            if (configurable instanceof OptionalConfigurable optionalConfigurable && !optionalConfigurable.needDisplay()) {
                 continue;
             }
 
@@ -47,7 +47,13 @@ public class ConfigurableExtensionPointUtil {
                 continue;
             }
 
-            idToConfigurable.put(configurable.getId(), ConfigurableWrapper.wrapConfigurable(configurable));
+            try {
+                ConfigurableWrapper wrapped = ConfigurableWrapper.wrapConfigurable(configurable);
+                idToConfigurable.put(configurable.getId(), wrapped);
+            }
+            catch (Throwable t) {
+                LOG.error("Failed to build: " + configurable.getId(), t);
+            }
         }
 
         //modify configurables (append children)

@@ -24,6 +24,7 @@ import consulo.ui.Component;
 import consulo.ui.ImageBox;
 import consulo.ui.Label;
 import consulo.ui.NotificationType;
+import consulo.ui.Space;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -46,8 +47,8 @@ import java.util.function.Supplier;
  * @since 2026-08-02
  */
 public class UnifiedAlertImpl<V> extends BaseAlert<V> {
-    private static final int ICON_GAP = 15;
-    private static final int BUTTON_GAP = 5;
+    private static final Space ICON_GAP = Space.X_LARGE;
+    private static final Space BUTTON_GAP = Space.MEDIUM;
 
     @Override
     @RequiredUIAccess
@@ -65,7 +66,7 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
             return CompletableFuture.completedFuture(remembered);
         }
 
-        Window window = Window.create(myTitle.get(), WindowOptions.builder().owner(owner).build());
+        Window window = Window.create(resolvedTitle().get(), WindowOptions.builder().owner(owner).build());
 
         CheckBox rememberBox = myRemember == null
             ? null

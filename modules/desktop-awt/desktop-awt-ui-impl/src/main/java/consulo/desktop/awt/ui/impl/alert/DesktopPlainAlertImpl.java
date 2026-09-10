@@ -53,13 +53,13 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
     DialogImpl() {
       super(false);
-      setTitle(myTitle.getValue());
+      setTitle(resolvedTitle().getValue());
       init();
     }
 
     DialogImpl(java.awt.Component parentComponent) {
       super(parentComponent, false);
-      setTitle(myTitle.getValue());
+      setTitle(resolvedTitle().getValue());
       init();
     }
 

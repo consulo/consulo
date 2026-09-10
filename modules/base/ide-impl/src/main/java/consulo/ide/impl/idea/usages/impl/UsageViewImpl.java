@@ -1977,10 +1977,11 @@ public class UsageViewImpl implements UsageViewEx {
             sink.set(HelpManager.HELP_ID, HELP_ID);
             sink.set(CopyProvider.KEY, myCopyProvider);
 
-            if (UIAccess.isUIThread()) {
+            if (usages != null) {
                 sink.lazy(
                     PsiElement.KEY_OF_ARRAY,
-                    () -> getSelectedUsages().stream()
+                    () -> usages
+                        .stream()
                         .filter(u -> u instanceof PsiElementUsage)
                         .map(u -> ((PsiElementUsage) u).getElement())
                         .filter(Objects::nonNull)

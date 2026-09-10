@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.configurable;
 
+import consulo.ui.RadioGroup;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
 import consulo.codeEditor.Editor;
@@ -42,13 +44,11 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.*;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
@@ -114,29 +114,18 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         scrollingLayout.add(smoothScrolling);
         propertyBuilder.add(smoothScrolling, editorSettings::isSmoothScrolling, editorSettings::setSmoothScrolling);
 
-        RadioButton preferScrolling =
-            RadioButton.create(LocalizeValue.localizeTODO("Prefer scrolling editor canvas to keep caret line centered"));
-        RadioButton preferMovingCaret =
-            RadioButton.create(LocalizeValue.localizeTODO("Prefer moving caret line to minimize editor scrolling"));
+        RadioGroup<Boolean> caretScrolling = RadioGroup.create();
 
-        ValueGroup.createBool().add(preferScrolling).add(preferMovingCaret);
+        propertyBuilder.add(caretScrolling, editorSettings::isRefrainFromScrolling, editorSettings::setRefrainFromScrolling);
 
-        propertyBuilder.add(() -> {
-            if (preferMovingCaret.getValueOrError()) {
-                return true;
-            }
-
-            if (preferScrolling.getValueOrError()) {
-                return false;
-            }
-            throw new IllegalArgumentException();
-        }, uiValue -> {
-            preferMovingCaret.setValue(uiValue);
-            preferScrolling.setValue(!uiValue);
-        }, editorSettings::isRefrainFromScrolling, editorSettings::setRefrainFromScrolling);
-
-        scrollingLayout.add(preferScrolling);
-        scrollingLayout.add(preferMovingCaret);
+        scrollingLayout.add(caretScrolling.newButton(
+            LocalizeValue.localizeTODO("Prefer scrolling editor canvas to keep caret line centered"),
+            false
+        ));
+        scrollingLayout.add(caretScrolling.newButton(
+            LocalizeValue.localizeTODO("Prefer moving caret line to minimize editor scrolling"),
+            true
+        ));
 
         layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Scrolling"), scrollingLayout));
 
@@ -213,7 +202,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         });
 
         DockLayout customSoftWrapLayout = DockLayout.create();
-        customSoftWrapLayout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 15);
+        customSoftWrapLayout.paddingBuilder().leftSet(Space.X_LARGE).apply();
         customSoftWrapLayout.left(useCustomSoftWrapIndent);
         customSoftWrapLayout.right(customSoftWrapIndent);
         virtualSpaceLayout.add(customSoftWrapLayout);
@@ -446,7 +435,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         otherLayout.add(
             DockLayout.create()
                 .left(showQuickDocOnMouseMove)
-                .right(HorizontalLayout.create(5).add(delayMs).add(tooltipDelay))
+                .right(HorizontalLayout.create().add(delayMs).add(tooltipDelay))
         );
 
         layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Other"), otherLayout));

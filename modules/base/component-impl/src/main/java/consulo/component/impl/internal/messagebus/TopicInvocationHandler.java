@@ -45,7 +45,7 @@ public class TopicInvocationHandler<L> implements InvocationHandler, Function<Me
     myMessageBus = messageBus;
     myTopicClass = topicClass;
 
-    TopicBinding binding = messageBus.myTopicBindingLoader.getBinding(topicClass.getName());
+    TopicBinding binding = messageBus.myTopicBindingLoader.getBinding(topicClass.getCanonicalName());
 
     if (binding != null) {
       myTopicMethods = binding.methods();

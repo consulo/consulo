@@ -61,10 +61,24 @@ public class HeadlessApplicationExtension implements BeforeAllCallback, BeforeEa
         HeadlessLoggerFactory.setAllowedErrorCategories(null);
 
         List<LoggedError> loggedErrors = HeadlessLoggerFactory.takeLoggedErrors();
+
+        printRecorded(context, "logged error", loggedErrors);
+
         if (!loggedErrors.isEmpty()) {
             AssertionError error = new AssertionError(loggedErrors.size() + " error(s) logged during the test");
             loggedErrors.forEach(error::addSuppressed);
             throw error;
+        }
+    }
+
+    @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
+    private static void printRecorded(ExtensionContext context, String kind, List<? extends Throwable> recorded) {
+        if (recorded.isEmpty()) {
+            return;
+        }
+        System.err.println(recorded.size() + " " + kind + "(s) recorded during " + context.getDisplayName());
+        for (Throwable throwable : recorded) {
+            throwable.printStackTrace();
         }
     }
 

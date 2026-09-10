@@ -123,7 +123,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
             LOG.debug("Image Fetcher thread is detected. Certificate check will be skipped.");
             return true;
         }
-        HttpCertificateManagerImpl.Config config = HttpCertificateManagerImpl.getInstance().getState();
+        HttpCertificateManagerState config = HttpCertificateManagerImpl.getInstance().getState();
         Application app = Application.get();
         if (app.isUnitTestMode() || app.isHeadlessEnvironment() || config.ACCEPT_AUTOMATICALLY) {
             LOG.debug("Certificate will be accepted automatically");

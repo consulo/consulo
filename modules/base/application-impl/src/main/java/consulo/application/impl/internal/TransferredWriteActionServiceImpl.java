@@ -22,18 +22,11 @@ public class TransferredWriteActionServiceImpl implements TransferredWriteAction
             return;
         }
 
-        RWLock lock = application.myLock;
-        if (lock instanceof StampedRWLock stampedLock) {
-            UIAccess uiAccess = application.getLastUIAccess();
-            stampedLock.transferWriteAction(action, uiAccess::give);
-            return;
-        }
-        if (!(lock instanceof ReadMostlyRWLock rwLock)) {
-            application.getLastUIAccess().giveAndWait(action);
-            return;
-        }
-
-        rwLock.transferWriteAction(true, action, edtRunnable -> application.invokeLater(edtRunnable, ModalityState.any()));
+        application.myLock.transferWriteAction(
+            true,
+            action,
+            edtRunnable -> application.invokeLater(edtRunnable, ModalityState.any())
+        );
     }
 
     @Override
@@ -47,12 +40,6 @@ public class TransferredWriteActionServiceImpl implements TransferredWriteAction
             return;
         }
 
-        RWLock lock = application.myLock;
-        if (!(lock instanceof ReadMostlyRWLock rwLock)) {
-            application.executeOnPooledThread(action);
-            return;
-        }
-
-        rwLock.transferWriteAction(false, action, application::executeOnPooledThread);
+        application.myLock.transferWriteAction(false, action, application::executeOnPooledThread);
     }
 }

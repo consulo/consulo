@@ -15,11 +15,11 @@
  */
 package consulo.language.editor.ui.util;
 
+import consulo.ui.RadioGroup;
 import consulo.language.editor.ui.localize.LanguageEditorRefactoringUILocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
-import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.Layout;
@@ -30,9 +30,7 @@ import consulo.ui.layout.VerticalLayout;
  * @since 2002-06-17
  */
 public class DocCommentPanel {
-    private RadioButton myRbJavaDocAsIs = null;
-    private RadioButton myRbJavaDocMove = null;
-    private RadioButton myRbJavaDocCopy = null;
+    private final RadioGroup<Integer> myPolicy = RadioGroup.create();
 
     private final Layout<?> myRootComponent;
 
@@ -40,55 +38,33 @@ public class DocCommentPanel {
     public DocCommentPanel(LocalizeValue titleValue) {
         VerticalLayout layout = VerticalLayout.create();
 
-        myRbJavaDocAsIs = RadioButton.create(LanguageEditorRefactoringUILocalize.javadocAsIs());
-        layout.add(myRbJavaDocAsIs);
-        myRbJavaDocAsIs.setFocusable(false);
+        addButton(layout, LanguageEditorRefactoringUILocalize.javadocAsIs(), DocCommentPolicy.ASIS);
+        addButton(layout, LanguageEditorRefactoringUILocalize.javadocCopy(), DocCommentPolicy.COPY);
+        addButton(layout, LanguageEditorRefactoringUILocalize.javadocMove(), DocCommentPolicy.MOVE);
 
-        myRbJavaDocCopy = RadioButton.create(LanguageEditorRefactoringUILocalize.javadocCopy());
-        myRbJavaDocCopy.setFocusable(false);
-        layout.add(myRbJavaDocCopy);
-
-        myRbJavaDocMove = RadioButton.create(LanguageEditorRefactoringUILocalize.javadocMove());
-        myRbJavaDocMove.setFocusable(false);
-        layout.add(myRbJavaDocMove);
-
-        ValueGroup<Boolean> bg = ValueGroup.createBool();
-        bg.add(myRbJavaDocAsIs);
-        bg.add(myRbJavaDocCopy);
-        bg.add(myRbJavaDocMove);
-
-        myRbJavaDocMove.setValue(true);
+        myPolicy.setValue(DocCommentPolicy.MOVE);
 
         myRootComponent = LabeledLayout.create(titleValue, layout);
     }
 
-    
+    @RequiredUIAccess
+    private void addButton(VerticalLayout layout, LocalizeValue text, int policy) {
+        RadioButton button = myPolicy.newButton(text, policy);
+        button.setFocusable(false);
+        layout.add(button);
+    }
+
     public Component getComponent() {
         return myRootComponent;
     }
 
     @RequiredUIAccess
     public void setPolicy(int javaDocPolicy) {
-        if (javaDocPolicy == DocCommentPolicy.COPY) {
-            myRbJavaDocCopy.setValue(true);
-        }
-        else if (javaDocPolicy == DocCommentPolicy.MOVE) {
-            myRbJavaDocMove.setValue(true);
-        }
-        else {
-            myRbJavaDocAsIs.setValue(true);
-        }
+        myPolicy.setValue(javaDocPolicy);
     }
 
     @RequiredUIAccess
     public int getPolicy() {
-        if (myRbJavaDocCopy != null && myRbJavaDocCopy.getValueOrError()) {
-            return DocCommentPolicy.COPY;
-        }
-        if (myRbJavaDocMove != null && myRbJavaDocMove.getValueOrError()) {
-            return DocCommentPolicy.MOVE;
-        }
-
-        return DocCommentPolicy.ASIS;
+        return myPolicy.getValueOrError();
     }
 }

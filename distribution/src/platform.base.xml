@@ -281,6 +281,7 @@
                 <include>com.ibm.icu:icu4j</include>
                 <include>com.github.weisj:jsvg</include>
                 <include>it.unimi.dsi:fastutil</include>
+                <include>com.dynatrace.hash4j:hash4j</include>
                 <include>ch.qos.logback:logback-core</include>
                 <include>com.google.protobuf:protobuf-javalite</include>
                 <include>org.jetbrains.runtime:jbr-api</include>

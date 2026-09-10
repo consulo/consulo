@@ -16,10 +16,13 @@
 
 package consulo.compiler.setting;
 
-import consulo.component.persist.PersistentStateComponent;
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.io.FileUtil;
+import consulo.util.xml.serializer.SerializationFilter;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 
@@ -31,11 +34,9 @@ import java.util.LinkedHashSet;
 /**
  * @author nik
  */
-public class ExcludedEntriesConfiguration implements PersistentStateComponent<ExcludedEntriesConfiguration>, Disposable {
-    private static final String FILE = "file";
-    private static final String DIRECTORY = "directory";
-    private static final String URL = "url";
-    private static final String INCLUDE_SUBDIRECTORIES = "includeSubdirectories";
+public class ExcludedEntriesConfiguration implements Disposable {
+    private static final SerializationFilter ourSerializationFilter = new SkipDefaultValuesSerializationFilters();
+
     private final Collection<ExcludeEntryDescription> myExcludeEntryDescriptions = new LinkedHashSet<>();
     private ExcludeEntryDescription[] myCachedDescriptions = null;
 
@@ -69,40 +70,6 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
         return myExcludeEntryDescriptions.contains(description);
     }
 
-    public void readExternal(Element node) {
-        for (Element element : node.getChildren()) {
-            String url = element.getAttributeValue(URL);
-            if (url == null) {
-                continue;
-            }
-            if (FILE.equals(element.getName())) {
-                ExcludeEntryDescription excludeEntryDescription = new ExcludeEntryDescription(url, false, true, this);
-                addExcludeEntryDescription(excludeEntryDescription);
-            }
-            if (DIRECTORY.equals(element.getName())) {
-                boolean includeSubdirectories = Boolean.parseBoolean(element.getAttributeValue(INCLUDE_SUBDIRECTORIES));
-                ExcludeEntryDescription excludeEntryDescription = new ExcludeEntryDescription(url, includeSubdirectories, false, this);
-                addExcludeEntryDescription(excludeEntryDescription);
-            }
-        }
-    }
-
-    public void writeExternal(Element element) {
-        for (ExcludeEntryDescription description : getExcludeEntryDescriptions()) {
-            if (description.isFile()) {
-                Element entry = new Element(FILE);
-                entry.setAttribute(URL, description.getUrl());
-                element.addContent(entry);
-            }
-            else {
-                Element entry = new Element(DIRECTORY);
-                entry.setAttribute(URL, description.getUrl());
-                entry.setAttribute(INCLUDE_SUBDIRECTORIES, Boolean.toString(description.isIncludeSubdirectories()));
-                element.addContent(entry);
-            }
-        }
-    }
-
     public boolean isExcluded(Path file) {
         String filePath = FileUtil.toSystemIndependentName(file.toString());
         for (ExcludeEntryDescription entryDescription : getExcludeEntryDescriptions()) {
@@ -130,6 +97,21 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
         return false;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #loadState(ExcludedEntriesConfigurationState)")
+    public void readExternal(Element node) {
+        ExcludedEntriesConfigurationState state = XmlSerializer.deserialize(node, ExcludedEntriesConfigurationState.class);
+        if (state != null) {
+            loadState(state);
+        }
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getState()")
+    public void writeExternal(Element element) {
+        XmlSerializer.serializeInto(getState(), element, ourSerializationFilter);
+    }
+
     @Override
     public void dispose() {
         for (ExcludeEntryDescription description : myExcludeEntryDescriptions) {
@@ -137,16 +119,37 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
         }
     }
 
-    @Override
-    public ExcludedEntriesConfiguration getState() {
-        return this;
+    public ExcludedEntriesConfigurationState getState() {
+        ExcludedEntriesConfigurationState state = new ExcludedEntriesConfigurationState();
+        for (ExcludeEntryDescription description : getExcludeEntryDescriptions()) {
+            if (description.isFile()) {
+                ExcludeEntryFileState fileState = new ExcludeEntryFileState();
+                fileState.url = description.getUrl();
+                state.files.add(fileState);
+            }
+            else {
+                ExcludeEntryDirectoryState directoryState = new ExcludeEntryDirectoryState();
+                directoryState.url = description.getUrl();
+                directoryState.includeSubdirectories = description.isIncludeSubdirectories();
+                state.directories.add(directoryState);
+            }
+        }
+        return state;
     }
 
-    @Override
-    public void loadState(ExcludedEntriesConfiguration state) {
-        for (ExcludeEntryDescription description : state.getExcludeEntryDescriptions()) {
-            addExcludeEntryDescription(description.copy(this));
+    public void loadState(ExcludedEntriesConfigurationState state) {
+        for (ExcludeEntryFileState fileState : state.files) {
+            if (fileState.url != null) {
+                addExcludeEntryDescription(new ExcludeEntryDescription(fileState.url, false, true, this));
+            }
         }
-        Disposer.dispose(state);
+
+        for (ExcludeEntryDirectoryState directoryState : state.directories) {
+            if (directoryState.url != null) {
+                addExcludeEntryDescription(
+                    new ExcludeEntryDescription(directoryState.url, directoryState.includeSubdirectories, false, this)
+                );
+            }
+        }
     }
 }

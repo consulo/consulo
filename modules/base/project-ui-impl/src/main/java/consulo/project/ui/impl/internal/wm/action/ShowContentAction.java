@@ -19,23 +19,22 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
-import org.jspecify.annotations.Nullable;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 @ActionImpl(id = "ShowContent")
-public class ShowContentAction extends LegacyDumbAwareAction {
+public class ShowContentAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     private ToolWindow myWindow;
 
     @Inject
@@ -51,15 +50,17 @@ public class ShowContentAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        ToolWindow window = getWindow(e);
-        e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
-        e.getPresentation().setText(
-            window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
-                ? ActionLocalize.actionShowcontentText()
-                : ActionLocalize.actionShowcontentViewsText()
-        );
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return UIAction.apply(i -> {
+            ToolWindow window = getWindow(e);
+            e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
+            e.getPresentation().setText(
+                window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
+                    ? ActionLocalize.actionShowcontentText()
+                    : ActionLocalize.actionShowcontentViewsText()
+            );
+            return null;
+        }).toCoroutine();
     }
 
     @Override

@@ -27,6 +27,7 @@ import consulo.ui.SelectionMode;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.model.FlatDataModel;
@@ -56,6 +57,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     }
 
     private final FlatDataModel<Item> myModel;
+    private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
     private final List<WebTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
     private @Nullable Function<Item, Length> myItemHeightGetter;
@@ -104,6 +106,20 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     @Override
     public FlatDataModel<Item> getDataModel() {
         return myModel;
+    }
+
+    @Override
+    public void setRowBackgroundGetter(@Nullable Function<Item, ColorValue> getter) {
+        myRowBackgroundGetter = getter;
+    }
+
+    /**
+     * Read by the columns while they render - the band is one rule over the row, not a copy per column.
+     */
+    @Nullable
+    ColorValue getRowBackground(Item item) {
+        Function<Item, ColorValue> getter = myRowBackgroundGetter;
+        return getter == null ? null : getter.apply(item);
     }
 
     @Override

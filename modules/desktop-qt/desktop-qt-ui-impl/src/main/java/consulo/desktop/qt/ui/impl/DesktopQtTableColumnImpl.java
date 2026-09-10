@@ -20,6 +20,7 @@ import consulo.ui.ComponentItemRender;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.TableColumn;
 import consulo.ui.TableItemEditor;
+import consulo.ui.TableItemRender;
 import consulo.ui.TextItemRender;
 import org.jspecify.annotations.Nullable;
 
@@ -36,7 +37,7 @@ public class DesktopQtTableColumnImpl<Item, Value> implements TableColumn<Item, 
     private final int myIndex;
 
     private LocalizeValue myHeader;
-    private TextItemRender<Value> myTextRender = TextItemRender.defaultRender();
+    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
     private @Nullable ComponentItemRender<Value> myComponentRender;
     private @Nullable Comparator<Value> myComparator;
     private @Nullable TableItemEditor<Item, Value> myEditor;
@@ -64,8 +65,8 @@ public class DesktopQtTableColumnImpl<Item, Value> implements TableColumn<Item, 
         return myValueProvider;
     }
 
-    public TextItemRender<Value> getTextRender() {
-        return myTextRender;
+    public TableItemRender<Item, Value> getRender() {
+        return myRender;
     }
 
     public @Nullable ComponentItemRender<Value> getComponentRender() {
@@ -100,8 +101,16 @@ public class DesktopQtTableColumnImpl<Item, Value> implements TableColumn<Item, 
     }
 
     @Override
+    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
+        myRender = render;
+        myComponentRender = null;
+        myTable.updateRows();
+        return this;
+    }
+
+    @Override
     public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myTextRender = render;
+        myRender = TableItemRender.of(render);
         myComponentRender = null;
         myTable.updateRows();
         return this;

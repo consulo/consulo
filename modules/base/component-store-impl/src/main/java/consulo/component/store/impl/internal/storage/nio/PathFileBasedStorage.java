@@ -66,7 +66,9 @@ import java.util.List;
 public class PathFileBasedStorage extends XmlElementStorage implements FileBasedStorage {
     private final boolean myUseXmlProlog;
     private final boolean myCollectVfsEvents;
-    private final Path myFile;
+    private final Path myXmlFile;
+    private final Path myJsonFile;
+    private volatile Path myFile;
     private LineSeparator myLineSeparator;
     private volatile VirtualFile myCachedVirtualFile;
 
@@ -87,11 +89,20 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
 
         myUseXmlProlog = useXmlProlog;
         myCollectVfsEvents = collectVfsEvents;
-        myFile = Path.of(filePath);
+        myXmlFile = Path.of(filePath + StorageFormat.XML_EXTENSION);
+        myJsonFile = Path.of(filePath + StorageFormat.JSON_EXTENSION);
+        myFile = Files.exists(myJsonFile) ? myJsonFile : myXmlFile;
 
         if (myCollectVfsEvents && listener != null) {
             VirtualFileTracker virtualFileTracker = Application.get().getInstance(VirtualFileTracker.class);
-            String url = LocalFileSystem.PROTOCOL_PREFIX + myFile.toAbsolutePath().toString().replace(File.separatorChar, '/');
+            registerTracker(virtualFileTracker, myXmlFile, listener, parentDisposable);
+            registerTracker(virtualFileTracker, myJsonFile, listener, parentDisposable);
+        }
+    }
+
+    private void registerTracker(VirtualFileTracker virtualFileTracker, Path path, StateStorageListener listener, Disposable parentDisposable) {
+        {
+            String url = LocalFileSystem.PROTOCOL_PREFIX + path.toAbsolutePath().toString().replace(File.separatorChar, '/');
             virtualFileTracker.addTracker(url, new VirtualFileListener() {
                 @Override
                 public void fileMoved(VirtualFileMoveEvent event) {
@@ -114,6 +125,11 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
                 }
             }, false, parentDisposable);
         }
+    }
+
+    @Override
+    protected boolean isJsonSupported() {
+        return true;
     }
 
     protected boolean isUseXmlProlog() {
@@ -161,20 +177,43 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
                 LOG.error(e);
             }
 
-            VirtualFile file = getVirtualFile();
+            writeContent(myXmlFile, content, isUseXmlProlog() ? myLineSeparator : null, events);
+
+            if (content != null) {
+                writeContent(myJsonFile, null, null, events);
+            }
+        }
+
+        @Override
+        protected void doSaveJson(byte[] content, @Nullable List<VFileEvent> events) throws IOException {
+            writeContent(myJsonFile, content, null, events);
+
+            writeContent(myXmlFile, null, null, events);
+        }
+
+        private void writeContent(Path target, @Nullable byte[] content, @Nullable LineSeparator prolog, @Nullable List<VFileEvent> events)
+            throws IOException {
+            if (content == null && !Files.exists(target)) {
+                return;
+            }
+
+            VirtualFile file = myCollectVfsEvents ? LocalFileSystem.getInstance().findFileByNioFile(target) : null;
             long oldModificationStamp = file == null ? -1 : file.getModificationStamp();
             long oldTimestamp = file == null ? -1 : file.getTimeStamp();
             long oldLength = file == null ? -1 : file.getLength();
 
             if (content == null) {
-                Files.deleteIfExists(myFile);
+                Files.deleteIfExists(target);
             }
             else {
-                if (!Files.exists(myFile)) {
-                    Files.createDirectories(myFile.getParent());
+                if (!Files.exists(target)) {
+                    Files.createDirectories(target.getParent());
                 }
 
-                PathStorageUtil.writeFile(myFile, content, isUseXmlProlog() ? myLineSeparator : null);
+                PathStorageUtil.writeFile(target, content, prolog);
+
+                myFile = target;
+                myCachedVirtualFile = null;
             }
 
             if (!myCollectVfsEvents || file == null || !file.isValid()) {
@@ -192,7 +231,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
 
             // Keep the VFS in sync via an explicit save-tagged content-change event with the real on-disk timestamp/length,
             // so that a later filesystem refresh observes no diff and does not report an external change.
-            File io = myFile.toFile();
+            File io = target.toFile();
             long newTimestamp = io.lastModified();
             long newLength = io.length();
             collect(events, new VFileContentChangeEvent(this, file, oldModificationStamp, -1, oldTimestamp, newTimestamp, oldLength, newLength, false));
@@ -226,18 +265,37 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     }
 
     @Override
+    protected @Nullable byte[] loadLocalJsonData() {
+        try {
+            if (!Files.exists(myJsonFile)) {
+                return null;
+            }
+
+            myFile = myJsonFile;
+            myBlockSavingTheContent = false;
+            return Files.readAllBytes(myJsonFile);
+        }
+        catch (IOException e) {
+            processReadException(e);
+            return null;
+        }
+    }
+
+    @Override
     protected @Nullable Element loadLocalData() {
         myBlockSavingTheContent = false;
         try {
-            if (!Files.exists(myFile)) {
+            if (!Files.exists(myXmlFile)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Document was not loaded for " + myFileSpec + " file not exists ");
                 }
                 return null;
             }
 
+            myFile = myXmlFile;
+
             Element element;
-            try (DetectingSeparatorReader reader = new DetectingSeparatorReader(Files.newBufferedReader(myFile, StandardCharsets.UTF_8))) {
+            try (DetectingSeparatorReader reader = new DetectingSeparatorReader(Files.newBufferedReader(myXmlFile, StandardCharsets.UTF_8))) {
                 element = JDOMUtil.loadDocument(reader).getRootElement();
 
                 LineSeparator defaultSeparator = isUseLfLineSeparatorByDefault() ? Platform.current().os().lineSeparator() : LineSeparator.LF;

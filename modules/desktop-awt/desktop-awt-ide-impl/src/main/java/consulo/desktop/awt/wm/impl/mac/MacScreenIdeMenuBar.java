@@ -29,7 +29,6 @@ import consulo.desktop.awt.wm.impl.IdeMenuBar;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.internal.ActionTicker;
@@ -146,11 +145,13 @@ public final class MacScreenIdeMenuBar implements IdeMenuBar {
     }
 
     private CompletableFuture<List<AnAction>> expandMainActionGroupAsync(DataContext context) {
-        ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
-        if (mainActionGroup == null) {
-            return CompletableFuture.completedFuture(new ArrayList<>());
-        }
+        return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_MENU)
+            .thenCompose(mainActionGroup -> mainActionGroup == null
+                ? CompletableFuture.completedFuture(new ArrayList<>())
+                : doExpandMainActionGroupAsync(mainActionGroup, context));
+    }
 
+    private CompletableFuture<List<AnAction>> doExpandMainActionGroupAsync(ActionGroup mainActionGroup, DataContext context) {
         AnAction[] children = mainActionGroup.getChildren(null, myActionManager);
         List<AnAction> groups = new ArrayList<>();
         List<AnActionEvent> events = new ArrayList<>();

@@ -36,7 +36,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.TargetElementUtil;
@@ -93,6 +92,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -958,21 +958,36 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         myGutterContextLine = line;
 
         WebActionContextMenu popupMenu = myPopupMenu;
-        if (popupMenu != null) {
-            popupMenu.setOverrideGroup(line < 0 ? null : gutterPopupGroup(markId, line, annotationColumn));
+        if (popupMenu == null) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture<@Nullable ActionGroup> group = line < 0
+            ? CompletableFuture.completedFuture(null)
+            : gutterPopupGroupAsync(markId, line, annotationColumn);
+
+        group.whenComplete((actionGroup, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the gutter popup group", throwable);
+                return;
+            }
+            uiAccess.giveIfNeed(() -> {
+            popupMenu.setOverrideGroup(actionGroup);
 
             // the items are expanded off the pointer entering the target, which by the time a right click lands has
             // long since happened - so the group that just changed is expanded from here instead
             popupMenu.refresh();
-        }
+        });
+        });
     }
 
-    private @Nullable ActionGroup gutterPopupGroup(int markId, int line, int annotationColumn) {
+    private CompletableFuture<@Nullable ActionGroup> gutterPopupGroupAsync(int markId, int line, int annotationColumn) {
         List<TextAnnotationGutterProvider> providers = myGutterComponent.getTextAnnotations();
         if (annotationColumn >= 0 && annotationColumn < providers.size()) {
             List<AnAction> actions = providers.get(annotationColumn).getPopupActions(line, this);
             if (!actions.isEmpty()) {
-                return ActionGroup.newImmutableBuilder().addAll(actions).build();
+                return CompletableFuture.completedFuture(ActionGroup.newImmutableBuilder().addAll(actions).build());
             }
         }
 
@@ -980,12 +995,11 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             && myGutterMarks.get(markId) instanceof GutterIconRenderer renderer) {
             ActionGroup renderetGroup = renderer.getPopupMenuActions();
             if (renderetGroup != null) {
-                return renderetGroup;
+                return CompletableFuture.completedFuture(renderetGroup);
             }
         }
 
-        return CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER)
-            instanceof ActionGroup group ? group : null;
+        return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_EDITOR_GUTTER);
     }
 
     // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system

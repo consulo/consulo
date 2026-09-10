@@ -16,6 +16,7 @@
 package consulo.module.content.internal;
 
 import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.content.ContentIterator;
 import consulo.content.FileIndex;
 import consulo.module.Module;
@@ -30,6 +31,10 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author nik
@@ -85,5 +90,50 @@ public abstract class FileIndexBase implements FileIndex {
   
   protected static VirtualFile[][] getModuleContentAndSourceRoots(Module module) {
     return new VirtualFile[][]{ModuleRootManager.getInstance(module).getContentRoots(), ModuleRootManager.getInstance(module).getSourceRoots()};
+  }
+
+  /**
+   * Returns the roots the given module contributes to a content walk: its content roots, plus every source root whose
+   * parent is not itself in content. The latter is what keeps a source root nested under an excluded folder reachable,
+   * since a walk seeded only from content roots is pruned at the excluded folder above it.
+   */
+  public Set<VirtualFile> getRootsToIterate(Module module) {
+    Set<VirtualFile> result = new LinkedHashSet<>();
+    AccessRule.read(() -> {
+      if (module.isDisposed()) {
+        return;
+      }
+
+      for (VirtualFile[] roots : getModuleContentAndSourceRoots(module)) {
+        for (VirtualFile root : roots) {
+          DirectoryInfo info = getInfoForFileOrDirectory(root);
+          if (!info.isInProject(root)) {
+            continue; // is excluded or ignored
+          }
+          if (!isRootOwnedByModule(module, info)) {
+            continue; // maybe 2 modules have the same content root?
+          }
+
+          VirtualFile parent = root.getParent();
+          if (parent != null && isParentAlreadyIterated(module, parent, getInfoForFileOrDirectory(parent))) {
+            continue;
+          }
+          result.add(root);
+        }
+      }
+    });
+    return result;
+  }
+
+  protected boolean isRootOwnedByModule(Module module, DirectoryInfo info) {
+    return module.equals(info.getModule());
+  }
+
+  protected boolean isParentAlreadyIterated(Module module, VirtualFile parent, DirectoryInfo parentInfo) {
+    return isFileInContent(parent, parentInfo);
+  }
+
+  public static boolean isFileInContent(VirtualFile fileOrDir, DirectoryInfo info) {
+    return info.isInProject(fileOrDir) && info.getContentRoot() != null;
   }
 }

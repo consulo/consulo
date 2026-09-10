@@ -23,7 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.creation.importing.ModuleImportContext;
 import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.project.Project;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -115,7 +115,9 @@ public class ModuleImportProcessor {
         File ioFile = VirtualFileUtil.virtualToIoFile(file);
         List<ModuleImportProvider> availableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
         if (availableProviders.isEmpty()) {
-            Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").showAsync();
+            MessageBoxes.okError(
+                LocalizeValue.localizeTODO("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'")
+            ).showAsync();
             result.completeExceptionally(new CancellationException());
             return;
         }

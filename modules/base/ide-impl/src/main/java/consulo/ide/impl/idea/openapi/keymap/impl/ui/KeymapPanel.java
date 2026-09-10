@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.logging.Logger;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -37,8 +38,10 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
 import consulo.ui.Button;
 import consulo.ui.CheckBox;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.TreeExpander;
@@ -81,6 +84,8 @@ import java.util.List;
 
 @ExtensionImpl
 public class KeymapPanel implements SearchableConfigurable, Configurable.NoScroll, KeymapListener, ApplicationConfigurable {
+    private static final Logger LOG = Logger.getInstance(KeymapPanel.class);
+
     @RequiredUIAccess
     private final PropertyChangeListener myAncestor;
 
@@ -672,7 +677,22 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             return;
         }
 
-        KeyboardShortcutDialog dialog = new KeyboardShortcutDialog(myRootPanel, actionId, getCurrentQuickListIds());
+        UIAccess uiAccess = UIAccess.current();
+        Project project = DataManager.getInstance().getDataContext(myRootPanel).getData(Project.KEY);
+        //without current filter
+        ActionsTreeUtil.createMainGroupAsync(project, mySelectedKeymap, getCurrentQuickListIds(), null, false, null)
+            .whenComplete((mainGroup, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to build the action tree", throwable);
+                    return;
+                }
+                uiAccess.giveIfNeed(() -> addKeyboardShortcut(shortcut, actionId, mainGroup));
+            });
+    }
+
+    @RequiredUIAccess
+    private void addKeyboardShortcut(Shortcut shortcut, String actionId, KeymapGroupImpl mainGroup) {
+        KeyboardShortcutDialog dialog = new KeyboardShortcutDialog(myRootPanel, actionId, mainGroup);
         KeyboardShortcut selectedKeyboardShortcut = shortcut instanceof KeyboardShortcut keyboardShortcut ? keyboardShortcut : null;
 
         dialog.setData(mySelectedKeymap, selectedKeyboardShortcut);
@@ -743,8 +763,22 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             return;
         }
 
+        UIAccess uiAccess = UIAccess.current();
+        Project project = DataManager.getInstance().getDataContext(myRootPanel).getData(Project.KEY);
+        ActionsTreeUtil.createMainGroupAsync(project, mySelectedKeymap, myQuickLists, null, false, null)
+            .whenComplete((mainGroup, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to build the action tree", throwable);
+                    return;
+                }
+                uiAccess.giveIfNeed(() -> addMouseShortcut(restrictions, actionId, mainGroup));
+            });
+    }
+
+    @RequiredUIAccess
+    private void addMouseShortcut(ShortcutRestrictions restrictions, String actionId, KeymapGroupImpl mainGroup) {
         MouseShortcutDialog dialog = new MouseShortcutDialog(myRootPanel, restrictions.allowMouseDoubleClick);
-        MouseShortcut mouseShortcut = dialog.showAndGet(actionId, mySelectedKeymap, myQuickLists);
+        MouseShortcut mouseShortcut = dialog.showAndGet(actionId, mySelectedKeymap, mainGroup);
         if (mouseShortcut == null) {
             return;
         }

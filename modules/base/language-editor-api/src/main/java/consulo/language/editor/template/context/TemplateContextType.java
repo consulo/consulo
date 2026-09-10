@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template.context;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.EditorFactory;
@@ -36,12 +37,12 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateContextType {
+    @Deprecated
+    @DeprecationInfo("Use Application.get().getExtensionPoint(TemplateContextType.class)")
     public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create(TemplateContextType.class);
 
-    
     LocalizeValue getPresentableName();
 
-    
     String getContextId();
 
     default boolean isInContext(TemplateActionContext templateActionContext) {

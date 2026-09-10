@@ -108,7 +108,7 @@ public final class ModuleAwareIndexMetaRecorder {
 
         OptionsMeta stored = ModuleAwareIndexMetaStorage.getInstance().get(indexId, fileId);
         if (stored == null) {
-            if (IndexingStamp.isFileIndexedStateCurrent(fileId, indexId)) {
+            if (IndexingStamp.isFileIndexedStateCurrent(fileId, indexId).isUpToDate()) {
                 return true;
             }
             ourReindexRequested.remove(fileId);

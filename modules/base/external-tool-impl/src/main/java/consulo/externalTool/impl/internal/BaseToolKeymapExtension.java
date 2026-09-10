@@ -28,6 +28,7 @@ import consulo.util.lang.StringUtil;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -41,7 +42,7 @@ public abstract class BaseToolKeymapExtension implements KeymapExtension {
     }
 
     @Override
-    public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
+    public CompletableFuture<KeymapGroup> createGroupAsync(Predicate<AnAction> filtered, ComponentManager project) {
         ActionManager actionManager = ActionManager.getInstance();
         String[] ids = actionManager.getActionIds(getActionIdPrefix());
         Arrays.sort(ids);
@@ -72,7 +73,7 @@ public abstract class BaseToolKeymapExtension implements KeymapExtension {
             group.addAll(subGroup);
         }
 
-        return group;
+        return CompletableFuture.completedFuture(group);
     }
 
     protected abstract String getActionIdPrefix();

@@ -35,7 +35,6 @@ import java.util.Set;
 public class LightLocalizationManager extends LocalizeManager {
     private Locale myLocale = Locale.US;
 
-    
     @Override
     public LocalizeValue fromStringKey(String localizeKeyInfo) {
         List<String> values = StringUtil.split(localizeKeyInfo, "@");
@@ -47,13 +46,16 @@ public class LightLocalizationManager extends LocalizeManager {
         return localizeKey.getValue();
     }
 
-    
+    @Override
+    public LocalizeValue fromException(Throwable t) {
+        return LocalizeValue.of(t.toString());
+    }
+
     @Override
     public Map.Entry<Locale, String> getUnformattedText(LocalizeKey key) {
         return Map.entry(myLocale, "[" + key.toString() + "]");
     }
 
-    
     @Override
     public Locale parseLocale(String localeText) {
         throw new UnsupportedOperationException();
@@ -64,13 +66,11 @@ public class LightLocalizationManager extends LocalizeManager {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public Locale getLocale() {
         return myLocale;
     }
 
-    
     @Override
     public Locale getAutoDetectedLocale() {
         return myLocale;
@@ -81,9 +81,8 @@ public class LightLocalizationManager extends LocalizeManager {
         return true;
     }
 
-    
     @Override
-    public Set<Locale> getAvaliableLocales() {
+    public Set<Locale> getAvailableLocales() {
         return Set.of(myLocale);
     }
 
@@ -97,7 +96,6 @@ public class LightLocalizationManager extends LocalizeManager {
         return 1;
     }
 
-    
     @Override
     public String formatText(String unformattedText, Locale locale, Object[] args) {
         if (args.length == 0) {
@@ -112,11 +110,7 @@ public class LightLocalizationManager extends LocalizeManager {
             }
 
             Object arg = args[i];
-            if (arg instanceof LocalizeValue localizeValue) {
-                builder.append(localizeValue.get());
-            } else {
-                builder.append(String.valueOf(arg));
-            }
+            builder.append(arg instanceof LocalizeValue lv ? lv.get() : String.valueOf(arg));
         }
         builder.append(")");
         return builder.toString();

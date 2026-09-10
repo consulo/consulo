@@ -26,11 +26,17 @@ final class CtxEditors {
 
         ourEditors = new WeakHashMap<>();
 
-        ourEditorSearchActions = ActionsLoader.getActionGroup("EditorSearch");
-        if (ourEditorSearchActions == null) {
-            Logger.getInstance(CtxEditors.class).debug("null action group for editor-search");
-            return;
-        }
+        ActionsLoader.getActionGroupAsync("EditorSearch").whenComplete((actions, throwable) -> {
+            Logger log = Logger.getInstance(CtxEditors.class);
+            if (throwable != null) {
+                log.error("Failed to resolve the editor search touchbar actions", throwable);
+                return;
+            }
+            ourEditorSearchActions = actions;
+            if (actions == null) {
+                log.debug("null action group for editor-search");
+            }
+        });
 
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
             @Override

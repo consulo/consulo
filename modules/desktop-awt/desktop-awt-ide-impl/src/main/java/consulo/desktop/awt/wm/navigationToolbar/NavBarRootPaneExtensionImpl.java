@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.navigationToolbar;
 
+import consulo.logging.Logger;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.navbar.ui.NavBarUIController;
@@ -23,13 +24,14 @@ import consulo.navigationBar.model.NavBarVm;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposer;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarBorder;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomisedActionGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.NavBarRootPaneExtension;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
@@ -43,6 +45,7 @@ import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author anna
@@ -51,11 +54,13 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, IdeRootPaneNorthExtensionWithDecorator {
+    private static final Logger LOG = Logger.getInstance(NavBarRootPaneExtensionImpl.class);
+
     private JComponent myWrapperPanel;
     private Project myProject;
     private StaticNavBarPanel myNavigationBar;
     private JPanel myRunPanel;
-    private final boolean myNavToolbarGroupExist;
+    private volatile boolean myNavToolbarGroupExist;
     private JScrollPane myScrollPane;
 
     private TitlelessDecorator myTitlelessDecorator = TitlelessDecorator.NOTHING;
@@ -68,7 +73,13 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
 
         myProject.getMessageBus().connect().subscribe(UISettingsListener.class, uiSettings -> toggleRunPanel(!uiSettings.getShowMainToolbar() && uiSettings.getShowNavigationBar() && !uiSettings.getPresentationMode()));
 
-        myNavToolbarGroupExist = runToolbarExists();
+        runToolbarExistsAsync().whenComplete((exists, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the navigation bar toolbar group", throwable);
+                return;
+            }
+            myNavToolbarGroupExist = exists;
+        });
 
         Disposer.register(myProject, this);
     }
@@ -106,10 +117,23 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
         return !UISettings.getInstance().getPresentationMode() && (UISettings.getInstance().getShowMainToolbar() || !myNavToolbarGroupExist);
     }
 
+    /**
+     * Last known answer of {@link #runToolbarExistsAsync()}. The border of the bar is measured while swing paints
+     * and cannot wait for the schema, so it reads what the last resolution left here.
+     */
+    private static volatile boolean ourRunToolbarExists;
+
     public static boolean runToolbarExists() {
-        AnAction correctedAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
-        return correctedAction instanceof DefaultActionGroup && ((DefaultActionGroup) correctedAction).getChildrenCount() > 0 ||
-            correctedAction instanceof CustomisedActionGroup && ((CustomisedActionGroup) correctedAction).getFirstAction() != null;
+        return ourRunToolbarExists;
+    }
+
+    public static CompletableFuture<Boolean> runToolbarExistsAsync() {
+        return CustomActionsSchema.getCorrectedActionAsync("NavBarToolBar").thenApply(correctedAction -> {
+            boolean exists = correctedAction instanceof DefaultActionGroup defaultGroup && defaultGroup.getChildrenCount() > 0
+                || correctedAction instanceof CustomisedActionGroup customisedGroup && customisedGroup.getFirstAction() != null;
+            ourRunToolbarExists = exists;
+            return exists;
+        });
     }
 
     @Override
@@ -151,9 +175,23 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     }
 
     private void toggleRunPanel(boolean show) {
-        if (show && myRunPanel == null && runToolbarExists()) {
+        UIAccess uiAccess = UIAccess.current();
+        runToolbarExistsAsync().thenCompose(exists -> exists
+                ? CustomActionsSchema.getCorrectedActionAsync("NavBarToolBar")
+                : CompletableFuture.completedFuture(null))
+            .whenComplete((toolbarRunGroup, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to resolve the navigation bar toolbar group", throwable);
+                    return;
+                }
+                uiAccess.giveIfNeed(() -> doToggleRunPanel(show, toolbarRunGroup));
+            });
+    }
+
+    @RequiredUIAccess
+    private void doToggleRunPanel(boolean show, @Nullable AnAction toolbarRunGroup) {
+        if (show && myRunPanel == null && toolbarRunGroup != null) {
             ActionManager manager = ActionManager.getInstance();
-            AnAction toolbarRunGroup = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
             if (toolbarRunGroup instanceof ActionGroup) {
                 boolean needGap = isNeedGap(toolbarRunGroup);
                 ActionToolbar actionToolbar = manager.createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, (ActionGroup) toolbarRunGroup, true);

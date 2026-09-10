@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author anna
@@ -79,6 +81,8 @@ public class KeymapGroupImpl implements KeymapGroup {
         
         private Predicate<AnAction> myFilter = action -> true;
 
+        private CompletableFuture<?> myChain = CompletableFuture.completedFuture(null);
+
         public CreatingBuilderImpl(
             KeymapGroupFactory keymapGroupFactory,
             ActionManager actionManager,
@@ -104,29 +108,53 @@ public class KeymapGroupImpl implements KeymapGroup {
         
         @Override
         public CreatingBuilder addGroup(String groupId, boolean forceNonPopup) {
-            for (AnAction action : getActions(groupId)) {
-                addAction(action, forceNonPopup);
-            }
+            append(() -> getActionsAsync((ActionGroup) myActionManager.getActionOrStub(groupId))
+                .thenCompose(actions -> addActionsAsync(actions, forceNonPopup)));
             return this;
         }
 
         
         @Override
         public CreatingBuilder addAction(AnAction action, boolean forceNonPopup) {
+            append(() -> addActionAsync(action, forceNonPopup));
+            return this;
+        }
+
+        
+        @Override
+        public CompletableFuture<KeymapGroup> build() {
+            return myChain.thenApply(ignored -> {
+                myKeymapGroup.normalizeSeparators();
+                return myKeymapGroup;
+            });
+        }
+
+        private void append(Supplier<CompletableFuture<?>> stage) {
+            myChain = myChain.thenCompose(ignored -> stage.get());
+        }
+
+        private CompletableFuture<?> addActionsAsync(List<AnAction> actions, boolean forceNonPopup) {
+            CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
+            for (AnAction action : actions) {
+                chain = chain.thenCompose(ignored -> addActionAsync(action, forceNonPopup));
+            }
+            return chain;
+        }
+
+        private CompletableFuture<?> addActionAsync(AnAction action, boolean forceNonPopup) {
             if (action instanceof ActionGroup group) {
                 if (forceNonPopup) {
-                    for (AnAction childAction : getActions(group)) {
-                        addAction(childAction, true);
-                    }
+                    return getActionsAsync(group).thenCompose(actions -> addActionsAsync(actions, true));
                 }
-                else {
-                    KeymapGroup subGroup = KeymapUtil.createGroup(group, false, myFilter);
+
+                return KeymapUtil.createGroupAsync(group, false, myFilter).thenAccept(subGroup -> {
                     if (subGroup.getSize() > 0) {
                         myKeymapGroup.addGroup(subGroup);
                     }
-                }
+                });
             }
-            else if (action instanceof AnSeparator) {
+
+            if (action instanceof AnSeparator) {
                 myKeymapGroup.addSeparator();
             }
             else if (myFilter.test(action)) {
@@ -135,24 +163,11 @@ public class KeymapGroupImpl implements KeymapGroup {
                     : ActionManager.getInstance().getId(action);
                 myKeymapGroup.addActionId(id);
             }
-            return this;
+            return CompletableFuture.completedFuture(null);
         }
 
-        
-        @Override
-        public KeymapGroup build() {
-            myKeymapGroup.normalizeSeparators();
-            return myKeymapGroup;
-        }
-
-        private AnAction[] getActions(String groupId) {
-            return getActions((ActionGroup) myActionManager.getActionOrStub(groupId));
-        }
-
-        private static AnAction[] getActions(ActionGroup group) {
-            return group instanceof DefaultActionGroup defaultActionGroup
-                ? defaultActionGroup.getChildActionsOrStubs()
-                : group.getChildren(null);
+        private static CompletableFuture<List<AnAction>> getActionsAsync(ActionGroup group) {
+            return KeymapUtil.getChildrenAsync(group);
         }
     }
 

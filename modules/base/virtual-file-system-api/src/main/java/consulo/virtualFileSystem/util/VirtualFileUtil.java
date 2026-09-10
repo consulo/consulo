@@ -17,6 +17,7 @@ package consulo.virtualFileSystem.util;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.WriteAction;
+import consulo.application.progress.ProgressManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,6 +32,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jspecify.annotations.Nullable;
 
@@ -42,6 +44,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -681,6 +684,7 @@ public final class VirtualFileUtil {
 
     @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
     public static VirtualFileVisitor.Result visitChildrenRecursively(VirtualFile file, VirtualFileVisitor<?> visitor) throws VirtualFileVisitor.VisitorException {
+        ProgressManager.checkCanceled();
         boolean pushed = false;
         try {
             boolean visited = visitor.allowVisitFile(file);
@@ -1115,5 +1119,16 @@ public final class VirtualFileUtil {
         return rawFileLoader.isTooLarge(file.getLength())
             ? FileUtil.loadFirstAndClose(file.getInputStream(), rawFileLoader.getLargeFilePreviewSize())
             : file.contentsToByteArray();
+    }
+
+    /**
+     * An experimental refresh-and-find routine that doesn't require a write-lock (and hence EDT).
+     */
+    public static void refreshAndFindFileByPath(
+        NewVirtualFileSystem vfs,
+        String path,
+        Consumer<? super @Nullable NewVirtualFile> consumer
+    ) {
+        VfsImplUtil.refreshAndFindFileByPath(vfs, path, consumer);
     }
 }

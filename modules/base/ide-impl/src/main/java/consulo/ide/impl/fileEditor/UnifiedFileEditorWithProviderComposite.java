@@ -22,8 +22,8 @@ import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -71,8 +71,8 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
           "File editor " + editor.getClass().getName() + " of " + file.getPath() + " has no unified component");
       }
 
-      myTopLayouts[i] = VerticalLayout.create(0);
-      myComponents[i] = DockLayout.create(0).top(myTopLayouts[i]).center(component);
+      myTopLayouts[i] = VerticalLayout.create(Space.NONE);
+      myComponents[i] = DockLayout.create(Space.NONE).top(myTopLayouts[i]).center(component);
     }
   }
 
@@ -134,7 +134,7 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
 
     VerticalLayout topLayout = myTopLayouts[index];
     Component uiComponent = component.getUIComponent();
-    uiComponent.addBorder(BorderPosition.BOTTOM);
+    uiComponent.borderBuilder().bottomSet().apply();
     topLayout.add(uiComponent);
     return () -> topLayout.remove(uiComponent);
   }

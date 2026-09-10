@@ -43,6 +43,14 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
         myLock = new ReadMostlyRWLock(null);
     }
 
+    /**
+     * The issues recorded so far, left in place so that {@link #takeThreadIssues()} at the end of the test still
+     * fails it: for a diagnostic printed while the test is running.
+     */
+    public static List<ThreadIssueException> peekThreadIssues() {
+        return List.copyOf(ourThreadIssues);
+    }
+
     @Override
     public int getProfiles() {
         return super.getProfiles() | ComponentProfiles.INTEGRATION_TEST;

@@ -40,6 +40,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
@@ -60,7 +61,10 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
     }
 
     @Override
-    public Coroutine<?, List<AnAction>> getChildrenAsync(AnActionEvent e) {
+    public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return Coroutine.first(CodeExecution.<Object, List<AnAction>>supply(() -> List.of()));
+        }
         return ActionSafeReadLock.apply(e, presentation -> List.of(getChildren(e.getDataContext())))
             .toCoroutine();
     }

@@ -23,242 +23,209 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.diff.DiffPlaces;
+import consulo.diff.impl.internal.util.HighlightingLevel;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.HighlightPolicy;
-import consulo.diff.impl.internal.util.HighlightingLevel;
 import consulo.diff.internal.IgnorePolicy;
 import consulo.util.dataholder.Key;
-import consulo.util.xml.serializer.annotation.MapAnnotation;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 @Singleton
-@State(name = "TextDiffSettings", storages = @Storage(file = DiffImplUtil.DIFF_CONFIG))
+@State(name = "TextDiffSettings", storages = @Storage(DiffImplUtil.DIFF_CONFIG))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiffSettingsHolder.State> {
-  public static final Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
+public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiffSettingsHolderState> {
+    public static final Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
 
-  public static final int[] CONTEXT_RANGE_MODES = {1, 2, 4, 8, -1};
-  public static final String[] CONTEXT_RANGE_MODE_LABELS = {"1", "2", "4", "8", "Disable"};
+    public static final int[] CONTEXT_RANGE_MODES = {1, 2, 4, 8, -1};
+    public static final String[] CONTEXT_RANGE_MODE_LABELS = {"1", "2", "4", "8", "Disable"};
 
-  private final static class SharedSettings {
-    // Fragments settings
-    public int CONTEXT_RANGE = 4;
+    public static class TextDiffSettings {
+        public static Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
 
-    public boolean MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES = false;
-  }
+        public TextDiffSharedSettings SHARED_SETTINGS = new TextDiffSharedSettings();
 
-  private static class PlaceSettings {
-    // Diff settings
-    public HighlightPolicy HIGHLIGHT_POLICY = HighlightPolicy.BY_WORD;
-    public IgnorePolicy IGNORE_POLICY = IgnorePolicy.DEFAULT;
+        public TextDiffPlaceSettings PLACE_SETTINGS = new TextDiffPlaceSettings();
 
-    // Presentation settings
-    public boolean ENABLE_SYNC_SCROLL = true;
+        public TextDiffSettings() {
+        }
 
-    // Editor settings
-    public boolean SHOW_WHITESPACES = false;
-    public boolean SHOW_LINE_NUMBERS = true;
-    public boolean SHOW_INDENT_LINES = false;
-    public boolean USE_SOFT_WRAPS = false;
-    public HighlightingLevel HIGHLIGHTING_LEVEL = HighlightingLevel.INSPECTIONS;
-    public boolean READ_ONLY_LOCK = true;
+        public TextDiffSettings(TextDiffSharedSettings SHARED_SETTINGS, TextDiffPlaceSettings PLACE_SETTINGS) {
+            this.SHARED_SETTINGS = SHARED_SETTINGS;
+            this.PLACE_SETTINGS = PLACE_SETTINGS;
+        }
 
-    // Fragments settings
-    public boolean EXPAND_BY_DEFAULT = true;
-  }
+        // Presentation settings
 
-  public static class TextDiffSettings {
-    public static Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
-    
-    public SharedSettings SHARED_SETTINGS = new SharedSettings();
-    
-    public PlaceSettings PLACE_SETTINGS = new PlaceSettings();
+        public boolean isEnableSyncScroll() {
+            return PLACE_SETTINGS.ENABLE_SYNC_SCROLL;
+        }
 
-    public TextDiffSettings() {
+        public void setEnableSyncScroll(boolean value) {
+            PLACE_SETTINGS.ENABLE_SYNC_SCROLL = value;
+        }
+
+        // Diff settings
+
+
+        public HighlightPolicy getHighlightPolicy() {
+            return PLACE_SETTINGS.HIGHLIGHT_POLICY;
+        }
+
+        public void setHighlightPolicy(HighlightPolicy value) {
+            PLACE_SETTINGS.HIGHLIGHT_POLICY = value;
+        }
+
+
+        public IgnorePolicy getIgnorePolicy() {
+            return PLACE_SETTINGS.IGNORE_POLICY;
+        }
+
+        public void setIgnorePolicy(IgnorePolicy policy) {
+            PLACE_SETTINGS.IGNORE_POLICY = policy;
+        }
+
+        //
+        // Merge
+        //
+
+        public boolean isAutoApplyNonConflictedChanges() {
+            return SHARED_SETTINGS.MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES;
+        }
+
+        public void setAutoApplyNonConflictedChanges(boolean value) {
+            SHARED_SETTINGS.MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES = value;
+        }
+
+        // Editor settings
+
+        public boolean isShowLineNumbers() {
+            return PLACE_SETTINGS.SHOW_LINE_NUMBERS;
+        }
+
+        public void setShowLineNumbers(boolean state) {
+            PLACE_SETTINGS.SHOW_LINE_NUMBERS = state;
+        }
+
+        public boolean isShowWhitespaces() {
+            return PLACE_SETTINGS.SHOW_WHITESPACES;
+        }
+
+        public void setShowWhiteSpaces(boolean state) {
+            PLACE_SETTINGS.SHOW_WHITESPACES = state;
+        }
+
+        public boolean isShowIndentLines() {
+            return PLACE_SETTINGS.SHOW_INDENT_LINES;
+        }
+
+        public void setShowIndentLines(boolean state) {
+            PLACE_SETTINGS.SHOW_INDENT_LINES = state;
+        }
+
+        public boolean isUseSoftWraps() {
+            return PLACE_SETTINGS.USE_SOFT_WRAPS;
+        }
+
+        public void setUseSoftWraps(boolean state) {
+            PLACE_SETTINGS.USE_SOFT_WRAPS = state;
+        }
+
+
+        public HighlightingLevel getHighlightingLevel() {
+            return PLACE_SETTINGS.HIGHLIGHTING_LEVEL;
+        }
+
+        public void setHighlightingLevel(HighlightingLevel state) {
+            PLACE_SETTINGS.HIGHLIGHTING_LEVEL = state;
+        }
+
+        public int getContextRange() {
+            return SHARED_SETTINGS.CONTEXT_RANGE;
+        }
+
+        public void setContextRange(int value) {
+            SHARED_SETTINGS.CONTEXT_RANGE = value;
+        }
+
+        public boolean isExpandByDefault() {
+            return PLACE_SETTINGS.EXPAND_BY_DEFAULT;
+        }
+
+        public void setExpandByDefault(boolean value) {
+            PLACE_SETTINGS.EXPAND_BY_DEFAULT = value;
+        }
+
+        public boolean isReadOnlyLock() {
+            return PLACE_SETTINGS.READ_ONLY_LOCK;
+        }
+
+        public void setReadOnlyLock(boolean state) {
+            PLACE_SETTINGS.READ_ONLY_LOCK = state;
+        }
+
+        //
+        // Impl
+        //
+
+
+        public static TextDiffSettings getSettings() {
+            return getSettings(null);
+        }
+
+
+        public static TextDiffSettings getSettings(@Nullable String place) {
+            return getInstance().getSettings(place);
+        }
     }
 
-    public TextDiffSettings(SharedSettings SHARED_SETTINGS, PlaceSettings PLACE_SETTINGS) {
-      this.SHARED_SETTINGS = SHARED_SETTINGS;
-      this.PLACE_SETTINGS = PLACE_SETTINGS;
+
+    public TextDiffSettings getSettings(@Nullable String place) {
+        if (place == null) {
+            place = DiffPlaces.DEFAULT;
+        }
+
+        TextDiffPlaceSettings placeSettings = myState.PLACES_MAP.get(place);
+        if (placeSettings == null) {
+            placeSettings = new TextDiffPlaceSettings();
+            myState.PLACES_MAP.put(place, placeSettings);
+        }
+        return new TextDiffSettings(myState.SHARED_SETTINGS, placeSettings);
     }
 
-    // Presentation settings
+    private TextDiffSettingsHolderState myState = new TextDiffSettingsHolderState();
 
-    public boolean isEnableSyncScroll() {
-      return PLACE_SETTINGS.ENABLE_SYNC_SCROLL;
+
+    @Override
+    public TextDiffSettingsHolderState getState() {
+        return myState;
     }
 
-    public void setEnableSyncScroll(boolean value) {
-      PLACE_SETTINGS.ENABLE_SYNC_SCROLL = value;
+    @Override
+    public void loadState(TextDiffSettingsHolderState state) {
+        myState = state;
     }
 
-    // Diff settings
-
-    
-    public HighlightPolicy getHighlightPolicy() {
-      return PLACE_SETTINGS.HIGHLIGHT_POLICY;
+    public static TextDiffSettingsHolder getInstance() {
+        return Application.get().getInstance(TextDiffSettingsHolder.class);
     }
 
-    public void setHighlightPolicy(HighlightPolicy value) {
-      PLACE_SETTINGS.HIGHLIGHT_POLICY = value;
+    public static TreeMap<String, TextDiffPlaceSettings> getDefaultPlaceSettings() {
+        TreeMap<String, TextDiffPlaceSettings> map = new TreeMap<>();
+
+        TextDiffPlaceSettings changes = new TextDiffPlaceSettings();
+        changes.EXPAND_BY_DEFAULT = false;
+        TextDiffPlaceSettings commit = new TextDiffPlaceSettings();
+        commit.EXPAND_BY_DEFAULT = false;
+
+        map.put(DiffPlaces.DEFAULT, new TextDiffPlaceSettings());
+        map.put(DiffPlaces.CHANGES_VIEW, changes);
+        map.put(DiffPlaces.COMMIT_DIALOG, commit);
+
+        return map;
     }
-
-    
-    public IgnorePolicy getIgnorePolicy() {
-      return PLACE_SETTINGS.IGNORE_POLICY;
-    }
-
-    public void setIgnorePolicy(IgnorePolicy policy) {
-      PLACE_SETTINGS.IGNORE_POLICY = policy;
-    }
-
-    //
-    // Merge
-    //
-
-    public boolean isAutoApplyNonConflictedChanges() {
-      return SHARED_SETTINGS.MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES;
-    }
-
-    public void setAutoApplyNonConflictedChanges(boolean value) {
-      SHARED_SETTINGS.MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES = value;
-    }
-
-    // Editor settings
-
-    public boolean isShowLineNumbers() {
-      return PLACE_SETTINGS.SHOW_LINE_NUMBERS;
-    }
-
-    public void setShowLineNumbers(boolean state) {
-      PLACE_SETTINGS.SHOW_LINE_NUMBERS = state;
-    }
-
-    public boolean isShowWhitespaces() {
-      return PLACE_SETTINGS.SHOW_WHITESPACES;
-    }
-
-    public void setShowWhiteSpaces(boolean state) {
-      PLACE_SETTINGS.SHOW_WHITESPACES = state;
-    }
-
-    public boolean isShowIndentLines() {
-      return PLACE_SETTINGS.SHOW_INDENT_LINES;
-    }
-
-    public void setShowIndentLines(boolean state) {
-      PLACE_SETTINGS.SHOW_INDENT_LINES = state;
-    }
-
-    public boolean isUseSoftWraps() {
-      return PLACE_SETTINGS.USE_SOFT_WRAPS;
-    }
-
-    public void setUseSoftWraps(boolean state) {
-      PLACE_SETTINGS.USE_SOFT_WRAPS = state;
-    }
-
-    
-    public HighlightingLevel getHighlightingLevel() {
-      return PLACE_SETTINGS.HIGHLIGHTING_LEVEL;
-    }
-
-    public void setHighlightingLevel(HighlightingLevel state) {
-      PLACE_SETTINGS.HIGHLIGHTING_LEVEL = state;
-    }
-
-    public int getContextRange() {
-      return SHARED_SETTINGS.CONTEXT_RANGE;
-    }
-
-    public void setContextRange(int value) {
-      SHARED_SETTINGS.CONTEXT_RANGE = value;
-    }
-
-    public boolean isExpandByDefault() {
-      return PLACE_SETTINGS.EXPAND_BY_DEFAULT;
-    }
-
-    public void setExpandByDefault(boolean value) {
-      PLACE_SETTINGS.EXPAND_BY_DEFAULT = value;
-    }
-
-    public boolean isReadOnlyLock() {
-      return PLACE_SETTINGS.READ_ONLY_LOCK;
-    }
-
-    public void setReadOnlyLock(boolean state) {
-      PLACE_SETTINGS.READ_ONLY_LOCK = state;
-    }
-
-    //
-    // Impl
-    //
-
-    
-    public static TextDiffSettings getSettings() {
-      return getSettings(null);
-    }
-
-    
-    public static TextDiffSettings getSettings(@Nullable String place) {
-      return getInstance().getSettings(place);
-    }
-  }
-
-  
-  public TextDiffSettings getSettings(@Nullable String place) {
-    if (place == null) place = DiffPlaces.DEFAULT;
-
-    PlaceSettings placeSettings = myState.PLACES_MAP.get(place);
-    if (placeSettings == null) {
-      placeSettings = new PlaceSettings();
-      myState.PLACES_MAP.put(place, placeSettings);
-    }
-    return new TextDiffSettings(myState.SHARED_SETTINGS, placeSettings);
-  }
-
-  public static class State {
-    @MapAnnotation(surroundWithTag = false, surroundKeyWithTag = false, surroundValueWithTag = false)
-    public Map<String, PlaceSettings> PLACES_MAP = getDefaultPlaceSettings();
-    public SharedSettings SHARED_SETTINGS = new SharedSettings();
-  }
-
-  private State myState = new State();
-
-  
-  @Override
-  public State getState() {
-    return myState;
-  }
-
-  @Override
-  public void loadState(State state) {
-    myState = state;
-  }
-
-  public static TextDiffSettingsHolder getInstance() {
-    return Application.get().getInstance(TextDiffSettingsHolder.class);
-  }
-
-  
-  public static Map<String, PlaceSettings> getDefaultPlaceSettings() {
-    Map<String, PlaceSettings> map = new TreeMap<>();
-
-    PlaceSettings changes = new PlaceSettings();
-    changes.EXPAND_BY_DEFAULT = false;
-    PlaceSettings commit = new PlaceSettings();
-    commit.EXPAND_BY_DEFAULT = false;
-
-    map.put(DiffPlaces.DEFAULT, new PlaceSettings());
-    map.put(DiffPlaces.CHANGES_VIEW, changes);
-    map.put(DiffPlaces.COMMIT_DIALOG, commit);
-
-    return map;
-  }
 }

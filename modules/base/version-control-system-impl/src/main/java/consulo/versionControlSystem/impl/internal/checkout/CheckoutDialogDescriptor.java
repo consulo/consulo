@@ -18,16 +18,17 @@ package consulo.versionControlSystem.impl.internal.checkout;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.dialog.action.DialogOkAction;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.checkout.CheckoutPage;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -42,11 +43,12 @@ public class CheckoutDialogDescriptor extends DialogDescriptor {
     private boolean myCheckoutEnabled;
     private @Nullable CheckoutPage myPage;
 
+    @RequiredUIAccess
     public CheckoutDialogDescriptor(Project project, CheckoutProvider provider) {
         super(provider.getName().map(Presentation.NO_MNEMONIC));
         myProject = project;
         myProvider = provider;
-        myListener = ProjectLevelVcsManagerEx.getInstanceEx(project).getCompositeCheckoutCallback();
+        myListener = ProjectLevelVcsManagerEx.getInstanceEx(project).getCompositeCheckoutCallback(UIAccess.current(), false);
     }
 
     @Override

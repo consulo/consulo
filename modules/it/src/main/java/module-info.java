@@ -22,6 +22,7 @@ module consulo.it {
     requires consulo.project.impl;
     requires consulo.project.ui.api;
     requires consulo.project.ui.impl;
+    requires consulo.application.content.api;
     requires consulo.module.api;
     requires consulo.module.content.api;
     requires consulo.document.api;
@@ -29,6 +30,7 @@ module consulo.it {
     requires consulo.code.editor.impl;
     requires consulo.language.api;
     requires consulo.language.impl;
+    requires consulo.language.index.impl;
     requires consulo.language.editor.api;
     requires consulo.platform.api;
     requires consulo.platform.impl;
@@ -55,58 +57,3 @@ module consulo.it {
     provides consulo.platform.internal.PlatformInternal with consulo.it.internal.HeadlessPlatformInternal;
     provides consulo.ui.internal.UIInternal with consulo.it.internal.HeadlessUIInternal;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -15,24 +15,19 @@
  */
 package consulo.ui.ex.tree;
 
-import consulo.logging.Logger;
+import com.dslplatform.json.CompiledJson;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
-import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringHash;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.util.xml.serializer.XmlSerializer;
-import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -43,72 +38,18 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-08-01
  */
-public class UITreeState implements JDOMExternalizable {
-    private static final Logger LOG = Logger.getInstance(UITreeState.class);
+@CompiledJson
+public class UITreeState {
+    @Tag("expand")
+    @AbstractCollection(surroundWithTag = false)
+    public List<UITreePath> expandedPaths = new ArrayList<>();
 
-    private static final String EXPAND_TAG = "expand";
-    private static final String SELECT_TAG = "select";
-    private static final String PATH_TAG = "path";
-
-    private enum Match {
-        OBJECT,
-        ID_TYPE
-    }
-
-    @Tag("item")
-    public static class PathElement {
-        @Attribute("name")
-        public String id;
-        @Attribute("type")
-        public String type;
-        @Attribute("user")
-        public String userStr;
-
-        Object userObject;
-        int index;
-
-        @SuppressWarnings("unused")
-        public PathElement() {
-            this(null, null, -1, null);
-        }
-
-        public PathElement(String itemId, String itemType, int itemIndex, @Nullable Object userObject) {
-            id = itemId;
-            type = itemType;
-            index = itemIndex;
-            userStr = userObject instanceof String s ? s : null;
-            this.userObject = userObject;
-        }
-
-        private @Nullable Match getMatchTo(@Nullable Object value) {
-            if (userObject != null && userObject.equals(value)) {
-                return Match.OBJECT;
-            }
-            return Comparing.equal(id, calcId(value)) && Comparing.equal(type, calcType(value)) ? Match.ID_TYPE : null;
-        }
-
-        @Override
-        public String toString() {
-            return id + ": " + type;
-        }
-    }
-
-    private final List<List<PathElement>> myExpandedPaths;
-    private final List<List<PathElement>> mySelectedPaths;
-
-    // xml deserialization
-    @SuppressWarnings("unused")
-    public UITreeState() {
-        this(new SmartList<>(), new SmartList<>());
-    }
-
-    private UITreeState(List<List<PathElement>> expandedPaths, List<List<PathElement>> selectedPaths) {
-        myExpandedPaths = expandedPaths;
-        mySelectedPaths = selectedPaths;
-    }
+    @Tag("select")
+    @AbstractCollection(surroundWithTag = false)
+    public List<UITreePath> selectedPaths = new ArrayList<>();
 
     public boolean isEmpty() {
-        return myExpandedPaths.isEmpty() && mySelectedPaths.isEmpty();
+        return expandedPaths.isEmpty() && selectedPaths.isEmpty();
     }
 
     public static <E> UITreeState createOn(Tree<E> tree) {
@@ -116,44 +57,36 @@ public class UITreeState implements JDOMExternalizable {
     }
 
     public static <E> UITreeState createOn(Tree<E> tree, boolean persistExpand, boolean persistSelect) {
-        List<List<PathElement>> expanded = new SmartList<>();
+        UITreeState state = new UITreeState();
+
         if (persistExpand) {
             for (List<TreeNode<E>> path : tree.getExpandedPaths()) {
                 if (!path.isEmpty()) {
-                    expanded.add(createPath(path));
+                    state.expandedPaths.add(createPath(path));
                 }
             }
         }
 
-        List<List<PathElement>> selected = new SmartList<>();
         if (persistSelect) {
             List<TreeNode<E>> path = tree.getSelectedPath();
             if (!path.isEmpty()) {
-                selected.add(createPath(path));
+                state.selectedPaths.add(createPath(path));
             }
         }
 
-        return new UITreeState(expanded, selected);
-    }
-
-    public static UITreeState createFrom(@Nullable Element element) {
-        UITreeState state = new UITreeState();
-        try {
-            if (element != null) {
-                state.readExternal(element);
-            }
-        }
-        catch (InvalidDataException e) {
-            LOG.warn(e);
-        }
         return state;
     }
 
-    private static <E> List<PathElement> createPath(List<TreeNode<E>> path) {
-        List<PathElement> result = new ArrayList<>(path.size());
-        for (int i = 0; i < path.size(); i++) {
-            Object value = path.get(i).getValue();
-            result.add(new PathElement(calcId(value), calcType(value), i, value));
+    private static <E> UITreePath createPath(List<TreeNode<E>> path) {
+        UITreePath result = new UITreePath();
+        for (TreeNode<E> node : path) {
+            Object value = node.getValue();
+
+            UITreePathElement element = new UITreePathElement();
+            element.id = calcId(value);
+            element.type = calcType(value);
+            element.userStr = value instanceof String s ? s : null;
+            result.items.add(element);
         }
         return result;
     }
@@ -186,98 +119,77 @@ public class UITreeState implements JDOMExternalizable {
         return Integer.toHexString(StringHash.murmur(name, 31)) + ":" + StringUtil.getShortName(name);
     }
 
-    @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        readExternal(element, myExpandedPaths, EXPAND_TAG);
-        readExternal(element, mySelectedPaths, SELECT_TAG);
+    private static boolean isMatchTo(UITreePathElement element, @Nullable Object value) {
+        return Comparing.equal(element.id, calcId(value)) && Comparing.equal(element.type, calcType(value));
     }
 
-    private static void readExternal(Element root, List<? super List<PathElement>> list, String name) {
-        list.clear();
-        for (Element element : root.getChildren(name)) {
-            for (Element child : element.getChildren(PATH_TAG)) {
-                PathElement[] path = XmlSerializer.deserialize(child, PathElement[].class);
-                list.add(List.of(path));
-            }
-        }
-    }
-
-    @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-        writeExternal(element, myExpandedPaths, EXPAND_TAG);
-        writeExternal(element, mySelectedPaths, SELECT_TAG);
-    }
-
-    private static void writeExternal(Element element, List<? extends List<PathElement>> list, String name) {
-        Element root = new Element(name);
-        for (List<PathElement> path : list) {
-            Element e = XmlSerializer.serialize(path.toArray());
-            e.setName(PATH_TAG);
-            root.addContent(e);
-        }
-        element.addContent(root);
-    }
-
-    public <E> void applyTo(Tree<E> tree) {
+    /**
+     * @return a future completed once every path has been walked, so that a caller which writes the state back
+     * can wait for the tree to carry it rather than snapshot a tree still being opened
+     */
+    public <E> CompletableFuture<?> applyTo(Tree<E> tree) {
         TreeNode<E> root = tree.getRootNode();
         if (root == null) {
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
-        for (List<PathElement> path : myExpandedPaths) {
+        List<CompletableFuture<Void>> walks = new ArrayList<>();
+
+        for (UITreePath path : expandedPaths) {
             if (startsAtRoot(path, root)) {
-                walk(tree, root, path, 1, true, node -> {
-                });
+                walks.add(walk(tree, root, path.items, 1, true, node -> {
+                }));
             }
         }
 
-        for (List<PathElement> path : mySelectedPaths) {
-            if (startsAtRoot(path, root) && path.size() > 1) {
-                walk(tree, root, path, 1, false, tree::select);
+        for (UITreePath path : selectedPaths) {
+            if (startsAtRoot(path, root) && path.items.size() > 1) {
+                walks.add(walk(tree, root, path.items, 1, false, tree::select));
             }
         }
+
+        return CompletableFuture.allOf(walks.toArray(CompletableFuture[]::new));
     }
 
     /**
      * The first element stands for the root the tree was built on, so a path written for another tree is left
      * alone rather than walked against nodes it never described.
      */
-    private static <E> boolean startsAtRoot(List<PathElement> path, TreeNode<E> root) {
-        return !path.isEmpty() && path.get(0).getMatchTo(root.getValue()) != null;
+    private static <E> boolean startsAtRoot(UITreePath path, TreeNode<E> root) {
+        return !path.items.isEmpty() && isMatchTo(path.items.get(0), root.getValue());
     }
 
     /**
      * @param expandTarget the last node of the path is opened as well - what an expanded path means, while a
      *                     selected one only needs its parents open
      */
-    private static <E> void walk(
+    private static <E> CompletableFuture<Void> walk(
         Tree<E> tree,
         TreeNode<E> node,
-        List<PathElement> path,
+        List<UITreePathElement> path,
         int index,
         boolean expandTarget,
         Consumer<TreeNode<E>> onTarget
     ) {
         if (index >= path.size()) {
             onTarget.accept(node);
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
-        PathElement pathElement = path.get(index);
+        UITreePathElement pathElement = path.get(index);
 
         // the node builds the level below it, so a path is walked one step at a time rather than searched
-        node.findChild(value -> pathElement.getMatchTo(value) != null).thenAccept(match -> {
+        return node.findChild(value -> isMatchTo(pathElement, value)).thenCompose(match -> {
             if (match == null) {
-                return;
+                return CompletableFuture.completedFuture(null);
             }
 
             if (index == path.size() - 1 && !expandTarget) {
                 onTarget.accept(match);
-                return;
+                return CompletableFuture.completedFuture(null);
             }
 
-            tree.expand(match).thenRun(() -> walk(tree, match, path, index + 1, expandTarget, onTarget));
+            return tree.expand(match).thenCompose(ignored -> walk(tree, match, path, index + 1, expandTarget, onTarget));
         });
     }
-
 }

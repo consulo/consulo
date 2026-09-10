@@ -95,7 +95,7 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
 
     @Override
     @SuppressWarnings({"SuspiciousMethodCalls"})
-    public V remove(Object key) {
+    public @Nullable V remove(Object key) {
         V value = myKeyToValueMap.remove(key);
         List<K> ks = myValueToKeysMap.get(value);
         if (ks != null) {

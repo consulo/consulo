@@ -16,52 +16,43 @@
 package consulo.sandboxPlugin.colorScheme;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.localize.LocalizeValue;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 06/06/2024
+ * @since 2024-06-06
  */
 @ExtensionImpl
 public class SandColorSettingsPage implements ColorSettingsPage {
-  
-  @Override
-  public ColorDescriptor[] getColorDescriptors() {
-    return new ColorDescriptor[]{
-      new ColorDescriptor(LocalizeValue.localizeTODO("Sand Color"), SandEditorColors.SAND_COLOR, ColorDescriptor.Kind.BACKGROUND)
-    };
-  }
+    @Override
+    public ColorDescriptor[] getColorDescriptors() {
+        return new ColorDescriptor[]{
+            new ColorDescriptor(LocalizeValue.localizeTODO("Sand Color"), SandEditorColors.SAND_COLOR, ColorDescriptor.Kind.BACKGROUND)
+        };
+    }
 
-  
-  @Override
-  public SyntaxHighlighter getHighlighter() {
-    return new DefaultSyntaxHighlighter();
-  }
+    @Override
+    public SyntaxHighlighter getHighlighter() {
+        return DefaultSyntaxHighlighter.INSTANCE;
+    }
 
-  
-  @Override
-  public String getDemoText() {
-    return " ";
-  }
+    @Override
+    public String getDemoText() {
+        return " ";
+    }
 
-  
-  @Override
-  public AttributesDescriptor[] getAttributeDescriptors() {
-    return new AttributesDescriptor[0];
-  }
+    @Override
+    public AttributesDescriptor[] getAttributeDescriptors() {
+        return new AttributesDescriptor[0];
+    }
 
-  
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.ofNullable("Sand");
-  }
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.ofNullable("Sand");
+    }
 }

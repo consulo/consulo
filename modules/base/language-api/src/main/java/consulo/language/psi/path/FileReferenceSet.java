@@ -392,7 +392,7 @@ public class FileReferenceSet {
         PsiFile file = getContainingFile();
         VirtualFile virtualFile = file == null ? null : file.getOriginalFile().getVirtualFile();
         VirtualFile parent = virtualFile == null ? null : virtualFile.getParent();
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove requireNonNull")
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1801", todo = "Remove requireNonNull")
         PsiDirectory directory = parent == null ? null : Objects.requireNonNull(file).getManager().findDirectory(parent);
         return directory != null ? Collections.singleton(directory) : Collections.emptyList();
     }
@@ -454,8 +454,6 @@ public class FileReferenceSet {
         return toFileSystemItems(Arrays.asList(files));
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     protected Collection<PsiFileSystemItem> toFileSystemItems(Collection<VirtualFile> files) {
         PsiManager manager = getElement().getManager();
         return ContainerUtil.mapNotNull(files, file -> file != null ? manager.findDirectory(file) : null);

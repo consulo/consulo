@@ -37,12 +37,27 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     @RequiredUIAccess
     @Override
     public boolean isFileSelectable(VirtualFile file) {
-        return file != null && (isProjectDirectory(file) || canOpen(file));
+        if (file == null) {
+            return false;
+        }
+        if (isProjectDirectory(file)) {
+            return true;
+        }
+        Path path = toNioPath(file);
+        return path != null && isPathSelectable(path);
     }
 
     @Override
     public boolean isPathSelectable(Path path) {
-        return isProjectDirectory(path) || canOpenAsProject(path);
+        // the root directory of any drive is never a project home
+        if (path.getParent() == null) {
+            return false;
+        }
+        if (isProjectDirectory(path) || canOpenAsProject(path)) {
+            return true;
+        }
+        // any other directory can become one - FolderProjectOpenProcessor writes the store folder into it
+        return Files.isDirectory(path) && Files.isWritable(path);
     }
 
     @Override
@@ -74,15 +89,15 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
         return canOpen(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
     }
 
-    public static boolean canOpen(VirtualFile file) {
-        Path path = toNioPath(file);
-        return path != null && ProjectOpenProcessors.getInstance().findProcessor(path) != null;
-    }
-
     /**
      * Unlike {@link ProjectOpenProcessors#findProcessor} this does not fall back to the processor which turns an
-     * arbitrary directory into a new project, so it answers whether the path already holds a project.
+     * arbitrary directory into a new project, so it answers whether the file already holds one.
      */
+    public static boolean canOpen(VirtualFile file) {
+        Path path = toNioPath(file);
+        return path != null && canOpenAsProject(path);
+    }
+
     private static boolean canOpenAsProject(Path path) {
         for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
             if (processor.canOpenProject(path)) {

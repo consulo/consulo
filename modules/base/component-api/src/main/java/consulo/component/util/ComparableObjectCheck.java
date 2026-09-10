@@ -16,25 +16,26 @@
 package consulo.component.util;
 
 import consulo.util.lang.Comparing;
+import org.jspecify.annotations.Nullable;
 
 public class ComparableObjectCheck {
-  public static boolean equals(ComparableObject me, Object him) {
+  public static boolean equals(ComparableObject me, @Nullable Object him) {
     if (me == him) {
       return true;
     }
 
-    else if (!(him instanceof ComparableObject)) {
+    if (!(him instanceof ComparableObject that)) {
       return false;
     }
 
     Object[] my = me.getEqualityObjects();
-    Object[] his = ((ComparableObject) him).getEqualityObjects();
+    Object[] his = that.getEqualityObjects();
 
     if (my.length == 0 || his.length == 0 || my.length != his.length) {
       return false;
     }
 
-    for (int i = 0; i < my.length; i++) {
+    for (int i = 0, n = my.length; i < n; i++) {
       if (!Comparing.equal(my[i], his[i])) {
         return false;
       }
@@ -55,5 +56,4 @@ public class ComparableObjectCheck {
     }
     return result;
   }
-
 }

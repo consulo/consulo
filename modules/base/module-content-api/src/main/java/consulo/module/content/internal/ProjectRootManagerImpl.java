@@ -1,5 +1,6 @@
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.RootProvider;
+import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.logging.Logger;
@@ -28,15 +30,22 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
+import consulo.project.RootsChangeRescanningInfo;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
+import consulo.util.collection.Maps;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -50,18 +59,19 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
     private final OrderRootsCache myRootsCache;
 
-    private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<>();
+    private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = Maps.newHashMap(HashingStrategy.identity());
     protected final List<OrderEntryWithTracking> myModuleExtensionWithSdkOrderEntries = new ArrayList<>();
     protected boolean myStartupActivityPerformed = false;
     private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
     private final VirtualFilePointerListener myRootsValidityChangedListener = new VirtualFilePointerListener() {
     };
 
-    protected class BatchSession {
-        private int myBatchLevel = 0;
-        private boolean myChanged = false;
-
+    protected abstract class BatchSession<Change, ChangeList> {
         private final boolean myFileTypes;
+        private int myBatchLevel;
+        private int myPendingRootsChanged;
+        private boolean myChanged;
+        private @Nullable ChangeList myChanges;
 
         private BatchSession(boolean fileTypes) {
             myFileTypes = fileTypes;
@@ -70,6 +80,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         public void levelUp() {
             if (myBatchLevel == 0) {
                 myChanged = false;
+                myChanges = null;
             }
             myBatchLevel += 1;
         }
@@ -79,37 +90,119 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
             myBatchLevel -= 1;
             if (myChanged && myBatchLevel == 0) {
                 try {
-                    fireChange();
+                    // todo make sure it should be not null here
+                    if (myChanges == null) {
+                        myChanges = initiateChangelist(getGenericChange());
+                    }
+                    myPendingRootsChanged--;
+                    ChangeList changes = copy(myChanges);
+                    myProject.getApplication().runWriteAction(() -> {
+                        fireRootsChanged(changes);
+                    });
                 }
                 finally {
-                    myChanged = false;
+                    if (myPendingRootsChanged == 0) {
+                        myChanged = false;
+                        myChanges = null;
+                    }
                 }
             }
         }
 
         @RequiredWriteAction
-        private boolean fireChange() {
-            return fireRootsChanged(myFileTypes);
+        public void beforeRootsChanged() {
+            if (myBatchLevel == 0 || !myChanged) {
+                fireBeforeRootsChanged(myFileTypes);
+                myPendingRootsChanged++;
+                myChanged = true;
+            }
         }
 
         @RequiredWriteAction
-        public void beforeRootsChanged() {
-            if (myBatchLevel == 0 || !myChanged) {
-                if (fireBeforeRootsChanged(myFileTypes)) {
-                    myChanged = true;
+        public void rootsChanged(Change change) {
+            ChangeList current = myChanges;
+            ChangeList accumulated = current == null ? initiateChangelist(change) : accumulate(current, change);
+            myChanges = accumulated;
+
+            if (myBatchLevel == 0 && myChanged) {
+                myPendingRootsChanged--;
+                if (fireRootsChanged(copy(accumulated)) && myPendingRootsChanged == 0) {
+                    myChanged = false;
+                    myChanges = null;
                 }
             }
         }
 
         @RequiredWriteAction
         public void rootsChanged() {
-            if (myBatchLevel == 0) {
-                if (fireChange()) {
-                    myChanged = false;
-                }
-            }
+            rootsChanged(getGenericChange());
         }
+
+        protected abstract boolean fireRootsChanged(ChangeList change);
+
+        protected abstract ChangeList initiateChangelist(Change change);
+
+        protected abstract ChangeList accumulate(ChangeList current, Change change);
+
+        protected abstract ChangeList copy(ChangeList changes);
+
+        protected abstract Change getGenericChange();
     }
+
+    protected final BatchSession<RootsChangeRescanningInfo, List<RootsChangeRescanningInfo>> myRootsChanged = new BatchSession<>(false) {
+        @Override
+        protected boolean fireRootsChanged(List<RootsChangeRescanningInfo> changes) {
+            return ProjectRootManagerImpl.this.fireRootsChanged(false, changes);
+        }
+
+        @Override
+        protected List<RootsChangeRescanningInfo> accumulate(List<RootsChangeRescanningInfo> current, RootsChangeRescanningInfo change) {
+            current.add(change);
+            return current;
+        }
+
+        @Override
+        protected RootsChangeRescanningInfo getGenericChange() {
+            return RootsChangeRescanningInfo.TOTAL_RESCAN;
+        }
+
+        @Override
+        protected List<RootsChangeRescanningInfo> initiateChangelist(RootsChangeRescanningInfo change) {
+            return new SmartList<>(change);
+        }
+
+        @Override
+        protected List<RootsChangeRescanningInfo> copy(List<RootsChangeRescanningInfo> changes) {
+            return new ArrayList<>(changes);
+        }
+    };
+
+    protected final BatchSession<Boolean, Boolean> myFileTypesChanged = new BatchSession<>(true) {
+        @Override
+        protected boolean fireRootsChanged(Boolean change) {
+            return ProjectRootManagerImpl.this.fireRootsChanged(true, Collections.emptyList());
+        }
+
+        @Override
+        protected Boolean accumulate(Boolean current, Boolean change) {
+            return current || change;
+        }
+
+        @Override
+        protected Boolean getGenericChange() {
+            return Boolean.TRUE;
+        }
+
+        @Override
+        protected Boolean initiateChangelist(Boolean change) {
+            return change;
+        }
+
+        @Override
+        protected Boolean copy(Boolean changes) {
+            return changes;
+        }
+    };
 
     private class RootProviderChangeListener implements RootProvider.RootSetChangedListener {
         private boolean myInsideRootsChange;
@@ -122,7 +215,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
             }
             myInsideRootsChange = true;
             try {
-                makeRootsChange(EmptyRunnable.INSTANCE, false, true);
+                makeRootsChange(EmptyRunnable.INSTANCE, buildRootProviderChangeInfo(wrapper));
             }
             finally {
                 myInsideRootsChange = false;
@@ -130,8 +223,37 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         }
     }
 
-    protected final BatchSession myRootsChanged = new BatchSession(false);
-    protected final BatchSession myFileTypesChanged = new BatchSession(true);
+    private RootsChangeRescanningInfo buildRootProviderChangeInfo(RootProvider provider) {
+        Set<OrderEntry> owners = myRegisteredRootProviders.get(provider);
+        if (owners == null || owners.isEmpty()) {
+            return RootsChangeRescanningInfo.TOTAL_RESCAN;
+        }
+
+        BuildableRootsChangeRescanningInfo builder = BuildableRootsChangeRescanningInfo.newInstance();
+        for (OrderEntry owner : owners) {
+            if (owner instanceof LibraryOrderEntry libraryOrderEntry) {
+                Library library = libraryOrderEntry.getLibrary();
+                if (library == null) {
+                    return RootsChangeRescanningInfo.TOTAL_RESCAN;
+                }
+                builder.addLibrary(library);
+            }
+            else if (owner instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+                Sdk sdk = sdkOrderEntry.getSdk();
+                if (sdk == null) {
+                    return RootsChangeRescanningInfo.TOTAL_RESCAN;
+                }
+                builder.addSdk(sdk);
+            }
+            else if (owner instanceof OrderEntryWithTracking) {
+                builder.addOrderEntry(owner);
+            }
+            else {
+                return RootsChangeRescanningInfo.TOTAL_RESCAN;
+            }
+        }
+        return builder.buildInfo();
+    }
 
     public static ProjectRootManagerImpl getInstanceImpl(Project project) {
         return (ProjectRootManagerImpl) getInstance(project);
@@ -200,31 +322,17 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    private boolean myMergedCallStarted = false;
-    private boolean myMergedCallHasRootChange = false;
-    private int myRootsChangesDepth = 0;
-
     @Override
     @RequiredWriteAction
     public void mergeRootsChangesDuring(Runnable runnable) {
-        if (getBatchSession(false).myBatchLevel == 0 && !myMergedCallStarted) {
-            LOG.assertTrue(myRootsChangesDepth == 0, "Merged rootsChanged not allowed inside rootsChanged, rootsChanged level == " + myRootsChangesDepth);
-            myMergedCallStarted = true;
-            myMergedCallHasRootChange = false;
-            try {
-                runnable.run();
-            }
-            finally {
-                if (myMergedCallHasRootChange) {
-                    LOG.assertTrue(myRootsChangesDepth == 1, "myMergedCallDepth = " + myRootsChangesDepth);
-                    getBatchSession(false).rootsChanged();
-                }
-                myMergedCallStarted = false;
-                myMergedCallHasRootChange = false;
-            }
-        }
-        else {
+        myProject.getApplication().assertWriteAccessAllowed();
+        BatchSession<?, ?> batchSession = myRootsChanged;
+        batchSession.levelUp();
+        try {
             runnable.run();
+        }
+        finally {
+            batchSession.levelDown();
         }
     }
 
@@ -244,17 +352,19 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         }
     }
 
+    @Deprecated
     @Override
     @RequiredWriteAction
-    public void makeRootsChange(Runnable runnable, boolean filetypes, boolean fireEvents) {
+    public void makeRootsChange(Runnable runnable, boolean fileTypes, boolean fireEvents) {
         if (myProject.isDisposed()) {
             return;
         }
-        BatchSession session = getBatchSession(filetypes);
-        if (fireEvents) {
-            session.beforeRootsChanged();
-        }
+
+        BatchSession<?, ?> session = fileTypes ? myFileTypesChanged : myRootsChanged;
         try {
+            if (fireEvents) {
+                session.beforeRootsChanged();
+            }
             runnable.run();
         }
         finally {
@@ -264,32 +374,39 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         }
     }
 
-    protected BatchSession getBatchSession(boolean filetypes) {
-        return filetypes ? myFileTypesChanged : myRootsChanged;
+    @Override
+    @RequiredWriteAction
+    public void makeRootsChange(Runnable runnable, RootsChangeRescanningInfo changes) {
+        if (myProject.isDisposed()) {
+            return;
+        }
+        try {
+            myRootsChanged.beforeRootsChanged();
+            runnable.run();
+        }
+        finally {
+            myRootsChanged.rootsChanged(changes);
+        }
+    }
+
+    @Override
+    @RequiredWriteAction
+    public AutoCloseable withRootsChange(RootsChangeRescanningInfo changes) {
+        myRootsChanged.beforeRootsChanged();
+        return () -> myRootsChanged.rootsChanged(changes);
+    }
+
+    protected BatchSession<?, ?> getBatchSession(boolean fileTypes) {
+        return fileTypes ? myFileTypesChanged : myRootsChanged;
     }
 
     protected boolean myFiringEvent = false;
 
     @RequiredWriteAction
-    private boolean fireBeforeRootsChanged(boolean filetypes) {
+    private void fireBeforeRootsChanged(boolean fileTypes) {
         myProject.getApplication().assertWriteAccessAllowed();
-
         LOG.assertTrue(!myFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
-
-        if (myMergedCallStarted) {
-            LOG.assertTrue(!filetypes, "Filetypes change is not supported inside merged call");
-        }
-
-        if (myRootsChangesDepth++ == 0) {
-            if (myMergedCallStarted) {
-                myMergedCallHasRootChange = true;
-                myRootsChangesDepth++; // blocks all firing until finishRootsChangedOnDemand
-            }
-            fireBeforeRootsChangeEvent(filetypes);
-            return true;
-        }
-
-        return false;
+        fireBeforeRootsChangeEvent(fileTypes);
     }
 
     protected void fireBeforeRootsChangeEvent(boolean fileTypes) {
@@ -305,41 +422,31 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @RequiredWriteAction
-    protected boolean fireRootsChanged(boolean filetypes) {
+    private boolean fireRootsChanged(boolean fileTypes, List<? extends RootsChangeRescanningInfo> indexingInfos) {
         if (myProject.isDisposed()) {
             return false;
         }
 
         myProject.getApplication().assertWriteAccessAllowed();
-
         LOG.assertTrue(!myFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
-
-        if (myMergedCallStarted) {
-            LOG.assertTrue(!filetypes, "Filetypes change is not supported inside merged call");
-        }
-
-        myRootsChangesDepth--;
-        if (myRootsChangesDepth > 0) {
-            return false;
-        }
 
         clearScopesCaches();
 
         incModificationCount();
 
-        fireRootsChangedEvent(filetypes);
-
-        doSynchronizeRoots();
+        fireRootsChangedEvent(fileTypes, indexingInfos);
 
         addRootsToWatch();
 
         return true;
     }
 
-    protected void fireRootsChangedEvent(boolean fileTypes) {
+    protected void fireRootsChangedEvent(boolean fileTypes, List<? extends RootsChangeRescanningInfo> indexingInfos) {
         myFiringEvent = true;
         try {
-            myProject.getMessageBus().syncPublisher(ModuleRootListener.class).rootsChanged(new ModuleRootEventImpl(myProject, fileTypes));
+            myProject.getMessageBus()
+                .syncPublisher(ModuleRootListener.class)
+                .rootsChanged(new ModuleRootEventImpl(myProject, fileTypes, indexingInfos));
         }
         finally {
             myFiringEvent = false;
@@ -351,9 +458,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
     public Project getProject() {
         return myProject;
-    }
-
-    protected void doSynchronizeRoots() {
     }
 
     @Override
@@ -384,6 +488,10 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
                 myRegisteredRootProviders.remove(provider);
             }
         }
+    }
+
+    private boolean isLibraryTracked(Library library) {
+        return myRegisteredRootProviders.containsKey(library.getRootProvider());
     }
 
     public void addListenerForTable(LibraryTable.Listener libraryListener, LibraryTable libraryTable) {
@@ -436,6 +544,13 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
             }
         }
 
+        @RequiredWriteAction
+        private void fireRootsChanged(Library library, RootsChangeRescanningInfo info) {
+            if (isLibraryTracked(library)) {
+                makeRootsChange(EmptyRunnable.INSTANCE, info);
+            }
+        }
+
         @Override
         @RequiredWriteAction
         public void afterLibraryAdded(Library newLibrary) {
@@ -444,6 +559,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
                 for (LibraryTable.Listener listener : myListeners) {
                     listener.afterLibraryAdded(newLibrary);
                 }
+                fireRootsChanged(newLibrary, BuildableRootsChangeRescanningInfo.newInstance().addLibrary(newLibrary).buildInfo());
             });
         }
 
@@ -455,6 +571,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
                 for (LibraryTable.Listener listener : myListeners) {
                     listener.afterLibraryRenamed(library);
                 }
+                fireRootsChanged(library, BuildableRootsChangeRescanningInfo.newInstance().addLibrary(library).buildInfo());
             });
         }
 
@@ -466,6 +583,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
                 for (LibraryTable.Listener listener : myListeners) {
                     listener.beforeLibraryRemoved(library);
                 }
+                fireRootsChanged(library, RootsChangeRescanningInfo.NO_RESCAN_NEEDED);
             });
         }
 
@@ -477,6 +595,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
                 for (LibraryTable.Listener listener : myListeners) {
                     listener.afterLibraryRemoved(library);
                 }
+                fireRootsChanged(library, RootsChangeRescanningInfo.NO_RESCAN_NEEDED);
             });
         }
     }

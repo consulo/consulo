@@ -162,7 +162,7 @@ public final class IdeMouseEventDispatcher {
             }
         }
 
-        if (Platform.current().os().isXWindow() && e.isPopupTrigger() && e.getButton() != 3) {
+        if (Platform.current().os().isUnix() && e.isPopupTrigger() && e.getButton() != 3) {
             // we can do better than silly triggering popup on everything but left click
             resetPopupTrigger(e);
         }

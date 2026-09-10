@@ -410,6 +410,11 @@ public class ComponentStoreTest {
         }
 
         @Override
+        public String resolveStorageFilePath(String fileSpec) {
+            return fileSpec;
+        }
+
+        @Override
         public @Nullable TrackingPathMacroSubstitutor getMacroSubstitutor() {
             return null;
         }

@@ -18,11 +18,11 @@ package consulo.ui.impl;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.Component;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.Space;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.internal.BorderPosition;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -31,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -42,7 +43,9 @@ import java.util.function.Supplier;
 public class UIDataObject extends UserDataHolderBase {
     private final Map<Class<? extends ComponentEvent<?>>, EventDispatcher<ComponentEventListener>> myListeners = new ConcurrentHashMap<>();
 
-    private @Nullable Map<BorderPosition, BorderInfo> myBorders;
+    private @Nullable Map<BorderPosition, ColorValue> myBorders;
+
+    private @Nullable Map<BorderPosition, Space> myPaddings;
 
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
@@ -72,29 +75,35 @@ public class UIDataObject extends UserDataHolderBase {
         return super.getUserData(key);
     }
 
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
+    public void applyBorders(Map<BorderPosition, ColorValue> set, Set<BorderPosition> reset) {
         if (myBorders == null) {
             myBorders = new ConcurrentHashMap<>();
         }
 
-        BorderInfo borderInfo = new BorderInfo(borderPosition, borderStyle, colorValue, width);
-        myBorders.put(borderPosition, borderInfo);
+        myBorders.putAll(set);
+        myBorders.keySet().removeAll(reset);
     }
 
-    public void removeBorder(BorderPosition borderPosition) {
-        if (myBorders == null) {
-            return;
+    public Map<BorderPosition, ColorValue> getBorders() {
+        return myBorders == null ? Map.of() : myBorders;
+    }
+
+    public void applyPaddings(Map<BorderPosition, Space> set, Set<BorderPosition> reset) {
+        if (myPaddings == null) {
+            myPaddings = new ConcurrentHashMap<>();
         }
 
-        myBorders.remove(borderPosition);
+        myPaddings.putAll(set);
+        myPaddings.keySet().removeAll(reset);
     }
 
-    public Map<BorderPosition, BorderInfo> getBorders() {
-        return myBorders == null ? Map.of() : myBorders;
+    public Map<BorderPosition, Space> getPaddings() {
+        return myPaddings == null ? Map.of() : myPaddings;
     }
 
     public void dispose() {
         myListeners.clear();
         myBorders = null;
+        myPaddings = null;
     }
 }

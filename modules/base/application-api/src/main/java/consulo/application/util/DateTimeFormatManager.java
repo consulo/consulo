@@ -8,94 +8,84 @@ import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.util.xml.serializer.XmlSerializer;
-import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
-
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Objects;
 
 /**
  * @author Konstantin Bulenkov
  */
 @Singleton
-@State(name = "DateTimeFormatter", storages = @Storage("ui-datetime.xml"))
+@State(name = "DateTimeFormatter", storages = @Storage("ui-datetime"))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class DateTimeFormatManager implements PersistentStateComponent<Element> {
-  private static final Logger LOG = LoggerFactory.getLogger(DateTimeFormatManager.class);
+public class DateTimeFormatManager implements PersistentStateComponent<DateTimeFormatManagerState> {
+    private static final Logger LOG = LoggerFactory.getLogger(DateTimeFormatManager.class);
 
-  public static DateTimeFormatManager getInstance() {
-    return Application.get().getInstance(DateTimeFormatManager.class);
-  }
-
-  public static final String DEFAULT_DATE_FORMAT = "dd MMM yyyy";
-  private boolean myPrettyFormattingAllowed = true;
-  private String myPattern = DEFAULT_DATE_FORMAT;
-  private boolean myOverrideSystemDateFormat = false;
-  private boolean myUse24HourTime = true;
-
-  @Override
-  public @Nullable Element getState() {
-    return XmlSerializer.serialize(this);
-  }
-
-  @Override
-  public void loadState(Element state) {
-    DateTimeFormatManager loaded = Objects.requireNonNull(XmlSerializer.deserialize(state, DateTimeFormatManager.class));
-    XmlSerializerUtil.copyBean(loaded, this);
-  }
-
-  public boolean isOverrideSystemDateFormat() {
-    return myOverrideSystemDateFormat;
-  }
-
-  public void setOverrideSystemDateFormat(boolean overrideSystemDateFormat) {
-    myOverrideSystemDateFormat = overrideSystemDateFormat;
-  }
-
-  public boolean isUse24HourTime() {
-    return myUse24HourTime;
-  }
-
-  public void setUse24HourTime(boolean use24HourTime) {
-    myUse24HourTime = use24HourTime;
-  }
-
-  public void setPrettyFormattingAllowed(boolean prettyFormattingAllowed) {
-    myPrettyFormattingAllowed = prettyFormattingAllowed;
-  }
-
-  public boolean isPrettyFormattingAllowed() {
-    return myPrettyFormattingAllowed;
-  }
-
-  public @Nullable DateFormat getDateFormat() {
-    try {
-      return new SimpleDateFormat(myPattern);
+    public static DateTimeFormatManager getInstance() {
+        return Application.get().getInstance(DateTimeFormatManager.class);
     }
-    catch (IllegalArgumentException e) {
-      LOG.warn("Exception while creating date format", e);
-    }
-    return null;
-  }
 
-  public String getDateFormatPattern() {
-    return myPattern;
-  }
+    private DateTimeFormatManagerState myState = new DateTimeFormatManagerState();
 
-  public void setDateFormatPattern(String pattern) {
-    try {
-      new SimpleDateFormat(pattern);
-      myPattern = pattern;
+    @Override
+    public @Nullable DateTimeFormatManagerState getState() {
+        return myState;
     }
-    catch (Exception ignored) {
+
+    @Override
+    public void loadState(DateTimeFormatManagerState state) {
+        myState = state;
     }
-  }
+
+    public boolean isOverrideSystemDateFormat() {
+        return myState.overrideSystemDateFormat;
+    }
+
+    public void setOverrideSystemDateFormat(boolean overrideSystemDateFormat) {
+        myState.overrideSystemDateFormat = overrideSystemDateFormat;
+    }
+
+    public boolean isUse24HourTime() {
+        return myState.use24HourTime;
+    }
+
+    public void setUse24HourTime(boolean use24HourTime) {
+        myState.use24HourTime = use24HourTime;
+    }
+
+    public void setPrettyFormattingAllowed(boolean prettyFormattingAllowed) {
+        myState.prettyFormattingAllowed = prettyFormattingAllowed;
+    }
+
+    public boolean isPrettyFormattingAllowed() {
+        return myState.prettyFormattingAllowed;
+    }
+
+    public @Nullable DateFormat getDateFormat() {
+        try {
+            return new SimpleDateFormat(myState.pattern);
+        }
+        catch (IllegalArgumentException e) {
+            LOG.warn("Exception while creating date format", e);
+        }
+        return null;
+    }
+
+    public String getDateFormatPattern() {
+        return myState.pattern;
+    }
+
+    public void setDateFormatPattern(String pattern) {
+        try {
+            new SimpleDateFormat(pattern);
+            myState.pattern = pattern;
+        }
+        catch (Exception ignored) {
+        }
+    }
 }

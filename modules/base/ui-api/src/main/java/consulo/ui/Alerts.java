@@ -17,7 +17,6 @@ package consulo.ui;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 
 import java.util.function.Function;
@@ -26,6 +25,8 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-06-09
  */
+@Deprecated
+@DeprecationInfo("Use MessageBoxBuilder/MessageBoxes from ui-api")
 public final class Alerts {
     private static final Object ourStableNull = new Object();
 
@@ -54,8 +55,7 @@ public final class Alerts {
     }
 
     public static Alert<Object> okError(Throwable throwable) {
-        String message = throwable.getLocalizedMessage();
-        return okError(LocalizeValue.of(StringUtil.isEmpty(message) ? throwable.toString() : message));
+        return okError(LocalizeValue.of(throwable));
     }
 
     @Deprecated

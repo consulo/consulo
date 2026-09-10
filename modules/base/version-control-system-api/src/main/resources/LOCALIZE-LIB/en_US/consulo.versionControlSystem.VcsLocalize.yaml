@@ -339,6 +339,8 @@ changes.changelist.chooser.new.changelist:
     text: Ne&w Changelist
 changes.changelist.chooser.title:
     text: Choose Changelist
+changes.changelists.to.cache.initially:
+    text: 'Changelists to cache initially:'
 changes.checkbox.delete.locally.added.files:
     text: '&Delete local copies of added files'
 changes.commit.partial.offer.to.move.text:
@@ -347,6 +349,8 @@ changes.commit.partial.offer.to.move.text:
         Would you like remaining changes to be moved to another changelist?
 changes.commit.partial.offer.to.move.title:
     text: Partial Commit of Active Changelist
+changes.days.of.history.to.cache.initially:
+    text: 'Days of history to cache initially:'
 changes.default.changelist.name:
     text: Default
 changes.dialog.editchangelist.error.already.exists:
@@ -355,6 +359,8 @@ changes.dialog.editchangelist.title:
     text: Edit Changelist
 changes.dialog.newchangelist.title:
     text: New Changelist
+changes.minutes:
+    text: minutes
 changes.newchangelist.warning.already.exists.text:
     text: Changelist ''{0}'' already exists.
 changes.newchangelist.warning.already.exists.title:
@@ -387,6 +393,8 @@ changes.node.title.unversioned.files:
     text: Unversioned Files
 changes.node.title.updating:
     text: (updating...)
+changes.refresh.changes.every:
+    text: Refresh changes every
 changes.remove.active.empty.prompt:
     text: 'Select the changelist to make active:'
 changes.remove.active.prompt:
@@ -1066,6 +1074,8 @@ paths.affected.in.revision:
     text: Paths Affected in Revision {0}
 perform.add.remove.in.background:
     text: Perform Add/Remove in background
+perform.checkout.from.vcs.in.background:
+    text: Perform checkout from VCS in background
 perform.commit.in.bacground:
     text: '&Perform commit to VCS in background'
 perform.edit.in.background:
@@ -1140,8 +1150,82 @@ scope.name.changelist.all.changed.files:
     text: All Changed Files
 searching.for.code.smells.processing.file.progress.text:
     text: Processing {0}
+settings.changelist.conflicts.configurable.name:
+    text: Changelist Conflicts
+settings.changes.configurable.name:
+    text: Changes
+settings.check.commit.message.spelling:
+    text: Check commit message spelling
+settings.clear.ignored.conflicts:
+    text: Clear
+settings.clear.initial.commit.message:
+    text: '&Clear initial commit message'
+settings.commit.configurable.name:
+    text: Commit
+settings.confirmation.ask:
+    text: Ask
+settings.confirmation.no:
+    text: 'No'
+settings.confirmation.yes:
+    text: 'Yes'
+settings.days:
+    text: days
+settings.directory.mappings.configurable.name:
+    text: Directory Mappings
+settings.do.not.remove:
+    text: Do not remove
+settings.edit.scopes:
+    text: Edit scopes
+settings.enable.changelist.conflict.tracking:
+    text: Enable changelist conflict tracking
+settings.file.texts.bigger.than.not.stored:
+    text: File texts bigger than {0}K are not stored
+settings.files.with.ignored.conflicts:
+    text: Files with ignored conflicts
 settings.filter.update.project.info.by.scope:
     text: Filter Update Project information by scope
+settings.group.changes:
+    text: Changes
+settings.highlight.files.from.non.active.changelists:
+    text: Highlight files from &non-active changelists
+settings.highlight.files.with.conflicts:
+    text: '&Highlight files with conflicts'
+settings.issue.navigation.description:
+    text: '{0} will search for the specified patterns in checkin comments and link them to issues in your issue tracker:'
+settings.issue.navigation.general.pattern:
+    text: General Pattern
+settings.limit.history.by:
+    text: Limit history by
+settings.remove.silently:
+    text: Remove silently
+settings.reveal.patch.in.after.creation:
+    text: 'Reveal patch in {0} after creation:'
+settings.rows:
+    text: rows
+settings.shelf.configurable.name:
+    text: Shelf
+settings.show.changed.in.last:
+    text: Show changed in last
+settings.show.conflict.resolving.dialog:
+    text: Show conflict resolving &dialog
+settings.show.directories.with.changed.descendants:
+    text: Show directories with changed descendants
+settings.show.options.before.removing:
+    text: Show options before removing
+settings.show.patch.in.after.creation:
+    text: 'Show patch in {0} after creation:'
+settings.show.unversioned.files.in.commit.dialog:
+    text: Show unversioned files in Commit dialog
+settings.store.base.revision.texts:
+    text: Store on shelf base revision texts for files under DVCS
+settings.unregistered.roots:
+    text: 'Unregistered roots:'
+settings.when.empty.changelist.becomes.inactive:
+    text: When empty changelist becomes inactive
+settings.when.files.are.created:
+    text: When files are created
+settings.when.files.are.deleted:
+    text: When files are deleted
 shelf.tab:
     text: Shelf
 shelve.changes.action:

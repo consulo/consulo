@@ -17,6 +17,7 @@ package consulo.desktop.qt.wm.impl.toolWindow;
 
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.HorizontalLayout;
@@ -39,8 +40,8 @@ public class DesktopQtToolWindowStripeImpl implements PseudoComponent {
     @RequiredUIAccess
     public DesktopQtToolWindowStripeImpl(DesktopQtToolWindowStripePosition position) {
         myLayout = switch (position) {
-            case LEFT, RIGHT -> VerticalLayout.create(0);
-            case TOP, BOTTOM -> HorizontalLayout.create(0);
+            case LEFT, RIGHT -> VerticalLayout.create(Space.NONE);
+            case TOP, BOTTOM -> HorizontalLayout.create(Space.NONE);
         };
     }
 

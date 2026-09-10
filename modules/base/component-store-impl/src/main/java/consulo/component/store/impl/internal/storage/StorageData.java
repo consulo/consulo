@@ -38,12 +38,14 @@ public class StorageData extends StorageDataBase {
   public static final String NAME = "name";
 
   private final StateMap myStates;
+  private final Map<String, byte[]> myJsonStates;
 
   protected final String myRootElementName;
   private PathMacrosService myPathMacrosService;
 
   public StorageData(String rootElementName, PathMacrosService pathMacrosService) {
     myStates = new StateMap();
+    myJsonStates = new HashMap<>();
     myRootElementName = rootElementName;
     myPathMacrosService = pathMacrosService;
   }
@@ -52,12 +54,35 @@ public class StorageData extends StorageDataBase {
     myRootElementName = storageData.myRootElementName;
     myPathMacrosService = storageData.myPathMacrosService;
     myStates = new StateMap(storageData.myStates);
+    myJsonStates = new HashMap<>(storageData.myJsonStates);
   }
 
   @Override
   
   public Set<String> getComponentNames() {
-    return myStates.keys();
+    if (myJsonStates.isEmpty()) {
+      return myStates.keys();
+    }
+
+    Set<String> names = new LinkedHashSet<>(myStates.keys());
+    names.addAll(myJsonStates.keySet());
+    return names;
+  }
+
+  public @Nullable byte[] getJsonState(String componentName) {
+    return myJsonStates.get(componentName);
+  }
+
+  public void putJsonState(String componentName, byte[] content) {
+    myJsonStates.put(componentName, content);
+  }
+
+  public void removeJsonState(String componentName) {
+    myJsonStates.remove(componentName);
+  }
+
+  public Map<String, byte[]> getJsonStates() {
+    return myJsonStates;
   }
 
   public void load(Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
@@ -235,6 +260,6 @@ public class StorageData extends StorageDataBase {
 
   @Override
   public boolean hasState(String componentName) {
-    return myStates.hasState(componentName);
+    return myStates.hasState(componentName) || myJsonStates.containsKey(componentName);
   }
 }

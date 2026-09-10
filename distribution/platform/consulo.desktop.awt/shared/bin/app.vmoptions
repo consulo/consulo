@@ -1,5 +1,6 @@
 -Dapple.awt.application.appearance=system
 -Dapple.laf.useScreenMenuBar=false
+-Dawt.toolkit.name=auto
 --add-opens=java.desktop/sun.awt=consulo.container.api
 --add-opens=java.desktop/sun.swing=consulo.container.api
 --add-opens=java.desktop/sun.awt.image=consulo.container.api
@@ -7,6 +8,7 @@
 --add-opens=java.desktop/sun.font=consulo.container.api
 --add-opens=java.desktop/sun.awt.datatransfer=consulo.container.api
 --add-opens=java.desktop/sun.awt.X11=consulo.container.api
+--add-opens=java.desktop/sun.awt.wl=consulo.container.api
 --add-opens=java.desktop/java.awt=consulo.container.api
 --add-opens=java.desktop/javax.swing=consulo.container.api
 --add-opens=java.desktop/javax.swing.plaf.basic=consulo.container.api

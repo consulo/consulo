@@ -7,6 +7,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.execution.executor.Executor;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.StartupManager;
@@ -79,15 +80,23 @@ final class CtxDefault {
             return;
         }
 
-        @Nullable Pair<Map<Long, ActionGroup>, Customizer> defaultGroup = ActionsLoader.getProjectDefaultActionGroup();
-        if (defaultGroup == null) {
-            LOG.debug("can't load default action group for project: %s", project);
-            TouchBarsManager.unregister(frame);
-            return;
-        }
+        UIAccess uiAccess = UIAccess.current();
+        ActionsLoader.getProjectDefaultActionGroupAsync().whenComplete((defaultGroup, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the project default touchbar actions", throwable);
+                return;
+            }
+            uiAccess.giveIfNeed(() -> {
+            if (defaultGroup == null) {
+                LOG.debug("can't load default action group for project: %s", project);
+                TouchBarsManager.unregister(frame);
+                return;
+            }
 
-        LOG.debug("register project-default action group %s | frame %s", project, frame);
-        TouchBarsManager.registerAndShow(frame, defaultGroup.first, defaultGroup.second);
+            LOG.debug("register project-default action group %s | frame %s", project, frame);
+            TouchBarsManager.registerAndShow(frame, defaultGroup.first, defaultGroup.second);
+        });
+        });
     }
 
     private static void registerTouchbarActions(Project project) {

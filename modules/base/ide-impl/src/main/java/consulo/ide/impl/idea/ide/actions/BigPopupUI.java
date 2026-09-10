@@ -7,10 +7,9 @@ import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
+import consulo.ui.Space;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -82,10 +81,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         JComponent topLeftPanel = createTopLeftPanel();
         JComponent settingsPanel = createSettingsPanel();
         mySearchField = createSearchField();
-        mySearchField.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, 8);
-        mySearchField.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, null, 8);
-        mySearchField.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, null, 4);
-        mySearchField.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 4);
+        mySearchField.paddingBuilder().verticalSet(Space.LARGE).horizontalSet(Space.SMALL).apply();
 
         (TargetAWT.to(mySearchField)).setFocusTraversalKeysEnabled(false);
         mySuggestionsPanel = createSuggestionsPanel();

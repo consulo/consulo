@@ -115,12 +115,13 @@ public class CustomizationUtil {
         return reorderedChildren.toArray(new AnAction[reorderedChildren.size()]);
     }
 
-    public static void optimizeSchema(JTree tree, CustomActionsSchemaImpl schema) {
+    public static void optimizeSchema(JTree tree, CustomActionsSchemaImpl schema, List<DefaultMutableTreeNode> defaultGroupNodes) {
         //noinspection HardCodedStringLiteral
         KeymapGroupImpl rootGroup = new KeymapGroupImpl("root");
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
-        root.removeAllChildren();
-        schema.fillActionGroups(root);
+        for (DefaultMutableTreeNode node : defaultGroupNodes) {
+            root.add(node);
+        }
         JTree defaultTree = new Tree(new DefaultTreeModel(root));
 
         ArrayList<ActionUrl> actions = new ArrayList<>();

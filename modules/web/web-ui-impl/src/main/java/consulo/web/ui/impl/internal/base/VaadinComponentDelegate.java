@@ -23,12 +23,14 @@ import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.BorderBuilder;
 import consulo.ui.Component;
 import consulo.ui.Length;
+import consulo.ui.PaddingBuilder;
+import consulo.ui.Space;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
+import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.AttachEvent;
@@ -41,8 +43,10 @@ import consulo.ui.event.KeyPressedEvent;
 import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
-import consulo.ui.impl.BorderInfo;
+import consulo.ui.impl.BorderBuilderImpl;
+import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
+import consulo.ui.internal.BorderPosition;
 import consulo.util.dataholder.Key;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
@@ -292,29 +296,16 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
-        dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
-
-        bordersChanged();
+    public BorderBuilder borderBuilder() {
+        return new BorderBuilderImpl(dataObject(), this::bordersChanged);
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(BorderPosition borderPosition) {
-        dataObject().removeBorder(borderPosition);
-
-        bordersChanged();
+    public PaddingBuilder paddingBuilder() {
+        return new PaddingBuilderImpl(dataObject(), this::bordersChanged);
     }
 
-    @RequiredUIAccess
-    @Override
-    public void addBorders(BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
-        for (BorderPosition position : BorderPosition.values()) {
-            dataObject().addBorder(position, borderStyle, colorKey, width);
-        }
-
-        bordersChanged();
-    }
 
     @Override
     public boolean isVisible() {
@@ -392,9 +383,10 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     public void bordersChanged() {
-        Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
+        Map<BorderPosition, ColorValue> borders = dataObject().getBorders();
+        Map<BorderPosition, Space> paddings = dataObject().getPaddings();
 
-        if (!borders.isEmpty()) {
+        if (!borders.isEmpty() || !paddings.isEmpty()) {
             myVaadinComponent.getStyle().set("box-sizing", "border-box");
         }
 
@@ -412,64 +404,43 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
             myVaadinComponent.getElement().getClassList().add("consulo-flat-input");
         }
 
-        applyBorder(BorderPosition.TOP, borders);
-        applyBorder(BorderPosition.BOTTOM, borders);
-        applyBorder(BorderPosition.RIGHT, borders);
-        applyBorder(BorderPosition.LEFT, borders);
-    }
-
-    private void applyBorder(BorderPosition pos, Map<BorderPosition, BorderInfo> borders) {
-        BorderInfo info = borders.get(pos);
-        if (info == null) {
-            return;
+        for (BorderPosition position : BorderPosition.values()) {
+            applyBorder(position, borders);
+            applyPadding(position, paddings);
         }
 
+        // a corner is shared by two sides, so only a component asking for every side is rounded
+        if (borders.size() == BorderPosition.values().length) {
+            myVaadinComponent.getElement().getClassList().add(AuraUtility.BorderRadius.MEDIUM);
+        }
+    }
+
+    private void applyBorder(BorderPosition position, Map<BorderPosition, ColorValue> borders) {
         ClassList classList = myVaadinComponent.getElement().getClassList();
 
-        switch (info.getBorderStyle()) {
-            case LINE_ROUNDED:
-            case LINE: {
-                classList.add(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
+        String edge = switch (position) {
+            case TOP -> AuraUtility.Border.TOP;
+            case BOTTOM -> AuraUtility.Border.BOTTOM;
+            case LEFT -> AuraUtility.Border.LEFT;
+            case RIGHT -> AuraUtility.Border.RIGHT;
+        };
 
-                if (info.getBorderStyle() == BorderStyle.LINE_ROUNDED) {
-                    myVaadinComponent.getStyle().set("border-radius", BorderStyle.DEFAULT_ARC + "px");
-                }
+        boolean present = borders.containsKey(position);
+        classList.set(edge, present);
 
-                switch (info.getBorderPosition()) {
-                    case TOP:
-                        classList.add(AuraUtility.Border.TOP);
-                        break;
-                    case BOTTOM:
-                        classList.add(AuraUtility.Border.BOTTOM);
-                        break;
-                    case LEFT:
-                        classList.add(AuraUtility.Border.LEFT);
-                        break;
-                    case RIGHT:
-                        classList.add(AuraUtility.Border.RIGHT);
-                        break;
-                }
-                break;
-            }
-            case EMPTY: {
-                String padding = info.getWidth() + "px";
+        if (present) {
+            classList.add(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
+        }
+    }
 
-                switch (info.getBorderPosition()) {
-                    case TOP:
-                        myVaadinComponent.getStyle().set("padding-top", padding);
-                        break;
-                    case BOTTOM:
-                        myVaadinComponent.getStyle().set("padding-bottom", padding);
-                        break;
-                    case LEFT:
-                        myVaadinComponent.getStyle().set("padding-left", padding);
-                        break;
-                    case RIGHT:
-                        myVaadinComponent.getStyle().set("padding-right", padding);
-                        break;
-                }
-                break;
-            }
+    private void applyPadding(BorderPosition position, Map<BorderPosition, Space> paddings) {
+        ClassList classList = myVaadinComponent.getElement().getClassList();
+
+        WebSpace.allPaddingClasses(position).forEach(classList::remove);
+
+        Space space = paddings.get(position);
+        if (space != null) {
+            classList.add(WebSpace.toPaddingClass(position, space));
         }
     }
 }

@@ -24,10 +24,10 @@ import java.util.Map;
 public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAccessor<Integer, V> {
   private static final Logger LOG = Logger.getInstance(SingleEntryIndexForwardIndexAccessor.class);
   private final ID<Integer, V> myIndexId;
-  private final VolatileNotNullLazyValue<UpdatableIndex<Integer, V, ?>> myIndex = new VolatileNotNullLazyValue<UpdatableIndex<Integer, V, ?>>() {
+  private final VolatileNotNullLazyValue<UpdatableIndex<Integer, V, ?, ?>> myIndex = new VolatileNotNullLazyValue<UpdatableIndex<Integer, V, ?, ?>>() {
     
     @Override
-    protected UpdatableIndex<Integer, V, ?> compute() {
+    protected UpdatableIndex<Integer, V, ?, ?> compute() {
       return ((FileBasedIndexImpl)FileBasedIndex.getInstance()).getIndex(myIndexId);
     }
   };

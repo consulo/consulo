@@ -21,9 +21,8 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.PseudoComponent;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.image.Image;
 import consulo.ui.layout.WrappedLayout;
 import consulo.util.lang.StringUtil;
@@ -138,8 +137,7 @@ public class UnifiedStatusBarWidgetWrapper {
     @RequiredUIAccess
     private static WrappedLayout pad(Component component) {
         WrappedLayout layout = WrappedLayout.create(component);
-        layout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 4);
-        layout.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, null, 4);
+        layout.paddingBuilder().horizontalSet(Space.SMALL).apply();
         return layout;
     }
 }

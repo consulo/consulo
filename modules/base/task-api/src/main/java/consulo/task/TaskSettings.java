@@ -23,7 +23,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 /**
@@ -33,23 +32,38 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "TaskSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-public class TaskSettings implements PersistentStateComponent<TaskSettings> {
+@State(name = "TaskSettings", storages = @Storage("other"))
+public class TaskSettings implements PersistentStateComponent<TaskSettingsState> {
 
-  public boolean ALWAYS_DISPLAY_COMBO = false;
-  public int CONNECTION_TIMEOUT = 5000;
+    public static TaskSettings getInstance() {
+        return Application.get().getInstance(TaskSettings.class);
+    }
 
-  public static TaskSettings getInstance() {
-    return Application.get().getInstance(TaskSettings.class);
-  }
+    private TaskSettingsState myState = new TaskSettingsState();
 
-  @Override
-  public TaskSettings getState() {
-    return this;
-  }
+    @Override
+    public TaskSettingsState getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(TaskSettings state) {
-    XmlSerializerUtil.copyBean(state, this);
-  }
+    @Override
+    public void loadState(TaskSettingsState state) {
+        myState = state;
+    }
+
+    public int getConnectionTimeout() {
+        return myState.CONNECTION_TIMEOUT;
+    }
+
+    public void setConnectionTimeout(int value) {
+        myState.CONNECTION_TIMEOUT = value;
+    }
+
+    public boolean isAlwaysDisplayCombo() {
+        return myState.ALWAYS_DISPLAY_COMBO;
+    }
+
+    public void setAlwaysDisplayCombo(boolean value) {
+        myState.ALWAYS_DISPLAY_COMBO = false;
+    }
 }

@@ -112,7 +112,7 @@ public class DefaultKeymap {
             else if (linux.isKDE()) {
                 return KeymapManager.KDE_KEYMAP;
             }
-            else if (linux.isXWindow()) {
+            else {
                 return KeymapManager.X_WINDOW_KEYMAP;
             }
         }

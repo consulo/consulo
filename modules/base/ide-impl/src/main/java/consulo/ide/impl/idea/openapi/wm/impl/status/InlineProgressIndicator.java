@@ -12,9 +12,8 @@ import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
@@ -86,7 +85,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         if (myCompact) {
             myProgress.addStyle(ProgressBarStyle.SPINNER);
 
-            HorizontalLayout layout = HorizontalLayout.create(5);
+            HorizontalLayout layout = HorizontalLayout.create();
             layout.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
 
             layout.add(myProgress);
@@ -108,12 +107,12 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             content.center(myProgress);
             content.bottom(myText2);
             content.right(toolbar);
-            content.addBorders(BorderStyle.EMPTY, null, 2);
+            content.paddingBuilder().allSet(Space.X_SMALL).apply();
 
             DockLayout root = DockLayout.create();
             root.top(myProcessName);
             root.center(content);
-            root.addBorders(BorderStyle.LINE_ROUNDED, ComponentColors.BORDER, 1);
+            root.borderBuilder().allSet().apply();
 
             myComponent = root;
         }

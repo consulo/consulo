@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.LongUnaryOperator;
@@ -311,6 +312,23 @@ public class ConcurrentBitSet {
     return (int)(h >> 32 ^ h);
   }
 
+    /**
+     * @return number of bits set
+     */
+    public int cardinality() {
+        int sum = 0;
+        for (int a = 0; a < arrays.length(); a++) {
+            AtomicLongArray array = arrays.get(a);
+            if (array == null) {
+                continue;
+            }
+            for (int i = 0; i < array.length(); i++) {
+                sum += Long.bitCount(array.get(i));
+            }
+        }
+        return sum;
+    }
+
   /**
    * Returns the number of bits of space actually in use
    *
@@ -429,6 +447,32 @@ public class ConcurrentBitSet {
       bitSetStorage.close();
     }
   }
+
+    public void writeTo(DataOutput output) throws IOException {
+        long[] words = toLongArray();
+        for (long word : words) {
+            output.writeLong(word);
+        }
+    }
+
+    public static ConcurrentBitSet readFrom(DataInput input) throws IOException {
+        long[] words = new long[32];
+        int size = 0;
+        while (true) {
+            long word;
+            try {
+                word = input.readLong();
+            }
+            catch (EOFException e) {
+                break;
+            }
+            if (size == words.length) {
+                words = Arrays.copyOf(words, words.length * 2);
+            }
+            words[size++] = word;
+        }
+        return new ConcurrentBitSet(Arrays.copyOf(words, size));
+    }
 
   public static ConcurrentBitSet readFrom(File file) throws IOException {
     if (!file.exists()) {

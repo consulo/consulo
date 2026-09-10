@@ -27,7 +27,9 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.forward.InputDataDiffBuilder;
 import consulo.index.io.internal.DebugAssertions;
 import consulo.language.Language;
+import consulo.application.progress.ProgressManager;
 import consulo.language.file.LanguageFileType;
+import consulo.language.impl.internal.psi.stub.IndexedFileImpl;
 import consulo.language.index.impl.internal.*;
 import consulo.language.index.impl.internal.forward.EmptyForwardIndex;
 import consulo.language.internal.SerializationManagerEx;
@@ -89,9 +91,11 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
                     return true;
                 }
                 if (file instanceof NewVirtualFile newVirtualFile
-                    && FileBasedIndex.getInstance() instanceof FileBasedIndexImpl fileBasedIndexImpl
-                    && fileBasedIndexImpl.getIndex(INDEX_ID).isIndexedStateForFile(newVirtualFile.getId(), newVirtualFile)) {
-                    return true;
+                    && FileBasedIndex.getInstance() instanceof FileBasedIndexImpl fileBasedIndexImpl) {
+                    IndexedFileImpl indexedFile = new IndexedFileImpl(newVirtualFile, fileType);
+                    if (fileBasedIndexImpl.getIndex(INDEX_ID).getIndexingStateForFile(newVirtualFile.getId(), indexedFile).isUpToDate()) {
+                        return true;
+                    }
                 }
             }
         }
@@ -286,7 +290,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
 
     
     @Override
-    public UpdatableIndex<Integer, SerializedStubTree, FileContent> createIndexImplementation(
+    public UpdatableIndex<Integer, SerializedStubTree, FileContent, ?> createIndexImplementation(
         FileBasedIndexExtension<Integer, SerializedStubTree> extension,
         IndexStorage<Integer, SerializedStubTree> storage
     ) throws StorageException, IOException {
@@ -306,7 +310,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
         return new MyIndex(extension, storage);
     }
 
-    private static class MyIndex extends VfsAwareMapReduceIndex<Integer, SerializedStubTree, FileContent> {
+    private static class MyIndex extends VfsAwareMapReduceIndex<Integer, SerializedStubTree, FileContent, MyIndex.Data> {
         private StubIndexImpl myStubIndex;
         private final StubVersionMap myStubVersionMap = new StubVersionMap();
 
@@ -414,9 +418,39 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
             return new StubCumulativeInputDiffBuilder(inputId, keysAndValues.isEmpty() ? null : keysAndValues.values().iterator().next());
         }
 
+        static final class Data {
+            private final FileType myFileType;
+
+            Data(FileType fileType) {
+                myFileType = fileType;
+            }
+        }
+
         @Override
-        public void setIndexedStateForFile(int fileId, VirtualFile file) {
-            super.setIndexedStateForFile(fileId, file);
+        public Data getFileIndexMetaData(IndexedFile file) {
+            FileType[] fileType = {null};
+            ProgressManager.getInstance().executeNonCancelableSection(() -> {
+                fileType[0] = file.getFileType();
+            });
+            return new Data(fileType[0]);
+        }
+
+        @Override
+        public void setIndexedStateForFileOnFileIndexMetaData(int fileId,
+                                                              @Nullable Data fileData,
+                                                              boolean isProvidedByInfrastructureExtension) {
+            super.setIndexedStateForFileOnFileIndexMetaData(fileId, fileData, isProvidedByInfrastructureExtension);
+            LOG.assertTrue(fileData != null, "getFileIndexMetaData doesn't return null");
+            persistIndexedState(fileId, fileData.myFileType);
+        }
+
+        @Override
+        public void setIndexedStateForFile(int fileId, IndexedFile file, boolean isProvidedByInfrastructureExtension) {
+            super.setIndexedStateForFile(fileId, file, isProvidedByInfrastructureExtension);
+            persistIndexedState(fileId, file.getFile());
+        }
+
+        private void persistIndexedState(int fileId, VirtualFile file) {
             try {
                 myStubVersionMap.persistIndexedState(fileId, file);
             }
@@ -425,19 +459,30 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
             }
         }
 
-        @Override
-        public boolean isIndexedStateForFile(int fileId, VirtualFile file) {
-            boolean indexedStateForFile = super.isIndexedStateForFile(fileId, file);
-            if (!indexedStateForFile) {
-                return false;
-            }
-
+        private void persistIndexedState(int fileId, FileType fileType) {
             try {
-                return myStubVersionMap.isIndexed(fileId, file);
+                myStubVersionMap.persistIndexedState(fileId, fileType);
             }
             catch (IOException e) {
                 LOG.error(e);
-                return false;
+            }
+        }
+
+        @Override
+        public FileIndexingStateWithExplanation getIndexingStateForFile(int fileId, IndexedFile file) {
+            FileIndexingStateWithExplanation indexingState = super.getIndexingStateForFile(fileId, file);
+            if (indexingState.updateRequired()) {
+                return indexingState;
+            }
+
+            try {
+                return myStubVersionMap.isIndexed(fileId, file.getFile())
+                    ? FileIndexingStateWithExplanation.upToDate()
+                    : FileIndexingStateWithExplanation.outdated("stub version is not the current one");
+            }
+            catch (IOException e) {
+                LOG.error(e);
+                return FileIndexingStateWithExplanation.outdated("IOException while reading stub version");
             }
         }
     }

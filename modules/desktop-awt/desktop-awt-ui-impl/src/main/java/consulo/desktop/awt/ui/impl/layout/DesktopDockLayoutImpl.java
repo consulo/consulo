@@ -15,7 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.DesktopSpace;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
@@ -29,7 +31,8 @@ import java.awt.*;
  * @since 2016-06-09
  */
 public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosition> implements DockLayout {
-    public DesktopDockLayoutImpl(int gapInPixels) {
+    public DesktopDockLayoutImpl(Space gap) {
+        int gapInPixels = DesktopSpace.toPixels(gap);
         initDefaultPanel(new BorderLayout(gapInPixels, gapInPixels));
     }
 

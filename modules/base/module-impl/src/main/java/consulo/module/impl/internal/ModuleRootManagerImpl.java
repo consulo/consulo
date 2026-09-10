@@ -22,7 +22,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.disposer.Disposable;
@@ -31,6 +30,7 @@ import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.internal.BuildableRootsChangeRescanningInfo;
 import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -139,7 +139,12 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   public void makeRootsChange(@RequiredReadAction Runnable runnable) {
     ProjectRootManagerEx projectRootManagerEx = (ProjectRootManagerEx)ProjectRootManager.getInstance(myModule.getProject());
     // IMPORTANT: should be the first listener!
-    projectRootManagerEx.makeRootsChange(runnable, false, isModuleAdded);
+    if (isModuleAdded) {
+      projectRootManagerEx.makeRootsChange(runnable, BuildableRootsChangeRescanningInfo.newInstance().addModule(myModule).buildInfo());
+    }
+    else {
+      projectRootManagerEx.makeRootsChange(runnable, false, false);
+    }
   }
 
   public RootModelImpl getRootModel() {

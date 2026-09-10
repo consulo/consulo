@@ -29,10 +29,9 @@ import consulo.ui.ComponentItemRender;
 import consulo.ui.Label;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -50,11 +49,11 @@ import java.util.function.BiConsumer;
  * @since 2026-08-23
  */
 public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
-    private static final int GROUP_INDENT = 22;
-    private static final int GAP = 8;
-    private static final int VERTICAL_GAP = 4;
+    private static final Space GAP = Space.LARGE;
+    private static final Space GROUP_INDENT = Space.XX_LARGE;
+    private static final Space VERTICAL_GAP = Space.SMALL;
 
-    public static final Length ROW_HEIGHT = Length.ofFont(2.5f).plusPixel(2 * VERTICAL_GAP);
+    public static final Length ROW_HEIGHT = Length.ofFont(2.5f).plusPixel(8);
 
     /**
      * The recent projects are the same list on every welcome screen, so how much room it asks for is decided once
@@ -91,9 +90,7 @@ public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
         row.addClickListener(event -> myActivateHandler.accept(value, event));
         row.addContextMenuListener(event -> myMenuHandler.accept(value, event));
         row.right(createMenuHandle(value));
-        row.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, GAP);
-        row.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, VERTICAL_GAP);
-        row.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, VERTICAL_GAP);
+        row.paddingBuilder().verticalSet(VERTICAL_GAP).rightSet(GAP).apply();
 
         if (value instanceof PopupProjectGroupActionGroup groupAction) {
             ProjectGroup group = groupAction.getGroup();
@@ -101,7 +98,7 @@ public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
             Label name = Label.create(LocalizeValue.of(group.getName()));
             name.setImage(group.isExpanded() ? PlatformIconGroup.nodesFolderopened() : PlatformIconGroup.nodesFolder());
             row.center(name);
-            row.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, GAP);
+            row.paddingBuilder().leftSet(GAP).apply();
             return row;
         }
 
@@ -109,13 +106,13 @@ public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
 
         Label icon = Label.create();
         icon.setImage(action.getExtensionIcon());
-        icon.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, GAP);
+        icon.paddingBuilder().rightSet(GAP).apply();
         row.left(icon);
 
         row.center(VerticalLayout.create().add(createTitle(action)).add(createPath(action)));
         row.setAccessibleName(LocalizeValue.of(action.getProjectName() + " - " + action.getProjectPath()));
 
-        row.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, isInsideGroup(action) ? GROUP_INDENT + GAP : GAP);
+        row.paddingBuilder().leftSet(isInsideGroup(action) ? GROUP_INDENT : GAP).apply();
 
         return row;
     }
@@ -141,7 +138,7 @@ public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
             Label branchLabel = Label.create(LocalizeValue.of(branch));
             branchLabel.setImage(PlatformIconGroup.vcsBranch());
             branchLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
-            branchLabel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, GAP);
+            branchLabel.paddingBuilder().leftSet(GAP).apply();
             title.add(branchLabel);
         }
 

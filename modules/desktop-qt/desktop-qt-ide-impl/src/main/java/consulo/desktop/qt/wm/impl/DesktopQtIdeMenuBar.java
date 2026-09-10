@@ -90,12 +90,24 @@ public class DesktopQtIdeMenuBar {
         ProgressIndicator indicator = new EmptyProgressIndicator();
         myUpdateIndicator = indicator;
 
-        ActionGroup mainMenuGroup = findMainMenuGroup();
-        if (mainMenuGroup == null) {
-            myUpdateIndicator = null;
-            return;
-        }
+        CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_MENU)
+            .whenComplete((mainMenuGroup, throwable) -> {
+                if (throwable != null) {
+                    LOG.error("Failed to resolve the main menu group", throwable);
+                    return;
+                }
+                uiAccess.giveIfNeed(() -> {
+                if (mainMenuGroup == null) {
+                    myUpdateIndicator = null;
+                    return;
+                }
+                expandMainMenuAsync(mainMenuGroup, uiAccess, indicator);
+            });
+            });
+    }
 
+    @RequiredUIAccess
+    private void expandMainMenuAsync(ActionGroup mainMenuGroup, UIAccess uiAccess, ProgressIndicator indicator) {
         UnifiedActionMenuExpander
             .expandAsync(mainMenuGroup, createDataContext(), ActionPlaces.MAIN_MENU, myPresentationFactory, uiAccess, indicator, false)
             .whenCompleteAsync((nodes, throwable) -> {
@@ -114,12 +126,6 @@ public class DesktopQtIdeMenuBar {
 
                 applyNodes(nodes);
             }, uiAccess);
-    }
-
-    private static @Nullable ActionGroup findMainMenuGroup() {
-        AnAction mainMenuAction = CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
-
-        return mainMenuAction instanceof ActionGroup mainMenuGroup ? mainMenuGroup : null;
     }
 
     private DataContext createDataContext() {

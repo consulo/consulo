@@ -7,7 +7,7 @@ import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.LanguageFileType;
 import consulo.language.index.impl.internal.IndexInfrastructure;
-import consulo.language.index.impl.internal.IndexingStamp;
+import consulo.language.index.impl.internal.IndexVersion;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.stub.BinaryFileStubBuilder;
 import consulo.language.psi.stub.IStubFileElementType;
@@ -58,7 +58,7 @@ class StubVersionMap {
   }
 
   private void updateState() throws IOException {
-    long currentStubIndexStamp = IndexingStamp.getIndexCreationStamp(StubUpdatingIndex.INDEX_ID);
+    long currentStubIndexStamp = IndexVersion.getIndexCreationStamp(StubUpdatingIndex.INDEX_ID);
     File allIndexedFiles = allIndexedFilesRegistryFile();
 
     List<String> removedFileTypes = new ArrayList<>();
@@ -235,12 +235,16 @@ class StubVersionMap {
   private static final FileAttribute VERSION_STAMP = new FileAttribute("stubIndex.versionStamp", 2, true);
 
   public void persistIndexedState(int fileId, VirtualFile file) throws IOException {
+    FileType[] type = {null};
+    ProgressManager.getInstance().executeNonCancelableSection(() -> {
+      type[0] = file.getFileType();
+    });
+    persistIndexedState(fileId, type[0]);
+  }
+
+  public void persistIndexedState(int fileId, FileType fileType) throws IOException {
     try (DataOutputStream stream = FSRecordsProxy.getInstance().writeAttribute(fileId, VERSION_STAMP)) {
-      FileType[] type = {null};
-      ProgressManager.getInstance().executeNonCancelableSection(() -> {
-        type[0] = file.getFileType();
-      });
-      DataInputOutputUtil.writeINT(stream, getIndexingTimestampDiffForFileType(type[0]));
+      DataInputOutputUtil.writeINT(stream, getIndexingTimestampDiffForFileType(fileType));
     }
   }
 

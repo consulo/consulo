@@ -22,7 +22,7 @@ import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Alerts;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -75,7 +75,7 @@ public class LoginAction extends LegacyDumbAwareAction implements RightAlignedTo
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
     if(configuration.getEmail() != null) {
-      Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().whenComplete((value, error) -> {
+      MessageBoxes.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().whenComplete((value, error) -> {
           if (error != null) {
               return;
           }

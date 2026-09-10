@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
@@ -56,6 +57,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import consulo.desktop.qt.ui.impl.messagebox.DesktopQtMessageBoxBuilderImpl;
+import consulo.desktop.qt.ui.impl.messagebox.DesktopQtInputBoxBuilderImpl;
+import consulo.ui.ex.impl.internal.UnifiedInputBoxBuilderImpl;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
@@ -120,7 +125,7 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public DockLayout _Layouts_dock(int gapInPixels) {
+    public DockLayout _Layouts_dock(Space gapInPixels) {
         return new DesktopQtDockLayoutImpl(gapInPixels);
     }
 
@@ -130,12 +135,12 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap) {
+    public VerticalLayout _Layouts_vertical(Space vGap) {
         return new DesktopQtVerticalLayoutImpl(vGap);
     }
 
     @Override
-    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment) {
         return new DesktopQtVerticalLayoutImpl(vGap, alignment);
     }
 
@@ -180,7 +185,7 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+    public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
         return new DesktopQtHorizontalLayoutImpl(gapInPixels);
     }
 
@@ -289,6 +294,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public FontBox _Components_fontBox() {
+        return new DesktopQtFontBoxImpl();
+    }
+
+    @Override
     public Image _Image_fromUrl(URL url) throws IOException {
         return DesktopQtBytesImageImpl.fromUrl(url);
     }
@@ -385,10 +395,6 @@ public class DesktopQtUIInternalImpl extends UIInternal {
         return new DesktopQtSeparatorImpl(style);
     }
 
-    @Override
-    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-        return new DesktopQtBoolValueGroup();
-    }
 
     @Override
     public MenuBar _MenuItems_menuBar() {
@@ -500,5 +506,37 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     @Override
     public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
         return new FlatDataModelImpl<>(list);
+    }
+
+    @Override
+    public <V> RadioGroup<V> _Components_radioGroup() {
+        return new DesktopQtRadioGroupImpl<>();
+    }
+
+
+    @Override
+    public <T> MessageBoxBuilder<T> _MessageBox_create() {
+        return new DesktopQtMessageBoxBuilderImpl<>();
+    }
+
+    @Override
+    public InputBoxBuilder<String, TextBox> _InputBox_text() {
+        return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.TEXT, TextBox::create);
+    }
+
+    @Override
+    public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
+        return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.INTEGER, IntBox::create);
+    }
+
+    @Override
+    public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
+        List<V> copy = new ArrayList<>(items);
+        return new UnifiedInputBoxBuilderImpl<>(() -> ComboBox.create(copy));
+    }
+
+    @Override
+    public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
+        return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.PASSWORD, PasswordBox::create);
     }
 }
