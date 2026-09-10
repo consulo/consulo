@@ -16,13 +16,18 @@
 package consulo.it.index;
 
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.index.impl.internal.roots.IndexableFilesIterator;
+import consulo.language.index.impl.internal.roots.ModuleIndexableFilesIteratorImpl;
 import consulo.language.index.impl.internal.roots.kind.ModuleRootOrigin;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.internal.FileIndexBase;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -82,8 +87,25 @@ public class NestedModuleContentRootTest {
             }
         }
 
+        String diagnostics = ReadAction.compute(() -> {
+            StringBuilder text = new StringBuilder();
+            for (Module each : ModuleManager.getInstance(project).getSortedModules()) {
+                text.append(each.getName())
+                    .append(" rootsToIterate=")
+                    .append(((FileIndexBase) ModuleRootManager.getInstance(each).getFileIndex()).getRootsToIterate(each))
+                    .append(' ');
+            }
+            text.append("| providers=");
+            for (IndexableFilesIterator iterator : index.getOrderedIndexableFilesProviders(project)) {
+                text.append(iterator.getDebugName()).append(", ");
+            }
+            text.append("| iteratorClassFrom=")
+                .append(ModuleIndexableFilesIteratorImpl.class.getProtectionDomain().getCodeSource().getLocation());
+            return text.toString();
+        });
+
         assertThat(innerModuleRoots)
-            .as("the nested module must be offered as a root of its own, the outer module's walk cannot reach it")
+            .as("the nested module must be offered as a root of its own, the outer module's walk cannot reach it [%s]", diagnostics)
             .contains(innerFile);
 
         waitFor("the outer module must be indexed", () -> !findClasses(project, "OuterModuleClass").isEmpty());
