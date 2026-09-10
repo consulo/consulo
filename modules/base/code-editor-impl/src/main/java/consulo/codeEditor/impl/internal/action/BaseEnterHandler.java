@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.impl.action;
+package consulo.codeEditor.impl.internal.action;
 
 import consulo.codeEditor.Editor;
 import consulo.document.DocCommandGroupId;

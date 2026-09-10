@@ -11,7 +11,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
-import consulo.codeEditor.impl.action.BaseEnterHandler;
+import consulo.codeEditor.impl.internal.action.BaseEnterHandler;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;

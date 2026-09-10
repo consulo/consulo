@@ -19,13 +19,13 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
@@ -207,8 +207,9 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
 
     @Override
     @RequiredUIAccess
-    public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, LocalizeValue nameToSelect) {
-        return ShowSettingsUtil.getInstance().showSettingsDialog(project, nameToSelect.get());
+    public <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(@Nullable Project project, Class<T> toSelect) {
+        return ShowSettingsUtil.getInstance().showAndSelect(project, toSelect, o -> {
+        });
     }
 
     @Override

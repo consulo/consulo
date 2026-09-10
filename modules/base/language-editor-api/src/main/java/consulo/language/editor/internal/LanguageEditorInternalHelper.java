@@ -23,6 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -32,7 +33,6 @@ import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.RelativePoint2D;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -134,7 +134,7 @@ public interface LanguageEditorInternalHelper {
     }
 
     @RequiredUIAccess
-    default CompletableFuture<Void> showSettingsDialog(@Nullable Project project, LocalizeValue nameToSelect) {
+    default <T extends UnnamedConfigurable> CompletableFuture<Void> showAndSelect(@Nullable Project project, Class<T> toSelect) {
         return CompletableFuture.completedFuture(null);
     }
 

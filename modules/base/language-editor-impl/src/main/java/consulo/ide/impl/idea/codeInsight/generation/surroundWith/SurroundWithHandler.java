@@ -12,6 +12,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -315,8 +316,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            LanguageEditorInternalHelper.getInstance()
-                .showSettingsDialog(e.getData(Project.KEY), CodeInsightLocalize.templatesSettingsPageTitle());
+            LanguageEditorInternalHelper.getInstance().showAndSelect(e.getData(Project.KEY), LiveTemplatesConfigurable.class);
         }
     }
 }

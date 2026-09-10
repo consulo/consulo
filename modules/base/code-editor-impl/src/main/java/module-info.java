@@ -32,18 +32,15 @@ module consulo.code.editor.impl {
         consulo.web.ide,
         consulo.web.ui.impl;
 
-
-    exports consulo.codeEditor.impl.action to
-        consulo.language.editor.impl,
-        consulo.ide.impl;
-
     exports consulo.codeEditor.impl.internal to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl;
 
-    exports consulo.codeEditor.impl.internal.action to consulo.ide.impl;
+    exports consulo.codeEditor.impl.internal.action to
+        consulo.language.editor.impl,
+        consulo.ide.impl;
 
     exports consulo.codeEditor.impl.softwrap to
         consulo.desktop.awt.ide.impl,
@@ -79,5 +76,4 @@ module consulo.code.editor.impl {
         consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
         consulo.language.inject.impl;
-
 }
