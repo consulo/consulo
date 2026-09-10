@@ -25,10 +25,10 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.CopyPasteManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import org.jspecify.annotations.Nullable;
 

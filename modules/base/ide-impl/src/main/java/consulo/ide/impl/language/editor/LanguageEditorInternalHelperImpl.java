@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.editor;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
@@ -24,6 +25,7 @@ import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.configurable.Configurable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
@@ -55,7 +57,6 @@ import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.JBLabel;
@@ -71,34 +72,40 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 04-Aug-22
+ * @since 2022-08-04
  */
 @Singleton
 @ServiceImpl
 public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalHelper {
     @Override
-    public void doWrapLongLinesIfNecessary(Editor editor,
-                                           Project project,
-                                           Language language,
-                                           Document document,
-                                           int startOffset,
-                                           int endOffset,
-                                           List<? extends TextRange> enabledRanges) {
+    @RequiredUIAccess
+    public void doWrapLongLinesIfNecessary(
+        Editor editor,
+        Project project,
+        Language language,
+        Document document,
+        int startOffset,
+        int endOffset,
+        List<? extends TextRange> enabledRanges
+    ) {
         CodeFormatterFacade codeFormatter = new CodeFormatterFacade(CodeStyleSettingsManager.getSettings(project), language);
 
         codeFormatter.doWrapLongLinesIfNecessary(editor, project, document, startOffset, endOffset, enabledRanges);
     }
 
     @Override
-    public void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,
-                                              String text,
-                                              SimpleTextAttributes attributes,
-                                              boolean selected,
-                                              ColoredTextContainer simpleColoredComponent) {
+    public void appendFragmentsForSpeedSearch(
+        JComponent speedSearchEnabledComponent,
+        String text,
+        SimpleTextAttributes attributes,
+        boolean selected,
+        ColoredTextContainer simpleColoredComponent
+    ) {
         SpeedSearchUtil.appendFragmentsForSpeedSearch(speedSearchEnabledComponent, text, attributes, selected, simpleColoredComponent);
     }
 
@@ -113,14 +120,13 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
         });
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showInspectionsSettings(Project project) {
         ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class);
     }
 
     @Override
-    
     public List<Annotation> runAnnotator(Language language, Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
         AnnotationHolderImpl holder = new AnnotationHolderImpl(language, new AnnotationSession(file), batchMode);
         holder.runAnnotatorWithContext(context, annotator);
@@ -128,6 +134,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
+    @RequiredWriteAction
     public int adjustLineIndentNoCommit(Language language, Document document, Editor editor, int offset) {
         return EnterHandler.adjustLineIndentNoCommit(language, document, editor, offset);
     }
@@ -139,14 +146,16 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
 
     @Override
     @RequiredUIAccess
-    public void setHighlightersToEditor(Project project,
-                                        Document document,
-                                        int startOffset,
-                                        int endOffset,
-                                        Collection<HighlightInfo> highlights,
-                                        // if null global scheme will be used
-                                        @Nullable EditorColorsScheme colorsScheme,
-                                        int group) {
+    public void setHighlightersToEditor(
+        Project project,
+        Document document,
+        int startOffset,
+        int endOffset,
+        Collection<HighlightInfo> highlights,
+        // if null global scheme will be used
+        @Nullable EditorColorsScheme colorsScheme,
+        int group
+    ) {
         TextRange range = new TextRange(startOffset, endOffset);
         UIAccess.assertIsUIThread();
 
@@ -157,26 +166,58 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
         MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
         UpdateHighlightersUtilImpl.assertMarkupConsistent(markup, project);
 
-        UpdateHighlightersUtilImpl.setHighlightersInRange(project, document, range, colorsScheme, new ArrayList<>(highlights), (MarkupModelEx) markup, group);
+        UpdateHighlightersUtilImpl.setHighlightersInRange(
+            project,
+            document,
+            range,
+            colorsScheme,
+            new ArrayList<>(highlights),
+            (MarkupModelEx) markup,
+            group
+        );
     }
 
+    @Override
     @RequiredUIAccess
-    @Override
-    public void highlightRanges(Project project, Editor editor, TextAttributesKey attributesKey, boolean clearHighlights, List<TextRange> textRanges) {
+    public void highlightRanges(
+        Project project,
+        Editor editor,
+        TextAttributesKey attributesKey,
+        boolean clearHighlights,
+        List<TextRange> textRanges
+    ) {
         HighlightManager manager = HighlightManager.getInstance(project);
-        HighlightUsagesHandler.highlightRanges(manager, editor, EditorColors.SEARCH_RESULT_ATTRIBUTES, false, textRanges);
+        HighlightUsagesHandler.highlightRanges(manager, editor, attributesKey, clearHighlights, textRanges);
     }
 
     @Override
+    @RequiredUIAccess
     public void startFindUsages(Editor editor, Project project, PsiElement element, @Nullable RelativePoint2D point) {
         ShowUsagesAction action = (ShowUsagesAction) ActionManager.getInstance().getAction(ShowUsagesAction.ID);
         if (DumbService.getInstance(project).isDumb()) {
             LocalizeValue name = action.getTemplatePresentation().getTextValue();
-            DumbService.getInstance(project).showDumbModeNotification(LocalizeValue.localizeTODO("Usage search is not available until indices are ready"));
+            DumbService.getInstance(project)
+                .showDumbModeNotification(LocalizeValue.localizeTODO("Usage search is not available until indices are ready"));
         }
         else {
             RelativePoint2D popupPosition = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
             action.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
         }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<Void> showSettingsDialog(@Nullable Project project, LocalizeValue nameToSelect) {
+        return ShowSettingsUtil.getInstance().showSettingsDialog(project, nameToSelect.get());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<Void> editConfigurable(
+        Project project,
+        Configurable configurable,
+        @RequiredUIAccess Runnable advancedInitialization
+    ) {
+        return ShowSettingsUtil.getInstance().editConfigurable(project, configurable, advancedInitialization);
     }
 }

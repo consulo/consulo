@@ -20,11 +20,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;

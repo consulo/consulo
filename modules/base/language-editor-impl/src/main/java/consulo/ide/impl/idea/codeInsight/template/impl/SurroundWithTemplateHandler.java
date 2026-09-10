@@ -5,7 +5,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.codeInsight.template.impl.actions.InvokeTemplateAction;
+import consulo.ide.impl.idea.codeInsight.template.impl.actions.WrapWithCustomTemplateAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
@@ -14,6 +15,7 @@ import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,7 +35,7 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
     @Override
     @RequiredUIAccess
     public void invoke(Project project, Editor editor, PsiFile file) {
-        if (!EditorModificationUtil.checkModificationAllowed(editor)) {
+        if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
             return;
         }
         if (!editor.getSelectionModel().hasSelection()) {

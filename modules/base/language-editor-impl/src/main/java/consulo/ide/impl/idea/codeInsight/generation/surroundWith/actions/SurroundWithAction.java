@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.generation.actions;
+package consulo.ide.impl.idea.codeInsight.generation.surroundWith.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
@@ -23,7 +23,6 @@ public class SurroundWithAction extends BaseCodeInsightAction {
         setEnabledInModalContext(true);
     }
 
-    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new SurroundWithHandler();

@@ -3,9 +3,9 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.impl.internal.action.PasteAction;
 import consulo.ide.internal.CopyReferenceFQNTransferable;
 import consulo.ide.localize.IdeLocalize;
@@ -24,7 +24,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
 
 @ExtensionImpl
@@ -52,6 +51,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isPastePossible(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         Editor editor = dataContext.getData(Editor.KEY);
@@ -59,6 +59,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isPasteEnabled(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         String fqn = getCopiedFqn(dataContext);
@@ -94,6 +95,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
             });
     }
 
+    @RequiredUIAccess
     private static @Nullable String getCopiedFqn(DataContext context) {
         Supplier<DataTransfer> producer = context.getData(PasteAction.DATA_TRANSFER_PROVIDER);
         if (producer != null) {

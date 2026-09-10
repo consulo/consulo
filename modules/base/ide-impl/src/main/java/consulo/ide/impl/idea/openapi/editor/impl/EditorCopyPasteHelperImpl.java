@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferable;
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferableData;
 import consulo.codeEditor.*;
@@ -46,141 +48,147 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
-  private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
+    private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
 
-  @Override
-  @RequiredUIAccess
-  public void copySelectionToClipboard(Editor editor) {
-    UIAccess.assertIsUIThread();
-    List<TextBlockTransferableData> extraData = new ArrayList<TextBlockTransferableData>();
-    String s = editor.getCaretModel().supportsMultipleCarets() ? getSelectedTextForClipboard(editor, extraData)
-                                                               : editor.getSelectionModel().getSelectedText();
-    if (s == null) return;
-
-    s = TextBlockTransferable.convertLineSeparators(s, "\n", extraData);
-    Transferable contents = editor.getCaretModel().supportsMultipleCarets() ? new TextBlockTransferable(s, extraData, null) : new StringSelection(s);
-    CopyPasteManager.getInstance().setContents(DataTransfer.builder()
-      .put(DataTransferType.TEXT, s)
-      .put(EditorImplUtil.TRANSFERABLE, contents)
-      .build());
-  }
-
-  public static String getSelectedTextForClipboard(Editor editor, Collection<TextBlockTransferableData> extraDataCollector) {
-    StringBuilder buf = new StringBuilder();
-    String separator = "";
-    List<Caret> carets = editor.getCaretModel().getAllCarets();
-    int[] startOffsets = new int[carets.size()];
-    int[] endOffsets = new int[carets.size()];
-    for (int i = 0; i < carets.size(); i++) {
-      buf.append(separator);
-      String caretSelectedText = carets.get(i).getSelectedText();
-      startOffsets[i] = buf.length();
-      if (caretSelectedText != null) {
-        buf.append(caretSelectedText);
-      }
-      endOffsets[i] = buf.length();
-      separator = "\n";
-    }
-    extraDataCollector.add(new CaretStateTransferableData(startOffsets, endOffsets));
-    return buf.toString();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public TextRange @Nullable [] pasteFromClipboard(Editor editor) {
-    // the clipboard answers as a future, and this one has to give a value back - only the payload this process
-    // already holds can be pasted here, which is what every caller of this overload means anyway
-    DataTransfer contents = CopyPasteManager.getInstance().getLocalContents();
-    return contents.isEmpty() ? null : pasteDataTransfer(editor, contents);
-  }
-
-  @Override
-  public TextRange @Nullable [] pasteTransferable(final Editor editor, Transferable content) {
-    String text = getStringContent(content);
-    if (text == null) return null;
-
-    return pasteText(editor, text, caretStateOf(content));
-  }
-
-  /**
-   * The awt free entry point. A payload which came from another application carries text and nothing else, and
-   * the caret layout of a multi caret copy only ever exists in a payload this process wrote itself.
-   */
-  @Override
-  public TextRange @Nullable [] pasteDataTransfer(final Editor editor, DataTransfer content) {
-    Transferable transferable = content.get(EditorImplUtil.TRANSFERABLE);
-    if (transferable != null) {
-      return pasteTransferable(editor, transferable);
-    }
-
-    String text = content.get(DataTransferType.TEXT);
-    if (text == null) return null;
-
-    return pasteText(editor, text, null);
-  }
-
-  private static @Nullable CaretStateTransferableData caretStateOf(Transferable content) {
-    try {
-      return content.isDataFlavorSupported(CaretStateTransferableData.FLAVOR)
-             ? (CaretStateTransferableData)content.getTransferData(CaretStateTransferableData.FLAVOR) : null;
-    }
-    catch (Exception e) {
-      LOG.error(e);
-      return null;
-    }
-  }
-
-  private static TextRange @Nullable [] pasteText(
-    final Editor editor,
-    String text,
-    @Nullable CaretStateTransferableData caretData
-  ) {
-
-    if (editor.getCaretModel().supportsMultipleCarets()) {
-      int caretCount = editor.getCaretModel().getCaretCount();
-      if (caretCount == 1 && editor.isColumnMode()) {
-        int pastedLineCount = LineTokenizer.calcLineCount(text, true);
-        EditorModificationUtil.deleteSelectedText(editor);
-        Caret caret = editor.getCaretModel().getPrimaryCaret();
-        for (int i = 0; i < pastedLineCount - 1; i++) {
-          caret = caret.clone(false);
-          if (caret == null) {
-            break;
-          }
+    @Override
+    @RequiredUIAccess
+    public void copySelectionToClipboard(Editor editor) {
+        UIAccess.assertIsUIThread();
+        List<TextBlockTransferableData> extraData = new ArrayList<>();
+        String s = editor.getCaretModel().supportsMultipleCarets()
+            ? getSelectedTextForClipboard(editor, extraData)
+            : editor.getSelectionModel().getSelectedText();
+        if (s == null) {
+            return;
         }
-        caretCount = editor.getCaretModel().getCaretCount();
-      }
-      final TextRange[] ranges = new TextRange[caretCount];
-      final Iterator<String> segments = new ClipboardTextPerCaretSplitter().split(text, caretData, caretCount).iterator();
-      final int[] index = {0};
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          String segment = segments.next();
-          int caretOffset = caret.getOffset();
-          ranges[index[0]++] = new TextRange(caretOffset, caretOffset + segment.length());
-          EditorModificationUtil.insertStringAtCaret(editor, segment, false, true);
+
+        s = TextBlockTransferable.convertLineSeparators(s, "\n", extraData);
+        Transferable contents = editor.getCaretModel().supportsMultipleCarets()
+            ? new TextBlockTransferable(s, extraData, null)
+            : new StringSelection(s);
+        CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+            .put(DataTransferType.TEXT, s)
+            .put(EditorImplUtil.TRANSFERABLE, contents)
+            .build());
+    }
+
+    public static String getSelectedTextForClipboard(Editor editor, Collection<TextBlockTransferableData> extraDataCollector) {
+        StringBuilder buf = new StringBuilder();
+        String separator = "";
+        List<Caret> carets = editor.getCaretModel().getAllCarets();
+        int[] startOffsets = new int[carets.size()];
+        int[] endOffsets = new int[carets.size()];
+        for (int i = 0; i < carets.size(); i++) {
+            buf.append(separator);
+            String caretSelectedText = carets.get(i).getSelectedText();
+            startOffsets[i] = buf.length();
+            if (caretSelectedText != null) {
+                buf.append(caretSelectedText);
+            }
+            endOffsets[i] = buf.length();
+            separator = "\n";
         }
-      });
-      return ranges;
+        extraDataCollector.add(new CaretStateTransferableData(startOffsets, endOffsets));
+        return buf.toString();
     }
-    else {
-      int caretOffset = editor.getCaretModel().getOffset();
-      EditorModificationUtil.insertStringAtCaret(editor, text, false, true);
-      return new TextRange[] { new TextRange(caretOffset, caretOffset + text.length())};
+
+    @Override
+    @RequiredUIAccess
+    public TextRange @Nullable [] pasteFromClipboard(Editor editor) {
+        // the clipboard answers as a future, and this one has to give a value back - only the payload this process
+        // already holds can be pasted here, which is what every caller of this overload means anyway
+        DataTransfer contents = CopyPasteManager.getInstance().getLocalContents();
+        return contents.isEmpty() ? null : pasteDataTransfer(editor, contents);
     }
-  }
 
-  private static @Nullable String getStringContent(Transferable content) {
-    RawText raw = RawText.fromTransferable(content);
-    if (raw != null) return raw.rawText;
+    @Override
+    @RequiredWriteAction
+    public TextRange @Nullable [] pasteTransferable(Editor editor, Transferable content) {
+        String text = getStringContent(content);
+        if (text == null) {
+            return null;
+        }
 
-    try {
-      return (String)content.getTransferData(DataFlavor.stringFlavor);
+        return pasteText(editor, text, caretStateOf(content));
     }
-    catch (UnsupportedFlavorException ignore) { }
-    catch (IOException ignore) { }
 
-    return null;
-  }
+    /**
+     * The awt free entry point. A payload which came from another application carries text and nothing else, and
+     * the caret layout of a multi caret copy only ever exists in a payload this process wrote itself.
+     */
+    @Override
+    @RequiredWriteAction
+    public TextRange @Nullable [] pasteDataTransfer(Editor editor, DataTransfer content) {
+        Transferable transferable = content.get(EditorImplUtil.TRANSFERABLE);
+        if (transferable != null) {
+            return pasteTransferable(editor, transferable);
+        }
+
+        String text = content.get(DataTransferType.TEXT);
+        if (text == null) {
+            return null;
+        }
+
+        return pasteText(editor, text, null);
+    }
+
+    private static @Nullable CaretStateTransferableData caretStateOf(Transferable content) {
+        try {
+            return content.isDataFlavorSupported(CaretStateTransferableData.FLAVOR)
+                ? (CaretStateTransferableData) content.getTransferData(CaretStateTransferableData.FLAVOR) : null;
+        }
+        catch (Exception e) {
+            LOG.error(e);
+            return null;
+        }
+    }
+
+    @RequiredWriteAction
+    private static TextRange @Nullable [] pasteText(Editor editor, String text, @Nullable CaretStateTransferableData caretData) {
+        if (editor.getCaretModel().supportsMultipleCarets()) {
+            int caretCount = editor.getCaretModel().getCaretCount();
+            if (caretCount == 1 && editor.isColumnMode()) {
+                int pastedLineCount = LineTokenizer.calcLineCount(text, true);
+                EditorModificationUtil.deleteSelectedText(editor);
+                Caret caret = editor.getCaretModel().getPrimaryCaret();
+                for (int i = 0; i < pastedLineCount - 1; i++) {
+                    caret = caret.clone(false);
+                    if (caret == null) {
+                        break;
+                    }
+                }
+                caretCount = editor.getCaretModel().getCaretCount();
+            }
+            TextRange[] ranges = new TextRange[caretCount];
+            Iterator<String> segments = new ClipboardTextPerCaretSplitter().split(text, caretData, caretCount).iterator();
+            int[] index = {0};
+            editor.getCaretModel().runForEachCaret(caret -> {
+                String segment = segments.next();
+                int caretOffset = caret.getOffset();
+                ranges[index[0]++] = new TextRange(caretOffset, caretOffset + segment.length());
+                EditorModificationUtil.insertStringAtCaret(editor, segment, false, true);
+            });
+            return ranges;
+        }
+        else {
+            int caretOffset = editor.getCaretModel().getOffset();
+            EditorModificationUtil.insertStringAtCaret(editor, text, false, true);
+            return new TextRange[]{new TextRange(caretOffset, caretOffset + text.length())};
+        }
+    }
+
+    private static @Nullable String getStringContent(Transferable content) {
+        RawText raw = RawText.fromTransferable(content);
+        if (raw != null) {
+            return raw.rawText;
+        }
+
+        try {
+            return (String) content.getTransferData(DataFlavor.stringFlavor);
+        }
+        catch (UnsupportedFlavorException | IOException ignore) {
+        }
+
+        return null;
+    }
 }

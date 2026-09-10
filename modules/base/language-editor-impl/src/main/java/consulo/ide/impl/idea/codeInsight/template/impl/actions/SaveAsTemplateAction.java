@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.actions;
+package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
@@ -25,13 +25,13 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateListPanel;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
@@ -41,8 +41,9 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.undoRedo.CommandProcessor;
 
 import java.util.*;
@@ -52,7 +53,7 @@ import java.util.*;
  * @since 2002-08-20
  */
 @ActionImpl(id = "SaveAsTemplate")
-public class SaveAsTemplateAction extends LegacyAnAction {
+public class SaveAsTemplateAction extends AnAction implements AnActionWithSyncUpdate {
     private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
 
     public SaveAsTemplateAction() {
@@ -171,7 +172,7 @@ public class SaveAsTemplateAction extends LegacyAnAction {
         );
 
         LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
-        ShowSettingsUtil.getInstance()
+        LanguageEditorInternalHelper.getInstance()
             .editConfigurable(project, configurable, () -> configurable.getTemplateListPanel().addTemplate(template));
     }
 

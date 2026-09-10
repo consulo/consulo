@@ -15,12 +15,14 @@
  */
 package consulo.codeEditor.util;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,14 +31,16 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 18-Mar-22
+ * @since 2022-03-18
  */
 public class EditorModificationUtil {
+    @RequiredUIAccess
     public static void fillVirtualSpaceUntilCaret(Editor editor) {
         LogicalPosition position = editor.getCaretModel().getLogicalPosition();
         fillVirtualSpaceUntil(editor, position.column, position.line);
     }
 
+    @RequiredUIAccess
     public static void fillVirtualSpaceUntil(Editor editor, int columnNumber, int lineNumber) {
         int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
         String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
@@ -48,7 +52,6 @@ public class EditorModificationUtil {
         }
     }
 
-    
     public static List<CaretState> calcBlockSelectionState(Editor editor, LogicalPosition blockStart, LogicalPosition blockEnd) {
         int startLine = Math.max(Math.min(blockStart.line, editor.getDocument().getLineCount() - 1), 0);
         int endLine = Math.max(Math.min(blockEnd.line, editor.getDocument().getLineCount() - 1), 0);
@@ -113,22 +116,27 @@ public class EditorModificationUtil {
         editor.getCaretModel().runForEachCaret(caret -> caret.moveToOffset(caret.getOffset() + caretShift));
     }
 
+    @RequiredWriteAction
     public static void insertStringAtCaret(Editor editor, String s) {
         insertStringAtCaret(editor, s, false, true);
     }
 
+    @RequiredWriteAction
     public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode) {
         return insertStringAtCaret(editor, s, toProcessOverwriteMode, s.length());
     }
 
+    @RequiredWriteAction
     public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
         return insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, s.length());
     }
 
+    @RequiredWriteAction
     public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, int caretShift) {
         return insertStringAtCaret(editor, s, toProcessOverwriteMode, true, caretShift);
     }
 
+    @RequiredWriteAction
     public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
         int result = insertStringAtCaretNoScrolling(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
         if (toMoveCaret) {
@@ -137,6 +145,7 @@ public class EditorModificationUtil {
         return result;
     }
 
+    @RequiredWriteAction
     private static int insertStringAtCaretNoScrolling(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
         SelectionModel selectionModel = editor.getSelectionModel();
         if (selectionModel.hasSelection()) {

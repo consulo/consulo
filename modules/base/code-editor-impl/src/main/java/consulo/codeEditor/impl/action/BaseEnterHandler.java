@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.idea.codeInsight.editorActions;
+package consulo.codeEditor.impl.action;
 
 import consulo.codeEditor.Editor;
 import consulo.document.DocCommandGroupId;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 
 public abstract class BaseEnterHandler extends EditorWriteActionHandler {
-  private static final String GROUP_ID = "EnterHandler.GROUP_ID";
+    private static final String GROUP_ID = "EnterHandler.GROUP_ID";
 
-  protected BaseEnterHandler() {
-    super(false);
-  }
+    protected BaseEnterHandler() {
+        super(false);
+    }
 
-  protected BaseEnterHandler(boolean runForEachCaret) {
-    super(runForEachCaret);
-  }
+    protected BaseEnterHandler(boolean runForEachCaret) {
+        super(runForEachCaret);
+    }
 
-  @Override
-  public DocCommandGroupId getCommandGroupId(Editor editor) {
-    return DocCommandGroupId.withGroupId(editor.getDocument(), GROUP_ID);
-  }
+    @Override
+    public DocCommandGroupId getCommandGroupId(Editor editor) {
+        return DocCommandGroupId.withGroupId(editor.getDocument(), GROUP_ID);
+    }
 }

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -25,6 +24,7 @@ import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.language.editor.impl.internal.template.LiveTemplateLookupElementImpl;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Template;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -61,7 +61,7 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
                         }
 
                         LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
-                        ShowSettingsUtil.getInstance().editConfigurable(
+                        LanguageEditorInternalHelper.getInstance().editConfigurable(
                             project,
                             configurable,
                             () -> configurable.getTemplateListPanel().editTemplate((TemplateImpl) template)

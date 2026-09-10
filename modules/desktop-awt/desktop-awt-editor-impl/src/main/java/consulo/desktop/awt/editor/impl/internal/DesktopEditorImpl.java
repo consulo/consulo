@@ -7,14 +7,13 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.Dumpable;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.*;
-import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.EditorActionPlan;
@@ -22,6 +21,7 @@ import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.colorScheme.DelegateColorScheme;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
@@ -36,11 +36,8 @@ import consulo.desktop.awt.editor.impl.internal.stickyLine.VisualStickyLines;
 import consulo.desktop.awt.editor.impl.internal.view.CharacterGrid;
 import consulo.desktop.awt.editor.impl.internal.view.CharacterGridImpl;
 import consulo.desktop.awt.editor.impl.internal.view.EditorViewImpl;
-import consulo.desktop.awt.editor.impl.internal.LeftHandScrollbarLayout;
-import consulo.desktop.awt.editor.impl.internal.StatusComponentContainer;
 import consulo.desktop.awt.ui.impl.ExperimentalUI;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -56,8 +53,6 @@ import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -86,11 +81,13 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.internal.AbstractPainter;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.ui.ex.keymap.Keymap;
@@ -106,13 +103,13 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.Timer;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.plaf.ScrollPaneUI;
 import java.awt.*;
@@ -133,8 +130,8 @@ import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -193,7 +190,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         EMPTY_CURSOR = emptyCursor;
     }
 
-   
     private final JScrollBar myVerticalScrollBar;
 
     protected final CaretCursor myCaretCursor;
@@ -3168,12 +3164,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                             .groupId(getDocument())
                             .inUndoTransparentAction()
                             .inWriteAction()
-                            .run(() -> EditorModificationUtil.insertStringAtCaret(
-                                DesktopEditorImpl.this,
-                                composedText,
-                                false,
-                                false
-                            ));
+                            .run(() -> EditorModificationUtil.insertStringAtCaret(DesktopEditorImpl.this, composedText, false, false));
 
                         composedTextRange = ProperTextRange.from(getCaretModel().getOffset(), composedText.length());
                     }

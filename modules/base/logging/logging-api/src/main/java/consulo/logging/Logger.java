@@ -59,7 +59,7 @@ public interface Logger {
 
     public abstract void debug(String message, @Nullable Throwable t);
 
-    default void debug(String message, Object... details) {
+    default void debug(String message, @Nullable Object... details) {
         if (isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             sb.append(message);
