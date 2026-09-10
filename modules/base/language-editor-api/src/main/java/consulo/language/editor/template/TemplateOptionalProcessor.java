@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
@@ -30,12 +29,10 @@ import consulo.util.dataholder.KeyWithDefaultValue;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateOptionalProcessor {
-    
     KeyWithDefaultValue<Boolean> getKey();
 
     void processText(Project project, Template template, Document document, RangeMarker templateRange, Editor editor);
 
-    
     LocalizeValue getOptionText();
 
     default boolean isEnabled(Template template) {

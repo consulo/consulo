@@ -26,15 +26,13 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author max
  */
 public class DefaultSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
-  @Override
-  
-  public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
-    return new DefaultSyntaxHighlighter();
-  }
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
+        return DefaultSyntaxHighlighter.INSTANCE;
+    }
 
-  
-  @Override
-  public Language getLanguage() {
-    return Language.ANY;
-  }
+    @Override
+    public Language getLanguage() {
+        return Language.ANY;
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -154,14 +153,13 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         myAdjustBox.setEnabled(show);
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.titleEditFileTemplate();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public JComponent createComponent() {
         myMainPanel = new JPanel(new GridBagLayout());
         myNameField = new JTextField();
@@ -296,8 +294,8 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         myChangeListeners.remove(listener);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         if (myModified) {
             return true;
@@ -318,8 +316,8 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         return false;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         if (myTemplate != null) {
             myTemplate.setText(myTemplateEditor.getDocument().getText());
@@ -350,8 +348,8 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         return FileUtil.ensureCanCreateFile(tempFile);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void reset() {
         String text = (myTemplate == null) ? "" : myTemplate.getText();
         String name = (myTemplate == null) ? "" : myTemplate.getName();
@@ -414,8 +412,8 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         return file;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void disposeUIResources() {
         myMainPanel = null;
         if (myTemplateEditor != null) {
@@ -441,7 +439,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
         SyntaxHighlighter originalHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, null, null);
         if (originalHighlighter == null) {
-            originalHighlighter = new DefaultSyntaxHighlighter();
+            originalHighlighter = DefaultSyntaxHighlighter.INSTANCE;
         }
 
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -474,7 +472,6 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         }
     }
 
-    
     @VisibleForTesting
     static Lexer createDefaultLexer() {
         return new MergingLexerAdapter(new FileTemplateTextLexer(), TokenSet.create(FileTemplateTokenType.TEXT));

@@ -20,15 +20,14 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     }
 
     public static @Nullable PostfixLiveTemplate getPostfixLiveTemplate(PsiFile file, Editor editor) {
-        PostfixLiveTemplate postfixLiveTemplate = CustomLiveTemplate.EP_NAME.findExtension(PostfixLiveTemplate.class);
+        PostfixLiveTemplate postfixLiveTemplate =
+            file.getApplication().getExtensionPoint(CustomLiveTemplate.class).findExtension(PostfixLiveTemplate.class);
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
-        return postfixLiveTemplate != null
-            && TemplateManagerImpl.isApplicable(postfixLiveTemplate, templateActionContext)
+        return postfixLiveTemplate != null && TemplateManagerImpl.isApplicable(postfixLiveTemplate, templateActionContext)
             ? postfixLiveTemplate
             : null;
     }
 
-    
     @Override
     public Language getLanguage() {
         return Language.ANY;
