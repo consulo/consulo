@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
@@ -26,13 +25,13 @@ import consulo.language.psi.PsiElement;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TemplateBuilderFactory {
-  public static TemplateBuilderFactory getInstance() {
-    return Application.get().getInstance(TemplateBuilderFactory.class);
-  }
+    public static TemplateBuilderFactory getInstance() {
+        return Application.get().getInstance(TemplateBuilderFactory.class);
+    }
 
-  public abstract TemplateBuilder createTemplateBuilder(PsiElement element);
+    public abstract TemplateBuilder createTemplateBuilder(PsiElement element);
 
-  public abstract Template createRawTemplate(String key, String group);
+    public abstract Template createRawTemplate(String key, String group);
 
-  public abstract Template createRawTemplate(String key, String group, String text);
+    public abstract Template createRawTemplate(String key, String group, String text);
 }

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.template;
 
 import consulo.component.persist.scheme.CompoundScheme;
 import org.jspecify.annotations.Nullable;
 
 public class TemplateGroup extends CompoundScheme<TemplateImpl> {
-
     private final String myReplace;
 
     public TemplateGroup(String name) {
@@ -36,7 +34,6 @@ public class TemplateGroup extends CompoundScheme<TemplateImpl> {
         return myReplace;
     }
 
-    
     @Override
     protected CompoundScheme<TemplateImpl> createNewInstance(String name) {
         return new TemplateGroup(name);
