@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 13-Feb-22
+ * @since 2022-02-13
  */
 module consulo.language.editor.api {
     // TODO obsolete dep
@@ -73,31 +73,48 @@ module consulo.language.editor.api {
     exports consulo.language.editor.wolfAnalyzer;
 
     exports consulo.language.editor.internal to
+        consulo.build.ui.api,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.execution.debug.impl,
+        consulo.file.editor.impl,
         consulo.ide.api,
         consulo.ide.impl,
-        consulo.file.editor.impl,
-        consulo.language.editor.impl,
-        consulo.language.index.impl,
-        consulo.language.editor.ui.api,
-        consulo.version.control.system.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.execution.debug.impl,
-        consulo.build.ui.api,
         consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.language.editor.impl,
+        consulo.language.editor.ui.api,
+        consulo.language.index.impl,
+        consulo.version.control.system.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.language.editor.internal.action to
+        consulo.desktop.awt.ide.impl,
+        consulo.ide.impl,
+        consulo.language.editor.impl;
 
     exports consulo.language.editor.internal.inspection to
         consulo.ide.impl,
         consulo.language.editor.impl;
 
     exports consulo.language.editor.internal.intention to
-        consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.execution.impl,
+        consulo.ide.impl,
         consulo.language.editor.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.web.ide,
+        consulo.web.ui.impl,
+        consulo.web.editor.impl;
     
     exports consulo.language.editor.internal.postfixTemplate to
         consulo.ide.impl,

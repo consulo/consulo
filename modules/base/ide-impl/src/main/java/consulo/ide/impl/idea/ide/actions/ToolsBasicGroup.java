@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.codeInsight.template.impl.actions.SaveAsTemplateAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -30,7 +30,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "ToolsBasicGroup",
     children = {
-        @ActionRef(type = SaveAsTemplateAction.class),
+        @ActionRef(id = LanguageEditorActions.SAVE_AS_LIVE_TEMPLATE),
         @ActionRef(type = SaveFileAsTemplateAction.class),
         @ActionRef(type = AnSeparator.class)
     }

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.application.ApplicationManager;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElementType;
@@ -25,6 +24,8 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
+import consulo.language.editor.internal.action.LanguageEditorActions;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -43,77 +44,94 @@ import java.util.List;
  * @author nik
  */
 public class SurroundElementWithAction extends LayoutTreeActionBase {
-  public SurroundElementWithAction(ArtifactEditorEx artifactEditor) {
-    super("Surround With...", artifactEditor);
-    CustomShortcutSet shortcutSet = new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts("SurroundWith"));
-    registerCustomShortcutSet(shortcutSet, artifactEditor.getLayoutTreeComponent().getLayoutTree());
-  }
-
-  @Override
-  protected boolean isEnabled() {
-    return myArtifactEditor.getLayoutTreeComponent().getSelection().getCommonParentElement() != null;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
-    LayoutTreeSelection selection = treeComponent.getSelection();
-    final CompositePackagingElement<?> parent = selection.getCommonParentElement();
-    if (parent == null) return;
-    PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
-    if (parentNode == null) return;
-
-    if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
-      return;
+    public SurroundElementWithAction(ArtifactEditorEx artifactEditor) {
+        super(ActionLocalize.actionSurroundwithText(), artifactEditor);
+        CustomShortcutSet shortcutSet =
+            new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(LanguageEditorActions.SURROUND_WITH));
+        registerCustomShortcutSet(shortcutSet, artifactEditor.getLayoutTreeComponent().getLayoutTree());
     }
 
-    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).getCompositeElementTypes();
-    final List<PackagingElement<?>> selected = selection.getElements();
-    if (types.length == 1) {
-      surroundWith(types[0], parent, selected, treeComponent);
+    @Override
+    protected boolean isEnabled() {
+        return myArtifactEditor.getLayoutTreeComponent().getSelection().getCommonParentElement() != null;
     }
-    else {
-      JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<CompositePackagingElementType>("Surround With...", types) {
-        @Override
-        public Image getIconFor(CompositePackagingElementType aValue) {
-          return aValue.getIcon();
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
+        LayoutTreeSelection selection = treeComponent.getSelection();
+        final CompositePackagingElement<?> parent = selection.getCommonParentElement();
+        if (parent == null) {
+            return;
+        }
+        PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
+        if (parentNode == null) {
+            return;
         }
 
-        
-        @Override
-        public String getTextFor(CompositePackagingElementType value) {
-          return value.getPresentableName().get();
+        if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
+            return;
         }
 
-        @Override
-        public PopupStep onChosen(CompositePackagingElementType selectedValue, boolean finalChoice) {
-          ApplicationManager.getApplication().invokeLater(() -> surroundWith(selectedValue, parent, selected, treeComponent));
-          return FINAL_CHOICE;
+        Project project = e.getRequiredData(Project.KEY);
+        CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(project).getCompositeElementTypes();
+        List<PackagingElement<?>> selected = selection.getElements();
+        if (types.length == 1) {
+            surroundWith(types[0], parent, selected, treeComponent);
         }
-      }).showInBestPositionFor(e.getDataContext());
+        else {
+            JBPopupFactory.getInstance().createListPopup(
+                project,
+                new BaseListPopupStep<CompositePackagingElementType>(getTemplatePresentation().getText(), types) {
+                    @Override
+                    public Image getIconFor(CompositePackagingElementType aValue) {
+                        return aValue.getIcon();
+                    }
+
+                    @Override
+                    public String getTextFor(CompositePackagingElementType value) {
+                        return value.getPresentableName().get();
+                    }
+
+                    @Override
+                    public PopupStep onChosen(CompositePackagingElementType selectedValue, boolean finalChoice) {
+                        project.getApplication().invokeLater(() -> surroundWith(selectedValue, parent, selected, treeComponent));
+                        return FINAL_CHOICE;
+                    }
+                }
+            ).showInBestPositionFor(e.getDataContext());
+        }
     }
-  }
 
-  private void surroundWith(CompositePackagingElementType<?> type, CompositePackagingElement<?> parent, List<PackagingElement<?>> selected,
-                            LayoutTreeComponent treeComponent) {
-    if (myArtifactEditor.isDisposed() || selected.isEmpty()) return;
+    @RequiredUIAccess
+    private void surroundWith(
+        CompositePackagingElementType<?> type,
+        CompositePackagingElement<?> parent,
+        List<PackagingElement<?>> selected,
+        LayoutTreeComponent treeComponent
+    ) {
+        if (myArtifactEditor.isDisposed() || selected.isEmpty()) {
+            return;
+        }
 
-    Project project = myArtifactEditor.getContext().getProject();
-    String elementName = ContainerUtil.getFirstItem(selected, null).createPresentation(myArtifactEditor.getContext()).getPresentableName();
-    String baseName = PathUtil.suggestFileName(elementName);
-    CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
-    if (newParent != null) {
-      treeComponent.editLayout(() -> {
-        for (PackagingElement<?> element : selected) {
-          newParent.addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
+        Project project = myArtifactEditor.getContext().getProject();
+        String elementName = ContainerUtil.getFirstItem(selected, null)
+            .createPresentation(myArtifactEditor.getContext())
+            .getPresentableName();
+        String baseName = PathUtil.suggestFileName(elementName);
+        CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
+        if (newParent != null) {
+            treeComponent.editLayout(() -> {
+                for (PackagingElement<?> element : selected) {
+                    newParent.addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
+                }
+                for (PackagingElement<?> element : selected) {
+                    parent.removeChild(element);
+                }
+                parent.addOrFindChild(newParent);
+            });
+            treeComponent.rebuildTree();
         }
-        for (PackagingElement<?> element : selected) {
-          parent.removeChild(element);
-        }
-        parent.addOrFindChild(newParent);
-      });
-      treeComponent.rebuildTree();
     }
-  }
 }

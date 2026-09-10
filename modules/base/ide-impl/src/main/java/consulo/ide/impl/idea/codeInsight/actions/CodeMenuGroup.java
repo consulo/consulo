@@ -27,12 +27,10 @@ import consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementD
 import consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementUpAction;
 import consulo.ide.impl.idea.codeInsight.folding.impl.actions.FoldingGroup;
 import consulo.ide.impl.idea.codeInsight.generation.actions.CommentGroup;
-import consulo.ide.impl.idea.codeInsight.generation.surroundWith.actions.SurroundWithAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.actions.ListTemplatesAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.actions.SurroundWithTemplateAction;
 import consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction;
 import consulo.ide.impl.idea.codeInspection.actions.AnalyzeMenuGroup;
 import consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -50,7 +48,7 @@ import consulo.ui.ex.action.IdeActions;
         @ActionRef(id = "DelegateMethods"),
         @ActionRef(id = "Generate"),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = SurroundWithAction.class),
+        @ActionRef(id = LanguageEditorActions.SURROUND_WITH),
         @ActionRef(type = UnwrapAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = CodeCompletionGroup.class),
@@ -60,8 +58,8 @@ import consulo.ui.ex.action.IdeActions;
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = FoldingGroup.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = ListTemplatesAction.class),
-        @ActionRef(type = SurroundWithTemplateAction.class),
+        @ActionRef(id = LanguageEditorActions.INSERT_LIVE_TEMPLATE),
+        @ActionRef(id = LanguageEditorActions.SURROUND_WITH_LIVE_TEMPLATE),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = CommentGroup.class),
         @ActionRef(type = CodeFormatGroup.class),

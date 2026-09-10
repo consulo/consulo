@@ -20,8 +20,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.hint.actions.NextParameterAction;
 import consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.actions.PreviousVariableAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateByTabAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.DefaultActionGroup;
 
@@ -36,8 +35,8 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = ChooseItemReplaceAction.class),
         @ActionRef(type = ChooseItemCompleteStatementAction.class),
         @ActionRef(type = ChooseItemWithDotAction.class),
-        @ActionRef(type = ExpandLiveTemplateByTabAction.class),
-        @ActionRef(type = PreviousVariableAction.class),
+        @ActionRef(id = LanguageEditorActions.EXPAND_LIVE_TEMPLATE_BY_TAB),
+        @ActionRef(id = LanguageEditorActions.PREVIOUS_LIVE_TEMPLATE_VARIABLE),
         @ActionRef(type = NextParameterAction.class),
         @ActionRef(type = PrevParameterAction.class)
     }
