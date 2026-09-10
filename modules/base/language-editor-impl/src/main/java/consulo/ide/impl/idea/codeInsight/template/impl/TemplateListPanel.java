@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.impl.internal.template.TemplateComparator;
 import consulo.language.editor.impl.internal.template.TemplateGroup;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
@@ -59,8 +58,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class TemplateListPanel extends JPanel implements Disposable {
     private static enum ExpandByKey {
@@ -692,7 +691,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     }
 
     private void installPopup() {
-        final LegacyDumbAwareAction rename = new LegacyDumbAwareAction(IdeLocalize.actionAnonymousTextRename()) {
+        final LegacyDumbAwareAction rename = new LegacyDumbAwareAction(CodeInsightLocalize.actionTextRename()) {
             @Override
             public void update(AnActionEvent e) {
                 int selected = getSingleSelectedIndex();
@@ -737,7 +736,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
                         }
                     }
                     addSeparator();
-                    add(new DumbAwareAction(IdeLocalize.actionAnonymousTextNewGroup()) {
+                    add(new DumbAwareAction(CodeInsightLocalize.actionTextNewGroup()) {
                         @RequiredUIAccess
                         @Override
                         public void actionPerformed(AnActionEvent e) {

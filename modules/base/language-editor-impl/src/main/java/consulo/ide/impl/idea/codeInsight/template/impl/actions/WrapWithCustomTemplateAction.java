@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
 import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.CustomTemplateCallback;

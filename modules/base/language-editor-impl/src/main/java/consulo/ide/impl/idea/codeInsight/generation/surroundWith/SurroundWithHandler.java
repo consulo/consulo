@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.generation.surroundWith;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
@@ -12,21 +12,19 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
-import consulo.language.editor.internal.CustomFoldingSurroundDescriptor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.internal.CustomFoldingSurroundDescriptor;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.surroundWith.SurroundWithRangeAdjuster;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
@@ -44,6 +42,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -64,7 +63,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
     @RequiredUIAccess
     public static void invoke(Project project, Editor editor, PsiFile file, Surrounder surrounder) {
-        if (!EditorModificationUtil.checkModificationAllowed(editor)) {
+        if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
             return;
         }
         if (file instanceof PsiCompiledElement) {
@@ -211,7 +210,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         TextRange range = surrounder.surroundElements(project, editor, elements);
         if (range != CARET_IS_OK) {
             if (TemplateManager.getInstance(project).getActiveTemplate(editor) == null
-                && InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
+                && !LanguageEditorInternalHelper.getInstance().isInlineRefactoringActive(editor)) {
                 LogicalPosition pos1 = new LogicalPosition(line, col);
                 editor.getCaretModel().moveToLogicalPosition(pos1);
             }
@@ -225,6 +224,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         }
     }
 
+    @RequiredReadAction
     private static @Nullable List<AnAction> doBuildSurroundActions(
         Project project,
         Editor editor,
@@ -258,7 +258,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
         List<AnAction> templateGroup = SurroundWithTemplateHandler.createActionGroup(editor, file, usedMnemonicsSet);
         if (!templateGroup.isEmpty()) {
-            applicable.add(AnSeparator.create(IdeLocalize.actionAnonymousTextLiveTemplates()));
+            applicable.add(AnSeparator.create(CodeInsightLocalize.actionTextLiveTemplates()));
             applicable.addAll(templateGroup);
             applicable.add(AnSeparator.getInstance());
             applicable.add(new ConfigureTemplatesAction());
@@ -296,10 +296,10 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
                 return;
             }
 
-            Language language = Language.ANY;
-            if (myElements != null && myElements.length != 0) {
-                language = myElements[0].getLanguage();
-            }
+            //Language language = Language.ANY;
+            //if (myElements != null && myElements.length != 0) {
+            //    language = myElements[0].getLanguage();
+            //}
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .inWriteAction()
@@ -313,11 +313,10 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             super(ActionLocalize.actionConfiguretemplatesactionText());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            ShowSettingsUtil.getInstance()
-                .showSettingsDialog(e.getData(Project.KEY), CodeInsightLocalize.templatesSettingsPageTitle().get());
+            LanguageEditorInternalHelper.getInstance().showAndSelect(e.getData(Project.KEY), LiveTemplatesConfigurable.class);
         }
     }
 }

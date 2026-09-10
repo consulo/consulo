@@ -655,6 +655,7 @@ public class TemplateStateImpl implements TemplateState {
         focusCurrentHighlighter(true);
     }
 
+    @RequiredReadAction
     PsiFile getPsiFile() {
         return PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     }
@@ -666,7 +667,6 @@ public class TemplateStateImpl implements TemplateState {
         first.handleTemplateInsert(lookupItems, Lookup.AUTO_INSERT_SELECT_CHAR);
     }
 
-    
     List<TemplateExpressionLookupElement> getCurrentExpressionLookupItems() {
         LookupElement[] elements = getCurrentExpression().calculateLookupItems(getCurrentExpressionContext());
         if (elements == null) {
@@ -1551,7 +1551,6 @@ public class TemplateStateImpl implements TemplateState {
         return myTemplate;
     }
 
-    
     @Override
     public Editor getEditor() {
         return myEditor;

@@ -22,10 +22,10 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.impl.internal.action.CopyAction;
 import consulo.language.psi.PsiDocumentManager;
@@ -41,88 +41,90 @@ import java.util.List;
 
 @ExtensionImpl(order = "first")
 public class CutHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
+    private EditorActionHandler myOriginalHandler;
 
-  @Override
-  public void init(EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
-
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_CUT;
-  }
-
-  @Override
-  @RequiredWriteAction
-  public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";
-    Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
-    if (project == null) {
-      if (myOriginalHandler != null) {
-        myOriginalHandler.execute(editor, null, dataContext);
-      }
-      return;
+    @Override
+    public void init(EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
     }
 
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-
-    if (file == null) {
-      if (myOriginalHandler != null) {
-        myOriginalHandler.execute(editor, null, dataContext);
-      }
-      return;
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_CUT;
     }
 
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    if (!selectionModel.hasSelection(true)) {
-      if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
-        return;
-      }
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          selectionModel.selectLineAtCaret();
+    @Override
+    @RequiredWriteAction
+    public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";
+        Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
+        if (project == null) {
+            if (myOriginalHandler != null) {
+                myOriginalHandler.execute(editor, null, dataContext);
+            }
+            return;
         }
-      });
-      if (!selectionModel.hasSelection(true)) return;
-    }
 
-    int start = selectionModel.getSelectionStart();
-    int end = selectionModel.getSelectionEnd();
-    final List<TextRange> selections = new ArrayList<TextRange>();
-    if (editor.getCaretModel().supportsMultipleCarets()) {
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          selections.add(new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()));
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+
+        if (file == null) {
+            if (myOriginalHandler != null) {
+                myOriginalHandler.execute(editor, null, dataContext);
+            }
+            return;
         }
-      });
-    }
 
-    EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_COPY).execute(editor, null, dataContext);
-
-    if (editor.getCaretModel().supportsMultipleCarets()) {
-      Collections.reverse(selections);
-      final Iterator<TextRange> it = selections.iterator();
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          TextRange range = it.next();
-          editor.getCaretModel().moveToOffset(range.getStartOffset());
-          selectionModel.removeSelection();
-          editor.getDocument().deleteString(range.getStartOffset(), range.getEndOffset());
+        final SelectionModel selectionModel = editor.getSelectionModel();
+        if (!selectionModel.hasSelection(true)) {
+            if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
+                return;
+            }
+            editor.getCaretModel().runForEachCaret(new CaretAction() {
+                @Override
+                public void perform(Caret caret) {
+                    selectionModel.selectLineAtCaret();
+                }
+            });
+            if (!selectionModel.hasSelection(true)) {
+                return;
+            }
         }
-      });
-      editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+
+        int start = selectionModel.getSelectionStart();
+        int end = selectionModel.getSelectionEnd();
+        final List<TextRange> selections = new ArrayList<TextRange>();
+        if (editor.getCaretModel().supportsMultipleCarets()) {
+            editor.getCaretModel().runForEachCaret(new CaretAction() {
+                @Override
+                public void perform(Caret caret) {
+                    selections.add(new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()));
+                }
+            });
+        }
+
+        EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_COPY).execute(editor, null, dataContext);
+
+        if (editor.getCaretModel().supportsMultipleCarets()) {
+            Collections.reverse(selections);
+            final Iterator<TextRange> it = selections.iterator();
+            editor.getCaretModel().runForEachCaret(new CaretAction() {
+                @Override
+                public void perform(Caret caret) {
+                    TextRange range = it.next();
+                    editor.getCaretModel().moveToOffset(range.getStartOffset());
+                    selectionModel.removeSelection();
+                    editor.getDocument().deleteString(range.getStartOffset(), range.getEndOffset());
+                }
+            });
+            editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+        }
+        else if (start != end) {
+            // There is a possible case that 'sticky selection' is active. It's automatically removed on copying then, so, we explicitly
+            // remove the text.
+            editor.getDocument().deleteString(start, end);
+        }
+        else {
+            EditorModificationUtil.deleteSelectedText(editor);
+        }
     }
-    else if (start != end) {
-      // There is a possible case that 'sticky selection' is active. It's automatically removed on copying then, so, we explicitly
-      // remove the text.
-      editor.getDocument().deleteString(start, end);
-    }
-    else {
-      EditorModificationUtil.deleteSelectedText(editor);
-    }
-  }
 }

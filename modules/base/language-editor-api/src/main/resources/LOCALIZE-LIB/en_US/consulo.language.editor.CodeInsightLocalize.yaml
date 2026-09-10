@@ -18,10 +18,16 @@ action.text.edit.live.template.settings:
     text: Edit live template settings
 action.text.edit.postfix.templates.settings:
     text: Edit postfix templates settings
+action.text.live.templates:
+    text: Live Templates
 action.text.move:
     text: Move
 action.text.never.show.intention.icon:
     text: Never show intention icon
+action.text.new.group:
+    text: New group…
+action.text.rename:
+    text: Rename
 action.text.show.intention.icon:
     text: Show intention icon
 block.comment.intersects.existing.comment:

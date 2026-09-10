@@ -2,12 +2,9 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AppUIExecutor;
 import consulo.codeEditor.Editor;
-import consulo.document.Document;
-import consulo.ide.impl.idea.codeInsight.AutoPopupControllerImpl;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.action.TypedHandlerDelegate;
 import consulo.language.editor.completion.lookup.LookupEx;
@@ -22,33 +19,34 @@ import consulo.util.dataholder.Key;
  */
 @ExtensionImpl(id = "completionAutoPopup", order = "first")
 public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
-  private static final Logger LOG = Logger.getInstance(CompletionAutoPopupHandler.class);
-  public static volatile Key<Boolean> ourTestingAutopopup = Key.create("TestingAutopopup");
+    private static final Logger LOG = Logger.getInstance(CompletionAutoPopupHandler.class);
+    public static volatile Key<Boolean> ourTestingAutopopup = Key.create("TestingAutopopup");
 
-  
-  @Override
-  public Result checkAutoPopup(char charTyped, Project project, Editor editor, PsiFile file) {
-    LookupEx lookup = LookupManager.getActiveLookup(editor);
+    @Override
+    public Result checkAutoPopup(char charTyped, Project project, Editor editor, PsiFile file) {
+        LookupEx lookup = LookupManager.getActiveLookup(editor);
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("checkAutoPopup: character=" + charTyped + ";");
-      LOG.debug("phase=" + CompletionServiceImpl.getCompletionPhase());
-      LOG.debug("lookup=" + lookup);
-      LOG.debug("currentCompletion=" + CompletionServiceImpl.getCompletionService().getCurrentCompletion());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(
+                "checkAutoPopup: character=", charTyped,
+                "; phase=", CompletionServiceImpl.getCompletionPhase(),
+                "; lookup=", lookup,
+                "; currentCompletion=", CompletionServiceImpl.getCompletionService().getCurrentCompletion()
+            );
+        }
+
+        if (lookup != null) {
+            if (editor.getSelectionModel().hasSelection()) {
+                lookup.performGuardedChange(() -> EditorModificationUtil.deleteSelectedText(editor));
+            }
+            return Result.STOP;
+        }
+
+        if (Character.isLetterOrDigit(charTyped) || charTyped == '_') {
+            AutoPopupController.getInstance(project).scheduleAutoPopup(editor);
+            return Result.STOP;
+        }
+
+        return Result.CONTINUE;
     }
-
-    if (lookup != null) {
-      if (editor.getSelectionModel().hasSelection()) {
-        lookup.performGuardedChange(() -> EditorModificationUtil.deleteSelectedText(editor));
-      }
-      return Result.STOP;
-    }
-
-    if (Character.isLetterOrDigit(charTyped) || charTyped == '_') {
-      AutoPopupController.getInstance(project).scheduleAutoPopup(editor);
-      return Result.STOP;
-    }
-
-    return Result.CONTINUE;
-  }
 }

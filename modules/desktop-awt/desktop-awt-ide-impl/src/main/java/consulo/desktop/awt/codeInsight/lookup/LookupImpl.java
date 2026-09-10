@@ -1,16 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.desktop.awt.codeInsight.lookup;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.*;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.colorScheme.internal.FontPreferences;
-import consulo.colorScheme.internal.FontPreferencesImpl;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -21,32 +21,31 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionLookupArrangerImpl;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.impl.internal.completion.lookup.EmptyLookupItem;
-import consulo.language.editor.impl.internal.completion.lookup.LookupDispose;
-import consulo.language.editor.impl.internal.completion.lookup.LookupOffsets;
-import consulo.language.editor.impl.internal.completion.lookup.PrefixChangeListener;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.*;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.CompletionExtender;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionsStep;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemReplaceAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.FocusedOnlyChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.completion.CamelHumpMatcher;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.completion.lookup.EmptyLookupItem;
+import consulo.language.editor.impl.internal.completion.lookup.LookupDispose;
+import consulo.language.editor.impl.internal.completion.lookup.LookupOffsets;
+import consulo.language.editor.impl.internal.completion.lookup.PrefixChangeListener;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.inject.InjectedLanguageManager;
@@ -67,19 +66,20 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -581,8 +581,8 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         finishLookup(completionChar, (LookupElement)myList.getSelectedValue());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void finishLookup(char completionChar, @Nullable LookupElement item) {
         LOG.assertTrue(!Application.get().isWriteAccessAllowed(), "finishLookup should be called without a write action");
         PsiFile file = getPsiFile();
@@ -660,10 +660,12 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return myOffsets.getPrefixLength(item, this);
     }
 
+    @RequiredWriteAction
     protected void insertLookupString(LookupElement item, int prefix) {
         insertLookupString(myProject, getTopLevelEditor(), item, itemMatcher(item), itemPattern(item), prefix);
     }
 
+    @RequiredWriteAction
     public static void insertLookupString(
         Project project,
         Editor editor,
@@ -687,6 +689,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
+    @RequiredWriteAction
     private static int insertLookupInDocumentWindowIfNeeded(
         Project project,
         Editor editor,
@@ -723,6 +726,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         ));
     }
 
+    @RequiredWriteAction
     private static int insertLookupInDocument(int caretOffset, Document document, int prefix, String lookupString) {
         int lookupStart = Math.min(caretOffset, Math.max(caretOffset - prefix, 0));
         int len = document.getTextLength();
@@ -1207,6 +1211,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable PsiFile getPsiFile() {
         return PsiDocumentManager.getInstance(myProject).getPsiFile(getEditor().getDocument());
     }
@@ -1236,6 +1241,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return file.findElementAt(0);
     }
 
+    @RequiredReadAction
     private static @Nullable DocumentWindow getInjectedDocument(Project project, Editor editor, int offset) {
         PsiFile hostFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (hostFile != null) {
@@ -1252,7 +1258,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    
+    @RequiredReadAction
     public Editor getEditor() {
         DocumentWindow documentWindow = getInjectedDocument(myProject, myEditor, myEditor.getCaretModel().getOffset());
         if (documentWindow != null) {
@@ -1263,12 +1269,10 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    
     public Editor getTopLevelEditor() {
         return myEditor;
     }
 
-    
     @Override
     public Project getProject() {
         return myProject;

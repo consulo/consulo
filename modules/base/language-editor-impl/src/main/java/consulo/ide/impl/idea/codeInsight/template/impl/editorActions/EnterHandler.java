@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.codeInsight.editorActions.BaseEnterHandler;
+import consulo.codeEditor.impl.internal.action.BaseEnterHandler;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.template.TemplateManager;
 import consulo.project.Project;
