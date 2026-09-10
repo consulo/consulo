@@ -30,55 +30,46 @@ import java.io.Closeable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LiveTemplateContributor {
     interface Factory {
-        Builder newBuilder(String id,
-                           String abbreviation,
-                           String value,
-                           LocalizeValue description);
+        Builder newBuilder(
+            String id,
+            String abbreviation,
+            String value,
+            LocalizeValue description
+        );
     }
 
     interface Builder extends Closeable {
-        
         Builder withVariable(String name, String expression, String defaultValue, boolean alwaysStopAt);
 
-        
         Builder withReformat();
 
-        
         Builder withTabShortcut();
 
-        
         Builder withEnterShortcut();
 
-        
         Builder withSpaceShortcut();
 
-        
         Builder withOption(KeyWithDefaultValue<Boolean> key, boolean value);
 
-        
         default Builder withContext(Class<? extends TemplateContextType> context) {
             return withContext(context, true);
         }
 
-        
         Builder withContext(Class<? extends TemplateContextType> context, boolean enabled);
 
-        
         default Builder withContextsOf(Class<? extends TemplateContextType> context) {
             return withContextsOf(context, true);
         }
 
-        
         Builder withContextsOf(Class<? extends TemplateContextType> context, boolean enabled);
 
+        @Override
         void close();
     }
 
     void contribute(Factory factory);
 
-    
     String groupId();
 
-    
     LocalizeValue groupName();
 }

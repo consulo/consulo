@@ -40,8 +40,8 @@ public class TemplateImpl implements Template, SchemeElement {
     private String myDescription;
     private String myGroupName;
     private char myShortcutChar = TemplateConstants.DEFAULT_CHAR;
-    private final ArrayList<Variable> myVariables = new ArrayList<>();
-    private ArrayList<Segment> mySegments = null;
+    private final List<Variable> myVariables = new ArrayList<>();
+    private List<Segment> mySegments = null;
     private String myTemplateText = null;
     private String myId;
     private Map<String, Boolean> myOptions = new LinkedHashMap<>();
@@ -93,7 +93,13 @@ public class TemplateImpl implements Template, SchemeElement {
     }
 
     @Override
-    public Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart) {
+    public Variable addVariable(
+        String name,
+        Expression expression,
+        Expression defaultValueExpression,
+        boolean isAlwaysStopAt,
+        boolean skipOnStart
+    ) {
         if (mySegments != null) {
             Segment segment = new Segment(name, myTemplateText.length());
             mySegments.add(segment);
@@ -126,7 +132,6 @@ public class TemplateImpl implements Template, SchemeElement {
         return myId;
     }
 
-    
     @Override
     public TemplateImpl copy() {
         TemplateImpl template = new TemplateImpl(myKey, myString, myGroupName);
@@ -138,7 +143,12 @@ public class TemplateImpl implements Template, SchemeElement {
         template.myTemplateContext = myTemplateContext.createCopy();
         template.isDeactivated = isDeactivated;
         for (Variable variable : myVariables) {
-            template.addVariable(variable.getName(), variable.getExpressionString(), variable.getDefaultValueString(), variable.isAlwaysStopAt());
+            template.addVariable(
+                variable.getName(),
+                variable.getExpressionString(),
+                variable.getDefaultValueString(),
+                variable.isAlwaysStopAt()
+            );
         }
         template.myOptions.putAll(myOptions);
         return template;
@@ -173,7 +183,6 @@ public class TemplateImpl implements Template, SchemeElement {
         return isDeactivated;
     }
 
-    
     @Override
     public TemplateContext getTemplateContext() {
         return myTemplateContext;
@@ -448,34 +457,34 @@ public class TemplateImpl implements Template, SchemeElement {
         return myVariables.get(i).skipOnStart();
     }
 
-    public ArrayList<Variable> getVariables() {
+    public List<Variable> getVariables() {
         return myVariables;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof TemplateImpl template)) {
+        if (!(o instanceof TemplateImpl that)) {
             return false;
         }
 
         //noinspection SimplifiableIfStatement
-        if (myId != null && template.myId != null && myId.equals(template.myId)) {
+        if (myId != null && myId.equals(that.myId)) {
             return true;
         }
 
-        return myIsToReformat == template.myIsToReformat
-            && myShortcutChar == template.myShortcutChar
-            && Objects.equals(myDescription, template.myDescription)
-            && Objects.equals(myGroupName, template.myGroupName)
-            && Objects.equals(myKey, template.myKey)
-            && Objects.equals(myString, template.myString)
-            && Objects.equals(myTemplateText, template.myTemplateText)
-            && new HashSet<>(myVariables).equals(new HashSet<>(template.myVariables))
-            && isDeactivated == template.isDeactivated
-            && myOptions.equals(template.myOptions);
+        return myIsToReformat == that.myIsToReformat
+            && myShortcutChar == that.myShortcutChar
+            && Objects.equals(myDescription, that.myDescription)
+            && Objects.equals(myGroupName, that.myGroupName)
+            && Objects.equals(myKey, that.myKey)
+            && Objects.equals(myString, that.myString)
+            && Objects.equals(myTemplateText, that.myTemplateText)
+            && new HashSet<>(myVariables).equals(new HashSet<>(that.myVariables))
+            && isDeactivated == that.isDeactivated
+            && myOptions.equals(that.myOptions);
     }
 
     @Override
@@ -483,13 +492,12 @@ public class TemplateImpl implements Template, SchemeElement {
         if (myId != null) {
             return myId.hashCode();
         }
-        int result;
-        result = myKey.hashCode();
-        result = 29 * result + (myString == null ? 0 : myString.hashCode());
+        int result = myKey.hashCode();
+        result = 29 * result + Objects.hashCode(myString);
         result = 29 * result + myGroupName.hashCode();
         return result;
     }
-    
+
     @Override
     public String toString() {
         return myGroupName + "/" + myKey;

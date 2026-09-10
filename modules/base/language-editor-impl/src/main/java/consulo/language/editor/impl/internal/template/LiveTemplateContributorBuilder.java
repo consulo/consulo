@@ -32,7 +32,6 @@ import java.util.Map;
  */
 public abstract class LiveTemplateContributorBuilder implements LiveTemplateContributor.Builder {
     public record Variable(String name, String expression, String defaultValue, boolean alwaysStopAt) {
-
     }
 
     private List<Variable> myVariables = new ArrayList<>();
@@ -54,12 +53,14 @@ public abstract class LiveTemplateContributorBuilder implements LiveTemplateCont
 
     protected Map<String, Boolean> myOptions = new LinkedHashMap<>();
 
-    public LiveTemplateContributorBuilder(String groupId,
-                                          LocalizeValue groupName,
-                                          String id,
-                                          String abbreviation,
-                                          String value,
-                                          LocalizeValue description) {
+    public LiveTemplateContributorBuilder(
+        String groupId,
+        LocalizeValue groupName,
+        String id,
+        String abbreviation,
+        String value,
+        LocalizeValue description
+    ) {
         myGroupId = groupId;
         myGroupName = groupName;
         myId = id;
@@ -96,56 +97,48 @@ public abstract class LiveTemplateContributorBuilder implements LiveTemplateCont
         return myDescription;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withContext(Class<? extends TemplateContextType> context, boolean enabled) {
         myStrictContextTypes.put(context, enabled);
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withContextsOf(Class<? extends TemplateContextType> context, boolean enabled) {
         myContextTypes.put(context, enabled);
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withVariable(String name, String expression, String defaultValue, boolean alwaysStopAt) {
         myVariables.add(new Variable(name, expression, defaultValue, alwaysStopAt));
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withReformat() {
         myWantReformat = true;
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withTabShortcut() {
         myShortcut = TemplateConstants.TAB_CHAR;
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withEnterShortcut() {
         myShortcut = TemplateConstants.ENTER_CHAR;
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withSpaceShortcut() {
         myShortcut = TemplateConstants.SPACE_CHAR;
         return this;
     }
 
-    
     @Override
     public LiveTemplateContributor.Builder withOption(KeyWithDefaultValue<Boolean> key, boolean value) {
         myOptions.put(key.toString(), value);
