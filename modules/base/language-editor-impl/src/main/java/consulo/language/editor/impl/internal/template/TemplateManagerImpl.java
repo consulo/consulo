@@ -230,7 +230,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     public void startTemplateForAllCarets(Editor editor, Template template) {
         Document document = editor.getDocument();
 
-        editor.getCaretModel().runForEachCaret(__ -> {
+        editor.getCaretModel().runForEachCaret(_ -> {
             // adjust the selection so that it starts with a non-whitespace character (to make sure that the template is inserted
             // at a meaningful position rather than at indent 0)
             SelectionModel selectionModel = editor.getSelectionModel();

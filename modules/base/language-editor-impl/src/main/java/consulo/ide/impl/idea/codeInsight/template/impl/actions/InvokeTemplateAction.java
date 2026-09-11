@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.localize.CodeInsightLocalize;

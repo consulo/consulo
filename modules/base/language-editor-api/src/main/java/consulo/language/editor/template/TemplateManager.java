@@ -68,6 +68,13 @@ public abstract class TemplateManager {
     @RequiredUIAccess
     public abstract boolean startTemplate(Editor editor, char shortcutChar);
 
+    /**
+     * Starts {@code template} for every caret in the editor.
+     * <p/>
+     * For each caret with a selection, when {@link Template#isToReformat()} is {@code true}, the selection is first shrunk
+     * so that it starts at a non-whitespace character and does not end with a complete trailing line, so that the template
+     * is not inserted at indent 0.
+     */
     @RequiredUIAccess
     public abstract void startTemplateForAllCarets(Editor editor, Template template);
 
