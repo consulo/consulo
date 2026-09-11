@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.codeInsight.lookup;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
@@ -11,13 +11,14 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.CompletionExtender;
 import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -36,8 +37,6 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -52,7 +51,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class LookupUi {
     private static final Logger LOG = Logger.getInstance(LookupUi.class);
 
-    
     private final LookupImpl myLookup;
     private final Advertiser myAdvertiser;
     private final JBList myList;
@@ -95,7 +93,7 @@ class LookupUi {
 
             ActionPopupMenu menu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_POPUP, moreActionGroup);
             menu.setTargetComponent(lookup.getEditor().getComponent());
-            
+
             InputDetails inputDetails = Objects.requireNonNull(event.getInputDetails());
 
             menu.show(moreButton, inputDetails.getX(), inputDetails.getY());
@@ -130,16 +128,13 @@ class LookupUi {
     }
 
     private void addListeners() {
-        myList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (myLookup.isLookupDisposed()) {
-                    return;
-                }
-
-                myHintAlarm.cancelAllRequests();
-                updateHint();
+        myList.addListSelectionListener(e -> {
+            if (myLookup.isLookupDisposed()) {
+                return;
             }
+
+            myHintAlarm.cancelAllRequests();
+            updateHint();
         });
     }
 
@@ -168,11 +163,14 @@ class LookupUi {
             }
             myProcessIcon.setVisible(calculating);
 
-            ApplicationManager.getApplication().invokeLater(() -> {
-                if (!calculating && !myLookup.isLookupDisposed()) {
-                    updateHint();
-                }
-            }, myModalityState);
+            Application.get().invokeLater(
+                () -> {
+                    if (!calculating && !myLookup.isLookupDisposed()) {
+                        updateHint();
+                    }
+                },
+                myModalityState
+            );
         };
 
         if (calculating) {
@@ -184,9 +182,10 @@ class LookupUi {
         new Alarm(myLookup).addRequest(iconUpdater, 100, myModalityState);
     }
 
+    @RequiredUIAccess
     void refreshUi(boolean selectionVisible, boolean itemsChanged, boolean reused, boolean onExplicitAction) {
         Editor editor = myLookup.getTopLevelEditor();
-        if (editor.getComponent().getRootPane() == null || editor instanceof EditorWindow && !((EditorWindow) editor).isValid()) {
+        if (editor.getComponent().getRootPane() == null || editor instanceof EditorWindow editorWindow && !editorWindow.isValid()) {
             return;
         }
 
@@ -208,10 +207,11 @@ class LookupUi {
     }
 
     boolean isPositionedAboveCaret() {
-        return myPositionedAbove != null && myPositionedAbove.booleanValue();
+        return myPositionedAbove != null && myPositionedAbove;
     }
 
     // in layered pane coordinate system.
+    @RequiredReadAction
     Rectangle calculatePosition() {
         JComponent lookupComponent = myLookup.getComponent();
         Dimension dim = lookupComponent.getPreferredSize();
@@ -259,7 +259,11 @@ class LookupUi {
             SwingUtilities.convertPointFromScreen(location, rootPane.getLayeredPane());
         }
         else {
-            LOG.error("editor.disposed=" + editor.isDisposed() + "; lookup.disposed=" + myLookup.isLookupDisposed() + "; editorShowing=" + editor.getContentComponent().isShowing());
+            LOG.error(
+                "editor.disposed=" + editor.isDisposed() +
+                    "; lookup.disposed=" + myLookup.isLookupDisposed() +
+                    "; editorShowing=" + editor.getContentComponent().isShowing()
+            );
         }
 
         myMaximumHeight = candidate.height;
@@ -303,7 +307,8 @@ class LookupUi {
                         }
 
                         int listHeight = myList.getLastVisibleIndex() - myList.getFirstVisibleIndex() + 1;
-                        if (listHeight != myList.getModel().getSize() && listHeight != myList.getVisibleRowCount() && preferredSize.height != size.height) {
+                        if (listHeight != myList.getModel()
+                            .getSize() && listHeight != myList.getVisibleRowCount() && preferredSize.height != size.height) {
                             UISettings.getInstance().setMaxLookupListHeight(Math.max(5, listHeight));
                         }
                     }
@@ -337,7 +342,7 @@ class LookupUi {
         }
     }
 
-    private static class MoreActionGroup extends ActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
+    private static class MoreActionGroup extends ActionGroup implements DumbAware, HintManager.ActionToIgnore {
         private List<AnAction> myActions = new ArrayList<>();
 
         private MoreActionGroup() {
@@ -348,7 +353,6 @@ class LookupUi {
             myActions.add(action);
         }
 
-        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions.toArray(AnAction[]::new);
@@ -365,7 +369,7 @@ class LookupUi {
         }
     }
 
-    private class ChangeSortingAction extends DumbAwareToggleAction implements HintManagerImpl.ActionToIgnore {
+    private class ChangeSortingAction extends DumbAwareToggleAction implements HintManager.ActionToIgnore {
         private ChangeSortingAction() {
             super("Sort by Name");
         }
@@ -379,14 +383,14 @@ class LookupUi {
         @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);
-            
+
             UISettings.getInstance().setSortLookupElementsLexicographically(state);
 
             myLookup.resort(false);
         }
     }
 
-    private static class DelegatedAction extends LegacyDumbAwareAction implements HintManagerImpl.ActionToIgnore {
+    private static class DelegatedAction extends LegacyDumbAwareAction implements HintManager.ActionToIgnore {
         private final AnAction delegateAction;
 
         private DelegatedAction(AnAction action) {
@@ -395,8 +399,8 @@ class LookupUi {
             copyShortcutFrom(delegateAction);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             if (e.getPlace() == ActionPlaces.EDITOR_POPUP) {
                 delegateAction.actionPerformed(e);

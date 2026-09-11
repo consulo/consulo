@@ -56,7 +56,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author VISTALL
  */
 public class UnifiedLookupUI extends LookupBase {
-
     // completion runs to hundreds of items, so the list is built to fetch around what it shows
     private final MutableFlatDataModel<LookupElement> myModel = FlatDataModel.lazyOf(List.of());
     private final ListBox<LookupElement> myList = ListBox.create(myModel);

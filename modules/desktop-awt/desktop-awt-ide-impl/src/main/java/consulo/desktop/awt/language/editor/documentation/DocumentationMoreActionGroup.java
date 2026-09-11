@@ -16,20 +16,20 @@
 package consulo.desktop.awt.language.editor.documentation;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ui.ex.action.RightAlignedToolbarAction;
+import consulo.language.editor.hint.HintManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 /**
+ * Used custom right menu - due need implement {@link HintManager.ActionToIgnore}
+ *
  * @author VISTALL
  * @since 2024-12-15
- *
- * Used custom right menu - due need implement {@link HintManagerImpl.ActionToIgnore}
  */
-public class DocumentationMoreActionGroup extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore, DumbAware, RightAlignedToolbarAction {
+public class DocumentationMoreActionGroup extends DefaultActionGroup implements HintManager.ActionToIgnore, DumbAware, RightAlignedToolbarAction {
     public DocumentationMoreActionGroup() {
     }
 

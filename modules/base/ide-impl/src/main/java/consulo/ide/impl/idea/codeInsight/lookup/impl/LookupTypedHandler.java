@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.TypedActionHandlerBase;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
@@ -15,8 +16,6 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.AutoHardWrapHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.lookup.CharFilter;
@@ -80,7 +79,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
             return false;
         }
 
-        if (charTyped == ' ' && ChooseItemAction.hasTemplatePrefix(lookup, TemplateSettingsImpl.SPACE_CHAR)) {
+        if (charTyped == ' ' && lookup.hasTemplatePrefix(TemplateSettingsImpl.SPACE_CHAR)) {
             return false;
         }
 
@@ -147,18 +146,19 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
         PrefixMatcher expanded = matcher.cloneWithPrefix(oldPrefix + charTyped);
         if (expanded.prefixMatches(item)) {
             for (String s : item.getAllLookupStrings()) {
-                if (matcher.prefixMatches(s)) {
-                    int i = -1;
-                    while (true) {
-                        i = s.indexOf(charTyped, i + 1);
-                        if (i < 0) {
-                            break;
-                        }
-                        String newPrefix = s.substring(0, i + 1);
-                        if (expanded.prefixMatches(newPrefix)) {
-                            lookup.replacePrefix(oldPrefix, newPrefix);
-                            return true;
-                        }
+                if (!matcher.prefixMatches(s)) {
+                    continue;
+                }
+                int i = -1;
+                while (true) {
+                    i = s.indexOf(charTyped, i + 1);
+                    if (i < 0) {
+                        break;
+                    }
+                    String newPrefix = s.substring(0, i + 1);
+                    if (expanded.prefixMatches(newPrefix)) {
+                        lookup.replacePrefix(oldPrefix, newPrefix);
+                        return true;
                     }
                 }
             }

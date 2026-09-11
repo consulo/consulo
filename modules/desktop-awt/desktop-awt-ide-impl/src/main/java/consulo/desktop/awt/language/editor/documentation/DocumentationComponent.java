@@ -1,10 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.desktop.awt.language.editor.documentation;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.localize.ApplicationLocalize;
@@ -23,21 +22,17 @@ import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.action.toolbar.AdvancedActionToolbarImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.util.lang.ref.SoftReference;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.*;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
@@ -70,6 +65,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
@@ -77,10 +73,10 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.ImageKey;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SoftReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
@@ -109,11 +105,10 @@ import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class DocumentationComponent extends JPanel implements Disposable, UiDataProvider, WidthBasedLayout {
-
     private static final Logger LOG = Logger.getInstance(DocumentationComponent.class);
     private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
 
@@ -151,6 +146,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
     private final MyDictionary<String, Image> myImageProvider = new MyDictionary<>() {
         @Override
+        @RequiredReadAction
         public Image get(Object key) {
             return getImageByKeyImpl(key);
         }
@@ -174,11 +170,8 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
     private final Map<KeyStroke, ActionListener> myKeyboardActions = new HashMap<>();
 
-    public static DocumentationComponent createAndFetch(
-        Project project,
-        PsiElement element,
-        Disposable disposable
-    ) {
+    @RequiredUIAccess
+    public static DocumentationComponent createAndFetch(Project project, PsiElement element, Disposable disposable) {
         DocumentationManagerImpl manager = (DocumentationManagerImpl) DocumentationManager.getInstance(project);
         DocumentationComponent component = new DocumentationComponent(manager);
         Disposer.register(disposable, component);
@@ -186,10 +179,12 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return component;
     }
 
+    @RequiredUIAccess
     public DocumentationComponent(DocumentationManagerImpl manager) {
         this(manager, true);
     }
 
+    @RequiredUIAccess
     public DocumentationComponent(DocumentationManagerImpl manager, boolean storeSize) {
         myManager = manager;
         myIsEmpty = true;
@@ -300,6 +295,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
         FocusListener focusAdapter = new FocusAdapter() {
             @Override
+            @RequiredReadAction
             public void focusLost(FocusEvent e) {
                 Component previouslyFocused = WindowManagerEx.getInstanceEx().getFocusedComponent(manager.getProject(getElement()));
 
@@ -469,6 +465,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         myControlPanel.setBorder(IdeBorderFactory.createBorder(UIUtil.getTooltipSeparatorColor(), SideBorder.BOTTOM));
         myControlPanelVisible = false;
 
+        @RequiredUIAccess
         HyperlinkListener hyperlinkListener = e -> {
             HyperlinkEvent.EventType type = e.getEventType();
             if (type == HyperlinkEvent.EventType.ACTIVATED) {
@@ -634,7 +631,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
     }
 
     public static FontSize getQuickDocFontSize() {
-        String strValue = PropertiesComponent.getInstance().getValue(QUICK_DOC_FONT_SIZE_PROPERTY);
+        String strValue = ApplicationPropertiesComponent.getInstance().getValue(QUICK_DOC_FONT_SIZE_PROPERTY);
         if (strValue != null) {
             try {
                 return FontSize.valueOf(strValue);
@@ -647,7 +644,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
     }
 
     public void setQuickDocFontSize(FontSize fontSize) {
-        PropertiesComponent.getInstance().setValue(QUICK_DOC_FONT_SIZE_PROPERTY, fontSize.toString());
+        ApplicationPropertiesComponent.getInstance().setValue(QUICK_DOC_FONT_SIZE_PROPERTY, fontSize.toString());
     }
 
     private void setFontSizeSliderSize(FontSize fontSize) {
@@ -714,11 +711,12 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return myElement != null ? PsiModificationTracker.getInstance(myElement.getProject()).getModificationCount() : -1;
     }
 
+    @RequiredUIAccess
     public void setText(String text, @Nullable PsiElement element, @Nullable DocumentationProvider provider) {
         setData(element, text, null, null, provider);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public void replaceText(String text, @Nullable PsiElement element) {
         PsiElement current = getElement();
         if (current == null || !current.getManager().areElementsEquivalent(current, element)) {
@@ -739,6 +737,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
+    @RequiredUIAccess
     public void setData(
         @Nullable PsiElement element,
         String text,
@@ -757,6 +756,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         setDataInternal(pointer, text, new Rectangle(0, 0), ref);
     }
 
+    @RequiredUIAccess
     private void setDataInternal(
         @Nullable SmartPsiElementPointer<PsiElement> element,
         String text,
@@ -775,6 +775,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         showHint(viewRect, ref);
     }
 
+    @RequiredUIAccess
     protected void showHint(Rectangle viewRect, @Nullable String ref) {
         String refToUse;
         Rectangle viewRectToUse;
@@ -808,6 +809,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         });
     }
 
+    @RequiredUIAccess
     protected void showHint() {
         if (myHint == null) {
             return;
@@ -1314,6 +1316,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }, null));
     }
 
+    @RequiredUIAccess
     private void goBack() {
         if (myBackStack.isEmpty()) {
             return;
@@ -1323,6 +1326,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         restoreContext(context);
     }
 
+    @RequiredUIAccess
     private void goForward() {
         if (myForwardStack.isEmpty()) {
             return;
@@ -1337,7 +1341,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return new Context(myElement, myText, myExternalUrl, myProvider, rect, myHighlightedLink);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     private void restoreContext(Context context) {
         myExternalUrl = context.externalUrl;
         myProvider = context.provider;
@@ -1373,7 +1377,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return myManager.getToolWindow() == null && Registry.is("documentation.show.toolbar");
     }
 
-    private static class WrapperActionGroup extends ActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
+    private static class WrapperActionGroup extends ActionGroup implements DumbAware, HintManager.ActionToIgnore {
         private final AnAction[] myActions;
 
         public WrapperActionGroup(AnAction... actions) {
@@ -1386,7 +1390,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private static class MyGearActionGroup extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore {
+    private static class MyGearActionGroup extends DefaultActionGroup implements HintManager.ActionToIgnore {
         MyGearActionGroup(AnAction... actions) {
             super(actions);
             setPopup(true);
@@ -1403,7 +1407,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class BackAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class BackAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         BackAction() {
             super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
@@ -1424,7 +1428,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class ForwardAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class ForwardAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         ForwardAction() {
             super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
@@ -1446,10 +1450,9 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
     }
 
     private class EditDocumentationSourceAction extends BaseNavigateToSourceAction {
-
         private EditDocumentationSourceAction() {
             super(true);
-            getTemplatePresentation().setIcon(AllIcons.Actions.EditSource);
+            getTemplatePresentation().setIcon(PlatformIconGroup.actionsEditsource());
             getTemplatePresentation().setText("Edit Source");
         }
 
@@ -1479,7 +1482,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return ActionPlaces.JAVADOC_TOOLBAR.equals(e.getPlace());
     }
 
-    private class ExternalDocAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class ExternalDocAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         private ExternalDocAction() {
             super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());
             registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
@@ -1499,6 +1502,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
 
         @Override
+        @RequiredReadAction
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(hasExternalDoc());
         }
@@ -1656,6 +1660,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
+    @RequiredUIAccess
     private void activateLink(int n) {
         HTMLDocument.Iterator link = getLink(n);
         if (link != null) {
@@ -1693,7 +1698,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class MyShowSettingsAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class MyShowSettingsAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         private final boolean myOnToolbar;
 
         MyShowSettingsAction(boolean onToolbar) {
@@ -1754,7 +1759,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class PreviousLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class PreviousLinkAction extends AnAction implements HintManager.ActionToIgnore {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -1766,7 +1771,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class NextLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class NextLinkAction extends AnAction implements HintManager.ActionToIgnore {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -1778,7 +1783,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class ActivateLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ActivateLinkAction extends AnAction implements HintManager.ActionToIgnore {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -1810,7 +1815,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class ShowToolbarAction extends ToggleAction implements HintManagerImpl.ActionToIgnore {
+    private class ShowToolbarAction extends ToggleAction implements HintManager.ActionToIgnore {
         ShowToolbarAction() {
             super(LocalizeValue.localizeTODO("Show Toolbar"));
         }
@@ -1908,7 +1913,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class ShowAsToolwindowAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class ShowAsToolwindowAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         ShowAsToolwindowAction() {
             super(LocalizeValue.localizeTODO("Open as Tool Window"));
         }
@@ -1933,7 +1938,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class RestoreDefaultSizeAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class RestoreDefaultSizeAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         RestoreDefaultSizeAction() {
             super(LocalizeValue.localizeTODO("Restore Size"));
         }
@@ -2001,14 +2006,11 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
         @Override
         public float getPreferredSpan(int axis) {
-            switch (axis) {
-                case View.X_AXIS:
-                    return myViewIcon.getWidth();
-                case View.Y_AXIS:
-                    return myViewIcon.getHeight();
-                default:
-                    throw new IllegalArgumentException("Invalid axis: " + axis);
-            }
+            return switch (axis) {
+                case View.X_AXIS -> myViewIcon.getWidth();
+                case View.Y_AXIS -> myViewIcon.getHeight();
+                default -> throw new IllegalArgumentException("Invalid axis: " + axis);
+            };
         }
 
         @Override

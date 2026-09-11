@@ -22,7 +22,7 @@ import consulo.document.DocumentWindow;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
+import consulo.codeEditor.action.TypedActionHandlerBase;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;

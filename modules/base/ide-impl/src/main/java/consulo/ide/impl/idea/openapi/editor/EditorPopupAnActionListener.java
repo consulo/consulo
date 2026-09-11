@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,25 +28,27 @@ import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
- * @since 22/04/2023
+ * @since 2023-04-22
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class EditorPopupAnActionListener implements AnActionListener {
-  private final Provider<EditorMouseHoverPopupManager> myEditorMouseHoverPopupManager;
+    private final Provider<EditorMouseHoverPopupManager> myEditorMouseHoverPopupManager;
 
-  @Inject
-  public EditorPopupAnActionListener(Provider<EditorMouseHoverPopupManager> editorMouseHoverPopupManager) {
-    myEditorMouseHoverPopupManager = editorMouseHoverPopupManager;
-  }
+    @Inject
+    public EditorPopupAnActionListener(Provider<EditorMouseHoverPopupManager> editorMouseHoverPopupManager) {
+        myEditorMouseHoverPopupManager = editorMouseHoverPopupManager;
+    }
 
-  @Override
-  public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    if (action instanceof HintManagerImpl.ActionToIgnore) return;
-    myEditorMouseHoverPopupManager.get().cancelProcessingAndCloseHint();
-  }
+    @Override
+    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+        if (action instanceof HintManager.ActionToIgnore) {
+            return;
+        }
+        myEditorMouseHoverPopupManager.get().cancelProcessingAndCloseHint();
+    }
 
-  @Override
-  public void beforeEditorTyping(char c, DataContext dataContext) {
-    myEditorMouseHoverPopupManager.get().cancelProcessingAndCloseHint();
-  }
+    @Override
+    public void beforeEditorTyping(char c, DataContext dataContext) {
+        myEditorMouseHoverPopupManager.get().cancelProcessingAndCloseHint();
+    }
 }

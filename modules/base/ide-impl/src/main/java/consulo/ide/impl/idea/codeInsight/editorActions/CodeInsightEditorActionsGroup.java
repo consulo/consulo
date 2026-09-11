@@ -20,7 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterAction;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.LookupActionsGroup;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
@@ -32,7 +32,7 @@ import consulo.ui.ex.action.IdeActions;
 @ActionImpl(
     id = "CodeInsightEditorActions",
     children = {
-        @ActionRef(type = LookupActionsGroup.class),
+        @ActionRef(id = LanguageEditorActions.GROUP_LOOKUP_ACTIONS),
         @ActionRef(type = EmacsStyleIndentAction.class),
         @ActionRef(type = CodeBlockStartAction.class),
         @ActionRef(type = CodeBlockEndAction.class),

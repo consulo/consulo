@@ -230,7 +230,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.codeInsight.intention.impl.config;
     exports consulo.ide.impl.idea.codeInsight.lookup;
     exports consulo.ide.impl.idea.codeInsight.lookup.impl;
-    exports consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
     exports consulo.ide.impl.idea.codeInsight.navigation;
     exports consulo.ide.impl.idea.codeInsight.navigation.actions;
     exports consulo.ide.impl.idea.codeInsight.preview;

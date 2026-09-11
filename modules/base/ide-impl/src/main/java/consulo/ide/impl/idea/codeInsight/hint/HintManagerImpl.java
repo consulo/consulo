@@ -100,9 +100,6 @@ public class HintManagerImpl implements HintManagerEx {
         return myQuestionAction == null || getPriority(myQuestionAction) <= getPriority(action);
     }
 
-    public interface ActionToIgnore {
-    }
-
     private static class HintInfo {
         final LightweightHintImpl hint;
         @HideFlags

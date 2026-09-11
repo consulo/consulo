@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
@@ -24,6 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.util.List;
 
@@ -31,75 +31,80 @@ import java.util.List;
  * Represents list with suggestions shown in code completion, refactorings, live templates etc.
  */
 public interface Lookup {
-  char NORMAL_SELECT_CHAR = '\n';
-  char REPLACE_SELECT_CHAR = '\t';
-  char COMPLETE_STATEMENT_SELECT_CHAR = '\r';
-  char AUTO_INSERT_SELECT_CHAR = (char) 0;
+    char NORMAL_SELECT_CHAR = '\n';
+    char REPLACE_SELECT_CHAR = '\t';
+    char COMPLETE_STATEMENT_SELECT_CHAR = '\r';
+    char AUTO_INSERT_SELECT_CHAR = (char) 0;
 
-   static boolean shouldAddCompletionChar(char completionChar) {
-    return completionChar != Lookup.AUTO_INSERT_SELECT_CHAR && completionChar != Lookup.REPLACE_SELECT_CHAR && completionChar != Lookup.NORMAL_SELECT_CHAR;
-  }
+    static boolean shouldAddCompletionChar(char completionChar) {
+        return completionChar != Lookup.AUTO_INSERT_SELECT_CHAR
+            && completionChar != Lookup.REPLACE_SELECT_CHAR
+            && completionChar != Lookup.NORMAL_SELECT_CHAR;
+    }
 
-  /**
-   * @return the offset in {@link #getTopLevelEditor()} which this lookup's left side should be aligned with. Note that if the lookup doesn't fit
-   * the screen due to its dimensions, the actual position might differ from this editor offset.
-   */
-  int getLookupStart();
+    /**
+     * @return the offset in {@link #getTopLevelEditor()} which this lookup's left side should be aligned with. Note that if the lookup doesn't fit
+     * the screen due to its dimensions, the actual position might differ from this editor offset.
+     */
+    int getLookupStart();
 
-  @Nullable LookupElement getCurrentItem();
+    @Nullable
+    LookupElement getCurrentItem();
 
-  void addLookupListener(LookupListener listener);
-  void removeLookupListener(LookupListener listener);
+    void addLookupListener(LookupListener listener);
 
-  /**
-   * @return bounds in layered pane coordinate system
-   */
-  Rectangle getBounds();
+    void removeLookupListener(LookupListener listener);
 
-  /**
-   * @return bounds of the current item in the layered pane coordinate system.
-   */
-  Rectangle getCurrentItemBounds();
-  boolean isPositionedAboveCaret();
+    /**
+     * @return bounds in layered pane coordinate system
+     */
+    Rectangle getBounds();
 
-  /**
-   * @return leaf PSI element at this lookup's start position (see {@link #getLookupStart()}) in {@link #getPsiFile()} result.
-   */
-  @Nullable PsiElement getPsiElement();
+    /**
+     * @return bounds of the current item in the layered pane coordinate system.
+     */
+    Rectangle getCurrentItemBounds();
 
-  /**
-   * Consider using {@link #getTopLevelEditor()} if you don't need injected editor.
-   * @return editor, possibly injected, where this lookup is shown
-   */
-  Editor getEditor();
+    boolean isPositionedAboveCaret();
 
-  /**
-   * @return the non-injected editor where this lookup is shown
-   */
-  Editor getTopLevelEditor();
+    /**
+     * @return leaf PSI element at this lookup's start position (see {@link #getLookupStart()}) in {@link #getPsiFile()} result.
+     */
+    @Nullable
+    PsiElement getPsiElement();
 
-  
-  Project getProject();
+    /**
+     * Consider using {@link #getTopLevelEditor()} if you don't need injected editor.
+     *
+     * @return editor, possibly injected, where this lookup is shown
+     */
+    Editor getEditor();
 
-  /**
-   * @return PSI file, possibly injected, associated with this lookup's editor
-   * @see #getEditor()
-   */
-  @Nullable PsiFile getPsiFile();
+    /**
+     * @return the non-injected editor where this lookup is shown
+     */
+    Editor getTopLevelEditor();
 
-  boolean isCompletion();
+    Project getProject();
 
-  List<LookupElement> getItems();
+    /**
+     * @return PSI file, possibly injected, associated with this lookup's editor
+     * @see #getEditor()
+     */
+    @Nullable
+    PsiFile getPsiFile();
 
-  boolean isFocused();
+    boolean isCompletion();
 
-  
-  String itemPattern(LookupElement element);
+    List<LookupElement> getItems();
 
-  
-  PrefixMatcher itemMatcher(LookupElement item);
+    boolean isFocused();
 
-  boolean isSelectionTouched();
+    String itemPattern(LookupElement element);
 
-  List<String> getAdvertisements();
+    PrefixMatcher itemMatcher(LookupElement item);
+
+    boolean isSelectionTouched();
+
+    List<String> getAdvertisements();
 }

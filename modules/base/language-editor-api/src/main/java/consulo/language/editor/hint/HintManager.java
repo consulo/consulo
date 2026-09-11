@@ -20,6 +20,9 @@ import javax.swing.event.HyperlinkListener;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface HintManager {
+    public interface ActionToIgnore {
+    }
+
     static HintManager getInstance() {
         return Application.get().getInstance(HintManager.class);
     }
