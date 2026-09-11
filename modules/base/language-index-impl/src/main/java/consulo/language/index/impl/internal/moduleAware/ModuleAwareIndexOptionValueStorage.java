@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.PersistentHashMap;
@@ -34,8 +33,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -118,10 +115,8 @@ public final class ModuleAwareIndexOptionValueStorage implements Disposable {
 
     private static @Nullable PersistentHashMap<String, List<StoredOption>> openStorage() {
         try {
-            Path root = Path.of(ContainerPathManager.get().getSystemPath(), "caches", DIR_NAME);
-            Files.createDirectories(root);
-            File file = root.resolve(FILE_NAME).toFile();
-            return new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, StoredOptionsExternalizer.INSTANCE);
+            File file = ModuleAwareIndexStorages.cacheFile(DIR_NAME, FILE_NAME);
+            return ModuleAwareIndexStorages.open(file, () -> new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, StoredOptionsExternalizer.INSTANCE));
         }
         catch (IOException e) {
             LOG.error("Failed to open module-aware option value storage; operating without recorded values", e);

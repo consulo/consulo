@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.index.io.ID;
 import consulo.index.io.PersistentHashMap;
@@ -29,8 +28,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * Persistent store for {@link OptionsMeta} keyed by {@code (indexUniqueId, fileId)}. Lives
@@ -61,10 +58,8 @@ public final class ModuleAwareIndexMetaStorage implements Disposable {
 
     private static @Nullable PersistentHashMap<MetaKey, OptionsMeta> openStorage() {
         try {
-            Path root = Path.of(ContainerPathManager.get().getSystemPath(), "caches", DIR_NAME);
-            Files.createDirectories(root);
-            File file = root.resolve(FILE_NAME).toFile();
-            return new PersistentHashMap<>(file, MetaKeyDescriptor.INSTANCE, OptionsMetaExternalizer.INSTANCE);
+            File file = ModuleAwareIndexStorages.cacheFile(DIR_NAME, FILE_NAME);
+            return ModuleAwareIndexStorages.open(file, () -> new PersistentHashMap<>(file, MetaKeyDescriptor.INSTANCE, OptionsMetaExternalizer.INSTANCE));
         }
         catch (IOException e) {
             LOG.error("Failed to open module-aware-index-meta storage; operating in degraded mode", e);

@@ -22,10 +22,6 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
 import consulo.virtualFileSystem.VirtualFile;
 
-/**
- * View options belong to the editors a navigation opened: once the last editor of a file is gone the file goes back to
- * its module-settings variant, so a later plain open shows no leftover context.
- */
 @TopicImpl(ComponentScope.PROJECT)
 public class ViewOptionsFileEditorListener implements FileEditorManagerListener {
     @Override

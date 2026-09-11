@@ -50,6 +50,8 @@ import consulo.language.index.impl.internal.dependencies.IsFileChangedResult;
 import consulo.language.index.impl.internal.dependencies.ProjectIndexingDependenciesService;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaStorage;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexOptionValueStorage;
 import consulo.language.index.impl.internal.projectFilter.IncrementalProjectIndexableFilesFilterHolder;
 import consulo.language.index.impl.internal.projectFilter.ProjectIndexableFilesFilterHolder;
 import consulo.language.internal.FileTypeManagerEx;
@@ -820,6 +822,14 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
         if (IndexingStamp.isDirty()) {
             IndexingStamp.flushCaches();
+        }
+        ModuleAwareIndexMetaStorage metaStorage = Application.get().getInstanceIfCreated(ModuleAwareIndexMetaStorage.class);
+        if (metaStorage != null) {
+            metaStorage.flush();
+        }
+        ModuleAwareIndexOptionValueStorage valueStorage = Application.get().getInstanceIfCreated(ModuleAwareIndexOptionValueStorage.class);
+        if (valueStorage != null) {
+            valueStorage.flush();
         }
         IndexConfiguration state = getState();
         for (ID<?, ?> indexId : new ArrayList<>(state.getIndexIDs())) {
