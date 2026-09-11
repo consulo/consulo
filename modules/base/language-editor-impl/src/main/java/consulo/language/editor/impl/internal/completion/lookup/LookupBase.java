@@ -156,6 +156,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
      * Replaces everything the list shows. Called with the arranged items, or with a single placeholder when there is
      * nothing to show yet.
      */
+    @RequiredUIAccess
     protected abstract void setItemsUi(List<LookupElement> items);
 
     protected abstract List<LookupElement> getItemsUi();
@@ -168,6 +169,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
 
     protected abstract @Nullable LookupElement getSelectedValueUi();
 
+    @RequiredUIAccess
     protected abstract void setSelectedValueUi(LookupElement item);
 
     /**
@@ -219,11 +221,13 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
      * it no longer fits where it was. Named apart from {@link #refreshUi(boolean, boolean)}, which is the step before
      * it: that one rebuilds the model and then calls this.
      */
+    @RequiredUIAccess
     protected abstract void repaintLookupUi(boolean selectionVisible, boolean itemsChanged, boolean reused, boolean onExplicitAction);
 
     /**
      * The document moved under the lookup and the popup has to follow the caret.
      */
+    @RequiredUIAccess
     protected abstract void repositionUi();
 
     /**
@@ -750,6 +754,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         return getSelectedIndexUi();
     }
 
+    @RequiredUIAccess
     public void setSelectedIndex(int index) {
         setSelectedIndexUi(index);
         ensureIndexVisibleUi(index);

@@ -97,6 +97,7 @@ public class UnifiedLookupUI extends LookupBase {
      * which did not change is left alone.
      */
     @Override
+    @RequiredUIAccess
     protected void setItemsUi(List<LookupElement> items) {
         if (isSameAsModel(items)) {
             return;
@@ -153,6 +154,7 @@ public class UnifiedLookupUI extends LookupBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void setSelectedValueUi(LookupElement item) {
         myList.setValue(item);
     }
@@ -192,6 +194,7 @@ public class UnifiedLookupUI extends LookupBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void presentationChangedUi(LookupElement item) {
         myModel.update(item);
     }
@@ -202,6 +205,7 @@ public class UnifiedLookupUI extends LookupBase {
      * hundreds of renders all land at once costs one round trip rather than one each.
      */
     @Override
+    @RequiredUIAccess
     protected void presentationsChangedUi(List<LookupElement> items) {
         for (LookupElement item : items) {
             myModel.update(item);
@@ -222,6 +226,7 @@ public class UnifiedLookupUI extends LookupBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void repaintLookupUi(boolean selectionVisible, boolean itemsChanged, boolean reused, boolean onExplicitAction) {
         myAdvertisementLabel.setText(LocalizeValue.of(myAdvertiser.currentText()));
     }
@@ -299,6 +304,7 @@ public class UnifiedLookupUI extends LookupBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void repositionUi() {
         LightPopup popup = myPopup;
         if (popup != null && popup.isVisible()) {

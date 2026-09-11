@@ -444,19 +444,17 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         if (isRealPopup()) {
             myPopup.setLocation(point.getScreenPoint());
         }
+        else if (myCurrentIdeTooltip != null) {
+            myCurrentIdeTooltip.setPoint(point.getPoint());
+            myCurrentIdeTooltip.setComponent(point.getComponent());
+            IdeTooltipManagerImpl.getInstanceImpl().show(myCurrentIdeTooltip, true, false);
+        }
         else {
-            if (myCurrentIdeTooltip != null) {
-                myCurrentIdeTooltip.setPoint(point.getPoint());
-                myCurrentIdeTooltip.setComponent(point.getComponent());
-                IdeTooltipManagerImpl.getInstanceImpl().show(myCurrentIdeTooltip, true, false);
-            }
-            else {
-                Point targetPoint = point.getPoint(myComponent.getParent());
-                myComponent.setLocation(targetPoint);
+            Point targetPoint = point.getPoint(myComponent.getParent());
+            myComponent.setLocation(targetPoint);
 
-                myComponent.revalidate();
-                myComponent.repaint();
-            }
+            myComponent.revalidate();
+            myComponent.repaint();
         }
     }
 
