@@ -22,6 +22,7 @@ import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -48,6 +49,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -221,6 +223,36 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         TemplateEditingListener listener
     ) {
         startTemplate(editor, null, template, inSeparateCommand, listener, null, predefinedVarValues);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void startTemplateForAllCarets(Editor editor, Template template) {
+        Document document = editor.getDocument();
+
+        editor.getCaretModel().runForEachCaret(__ -> {
+            // adjust the selection so that it starts with a non-whitespace character (to make sure that the template is inserted
+            // at a meaningful position rather than at indent 0)
+            SelectionModel selectionModel = editor.getSelectionModel();
+            if (selectionModel.hasSelection() && template.isToReformat()) {
+                int offset = selectionModel.getSelectionStart();
+                int selectionEnd = selectionModel.getSelectionEnd();
+                int lineEnd = document.getLineEndOffset(document.getLineNumber(offset));
+                CharSequence text = document.getCharsSequence();
+                while (offset < lineEnd && offset < selectionEnd && StringUtil.containsChar(" \t", text.charAt(offset))) {
+                    offset++;
+                }
+                // avoid extra line break after $SELECTION$ in case when selection ends with a complete line
+                if (selectionEnd == document.getLineStartOffset(document.getLineNumber(selectionEnd))) {
+                    selectionEnd--;
+                }
+                if (offset < lineEnd && offset < selectionEnd) {  // found non-WS character in first line of selection
+                    selectionModel.setSelection(offset, selectionEnd);
+                }
+            }
+            String selectionString = selectionModel.getSelectedText();
+            startTemplate(editor, selectionString, template);
+        });
     }
 
     private static int passArgumentBack(CharSequence text, int caretOffset) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.annotation.DeprecationInfo;
@@ -26,6 +25,7 @@ import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -39,12 +39,16 @@ public abstract class TemplateManager {
         return project.getInstance(TemplateManager.class);
     }
 
+    @RequiredUIAccess
     public abstract void startTemplate(Editor editor, Template template);
 
+    @RequiredUIAccess
     public abstract void startTemplate(Editor editor, String selectionString, Template template);
 
+    @RequiredUIAccess
     public abstract void startTemplate(Editor editor, Template template, TemplateEditingListener listener);
 
+    @RequiredUIAccess
     public abstract void startTemplate(
         Editor editor,
         Template template,
@@ -53,6 +57,7 @@ public abstract class TemplateManager {
         @Nullable TemplateEditingListener listener
     );
 
+    @RequiredUIAccess
     public abstract void startTemplate(
         Editor editor,
         Template template,
@@ -60,7 +65,11 @@ public abstract class TemplateManager {
         BiPredicate<String, String> callback
     );
 
+    @RequiredUIAccess
     public abstract boolean startTemplate(Editor editor, char shortcutChar);
+
+    @RequiredUIAccess
+    public abstract void startTemplateForAllCarets(Editor editor, Template template);
 
     @Deprecated
     @DeprecationInfo("use TemplateBuilderFactory")
