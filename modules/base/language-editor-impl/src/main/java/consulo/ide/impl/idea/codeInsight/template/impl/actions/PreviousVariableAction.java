@@ -23,6 +23,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @author max
  * @since 2002-05-16
  */
-@ActionImpl(id = "PreviousTemplateVariable")
+@ActionImpl(id = LanguageEditorActions.PREVIOUS_LIVE_TEMPLATE_VARIABLE)
 public class PreviousVariableAction extends EditorAction {
     private static class MyHandler extends EditorActionHandler {
         @Override

@@ -76,12 +76,6 @@ module consulo.language.editor.impl {
     exports consulo.language.editor.impl.internal.inlay to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inlay.param to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inlay.setting to consulo.ide.impl;
-    exports consulo.ide.impl.idea.codeInsight.generation.surroundWith.actions to
-        consulo.desktop.awt.ide.impl,
-        consulo.ide.impl;
-    exports consulo.ide.impl.idea.codeInsight.template.impl.actions to
-        consulo.desktop.awt.ide.impl,
-        consulo.ide.impl;
     exports consulo.ide.impl.idea.codeInsight.template.impl.editorActions to consulo.ide.impl;
 
     opens consulo.language.editor.impl.internal.inlay.setting to consulo.util.xml.serializer;

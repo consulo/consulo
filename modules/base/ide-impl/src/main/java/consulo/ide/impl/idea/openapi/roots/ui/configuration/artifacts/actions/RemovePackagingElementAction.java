@@ -29,8 +29,8 @@ import consulo.ui.ex.action.AnActionEvent;
 public class RemovePackagingElementAction extends LayoutTreeActionBase {
     public RemovePackagingElementAction(ArtifactEditorEx artifactEditor) {
         super(
-            ProjectLocalize.actionNameRemovePackagingElement().get(),
-            ProjectLocalize.actionDescriptionRemovePackagingElements().get(),
+            ProjectLocalize.actionNameRemovePackagingElement(),
+            ProjectLocalize.actionDescriptionRemovePackagingElements(),
             PlatformIconGroup.generalRemove(),
             artifactEditor
         );

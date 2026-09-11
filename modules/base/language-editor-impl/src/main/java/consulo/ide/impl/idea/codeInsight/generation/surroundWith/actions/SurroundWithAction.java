@@ -8,6 +8,7 @@ import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHan
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
@@ -16,7 +17,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-@ActionImpl(id = "SurroundWith")
+@ActionImpl(id = LanguageEditorActions.SURROUND_WITH)
 public class SurroundWithAction extends BaseCodeInsightAction {
     public SurroundWithAction() {
         super(ActionLocalize.actionSurroundwithText(), ActionLocalize.actionSurroundwithDescription());

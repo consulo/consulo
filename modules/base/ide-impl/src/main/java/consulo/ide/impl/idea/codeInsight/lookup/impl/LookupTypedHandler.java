@@ -1,37 +1,35 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.codeEditor.util.EditorModificationUtil;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
-import consulo.language.editor.completion.CodeCompletionFeatures;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.AutoHardWrapHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
-import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
-import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
-
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 

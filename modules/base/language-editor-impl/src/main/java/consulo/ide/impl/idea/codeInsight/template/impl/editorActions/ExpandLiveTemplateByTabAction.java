@@ -19,12 +19,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author peter
  */
-@ActionImpl(id = IdeActions.ACTION_EXPAND_LIVE_TEMPLATE_BY_TAB, shortcutFrom = @ActionRef(id = IdeActions.ACTION_EDITOR_TAB))
+@ActionImpl(id = LanguageEditorActions.EXPAND_LIVE_TEMPLATE_BY_TAB, shortcutFrom = @ActionRef(id = IdeActions.ACTION_EDITOR_TAB))
 public class ExpandLiveTemplateByTabAction extends EditorAction {
     public ExpandLiveTemplateByTabAction() {
         super(ExpandLiveTemplateCustomAction.createExpandTemplateHandler(TemplateSettingsImpl.TAB_CHAR));

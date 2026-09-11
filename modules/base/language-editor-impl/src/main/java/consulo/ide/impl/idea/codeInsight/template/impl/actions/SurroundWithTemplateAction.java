@@ -19,12 +19,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author mike
  */
-@ActionImpl(id = "SurroundWithLiveTemplate")
+@ActionImpl(id = LanguageEditorActions.SURROUND_WITH_LIVE_TEMPLATE)
 public class SurroundWithTemplateAction extends BaseCodeInsightAction {
     public SurroundWithTemplateAction() {
         super(ActionLocalize.actionSurroundwithlivetemplateText(), ActionLocalize.actionSurroundwithlivetemplateDescription());

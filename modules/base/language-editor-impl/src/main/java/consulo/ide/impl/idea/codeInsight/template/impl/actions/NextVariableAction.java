@@ -23,10 +23,10 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import org.jspecify.annotations.Nullable;
 
@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @author max
  * @since 2002-05-16
  */
-@ActionImpl(id = IdeActions.ACTION_EDITOR_NEXT_TEMPLATE_VARIABLE)
+@ActionImpl(id = LanguageEditorActions.NEXT_LIVE_TEMPLATE_VARIABLE)
 public class NextVariableAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override

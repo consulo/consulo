@@ -18,6 +18,7 @@ package consulo.ide.impl.presentationAssistant;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -90,7 +91,7 @@ class ShortcutPresenter implements Disposable {
     private static final Set<String> TYPING_ACTIONS = Set.of(
         IdeActions.ACTION_EDITOR_BACKSPACE,
         IdeActions.ACTION_EDITOR_ENTER,
-        IdeActions.ACTION_EDITOR_NEXT_TEMPLATE_VARIABLE
+        LanguageEditorActions.NEXT_LIVE_TEMPLATE_VARIABLE
     );
 
     private static final Set<String> PARENT_GROUP_IDS = Set.of(

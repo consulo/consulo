@@ -19,9 +19,10 @@ import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.impl.internal.template.ListTemplatesHandler;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
 
-@ActionImpl(id = "InsertLiveTemplate")
+@ActionImpl(id = LanguageEditorActions.INSERT_LIVE_TEMPLATE)
 public class ListTemplatesAction extends BaseCodeInsightAction {
     public ListTemplatesAction() {
         super(ActionLocalize.actionInsertlivetemplateText(), ActionLocalize.actionInsertlivetemplateDescription());

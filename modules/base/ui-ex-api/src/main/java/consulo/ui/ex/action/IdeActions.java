@@ -110,10 +110,6 @@ public interface IdeActions {
 
     String ACTION_EDITOR_TOGGLE_OVERWRITE_MODE = "EditorToggleInsertState";
 
-    String ACTION_EDITOR_NEXT_TEMPLATE_VARIABLE = "NextTemplateVariable";
-
-    String ACTION_EDITOR_PREVIOUS_TEMPLATE_VARIABLE = "PreviousTemplateVariable";
-
     String ACTION_EDITOR_REFORMAT = "ReformatCode";
 
     String ACTION_REPLACE = "Replace";
@@ -160,10 +156,6 @@ public interface IdeActions {
     String ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT = "EditorChooseLookupItemCompleteStatement";
 
     String ACTION_CHOOSE_LOOKUP_ITEM_DOT = "EditorChooseLookupItemDot";
-
-    String ACTION_EXPAND_LIVE_TEMPLATE_BY_TAB = "ExpandLiveTemplateByTab";
-
-    String ACTION_EXPAND_LIVE_TEMPLATE_CUSTOM = "ExpandLiveTemplateCustom";
 
     String ACTION_LOOKUP_UP = "EditorLookupUp";
 

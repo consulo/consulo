@@ -29,7 +29,6 @@ import consulo.ide.impl.idea.codeInsight.lookup.impl.CompletionExtender;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionsStep;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemReplaceAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.FocusedOnlyChooseItemAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.language.editor.AutoPopupController;
@@ -48,6 +47,7 @@ import consulo.language.editor.impl.internal.completion.lookup.LookupOffsets;
 import consulo.language.editor.impl.internal.completion.lookup.PrefixChangeListener;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDocumentManager;
@@ -874,7 +874,9 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             delegateActionToEditor(
                 IdeActions.ACTION_EDITOR_ENTER,
                 /* e.g. rename popup comes initially unfocused */
-                () -> getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED ? new NextVariableAction() : new FocusedOnlyChooseItemAction(),
+                () -> getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED
+                    ? ActionManager.getInstance().getAction(LanguageEditorActions.NEXT_LIVE_TEMPLATE_VARIABLE)
+                    : new FocusedOnlyChooseItemAction(),
                 actionEvent
             );
             delegateActionToEditor(IdeActions.ACTION_EDITOR_MOVE_CARET_UP, null, actionEvent);

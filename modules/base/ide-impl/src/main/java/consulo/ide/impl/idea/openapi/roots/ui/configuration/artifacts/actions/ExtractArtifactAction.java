@@ -38,7 +38,7 @@ import java.util.Collection;
  */
 public class ExtractArtifactAction extends LayoutTreeActionBase {
     public ExtractArtifactAction(ArtifactEditorEx editor) {
-        super(ProjectLocalize.actionNameExtractArtifact().get(), editor);
+        super(ProjectLocalize.actionNameExtractArtifact(), editor);
     }
 
     @Override

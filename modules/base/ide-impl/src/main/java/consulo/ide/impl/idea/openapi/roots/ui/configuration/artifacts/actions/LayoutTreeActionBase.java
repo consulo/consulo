@@ -15,31 +15,33 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ui.image.Image;
 
 /**
  * @author nik
  */
-public abstract class LayoutTreeActionBase extends LegacyDumbAwareAction {
-  protected final ArtifactEditorEx myArtifactEditor;
+public abstract class LayoutTreeActionBase extends DumbAwareAction implements AnActionWithSyncUpdate {
+    protected final ArtifactEditorEx myArtifactEditor;
 
-  protected LayoutTreeActionBase(String text, String description, Image icon, ArtifactEditorEx artifactEditor) {
-    super(text, description, icon);
-    myArtifactEditor = artifactEditor;
-  }
+    protected LayoutTreeActionBase(LocalizeValue text, LocalizeValue description, Image icon, ArtifactEditorEx artifactEditor) {
+        super(text, description, icon);
+        myArtifactEditor = artifactEditor;
+    }
 
-  protected LayoutTreeActionBase(String text, ArtifactEditorEx artifactEditor) {
-    super(text);
-    myArtifactEditor = artifactEditor;
-  }
+    protected LayoutTreeActionBase(LocalizeValue text, ArtifactEditorEx artifactEditor) {
+        super(text);
+        myArtifactEditor = artifactEditor;
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(isEnabled());
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(isEnabled());
+    }
 
-  protected abstract boolean isEnabled();
+    protected abstract boolean isEnabled();
 }

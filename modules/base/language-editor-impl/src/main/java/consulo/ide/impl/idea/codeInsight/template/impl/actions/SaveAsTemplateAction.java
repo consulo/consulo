@@ -32,6 +32,7 @@ import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
@@ -52,7 +53,7 @@ import java.util.*;
  * @author mike
  * @since 2002-08-20
  */
-@ActionImpl(id = "SaveAsTemplate")
+@ActionImpl(id = LanguageEditorActions.SAVE_AS_LIVE_TEMPLATE)
 public class SaveAsTemplateAction extends AnAction implements AnActionWithSyncUpdate {
     private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
 
