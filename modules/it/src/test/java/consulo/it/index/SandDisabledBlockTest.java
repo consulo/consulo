@@ -22,6 +22,10 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.language.psi.PsiElement;
+import consulo.sandboxPlugin.lang.psi.SandExtendsRef;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
+import consulo.language.psi.stub.IndexOptionSelector;
+import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -36,6 +40,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
+import consulo.sandboxPlugin.lang.moduleAware.SandSeedEnv;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandClassSearch;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -139,9 +144,12 @@ public class SandDisabledBlockTest {
 
         Project project = openProjectWithModule(application, projectManager, directory);
 
-        // the includer defines A: the included file is seeded with it, so only the first
-        // (physically earlier) variant exists
-        waitFor(() -> singleItemAt(project, true));
+        // the included file's own view follows its module flags (no A): the #else variant; the
+        // includer defines A, so a second variant seeded with it is indexed and its reference
+        // resolves through it to the physically earlier declaration
+        waitFor(() -> singleItemAt(project, false), () -> describeItems(project));
+        waitFor(() -> variantCount(project, "Item") == 2, () -> describeItems(project));
+        waitFor(() -> userResolvesTo(project, true), () -> describeItems(project));
 
         // dropping the includer's #flag re-seeds the included file: reparse + reindex flip
         // the existing variant to the #else one - the second declaration in the text
@@ -153,7 +161,61 @@ public class SandDisabledBlockTest {
         assertThat(srcFile).isNotNull();
         srcFile.refresh(false, true);
 
-        waitFor(() -> singleItemAt(project, false));
+        waitFor(() -> singleItemAt(project, false), () -> describeItems(project));
+        waitFor(() -> variantCount(project, "Item") == 1, () -> describeItems(project));
+        waitFor(() -> userResolvesTo(project, false), () -> describeItems(project));
+    }
+
+    private static int variantCount(Project project, String name) {
+        return ReadAction.compute(() -> {
+            try {
+                return ModuleAwareIndexOptions.withSelector(IndexOptionSelector.ALL_VARIANTS, () -> SandClassSearch.allVariants(project, name)).size();
+            }
+            catch (IndexNotReadyException e) {
+                return -1;
+            }
+        });
+    }
+
+    private static boolean userResolvesTo(Project project, boolean first) {
+        return ReadAction.compute(() -> {
+            try {
+                Collection<SandClass> users = SandClassSearch.allVariants(project, "User");
+                if (users.size() != 1) {
+                    return false;
+                }
+                SandExtendsRef ref = PsiTreeUtil.findChildOfType(users.iterator().next(), SandExtendsRef.class);
+                PsiReference reference = ref == null ? null : ref.getReference();
+                PsiElement resolved = reference == null ? null : reference.resolve();
+                if (!(resolved instanceof SandClass resolvedClass)) {
+                    return false;
+                }
+                PsiElement nameIdentifier = resolvedClass.getNameIdentifier();
+                PsiFile someFile = resolvedClass.getContainingFile();
+                if (nameIdentifier == null || someFile == null) {
+                    return false;
+                }
+                String text = someFile.getText();
+                int expectedOffset = first ? text.indexOf("Item") : text.lastIndexOf("Item");
+                return nameIdentifier.getTextOffset() == expectedOffset;
+            }
+            catch (IndexNotReadyException e) {
+                return false;
+            }
+        });
+    }
+
+    private static String describeItems(Project project) {
+        return ReadAction.compute(() -> {
+            StringBuilder text = new StringBuilder();
+            for (SandClass item : SandClassSearch.allVariants(project, "Item")) {
+                PsiElement nameIdentifier = item.getNameIdentifier();
+                text.append("Item@").append(nameIdentifier == null ? -1 : nameIdentifier.getTextOffset()).append(' ');
+                VirtualFile file = item.getContainingFile().getVirtualFile();
+                text.append("seed=").append(SandSeedEnv.seedFor(project, file)).append(' ');
+            }
+            return text.toString();
+        });
     }
 
     /**

@@ -22,7 +22,12 @@ import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceBase;
+import consulo.language.psi.stub.IndexOptionSelector;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
 import consulo.project.Project;
+import consulo.sandboxPlugin.lang.moduleAware.SandModuleAwareIndexOptionProvider;
+import consulo.sandboxPlugin.lang.moduleAware.SandSeedEnv;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.sandboxPlugin.lang.psi.stub.SandClassSearch;
 
 import java.util.Collection;
@@ -47,8 +52,12 @@ public class SandExtendsRef extends ASTWrapperPsiElement {
             public PsiElement resolve() {
                 String name = getElement().getText();
                 Project project = getElement().getProject();
-
-                Collection<SandClass> candidates = SandClassSearch.active(project, name);
+                VirtualFile source = getElement().getContainingFile().getOriginalFile().getVirtualFile();
+                IndexOptionSelector selector = source == null ? null : (providerId, target) ->
+                    SandModuleAwareIndexOptionProvider.ID.equals(providerId) ? SandSeedEnv.optionsSeenFrom(project, source, target) : null;
+                Collection<SandClass> candidates = selector == null
+                    ? SandClassSearch.active(project, name)
+                    : ModuleAwareIndexOptions.withSelector(selector, () -> SandClassSearch.active(project, name));
                 return candidates.isEmpty() ? null : candidates.iterator().next();
             }
         };

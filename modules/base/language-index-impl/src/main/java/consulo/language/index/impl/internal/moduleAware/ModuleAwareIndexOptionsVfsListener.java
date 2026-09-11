@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.sandboxPlugin.lang.moduleAware;
+package consulo.language.index.impl.internal.moduleAware;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
@@ -23,32 +23,32 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListenerBackgroundable;
 import consulo.virtualFileSystem.event.VFileEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Any sand file change may move an include site's entry environment — re-derive the seeds.
+ * Any change to a file some option provider claims may move the options of other files, so the providers are asked
+ * to analyse the change.
  */
 @TopicImpl(ComponentScope.APPLICATION)
-final class SandIncludeSeedVfsListener implements BulkFileListenerBackgroundable {
-    public SandIncludeSeedVfsListener() {
+final class ModuleAwareIndexOptionsVfsListener implements BulkFileListenerBackgroundable {
+    public ModuleAwareIndexOptionsVfsListener() {
     }
 
     @Override
     public void after(List<? extends VFileEvent> events) {
-        boolean sandTouched = false;
+        List<VirtualFile> claimed = new ArrayList<>();
         for (VFileEvent event : events) {
             VirtualFile file = event.getFile();
-            String name = file != null ? file.getName() : event.getPath();
-            if (name != null && name.endsWith(".sand")) {
-                sandTouched = true;
-                break;
+            if (file != null && !file.isDirectory() && !ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType()).isEmpty()) {
+                claimed.add(file);
             }
         }
-        if (!sandTouched) {
+        if (claimed.isEmpty()) {
             return;
         }
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            SandSeedEnv.scheduleRecompute(project);
+            ModuleAwareIndexOptionsAnalyzer.getInstance(project).schedule(claimed);
         }
     }
 }

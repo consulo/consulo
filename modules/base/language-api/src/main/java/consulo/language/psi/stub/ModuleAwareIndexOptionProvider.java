@@ -17,11 +17,15 @@ package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
+import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,8 +42,6 @@ import java.util.Set;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleAwareIndexOptionProvider {
 
-    ExtensionPointName<ModuleAwareIndexOptionProvider> EP_NAME =
-        ExtensionPointName.create(ModuleAwareIndexOptionProvider.class);
 
     /**
      * Stable identifier — appears in stored per-file meta. Changing it orphans all
@@ -60,9 +62,22 @@ public interface ModuleAwareIndexOptionProvider {
     Set<FileType> getInputFileTypes();
 
     /**
-     * Return the current options for the given {@code (module, file)}. Must not return
-     * {@code null} — use {@link IndexOption#fullySharable()} when no module-aware context
-     * applies to this particular file.
+     * The options of {@code file} that can be known from the roots model and the file itself, with no index access:
+     * this is called while the file is being indexed and parsed. Must not return {@code null} — use
+     * {@link IndexOption#fullySharable()} when no module-aware context applies to this particular file. When
+     * {@link #analyze} has produced a value for the file, that value is what indexing and parsing see instead.
      */
     IndexOption getOptions(Module module, VirtualFile file);
+
+    /**
+     * The analysis that needs more than one file: given the files that changed, returns new option values for every
+     * file of this provider's types whose options may now differ. The platform decides when to call this, keeps the
+     * returned values, works out which ones actually moved, rescans and reparses exactly those, and hands the kept
+     * value back through {@link ModuleAwareIndexOptions#getRecordedOptions} at index and parse time. It is called
+     * outside indexing, in a read action, and must not query indexes: file contents and the roots model only.
+     * {@code changedFiles} is {@code null} for a full pass over the project.
+     */
+    default Map<VirtualFile, List<IndexOption>> analyze(Project project, @Nullable Collection<VirtualFile> changedFiles) {
+        return Map.of();
+    }
 }

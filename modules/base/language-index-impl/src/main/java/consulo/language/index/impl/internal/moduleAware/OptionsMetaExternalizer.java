@@ -18,6 +18,8 @@ package consulo.language.index.impl.internal.moduleAware;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.IOUtil;
+import consulo.language.index.impl.internal.moduleAware.OptionsMeta.PerProviderMeta;
+import consulo.language.index.impl.internal.moduleAware.OptionsMeta.VariantTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -28,18 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static consulo.language.index.impl.internal.moduleAware.OptionsMeta.PerProviderMeta;
-import static consulo.language.index.impl.internal.moduleAware.OptionsMeta.VariantTag;
-
-/**
- * Persists {@link OptionsMeta} alongside an options-sensitive index. Entries are written
- * sorted by provider id — gives deterministic bytes so the stored meta diff stably across
- * runs.
- */
 public final class OptionsMetaExternalizer implements DataExternalizer<OptionsMeta> {
     public static final OptionsMetaExternalizer INSTANCE = new OptionsMetaExternalizer();
 
-    private static final int FORMAT_VERSION = 1;
+    private static final int FORMAT_VERSION = 2;
 
     private OptionsMetaExternalizer() {
     }
@@ -48,17 +42,18 @@ public final class OptionsMetaExternalizer implements DataExternalizer<OptionsMe
     public void save(DataOutput out, OptionsMeta value) throws IOException {
         DataInputOutputUtil.writeINT(out, FORMAT_VERSION);
         DataInputOutputUtil.writeINT(out, value.indexVersion());
-
-        List<Map.Entry<String, PerProviderMeta>> entries = new ArrayList<>(value.providers().entrySet());
-        entries.sort(Comparator.comparing(Map.Entry::getKey));
-
-        DataInputOutputUtil.writeINT(out, entries.size());
-        for (Map.Entry<String, PerProviderMeta> entry : entries) {
-            IOUtil.writeUTF(out, entry.getKey());
-            PerProviderMeta meta = entry.getValue();
-            DataInputOutputUtil.writeINT(out, meta.providerVersion());
-            DataInputOutputUtil.writeINT(out, meta.variantTag().ordinal());
-            DataInputOutputUtil.writeINT(out, meta.optionsHash());
+        DataInputOutputUtil.writeINT(out, value.variants().size());
+        for (Map<String, PerProviderMeta> variant : value.variants()) {
+            List<Map.Entry<String, PerProviderMeta>> entries = new ArrayList<>(variant.entrySet());
+            entries.sort(Comparator.comparing(Map.Entry::getKey));
+            DataInputOutputUtil.writeINT(out, entries.size());
+            for (Map.Entry<String, PerProviderMeta> entry : entries) {
+                IOUtil.writeUTF(out, entry.getKey());
+                PerProviderMeta meta = entry.getValue();
+                DataInputOutputUtil.writeINT(out, meta.providerVersion());
+                DataInputOutputUtil.writeINT(out, meta.variantTag().ordinal());
+                DataInputOutputUtil.writeINT(out, meta.optionsHash());
+            }
         }
     }
 
@@ -69,21 +64,24 @@ public final class OptionsMetaExternalizer implements DataExternalizer<OptionsMe
             throw new IOException("Unsupported OptionsMeta format version: " + format);
         }
         int indexVersion = DataInputOutputUtil.readINT(in);
-
-        int size = DataInputOutputUtil.readINT(in);
-        Map<String, PerProviderMeta> providers = new HashMap<>(size);
+        int variantCount = DataInputOutputUtil.readINT(in);
+        List<Map<String, PerProviderMeta>> variants = new ArrayList<>(variantCount);
         VariantTag[] tags = VariantTag.values();
-        for (int i = 0; i < size; i++) {
-            String providerId = IOUtil.readUTF(in);
-            int providerVersion = DataInputOutputUtil.readINT(in);
-            int tagOrdinal = DataInputOutputUtil.readINT(in);
-            int optionsHash = DataInputOutputUtil.readINT(in);
-
-            if (tagOrdinal < 0 || tagOrdinal >= tags.length) {
-                throw new IOException("Unknown VariantTag ordinal: " + tagOrdinal);
+        for (int v = 0; v < variantCount; v++) {
+            int size = DataInputOutputUtil.readINT(in);
+            Map<String, PerProviderMeta> providers = new HashMap<>(size);
+            for (int i = 0; i < size; i++) {
+                String providerId = IOUtil.readUTF(in);
+                int providerVersion = DataInputOutputUtil.readINT(in);
+                int tagOrdinal = DataInputOutputUtil.readINT(in);
+                int optionsHash = DataInputOutputUtil.readINT(in);
+                if (tagOrdinal < 0 || tagOrdinal >= tags.length) {
+                    throw new IOException("Unknown VariantTag ordinal: " + tagOrdinal);
+                }
+                providers.put(providerId, new PerProviderMeta(providerVersion, tags[tagOrdinal], optionsHash));
             }
-            providers.put(providerId, new PerProviderMeta(providerVersion, tags[tagOrdinal], optionsHash));
+            variants.add(Map.copyOf(providers));
         }
-        return new OptionsMeta(indexVersion, Map.copyOf(providers));
+        return new OptionsMeta(indexVersion, variants);
     }
 }

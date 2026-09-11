@@ -18,7 +18,6 @@ package consulo.sandboxPlugin.lang.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
-import consulo.language.file.FileViewProvider;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderFactory;
@@ -26,16 +25,12 @@ import consulo.language.parser.PsiParser;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.IStubFileElementType;
-import consulo.language.psi.stub.IndexingDataKeys;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.moduleAware.SandSeedEnv;
 import consulo.sandboxPlugin.lang.parser.SandBuilderWrapper;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.light.LightVirtualFileBase;
-import org.jspecify.annotations.Nullable;
 
 /**
  * The parse entry seeds the preprocessor variables (module flags + include-derived entry
@@ -70,26 +65,10 @@ public class SandFileElementType extends IStubFileElementType<PsiFileStub<PsiFil
 
     PsiBuilder builder =
       PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
-    builder.putUserData(SandBuilderWrapper.SEED_VARIABLES, SandSeedEnv.seedFor(project, stableFile(psi)));
+    builder.putUserData(SandBuilderWrapper.SEED_VARIABLES, SandSeedEnv.seedFor(psi));
 
     PsiParser parser = ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
     return parser.parse(this, builder, languageVersion).getFirstChildNode();
   }
 
-  @RequiredReadAction
-  private static @Nullable VirtualFile stableFile(PsiElement psi) {
-    PsiFile psiFile = psi.getContainingFile();
-    FileViewProvider viewProvider = psiFile.getViewProvider();
-    VirtualFile virtualFile = viewProvider.getVirtualFile();
-    if (virtualFile instanceof LightVirtualFileBase lightVirtualFile) {
-      virtualFile = lightVirtualFile.getOriginalFile();
-      if (virtualFile instanceof LightVirtualFileBase innerLight) {
-        virtualFile = innerLight.getOriginalFile();
-      }
-    }
-    if (virtualFile == null) {
-      virtualFile = psi.getUserData(IndexingDataKeys.VIRTUAL_FILE);
-    }
-    return virtualFile;
-  }
 }

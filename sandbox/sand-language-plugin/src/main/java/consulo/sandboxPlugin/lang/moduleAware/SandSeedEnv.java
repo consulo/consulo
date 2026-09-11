@@ -15,52 +15,34 @@
  */
 package consulo.sandboxPlugin.lang.moduleAware;
 
-import consulo.application.Application;
-import consulo.application.ReadAction;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.document.util.FileContentUtilCore;
-import consulo.language.psi.search.FileTypeIndex;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.logging.Logger;
-import consulo.project.DumbService;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IndexOption;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
-import consulo.project.content.scope.ProjectScopes;
 import consulo.sandboxPlugin.lang.SandFileType;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
-import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.TreeSet;
 
 /**
- * The seed a sand file is parsed under — the C#-preprocessor model's
- * {@code getStableDefines}: module flags plus the union of every includer's entry
- * environment at its include site (your original {@code #define A} + {@code #include}
- * requirement). The include contributions are pre-computed outside indexing (smart mode)
- * and stored per project; a contribution change re-parses and re-indexes the affected
- * included files.
+ * The seed a sand file is parsed under: the module flags plus, for an included file, the union of every includer's
+ * environment at its include site. The include part needs the whole project, so it is produced by
+ * {@link #analyze} when the platform asks and read back through the value the platform recorded; the parser never
+ * computes it.
  */
 public final class SandSeedEnv {
-    private static final Logger LOG = Logger.getInstance(SandSeedEnv.class);
-    private static final Key<ConcurrentMap<VirtualFile, Set<String>>> INCLUDE_SEEDS = Key.create("sand.include.seeds");
-    private static final Key<AtomicBoolean> RECOMPUTE_PENDING = Key.create("sand.include.seeds.pending");
-    private static final FileAttribute SEED_ATTRIBUTE = new FileAttribute("sand-include-seed", 1, false);
-
     private SandSeedEnv() {
     }
 
@@ -68,141 +50,78 @@ public final class SandSeedEnv {
         if (file == null) {
             return Set.of();
         }
-        Set<String> seed = new HashSet<>(SandFlagEnv.moduleFlags(project, file));
-        seed.addAll(includeSeed(project, file));
-        return seed;
+        SandOptions options = ModuleAwareIndexOptions.getOptions(project, file, SandModuleAwareIndexOptionProvider.ID, SandOptionsExternalizer.INSTANCE);
+        return options == null ? Set.of() : options.symbols();
     }
 
-    private static Set<String> includeSeed(Project project, VirtualFile file) {
-        ConcurrentMap<VirtualFile, Set<String>> store = store(project);
-        Set<String> fromIncluders = store.get(file);
-        if (fromIncluders == null) {
-            fromIncluders = readAttribute(file);
-            Set<String> previous = store.putIfAbsent(file, fromIncluders);
-            if (previous != null) {
-                fromIncluders = previous;
-            }
-        }
-        return fromIncluders;
+    public static Set<String> seedFor(PsiElement context) {
+        SandOptions options = ModuleAwareIndexOptions.getOptions(context, SandModuleAwareIndexOptionProvider.ID, SandOptionsExternalizer.INSTANCE);
+        return options == null ? Set.of() : options.symbols();
     }
 
-    public static void scheduleRecompute(Project project) {
-        if (project.isDisposed()) {
-            return;
-        }
-        AtomicBoolean pending = pending(project);
-        if (!pending.compareAndSet(false, true)) {
-            return;
-        }
-        DumbService.getInstance(project).runWhenSmart(() -> Application.get().executeOnPooledThread(() -> {
-            pending.set(false);
-            if (project.isDisposed()) {
-                return;
+    public static Map<VirtualFile, List<IndexOption>> analyze(Project project, @Nullable Collection<VirtualFile> changedFiles) {
+        ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
+        List<VirtualFile> sandFiles = new ArrayList<>();
+        fileIndex.iterateContent(file -> {
+            if (!file.isDirectory() && file.getFileType() == SandFileType.INSTANCE) {
+                sandFiles.add(file);
             }
-            List<VirtualFile> changed;
-            try {
-                changed = ReadAction.compute(() -> recompute(project));
-            }
-            catch (IndexNotReadyException e) {
-                scheduleRecompute(project);
-                return;
-            }
-            catch (Throwable t) {
-                LOG.error("sand-seed recompute failed", t);
-                return;
-            }
-            if (changed.isEmpty()) {
-                return;
-            }
-            FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
-            for (VirtualFile file : changed) {
-                fileBasedIndex.requestReindex(file);
-            }
-            Application application = Application.get();
-            application.invokeLater(() -> application.runWriteAction(() -> FileContentUtilCore.reparseFiles(changed)));
-        }));
-    }
+            return true;
+        });
 
-    private static List<VirtualFile> recompute(Project project) {
-        Map<VirtualFile, Set<String>> newSeeds = new HashMap<>();
-        Collection<VirtualFile> sandFiles =
-            FileTypeIndex.getFiles(SandFileType.INSTANCE, ProjectScopes.getContentScope(project));
+        Map<VirtualFile, Set<Set<String>>> includeSeeds = new HashMap<>();
         for (VirtualFile includer : sandFiles) {
             SandIncludeSimulator.Walk walk = SandIncludeSimulator.walk(includer, SandFlagEnv.moduleFlags(project, includer));
             for (Map.Entry<VirtualFile, Set<Set<String>>> entry : walk.includeSiteEnvs().entrySet()) {
-                Set<String> union = newSeeds.computeIfAbsent(entry.getKey(), key -> new HashSet<>());
-                for (Set<String> environment : entry.getValue()) {
-                    union.addAll(environment);
+                includeSeeds.computeIfAbsent(entry.getKey(), key -> new LinkedHashSet<>()).addAll(entry.getValue());
+            }
+        }
+
+        Map<VirtualFile, List<IndexOption>> result = new HashMap<>();
+        for (VirtualFile file : sandFiles) {
+            Module module = fileIndex.getModuleForFile(file);
+            if (module == null) {
+                continue;
+            }
+            Set<String> moduleFlags = new TreeSet<>(SandFlagEnv.moduleFlags(project, file));
+            List<IndexOption> variants = new ArrayList<>();
+            Set<Set<String>> seen = new LinkedHashSet<>();
+            seen.add(moduleFlags);
+            variants.add(optionsOf(module, moduleFlags));
+            for (Set<String> environment : includeSeeds.getOrDefault(file, Set.of())) {
+                Set<String> symbols = new TreeSet<>(moduleFlags);
+                symbols.addAll(environment);
+                if (seen.add(symbols)) {
+                    variants.add(optionsOf(module, symbols));
                 }
             }
+            result.put(file, variants);
         }
-
-        ConcurrentMap<VirtualFile, Set<String>> store = store(project);
-        List<VirtualFile> changed = new ArrayList<>();
-        for (Map.Entry<VirtualFile, Set<String>> entry : newSeeds.entrySet()) {
-            if (!Objects.equals(store.get(entry.getKey()), entry.getValue())) {
-                changed.add(entry.getKey());
-            }
-        }
-        for (VirtualFile stale : store.keySet()) {
-            if (!newSeeds.containsKey(stale)) {
-                changed.add(stale);
-            }
-        }
-
-        store.clear();
-        store.putAll(newSeeds);
-        for (VirtualFile file : changed) {
-            writeAttribute(file, newSeeds.getOrDefault(file, Set.of()));
-        }
-        return changed;
+        return result;
     }
 
-    private static Set<String> readAttribute(VirtualFile file) {
-        try (DataInputStream stream = SEED_ATTRIBUTE.readAttribute(file)) {
-            if (stream == null) {
-                return Set.of();
-            }
-            int count = stream.readInt();
-            Set<String> seed = new HashSet<>(count);
-            for (int i = 0; i < count; i++) {
-                seed.add(stream.readUTF());
-            }
-            return seed;
+    /**
+     * The option under which {@code includer} sees {@code included}: the included file's module flags plus the
+     * environment at the include site, or {@code null} when the includer does not include it.
+     */
+    public static @Nullable IndexOption optionsSeenFrom(Project project, VirtualFile includer, VirtualFile included) {
+        Module module = ProjectFileIndex.getInstance(project).getModuleForFile(included);
+        if (module == null) {
+            return null;
         }
-        catch (IOException e) {
-            LOG.warn("sand-include-seed attribute read failed for " + file, e);
-            return Set.of();
+        SandIncludeSimulator.Walk walk = SandIncludeSimulator.walk(includer, SandFlagEnv.moduleFlags(project, includer));
+        Set<Set<String>> environments = walk.includeSiteEnvs().get(included);
+        if (environments == null || environments.isEmpty()) {
+            return null;
         }
+        Set<String> symbols = new TreeSet<>(SandFlagEnv.moduleFlags(project, included));
+        symbols.addAll(environments.iterator().next());
+        return optionsOf(module, symbols);
     }
 
-    private static void writeAttribute(VirtualFile file, Set<String> seed) {
-        List<String> sorted = new ArrayList<>(seed);
-        sorted.sort(null);
-        try (DataOutputStream stream = SEED_ATTRIBUTE.writeAttribute(file)) {
-            stream.writeInt(sorted.size());
-            for (String flag : sorted) {
-                stream.writeUTF(flag);
-            }
-        }
-        catch (IOException e) {
-            LOG.warn("sand-include-seed attribute write failed for " + file, e);
-        }
-    }
-
-    private static ConcurrentMap<VirtualFile, Set<String>> store(Project project) {
-        ConcurrentMap<VirtualFile, Set<String>> store = project.getUserData(INCLUDE_SEEDS);
-        if (store == null) {
-            store = ((UserDataHolderEx) project).putUserDataIfAbsent(INCLUDE_SEEDS, new ConcurrentHashMap<>());
-        }
-        return store;
-    }
-
-    private static AtomicBoolean pending(Project project) {
-        AtomicBoolean pending = project.getUserData(RECOMPUTE_PENDING);
-        if (pending == null) {
-            pending = ((UserDataHolderEx) project).putUserDataIfAbsent(RECOMPUTE_PENDING, new AtomicBoolean());
-        }
-        return pending;
+    static IndexOption optionsOf(Module module, Set<String> symbols) {
+        SandOptions options = new SandOptions(new TreeSet<>(symbols), "sandbox");
+        LocalizeValue label = LocalizeValue.of("sandbox / " + module.getName());
+        return IndexOption.sharablePerOption(options, SandOptionsExternalizer.INSTANCE, label);
     }
 }

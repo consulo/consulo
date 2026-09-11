@@ -22,6 +22,8 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaStorage;
+import consulo.language.index.impl.internal.IndexingStamp;
+import consulo.language.index.impl.internal.UnindexedFilesScanner;
 import consulo.language.index.impl.internal.stub.StubUpdatingIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndex;
@@ -110,16 +112,19 @@ public class SandMetaHoleGuardTest {
         storage.delete(StubUpdatingIndex.INDEX_ID, fileId);
         assertThat(storage.get(StubUpdatingIndex.INDEX_ID, fileId)).isNull();
 
-        // any rootsChanged triggers revalidation; missing meta on an indexed file must reindex it
-        WriteAction.run(() -> {
-            ModifiableModuleModel moduleModel = moduleManager.getModifiableModel();
-            moduleModel.newModule("other", directory.resolve("other").toString());
-            moduleModel.commit();
-        });
+        // a scan that visits the file repairs the hole: the persistent flag says the file is done, but the
+        // module-aware trigger and the stub index's own state both report the missing meta as drift
+        new UnindexedFilesScanner(project, "meta hole").queue();
 
         // a single dirty file is below the dumb-mode threshold and reindexes lazily on the
         // next index access - so the poll must query the index to drive the update
-        waitFor(() -> hasClass(project, "Foo") && storage.get(StubUpdatingIndex.INDEX_ID, fileId) != null);
+        waitFor(
+            () -> hasClass(project, "Foo") && storage.get(StubUpdatingIndex.INDEX_ID, fileId) != null,
+            () -> "hasClass=" + hasClass(project, "Foo")
+                + " meta=" + storage.get(StubUpdatingIndex.INDEX_ID, fileId)
+                + " stubStamp=" + IndexingStamp.isFileIndexedStateCurrent(fileId, StubUpdatingIndex.INDEX_ID)
+                + " dumb=" + dumbService.isDumb()
+        );
         awaitSmart(dumbService);
     }
 
@@ -141,6 +146,10 @@ public class SandMetaHoleGuardTest {
     }
 
     private static void waitFor(BooleanSupplier condition) throws Exception {
+        waitFor(condition, () -> "");
+    }
+
+    private static void waitFor(BooleanSupplier condition, java.util.function.Supplier<String> describe) throws Exception {
         long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS);
         while (System.currentTimeMillis() < deadline) {
             if (condition.getAsBoolean()) {
@@ -148,6 +157,6 @@ public class SandMetaHoleGuardTest {
             }
             Thread.sleep(50);
         }
-        assertThat(condition.getAsBoolean()).as("timed out waiting for condition").isTrue();
+        assertThat(condition.getAsBoolean()).as("timed out waiting for condition [" + describe.get() + "]").isTrue();
     }
 }

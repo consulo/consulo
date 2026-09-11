@@ -17,6 +17,7 @@ package consulo.language.index.impl.internal.moduleAware;
 
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.internal.psi.stub.IndexOptionImpl;
+import consulo.language.psi.stub.IndexOption;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -40,6 +41,15 @@ public final class IndexOptionHasher {
 
     public static int hash(IndexOptionImpl.SharablePerOption<?> option) {
         return Arrays.hashCode(serialize(option));
+    }
+
+    /**
+     * The bytes that stand for any option: the payload for a sharable-per-option value, nothing for the other tiers.
+     * Their {@link Arrays#hashCode(byte[])} is the options hash recorded in {@link OptionsMeta}, whether the option
+     * came from a provider call or from the value storage.
+     */
+    public static byte[] payloadOf(IndexOption option) {
+        return option instanceof IndexOptionImpl.SharablePerOption<?> sharable ? serialize(sharable) : new byte[0];
     }
 
     public static byte[] serialize(IndexOptionImpl.SharablePerOption<?> option) {

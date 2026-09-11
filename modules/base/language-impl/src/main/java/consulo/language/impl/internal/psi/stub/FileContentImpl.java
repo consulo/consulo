@@ -86,6 +86,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     if (psi == null) {
       psi = createFileFromText(getContentAsText());
       psi.putUserData(IndexingDataKeys.VIRTUAL_FILE, getFile());
+      psi.putUserData(IndexingDataKeys.INDEX_OPTIONS, getUserData(IndexingDataKeys.INDEX_OPTIONS));
       putUserData(CACHED_PSI, psi);
     }
     return psi;

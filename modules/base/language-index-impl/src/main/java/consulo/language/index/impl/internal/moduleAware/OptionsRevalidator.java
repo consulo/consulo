@@ -15,49 +15,40 @@
  */
 package consulo.language.index.impl.internal.moduleAware;
 
+import consulo.language.index.impl.internal.moduleAware.OptionsMeta.PerProviderMeta;
+import consulo.language.index.impl.internal.moduleAware.OptionsMeta.VariantTag;
 import consulo.language.internal.psi.stub.IndexOptionImpl;
 import consulo.language.psi.stub.IndexOption;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static consulo.language.index.impl.internal.moduleAware.OptionsMeta.PerProviderMeta;
-import static consulo.language.index.impl.internal.moduleAware.OptionsMeta.VariantTag;
-
-/**
- * Decides whether a file needs reindexing for an options-sensitive index and builds the
- * fresh {@link OptionsMeta} snapshot to store after a successful reindex. See the
- * revalidation algorithm in {@code MODULE_AWARE_INDEX.md}.
- *
- * <p>The expensive part — asking every provider for its options and hashing the payload —
- * is factored into {@link #currentState} so callers can cache it per file
- * ({@link ModuleAwareIndexMetaRecorder}); comparison and snapshotting then work on the
- * precomputed map, subset per index by the requested provider ids.</p>
- */
 public final class OptionsRevalidator {
     private OptionsRevalidator() {
     }
 
     /**
-     * Computes the current per-provider state for every given provider. The result is
-     * index-agnostic: callers subset it by an index's requested provider ids.
+     * Computes the current per-provider state of every variant the file is indexed under, primary first. The result
+     * is index-agnostic: callers subset it by an index's requested provider ids.
      */
-    public static Map<String, PerProviderMeta> currentState(List<ModuleAwareIndexOptionProvider> providers,
-                                                            Module module,
-                                                            VirtualFile file) {
-        Map<String, PerProviderMeta> state = new HashMap<>(providers.size());
+    public static List<Map<String, PerProviderMeta>> currentState(List<ModuleAwareIndexOptionProvider> providers,
+                                                                  Module module,
+                                                                  VirtualFile file,
+                                                                  int fileId) {
+        Map<String, Integer> versions = new HashMap<>(providers.size());
         for (ModuleAwareIndexOptionProvider provider : providers) {
-            IndexOption option = provider.getOptions(module, file);
-            VariantTag tag = tagOf(option);
-            int hash = tag == VariantTag.SharablePerOption
-                ? IndexOptionHasher.hash((IndexOptionImpl.SharablePerOption<?>) option)
-                : 0;
-            state.put(provider.getId(), new PerProviderMeta(provider.getVersion(), tag, hash));
+            versions.put(provider.getId(), provider.getVersion());
+        }
+        List<VariantDescriptor> descriptors = ModuleAwareIndexVariants.descriptorsFor(providers, module, file, fileId);
+        List<Map<String, PerProviderMeta>> state = new ArrayList<>(descriptors.size());
+        for (VariantDescriptor descriptor : descriptors) {
+            state.add(descriptor.toMeta(versions));
         }
         return state;
     }
@@ -65,40 +56,28 @@ public final class OptionsRevalidator {
     public static boolean needsReindex(int currentIndexVersion,
                                        OptionsMeta stored,
                                        Set<String> currentIds,
-                                       Map<String, PerProviderMeta> currentState) {
+                                       List<Map<String, PerProviderMeta>> currentState) {
         if (stored.indexVersion() != currentIndexVersion) {
             return true;
         }
-
-        if (!currentIds.equals(stored.providers().keySet())) {
-            return true;
-        }
-
-        for (String id : currentIds) {
-            PerProviderMeta storedMeta = stored.providers().get(id);
-            PerProviderMeta current = currentState.get(id);
-            if (storedMeta == null || current == null) {
-                return true;
-            }
-            if (!storedMeta.equals(current)) {
-                return true;
-            }
-        }
-
-        return false;
+        return !stored.sameVariants(snapshot(currentIndexVersion, currentIds, currentState));
     }
 
     public static OptionsMeta snapshot(int currentIndexVersion,
                                        Set<String> currentIds,
-                                       Map<String, PerProviderMeta> currentState) {
-        Map<String, PerProviderMeta> providers = new HashMap<>(currentIds.size());
-        for (String id : currentIds) {
-            PerProviderMeta current = currentState.get(id);
-            if (current != null) {
-                providers.put(id, current);
+                                       List<Map<String, PerProviderMeta>> currentState) {
+        List<Map<String, PerProviderMeta>> variants = new ArrayList<>(currentState.size());
+        for (Map<String, PerProviderMeta> state : currentState) {
+            Map<String, PerProviderMeta> providers = new HashMap<>(currentIds.size());
+            for (String id : currentIds) {
+                PerProviderMeta current = state.get(id);
+                if (current != null) {
+                    providers.put(id, current);
+                }
             }
+            variants.add(Map.copyOf(providers));
         }
-        return new OptionsMeta(currentIndexVersion, Map.copyOf(providers));
+        return new OptionsMeta(currentIndexVersion, variants);
     }
 
     static VariantTag tagOf(IndexOption option) {

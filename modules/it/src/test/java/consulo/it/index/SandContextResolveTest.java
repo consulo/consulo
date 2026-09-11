@@ -24,6 +24,8 @@ import consulo.it.HeadlessApplicationExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+import consulo.language.psi.stub.IndexOptionSelector;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -118,7 +120,12 @@ public class SandContextResolveTest {
 
         // main1 defines A: the union seed enables the first variant, and both users resolve to it
         waitFor(() -> resolvesToVariant(project, "UserA", true));
-        waitFor(() -> resolvesToVariant(project, "UserB", true));
+        waitFor(() -> resolvesToVariant(project, "UserB", false));
+        waitFor(() -> variantCount(project, "Item") == 2);
+        VirtualFile someFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(src.resolve("some.sand"));
+        assertThat(someFile).isNotNull();
+        waitFor(() -> navigatesToPhysicalVariant(project, someFile));
+        waitFor(() -> ModuleAwareIndexOptions.getViewOptions(someFile) != null);
 
         // the include directive's file name is a reference to the included file
         waitFor(() -> ReadAction.compute(() -> {
@@ -153,6 +160,46 @@ public class SandContextResolveTest {
 
         waitFor(() -> resolvesToVariant(project, "UserA", false));
         waitFor(() -> resolvesToVariant(project, "UserB", false));
+        waitFor(() -> variantCount(project, "Item") == 1);
+        waitFor(() -> ModuleAwareIndexOptions.getViewOptions(someFile) == null);
+    }
+
+    /**
+     * UserA resolves into the variant seeded by its includer; navigating to that element must target the physical
+     * file at the first declaration, not the copy that served the variant.
+     */
+    private static boolean navigatesToPhysicalVariant(Project project, VirtualFile someFile) {
+        return ReadAction.compute(() -> {
+            try {
+                Collection<SandClass> users = SandClassSearch.active(project, "UserA");
+                if (users.isEmpty()) {
+                    return false;
+                }
+                SandExtendsRef ref = PsiTreeUtil.findChildOfType(users.iterator().next(), SandExtendsRef.class);
+                PsiReference reference = ref == null ? null : ref.getReference();
+                PsiElement resolved = reference == null ? null : reference.resolve();
+                if (resolved == null) {
+                    return false;
+                }
+                VirtualFile physical = ModuleAwareIndexOptions.physicalFileOfVariantCopy(resolved);
+                String text = new String(someFile.contentsToByteArray(), someFile.getCharset());
+                return someFile.equals(physical) && resolved.getTextOffset() == text.indexOf("class Item");
+            }
+            catch (IndexNotReadyException | java.io.IOException e) {
+                return false;
+            }
+        });
+    }
+
+    private static int variantCount(Project project, String name) {
+        return ReadAction.compute(() -> {
+            try {
+                return ModuleAwareIndexOptions.withSelector(IndexOptionSelector.ALL_VARIANTS, () -> SandClassSearch.allVariants(project, name)).size();
+            }
+            catch (IndexNotReadyException e) {
+                return -1;
+            }
+        });
     }
 
     /**

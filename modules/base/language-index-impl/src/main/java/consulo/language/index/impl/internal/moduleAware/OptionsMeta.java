@@ -15,14 +15,19 @@
  */
 package consulo.language.index.impl.internal.moduleAware;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Per-file per-index stored metadata used to decide whether a file needs reindexing under
- * module-aware indexing. Maps provider id → what was applicable the last time this file
- * was indexed. See the revalidation algorithm section in {@code MODULE_AWARE_INDEX.md}.
+ * What an index entry of a file was built under: one per-provider state for each stored variant, the primary variant
+ * first.
  */
-public record OptionsMeta(int indexVersion, Map<String, PerProviderMeta> providers) {
+public record OptionsMeta(int indexVersion, List<Map<String, PerProviderMeta>> variants) {
+    public OptionsMeta {
+        variants = List.copyOf(variants);
+    }
 
     public record PerProviderMeta(int providerVersion, VariantTag variantTag, int optionsHash) {
     }
@@ -31,5 +36,21 @@ public record OptionsMeta(int indexVersion, Map<String, PerProviderMeta> provide
         FullySharable,
         UniqueToModule,
         SharablePerOption
+    }
+
+    public Map<String, PerProviderMeta> primary() {
+        return variants.isEmpty() ? Map.of() : variants.get(0);
+    }
+
+    /**
+     * @return whether the same variants are recorded: the same primary, and the same set of secondaries
+     */
+    public boolean sameVariants(OptionsMeta other) {
+        if (variants.size() != other.variants.size() || !primary().equals(other.primary())) {
+            return false;
+        }
+        Set<Map<String, PerProviderMeta>> mine = new HashSet<>(variants.subList(1, variants.size()));
+        Set<Map<String, PerProviderMeta>> theirs = new HashSet<>(other.variants.subList(1, other.variants.size()));
+        return mine.equals(theirs);
     }
 }

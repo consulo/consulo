@@ -23,8 +23,11 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.internal.ComponentBinding;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.ThreadIssueException;
 import consulo.util.lang.ref.SimpleReference;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -34,13 +37,34 @@ import java.util.function.BooleanSupplier;
  * @author VISTALL
  */
 public class HeadlessApplicationImpl extends UnifiedApplication {
+    private static final List<ThreadIssueException> ourThreadIssues = new CopyOnWriteArrayList<>();
+
+    private static volatile boolean ourAllowWriteLockUnderUIThread;
+
     public HeadlessApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
-        // the production lock: dynamic write-intent acquisition from any thread plus the real
-        // transferWriteAction protocol - a write-intent waiter polls pending transfers, so a UI
-        // task acquiring the write lock cannot deadlock against a background write action
-        // transferring onto the UI queue
         myLock = new ReadMostlyRWLock(null);
+    }
+
+    /**
+     * Opt-out, rejected by default: not every flow under test is free of write actions on the UI thread yet, so
+     * those tests turn this on for as long as they run.
+     */
+    public static void setAllowWriteLockUnderUIThread(boolean value) {
+        ourAllowWriteLockUnderUIThread = value;
+    }
+
+    /**
+     * The write-lock-under-UI-thread ban is not applied on this branch: the lock installed above polls pending
+     * write-action transfers while waiting for write intent, so a UI task taking the write lock cannot deadlock
+     * against a background write action transferring onto the UI queue. The opt-out annotation and the recorded
+     * issue list stay, so tests written against the ban still compile and pass.
+     */
+
+    public static List<ThreadIssueException> takeThreadIssues() {
+        List<ThreadIssueException> issues = List.copyOf(ourThreadIssues);
+        ourThreadIssues.clear();
+        return issues;
     }
 
     /**

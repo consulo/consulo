@@ -44,6 +44,10 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.navigation.NavigationContexts;
+import java.util.Map;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
+import consulo.language.psi.stub.IndexOption;
+import consulo.language.editor.navigation.NavigationContext;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PopupNavigationUtil;
@@ -209,6 +213,14 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         Project project = element.getProject();
         for (FileEditor fileEditor : FileEditorManager.getInstance(project).getEditors(targetFile)) {
             fileEditor.putUserData(NavigationContexts.NAVIGATION_CONTEXTS, contexts);
+        }
+        for (Object context : contexts) {
+            if (context instanceof NavigationContext navigationContext) {
+                Map<String, IndexOption> viewOptions = navigationContext.getViewOptions(project, targetFile);
+                if (viewOptions != null) {
+                    ModuleAwareIndexOptions.setViewOptions(project, targetFile, viewOptions);
+                }
+            }
         }
         EditorNotifications.getInstance(project).updateNotifications(targetFile);
         DaemonCodeAnalyzer.getInstance(project).restart(targetPsiFile.getOriginalFile());

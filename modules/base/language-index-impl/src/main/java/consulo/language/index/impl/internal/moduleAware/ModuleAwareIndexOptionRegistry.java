@@ -15,42 +15,46 @@
  */
 package consulo.language.index.impl.internal.moduleAware;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Dispatch helper for {@link ModuleAwareIndexOptionProvider} — returns providers claiming
- * a given file type, or looks up a provider by stable id (used during revalidation when
- * the stored meta names providers that may or may not still be registered).
- *
- * <p>Reads the extension point on every call. Caching can be bolted on later with an
- * extension-point listener for invalidation; v1 stays dumb.</p>
- */
 public final class ModuleAwareIndexOptionRegistry {
+    private static final ExtensionPointCacheKey<ModuleAwareIndexOptionProvider, Map<String, ModuleAwareIndexOptionProvider>> BY_ID =
+        ExtensionPointCacheKey.groupBy("ModuleAwareIndexOptionProvider.byId", ModuleAwareIndexOptionProvider::getId);
+
+    private static final ExtensionPointCacheKey<ModuleAwareIndexOptionProvider, Map<FileType, List<ModuleAwareIndexOptionProvider>>> BY_FILE_TYPE =
+        ExtensionPointCacheKey.create("ModuleAwareIndexOptionProvider.byFileType", walker -> {
+            Map<FileType, List<ModuleAwareIndexOptionProvider>> byFileType = new HashMap<>();
+            walker.walk(provider -> {
+                for (FileType fileType : provider.getInputFileTypes()) {
+                    byFileType.computeIfAbsent(fileType, ignored -> new ArrayList<>()).add(provider);
+                }
+            });
+            byFileType.replaceAll((fileType, providers) -> List.copyOf(providers));
+            return byFileType;
+        });
+
     private ModuleAwareIndexOptionRegistry() {
     }
 
     public static List<ModuleAwareIndexOptionProvider> getApplicableProviders(FileType fileType) {
-        List<ModuleAwareIndexOptionProvider> all = ModuleAwareIndexOptionProvider.EP_NAME.getExtensionList();
-        List<ModuleAwareIndexOptionProvider> result = new ArrayList<>(all.size());
-        for (ModuleAwareIndexOptionProvider provider : all) {
-            if (provider.getInputFileTypes().contains(fileType)) {
-                result.add(provider);
-            }
-        }
-        return result;
+        return point().getOrBuildCache(BY_FILE_TYPE).getOrDefault(fileType, List.of());
     }
 
     public static @Nullable ModuleAwareIndexOptionProvider findById(String id) {
-        for (ModuleAwareIndexOptionProvider provider : ModuleAwareIndexOptionProvider.EP_NAME.getExtensionList()) {
-            if (provider.getId().equals(id)) {
-                return provider;
-            }
-        }
-        return null;
+        return point().getOrBuildCache(BY_ID).get(id);
+    }
+
+    private static ExtensionPoint<ModuleAwareIndexOptionProvider> point() {
+        return Application.get().getExtensionPoint(ModuleAwareIndexOptionProvider.class);
     }
 }

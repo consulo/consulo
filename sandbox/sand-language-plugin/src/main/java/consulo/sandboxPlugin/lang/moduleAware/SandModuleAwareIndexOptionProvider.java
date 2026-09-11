@@ -18,14 +18,17 @@ package consulo.sandboxPlugin.lang.moduleAware;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.IndexOption;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
-import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
+import consulo.project.Project;
 import consulo.sandboxPlugin.lang.Sand2FileType;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,7 +53,7 @@ public final class SandModuleAwareIndexOptionProvider implements ModuleAwareInde
 
     @Override
     public int getVersion() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -60,11 +63,11 @@ public final class SandModuleAwareIndexOptionProvider implements ModuleAwareInde
 
     @Override
     public IndexOption getOptions(Module module, VirtualFile file) {
-        SandModuleExtension extension = module.getExtension(SandModuleExtension.class);
-        Set<String> symbols = extension == null ? Set.of() : extension.getFlags();
+        return SandSeedEnv.optionsOf(module, SandFlagEnv.moduleFlags(module.getProject(), file));
+    }
 
-        SandOptions options = new SandOptions(symbols, "sandbox");
-        LocalizeValue label = LocalizeValue.of("sandbox / " + module.getName());
-        return IndexOption.sharablePerOption(options, SandOptionsExternalizer.INSTANCE, label);
+    @Override
+    public Map<VirtualFile, List<IndexOption>> analyze(Project project, @Nullable Collection<VirtualFile> changedFiles) {
+        return SandSeedEnv.analyze(project, changedFiles);
     }
 }

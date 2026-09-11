@@ -16,8 +16,15 @@
 package consulo.language.index.impl.internal.stub;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.language.psi.stub.IndexingDataKeys;
+import consulo.language.psi.PsiFile;
+import consulo.language.impl.internal.psi.stub.FileContentImpl;
+import consulo.language.index.impl.internal.moduleAware.VariantDescriptor;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexVariants;
 import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.index.io.ID;
 import consulo.index.io.IndexStorage;
 import consulo.index.io.PersistentHashMapValueStorage;
@@ -59,8 +66,14 @@ import java.util.Map;
 @ExtensionImpl
 public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<SerializedStubTree>
     implements CustomImplementationFileBasedIndexExtension<Integer, SerializedStubTree> {
+    private static final ExtensionPointCacheKey<ModuleAwareIndexOptionProvider, List<String>> OPTION_PROVIDER_IDS =
+        ExtensionPointCacheKey.create("StubUpdatingIndex.optionProviderIds", walker -> {
+            List<String> ids = new ArrayList<>();
+            walker.walk(provider -> ids.add(provider.getId()));
+            return List.copyOf(ids);
+        });
     static final Logger LOG = Logger.getInstance(StubUpdatingIndex.class);
-    private static final int VERSION = 43 + (PersistentHashMapValueStorage.COMPRESSION_ENABLED ? 1 : 0);
+    private static final int VERSION = 44 + (PersistentHashMapValueStorage.COMPRESSION_ENABLED ? 1 : 0);
 
     // todo remove once we don't need this for stub-ast mismatch debug info
     private static final FileAttribute INDEXED_STAMP = new FileAttribute("stubIndexStamp", 3, true);
@@ -126,35 +139,43 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
             public @Nullable SerializedStubTree computeValue(FileContent inputData) {
                 return ReadAction.compute(() -> {
                     SerializedStubTree serializedStubTree = null;
-
+                    PsiFile primaryPsi = null;
+                    VirtualFile file = inputData.getFile();
                     try {
-                        //if (Registry.is("use.prebuilt.indices")) {
-                        //    final PrebuiltStubsProvider prebuiltStubsProvider =
-                        //        PrebuiltStubsProviders.INSTANCE.forFileType(inputData.getFileType());
-                        //    if (prebuiltStubsProvider != null) {
-                        //        serializedStubTree = prebuiltStubsProvider.findStub(inputData);
-                        //        if (PrebuiltIndexProviderBase.DEBUG_PREBUILT_INDICES) {
-                        //            Stub stub = StubTreeBuilder.buildStubTree(inputData);
-                        //            if (serializedStubTree != null && stub != null) {
-                        //                check(serializedStubTree.getStub(false), stub);
-                        //                checkStubIndexes(serializedStubTree, stub);
-                        //            }
-                        //        }
-                        //    }
-                        //}
-
-                        if (serializedStubTree == null) {
+                        Project project = inputData instanceof FileContentImpl impl ? impl.getProject() : null;
+                        List<VariantDescriptor> descriptors = project == null ? List.of() : ModuleAwareIndexVariants.descriptorsFor(project, file);
+                        if (descriptors.isEmpty()) {
                             Stub rootStub = StubTreeBuilder.buildStubTree(inputData);
                             if (rootStub != null) {
-                                serializedStubTree = new SerializedStubTree(
-                                    rootStub,
-                                    SerializationManagerEx.getInstanceEx(),
-                                    StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE
-                                );
-                                if (DebugAssertions.DEBUG) {
-                                    Stub deserialized = serializedStubTree.retrieveStubFromBytes(SerializationManagerEx.getInstanceEx());
-                                    check(deserialized, rootStub);
+                                serializedStubTree = serialize(rootStub);
+                            }
+                        }
+                        else {
+                            List<SerializedStubTree.StubVariant> variants = new ArrayList<>(descriptors.size() - 1);
+                            SerializedStubTree primary = null;
+                            for (int i = 0; i < descriptors.size(); i++) {
+                                VariantDescriptor descriptor = descriptors.get(i);
+                                FileContentImpl copy = new FileContentImpl(file, inputData.getContent());
+                                copy.setProject(project);
+                                copy.putUserData(IndexingDataKeys.INDEX_OPTIONS, descriptor.payloadMap());
+                                Stub rootStub = StubTreeBuilder.buildStubTree(copy);
+                                if (rootStub == null) {
+                                    if (i == 0) {
+                                        break;
+                                    }
+                                    continue;
                                 }
+                                SerializedStubTree variantTree = serialize(rootStub);
+                                if (i == 0) {
+                                    primary = variantTree;
+                                    primaryPsi = copy.getPsiFile();
+                                }
+                                else {
+                                    variants.add(new SerializedStubTree.StubVariant(descriptor, variantTree));
+                                }
+                            }
+                            if (primary != null) {
+                                serializedStubTree = primary.withVariants(descriptors.get(0), variants);
                             }
                         }
                     }
@@ -172,10 +193,10 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
                         return null;
                     }
 
-                    VirtualFile file = inputData.getFile();
                     boolean isBinary = file.getFileType().isBinary();
-                    int contentLength = isBinary ? -1 : inputData.getPsiFile().getTextLength();
+                    int contentLength = isBinary ? -1 : (primaryPsi != null ? primaryPsi : inputData.getPsiFile()).getTextLength();
                     long byteLength = file.getLength();
+
                     rememberIndexingStamp(file, isBinary, byteLength, contentLength);
 
                     if (LOG.isDebugEnabled()) {
@@ -183,6 +204,19 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
                     }
                     return serializedStubTree;
                 });
+            }
+
+            private SerializedStubTree serialize(Stub rootStub) throws IOException, SerializerNotFoundException {
+                SerializedStubTree tree = new SerializedStubTree(
+                    rootStub,
+                    SerializationManagerEx.getInstanceEx(),
+                    StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE
+                );
+                if (DebugAssertions.DEBUG) {
+                    Stub deserialized = tree.retrieveStubFromBytes(SerializationManagerEx.getInstanceEx());
+                    check(deserialized, rootStub);
+                }
+                return tree;
             }
         };
     }
@@ -280,12 +314,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
      */
     @Override
     public List<String> getOptionProviderIds() {
-        List<ModuleAwareIndexOptionProvider> providers = ModuleAwareIndexOptionProvider.EP_NAME.getExtensionList();
-        List<String> ids = new ArrayList<>(providers.size());
-        for (ModuleAwareIndexOptionProvider provider : providers) {
-            ids.add(provider.getId());
-        }
-        return ids;
+        return Application.get().getExtensionPoint(ModuleAwareIndexOptionProvider.class).getOrBuildCache(OPTION_PROVIDER_IDS);
     }
 
     

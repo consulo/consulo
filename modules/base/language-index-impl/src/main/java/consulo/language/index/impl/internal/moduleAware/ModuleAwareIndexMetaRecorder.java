@@ -17,7 +17,12 @@ package consulo.language.index.impl.internal.moduleAware;
 
 import consulo.index.io.ID;
 import consulo.language.index.impl.internal.IndexingStamp;
-import consulo.language.psi.stub.FileBasedIndex;
+import consulo.application.AccessRule;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
+import consulo.document.util.FileContentUtilCore;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.psi.stub.IndexedFile;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
 import consulo.module.Module;
@@ -33,11 +38,14 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -60,12 +68,29 @@ import java.util.concurrent.atomic.AtomicReference;
  * produced under unknown options.</p>
  */
 public final class ModuleAwareIndexMetaRecorder {
-    private record ProviderStateCache(long rootsStamp, ConcurrentIntObjectMap<Map<String, OptionsMeta.PerProviderMeta>> byFile) {
+    private record ProviderStateCache(long rootsStamp, ConcurrentIntObjectMap<List<Map<String, OptionsMeta.PerProviderMeta>>> byFile) {
     }
 
-    private static final Map<ID<?, ?>, FileBasedIndexExtension<?, ?>> ourExtensionCache = new ConcurrentHashMap<>();
+    private static final ExtensionPointCacheKey<FileBasedIndexExtension, Map<ID<?, ?>, FileBasedIndexExtension<?, ?>>> BY_INDEX_ID =
+        ExtensionPointCacheKey.create("ModuleAwareIndexMetaRecorder.byIndexId", walker -> {
+            Map<ID<?, ?>, FileBasedIndexExtension<?, ?>> byId = new HashMap<>();
+            walker.walk(extension -> byId.put(extension.getName(), extension));
+            return byId;
+        });
+    private static final ExtensionPointCacheKey<FileBasedIndexExtension, List<FileBasedIndexExtension<?, ?>>> OPTIONS_SENSITIVE =
+        ExtensionPointCacheKey.create("ModuleAwareIndexMetaRecorder.optionsSensitive", walker -> {
+            List<FileBasedIndexExtension<?, ?>> sensitive = new ArrayList<>();
+            walker.walk(extension -> {
+                if (!extension.getOptionProviderIds().isEmpty()) {
+                    sensitive.add(extension);
+                }
+            });
+            return List.copyOf(sensitive);
+        });
     private static final Key<AtomicReference<ProviderStateCache>> PROVIDER_STATE_CACHE = Key.create("module.aware.provider.state.cache");
     private static final Set<Integer> ourReindexRequested = ConcurrentHashMap.newKeySet();
+    private static final Set<VirtualFile> ourPendingReparse = ConcurrentHashMap.newKeySet();
+    private static final AtomicBoolean ourReparseScheduled = new AtomicBoolean();
 
     private ModuleAwareIndexMetaRecorder() {
     }
@@ -74,7 +99,7 @@ public final class ModuleAwareIndexMetaRecorder {
      * Read-path hook: returns {@code true} if stored {@link OptionsMeta} for
      * {@code (indexId, file)} no longer matches the current provider state, meaning the
      * cached index entry is stale for this module's options. Callers should drop the
-     * cached result and trigger reindex via {@link #requestReindexOnce}.
+     * cached result and trigger a rescan via {@link #requestRescanOnce}.
      */
     public static boolean isStale(ID<?, ?> indexId,
                                   VirtualFile file,
@@ -115,7 +140,7 @@ public final class ModuleAwareIndexMetaRecorder {
             return false;
         }
 
-        Map<String, OptionsMeta.PerProviderMeta> currentState = cachedState(project, fileId, file, module);
+        List<Map<String, OptionsMeta.PerProviderMeta>> currentState = cachedState(project, fileId, file, module);
         boolean stale = OptionsRevalidator.needsReindex(extension.getVersion(), stored, idsOf(applicable), currentState);
         if (!stale) {
             ourReindexRequested.remove(fileId);
@@ -124,19 +149,82 @@ public final class ModuleAwareIndexMetaRecorder {
     }
 
     /**
-     * Fires {@link FileBasedIndex#requestReindex} at most once per staleness episode.
-     * The guard clears when fresh meta lands ({@link #recordIfApplicable}) or when the
-     * file is observed clean again ({@link #isStale} returning {@code false}).
+     * Asks for the file to be scanned again at most once per staleness episode. The scan consults
+     * {@link #isOptionsDrifted} and reindexes the file; marking it changed on disk instead would put it in the
+     * dirty-file queue, which is persisted and decides whether the next open may skip its full scan. The guard
+     * clears when fresh meta lands ({@link #recordIfApplicable}) or when the file is observed clean again
+     * ({@link #isStale} returning {@code false}).
      */
-    public static boolean requestReindexOnce(VirtualFile file) {
+    public static boolean requestRescanOnce(Project project, VirtualFile file) {
         if (!(file instanceof VirtualFileWithId withId)) {
             return false;
         }
         if (ourReindexRequested.add(withId.getId())) {
-            FileBasedIndex.getInstance().requestReindex(file);
+            ModuleAwareIndexOptions.optionsChanged(project, List.of(file), "index options drifted");
             return true;
         }
         return false;
+    }
+
+    /**
+     * Options steer the parse as well as the index, so a file whose recorded options moved needs its tree rebuilt
+     * once its index has been. Files are batched into one write action per burst of recordings.
+     */
+    private static void scheduleReparse(VirtualFile file) {
+        ourPendingReparse.add(file);
+        if (!ourReparseScheduled.compareAndSet(false, true)) {
+            return;
+        }
+        Application application = Application.get();
+        application.invokeLater(() -> {
+            ourReparseScheduled.set(false);
+            List<VirtualFile> files = new ArrayList<>(ourPendingReparse);
+            ourPendingReparse.removeAll(files);
+            files.removeIf(each -> !each.isValid());
+            if (!files.isEmpty()) {
+                application.runWriteAction(() -> FileContentUtilCore.reparseFiles(files));
+            }
+        });
+    }
+
+    /**
+     * Scanning hook: {@code true} when the options that produced this file's index data no longer match the
+     * current ones. The scanner consults it before the persistent indexing flag decides a file needs no work,
+     * so a file whose module options drifted is reindexed by the ordinary scan instead of by a separate walk
+     * of the whole project.
+     */
+    public static boolean isOptionsDrifted(IndexedFile indexedFile) {
+        List<FileBasedIndexExtension<?, ?>> sensitive = optionsSensitiveExtensions();
+        if (sensitive.isEmpty()) {
+            return false;
+        }
+
+        VirtualFile file = indexedFile.getFile();
+        Project project = indexedFile.getProject();
+        if (project == null || !(file instanceof VirtualFileWithId)) {
+            return false;
+        }
+
+        return AccessRule.read(() -> {
+            if (project.isDisposed() || !file.isValid()) {
+                return Boolean.FALSE;
+            }
+            for (FileBasedIndexExtension<?, ?> extension : sensitive) {
+                if (isStale(extension.getName(), file, project)) {
+                    return Boolean.TRUE;
+                }
+            }
+            return Boolean.FALSE;
+        });
+    }
+
+    /**
+     * The extensions that declare option providers. The extension list is fixed for the life of the
+     * application, so the answer is computed once: the common case is no provider at all, and then every
+     * scanning-side call above costs one empty-list check.
+     */
+    private static List<FileBasedIndexExtension<?, ?>> optionsSensitiveExtensions() {
+        return Application.get().getExtensionPoint(FileBasedIndexExtension.class).getOrBuildCache(OPTIONS_SENSITIVE);
     }
 
     public static void recordIfApplicable(ID<?, ?> indexId,
@@ -168,24 +256,67 @@ public final class ModuleAwareIndexMetaRecorder {
 
         int fileId = withId.getId();
         List<ModuleAwareIndexOptionProvider> allApplicable = ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType());
-        Map<String, OptionsMeta.PerProviderMeta> freshState = OptionsRevalidator.currentState(allApplicable, module, file);
+        List<Map<String, OptionsMeta.PerProviderMeta>> freshState = OptionsRevalidator.currentState(allApplicable, module, file, fileId);
 
         OptionsMeta snapshot = OptionsRevalidator.snapshot(extension.getVersion(), idsOf(applicable), freshState);
-        ModuleAwareIndexMetaStorage.getInstance().put(indexId, fileId, snapshot);
+        ModuleAwareIndexMetaStorage storage = ModuleAwareIndexMetaStorage.getInstance();
+        OptionsMeta previous = storage.get(indexId, fileId);
+        storage.put(indexId, fileId, snapshot);
+        if (previous != null && !previous.equals(snapshot)) {
+            scheduleReparse(file);
+        }
 
         cacheHolder(project).byFile().put(fileId, freshState);
         ourReindexRequested.remove(fileId);
+        dropStaleViewOptions(project, file);
     }
 
-    private static Map<String, OptionsMeta.PerProviderMeta> cachedState(Project project, int fileId, VirtualFile file, Module module) {
+    /**
+     * View options survive only while a stored variant carries them; after a reindex that removed the variant the file
+     * falls back to its primary one and is reparsed so its tree follows.
+     */
+    private static void dropStaleViewOptions(Project project, VirtualFile file) {
+        Map<String, byte[]> view = ModuleAwareIndexOptions.getViewOptions(file);
+        if (view == null) {
+            return;
+        }
+        for (VariantDescriptor descriptor : ModuleAwareIndexVariants.descriptorsFor(project, file)) {
+            if (descriptor.matches(view)) {
+                return;
+            }
+        }
+        file.putUserData(ModuleAwareIndexOptions.VIEW_OPTIONS, null);
+        scheduleReparse(file);
+    }
+
+    /**
+     * The per-file provider state is cached until the roots change, which is the only invalidation the read path
+     * can see on its own. A provider whose options moved for other reasons (an include seed, say) says so through
+     * {@link ModuleAwareIndexOptions#optionsChanged}, and that drops the cached state here first, so the scan that
+     * follows compares the recorded meta against fresh options rather than against the cache.
+     */
+    public static void dropCachedState(Project project, Collection<? extends VirtualFile> files) {
+        AtomicReference<ProviderStateCache> reference = project.getUserData(PROVIDER_STATE_CACHE);
+        ProviderStateCache holder = reference == null ? null : reference.get();
+        if (holder == null) {
+            return;
+        }
+        for (VirtualFile file : files) {
+            if (file instanceof VirtualFileWithId withId) {
+                holder.byFile().remove(withId.getId());
+            }
+        }
+    }
+
+    private static List<Map<String, OptionsMeta.PerProviderMeta>> cachedState(Project project, int fileId, VirtualFile file, Module module) {
         ProviderStateCache holder = cacheHolder(project);
-        Map<String, OptionsMeta.PerProviderMeta> state = holder.byFile().get(fileId);
+        List<Map<String, OptionsMeta.PerProviderMeta>> state = holder.byFile().get(fileId);
         if (state != null) {
             return state;
         }
         List<ModuleAwareIndexOptionProvider> allApplicable = ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType());
-        state = OptionsRevalidator.currentState(allApplicable, module, file);
-        Map<String, OptionsMeta.PerProviderMeta> existing = holder.byFile().putIfAbsent(fileId, state);
+        state = OptionsRevalidator.currentState(allApplicable, module, file, fileId);
+        List<Map<String, OptionsMeta.PerProviderMeta>> existing = holder.byFile().putIfAbsent(fileId, state);
         return existing != null ? existing : state;
     }
 
@@ -227,16 +358,6 @@ public final class ModuleAwareIndexMetaRecorder {
     }
 
     private static @Nullable FileBasedIndexExtension<?, ?> findExtension(ID<?, ?> indexId) {
-        FileBasedIndexExtension<?, ?> cached = ourExtensionCache.get(indexId);
-        if (cached != null) {
-            return cached;
-        }
-        for (FileBasedIndexExtension<?, ?> extension : FileBasedIndexExtension.EXTENSION_POINT_NAME.getExtensionList()) {
-            if (extension.getName().equals(indexId)) {
-                ourExtensionCache.put(indexId, extension);
-                return extension;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(FileBasedIndexExtension.class).getOrBuildCache(BY_INDEX_ID).get(indexId);
     }
 }

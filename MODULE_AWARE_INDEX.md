@@ -410,6 +410,40 @@ Manual IDE testing rejected "parsed but presentation-disabled": disabled blocks 
 - The platform pieces stay full-surface per port policy (`StubVariantFilter`/`getActiveElements` remain for adopters that do want query-time filtering; `NavigationContexts` keeps carrying arrival envs — now consumed as a re-seed trigger).
 - **Implemented and verified — 79/79 modules/it green.** `SandDisabledBlockTest` (both methods) pins the contract; `SandPreprocessorVariantsTest`/`SandContextResolveTest`/`SandEditorPsiTest` rewritten to enabled-only semantics; `SandFlagConditionalIndexTest`/`SandIncludeEntryStateTest` deleted as superseded. Two platform relocations fell out of making it pass headlessly: `PsiVFSListener` + `GlobalPsiVFSBulkFileListener` + `PsiVFSListenerStartUpActivity` moved ide-impl → `consulo.language.impl.internal.file` (headless had **no VFS→PSI invalidation at all** — `FileContentUtilCore.reparseFiles` published force-reload events into the void, so seed-drift reparses never invalidated cached PSI; `MUST_RECOMPUTE_FILE_TYPE` extracted to `consulo.document.internal.RecomputeFileTypeMarker` so both writer and reader modules share it), and drifted files are reparsed by `ModuleAwareIndexRootChangeListener` (options steer the parse now, so option drift = tree rebuild, not just index rows). Headless additions: real command builder in `HeadlessCommandProcessor` (inline execution + thread-local command depth — VFS reload-from-disk runs inside commands), `HeadlessLanguageEditorInternalHelper`. `SandClassSearch` scopes to `projectScope` (shared-JVM suites leak same-name classes across still-open projects under `allScope`). Stub version 8.
 
+## Multi-variant stubs — N stub trees per file, one per option (2026-09-11, user-directed, supersedes "single stub per file")
+
+Decisions taken with the user: **N trees per option** (not one tree with guards), queries **filter by reader** (a selector
+picks the variant the reader expects; an explicit all-variants mode exists for Goto Class), the option set of a file comes
+from the **analyzer: module settings plus one option per distinct include-site environment**.
+
+Storage: `StubUpdatingIndex` keeps `SingleEntryFileBasedIndexExtension<SerializedStubTree>`, but a `SerializedStubTree`
+now carries its *primary* variant (the file's module-settings option, index 0) plus `variants` — `(VariantDescriptor,
+tree)` pairs, where a descriptor is the list of `(providerId, tag, payload bytes)` plus a display name. The inverted stub
+indexes (name → file ids) hold the union of all variants' keys; per-variant stub id lists live in the value and are
+resolved at query time. Index version bumped; old data reindexes.
+
+Indexing: `StubUpdatingIndex` builds one stub tree per descriptor. Each secondary variant parses a fresh `FileContentImpl`
+copy whose `IndexingDataKeys.INDEX_OPTIONS` carries the variant's payloads; `FileContentImpl.getPsiFile` copies that key
+onto the PSI, and `ModuleAwareIndexOptions.getOptions(PsiElement)` reads it first, then the file's *view options*, then
+the recorded primary. So a parse always knows which variant it produces.
+
+Descriptors come from `ModuleAwareIndexOptionValueStorage`, which stores a list per (provider, file) — primary first —
+filled by `ModuleAwareIndexOptionProvider.analyze` returning `Map<VirtualFile, List<IndexOption>>`. Across providers only
+one dimension varies at a time (no cartesian product). `OptionsMeta` records the list of per-variant states; drift
+compares the primary and the set of secondaries.
+
+Selection: `StubProcessingHelper` picks a variant per file: the reader's `IndexOptionSelector` (thread-local, set through
+`ModuleAwareIndexOptions.withOptions`) if it names a stored variant, else the file's *current* variant (view options on
+the `VirtualFile`, else primary). A non-current variant is served through a light PSI copy of the file parsed under that
+variant's payloads (`ForeignVariantFiles`), whose AST spine matches the stored stub tree, so no reparse of the real file
+and no stub/AST mismatch. `ALL` mode iterates every variant.
+
+View: navigation contexts set the file's view options and reparse it; "View original" clears them. Editors always show
+exactly one variant of the physical file. Navigating to an element served from another variant (Goto Class lists every
+variant through `IndexOptionSelector.ALL_VARIANTS`) opens the physical file switched to that variant
+(`ModuleAwareIndexOptions.physicalFileOfVariantCopy`); view options that no longer name a stored variant are dropped when
+the file is re-recorded after indexing.
+
 ## Phased rollout
 
 ### Phase 1 — Platform plumbing ✅ DONE
