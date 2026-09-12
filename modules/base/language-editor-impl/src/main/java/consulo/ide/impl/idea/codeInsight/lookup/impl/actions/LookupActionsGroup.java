@@ -18,8 +18,6 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.codeInsight.hint.actions.NextParameterAction;
-import consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction;
 import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -29,7 +27,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @since 2025-09-23
  */
 @ActionImpl(
-    id = "LookupActions",
+    id = LanguageEditorActions.GROUP_LOOKUP_ACTIONS,
     children = {
         @ActionRef(type = FocusedOnlyChooseItemAction.class),
         @ActionRef(type = ChooseItemReplaceAction.class),
@@ -37,8 +35,8 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = ChooseItemWithDotAction.class),
         @ActionRef(id = LanguageEditorActions.EXPAND_LIVE_TEMPLATE_BY_TAB),
         @ActionRef(id = LanguageEditorActions.PREVIOUS_LIVE_TEMPLATE_VARIABLE),
-        @ActionRef(type = NextParameterAction.class),
-        @ActionRef(type = PrevParameterAction.class)
+        @ActionRef(id = LanguageEditorActions.NEXT_PARAMETER),
+        @ActionRef(id = LanguageEditorActions.PREVIOUS_PARAMETER)
     }
 )
 public class LookupActionsGroup extends DefaultActionGroup implements DumbAware {

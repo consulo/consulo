@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.codeInsight.intention.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
@@ -29,7 +29,7 @@ import consulo.ui.ex.action.IdeActions;
  * @author mike
  */
 @ActionImpl(id = IdeActions.ACTION_SHOW_INTENTION_ACTIONS)
-public class ShowIntentionActionsAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore {
+public class ShowIntentionActionsAction extends BaseCodeInsightAction implements HintManager.ActionToIgnore {
     public ShowIntentionActionsAction() {
         super(ActionLocalize.actionShowintentionactionsText(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulbgrey());
         setEnabledInModalContext(true);
@@ -40,7 +40,6 @@ public class ShowIntentionActionsAction extends BaseCodeInsightAction implements
         return true;
     }
 
-    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ShowIntentionActionsHandler();

@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -32,109 +33,112 @@ import java.util.Map;
  * @author peter
  */
 public interface LookupEx extends Lookup, Disposable {
-  void setCurrentItem(LookupElement item);
+    void setCurrentItem(LookupElement item);
 
-  Component getComponent();
+    Component getComponent();
 
-  void showElementActions(@Nullable InputEvent event);
+    void showElementActions(@Nullable InputEvent event);
 
-  void hideLookup(boolean explicitly);
+    void hideLookup(boolean explicitly);
 
-  void finishLookup(char completionChar);
+    void finishLookup(char completionChar);
 
-  void finishLookup(char completionChar, @Nullable LookupElement item);
+    void finishLookup(char completionChar, @Nullable LookupElement item);
 
-  void setFocusDegree(LookupFocusDegree focusDegree);
+    void setFocusDegree(LookupFocusDegree focusDegree);
 
-  boolean performGuardedChange(Runnable change);
+    boolean performGuardedChange(Runnable change);
 
-  LookupFocusDegree getLookupFocusDegree();
+    LookupFocusDegree getLookupFocusDegree();
 
-  default void hide() {
-    hideLookup(true);
-  }
+    default void hide() {
+        hideLookup(true);
+    }
 
-  void setStartCompletionWhenNothingMatches(boolean startCompletionWhenNothingMatches);
+    void setStartCompletionWhenNothingMatches(boolean startCompletionWhenNothingMatches);
 
-  default void addAdvertisement(LocalizeValue text, @Nullable Image icon) {
-    addAdvertisement(text.get(), icon);
-  }
+    default void addAdvertisement(LocalizeValue text, @Nullable Image icon) {
+        addAdvertisement(text.get(), icon);
+    }
 
-  @Deprecated
-  @DeprecationInfo("Use variant with LocalizeValue")
-  void addAdvertisement(String text, @Nullable Image icon);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    void addAdvertisement(String text, @Nullable Image icon);
 
-  int getLookupOriginalStart();
+    int getLookupOriginalStart();
 
-  void truncatePrefix(boolean preserveSelection, int hideOffset);
+    void truncatePrefix(boolean preserveSelection, int hideOffset);
 
-  boolean isAvailableToUser();
+    boolean isAvailableToUser();
 
-  void refreshUi(boolean mayCheckReused, boolean onExplicitAction);
+    void refreshUi(boolean mayCheckReused, boolean onExplicitAction);
 
-  LookupElement getCurrentItemOrEmpty();
+    LookupElement getCurrentItemOrEmpty();
 
-  void markReused();
+    void markReused();
 
-  void setCancelOnClickOutside(boolean b);
+    void setCancelOnClickOutside(boolean b);
 
-  void setCancelOnOtherWindowOpen(boolean b);
+    void setCancelOnOtherWindowOpen(boolean b);
 
-  boolean isLookupDisposed();
+    boolean isLookupDisposed();
 
-  boolean isVisible();
+    boolean isVisible();
 
-  void setCalculating(boolean calculating);
+    void setCalculating(boolean calculating);
 
-  boolean isCalculating();
+    boolean isCalculating();
 
-  void markSelectionTouched();
+    void markSelectionTouched();
 
-  void updateLookupWidth();
+    void updateLookupWidth();
 
-  void requestResize();
+    void requestResize();
 
-  void fireBeforeAppendPrefix(char c);
+    void fireBeforeAppendPrefix(char c);
 
-  void appendPrefix(char c);
+    void appendPrefix(char c);
 
-  String getAdditionalPrefix();
+    String getAdditionalPrefix();
 
-  boolean addItem(LookupElement item, PrefixMatcher matcher);
+    boolean addItem(LookupElement item, PrefixMatcher matcher);
 
-  void setArranger(LookupArranger arranger);
+    void setArranger(LookupArranger arranger);
 
-  boolean isShown();
+    boolean isShown();
 
-  void ensureSelectionVisible(boolean forceTopSelection);
+    void ensureSelectionVisible(boolean forceTopSelection);
 
-  boolean showLookup();
+    boolean showLookup();
 
-  boolean mayBeNoticed();
+    boolean mayBeNoticed();
 
-  LookupAdvertiser getAdvertiser();
+    LookupAdvertiser getAdvertiser();
 
-  Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> items, boolean hideSingleValued);
+    Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> items, boolean hideSingleValued);
 
-  void moveUp();
+    void moveUp();
 
-  void moveDown();
+    void moveDown();
 
-  void movePageUp();
+    void movePageUp();
 
-  void movePageDown();
+    void movePageDown();
 
-  void moveHome();
+    void moveHome();
 
-  void moveEnd();
+    void moveEnd();
 
-  void checkValid();
+    void checkValid();
 
-  void replacePrefix(String presentPrefix, String newPrefix);
+    void replacePrefix(String presentPrefix, String newPrefix);
 
-  void finishLookupInWritableFile(char completionChar, @Nullable LookupElement item);
+    void finishLookupInWritableFile(char completionChar, @Nullable LookupElement item);
 
-  boolean isStartCompletionWhenNothingMatches();
+    boolean isStartCompletionWhenNothingMatches();
 
-  int getSelectedIndex();
+    int getSelectedIndex();
+
+    @RequiredUIAccess
+    boolean hasTemplatePrefix(char shortcutChar);
 }

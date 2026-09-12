@@ -4,8 +4,8 @@ package consulo.ide.impl.idea.codeInsight.completion.actions;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -23,7 +23,7 @@ import java.awt.event.InputEvent;
  * @author peter
  */
 public abstract class BaseCodeCompletionAction extends DumbAwareAction
-    implements HintManagerImpl.ActionToIgnore, AnActionWithAsyncUpdate {
+    implements HintManager.ActionToIgnore, AnActionWithAsyncUpdate {
     protected BaseCodeCompletionAction() {
         setEnabledInModalContext(true);
         setInjectedContext(true);
@@ -45,7 +45,6 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction
             .invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0);
     }
 
-    
     public CodeCompletionHandlerBase createHandler(
         CompletionType completionType,
         boolean invokedExplicitly,

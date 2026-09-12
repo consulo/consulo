@@ -39,7 +39,7 @@ import consulo.document.event.DocumentListener;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
+import consulo.codeEditor.action.TypedActionHandlerBase;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -90,6 +90,7 @@ public class IncrementalSearchHandler {
     return data != null && data.hint != null && data.hint.isVisible();
   }
 
+  @RequiredUIAccess
   public void invoke(Project project, final Editor editor) {
     if (!ourActionsRegistered) {
       EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -191,8 +192,15 @@ public class IncrementalSearchHandler {
     int y = - hint.getComponent().getPreferredSize().height;
     Point p = SwingUtilities.convertPoint(component,x,y,component.getRootPane().getLayeredPane());
 
-    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, p, HintManagerImpl.HIDE_BY_ESCAPE | HintManagerImpl.HIDE_BY_TEXT_CHANGE, 0, false, new HintHint(editor.getContentComponent(), p).setAwtTooltip
-            (false));
+    HintManagerImpl.getInstanceImpl().showEditorHint(
+      hint,
+      editor,
+      p,
+      HintManagerImpl.HIDE_BY_ESCAPE | HintManagerImpl.HIDE_BY_TEXT_CHANGE,
+      0,
+      false,
+      new HintHint(editor.getContentComponent(), p).setAwtTooltip(false)
+    );
 
     PerHintSearchData hintData = new PerHintSearchData(project, label2);
     hintData.searchStart = editor.getCaretModel().getOffset();

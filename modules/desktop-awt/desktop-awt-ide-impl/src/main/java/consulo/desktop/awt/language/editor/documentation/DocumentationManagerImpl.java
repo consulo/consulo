@@ -19,7 +19,6 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.documentation.DockablePopupManager;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
@@ -36,6 +35,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.*;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -55,6 +55,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.ScrollingUtil;
@@ -65,7 +66,6 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.QuickSearchComponent;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -91,10 +91,10 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.BrowserUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,7 +120,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     private static final long DOC_GENERATION_PAUSE_MILLISECONDS = 100;
 
     private static final Class[] ACTION_CLASSES_TO_IGNORE = {
-        HintManagerImpl.ActionToIgnore.class,
+        HintManager.ActionToIgnore.class,
         ScrollingUtil.ScrollingAction.class,
         SwingActionDelegate.class,
         BaseNavigateToSourceAction.class,
@@ -156,6 +156,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Override
+    @RequiredUIAccess
     protected DocumentationComponent createComponent() {
         return new DocumentationComponent(this);
     }
@@ -1056,13 +1057,14 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         component.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
-    
     @Override
+    @RequiredReadAction
     public Project getProject(@Nullable PsiElement element) {
         assertSameProject(element);
         return myProject;
     }
 
+    @RequiredReadAction
     private PsiElement assertSameProject(@Nullable PsiElement element) {
         if (element != null && element.isValid() && myProject != element.getProject()) {
             throw new AssertionError(myProject + "!=" + element.getProject() + "; element=" + element);
@@ -1162,7 +1164,6 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     private static class MyCollector extends DocumentationCollector {
-
         final Project project;
         final PsiElement originalElement;
         final boolean onHover;
@@ -1264,6 +1265,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
             (withUrl ? DocumentationMarkup.CONTENT_END : "");
     }
 
+    @RequiredReadAction
     private static String getScope(Project project, VirtualFile file) {
         FileColorManagerImpl colorManager = (FileColorManagerImpl)FileColorManager.getInstance(project);
         Color color = colorManager.getRendererBackground(file);
@@ -1285,7 +1287,6 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         return "";
     }
 
-    
     private static String getVcsStatus(Project project, VirtualFile file) {
         FileStatus status = ChangeListManager.getInstance(project).getStatus(file);
         return status != FileStatus.NOT_CHANGED

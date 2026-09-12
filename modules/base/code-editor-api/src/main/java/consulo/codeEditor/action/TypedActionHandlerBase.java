@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
+package consulo.codeEditor.action;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.ActionPlan;
-import consulo.codeEditor.action.TypedActionHandler;
-import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.internal.OverrideTypedActionHandler;
 import consulo.dataContext.DataContext;
-
 import org.jspecify.annotations.Nullable;
 
 public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, OverrideTypedActionHandler {

@@ -26,10 +26,7 @@ import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class represents an item of a lookup list.
@@ -84,9 +81,9 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         return o == this
             || o instanceof LookupItem item
             && Comparing.equal(myObject, item.myObject)
-            && Comparing.equal(myLookupString, item.myLookupString)
-            && Comparing.equal(myAllLookupStrings, item.myAllLookupStrings)
-            && Comparing.equal(myAttributes, item.myAttributes);
+            && Objects.equals(myLookupString, item.myLookupString)
+            && Objects.equals(myAllLookupStrings, item.myAllLookupStrings)
+            && Objects.equals(myAttributes, item.myAttributes);
     }
 
     @Override
@@ -115,7 +112,6 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
      * choosen.
      */
     @Override
-    
     public String getLookupString() {
         return myLookupString;
     }
@@ -203,12 +199,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         };
     }
 
-    
-    public static TailType handleCompletionChar(
-        Editor editor,
-        LookupElement lookupElement,
-        char completionChar
-    ) {
+    public static TailType handleCompletionChar(Editor editor, LookupElement lookupElement, char completionChar) {
         TailType type = getDefaultTailType(completionChar);
         if (type != null) {
             return type;
@@ -223,14 +214,12 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         return TailType.NONE;
     }
 
-    
     public TailType getTailType() {
         TailType tailType = getAttribute(TAIL_TYPE_ATTR);
         return tailType != null ? tailType : TailType.UNKNOWN;
     }
 
     @Override
-    
     public LookupItem<T> setTailType(TailType type) {
         setAttribute(TAIL_TYPE_ATTR, type);
         return this;
@@ -281,14 +270,12 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    
     public LookupItem<T> setIcon(Icon icon) {
         setAttribute(ICON_ATTR, icon);
         return this;
     }
 
     @Override
-    
     public LookupItem<T> setPriority(double priority) {
         myPriority = priority;
         return this;
@@ -299,7 +286,6 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    
     public LookupItem<T> setPresentableText(String displayText) {
         myPresentable = displayText;
         return this;
@@ -310,13 +296,11 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    
     public LookupItem<T> setTypeText(String text) {
         setAttribute(TYPE_TEXT_ATTR, text);
         return this;
     }
 
-    
     @Override
     public MutableLookupElement<T> setTailText(String text, boolean grayed) {
         setAttribute(TAIL_TEXT_ATTR, text);
@@ -325,7 +309,6 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    
     public LookupItem<T> setCaseSensitive(boolean caseSensitive) {
         setAttribute(CASE_INSENSITIVE, !caseSensitive);
         return this;

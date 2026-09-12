@@ -19,11 +19,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UIFontManager;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.localize.DaemonLocalize;
@@ -53,7 +52,7 @@ import java.util.function.Consumer;
  * from kotlin
  */
 public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
-    private class ShowDocAction extends ToggleAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
+    private class ShowDocAction extends ToggleAction implements HintManager.ActionToIgnore, DumbAware, PopupAction {
         private final TooltipReloader myTooltipReloader;
         private final boolean myEnabled;
 
@@ -82,7 +81,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private class ShowActionsAction extends ToggleAction implements HintManagerImpl.ActionToIgnore {
+    private class ShowActionsAction extends ToggleAction implements HintManager.ActionToIgnore {
         private final TooltipReloader myTooltipReloader;
         private final boolean myEnabled;
 
@@ -110,7 +109,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private static class WrapperActionGroup extends ActionGroup implements HintManagerImpl.ActionToIgnore, DumbAware {
+    private static class WrapperActionGroup extends ActionGroup implements HintManager.ActionToIgnore, DumbAware {
         private final AnAction[] myActions;
 
         private WrapperActionGroup(List<? extends AnAction> actions) {
@@ -124,7 +123,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private static class SettingsActionGroup extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore, DumbAware {
+    private static class SettingsActionGroup extends DefaultActionGroup implements HintManager.ActionToIgnore, DumbAware {
         private SettingsActionGroup(List<? extends AnAction> actions) {
             super(actions);
 

@@ -1,39 +1,25 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
+import consulo.application.internal.SlowOperations;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.completion.CodeCompletionFeatures;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
-import consulo.application.internal.SlowOperations;
-import consulo.language.editor.completion.CompletionProcess;
-import consulo.language.editor.completion.CompletionService;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.template.LiveTemplateLookupElement;
-import consulo.language.editor.template.Template;
-import consulo.language.editor.template.TemplateManager;
-import consulo.language.editor.template.TemplateSettings;
-import consulo.language.editor.template.context.TemplateActionContext;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
+import consulo.language.editor.hint.HintManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
-public abstract class ChooseItemAction extends EditorAction implements HintManagerImpl.ActionToIgnore, LatencyAwareEditorAction {
+public abstract class ChooseItemAction extends EditorAction implements HintManager.ActionToIgnore {
     protected static class Handler extends EditorActionHandler {
         final boolean focusedOnly;
         final char finishingChar;
@@ -50,7 +36,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
             assert lookup != null;
 
             if ((finishingChar == Lookup.NORMAL_SELECT_CHAR || finishingChar == Lookup.REPLACE_SELECT_CHAR)
-                && hasTemplatePrefix(lookup, finishingChar)) {
+                && lookup.hasTemplatePrefix(finishingChar)) {
                 lookup.hideLookup(true);
 
                 ExpandLiveTemplateCustomAction.createExpandTemplateHandler(finishingChar).execute(editor, null, dataContext);
@@ -102,48 +88,5 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
 
     protected ChooseItemAction(LocalizeValue text, Handler handler) {
         super(text, handler);
-    }
-
-    public static boolean hasTemplatePrefix(LookupEx lookup, char shortcutChar) {
-        lookup.refreshUi(false, false); // to bring the list model up to date
-
-        CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
-        if (completion == null || !completion.isAutopopupCompletion()) {
-            return false;
-        }
-
-        if (lookup.isSelectionTouched()) {
-            return false;
-        }
-
-        PsiFile file = lookup.getPsiFile();
-        if (file == null) {
-            return false;
-        }
-
-        Editor editor = lookup.getEditor();
-        int offset = editor.getCaretModel().getOffset();
-        PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
-
-        LiveTemplateLookupElement liveTemplateLookup = ContainerUtil.findInstance(lookup.getItems(), LiveTemplateLookupElement.class);
-        if (liveTemplateLookup == null || !liveTemplateLookup.sudden) {
-            // Lookup doesn't contain sudden live templates. It means that
-            // - there are no live template with given key:
-            //    in this case we should find live template with appropriate prefix
-            //    (custom live templates doesn't participate in this action).
-            // - completion provider worked too long:
-            //    in this case we should check custom templates that provides completion lookup.
-            if (LiveTemplateCompletionContributor.customTemplateAvailableAndHasCompletionItem(shortcutChar, editor, file, offset)) {
-                return true;
-            }
-
-            List<? extends Template> templates =
-                SlowOperations.allowSlowOperations(() -> TemplateManager.getInstance(file.getProject())
-                    .listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
-            Template template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
-            return template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template);
-        }
-
-        return liveTemplateLookup.getTemplateShortcut() == shortcutChar;
     }
 }

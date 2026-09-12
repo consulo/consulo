@@ -30,9 +30,9 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.editor.ui.internal.EditorFragmentComponent;
-import consulo.usage.internal.ImplementationViewComponent;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
@@ -49,11 +49,12 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageView;
+import consulo.usage.internal.ImplementationViewComponent;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -86,6 +87,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
     private final ActionToolbar myToolbar;
     private JLabel myLabel;
 
+    @Override
     public void setHint(JBPopup hint, LocalizeValue title) {
         myHint = hint;
         myTitle = title.get();
@@ -563,7 +565,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         return FindUtil.showInUsageView(null, collectNonBinaryElements(), myTitle, myEditor.getProject());
     }
 
-    private class BackAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class BackAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         public BackAction() {
             super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
@@ -581,7 +583,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
     }
 
-    private class ForwardAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
+    private class ForwardAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         public ForwardAction() {
             super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
@@ -613,13 +615,13 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
     }
 
-    private class ShowSourceAction extends EditSourceActionBase implements HintManagerImpl.ActionToIgnore {
+    private class ShowSourceAction extends EditSourceActionBase implements HintManager.ActionToIgnore {
         public ShowSourceAction() {
             super(false, PlatformIconGroup.actionsPreview(), CodeInsightLocalize.quickDefinitionShowSource());
         }
     }
 
-    private class EditSourceActionBase extends LegacyAnAction {
+    private class EditSourceActionBase extends AnAction implements AnActionWithSyncUpdate {
         private final boolean myFocusEditor;
 
         public EditSourceActionBase(boolean focusEditor, Image icon, LocalizeValue text) {

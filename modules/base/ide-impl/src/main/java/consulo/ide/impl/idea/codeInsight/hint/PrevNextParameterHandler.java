@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
@@ -31,46 +31,54 @@ import org.jspecify.annotations.Nullable;
  * @author ven
  */
 public class PrevNextParameterHandler extends EditorActionHandler {
-  public PrevNextParameterHandler(boolean isNextParameterHandler) {
-    myIsNextParameterHandler = isNextParameterHandler;
-  }
-
-  private final boolean myIsNextParameterHandler;
-
-  @Override
-  @RequiredUIAccess
-  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
-    if (!ParameterInfoController.existsForEditor(editor)) return false;
-
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) return false;
-
-    PsiElement exprList = getExpressionList(editor, caret.getOffset(), project);
-    if (exprList == null) return false;
-
-    int lbraceOffset = exprList.getTextRange().getStartOffset();
-    return ParameterInfoController.findControllerAtOffset(editor, lbraceOffset) != null
-      && ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();
-    PsiElement exprList = getExpressionList(editor, offset, dataContext);
-    if (exprList != null) {
-      int listOffset = exprList.getTextRange().getStartOffset();
-      ParameterInfoController.prevOrNextParameter(editor, listOffset, myIsNextParameterHandler);
+    public PrevNextParameterHandler(boolean isNextParameterHandler) {
+        myIsNextParameterHandler = isNextParameterHandler;
     }
-  }
 
-  private static @Nullable PsiElement getExpressionList(Editor editor, int offset, DataContext dataContext) {
-    Project project = dataContext.getData(Project.KEY);
-    return project != null ? getExpressionList(editor, offset, project) : null;
-  }
+    private final boolean myIsNextParameterHandler;
 
-  private static @Nullable PsiElement getExpressionList(Editor editor, int offset, Project project) {
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
-  }
+    @Override
+    @RequiredUIAccess
+    protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
+        if (!ParameterInfoController.existsForEditor(editor)) {
+            return false;
+        }
+
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
+
+        PsiElement exprList = getExpressionList(editor, caret.getOffset(), project);
+        if (exprList == null) {
+            return false;
+        }
+
+        int lbraceOffset = exprList.getTextRange().getStartOffset();
+        return ParameterInfoController.findControllerAtOffset(editor, lbraceOffset) != null
+            && ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();
+        PsiElement exprList = getExpressionList(editor, offset, dataContext);
+        if (exprList != null) {
+            int listOffset = exprList.getTextRange().getStartOffset();
+            ParameterInfoController.prevOrNextParameter(editor, listOffset, myIsNextParameterHandler);
+        }
+    }
+
+    @RequiredReadAction
+    private static @Nullable PsiElement getExpressionList(Editor editor, int offset, DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        return project != null ? getExpressionList(editor, offset, project) : null;
+    }
+
+    @RequiredReadAction
+    private static @Nullable PsiElement getExpressionList(Editor editor, int offset, Project project) {
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
+    }
 }

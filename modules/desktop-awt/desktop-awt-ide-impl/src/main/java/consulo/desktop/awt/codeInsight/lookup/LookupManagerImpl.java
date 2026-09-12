@@ -11,7 +11,6 @@ import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.editor.completion.CompletionProcess;
@@ -40,215 +39,221 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 @ServiceImpl
 public class LookupManagerImpl extends LookupManager {
-  private static final Logger LOG = Logger.getInstance(LookupManagerImpl.class);
-  private final Project myProject;
-  private LookupImpl myActiveLookup = null;
-  private Editor myActiveLookupEditor = null;
-  private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
+    private static final Logger LOG = Logger.getInstance(LookupManagerImpl.class);
+    private final Project myProject;
+    private LookupImpl myActiveLookup = null;
+    private Editor myActiveLookupEditor = null;
+    private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
-  public static final Key<Boolean> SUPPRESS_AUTOPOPUP_JAVADOC = Key.create("LookupManagerImpl.suppressAutopopupJavadoc");
+    public static final Key<Boolean> SUPPRESS_AUTOPOPUP_JAVADOC = Key.create("LookupManagerImpl.suppressAutopopupJavadoc");
 
-  private Future<?> myUpdateDocFuture = CompletableFuture.completedFuture(null);
+    private Future<?> myUpdateDocFuture = CompletableFuture.completedFuture(null);
 
-  @Inject
-  public LookupManagerImpl(Project project) {
-    myProject = project;
+    @Inject
+    public LookupManagerImpl(Project project) {
+        myProject = project;
 
-    project.getMessageBus().connect().subscribe(EditorHintListener.class, new EditorHintListener() {
-      @Override
-      public void hintShown(Project project, final LightweightHintImpl hint, int flags) {
-        if (project == myProject) {
-          Lookup lookup = getActiveLookup();
-          if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {
-            lookup.addLookupListener(new LookupListener() {
-              @Override
-              public void currentItemChanged(LookupEvent event) {
-                hint.hide();
-              }
+        project.getMessageBus().connect().subscribe(
+            EditorHintListener.class,
+            (hintProject, hint, flags) -> {
+                if (hintProject != myProject) {
+                    return;
+                }
+                Lookup lookup = getActiveLookup();
+                if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {
+                    lookup.addLookupListener(new LookupListener() {
+                        @Override
+                        public void currentItemChanged(LookupEvent event) {
+                            hint.hide();
+                        }
 
-              @Override
-              public void itemSelected(LookupEvent event) {
-                hint.hide();
-              }
+                        @Override
+                        public void itemSelected(LookupEvent event) {
+                            hint.hide();
+                        }
 
-              @Override
-              public void lookupCanceled(LookupEvent event) {
-                hint.hide();
-              }
-            });
-          }
-        }
-      }
-    });
+                        @Override
+                        public void lookupCanceled(LookupEvent event) {
+                            hint.hide();
+                        }
+                    });
+                }
+            }
+        );
 
-    project.getMessageBus().connect().subscribe(DumbModeListener.class, new DumbModeListener() {
-      @Override
-      public void enteredDumbMode() {
-        hideActiveLookup();
-      }
+        project.getMessageBus().connect().subscribe(DumbModeListener.class, new DumbModeListener() {
+            @Override
+            @RequiredUIAccess
+            public void enteredDumbMode() {
+                hideActiveLookup();
+            }
 
-      @Override
-      public void exitDumbMode() {
-        hideActiveLookup();
-      }
-    });
-
-    EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
-      @Override
-      public void editorReleased(EditorFactoryEvent event) {
-        if (event.getEditor() == myActiveLookupEditor) {
-          hideActiveLookup();
-        }
-      }
-    }, myProject);
-  }
-
-  @Override
-  public LookupEx showLookup(Editor editor,
-                             LookupElement[] items,
-                             String prefix,
-                             LookupArranger arranger) {
-    for (LookupElement item : items) {
-      assert item != null;
-    }
-
-    LookupImpl lookup = createLookup(editor, items, prefix, arranger);
-    return lookup.showLookup() ? lookup : null;
-  }
-
-  
-  @Override
-  public LookupImpl createLookup(Editor editor,
-                                 LookupElement[] items,
-                                 String prefix,
-                                 LookupArranger arranger) {
-    hideActiveLookup();
-
-    final LookupImpl lookup = createLookup(editor, arranger, myProject);
-
-    UIAccess.assertIsUIThread();
-
-    myActiveLookup = lookup;
-    myActiveLookupEditor = editor;
-    myActiveLookup.addLookupListener(new LookupListener() {
-      @Override
-      public void itemSelected(LookupEvent event) {
-        lookupClosed();
-      }
-
-      @Override
-      public void lookupCanceled(LookupEvent event) {
-        lookupClosed();
-      }
-
-      @Override
-      public void currentItemChanged(LookupEvent event) {
-        myUpdateDocFuture.cancel(false);
-        CodeInsightSettings settings = CodeInsightSettings.getInstance();
-        if (settings.AUTO_POPUP_JAVADOC_INFO && DocumentationManager.getInstance(myProject).getDocInfoHint() == null) {
-          myUpdateDocFuture =
-            myProject.getUIAccess().getScheduler().schedule(() -> showJavadoc(lookup), settings.JAVADOC_INFO_DELAY, TimeUnit.MILLISECONDS);
-        }
-      }
-
-      @RequiredUIAccess
-      private void lookupClosed() {
-        UIAccess.assertIsUIThread();
-        myUpdateDocFuture.cancel(false);
-        lookup.removeLookupListener(this);
-      }
-    });
-    Disposer.register(lookup, () -> {
-      myActiveLookup = null;
-      myActiveLookupEditor = null;
-      myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, lookup, null);
-    });
-
-    if (items.length > 0) {
-      CamelHumpMatcher matcher = new CamelHumpMatcher(prefix);
-      for (LookupElement item : items) {
-        myActiveLookup.addItem(item, matcher);
-      }
-      myActiveLookup.refreshUi(true, true);
-    }
-    else {
-      myUpdateDocFuture.cancel(false); // no items -> no doc
-    }
-
-    myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, null, myActiveLookup);
-    return lookup;
-  }
-
-  private void showJavadoc(LookupImpl lookup) {
-    if (myActiveLookup != lookup) return;
-
-    DocumentationManager docManager = DocumentationManager.getInstance(myProject);
-    if (docManager.getDocInfoHint() != null) return; // will auto-update
-
-    LookupElement currentItem = lookup.getCurrentItem();
-    CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
-    if (currentItem != null && currentItem.isValid() && isAutoPopupJavadocSupportedBy(currentItem) && completion != null) {
-      try {
-        boolean hideLookupWithDoc = completion.isAutopopupCompletion() || CodeInsightSettings.getInstance().JAVADOC_INFO_DELAY == 0;
-        docManager.showJavaDocInfo(lookup.getEditor(), lookup.getPsiFile(), false, () -> {
-          if (hideLookupWithDoc && completion == CompletionService.getCompletionService().getCurrentCompletion()) {
-            hideActiveLookup();
-          }
+            @Override
+            @RequiredUIAccess
+            public void exitDumbMode() {
+                hideActiveLookup();
+            }
         });
-      }
-      catch (IndexNotReadyException ignored) {
-      }
-    }
-  }
 
-  protected boolean isAutoPopupJavadocSupportedBy(@SuppressWarnings("unused") LookupElement lookupItem) {
-    return lookupItem.getUserData(SUPPRESS_AUTOPOPUP_JAVADOC) == null;
-  }
-
-  
-  protected LookupImpl createLookup(Editor editor, LookupArranger arranger, Project project) {
-    return new LookupImpl(project, editor, arranger);
-  }
-
-  @Override
-  public void hideActiveLookup() {
-    LookupImpl lookup = myActiveLookup;
-    if (lookup != null) {
-      lookup.checkValid();
-      lookup.hide();
-      LOG.assertTrue(lookup.isLookupDisposed(), "Should be disposed");
-    }
-  }
-
-  @Override
-  public LookupEx getActiveLookup() {
-    if (myActiveLookup != null && myActiveLookup.isLookupDisposed()) {
-      LookupImpl lookup = myActiveLookup;
-      myActiveLookup = null;
-      lookup.checkValid();
+        EditorFactory.getInstance().addEditorFactoryListener(
+            new EditorFactoryListener() {
+                @Override
+                @RequiredUIAccess
+                public void editorReleased(EditorFactoryEvent event) {
+                    if (event.getEditor() == myActiveLookupEditor) {
+                        hideActiveLookup();
+                    }
+                }
+            },
+            myProject
+        );
     }
 
-    return myActiveLookup;
-  }
+    @Override
+    @RequiredUIAccess
+    public LookupEx showLookup(Editor editor, LookupElement[] items, String prefix, LookupArranger arranger) {
+        for (LookupElement item : items) {
+            assert item != null;
+        }
 
-  @Override
-  public void addPropertyChangeListener(PropertyChangeListener listener) {
-    myPropertyChangeSupport.addPropertyChangeListener(listener);
-  }
+        LookupImpl lookup = createLookup(editor, items, prefix, arranger);
+        return lookup.showLookup() ? lookup : null;
+    }
 
-  @Override
-  public void addPropertyChangeListener(final PropertyChangeListener listener, Disposable disposable) {
-    addPropertyChangeListener(listener);
-    Disposer.register(disposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removePropertyChangeListener(listener);
-      }
-    });
-  }
+    @Override
+    @RequiredUIAccess
+    public LookupImpl createLookup(Editor editor, LookupElement[] items, String prefix, LookupArranger arranger) {
+        hideActiveLookup();
 
-  @Override
-  public void removePropertyChangeListener(PropertyChangeListener listener) {
-    myPropertyChangeSupport.removePropertyChangeListener(listener);
-  }
+        final LookupImpl lookup = createLookup(editor, arranger, myProject);
+
+        UIAccess.assertIsUIThread();
+
+        myActiveLookup = lookup;
+        myActiveLookupEditor = editor;
+        myActiveLookup.addLookupListener(new LookupListener() {
+            @Override
+            @RequiredUIAccess
+            public void itemSelected(LookupEvent event) {
+                lookupClosed();
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void lookupCanceled(LookupEvent event) {
+                lookupClosed();
+            }
+
+            @Override
+            public void currentItemChanged(LookupEvent event) {
+                myUpdateDocFuture.cancel(false);
+                CodeInsightSettings settings = CodeInsightSettings.getInstance();
+                if (settings.AUTO_POPUP_JAVADOC_INFO && DocumentationManager.getInstance(myProject).getDocInfoHint() == null) {
+                    myUpdateDocFuture =
+                        myProject.getUIAccess()
+                            .getScheduler()
+                            .schedule(() -> showJavadoc(lookup), settings.JAVADOC_INFO_DELAY, TimeUnit.MILLISECONDS);
+                }
+            }
+
+            @RequiredUIAccess
+            private void lookupClosed() {
+                UIAccess.assertIsUIThread();
+                myUpdateDocFuture.cancel(false);
+                lookup.removeLookupListener(this);
+            }
+        });
+        Disposer.register(lookup, () -> {
+            myActiveLookup = null;
+            myActiveLookupEditor = null;
+            myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, lookup, null);
+        });
+
+        if (items.length > 0) {
+            CamelHumpMatcher matcher = new CamelHumpMatcher(prefix);
+            for (LookupElement item : items) {
+                myActiveLookup.addItem(item, matcher);
+            }
+            myActiveLookup.refreshUi(true, true);
+        }
+        else {
+            myUpdateDocFuture.cancel(false); // no items -> no doc
+        }
+
+        myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, null, myActiveLookup);
+        return lookup;
+    }
+
+    private void showJavadoc(LookupImpl lookup) {
+        if (myActiveLookup != lookup) {
+            return;
+        }
+
+        DocumentationManager docManager = DocumentationManager.getInstance(myProject);
+        if (docManager.getDocInfoHint() != null) {
+            return; // will auto-update
+        }
+
+        LookupElement currentItem = lookup.getCurrentItem();
+        CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
+        if (currentItem != null && currentItem.isValid() && isAutoPopupJavadocSupportedBy(currentItem) && completion != null) {
+            try {
+                boolean hideLookupWithDoc = completion.isAutopopupCompletion() || CodeInsightSettings.getInstance().JAVADOC_INFO_DELAY == 0;
+                docManager.showJavaDocInfo(lookup.getEditor(), lookup.getPsiFile(), false, () -> {
+                    if (hideLookupWithDoc && completion == CompletionService.getCompletionService().getCurrentCompletion()) {
+                        hideActiveLookup();
+                    }
+                });
+            }
+            catch (IndexNotReadyException ignored) {
+            }
+        }
+    }
+
+    protected boolean isAutoPopupJavadocSupportedBy(@SuppressWarnings("unused") LookupElement lookupItem) {
+        return lookupItem.getUserData(SUPPRESS_AUTOPOPUP_JAVADOC) == null;
+    }
+
+    @RequiredUIAccess
+    protected LookupImpl createLookup(Editor editor, LookupArranger arranger, Project project) {
+        return new LookupImpl(project, editor, arranger);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void hideActiveLookup() {
+        LookupImpl lookup = myActiveLookup;
+        if (lookup != null) {
+            lookup.checkValid();
+            lookup.hide();
+            LOG.assertTrue(lookup.isLookupDisposed(), "Should be disposed");
+        }
+    }
+
+    @Override
+    public LookupEx getActiveLookup() {
+        if (myActiveLookup != null && myActiveLookup.isLookupDisposed()) {
+            LookupImpl lookup = myActiveLookup;
+            myActiveLookup = null;
+            lookup.checkValid();
+        }
+
+        return myActiveLookup;
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        myPropertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener, Disposable disposable) {
+        addPropertyChangeListener(listener);
+        Disposer.register(disposable, () -> removePropertyChangeListener(listener));
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        myPropertyChangeSupport.removePropertyChangeListener(listener);
+    }
 }

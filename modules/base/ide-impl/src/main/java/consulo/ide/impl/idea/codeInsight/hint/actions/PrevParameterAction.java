@@ -18,12 +18,13 @@ package consulo.ide.impl.idea.codeInsight.hint.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.codeInsight.hint.PrevNextParameterHandler;
 import consulo.codeEditor.action.EditorAction;
+import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author ven
  */
-@ActionImpl(id = "PrevParameter")
+@ActionImpl(id = LanguageEditorActions.PREVIOUS_PARAMETER)
 public class PrevParameterAction extends EditorAction {
     public PrevParameterAction() {
         super(ActionLocalize.actionPrevparameterText(), new PrevNextParameterHandler(false));

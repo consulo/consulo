@@ -31,22 +31,19 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.editor.impl.internal.DesktopEditorFloatPanel;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ui.UIAccess;
-import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -54,10 +51,12 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
@@ -71,8 +70,8 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -81,8 +80,8 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
@@ -650,7 +649,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private class WrapperGroup extends DumbAwareActionGroup implements  HintManagerImpl.ActionToIgnore {
+    private class WrapperGroup extends DumbAwareActionGroup implements HintManager.ActionToIgnore {
         private final ActionGroup[] myActions;
 
         public WrapperGroup(List<? extends AnAction> actions) {
@@ -664,7 +663,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private class MenuAction extends DefaultActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
+    private class MenuAction extends DefaultActionGroup implements DumbAware, HintManager.ActionToIgnore {
         private MenuAction(List<? extends AnAction> actions) {
             setPopup(true);
             addAll(actions);
@@ -789,7 +788,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         connection.subscribe(AnActionListener.class, new AnActionListener() {
             @Override
             public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                if (action instanceof HintManagerImpl.ActionToIgnore) {
+                if (action instanceof HintManager.ActionToIgnore) {
                     return;
                 }
                 myPopupManager.hidePopup();

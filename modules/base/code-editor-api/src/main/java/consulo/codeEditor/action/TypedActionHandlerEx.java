@@ -30,22 +30,22 @@ import consulo.document.Document;
  * @see ActionPlan
  */
 public interface TypedActionHandlerEx extends TypedActionHandler {
-  /**
-   * The method is invoked before acquiring a write lock and actually executing an action.
-   * Expected to draft an action plan that will be used as a base for zero-latency rendering in editor.
-   * <p>
-   * There's no need to mirror all the oncoming changes, focus on latency-sensitive activity (like typing).
-   * <p>
-   * Implementation should not modify entities besides {@link ActionPlan} (e.g. {@link Editor}, {@link Document}, {@link CaretModel}, etc.).
-   * Moreover, as the handlers can be chained, implementation must rely primarily on the state that is provided by the {@link ActionPlan}
-   * (i.e. {@link ActionPlan#getText()} must be used instead of a direct {@link Document#getText()} call).
-   * <p>
-   * The handler is responsible for delegating to the previously registered handler if needed.
-   *
-   * @param editor  the editor in which the key was typed.
-   * @param c       the typed character.
-   * @param context the current data context.
-   * @param plan    the current action plan draft.
-   */
-  void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan);
+    /**
+     * The method is invoked before acquiring a write lock and actually executing an action.
+     * Expected to draft an action plan that will be used as a base for zero-latency rendering in editor.
+     * <p>
+     * There's no need to mirror all the oncoming changes, focus on latency-sensitive activity (like typing).
+     * <p>
+     * Implementation should not modify entities besides {@link ActionPlan} (e.g. {@link Editor}, {@link Document}, {@link CaretModel}, etc.).
+     * Moreover, as the handlers can be chained, implementation must rely primarily on the state that is provided by the {@link ActionPlan}
+     * (i.e. {@link ActionPlan#getText()} must be used instead of a direct {@link Document#getText()} call).
+     * <p>
+     * The handler is responsible for delegating to the previously registered handler if needed.
+     *
+     * @param editor  the editor in which the key was typed.
+     * @param c       the typed character.
+     * @param context the current data context.
+     * @param plan    the current action plan draft.
+     */
+    void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan);
 }

@@ -22,12 +22,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorKeys;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ui.ex.action.PopupAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.*;
 import consulo.platform.base.localize.ActionLocalize;
@@ -35,12 +34,13 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "QuickJavaDoc")
-public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction, AnActionWithAsyncUpdate {
+public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManager.ActionToIgnore, DumbAware, PopupAction, AnActionWithAsyncUpdate {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
     @SuppressWarnings("SpellCheckingInspection")
@@ -54,12 +54,11 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         setInjectedContext(true);
     }
 
-
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new CodeInsightActionHandler() {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void invoke(Project project, Editor editor, PsiFile file) {
                 DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
             }

@@ -16,18 +16,16 @@
 package consulo.language.editor.impl.internal.completion.lookup;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
+import consulo.application.internal.SlowOperations;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseListener;
-import consulo.codeEditor.event.SelectionEvent;
-import consulo.codeEditor.event.SelectionListener;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;
@@ -37,24 +35,23 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.completion.CodeCompletionFeatures;
-import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.completion.CamelHumpMatcher;
-import consulo.language.editor.completion.lookup.DeferredUserLookupValue;
-import consulo.language.editor.completion.lookup.LookupArranger;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupElementListPresenter;
-import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.language.editor.completion.lookup.LookupElementRenderer;
-import consulo.language.editor.completion.lookup.LookupEx;
-import consulo.language.editor.completion.lookup.LookupFocusDegree;
-import consulo.language.editor.completion.lookup.LookupItem;
+import consulo.language.editor.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CompletionProcess;
+import consulo.language.editor.completion.CompletionService;
+import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
+import consulo.language.editor.template.LiveTemplateLookupElement;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.TemplateSettings;
+import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDocumentManager;
@@ -74,14 +71,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -163,6 +156,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
      * Replaces everything the list shows. Called with the arranged items, or with a single placeholder when there is
      * nothing to show yet.
      */
+    @RequiredUIAccess
     protected abstract void setItemsUi(List<LookupElement> items);
 
     protected abstract List<LookupElement> getItemsUi();
@@ -175,6 +169,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
 
     protected abstract @Nullable LookupElement getSelectedValueUi();
 
+    @RequiredUIAccess
     protected abstract void setSelectedValueUi(LookupElement item);
 
     /**
@@ -226,11 +221,13 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
      * it no longer fits where it was. Named apart from {@link #refreshUi(boolean, boolean)}, which is the step before
      * it: that one rebuilds the model and then calls this.
      */
+    @RequiredUIAccess
     protected abstract void repaintLookupUi(boolean selectionVisible, boolean itemsChanged, boolean reused, boolean onExplicitAction);
 
     /**
      * The document moved under the lookup and the popup has to follow the caret.
      */
+    @RequiredUIAccess
     protected abstract void repositionUi();
 
     /**
@@ -322,7 +319,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         synchronized (LAST_COMPUTATION) {
             cancelExpensiveRendering(item);
 
-            Ref<CancellablePromise<?>> promiseRef = Ref.create();
+            SimpleReference<CancellablePromise<?>> promiseRef = SimpleReference.create();
             CancellablePromise<Void> promise = ReadAction.nonBlocking(() -> {
                 if (item.isValid()) {
                     renderExpensively(item, renderer);
@@ -724,10 +721,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
     }
 
     @Override
-    public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(
-        Iterable<LookupElement> items,
-        boolean hideSingleValued
-    ) {
+    public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> items, boolean hideSingleValued) {
         return withLock(() -> myPresentableArranger.getRelevanceObjects(items, hideSingleValued));
     }
 
@@ -760,6 +754,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         return getSelectedIndexUi();
     }
 
+    @RequiredUIAccess
     public void setSelectedIndex(int index) {
         setSelectedIndexUi(index);
         ensureIndexVisibleUi(index);
@@ -920,6 +915,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         fireItemSelected(item, completionChar);
     }
 
+    @RequiredUIAccess
     private void hideWithItemSelected(@Nullable LookupElement lookupItem, char completionChar) {
         fireBeforeItemSelected(lookupItem, completionChar);
         doHide(false, true);
@@ -930,10 +926,12 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         return myOffsets.getPrefixLength(item, this);
     }
 
+    @RequiredWriteAction
     protected void insertLookupString(LookupElement item, int prefix) {
         insertLookupString(myProject, getTopLevelEditor(), item, itemMatcher(item), itemPattern(item), prefix);
     }
 
+    @RequiredWriteAction
     public static void insertLookupString(
         Project project,
         Editor editor,
@@ -957,6 +955,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
+    @RequiredWriteAction
     private static int insertLookupInDocumentWindowIfNeeded(
         Project project,
         Editor editor,
@@ -993,6 +992,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         ));
     }
 
+    @RequiredWriteAction
     private static int insertLookupInDocument(int caretOffset, Document document, int prefix, String lookupString) {
         int lookupStart = Math.min(caretOffset, Math.max(caretOffset - prefix, 0));
         int len = document.getTextLength();
@@ -1109,7 +1109,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
 
         fireLookupShown();
 
-        if (Application.get().isUnitTestMode()) {
+        if (Application.get().isHeadlessEnvironment()) {
             return true;
         }
 
@@ -1271,6 +1271,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
     }
 
     @Override
+    @RequiredReadAction
     public Editor getEditor() {
         DocumentWindow documentWindow = getInjectedDocument(myProject, myEditor, myEditor.getCaretModel().getOffset());
         if (documentWindow != null) {
@@ -1286,6 +1287,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable PsiFile getPsiFile() {
         return PsiDocumentManager.getInstance(myProject).getPsiFile(getEditor().getDocument());
     }
@@ -1310,6 +1312,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         return file.findElementAt(0);
     }
 
+    @RequiredReadAction
     private static @Nullable DocumentWindow getInjectedDocument(Project project, Editor editor, int offset) {
         PsiFile hostFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (hostFile != null) {
@@ -1468,5 +1471,50 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         for (LookupListener listener : myListeners) {
             listener.uiRefreshed();
         }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean hasTemplatePrefix(char shortcutChar) {
+        refreshUi(false, false); // to bring the list model up to date
+
+        CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
+        if (completion == null || !completion.isAutopopupCompletion()) {
+            return false;
+        }
+
+        if (isSelectionTouched()) {
+            return false;
+        }
+
+        PsiFile file = getPsiFile();
+        if (file == null) {
+            return false;
+        }
+
+        Editor editor = getEditor();
+        int offset = editor.getCaretModel().getOffset();
+        PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
+
+        LiveTemplateLookupElement liveTemplateLookup = ContainerUtil.findInstance(getItems(), LiveTemplateLookupElement.class);
+        if (liveTemplateLookup == null || !liveTemplateLookup.sudden) {
+            // Lookup doesn't contain sudden live templates. It means that
+            // - there are no live template with given key:
+            //    in this case we should find live template with appropriate prefix
+            //    (custom live templates doesn't participate in this action).
+            // - completion provider worked too long:
+            //    in this case we should check custom templates that provides completion lookup.
+            if (LiveTemplateCompletionContributor.customTemplateAvailableAndHasCompletionItem(shortcutChar, editor, file, offset)) {
+                return true;
+            }
+
+            List<? extends Template> templates =
+                SlowOperations.allowSlowOperations(() -> TemplateManager.getInstance(file.getProject())
+                    .listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
+            Template template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
+            return template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template);
+        }
+
+        return liveTemplateLookup.getTemplateShortcut() == shortcutChar;
     }
 }

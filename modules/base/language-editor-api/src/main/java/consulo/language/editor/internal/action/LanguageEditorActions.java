@@ -26,11 +26,17 @@ public interface LanguageEditorActions {
 
     String NEXT_LIVE_TEMPLATE_VARIABLE = "NextTemplateVariable";
 
+    String NEXT_PARAMETER = "NextParameter";
+
     String PREVIOUS_LIVE_TEMPLATE_VARIABLE = "PreviousTemplateVariable";
+
+    String PREVIOUS_PARAMETER = "PrevParameter";
 
     String SAVE_AS_LIVE_TEMPLATE = "SaveAsTemplate";
 
     String SURROUND_WITH = "SurroundWith";
 
     String SURROUND_WITH_LIVE_TEMPLATE = "SurroundWithLiveTemplate";
+
+    String GROUP_LOOKUP_ACTIONS = "LookupActions";
 }

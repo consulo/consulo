@@ -35,7 +35,7 @@ import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.Filter.ResultItem;
 import consulo.execution.util.ConsoleBuffer;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
+import consulo.codeEditor.action.TypedActionHandlerBase;
 import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

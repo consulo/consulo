@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.popup;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.RemoteDesktopService;
@@ -13,17 +14,18 @@ import consulo.desktop.awt.ui.ImmutableInsets;
 import consulo.desktop.awt.ui.popup.form.*;
 import consulo.desktop.awt.wm.impl.WeakFocusStackManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
+import consulo.language.editor.hint.HintManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Button;
 import consulo.ui.*;
+import consulo.ui.Button;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -42,23 +44,22 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
+import java.awt.*;
 import java.awt.Component;
 import java.awt.Window;
-import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import static consulo.ui.ex.awt.UIUtil.useSafely;
@@ -519,7 +520,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         myTracker = tracker;
         myTracker.init(this);
 
-        JRootPane root = ObjectUtil.notNull(UIUtil.getRootPane(comp));
+        JRootPane root = Objects.requireNonNull(UIUtil.getRootPane(comp));
 
         myVisible = true;
 
@@ -703,7 +704,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                             DataContext dataContext,
                             AnActionEvent event
                         ) {
-                            if (myHideOnAction && !(action instanceof HintManagerImpl.ActionToIgnore)) {
+                            if (myHideOnAction && !(action instanceof HintManager.ActionToIgnore)) {
                                 hide();
                             }
                         }
@@ -798,6 +799,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 private JComponent myCloseButton;
 
                 @Override
+                @RequiredUIAccess
                 public List<JComponent> createActions() {
                     Button closeBtn = Button.create(LocalizeValue.empty());
                     closeBtn.setIcon(getCloseButton());
@@ -886,7 +888,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     @Override
     public void revalidate(PositionTracker<Balloon> tracker) {
-        if (ApplicationManager.getApplication().isDisposeInProgress()) {
+        if (Application.get().isDisposeInProgress()) {
             return;
         }
 
