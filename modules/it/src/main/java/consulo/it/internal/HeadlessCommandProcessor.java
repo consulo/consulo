@@ -17,26 +17,65 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.undoRedo.event.CommandListener;
+import consulo.undoRedo.internal.builder.BaseExecutableCommandBuilder;
+import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 /**
  * The production {@code CommandProcessorImpl} lives in {@code consulo.ide.impl} which is not part of the headless
- * application. VFS event listeners (e.g. {@code PerFileMappingsBase}) query the command state during event delivery,
- * so the headless application answers "no command is running" to everything.
+ * application. There is no undo stack headlessly, so a command carries no state: the builder executes its runnable
+ * inline (with {@code inWriteAction()} etc. honored through the standard wrappers) — VFS-driven flows like
+ * {@code FileDocumentManagerImpl.reloadFromDisk} run their commands like any other code.
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
 public class HeadlessCommandProcessor extends CommandProcessor {
+    private final Application myApplication;
+
+    @Inject
+    public HeadlessCommandProcessor(Application application) {
+        myApplication = application;
+    }
+
+    private final ThreadLocal<Integer> myCommandDepth = ThreadLocal.withInitial(() -> 0);
+
+    private class HeadlessCommandBuilder<R, THIS extends HeadlessCommandBuilder<R, THIS>>
+        extends BaseExecutableCommandBuilder<R, THIS> implements WrappableRunnableCommandBuilder<R, THIS> {
+        @Override
+        public CommandProcessor getCommandProcessor() {
+            return HeadlessCommandProcessor.this;
+        }
+
+        @Override
+        public Application getApplication() {
+            return myApplication;
+        }
+
+        @Override
+        public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
+            myCommandDepth.set(myCommandDepth.get() + 1);
+            try {
+                return super.execute(executable);
+            }
+            finally {
+                myCommandDepth.set(myCommandDepth.get() - 1);
+            }
+        }
+    }
+
     @Override
     public <T> RunnableCommandBuilder<T, ? extends RunnableCommandBuilder<T, ?>> newCommand() {
-        throw new UnsupportedOperationException("Commands are not supported in the headless application");
+        return new HeadlessCommandBuilder<>();
     }
 
     @Override
@@ -45,7 +84,7 @@ public class HeadlessCommandProcessor extends CommandProcessor {
 
     @Override
     public boolean hasCurrentCommand() {
-        return false;
+        return myCommandDepth.get() > 0;
     }
 
     @Override
@@ -58,14 +97,22 @@ public class HeadlessCommandProcessor extends CommandProcessor {
         return null;
     }
 
+    private final ThreadLocal<Integer> myTransparentDepth = ThreadLocal.withInitial(() -> 0);
+
     @Override
     public void runUndoTransparentAction(Runnable action) {
-        action.run();
+        myTransparentDepth.set(myTransparentDepth.get() + 1);
+        try {
+            action.run();
+        }
+        finally {
+            myTransparentDepth.set(myTransparentDepth.get() - 1);
+        }
     }
 
     @Override
     public boolean isUndoTransparentActionInProgress() {
-        return false;
+        return myTransparentDepth.get() > 0;
     }
 
     @Override

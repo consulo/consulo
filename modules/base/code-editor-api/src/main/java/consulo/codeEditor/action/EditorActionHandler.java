@@ -84,10 +84,18 @@ public abstract class EditorActionHandler {
         }
     }
 
+    /**
+     * Injected-caret promotion is an execution concern: {@code execute} runs after
+     * {@code ensureInjectionUpToDate}, where the injected editor is computable. The enabled
+     * check runs on the UI thread on every keystroke and every toolbar pass — there the
+     * injected-caret data rule can never run (rules are skipped on the UI thread), so asking
+     * for it produced a guaranteed miss plus a "slow data on EDT" report before falling back
+     * to the host caret. Enablement is decided on the host caret directly.
+     */
     private void doIfEnabled(Caret hostCaret, DataContext context, CaretTask task) {
         DataContext caretContext = CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
         Editor editor = hostCaret.getEditor();
-        if (myWorksInInjected) {
+        if (myWorksInInjected && !inCheck) {
             DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
             Caret injectedCaret = injectedCaretContext.getData(Caret.KEY);
             if (injectedCaret != null && injectedCaret != hostCaret

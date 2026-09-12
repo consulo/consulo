@@ -19,6 +19,7 @@ module consulo.language.editor.impl {
     requires consulo.code.editor.impl;
 
     requires consulo.language.impl;
+    requires consulo.navigation.api;
 
     exports consulo.language.editor.impl.action;
     exports consulo.language.editor.impl.codeVision;

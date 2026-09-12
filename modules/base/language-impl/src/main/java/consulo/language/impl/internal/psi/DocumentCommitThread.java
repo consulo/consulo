@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
@@ -18,16 +18,12 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.ServiceManager;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.internal.psi.ChangedPsiRangeUtil;
-import consulo.language.impl.internal.psi.DocumentCommitProcessor;
-import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
 import consulo.language.impl.internal.psi.diff.DiffLog;
@@ -37,7 +33,6 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
-import consulo.ui.UIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -58,10 +53,6 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
 
     private final ExecutorService executor;
     private volatile boolean isDisposed;
-
-    static DocumentCommitThread getInstance() {
-        return (DocumentCommitThread) ServiceManager.getService(DocumentCommitProcessor.class);
-    }
 
     @Inject
     DocumentCommitThread(ApplicationConcurrency applicationConcurrency) {
@@ -85,7 +76,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
 
         PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase) PsiDocumentManager.getInstance(project);
         if (documentManager.isEventSystemEnabled(document)) {
-            UIAccess.assertIsUIThread();
+            documentManager.assertCommitThread();
         }
 
         PsiFile psiFile = documentManager.getCachedPsiFile(document);
@@ -170,7 +161,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             }
             PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase) PsiDocumentManager.getInstance(project);
             if (documentManager.isEventSystemEnabled(document)) {
-                UIAccess.assertIsUIThread();
+                documentManager.assertCommitThread();
             }
             boolean success = documentManager.finishCommit(document, finishProcessors, reparseInjectedProcessors,
                 synchronously, task.reason);

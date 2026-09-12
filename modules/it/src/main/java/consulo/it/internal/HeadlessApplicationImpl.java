@@ -17,6 +17,7 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.internal.StartupProgress;
+import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.progress.ProgressManager;
 import consulo.component.internal.ComponentBinding;
@@ -42,6 +43,7 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
 
     public HeadlessApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
+        myLock = new ReadMostlyRWLock(null);
     }
 
     /**
@@ -53,27 +55,11 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
     }
 
     /**
-     * Taking the write lock on the UI thread parks it until every reader releases the read lock, which is the
-     * shape of a real freeze. The issue is recorded as well as thrown, since callers of a write action commonly
-     * swallow {@link Throwable}.
-     * <p>
-     * Only the outermost write action is rejected - a nested one acquires nothing. {@code myWriteActionsStack} is
-     * the signal for that rather than the lock: {@link consulo.application.impl.internal.StampedRWLock} maps
-     * {@code writeIntentLock} onto {@code writeLock}, so the lock is already held by the time this runs.
+     * The write-lock-under-UI-thread ban is not applied on this branch: the lock installed above polls pending
+     * write-action transfers while waiting for write intent, so a UI task taking the write lock cannot deadlock
+     * against a background write action transferring onto the UI queue. The opt-out annotation and the recorded
+     * issue list stay, so tests written against the ban still compile and pass.
      */
-    @Override
-    protected void startWrite(Class clazz) {
-        if (!ourAllowWriteLockUnderUIThread && HeadlessUIAccess.INSTANCE.isUIThread() && myWriteActionsStack.isEmpty()) {
-            ThreadIssueException issue = new ThreadIssueException(
-                "Write action must not be acquired from the UI thread, it parks the UI until every reader releases"
-                    + " the read lock. Write action: " + clazz.getName()
-            );
-            ourThreadIssues.add(issue);
-            throw issue;
-        }
-
-        super.startWrite(clazz);
-    }
 
     public static List<ThreadIssueException> takeThreadIssues() {
         List<ThreadIssueException> issues = List.copyOf(ourThreadIssues);

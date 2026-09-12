@@ -18,6 +18,7 @@ package consulo.language.index.impl.internal.stub;
 import consulo.language.impl.internal.psi.stub.StubTextInconsistencyException;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiBinaryFile;
+import consulo.language.index.impl.internal.moduleAware.VariantDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -47,7 +48,21 @@ public abstract class StubProcessingHelperBase {
                                                              Predicate<? super Psi> processor,
                                                              @Nullable ProjectAwareSearchScope scope,
                                                              Class<Psi> requiredClass) {
-    PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+    return processStubsInFile(project, file, null, value, processor, scope, requiredClass);
+  }
+
+  /**
+   * @param foreignVariant the stored variant the stub ids belong to when it is not the one the file is currently
+   *                       viewed under; its elements are served through a copy of the file parsed under that variant
+   */
+  public <Psi extends PsiElement> boolean processStubsInFile(Project project,
+                                                             VirtualFile file,
+                                                             @Nullable VariantDescriptor foreignVariant,
+                                                             StubIdList value,
+                                                             Predicate<? super Psi> processor,
+                                                             @Nullable ProjectAwareSearchScope scope,
+                                                             Class<Psi> requiredClass) {
+    PsiFile psiFile = foreignVariant == null ? PsiManager.getInstance(project).findFile(file) : ForeignVariantFiles.get(project, file, foreignVariant);
     if (psiFile == null) {
       LOG.error("Stub index points to a file without PSI: " + file.getFileType() + ", used scope " + scope);
       onInternalError(file);

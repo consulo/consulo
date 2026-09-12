@@ -24,9 +24,9 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.version.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
+import consulo.sandboxPlugin.lang.psi.SandFileElementType;
 
 /**
  * @author VISTALL
@@ -34,12 +34,7 @@ import consulo.sandboxPlugin.lang.psi.SandFile;
  */
 @ExtensionImpl
 public class SandParsingDefinition extends LanguageVersionableParserDefinition {
-  private static IFileElementType FILE = new IStubFileElementType<>(SandLanguage.INSTANCE) {
-    @Override
-    public int getStubVersion() {
-      return 2;
-    }
-  };
+  private static IFileElementType FILE = SandFileElementType.INSTANCE;
 
   
   @Override

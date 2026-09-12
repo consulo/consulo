@@ -16,6 +16,7 @@
 package consulo.it.internal;
 
 import consulo.application.Application;
+import consulo.logging.Logger;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.ui.ModalityState;
 import consulo.ui.clipboard.Clipboard;
@@ -71,7 +72,16 @@ public final class HeadlessUIAccess extends BaseUIAccess {
 
     @Override
     public void give(Runnable runnable) {
-        myExecutor.execute(runnable);
+        myExecutor.execute(() -> {
+            try {
+                runnable.run();
+            }
+            catch (Throwable t) {
+                // an escaping error would kill the single UI worker; everything queued or
+                // waiting on it would then hang forever
+                Logger.getInstance(HeadlessUIAccess.class).warn("Headless UI task failed", t);
+            }
+        });
     }
 
     @Override

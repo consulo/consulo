@@ -161,7 +161,6 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
     private class XDebuggerGroupedFrameListRenderer extends GroupedItemsListRenderer<Object> {
         private final XDebuggerFrameListRenderer myOriginalRenderer = new XDebuggerFrameListRenderer(myProject);
-
         /**
          * Consulo popups render separators as their own list items, so the shared {@link GroupedItemsListRenderer} has no
          * "separator above" component. The frames list still needs one: it is the "Async stack trace" caption above the

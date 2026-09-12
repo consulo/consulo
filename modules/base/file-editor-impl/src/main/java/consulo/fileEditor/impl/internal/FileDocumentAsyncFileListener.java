@@ -18,6 +18,7 @@ package consulo.fileEditor.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.document.Document;
+import consulo.document.internal.RecomputeFileTypeMarker;
 import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -77,7 +78,7 @@ public final class FileDocumentAsyncFileListener implements AsyncFileListener {
                 }
 
                 for (VirtualFile file : toRecompute) {
-                    file.putUserData(FileDocumentManagerImpl.MUST_RECOMPUTE_FILE_TYPE, Boolean.TRUE);
+                    file.putUserData(RecomputeFileTypeMarker.MUST_RECOMPUTE_FILE_TYPE, Boolean.TRUE);
                 }
             }
 

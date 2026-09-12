@@ -15,23 +15,62 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.SdkType;
-import consulo.module.content.layer.extension.ModuleExtensionWithSdkBase;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionWithSdkBase;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
+import org.jdom.Element;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandModuleExtension extends ModuleExtensionWithSdkBase<SandModuleExtension> {
+  protected Set<String> myFlags = new TreeSet<>();
+
   public SandModuleExtension(String id, ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 
-  
+
   @Override
   public Class<? extends SdkType> getSdkTypeClass() {
     return SandBundleType.class;
+  }
+
+  public Set<String> getFlags() {
+    return Set.copyOf(myFlags);
+  }
+
+  @RequiredReadAction
+  @Override
+  public void commit(SandModuleExtension mutableModuleExtension) {
+    super.commit(mutableModuleExtension);
+    myFlags = new TreeSet<>(mutableModuleExtension.myFlags);
+  }
+
+  @Override
+  protected void getStateImpl(Element element) {
+    super.getStateImpl(element);
+    for (String flag : myFlags) {
+      element.addContent(new Element("flag").setAttribute("name", flag));
+    }
+  }
+
+  @RequiredReadAction
+  @Override
+  protected void loadStateImpl(Element element) {
+    super.loadStateImpl(element);
+    myFlags.clear();
+    for (Element child : element.getChildren("flag")) {
+      String name = child.getAttributeValue("name");
+      if (name != null) {
+        myFlags.add(name);
+      }
+    }
   }
 }
