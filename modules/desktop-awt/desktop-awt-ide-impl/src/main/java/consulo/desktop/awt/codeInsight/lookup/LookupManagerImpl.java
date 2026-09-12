@@ -55,27 +55,28 @@ public class LookupManagerImpl extends LookupManager {
 
         project.getMessageBus().connect().subscribe(
             EditorHintListener.class,
-            (project1, hint, flags) -> {
-                if (project1 == myProject) {
-                    Lookup lookup = getActiveLookup();
-                    if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {
-                        lookup.addLookupListener(new LookupListener() {
-                            @Override
-                            public void currentItemChanged(LookupEvent event) {
-                                hint.hide();
-                            }
+            (hintProject, hint, flags) -> {
+                if (hintProject != myProject) {
+                    return;
+                }
+                Lookup lookup = getActiveLookup();
+                if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {
+                    lookup.addLookupListener(new LookupListener() {
+                        @Override
+                        public void currentItemChanged(LookupEvent event) {
+                            hint.hide();
+                        }
 
-                            @Override
-                            public void itemSelected(LookupEvent event) {
-                                hint.hide();
-                            }
+                        @Override
+                        public void itemSelected(LookupEvent event) {
+                            hint.hide();
+                        }
 
-                            @Override
-                            public void lookupCanceled(LookupEvent event) {
-                                hint.hide();
-                            }
-                        });
-                    }
+                        @Override
+                        public void lookupCanceled(LookupEvent event) {
+                            hint.hide();
+                        }
+                    });
                 }
             }
         );

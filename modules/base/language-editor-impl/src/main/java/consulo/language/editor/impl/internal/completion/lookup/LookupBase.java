@@ -926,12 +926,12 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         return myOffsets.getPrefixLength(item, this);
     }
 
-    @RequiredReadAction
+    @RequiredWriteAction
     protected void insertLookupString(LookupElement item, int prefix) {
         insertLookupString(myProject, getTopLevelEditor(), item, itemMatcher(item), itemPattern(item), prefix);
     }
 
-    @RequiredReadAction
+    @RequiredWriteAction
     public static void insertLookupString(
         Project project,
         Editor editor,

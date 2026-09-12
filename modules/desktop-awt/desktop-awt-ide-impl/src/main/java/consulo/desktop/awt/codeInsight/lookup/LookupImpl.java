@@ -32,6 +32,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
@@ -53,7 +54,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class LookupImpl extends LookupBase implements LookupEx, Disposable, LookupElementListPresenter {
+public class LookupImpl extends LookupBase {
     private class MyHint extends LightweightHintImpl {
         private MyHint() {
             super(new JPanel(new BorderLayout()));
@@ -147,7 +148,7 @@ public class LookupImpl extends LookupBase implements LookupEx, Disposable, Look
         myHint.setCancelOnOtherWindowOpen(cancelOnOtherWindowOpen);
     }
 
-    public MyHint getHint() {
+    public LightweightHint getHint() {
         return myHint;
     }
 
@@ -417,9 +418,9 @@ public class LookupImpl extends LookupBase implements LookupEx, Disposable, Look
 
     @Override
     @RequiredUIAccess
-    protected void doHide(boolean fireCanceled, boolean explicitly) {
+    public void dispose() {
         boolean disposed = isLookupDisposed();
-        super.doHide(fireCanceled, explicitly);
+        super.dispose();
         if (!disposed) {
             ToolTipManager.sharedInstance().unregisterComponent(myList);
         }

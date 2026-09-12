@@ -1502,7 +1502,6 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
 
         @Override
-        @RequiredReadAction
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(hasExternalDoc());
         }

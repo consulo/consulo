@@ -145,7 +145,13 @@ public class LookupCellRenderer implements ListCellRenderer<LookupElement> {
     private boolean myIsSelected = false;
 
     @Override
-    public Component getListCellRendererComponent(JList list, LookupElement value, int index, boolean isSelected, boolean hasFocus) {
+    public Component getListCellRendererComponent(
+        JList<? extends LookupElement> list,
+        LookupElement value,
+        int index,
+        boolean isSelected,
+        boolean hasFocus
+    ) {
         boolean nonFocusedSelection = isSelected && myLookup.getLookupFocusDegree() == LookupFocusDegree.SEMI_FOCUSED;
         if (!myLookup.isFocused()) {
             isSelected = false;
@@ -154,11 +160,8 @@ public class LookupCellRenderer implements ListCellRenderer<LookupElement> {
         myIsSelected = isSelected;
         myPanel.setBackground(nonFocusedSelection ? SELECTED_NON_FOCUSED_BACKGROUND_COLOR : isSelected ? SELECTED_BACKGROUND_COLOR : null);
 
-        int allowedWidth =
-            list.getWidth() - calcSpacing(myNameComponent, myEmptyIcon) - calcSpacing(myTailComponent, null) - calcSpacing(
-                myTypeLabel,
-                null
-            );
+        int allowedWidth = list.getWidth() -
+            calcSpacing(myNameComponent, myEmptyIcon) - calcSpacing(myTailComponent, null) - calcSpacing(myTypeLabel, null);
 
         FontMetrics normalMetrics = getRealFontMetrics(value, false);
 

@@ -24,17 +24,14 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyPasteManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
-import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.*;
 
 /**
  * @author Denis Zhdanov
  * @since 2011-03-29
  */
 @ActionImpl(id = "QuickDocCopy", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COPY))
-public class CopyQuickDocAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
+public class CopyQuickDocAction extends DumbAwareAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
     public CopyQuickDocAction() {
         super(ActionLocalize.actionQuickdoccopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
         setEnabledInModalContext(true);
