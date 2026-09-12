@@ -1109,7 +1109,7 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
 
         fireLookupShown();
 
-        if (Application.get().isUnitTestMode()) {
+        if (Application.get().isHeadlessEnvironment()) {
             return true;
         }
 

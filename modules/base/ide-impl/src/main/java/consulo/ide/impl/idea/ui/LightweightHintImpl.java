@@ -95,10 +95,12 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         mySelectingHint = selectingHint;
     }
 
+    @Override
     public void setCancelOnClickOutside(boolean b) {
         myCancelOnClickOutside = b;
     }
 
+    @Override
     public void setCancelOnOtherWindowOpen(boolean b) {
         myCancelOnOtherWindowOpen = b;
     }
@@ -136,12 +138,24 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
         myComponent.validate();
 
-        if (!myForceShowAsPopup && !hintHint.isPopupForced() && (myForceLightweightPopup || fitsLayeredPane(layeredPane, myComponent, new RelativePoint(parentComponent, new Point(x, y)), hintHint))) {
+        if (!myForceShowAsPopup && !hintHint.isPopupForced()
+            && (myForceLightweightPopup || fitsLayeredPane(
+            layeredPane,
+            myComponent,
+            new RelativePoint(parentComponent, new Point(x, y)),
+            hintHint
+        ))) {
             beforeShow();
             Dimension preferredSize = myComponent.getPreferredSize();
 
             if (hintHint.isAwtTooltip()) {
-                IdeTooltip tooltip = new IdeTooltip(hintHint.getOriginalComponent(), hintHint.getOriginalPoint(), myComponent, hintHint, myComponent) {
+                IdeTooltip tooltip = new IdeTooltip(
+                    hintHint.getOriginalComponent(),
+                    hintHint.getOriginalPoint(),
+                    myComponent,
+                    hintHint,
+                    myComponent
+                ) {
                     @Override
                     protected boolean canAutohideOn(TooltipEvent event) {
                         if (!LightweightHintImpl.this.canAutoHideOn(event)) {
@@ -189,7 +203,8 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
                 tooltip.setPointerSize(JBUI.size(16, 8)).setPointerShiftedToStart(true);
 
-                myCurrentIdeTooltip = IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
+                myCurrentIdeTooltip = IdeTooltipManagerImpl.getInstanceImpl()
+                    .show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
             }
             else {
                 Point layeredPanePoint = SwingUtilities.convertPoint(parentComponent, x, y, layeredPane);
@@ -214,12 +229,23 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                 actualComponent.validate();
             }
 
-            myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(actualComponent, myFocusRequestor).setRequestFocus(myFocusRequestor != null || hintHint.isRequestFocus())
-                .setFocusable(myFocusRequestor != null || hintHint.isRequestFocus()).setResizable(myResizable).setMovable(myTitle != null).setTitle(myTitle).setModalContext(false)
-                .setShowShadow(isRealPopup() && !isForceHideShadow()).setCancelKeyEnabled(false).setCancelOnClickOutside(myCancelOnClickOutside).setCancelCallback(() -> {
+            myPopup = JBPopupFactory.getInstance()
+                .createComponentPopupBuilder(actualComponent, myFocusRequestor)
+                .setRequestFocus(myFocusRequestor != null || hintHint.isRequestFocus())
+                .setFocusable(myFocusRequestor != null || hintHint.isRequestFocus())
+                .setResizable(myResizable)
+                .setMovable(myTitle != null)
+                .setTitle(myTitle)
+                .setModalContext(false)
+                .setShowShadow(isRealPopup() && !isForceHideShadow())
+                .setCancelKeyEnabled(false)
+                .setCancelOnClickOutside(myCancelOnClickOutside)
+                .setCancelCallback(() -> {
                     onPopupCancel();
                     return true;
-                }).setCancelOnOtherWindowOpen(myCancelOnOtherWindowOpen).createPopup();
+                })
+                .setCancelOnOtherWindowOpen(myCancelOnOtherWindowOpen)
+                .createPopup();
 
             beforeShow();
             myPopup.show(new RelativePoint(myParentComponent, new Point(actualPoint.x, actualPoint.y)));
@@ -292,7 +318,12 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         }
         else {
             Rectangle lpRect = new Rectangle(pane.getLocationOnScreen().x, pane.getLocationOnScreen().y, pane.getWidth(), pane.getHeight());
-            Rectangle componentRect = new Rectangle(desiredLocation.getScreenPoint().x, desiredLocation.getScreenPoint().y, component.getPreferredSize().width, component.getPreferredSize().height);
+            Rectangle componentRect = new Rectangle(
+                desiredLocation.getScreenPoint().x,
+                desiredLocation.getScreenPoint().y,
+                component.getPreferredSize().width,
+                component.getPreferredSize().height
+            );
             return lpRect.contains(componentRect);
         }
     }
@@ -354,25 +385,19 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                 }
                 myPopup = null;
             }
+            else if (myCurrentIdeTooltip != null) {
+                IdeTooltip tooltip = myCurrentIdeTooltip;
+                myCurrentIdeTooltip = null;
+                tooltip.hide();
+            }
             else {
-                if (myCurrentIdeTooltip != null) {
-                    IdeTooltip tooltip = myCurrentIdeTooltip;
-                    myCurrentIdeTooltip = null;
-                    tooltip.hide();
-                }
-                else {
-                    JRootPane rootPane = myComponent.getRootPane();
-                    JLayeredPane layeredPane = rootPane == null ? null : rootPane.getLayeredPane();
-                    if (layeredPane != null) {
-                        Rectangle bounds = myComponent.getBounds();
-                        try {
-                            layeredPane.remove(myComponent);
-                        }
-                        finally {
-                        }
+                JRootPane rootPane = myComponent.getRootPane();
+                JLayeredPane layeredPane = rootPane == null ? null : rootPane.getLayeredPane();
+                if (layeredPane != null) {
+                    Rectangle bounds = myComponent.getBounds();
+                    layeredPane.remove(myComponent);
 
-                        layeredPane.paintImmediately(bounds.x, bounds.y, bounds.width, bounds.height);
-                    }
+                    layeredPane.paintImmediately(bounds.x, bounds.y, bounds.width, bounds.height);
                 }
             }
         }
@@ -425,15 +450,13 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
             location = myPopup.getLocationOnScreen();
             SwingUtilities.convertPointFromScreen(location, c);
         }
+        else if (myCurrentIdeTooltip != null) {
+            Point tipPoint = myCurrentIdeTooltip.getPoint();
+            Component tipComponent = myCurrentIdeTooltip.getComponent();
+            return SwingUtilities.convertPoint(tipComponent, tipPoint, c);
+        }
         else {
-            if (myCurrentIdeTooltip != null) {
-                Point tipPoint = myCurrentIdeTooltip.getPoint();
-                Component tipComponent = myCurrentIdeTooltip.getComponent();
-                return SwingUtilities.convertPoint(tipComponent, tipPoint, c);
-            }
-            else {
-                location = SwingUtilities.convertPoint(myComponent.getParent(), myComponent.getLocation(), c);
-            }
+            location = SwingUtilities.convertPoint(myComponent.getParent(), myComponent.getLocation(), c);
         }
 
         return location;
@@ -472,8 +495,8 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                     adjustSize = true;
                     break;
                 }
-                if (c instanceof JComponent) {
-                    Border border = ((JComponent) c).getBorder();
+                if (c instanceof JComponent component) {
+                    Border border = component.getBorder();
                     if (prev != null && border != null) {
                         Insets insets = border.getBorderInsets(prev);
                         widthExpand += insets.left + insets.right;
