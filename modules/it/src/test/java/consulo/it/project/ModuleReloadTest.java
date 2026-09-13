@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,6 +113,61 @@ public class ModuleReloadTest {
         assertThat(project.isDisposed()).isFalse();
     }
 
+    /**
+     * A busy machine keeps the VFS refreshing in the background, so {@code beforeRefreshStart} arrives faster than the
+     * reload settles. The reload must still run: a refresh in progress only defers it, never drops it. Reproduces the
+     * CI-only timeout where a registered change was cancelled by every following refresh and never reloaded.
+     */
+    @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
+    @Test
+    public void modulesFollowChangesUnderARefreshStorm(Application application, ProjectManager projectManager) throws Exception {
+        Path directory = Files.createTempDirectory("consulo-it-module-reload-storm");
+
+        Project project = projectManager
+            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
+            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
+        StoreReloadManager reloadManager = StoreReloadManager.getInstance(project);
+        ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+        createModule(moduleManager, "alpha", directory.resolve("alpha"));
+        createModule(moduleManager, "beta", directory.resolve("beta"));
+        saveProject(project, application);
+
+        Path modulesFile = directory.resolve(Project.DIRECTORY_STORE_FOLDER).resolve("modules.xml");
+        String bothModules = Files.readString(modulesFile);
+        assertThat(moduleNames(moduleManager)).contains("alpha", "beta");
+
+        VirtualFile modulesVirtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(modulesFile);
+        assertThat(modulesVirtualFile).isNotNull();
+
+        AtomicBoolean stormRunning = new AtomicBoolean(true);
+        Thread storm = new Thread(() -> {
+            while (stormRunning.get()) {
+                reloadManager.blockReloadingProjectOnExternalChanges();
+                sleepQuietly(2);
+                reloadManager.unblockReloadingProjectOnExternalChanges();
+                sleepQuietly(2);
+            }
+        }, "reload-refresh-storm");
+        storm.setDaemon(true);
+        storm.start();
+
+        try {
+            Files.writeString(modulesFile, withoutModule(bothModules, "beta"));
+            modulesVirtualFile.refresh(false, false);
+
+            waitFor(() -> !moduleNames(moduleManager).contains("beta"));
+        }
+        finally {
+            stormRunning.set(false);
+            storm.join(TimeUnit.SECONDS.toMillis(5));
+        }
+
+        assertThat(moduleNames(moduleManager)).contains("alpha").doesNotContain("beta");
+        assertThat(project.isDisposed()).isFalse();
+    }
+
     private static void createModule(ModuleManager moduleManager, String name, Path dirPath) throws Exception {
         Files.createDirectories(dirPath);
 
@@ -149,6 +205,15 @@ public class ModuleReloadTest {
         assertThat(removed).as("no module named %s in %s", name, xml).isTrue();
 
         return JDOMUtil.writeElement(root);
+    }
+
+    private static void sleepQuietly(long millis) {
+        try {
+            Thread.sleep(millis);
+        }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private static void waitFor(BooleanSupplier condition) throws Exception {

@@ -215,14 +215,12 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         }
 
         if (myChangedFilesFuture.isDone() || myChangedFilesFuture.isCancelled()) {
-            myChangedFilesFuture = myConcurrency.getScheduledExecutorService().schedule(reloadChangedStoragesTask, 1, TimeUnit.SECONDS);
+            myChangedFilesFuture = myConcurrency.getScheduledExecutorService().schedule(reloadChangedStoragesTask, 300, TimeUnit.MILLISECONDS);
         }
     }
 
     @Override
     public void blockReloadingProjectOnExternalChanges() {
-        cancel();
-
         myReloadBlockCount.incrementAndGet();
     }
 
