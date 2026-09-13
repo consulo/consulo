@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 15-Feb-22
+ * @since 2022-02-15
  */
+@SuppressWarnings("module")
 module consulo.document.impl {
     requires transitive consulo.application.api;
     requires transitive consulo.project.api;
@@ -11,18 +12,22 @@ module consulo.document.impl {
     requires it.unimi.dsi.fastutil;
 
     exports consulo.document.impl to
-        consulo.ide.impl,
-        consulo.language.impl,
-        consulo.test.impl,
         consulo.code.editor.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.language.editor.impl;
+        consulo.ide.impl,
+        consulo.language.editor.impl,
+        consulo.language.impl,
+        consulo.test.impl;
 
     exports consulo.document.impl.event to
+        consulo.code.editor.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
         consulo.language.impl,
-        consulo.language.editor.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.code.editor.impl;
+        consulo.language.editor.impl;
 }

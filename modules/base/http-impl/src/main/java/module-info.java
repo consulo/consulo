@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-08-02
  */
+@SuppressWarnings("module")
 module consulo.http.impl {
     requires transitive consulo.http.api;
 
@@ -25,7 +26,9 @@ module consulo.http.impl {
     requires org.apache.httpcomponents.httpmime;
 
     exports consulo.http.impl.internal.proxy to consulo.ide.impl;
-    exports consulo.http.impl.internal.ssl to consulo.ide.impl, consulo.proxy;
+    exports consulo.http.impl.internal.ssl to
+        consulo.ide.impl,
+        consulo.proxy;
 
     opens consulo.http.impl.internal.proxy to consulo.util.xml.serializer;
     opens consulo.http.impl.internal.ssl to consulo.util.xml.serializer;

@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-09-07
  */
+@SuppressWarnings("module")
 module consulo.external.tool.impl {
     requires consulo.execution.api;
     requires consulo.version.control.system.api;

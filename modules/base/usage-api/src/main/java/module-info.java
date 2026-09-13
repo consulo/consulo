@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-03-27
  */
+@SuppressWarnings("module")
 module consulo.usage.api {
     // TODO remove this dependency in future
     requires java.desktop;

@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 15-Mar-22
+ * @since 2022-03-15
  */
+@SuppressWarnings("module")
 module consulo.language.editor.ui.api {
     // TODO remove this dependency in future
     requires java.desktop;
@@ -22,10 +23,14 @@ module consulo.language.editor.ui.api {
     exports consulo.language.editor.ui.awt.scope;
     exports consulo.language.editor.ui.util;
 
-    exports consulo.language.editor.ui.internal to consulo.ide.impl,
+    exports consulo.language.editor.ui.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
         consulo.execution.debug.impl,
-        consulo.version.control.system.impl,
         consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.web.editor.impl, consulo.desktop.qt.editor.impl;
+        consulo.ide.impl,
+        consulo.version.control.system.impl,
+        consulo.web.editor.impl;
 }

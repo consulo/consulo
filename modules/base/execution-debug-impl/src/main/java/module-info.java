@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
+@SuppressWarnings("module")
 module consulo.execution.debug.impl {
     requires consulo.diff.api;
     requires consulo.execution.debug.api;
@@ -20,7 +21,9 @@ module consulo.execution.debug.impl {
     requires forms.rt;
 
     exports consulo.execution.debug.impl.internal.action to consulo.ide.impl;
-    exports consulo.execution.debug.impl.internal to consulo.ide.impl, consulo.util.xml.serializer;
+    exports consulo.execution.debug.impl.internal to
+        consulo.ide.impl,
+        consulo.util.xml.serializer;
     exports consulo.execution.debug.impl.internal.breakpoint to consulo.ide.impl;
     exports consulo.execution.debug.impl.internal.breakpoint.ui to consulo.ide.impl;
 
@@ -29,5 +32,7 @@ module consulo.execution.debug.impl {
     opens consulo.execution.debug.impl.internal.ui.tree.action to consulo.component.impl;
     opens consulo.execution.debug.impl.internal.setting to consulo.util.xml.serializer;
     opens consulo.execution.debug.impl.internal.breakpoint to consulo.util.xml.serializer;
-    opens consulo.execution.debug.impl.internal.action.handler to consulo.util.xml.serializer, consulo.proxy;
+    opens consulo.execution.debug.impl.internal.action.handler to
+        consulo.util.xml.serializer,
+        consulo.proxy;
 }

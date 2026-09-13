@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-03-19
  */
+@SuppressWarnings("module")
 module consulo.code.editor.impl {
     // TODO remove in future this dependency
     requires java.desktop;
@@ -25,13 +26,13 @@ module consulo.code.editor.impl {
         consulo.execution.debug.impl,
         consulo.file.editor.impl,
         consulo.ide.impl,
+        consulo.it,
         consulo.language.editor.impl,
         consulo.language.inject.impl,
         consulo.util.xml.serializer,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl,
-        consulo.it;
+        consulo.web.ui.impl;
 
     exports consulo.codeEditor.impl.internal to
         consulo.desktop.awt.editor.impl,

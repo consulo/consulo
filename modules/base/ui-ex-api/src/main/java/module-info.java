@@ -2,8 +2,9 @@ import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 
 /**
  * @author VISTALL
- * @since 29/01/2022
+ * @since 2022-01-29
  */
+@SuppressWarnings("module")
 module consulo.ui.ex.api {
     // todo obsolete dependency
     requires java.desktop;
@@ -50,43 +51,61 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.localize;
 
     exports consulo.ui.ex.internal.actionholder;
-  exports consulo.ui.ex.internal to
-        consulo.ui.ex.impl,
-        consulo.ide.impl,
-        consulo.external.system.api,
-        consulo.language.editor.api,
-        consulo.language.inject.advanced.impl,
-        consulo.language.editor.refactoring.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.ui.ex.awt.api,
+    exports consulo.ui.ex.internal to
+        consulo.code.editor.api,
+        consulo.code.editor.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.os.mac,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.execution.api,
         consulo.execution.impl,
-        consulo.project.ui.api,
         consulo.execution.debug.impl,
         consulo.execution.coverage.impl,
         consulo.external.service.impl,
-        consulo.version.control.system.impl,
-        consulo.code.editor.api,
-        consulo.code.editor.impl,
-        consulo.project.ui.impl,
-        consulo.module.content.api,
+        consulo.external.system.api,
         consulo.external.tool.impl,
-        consulo.desktop.awt.os.mac,
+        consulo.ide.impl,
         consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.language.editor.api,
+        consulo.language.editor.refactoring.impl,
+        consulo.language.inject.advanced.impl,
+        consulo.module.content.api,
+        consulo.project.ui.api,
+        consulo.project.ui.impl,
+        consulo.ui.ex.awt.api,
+        consulo.ui.ex.impl,
+        consulo.version.control.system.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
     exports consulo.ui.ex.keymap.internal to
-        consulo.ui.ex.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.ui.ex.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
     exports consulo.ui.ex.awtUnsafe.internal to
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
     uses TargetAWTFacade;
 }

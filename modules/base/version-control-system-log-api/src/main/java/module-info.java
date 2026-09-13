@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-07-31
  */
+@SuppressWarnings("module")
 module consulo.version.control.system.log.api {
     requires transitive consulo.ui.ex.api;
     requires consulo.index.io;
@@ -23,8 +24,10 @@ module consulo.version.control.system.log.api {
     exports consulo.versionControlSystem.log.util;
 
     exports consulo.versionControlSystem.log.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
-        consulo.version.control.system.log.impl,
         consulo.version.control.system.distributed.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+        consulo.version.control.system.log.impl;
 }

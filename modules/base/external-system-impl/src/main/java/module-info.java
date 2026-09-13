@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-04-10
  */
+@SuppressWarnings("module")
 module consulo.external.system.impl {
     // TODO remove in future
     requires java.desktop;

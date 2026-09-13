@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 13/01/2022
+ * @since 2022-01-13
  */
+@SuppressWarnings("module")
 module consulo.ui.impl {
     requires consulo.annotation;
     requires consulo.proxy;
@@ -27,10 +28,83 @@ module consulo.ui.impl {
 
     opens consulo.ui.impl.style to consulo.util.xml.serializer;
 
-    exports consulo.ui.impl to consulo.ide.impl, consulo.ui.ex.impl, consulo.test.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.it, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
-    exports consulo.ui.impl.clipboard to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.it, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
-    exports consulo.ui.impl.font to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.it, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
-    exports consulo.ui.impl.image to consulo.application.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.it, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
-    exports consulo.ui.impl.model to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.it, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
-    exports consulo.ui.impl.style to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.it, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+    exports consulo.ui.impl to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.ide.impl,
+        consulo.test.impl,
+        consulo.ui.ex.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.clipboard to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.font to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.image to
+        consulo.application.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.model to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.style to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 }

@@ -5,24 +5,28 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-28
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.index.io {
-  requires transitive consulo.annotation;
-  requires transitive consulo.util.collection;
-  requires transitive consulo.util.collection.primitive;
-  requires transitive consulo.util.io;
+    requires transitive consulo.annotation;
+    requires transitive consulo.util.collection;
+    requires transitive consulo.util.collection.primitive;
+    requires transitive consulo.util.io;
 
-  requires static org.lz4.java;
+    requires static org.lz4.java;
 
-  requires org.slf4j;
+    requires org.slf4j;
 
-  requires consulo.container.api;
+    requires consulo.container.api;
 
-  exports consulo.index.io;
-  exports consulo.index.io.data;
-  exports consulo.index.io.storage;
-  exports consulo.index.io.forward;
+    exports consulo.index.io;
+    exports consulo.index.io.data;
+    exports consulo.index.io.storage;
+    exports consulo.index.io.forward;
 
-  exports consulo.index.io.internal to consulo.application.impl, consulo.language.index.impl, consulo.ide.impl;
+    exports consulo.index.io.internal to
+        consulo.application.impl,
+        consulo.language.index.impl,
+        consulo.ide.impl;
 
-  uses consulo.index.io.internal.LowMemoryWatcherInternal;
+    uses consulo.index.io.internal.LowMemoryWatcherInternal;
 }

@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-17
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.virtual.file.system.api {
     requires transitive consulo.application.api;
     requires transitive consulo.util.io;
@@ -30,29 +31,31 @@ module consulo.virtual.file.system.api {
 
     exports consulo.virtualFileSystem.internal.core.local to consulo.test.impl;
     exports consulo.virtualFileSystem.internal.matcher to
+        consulo.extension.preview.recorder.impl,
         consulo.ide.impl,
-        consulo.virtual.file.system.impl,
-        consulo.extension.preview.recorder.impl;
+        consulo.virtual.file.system.impl;
 
     exports consulo.virtualFileSystem.internal to
-        consulo.document.api,
-        consulo.file.editor.impl,
-        consulo.virtual.file.system.impl,
-        consulo.ide.impl,
-        consulo.component.store.impl,
-        consulo.compiler.impl,
         consulo.application.impl,
         consulo.application.content.impl,
-        consulo.test.impl,
+        consulo.component.store.impl,
+        consulo.compiler.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.ide.impl,
         consulo.diff.impl,
+        consulo.document.api,
+        consulo.execution.coverage.impl,
+        consulo.file.editor.impl,
+        consulo.ide.impl,
+        consulo.it,
         consulo.language.impl,
         consulo.language.editor.impl,
         consulo.language.index.impl,
-        consulo.test.junit.impl,
-        consulo.it,
-        consulo.desktop.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.local.history.impl,
-        consulo.execution.coverage.impl,
-        consulo.version.control.system.impl;
+        consulo.test.impl,
+        consulo.test.junit.impl,
+        consulo.version.control.system.impl,
+        consulo.virtual.file.system.impl;
 }

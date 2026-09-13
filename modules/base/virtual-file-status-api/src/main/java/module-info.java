@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 28-Mar-22
+ * @since 2022-03-28
  */
+@SuppressWarnings("module")
 module consulo.virtual.file.status.api {
     requires transitive consulo.project.api;
     requires transitive consulo.color.scheme.api;

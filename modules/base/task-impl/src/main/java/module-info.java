@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2023-02-02
  */
+@SuppressWarnings("module")
 module consulo.task.impl {
     requires consulo.task.api;
     requires consulo.project.ui.api;
@@ -19,13 +20,16 @@ module consulo.task.impl {
     exports consulo.task.impl.internal.context to consulo.ide.impl;
     exports consulo.task.impl.internal.language to consulo.ide.impl;
 
-    opens consulo.task.impl.internal to consulo.util.xml.serializer, consulo.ui.ex.awt.api;
-    opens consulo.task.impl.internal.action to consulo.component.impl, consulo.ui.ex.awt.api;
+    opens consulo.task.impl.internal to
+        consulo.util.xml.serializer,
+        consulo.ui.ex.awt.api;
+    opens consulo.task.impl.internal.action to
+        consulo.component.impl,
+        consulo.ui.ex.awt.api;
     opens consulo.task.impl.internal.timeTracking to consulo.util.xml.serializer;
     opens consulo.task.impl.internal.setting to consulo.ui.ex.awt.api;
 
     // TODO remove in future
     requires java.desktop;
     requires forms.rt;
-
 }

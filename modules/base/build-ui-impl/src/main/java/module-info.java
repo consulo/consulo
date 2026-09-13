@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2023-11-13
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.build.ui.impl {
     requires transitive consulo.build.ui.api;
     requires consulo.compiler.api;

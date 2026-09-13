@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-07-21
  */
+@SuppressWarnings("module")
 module consulo.execution.test.sm.api {
     // TODO remove in future
     requires java.desktop;

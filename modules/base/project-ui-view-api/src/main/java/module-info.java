@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 02-Apr-22
+ * @since 2022-04-02
  */
+@SuppressWarnings("module")
 module consulo.project.ui.view.api {
     // TODO remove this dependency in future
     requires java.desktop;
@@ -26,5 +27,7 @@ module consulo.project.ui.view.api {
         consulo.bookmark.ui.view.api,
         consulo.project.ui.view.impl;
 
-    exports consulo.project.ui.view.internal.node to consulo.ide.impl, consulo.bookmark.ui.view.api;
+    exports consulo.project.ui.view.internal.node to
+        consulo.bookmark.ui.view.api,
+        consulo.ide.impl;
 }

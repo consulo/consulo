@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 31/01/2022
+ * @since 2022-01-31
  */
+@SuppressWarnings("module")
 module consulo.application.ui.api {
     // TODO obsolete dependency
     requires java.desktop;

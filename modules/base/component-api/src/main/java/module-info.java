@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-16
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.component.api {
     requires transitive consulo.disposer.api;
     requires transitive consulo.logging.api;
@@ -45,35 +46,46 @@ module consulo.component.api {
     exports consulo.component.util.config;
 
     exports consulo.component.internal to
-        consulo.component.impl,
-        consulo.ui.ex.impl,
-        consulo.ide.impl,
         consulo.application.api,
         consulo.application.impl,
-        consulo.module.impl,
-        consulo.project.impl,
-        consulo.datacontext.api,
-        consulo.virtual.file.system.api,
-        consulo.external.service.impl,
+        consulo.component.impl,
         consulo.component.store.api,
         consulo.component.store.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.test.impl,
-        consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
-
-    exports consulo.component.internal.inject to consulo.component.impl,
-        consulo.ui.ex.impl,
-        consulo.application.impl,
-        consulo.project.impl,
-        consulo.module.impl,
+        consulo.datacontext.api,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.external.service.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.module.impl,
+        consulo.project.impl,
         consulo.test.impl,
+        consulo.ui.ex.impl,
+        consulo.virtual.file.system.api,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
+
+    exports consulo.component.internal.inject to
+        consulo.application.impl,
+        consulo.component.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
         consulo.language.editor.api,
-        consulo.it;
+        consulo.module.impl,
+        consulo.project.impl,
+        consulo.test.impl,
+        consulo.ui.ex.impl;
 
     uses consulo.component.bind.InjectingBinding;
     uses consulo.component.bind.TopicBinding;

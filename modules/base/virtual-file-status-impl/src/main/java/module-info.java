@@ -1,10 +1,11 @@
 /**
  * @author VISTALL
- * @since 28-Mar-22
+ * @since 2022-03-28
  */
+@SuppressWarnings("module")
 module consulo.virtual.file.status.impl {
-  requires transitive consulo.virtual.file.status.api;
-  requires transitive consulo.code.editor.api;
+    requires transitive consulo.virtual.file.status.api;
+    requires transitive consulo.code.editor.api;
 
-  exports consulo.virtualFileSystem.status.impl.internal to consulo.ide.impl;
+    exports consulo.virtualFileSystem.status.impl.internal to consulo.ide.impl;
 }

@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2026-08-03
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.mcp.server.impl {
     requires transitive consulo.mcp.server.api;
     requires consulo.builtin.web.server.api;

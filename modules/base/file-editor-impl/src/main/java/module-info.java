@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 04-Aug-22
+ * @since 2022-08-04
  */
+@SuppressWarnings("module")
 module consulo.file.editor.impl {
     requires consulo.file.editor.api;
     requires consulo.project.ui.view.api;
@@ -15,13 +16,27 @@ module consulo.file.editor.impl {
 
     requires com.google.common;
 
-    exports consulo.fileEditor.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.ide.impl;
+    exports consulo.fileEditor.impl.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.ide.impl;
 
-    opens consulo.fileEditor.impl.internal to consulo.util.xml.serializer, consulo.proxy;
+    opens consulo.fileEditor.impl.internal to
+        consulo.proxy,
+        consulo.util.xml.serializer;
 
-    exports consulo.fileEditor.impl.internal.search to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.fileEditor.impl.internal.search to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.ide.impl;
 
-    exports consulo.fileEditor.impl.internal.text to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.fileEditor.impl.internal.text to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.ide.impl;
 
     // TODO remove in future
     requires java.desktop;

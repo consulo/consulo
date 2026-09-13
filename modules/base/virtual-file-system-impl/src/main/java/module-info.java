@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 27-Feb-22
+ * @since 2022-02-27
  */
+@SuppressWarnings("module")
 module consulo.virtual.file.system.impl {
     requires consulo.virtual.file.system.api;
     requires consulo.util.collection;

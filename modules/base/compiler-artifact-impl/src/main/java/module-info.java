@@ -2,13 +2,16 @@
  * @author VISTALL
  * @since 2023-11-13
  */
+@SuppressWarnings("module")
 module consulo.compiler.artifact.impl {
     requires transitive consulo.compiler.artifact.api;
 
     requires consulo.component.impl;
     requires consulo.module.content.api;
 
-    exports consulo.compiler.artifact.impl.internal to consulo.compiler.impl, consulo.ide.impl;
+    exports consulo.compiler.artifact.impl.internal to
+        consulo.compiler.impl,
+        consulo.ide.impl;
 
     exports consulo.compiler.artifact.impl.internal.ui to consulo.ide.impl;
 

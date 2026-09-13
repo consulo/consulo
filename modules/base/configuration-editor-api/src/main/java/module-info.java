@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-01-09
  */
+@SuppressWarnings("module")
 module consulo.configuration.editor.api {
     requires transitive consulo.file.editor.api;
     requires transitive consulo.project.api;

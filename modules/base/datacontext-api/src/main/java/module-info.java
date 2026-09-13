@@ -5,15 +5,16 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-29
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.datacontext.api {
-  // todo obsolete dependency
-  requires java.desktop;
+    // todo obsolete dependency
+    requires java.desktop;
 
-  requires transitive consulo.component.api;
-  requires transitive consulo.util.dataholder;
+    requires transitive consulo.component.api;
+    requires transitive consulo.util.dataholder;
 
-  exports consulo.dataContext;
-  exports consulo.dataContext.internal to
-    consulo.execution.impl,
-    consulo.ide.impl;
+    exports consulo.dataContext;
+    exports consulo.dataContext.internal to
+        consulo.execution.impl,
+        consulo.ide.impl;
 }
