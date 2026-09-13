@@ -75,8 +75,7 @@ public abstract class RefHashMap<K, V extends @Nullable Object> extends Abstract
     }
 
     public interface Key<T> {
-        @Nullable
-        T get();
+        @Nullable T get();
     }
 
     protected abstract <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q);

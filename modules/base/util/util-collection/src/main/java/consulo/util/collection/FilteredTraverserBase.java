@@ -217,7 +217,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
         }
         else {
             // traverse subtree to select accepted children
-            return TreeTraversal.GUIDED_TRAVERSAL(myMeta.createChildrenGuide(node)).traversal(node, myTree);
+            return TreeTraversal.guidedTraversal(myMeta.createChildrenGuide(node)).traversal(node, myTree);
         }
     }
 
@@ -383,7 +383,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
         );
 
         public static <T> Meta<T> empty() {
-            return (Meta<T>)EMPTY;
+            return (Meta<T>) EMPTY;
         }
     }
 
@@ -421,8 +421,10 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
             return false;
         }
 
+        @SuppressWarnings("memberName")
         final Predicate<? super T> OR = this::valueOr;
 
+        @SuppressWarnings("memberName")
         final Predicate<? super T> AND = this::valueAnd;
 
         @Override

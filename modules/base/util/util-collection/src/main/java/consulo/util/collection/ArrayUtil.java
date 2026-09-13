@@ -348,12 +348,12 @@ public class ArrayUtil {
      */
     public static <T> T[] append(T[] src, T element) {
         //noinspection unchecked
-        return append(src, element, (Class<T>)src.getClass().getComponentType());
+        return append(src, element, (Class<T>) src.getClass().getComponentType());
     }
 
     public static <T> T[] prepend(T element, T[] array) {
         //noinspection unchecked
-        return prepend(element, array, (Class<T>)array.getClass().getComponentType());
+        return prepend(element, array, (Class<T>) array.getClass().getComponentType());
     }
 
     public static <T> T[] prepend(T element, T[] array, Class<T> type) {
@@ -416,7 +416,7 @@ public class ArrayUtil {
 
     public static <T> T[] newArray(Class<T> type, int length) {
         //noinspection unchecked
-        return (T[])Array.newInstance(type, length);
+        return (T[]) Array.newInstance(type, length);
     }
 
     public static <T> T[] remove(T[] src, int idx, IntFunction<T[]> factory) {
@@ -627,7 +627,7 @@ public class ArrayUtil {
                 return 1;
             }
             //noinspection unchecked
-            int res = ((Comparable)o1).compareTo(o2);
+            int res = ((Comparable) o1).compareTo(o2);
             if (res != 0) {
                 return res;
             }
@@ -956,6 +956,6 @@ public class ArrayUtil {
 
     public static <T> Class<T> getComponentType(T[] collection) {
         //noinspection unchecked
-        return (Class<T>)collection.getClass().getComponentType();
+        return (Class<T>) collection.getClass().getComponentType();
     }
 }

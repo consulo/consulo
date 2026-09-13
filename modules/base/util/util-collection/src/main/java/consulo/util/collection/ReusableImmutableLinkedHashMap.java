@@ -56,7 +56,7 @@ public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> exten
      */
     @SuppressWarnings("unchecked")
     public static <K, V> ReusableImmutableLinkedHashMap<K, V> empty() {
-        return (ReusableImmutableLinkedHashMap<K, V>)EMPTY;
+        return (ReusableImmutableLinkedHashMap<K, V>) EMPTY;
     }
 
     /**
@@ -98,7 +98,7 @@ public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> exten
     ) {
         if (map instanceof ReusableImmutableLinkedHashMap ilhm && ilhm.getStrategy() == strategy) {
             // Same strategy ImmutableLinkedHashMap. Reusing it.
-            return (ReusableImmutableLinkedHashMap<K, V>)ilhm;
+            return (ReusableImmutableLinkedHashMap<K, V>) ilhm;
         }
         else if (map.isEmpty()) {
             // Empty map optimization.
@@ -251,7 +251,7 @@ public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> exten
     public boolean containsKey(Object key) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         ReusableLinkedHashtable<K, V> table = range.getTable();
-        int keyPos = table.getPos((K)key);
+        int keyPos = table.getPos((K) key);
         if (keyPos < 0) {
             return false;
         }
@@ -273,16 +273,16 @@ public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> exten
     public @Nullable V getOrDefault(Object key, @Nullable V defaultValue) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         ReusableLinkedHashtable<K, V> table = range.getTable();
-        int keyPos = table.getPos((K)key);
+        int keyPos = table.getPos((K) key);
         if (keyPos < 0) {
             return defaultValue;
         }
         if (range.isMasterRange()) {
-            return (V)table.getValue(keyPos);
+            return (V) table.getValue(keyPos);
         }
 
         // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
-        return range.isInList(keyPos) ? (V)table.getValue(keyPos) : defaultValue;
+        return range.isInList(keyPos) ? (V) table.getValue(keyPos) : defaultValue;
     }
 
     @Override

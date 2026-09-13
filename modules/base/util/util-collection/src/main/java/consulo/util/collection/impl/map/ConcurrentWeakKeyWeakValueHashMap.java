@@ -17,61 +17,61 @@ import java.util.Objects;
  * To create, use {@link Maps#newConcurrentWeakKeyWeakValueHashMap()}
  */
 public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValueHashMap<K, V> {
-  private static final class WeakValue<K, V> extends WeakReference<V> implements ValueReference<K, V> {
-    // can't make it final because of circular dependency of KeyReference to ValueReference
-    private volatile @Nullable KeyReference<K, V> myKeyReference = null;
+    private static final class WeakValue<K, V> extends WeakReference<V> implements ValueReference<K, V> {
+        // can't make it final because of circular dependency of KeyReference to ValueReference
+        private volatile @Nullable KeyReference<K, V> myKeyReference = null;
 
-    private WeakValue(V value, ReferenceQueue<? super V> queue) {
-      super(Objects.requireNonNull(value), queue);
+        private WeakValue(V value, ReferenceQueue<? super V> queue) {
+            super(Objects.requireNonNull(value), queue);
+        }
+
+        // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
+        // otherwise it's just canonical equals on referents for replace(K,V,V) to work
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null) {
+                return false;
+            }
+
+            V v = get();
+            @SuppressWarnings("unchecked")
+            V thatV = ((ValueReference<K, V>) o).get();
+            return v != null && v.equals(thatV);
+        }
+
+        @Override
+        public @Nullable KeyReference<K, V> getKeyReference() {
+            return myKeyReference;
+        }
     }
 
-    // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
-    // otherwise it's just canonical equals on referents for replace(K,V,V) to work
+    public ConcurrentWeakKeyWeakValueHashMap(
+        int initialCapacity,
+        float loadFactor,
+        int concurrencyLevel,
+        HashingStrategy<? super K> hashingStrategy
+    ) {
+        super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    }
+
     @Override
-    public boolean equals(@Nullable Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null) {
-        return false;
-      }
-
-      V v = get();
-      @SuppressWarnings("unchecked")
-      V thatV = ((ValueReference<K, V>) o).get();
-      return v != null && v.equals(thatV);
+    KeyReference<K, V> createKeyReference(K k, V v) {
+        ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
+        WeakKey<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
+        if (valueReference instanceof WeakValue) {
+            ((WeakValue<K, V>) valueReference).myKeyReference = keyReference;
+        }
+        // to avoid queueing in myValueQueue before setting its myKeyReference to not-null value
+        Reference.reachabilityFence(k);
+        Reference.reachabilityFence(v);
+        return keyReference;
     }
 
     @Override
-    public @Nullable KeyReference<K, V> getKeyReference() {
-      return myKeyReference;
+    protected ValueReference<K, V> createValueReference(V value, ReferenceQueue<? super V> queue) {
+        return new WeakValue<>(value, queue);
     }
-  }
-
-  public ConcurrentWeakKeyWeakValueHashMap(
-    int initialCapacity,
-    float loadFactor,
-    int concurrencyLevel,
-    HashingStrategy<? super K> hashingStrategy
-  ) {
-    super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
-  }
-
-  @Override
-  KeyReference<K, V> createKeyReference(K k, V v) {
-    ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
-    WeakKey<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
-    if (valueReference instanceof WeakValue) {
-      ((WeakValue<K, V>)valueReference).myKeyReference = keyReference;
-    }
-    // to avoid queueing in myValueQueue before setting its myKeyReference to not-null value
-    Reference.reachabilityFence(k);
-    Reference.reachabilityFence(v);
-    return keyReference;
-  }
-
-  @Override
-  protected ValueReference<K, V> createValueReference(V value, ReferenceQueue<? super V> queue) {
-    return new WeakValue<>(value, queue);
-  }
 }

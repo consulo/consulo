@@ -18,416 +18,422 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.HashingStrategy;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public class LinkedHashMap<K, V extends @Nullable Object> extends AbstractMap<K, V> implements Map<K, V> {
-  private @Nullable Entry<K, V> @Nullable [] table = null;
-  private @Nullable Entry<K, V> top = null;
-  private @Nullable Entry<K, V> back = null;
-  private int capacity;
-  private int size;
-  private final float loadFactor;
-  private final HashingStrategy<K> hashingStrategy;
-  private final boolean accessOrder;
+    private @Nullable Entry<K, V> @Nullable [] table = null;
+    private @Nullable Entry<K, V> top = null;
+    private @Nullable Entry<K, V> back = null;
+    private int capacity;
+    private int size;
+    private final float loadFactor;
+    private final HashingStrategy<K> hashingStrategy;
+    private final boolean accessOrder;
 
-  public LinkedHashMap() {
-    this(0);
-  }
-
-  public LinkedHashMap(int capacity) {
-    this(capacity, HashUtil.DEFAULT_LOAD_FACTOR);
-  }
-
-  public LinkedHashMap(int capacity, boolean accessOrder) {
-    this(capacity, HashUtil.DEFAULT_LOAD_FACTOR, accessOrder);
-  }
-
-  public LinkedHashMap(int capacity, float loadFactor) {
-    this(capacity, loadFactor, HashingStrategy.canonical());
-  }
-
-  public LinkedHashMap(int capacity, float loadFactor, boolean accessOrder) {
-    this(capacity, loadFactor, HashingStrategy.canonical(), accessOrder);
-  }
-
-  public LinkedHashMap(HashingStrategy<K> hashingStrategy) {
-    this(0, HashUtil.DEFAULT_LOAD_FACTOR, hashingStrategy);
-  }
-
-  public LinkedHashMap(int capacity, float loadFactor, HashingStrategy<K> hashingStrategy) {
-    this(capacity, loadFactor, hashingStrategy, false);
-  }
-
-  public LinkedHashMap(int capacity, float loadFactor, HashingStrategy<K> hashingStrategy, boolean accessOrder) {
-    this.loadFactor = loadFactor;
-    this.hashingStrategy = hashingStrategy;
-    clear(capacity);
-    this.accessOrder = accessOrder;
-  }
-
-  @Override
-  public int size() {
-    return size;
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return size() == 0;
-  }
-
-  @Override
-  public void clear() {
-    clear(0);
-  }
-
-  @Override
-  public @Nullable V get(Object key) {
-    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
-    int hash = HashUtil.hash(key, hashingStrategy);
-    int index = hash % table.length;
-
-    for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
-      K entryKey;
-      if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K)key))) {
-        moveToTop(e);
-        return e.value;
-      }
+    public LinkedHashMap() {
+        this(0);
     }
-    return null;
-  }
 
-  @Override
-  public @Nullable V put(K key, V value) {
-    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
-    int hash = HashUtil.hash(key, hashingStrategy);
-    int index = hash % table.length;
-    for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
-      K entryKey;
-      if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, key))) {
-        moveToTop(e);
-        return e.setValue(value);
-      }
+    public LinkedHashMap(int capacity) {
+        this(capacity, HashUtil.DEFAULT_LOAD_FACTOR);
     }
-    Entry<K, V> e = new Entry<K, V>(key, value, hash);
-    e.hashNext = table[index];
-    table[index] = e;
-    Entry<K, V> top = this.top;
-    e.next = top;
-    if (top != null) {
-      top.previous = e;
-      Objects.requireNonNull(back);
-    }
-    else {
-      back = e;
-    }
-    this.top = e;
-    size++;
-    if (removeEldestEntry(back, back.key, back.value)) {
-      doRemoveEldestEntry();
-    }
-    else if (size > capacity) {
-      rehash((int)(capacity * HashUtil.CAPACITY_MULTIPLE));
-    }
-    return null;
-  }
 
-  public void doRemoveEldestEntry() {
-    V val = remove(Objects.requireNonNull(back).key);
-    assert val != null : "LinkedHashMap.Entry was not removed. Possibly mutable key: " + back.key;
-  }
-
-  @Override
-  public boolean containsKey(Object key) {
-    return get(key) != null;
-  }
-
-  @Override
-  public @Nullable V remove(Object key) {
-    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
-    int hash = HashUtil.hash(key, hashingStrategy);
-    int index = hash % table.length;
-    Entry<K, V> e = table[index];
-    if (e == null) {
-      return null;
+    public LinkedHashMap(int capacity, boolean accessOrder) {
+        this(capacity, HashUtil.DEFAULT_LOAD_FACTOR, accessOrder);
     }
-    K entryKey;
-    if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K)key))) {
-      table[index] = e.hashNext;
+
+    public LinkedHashMap(int capacity, float loadFactor) {
+        this(capacity, loadFactor, HashingStrategy.canonical());
     }
-    else {
-      for (; ; ) {
-        Entry<K, V> last = e;
-        e = e.hashNext;
+
+    public LinkedHashMap(int capacity, float loadFactor, boolean accessOrder) {
+        this(capacity, loadFactor, HashingStrategy.canonical(), accessOrder);
+    }
+
+    public LinkedHashMap(HashingStrategy<K> hashingStrategy) {
+        this(0, HashUtil.DEFAULT_LOAD_FACTOR, hashingStrategy);
+    }
+
+    public LinkedHashMap(int capacity, float loadFactor, HashingStrategy<K> hashingStrategy) {
+        this(capacity, loadFactor, hashingStrategy, false);
+    }
+
+    public LinkedHashMap(int capacity, float loadFactor, HashingStrategy<K> hashingStrategy, boolean accessOrder) {
+        this.loadFactor = loadFactor;
+        this.hashingStrategy = hashingStrategy;
+        clear(capacity);
+        this.accessOrder = accessOrder;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    @Override
+    public void clear() {
+        clear(0);
+    }
+
+    @Override
+    public @Nullable V get(Object key) {
+        @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
+        int hash = HashUtil.hash(key, hashingStrategy);
+        int index = hash % table.length;
+
+        for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
+            K entryKey;
+            if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K) key))) {
+                moveToTop(e);
+                return e.value;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public @Nullable V put(K key, V value) {
+        @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
+        int hash = HashUtil.hash(key, hashingStrategy);
+        int index = hash % table.length;
+        for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
+            K entryKey;
+            if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, key))) {
+                moveToTop(e);
+                return e.setValue(value);
+            }
+        }
+        Entry<K, V> e = new Entry<>(key, value, hash);
+        e.hashNext = table[index];
+        table[index] = e;
+        Entry<K, V> top = this.top;
+        e.next = top;
+        if (top != null) {
+            top.previous = e;
+            Objects.requireNonNull(back);
+        }
+        else {
+            back = e;
+        }
+        this.top = e;
+        size++;
+        if (removeEldestEntry(back, back.key, back.value)) {
+            doRemoveEldestEntry();
+        }
+        else if (size > capacity) {
+            rehash((int) (capacity * HashUtil.CAPACITY_MULTIPLE));
+        }
+        return null;
+    }
+
+    public void doRemoveEldestEntry() {
+        V val = remove(Objects.requireNonNull(back).key);
+        assert val != null : "LinkedHashMap.Entry was not removed. Possibly mutable key: " + back.key;
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return get(key) != null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @Nullable V remove(Object key) {
+        @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
+        int hash = HashUtil.hash(key, hashingStrategy);
+        int index = hash % table.length;
+        Entry<K, V> e = table[index];
         if (e == null) {
-          return null;
+            return null;
         }
-        if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K)key))) {
-          last.hashNext = e.hashNext;
-          break;
+        K entryKey;
+        if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K) key))) {
+            table[index] = e.hashNext;
         }
-      }
-    }
-    unlink(e);
-    size--;
-    return e.value;
-  }
-
-  @Override
-  public Set<K> keySet() {
-    return new KeySet();
-  }
-
-  @Override
-  public Collection<V> values() {
-    return new Values();
-  }
-
-  @Override
-  public Set<Map.Entry<K, V>> entrySet() {
-    return new EntrySet();
-  }
-
-  protected boolean removeEldestEntry(Map.Entry<K, V> eldest, K key, V value) {
-    return removeEldestEntry(eldest);
-  }
-
-  protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-    return false;
-  }
-
-  private void init(int capacity) {
-    table = new Entry[HashUtil.adjustTableSize((int)(capacity / loadFactor))];
-    top = back = null;
-    this.capacity = capacity;
-  }
-
-  private void clear(int capacity) {
-    if (capacity < HashUtil.MIN_CAPACITY) {
-      capacity = HashUtil.MIN_CAPACITY;
-    }
-    init(capacity);
-    size = 0;
-  }
-
-  public @Nullable K getLastKey() {
-    return top != null ? top.key : null;
-  }
-
-  public @Nullable V getLastValue() {
-    return top != null ? top.value : null;
-  }
-
-  private void moveToTop(Entry<K, V> e) {
-    if (!accessOrder) {
-      return;
-    }
-
-    Entry<K, V> top = this.top;
-    if (top != e) {
-      Entry<K, V> prev = Objects.requireNonNull(e.previous);
-      Entry<K, V> next = e.next;
-      prev.next = next;
-      if (next != null) {
-        next.previous = prev;
-      }
-      else {
-        back = prev;
-      }
-      Objects.requireNonNull(top).previous = e;
-      e.next = top;
-      e.previous = null;
-      this.top = e;
-    }
-  }
-
-  private void unlink(Entry<K, V> e) {
-    Entry<K, V> prev = e.previous;
-    Entry<K, V> next = e.next;
-    if (prev != null) {
-      prev.next = next;
-    }
-    else {
-      top = next;
-    }
-    if (next != null) {
-      next.previous = prev;
-    }
-    else {
-      back = prev;
-    }
-
-    // Help GC
-    e.previous = null;
-    e.next = null;
-  }
-
-  private void rehash(int capacity) {
-    table = new Entry[HashUtil.adjustTableSize((int)(capacity / loadFactor))];
-    this.capacity = capacity;
-    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
-    int tableLen = table.length;
-    for (Entry<K, V> e = back; e != null; e = e.previous) {
-      int hash = e.keyHash % tableLen;
-      e.hashNext = table[hash];
-      table[hash] = e;
-    }
-  }
-
-  private static class Entry<K, V extends @Nullable Object> implements Map.Entry<K, V> {
-    private final K key;
-    private final int keyHash;
-    private V value;
-    private @Nullable Entry<K, V> next = null;
-    private @Nullable Entry<K, V> previous = null;
-    private @Nullable Entry<K, V> hashNext = null;
-
-    public Entry(K key, V value, int hash) {
-      this.key = key;
-      keyHash = hash;
-      this.value = value;
-    }
-
-    @Override
-    public K getKey() {
-      return key;
-    }
-
-    @Override
-    public V getValue() {
-      return value;
-    }
-
-    @Override
-    public V setValue(V value) {
-      V result = this.value;
-      this.value = value;
-      return result;
-    }
-  }
-
-  private abstract class LinkedHashIterator<T> implements Iterator<T> {
-    private LinkedHashMap.@Nullable Entry<K, V> e = back;
-    private LinkedHashMap.@Nullable Entry<K, V> last = null;
-
-    @Override
-    public boolean hasNext() {
-      return e != null;
-    }
-
-    @Override
-    public void remove() {
-      if (last == null) {
-        throw new IllegalStateException();
-      }
-      LinkedHashMap.this.remove(last.key);
-      last = null;
-    }
-
-    protected LinkedHashMap.@Nullable Entry<K, V> nextEntry() {
-      LinkedHashMap.Entry<K, V> result = last = e;
-      e = Objects.requireNonNull(result).previous;
-      return result;
-    }
-  }
-
-  private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
-    @Override
-    public Iterator<Map.Entry<K, V>> iterator() {
-      return new LinkedHashIterator<Map.Entry<K, V>>() {
-        @Override
-        public Map.@Nullable Entry<K, V> next() {
-          return nextEntry();
+        else {
+            for (; ; ) {
+                Entry<K, V> last = e;
+                e = e.hashNext;
+                if (e == null) {
+                    return null;
+                }
+                if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K) key))) {
+                    last.hashNext = e.hashNext;
+                    break;
+                }
+            }
         }
-      };
+        unlink(e);
+        size--;
+        return e.value;
     }
 
     @Override
-    public boolean contains(Object o) {
-      if (!(o instanceof Map.Entry)) {
+    public Set<K> keySet() {
+        return new KeySet();
+    }
+
+    @Override
+    public Collection<V> values() {
+        return new Values();
+    }
+
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return new EntrySet();
+    }
+
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest, K key, V value) {
+        return removeEldestEntry(eldest);
+    }
+
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
         return false;
-      }
-      Map.Entry<K, V> e = (Map.Entry<K, V>)o;
-      V value = get(e.getKey());
-      return value != null && value.equals(e.getValue());
     }
 
-    @Override
-    public boolean remove(Object o) {
-      if (!(o instanceof Map.Entry)) {
-        return false;
-      }
-      Map.Entry<K, V> e = (Map.Entry<K, V>)o;
-      return LinkedHashMap.this.remove(e.getKey()) != null;
+    @SuppressWarnings("unchecked")
+    private void init(int capacity) {
+        table = new Entry[HashUtil.adjustTableSize((int) (capacity / loadFactor))];
+        top = back = null;
+        this.capacity = capacity;
     }
 
-    @Override
-    public int size() {
-      return size;
-    }
-
-    @Override
-    public void clear() {
-      LinkedHashMap.this.clear();
-    }
-  }
-
-  private final class KeySet extends AbstractSet<K> {
-
-    @Override
-    public Iterator<K> iterator() {
-      return new LinkedHashIterator<K>() {
-        @Override
-        public K next() {
-          return Objects.requireNonNull(nextEntry()).key;
+    private void clear(int capacity) {
+        if (capacity < HashUtil.MIN_CAPACITY) {
+            capacity = HashUtil.MIN_CAPACITY;
         }
-      };
+        init(capacity);
+        size = 0;
     }
 
-    @Override
-    public int size() {
-      return size;
+    public @Nullable K getLastKey() {
+        return top != null ? top.key : null;
     }
 
-    @Override
-    public boolean contains(Object o) {
-      return LinkedHashMap.this.containsKey(o);
+    public @Nullable V getLastValue() {
+        return top != null ? top.value : null;
     }
 
-    @Override
-    public boolean remove(Object o) {
-      return LinkedHashMap.this.remove(o) != null;
-    }
-
-    @Override
-    public void clear() {
-      LinkedHashMap.this.clear();
-    }
-  }
-
-  private final class Values extends AbstractCollection<V> {
-    @Override
-    public Iterator<V> iterator() {
-      return new LinkedHashIterator<V>() {
-        @Override
-        public V next() {
-          return Objects.requireNonNull(nextEntry()).value;
+    private void moveToTop(Entry<K, V> e) {
+        if (!accessOrder) {
+            return;
         }
-      };
+
+        Entry<K, V> top = this.top;
+        if (top != e) {
+            Entry<K, V> prev = Objects.requireNonNull(e.previous);
+            Entry<K, V> next = e.next;
+            prev.next = next;
+            if (next != null) {
+                next.previous = prev;
+            }
+            else {
+                back = prev;
+            }
+            Objects.requireNonNull(top).previous = e;
+            e.next = top;
+            e.previous = null;
+            this.top = e;
+        }
     }
 
-    @Override
-    public int size() {
-      return size;
+    private void unlink(Entry<K, V> e) {
+        Entry<K, V> prev = e.previous;
+        Entry<K, V> next = e.next;
+        if (prev != null) {
+            prev.next = next;
+        }
+        else {
+            top = next;
+        }
+        if (next != null) {
+            next.previous = prev;
+        }
+        else {
+            back = prev;
+        }
+
+        // Help GC
+        e.previous = null;
+        e.next = null;
     }
 
-    @Override
-    public boolean contains(Object o) {
-      return containsValue(o);
+    @SuppressWarnings("unchecked")
+    private void rehash(int capacity) {
+        table = new Entry[HashUtil.adjustTableSize((int) (capacity / loadFactor))];
+        this.capacity = capacity;
+        @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
+        int tableLen = table.length;
+        for (Entry<K, V> e = back; e != null; e = e.previous) {
+            int hash = e.keyHash % tableLen;
+            e.hashNext = table[hash];
+            table[hash] = e;
+        }
     }
 
-    @Override
-    public void clear() {
-      LinkedHashMap.this.clear();
+    private static class Entry<K, V extends @Nullable Object> implements Map.Entry<K, V> {
+        private final K key;
+        private final int keyHash;
+        private V value;
+        private @Nullable Entry<K, V> next = null;
+        private @Nullable Entry<K, V> previous = null;
+        private @Nullable Entry<K, V> hashNext = null;
+
+        public Entry(K key, V value, int hash) {
+            this.key = key;
+            keyHash = hash;
+            this.value = value;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public V setValue(V value) {
+            V result = this.value;
+            this.value = value;
+            return result;
+        }
     }
-  }
+
+    private abstract class LinkedHashIterator<T> implements Iterator<T> {
+        private LinkedHashMap.@Nullable Entry<K, V> e = back;
+        private LinkedHashMap.@Nullable Entry<K, V> last = null;
+
+        @Override
+        public boolean hasNext() {
+            return e != null;
+        }
+
+        @Override
+        public void remove() {
+            if (last == null) {
+                throw new IllegalStateException();
+            }
+            LinkedHashMap.this.remove(last.key);
+            last = null;
+        }
+
+        protected LinkedHashMap.@Nullable Entry<K, V> nextEntry() {
+            LinkedHashMap.Entry<K, V> result = last = e;
+            e = Objects.requireNonNull(result).previous;
+            return result;
+        }
+    }
+
+    private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
+        @Override
+        public Iterator<Map.Entry<K, V>> iterator() {
+            return new LinkedHashIterator<Map.Entry<K, V>>() {
+                @Override
+                public Map.@Nullable Entry<K, V> next() {
+                    return nextEntry();
+                }
+            };
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public boolean contains(Object o) {
+            if (!(o instanceof Map.Entry)) {
+                return false;
+            }
+            Map.Entry<K, V> e = (Map.Entry<K, V>) o;
+            V value = get(e.getKey());
+            return value != null && value.equals(e.getValue());
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public boolean remove(Object o) {
+            if (!(o instanceof Map.Entry)) {
+                return false;
+            }
+            Map.Entry<K, V> e = (Map.Entry<K, V>) o;
+            return LinkedHashMap.this.remove(e.getKey()) != null;
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
+
+        @Override
+        public void clear() {
+            LinkedHashMap.this.clear();
+        }
+    }
+
+    private final class KeySet extends AbstractSet<K> {
+
+        @Override
+        public Iterator<K> iterator() {
+            return new LinkedHashIterator<K>() {
+                @Override
+                public K next() {
+                    return Objects.requireNonNull(nextEntry()).key;
+                }
+            };
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return LinkedHashMap.this.containsKey(o);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return LinkedHashMap.this.remove(o) != null;
+        }
+
+        @Override
+        public void clear() {
+            LinkedHashMap.this.clear();
+        }
+    }
+
+    private final class Values extends AbstractCollection<V> {
+        @Override
+        public Iterator<V> iterator() {
+            return new LinkedHashIterator<V>() {
+                @Override
+                public V next() {
+                    return Objects.requireNonNull(nextEntry()).value;
+                }
+            };
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return containsValue(o);
+        }
+
+        @Override
+        public void clear() {
+            LinkedHashMap.this.clear();
+        }
+    }
 }

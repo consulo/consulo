@@ -20,96 +20,98 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class MultiValuesMap<K, V> {
-  private final Map<K, Collection<V>> myBaseMap;
-  private final boolean myOrdered;
+    private final Map<K, Collection<V>> myBaseMap;
+    private final boolean myOrdered;
 
-  public MultiValuesMap() {
-    this(false);
-  }
-
-  public MultiValuesMap(boolean ordered) {
-    myOrdered = ordered;
-    myBaseMap = ordered ? new LinkedHashMap<>() : new HashMap<>();
-  }
-
-  public void putAll(K key, Collection<V> values) {
-    for (V value : values) {
-      put(key, value);
-    }
-  }
-
-  @SafeVarargs
-  public final void putAll(K key, V... values) {
-    for (V value : values) {
-      put(key, value);
-    }
-  }
-
-  public void put(K key, V value) {
-    if (!myBaseMap.containsKey(key)) {
-      myBaseMap.put(key, myOrdered ? new LinkedHashSet<>() : new HashSet<>());
+    public MultiValuesMap() {
+        this(false);
     }
 
-    myBaseMap.get(key).add(value);
-  }
-
-  public @Nullable Collection<V> get(K key) {
-    return myBaseMap.get(key);
-  }
-
-  public Set<K> keySet() {
-    return myBaseMap.keySet();
-  }
-
-  public Collection<V> values() {
-    Set<V> result = myOrdered ? new LinkedHashSet<>() : new HashSet<>();
-    for (Collection<V> values : myBaseMap.values()) {
-      result.addAll(values);
+    public MultiValuesMap(boolean ordered) {
+        myOrdered = ordered;
+        myBaseMap = ordered ? new LinkedHashMap<>() : new HashMap<>();
     }
 
-    return result;
-  }
-
-  public void remove(K key, V value) {
-    if (!myBaseMap.containsKey(key)) return;
-    Collection<V> values = myBaseMap.get(key);
-    values.remove(value);
-    if (values.isEmpty()) {
-      myBaseMap.remove(key);
-    }
-  }
-
-  public void clear() {
-    myBaseMap.clear();
-  }
-
-  public @Nullable Collection<V> removeAll(K key) {
-    return myBaseMap.remove(key);
-  }
-
-  public Set<Map.Entry<K, Collection<V>>> entrySet() {
-    return myBaseMap.entrySet();
-  }
-
-  public boolean isEmpty() {
-    return myBaseMap.isEmpty();
-  }
-
-  public boolean containsKey(K key) {
-    return myBaseMap.containsKey(key);
-  }
-
-  public Collection<V> collectValues() {
-    Collection<V> result = new HashSet<>();
-    for (Collection<V> v : myBaseMap.values()) {
-      result.addAll(v);
+    public void putAll(K key, Collection<V> values) {
+        for (V value : values) {
+            put(key, value);
+        }
     }
 
-    return result;
-  }
+    @SafeVarargs
+    public final void putAll(K key, V... values) {
+        for (V value : values) {
+            put(key, value);
+        }
+    }
 
-  public @Nullable V getFirst(K key) {
-    Collection<V> values = myBaseMap.get(key);
-    return values == null || values.isEmpty() ? null : values.iterator().next();
-  }
+    public void put(K key, V value) {
+        if (!myBaseMap.containsKey(key)) {
+            myBaseMap.put(key, myOrdered ? new LinkedHashSet<>() : new HashSet<>());
+        }
+
+        myBaseMap.get(key).add(value);
+    }
+
+    public @Nullable Collection<V> get(K key) {
+        return myBaseMap.get(key);
+    }
+
+    public Set<K> keySet() {
+        return myBaseMap.keySet();
+    }
+
+    public Collection<V> values() {
+        Set<V> result = myOrdered ? new LinkedHashSet<>() : new HashSet<>();
+        for (Collection<V> values : myBaseMap.values()) {
+            result.addAll(values);
+        }
+
+        return result;
+    }
+
+    public void remove(K key, V value) {
+        if (!myBaseMap.containsKey(key)) {
+            return;
+        }
+        Collection<V> values = myBaseMap.get(key);
+        values.remove(value);
+        if (values.isEmpty()) {
+            myBaseMap.remove(key);
+        }
+    }
+
+    public void clear() {
+        myBaseMap.clear();
+    }
+
+    public @Nullable Collection<V> removeAll(K key) {
+        return myBaseMap.remove(key);
+    }
+
+    public Set<Map.Entry<K, Collection<V>>> entrySet() {
+        return myBaseMap.entrySet();
+    }
+
+    public boolean isEmpty() {
+        return myBaseMap.isEmpty();
+    }
+
+    public boolean containsKey(K key) {
+        return myBaseMap.containsKey(key);
+    }
+
+    public Collection<V> collectValues() {
+        Collection<V> result = new HashSet<>();
+        for (Collection<V> v : myBaseMap.values()) {
+            result.addAll(v);
+        }
+
+        return result;
+    }
+
+    public @Nullable V getFirst(K key) {
+        Collection<V> values = myBaseMap.get(key);
+        return values == null || values.isEmpty() ? null : values.iterator().next();
+    }
 }

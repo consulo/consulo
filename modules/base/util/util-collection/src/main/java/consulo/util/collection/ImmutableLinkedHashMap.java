@@ -41,7 +41,7 @@ public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends Abstr
      */
     @SuppressWarnings("unchecked")
     public static <K, V> ImmutableLinkedHashMap<K, V> empty() {
-        return (ImmutableLinkedHashMap<K, V>)EMPTY;
+        return (ImmutableLinkedHashMap<K, V>) EMPTY;
     }
 
     /**
@@ -83,7 +83,7 @@ public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends Abstr
     ) {
         if (map instanceof ImmutableLinkedHashMap ilhm && ilhm.getStrategy() == strategy) {
             // Same strategy SimpleImmutableLinkedHashMap. Reusing it.
-            return (ImmutableLinkedHashMap<K, V>)ilhm;
+            return (ImmutableLinkedHashMap<K, V>) ilhm;
         }
         else if (map.isEmpty()) {
             // Empty map optimization.
@@ -209,7 +209,7 @@ public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends Abstr
     @Override
     @SuppressWarnings("unchecked")
     public boolean containsKey(Object key) {
-        return myTable.getPos((K)key) >= 0;
+        return myTable.getPos((K) key) >= 0;
     }
 
     @Override
@@ -222,8 +222,8 @@ public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends Abstr
     @SuppressWarnings("unchecked")
     public @Nullable V getOrDefault(Object key, @Nullable V defaultValue) {
         ReusableLinkedHashtable<K, V> table = myTable;
-        int keyPos = table.getPos((K)key);
-        return keyPos < 0 ? defaultValue : (V)table.getValue(keyPos);
+        int keyPos = table.getPos((K) key);
+        return keyPos < 0 ? defaultValue : (V) table.getValue(keyPos);
     }
 
     @Override

@@ -153,7 +153,7 @@ public class ContainerUtil {
 
     public static @Nullable <T, U extends T> U findInstance(Iterator<? extends T> iterator, Class<? extends U> aClass) {
         //noinspection unchecked
-        return (U)find(iterator, FilteringIterator.instanceOf(aClass));
+        return (U) find(iterator, FilteringIterator.instanceOf(aClass));
     }
 
     public static <T, L extends List<T>> @Nullable T getLastItem(@Nullable L list, @Nullable T def) {
@@ -176,7 +176,7 @@ public class ContainerUtil {
     }
 
     public static <T> List<T> sorted(Collection<? extends T> list, Comparator<? super T> comparator) {
-        return sorted((Iterable<? extends T>)list, comparator);
+        return sorted((Iterable<? extends T>) list, comparator);
     }
 
     public static <T> List<T> sorted(Iterable<? extends T> list, Comparator<? super T> comparator) {
@@ -283,7 +283,7 @@ public class ContainerUtil {
         Function<T, V> mapper
     ) {
         List<V> list = map2List(collection, mapper);
-        @SuppressWarnings("unchecked") V[] array = (V[])Array.newInstance(aClass, list.size());
+        @SuppressWarnings("unchecked") V[] array = (V[]) Array.newInstance(aClass, list.size());
         return list.toArray(array);
     }
 
@@ -482,7 +482,7 @@ public class ContainerUtil {
         List<V> result = new SmartList<>();
         for (T t : collection) {
             if (instanceOf.isInstance(t)) {
-                @SuppressWarnings("unchecked") V v = (V)t;
+                @SuppressWarnings("unchecked") V v = (V) t;
                 result.add(v);
             }
         }
@@ -742,7 +742,7 @@ public class ContainerUtil {
     @Deprecated
     public static <T> ArrayList<T> newArrayList(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
-            @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
+            @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>) elements;
             return new ArrayList<>(collection);
         }
         return copy(new ArrayList<>(), elements);
@@ -962,11 +962,11 @@ public class ContainerUtil {
         }
         if (list1.isEmpty()) {
             //noinspection unchecked
-            return (List<T>)list2;
+            return (List<T>) list2;
         }
         if (list2.isEmpty()) {
             //noinspection unchecked
-            return (List<T>)list1;
+            return (List<T>) list1;
         }
 
         int size1 = list1.size();
@@ -1255,7 +1255,7 @@ public class ContainerUtil {
 
         public NavigableSet<K> navigableKeySet() {
             //noinspection unchecked
-            return ((TreeMap)myMap).navigableKeySet();
+            return ((TreeMap) myMap).navigableKeySet();
         }
     }
 
@@ -1361,12 +1361,12 @@ public class ContainerUtil {
 
     public static <T> List<T> filterIsInstance(Collection<?> collection, Class<? extends T> aClass) {
         //noinspection unchecked
-        return filter((Collection<T>)collection, Predicates.instanceOf(aClass));
+        return filter((Collection<T>) collection, Predicates.instanceOf(aClass));
     }
 
     public static <T> List<T> filterIsInstance(Object[] collection, Class<? extends T> aClass) {
         //noinspection unchecked
-        return (List<T>)filter(collection, Predicates.instanceOf(aClass));
+        return (List<T>) filter(collection, Predicates.instanceOf(aClass));
     }
 
     public static <T> void removeDuplicates(Collection<T> collection) {

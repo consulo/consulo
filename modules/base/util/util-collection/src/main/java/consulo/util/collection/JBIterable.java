@@ -490,8 +490,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
         static final class FlattenIt<E, T> extends JBIterator<T> {
             final Iterator<E> original;
             final Function<? super E, ? extends Iterable<? extends T>> function;
-            @Nullable
-            Iterator<? extends T> cur = null;
+            @Nullable Iterator<? extends T> cur = null;
 
             public FlattenIt(Iterator<E> iterator, Function<? super E, ? extends Iterable<? extends T>> fun) {
                 original = iterator;
@@ -525,8 +524,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
      */
     public final JBIterable<E> unique(final Function<? super E, ?> identity) {
         return filter(new SCond<>() {
-            @Nullable
-            Set<Object> visited = null;
+            @Nullable Set<Object> visited = null;
 
             @Override
             public boolean test(E e) {
@@ -733,8 +731,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
         return intercept(iterator -> {
             final Iterator<E> orig = iterator;
             return new JBIterator<JBIterable<E>>() {
-                @Nullable
-                JBIterator<E> it;
+                @Nullable JBIterator<E> it;
 
                 @Override
                 protected @Nullable JBIterable<E> nextImpl() {
@@ -766,11 +763,9 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
             final Iterator<E> orig = iterator;
             final Predicate<? super E> condition = Stateful.copy(separator);
             return new JBIterator<JBIterable<E>>() {
-                @Nullable
-                JBIterator<E> it = null;
+                @Nullable JBIterator<E> it = null;
 
-                @Nullable
-                E stored = null;
+                @Nullable E stored = null;
 
                 int st; // encode transitions: -2:sep->sep, -1:val->sep, 1:sep->val, 2:val->val
 

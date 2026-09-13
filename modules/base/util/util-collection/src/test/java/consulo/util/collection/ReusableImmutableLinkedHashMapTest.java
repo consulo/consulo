@@ -275,7 +275,7 @@ public class ReusableImmutableLinkedHashMapTest {
     public void testAddCollisions() {
         ReusableImmutableLinkedHashMap<Long, String> map = ReusableImmutableLinkedHashMap.empty();
         for (int i = 0; i < 50; i++) {
-            long key = ((long)i << 32) | i ^ 135;
+            long key = ((long) i << 32) | i ^ 135;
             map = map.with(key, String.valueOf(key));
             assertThat(map)
                 .hasSize(i + 1)

@@ -645,7 +645,7 @@ public class StringUtilTest {
     @SuppressWarnings("NullArgumentToVariableArgMethod")
     @Test
     void testJoinArray1() {
-        assertThat(StringUtil.join(null)).isSameAs("");
+        assertThat(StringUtil.join((String[]) null)).isSameAs("");
         assertThat(StringUtil.join(new String[0])).isSameAs("");
         assertThat(StringUtil.join("foo")).isSameAs("foo");
         assertThat(StringUtil.join("foo", "bar")).isEqualTo("foobar");

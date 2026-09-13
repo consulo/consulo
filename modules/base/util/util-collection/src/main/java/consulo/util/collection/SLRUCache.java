@@ -20,31 +20,31 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
-  protected SLRUCache(int protectedQueueSize, int probationalQueueSize) {
-    super(protectedQueueSize, probationalQueueSize);
-  }
-
-  protected SLRUCache(int protectedQueueSize, int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
-    super(protectedQueueSize, probationalQueueSize, hashingStrategy);
-  }
-
-  public abstract V createValue(K key);
-
-  @Override
-  public V get(K key) {
-    V value = super.get(key);
-    if (value != null) {
-      return value;
+public abstract class SLRUCache<K, V> extends SLRUMap<K, V> {
+    protected SLRUCache(int protectedQueueSize, int probationalQueueSize) {
+        super(protectedQueueSize, probationalQueueSize);
     }
 
-    value = createValue(key);
-    put(key, value);
+    protected SLRUCache(int protectedQueueSize, int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
+        super(protectedQueueSize, probationalQueueSize, hashingStrategy);
+    }
 
-    return value;
-  }
+    public abstract V createValue(K key);
 
-  public @Nullable V getIfCached(K key) {
-    return super.get(key);
-  }
+    @Override
+    public V get(K key) {
+        V value = super.get(key);
+        if (value != null) {
+            return value;
+        }
+
+        value = createValue(key);
+        put(key, value);
+
+        return value;
+    }
+
+    public @Nullable V getIfCached(K key) {
+        return super.get(key);
+    }
 }
