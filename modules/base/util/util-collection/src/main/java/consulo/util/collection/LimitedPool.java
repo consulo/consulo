@@ -20,49 +20,54 @@ package consulo.util.collection;
  * @author max
  */
 public class LimitedPool<T> {
-  private final int capacity;
-  private final ObjectFactory<T> factory;
-  private Object[] storage;
-  private int index = 0;
+    private final int capacity;
+    private final ObjectFactory<T> factory;
+    private Object[] storage;
+    private int index = 0;
 
-  public LimitedPool(int capacity, ObjectFactory<T> factory) {
-    this.capacity = capacity;
-    this.factory = factory;
-    storage = new Object[10];
-  }
-
-  public interface ObjectFactory<T> {
-    T create();
-    void cleanup(T t);
-  }
-
-  @SuppressWarnings("NullAway")
-  public T alloc() {
-    if (index == 0) return factory.create();
-    int i = --index;
-    //noinspection unchecked
-    T result = (T)storage[i];
-    // NullAway problem: technical usage of null for filling elements not used for user data storage.
-    // Static validator doesn't understand this. So we're suppressing NullAway validation here.
-    storage[i] = null;
-    return result;
-  }
-
-  public void recycle(T t) {
-    factory.cleanup(t);
-
-    if (index >= capacity) return;
-
-    ensureCapacity();
-    storage[index++] = t;
-  }
-
-  private void ensureCapacity() {
-    if (storage.length <= index) {
-      int newCapacity = Math.min(capacity, storage.length * 3 / 2);
-      Object[] newStorage = new Object[newCapacity];
-      System.arraycopy(storage, 0, newStorage, 0, storage.length);
-      storage = newStorage;
+    public LimitedPool(int capacity, ObjectFactory<T> factory) {
+        this.capacity = capacity;
+        this.factory = factory;
+        storage = new Object[10];
     }
-  }
+
+    public interface ObjectFactory<T> {
+        T create();
+
+        void cleanup(T t);
+    }
+
+    @SuppressWarnings("NullAway")
+    public T alloc() {
+        if (index == 0) {
+            return factory.create();
+        }
+        int i = --index;
+        //noinspection unchecked
+        T result = (T) storage[i];
+        // NullAway problem: technical usage of null for filling elements not used for user data storage.
+        // Static validator doesn't understand this. So we're suppressing NullAway validation here.
+        storage[i] = null;
+        return result;
+    }
+
+    public void recycle(T t) {
+        factory.cleanup(t);
+
+        if (index >= capacity) {
+            return;
+        }
+
+        ensureCapacity();
+        storage[index++] = t;
+    }
+
+    private void ensureCapacity() {
+        if (storage.length <= index) {
+            int newCapacity = Math.min(capacity, storage.length * 3 / 2);
+            Object[] newStorage = new Object[newCapacity];
+            System.arraycopy(storage, 0, newStorage, 0, storage.length);
+            storage = newStorage;
+        }
+    }
 }

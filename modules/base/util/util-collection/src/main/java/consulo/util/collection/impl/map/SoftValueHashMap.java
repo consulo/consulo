@@ -21,26 +21,26 @@ import consulo.util.lang.ref.SoftReference;
 import java.lang.ref.ReferenceQueue;
 
 public final class SoftValueHashMap<K, V> extends RefValueHashMap<K, V> {
-  private static class MySoftReference<K, T> extends SoftReference<T> implements MyReference<K, T> {
-    private final K key;
+    private static class MySoftReference<K, T> extends SoftReference<T> implements MyReference<K, T> {
+        private final K key;
 
-    MySoftReference(K key, T referent, ReferenceQueue<? super T> q) {
-      super(referent, q);
-      this.key = key;
+        MySoftReference(K key, T referent, ReferenceQueue<? super T> q) {
+            super(referent, q);
+            this.key = key;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+    }
+
+    public SoftValueHashMap(HashingStrategy<K> strategy) {
+        super(strategy);
     }
 
     @Override
-    public K getKey() {
-      return key;
+    protected MyReference<K, V> createReference(K key, V value, ReferenceQueue<? super V> queue) {
+        return new MySoftReference<>(key, value, queue);
     }
-  }
-
-  public SoftValueHashMap(HashingStrategy<K> strategy) {
-    super(strategy);
-  }
-
-  @Override
-  protected MyReference<K, V> createReference(K key, V value, ReferenceQueue<? super V> queue) {
-    return new MySoftReference<>(key, value, queue);
-  }
 }

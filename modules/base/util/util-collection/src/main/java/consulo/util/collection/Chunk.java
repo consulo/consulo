@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -23,53 +25,49 @@ import java.util.Set;
  * @since 2004-09-27
  */
 public class Chunk<Node> {
-  private final Set<Node> myNodes;
+    private final Set<Node> myNodes;
 
-  public Chunk(Node node) {
-    this(new LinkedHashSet<Node>());
-    myNodes.add(node);
-  }
-  
-  public Chunk(Set<Node> nodes) {
-    myNodes = nodes;
-  }
-
-  public Set<Node> getNodes() {
-    return myNodes;
-  }
-
-  public boolean containsNode(Node node) {
-    return myNodes.contains(node);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Chunk)) return false;
-
-    Chunk chunk = (Chunk)o;
-
-    if (!myNodes.equals(chunk.myNodes)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myNodes.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder buf = new StringBuilder();
-    buf.append("[");
-    for (Node node : myNodes) {
-      if (buf.length() > 1) {
-        buf.append(", ");
-      }
-      buf.append(node.toString());
+    public Chunk(Node node) {
+        this(new LinkedHashSet<>());
+        myNodes.add(node);
     }
-    buf.append("]");
-    return buf.toString();
-  }
+
+    public Chunk(Set<Node> nodes) {
+        myNodes = nodes;
+    }
+
+    public Set<Node> getNodes() {
+        return myNodes;
+    }
+
+    public boolean containsNode(Node node) {
+        return myNodes.contains(node);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof Chunk that && myNodes.equals(that.myNodes);
+    }
+
+    @Override
+    public int hashCode() {
+        return myNodes.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        buf.append("[");
+        for (Node node : myNodes) {
+            if (buf.length() > 1) {
+                buf.append(", ");
+            }
+            buf.append(node.toString());
+        }
+        buf.append("]");
+        return buf.toString();
+    }
 }

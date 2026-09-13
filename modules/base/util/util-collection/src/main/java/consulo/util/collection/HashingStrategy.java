@@ -60,12 +60,12 @@ public interface HashingStrategy<T> {
 
     @SuppressWarnings("unchecked")
     static <T> HashingStrategy<T> canonical() {
-        return (HashingStrategy<T>)CanonicalHashingStrategy.INSTANCE;
+        return (HashingStrategy<T>) CanonicalHashingStrategy.INSTANCE;
     }
 
     @SuppressWarnings("unchecked")
     static <T> HashingStrategy<T> identity() {
-        return (HashingStrategy<T>)IdentityHashingStrategy.INSTANCE;
+        return (HashingStrategy<T>) IdentityHashingStrategy.INSTANCE;
     }
 
     static HashingStrategy<String> caseInsensitive() {

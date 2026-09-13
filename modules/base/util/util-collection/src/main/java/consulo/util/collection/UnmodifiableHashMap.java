@@ -40,7 +40,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
      */
     @SuppressWarnings("unchecked")
     public static <K, V> UnmodifiableHashMap<K, V> empty() {
-        return (UnmodifiableHashMap<K, V>)EMPTY;
+        return (UnmodifiableHashMap<K, V>) EMPTY;
     }
 
     /**
@@ -87,7 +87,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         Map<? extends K, ? extends V> map
     ) {
         if (map instanceof UnmodifiableHashMap uhm && uhm.strategy == strategy) {
-            return (UnmodifiableHashMap<K, V>)uhm;
+            return (UnmodifiableHashMap<K, V>) uhm;
         }
         else if (map.isEmpty()) {
             return empty(strategy);
@@ -174,7 +174,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
                     continue;
                 }
                 @SuppressWarnings("unchecked")
-                K k = (K)data[i];
+                K k = (K) data[i];
                 if (k == null) {
                     continue;
                 }
@@ -251,7 +251,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         Object[] newData = new Object[(size + 1) << 2];
         for (int i = 0; i < data.length; i += 2) {
             @SuppressWarnings("unchecked")
-            K k = (K)data[i];
+            K k = (K) data[i];
             if (k == null) {
                 continue;
             }
@@ -295,7 +295,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         Object[] newData = new Object[newSize << 2];
         for (int i = 0; i < data.length; i += 2) {
             @SuppressWarnings("unchecked")
-            K k = (K)data[i];
+            K k = (K) data[i];
             if (k == null) {
                 continue;
             }
@@ -353,7 +353,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
 
     @Override
     public boolean containsKey(Object key) {
-        @SuppressWarnings("unchecked") K typedKey = (K)key;
+        @SuppressWarnings("unchecked") K typedKey = (K) key;
         if (data.length > 0 && tablePos(strategy, data, typedKey) >= 0) {
             return true;
         }
@@ -399,7 +399,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
     @Contract("_,!null -> !null")
     @Override
     public @Nullable V getOrDefault(Object key, @Nullable V defaultValue) {
-        @SuppressWarnings("unchecked") K typedKey = (K)key;
+        @SuppressWarnings("unchecked") K typedKey = (K) key;
         if (k1 != null) {
             if (strategy.equals(k1, typedKey)) {
                 return v1;
@@ -418,7 +418,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         }
         int pos = tablePos(strategy, data, typedKey);
         @SuppressWarnings("unchecked")
-        V v = pos < 0 ? defaultValue : (V)data[pos + 1];
+        V v = pos < 0 ? defaultValue : (V) data[pos + 1];
         return v;
     }
 
@@ -426,7 +426,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         int pos = Math.floorMod(strategy.hashCode(key), data.length >>> 1) << 1;
         while (true) {
             @SuppressWarnings("unchecked")
-            K candidate = (K)data[pos];
+            K candidate = (K) data[pos];
             if (candidate == null) {
                 return ~pos;
             }
@@ -452,7 +452,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         if (!(obj instanceof Map)) {
             return false;
         }
-        Map<?, ?> map = (Map<?, ?>)obj;
+        Map<?, ?> map = (Map<?, ?>) obj;
         if (size() != map.size()) {
             return false;
         }
@@ -470,7 +470,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
             }
         }
         for (int i = 0; i < data.length; i += 2) {
-            @SuppressWarnings("unchecked") K key = (K)data[i];
+            @SuppressWarnings("unchecked") K key = (K) data[i];
             if (key != null && !Objects.equals(map.get(key), data[i + 1])) {
                 return false;
             }
@@ -493,7 +493,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
         for (int i = 0; i < data.length; i += 2) {
             Object key = data[i];
             if (key != null) {
-                action.accept((K)key, (V)data[i + 1]);
+                action.accept((K) key, (V) data[i + 1]);
             }
         }
     }
@@ -589,7 +589,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
                     for (int i = 0; i < data.length; i += 2) {
                         Object key = data[i];
                         if (key != null) {
-                            @SuppressWarnings("unchecked") K k = (K)data[i];
+                            @SuppressWarnings("unchecked") K k = (K) data[i];
                             action.accept(k);
                         }
                     }
@@ -624,7 +624,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
                         @Override
                         @SuppressWarnings("unchecked")
                         @Nullable V tableElement(int offset) {
-                            return (V)data[offset + 1];
+                            return (V) data[offset + 1];
                         }
                     };
                 }
@@ -644,7 +644,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
                         Object key = data[i];
                         if (key != null) {
                             @SuppressWarnings("unchecked")
-                            V v = (V)data[i + 1];
+                            V v = (V) data[i + 1];
                             action.accept(v);
                         }
                     }
@@ -682,7 +682,7 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
                     @Override
                     @SuppressWarnings("unchecked")
                     Entry<K, V> tableElement(int offset) {
-                        return new AbstractMap.SimpleImmutableEntry<>((K)data[offset], (V)data[offset + 1]);
+                        return new AbstractMap.SimpleImmutableEntry<>((K) data[offset], (V) data[offset + 1]);
                     }
                 };
             }

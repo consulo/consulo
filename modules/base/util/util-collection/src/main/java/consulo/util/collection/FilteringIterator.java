@@ -89,7 +89,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        E result = (E)myCurrent;
+        E result = (E) myCurrent;
         myNextObtained = false;
         return result;
     }
@@ -113,7 +113,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return (E)myCurrent;
+        return (E) myCurrent;
     }
 
     public static <T> Iterator<T> skipNulls(Iterator<T> iterator) {
@@ -122,7 +122,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
 
     @SuppressWarnings("unchecked")
     public static <Dom, T extends Dom> Iterator<T> create(Iterator<Dom> iterator, Predicate<? super Dom> condition) {
-        return condition == Predicates.alwaysTrue() ? (Iterator<T>)iterator : new FilteringIterator<>(iterator, condition);
+        return condition == Predicates.alwaysTrue() ? (Iterator<T>) iterator : new FilteringIterator<>(iterator, condition);
     }
 
     public static <T> Predicate<T> alwaysTrueCondition(Class<T> aClass) {
@@ -135,7 +135,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
 
     @SuppressWarnings("unchecked")
     public static <T> Iterator<T> createInstanceOf(Iterator<?> iterator, Class<T> aClass) {
-        return create((Iterator<T>)iterator, instanceOf(aClass));
+        return create((Iterator<T>) iterator, instanceOf(aClass));
     }
 
     public static class InstanceOf<T> implements Predicate<Object> {

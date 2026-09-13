@@ -33,204 +33,216 @@ import java.util.concurrent.locks.Lock;
  * @author cdr
  */
 public class ConcurrencyUtil {
-  /**
-   * Invokes and waits all tasks using threadPool, avoiding thread starvation on the way
-   * (see <a href="http://gafter.blogspot.com/2006/11/thread-pool-puzzler.html">"A Thread Pool Puzzler"</a>).
-   */
-  public static <T> @Nullable List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, @Nullable ExecutorService executorService)
-    throws Throwable {
-    if (executorService == null) {
-      for (Callable<T> task : tasks) {
-        task.call();
-      }
-      return null;
-    }
+    /**
+     * Invokes and waits all tasks using threadPool, avoiding thread starvation on the way
+     * (see <a href="http://gafter.blogspot.com/2006/11/thread-pool-puzzler.html">"A Thread Pool Puzzler"</a>).
+     */
+    public static <T> @Nullable List<Future<T>> invokeAll(
+        Collection<? extends Callable<T>> tasks,
+        @Nullable ExecutorService executorService
+    ) throws Throwable {
+        if (executorService == null) {
+            for (Callable<T> task : tasks) {
+                task.call();
+            }
+            return null;
+        }
 
-    List<Future<T>> futures = new ArrayList<>(tasks.size());
-    boolean done = false;
-    try {
-      for (Callable<T> t : tasks) {
-        Future<T> future = executorService.submit(t);
-        futures.add(future);
-      }
-      // force not started futures to execute using the current thread
-      for (Future f : futures) {
-        ((Runnable)f).run();
-      }
-      for (Future f : futures) {
+        List<Future<T>> futures = new ArrayList<>(tasks.size());
+        boolean done = false;
         try {
-          f.get();
+            for (Callable<T> t : tasks) {
+                Future<T> future = executorService.submit(t);
+                futures.add(future);
+            }
+            // force not started futures to execute using the current thread
+            for (Future f : futures) {
+                ((Runnable) f).run();
+            }
+            for (Future f : futures) {
+                try {
+                    f.get();
+                }
+                catch (CancellationException ignore) {
+                }
+                catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    if (cause != null) {
+                        throw cause;
+                    }
+                }
+            }
+            done = true;
         }
-        catch (CancellationException ignore) {
+        finally {
+            if (!done) {
+                for (Future f : futures) {
+                    f.cancel(false);
+                }
+            }
         }
-        catch (ExecutionException e) {
-          Throwable cause = e.getCause();
-          if (cause != null) {
-            throw cause;
-          }
+        return futures;
+    }
+
+    /**
+     * @return defaultValue if the reference contains null (in that case defaultValue is placed there), or reference value otherwise.
+     */
+    public static <T> T cacheOrGet(AtomicReference<T> ref, T defaultValue) {
+        return ref.updateAndGet(prev -> prev == null ? defaultValue : prev);
+    }
+
+    public static ThreadPoolExecutor newSingleThreadExecutor(String name) {
+        return newSingleThreadExecutor(name, Thread.NORM_PRIORITY);
+    }
+
+    public static ThreadPoolExecutor newSingleThreadExecutor(String name, int priority) {
+        return new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(),
+            newNamedThreadFactory(name, true, priority)
+        );
+    }
+
+    public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(String name) {
+        return newSingleScheduledThreadExecutor(name, Thread.NORM_PRIORITY);
+    }
+
+    public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(String name, int priority) {
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, newNamedThreadFactory(name, true, priority));
+        executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
+        executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        return executor;
+    }
+
+    /**
+     * Service which executes tasks synchronously immediately after they submitted
+     */
+    public static ExecutorService newSameThreadExecutorService() {
+        return new SameThreadExecutorService();
+    }
+
+    public static ThreadFactory newNamedThreadFactory(String name, boolean isDaemon, int priority) {
+        return r -> {
+            Thread thread = new Thread(r, name);
+            thread.setDaemon(isDaemon);
+            thread.setPriority(priority);
+            return thread;
+        };
+    }
+
+    public static ThreadFactory newNamedThreadFactory(String name) {
+        return r -> new Thread(r, name);
+    }
+
+    ///**
+    // * Awaits for all tasks in the {@code executor} to finish for the specified {@code timeout}
+    // */
+    //public static void awaitQuiescence(ThreadPoolExecutor executor, long timeout, TimeUnit unit) {
+    //    executor.setKeepAliveTime(1, TimeUnit.NANOSECONDS); // no need for zombies in tests
+    //    executor.setCorePoolSize(0); // interrupt idle workers
+    //    ReentrantLock mainLock = ReflectionUtil.getField(executor.getClass(), executor, ReentrantLock.class, "mainLock");
+    //    Set workers;
+    //    mainLock.lock();
+    //    try {
+    //        Set workersField = ReflectionUtil.getField(executor.getClass(), executor, HashSet.class, "workers");
+    //        workers = new HashSet(workersField); // to be able to iterate thread-safely outside the lock
+    //    }
+    //    finally {
+    //        mainLock.unlock();
+    //    }
+    //    for (Object worker : workers) {
+    //        Thread thread = ReflectionUtil.getField(worker.getClass(), worker, Thread.class, "thread");
+    //        try {
+    //            thread.join(unit.toMillis(timeout));
+    //        }
+    //        catch (InterruptedException e) {
+    //            String trace = "Thread leaked: " + thread + "; " + thread.getState() +
+    //                " (" + thread.isAlive() + ")\n--- its stacktrace:\n";
+    //            for (final StackTraceElement stackTraceElement : thread.getStackTrace()) {
+    //                trace += " at " + stackTraceElement + "\n";
+    //            }
+    //            trace += "---\n";
+    //            System.err.println(
+    //                "Executor " + executor + " is still active after " + unit.toSeconds(timeout) + " seconds://///\n" +
+    //                "Thread " + thread + " dump:\n" + trace +
+    //                "all thread dump:\n" + ThreadDumper.dumpThreadsToString() + "\n/////"
+    //            );
+    //            break;
+    //        }
+    //    }
+    //}
+
+    public static void joinAll(Collection<? extends Thread> threads) throws RuntimeException {
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            }
+            catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-      }
-      done = true;
     }
-    finally {
-      if (!done) {
-        for (Future f : futures) {
-          f.cancel(false);
+
+    public static void joinAll(Thread... threads) throws RuntimeException {
+        joinAll(Arrays.asList(threads));
+    }
+
+    public static void getAll(Collection<? extends Future<?>> futures) throws ExecutionException, InterruptedException {
+        for (Future<?> future : futures) {
+            future.get();
         }
-      }
     }
-    return futures;
-  }
 
-  /**
-   * @return defaultValue if the reference contains null (in that case defaultValue is placed there), or reference value otherwise.
-   */
-  public static <T> T cacheOrGet(AtomicReference<T> ref, T defaultValue) {
-    return ref.updateAndGet(prev -> prev == null ? defaultValue : prev);
-  }
-
-  public static ThreadPoolExecutor newSingleThreadExecutor(String name) {
-    return newSingleThreadExecutor(name, Thread.NORM_PRIORITY);
-  }
-
-  public static ThreadPoolExecutor newSingleThreadExecutor(String name, int priority) {
-    return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), newNamedThreadFactory(name, true, priority));
-  }
-
-  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(String name) {
-    return newSingleScheduledThreadExecutor(name, Thread.NORM_PRIORITY);
-  }
-
-  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(String name, int priority) {
-    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, newNamedThreadFactory(name, true, priority));
-    executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
-    executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-    return executor;
-  }
-
-  /**
-   * Service which executes tasks synchronously immediately after they submitted
-   */
-  public static ExecutorService newSameThreadExecutorService() {
-    return new SameThreadExecutorService();
-  }
-
-  public static ThreadFactory newNamedThreadFactory(String name, boolean isDaemon, int priority) {
-    return r -> {
-      Thread thread = new Thread(r, name);
-      thread.setDaemon(isDaemon);
-      thread.setPriority(priority);
-      return thread;
-    };
-  }
-
-  public static ThreadFactory newNamedThreadFactory(String name) {
-    return r -> new Thread(r, name);
-  }
-
-  ///**
-  // * Awaits for all tasks in the {@code executor} to finish for the specified {@code timeout}
-  // */
-  //public static void awaitQuiescence(ThreadPoolExecutor executor, long timeout, TimeUnit unit) {
-  //  executor.setKeepAliveTime(1, TimeUnit.NANOSECONDS); // no need for zombies in tests
-  //  executor.setCorePoolSize(0); // interrupt idle workers
-  //  ReentrantLock mainLock = ReflectionUtil.getField(executor.getClass(), executor, ReentrantLock.class, "mainLock");
-  //  Set workers;
-  //  mainLock.lock();
-  //  try {
-  //    Set workersField = ReflectionUtil.getField(executor.getClass(), executor, HashSet.class, "workers");
-  //    workers = new HashSet(workersField); // to be able to iterate thread-safely outside the lock
-  //  }
-  //  finally {
-  //    mainLock.unlock();
-  //  }
-  //  for (Object worker : workers) {
-  //    Thread thread = ReflectionUtil.getField(worker.getClass(), worker, Thread.class, "thread");
-  //    try {
-  //      thread.join(unit.toMillis(timeout));
-  //    }
-  //    catch (InterruptedException e) {
-  //      String trace = "Thread leaked: " + thread + "; " + thread.getState() + " (" + thread.isAlive() + ")\n--- its stacktrace:\n";
-  //      for (final StackTraceElement stackTraceElement : thread.getStackTrace()) {
-  //        trace += " at " + stackTraceElement + "\n";
-  //      }
-  //      trace += "---\n";
-  //      System.err.println("Executor " + executor + " is still active after " + unit.toSeconds(timeout) + " seconds://///\n" +
-  //                         "Thread " + thread + " dump:\n" + trace +
-  //                         "all thread dump:\n" + ThreadDumper.dumpThreadsToString() + "\n/////");
-  //      break;
-  //    }
-  //  }
-  //}
-
-  public static void joinAll(Collection<? extends Thread> threads) throws RuntimeException {
-    for (Thread thread : threads) {
-      try {
-        thread.join();
-      }
-      catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
+    public static Runnable underThreadNameRunnable(String name, Runnable runnable) {
+        return () -> runUnderThreadName(name, runnable);
     }
-  }
 
-  public static void joinAll(Thread... threads) throws RuntimeException {
-    joinAll(Arrays.asList(threads));
-  }
+    public static void runUnderThreadName(String name, Runnable runnable) {
+        Thread currentThread = Thread.currentThread();
+        String oldThreadName = currentThread.getName();
+        if (name.equals(oldThreadName)) {
+            runnable.run();
+        }
+        else {
+            currentThread.setName(name);
+            try {
+                runnable.run();
+            }
+            finally {
+                currentThread.setName(oldThreadName);
+            }
+        }
+    }
 
-  public static void getAll(Collection<? extends Future<?>> futures) throws ExecutionException, InterruptedException {
-    for (Future<?> future : futures) {
-      future.get();
+    public static Runnable once(Runnable delegate) {
+        AtomicBoolean done = new AtomicBoolean(false);
+        return () -> {
+            if (done.compareAndSet(false, true)) {
+                delegate.run();
+            }
+        };
     }
-  }
 
-  public static Runnable underThreadNameRunnable(String name, Runnable runnable) {
-    return () -> runUnderThreadName(name, runnable);
-  }
+    public static <T, E extends Throwable> @Nullable T withLock(Lock lock, ThrowableSupplier<T, E> runnable) throws E {
+        lock.lock();
+        try {
+            return runnable.get();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
 
-  public static void runUnderThreadName(String name, Runnable runnable) {
-    Thread currentThread = Thread.currentThread();
-    String oldThreadName = currentThread.getName();
-    if (name.equals(oldThreadName)) {
-      runnable.run();
+    public static <E extends Throwable> void withLock(Lock lock, ThrowableRunnable<E> runnable) throws E {
+        lock.lock();
+        try {
+            runnable.run();
+        }
+        finally {
+            lock.unlock();
+        }
     }
-    else {
-      currentThread.setName(name);
-      try {
-        runnable.run();
-      }
-      finally {
-        currentThread.setName(oldThreadName);
-      }
-    }
-  }
-
-  public static Runnable once(Runnable delegate) {
-    AtomicBoolean done = new AtomicBoolean(false);
-    return () -> {
-      if (done.compareAndSet(false, true)) {
-        delegate.run();
-      }
-    };
-  }
-
-  public static <T, E extends Throwable> @Nullable T withLock(Lock lock, ThrowableSupplier<T, E> runnable) throws E {
-    lock.lock();
-    try {
-      return runnable.get();
-    }
-    finally {
-      lock.unlock();
-    }
-  }
-
-  public static <E extends Throwable> void withLock(Lock lock, ThrowableRunnable<E> runnable) throws E {
-    lock.lock();
-    try {
-      runnable.run();
-    }
-    finally {
-      lock.unlock();
-    }
-  }
 }

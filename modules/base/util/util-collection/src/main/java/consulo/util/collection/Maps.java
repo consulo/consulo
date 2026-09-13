@@ -73,7 +73,7 @@ public final class Maps {
      * or corresponding value if entry already exists.
      */
     public static <K, V> V cacheOrGet(ConcurrentMap<K, V> map, K key, V defaultValue) {
-        return cacheOrGet((Map<K, V>)map, key, defaultValue);
+        return cacheOrGet((Map<K, V>) map, key, defaultValue);
     }
 
     public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map, HashingStrategy<K> hashingStrategy) {

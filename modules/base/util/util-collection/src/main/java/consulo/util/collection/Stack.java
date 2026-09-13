@@ -26,65 +26,70 @@ import java.util.*;
  * @author max
  */
 public class Stack<T> extends ArrayList<T> {
-  public Stack() { }
-
-  public Stack(int initialCapacity) {
-    super(initialCapacity);
-  }
-
-  public Stack(Collection<T> init) {
-    super(init);
-  }
-
-  public Stack(T... items) {
-    for (T item : items) {
-      push(item);
+    public Stack() {
     }
-  }
 
-  public void push(T t) {
-    add(t);
-  }
+    public Stack(int initialCapacity) {
+        super(initialCapacity);
+    }
 
-  public T peek() {
-    int size = size();
-    if (size == 0) throw new EmptyStackException();
-    return get(size - 1);
-  }
+    public Stack(Collection<T> init) {
+        super(init);
+    }
 
-  public T pop() {
-    int size = size();
-    if (size == 0) throw new EmptyStackException();
-    return remove(size - 1);
-  }
-
-  public @Nullable T tryPop() {
-    return isEmpty() ? null : pop();
-  }
-
-  public boolean empty() {
-    return isEmpty();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o instanceof RandomAccess && o instanceof List) {
-      List other = (List)o;
-      if (size() != other.size()) {
-        return false;
-      }
-
-      for (int i = 0; i < other.size(); i++) {
-        Object o1 = other.get(i);
-        Object o2 = get(i);
-        if (!(o1 == null ? o2 == null : o1.equals(o2))) {
-          return false;
+    @SafeVarargs
+    public Stack(T... items) {
+        for (T item : items) {
+            push(item);
         }
-      }
-
-      return true;
     }
 
-    return super.equals(o);
-  }
+    public void push(T t) {
+        add(t);
+    }
+
+    public T peek() {
+        int size = size();
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return get(size - 1);
+    }
+
+    public T pop() {
+        int size = size();
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return remove(size - 1);
+    }
+
+    public @Nullable T tryPop() {
+        return isEmpty() ? null : pop();
+    }
+
+    public boolean empty() {
+        return isEmpty();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (o instanceof RandomAccess && o instanceof List<?> that) {
+            if (size() != that.size()) {
+                return false;
+            }
+
+            for (int i = 0; i < that.size(); i++) {
+                Object o1 = that.get(i);
+                Object o2 = get(i);
+                if (!(o1 == null ? o2 == null : o1.equals(o2))) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return super.equals(o);
+    }
 }

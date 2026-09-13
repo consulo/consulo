@@ -26,268 +26,285 @@ import java.util.function.Predicate;
  * @author max
  */
 public class MostlySingularMultiMap<K, V> implements Serializable {
-  private static final long serialVersionUID = 2784473565881807109L;
+    private static final long serialVersionUID = 2784473565881807109L;
 
-  protected final Map<K, Object> myMap;
+    protected final Map<K, Object> myMap;
 
-  public MostlySingularMultiMap() {
-    myMap = createMap();
-  }
-
-  protected Map<K, Object> createMap() {
-    return new HashMap<K, Object>();
-  }
-
-  public void add(K key, V value) {
-    Object current = myMap.get(key);
-    if (current == null) {
-      myMap.put(key, value);
-    }
-    else if (current instanceof MostlySingularMultiMap.ValueList) {
-      //noinspection unchecked
-      ValueList<Object> curList = (ValueList<Object>)current;
-      curList.add(value);
-    }
-    else {
-      ValueList<Object> newList = new ValueList<Object>();
-      newList.add(current);
-      newList.add(value);
-      myMap.put(key, newList);
-    }
-  }
-
-  public boolean remove(K key, V value) {
-    Object current = myMap.get(key);
-    if (current == null) {
-      return false;
-    }
-    if (current instanceof MostlySingularMultiMap.ValueList) {
-      ValueList curList = (ValueList)current;
-      return curList.remove(value);
+    public MostlySingularMultiMap() {
+        myMap = createMap();
     }
 
-    if (value.equals(current)) {
-      myMap.remove(key);
-      return true;
+    protected Map<K, Object> createMap() {
+        return new HashMap<>();
     }
 
-    return false;
-  }
-
-  public boolean removeAllValues(K key) {
-    return myMap.remove(key) != null;
-  }
-
-  public Set<K> keySet() {
-    return myMap.keySet();
-  }
-
-  public boolean isEmpty() {
-    return myMap.isEmpty();
-  }
-
-  public boolean processForKey(K key, Predicate<? super V> p) {
-    return processValue(p, myMap.get(key));
-  }
-
-  @SuppressWarnings("unchecked")
-  private boolean processValue(Predicate<? super V> p, @Nullable Object v) {
-    if (v instanceof MostlySingularMultiMap.ValueList) {
-      for (Object o : (ValueList)v) {
-        if (!p.test((V)o)) return false;
-      }
-    }
-    else if (v != null) {
-      return p.test((V)v);
-    }
-
-    return true;
-  }
-
-  public boolean processAllValues(Predicate<? super V> p) {
-    for (Object v : myMap.values()) {
-      if (!processValue(p, v)) return false;
-    }
-
-    return true;
-  }
-
-  public int size() {
-    return myMap.size();
-  }
-
-  public boolean containsKey(K key) {
-    return myMap.containsKey(key);
-  }
-
-  public int valuesForKey(K key) {
-    Object current = myMap.get(key);
-    if (current == null) return 0;
-    if (current instanceof MostlySingularMultiMap.ValueList) return ((ValueList)current).size();
-    return 1;
-  }
-
-  public Iterable<V> get(K name) {
-    Object value = myMap.get(name);
-    return rawValueToCollection(value);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected List<V> rawValueToCollection(@Nullable Object value) {
-    if (value == null) return Collections.emptyList();
-
-    if (value instanceof MostlySingularMultiMap.ValueList) {
-      return (ValueList<V>)value;
-    }
-
-    return Collections.singletonList((V)value);
-  }
-
-  public void compact() {
-    // FIXME [VISTALL] unsupported ((HashMap)myMap).trimToSize();
-    for (Object eachValue : myMap.values()) {
-      if (eachValue instanceof MostlySingularMultiMap.ValueList) {
-        ((ValueList)eachValue).trimToSize();
-      }
-    }
-  }
-
-  @Override
-  public String toString() {
-    return "{" + StringUtil.join(myMap.entrySet(), entry -> {
-      Object value = entry.getValue();
-      String s = (value instanceof MostlySingularMultiMap.ValueList valueList ? valueList : Collections.singletonList(value)).toString();
-      return entry.getKey() + ": " + s;
-    }, "; ") + "}";
-  }
-
-  public void clear() {
-    myMap.clear();
-  }
-
-  public static <K, V> MostlySingularMultiMap<K, V> emptyMap() {
-    //noinspection unchecked
-    return EMPTY;
-  }
-
-  public static <K, V> MostlySingularMultiMap<K, V> newMap() {
-    return new MostlySingularMultiMap<K, V>();
-  }
-
-  private static final MostlySingularMultiMap EMPTY = new EmptyMap();
-
-  @SuppressWarnings("unchecked")
-  public void addAll(MostlySingularMultiMap<K, V> other) {
-    if (other instanceof EmptyMap) return;
-
-    for (Map.Entry<K, Object> entry : other.myMap.entrySet()) {
-      K key = entry.getKey();
-      Object otherValue = entry.getValue();
-      Object myValue = myMap.get(key);
-
-      if (myValue == null) {
-        if (otherValue instanceof MostlySingularMultiMap.ValueList) {
-          myMap.put(key, new ValueList((ValueList)otherValue));
+    public void add(K key, V value) {
+        Object current = myMap.get(key);
+        if (current == null) {
+            myMap.put(key, value);
+        }
+        else if (current instanceof MostlySingularMultiMap.ValueList) {
+            //noinspection unchecked
+            ValueList<Object> curList = (ValueList<Object>) current;
+            curList.add(value);
         }
         else {
-          myMap.put(key, otherValue);
+            ValueList<Object> newList = new ValueList<>();
+            newList.add(current);
+            newList.add(value);
+            myMap.put(key, newList);
         }
-      }
-      else if (myValue instanceof MostlySingularMultiMap.ValueList) {
-        ValueList myListValue = (ValueList)myValue;
-        if (otherValue instanceof MostlySingularMultiMap.ValueList) {
-          myListValue.addAll((ValueList)otherValue);
+    }
+
+    public boolean remove(K key, V value) {
+        Object current = myMap.get(key);
+        if (current == null) {
+            return false;
         }
-        else {
-          myListValue.add(otherValue);
+        if (current instanceof MostlySingularMultiMap.ValueList) {
+            ValueList curList = (ValueList) current;
+            return curList.remove(value);
         }
-      }
-      else {
-        if (otherValue instanceof MostlySingularMultiMap.ValueList) {
-          ValueList otherListValue = (ValueList)otherValue;
-          ValueList newList = new ValueList(otherListValue.size() + 1);
-          newList.add(myValue);
-          newList.addAll(otherListValue);
-          myMap.put(key, newList);
+
+        if (value.equals(current)) {
+            myMap.remove(key);
+            return true;
         }
-        else {
-          ValueList newList = new ValueList();
-          newList.add(myValue);
-          newList.add(otherValue);
-          myMap.put(key, newList);
-        }
-      }
-    }
-  }
 
-  // marker class to distinguish multi-values from single values in case client want to store collections as values.
-  protected static class ValueList<V> extends ArrayList<V> {
-    public ValueList() {
+        return false;
     }
 
-    public ValueList(int initialCapacity) {
-      super(initialCapacity);
+    public boolean removeAllValues(K key) {
+        return myMap.remove(key) != null;
     }
 
-    public ValueList(Collection<? extends V> c) {
-      super(c);
-    }
-  }
-
-  private static class EmptyMap extends MostlySingularMultiMap {
-    @Override
-    public void add(Object key, Object value) {
-      throw new UnsupportedOperationException();
+    public Set<K> keySet() {
+        return myMap.keySet();
     }
 
-    @Override
-    public boolean remove(Object key, Object value) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAllValues(Object key) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clear() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set keySet() {
-      return Collections.emptySet();
-    }
-
-    @Override
     public boolean isEmpty() {
-      return true;
+        return myMap.isEmpty();
     }
 
-    @Override
-    public boolean processForKey(Object key, Predicate p) {
-      return true;
+    public boolean processForKey(K key, Predicate<? super V> p) {
+        return processValue(p, myMap.get(key));
     }
 
-    @Override
-    public boolean processAllValues(Predicate p) {
-      return true;
+    @SuppressWarnings("unchecked")
+    private boolean processValue(Predicate<? super V> p, @Nullable Object v) {
+        if (v instanceof MostlySingularMultiMap.ValueList) {
+            for (Object o : (ValueList) v) {
+                if (!p.test((V) o)) {
+                    return false;
+                }
+            }
+        }
+        else if (v != null) {
+            return p.test((V) v);
+        }
+
+        return true;
     }
 
-    @Override
+    public boolean processAllValues(Predicate<? super V> p) {
+        for (Object v : myMap.values()) {
+            if (!processValue(p, v)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public int size() {
-      return 0;
+        return myMap.size();
+    }
+
+    public boolean containsKey(K key) {
+        return myMap.containsKey(key);
+    }
+
+    public int valuesForKey(K key) {
+        Object current = myMap.get(key);
+        if (current == null) {
+            return 0;
+        }
+        if (current instanceof MostlySingularMultiMap.ValueList) {
+            return ((ValueList) current).size();
+        }
+        return 1;
+    }
+
+    public Iterable<V> get(K name) {
+        Object value = myMap.get(name);
+        return rawValueToCollection(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected List<V> rawValueToCollection(@Nullable Object value) {
+        if (value == null) {
+            return Collections.emptyList();
+        }
+
+        if (value instanceof MostlySingularMultiMap.ValueList) {
+            return (ValueList<V>) value;
+        }
+
+        return Collections.singletonList((V) value);
+    }
+
+    public void compact() {
+        // FIXME [VISTALL] unsupported ((HashMap)myMap).trimToSize();
+        for (Object eachValue : myMap.values()) {
+            if (eachValue instanceof MostlySingularMultiMap.ValueList valueList) {
+                valueList.trimToSize();
+            }
+        }
     }
 
     @Override
-    public int valuesForKey(Object key) {
-      return 0;
+    public String toString() {
+        return "{" + StringUtil.join(
+            myMap.entrySet(),
+            entry -> {
+                Object value = entry.getValue();
+                String s = (value instanceof MostlySingularMultiMap.ValueList valueList ? valueList : Collections.singletonList(value))
+                    .toString();
+                return entry.getKey() + ": " + s;
+            },
+            "; "
+        ) + "}";
     }
 
-    @Override
-    public Iterable get(Object name) {
-      return List.of();
+    public void clear() {
+        myMap.clear();
     }
-  }
+
+    public static <K, V> MostlySingularMultiMap<K, V> emptyMap() {
+        //noinspection unchecked
+        return EMPTY;
+    }
+
+    public static <K, V> MostlySingularMultiMap<K, V> newMap() {
+        return new MostlySingularMultiMap<>();
+    }
+
+    private static final MostlySingularMultiMap EMPTY = new EmptyMap();
+
+    @SuppressWarnings("unchecked")
+    public void addAll(MostlySingularMultiMap<K, V> other) {
+        if (other instanceof EmptyMap) {
+            return;
+        }
+
+        for (Map.Entry<K, Object> entry : other.myMap.entrySet()) {
+            K key = entry.getKey();
+            Object otherValue = entry.getValue();
+            Object myValue = myMap.get(key);
+
+            if (myValue == null) {
+                if (otherValue instanceof MostlySingularMultiMap.ValueList) {
+                    myMap.put(key, new ValueList((ValueList) otherValue));
+                }
+                else {
+                    myMap.put(key, otherValue);
+                }
+            }
+            else if (myValue instanceof MostlySingularMultiMap.ValueList) {
+                ValueList myListValue = (ValueList) myValue;
+                if (otherValue instanceof MostlySingularMultiMap.ValueList) {
+                    myListValue.addAll((ValueList) otherValue);
+                }
+                else {
+                    myListValue.add(otherValue);
+                }
+            }
+            else {
+                if (otherValue instanceof MostlySingularMultiMap.ValueList) {
+                    ValueList otherListValue = (ValueList) otherValue;
+                    ValueList newList = new ValueList(otherListValue.size() + 1);
+                    newList.add(myValue);
+                    newList.addAll(otherListValue);
+                    myMap.put(key, newList);
+                }
+                else {
+                    ValueList newList = new ValueList();
+                    newList.add(myValue);
+                    newList.add(otherValue);
+                    myMap.put(key, newList);
+                }
+            }
+        }
+    }
+
+    // marker class to distinguish multi-values from single values in case client want to store collections as values.
+    protected static class ValueList<V> extends ArrayList<V> {
+        public ValueList() {
+        }
+
+        public ValueList(int initialCapacity) {
+            super(initialCapacity);
+        }
+
+        public ValueList(Collection<? extends V> c) {
+            super(c);
+        }
+    }
+
+    private static class EmptyMap extends MostlySingularMultiMap {
+        @Override
+        public void add(Object key, Object value) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean remove(Object key, Object value) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean removeAllValues(Object key) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void clear() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Set keySet() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return true;
+        }
+
+        @Override
+        public boolean processForKey(Object key, Predicate p) {
+            return true;
+        }
+
+        @Override
+        public boolean processAllValues(Predicate p) {
+            return true;
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public int valuesForKey(Object key) {
+            return 0;
+        }
+
+        @Override
+        public Iterable get(Object name) {
+            return List.of();
+        }
+    }
 }

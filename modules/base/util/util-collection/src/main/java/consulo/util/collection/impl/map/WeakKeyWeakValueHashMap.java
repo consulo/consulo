@@ -22,30 +22,30 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 
 public final class WeakKeyWeakValueHashMap<K, V> extends RefKeyRefValueHashMap<K, V> implements Map<K, V> {
-  public WeakKeyWeakValueHashMap() {
-    this(false);
-  }
+    public WeakKeyWeakValueHashMap() {
+        this(false);
+    }
 
-  public WeakKeyWeakValueHashMap(boolean good) {
-    super((RefHashMap<K, ValueReference<K, V>>)Maps.<K, ValueReference<K, V>>newWeakHashMap());
-  }
+    public WeakKeyWeakValueHashMap(boolean good) {
+        super((RefHashMap<K, ValueReference<K, V>>) Maps.<K, ValueReference<K, V>>newWeakHashMap());
+    }
 
-  private static class WeakValueReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
-    private final RefHashMap.Key<K> key;
+    private static class WeakValueReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
+        private final RefHashMap.Key<K> key;
 
-    private WeakValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
-      super(referent, q);
-      this.key = key;
+        private WeakValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+            super(referent, q);
+            this.key = key;
+        }
+
+        @Override
+        public RefHashMap.Key<K> getKey() {
+            return key;
+        }
     }
 
     @Override
-    public RefHashMap.Key<K> getKey() {
-      return key;
+    protected ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+        return new WeakValueReference<>(key, referent, q);
     }
-  }
-
-  @Override
-  protected ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
-    return new WeakValueReference<>(key, referent, q);
-  }
 }

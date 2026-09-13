@@ -236,6 +236,8 @@
             <property name="severity" value="error"/>
         </module>
 
+        <module name="SuppressWarningsHolder"/>
+
         <module name="SuppressionCommentFilter">
             <property name="offCommentFormat" value="CHECKSTYLE OFF: (.+)"/>
             <property name="onCommentFormat" value="CHECKSTYLE ON"/>
@@ -243,4 +245,6 @@
             <property name="messageFormat" value="$1"/>
         </module>
     </module>
+
+    <module name="SuppressWarningsFilter"/>
 </module>

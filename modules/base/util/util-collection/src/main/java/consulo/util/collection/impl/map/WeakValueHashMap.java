@@ -21,26 +21,26 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 public final class WeakValueHashMap<K, V> extends RefValueHashMap<K, V> {
-  private static class MyWeakReference<K, T> extends WeakReference<T> implements MyReference<K, T> {
-    private final K key;
+    private static class MyWeakReference<K, T> extends WeakReference<T> implements MyReference<K, T> {
+        private final K key;
 
-    private MyWeakReference(K key, T referent, ReferenceQueue<? super T> q) {
-      super(referent, q);
-      this.key = key;
+        private MyWeakReference(K key, T referent, ReferenceQueue<? super T> q) {
+            super(referent, q);
+            this.key = key;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+    }
+
+    public WeakValueHashMap(HashingStrategy<K> strategy) {
+        super(strategy);
     }
 
     @Override
-    public K getKey() {
-      return key;
+    protected MyReference<K, V> createReference(K key, V value, ReferenceQueue<? super V> queue) {
+        return new MyWeakReference<>(key, value, queue);
     }
-  }
-
-  public WeakValueHashMap(HashingStrategy<K> strategy) {
-    super(strategy);
-  }
-
-  @Override
-  protected MyReference<K, V> createReference(K key, V value, ReferenceQueue<? super V> queue) {
-    return new MyWeakReference<>(key, value, queue);
-  }
 }

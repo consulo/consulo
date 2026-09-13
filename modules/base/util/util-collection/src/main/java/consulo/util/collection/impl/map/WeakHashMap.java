@@ -31,47 +31,51 @@ import java.lang.ref.WeakReference;
  * Otherwise it's the same as java.util.WeakHashMap, you are free to use either.
  */
 public abstract class WeakHashMap<K, V> extends RefHashMap<K, V> {
-  public WeakHashMap(int initialCapacity) {
-    super(initialCapacity);
-  }
+    public WeakHashMap(int initialCapacity) {
+        super(initialCapacity);
+    }
 
-  public WeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
-    super(initialCapacity, loadFactor, strategy);
-  }
-
-  @Override
-  protected <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
-    return new WeakKey<>(k, strategy, q);
-  }
-
-  private static class WeakKey<T> extends WeakReference<T> implements Key<T> {
-    private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
-    private final HashingStrategy<? super T> myStrategy;
-
-    private WeakKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
-      super(k, q);
-      myStrategy = strategy;
-      myHash = strategy.hashCode(k);
+    public WeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
+        super(initialCapacity, loadFactor, strategy);
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Key)) return false;
-      T t = get();
-      T u = ((Key<T>)o).get();
-      return RefHashMap.keyEqual(t, u, myStrategy);
+    protected <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
+        return new WeakKey<>(k, strategy, q);
     }
 
-    @Override
-    public int hashCode() {
-      return myHash;
-    }
+    private static class WeakKey<T> extends WeakReference<T> implements Key<T> {
+        private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
+        private final HashingStrategy<? super T> myStrategy;
 
-    @Override
-    public String toString() {
-      Object t = get();
-      return "WeakKey(" + t + ", " + myHash + ")";
+        private WeakKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
+            super(k, q);
+            myStrategy = strategy;
+            myHash = strategy.hashCode(k);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Key)) {
+                return false;
+            }
+            T t = get();
+            T u = ((Key<T>) o).get();
+            return RefHashMap.keyEqual(t, u, myStrategy);
+        }
+
+        @Override
+        public int hashCode() {
+            return myHash;
+        }
+
+        @Override
+        public String toString() {
+            Object t = get();
+            return "WeakKey(" + t + ", " + myHash + ")";
+        }
     }
-  }
 }

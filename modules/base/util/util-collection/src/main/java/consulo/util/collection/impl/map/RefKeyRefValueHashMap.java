@@ -21,111 +21,114 @@ import java.lang.ref.ReferenceQueue;
 import java.util.*;
 
 public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
-  private final RefHashMap<K, ValueReference<K, V>> myMap;
-  private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
+    private final RefHashMap<K, ValueReference<K, V>> myMap;
+    private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
-  public RefKeyRefValueHashMap(RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
-    myMap = weakKeyMap;
-  }
-
-  protected interface ValueReference<K, V> {
-    RefHashMap.Key<K> getKey();
-
-    V get();
-  }
-
-  protected @Nullable V dereference(@Nullable ValueReference<K, ? extends V> reference) {
-    return reference == null ? null : reference.get();
-  }
-
-  protected abstract ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
-
-  // returns true if some refs were tossed
-  boolean processQueue() {
-    boolean processed = myMap.processQueue();
-    while (true) {
-      ValueReference<K, V> ref = (ValueReference<K, V>)myQueue.poll();
-      if (ref == null) break;
-      RefHashMap.Key<K> weakKey = ref.getKey();
-      myMap.removeKey(weakKey);
-      processed = true;
+    public RefKeyRefValueHashMap(RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
+        myMap = weakKeyMap;
     }
-    return processed;
-  }
 
-  @Override
-  public @Nullable V get(Object key) {
-    ValueReference<K, V> ref = myMap.get(key);
-    return dereference(ref);
-  }
+    protected interface ValueReference<K, V> {
+        RefHashMap.Key<K> getKey();
 
-  @Override
-  public @Nullable V put(K key, V value) {
-    processQueue();
-    RefHashMap.Key<K> weakKey = myMap.createKey(key);
-    ValueReference<K, V> reference = createValueReference(weakKey, value, myQueue);
-    ValueReference<K, V> oldRef = myMap.putKey(weakKey, reference);
-    return dereference(oldRef);
-  }
-
-  @Override
-  public @Nullable V remove(Object key) {
-    processQueue();
-    ValueReference<K, V> ref = myMap.remove(key);
-    return dereference(ref);
-  }
-
-  @Override
-  public void putAll(Map<? extends K, ? extends V> t) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void clear() {
-    myMap.clear();
-    processQueue();
-  }
-
-  @Override
-  public int size() {
-    return myMap.size(); //?
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return myMap.isEmpty();
-  }
-
-  @Override
-  public boolean containsKey(Object key) {
-    throw RefValueHashMap.pointlessContainsKey();
-  }
-
-  @Override
-  public boolean containsValue(Object value) {
-    throw RefValueHashMap.pointlessContainsValue();
-  }
-
-  @Override
-  public Set<K> keySet() {
-    return myMap.keySet();
-  }
-
-  @Override
-  public Collection<V> values() {
-    List<V> result = new ArrayList<>();
-    Collection<ValueReference<K, V>> refs = myMap.values();
-    for (ValueReference<K, V> ref : refs) {
-      V value = ref.get();
-      if (value != null) {
-        result.add(value);
-      }
+        V get();
     }
-    return result;
-  }
 
-  @Override
-  public Set<Entry<K, V>> entrySet() {
-    throw new UnsupportedOperationException();
-  }
+    protected @Nullable V dereference(@Nullable ValueReference<K, ? extends V> reference) {
+        return reference == null ? null : reference.get();
+    }
+
+    protected abstract ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
+
+    // returns true if some refs were tossed
+    @SuppressWarnings("unchecked")
+    boolean processQueue() {
+        boolean processed = myMap.processQueue();
+        while (true) {
+            ValueReference<K, V> ref = (ValueReference<K, V>) myQueue.poll();
+            if (ref == null) {
+                break;
+            }
+            RefHashMap.Key<K> weakKey = ref.getKey();
+            myMap.removeKey(weakKey);
+            processed = true;
+        }
+        return processed;
+    }
+
+    @Override
+    public @Nullable V get(Object key) {
+        ValueReference<K, V> ref = myMap.get(key);
+        return dereference(ref);
+    }
+
+    @Override
+    public @Nullable V put(K key, V value) {
+        processQueue();
+        RefHashMap.Key<K> weakKey = myMap.createKey(key);
+        ValueReference<K, V> reference = createValueReference(weakKey, value, myQueue);
+        ValueReference<K, V> oldRef = myMap.putKey(weakKey, reference);
+        return dereference(oldRef);
+    }
+
+    @Override
+    public @Nullable V remove(Object key) {
+        processQueue();
+        ValueReference<K, V> ref = myMap.remove(key);
+        return dereference(ref);
+    }
+
+    @Override
+    public void putAll(Map<? extends K, ? extends V> t) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void clear() {
+        myMap.clear();
+        processQueue();
+    }
+
+    @Override
+    public int size() {
+        return myMap.size(); //?
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return myMap.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        throw RefValueHashMap.pointlessContainsKey();
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        throw RefValueHashMap.pointlessContainsValue();
+    }
+
+    @Override
+    public Set<K> keySet() {
+        return myMap.keySet();
+    }
+
+    @Override
+    public Collection<V> values() {
+        List<V> result = new ArrayList<>();
+        Collection<ValueReference<K, V>> refs = myMap.values();
+        for (ValueReference<K, V> ref : refs) {
+            V value = ref.get();
+            if (value != null) {
+                result.add(value);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        throw new UnsupportedOperationException();
+    }
 }
