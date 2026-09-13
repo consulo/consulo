@@ -2,6 +2,7 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -45,7 +46,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.function.BooleanSupplier;
 
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 @Singleton
 public final class DocumentCommitThread implements Disposable, DocumentCommitProcessor {
     private static final Logger LOG = Logger.getInstance(DocumentCommitThread.class);

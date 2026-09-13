@@ -40,8 +40,6 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate-lexers</goal>
-                            <goal>generate-icon</goal>
-                            <goal>generate-localize</goal>
                         </goals>
                     </execution>
                 </executions>
