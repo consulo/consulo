@@ -15,12 +15,13 @@
  */
 package consulo.util.xml.serializer;
 
-import consulo.util.collection.ContainerUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -94,7 +95,7 @@ public class JDOMExternalizerUtil {
       String value = children.iterator().next().getAttributeValue(VALUE_ATTR_NAME);
       return value == null ? Collections.<String>emptyList() : Collections.singletonList(value);
     }
-    List<String> values = ContainerUtil.newArrayListWithCapacity(children.size());
+    List<String> values = new ArrayList<>(children.size());
     for (Element child : children) {
       String value = child.getAttributeValue(VALUE_ATTR_NAME);
       if (value != null) {

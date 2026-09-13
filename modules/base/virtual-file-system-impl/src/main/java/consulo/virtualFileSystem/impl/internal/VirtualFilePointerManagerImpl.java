@@ -60,10 +60,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
     private final Application myApplication;
     private final Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> myRoots =
-        Maps.newHashMap(ContainerUtil.identityStrategy()); // guarded by this
+        Maps.newHashMap(HashingStrategy.identity()); // guarded by this
     // compare by identity because VirtualFilePointerContainer has too smart equals
-    private final Set<VirtualFilePointerContainerImpl> myContainers = Sets.newHashSet(ContainerUtil.identityStrategy());
-    // guarded by myContainers
+    private final Set<VirtualFilePointerContainerImpl> myContainers =
+        Sets.newHashSet(HashingStrategy.identity()); // guarded by myContainers
 
     private int myPointerSetModCount;
 
@@ -100,7 +100,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    
     private static VirtualFilePointer[] toPointers(Collection<? extends FilePointerPartNode> nodes) {
         if (nodes.isEmpty()) {
             return VirtualFilePointer.EMPTY_ARRAY;
@@ -113,7 +112,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @TestOnly
-    
     synchronized List<VirtualFilePointer> getPointersUnder(VirtualFile parent, String childName) {
         assert !StringUtil.isEmptyOrSpaces(childName);
         MultiMap<VirtualFilePointerListener, FilePointerPartNode> nodes = MultiMap.create();
@@ -156,13 +154,11 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @Override
-    
     public VirtualFilePointer create(String url, Disposable parent, @Nullable VirtualFilePointerListener listener) {
         return create(null, url, parent, listener, false);
     }
 
     @Override
-    
     public VirtualFilePointer create(VirtualFile file, Disposable parent, @Nullable VirtualFilePointerListener listener) {
         return create(file, null, parent, listener, false);
     }
@@ -268,7 +264,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
     private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new HashMap<>(); // guarded by this
 
-    
     private synchronized IdentityVirtualFilePointer getOrCreateIdentity(
         String url,
         @Nullable VirtualFile found,
@@ -357,14 +352,12 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         return s.toString();
     }
 
-    
     private static String trimTrailingSeparators(String path) {
         path = StringUtil.trimEnd(path, consulo.virtualFileSystem.archive.ArchiveFileSystem.ARCHIVE_SEPARATOR);
         path = StringUtil.trimTrailing(path, '/');
         return path;
     }
 
-    
     private synchronized VirtualFilePointerImpl getOrCreate(
         VirtualFile file,
         String path,
@@ -400,12 +393,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @Override
-    
-    public VirtualFilePointer duplicate(
-        VirtualFilePointer pointer,
-        Disposable parent,
-        @Nullable VirtualFilePointerListener listener
-    ) {
+    public VirtualFilePointer duplicate(VirtualFilePointer pointer, Disposable parent, @Nullable VirtualFilePointerListener listener) {
         VirtualFile file = pointer.getFile();
         return file == null ? create(pointer.getUrl(), parent, listener) : create(file, parent, listener);
     }
@@ -431,13 +419,11 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @Override
-    
     public VirtualFilePointerContainer createContainer(Disposable parent) {
         return createContainer(parent, null);
     }
 
     @Override
-    
     public synchronized VirtualFilePointerContainer createContainer(
         Disposable parent,
         @Nullable VirtualFilePointerListener listener
@@ -445,7 +431,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         return registerContainer(parent, new VirtualFilePointerContainerImpl(this, parent, listener));
     }
 
-    
     private VirtualFilePointerContainer registerContainer(Disposable parent, VirtualFilePointerContainerImpl container) {
         synchronized (myContainers) {
             myContainers.add(container);
@@ -471,7 +456,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         return container;
     }
 
-    
     public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         long start = System.currentTimeMillis();
         MultiMap<VirtualFilePointerListener, FilePointerPartNode> toFireEvents = MultiMap.create();
@@ -738,7 +722,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     private static class DelegatingDisposable implements Disposable {
-        private static final ConcurrentMap<Disposable, DelegatingDisposable> ourInstances = Maps.newConcurrentHashMap(ContainerUtil.identityStrategy());
+        private static final ConcurrentMap<Disposable, DelegatingDisposable> ourInstances = Maps.newConcurrentHashMap(HashingStrategy.identity());
 
         private final TObjectIntHashMap<VirtualFilePointerImpl> myCounts =
             new TObjectIntHashMap<>(TObjectHashingStrategy.IDENTITY); // guarded by this
@@ -792,7 +776,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    
     @Override
     public VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener) {
         return create(null, url, parent, listener, true);
@@ -840,7 +823,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    
     synchronized Collection<VirtualFilePointer> dumpAllPointers() {
         Collection<VirtualFilePointer> result = new HashSet<>();
         for (Map<VirtualFilePointerListener, FilePointerPartNode> myPointers : myRoots.values()) {
