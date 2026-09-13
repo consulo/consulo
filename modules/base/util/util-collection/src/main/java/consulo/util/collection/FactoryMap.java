@@ -74,21 +74,21 @@ public abstract class FactoryMap<K extends @Nullable Object, V extends @Nullable
         return map;
     }
 
-    private static <T> T FAKE_NULL() {
+    private static <T> T fakeNull() {
         //noinspection unchecked
         return (T) ObjectUtil.NULL;
     }
 
     private static <T> T notNull(@Nullable Object key) {
         //noinspection unchecked
-        return key == null ? FAKE_NULL() : (T) key;
+        return key == null ? fakeNull() : (T) key;
     }
 
     @SuppressWarnings("NullAway")
     private static <T extends @Nullable Object> T nullize(T value) {
         // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
         // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
-        return value == FAKE_NULL() ? null : value;
+        return value == fakeNull() ? null : value;
     }
 
     @Override
@@ -113,7 +113,7 @@ public abstract class FactoryMap<K extends @Nullable Object, V extends @Nullable
     @Override
     public Set<K> keySet() {
         Set<K> ts = getMap().keySet();
-        K nullKey = FAKE_NULL();
+        K nullKey = fakeNull();
         if (ts.contains(nullKey)) {
             Set<K> hashSet = new HashSet<>(ts);
             hashSet.remove(nullKey);

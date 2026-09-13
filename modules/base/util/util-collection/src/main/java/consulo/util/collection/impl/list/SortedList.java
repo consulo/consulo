@@ -24,80 +24,82 @@ import java.util.*;
  * @author peter
  */
 public class SortedList<T> extends AbstractList<T> {
-  private final SortedMap<T, List<T>> myMap;
-  private final Comparator<T> myComparator;
+    private final SortedMap<T, List<T>> myMap;
+    private final Comparator<T> myComparator;
 
-  private @Nullable List<T> myDelegate = null;
+    private @Nullable List<T> myDelegate = null;
 
-  public SortedList(Comparator<T> comparator) {
-    myComparator = comparator;
-    myMap = new TreeMap<>(comparator);
-  }
-
-  public Comparator<T> getComparator() {
-    return myComparator;
-  }
-
-  @Override
-  public void add(int index, T element) {
-    _addToMap(element);
-  }
-
-  private void _addToMap(@Nullable T element) {
-    List<T> group = myMap.get(element);
-    if (group == null) {
-      myMap.put(element, group = new ArrayList<T>());
+    public SortedList(Comparator<T> comparator) {
+        myComparator = comparator;
+        myMap = new TreeMap<>(comparator);
     }
-    group.add(element);
-    myDelegate = null;
-  }
 
-  @Override
-  public boolean add(@Nullable T t) {
-    _addToMap(t);
-    return true;
-  }
-
-  @Override
-  public @Nullable T remove(int index) {
-    T value = get(index);
-    remove(value);
-    return value;
-  }
-
-  @Override
-  public boolean remove(@Nullable Object value) {
-    List<T> group = myMap.remove(value);
-    if (group == null) return false;
-
-    group.remove(value);
-    if (!group.isEmpty()) {
-      myMap.put(group.get(0), group);
+    public Comparator<T> getComparator() {
+        return myComparator;
     }
-    myDelegate = null;
-    return true;
-  }
 
-  @Override
-  public @Nullable T get(int index) {
-    return ensureLinearized().get(index);
-  }
-
-  private List<T> ensureLinearized() {
-    if (myDelegate == null) {
-      myDelegate = ContainerUtil.concat(myMap.values());
+    @Override
+    public void add(int index, T element) {
+        addToMap(element);
     }
-    return myDelegate;
-  }
 
-  @Override
-  public void clear() {
-    myMap.clear();
-    myDelegate = null;
-  }
+    private void addToMap(@Nullable T element) {
+        List<T> group = myMap.get(element);
+        if (group == null) {
+            myMap.put(element, group = new ArrayList<>());
+        }
+        group.add(element);
+        myDelegate = null;
+    }
 
-  @Override
-  public int size() {
-    return ensureLinearized().size();
-  }
+    @Override
+    public boolean add(@Nullable T t) {
+        addToMap(t);
+        return true;
+    }
+
+    @Override
+    public @Nullable T remove(int index) {
+        T value = get(index);
+        remove(value);
+        return value;
+    }
+
+    @Override
+    public boolean remove(@Nullable Object value) {
+        List<T> group = myMap.remove(value);
+        if (group == null) {
+            return false;
+        }
+
+        group.remove(value);
+        if (!group.isEmpty()) {
+            myMap.put(group.get(0), group);
+        }
+        myDelegate = null;
+        return true;
+    }
+
+    @Override
+    public @Nullable T get(int index) {
+        return ensureLinearized().get(index);
+    }
+
+    private List<T> ensureLinearized() {
+        if (myDelegate == null) {
+            myDelegate = ContainerUtil.concat(myMap.values());
+        }
+        return myDelegate;
+    }
+
+    @Override
+    public void clear() {
+        myMap.clear();
+        myDelegate = null;
+    }
+
+    @Override
+    public int size() {
+        return ensureLinearized().size();
+    }
 }

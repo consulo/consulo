@@ -24,101 +24,103 @@ import java.util.List;
  * ArrayList which guarantees all its elements are not null
  */
 public class NotNullList<E> extends ArrayList<E> {
-  public NotNullList(int initialCapacity) {
-    super(initialCapacity);
-  }
-
-  public NotNullList() {
-  }
-
-  public NotNullList(Collection<? extends E> c) {
-    super(c);
-    checkNotNullCollection(c);
-  }
-
-  @Override
-  public boolean add(E e) {
-    return super.add(e);
-  }
-
-  @Override
-  public void add(int index, E element) {
-    super.add(index, element);
-  }
-
-  @Override
-  public boolean addAll(Collection<? extends E> c) {
-    checkNotNullCollection(c);
-    return super.addAll(c);
-  }
-
-  @Override
-  public E set(int index, E element) {
-    return super.set(index, element);
-  }
-
-  @Override
-  public E get(int index) {
-    return super.get(index);
-  }
-
-  private void checkNotNullCollection(Collection<? extends E> c) {
-    for (E e : c) {
-      if (e == null) throw new IllegalArgumentException("null element in the collection: " + c);
+    public NotNullList(int initialCapacity) {
+        super(initialCapacity);
     }
-  }
 
-  @Override
-  public boolean addAll(int index, Collection<? extends E> c) {
-    checkNotNullCollection(c);
-    return super.addAll(index, c);
-  }
+    public NotNullList() {
+    }
 
-  @Override
-  public List<E> subList(int fromIndex, int toIndex) {
-    final List<E> subList = super.subList(fromIndex, toIndex);
-    return new AbstractList<E>() {
-      @Override
-      public E get(int index) {
-        return subList.get(index);
-      }
-
-      @Override
-      public int size() {
-        return subList.size();
-      }
-
-      @Override
-      public boolean add(E e) {
-        return subList.add(e);
-      }
-
-      @Override
-      public E set(int index, E element) {
-        return subList.set(index, element);
-      }
-
-      @Override
-      public void add(int index, E element) {
-        subList.add(index, element);
-      }
-
-      @Override
-      public boolean addAll(int index, Collection<? extends E> c) {
+    public NotNullList(Collection<? extends E> c) {
+        super(c);
         checkNotNullCollection(c);
-        return subList.addAll(index, c);
-      }
+    }
 
-      @Override
-      public List<E> subList(int fromIndex, int toIndex) {
-        return subList.subList(fromIndex, toIndex);
-      }
+    @Override
+    public boolean add(E e) {
+        return super.add(e);
+    }
 
-      @Override
-      public boolean addAll(Collection<? extends E> c) {
+    @Override
+    public void add(int index, E element) {
+        super.add(index, element);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
         checkNotNullCollection(c);
-        return subList.addAll(c);
-      }
-    };
-  }
+        return super.addAll(c);
+    }
+
+    @Override
+    public E set(int index, E element) {
+        return super.set(index, element);
+    }
+
+    @Override
+    public E get(int index) {
+        return super.get(index);
+    }
+
+    private void checkNotNullCollection(Collection<? extends E> c) {
+        for (E e : c) {
+            if (e == null) {
+                throw new IllegalArgumentException("null element in the collection: " + c);
+            }
+        }
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
+        checkNotNullCollection(c);
+        return super.addAll(index, c);
+    }
+
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        final List<E> subList = super.subList(fromIndex, toIndex);
+        return new AbstractList<E>() {
+            @Override
+            public E get(int index) {
+                return subList.get(index);
+            }
+
+            @Override
+            public int size() {
+                return subList.size();
+            }
+
+            @Override
+            public boolean add(E e) {
+                return subList.add(e);
+            }
+
+            @Override
+            public E set(int index, E element) {
+                return subList.set(index, element);
+            }
+
+            @Override
+            public void add(int index, E element) {
+                subList.add(index, element);
+            }
+
+            @Override
+            public boolean addAll(int index, Collection<? extends E> c) {
+                checkNotNullCollection(c);
+                return subList.addAll(index, c);
+            }
+
+            @Override
+            public List<E> subList(int fromIndex, int toIndex) {
+                return subList.subList(fromIndex, toIndex);
+            }
+
+            @Override
+            public boolean addAll(Collection<? extends E> c) {
+                checkNotNullCollection(c);
+                return subList.addAll(c);
+            }
+        };
+    }
 }

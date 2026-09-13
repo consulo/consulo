@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -24,249 +25,252 @@ import java.util.*;
  * @author peter
  */
 @SuppressWarnings("unchecked")
-public class SmartFMap<K,V> implements Map<K,V> {
-  private static final SmartFMap EMPTY = new SmartFMap(ArrayUtil.EMPTY_OBJECT_ARRAY);
-  private static final int ARRAY_THRESHOLD = 8;
-  private final Object myMap;
+public class SmartFMap<K, V> implements Map<K, V> {
+    private static final SmartFMap EMPTY = new SmartFMap(ArrayUtil.EMPTY_OBJECT_ARRAY);
+    private static final int ARRAY_THRESHOLD = 8;
+    private final Object myMap;
 
-  private SmartFMap(Object map) {
-    myMap = map;
-  }
-
-  public static <K,V> SmartFMap<K, V> emptyMap() {
-    return EMPTY;
-  }
-
-  public SmartFMap<K, V> plus(K key, V value) {
-    return new SmartFMap<K, V>(doPlus(myMap, key, value, false));
-  }
-
-  private static Object doPlus(Object oldMap, Object key, Object value, boolean inPlace) {
-    if (oldMap instanceof Map) {
-      Map newMap = inPlace ? (Map)oldMap : new HashMap((Map)oldMap);
-      newMap.put(key, value);
-      return newMap;
+    private SmartFMap(Object map) {
+        myMap = map;
     }
 
-    Object[] array = (Object[])oldMap;
-    for (int i = 0; i < array.length; i += 2) {
-      if (key.equals(array[i])) {
-        Object[] newArray = inPlace ? array : new Object[array.length];
-        if (!inPlace) {
-          System.arraycopy(array, 0, newArray, 0, array.length);
+    public static <K, V> SmartFMap<K, V> emptyMap() {
+        return EMPTY;
+    }
+
+    public SmartFMap<K, V> plus(K key, V value) {
+        return new SmartFMap<>(doPlus(myMap, key, value, false));
+    }
+
+    private static Object doPlus(Object oldMap, Object key, Object value, boolean inPlace) {
+        if (oldMap instanceof Map) {
+            Map newMap = inPlace ? (Map) oldMap : new HashMap((Map) oldMap);
+            newMap.put(key, value);
+            return newMap;
         }
-        newArray[i + 1] = value;
+
+        Object[] array = (Object[]) oldMap;
+        for (int i = 0; i < array.length; i += 2) {
+            if (key.equals(array[i])) {
+                Object[] newArray = inPlace ? array : new Object[array.length];
+                if (!inPlace) {
+                    System.arraycopy(array, 0, newArray, 0, array.length);
+                }
+                newArray[i + 1] = value;
+                return newArray;
+            }
+        }
+        if (array.length == 2 * ARRAY_THRESHOLD) {
+            Map map = new HashMap();
+            for (int i = 0; i < array.length; i += 2) {
+                map.put(array[i], array[i + 1]);
+            }
+            map.put(key, value);
+            return map;
+        }
+
+        Object[] newArray = new Object[array.length + 2];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = key;
+        newArray[array.length + 1] = value;
         return newArray;
-      }
-    }
-    if (array.length == 2 * ARRAY_THRESHOLD) {
-      Map map = new HashMap();
-      for (int i = 0; i < array.length; i += 2) {
-        map.put(array[i], array[i + 1]);
-      }
-      map.put(key, value);
-      return map;
     }
 
-    Object[] newArray = new Object[array.length + 2];
-    System.arraycopy(array, 0, newArray, 0, array.length);
-    newArray[array.length] = key;
-    newArray[array.length + 1] = value;
-    return newArray;
-  }
+    public SmartFMap<K, V> minus(K key) {
+        if (myMap instanceof Map) {
+            Map<K, V> newMap = new HashMap<>((Map<K, V>) myMap);
+            newMap.remove(key);
+            if (newMap.size() <= ARRAY_THRESHOLD) {
+                Object[] newArray = new Object[newMap.size() * 2];
+                int i = 0;
+                for (K k : newMap.keySet()) {
+                    newArray[i++] = k;
+                    newArray[i++] = newMap.get(k);
+                }
+                return new SmartFMap<>(newArray);
+            }
 
-  public SmartFMap<K, V> minus(K key) {
-    if (myMap instanceof Map) {
-      Map<K, V> newMap = new HashMap<K, V>((Map<K, V>)myMap);
-      newMap.remove(key);
-      if (newMap.size() <= ARRAY_THRESHOLD) {
-        Object[] newArray = new Object[newMap.size() * 2];
-        int i = 0;
-        for (K k : newMap.keySet()) {
-          newArray[i++] = k;
-          newArray[i++] = newMap.get(k);
-        }
-        return new SmartFMap<K, V>(newArray);
-      }
-
-      return new SmartFMap<K, V>(newMap);
-    }
-
-    Object[] array = (Object[])myMap;
-    for (int i = 0; i < array.length; i += 2) {
-      if (key.equals(array[i])) {
-        if (size() == 1) {
-          return EMPTY;
+            return new SmartFMap<>(newMap);
         }
 
-        Object[] newArray = new Object[array.length - 2];
-        System.arraycopy(array, 0, newArray, 0, i);
-        System.arraycopy(array, i + 2, newArray, i, array.length - i - 2);
-        return new SmartFMap<K, V>(newArray);
-      }
+        Object[] array = (Object[]) myMap;
+        for (int i = 0; i < array.length; i += 2) {
+            if (key.equals(array[i])) {
+                if (size() == 1) {
+                    return EMPTY;
+                }
+
+                Object[] newArray = new Object[array.length - 2];
+                System.arraycopy(array, 0, newArray, 0, i);
+                System.arraycopy(array, i + 2, newArray, i, array.length - i - 2);
+                return new SmartFMap<>(newArray);
+            }
+        }
+        return this;
     }
-    return this;
-  }
 
-  public SmartFMap<K, V> plusAll(Map<K, V> m) {
-    SmartFMap<K, V> result = this;
-    for (Map.Entry<? extends K, ? extends V> e : m.entrySet()) {
-      result = result.plus(e.getKey(), e.getValue());
+    public SmartFMap<K, V> plusAll(Map<K, V> m) {
+        SmartFMap<K, V> result = this;
+        for (Map.Entry<? extends K, ? extends V> e : m.entrySet()) {
+            result = result.plus(e.getKey(), e.getValue());
+        }
+        return result;
     }
-    return result;
-  }
 
-  public SmartFMap<K, V> minusAll(Collection<K> keys) {
-    SmartFMap<K, V> result = this;
-    for (K key : keys) {
-      result = result.minus(key);
+    public SmartFMap<K, V> minusAll(Collection<K> keys) {
+        SmartFMap<K, V> result = this;
+        for (K key : keys) {
+            result = result.minus(key);
+        }
+        return result;
     }
-    return result;
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof Map && entrySet().equals(((Map)obj).entrySet());
-  }
-
-  @Override
-  public int hashCode() {
-    return entrySet().hashCode();
-  }
-
-  @Override
-  public boolean containsKey(Object key) {
-    if (key == null) {
-      return false;
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Map && entrySet().equals(((Map) obj).entrySet());
     }
-    if (myMap instanceof Map) {
-      return ((Map<K, V>)myMap).containsKey(key);
+
+    @Override
+    public int hashCode() {
+        return entrySet().hashCode();
     }
-    Object[] array = (Object[])myMap;
-    for (int i = 0; i < array.length; i += 2) {
-      if (key.equals(array[i])) {
-        return true;
-      }
+
+    @Override
+    public boolean containsKey(Object key) {
+        if (key == null) {
+            return false;
+        }
+        if (myMap instanceof Map) {
+            return ((Map<K, V>) myMap).containsKey(key);
+        }
+        Object[] array = (Object[]) myMap;
+        for (int i = 0; i < array.length; i += 2) {
+            if (key.equals(array[i])) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  @Override
-  public boolean containsValue(Object value) {
-    return false;
-  }
-
-  @Override
-  public @Nullable V get(Object key) {
-    return (V)doGet(myMap, key);
-  }
-
-  private static @Nullable Object doGet(Object map, Object key) {
-    if (key == null) {
-      return null;
+    @Override
+    public boolean containsValue(Object value) {
+        return false;
     }
-    if (map instanceof Map) {
-      return ((Map)map).get(key);
+
+    @Override
+    public @Nullable V get(Object key) {
+        return (V) doGet(myMap, key);
     }
-    Object[] array = (Object[])map;
-    for (int i = 0; i < array.length; i += 2) {
-      if (key.equals(array[i])) {
-        return array[i + 1];
-      }
+
+    private static @Nullable Object doGet(Object map, Object key) {
+        if (key == null) {
+            return null;
+        }
+        if (map instanceof Map) {
+            return ((Map) map).get(key);
+        }
+        Object[] array = (Object[]) map;
+        for (int i = 0; i < array.length; i += 2) {
+            if (key.equals(array[i])) {
+                return array[i + 1];
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  @Deprecated
-  public V put(K key, V value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  @Deprecated
-  public void putAll(Map<? extends K, ? extends V> m) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  @Deprecated
-  public void clear() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Set<K> keySet() {
-    LinkedHashSet<K> result = new LinkedHashSet<K>();
-    for (Entry<K, V> entry : entrySet()) {
-      result.add(entry.getKey());
+    @Override
+    @Deprecated
+    public V put(K key, V value) {
+        throw new UnsupportedOperationException();
     }
-    return Collections.unmodifiableSet(result);
-  }
 
-  @Override
-  public Collection<V> values() {
-    ArrayList<V> result = new ArrayList<V>();
-    for (Entry<K, V> entry : entrySet()) {
-      result.add(entry.getValue());
+    @Override
+    @Deprecated
+    public void putAll(Map<? extends K, ? extends V> m) {
+        throw new UnsupportedOperationException();
     }
-    return Collections.unmodifiableCollection(result);
-  }
 
-  @Override
-  @Deprecated
-  public V remove(Object key) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int size() {
-    if (myMap instanceof Map) {
-      return ((Map<K, V>)myMap).size();
+    @Override
+    @Deprecated
+    public void clear() {
+        throw new UnsupportedOperationException();
     }
-    return ((Object[])myMap).length >> 1;
-  }
 
-  @Override
-  public boolean isEmpty() {
-    return size() == 0;
-  }
-
-  @Override
-  public Set<Entry<K, V>> entrySet() {
-    LinkedHashSet<Entry<K, V>> set = new LinkedHashSet<Entry<K, V>>();
-    if (myMap instanceof Map) {
-      for (Entry<K, V> entry : ((Map<K, V>)myMap).entrySet()) {
-        set.add(new AbstractMap.SimpleImmutableEntry<K, V>(entry));
-      }
-    } else {
-      Object[] array = (Object[])myMap;
-      for (int i = 0; i < array.length; i += 2) {
-        set.add(new AbstractMap.SimpleImmutableEntry<K, V>((K)array[i], (V)array[i + 1]));
-      }
+    @Override
+    public Set<K> keySet() {
+        LinkedHashSet<K> result = new LinkedHashSet<>();
+        for (Entry<K, V> entry : entrySet()) {
+            result.add(entry.getKey());
+        }
+        return Collections.unmodifiableSet(result);
     }
-    return Collections.unmodifiableSet(set);
-  }
 
-  // copied from AbstractMap
-  public String toString() {
-    Iterator<Entry<K,V>> i = entrySet().iterator();
-    if (!i.hasNext())
-      return "{}";
-
-    StringBuilder sb = new StringBuilder();
-    sb.append('{');
-    while (true) {
-      Entry<K, V> e = i.next();
-      K key = e.getKey();
-      V value = e.getValue();
-      sb.append(key == this ? "(this Map)" : key);
-      sb.append('=');
-      sb.append(value == this ? "(this Map)" : value);
-      if (!i.hasNext()) {
-        return sb.append('}').toString();
-      }
-      sb.append(", ");
+    @Override
+    public Collection<V> values() {
+        List<V> result = new ArrayList<>();
+        for (Entry<K, V> entry : entrySet()) {
+            result.add(entry.getValue());
+        }
+        return Collections.unmodifiableCollection(result);
     }
-  }
+
+    @Override
+    @Deprecated
+    public V remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int size() {
+        if (myMap instanceof Map) {
+            return ((Map<K, V>) myMap).size();
+        }
+        return ((Object[]) myMap).length >> 1;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        Set<Entry<K, V>> set = new LinkedHashSet<>();
+        if (myMap instanceof Map) {
+            for (Entry<K, V> entry : ((Map<K, V>) myMap).entrySet()) {
+                set.add(new AbstractMap.SimpleImmutableEntry<>(entry));
+            }
+        }
+        else {
+            Object[] array = (Object[]) myMap;
+            for (int i = 0; i < array.length; i += 2) {
+                set.add(new AbstractMap.SimpleImmutableEntry<>((K) array[i], (V) array[i + 1]));
+            }
+        }
+        return Collections.unmodifiableSet(set);
+    }
+
+    // copied from AbstractMap
+    @Override
+    public String toString() {
+        Iterator<Entry<K, V>> i = entrySet().iterator();
+        if (!i.hasNext()) {
+            return "{}";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+        while (true) {
+            Entry<K, V> e = i.next();
+            K key = e.getKey();
+            V value = e.getValue();
+            sb.append(key == this ? "(this Map)" : key);
+            sb.append('=');
+            sb.append(value == this ? "(this Map)" : value);
+            if (!i.hasNext()) {
+                return sb.append('}').toString();
+            }
+            sb.append(", ");
+        }
+    }
 }

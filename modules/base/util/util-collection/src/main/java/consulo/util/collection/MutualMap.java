@@ -23,79 +23,84 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class MutualMap<Key, Value> {
-  private final Map<Key, Value> myKey2Value;
-  private final Map<Value, Key> myValue2Key;
+    private final Map<Key, Value> myKey2Value;
+    private final Map<Value, Key> myValue2Key;
 
-  public MutualMap(boolean ordered) {
-    if (ordered) {
-      myKey2Value = new LinkedHashMap<Key, Value>();
-      myValue2Key = new LinkedHashMap<Value, Key>();
-    } else {
-      myKey2Value = new HashMap<Key, Value>();
-      myValue2Key = new HashMap<Value, Key>();
+    public MutualMap(boolean ordered) {
+        if (ordered) {
+            myKey2Value = new LinkedHashMap<>();
+            myValue2Key = new LinkedHashMap<>();
+        }
+        else {
+            myKey2Value = new HashMap<>();
+            myValue2Key = new HashMap<>();
+        }
     }
-  }
 
-  public MutualMap() {
-    this(false);
-  }
+    public MutualMap() {
+        this(false);
+    }
 
-  public void put(@Nullable Key key, @Nullable Value value) {
-    myKey2Value.put(key, value);
-    myValue2Key.put(value, key);
-  }
+    public void put(@Nullable Key key, @Nullable Value value) {
+        myKey2Value.put(key, value);
+        myValue2Key.put(value, key);
+    }
 
-  public @Nullable Value getValue(@Nullable Key key) {
-    return myKey2Value.get(key);
-  }
+    public @Nullable Value getValue(@Nullable Key key) {
+        return myKey2Value.get(key);
+    }
 
-  public @Nullable Key getKey(@Nullable Value value) {
-    return myValue2Key.get(value);
-  }
+    public @Nullable Key getKey(@Nullable Value value) {
+        return myValue2Key.get(value);
+    }
 
-  public int size() {
-    return myValue2Key.size();
-  }
+    public int size() {
+        return myValue2Key.size();
+    }
 
-  public boolean containsKey(@Nullable Key key) {
-    return myKey2Value.containsKey(key);
-  }
+    public boolean containsKey(@Nullable Key key) {
+        return myKey2Value.containsKey(key);
+    }
 
-  public void remove(@Nullable Key key) {
-    Value value = myKey2Value.get(key);
-    myKey2Value.remove(key);
-    myValue2Key.remove(value);
-  }
+    public void remove(@Nullable Key key) {
+        Value value = myKey2Value.get(key);
+        myKey2Value.remove(key);
+        myValue2Key.remove(value);
+    }
 
-  public Collection<Value> getValues() {
-    return myKey2Value.values();
-  }
+    public Collection<Value> getValues() {
+        return myKey2Value.values();
+    }
 
-  public Collection<Key> getKeys() {
-    return myKey2Value.keySet();
-  }
+    public Collection<Key> getKeys() {
+        return myKey2Value.keySet();
+    }
 
-  public void clear() {
-    myKey2Value.clear();
-    myValue2Key.clear();
-  }
+    public void clear() {
+        myKey2Value.clear();
+        myValue2Key.clear();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    MutualMap mutualMap = (MutualMap)o;
-    return myKey2Value.equals(mutualMap.myKey2Value) && myValue2Key.equals(mutualMap.myValue2Key);
-  }
+        MutualMap mutualMap = (MutualMap) o;
+        return myKey2Value.equals(mutualMap.myKey2Value) && myValue2Key.equals(mutualMap.myValue2Key);
+    }
 
-  @Override
-  public int hashCode() {
-    return 31 * myKey2Value.hashCode() + myValue2Key.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myKey2Value.hashCode() + myValue2Key.hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return myKey2Value.toString();
-  }
+    @Override
+    public String toString() {
+        return myKey2Value.toString();
+    }
 }

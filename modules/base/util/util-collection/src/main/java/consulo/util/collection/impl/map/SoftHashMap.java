@@ -26,48 +26,56 @@ import java.lang.ref.ReferenceQueue;
  * Null values are allowed
  */
 public abstract class SoftHashMap<K, V> extends RefHashMap<K, V> {
-  public SoftHashMap(int initialCapacity) {
-    super(initialCapacity);
-  }
+    public SoftHashMap(int initialCapacity) {
+        super(initialCapacity);
+    }
 
-  public SoftHashMap(HashingStrategy<? super K> hashingStrategy) {
-    super(hashingStrategy);
-  }
-
-  @Override
-  protected <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
-    return new SoftKey<>(k, strategy, q);
-  }
-
-  private static class SoftKey<T> extends SoftReference<T> implements Key<T> {
-    private final int myHash;  /* Hash code of key, stored here since the key may be tossed by the GC */
-    private final HashingStrategy<? super T> myStrategy;
-
-    private SoftKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
-      super(k, q);
-      myStrategy = strategy;
-      myHash = strategy.hashCode(k);
+    public SoftHashMap(HashingStrategy<? super K> hashingStrategy) {
+        super(hashingStrategy);
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Key)) return false;
-      if (myHash != o.hashCode()) return false;
-      T t = get();
-      T u = ((Key<T>)o).get();
-      if (t == null || u == null) return false;
-      return keyEqual(t, u, myStrategy);
+    protected <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
+        return new SoftKey<>(k, strategy, q);
     }
 
-    @Override
-    public int hashCode() {
-      return myHash;
-    }
+    private static class SoftKey<T> extends SoftReference<T> implements Key<T> {
+        private final int myHash;  /* Hash code of key, stored here since the key may be tossed by the GC */
+        private final HashingStrategy<? super T> myStrategy;
 
-    @Override
-    public String toString() {
-      return "SoftHashMap.SoftKey(" + get() + ")";
+        private SoftKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
+            super(k, q);
+            myStrategy = strategy;
+            myHash = strategy.hashCode(k);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Key)) {
+                return false;
+            }
+            if (myHash != o.hashCode()) {
+                return false;
+            }
+            T t = get();
+            T u = ((Key<T>) o).get();
+            if (t == null || u == null) {
+                return false;
+            }
+            return keyEqual(t, u, myStrategy);
+        }
+
+        @Override
+        public int hashCode() {
+            return myHash;
+        }
+
+        @Override
+        public String toString() {
+            return "SoftHashMap.SoftKey(" + get() + ")";
+        }
     }
-  }
 }

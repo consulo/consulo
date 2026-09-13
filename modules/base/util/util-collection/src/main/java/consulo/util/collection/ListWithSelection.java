@@ -21,37 +21,38 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class ListWithSelection<E> extends ArrayList<E> {
-  private @Nullable E mySelection = null;
+    private @Nullable E mySelection = null;
 
-  public ListWithSelection(Collection<E> collection) {
-    super(collection);
-  }
+    public ListWithSelection(Collection<E> collection) {
+        super(collection);
+    }
 
-  public ListWithSelection(Collection<E> collection, E selection) {
-    this(collection);
-    select(selection);
-  }
+    public ListWithSelection(Collection<E> collection, E selection) {
+        this(collection);
+        select(selection);
+    }
 
-  public ListWithSelection() {
-    this(new ArrayList<E>());
-  }
+    public ListWithSelection() {
+        this(new ArrayList<>());
+    }
 
-  public boolean select(E object) {
-    if (!contains(object))
-      return false;
-    mySelection = object;
-    return true;
-  }
+    public boolean select(E object) {
+        if (!contains(object)) {
+            return false;
+        }
+        mySelection = object;
+        return true;
+    }
 
-  public @Nullable E getSelection() {
-    return mySelection;
-  }
+    public @Nullable E getSelection() {
+        return mySelection;
+    }
 
-  public void selectFirst() {
-    select(get(0));
-  }
+    public void selectFirst() {
+        select(get(0));
+    }
 
-  public Integer getSelectedIndex() {
-    return indexOf(mySelection);
-  }
+    public Integer getSelectedIndex() {
+        return indexOf(mySelection);
+    }
 }

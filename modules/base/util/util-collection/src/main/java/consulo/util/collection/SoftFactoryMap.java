@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.collection;
 
 import consulo.util.lang.ObjectUtil;
@@ -25,23 +24,23 @@ import java.util.concurrent.ConcurrentMap;
  * @author peter
  */
 public abstract class SoftFactoryMap<T, V> {
-  private final ConcurrentMap<T, V> myMap = Maps.newConcurrentWeakKeySoftValueHashMap();
+    private final ConcurrentMap<T, V> myMap = Maps.newConcurrentWeakKeySoftValueHashMap();
 
-  protected abstract V create(@Nullable T key);
+    protected abstract V create(@Nullable T key);
 
-  public final @Nullable V get(@Nullable T key) {
-    V v = myMap.get(key);
-    if (v != null) {
-      return v == ObjectUtil.NULL ? null : v;
+    public final @Nullable V get(@Nullable T key) {
+        V v = myMap.get(key);
+        if (v != null) {
+            return v == ObjectUtil.NULL ? null : v;
+        }
+
+        V value = create(key);
+        V toPut = value == null ? (V) ObjectUtil.NULL : value;
+        V prev = myMap.putIfAbsent(key, toPut);
+        return prev == null || prev == ObjectUtil.NULL ? value : prev;
     }
 
-    V value = create(key);
-    V toPut = value == null ? (V)ObjectUtil.NULL : value;
-    V prev = myMap.putIfAbsent(key, toPut);
-    return prev == null || prev == ObjectUtil.NULL ? value : prev;
-  }
-
-  public void clear() {
-    myMap.clear();
-  }
+    public void clear() {
+        myMap.clear();
+    }
 }

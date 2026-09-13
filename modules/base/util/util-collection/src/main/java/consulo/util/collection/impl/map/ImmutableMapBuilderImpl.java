@@ -22,16 +22,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImmutableMapBuilderImpl<K, V> implements ImmutableMapBuilder<K, V> {
-  private final Map<K, V> myMap = new HashMap<>();
+    private final Map<K, V> myMap = new HashMap<>();
 
-  @Override
-  public ImmutableMapBuilder<K, V> put(K key, V value) {
-    myMap.put(key, value);
-    return this;
-  }
+    @Override
+    public ImmutableMapBuilder<K, V> put(K key, V value) {
+        myMap.put(key, value);
+        return this;
+    }
 
-  @Override
-  public Map<K, V> build() {
-    return Collections.unmodifiableMap(myMap);
-  }
+    @Override
+    public Map<K, V> build() {
+        return Collections.unmodifiableMap(myMap);
+    }
 }

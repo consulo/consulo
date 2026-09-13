@@ -21,22 +21,22 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 30/01/2022
+ * @since 2022-01-30
  */
 public class Collections2 {
-  /**
-   * Create collection from iterable. Optimized version if iterable is collection
-   */
-  @SuppressWarnings("unchecked")
-  public static <C extends Collection<E>, E> C of(Iterable<E> iterable, Function<Collection<E>, C> factory) {
-    if (iterable instanceof Collection) {
-      return (C)factory.apply((Collection)iterable);
-    }
+    /**
+     * Create collection from iterable. Optimized version if iterable is collection
+     */
+    @SuppressWarnings("unchecked")
+    public static <C extends Collection<E>, E> C of(Iterable<E> iterable, Function<Collection<E>, C> factory) {
+        if (iterable instanceof Collection) {
+            return (C) factory.apply((Collection) iterable);
+        }
 
-    C emptyCollection = factory.apply(List.of());
-    for (E e : iterable) {
-      emptyCollection.add(e);
+        C emptyCollection = factory.apply(List.of());
+        for (E e : iterable) {
+            emptyCollection.add(e);
+        }
+        return emptyCollection;
     }
-    return emptyCollection;
-  }
 }

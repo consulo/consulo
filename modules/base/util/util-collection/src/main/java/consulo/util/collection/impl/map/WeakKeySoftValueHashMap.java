@@ -22,26 +22,26 @@ import java.lang.ref.SoftReference;
 import java.util.Map;
 
 public final class WeakKeySoftValueHashMap<K, V> extends RefKeyRefValueHashMap<K, V> implements Map<K, V> {
-  public WeakKeySoftValueHashMap() {
-    super((RefHashMap<K, ValueReference<K, V>>)Maps.<K, ValueReference<K, V>>newWeakHashMap());
-  }
+    public WeakKeySoftValueHashMap() {
+        super((RefHashMap<K, ValueReference<K, V>>) Maps.<K, ValueReference<K, V>>newWeakHashMap());
+    }
 
-  private static class SoftValueReference<K, V> extends SoftReference<V> implements ValueReference<K, V> {
-    private final RefHashMap.Key<K> key;
+    private static class SoftValueReference<K, V> extends SoftReference<V> implements ValueReference<K, V> {
+        private final RefHashMap.Key<K> key;
 
-    private SoftValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
-      super(referent, q);
-      this.key = key;
+        private SoftValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+            super(referent, q);
+            this.key = key;
+        }
+
+        @Override
+        public RefHashMap.Key<K> getKey() {
+            return key;
+        }
     }
 
     @Override
-    public RefHashMap.Key<K> getKey() {
-      return key;
+    protected ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+        return new SoftValueReference<>(key, referent, q);
     }
-  }
-
-  @Override
-  protected ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
-    return new SoftValueReference<>(key, referent, q);
-  }
 }

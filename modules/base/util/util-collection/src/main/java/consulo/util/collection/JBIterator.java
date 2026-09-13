@@ -252,15 +252,13 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
     private static class Op<T extends @Nullable Object> {
         final T impl;
 
-        @Nullable
-        Op nextOp = null;
+        @Nullable Op nextOp = null;
 
         public Op(T impl) {
             this.impl = impl;
         }
 
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             throw new UnsupportedOperationException();
         }
 
@@ -290,8 +288,7 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
 
         @Override
         @SuppressWarnings("NullAway")
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             // NullAway problem: parameter is nullable by method contract but in actual usage parameter can be null only if E is nullable.
             // We cannot explain this to the static validator, so suppressing NullAway validation.
             return Objects.requireNonNull(impl).apply((E) o);
@@ -304,8 +301,7 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
         }
 
         @Override
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             return Objects.requireNonNull(impl).test((E) o) ? o : skip();
         }
     }
@@ -316,8 +312,7 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
         }
 
         @Override
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             return Objects.requireNonNull(impl).test((E) o) ? o : stop();
         }
     }
@@ -330,8 +325,7 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
         }
 
         @Override
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             if (active && Objects.requireNonNull(impl).test((E) o)) {
                 return skip();
             }
@@ -346,8 +340,7 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
         }
 
         @Override
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             return o;
         }
     }
@@ -360,8 +353,7 @@ public abstract class JBIterator<E extends @Nullable Object> implements Iterator
         }
 
         @Override
-        @Nullable
-        Object apply(@Nullable Object o) {
+        @Nullable Object apply(@Nullable Object o) {
             JBIterator<?> it = (JBIterator<?>) Objects.requireNonNull(o);
             return ((advanced = nextOp != null) ? it.advance() : it.hasNext()) ? it : stop();
         }

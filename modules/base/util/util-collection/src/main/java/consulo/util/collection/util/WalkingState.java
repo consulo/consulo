@@ -23,111 +23,121 @@ import java.util.function.Predicate;
  * @author cdr
  */
 public class WalkingState<T> {
-  public interface TreeGuide<T> {
-    @Nullable T getNextSibling(T element);
-    @Nullable T getPrevSibling(T element);
-    @Nullable T getFirstChild(T element);
-    @Nullable T getParent(T element);
-  }
-  private boolean isDown;
-  protected boolean startedWalking;
-  private final TreeGuide<T> myWalker;
-  private boolean stopped;
+    public interface TreeGuide<T> {
+        @Nullable T getNextSibling(T element);
 
-  public void elementFinished(T element) {}
+        @Nullable T getPrevSibling(T element);
 
-  public WalkingState(TreeGuide<T> delegate) {
-    myWalker = delegate;
-  }
+        @Nullable T getFirstChild(T element);
 
-  public void visit(T element) {
-    elementStarted(element);
-  }
-
-  public void elementStarted(T element) {
-    isDown = true;
-    if (!startedWalking) {
-      stopped = false;
-      startedWalking = true;
-      try {
-        walkChildren(element);
-      }
-      finally {
-        startedWalking = false;
-      }
+        @Nullable T getParent(T element);
     }
-  }
 
-  private void walkChildren(T root) {
-    for (T element = next(root, root, isDown); element != null && !stopped; element = next(element, root, isDown)) {
-      isDown = false; // if client visitor did not call default visitElement it means skip subtree
-      T parent = myWalker.getParent(element);
-      T next = myWalker.getNextSibling(element);
-      visit(element);
-      assert myWalker.getNextSibling(element) == next
-          : "Next sibling of the element '" + element + "' changed. Was: " + next + "; " +
-          "Now:" + myWalker.getNextSibling(element) + "; Root:" + root;
-      assert myWalker.getParent(element) == parent
-          : "Parent of the element '" + element + "' changed. Was: " + parent + "; Now:" + myWalker.getParent(element) + "; Root:" + root;
+    private boolean isDown;
+    protected boolean startedWalking;
+    private final TreeGuide<T> myWalker;
+    private boolean stopped;
+
+    public void elementFinished(T element) {
     }
-  }
 
-  public @Nullable T next(T element, T root, boolean isDown) {
-    if (isDown) {
-      T child = myWalker.getFirstChild(element);
-      if (child != null) return child;
+    public WalkingState(TreeGuide<T> delegate) {
+        myWalker = delegate;
     }
-    // up
-    while (element != root && element != null) {
-      T next = myWalker.getNextSibling(element);
 
-      elementFinished(element);
-      if (next != null) {
-        Object nextPrev = myWalker.getPrevSibling(next);
-        if (nextPrev != element) {
-          String msg = "Element: " + element + "; next: " + next + "; next.prev: " + nextPrev;
-          while (true) {
-            T top = myWalker.getParent(element);
-            if (top == null) break;
-            element = top;
-          }
-          assert false : msg + " Top:" + element;
+    public void visit(T element) {
+        elementStarted(element);
+    }
+
+    public void elementStarted(T element) {
+        isDown = true;
+        if (!startedWalking) {
+            stopped = false;
+            startedWalking = true;
+            try {
+                walkChildren(element);
+            }
+            finally {
+                startedWalking = false;
+            }
         }
-        return next;
-      }
-      element = myWalker.getParent(element);
     }
-    if (element != null) {
-      elementFinished(element);
+
+    private void walkChildren(T root) {
+        for (T element = next(root, root, isDown); element != null && !stopped; element = next(element, root, isDown)) {
+            isDown = false; // if client visitor did not call default visitElement it means skip subtree
+            T parent = myWalker.getParent(element);
+            T next = myWalker.getNextSibling(element);
+            visit(element);
+            assert myWalker.getNextSibling(element) == next
+                : "Next sibling of the element '" + element + "' changed. Was: " + next + "; " +
+                "Now:" + myWalker.getNextSibling(element) + "; Root:" + root;
+            assert myWalker.getParent(element) == parent
+                : "Parent of the element '" + element + "' changed. Was: " + parent +
+                "; Now:" + myWalker.getParent(element) + "; Root:" + root;
+        }
     }
-    return null;
-  }
 
-  public void startedWalking() {
-    startedWalking = true;
-  }
-
-  public void stopWalking() {
-    stopped = true;
-  }
-
-  /**
-   * process in the in-order fashion
-   */
-  public static <T> boolean processAll(T root, TreeGuide<T> treeGuide, final Predicate<T> processor) {
-    final boolean[] result = {true};
-    new WalkingState<T>(treeGuide) {
-      @Override
-      public void visit(T element) {
-        if (!processor.test(element)) {
-          stopWalking();
-          result[0] = false;
+    public @Nullable T next(T element, T root, boolean isDown) {
+        if (isDown) {
+            T child = myWalker.getFirstChild(element);
+            if (child != null) {
+                return child;
+            }
         }
-        else {
-          super.visit(element);
+        // up
+        while (element != root && element != null) {
+            T next = myWalker.getNextSibling(element);
+
+            elementFinished(element);
+            if (next != null) {
+                Object nextPrev = myWalker.getPrevSibling(next);
+                if (nextPrev != element) {
+                    String msg = "Element: " + element + "; next: " + next + "; next.prev: " + nextPrev;
+                    while (true) {
+                        T top = myWalker.getParent(element);
+                        if (top == null) {
+                            break;
+                        }
+                        element = top;
+                    }
+                    assert false : msg + " Top:" + element;
+                }
+                return next;
+            }
+            element = myWalker.getParent(element);
         }
-      }
-    }.visit(root);
-    return result[0];
-  }
+        if (element != null) {
+            elementFinished(element);
+        }
+        return null;
+    }
+
+    public void startedWalking() {
+        startedWalking = true;
+    }
+
+    public void stopWalking() {
+        stopped = true;
+    }
+
+    /**
+     * process in the in-order fashion
+     */
+    public static <T> boolean processAll(T root, TreeGuide<T> treeGuide, final Predicate<T> processor) {
+        final boolean[] result = {true};
+        new WalkingState<>(treeGuide) {
+            @Override
+            public void visit(T element) {
+                if (!processor.test(element)) {
+                    stopWalking();
+                    result[0] = false;
+                }
+                else {
+                    super.visit(element);
+                }
+            }
+        }.visit(root);
+        return result[0];
+    }
 }
