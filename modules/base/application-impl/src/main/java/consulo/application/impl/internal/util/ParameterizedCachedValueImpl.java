@@ -26,7 +26,7 @@ public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> imple
     private final Project myProject;
     private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-    ParameterizedCachedValueImpl(
+    public ParameterizedCachedValueImpl(
         Project project,
         ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue,

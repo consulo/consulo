@@ -48,3 +48,7 @@ settings.inlay.parameter.hints.panel.name:
     text: Parameter hints
 toolwindow.structure.display.name:
     text: Structure
+navigation.context.notification.text:
+    text: Viewing in context [{0}] - navigated from {1}
+navigation.context.view.original:
+    text: View original

@@ -59,4 +59,5 @@ public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements
     public @Nullable PsiElement getNameIdentifier() {
         return findChildByType(SandTokens.IDENTIFIER);
     }
+
 }

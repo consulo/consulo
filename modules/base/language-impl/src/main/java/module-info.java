@@ -4,6 +4,8 @@
  */
 module consulo.language.impl {
     requires transitive consulo.project.api;
+    requires consulo.module.api;
+    requires consulo.module.content.api;
     requires transitive consulo.language.api;
     requires consulo.document.impl;
     requires consulo.undo.redo.api;

@@ -24,6 +24,7 @@ import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.internal.psi.stub.IndexedFileImpl;
 import consulo.language.index.impl.internal.dependencies.FileIndexingStamp;
 import consulo.language.index.impl.internal.dependencies.ScanningRequestToken;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IndexedFile;
 import consulo.logging.Logger;
@@ -165,7 +166,11 @@ final class UnindexedFilesFinder {
     ) {
         myProject = project;
         myFileBasedIndex = (FileBasedIndexImpl) FileBasedIndex.getInstance();
-        myForceReindexingTrigger = forceReindexingTrigger;
+        // with no explicit trigger the module-aware layer supplies one, so a file whose module options drifted is
+        // reindexed by the ordinary scan; it costs one empty-list check when nothing declares option providers
+        myForceReindexingTrigger = forceReindexingTrigger != null
+            ? forceReindexingTrigger
+            : (indexedFile, stamp) -> ModuleAwareIndexMetaRecorder.isOptionsDrifted(indexedFile);
         myIndexingRequest = indexingRequest;
     }
 

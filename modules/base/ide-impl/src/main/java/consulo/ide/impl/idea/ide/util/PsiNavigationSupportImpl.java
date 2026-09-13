@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
+
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
@@ -39,7 +41,10 @@ public class PsiNavigationSupportImpl implements PsiNavigationSupport {
         }
 
         int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
-        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(navigationElement);
+        VirtualFile virtualFile = ModuleAwareIndexOptions.physicalFileOfVariantCopy(navigationElement);
+        if (virtualFile == null) {
+            virtualFile = PsiUtilCore.getVirtualFile(navigationElement);
+        }
         if (virtualFile == null || !virtualFile.isValid()) {
             return null;
         }

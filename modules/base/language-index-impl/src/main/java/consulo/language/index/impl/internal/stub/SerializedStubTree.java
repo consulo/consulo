@@ -15,6 +15,8 @@
  */
 package consulo.language.index.impl.internal.stub;
 
+import consulo.language.index.impl.internal.moduleAware.VariantDescriptor;
+
 import consulo.language.impl.DebugUtil;
 import consulo.language.internal.SerializationManagerEx;
 import consulo.language.psi.stub.*;
@@ -32,7 +34,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -61,19 +68,69 @@ public class SerializedStubTree {
 
   private volatile SerializationManagerEx mySerializationManager;
 
+  private final @Nullable VariantDescriptor myDescriptor;
+  private final List<StubVariant> myVariants;
+  private volatile Map<StubIndexKey, Map<Object, StubIdList>> myUnionIndexedStubs;
+
+  public record StubVariant(VariantDescriptor descriptor, SerializedStubTree tree) {
+  }
+
   public void setSerializationManager(SerializationManagerEx serializationManager) {
     mySerializationManager = serializationManager;
   }
 
   public SerializedStubTree(byte[] treeBytes, int treeByteLength, @Nullable Stub stubElement,
                             byte[] indexedStubBytes, int indexedStubByteLength, @Nullable Map<StubIndexKey, Map<Object, StubIdList>> indexedStubs) {
+    this(treeBytes, treeByteLength, stubElement, indexedStubBytes, indexedStubByteLength, indexedStubs, null, List.of());
+  }
+
+  public SerializedStubTree(byte[] treeBytes, int treeByteLength, @Nullable Stub stubElement,
+                            byte[] indexedStubBytes, int indexedStubByteLength, @Nullable Map<StubIndexKey, Map<Object, StubIdList>> indexedStubs,
+                            @Nullable VariantDescriptor descriptor, List<StubVariant> variants) {
     myTreeBytes = treeBytes;
     myTreeByteLength = treeByteLength;
     myStubElement = stubElement;
-
     myIndexedStubBytes = indexedStubBytes;
     myIndexedStubByteLength = indexedStubByteLength;
     myIndexedStubs = indexedStubs;
+    myDescriptor = descriptor;
+    myVariants = List.copyOf(variants);
+  }
+
+  /**
+   * This tree as the primary variant of a file, described by {@code descriptor}, together with its secondary variants.
+   */
+  public SerializedStubTree withVariants(VariantDescriptor descriptor, List<StubVariant> variants) {
+    return new SerializedStubTree(myTreeBytes, myTreeByteLength, myStubElement, myIndexedStubBytes, myIndexedStubByteLength, myIndexedStubs, descriptor, variants);
+  }
+
+  public int getVariantCount() {
+    return 1 + myVariants.size();
+  }
+
+  public SerializedStubTree getVariantTree(int index) {
+    return index == 0 ? this : myVariants.get(index - 1).tree();
+  }
+
+  public @Nullable VariantDescriptor getDescriptor(int index) {
+    return index == 0 ? myDescriptor : myVariants.get(index - 1).descriptor();
+  }
+
+  public List<StubVariant> getVariants() {
+    return myVariants;
+  }
+
+  /**
+   * @return the index of the variant whose providers carry exactly the given payloads, or -1
+   */
+  public int findVariant(Map<String, byte[]> payloads) {
+    for (int i = 0; i < getVariantCount(); i++) {
+      VariantDescriptor descriptor = getDescriptor(i);
+      if (descriptor != null && descriptor.matches(payloads)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   public SerializedStubTree(Stub rootStub, SerializationManagerEx serializationManager, StubForwardIndexExternalizer<?> forwardIndexExternalizer) throws IOException {
@@ -87,6 +144,8 @@ public class SerializedStubTree {
     forwardIndexExternalizer.save(new DataOutputStream(indexBytes), myIndexedStubs);
     myIndexedStubBytes = indexBytes.getInternalBuffer();
     myIndexedStubByteLength = indexBytes.size();
+    myDescriptor = null;
+    myVariants = List.of();
   }
 
   
@@ -115,13 +174,24 @@ public class SerializedStubTree {
       reSerializedIndexByteLength = reSerializedStubIndices.size();
     }
 
-    return new SerializedStubTree(outStub.getInternalBuffer(), outStub.size(), null, reSerializedIndexBytes, reSerializedIndexByteLength, myIndexedStubs);
+    List<StubVariant> variants = new ArrayList<>(myVariants.size());
+    for (StubVariant variant : myVariants) {
+      variants.add(new StubVariant(variant.descriptor(), variant.tree().reSerialize(currentSerializationManager, newSerializationManager, currentForwardIndexSerializer, newForwardIndexSerializer)));
+    }
+    return new SerializedStubTree(outStub.getInternalBuffer(), outStub.size(), null, reSerializedIndexBytes, reSerializedIndexByteLength, myIndexedStubs, myDescriptor, variants);
   }
 
   void restoreIndexedStubs(StubForwardIndexExternalizer<?> dataExternalizer) throws IOException {
     if (myIndexedStubs == null) {
       myIndexedStubs = dataExternalizer.read(new DataInputStream(new ByteArrayInputStream(myIndexedStubBytes, 0, myIndexedStubByteLength)));
     }
+    for (StubVariant variant : myVariants) {
+      variant.tree().restoreIndexedStubs(dataExternalizer);
+    }
+  }
+
+  <K> StubIdList restoreIndexedStubs(StubForwardIndexExternalizer<?> dataExternalizer, StubIndexKey<K, ?> indexKey, K key, int variant) throws IOException {
+    return getVariantTree(variant).restoreIndexedStubs(dataExternalizer, indexKey, key);
   }
 
   <K> StubIdList restoreIndexedStubs(StubForwardIndexExternalizer<?> dataExternalizer, StubIndexKey<K, ?> indexKey, K key) throws IOException {
@@ -132,8 +202,39 @@ public class SerializedStubTree {
   }
 
   
+  /**
+   * The keys of every variant of the file: the inverted stub indexes point at a file whenever any of its variants
+   * contains a key, and the variant-specific stub ids are resolved from the value at query time.
+   */
   public Map<StubIndexKey, Map<Object, StubIdList>> getStubIndicesValueMap() {
-    return myIndexedStubs;
+    if (myVariants.isEmpty()) {
+      return myIndexedStubs;
+    }
+    Map<StubIndexKey, Map<Object, StubIdList>> union = myUnionIndexedStubs;
+    if (union != null) {
+      return union;
+    }
+    try {
+      restoreIndexedStubs(StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE);
+    }
+    catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+    union = new HashMap<>();
+    for (int i = 0; i < getVariantCount(); i++) {
+      Map<StubIndexKey, Map<Object, StubIdList>> variantMap = getVariantTree(i).myIndexedStubs;
+      if (variantMap == null) {
+        continue;
+      }
+      for (Map.Entry<StubIndexKey, Map<Object, StubIdList>> entry : variantMap.entrySet()) {
+        Map<Object, StubIdList> merged = union.computeIfAbsent(entry.getKey(), k -> new HashMap<>());
+        for (Map.Entry<Object, StubIdList> keyEntry : entry.getValue().entrySet()) {
+          merged.putIfAbsent(keyEntry.getKey(), keyEntry.getValue());
+        }
+      }
+    }
+    myUnionIndexedStubs = union;
+    return union;
   }
 
   @TestOnly
@@ -178,12 +279,24 @@ public class SerializedStubTree {
       return false;
     }
     SerializedStubTree thatTree = (SerializedStubTree)that;
+    if (!sameBytes(thatTree) || myVariants.size() != thatTree.myVariants.size() || !Objects.equals(myDescriptor, thatTree.myDescriptor)) {
+      return false;
+    }
+    for (int i = 0; i < myVariants.size(); i++) {
+      StubVariant mine = myVariants.get(i);
+      StubVariant theirs = thatTree.myVariants.get(i);
+      if (!mine.descriptor().equals(theirs.descriptor()) || !mine.tree().sameBytes(theirs.tree())) {
+        return false;
+      }
+    }
+    return true;
+  }
 
+  private boolean sameBytes(SerializedStubTree thatTree) {
     int length = myTreeByteLength;
     if (length != thatTree.myTreeByteLength) {
       return false;
     }
-
     byte[] thisBytes = myTreeBytes;
     byte[] thatBytes = thatTree.myTreeBytes;
     for (int i = 0; i < length; i++) {
@@ -191,7 +304,6 @@ public class SerializedStubTree {
         return false;
       }
     }
-
     return true;
   }
 

@@ -13,6 +13,7 @@ import consulo.index.io.internal.DebugAssertions;
 import consulo.language.index.impl.internal.forward.*;
 import consulo.language.internal.psi.stub.IdIndex;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.IdFilter;
 import consulo.language.psi.stub.IndexedFile;
@@ -132,7 +133,18 @@ public class VfsAwareMapReduceIndex<Key, Value, Input, FileIndexMetaData> extend
 
   @Override
   public FileIndexingStateWithExplanation getIndexingStateForFile(int fileId, IndexedFile file) {
-    return IndexingStamp.isFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId);
+    FileIndexingStateWithExplanation state = IndexingStamp.isFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId);
+    if (!state.isUpToDate()) {
+      return state;
+    }
+    // the stamp says the data is current for this content; an index that declares option providers is current only
+    // if the options it was produced under still match, which is what makes a scan reindex a drifted file
+    if (myExtension instanceof FileBasedIndexExtension<?, ?> extension
+      && !extension.getOptionProviderIds().isEmpty()
+      && ModuleAwareIndexMetaRecorder.isStale((ID<?, ?>)myIndexId, file.getFile(), file.getProject())) {
+      return FileIndexingStateWithExplanation.outdated("module-aware options drifted");
+    }
+    return state;
   }
 
   @Override

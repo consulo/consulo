@@ -30,7 +30,8 @@ module consulo.code.editor.impl {
         consulo.util.xml.serializer,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.it;
 
     exports consulo.codeEditor.impl.internal to
         consulo.desktop.awt.editor.impl,

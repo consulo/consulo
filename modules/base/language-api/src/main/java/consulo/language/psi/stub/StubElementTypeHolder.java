@@ -55,6 +55,10 @@ public abstract class StubElementTypeHolder<T> {
    * </li>
    * <li>For all other fields, if any, the same {@code prefix+debugName} concatenation doesn't produce an external id used by any other stub element type</li>
    * </ul>
+   * The concatenation is raw — the prefix must therefore <b>include the trailing separator</b>, e.g. {@code "sand."},
+   * or the lazily registered name will not match the element type's real external id and serialization of that
+   * stub fails with "No ID found for serializer" the first time the language is indexed before any of its classes
+   * happened to load.
    */
   public abstract @Nullable String getExternalIdPrefix();
 

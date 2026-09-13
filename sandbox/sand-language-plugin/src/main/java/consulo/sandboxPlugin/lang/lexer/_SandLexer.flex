@@ -39,9 +39,18 @@ IDENTIFIER=[:jletter:] [:jletterdigit:]*
 
 <YYINITIAL>
 {
+  "#flag"                   { return SandTokens.FLAG_KEYWORD; }
+  "#undef"                  { return SandTokens.UNDEF_KEYWORD; }
+  "#include"                { return SandTokens.INCLUDE_KEYWORD; }
+  "#ifndef"                 { return SandTokens.IFNDEF_KEYWORD; }
+  "#if"                     { return SandTokens.IF_KEYWORD; }
+  "#elif"                   { return SandTokens.ELIF_KEYWORD; }
+  "#else"                   { return SandTokens.ELSE_KEYWORD; }
+  "#end"                    { return SandTokens.END_KEYWORD; }
   "class"                   { return SandTokens.CLASS_KEYWORD; }
   "{"                       { return SandTokens.LBRACE; }
   "}"                       { return SandTokens.RBRACE; }
+  ":"                       { return SandTokens.COLON; }
   {STRING_LITERAL}          { return SandTokens.STRING_LITERAL; }
   {SINGLE_LINE_COMMENT}     { return SandTokens.LINE_COMMENT; }
   {IDENTIFIER}              { return SandTokens.IDENTIFIER; }

@@ -22,6 +22,8 @@ import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
+import consulo.language.psi.stub.IndexOptionSelector;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
 import consulo.language.psi.stub.StubIndex;
 import consulo.navigation.NavigationItem;
 import consulo.sandboxPlugin.lang.psi.SandClass;
@@ -42,7 +44,10 @@ public class SandClassContributor implements GotoClassOrTypeContributor {
 
   @Override
   public void processElementsWithName(String name, Processor<NavigationItem> processor, FindSymbolParameters parameters) {
-    StubIndex.getInstance()
-            .processElements(SandIndexKeys.SAND_CLASSES, name, parameters.getProject(), (GlobalSearchScope)parameters.getSearchScope(), parameters.getIdFilter(), SandClass.class, processor);
+    ModuleAwareIndexOptions.withSelector(IndexOptionSelector.ALL_VARIANTS, () -> {
+      StubIndex.getInstance()
+              .processElements(SandIndexKeys.SAND_CLASSES, name, parameters.getProject(), (GlobalSearchScope)parameters.getSearchScope(), parameters.getIdFilter(), SandClass.class, processor);
+      return null;
+    });
   }
 }

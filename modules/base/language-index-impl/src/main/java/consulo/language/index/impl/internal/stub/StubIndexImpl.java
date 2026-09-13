@@ -1,6 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.index.impl.internal.stub;
 
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexVariants;
+import consulo.language.index.impl.internal.moduleAware.VariantDescriptor;
+import consulo.language.psi.stub.IndexOptionSelector;
+import consulo.language.psi.stub.ModuleAwareIndexOptions;
+
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.ModalityStateImpl;
@@ -391,6 +396,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
             return true;
         }
         PersistentFS fs = (PersistentFS)ManagingFS.getInstance();
+        IndexOptionSelector selector = ModuleAwareIndexOptions.currentSelector();
         // already ensured up-to-date in getContainingIds() method
         try {
             while (ids.hasNext()) {
@@ -400,16 +406,39 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 if (file == null || (scope != null && !scope.contains(file))) {
                     continue;
                 }
-
-                StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(
-                    new CompositeKey(key, id),
-                    __ -> myStubProcessingHelper.retrieveStubIdList(indexKey, key, file, stubUpdatingIndex, true)
-                );
-                if (list == null) {
+                SerializedStubTree tree = myStubProcessingHelper.readTree(file, stubUpdatingIndex, true);
+                if (tree == null) {
                     continue;
                 }
-                if (!myStubProcessingHelper.processStubsInFile(project, file, list, processor, scope, requiredClass)) {
-                    return false;
+                int current = ModuleAwareIndexVariants.currentVariant(tree, file);
+                int variantCount = tree.getVariantCount();
+                int[] variants;
+                if (selector == IndexOptionSelector.ALL_VARIANTS && variantCount > 1) {
+                    variants = new int[variantCount];
+                    for (int i = 0; i < variantCount; i++) {
+                        variants[i] = i;
+                    }
+                }
+                else {
+                    variants = new int[]{ModuleAwareIndexVariants.selectVariant(tree, file, selector)};
+                }
+                boolean found = false;
+                for (int variant : variants) {
+                    StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(
+                        new CompositeKey(key, id, variant),
+                        __ -> myStubProcessingHelper.retrieveStubIdList(indexKey, key, file, tree, variant, variantCount == 1)
+                    );
+                    if (list == null) {
+                        continue;
+                    }
+                    found = true;
+                    VariantDescriptor foreign = variant == current ? null : tree.getDescriptor(variant);
+                    if (!myStubProcessingHelper.processStubsInFile(project, file, foreign, list, processor, scope, requiredClass)) {
+                        return false;
+                    }
+                }
+                if (!found && variantCount > 1 && selector == IndexOptionSelector.ALL_VARIANTS) {
+                    myStubProcessingHelper.retrieveStubIdList(indexKey, key, file, tree, current, true);
                 }
             }
         }
@@ -816,10 +845,12 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     private static class CompositeKey<K> {
         private final K key;
         private final int fileId;
+        private final int variant;
 
-        private CompositeKey(K key, int id) {
+        private CompositeKey(K key, int id, int variant) {
             this.key = key;
             fileId = id;
+            this.variant = variant;
         }
 
         @Override
@@ -831,12 +862,12 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 return false;
             }
             CompositeKey<?> key1 = (CompositeKey<?>)o;
-            return fileId == key1.fileId && Objects.equals(key, key1.key);
+            return fileId == key1.fileId && variant == key1.variant && Objects.equals(key, key1.key);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(key, fileId);
+            return Objects.hash(key, fileId, variant);
         }
     }
 }

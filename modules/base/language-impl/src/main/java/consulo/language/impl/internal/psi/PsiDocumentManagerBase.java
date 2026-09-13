@@ -83,7 +83,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     protected boolean myStopTrackingDocuments;
     private boolean myPerformBackgroundCommit = true;
 
-    private volatile boolean myIsCommitInProgress;
+    private final ThreadLocal<Integer> myIsCommitInProgress = new ThreadLocal<>();
     private static volatile boolean ourIsFullReparseInProgress;
     private final PsiToDocumentSynchronizer mySynchronizer;
 
@@ -369,12 +369,23 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         Document document = getTopLevelDocument(doc);
 
         if (isEventSystemEnabled(document)) {
-            UIAccess.assertIsUIThread();
+            assertCommitThread();
         }
 
         if (!isCommitted(document)) {
             doCommit(document);
         }
+    }
+
+    /**
+     * PSI commits belong to the UI thread in event-system-enabled providers. Headless
+     * containers substitute their own manager and relax this to the calling thread —
+     * a single-threaded UI executor cannot take the write lock without deadlocking
+     * against background write actions transferring onto it.
+     */
+    @RequiredUIAccess
+    protected void assertCommitThread() {
+        UIAccess.assertIsUIThread();
     }
 
     @RequiredReadAction
@@ -392,7 +403,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         Object reason
     ) {
         assert !myProject.isDisposed() : "Already disposed";
-        UIAccess.assertIsUIThread();
+        assertCommitThread();
         final boolean[] ok = {true};
         Runnable runnable = new DocumentRunnable(document, myProject) {
             @Override
@@ -425,7 +436,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         boolean synchronously,
         boolean forceNoPsiCommit
     ) {
-        UIAccess.assertIsUIThread();
+        assertCommitThread();
         if (myProject.isDisposed()) {
             return false;
         }
@@ -438,32 +449,32 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
         FileViewProvider viewProvider = forceNoPsiCommit ? null : getCachedViewProvider(document);
 
-        myIsCommitInProgress = true;
         SimpleReference<Boolean> success = new SimpleReference<>(true);
-        try {
-            ProgressManager.getInstance().executeNonCancelableSection(() -> {
-                if (viewProvider == null) {
-                    handleCommitWithoutPsi(document);
-                }
-                else {
-                    success.set(commitToExistingPsi(document, finishProcessors, reparseInjectedProcessors, synchronously, virtualFile));
-                }
-            });
-        }
-        catch (Throwable e) {
+        executeInsideCommit(() -> {
             try {
-                forceReload(virtualFile, viewProvider);
+                ProgressManager.getInstance().executeNonCancelableSection(() -> {
+                    if (viewProvider == null) {
+                        handleCommitWithoutPsi(document);
+                    }
+                    else {
+                        success.set(commitToExistingPsi(document, finishProcessors, reparseInjectedProcessors, synchronously, virtualFile));
+                    }
+                });
+            }
+            catch (Throwable e) {
+                try {
+                    forceReload(virtualFile, viewProvider);
+                }
+                finally {
+                    LOG.error(e);
+                }
             }
             finally {
-                LOG.error(e);
+                if (success.get()) {
+                    myUncommittedDocuments.remove(document);
+                }
             }
-        }
-        finally {
-            if (success.get()) {
-                myUncommittedDocuments.remove(document);
-            }
-            myIsCommitInProgress = false;
-        }
+        });
 
         return success.get();
     }
@@ -529,7 +540,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     @RequiredUIAccess
     private boolean doCommit(Document document) {
-        assert !myIsCommitInProgress : "Do not call commitDocument() from inside PSI change listener";
+        assert !isCommitInProgress() : "Do not call commitDocument() from inside PSI change listener";
 
         // otherwise there are many clients calling commitAllDocs() on PSI childrenChanged()
         if (getSynchronizer().isDocumentAffectedByTransactions(document)) {
@@ -544,13 +555,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         }
 
         Application.get().runWriteAction(() -> {
-            myIsCommitInProgress = true;
-            try {
-                myDocumentCommitProcessor.commitSynchronously(document, myProject, psiFile);
-            }
-            finally {
-                myIsCommitInProgress = false;
-            }
+            executeInsideCommit(() -> myDocumentCommitProcessor.commitSynchronously(document, myProject, psiFile));
             assert !isInUncommittedSet(document) : "Document :" + document;
         });
         return true;
@@ -558,7 +563,19 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     // true if the PSI is being modified and events being sent
     public boolean isCommitInProgress() {
-        return myIsCommitInProgress || isFullReparseInProgress();
+        return myIsCommitInProgress.get() != null || isFullReparseInProgress();
+    }
+
+    // inside this method isCommitInProgress() == true
+    private void executeInsideCommit(Runnable runnable) {
+        Integer counter = myIsCommitInProgress.get();
+        myIsCommitInProgress.set(counter == null ? 1 : counter + 1);
+        try {
+            runnable.run();
+        }
+        finally {
+            myIsCommitInProgress.set(counter);
+        }
     }
 
     public static boolean isFullReparseInProgress() {
@@ -901,7 +918,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     @Override
     public boolean hasUncommitedDocuments() {
-        return !myIsCommitInProgress && !myUncommittedDocuments.isEmpty();
+        return !isCommitInProgress() && !myUncommittedDocuments.isEmpty();
     }
 
     @Override

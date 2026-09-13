@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.codeEditor.EditorFactory;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -33,5 +34,18 @@ public class HeadlessPsiDocumentManager extends PsiDocumentManagerBase {
     @Inject
     public HeadlessPsiDocumentManager(Project project, DocumentCommitProcessor documentCommitProcessor) {
         super(project, documentCommitProcessor);
+        // same wiring as the production PsiDocumentManagerImpl: without it the manager never
+        // hears document changes - documents stay "committed" forever, commitDocument no-ops,
+        // trees go stale and unsaved-document indexing indexes the old text
+        EditorFactory.getInstance().getEventMulticaster().addDocumentListener(this, this);
+    }
+
+    /**
+     * Commits run on the calling thread: the headless UI executor must never take the
+     * write lock (it deadlocks against background write actions transferring onto it),
+     * so tests commit from their own thread instead.
+     */
+    @Override
+    protected void assertCommitThread() {
     }
 }

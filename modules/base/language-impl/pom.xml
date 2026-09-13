@@ -53,5 +53,10 @@
             <artifactId>consulo-undo-redo-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-module-content-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -70,7 +70,7 @@ public class SandLanguageVersion extends BaseSandLanguageVersion {
   
   @Override
   public TokenSet getCommentTokens() {
-    return TokenSet.create(SandTokens.LINE_COMMENT);
+    return TokenSet.create(SandTokens.LINE_COMMENT, SandTokens.NON_ACTIVE_SYMBOL);
   }
 
   

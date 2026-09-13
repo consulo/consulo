@@ -6,6 +6,7 @@
 .consulo/misc.xml
 .consulo/compiler.xml
 .consulo/encodings.xml
+.consulo/encodings.json
 .consulo/modules.xml
 .consulo/uiDesigner.xml
 .consulo/artifacts/

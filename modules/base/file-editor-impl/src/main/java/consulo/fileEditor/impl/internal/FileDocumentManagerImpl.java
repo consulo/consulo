@@ -16,6 +16,7 @@ import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.impl.FrozenDocument;
+import consulo.document.internal.RecomputeFileTypeMarker;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.FileDocumentManagerEx;
 import consulo.document.internal.PrioritizedDocumentListener;
@@ -82,7 +83,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     private static final Key<String> LINE_SEPARATOR_KEY = Key.create("LINE_SEPARATOR_KEY");
     private static final Key<VirtualFile> FILE_KEY = Key.create("FILE_KEY");
-    protected static final Key<Boolean> MUST_RECOMPUTE_FILE_TYPE = Key.create("Must recompute file type");
     private static final Key<Boolean> BIG_FILE_PREVIEW = Key.create("BIG_FILE_PREVIEW");
 
     private final Set<Document> myUnsavedDocuments = ContainerUtil.newConcurrentSet();
@@ -765,12 +765,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     public static boolean recomputeFileTypeIfNecessary(VirtualFile virtualFile) {
-        if (virtualFile.getUserData(MUST_RECOMPUTE_FILE_TYPE) != null) {
-            virtualFile.getFileType();
-            virtualFile.putUserData(MUST_RECOMPUTE_FILE_TYPE, null);
-            return true;
-        }
-        return false;
+        return RecomputeFileTypeMarker.recomputeFileTypeIfNecessary(virtualFile);
     }
 
     private void fireUnsavedDocumentsDropped() {

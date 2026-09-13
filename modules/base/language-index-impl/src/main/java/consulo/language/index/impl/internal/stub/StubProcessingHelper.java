@@ -26,13 +26,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
 
   private final ThreadLocal<Set<VirtualFile>> myFilesHavingProblems = new ThreadLocal<>();
 
-  public @Nullable <Key, Psi extends PsiElement> StubIdList retrieveStubIdList(
-    StubIndexKey<Key, Psi> indexKey,
-    Key key,
-    VirtualFile file,
-    UpdatableIndex<Integer, SerializedStubTree, FileContent, ?> stubUpdatingIndex,
-    boolean failOnMissedKeys
-  ) {
+  public @Nullable SerializedStubTree readTree(VirtualFile file, UpdatableIndex<Integer, SerializedStubTree, FileContent, ?> stubUpdatingIndex, boolean failOnMissedKeys) {
     int id = FileBasedIndex.getFileId(file);
     try {
       Map<Integer, SerializedStubTree> data = stubUpdatingIndex.getIndexedFileData(id);
@@ -43,16 +37,31 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
         }
         return null;
       }
-      SerializedStubTree tree = data.values().iterator().next();
+      return data.values().iterator().next();
+    }
+    catch (StorageException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public @Nullable <Key, Psi extends PsiElement> StubIdList retrieveStubIdList(
+    StubIndexKey<Key, Psi> indexKey,
+    Key key,
+    VirtualFile file,
+    SerializedStubTree tree,
+    int variant,
+    boolean failOnMissedKeys
+  ) {
+    try {
       StubIdList stubIdList =
-        tree.restoreIndexedStubs(StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE, indexKey, key);
+        tree.restoreIndexedStubs(StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE, indexKey, key, variant);
       if (stubIdList == null && failOnMissedKeys) {
         LOG.error("Stub ids not found for key in index = " + indexKey.getName() + ", file " + file.getPath());
         onInternalError(file);
       }
       return stubIdList;
     }
-    catch (StorageException | IOException e) {
+    catch (IOException e) {
       throw new RuntimeException(e);
     }
   }

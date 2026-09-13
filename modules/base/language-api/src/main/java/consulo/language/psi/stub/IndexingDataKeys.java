@@ -20,6 +20,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 
+import java.util.Map;
+
 /**
  * @author yole
  */
@@ -33,4 +35,11 @@ public interface IndexingDataKeys {
   Key<LighterAST> LIGHTER_AST_NODE_KEY = Key.create("lighter.ast.node");
 
   Key<Boolean> REBUILD_REQUESTED = Key.create("REBUILD_REQUESTED");
+
+  /**
+   * The module-aware option payloads, by provider id, that a PSI file was created to be parsed under. Set on a
+   * {@link consulo.language.psi.stub.FileContent} before its PSI is built and copied onto that PSI, so the parse of a
+   * secondary stub variant sees its own options rather than the file's recorded ones.
+   */
+  Key<Map<String, byte[]>> INDEX_OPTIONS = Key.create("module.aware.index.options");
 }

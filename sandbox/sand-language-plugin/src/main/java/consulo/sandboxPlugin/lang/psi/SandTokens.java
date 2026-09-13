@@ -30,4 +30,14 @@ public interface SandTokens extends StandardTokenTypes {
   IElementType LBRACE = new IElementType("LBRACE", SandLanguage.INSTANCE);
   IElementType RBRACE = new IElementType("RBRACE", SandLanguage.INSTANCE);
   IElementType STRING_LITERAL = new IElementType("STRING_LITERAL", SandLanguage.INSTANCE);
+  IElementType COLON = new IElementType("COLON", SandLanguage.INSTANCE);
+  IElementType FLAG_KEYWORD = new IElementType("FLAG_KEYWORD", SandLanguage.INSTANCE);
+  IElementType UNDEF_KEYWORD = new IElementType("UNDEF_KEYWORD", SandLanguage.INSTANCE);
+  IElementType IF_KEYWORD = new IElementType("IF_KEYWORD", SandLanguage.INSTANCE);
+  IElementType IFNDEF_KEYWORD = new IElementType("IFNDEF_KEYWORD", SandLanguage.INSTANCE);
+  IElementType ELIF_KEYWORD = new IElementType("ELIF_KEYWORD", SandLanguage.INSTANCE);
+  IElementType ELSE_KEYWORD = new IElementType("ELSE_KEYWORD", SandLanguage.INSTANCE);
+  IElementType END_KEYWORD = new IElementType("END_KEYWORD", SandLanguage.INSTANCE);
+  IElementType INCLUDE_KEYWORD = new IElementType("INCLUDE_KEYWORD", SandLanguage.INSTANCE);
+  IElementType NON_ACTIVE_SYMBOL = new IElementType("NON_ACTIVE_SYMBOL", SandLanguage.INSTANCE);
 }
