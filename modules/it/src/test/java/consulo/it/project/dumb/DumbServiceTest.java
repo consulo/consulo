@@ -20,6 +20,7 @@ import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessApplicationExtension;
+import consulo.it.index.ScanningTestSupport;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -74,7 +75,7 @@ public class DumbServiceTest {
         throws Exception {
         Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
-        BlockingQueue<Event> events = subscribe(application, project, dumbService);
+        BlockingQueue<Event> events = subscribe(application, project);
 
         UIAccess uiAccess = application.getLastUIAccess();
         for (int cycle = 0; cycle < CYCLES; cycle++) {
@@ -102,7 +103,7 @@ public class DumbServiceTest {
         throws Exception {
         Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
-        BlockingQueue<Event> events = subscribe(application, project, dumbService);
+        BlockingQueue<Event> events = subscribe(application, project);
 
         assertThat(application.isDispatchThread())
             .as("this test must queue from a non-UI thread to reach the background path")
@@ -127,7 +128,7 @@ public class DumbServiceTest {
         throws Exception {
         Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
-        BlockingQueue<Event> events = subscribe(application, project, dumbService);
+        BlockingQueue<Event> events = subscribe(application, project);
 
         CountDownLatch performed = new CountDownLatch(1);
         AtomicBoolean dumbOnReturn = new AtomicBoolean();
@@ -161,7 +162,7 @@ public class DumbServiceTest {
     ) throws Exception {
         Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
-        BlockingQueue<Event> events = subscribe(application, project, dumbService);
+        BlockingQueue<Event> events = subscribe(application, project);
 
         assertThat(application.isDispatchThread()).as("this test must queue from a non-UI thread").isFalse();
 
@@ -194,11 +195,11 @@ public class DumbServiceTest {
     }
 
     /**
-     * Subscribes once the project has settled into smart mode, so the indexing started by the open flow
-     * cannot leak an unpaired {@code exitDumbMode} into the recorded events.
+     * Subscribes once the open flow is completely idle: scanning, the indexing it queues and every dumb task,
+     * not just the first smart moment, so none of them can leak an unpaired {@code exitDumbMode} into the
+     * recorded events.
      */
-    private static BlockingQueue<Event> subscribe(Application application, Project project, DumbService dumbService)
-        throws InterruptedException {
+    private static BlockingQueue<Event> subscribe(Application application, Project project) throws Exception {
         BlockingQueue<Event> events = new LinkedBlockingQueue<>();
         project.getMessageBus().connect().subscribe(
             DumbModeListenerBackgroundable.class,
@@ -215,11 +216,7 @@ public class DumbServiceTest {
             }
         );
 
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS))
-            .as("project must reach smart mode after open")
-            .isTrue();
+        ScanningTestSupport.awaitIdle(project);
         events.clear();
         return events;
     }
