@@ -1,9 +1,9 @@
 package consulo.execution.coverage;
 
-import com.intellij.rt.coverage.data.ClassData;
-import com.intellij.rt.coverage.data.LineCoverage;
-import com.intellij.rt.coverage.data.LineData;
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageUnit;
+import consulo.execution.coverage.data.LineStatus;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.CoverageProjectData;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectFileIndex;
@@ -124,7 +124,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
     protected @Nullable FileCoverageInfo collectBaseFileCoverage(
         VirtualFile file,
         Annotator annotator,
-        ProjectData projectData,
+        CoverageProjectData projectData,
         Map<String, String> normalizedFiles2Files
     ) {
         String filePath = normalizeFilePath(file.getPath());
@@ -132,7 +132,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         // process file
         FileCoverageInfo info;
 
-        ClassData classData = getClassData(filePath, projectData, normalizedFiles2Files);
+        CoverageUnit classData = getClassData(filePath, projectData, normalizedFiles2Files);
         if (classData != null) {
             // fill info from coverage data
             info = fileInfoForCoveredFile(classData);
@@ -148,23 +148,23 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return info;
     }
 
-    private static @Nullable ClassData getClassData(
+    private static @Nullable CoverageUnit getClassData(
         String filePath,
-        ProjectData data,
+        CoverageProjectData data,
         Map<String, String> normalizedFiles2Files
     ) {
         String originalFileName = normalizedFiles2Files.get(filePath);
         if (originalFileName == null) {
             return null;
         }
-        return data.getClassData(originalFileName);
+        return data.getUnit(originalFileName);
     }
 
     protected @Nullable DirCoverageInfo collectFolderCoverage(
         VirtualFile dir,
         CoverageDataManager dataManager,
         Annotator annotator,
-        ProjectData projectInfo,
+        CoverageProjectData projectInfo,
         boolean trackTestFolders,
         ProjectFileIndex index,
         CoverageEngine coverageEngine,
@@ -256,7 +256,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         VirtualFile contentRoot,
         CoverageSuitesBundle suite,
         CoverageDataManager dataManager,
-        ProjectData data,
+        CoverageProjectData data,
         Project project,
         Annotator annotator
     ) {
@@ -268,7 +268,10 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
 
         ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
 
-        @SuppressWarnings("unchecked") Set<String> files = data.getClasses().keySet();
+        Set<String> files = new HashSet<>();
+        for (CoverageUnit unit : data.getUnits()) {
+            files.add(unit.getName());
+        }
         Map<String, String> normalizedFiles2Files = new HashMap<>();
         for (String file : files) {
             normalizedFiles2Files.put(normalizeFilePath(file), file);
@@ -288,7 +291,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
 
     @Override
     protected @Nullable Runnable createRenewRequest(CoverageSuitesBundle suite, CoverageDataManager dataManager) {
-        ProjectData data = suite.getCoverageData();
+        CoverageProjectData data = suite.getCoverageData();
         if (data == null) {
             return null;
         }
@@ -350,7 +353,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
             //        //}
             //      } else {
             //        // process file
-            //        final ClassData classData = data.getOrCreateClassData(normalizedPath);
+            //        final CoverageUnit classData = data.getOrCreateUnit(normalizedPath);
             //        if (classData != null) {
             //          final int count = classData.getLines().length;
             //          if (count != 0) {
@@ -358,8 +361,8 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
             //            info.totalLineCount = count;
             //            // let's count covered lines
             //            for (int i = 1; i <= count; i++) {
-            //              final LineData lineData = classData.getLineData(i);
-            //              if (lineData.getStatus() != LineCoverage.NONE){
+            //              final CoverageLine lineData = classData.getLine(i);
+            //              if (lineData.getStatus() != LineStatus.NOT_COVERED){
             //                info.coveredLineCount++;
             //              }
             //            }
@@ -392,12 +395,12 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return calcPercent(info.coveredFilesCount, info.totalFilesCount) + "% files";
     }
 
-    private static @Nullable FileCoverageInfo fileInfoForCoveredFile(ClassData classData) {
-        Object[] lines = classData.getLines();
+    private static @Nullable FileCoverageInfo fileInfoForCoveredFile(CoverageUnit classData) {
+        List<CoverageLine> lines = classData.getLines();
 
         // class data lines = [0, 1, ... count] but first element with index = #0 is fake and isn't
         // used thus count = length = 1
-        int count = lines.length - 1;
+        int count = lines.size() - 1;
 
         if (count == 0) {
             return null;
@@ -409,14 +412,14 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         int coveredLinesCount = 0;
         // let's count covered lines
         for (int i = 1; i <= count; i++) {
-            LineData lineData = classData.getLineData(i);
+            CoverageLine lineData = classData.getLine(i);
             if (lineData == null) {
                 // Ignore not src code
                 continue;
             }
-            int status = lineData.getStatus();
+            LineStatus status = lineData.getStatus();
             // covered - if src code & covered (or inferred covered)
-            if (status != LineCoverage.NONE) {
+            if (status != LineStatus.NOT_COVERED) {
                 coveredLinesCount++;
             }
             srcLinesCount++;

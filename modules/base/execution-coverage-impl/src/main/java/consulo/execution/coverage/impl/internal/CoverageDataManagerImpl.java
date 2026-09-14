@@ -1,9 +1,11 @@
 package consulo.execution.coverage.impl.internal;
 
-import com.intellij.rt.coverage.data.ClassData;
-import com.intellij.rt.coverage.data.LineCoverage;
-import com.intellij.rt.coverage.data.LineData;
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageUnit;
+import consulo.execution.coverage.data.LineStatus;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.CoverageLineImpl;
+import consulo.execution.coverage.data.CoverageProjectData;
+import consulo.execution.coverage.data.CoverageProjectDataImpl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -492,7 +494,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     @Override
     public void selectSubCoverage(CoverageSuitesBundle suite, List<String> testNames) {
         suite.restoreCoverageData();
-        ProjectData data = suite.getCoverageData();
+        CoverageProjectData data = suite.getCoverageData();
         if (data == null) {
             return;
         }
@@ -535,39 +537,39 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 }
             }
         }
-        ProjectData projectData = new ProjectData();
+        CoverageProjectData projectData = new CoverageProjectDataImpl();
         for (String className : executionTrace.keySet()) {
-            ClassData loadedClassData = projectData.getClassData(className);
+            CoverageUnit loadedClassData = projectData.getUnit(className);
             if (loadedClassData == null) {
-                loadedClassData = projectData.getOrCreateClassData(className);
+                loadedClassData = projectData.getOrCreateUnit(className);
             }
             Set<Integer> lineNumbers = executionTrace.get(className);
-            ClassData oldData = data.getClassData(className);
+            CoverageUnit oldData = data.getUnit(className);
             LOG.assertTrue(oldData != null, "missed className: \"" + className + "\"");
-            Object[] oldLines = oldData.getLines();
+            List<CoverageLine> oldLines = oldData.getLines();
             LOG.assertTrue(oldLines != null);
-            int maxNumber = oldLines.length;
+            int maxNumber = oldLines.size();
             for (Integer lineNumber : lineNumbers) {
                 if (lineNumber >= maxNumber) {
                     maxNumber = lineNumber + 1;
                 }
             }
-            LineData[] lines = new LineData[maxNumber];
+            List<CoverageLine> lines = new ArrayList<>(Collections.nCopies(maxNumber, (CoverageLine)null));
             for (Integer line : lineNumbers) {
                 int lineIdx = line - 1;
                 String methodSig = null;
-                if (lineIdx < oldData.getLines().length) {
-                    LineData oldLineData = oldData.getLineData(lineIdx);
+                if (lineIdx < oldLines.size()) {
+                    CoverageLine oldLineData = oldData.getLine(lineIdx);
                     if (oldLineData != null) {
                         methodSig = oldLineData.getMethodSignature();
                     }
                 }
-                LineData lineData = new LineData(lineIdx, methodSig);
+                CoverageLineImpl lineData = new CoverageLineImpl(lineIdx, methodSig);
                 if (methodSig != null) {
                     loadedClassData.registerMethodSignature(lineData);
                 }
-                lineData.setStatus(LineCoverage.FULL);
-                lines[lineIdx] = lineData;
+                lineData.setStatus(LineStatus.COVERED);
+                lines.set(lineIdx, lineData);
             }
             loadedClassData.setLines(lines);
         }

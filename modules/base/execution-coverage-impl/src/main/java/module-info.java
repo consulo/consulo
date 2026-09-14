@@ -4,7 +4,6 @@
  */
 module consulo.execution.coverage.impl {
     requires consulo.execution.coverage.api;
-    requires transitive consulo.xcoverage.rt;
     
     requires it.unimi.dsi.fastutil;
 }

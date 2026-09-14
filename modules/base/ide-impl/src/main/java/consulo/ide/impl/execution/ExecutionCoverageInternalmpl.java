@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.execution;
 
-import com.intellij.rt.coverage.data.LineData;
+import consulo.execution.coverage.data.CoverageLine;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -76,7 +76,7 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
     public void showCoverageHit(JPanel panel,
                                 Editor editor,
                                 Point point,
-                                LineData lineData,
+                                CoverageLine lineData,
                                 String reportText) {
         final Editor uEditor;
         if (reportText != null) {
@@ -117,8 +117,8 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
     @Override
     @RequiredUIAccess
     public void showColorsSettings(Project project,
-                                   LineData lineData,
-                                   Function<LineData, TextAttributesKey> attributesKeyFunc) {
+                                   CoverageLine lineData,
+                                   Function<CoverageLine, TextAttributesKey> attributesKeyFunc) {
         ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions() {
             @Override
             protected List<ColorAndFontPanelFactory> createPanelFactories() {

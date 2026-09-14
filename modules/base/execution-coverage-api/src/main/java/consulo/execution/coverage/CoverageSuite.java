@@ -2,7 +2,7 @@ package consulo.execution.coverage;
 
 import consulo.project.Project;
 import consulo.util.xml.serializer.JDOMExternalizable;
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageProjectData;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -25,9 +25,9 @@ public interface CoverageSuite extends JDOMExternalizable {
 
     boolean isCoverageByTestEnabled();
 
-    @Nullable ProjectData getCoverageData(CoverageDataManager coverageDataManager);
+    @Nullable CoverageProjectData getCoverageData(CoverageDataManager coverageDataManager);
 
-    void setCoverageData(ProjectData projectData);
+    void setCoverageData(CoverageProjectData projectData);
 
     void restoreCoverageData();
 

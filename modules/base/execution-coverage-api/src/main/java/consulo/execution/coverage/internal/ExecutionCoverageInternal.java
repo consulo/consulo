@@ -15,7 +15,7 @@
  */
 package consulo.execution.coverage.internal;
 
-import com.intellij.rt.coverage.data.LineData;
+import consulo.execution.coverage.data.CoverageLine;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -47,10 +47,10 @@ public interface ExecutionCoverageInternal {
     void showCoverageHit(JPanel panel,
                          Editor editor,
                          Point point,
-                         LineData lineData,
+                         CoverageLine lineData,
                          String reportText);
     @RequiredUIAccess
     void showColorsSettings(Project project,
-                            LineData lineData,
-                            Function<LineData, TextAttributesKey> attributesKeyFunc);
+                            CoverageLine lineData,
+                            Function<CoverageLine, TextAttributesKey> attributesKeyFunc);
 }

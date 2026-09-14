@@ -11,9 +11,9 @@ module consulo.execution.coverage.api {
     requires transitive consulo.ui.ex.awt.api;
     requires transitive consulo.execution.api;
     requires transitive consulo.execution.test.api;
-    requires transitive consulo.xcoverage.rt;
 
     exports consulo.execution.coverage;
+    exports consulo.execution.coverage.data;
     exports consulo.execution.coverage.action;
     exports consulo.execution.coverage.localize;
     exports consulo.execution.coverage.icon;

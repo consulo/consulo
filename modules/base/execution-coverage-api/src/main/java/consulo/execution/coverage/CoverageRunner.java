@@ -1,6 +1,6 @@
 package consulo.execution.coverage;
 
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageProjectData;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -14,7 +14,7 @@ import java.io.File;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CoverageRunner {
-    public abstract ProjectData loadCoverageData(File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite);
+    public abstract CoverageProjectData loadCoverageData(File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite);
 
     public abstract String getPresentableName();
 

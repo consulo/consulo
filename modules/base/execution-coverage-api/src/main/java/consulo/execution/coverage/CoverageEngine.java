@@ -1,6 +1,6 @@
 package consulo.execution.coverage;
 
-import com.intellij.rt.coverage.data.LineData;
+import consulo.execution.coverage.data.CoverageLine;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
@@ -262,7 +262,7 @@ public abstract class CoverageEngine {
         int lineNumber,
         int startOffset,
         int endOffset,
-        @Nullable LineData lineData
+        @Nullable CoverageLine lineData
     ) {
         int hits = lineData == null ? 0 : lineData.getHits();
         return "Hits: " + hits;
@@ -296,7 +296,7 @@ public abstract class CoverageEngine {
         return false;
     }
 
-    public Object[] postProcessExecutableLines(Object[] lines, Editor editor) {
+    public List<CoverageLine> postProcessExecutableLines(List<CoverageLine> lines, Editor editor) {
         return lines;
     }
 

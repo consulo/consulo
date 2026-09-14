@@ -1,6 +1,6 @@
 package consulo.execution.coverage;
 
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageProjectData;
 import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.execution.configuration.RunConfigurationBase;
@@ -30,7 +30,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     private static final String COVERAGE_BY_TEST_ENABLED_ATTRIBUTE_NAME = "COVERAGE_BY_TEST_ENABLED";
     private static final String TRACING_ENABLED_ATTRIBUTE_NAME = "COVERAGE_TRACING_ENABLED";
 
-    private SoftReference<ProjectData> myCoverageData = new SoftReference<>(null);
+    private SoftReference<CoverageProjectData> myCoverageData = new SoftReference<>(null);
 
     private String myName;
     private long myLastCoverageTimeStamp;
@@ -191,11 +191,11 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    public void setCoverageData(ProjectData projectData) {
+    public void setCoverageData(CoverageProjectData projectData) {
         myCoverageData = new SoftReference<>(projectData);
     }
 
-    public ProjectData getCoverageData() {
+    public CoverageProjectData getCoverageData() {
         return myCoverageData.get();
     }
 
@@ -215,12 +215,12 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    public @Nullable ProjectData getCoverageData(CoverageDataManager coverageDataManager) {
-        ProjectData data = getCoverageData();
+    public @Nullable CoverageProjectData getCoverageData(CoverageDataManager coverageDataManager) {
+        CoverageProjectData data = getCoverageData();
         if (data != null) {
             return data;
         }
-        ProjectData map = loadProjectInfo();
+        CoverageProjectData map = loadProjectInfo();
         setCoverageData(map);
         return map;
     }
@@ -244,7 +244,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         return myCoverageDataFileProvider.getCoverageDataFilePath().hashCode();
     }
 
-    protected @Nullable ProjectData loadProjectInfo() {
+    protected @Nullable CoverageProjectData loadProjectInfo() {
         String sessionDataFileName = getCoverageDataFileName();
         File sessionDataFile = new File(sessionDataFileName);
         if (!sessionDataFile.exists()) {

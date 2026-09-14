@@ -1,6 +1,7 @@
 package consulo.execution.coverage;
 
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageProjectData;
+import consulo.execution.coverage.data.CoverageProjectDataImpl;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
@@ -33,7 +34,7 @@ public class CoverageSuitesBundle {
 
     private CachedValue<GlobalSearchScope> myCachedValue;
 
-    private SoftReference<ProjectData> myData = new SoftReference<>(null);
+    private SoftReference<CoverageProjectData> myData = new SoftReference<>(null);
     private static final Logger LOG = Logger.getInstance(CoverageSuitesBundle.class);
 
     public CoverageSuitesBundle(CoverageSuite suite) {
@@ -85,14 +86,14 @@ public class CoverageSuitesBundle {
         return false;
     }
 
-    public @Nullable ProjectData getCoverageData() {
-        ProjectData projectData = myData.get();
+    public @Nullable CoverageProjectData getCoverageData() {
+        CoverageProjectData projectData = myData.get();
         if (projectData != null) {
             return projectData;
         }
-        ProjectData data = new ProjectData();
+        CoverageProjectData data = new CoverageProjectDataImpl();
         for (CoverageSuite suite : mySuites) {
-            ProjectData coverageData = suite.getCoverageData(null);
+            CoverageProjectData coverageData = suite.getCoverageData(null);
             if (coverageData != null) {
                 data.merge(coverageData);
             }
@@ -136,7 +137,7 @@ public class CoverageSuitesBundle {
         return ArrayUtil.find(mySuites, suite) > -1;
     }
 
-    public void setCoverageData(ProjectData projectData) {
+    public void setCoverageData(CoverageProjectData projectData) {
         myData = new SoftReference<>(projectData);
     }
 

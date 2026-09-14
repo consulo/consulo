@@ -1,7 +1,7 @@
 package consulo.execution.coverage.impl.internal.action;
 
-import com.intellij.rt.coverage.data.LineCoverage;
-import com.intellij.rt.coverage.data.LineData;
+import consulo.execution.coverage.data.LineStatus;
+import consulo.execution.coverage.data.CoverageLine;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
@@ -48,9 +48,9 @@ public class ShowCoveringTestsAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(ShowCoveringTestsAction.class);
 
     private final String myClassFQName;
-    private final LineData myLineData;
+    private final CoverageLine myLineData;
 
-    public ShowCoveringTestsAction(String classFQName, LineData lineData) {
+    public ShowCoveringTestsAction(String classFQName, CoverageLine lineData) {
         super(
             ExecutionCoverageLocalize.actionShowTestsCoveringLineText(),
             ExecutionCoverageLocalize.actionShowTestsCoveringLineDescription(),
@@ -168,7 +168,7 @@ public class ShowCoveringTestsAction extends LegacyAnAction {
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(false);
-        if (myLineData != null && myLineData.getStatus() != LineCoverage.NONE) {
+        if (myLineData != null && myLineData.getStatus() != LineStatus.NOT_COVERED) {
             Project project = e.getData(Project.KEY);
             if (project != null) {
                 File[] files = getTraceFiles(project);

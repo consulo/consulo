@@ -16,8 +16,8 @@
 
 package consulo.execution.coverage.impl.internal;
 
-import com.intellij.rt.coverage.data.LineCoverage;
-import com.intellij.rt.coverage.data.LineData;
+import consulo.execution.coverage.data.LineStatus;
+import consulo.execution.coverage.data.CoverageLine;
 import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
@@ -65,7 +65,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     private static final int THICKNESS = 8;
     private final TextAttributesKey myKey;
     private final String myClassName;
-    private final SortedMap<Integer, LineData> myLines;
+    private final SortedMap<Integer, CoverageLine> myLines;
     private final boolean myCoverageByTestApplicable;
     private final Int2IntFunction myNewToOldConverter;
     private final Int2IntFunction myOldToNewConverter;
@@ -75,7 +75,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     protected CoverageLineMarkerRenderer(
         TextAttributesKey textAttributesKey,
         @Nullable String className,
-        SortedMap<Integer, LineData> lines,
+        SortedMap<Integer, CoverageLine> lines,
         boolean coverageByTestApplicable,
         Int2IntFunction newToOldConverter,
         Int2IntFunction oldToNewConverter,
@@ -110,8 +110,8 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         }
 
         int line = context.startLine();
-        LineData lineData = getLineData(line);
-        Image icon = lineData != null && lineData.isCoveredByOneTest() ? PlatformIconGroup.gutterUnique() : null;
+        CoverageLine lineData = getLineData(line);
+        Image icon = lineData != null && lineData.isCoveredBySingleTest() ? PlatformIconGroup.gutterUnique() : null;
 
         return List.of(new CoveragePresentation(line, context.endLine(), color, icon, line));
     }
@@ -119,7 +119,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     public static CoverageLineMarkerRenderer getRenderer(
         int lineNumber,
         @Nullable String className,
-        SortedMap<Integer, LineData> lines,
+        SortedMap<Integer, CoverageLine> lines,
         boolean coverageByTestApplicable,
         CoverageSuitesBundle coverageSuite,
         Int2IntFunction newToOldConverter,
@@ -138,16 +138,16 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         );
     }
 
-    public static TextAttributesKey getAttributesKey(int lineNumber, SortedMap<Integer, LineData> lines) {
+    public static TextAttributesKey getAttributesKey(int lineNumber, SortedMap<Integer, CoverageLine> lines) {
         return getAttributesKey(lines.get(lineNumber));
     }
 
-    private static TextAttributesKey getAttributesKey(LineData lineData) {
+    private static TextAttributesKey getAttributesKey(CoverageLine lineData) {
         if (lineData != null) {
             switch (lineData.getStatus()) {
-                case LineCoverage.FULL:
+                case LineStatus.COVERED:
                     return CodeInsightColors.LINE_FULL_COVERAGE;
-                case LineCoverage.PARTIAL:
+                case LineStatus.PARTIALLY_COVERED:
                     return CodeInsightColors.LINE_PARTIAL_COVERAGE;
             }
         }
@@ -184,10 +184,10 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(createActionsToolbar(editor, lineNumber), BorderLayout.NORTH);
 
-        LineData lineData = getLineData(lineNumber);
+        CoverageLine lineData = getLineData(lineNumber);
         Editor uEditor = null;
         String reportText = null;
-        if (lineData != null && lineData.getStatus() != LineCoverage.NONE && !mySubCoverageActive) {
+        if (lineData != null && lineData.getStatus() != LineStatus.NOT_COVERED && !mySubCoverageActive) {
             reportText = getReport(editor, lineNumber);
         }
 
@@ -195,7 +195,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     }
 
     private String getReport(Editor editor, int lineNumber) {
-        LineData lineData = getLineData(lineNumber);
+        CoverageLine lineData = getLineData(lineNumber);
 
         Document document = editor.getDocument();
         Project project = editor.getProject();
@@ -231,7 +231,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
             editorComponent
         );
 
-        LineData lineData = getLineData(lineNumber);
+        CoverageLine lineData = getLineData(lineNumber);
         if (myCoverageByTestApplicable) {
             group.add(new ShowCoveringTestsAction(myClassName, lineData));
         }
@@ -252,7 +252,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         toolbarComponent.setBorder(new ColoredSideBorder(
             awtForeground,
             awtForeground,
-            lineData == null || lineData.getStatus() == LineCoverage.NONE || mySubCoverageActive ? awtForeground : null,
+            lineData == null || lineData.getStatus() == LineStatus.NOT_COVERED || mySubCoverageActive ? awtForeground : null,
             awtForeground,
             1
         ));
@@ -274,7 +274,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         });
     }
 
-    public @Nullable LineData getLineData(int lineNumber) {
+    public @Nullable CoverageLine getLineData(int lineNumber) {
         return myLines != null
             ? myLines.get(myNewToOldConverter != null ? myNewToOldConverter.applyAsInt(lineNumber) : lineNumber)
             : null;
@@ -369,12 +369,12 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         private @Nullable Integer getLineEntry() {
             ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
             Collections.sort(list);
-            LineData data = getLineData(myLineNumber);
-            int currentStatus = data != null ? data.getStatus() : LineCoverage.NONE;
+            CoverageLine data = getLineData(myLineNumber);
+            LineStatus currentStatus = data != null ? data.getStatus() : LineStatus.NOT_COVERED;
             int idx = list.indexOf(myNewToOldConverter != null ? myNewToOldConverter.apply(myLineNumber) : myLineNumber);
             while (hasNext(idx, list)) {
                 int index = next(idx);
-                LineData lineData = myLines.get(list.get(index));
+                CoverageLine lineData = myLines.get(list.get(index));
                 idx = index;
                 if (lineData != null && lineData.getStatus() != currentStatus) {
                     Integer line = list.get(idx);
@@ -396,14 +396,14 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         protected LocalizeValue getNextChange() {
             Integer entry = getLineEntry();
             if (entry != null) {
-                LineData lineData = getLineData(entry);
+                CoverageLine lineData = getLineData(entry);
                 if (lineData != null) {
                     switch (lineData.getStatus()) {
-                        case LineCoverage.NONE:
+                        case LineStatus.NOT_COVERED:
                             return ExecutionCoverageLocalize.coverageNextChangeUncovered();
-                        case LineCoverage.PARTIAL:
+                        case LineStatus.PARTIALLY_COVERED:
                             return ExecutionCoverageLocalize.coverageNextChangePartialCovered();
-                        case LineCoverage.FULL:
+                        case LineStatus.COVERED:
                             return ExecutionCoverageLocalize.coverageNextChangeFullyCovered();
                     }
                 }

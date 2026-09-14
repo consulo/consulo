@@ -90,7 +90,6 @@ open module consulo.ide.impl {
 
     requires consulo.ui.impl;
 
-    requires consulo.xcoverage.rt;
     requires consulo.remote.servers.agent.rt;
 
     requires consulo.util.collection;

@@ -4,10 +4,10 @@
 
 package consulo.execution.coverage.impl.internal;
 
-import com.intellij.rt.coverage.data.ClassData;
-import com.intellij.rt.coverage.data.LineCoverage;
-import com.intellij.rt.coverage.data.LineData;
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.data.CoverageUnit;
+import consulo.execution.coverage.data.LineStatus;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.CoverageProjectData;
 import consulo.application.util.LineTokenizer;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
@@ -231,7 +231,7 @@ public class SrcFileAnnotator implements Disposable {
         }
         final MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, true);
         final List<RangeHighlighter> highlighters = new ArrayList<>();
-        final ProjectData data = suite.getCoverageData();
+        final CoverageProjectData data = suite.getCoverageData();
         if (data == null) {
             coverageDataNotFound(suite);
             return;
@@ -298,18 +298,19 @@ public class SrcFileAnnotator implements Disposable {
         final boolean subCoverageActive = CoverageDataManager.getInstance(myProject).isSubCoverageActive();
         final boolean coverageByTestApplicable =
             suite.isCoverageByTestApplicable() && !(subCoverageActive && suite.isCoverageByTestEnabled());
-        final SortedMap<Integer, LineData> executableLines = new TreeMap<>();
-        final SortedMap<Integer, Object[]> classLines = new TreeMap<>();
+        final SortedMap<Integer, CoverageLine> executableLines = new TreeMap<>();
+        final SortedMap<Integer, List<CoverageLine>> classLines = new TreeMap<>();
         final SortedMap<Integer, String> classNames = new TreeMap<>();
         class HighlightersCollector {
             private void collect(File outputFile, String qualifiedName) {
-                ClassData fileData = data.getClassData(qualifiedName);
+                CoverageUnit fileData = data.getUnit(qualifiedName);
                 if (fileData != null) {
-                    Object[] lines = fileData.getLines();
+                    List<CoverageLine> lines = fileData.getLines();
                     if (lines != null) {
-                        Object[] postProcessedLines = suite.getCoverageEngine().postProcessExecutableLines(lines, myEditor);
-                        for (Object lineDataRaw : postProcessedLines) {
-                            if (lineDataRaw instanceof LineData lineData) {
+                        List<CoverageLine> postProcessedLines = suite.getCoverageEngine().postProcessExecutableLines(lines, myEditor);
+                        for (CoverageLine lineData : postProcessedLines) {
+                            // the lines array is sparse - entries without code are null
+                            if (lineData != null) {
                                 int line = lineData.getLineNumber() - 1;
                                 int lineNumberInCurrent;
                                 if (oldToNewLineMapping != null) {
@@ -367,7 +368,7 @@ public class SrcFileAnnotator implements Disposable {
                 }
             }
         }
-        else { //check non-compilable classes which present in ProjectData
+        else { //check non-compilable classes which present in CoverageProjectData
             for (String qName : qualifiedNames) {
                 collector.collect(null, qName);
             }
@@ -412,7 +413,7 @@ public class SrcFileAnnotator implements Disposable {
                                     }
                                     for (int line = lineNumber; line <= lastLineNumber; line++) {
                                         int oldLineNumber = newToOldLineMapping.get(line);
-                                        LineData lineData = executableLines.get(oldLineNumber);
+                                        CoverageLine lineData = executableLines.get(oldLineNumber);
                                         if (lineData != null) {
                                             RangeHighlighter rangeHighlighter =
                                                 createRangeHighlighter(
@@ -442,9 +443,9 @@ public class SrcFileAnnotator implements Disposable {
         myEditor.putUserData(COVERAGE_DOCUMENT_LISTENER, documentListener);
     }
 
-    private static boolean classesArePresentInCoverageData(ProjectData data, Set<String> qualifiedNames) {
+    private static boolean classesArePresentInCoverageData(CoverageProjectData data, Set<String> qualifiedNames) {
         for (String qualifiedName : qualifiedNames) {
-            if (data.getClassData(qualifiedName) != null) {
+            if (data.getUnit(qualifiedName) != null) {
                 return true;
             }
         }
@@ -455,12 +456,12 @@ public class SrcFileAnnotator implements Disposable {
         long date,
         MarkupModel markupModel,
         boolean coverageByTestApplicable,
-        SortedMap<Integer, LineData> executableLines,
+        SortedMap<Integer, CoverageLine> executableLines,
         @Nullable String className,
         int line,
         int lineNumberInCurrent,
         CoverageSuitesBundle coverageSuite,
-        Object[] lines
+        List<CoverageLine> lines
     ) {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         TextAttributes attributes = scheme.getAttributes(CoverageLineMarkerRenderer.getAttributesKey(line, executableLines));
@@ -504,8 +505,9 @@ public class SrcFileAnnotator implements Disposable {
         highlighter.setLineMarkerRenderer(markerRenderer);
         highlighter.setLineMarkerPresentationProvider(markerRenderer);
 
-        LineData lineData = className != null ? (LineData) lines[line + 1] : null;
-        if (lineData != null && lineData.getStatus() == LineCoverage.NONE) {
+        int lineIdx = line + 1;
+        CoverageLine lineData = className != null && lineIdx < lines.size() ? lines.get(lineIdx) : null;
+        if (lineData != null && lineData.getStatus() == LineStatus.NOT_COVERED) {
             highlighter.setErrorStripeMarkColor(markerRenderer.getErrorStripeColor(myEditor));
             highlighter.setThinErrorStripeMark(true);
             highlighter.setGreedyToLeft(true);
@@ -553,7 +555,7 @@ public class SrcFileAnnotator implements Disposable {
         File outputFile,
         List<RangeHighlighter> highlighters,
         MarkupModel markupModel,
-        SortedMap<Integer, LineData> executableLines,
+        SortedMap<Integer, CoverageLine> executableLines,
         boolean coverageByTestApplicable
     ) {
         CoverageSuitesBundle coverageSuite = CoverageDataManager.getInstance(myProject).getCurrentSuitesBundle();
@@ -614,7 +616,7 @@ public class SrcFileAnnotator implements Disposable {
         File outputFile,
         List<RangeHighlighter> highlighters,
         MarkupModel markupModel,
-        SortedMap<Integer, LineData> executableLines,
+        SortedMap<Integer, CoverageLine> executableLines,
         boolean coverageByTestApplicable,
         CoverageSuitesBundle coverageSuite,
         int lineNumber,

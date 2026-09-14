@@ -224,7 +224,6 @@
     <module>modules/base/welcome-screen-impl</module>
 
     <module>modules/base/proxy</module>
-    <module>modules/base/xcoverage-data</module>
     <module>modules/base/ui-api</module>
     <module>modules/base/ui-impl</module>
 
