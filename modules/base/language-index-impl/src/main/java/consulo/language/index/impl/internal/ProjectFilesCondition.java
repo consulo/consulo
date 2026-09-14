@@ -23,24 +23,14 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.function.Predicate;
 
 class ProjectFilesCondition implements Predicate<FileIndexingRequest> {
-    private static final int MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT = 2;
     private final VirtualFile myRestrictedTo;
     private final SearchScope myFilter;
-    private int myFilesFromOtherProjects;
     private final IdFilter myIndexableFilesFilter;
 
-    public ProjectFilesCondition(
-        IdFilter indexableFilesFilter,
-        SearchScope filter,
-        VirtualFile restrictedTo,
-        boolean includeFilesFromOtherProjects
-    ) {
+    public ProjectFilesCondition(IdFilter indexableFilesFilter, SearchScope filter, VirtualFile restrictedTo) {
         myRestrictedTo = restrictedTo;
         myFilter = filter;
         myIndexableFilesFilter = indexableFilesFilter;
-        if (!includeFilesFromOtherProjects) {
-            myFilesFromOtherProjects = MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT;
-        }
     }
 
     @Override
@@ -48,25 +38,13 @@ class ProjectFilesCondition implements Predicate<FileIndexingRequest> {
         if (request.isDeleteRequest()) {
             return true;
         }
+        return belongsTo(request.getFile(), request.getFileId());
+    }
 
-        VirtualFile file = request.getFile();
-        int fileId = request.getFileId();
-        if (myIndexableFilesFilter != null && fileId > 0 && !myIndexableFilesFilter.containsFileId(fileId)) {
-            if (myFilesFromOtherProjects >= MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT) {
-                return false;
-            }
-            ++myFilesFromOtherProjects;
-            return true;
+    private boolean belongsTo(VirtualFile file, int fileId) {
+        if (myIndexableFilesFilter != null && !myIndexableFilesFilter.containsFileId(fileId)) {
+            return false;
         }
-
-        if (FileBasedIndexImpl.belongsToScope(file, myRestrictedTo, myFilter)) {
-            return true;
-        }
-
-        if (myFilesFromOtherProjects < MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT) {
-            ++myFilesFromOtherProjects;
-            return true;
-        }
-        return false;
+        return FileBasedIndexImpl.belongsToScope(file, myRestrictedTo, myFilter);
     }
 }

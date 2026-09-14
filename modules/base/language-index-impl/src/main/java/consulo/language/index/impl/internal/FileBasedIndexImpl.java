@@ -2277,24 +2277,18 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     private final FileIndexingRequestUpdateTask myForceUpdateTask = new FileIndexingRequestUpdateTask();
-    private volatile long myLastOtherProjectInclusionStamp;
 
     private void forceUpdate(@Nullable Project project, @Nullable SearchScope filter, @Nullable VirtualFile restrictedTo) {
         Collection<FileIndexingRequest> allFilesToUpdate = getAllFilesToUpdate();
 
         if (!allFilesToUpdate.isEmpty()) {
-            boolean includeFilesFromOtherProjects =
-                restrictedTo == null && System.currentTimeMillis() - myLastOtherProjectInclusionStamp > 100;
             List<FileIndexingRequest> virtualFilesToBeUpdatedForProject = ContainerUtil.filter(
                 allFilesToUpdate,
-                new ProjectFilesCondition(createProjectIndexableFiles(project), filter, restrictedTo, includeFilesFromOtherProjects)
+                new ProjectFilesCondition(createProjectIndexableFiles(project), filter, restrictedTo)
             );
 
             if (!virtualFilesToBeUpdatedForProject.isEmpty()) {
                 myForceUpdateTask.processAll(virtualFilesToBeUpdatedForProject, project);
-            }
-            if (includeFilesFromOtherProjects) {
-                myLastOtherProjectInclusionStamp = System.currentTimeMillis();
             }
         }
     }

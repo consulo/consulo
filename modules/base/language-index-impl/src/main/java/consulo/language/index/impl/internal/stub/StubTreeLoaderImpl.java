@@ -42,6 +42,7 @@ import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -175,10 +176,21 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     PsiFile cachedPsi = PsiManagerEx.getInstanceEx(project).getFileManager().getCachedPsiFile(vFile);
     IndexingStampInfo indexingStampInfo = getIndexingStampInfo(vFile);
     if (indexingStampInfo != null && !indexingStampInfo.contentLengthMatches(vFile.getLength(), getCurrentTextContentLength(project, vFile, document, cachedPsi))) {
+      if (isScheduledForReindex(project, vFile)) {
+        return false;
+      }
       diagnoseLengthMismatch(vFile, wasIndexedAlready, document, saved, cachedPsi);
       return false;
     }
     return true;
+  }
+
+  private static boolean isScheduledForReindex(Project project, VirtualFile vFile) {
+    if (!(vFile instanceof VirtualFileWithId withId)) {
+      return false;
+    }
+    FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
+    return fileBasedIndex instanceof FileBasedIndexImpl impl && impl.getAllDirtyFiles(project).contains(withId.getId());
   }
 
   private void diagnoseLengthMismatch(VirtualFile vFile, boolean wasIndexedAlready, @Nullable Document document, boolean saved, @Nullable PsiFile cachedPsi) {
