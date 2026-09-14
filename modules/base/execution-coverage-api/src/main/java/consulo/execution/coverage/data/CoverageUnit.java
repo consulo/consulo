@@ -39,4 +39,14 @@ public interface CoverageUnit {
     void registerMethodSignature(CoverageLine line);
 
     Set<String> getMethodSignatures();
+
+    /**
+     * Coverage of a single method, derived from the lines carrying its signature.
+     */
+    LineStatus getMethodStatus(String signature);
+
+    @Nullable
+    String getSourceFile();
+
+    void setSourceFile(@Nullable String sourceFile);
 }

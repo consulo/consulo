@@ -18,7 +18,9 @@ package consulo.execution.coverage.data;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +28,8 @@ public class CoverageUnitImpl implements CoverageUnit {
     private final String myName;
     private final List<CoverageLine> myLines = new ArrayList<>();
     private final Set<String> myMethodSignatures = new LinkedHashSet<>();
+    private final Map<String, LineStatus> myMethodStatus = new HashMap<>();
+    private String mySourceFile;
 
     public CoverageUnitImpl(String name) {
         myName = name;
@@ -51,6 +55,7 @@ public class CoverageUnitImpl implements CoverageUnit {
     public void setLines(List<CoverageLine> lines) {
         myLines.clear();
         myLines.addAll(lines);
+        myMethodStatus.clear();
     }
 
     @Override
@@ -64,6 +69,34 @@ public class CoverageUnitImpl implements CoverageUnit {
     @Override
     public Set<String> getMethodSignatures() {
         return myMethodSignatures;
+    }
+
+    @Override
+    public LineStatus getMethodStatus(String signature) {
+        LineStatus cached = myMethodStatus.get(signature);
+        if (cached != null) {
+            return cached;
+        }
+        LineStatus status = LineStatus.NOT_COVERED;
+        for (CoverageLine line : myLines) {
+            if (line != null && signature.equals(line.getMethodSignature()) && line.getStatus() != LineStatus.NOT_COVERED) {
+                status = LineStatus.PARTIALLY_COVERED;
+                break;
+            }
+        }
+        myMethodStatus.put(signature, status);
+        return status;
+    }
+
+    @Nullable
+    @Override
+    public String getSourceFile() {
+        return mySourceFile;
+    }
+
+    @Override
+    public void setSourceFile(@Nullable String sourceFile) {
+        mySourceFile = sourceFile;
     }
 
     public void merge(CoverageUnit data) {
@@ -87,5 +120,9 @@ public class CoverageUnitImpl implements CoverageUnit {
             }
         }
         myMethodSignatures.addAll(data.getMethodSignatures());
+        myMethodStatus.clear();
+        if (mySourceFile == null) {
+            mySourceFile = data.getSourceFile();
+        }
     }
 }
