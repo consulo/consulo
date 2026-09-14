@@ -15,26 +15,11 @@
  */
 package consulo.execution.coverage.data;
 
-import org.jspecify.annotations.Nullable;
+/**
+ * Coverage of a single branching point on a line. A jump has two outcomes, a switch has one per key plus the default.
+ */
+public interface BranchCoverage {
+    int getOutcomeCount();
 
-import java.util.List;
-
-public interface CoverageLine {
-    int getLineNumber();
-
-    LineStatus getStatus();
-
-    void setStatus(LineStatus status);
-
-    int getHits();
-
-    @Nullable
-    String getMethodSignature();
-
-    boolean isCoveredBySingleTest();
-
-    @Nullable
-    String getUniqueTestName();
-
-    List<BranchCoverage> getBranches();
+    int getHits(int outcome);
 }

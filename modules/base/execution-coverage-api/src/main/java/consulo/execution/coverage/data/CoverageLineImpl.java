@@ -17,11 +17,16 @@ package consulo.execution.coverage.data;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CoverageLineImpl implements CoverageLine {
     private final int myLineNumber;
-    private final String myMethodSignature;
+    private String myMethodSignature;
     private LineStatus myStatus = LineStatus.NOT_COVERED;
     private int myHits;
+    private String myUniqueTestName;
+    private final List<BranchCoverage> myBranches = new ArrayList<>();
 
     public CoverageLineImpl(int lineNumber, @Nullable String methodSignature) {
         myLineNumber = lineNumber;
@@ -52,6 +57,10 @@ public class CoverageLineImpl implements CoverageLine {
         myHits = hits;
     }
 
+    public void touch() {
+        myHits++;
+    }
+
     @Nullable
     @Override
     public String getMethodSignature() {
@@ -60,6 +69,57 @@ public class CoverageLineImpl implements CoverageLine {
 
     @Override
     public boolean isCoveredBySingleTest() {
-        return false;
+        return myUniqueTestName != null && !myUniqueTestName.isEmpty();
+    }
+
+    @Nullable
+    @Override
+    public String getUniqueTestName() {
+        return myUniqueTestName;
+    }
+
+    public void setUniqueTestName(@Nullable String testName) {
+        myUniqueTestName = testName;
+    }
+
+    @Override
+    public List<BranchCoverage> getBranches() {
+        return myBranches;
+    }
+
+    public void addBranch(BranchCoverage branch) {
+        myBranches.add(branch);
+    }
+
+    public void merge(CoverageLine data) {
+        myHits += data.getHits();
+
+        List<BranchCoverage> otherBranches = data.getBranches();
+        for (int i = 0; i < otherBranches.size(); i++) {
+            BranchCoverage other = otherBranches.get(i);
+            if (i < myBranches.size()) {
+                BranchCoverage mine = myBranches.get(i);
+                if (mine instanceof BranchCoverageImpl branchImpl) {
+                    branchImpl.merge(other);
+                    continue;
+                }
+            }
+            BranchCoverageImpl copy = new BranchCoverageImpl(other.getOutcomeCount());
+            copy.merge(other);
+            myBranches.add(copy);
+        }
+
+        if (data.getMethodSignature() != null) {
+            myMethodSignature = data.getMethodSignature();
+        }
+        if (data.getStatus().ordinal() > myStatus.ordinal()) {
+            myStatus = data.getStatus();
+        }
+        if (myUniqueTestName == null) {
+            myUniqueTestName = data.getUniqueTestName();
+        }
+        else if (data.getUniqueTestName() != null && !myUniqueTestName.equals(data.getUniqueTestName())) {
+            myUniqueTestName = "";
+        }
     }
 }

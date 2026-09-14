@@ -43,7 +43,13 @@ public class CoverageProjectDataImpl implements CoverageProjectData {
     @Override
     public void merge(CoverageProjectData data) {
         for (CoverageUnit unit : data.getUnits()) {
-            myUnits.putIfAbsent(unit.getName(), unit);
+            CoverageUnit mine = myUnits.get(unit.getName());
+            if (mine == null) {
+                mine = getOrCreateUnit(unit.getName());
+            }
+            if (mine instanceof CoverageUnitImpl unitImpl) {
+                unitImpl.merge(unit);
+            }
         }
     }
 }

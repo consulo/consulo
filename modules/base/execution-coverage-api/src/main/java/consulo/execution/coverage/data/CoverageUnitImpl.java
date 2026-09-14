@@ -18,12 +18,14 @@ package consulo.execution.coverage.data;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CoverageUnitImpl implements CoverageUnit {
     private final String myName;
-    private List<CoverageLine> myLines = Collections.emptyList();
+    private final List<CoverageLine> myLines = new ArrayList<>();
+    private final Set<String> myMethodSignatures = new LinkedHashSet<>();
 
     public CoverageUnitImpl(String name) {
         myName = name;
@@ -47,10 +49,43 @@ public class CoverageUnitImpl implements CoverageUnit {
 
     @Override
     public void setLines(List<CoverageLine> lines) {
-        myLines = new ArrayList<>(lines);
+        myLines.clear();
+        myLines.addAll(lines);
     }
 
     @Override
     public void registerMethodSignature(CoverageLine line) {
+        String signature = line.getMethodSignature();
+        if (signature != null) {
+            myMethodSignatures.add(signature);
+        }
+    }
+
+    @Override
+    public Set<String> getMethodSignatures() {
+        return myMethodSignatures;
+    }
+
+    public void merge(CoverageUnit data) {
+        List<CoverageLine> otherLines = data.getLines();
+        while (myLines.size() < otherLines.size()) {
+            myLines.add(null);
+        }
+        for (int i = 0; i < otherLines.size(); i++) {
+            CoverageLine other = otherLines.get(i);
+            if (other == null) {
+                continue;
+            }
+            CoverageLine mine = myLines.get(i);
+            if (mine instanceof CoverageLineImpl lineImpl) {
+                lineImpl.merge(other);
+            }
+            else {
+                CoverageLineImpl copy = new CoverageLineImpl(other.getLineNumber(), other.getMethodSignature());
+                copy.merge(other);
+                myLines.set(i, copy);
+            }
+        }
+        myMethodSignatures.addAll(data.getMethodSignatures());
     }
 }

@@ -18,6 +18,7 @@ package consulo.execution.coverage.data;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A named unit of coverage. For JVM engines this is a class; for file based engines it is a source file path.
@@ -36,4 +37,6 @@ public interface CoverageUnit {
     void setLines(List<CoverageLine> lines);
 
     void registerMethodSignature(CoverageLine line);
+
+    Set<String> getMethodSignatures();
 }
