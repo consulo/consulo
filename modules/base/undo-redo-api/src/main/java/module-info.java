@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-02-16
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.undo.redo.api {
     requires transitive consulo.document.api;
     requires transitive consulo.project.api;
@@ -20,11 +21,15 @@ module consulo.undo.redo.api {
         consulo.language.editor.refactoring.api,
         consulo.local.history.impl,
         consulo.code.editor.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac;
 
     exports consulo.undoRedo.internal.builder to
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.diff.api,
         consulo.diff.impl,
         consulo.ide.impl,

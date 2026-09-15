@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-03-23
  */
+@SuppressWarnings("module")
 module consulo.language.editor.impl {
     requires consulo.mcp.server.api;
     // TODO remove this dependency in future
@@ -86,6 +87,6 @@ module consulo.language.editor.impl {
     opens consulo.language.editor.impl.internal.inspection.scheme to
         consulo.component.impl,
         consulo.util.xml.serializer;
-    // listener calls via messagebus
+    // listener calls via message-bus
     opens consulo.language.editor.impl.internal.rawHighlight to consulo.compiler.impl;
 }

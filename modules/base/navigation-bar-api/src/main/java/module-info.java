@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2026-07-04
  */
+@SuppressWarnings("module")
 module consulo.navigation.bar.api {
     requires transitive consulo.project.api;
     requires transitive consulo.ui.ex.api;
@@ -10,7 +11,9 @@ module consulo.navigation.bar.api {
     exports consulo.navigationBar.model;
 
     exports consulo.navigationBar.internal to
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
         consulo.navigation.bar.impl;
 }

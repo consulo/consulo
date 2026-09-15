@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-20
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.application.content.api {
     // TODO [VISTALL] obsolete dep
     requires java.desktop;
@@ -32,9 +33,9 @@ module consulo.application.content.api {
         consulo.version.control.system.impl;
 
     exports consulo.content.internal to
-        consulo.ide.impl,
+        consulo.application.content.impl,
         consulo.compiler.artifact.api,
         consulo.compiler.artifact.impl,
-        consulo.application.content.impl,
+        consulo.ide.impl,
         consulo.module.impl;
 }

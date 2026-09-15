@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-08-01
  */
+@SuppressWarnings("module")
 module consulo.local.history.impl {
     requires consulo.local.history.api;
     requires consulo.diff.api;

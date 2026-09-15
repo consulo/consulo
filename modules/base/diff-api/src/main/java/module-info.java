@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 04-Apr-22
+ * @since 2022-04-04
  */
+@SuppressWarnings("module")
 module consulo.diff.api {
     requires transitive consulo.project.api;
     requires transitive consulo.virtual.file.status.api;
@@ -28,11 +29,13 @@ module consulo.diff.api {
     exports consulo.diff.util;
 
     exports consulo.diff.internal to
-        consulo.ide.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.diff.impl,
+        consulo.ide.impl,
         consulo.version.control.system.api,
-        consulo.version.control.system.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+        consulo.version.control.system.impl;
 
     opens consulo.diff.internal to consulo.util.xml.serializer;
 }

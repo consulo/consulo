@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-09-14
  */
+@SuppressWarnings("module")
 module consulo.language.editor.todo.impl {
     requires consulo.language.editor.refactoring.api;
     requires consulo.version.control.system.api;
@@ -14,5 +15,7 @@ module consulo.language.editor.todo.impl {
 
     // TODO remove after migrate to binding actions, instead xml
     opens consulo.language.editor.todo.impl.internal.action to consulo.component.impl;
-    opens consulo.language.editor.todo.impl.internal to consulo.component.impl, consulo.util.xml.serializer;
+    opens consulo.language.editor.todo.impl.internal to
+        consulo.component.impl,
+        consulo.util.xml.serializer;
 }

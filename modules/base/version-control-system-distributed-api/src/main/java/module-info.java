@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-07-31
  */
+@SuppressWarnings("module")
 module consulo.version.control.system.distributed.api {
     requires transitive consulo.version.control.system.api;
     requires transitive consulo.version.control.system.log.api;
@@ -27,5 +28,8 @@ module consulo.version.control.system.distributed.api {
 
     opens consulo.versionControlSystem.distributed.branch to consulo.util.xml.serializer;
 
-    exports consulo.versionControlSystem.distributed.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.versionControlSystem.distributed.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 }

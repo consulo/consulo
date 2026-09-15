@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-02-19
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.file.editor.api {
     // TODO obsolete dep
     requires java.desktop;
@@ -31,17 +32,25 @@ module consulo.file.editor.api {
     exports consulo.fileEditor.util;
 
     exports consulo.fileEditor.internal to
-        consulo.ide.impl,
-        consulo.proxy,
-        consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.language.editor.impl,
         consulo.configuration.editor.api,
-        consulo.version.control.system.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.execution.coverage.impl,
+        consulo.file.editor.impl,
+        consulo.ide.impl,
         consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.language.editor.impl,
+        consulo.proxy,
+        consulo.version.control.system.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
-    exports consulo.fileEditor.internal.largeFileEditor to consulo.file.editor.impl, consulo.ide.impl;
+    exports consulo.fileEditor.internal.largeFileEditor to
+        consulo.file.editor.impl,
+        consulo.ide.impl;
 }

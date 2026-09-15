@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 18-Jul-22
+ * @since 2022-07-18
  */
+@SuppressWarnings("module")
 module consulo.project.impl {
     // TODO remove in future
     requires java.desktop;
@@ -18,7 +19,9 @@ module consulo.project.impl {
         consulo.language.editor.impl,
         consulo.language.index.impl;
 
-    exports consulo.project.impl.internal.store to consulo.ide.impl, consulo.it;
+    exports consulo.project.impl.internal.store to
+        consulo.ide.impl,
+        consulo.it;
 
     opens consulo.project.impl.internal to consulo.util.xml.serializer;
 }

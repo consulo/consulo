@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-01-12
  */
+@SuppressWarnings("module")
 module consulo.language.inject.advanced.api {
     requires transitive consulo.language.api;
     requires transitive consulo.language.editor.api;

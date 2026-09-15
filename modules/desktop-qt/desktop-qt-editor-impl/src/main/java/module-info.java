@@ -4,6 +4,7 @@
  * @author VISTALL
  * @since 2026-08-17
  */
+@SuppressWarnings("module")
 module consulo.desktop.qt.editor.impl {
     requires consulo.language.editor.ui.api;
     requires consulo.application.api;

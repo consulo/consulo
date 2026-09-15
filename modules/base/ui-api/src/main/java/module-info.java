@@ -1,10 +1,11 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2020-10-24
  */
-import org.jspecify.annotations.NullMarked;
-
 @NullMarked
+@SuppressWarnings("module")
 module consulo.ui.api {
     requires consulo.util.lang;
     requires consulo.util.collection;
@@ -35,14 +36,21 @@ module consulo.ui.api {
     exports consulo.ui.image.internal;
 
     exports consulo.ui.internal to
-        consulo.ui.ex.api, consulo.ui.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.color.scheme.ui.api,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
-        consulo.test.impl,
         consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.test.impl,
+        consulo.ui.ex.api,
+        consulo.ui.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
     uses consulo.ui.image.IconLibraryDescriptor;
     uses consulo.ui.internal.UIInternal;

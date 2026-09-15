@@ -1,12 +1,15 @@
 /**
  * @author VISTALL
- * @since 04-Apr-22
+ * @since 2022-04-04
  */
+@SuppressWarnings("module")
 module consulo.local.history.api {
     requires transitive consulo.project.api;
 
     exports consulo.localHistory;
     exports consulo.localHistory.localize;
 
-    exports consulo.localHistory.internal to consulo.version.control.system.impl, consulo.local.history.impl;
+    exports consulo.localHistory.internal to
+        consulo.local.history.impl,
+        consulo.version.control.system.impl;
 }

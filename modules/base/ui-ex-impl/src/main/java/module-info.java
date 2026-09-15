@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2026-07-27
  */
+@SuppressWarnings("module")
 module consulo.ui.ex.impl {
     requires transitive consulo.ui.ex.api;
     requires transitive consulo.ui.ex.awt.api;
@@ -13,27 +14,54 @@ module consulo.ui.ex.impl {
     requires consulo.util.nodep;
     requires gnu.trove;
 
-    exports consulo.ui.ex.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+    exports consulo.ui.ex.impl.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
-    exports consulo.ui.ex.impl.internal.clipboard to consulo.desktop.ide.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+    exports consulo.ui.ex.impl.internal.clipboard to
+        consulo.desktop.ide.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
     exports consulo.ui.ex.impl.internal.util to consulo.ide.impl;
 
     exports consulo.ui.ex.impl.internal.action to
-        consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
     exports consulo.ui.ex.impl.internal.popup.action to
-        consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.ide.impl;
 
     exports consulo.ui.ex.impl.internal.keymap to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
     opens consulo.ui.ex.impl.internal.keymap to consulo.util.xml.serializer;
 }

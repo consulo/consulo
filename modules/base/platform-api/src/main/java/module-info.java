@@ -5,21 +5,28 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-13
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.platform.api {
-  requires consulo.ui.api;
-  requires consulo.annotation;
-  requires consulo.container.api;
-  requires consulo.util.lang;
-  requires consulo.util.dataholder;
+    requires consulo.ui.api;
+    requires consulo.annotation;
+    requires consulo.container.api;
+    requires consulo.util.lang;
+    requires consulo.util.dataholder;
 
-  uses consulo.platform.internal.PlatformInternal;
-  
-  exports consulo.platform;
-  exports consulo.platform.os;
-  exports consulo.platform.internal to
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-    consulo.test.impl,
-    consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-    consulo.it,
-    consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+    uses consulo.platform.internal.PlatformInternal;
+
+    exports consulo.platform;
+    exports consulo.platform.os;
+    exports consulo.platform.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.test.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 }

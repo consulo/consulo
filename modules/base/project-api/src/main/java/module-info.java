@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-19
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.project.api {
     // TODO [VISTALL] obsolete requires
     requires java.desktop;
@@ -23,28 +24,34 @@ module consulo.project.api {
     exports consulo.project.localize;
 
     exports consulo.project.internal to
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.ui.ex.impl,
-        consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.sand.language.plugin,
         consulo.application.impl,
-        consulo.component.impl,
-        consulo.module.impl,
-        consulo.version.control.system.api,
-        consulo.version.control.system.impl,
         consulo.compiler.artifact.impl,
-        consulo.project.impl,
-        consulo.project.ui.impl,
+        consulo.component.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.execution.impl,
-        consulo.language.impl,
-        consulo.language.index.impl,
-        consulo.virtual.file.system.impl,
         consulo.external.system.impl,
         consulo.external.service.impl,
-        consulo.module.content.impl,
         consulo.file.editor.impl,
         consulo.file.chooser.impl,
+        consulo.ide.impl,
         consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.language.impl,
+        consulo.language.index.impl,
+        consulo.module.content.impl,
+        consulo.module.impl,
+        consulo.project.impl,
+        consulo.project.ui.impl,
+        consulo.sand.language.plugin,
+        consulo.ui.ex.impl,
+        consulo.version.control.system.api,
+        consulo.version.control.system.impl,
+        consulo.virtual.file.system.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 }

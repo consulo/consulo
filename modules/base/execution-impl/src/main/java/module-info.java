@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
+@SuppressWarnings("module")
 module consulo.execution.impl {
     requires consulo.mcp.server.api;
     requires consulo.execution.api;
@@ -36,12 +37,16 @@ module consulo.execution.impl {
     exports consulo.execution.impl.internal.ui.layout to
         consulo.ide.impl,
         consulo.execution.debug.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.impl.internal.ui.layout.action to
         consulo.ide.impl,
         consulo.execution.debug.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.impl.internal.dashboard.action to consulo.execution.debug.impl;
 

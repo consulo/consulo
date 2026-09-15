@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-04-02
  */
+@SuppressWarnings("module")
 module consulo.execution.coverage.api {
     // TODO remove in future
     requires java.desktop;

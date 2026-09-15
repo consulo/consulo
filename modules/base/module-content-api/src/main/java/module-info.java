@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-21
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.module.content.api {
     requires transitive consulo.application.content.api;
     requires transitive consulo.project.content.api;
@@ -26,18 +27,18 @@ module consulo.module.content.api {
     exports consulo.module.content.layer.orderEntry;
 
     exports consulo.module.content.internal to
+        consulo.compiler.artifact.impl,
+        consulo.compiler.impl,
+        consulo.external.system.api,
+        consulo.external.system.impl,
         consulo.it,
         consulo.ide.api,
         consulo.ide.impl,
-        consulo.module.impl,
         consulo.language.api,
+        consulo.language.editor.impl,
         consulo.language.impl,
         consulo.language.index.impl,
-        consulo.compiler.impl,
-        consulo.compiler.artifact.impl,
-        consulo.external.system.impl,
+        consulo.module.impl,
         consulo.module.ui.api,
-        consulo.module.content.impl,
-        consulo.language.editor.impl,
-        consulo.external.system.api;
+        consulo.module.content.impl;
 }

@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 21-Feb-22
+ * @since 2022-02-21
  */
+@SuppressWarnings("module")
 module consulo.ui.ex.awt.api {
     requires java.desktop;
 
@@ -48,16 +49,18 @@ module consulo.ui.ex.awt.api {
     exports consulo.ui.ex.awt.popup;
 
     exports consulo.ui.ex.awt.internal to
-        consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.language.editor.refactoring.api,
-        consulo.version.control.system.log.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.execution.debug.impl,
         consulo.external.system.api,
-        consulo.language.editor.ui.api,
+        consulo.ide.impl,
         consulo.language.editor.impl,
-        consulo.task.impl,
+        consulo.language.editor.refactoring.api,
+        consulo.language.editor.ui.api,
         consulo.ide.api,
-        consulo.execution.debug.impl;
+        consulo.task.impl,
+        consulo.version.control.system.log.impl;
 
     exports consulo.ui.ex.awt.internal.laf;
 

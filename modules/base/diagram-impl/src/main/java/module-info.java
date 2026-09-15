@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-09-02
  */
+@SuppressWarnings("module")
 module consulo.diagram.impl {
     requires consulo.diagram.api;
     requires consulo.ui.ex.api;
