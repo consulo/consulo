@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-06-15
  */
+@SuppressWarnings("module")
 module consulo.language.code.style.impl {
     requires consulo.mcp.server.api;
     requires consulo.language.code.style.api;

@@ -5,6 +5,7 @@
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
+@SuppressWarnings("module")
 module consulo.localize.api {
     requires transitive consulo.annotation;
     requires transitive consulo.disposer.api;

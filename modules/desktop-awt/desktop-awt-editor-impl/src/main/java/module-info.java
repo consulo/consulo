@@ -4,6 +4,7 @@
  * @author VISTALL
  * @since 2026-08-17
  */
+@SuppressWarnings("module")
 module consulo.desktop.awt.editor.impl {
     requires consulo.annotation;
     requires consulo.application.api;

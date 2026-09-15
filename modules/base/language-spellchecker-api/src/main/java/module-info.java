@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2023-01-14
  */
+@SuppressWarnings("module")
 module consulo.language.spellchecker.api {
     requires transitive consulo.language.api;
 

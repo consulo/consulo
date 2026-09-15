@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-03-12
  */
+@SuppressWarnings("module")
 module consulo.language.code.style.api {
     // todo drop this dependency
     requires java.desktop;

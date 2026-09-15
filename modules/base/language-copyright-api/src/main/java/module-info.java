@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-06-13
  */
+@SuppressWarnings("module")
 module consulo.language.copyright.api {
     // TODO remove this dependency in future
     requires java.desktop;

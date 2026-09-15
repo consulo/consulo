@@ -5,6 +5,7 @@
  * @author VISTALL
  * @since 2026-08-17
  */
+@SuppressWarnings("module")
 module consulo.web.ui.impl {
     requires vaadin.text.field.flow;
     requires vaadin.virtual.list.flow;

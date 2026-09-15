@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 18-Apr-22
+ * @since 2022-04-18
  */
+@SuppressWarnings("module")
 module consulo.language.editor.refactoring.api {
     requires transitive consulo.document.api;
     requires transitive consulo.find.api;
@@ -46,6 +47,8 @@ module consulo.language.editor.refactoring.api {
     exports consulo.language.editor.refactoring.unwrap;
     exports consulo.language.editor.refactoring.util;
 
-    exports consulo.language.editor.refactoring.internal to consulo.ide.impl, consulo.language.editor.refactoring.impl;
+    exports consulo.language.editor.refactoring.internal to
+        consulo.ide.impl,
+        consulo.language.editor.refactoring.impl;
     exports consulo.language.editor.refactoring.internal.unwrap to consulo.ide.impl;
 }
