@@ -1885,8 +1885,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
         boolean setIndexedStatus = true;
         if (indexingDebugEnabled()) {
+            boolean debugValid = file.isValid();
             LOG.warn("INDEX-DEBUG indexFileContent enter id=" + fileId + " file=" + file.getPath()
-                + " deleteRequest=" + isDeleteRequest + " valid=" + file.isValid() + " tooLarge=" + isTooLarge(file));
+                + " deleteRequest=" + isDeleteRequest + " valid=" + debugValid
+                + " tooLarge=" + (debugValid && isTooLarge(file)));
         }
         long fileStatusLockObject = IndexingFlag.getOrCreateHash(file);
         try {
@@ -2393,7 +2395,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         Set<Project> containingProjects = getContainingProjects(file);
         if (indexingDebugEnabled()) {
             LOG.warn("INDEX-DEBUG scheduleFileForIndexing id=" + fileId + " file=" + file.getPath()
-                + " containingProjects=" + containingProjects.size() + " canBeIndexed=" + canBeIndexed(file));
+                + " containingProjects=" + containingProjects.size()
+                + " canBeIndexed=" + (!containingProjects.isEmpty() && canBeIndexed(file)));
         }
         if (containingProjects.isEmpty() || !canBeIndexed(file)) {
             // large file might be scheduled for update in before event when its size was not large

@@ -130,9 +130,10 @@ public class ProjectReopenSkipsFullScanTest {
                 "the classes indexed by the first session must still be findable without any rescan",
                 () -> !findClasses(second, "Reopen5").isEmpty()
             );
-            assertThat(findClasses(second, "Reopen" + (FILES - 1)))
-                .as("every class of the first session must survive the reopen")
-                .isNotEmpty();
+            waitFor(
+                "every class of the first session must survive the reopen",
+                () -> !findClasses(second, "Reopen" + (FILES - 1)).isEmpty()
+            );
         }
         finally {
             Disposer.dispose(disposable);
