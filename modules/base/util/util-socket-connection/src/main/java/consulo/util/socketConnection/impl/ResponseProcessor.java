@@ -4,7 +4,7 @@ import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.socketConnection.*;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -39,32 +39,30 @@ public class ResponseProcessor<R extends AbstractResponse> {
     myScheduledExecutorService = executor;
   }
 
-  public void startReading(final ResponseReader<R> reader) {
-    myScheduledExecutorService.execute(new Runnable() {
-      public void run() {
-        myThread = Thread.currentThread();
-        try {
-          while (true) {
-            R r = reader.readResponse();
-            if (r == null) break;
-            if (r instanceof ResponseToRequest) {
-              int requestId = ((ResponseToRequest)r).getRequestId();
-              processResponse(requestId, r);
-            }
-            else {
-              processResponse(r);
-            }
+  public void startReading(ResponseReader<R> reader) {
+    myScheduledExecutorService.execute(() -> {
+      myThread = Thread.currentThread();
+      try {
+        while (true) {
+          R r = reader.readResponse();
+          if (r == null) break;
+          if (r instanceof ResponseToRequest) {
+            int requestId = ((ResponseToRequest)r).getRequestId();
+            processResponse(requestId, r);
+          }
+          else {
+            processResponse(r);
           }
         }
-        catch (InterruptedException ignored) {
-        }
-        catch (IOException e) {
-          LOG.info(e.getMessage(), e);
-        }
-        finally {
-          synchronized (myLock) {
-            myStopped = true;
-          }
+      }
+      catch (InterruptedException ignored) {
+      }
+      catch (IOException e) {
+        LOG.info(e.getMessage(), e);
+      }
+      finally {
+        synchronized (myLock) {
+          myStopped = true;
         }
       }
     });
@@ -154,7 +152,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
   }
 
   private void scheduleTimeoutCheck() {
-    Ref<Long> nextTime = Ref.create(Long.MAX_VALUE);
+    SimpleReference<Long> nextTime = SimpleReference.create(Long.MAX_VALUE);
     synchronized (myLock) {
       if (myTimeoutHandlers.isEmpty()) return;
 
@@ -167,7 +165,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
         myTimeoutTask.cancel(false);
       }
 
-      myTimeoutTask = myScheduledExecutorService.schedule(() -> checkTimeout(), delay, TimeUnit.MILLISECONDS);
+      myTimeoutTask = myScheduledExecutorService.schedule(this::checkTimeout, delay, TimeUnit.MILLISECONDS);
     }
     else {
       checkTimeout();
