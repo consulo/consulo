@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 12-Feb-22
+ * @since 2022-02-12
  */
+@SuppressWarnings("module")
 module consulo.execution.debug.api {
     // todo temp dependency
     requires java.desktop;
@@ -46,9 +47,17 @@ module consulo.execution.debug.api {
     exports consulo.execution.debug.stream.wrapper;
     exports consulo.execution.debug.stream.wrapper.impl;
 
-    exports consulo.execution.debug.internal to consulo.ide.impl, consulo.execution.debug.impl;
-    exports consulo.execution.debug.internal.breakpoint to consulo.execution.debug.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.execution.debug.internal to
+        consulo.execution.debug.impl,
+        consulo.ide.impl;
+    exports consulo.execution.debug.internal.breakpoint to
+        consulo.execution.debug.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl;
 
     opens consulo.execution.debug.breakpoint to consulo.util.xml.serializer;
     opens consulo.execution.debug.memory to consulo.util.xml.serializer;

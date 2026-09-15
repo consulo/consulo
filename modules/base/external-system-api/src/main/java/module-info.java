@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 02-Sep-22
+ * @since 2022-09-02
  */
+@SuppressWarnings("module")
 module consulo.external.system.api {
     requires transitive consulo.project.api;
     requires transitive consulo.configurable.api;
@@ -18,9 +19,6 @@ module consulo.external.system.api {
 
     requires consulo.util.rmi;
     requires consulo.util.nodep;
-
-    opens consulo.externalSystem.model.execution to consulo.util.xml.serializer;
-    opens consulo.externalSystem.setting to consulo.util.xml.serializer;
 
     exports consulo.externalSystem;
     exports consulo.externalSystem.importing;
@@ -52,6 +50,13 @@ module consulo.external.system.api {
     // TODO remove this dependency in future
     exports consulo.externalSystem.ui.awt;
 
-    exports consulo.externalSystem.internal to consulo.ide.impl, consulo.external.system.impl;
-    exports consulo.externalSystem.internal.ui to consulo.ide.impl, consulo.external.system.impl;
+    exports consulo.externalSystem.internal to
+        consulo.external.system.impl,
+        consulo.ide.impl;
+    exports consulo.externalSystem.internal.ui to
+        consulo.external.system.impl,
+        consulo.ide.impl;
+
+    opens consulo.externalSystem.model.execution to consulo.util.xml.serializer;
+    opens consulo.externalSystem.setting to consulo.util.xml.serializer;
 }

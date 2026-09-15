@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-02-12
  */
+@SuppressWarnings("module")
 module consulo.compiler.api {
     requires transitive consulo.execution.api;
     requires transitive consulo.index.io;

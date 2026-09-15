@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-08-10
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.bookmark.api {
     requires transitive consulo.annotation;
     requires transitive consulo.document.api;

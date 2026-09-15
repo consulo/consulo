@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-03-23
  */
+@SuppressWarnings("module")
 module consulo.application.impl {
     requires transitive consulo.component.impl;
     requires transitive consulo.component.store.impl;
@@ -29,63 +30,104 @@ module consulo.application.impl {
     requires org.slf4j;
 
     exports consulo.application.impl.internal to
-        consulo.ui.ex.impl,
-        consulo.ide.impl,
-        consulo.logging.logback.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.proxy,
-        consulo.test.impl,
-        consulo.module.impl,
-        consulo.project.impl,
-        consulo.sand.language.plugin,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
         consulo.language.impl,
         consulo.language.index.impl,
         consulo.language.editor.api,
         consulo.language.editor.impl,
-        consulo.it,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.logging.logback.impl,
+        consulo.module.impl,
+        consulo.project.impl,
+        consulo.proxy,
+        consulo.sand.language.plugin,
+        consulo.test.impl,
+        consulo.ui.ex.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
-    exports consulo.application.impl.internal.macro to consulo.ide.impl, consulo.module.impl, consulo.project.impl;
+    exports consulo.application.impl.internal.macro to
+        consulo.ide.impl,
+        consulo.module.impl,
+        consulo.project.impl;
 
     exports consulo.application.impl.internal.progress to
+        consulo.compiler.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.os.mac,
+        consulo.desktop.ide.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
         consulo.language.editor.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.awt.os.mac,
-        consulo.test.impl,
-        consulo.compiler.impl,
         consulo.project.impl,
-        consulo.desktop.ide.impl,
+        consulo.test.impl,
         consulo.virtual.file.system.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.it;
 
     exports consulo.application.impl.internal.performance to
-        consulo.ui.ex.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.os.mac,
         consulo.ide.impl,
         consulo.language.index.impl,
         consulo.project.impl,
         consulo.proxy,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.awt.os.mac,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.ui.ex.impl,
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
-    exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.application.impl.internal.plugin to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl;
 
-    exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+    exports consulo.application.impl.internal.start to
+        consulo.builtin.web.server.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.ide.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
         consulo.language.index.impl,
         consulo.logging.logback.impl,
-        consulo.desktop.ide.impl,
-        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-        consulo.builtin.web.server.impl,
-        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+        consulo.web.editor.impl,
+        consulo.web.ide,
+        consulo.web.ui.impl;
 
-    exports consulo.application.impl.internal.store to consulo.ide.impl, consulo.it;
-    exports consulo.application.impl.internal.util to consulo.language.impl, consulo.ide.impl, consulo.it;
-    exports consulo.application.impl.internal.concurent to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.application.impl.internal.store to
+        consulo.ide.impl,
+        consulo.it;
+    exports consulo.application.impl.internal.util to
+        consulo.ide.impl,
+        consulo.it,
+        consulo.language.impl;
+
+    exports consulo.application.impl.internal.concurent to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.ide.impl;
 
     opens consulo.application.impl.internal.start to args4j;
 

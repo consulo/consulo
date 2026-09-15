@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-07-21
  */
+@SuppressWarnings("module")
 module consulo.external.service.impl {
     requires static org.jspecify;
     requires consulo.application.api;
@@ -29,15 +30,27 @@ module consulo.external.service.impl {
     requires consulo.ui.ex.awt.api;
     requires forms.rt;
 
-    exports consulo.externalService.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.externalService.impl.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
-    exports consulo.externalService.impl.internal.errorReport to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.externalService.impl.internal.errorReport to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
-    exports consulo.externalService.impl.internal.repository to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.externalService.impl.internal.repository to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
     exports consulo.externalService.impl.internal.statistic to consulo.ide.impl;
 
-    exports consulo.externalService.impl.internal.update to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.externalService.impl.internal.update to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
     opens consulo.externalService.impl.internal.statistic to
         consulo.component.impl,

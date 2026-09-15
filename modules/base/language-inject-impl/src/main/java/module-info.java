@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 19-Mar-22
+ * @since 2022-03-19
  */
+@SuppressWarnings("module")
 module consulo.language.inject.impl {
     // TODO remove this dependency in future
     requires java.desktop;
@@ -12,13 +13,15 @@ module consulo.language.inject.impl {
     requires transitive consulo.code.editor.api;
 
     exports consulo.language.inject.impl.internal to consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.language.editor.impl,
         consulo.language.editor.refactoring.api,
         consulo.language.inject.advanced.impl,
         consulo.language.code.style.impl;
 
     opens consulo.language.inject.impl.internal to
-        consulo.language.impl,
-        consulo.application.impl;
+        consulo.application.impl,
+        consulo.language.impl;
 }

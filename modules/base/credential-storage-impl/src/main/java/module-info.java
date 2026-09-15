@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 23/01/2023
+ * @since 2023-01-23
  */
+@SuppressWarnings("module")
 module consulo.credential.storage.impl {
     requires consulo.credential.storage.api;
     requires consulo.file.chooser.api;

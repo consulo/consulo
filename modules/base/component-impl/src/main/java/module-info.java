@@ -2,32 +2,44 @@ import consulo.component.impl.internal.inject.DefaultRootInjectingContainerFacto
 
 /**
  * @author VISTALL
- * @since 20-Feb-22
+ * @since 2022-02-20
  */
+@SuppressWarnings("module")
 module consulo.component.impl {
-  requires transitive consulo.component.api;
-  requires transitive consulo.container.api;
-  requires transitive consulo.proxy;
-  requires transitive consulo.virtual.file.system.api;
-  requires transitive jakarta.inject;
+    requires transitive consulo.component.api;
+    requires transitive consulo.container.api;
+    requires transitive consulo.proxy;
+    requires transitive consulo.virtual.file.system.api;
+    requires transitive jakarta.inject;
 
-  requires consulo.util.nodep;
+    requires consulo.util.nodep;
 
-  exports consulo.component.impl.internal to
-    consulo.ide.impl,
-    consulo.component.store.impl,
-    consulo.application.impl,
-    consulo.test.impl,
-    consulo.module.impl,
-    consulo.project.impl,
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-    consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
-    consulo.it;
+    exports consulo.component.impl.internal to
+        consulo.application.impl,
+        consulo.component.store.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.ide.impl,
+        consulo.it,
+        consulo.module.impl,
+        consulo.project.impl,
+        consulo.test.impl;
 
-  exports consulo.component.impl.internal.messagebus to consulo.ide.impl, consulo.test.impl;
-  exports consulo.component.impl.internal.macro to consulo.component.store.impl, consulo.application.impl, consulo.ide.impl, consulo.module.impl, consulo.project.impl;
+    exports consulo.component.impl.internal.messagebus to
+        consulo.ide.impl,
+        consulo.test.impl;
+    exports consulo.component.impl.internal.macro to
+        consulo.application.impl,
+        consulo.component.store.impl,
+        consulo.ide.impl,
+        consulo.module.impl,
+        consulo.project.impl;
 
-  opens consulo.component.impl.internal to consulo.util.xml.serializer;
-  
-  provides consulo.component.internal.inject.RootInjectingContainerFactory with DefaultRootInjectingContainerFactory;
+    opens consulo.component.impl.internal to consulo.util.xml.serializer;
+
+    provides consulo.component.internal.inject.RootInjectingContainerFactory with DefaultRootInjectingContainerFactory;
 }

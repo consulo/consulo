@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 05-Feb-22
+ * @since 2022-02-05
  */
+@SuppressWarnings("module")
 module consulo.execution.api {
     // TODO obsolete dependency
     requires java.desktop;
@@ -57,23 +58,31 @@ module consulo.execution.api {
         consulo.execution.impl,
         consulo.execution.debug.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
-    exports consulo.execution.internal to consulo.ide.impl,
-        consulo.execution.impl,
+    exports consulo.execution.internal to
         consulo.compiler.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.execution.debug.impl,
-        consulo.execution.test.sm.api,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.execution.test.api,
-        consulo.execution.debug.api;
-
-    exports consulo.execution.internal.layout to consulo.ide.impl,
+        consulo.execution.debug.api,
         consulo.execution.impl,
-        consulo.execution.debug.impl,
+        consulo.execution.test.api,
         consulo.execution.test.sm.api,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.execution.test.api;
+        consulo.ide.impl;
+
+    exports consulo.execution.internal.layout to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.execution.debug.impl,
+        consulo.execution.impl,
+        consulo.execution.test.api,
+        consulo.execution.test.sm.api,
+        consulo.ide.impl;
 
     opens consulo.execution.internal.action to consulo.component.impl;
 }

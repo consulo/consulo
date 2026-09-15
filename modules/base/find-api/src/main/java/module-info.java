@@ -1,21 +1,24 @@
 /**
  * @author VISTALL
- * @since 31-Mar-22
+ * @since 2022-03-31
  */
+@SuppressWarnings("module")
 module consulo.find.api {
-  // TODO remove in future
-  requires java.desktop;
+    // TODO remove in future
+    requires java.desktop;
 
-  requires transitive consulo.project.api;
-  requires transitive consulo.application.content.api;
-  requires transitive consulo.language.api;
-  requires transitive consulo.file.editor.api;
-  requires transitive consulo.usage.api;
-  requires transitive consulo.ui.ex.awt.api;
+    requires transitive consulo.project.api;
+    requires transitive consulo.application.content.api;
+    requires transitive consulo.language.api;
+    requires transitive consulo.file.editor.api;
+    requires transitive consulo.usage.api;
+    requires transitive consulo.ui.ex.awt.api;
 
-  exports consulo.find;
-  exports consulo.find.ui;
-  exports consulo.find.localize;
+    exports consulo.find;
+    exports consulo.find.ui;
+    exports consulo.find.localize;
 
-  exports consulo.find.internal to consulo.ide.impl, consulo.version.control.system.impl;
+    exports consulo.find.internal to
+        consulo.ide.impl,
+        consulo.version.control.system.impl;
 }

@@ -1,6 +1,7 @@
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
+@SuppressWarnings("module")
 module consulo.util.collection {
     requires transitive consulo.annotation;
     requires transitive consulo.util.lang;
@@ -12,11 +13,13 @@ module consulo.util.collection {
     exports consulo.util.collection.util;
 
     exports consulo.util.collection.impl.map to
-        consulo.util.collection.primitive,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.language.impl,
-        consulo.index.io,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
+        consulo.index.io,
+        consulo.language.impl,
+        consulo.util.collection.primitive,
         consulo.virtual.file.system.impl;
 
     exports consulo.util.collection.impl.set to consulo.util.collection.primitive;

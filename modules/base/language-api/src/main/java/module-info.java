@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-22
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.language.api {
     requires transitive consulo.document.api;
     requires transitive consulo.index.io;
@@ -77,19 +78,19 @@ module consulo.language.api {
         consulo.language.index.impl;
 
     exports consulo.language.internal to
-        consulo.it,
+        consulo.file.editor.impl,
         consulo.find.api,
         consulo.ide.impl,
+        consulo.it,
         consulo.language.editor.api,
         consulo.language.editor.impl,
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.language.impl,
+        consulo.language.index.impl,
         consulo.language.inject.impl,
         consulo.language.inject.advanced.api,
         consulo.language.inject.advanced.impl,
-        consulo.language.index.impl,
-        consulo.file.editor.impl,
         consulo.usage.api;
 
     exports consulo.language.internal.psi to

@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-01-31
  */
+@SuppressWarnings("module")
 module consulo.component.store.api {
     requires consulo.annotation;
     requires consulo.ui.api;
@@ -9,12 +10,12 @@ module consulo.component.store.api {
     requires consulo.application.api;
 
     exports consulo.component.store.internal to
-        consulo.component.store.impl,
         consulo.application.impl,
-        consulo.project.impl,
-        consulo.module.impl,
+        consulo.component.store.impl,
         consulo.external.service.impl,
-        consulo.language.index.impl,
         consulo.ide.impl,
-        consulo.it;
+        consulo.it,
+        consulo.language.index.impl,
+        consulo.module.impl,
+        consulo.project.impl;
 }

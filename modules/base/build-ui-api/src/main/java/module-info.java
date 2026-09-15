@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-08-01
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.build.ui.api {
     // TODO remove in future
     requires java.desktop;
@@ -25,6 +26,6 @@ module consulo.build.ui.api {
 
     exports consulo.build.ui.internal to
         consulo.external.system.api,
-        consulo.language.editor.problem.view.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.language.editor.problem.view.impl;
 }

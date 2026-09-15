@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-20
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.configurable.api {
     // TODO [VISTALL] obsolete dep
     requires java.desktop;
@@ -26,7 +27,9 @@ module consulo.configurable.api {
         consulo.language.code.style.ui.api,
         consulo.ide.api,
         consulo.task.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
         consulo.ui.ex.awt.api,
         consulo.execution.debug.impl,
         consulo.remote.server.impl,

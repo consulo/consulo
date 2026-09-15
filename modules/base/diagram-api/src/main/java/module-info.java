@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2025-09-02
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.diagram.api {
     requires transitive consulo.application.api;
 
@@ -12,5 +13,8 @@ module consulo.diagram.api {
 
     exports consulo.diagram;
 
-    exports consulo.diagram.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.diagram.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 }

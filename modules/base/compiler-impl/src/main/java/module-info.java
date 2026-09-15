@@ -1,7 +1,8 @@
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
+@SuppressWarnings("module")
 module consulo.compiler.impl {
     requires consulo.mcp.server.api;
     requires transitive consulo.compiler.api;
@@ -21,7 +22,9 @@ module consulo.compiler.impl {
 
     opens consulo.compiler.impl.internal.action to consulo.component.impl;
 
-    opens consulo.compiler.impl.internal to consulo.component.impl, consulo.util.xml.serializer;
+    opens consulo.compiler.impl.internal to
+        consulo.component.impl,
+        consulo.util.xml.serializer;
 
     opens consulo.compiler.impl.internal.state to consulo.component.impl;
 }

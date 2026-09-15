@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-01-13
  */
+@SuppressWarnings("module")
 open module consulo.ide.impl {
     requires java.desktop;
     requires java.xml;
@@ -161,7 +162,10 @@ open module consulo.ide.impl {
         consulo.ide.impl.ui.impl.LightIconLibraryDescriptor,
         consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor;
 
-    exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.dataContext to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 
     //opens consulo.ide.impl.presentationAssistant to consulo.util.xml.serializer;
 
@@ -523,11 +527,29 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.wm.impl.status;
     exports consulo.ide.impl.wm.impl.welcomeScreen;
 
-    exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.idea.ui.popup.actionPopup to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
-
+    exports consulo.ide.impl.project.ui.impl to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.configurable to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl,
+        consulo.sand.language.plugin;
+    exports consulo.ide.impl.desktop.awt.editor to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.wm.statusBar to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.internal to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.idea.ui.popup.actionPopup to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ui.impl;
 }

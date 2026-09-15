@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2020-10-24
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.util.dataholder {
     requires consulo.annotation;
     requires consulo.util.concurrent;

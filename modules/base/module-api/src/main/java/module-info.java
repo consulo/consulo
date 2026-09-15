@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-01-20
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.module.api {
     // TODO [VISTALL] remove in future. Used in SwingMutableModuleExtension
     requires static java.desktop;
@@ -22,9 +23,9 @@ module consulo.module.api {
     exports consulo.module.localize;
 
     exports consulo.module.internal to
-        consulo.module.impl,
-        consulo.project.impl,
-        consulo.module.content.impl,
+        consulo.ide.impl,
         consulo.language.index.impl,
-        consulo.ide.impl;
+        consulo.module.content.impl,
+        consulo.module.impl,
+        consulo.project.impl;
 }

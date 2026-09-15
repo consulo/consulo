@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
  * @since 2022-08-02
  */
 @NullMarked
+@SuppressWarnings("module")
 module consulo.http.api {
     requires transitive consulo.application.api;
 
