@@ -1852,6 +1852,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         };
     }
 
+    private static boolean indexingDebugEnabled() {
+        return Boolean.getBoolean(IndexedFilesListener.DEBUG_PROPERTY);
+    }
+
     public boolean isFileUpToDate(VirtualFile file) {
         return file instanceof VirtualFileWithId && !myFilesToUpdateCollector.isScheduledForUpdate(file);
     }
@@ -1880,6 +1884,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         int fileId = Math.abs(getIdMaskingNonIdBasedFile(file));
 
         boolean setIndexedStatus = true;
+        if (indexingDebugEnabled()) {
+            LOG.warn("INDEX-DEBUG indexFileContent enter id=" + fileId + " file=" + file.getPath()
+                + " deleteRequest=" + isDeleteRequest + " valid=" + file.isValid() + " tooLarge=" + isTooLarge(file));
+        }
         long fileStatusLockObject = IndexingFlag.getOrCreateHash(file);
         try {
             // if file was scheduled for update due to vfs events then it is present in the files-to-update collector
@@ -1892,6 +1900,11 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             }
             else {
                 setIndexedStatus = doIndexFileContent(project, content, indexingStamp);
+            }
+
+            if (indexingDebugEnabled()) {
+                LOG.warn("INDEX-DEBUG indexFileContent result id=" + fileId + " file=" + file.getPath()
+                    + " setIndexedStatus=" + setIndexedStatus);
             }
 
             myFilesToUpdateCollector.removeFileIdFromFilesScheduledForUpdate(fileId);
@@ -1923,6 +1936,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
             Set<ID<?, ?>> currentIndexedStates = getAppliedIndexes(inputId);
             List<ID<?, ?>> requiredIndexes = getRequiredIndexes(indexedFile);
+            boolean indexingDebug = indexingDebugEnabled();
             for (ID<?, ?> indexId : requiredIndexes) {
                 currentIndexedStates.remove(indexId);
                 ProgressManager.checkCanceled();
@@ -1951,6 +1965,11 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 }
                 else {
                     shouldUpdate = false;
+                }
+
+                if (indexingDebug) {
+                    LOG.warn("INDEX-DEBUG index-decision id=" + inputId + " file=" + file.getPath()
+                        + " index=" + indexId + " updateRequired=" + requiredIndexNotUpToDate + " shouldUpdate=" + shouldUpdate);
                 }
 
                 if (shouldUpdate) {
@@ -2287,6 +2306,12 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 new ProjectFilesCondition(createProjectIndexableFiles(project), filter, restrictedTo)
             );
 
+            if (indexingDebugEnabled()) {
+                LOG.warn("INDEX-DEBUG forceUpdate project=" + (project == null ? "null" : project.getName())
+                    + " candidates=" + allFilesToUpdate.size() + " accepted=" + virtualFilesToBeUpdatedForProject.size()
+                    + " restrictedTo=" + (restrictedTo == null ? "null" : restrictedTo.getName()));
+            }
+
             if (!virtualFilesToBeUpdatedForProject.isEmpty()) {
                 myForceUpdateTask.processAll(virtualFilesToBeUpdatedForProject, project);
             }
@@ -2366,6 +2391,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         List<Project> dirtyQueueProjects
     ) {
         Set<Project> containingProjects = getContainingProjects(file);
+        if (indexingDebugEnabled()) {
+            LOG.warn("INDEX-DEBUG scheduleFileForIndexing id=" + fileId + " file=" + file.getPath()
+                + " containingProjects=" + containingProjects.size() + " canBeIndexed=" + canBeIndexed(file));
+        }
         if (containingProjects.isEmpty() || !canBeIndexed(file)) {
             // large file might be scheduled for update in before event when its size was not large
             doInvalidateIndicesForFile(fileId, file, containingProjects, dirtyQueueProjects);
