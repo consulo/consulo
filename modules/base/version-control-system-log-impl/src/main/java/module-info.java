@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2025-08-30
  */
+@SuppressWarnings("module")
 module consulo.version.control.system.log.impl {
     requires consulo.version.control.system.log.api;
     requires consulo.external.service.api;

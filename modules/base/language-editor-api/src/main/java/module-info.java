@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-02-13
  */
+@SuppressWarnings("module")
 module consulo.language.editor.api {
     // TODO obsolete dep
     requires java.desktop;

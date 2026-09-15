@@ -2,6 +2,7 @@
  * @author VISTALL
  * @since 2022-01-14
  */
+@SuppressWarnings("module")
 open module consulo.desktop.awt.ide.impl {
     requires java.desktop;
     requires java.management;
@@ -85,7 +86,6 @@ open module consulo.desktop.awt.ide.impl {
 
     provides consulo.platform.internal.PlatformInternal with consulo.desktop.awt.platform.impl.DesktopAWTPlatformInternalImpl;
     provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopAWTContainerStartupImpl;
-
 
     exports consulo.desktop.awt.ui to consulo.desktop.awt.os.mac;
 }
