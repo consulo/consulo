@@ -40,8 +40,11 @@ public abstract class IdFilter {
   
   public static IdFilter getProjectIdFilter(Project project, boolean includeNonProjectItems) {
     Key<CachedValue<IdFilter>> key = includeNonProjectItems ? OUTSIDE_PROJECT : INSIDE_PROJECT;
-    CachedValueProvider<IdFilter> provider =
-            () -> CachedValueProvider.Result.create(buildProjectIdFilter(project, includeNonProjectItems), ProjectRootManager.getInstance(project), VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS);
+    CachedValueProvider<IdFilter> provider = () -> CachedValueProvider.Result.create(
+      buildProjectIdFilter(project, includeNonProjectItems),
+      ProjectRootManager.getInstance(project),
+      VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS
+    );
     return CachedValuesManager.getManager(project).getCachedValue(project, key, provider, false);
   }
 

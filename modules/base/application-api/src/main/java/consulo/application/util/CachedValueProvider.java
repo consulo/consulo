@@ -21,23 +21,23 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
-public interface CachedValueProvider<T> {
+public interface CachedValueProvider<T extends @Nullable Object> {
     @Nullable Result<T> compute();
 
     class Result<T> {
-        private final @Nullable T myValue;
-        private final Object[] myDependencyItems;
+        private final T myValue;
+        private final Object @Nullable [] myDependencyItems;
 
-        public Result(@Nullable T value, Object... dependencyItems) {
+        public Result(T value, Object @Nullable ... dependencyItems) {
             myValue = value;
             myDependencyItems = dependencyItems;
         }
 
-        public @Nullable T getValue() {
+        public T getValue() {
             return myValue;
         }
 
-        public Object[] getDependencyItems() {
+        public Object @Nullable [] getDependencyItems() {
             return myDependencyItems;
         }
 
@@ -48,15 +48,15 @@ public interface CachedValueProvider<T> {
             return Result.create(myValue, ArrayUtil.append(myDependencyItems, dependency, ArrayUtil.OBJECT_ARRAY_FACTORY));
         }
 
-        public static <T> Result<T> createSingleDependency(@Nullable T value, Object dependency) {
+        public static <T extends @Nullable Object> Result<T> createSingleDependency(T value, Object dependency) {
             return create(value, dependency);
         }
 
-        public static <T> Result<T> create(@Nullable T value, Object... dependencies) {
+        public static <T extends @Nullable Object> Result<T> create(T value, Object... dependencies) {
             return new Result<>(value, dependencies);
         }
 
-        public static <T> Result<T> create(@Nullable T value, Collection<?> dependencies) {
+        public static <T extends @Nullable Object> Result<T> create(T value, Collection<?> dependencies) {
             return new Result<>(value, ArrayUtil.toObjectArray(dependencies));
         }
     }

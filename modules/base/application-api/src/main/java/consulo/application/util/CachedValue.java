@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -78,7 +80,7 @@ import java.util.function.Supplier;
  * @see CachedValueProvider
  * @see CachedValuesManager
  */
-public interface CachedValue<T> {
+public interface CachedValue<T extends @Nullable Object> {
     /**
      * @return cached value if it's already computed and not outdated, newly computed value otherwise
      */
