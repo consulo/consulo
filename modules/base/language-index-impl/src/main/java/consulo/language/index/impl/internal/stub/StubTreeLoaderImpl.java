@@ -42,7 +42,6 @@ import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -176,21 +175,10 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     PsiFile cachedPsi = PsiManagerEx.getInstanceEx(project).getFileManager().getCachedPsiFile(vFile);
     IndexingStampInfo indexingStampInfo = getIndexingStampInfo(vFile);
     if (indexingStampInfo != null && !indexingStampInfo.contentLengthMatches(vFile.getLength(), getCurrentTextContentLength(project, vFile, document, cachedPsi))) {
-      if (isScheduledForReindex(project, vFile)) {
-        return false;
-      }
       diagnoseLengthMismatch(vFile, wasIndexedAlready, document, saved, cachedPsi);
       return false;
     }
     return true;
-  }
-
-  private static boolean isScheduledForReindex(Project project, VirtualFile vFile) {
-    if (!(vFile instanceof VirtualFileWithId withId)) {
-      return false;
-    }
-    FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
-    return fileBasedIndex instanceof FileBasedIndexImpl impl && impl.getAllDirtyFiles(project).contains(withId.getId());
   }
 
   private void diagnoseLengthMismatch(VirtualFile vFile, boolean wasIndexedAlready, @Nullable Document document, boolean saved, @Nullable PsiFile cachedPsi) {
@@ -216,7 +204,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       message += "\nprojects with file: " + (LOG.isDebugEnabled() ? projects.toString() : projects.size());
     }
 
-    processError(vFile, message, new Exception());
+    processOutdatedStub(vFile, message);
   }
 
   private static void checkDeserializationCreatesNoPsi(ObjectStubTree<?> tree) {
@@ -253,7 +241,17 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
   private static ObjectStubTree processError(VirtualFile vFile, String message, @Nullable Exception e) {
     LOG.error(message, e);
+    scheduleReindexAfterMismatch(vFile);
+    return null;
+  }
 
+  private static ObjectStubTree processOutdatedStub(VirtualFile vFile, String message) {
+    LOG.warn(message);
+    scheduleReindexAfterMismatch(vFile);
+    return null;
+  }
+
+  private static void scheduleReindexAfterMismatch(VirtualFile vFile) {
     ApplicationManager.getApplication().invokeLater(() -> {
       Document doc = FileDocumentManager.getInstance().getCachedDocument(vFile);
       if (doc != null) {
@@ -264,8 +262,6 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       // processError may be invoked under stub index's read action and requestReindex in EDT starts dumb mode in writeAction (IDEA-197296)
       FileBasedIndex.getInstance().requestReindex(vFile);
     }, IdeaModalityState.nonModal());
-
-    return null;
   }
 
   @Override

@@ -44,6 +44,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.inject.Inject;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -287,6 +288,13 @@ final class ChangedFilesCollector extends IndexedFilesListener {
         int publishedEventIndex = getEventMerger().getPublishedEventIndex();
         int processedEventIndex = myProcessedEventIndex.get();
         if (processedEventIndex == publishedEventIndex) {
+            if (Boolean.getBoolean(DEBUG_PROPERTY) && getEventMerger().hasChanges()) {
+                LOG.warn("DIRTY-DEBUG drain-skipped index=" + publishedEventIndex
+                    + " pending=" + getEventMerger().getApproximateChangesCount()
+                    + " ids=" + Arrays.toString(getEventMerger().getPendingFileIds())
+                    + " collector=" + System.identityHashCode(this)
+                    + " thread=" + Thread.currentThread().getName());
+            }
             return;
         }
 
@@ -329,6 +337,14 @@ final class ChangedFilesCollector extends IndexedFilesListener {
         catch (InterruptedException e) {
             LOG.warn(e);
             throw new ProcessCanceledException(e);
+        }
+
+        if (Boolean.getBoolean(DEBUG_PROPERTY) && getEventMerger().hasChanges()) {
+            LOG.warn("DIRTY-DEBUG drain-left-over pending=" + getEventMerger().getApproximateChangesCount()
+                + " ids=" + Arrays.toString(getEventMerger().getPendingFileIds())
+                + " publishedNow=" + getEventMerger().getPublishedEventIndex() + " publishedBefore=" + publishedEventIndex
+                + " collector=" + System.identityHashCode(this)
+                + " thread=" + Thread.currentThread().getName());
         }
 
         if (getEventMerger().getPublishedEventIndex() == publishedEventIndex) {

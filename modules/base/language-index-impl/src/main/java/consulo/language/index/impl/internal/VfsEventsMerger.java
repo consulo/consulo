@@ -130,6 +130,10 @@ public final class VfsEventsMerger {
     return true;
   }
 
+  int[] getPendingFileIds() {
+    return myChangeInfos.keySet().toIntArray();
+  }
+
   public boolean hasChanges() {
     return !myChangeInfos.isEmpty();
   }
