@@ -90,8 +90,8 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
     protected class ModelHelper {
         final OrderedSet<T> originalItems = new OrderedSet<>(HashingStrategy.canonical());
 
-        private final Map<T, T> modifiedToOriginal = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
-        private final Map<T, T> originalToModified = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
+        private final Map<T, T> modifiedToOriginal = Maps.newHashMap(HashingStrategy.identity());
+        private final Map<T, T> originalToModified = Maps.newHashMap(HashingStrategy.identity());
 
         public void reset(@Nullable List<T> newOriginalItems) {
             if (newOriginalItems != null) {
