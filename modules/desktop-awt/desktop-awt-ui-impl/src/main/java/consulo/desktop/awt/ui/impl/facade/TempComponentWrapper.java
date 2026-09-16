@@ -37,7 +37,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 16/08/2021
  */
-class TempComponentWrapper implements Component, HasSize, ToSwingComponentWrapper, HasFocus {
+class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFocus {
     private final java.awt.Component myComponent;
 
     TempComponentWrapper(java.awt.Component component) {
@@ -55,7 +55,6 @@ class TempComponentWrapper implements Component, HasSize, ToSwingComponentWrappe
         return PaddingBuilderImpl.NOOP;
     }
 
-
     @Override
     public boolean isVisible() {
         return myComponent.isVisible();
@@ -64,7 +63,7 @@ class TempComponentWrapper implements Component, HasSize, ToSwingComponentWrappe
     @RequiredUIAccess
     @Override
     public void setVisible(boolean value) {
-        throw new UnsupportedOperationException();
+        myComponent.setVisible(value);
     }
 
     @Override
@@ -75,17 +74,11 @@ class TempComponentWrapper implements Component, HasSize, ToSwingComponentWrappe
     @RequiredUIAccess
     @Override
     public void setEnabled(boolean value) {
-        throw new UnsupportedOperationException();
+        myComponent.setEnabled(value);
     }
 
     @Override
     public @Nullable Component getParent() {
-        throw new UnsupportedOperationException();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void setSize(Size2D size) {
         throw new UnsupportedOperationException();
     }
 
