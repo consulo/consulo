@@ -15,14 +15,16 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -31,176 +33,180 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public class LayoutCodeDialog extends DialogWrapper {
-  private final Project myProject;
-  
-  private final PsiFile myFile;
+    private final Project myProject;
 
-  private final boolean myTextSelected;
+    private final PsiFile myFile;
 
-  private final String myHelpId;
-  private final LastRunReformatCodeOptionsProvider myLastRunOptions;
+    private final boolean myTextSelected;
 
-  private JPanel myButtonsPanel;
+    private final String myHelpId;
+    private final LastRunReformatCodeOptionsProvider myLastRunOptions;
 
-  private JCheckBox myOptimizeImportsCb;
-  private JCheckBox myRearrangeCodeCb;
+    private JPanel myButtonsPanel;
 
-  private JRadioButton myOnlyVCSChangedTextRb;
-  private JRadioButton mySelectedTextRadioButton;
-  private JRadioButton myWholeFileRadioButton;
+    private JCheckBox myOptimizeImportsCb;
+    private JCheckBox myRearrangeCodeCb;
 
-  private JPanel myActionsPanel;
-  private JPanel myScopePanel;
-  private JLabel myOptionalLabel;
+    private JRadioButton myOnlyVCSChangedTextRb;
+    private JRadioButton mySelectedTextRadioButton;
+    private JRadioButton myWholeFileRadioButton;
 
-  private LayoutCodeOptions myRunOptions;
+    private JPanel myActionsPanel;
+    private JPanel myScopePanel;
+    private JLabel myOptionalLabel;
 
-  public LayoutCodeDialog(Project project,
-                          PsiFile file,
-                          boolean textSelected,
-                          String helpId) {
-    super(project, true);
-    myFile = file;
-    myProject = project;
-    myTextSelected = textSelected;
-    myHelpId = helpId;
+    private LayoutCodeOptions myRunOptions;
 
-    myLastRunOptions = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
-    myRunOptions = createOptionsBundledOnDialog();
+    @RequiredReadAction
+    public LayoutCodeDialog(Project project, PsiFile file, boolean textSelected, String helpId) {
+        super(project, true);
+        myFile = file;
+        myProject = project;
+        myTextSelected = textSelected;
+        myHelpId = helpId;
 
-    setOKButtonText(CodeInsightLocalize.reformatCodeAcceptButtonText());
-    setTitle("Reformat File: " + file.getName());
+        myLastRunOptions = new LastRunReformatCodeOptionsProvider(ApplicationPropertiesComponent.getInstance());
+        myRunOptions = createOptionsBundledOnDialog();
 
-    init();
-  }
+        setOKButtonText(CodeInsightLocalize.reformatCodeAcceptButtonText());
+        setTitle("Reformat File: " + file.getName());
 
-  protected void init() {
-    super.init();
-
-    setUpActions();
-    setUpTextRangeMode();
-  }
-
-  private void setUpTextRangeMode() {
-    mySelectedTextRadioButton.setEnabled(myTextSelected);
-    if (!myTextSelected) {
-      mySelectedTextRadioButton.setToolTipText("No text selected in editor");
+        init();
     }
 
-    boolean fileHasChanges = FormatChangedTextUtil.hasChanges(myFile);
-    if (myFile.getVirtualFile() instanceof LightVirtualFile) {
-      myOnlyVCSChangedTextRb.setVisible(false);
-    }
-    else {
-      myOnlyVCSChangedTextRb.setEnabled(fileHasChanges);
-      if (!fileHasChanges) {
-        String hint = getChangesNotAvailableHint();
-        if (hint != null) myOnlyVCSChangedTextRb.setToolTipText(hint);
-      }
+    @Override
+    @RequiredReadAction
+    protected void init() {
+        super.init();
+
+        setUpActions();
+        setUpTextRangeMode();
     }
 
-    myWholeFileRadioButton.setEnabled(true);
-
-    if (myTextSelected) {
-      mySelectedTextRadioButton.setSelected(true);
-    }
-    else {
-      boolean lastRunProcessedChangedText = myLastRunOptions.getLastTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
-      if (lastRunProcessedChangedText && fileHasChanges) {
-        myOnlyVCSChangedTextRb.setSelected(true);
-      }
-      else {
-        myWholeFileRadioButton.setSelected(true);
-      }
-    }
-  }
-
-  private void setUpActions() {
-    boolean canOptimizeImports = !ImportOptimizer.forFile(myFile).isEmpty();
-    myOptimizeImportsCb.setVisible(canOptimizeImports);
-    if (canOptimizeImports) {
-      myOptimizeImportsCb.setSelected(myLastRunOptions.getLastOptimizeImports());
-    }
-
-    boolean canRearrangeCode = Rearranger.forLanguage(myFile.getLanguage()) != null;
-    myRearrangeCodeCb.setVisible(canRearrangeCode);
-    if (canRearrangeCode) {
-      myRearrangeCodeCb.setSelected(myLastRunOptions.isRearrangeCode(myFile.getLanguage()));
-    }
-
-    myOptionalLabel.setVisible(canOptimizeImports || canRearrangeCode);
-  }
-
-  private @Nullable String getChangesNotAvailableHint() {
-    if (!VcsUtil.isFileUnderVcs(myProject, VcsUtil.getFilePath(myFile.getVirtualFile()))) {
-      return "File not under VCS root";
-    }
-    else if (!FormatChangedTextUtil.hasChanges(myFile)) {
-      return "File was not changed since last revision";
-    }
-    return null;
-  }
-
-  private void saveCurrentConfiguration() {
-    if (myOptimizeImportsCb.isEnabled()) {
-      myLastRunOptions.saveOptimizeImportsState(myRunOptions.isOptimizeImports());
-    }
-    if (myRearrangeCodeCb.isEnabled()) {
-      myLastRunOptions.saveRearrangeState(myFile.getLanguage(), myRunOptions.isRearrangeCode());
-    }
-
-    if (!mySelectedTextRadioButton.isSelected() && myOnlyVCSChangedTextRb.isEnabled()) {
-      myLastRunOptions.saveProcessVcsChangedTextState(myOnlyVCSChangedTextRb.isSelected());
-    }
-  }
-
-  private LayoutCodeOptions createOptionsBundledOnDialog() {
-    return new LayoutCodeOptions() {
-      @Override
-      public TextRangeType getTextRangeType() {
-        if (myOnlyVCSChangedTextRb.isSelected()) {
-          return TextRangeType.VCS_CHANGED_TEXT;
+    private void setUpTextRangeMode() {
+        mySelectedTextRadioButton.setEnabled(myTextSelected);
+        if (!myTextSelected) {
+            mySelectedTextRadioButton.setToolTipText("No text selected in editor");
         }
-        if (mySelectedTextRadioButton.isSelected()) {
-          return TextRangeType.SELECTED_TEXT;
+
+        boolean fileHasChanges = FormatChangedTextUtil.hasChanges(myFile);
+        if (myFile.getVirtualFile() instanceof LightVirtualFile) {
+            myOnlyVCSChangedTextRb.setVisible(false);
         }
-        return TextRangeType.WHOLE_FILE;
-      }
+        else {
+            myOnlyVCSChangedTextRb.setEnabled(fileHasChanges);
+            if (!fileHasChanges) {
+                String hint = getChangesNotAvailableHint();
+                if (hint != null) {
+                    myOnlyVCSChangedTextRb.setToolTipText(hint);
+                }
+            }
+        }
 
-      @Override
-      public boolean isRearrangeCode() {
-        return myRearrangeCodeCb.isEnabled() && myRearrangeCodeCb.isSelected();
-      }
+        myWholeFileRadioButton.setEnabled(true);
 
-      @Override
-      public boolean isOptimizeImports() {
-        return myOptimizeImportsCb.isEnabled() && myOptimizeImportsCb.isSelected();
-      }
-    };
-  }
+        if (myTextSelected) {
+            mySelectedTextRadioButton.setSelected(true);
+        }
+        else {
+            boolean lastRunProcessedChangedText = myLastRunOptions.getLastTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
+            if (lastRunProcessedChangedText && fileHasChanges) {
+                myOnlyVCSChangedTextRb.setSelected(true);
+            }
+            else {
+                myWholeFileRadioButton.setSelected(true);
+            }
+        }
+    }
 
-  @Override
-  protected @Nullable JComponent createCenterPanel() {
-    return myButtonsPanel;
-  }
+    @RequiredReadAction
+    private void setUpActions() {
+        boolean canOptimizeImports = !ImportOptimizer.forFile(myFile).isEmpty();
+        myOptimizeImportsCb.setVisible(canOptimizeImports);
+        if (canOptimizeImports) {
+            myOptimizeImportsCb.setSelected(myLastRunOptions.getLastOptimizeImports());
+        }
 
-  @Override
-  protected Action[] createActions() {
-    return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
-  }
+        boolean canRearrangeCode = Rearranger.forLanguage(myFile.getLanguage()) != null;
+        myRearrangeCodeCb.setVisible(canRearrangeCode);
+        if (canRearrangeCode) {
+            myRearrangeCodeCb.setSelected(myLastRunOptions.isRearrangeCode(myFile.getLanguage()));
+        }
 
-  @Override
-  protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(myHelpId);
-  }
+        myOptionalLabel.setVisible(canOptimizeImports || canRearrangeCode);
+    }
 
-  @Override
-  protected void doOKAction() {
-    saveCurrentConfiguration();
-    super.doOKAction();
-  }
+    private @Nullable String getChangesNotAvailableHint() {
+        if (!VcsUtil.isFileUnderVcs(myProject, VcsUtil.getFilePath(myFile.getVirtualFile()))) {
+            return "File not under VCS root";
+        }
+        else if (!FormatChangedTextUtil.hasChanges(myFile)) {
+            return "File was not changed since last revision";
+        }
+        return null;
+    }
 
-  public LayoutCodeOptions getRunOptions() {
-    return myRunOptions;
-  }
+    private void saveCurrentConfiguration() {
+        if (myOptimizeImportsCb.isEnabled()) {
+            myLastRunOptions.saveOptimizeImportsState(myRunOptions.isOptimizeImports());
+        }
+        if (myRearrangeCodeCb.isEnabled()) {
+            myLastRunOptions.saveRearrangeState(myFile.getLanguage(), myRunOptions.isRearrangeCode());
+        }
+
+        if (!mySelectedTextRadioButton.isSelected() && myOnlyVCSChangedTextRb.isEnabled()) {
+            myLastRunOptions.saveProcessVcsChangedTextState(myOnlyVCSChangedTextRb.isSelected());
+        }
+    }
+
+    private LayoutCodeOptions createOptionsBundledOnDialog() {
+        return new LayoutCodeOptions() {
+            @Override
+            public TextRangeType getTextRangeType() {
+                if (myOnlyVCSChangedTextRb.isSelected()) {
+                    return TextRangeType.VCS_CHANGED_TEXT;
+                }
+                if (mySelectedTextRadioButton.isSelected()) {
+                    return TextRangeType.SELECTED_TEXT;
+                }
+                return TextRangeType.WHOLE_FILE;
+            }
+
+            @Override
+            public boolean isRearrangeCode() {
+                return myRearrangeCodeCb.isEnabled() && myRearrangeCodeCb.isSelected();
+            }
+
+            @Override
+            public boolean isOptimizeImports() {
+                return myOptimizeImportsCb.isEnabled() && myOptimizeImportsCb.isSelected();
+            }
+        };
+    }
+
+    @Override
+    protected @Nullable JComponent createCenterPanel() {
+        return myButtonsPanel;
+    }
+
+    @Override
+    protected Action[] createActions() {
+        return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void doHelpAction() {
+        HelpManager.getInstance().invokeHelp(myHelpId);
+    }
+
+    @Override
+    protected void doOKAction() {
+        saveCurrentConfiguration();
+        super.doOKAction();
+    }
+
+    public LayoutCodeOptions getRunOptions() {
+        return myRunOptions;
+    }
 }

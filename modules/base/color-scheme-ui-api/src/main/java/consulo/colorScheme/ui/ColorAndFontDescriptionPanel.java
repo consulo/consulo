@@ -16,6 +16,7 @@
 package consulo.colorScheme.ui;
 
 import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
@@ -29,7 +30,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -38,10 +38,8 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author cdr
@@ -87,32 +85,32 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
     public ColorAndFontDescriptionPanel() {
         myPanel = new JPanel(new VerticalLayout(5));
 
-        myCbBold = new JBCheckBox(ApplicationBundle.message("checkbox.font.bold"));
-        myCbItalic = new JBCheckBox(ApplicationBundle.message("checkbox.font.italic"));
+        myCbBold = new JBCheckBox(ApplicationLocalize.checkboxFontBold().get());
+        myCbItalic = new JBCheckBox(ApplicationLocalize.checkboxFontItalic().get());
 
         JPanel leftFontLine = new JPanel(new HorizontalLayout(10));
         leftFontLine.add(myCbBold);
         leftFontLine.add(myCbItalic);
         myPanel.add(new BorderLayoutPanel().addToRight(leftFontLine));
 
-        myCbForeground = new JBCheckBox(ApplicationBundle.message("checkbox.color.foreground"));
+        myCbForeground = new JBCheckBox(ApplicationLocalize.checkboxColorForeground().get());
         myForegroundChooser = ColorBox.create();
-        myCbBackground = new JBCheckBox(ApplicationBundle.message("checkbox.color.background"));
+        myCbBackground = new JBCheckBox(ApplicationLocalize.checkboxColorBackground().get());
         myBackgroundChooser = ColorBox.create();
-        myCbErrorStripe = new JBCheckBox(ApplicationBundle.message("checkbox.color.error.stripe.mark"));
+        myCbErrorStripe = new JBCheckBox(ApplicationLocalize.checkboxColorErrorStripeMark().get());
         myErrorStripeColorChooser = ColorBox.create();
-        myCbEffects = new JBCheckBox(ApplicationBundle.message("checkbox.color.effects"));
+        myCbEffects = new JBCheckBox(ApplicationLocalize.checkboxColorEffects().get());
         myEffectsColorChooser = ColorBox.create();
 
         FormBuilder fontColorOptions = FormBuilder.createFormBuilder();
-        fontColorOptions.addLabeledComponent(myCbForeground, (JComponent) TargetAWT.to(myForegroundChooser));
-        fontColorOptions.addLabeledComponent(myCbBackground, (JComponent) TargetAWT.to(myBackgroundChooser));
-        fontColorOptions.addLabeledComponent(myCbErrorStripe, (JComponent) TargetAWT.to(myErrorStripeColorChooser));
-        fontColorOptions.addLabeledComponent(myCbEffects, (JComponent) TargetAWT.to(myEffectsColorChooser));
+        fontColorOptions.addLabeledComponent(myCbForeground, TargetAWT.to(myForegroundChooser));
+        fontColorOptions.addLabeledComponent(myCbBackground, TargetAWT.to(myBackgroundChooser));
+        fontColorOptions.addLabeledComponent(myCbErrorStripe, TargetAWT.to(myErrorStripeColorChooser));
+        fontColorOptions.addLabeledComponent(myCbEffects, TargetAWT.to(myEffectsColorChooser));
         myPanel.add(fontColorOptions.getPanel());
 
         myEffectsCombo = new ComboBox<>();
-        myEffectsModel = new EffectsComboModel(ContainerUtil.newArrayList(myEffectsMap.keySet()));
+        myEffectsModel = new EffectsComboModel(new ArrayList<>(myEffectsMap.keySet()));
         myEffectsCombo.setModel(myEffectsModel);
         myEffectsCombo.setRenderer(new ColoredListCellRenderer<>() {
             @Override
@@ -123,7 +121,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
 
         myPanel.add(new BorderLayoutPanel().addToRight(myEffectsCombo));
 
-        myInheritAttributesBox = new JBCheckBox(ApplicationBundle.message("label.inherit.attributes"));
+        myInheritAttributesBox = new JBCheckBox(ApplicationLocalize.labelInheritAttributes().get());
         myPanel.add(myInheritAttributesBox);
         myInheritanceLabel = new JTextPane();
         myPanel.add(myInheritanceLabel);

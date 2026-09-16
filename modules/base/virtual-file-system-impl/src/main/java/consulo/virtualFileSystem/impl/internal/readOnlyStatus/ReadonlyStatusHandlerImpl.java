@@ -20,6 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -42,7 +43,6 @@ import java.util.*;
 @State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal, PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
-    
     private final Project myProject;
     private final List<WritingAccessProvider> myAccessProviders;
 
@@ -173,7 +173,6 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
     }
 
     private static class OperationStatusImpl extends OperationStatus {
-
         private final VirtualFile[] myReadonlyFiles;
 
         OperationStatusImpl(VirtualFile[] readonlyFiles) {
@@ -181,7 +180,6 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
         }
 
         @Override
-        
         public VirtualFile[] getReadonlyFiles() {
             return myReadonlyFiles;
         }
@@ -192,8 +190,7 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
         }
 
         @Override
-        
-        public String getReadonlyFilesMessage() {
+        public LocalizeValue getReadonlyFilesMessage() {
             if (hasReadonlyFiles()) {
                 StringBuilder buf = new StringBuilder();
                 if (myReadonlyFiles.length > 1) {
@@ -202,10 +199,10 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
                         buf.append(file.getPresentableUrl());
                     }
 
-                    return CommonLocalize.failedToMakeTheFollowingFilesWritableErrorMessage(buf.toString()).get();
+                    return CommonLocalize.failedToMakeTheFollowingFilesWritableErrorMessage(buf.toString());
                 }
                 else {
-                    return CommonLocalize.failedToMakeFileWriteableErrorMessage(myReadonlyFiles[0].getPresentableUrl()).get();
+                    return CommonLocalize.failedToMakeFileWriteableErrorMessage(myReadonlyFiles[0].getPresentableUrl());
                 }
             }
             throw new RuntimeException("No readonly files");

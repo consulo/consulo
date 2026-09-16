@@ -43,17 +43,17 @@ public abstract class ColumnInfo<Item, Aspect> {
         }
     }
 
-    private String myName;
+    private LocalizeValue myName;
     public static final ColumnInfo[] EMPTY_ARRAY = new ColumnInfo[0];
 
     public ColumnInfo(LocalizeValue name) {
-        myName = name.get();
+        myName = name;
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public ColumnInfo(String name) {
-        myName = name;
+        this(LocalizeValue.of(name));
     }
 
     public @Nullable Icon getIcon() {
@@ -62,7 +62,7 @@ public abstract class ColumnInfo<Item, Aspect> {
 
     @Override
     public String toString() {
-        return getName();
+        return getName().get();
     }
 
     public abstract @Nullable Aspect valueOf(Item item);
@@ -75,7 +75,7 @@ public abstract class ColumnInfo<Item, Aspect> {
         return null;
     }
 
-    public String getName() {
+    public LocalizeValue getName() {
         return myName;
     }
 
@@ -119,13 +119,13 @@ public abstract class ColumnInfo<Item, Aspect> {
     }
 
     public void setName(LocalizeValue name) {
-        myName = name.get();
+        myName = name;
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void setName(String s) {
-        myName = s;
+    public final void setName(String s) {
+        myName = LocalizeValue.of(s);
     }
 
     public @Nullable String getTooltipText() {
@@ -133,7 +133,7 @@ public abstract class ColumnInfo<Item, Aspect> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

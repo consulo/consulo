@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.history;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.dualView.DualView;
 import consulo.ui.ex.awt.dualView.DualViewColumnInfo;
@@ -31,130 +32,144 @@ import java.util.Comparator;
 import java.util.Enumeration;
 
 public abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOnVcsRevision, Object> {
-  
-  private final ColumnInfo<VcsFileRevision, T> myBaseColumn;
+    private final ColumnInfo<VcsFileRevision, T> myBaseColumn;
 
-  public FileHistoryColumnWrapper(ColumnInfo<VcsFileRevision, T> additionalColumn) {
-    super(additionalColumn.getName());
-    myBaseColumn = additionalColumn;
-  }
-
-  @Override
-  public Comparator<TreeNodeOnVcsRevision> getComparator() {
-    Comparator<VcsFileRevision> comparator = myBaseColumn.getComparator();
-    if (comparator == null) return null;
-    return (o1, o2) -> {
-      if (o1 == null) return -1;
-      if (o2 == null) return 1;
-      VcsFileRevision revision1 = o1.getRevision();
-      VcsFileRevision revision2 = o2.getRevision();
-      if (revision1 == null) return -1;
-      if (revision2 == null) return 1;
-      return comparator.compare(revision1, revision2);
-    };
-  }
-
-  @Override
-  public String getName() {
-    return myBaseColumn.getName();
-  }
-
-  @Override
-  public void setName(String s) {
-    myBaseColumn.setName(s);
-  }
-
-  @Override
-  public Class getColumnClass() {
-    return myBaseColumn.getColumnClass();
-  }
-
-  @Override
-  public boolean isCellEditable(TreeNodeOnVcsRevision o) {
-    return myBaseColumn.isCellEditable(o.getRevision());
-  }
-
-  @Override
-  public void setValue(TreeNodeOnVcsRevision o, Object aValue) {
-    //noinspection unchecked
-    myBaseColumn.setValue(o.getRevision(), (T)aValue);
-  }
-
-  @Override
-  public TableCellRenderer getRenderer(TreeNodeOnVcsRevision p0) {
-    return myBaseColumn.getRenderer(p0.getRevision());
-  }
-
-  @Override
-  public TableCellEditor getEditor(TreeNodeOnVcsRevision item) {
-    return myBaseColumn.getEditor(item.getRevision());
-  }
-
-  @Override
-  public String getMaxStringValue() {
-    String superValue = myBaseColumn.getMaxStringValue();
-    if (superValue != null) return superValue;
-    return getMaxValue(myBaseColumn.getName());
-  }
-
-  private @Nullable String getMaxValue(String columnHeader) {
-    DualView dualView = getDualView();
-    if(dualView == null) {
-      return columnHeader + "ww";
+    public FileHistoryColumnWrapper(ColumnInfo<VcsFileRevision, T> additionalColumn) {
+        super(additionalColumn.getName());
+        myBaseColumn = additionalColumn;
     }
-    TableView table = dualView.getFlatView();
-    if (table.getRowCount() == 0) return null;
-    Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
-    int idx = 0;
-    while (columns.hasMoreElements()) {
-      TableColumn column = columns.nextElement();
-      if (columnHeader.equals(column.getHeaderValue())) {
-        break;
-      }
-      ++idx;
-    }
-    if (idx >= table.getColumnModel().getColumnCount() - 1) return null;
-    FontMetrics fm = table.getFontMetrics(table.getFont().deriveFont(Font.BOLD));
-    Object header = table.getColumnModel().getColumn(idx).getHeaderValue();
-    double maxValue = fm.stringWidth((String)header);
-    String value = (String)header;
-    for (int i = 0; i < table.getRowCount(); i++) {
-      Object at = table.getValueAt(i, idx);
-      if (at instanceof String) {
-        int newWidth = fm.stringWidth((String)at);
-        if (newWidth > maxValue) {
-          maxValue = newWidth;
-          value = (String)at;
+
+    @Override
+    public Comparator<TreeNodeOnVcsRevision> getComparator() {
+        Comparator<VcsFileRevision> comparator = myBaseColumn.getComparator();
+        if (comparator == null) {
+            return null;
         }
-      }
+        return (o1, o2) -> {
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
+            VcsFileRevision revision1 = o1.getRevision();
+            VcsFileRevision revision2 = o2.getRevision();
+            if (revision1 == null) {
+                return -1;
+            }
+            if (revision2 == null) {
+                return 1;
+            }
+            return comparator.compare(revision1, revision2);
+        };
     }
-    return value + "ww";
-  }
 
-  @Override
-  public int getAdditionalWidth() {
-    return myBaseColumn.getAdditionalWidth();
-  }
+    @Override
+    public LocalizeValue getName() {
+        return myBaseColumn.getName();
+    }
 
-  @Override
-  public int getWidth(JTable table) {
-    return myBaseColumn.getWidth(table);
-  }
+    @Override
+    public void setName(LocalizeValue s) {
+        myBaseColumn.setName(s);
+    }
 
-  @Override
-  public boolean shouldBeShownIsTheTree() {
-    return true;
-  }
+    @Override
+    public Class getColumnClass() {
+        return myBaseColumn.getColumnClass();
+    }
 
-  @Override
-  public boolean shouldBeShownIsTheTable() {
-    return true;
-  }
+    @Override
+    public boolean isCellEditable(TreeNodeOnVcsRevision o) {
+        return myBaseColumn.isCellEditable(o.getRevision());
+    }
 
-  @Override
-  public Object valueOf(TreeNodeOnVcsRevision o) {
-    return myBaseColumn.valueOf(o.getRevision());
-  }
+    @Override
+    public void setValue(TreeNodeOnVcsRevision o, Object aValue) {
+        //noinspection unchecked
+        myBaseColumn.setValue(o.getRevision(), (T) aValue);
+    }
 
-  protected abstract DualView getDualView();
+    @Override
+    public TableCellRenderer getRenderer(TreeNodeOnVcsRevision p0) {
+        return myBaseColumn.getRenderer(p0.getRevision());
+    }
+
+    @Override
+    public TableCellEditor getEditor(TreeNodeOnVcsRevision item) {
+        return myBaseColumn.getEditor(item.getRevision());
+    }
+
+    @Override
+    public String getMaxStringValue() {
+        String superValue = myBaseColumn.getMaxStringValue();
+        if (superValue != null) {
+            return superValue;
+        }
+        return getMaxValue(myBaseColumn.getName());
+    }
+
+    private @Nullable String getMaxValue(LocalizeValue columnHeader) {
+        DualView dualView = getDualView();
+        if (dualView == null) {
+            return columnHeader.get() + "ww";
+        }
+        TableView table = dualView.getFlatView();
+        if (table.getRowCount() == 0) {
+            return null;
+        }
+        Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
+        int idx = 0;
+        while (columns.hasMoreElements()) {
+            TableColumn column = columns.nextElement();
+            if (columnHeader.get().equals(column.getHeaderValue())) {
+                break;
+            }
+            ++idx;
+        }
+        if (idx >= table.getColumnModel().getColumnCount() - 1) {
+            return null;
+        }
+        FontMetrics fm = table.getFontMetrics(table.getFont().deriveFont(Font.BOLD));
+        Object header = table.getColumnModel().getColumn(idx).getHeaderValue();
+        double maxValue = fm.stringWidth((String) header);
+        String value = (String) header;
+        for (int i = 0; i < table.getRowCount(); i++) {
+            if (table.getValueAt(i, idx) instanceof String at) {
+                int newWidth = fm.stringWidth(at);
+                if (newWidth > maxValue) {
+                    maxValue = newWidth;
+                    value = at;
+                }
+            }
+        }
+        return value + "ww";
+    }
+
+    @Override
+    public int getAdditionalWidth() {
+        return myBaseColumn.getAdditionalWidth();
+    }
+
+    @Override
+    public int getWidth(JTable table) {
+        return myBaseColumn.getWidth(table);
+    }
+
+    @Override
+    public boolean shouldBeShownIsTheTree() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldBeShownIsTheTable() {
+        return true;
+    }
+
+    @Override
+    public Object valueOf(TreeNodeOnVcsRevision o) {
+        return myBaseColumn.valueOf(o.getRevision());
+    }
+
+    protected abstract DualView getDualView();
 }

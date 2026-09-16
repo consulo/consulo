@@ -54,52 +54,42 @@ public class DateFormatUtil {
         return (endDate.getTime() - startDate.getTime() + DAY_FACTOR - 1000) / DAY_FACTOR;
     }
 
-    
     public static SyncDateFormat getDateFormat() {
         return DateTimeFormatCache.getInstance().DATE_FORMAT;
     }
 
-    
     public static SyncDateFormat getTimeFormat() {
         return DateTimeFormatCache.getInstance().TIME_FORMAT;
     }
 
-    
     public static SyncDateFormat getTimeWithSecondsFormat() {
         return DateTimeFormatCache.getInstance().TIME_WITH_SECONDS_FORMAT;
     }
 
-    
     public static SyncDateFormat getDateTimeFormat() {
         return DateTimeFormatCache.getInstance().DATE_TIME_FORMAT;
     }
 
-    
     public static SyncDateFormat getIso8601Format() {
         return DateTimeFormatCache.getInstance().ISO8601_FORMAT;
     }
 
-    
     public static String formatTime(Date time) {
         return formatTime(time.getTime());
     }
 
-    
     public static String formatTime(long time) {
         return getTimeFormat().format(time);
     }
 
-    
     public static String formatTimeWithSeconds(Date time) {
         return formatTimeWithSeconds(time.getTime());
     }
 
-    
     public static String formatTimeWithSeconds(long time) {
         return getTimeWithSecondsFormat().format(time);
     }
 
-    
     public static String formatDate(Date time) {
         return formatDate(time.getTime());
     }
@@ -109,32 +99,26 @@ public class DateFormatUtil {
         return getDateFormat().format(time);
     }
 
-    
     public static String formatPrettyDate(Date date) {
         return formatPrettyDate(date.getTime());
     }
 
-    
     public static String formatPrettyDate(long time) {
         return doFormatPretty(time, false);
     }
 
-    
     public static String formatDateTime(Date date) {
         return formatDateTime(date.getTime());
     }
 
-    
     public static String formatDateTime(long time) {
         return getDateTimeFormat().format(time);
     }
 
-    
     public static String formatPrettyDateTime(Date date) {
         return formatPrettyDateTime(date.getTime());
     }
 
-    
     public static String formatPrettyDateTime(long time) {
         return doFormatPretty(time, true);
     }
@@ -143,7 +127,6 @@ public class DateFormatUtil {
         return doFormatPretty(time, true) != null;
     }
 
-    
     private static String doFormatPretty(long time, boolean formatTime) {
         long currentTime = Clock.getTime();
 
@@ -184,7 +167,6 @@ public class DateFormatUtil {
         return formatTime ? cache.DATE_TIME_FORMAT.format(time) : cache.DATE_FORMAT.format(time);
     }
 
-    
     public static String formatDuration(long delta) {
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < DENOMINATORS.length; i++) {
@@ -215,16 +197,14 @@ public class DateFormatUtil {
         };
     }
 
-    
-    public static String formatFrequency(long time) {
-        return ApplicationLocalize.dateFrequency(formatBetweenDates(time, 0)).get();
+    public static LocalizeValue formatFrequency(long time) {
+        return ApplicationLocalize.dateFrequency(formatBetweenDates(time, 0));
     }
 
-    
-    public static String formatBetweenDates(long d1, long d2) {
+    public static LocalizeValue formatBetweenDates(long d1, long d2) {
         long delta = Math.abs(d1 - d2);
         if (delta == 0) {
-            return ApplicationLocalize.dateFormatRightNow().get();
+            return ApplicationLocalize.dateFormatRightNow();
         }
 
         int n = -1;
@@ -239,21 +219,20 @@ public class DateFormatUtil {
 
         if (d2 > d1) {
             if (n <= 0) {
-                return ApplicationLocalize.dateFormatAFewMomentsAgo().get();
+                return ApplicationLocalize.dateFormatAFewMomentsAgo();
             }
-            return someTimeAgoMessage(PERIODS[i], n).get();
+            return someTimeAgoMessage(PERIODS[i], n);
         }
         else if (d2 < d1) {
             if (n <= 0) {
-                return ApplicationLocalize.dateFormatInAFewMoments().get();
+                return ApplicationLocalize.dateFormatInAFewMoments();
             }
-            return composeInSomeTimeMessage(PERIODS[i], n).get();
+            return composeInSomeTimeMessage(PERIODS[i], n);
         }
 
-        return "";
+        return LocalizeValue.empty();
     }
 
-    
     public static String formatAboutDialogDate(Date date) {
         DateTimeFormatCache cache = DateTimeFormatCache.getInstance();
         return cache.ABOUT_DATE_FORMAT.format(date);

@@ -15,11 +15,11 @@
  */
 package consulo.compiler.artifact.element;
 
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
@@ -27,64 +27,69 @@ import consulo.ui.ex.tree.PresentationData;
  * @author nik
  */
 public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
-  public ArtifactRootElementImpl() {
-    super(ArtifactRootElementType.INSTANCE);
-  }
+    public ArtifactRootElementImpl() {
+        super(ArtifactRootElementType.INSTANCE);
+    }
 
-  @Override
-  public PackagingElementPresentation createPresentation(final ArtifactEditorContext context) {
-    return new PackagingElementPresentation() {
-      @Override
-      public String getPresentableName() {
-        return CompilerBundle.message("packaging.element.text.output.root");
-      }
+    @Override
+    public PackagingElementPresentation createPresentation(final ArtifactEditorContext context) {
+        return new PackagingElementPresentation() {
+            @Override
+            public String getPresentableName() {
+                return CompilerLocalize.packagingElementTextOutputRoot().get();
+            }
 
-      @Override
-      public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
-                         SimpleTextAttributes commentAttributes) {
-        presentationData.setIcon(context.getArtifactType().getIcon());
-        presentationData.addText(getPresentableName(), mainAttributes);
-      }
+            @Override
+            public void render(
+                PresentationData presentationData,
+                SimpleTextAttributes mainAttributes,
+                SimpleTextAttributes commentAttributes
+            ) {
+                presentationData.setIcon(context.getArtifactType().getIcon());
+                presentationData.addText(getPresentableName(), mainAttributes);
+            }
 
-      @Override
-      public int getWeight() {
-        return 0;
-      }
-    };
-  }
+            @Override
+            public int getWeight() {
+                return 0;
+            }
+        };
+    }
 
-  @Override
-  public Object getState() {
-    return null;
-  }
+    @Override
+    public Object getState() {
+        return null;
+    }
 
-  @Override
-  public void loadState(ArtifactManager artifactManager, Object state) {
-  }
+    @Override
+    public void loadState(ArtifactManager artifactManager, Object state) {
+    }
 
-  @Override
-  public boolean canBeRenamed() {
-    return false;
-  }
+    @Override
+    public boolean canBeRenamed() {
+        return false;
+    }
 
-  @Override
-  public void rename(String newName) {
-  }
+    @Override
+    public void rename(String newName) {
+    }
 
-  @Override
-  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
-                                                     PackagingElementResolvingContext resolvingContext,
-                                                     ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
-    computeChildrenInstructions(creator, resolvingContext, compilerContext, artifactType);
-  }
+    @Override
+    public void computeIncrementalCompilerInstructions(
+        IncrementalCompilerInstructionCreator creator,
+        PackagingElementResolvingContext resolvingContext,
+        ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType
+    ) {
+        computeChildrenInstructions(creator, resolvingContext, compilerContext, artifactType);
+    }
 
-  @Override
-  public String getName() {
-    return "";
-  }
+    @Override
+    public String getName() {
+        return "";
+    }
 
-  @Override
-  public String toString() {
-    return "<root>";
-  }
+    @Override
+    public String toString() {
+        return "<root>";
+    }
 }

@@ -13,6 +13,7 @@ module consulo.document.api {
 
     exports consulo.document;
     exports consulo.document.event;
+    exports consulo.document.localize;
     exports consulo.document.util;
 
     exports consulo.document.internal to

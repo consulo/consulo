@@ -15,16 +15,16 @@
  */
 package consulo.compiler.impl.internal.exection;
 
-import consulo.application.AllIcons;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.event.ArtifactListener;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogBuilder;
@@ -42,93 +42,99 @@ import java.util.concurrent.CompletableFuture;
  * @author nik
  */
 public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractArtifactsBeforeRunTask<T>> extends BeforeRunTaskProvider<T> {
-  protected final Project myProject;
-  private final Key<T> myId;
+    protected final Project myProject;
+    private final Key<T> myId;
 
-  public AbstractArtifactsBeforeRunTaskProvider(Project project, Key<T> id) {
-    myProject = project;
-    myId = id;
-    project.getMessageBus().connect().subscribe(ArtifactListener.class, new ArtifactListener() {
-      @Override
-      public void artifactRemoved(Artifact artifact) {
-        RunManager runManager = RunManager.getInstance(myProject);
-        for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
-          List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
-          for (AbstractArtifactsBeforeRunTask task : tasks) {
-            String artifactName = artifact.getName();
-            List<ArtifactPointer> pointersList = task.getArtifactPointers();
-            ArtifactPointer[] pointers = pointersList.toArray(new ArtifactPointer[pointersList.size()]);
-            for (ArtifactPointer pointer : pointers) {
-              if (pointer.getName().equals(artifactName) && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
-                task.removeArtifact(pointer);
-              }
+    public AbstractArtifactsBeforeRunTaskProvider(Project project, Key<T> id) {
+        myProject = project;
+        myId = id;
+        project.getMessageBus().connect().subscribe(
+            ArtifactListener.class,
+            new ArtifactListener() {
+                @Override
+                public void artifactRemoved(Artifact artifact) {
+                    RunManager runManager = RunManager.getInstance(myProject);
+                    for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
+                        List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
+                        for (AbstractArtifactsBeforeRunTask task : tasks) {
+                            String artifactName = artifact.getName();
+                            List<ArtifactPointer> pointersList = task.getArtifactPointers();
+                            for (ArtifactPointer pointer : pointersList.toArray(new ArtifactPointer[pointersList.size()])) {
+                                if (pointer.getName().equals(artifactName)
+                                    && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
+                                    task.removeArtifact(pointer);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    });
-  }
-
-  
-  @Override
-  public Key<T> getId() {
-    return myId;
-  }
-
-  @Override
-  public Image getIcon(RunConfiguration configuration) {
-    return AllIcons.Nodes.Artifact;
-  }
-
-  @Override
-  public Image getTaskIcon(RunConfiguration configuration, AbstractArtifactsBeforeRunTask task) {
-    List<ArtifactPointer> pointers = task.getArtifactPointers();
-    if (pointers == null || pointers.isEmpty())
-      return getIcon(configuration);
-    Artifact artifact = pointers.get(0).get();
-    if (artifact == null)
-      return getIcon(configuration);
-    return artifact.getArtifactType().getIcon();
-  }
-
-  @Override
-  public boolean isConfigurable() {
-    return true;
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
-    Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
-    Set<ArtifactPointer> pointers = new HashSet<>();
-    for (Artifact artifact : artifacts) {
-      pointers.add(ArtifactPointerManager.getInstance(myProject).create(artifact));
+        );
     }
-    pointers.addAll(task.getArtifactPointers());
-    ArtifactChooser chooser = new ArtifactChooser(new ArrayList<>(pointers));
-    chooser.markElements(task.getArtifactPointers());
-    chooser.setPreferredSize(new Dimension(400, 300));
 
-    DialogBuilder builder = new DialogBuilder(myProject);
-    builder.setTitle(CompilerBundle.message("build.artifacts.before.run.selector.title"));
-    builder.setDimensionServiceKey("#BuildArtifactsBeforeRunChooser");
-    builder.addOkAction();
-    builder.addCancelAction();
-    builder.setCenterPanel(chooser);
-    builder.setPreferredFocusComponent(chooser);
 
-    return builder.showAsync()
-      .toCompletableFuture()
-      .thenRun(() -> task.setArtifactPointers(chooser.getMarkedElements()));
-  }
+    @Override
+    public Key<T> getId() {
+        return myId;
+    }
 
-  @Override
-  public boolean canExecuteTask(RunConfiguration configuration, T task) {
-    for (ArtifactPointer pointer:  task.getArtifactPointers()) {
-      if (pointer.get() != null)
+    @Override
+    public Image getIcon(RunConfiguration configuration) {
+        return PlatformIconGroup.nodesArtifact();
+    }
+
+    @Override
+    public Image getTaskIcon(RunConfiguration configuration, AbstractArtifactsBeforeRunTask task) {
+        List<ArtifactPointer> pointers = task.getArtifactPointers();
+        if (pointers == null || pointers.isEmpty()) {
+            return getIcon(configuration);
+        }
+        Artifact artifact = pointers.get(0).get();
+        if (artifact == null) {
+            return getIcon(configuration);
+        }
+        return artifact.getArtifactType().getIcon();
+    }
+
+    @Override
+    public boolean isConfigurable() {
         return true;
     }
-    return false;
-  }
+
+    @RequiredUIAccess
+
+    @Override
+    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
+        Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
+        Set<ArtifactPointer> pointers = new HashSet<>();
+        for (Artifact artifact : artifacts) {
+            pointers.add(ArtifactPointerManager.getInstance(myProject).create(artifact));
+        }
+        pointers.addAll(task.getArtifactPointers());
+        ArtifactChooser chooser = new ArtifactChooser(new ArrayList<>(pointers));
+        chooser.markElements(task.getArtifactPointers());
+        chooser.setPreferredSize(new Dimension(400, 300));
+
+        DialogBuilder builder = new DialogBuilder(myProject);
+        builder.setTitle(CompilerLocalize.buildArtifactsBeforeRunSelectorTitle());
+        builder.setDimensionServiceKey("#BuildArtifactsBeforeRunChooser");
+        builder.addOkAction();
+        builder.addCancelAction();
+        builder.setCenterPanel(chooser);
+        builder.setPreferredFocusComponent(chooser);
+
+        return builder.showAsync()
+            .toCompletableFuture()
+            .thenRun(() -> task.setArtifactPointers(chooser.getMarkedElements()));
+    }
+
+    @Override
+    public boolean canExecuteTask(RunConfiguration configuration, T task) {
+        for (ArtifactPointer pointer : task.getArtifactPointers()) {
+            if (pointer.get() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

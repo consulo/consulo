@@ -35,77 +35,89 @@ import java.awt.*;
  * @author nik
  */
 public class CodeFragmentInputComponent extends EvaluationInputComponent {
-  private final XDebuggerExpressionEditorImpl myMultilineEditor;
-  private final JPanel myMainPanel;
-  private final String mySplitterProportionKey;
+    private final XDebuggerExpressionEditorImpl myMultilineEditor;
+    private final JPanel myMainPanel;
+    private final String mySplitterProportionKey;
 
-  public CodeFragmentInputComponent(Project project,
-                                    XDebuggerEditorsProvider editorsProvider,
-                                    @Nullable XSourcePosition sourcePosition,
-                                    @Nullable XExpression statements,
-                                    String splitterProportionKey,
-                                    Disposable parentDisposable) {
-    super(XDebuggerLocalize.dialogTitleEvaluateCodeFragment());
-    myMultilineEditor = new XDebuggerExpressionEditorImpl(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
-                                                      statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT, false, true);
-    myMainPanel = new JPanel(new BorderLayout());
-    JPanel editorPanel = new JPanel(new BorderLayout());
-    editorPanel.add(myMultilineEditor.getComponent(), BorderLayout.CENTER);
-    DefaultActionGroup group = new DefaultActionGroup();
-    group.add(new HistoryNavigationAction(false, IdeActions.ACTION_PREVIOUS_OCCURENCE, parentDisposable));
-    group.add(new HistoryNavigationAction(true, IdeActions.ACTION_NEXT_OCCURENCE, parentDisposable));
-    editorPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, false).getComponent(), BorderLayout.EAST);
-    //myMainPanel.add(new JLabel(XDebuggerBundle.message("xdebugger.label.text.code.fragment")), BorderLayout.NORTH);
-    myMainPanel.add(editorPanel, BorderLayout.CENTER);
-    if (statements != null) {
-      myMultilineEditor.setExpression(statements);
-    }
-    mySplitterProportionKey = splitterProportionKey;
-  }
-
-  @Override
-  
-  public XDebuggerEditorBase getInputEditor() {
-    return myMultilineEditor;
-  }
-
-  public JPanel getMainComponent() {
-    return myMainPanel;
-  }
-
-  @Override
-  public void addComponent(JPanel contentPanel, JPanel resultPanel) {
-    JBSplitter splitter = new JBSplitter(true, 0.3f, 0.2f, 0.7f);
-    splitter.setSplitterProportionKey(mySplitterProportionKey);
-    contentPanel.add(splitter, BorderLayout.CENTER);
-    splitter.setFirstComponent(myMainPanel);
-    splitter.setSecondComponent(resultPanel);
-  }
-
-  private class HistoryNavigationAction extends LegacyAnAction {
-    private final boolean myForward;
-
-    public HistoryNavigationAction(boolean forward, String actionId, Disposable parentDisposable) {
-      myForward = forward;
-      AnAction action = ActionManager.getInstance().getAction(actionId);
-      copyFrom(action);
-      registerCustomShortcutSet(action.getShortcutSet(), myMainPanel, parentDisposable);
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-      e.getPresentation().setEnabled(myForward ? myMultilineEditor.canGoForward() : myMultilineEditor.canGoBackward());
-    }
-
-    @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-      if (myForward) {
-        myMultilineEditor.goForward();
-      }
-      else {
-        myMultilineEditor.goBackward();
-      }
+    public CodeFragmentInputComponent(
+        Project project,
+        XDebuggerEditorsProvider editorsProvider,
+        @Nullable XSourcePosition sourcePosition,
+        @Nullable XExpression statements,
+        String splitterProportionKey,
+        Disposable parentDisposable
+    ) {
+        super(XDebuggerLocalize.dialogTitleEvaluateCodeFragment());
+        myMultilineEditor = new XDebuggerExpressionEditorImpl(
+            project,
+            editorsProvider,
+            "evaluateCodeFragment",
+            sourcePosition,
+            statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT,
+            false,
+            true
+        );
+        myMainPanel = new JPanel(new BorderLayout());
+        JPanel editorPanel = new JPanel(new BorderLayout());
+        editorPanel.add(myMultilineEditor.getComponent(), BorderLayout.CENTER);
+        DefaultActionGroup group = new DefaultActionGroup();
+        group.add(new HistoryNavigationAction(false, IdeActions.ACTION_PREVIOUS_OCCURENCE, parentDisposable));
+        group.add(new HistoryNavigationAction(true, IdeActions.ACTION_NEXT_OCCURENCE, parentDisposable));
+        editorPanel.add(
+            ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, false).getComponent(),
+            BorderLayout.EAST
+        );
+        //myMainPanel.add(new JLabel(XDebuggerBundle.message("xdebugger.label.text.code.fragment")), BorderLayout.NORTH);
+        myMainPanel.add(editorPanel, BorderLayout.CENTER);
+        if (statements != null) {
+            myMultilineEditor.setExpression(statements);
+        }
+        mySplitterProportionKey = splitterProportionKey;
     }
-  }
+
+    @Override
+    public XDebuggerEditorBase getInputEditor() {
+        return myMultilineEditor;
+    }
+
+    public JPanel getMainComponent() {
+        return myMainPanel;
+    }
+
+    @Override
+    public void addComponent(JPanel contentPanel, JPanel resultPanel) {
+        JBSplitter splitter = new JBSplitter(true, 0.3f, 0.2f, 0.7f);
+        splitter.setSplitterProportionKey(mySplitterProportionKey);
+        contentPanel.add(splitter, BorderLayout.CENTER);
+        splitter.setFirstComponent(myMainPanel);
+        splitter.setSecondComponent(resultPanel);
+    }
+
+    private class HistoryNavigationAction extends LegacyAnAction {
+        private final boolean myForward;
+
+        public HistoryNavigationAction(boolean forward, String actionId, Disposable parentDisposable) {
+            myForward = forward;
+            AnAction action = ActionManager.getInstance().getAction(actionId);
+            copyFrom(action);
+            registerCustomShortcutSet(action.getShortcutSet(), myMainPanel, parentDisposable);
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(myForward ? myMultilineEditor.canGoForward() : myMultilineEditor.canGoBackward());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            if (myForward) {
+                myMultilineEditor.goForward();
+            }
+            else {
+                myMultilineEditor.goBackward();
+            }
+        }
+    }
 }

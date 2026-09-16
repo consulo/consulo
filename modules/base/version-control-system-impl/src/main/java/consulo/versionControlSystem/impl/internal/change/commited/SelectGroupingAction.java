@@ -17,6 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import javax.swing.*;
@@ -26,73 +27,74 @@ import java.util.Comparator;
  * @author yole
  */
 public class SelectGroupingAction extends LabeledComboBoxAction {
-  private final Project myProject;
-  private final CommittedChangesTreeBrowser myBrowser;
+    private final Project myProject;
+    private final CommittedChangesTreeBrowser myBrowser;
 
-  public SelectGroupingAction(Project project, CommittedChangesTreeBrowser browser) {
-    super(VcsBundle.message("committed.changes.group.title"));
-    myProject = project;
-    myBrowser = browser;
-    getComboBox().setPrototypeDisplayValue("Date+");
-  }
+    public SelectGroupingAction(Project project, CommittedChangesTreeBrowser browser) {
+        super(VcsLocalize.committedChangesGroupTitle().get());
+        myProject = project;
+        myBrowser = browser;
+        getComboBox().setPrototypeDisplayValue("Date+");
+    }
 
-  protected void selectionChanged(Object selection) {
-    myBrowser.setGroupingStrategy((ChangeListGroupingStrategy)selection);
-  }
+    @Override
+    protected void selectionChanged(Object selection) {
+        myBrowser.setGroupingStrategy((ChangeListGroupingStrategy) selection);
+    }
 
-  protected ComboBoxModel createModel() {
-    DefaultComboBoxModel model =
+    @Override
+    protected ComboBoxModel createModel() {
+        DefaultComboBoxModel model =
             new DefaultComboBoxModel(new Object[]{new DateChangeListGroupingStrategy(), ChangeListGroupingStrategy.USER});
-    AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
-    for (AbstractVcs vcs : vcss) {
-      CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
-      if (provider != null) {
-        for (ChangeListColumn column : provider.getColumns()) {
-          if (ChangeListColumn.isCustom(column) && column.getComparator() != null) {
-            model.addElement(new CustomChangeListColumnGroupingStrategy(column));
-          }
+        for (AbstractVcs vcs : ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss()) {
+            CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+            if (provider != null) {
+                for (ChangeListColumn column : provider.getColumns()) {
+                    if (ChangeListColumn.isCustom(column) && column.getComparator() != null) {
+                        model.addElement(new CustomChangeListColumnGroupingStrategy(column));
+                    }
+                }
+            }
         }
-      }
-    }
-    return model;
-  }
-
-  private static class CustomChangeListColumnGroupingStrategy
-          implements ChangeListGroupingStrategy {
-
-    private final ChangeListColumn<CommittedChangeList> myColumn;
-
-    private CustomChangeListColumnGroupingStrategy(ChangeListColumn column) {
-      // The column is coming from a call to CommittedChangesProvider::getColumns(), which is typed as
-      //  simply "ChangeListColumn[]" without any additional type info. Inspecting the implementations
-      //  of that method shows that all the ChangeListColumn's that are returned are actually
-      //  ChangeListColumn<? extends CommittedChangeList>. Hence this cast, while ugly, is currently OK.
-      //noinspection unchecked
-      myColumn = (ChangeListColumn<CommittedChangeList>)column;
+        return model;
     }
 
-    @Override
-    public void beforeStart() {
-    }
+    private static class CustomChangeListColumnGroupingStrategy
+        implements ChangeListGroupingStrategy {
 
-    @Override
-    public boolean changedSinceApply() {
-      return false;
-    }
+        private final ChangeListColumn<CommittedChangeList> myColumn;
 
-    @Override
-    public String getGroupName(CommittedChangeList changeList) {
-      return changeList.getBranch();
-    }
+        private CustomChangeListColumnGroupingStrategy(ChangeListColumn column) {
+            // The column is coming from a call to CommittedChangesProvider::getColumns(), which is typed as
+            //  simply "ChangeListColumn[]" without any additional type info. Inspecting the implementations
+            //  of that method shows that all the ChangeListColumn's that are returned are actually
+            //  ChangeListColumn<? extends CommittedChangeList>. Hence this cast, while ugly, is currently OK.
+            //noinspection unchecked
+            myColumn = (ChangeListColumn<CommittedChangeList>) column;
+        }
 
-    @Override
-    public Comparator<CommittedChangeList> getComparator() {
-      return myColumn.getComparator();
-    }
+        @Override
+        public void beforeStart() {
+        }
 
-    @Override
-    public String toString() {
-      return myColumn.getTitle();
+        @Override
+        public boolean changedSinceApply() {
+            return false;
+        }
+
+        @Override
+        public String getGroupName(CommittedChangeList changeList) {
+            return changeList.getBranch();
+        }
+
+        @Override
+        public Comparator<CommittedChangeList> getComparator() {
+            return myColumn.getComparator();
+        }
+
+        @Override
+        public String toString() {
+            return myColumn.getTitle().get();
+        }
     }
-  }
 }

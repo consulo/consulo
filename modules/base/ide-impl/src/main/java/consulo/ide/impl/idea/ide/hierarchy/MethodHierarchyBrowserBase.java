@@ -45,13 +45,11 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     }
 
     @Override
-    
     protected LocalizeValue getPrevOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyMethodPrevOccurenceName();
     }
 
     @Override
-    
     protected LocalizeValue getNextOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyMethodNextOccurenceName();
     }
@@ -104,13 +102,11 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     }
 
     @Override
-    
     protected Key getBrowserDataKey() {
         return DATA_KEY;
     }
 
     @Override
-    
     protected String getActionPlace() {
         return ActionPlaces.METHOD_HIERARCHY_VIEW_TOOLBAR;
     }

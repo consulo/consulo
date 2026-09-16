@@ -21,12 +21,14 @@ import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.internal.ExternalServiceHelper;
+import consulo.externalService.localize.FeatureStatisticsLocalize;
 import consulo.externalService.statistic.*;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.ListTableModel;
@@ -39,10 +41,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
@@ -53,61 +52,65 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
         USAGE_COUNT_COMPARATOR = (fd1, fd2) -> fd1.getUsageCount() - fd2.getUsageCount(),
         LAST_USED_COMPARATOR = (fd1, fd2) -> new Date(fd2.getLastTimeUsed()).compareTo(new Date(fd1.getLastTimeUsed()));
 
-    private static final ColumnInfo<FeatureDescriptor, String> DISPLAY_NAME = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.feature")) {
-        @Override
-        public String valueOf(FeatureDescriptor featureDescriptor) {
-            return featureDescriptor.getDisplayName();
-        }
-
-        @Override
-        public Comparator<FeatureDescriptor> getComparator() {
-            return DISPLAY_NAME_COMPARATOR;
-        }
-    };
-    private static final ColumnInfo<FeatureDescriptor, String> GROUP_NAME = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.group")) {
-        @Override
-        public String valueOf(FeatureDescriptor featureDescriptor) {
-            return getGroupName(featureDescriptor);
-        }
-
-        @Override
-        public Comparator<FeatureDescriptor> getComparator() {
-            return GROUP_NAME_COMPARATOR;
-        }
-    };
-    private static final ColumnInfo<FeatureDescriptor, String> USED_TOTAL = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.usage.count")) {
-        @Override
-        public String valueOf(FeatureDescriptor featureDescriptor) {
-            int count = featureDescriptor.getUsageCount();
-            return FeatureStatisticsBundle.message("feature.statistics.usage.count", count);
-        }
-
-        @Override
-        public Comparator<FeatureDescriptor> getComparator() {
-            return USAGE_COUNT_COMPARATOR;
-        }
-    };
-    private static final ColumnInfo<FeatureDescriptor, String> LAST_USED = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.last.used")) {
-        @Override
-        public String valueOf(FeatureDescriptor featureDescriptor) {
-            long tm = featureDescriptor.getLastTimeUsed();
-            if (tm <= 0) {
-                return FeatureStatisticsBundle.message("feature.statistics.not.applicable");
+    private static final ColumnInfo<FeatureDescriptor, String> DISPLAY_NAME =
+        new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsLocalize.featureStatisticsColumnFeature()) {
+            @Override
+            public String valueOf(FeatureDescriptor featureDescriptor) {
+                return featureDescriptor.getDisplayName();
             }
-            return DateFormatUtil.formatBetweenDates(tm, System.currentTimeMillis());
-        }
 
-        @Override
-        public Comparator<FeatureDescriptor> getComparator() {
-            return LAST_USED_COMPARATOR;
-        }
-    };
+            @Override
+            public Comparator<FeatureDescriptor> getComparator() {
+                return DISPLAY_NAME_COMPARATOR;
+            }
+        };
+    private static final ColumnInfo<FeatureDescriptor, String> GROUP_NAME =
+        new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsLocalize.featureStatisticsColumnGroup()) {
+            @Override
+            public String valueOf(FeatureDescriptor featureDescriptor) {
+                return getGroupName(featureDescriptor);
+            }
+
+            @Override
+            public Comparator<FeatureDescriptor> getComparator() {
+                return GROUP_NAME_COMPARATOR;
+            }
+        };
+    private static final ColumnInfo<FeatureDescriptor, String> USED_TOTAL =
+        new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsLocalize.featureStatisticsColumnUsageCount()) {
+            @Override
+            public String valueOf(FeatureDescriptor featureDescriptor) {
+                int count = featureDescriptor.getUsageCount();
+                return FeatureStatisticsLocalize.featureStatisticsUsageCount(count).get();
+            }
+
+            @Override
+            public Comparator<FeatureDescriptor> getComparator() {
+                return USAGE_COUNT_COMPARATOR;
+            }
+        };
+    private static final ColumnInfo<FeatureDescriptor, String> LAST_USED =
+        new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsLocalize.featureStatisticsColumnLastUsed()) {
+            @Override
+            public String valueOf(FeatureDescriptor featureDescriptor) {
+                long tm = featureDescriptor.getLastTimeUsed();
+                if (tm <= 0) {
+                    return FeatureStatisticsLocalize.featureStatisticsNotApplicable().get();
+                }
+                return DateFormatUtil.formatBetweenDates(tm, System.currentTimeMillis()).get();
+            }
+
+            @Override
+            public Comparator<FeatureDescriptor> getComparator() {
+                return LAST_USED_COMPARATOR;
+            }
+        };
 
     private static final ColumnInfo[] COLUMNS = new ColumnInfo[]{DISPLAY_NAME, GROUP_NAME, USED_TOTAL, LAST_USED};
 
     public ShowFeatureUsageStatisticsDialog(Project project) {
         super(project, true);
-        setTitle(FeatureStatisticsBundle.message("feature.statistics.dialog.title"));
+        setTitle(FeatureStatisticsLocalize.featureStatisticsDialogTitle());
         setCancelButtonText(CommonLocalize.buttonClose());
         setModal(false);
         init();
@@ -119,17 +122,18 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     }
 
     @Override
-    
     protected Action[] createActions() {
         return new Action[]{getCancelAction(), getHelpAction()};
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp("editing.productivityGuide");
     }
 
     @Override
+    @RequiredUIAccess
     protected JComponent createCenterPanel() {
         Splitter splitter = new Splitter(true);
         splitter.setShowDividerControls(true);
@@ -149,11 +153,14 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
         long uptime = System.currentTimeMillis() - app.getStartTime();
         long idleTime = app.getIdleTime();
 
-        String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime", Application.get().getName(), DateFormatUtil.formatDuration(uptime));
+        LocalizeValue uptimeS = FeatureStatisticsLocalize.featureStatisticsApplicationUptime(
+            Application.get().getName(),
+            DateFormatUtil.formatDuration(uptime)
+        );
 
-        String idleTimeS = FeatureStatisticsBundle.message("feature.statistics.application.idle.time", DateFormatUtil.formatDuration(idleTime));
+        LocalizeValue idleTimeS = FeatureStatisticsLocalize.featureStatisticsApplicationIdleTime(DateFormatUtil.formatDuration(idleTime));
 
-        String labelText = uptimeS + ", " + idleTimeS;
+        String labelText = uptimeS.get() + ", " + idleTimeS.get();
         CompletionStatistics stats = ((FeatureUsageTrackerImpl) FeatureUsageTracker.getInstance()).getCompletionStatistics();
         if (stats.dayCount > 0 && stats.sparedCharacters > 0) {
             String total = formatCharacterCount(stats.sparedCharacters, true);
@@ -163,11 +170,11 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
                 " (~" + perDay + " per working day)";
         }
 
-        CumulativeStatistics fstats = ((FeatureUsageTrackerImpl) FeatureUsageTracker.getInstance()).getFixesStats();
-        if (fstats.dayCount > 0 && fstats.invocations > 0) {
-            labelText += "<br>Quick fixes have saved you from " + fstats.invocations +
-                " possible bugs since " + DateFormatUtil.formatDate(fstats.startDate) +
-                " (~" + fstats.invocations / fstats.dayCount + " per working day)";
+        CumulativeStatistics fStats = ((FeatureUsageTrackerImpl) FeatureUsageTracker.getInstance()).getFixesStats();
+        if (fStats.dayCount > 0 && fStats.invocations > 0) {
+            labelText += "<br>Quick fixes have saved you from " + fStats.invocations +
+                " possible bugs since " + DateFormatUtil.formatDate(fStats.startDate) +
+                " (~" + fStats.invocations / fStats.dayCount + " per working day)";
         }
 
         controlsPanel.add(new JLabel("<html><body>" + labelText + "</body></html>"), BorderLayout.NORTH);
@@ -221,7 +228,9 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
 
     private static String formatCharacterCount(int count, boolean full) {
         DecimalFormat oneDigit = new DecimalFormat("0.0");
-        String result = count > 1024 * 1024 ? oneDigit.format((double) count / 1024 / 1024) + "M" : count > 1024 ? oneDigit.format((double) count / 1024) + "K" : String.valueOf(count);
+        String result = count > 1024 * 1024
+            ? oneDigit.format((double) count / 1024 / 1024) + "M" : count > 1024
+            ? oneDigit.format((double) count / 1024) + "K" : String.valueOf(count);
         if (full) {
             return result + " characters";
         }

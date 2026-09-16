@@ -154,7 +154,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
             }
             myDownloads.setText(downloads);
 
-            myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()));
+            myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()).get());
         }
 
         updatePresentation(isSelected, value);

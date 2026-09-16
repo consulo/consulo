@@ -25,111 +25,124 @@ import javax.swing.tree.TreePath;
 import java.util.*;
 
 public class ListTreeTableModelOnColumns extends DefaultTreeModel
-        implements TreeTableModel, SortableColumnModel{
+    implements TreeTableModel, SortableColumnModel {
 
-  private ColumnInfo[] myColumns;
-  private JTree myTree;
+    private ColumnInfo[] myColumns;
+    private JTree myTree;
 
-  public ListTreeTableModelOnColumns(TreeNode root, ColumnInfo[] columns) {
-    super(root);
-    myColumns = columns;
-  }
-
-  @Override
-  public void setTree(JTree tree) {
-    myTree = tree;
-  }
-
-  public int getColumnCount() {
-    return myColumns.length;
-  }
-
-  public String getColumnName(int column) {
-    return myColumns[column].getName();
-  }
-
-  public Object getValueAt(Object value, int column) {
-    return myColumns[column].valueOf(value);
-  }
-
-  public Object getChild(Object parent, int index) {
-    return ((TreeNode) parent).getChildAt(index);
-  }
-
-  @Override
-  public Object getRowValue(int row) {
-    TreePath path = myTree.getPathForRow(row);
-    if (path != null) {
-      return path.getLastPathComponent();
+    public ListTreeTableModelOnColumns(TreeNode root, ColumnInfo[] columns) {
+        super(root);
+        myColumns = columns;
     }
 
-    return null;
-  }
-
-  @Override
-  public RowSorter.SortKey getDefaultSortKey() {
-    return null;
-  }
-
-  public int getChildCount(Object parent) {
-    return ((TreeNode) parent).getChildCount();
-  }
-
-  public Class getColumnClass(int column) {
-    return myColumns[column].getColumnClass();
-  }
-
-  public ColumnInfo[] getColumns() {
-    return myColumns;
-  }
-
-  public boolean isCellEditable(Object node, int column) {
-    return myColumns[column].isCellEditable(node);
-  }
-
-  public void setValueAt(Object aValue, Object node, int column) {
-    myColumns[column].setValue(node, aValue);
-  }
-
-  /**
-   * @param columns
-   * @return true if changed
-   */
-  public boolean setColumns(ColumnInfo[] columns) {
-    if (myColumns != null && Arrays.equals(myColumns, columns)) {
-      return false;
+    @Override
+    public void setTree(JTree tree) {
+        myTree = tree;
     }
-    myColumns = columns;
-    return true;
-  }
 
-  public ColumnInfo[] getColumnInfos() {
-    return myColumns;
-  }
-
-  public List getItems() {
-    List result = new ArrayList();
-    TreeNode root = (TreeNode) getRoot();
-    for (int i = 0; i < root.getChildCount(); i++) {
-      addElementsToCollection(root.getChildAt(i), result);
+    @Override
+    public int getColumnCount() {
+        return myColumns.length;
     }
-    return result;
-  }
 
-  private void addElementsToCollection(TreeNode parent, Collection collection) {
-    collection.add(parent);
-    Enumeration children = parent.children();
-    if (children == null) return;
-    while(children.hasMoreElements()){
-      TreeNode child = (TreeNode) children.nextElement();
-      addElementsToCollection(child, collection);
+    @Override
+    public String getColumnName(int column) {
+        return myColumns[column].getName().get();
     }
-  }
 
-  public void setSortable(boolean aBoolean) {
-  }
+    @Override
+    public Object getValueAt(Object value, int column) {
+        return myColumns[column].valueOf(value);
+    }
 
-  public boolean isSortable() {
-    return false;
-  }
+    @Override
+    public Object getChild(Object parent, int index) {
+        return ((TreeNode) parent).getChildAt(index);
+    }
+
+    @Override
+    public Object getRowValue(int row) {
+        TreePath path = myTree.getPathForRow(row);
+        if (path != null) {
+            return path.getLastPathComponent();
+        }
+
+        return null;
+    }
+
+    @Override
+    public RowSorter.SortKey getDefaultSortKey() {
+        return null;
+    }
+
+    @Override
+    public int getChildCount(Object parent) {
+        return ((TreeNode) parent).getChildCount();
+    }
+
+    @Override
+    public Class getColumnClass(int column) {
+        return myColumns[column].getColumnClass();
+    }
+
+    public ColumnInfo[] getColumns() {
+        return myColumns;
+    }
+
+    @Override
+    public boolean isCellEditable(Object node, int column) {
+        return myColumns[column].isCellEditable(node);
+    }
+
+    @Override
+    public void setValueAt(Object aValue, Object node, int column) {
+        myColumns[column].setValue(node, aValue);
+    }
+
+    /**
+     * @param columns
+     * @return true if changed
+     */
+    public boolean setColumns(ColumnInfo[] columns) {
+        if (myColumns != null && Arrays.equals(myColumns, columns)) {
+            return false;
+        }
+        myColumns = columns;
+        return true;
+    }
+
+    @Override
+    public ColumnInfo[] getColumnInfos() {
+        return myColumns;
+    }
+
+    public List getItems() {
+        List result = new ArrayList();
+        TreeNode root = (TreeNode) getRoot();
+        for (int i = 0; i < root.getChildCount(); i++) {
+            addElementsToCollection(root.getChildAt(i), result);
+        }
+        return result;
+    }
+
+    private void addElementsToCollection(TreeNode parent, Collection collection) {
+        collection.add(parent);
+        Enumeration children = parent.children();
+        if (children == null) {
+            return;
+        }
+        while (children.hasMoreElements()) {
+            TreeNode child = (TreeNode) children.nextElement();
+            addElementsToCollection(child, collection);
+        }
+    }
+
+    @Override
+    public void setSortable(boolean aBoolean) {
+    }
+
+    @Override
+    public boolean isSortable() {
+        return false;
+    }
 }
