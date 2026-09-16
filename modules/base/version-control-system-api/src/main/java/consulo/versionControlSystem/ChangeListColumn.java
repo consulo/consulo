@@ -17,6 +17,7 @@ package consulo.versionControlSystem;
 
 import consulo.application.util.DateFormatUtil;
 import consulo.localize.LocalizeValue;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
@@ -69,7 +70,7 @@ public abstract class ChangeListColumn<T extends ChangeList> {
 
         @Override
         public Comparator<CommittedChangeList> getComparator() {
-            return Comparator.comparing(o -> (String) getValue(o));
+            return (o1, o2) -> Comparing.compare((String) getValue(o1), (String) getValue(o2));
         }
     };
 
@@ -116,7 +117,7 @@ public abstract class ChangeListColumn<T extends ChangeList> {
 
         @Override
         public Comparator<CommittedChangeList> getComparator() {
-            return (o1, o2) -> (int) (o1.getNumber() - o2.getNumber());
+            return Comparator.comparingLong(CommittedChangeList::getNumber);
         }
     }
 }

@@ -189,10 +189,6 @@ public interface FileDocumentManager extends SavingRequestor {
             myReadOnlyMessage = readOnlyMessage;
         }
 
-        public WriteAccessStatus(String readOnlyMessage) {
-            this(LocalizeValue.of(readOnlyMessage));
-        }
-
         public boolean hasWriteAccess() {
             return myWithWriteAccess;
         }

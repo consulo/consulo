@@ -426,7 +426,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     protected @Nullable ApplyPatchStatus executeWritable() {
         ReadonlyStatusHandler.OperationStatus readOnlyFilesStatus = getReadOnlyFilesStatus(myVerifier.getWritableFiles());
         if (readOnlyFilesStatus.hasReadonlyFiles()) {
-            showError(myProject, readOnlyFilesStatus.getReadonlyFilesMessage(), true);
+            showError(myProject, readOnlyFilesStatus.getReadonlyFilesMessage().get(), true);
             return ApplyPatchStatus.ABORT;
         }
         myFailedPatches.addAll(myVerifier.filterBadFileTypePatches());
