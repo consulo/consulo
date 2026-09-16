@@ -14,4 +14,6 @@ module consulo.project.content.impl {
     requires consulo.project.api;
 
     requires org.jdom;
+
+    opens consulo.project.content.impl.internal.library to consulo.component.impl;
 }
