@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.impl.libraries;
+package consulo.project.content.impl.internal.library;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.library.LibraryTable;
@@ -22,23 +22,25 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 @Singleton
 @ServiceImpl
 public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implements Disposable {
-  @Override
-  
-  public LibraryTable getLibraryTable(Project project) {
-    return ProjectLibraryTable.getInstance(project);
-  }
+    @Override
+    public LibraryTable getLibraryTable(Project project) {
+        return ProjectLibraryTable.getInstance(project);
+    }
 
-  @Override
-  public LibraryTable getLibraryTableByLevel(String level, Project project) {
-    if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(level)) return getLibraryTable(project);
-    return null;
-  }
+    @Override
+    public @Nullable LibraryTable getLibraryTableByLevel(String level, Project project) {
+        if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(level)) {
+            return getLibraryTable(project);
+        }
+        return null;
+    }
 
-  @Override
-  public void dispose() {
-  }
+    @Override
+    public void dispose() {
+    }
 }

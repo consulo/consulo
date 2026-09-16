@@ -40,5 +40,6 @@ module consulo.module.content.api {
         consulo.language.index.impl,
         consulo.module.impl,
         consulo.module.ui.api,
-        consulo.module.content.impl;
+        consulo.module.content.impl,
+        consulo.project.content.impl;
 }

@@ -1,0 +1,104 @@
+/*
+ * Copyright 2000-2012 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package consulo.project.content.impl.internal.library;
+
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.content.impl.internal.library.LibraryImpl;
+import consulo.application.content.impl.internal.library.LibraryOwner;
+import consulo.application.content.impl.internal.library.LibraryTableBase;
+import consulo.component.persist.State;
+import consulo.component.persist.StateSplitterEx;
+import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.content.library.LibraryTablePresentation;
+import consulo.module.content.internal.ProjectRootManagerImpl;
+import consulo.project.Project;
+import consulo.project.content.library.ProjectLibraryTable;
+import consulo.project.localize.ProjectLocalize;
+import consulo.util.lang.Pair;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.jdom.Element;
+
+import java.util.List;
+
+/**
+ * @author dsl
+ */
+@Singleton
+@ServiceImpl
+@State(
+    name = "libraryTable",
+    storages = @Storage(
+        file = StoragePathMacros.PROJECT_CONFIG_DIR + "/libraries/",
+        stateSplitter = ProjectLibraryTableImpl.LibraryStateSplitter.class
+    )
+)
+public class ProjectLibraryTableImpl extends LibraryTableBase implements ProjectLibraryTable {
+    private static final LibraryTablePresentation PROJECT_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
+        @Override
+        public String getDisplayName(boolean plural) {
+            return ProjectLocalize.projectLibraryDisplayName(plural ? 2 : 1).get();
+        }
+
+        @Override
+        public String getDescription() {
+            return ProjectLocalize.librariesNodeTextProject().get();
+        }
+
+        @Override
+        public String getLibraryTableEditorTitle() {
+            return ProjectLocalize.libraryConfigureProjectTitle().get();
+        }
+    };
+
+    private final Project myProject;
+    private final LibraryOwner myLibraryOwner;
+
+    @Inject
+    public ProjectLibraryTableImpl(Project project) {
+        myProject = project;
+        myLibraryOwner = () -> ProjectRootManagerImpl.getInstanceImpl(project).getRootsValidityChangedListener();
+    }
+
+    @Override
+    protected LibraryOwner getLibraryOwner() {
+        return myLibraryOwner;
+    }
+
+    @Override
+    public Project getProject() {
+        return myProject;
+    }
+
+    @Override
+    public LibraryTablePresentation getPresentation() {
+        return PROJECT_LIBRARY_TABLE_PRESENTATION;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+
+    public static final class LibraryStateSplitter extends StateSplitterEx {
+        @Override
+        public List<Pair<Element, String>> splitState(Element state) {
+            return splitState(state, LibraryImpl.LIBRARY_NAME_ATTR);
+        }
+    }
+}

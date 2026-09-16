@@ -25,6 +25,8 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -36,14 +38,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
 public class HeadlessApplicationEncodingManager extends BaseApplicationEncodingManager {
-    private final AtomicInteger myEncodingLookupCount = new AtomicInteger();
+    private final Map<String, AtomicInteger> myEncodingLookups = new ConcurrentHashMap<>();
 
-    public int getEncodingLookupCount() {
-        return myEncodingLookupCount.get();
+    /**
+     * How often a per-file encoding was asked for {@code file} since the last reset. Counted per file on purpose: the
+     * whole suite shares this application, so a background scan of an unrelated file must not be mistaken for a lookup
+     * the test provoked.
+     */
+    public int getEncodingLookupCount(VirtualFile file) {
+        AtomicInteger count = myEncodingLookups.get(file.getPath());
+        return count == null ? 0 : count.get();
     }
 
     public void resetEncodingLookupCount() {
-        myEncodingLookupCount.set(0);
+        myEncodingLookups.clear();
     }
 
     @Override
@@ -53,7 +61,9 @@ public class HeadlessApplicationEncodingManager extends BaseApplicationEncodingM
 
     @Override
     public @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
-        myEncodingLookupCount.incrementAndGet();
+        if (virtualFile != null) {
+            myEncodingLookups.computeIfAbsent(virtualFile.getPath(), path -> new AtomicInteger()).incrementAndGet();
+        }
         return super.getEncoding(virtualFile, useParentDefaults);
     }
 }

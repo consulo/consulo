@@ -14,5 +14,6 @@ module consulo.application.content.impl {
     exports consulo.application.content.impl.internal.bundle to consulo.ide.impl;
     exports consulo.application.content.impl.internal.library to
         consulo.ide.impl,
-        consulo.module.impl;
+        consulo.module.impl,
+        consulo.project.content.impl;
 }

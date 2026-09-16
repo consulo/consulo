@@ -74,7 +74,7 @@ public class BinaryContentSkipsEncodingLookupTest {
         CharSequence text = detect(file, content);
 
         assertThat(text).as("detectors keyed on text must still receive it").startsWith("%YAML");
-        assertThat(encodingManager.getEncodingLookupCount()).as("per-file encoding lookup count").isPositive();
+        assertThat(encodingManager.getEncodingLookupCount(file)).as("per-file encoding lookup count").isPositive();
     }
 
     private static void assertNoEncodingLookup(Application application, String prefix, String suffix, byte[] content)
@@ -86,7 +86,7 @@ public class BinaryContentSkipsEncodingLookupTest {
         CharSequence text = detect(file, content);
 
         assertThat(text).as("content that is not text must not be handed to detectors as text").isNull();
-        assertThat(encodingManager.getEncodingLookupCount()).as("per-file encoding lookup count").isZero();
+        assertThat(encodingManager.getEncodingLookupCount(file)).as("per-file encoding lookup count").isZero();
         assertThat(file.isCharsetSet()).as("no charset may be stored for content that was never decoded").isFalse();
     }
 

@@ -44,6 +44,7 @@ open module consulo.ide.impl {
     requires consulo.configurable.api;
     requires consulo.file.chooser.api;
     requires consulo.project.content.api;
+    requires consulo.project.content.impl;
     requires consulo.module.content.api;
     requires consulo.module.creation.api;
     requires consulo.language.api;

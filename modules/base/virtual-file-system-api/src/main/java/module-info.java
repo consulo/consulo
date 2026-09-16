@@ -59,3 +59,4 @@ module consulo.virtual.file.system.api {
         consulo.version.control.system.impl,
         consulo.virtual.file.system.impl;
 }
+
