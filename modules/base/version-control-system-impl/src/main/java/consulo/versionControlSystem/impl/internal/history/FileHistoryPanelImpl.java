@@ -710,7 +710,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         private final Comparator<VcsFileRevision> myComparator;
 
         public RevisionColumnInfo(Comparator<VcsFileRevision> comparator) {
-            super(VcsLocalize.columnNameRevisionVersion().get());
+            super(VcsLocalize.columnNameRevisionVersion());
             myComparator = comparator;
         }
 
@@ -744,7 +744,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     public static class DateColumnInfo extends VcsColumnInfo<String> {
         public DateColumnInfo() {
-            super(VcsLocalize.columnNameRevisionDate().get());
+            super(VcsLocalize.columnNameRevisionDate());
         }
 
         static String toString(VcsFileRevision object) {
@@ -809,7 +809,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         private final TableCellRenderer AUTHOR_RENDERER = new AuthorCellRenderer();
 
         public AuthorColumnInfo() {
-            super(VcsLocalize.columnNameRevisionListAuthor().get());
+            super(VcsLocalize.columnNameRevisionListAuthor());
         }
 
         static String toString(VcsFileRevision o) {
@@ -870,7 +870,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         private final IssueLinkRenderer myIssueLinkRenderer;
 
         public MessageColumnInfo(Project project) {
-            super(VcsLocalize.labelSelectedRevisionCommitMessage().get());
+            super(VcsLocalize.labelSelectedRevisionCommitMessage());
             myRenderer = new ColoredTableCellRenderer() {
                 @Override
                 protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
@@ -993,7 +993,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     abstract static class VcsColumnInfo<T extends Comparable<T>> extends DualViewColumnInfo<VcsFileRevision, String>
         implements Comparator<VcsFileRevision> {
-        public VcsColumnInfo(String name) {
+        public VcsColumnInfo(LocalizeValue name) {
             super(name);
         }
 

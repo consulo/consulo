@@ -1,0 +1,188 @@
+feature.statistics.dialog.title:
+    text: Productivity Guide
+feature.statistics.welcome.tip.name:
+    text: Productivity Features Guide
+feature.statistics.column.feature:
+    text: Feature
+feature.statistics.column.group:
+    text: Group
+feature.statistics.column.usage.count:
+    text: Used
+feature.statistics.column.last.used:
+    text: Last used
+feature.statistics.column.usage.frequency:
+    text: Average usage frequency
+feature.statistics.usage.count:
+    text: '{0,choice, 0#Never|1#Once|2#Twice|3#{0,number} times}'
+feature.statistics.show.while.compiling:
+    text: Show productivity hints while compiling
+feature.statistics.show.on.startup:
+    text: Show productivity hints during startup or other lengthy processes
+feature.statistics.action.next.tip:
+    text: '&Next Tip'
+feature.statistics.action.prev.tip:
+    text: '&Previous Tip'
+feature.statistics.action.close:
+    text: '&Close'
+features.statistics.keep.hints.window:
+    text: Keep hints window opened when the process is finished
+feature.statistics.floating.window.title:
+    text: Productivity hints
+feature.statistics.not.applicable:
+    text: N/A
+feature.statistics.application.uptime:
+    text: '{0} uptime: {1}'
+feature.statistics.application.idle.time:
+    text: 'idle time: {0}'
+navigation.popup.class:
+    text: Go to class
+navigation.popup.file:
+    text: Go to file
+navigation.popup.symbol:
+    text: Go to symbol
+navigation.popup.camelprefix:
+    text: Using camel words prefixes in navigation popups
+navigation.popup.wildcards:
+    text: Using wildcards in go to class, file or symbol
+navigation.popup.file.structure:
+    text: File structure popup
+navigation.recent.files:
+    text: Recent files popup
+navigation.select.in:
+    text: Select In popup
+navigation.goto.declaration:
+    text: Go to declaration
+navigation.goto.implementation:
+    text: Go to implementation
+editing.completion.basic:
+    text: Basic code completion
+editing.completion.smarttype.general:
+    text: Smart type completion
+editing.completion.smarttype.afternew:
+    text: Smart type completion after new
+editing.completion.smarttype.casting:
+    text: Smart type casting
+editing.completion.second.basic:
+    text: Second basic completion
+editing.completion.second.smarttype.chain:
+    text: 'Second smart type completion: chained method calls'
+editing.completion.second.smarttype.toar:
+    text: 'Second smart type completion: toArray() conversion'
+editing.completion.second.smarttype.aslist:
+    text: 'Second smart type completion: asList() conversion'
+editing.completion.second.smarttype.array.member:
+    text: 'Second smart type completion: array member access'
+editing.completion.global.member.name:
+    text: Global method name code completion
+editing.completion.variable.name:
+    text: Variable name completion
+editing.completion.replace:
+    text: Replace By when using lookup
+editing.completion.finishByDotEtc:
+    text: Finish lookup by special characters
+editing.completion.finishByCtrlDot:
+    text: Finish lookup by Ctrl+Dot
+editing.completion.finishByExclamation:
+    text: Finish lookup by exclamation mark
+editing.completion.finishBySmartEnter:
+    text: Finish lookup by smart enter
+editing.completion.camelHumps:
+    text: Camel prefixes in code completion
+editing.completion.finishByControlEnter:
+    text: Finish lookup even when non-focused
+editing.completion.cancelByControlArrows:
+    text: Cancel lookup and move caret up/down in the editor
+editing.completion.changeSorting:
+    text: Changing completion variants sorting
+editing.select.word:
+    text: Syntax aware selection
+editing.incremental.search:
+    text: Editor incremental search
+codeassists.quickjavadoc:
+    text: Quick Documentation popup
+codeassists.quickdefinition:
+    text: Quick Definition lookup
+codeassists.quickdefinition.lookup:
+    text: Quick Definition in lookup lists
+codeassists.quickjavadoc.lookup:
+    text: Quick Documentation in lookups
+codeassists.quickjavadoc.ctrln:
+    text: Quick Documentation in goto class or symbol
+codeassists.javadoc.external:
+    text: Browse external documentation
+codeassists.surroundwith.statement:
+    text: Surround statements with
+codeassists.surroundwith.expression:
+    text: Surround expression with
+codeassists.comment.block:
+    text: Comment/Uncomment block
+codeassists.comment.line:
+    text: Comment/Uncomment current line
+codeassists.overrideimplement:
+    text: Override/Implement methods
+codeassists.complete.statement:
+    text: Complete Statement
+refactoring.move.moveInner:
+    text: Move inner class to upper level
+refactoring.introduceVariable.incompleteStatement:
+    text: Use Introduce Variable to quickly declare variables
+refactoring.introduceVariable:
+    text: Introduce Variable refactoring
+refactoring.rename:
+    text: Rename
+refactoring.copyClass:
+    text: Copy Class refactoring
+ui.tree.speedsearch:
+    text: Speed search in trees
+ui.scheme.quickswitch:
+    text: Quick switch scheme...
+ui.horizontal.scrolling:
+    text: Horizontal Scrolling
+ui.recentchanges:
+    text: Recent changes
+ant.quickfix.CreateProperty:
+    text: Create property tag
+ant.quickfix.CreateTarget:
+    text: Create target tag
+group.navigation:
+    text: Navigation
+group.completion:
+    text: Code Completion
+group.editing:
+    text: Code Editing
+group.codeassists:
+    text: Code Assistants
+group.refactoring:
+    text: Refactoring
+group.ui:
+    text: UI Usability Features
+group.ant:
+    text: Ant support features
+group.tools:
+    text: Tools support
+group.diff:
+    text: Diff Tools
+navigation.popup.action:
+    text: Go to action
+navigation.goto.usages:
+    text: Show usages
+navigation.goto.inspection:
+    text: Go to inspection
+editing.completion.completeStatement:
+    text: Complete Statement from Code Completion
+codeassists.highlight.implements:
+    text: Highlight implementing or overriding members
+codeassists.highlight.return:
+    text: Highlight method exit points
+codeassists.highlight.throws:
+    text: Highlight method throws
+find.recent.search:
+    text: Recent searches history
+find.completion:
+    text: Completion in Find Bar
+switcher:
+    text: Switcher
+dir.diff:
+    text: Directory Diff
+jar.diff:
+    text: Jar Files Diff

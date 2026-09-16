@@ -79,7 +79,7 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
 
     @Override
     public String getColumnName(int column) {
-        return COLUMN_INFOS[column].getName();
+        return COLUMN_INFOS[column].getName().get();
     }
 
     @Override

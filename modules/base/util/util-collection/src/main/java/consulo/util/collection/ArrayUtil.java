@@ -866,6 +866,46 @@ public class ArrayUtil {
     }
 
     @Contract("null -> true")
+    public static boolean isEmpty(byte @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(short @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(int @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(long @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(float @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(double @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(boolean @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(char @Nullable [] array) {
+        return array == null || array.length == 0;
+    }
+
+    @Contract("null -> true")
     public static <T> boolean isEmpty(T @Nullable [] array) {
         return array == null || array.length == 0;
     }

@@ -15,22 +15,27 @@
  */
 package consulo.document;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.document.localize.DocumentLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
- * @since 19/01/2022
+ * @since 2022-01-19
  */
+@Deprecated
+@DeprecationInfo("Replace with DocumentLocalize")
+@MigratedExtensionsTo(DocumentLocalize.class)
 public class DocumentBundle extends AbstractBundle {
-  public static final DocumentBundle INSTANCE = new DocumentBundle();
+    public static final DocumentBundle INSTANCE = new DocumentBundle();
 
-  private DocumentBundle() {
-    super("consulo.document.DocumentBundle");
-  }
+    private DocumentBundle() {
+        super("consulo.document.DocumentBundle");
+    }
 
-  
-  public static String message(@PropertyKey(resourceBundle = "consulo.document.DocumentBundle") String key, Object... args) {
-    return INSTANCE.getMessage(key, args);
-  }
+    public static String message(@PropertyKey(resourceBundle = "consulo.document.DocumentBundle") String key, Object... args) {
+        return INSTANCE.getMessage(key, args);
+    }
 }

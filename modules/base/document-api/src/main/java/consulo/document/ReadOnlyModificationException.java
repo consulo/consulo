@@ -15,15 +15,17 @@
  */
 package consulo.document;
 
+import consulo.document.localize.DocumentLocalize;
+
 public class ReadOnlyModificationException extends RuntimeException {
-  private final Document myDocument;
+    private final Document myDocument;
 
-  public ReadOnlyModificationException(Document document) {
-    super(DocumentBundle.message("attempt.to.modify.read.only.document.error.message"));
-    myDocument = document;
-  }
+    public ReadOnlyModificationException(Document document) {
+        super(DocumentLocalize.attemptToModifyReadOnlyDocumentErrorMessage().get());
+        myDocument = document;
+    }
 
-  public Document getDocument() {
-    return myDocument;
-  }
+    public Document getDocument() {
+        return myDocument;
+    }
 }

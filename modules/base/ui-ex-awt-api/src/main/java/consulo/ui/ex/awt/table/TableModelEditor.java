@@ -16,8 +16,10 @@
 package consulo.ui.ex.awt.table;
 
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
@@ -27,8 +29,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.Lists;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
@@ -50,12 +51,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
 
     private final MyListTableModel model;
 
-    public TableModelEditor(
-        ColumnInfo[] columns,
-        CollectionItemEditor<T> itemEditor,
-        String emptyText,
-        Supplier<T> itemFactory
-    ) {
+    public TableModelEditor(ColumnInfo[] columns, CollectionItemEditor<T> itemEditor, String emptyText, Supplier<T> itemFactory) {
         this(Collections.emptyList(), columns, itemEditor, emptyText, itemFactory);
     }
 
@@ -81,14 +77,14 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         preferredScrollableViewportHeightInRows(JBTable.PREFERRED_SCROLLABLE_VIEWPORT_HEIGHT_IN_ROWS);
         new TableSpeedSearch(table);
         ColumnInfo firstColumn = columns[0];
-        if ((firstColumn.getColumnClass() == boolean.class || firstColumn.getColumnClass() == Boolean.class) && firstColumn.getName()
-            .isEmpty()) {
+        if ((firstColumn.getColumnClass() == boolean.class || firstColumn.getColumnClass() == Boolean.class)
+            && firstColumn.getName().isEmpty()) {
             TableUtil.setupCheckboxColumn(table.getColumnModel().getColumn(0));
         }
 
         boolean needTableHeader = false;
         for (ColumnInfo column : columns) {
-            if (!StringUtil.isEmpty(column.getName())) {
+            if (column.getName().isNotEmpty()) {
                 needTableHeader = true;
                 break;
             }
@@ -114,41 +110,32 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     }
 
     private void addDialogActions() {
-        toolbarDecorator.setEditAction(new AnActionButtonRunnable() {
-            @Override
-            public void run(AnActionButton button) {
-                T item = table.getSelectedObject();
-                if (item != null) {
-                    Function<T, T> mutator;
-                    if (helper.isMutable(item)) {
-                        mutator = Function.identity();
-                    }
-                    else {
-                        int selectedRow = table.getSelectedRow();
-                        mutator = item12 -> helper.getMutable(item12, selectedRow);
-                    }
-                    ((DialogItemEditor<T>) itemEditor).edit(item, mutator, false);
-                    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
+        toolbarDecorator.setEditAction(button -> {
+            T item = table.getSelectedObject();
+            if (item != null) {
+                Function<T, T> mutator;
+                if (helper.isMutable(item)) {
+                    mutator = Function.identity();
                 }
+                else {
+                    int selectedRow = table.getSelectedRow();
+                    mutator = item12 -> helper.getMutable(item12, selectedRow);
+                }
+                ((DialogItemEditor<T>) itemEditor).edit(item, mutator, false);
+                IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
             }
-        }).setEditActionUpdater(new AnActionButtonUpdater() {
-            @Override
-            public boolean isEnabled(AnActionEvent e) {
-                T item = table.getSelectedObject();
-                return item != null && ((DialogItemEditor<T>) itemEditor).isEditable(item);
-            }
+        }).setEditActionUpdater(e -> {
+            T item = table.getSelectedObject();
+            return item != null && ((DialogItemEditor<T>) itemEditor).isEditable(item);
         });
 
         if (((DialogItemEditor) itemEditor).isUseDialogToAdd()) {
-            toolbarDecorator.setAddAction(new AnActionButtonRunnable() {
-                @Override
-                public void run(AnActionButton button) {
-                    T item = createElement();
-                    ((DialogItemEditor<T>) itemEditor).edit(item, item1 -> {
-                        model.addRow(item1);
-                        return item1;
-                    }, true);
-                }
+            toolbarDecorator.setAddAction(button -> {
+                T item = createElement();
+                ((DialogItemEditor<T>) itemEditor).edit(item, item1 -> {
+                    model.addRow(item1);
+                    return item1;
+                }, true);
             });
         }
     }
@@ -255,7 +242,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         }
 
         public EditableColumnInfo() {
-            super("");
+            super(LocalizeValue.empty());
         }
 
         @Override
@@ -264,11 +251,11 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         }
     }
 
-    
     public JComponent createComponent() {
         return toolbarDecorator.addExtraAction(
             new ToolbarDecorator.ElementActionButton(CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
                     TableUtil.stopEditing(table);
 
@@ -288,7 +275,6 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         ).createPanel();
     }
 
-    
     @Override
     protected List<T> getItems() {
         return model.items;
@@ -297,9 +283,9 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     public void selectItem(T item) {
         table.clearSelection();
 
-        Ref<T> ref;
+        SimpleReference<T> ref;
         if (helper.hasModifiedItems()) {
-            ref = Ref.create();
+            ref = SimpleReference.create();
             helper.process((modified, original) -> {
                 if (item == original) {
                     ref.setIfNull(modified);
@@ -313,7 +299,6 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         table.addSelection(ref == null || ref.isNull() ? item : ref.get());
     }
 
-    
     public List<T> apply() {
         if (helper.hasModifiedItems()) {
             @SuppressWarnings("unchecked") ColumnInfo<T, Object>[] columns = model.getColumnInfos();
@@ -336,6 +321,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         return model.items;
     }
 
+    @Override
     public void reset(List<T> items) {
         super.reset(items);
         model.setItems(new ArrayList<>(items));
@@ -343,6 +329,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
 
     private class MyRemoveAction implements AnActionButtonRunnable, AnActionButtonUpdater, TableUtil.ItemChecker {
         @Override
+        @RequiredUIAccess
         public void run(AnActionButton button) {
             if (TableUtil.doRemoveSelectedItems(table, model, this)) {
                 IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);

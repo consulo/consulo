@@ -43,172 +43,174 @@ import java.util.function.Function;
  * @author yole
  */
 public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
-  private final JScrollPane myScrollPane;
-  private final JList myValueList;
-  private final List<ChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
-  private final ChangeListColumn myColumn;
-  private final Class<? extends CommittedChangesProvider> myProviderClass;
-  private final MyListModel myModel;
-  private final CommittedChangeListToStringConverter ourConverterInstance = new CommittedChangeListToStringConverter();
+    private final JScrollPane myScrollPane;
+    private final JList myValueList;
+    private final List<ChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
+    private final ChangeListColumn myColumn;
+    private final Class<? extends CommittedChangesProvider> myProviderClass;
+    private final MyListModel myModel;
+    private final CommittedChangeListToStringConverter ourConverterInstance = new CommittedChangeListToStringConverter();
 
-  private Object[] myPreferredSelection;
+    private Object[] myPreferredSelection;
 
-  public ColumnFilteringStrategy(ChangeListColumn column,
-                                 Class<? extends CommittedChangesProvider> providerClass) {
-    myModel = new MyListModel();
-    myValueList = new JBList();
-    myScrollPane = ScrollPaneFactory.createScrollPane(myValueList);
-    myValueList.setModel(myModel);
-    myValueList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        for (ChangeListener listener : myListeners) {
-          listener.stateChanged(new ChangeEvent(this));
-        }
-      }
-    });
-    myValueList.setCellRenderer(new ColoredListCellRenderer() {
-      @Override
-      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (index == 0) {
-          append(value.toString(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-        }
-        else if (value.toString().length() == 0) {
-          append(VcsLocalize.committedChangesFilterNone().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
-        }
-        else {
-          append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        }
-      }
-    });
-    myColumn = column;
-    myProviderClass = providerClass;
-  }
-
-  @Override
-  public CommittedChangesFilterKey getKey() {
-    return new CommittedChangesFilterKey(toString(), CommittedChangesFilterPriority.USER);
-  }
-
-  @Override
-  public String toString() {
-    return myColumn.getTitle();
-  }
-
-  @Override
-  public @Nullable JComponent getFilterUI() {
-    return myScrollPane;
-  }
-
-  @Override
-  public void setFilterBase(List<CommittedChangeList> changeLists) {
-    myPreferredSelection = null;
-    appendFilterBase(changeLists);
-  }
-
-  @Override
-  public void addChangeListener(ChangeListener listener) {
-    myListeners.add(listener);
-  }
-
-  @Override
-  public void removeChangeListener(ChangeListener listener) {
-    myListeners.remove(listener);
-  }
-
-  @Override
-  public void resetFilterBase() {
-    myPreferredSelection = myValueList.getSelectedValues();
-    myValueList.clearSelection();
-    myModel.clear();
-    myValueList.revalidate();
-    myValueList.repaint();
-  }
-
-  @Override
-  public void appendFilterBase(List<CommittedChangeList> changeLists) {
-    Object[] oldSelection = myModel.isEmpty() ? myPreferredSelection : myValueList.getSelectedValues();
-
-    myModel.addNext(changeLists, ourConverterInstance);
-    if (oldSelection != null) {
-      for (Object o : oldSelection) {
-        myValueList.setSelectedValue(o, false);
-      }
-    }
-    myValueList.revalidate();
-    myValueList.repaint();
-  }
-
-  private class CommittedChangeListToStringConverter implements Function<CommittedChangeList, String> {
-    @Override
-    public String apply(CommittedChangeList o) {
-      if (myProviderClass == null || myProviderClass.isInstance(o.getVcs().getCommittedChangesProvider())) {
-        return myColumn.getValue(ReceivedChangeList.unwrap(o)).toString();
-      }
-      return null;
-    }
-  }
-
-  @Override
-  public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
-    Object[] selection = myValueList.getSelectedValues();
-    if (myValueList.getSelectedIndex() == 0 || selection.length == 0) {
-      return changeLists;
-    }
-    List<CommittedChangeList> result = new ArrayList<CommittedChangeList>();
-    for (CommittedChangeList changeList : changeLists) {
-      if (myProviderClass == null || myProviderClass.isInstance(changeList.getVcs().getCommittedChangesProvider())) {
-        for (Object value : selection) {
-          //noinspection unchecked
-          if (value.toString().equals(myColumn.getValue(ReceivedChangeList.unwrap(changeList)).toString())) {
-            result.add(changeList);
-            break;
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  private static class MyListModel extends AbstractListModel {
-    private volatile String[] myValues;
-
-    private MyListModel() {
-      myValues = ArrayUtil.EMPTY_STRING_ARRAY;
-    }
-
-    public <T> void addNext(Collection<T> values, Function<T, String> converter) {
-      TreeSet<String> set = new TreeSet<String>(Arrays.asList(myValues));
-      for (T value : values) {
-        String converted = converter.apply(value);
-        if (converted != null) {
-          // also works as filter
-          set.add(converted);
-        }
-      }
-      myValues = ArrayUtil.toStringArray(set);
-      fireContentsChanged(this, 0, myValues.length);
+    public ColumnFilteringStrategy(
+        ChangeListColumn column,
+        Class<? extends CommittedChangesProvider> providerClass
+    ) {
+        myModel = new MyListModel();
+        myValueList = new JBList();
+        myScrollPane = ScrollPaneFactory.createScrollPane(myValueList);
+        myValueList.setModel(myModel);
+        myValueList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                for (ChangeListener listener : myListeners) {
+                    listener.stateChanged(new ChangeEvent(this));
+                }
+            }
+        });
+        myValueList.setCellRenderer(new ColoredListCellRenderer() {
+            @Override
+            protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                if (index == 0) {
+                    append(value.toString(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+                }
+                else if (value.toString().length() == 0) {
+                    append(VcsLocalize.committedChangesFilterNone().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                }
+                else {
+                    append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                }
+            }
+        });
+        myColumn = column;
+        myProviderClass = providerClass;
     }
 
     @Override
-    public int getSize() {
-      return myValues.length + 1;
-    }
-
-    public boolean isEmpty() {
-      return myValues.length == 0;
+    public CommittedChangesFilterKey getKey() {
+        return new CommittedChangesFilterKey(toString(), CommittedChangesFilterPriority.USER);
     }
 
     @Override
-    public Object getElementAt(int index) {
-      if (index == 0) {
-        return VcsLocalize.committedChangesFilterAll().get();
-      }
-      return myValues[index - 1];
+    public String toString() {
+        return myColumn.getTitle().get();
     }
 
-    public void clear() {
-      myValues = ArrayUtil.EMPTY_STRING_ARRAY;
+    @Override
+    public @Nullable JComponent getFilterUI() {
+        return myScrollPane;
     }
-  }
+
+    @Override
+    public void setFilterBase(List<CommittedChangeList> changeLists) {
+        myPreferredSelection = null;
+        appendFilterBase(changeLists);
+    }
+
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+        myListeners.add(listener);
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+        myListeners.remove(listener);
+    }
+
+    @Override
+    public void resetFilterBase() {
+        myPreferredSelection = myValueList.getSelectedValues();
+        myValueList.clearSelection();
+        myModel.clear();
+        myValueList.revalidate();
+        myValueList.repaint();
+    }
+
+    @Override
+    public void appendFilterBase(List<CommittedChangeList> changeLists) {
+        Object[] oldSelection = myModel.isEmpty() ? myPreferredSelection : myValueList.getSelectedValues();
+
+        myModel.addNext(changeLists, ourConverterInstance);
+        if (oldSelection != null) {
+            for (Object o : oldSelection) {
+                myValueList.setSelectedValue(o, false);
+            }
+        }
+        myValueList.revalidate();
+        myValueList.repaint();
+    }
+
+    private class CommittedChangeListToStringConverter implements Function<CommittedChangeList, String> {
+        @Override
+        public String apply(CommittedChangeList o) {
+            if (myProviderClass == null || myProviderClass.isInstance(o.getVcs().getCommittedChangesProvider())) {
+                return myColumn.getValue(ReceivedChangeList.unwrap(o)).toString();
+            }
+            return null;
+        }
+    }
+
+    @Override
+    public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
+        Object[] selection = myValueList.getSelectedValues();
+        if (myValueList.getSelectedIndex() == 0 || selection.length == 0) {
+            return changeLists;
+        }
+        List<CommittedChangeList> result = new ArrayList<>();
+        for (CommittedChangeList changeList : changeLists) {
+            if (myProviderClass == null || myProviderClass.isInstance(changeList.getVcs().getCommittedChangesProvider())) {
+                for (Object value : selection) {
+                    //noinspection unchecked
+                    if (value.toString().equals(myColumn.getValue(ReceivedChangeList.unwrap(changeList)).toString())) {
+                        result.add(changeList);
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private static class MyListModel extends AbstractListModel {
+        private volatile String[] myValues;
+
+        private MyListModel() {
+            myValues = ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+
+        public <T> void addNext(Collection<T> values, Function<T, String> converter) {
+            TreeSet<String> set = new TreeSet<>(Arrays.asList(myValues));
+            for (T value : values) {
+                String converted = converter.apply(value);
+                if (converted != null) {
+                    // also works as filter
+                    set.add(converted);
+                }
+            }
+            myValues = ArrayUtil.toStringArray(set);
+            fireContentsChanged(this, 0, myValues.length);
+        }
+
+        @Override
+        public int getSize() {
+            return myValues.length + 1;
+        }
+
+        public boolean isEmpty() {
+            return myValues.length == 0;
+        }
+
+        @Override
+        public Object getElementAt(int index) {
+            if (index == 0) {
+                return VcsLocalize.committedChangesFilterAll().get();
+            }
+            return myValues[index - 1];
+        }
+
+        public void clear() {
+            myValues = ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+    }
 }

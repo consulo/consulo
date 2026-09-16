@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.project.impl.internal.DumbServiceImpl;
+import consulo.ui.CheckBox;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
@@ -680,6 +681,27 @@ public class FindInProjectUtil {
         return GlobalSearchScopesCore.directoriesScope(project, withSubdirectories, array);
     }
 
+    public static void initFileFilter(JComboBox<? super String> fileFilter, CheckBox useFileFilter) {
+        fileFilter.setEditable(true);
+        String[] fileMasks = FindSettings.getInstance().getRecentFileMasks();
+        for (int i = fileMasks.length - 1; i >= 0; i--) {
+            fileFilter.addItem(fileMasks[i]);
+        }
+        fileFilter.setEnabled(false);
+
+        useFileFilter.addClickListener(_ -> {
+            if (useFileFilter.getValue()) {
+                fileFilter.setEnabled(true);
+                fileFilter.getEditor().selectAll();
+                fileFilter.getEditor().getEditorComponent().requestFocusInWindow();
+            }
+            else {
+                fileFilter.setEnabled(false);
+            }
+        });
+    }
+
+    @Deprecated
     public static void initFileFilter(JComboBox<? super String> fileFilter, JCheckBox useFileFilter) {
         fileFilter.setEditable(true);
         String[] fileMasks = FindSettings.getInstance().getRecentFileMasks();

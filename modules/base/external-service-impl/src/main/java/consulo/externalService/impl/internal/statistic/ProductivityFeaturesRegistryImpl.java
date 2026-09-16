@@ -17,6 +17,7 @@ package consulo.externalService.impl.internal.statistic;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.externalService.localize.FeatureStatisticsLocalize;
 import consulo.externalService.statistic.*;
 import consulo.logging.Logger;
 import consulo.util.jdom.JDOMUtil;
@@ -141,7 +142,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
             return new FeatureDescriptor(
                 WELCOME,
                 "consulo.ide.tipOfDay.impl.TipOfDayLocalize@adaptivewelcome",
-                FeatureStatisticsBundle.message("feature.statistics.welcome.tip.name")
+                FeatureStatisticsLocalize.featureStatisticsWelcomeTipName().get()
             );
         }
         return myFeatures.get(id);
