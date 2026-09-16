@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import jakarta.inject.Singleton;
 
 import java.nio.charset.Charset;
@@ -42,6 +43,19 @@ public class LightEncodingProjectManager extends LightEncodingManager implements
   @Override
   public Map<? extends VirtualFile, ? extends Charset> getAllMappings() {
     return Map.of();
+  }
+
+  @Override
+  public void setMapping(Map<? extends VirtualFile, ? extends Charset> mapping) {
+  }
+
+  @Override
+  public Map<? extends VirtualFilePointer, ? extends Charset> getAllPointersMappings() {
+    return Map.of();
+  }
+
+  @Override
+  public void setPointerMapping(Map<? extends VirtualFilePointer, ? extends Charset> mapping) {
   }
 
   @Override

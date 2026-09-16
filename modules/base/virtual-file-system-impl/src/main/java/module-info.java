@@ -38,4 +38,3 @@ module consulo.virtual.file.system.impl {
 
     opens consulo.virtualFileSystem.impl.internal.encoding to consulo.util.xml.serializer;
 }
-

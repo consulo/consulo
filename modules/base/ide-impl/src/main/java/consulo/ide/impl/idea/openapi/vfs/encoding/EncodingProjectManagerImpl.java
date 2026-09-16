@@ -23,6 +23,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
@@ -260,6 +261,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             .collect(Collectors.toMap(p -> p.getFirst(), p -> p.getSecond(), (c1, c2) -> c1));
     }
 
+    @Override
     public void setMapping(Map<? extends VirtualFile, ? extends Charset> mapping) {
         Application app = myProject.getApplication();
         app.assertWriteAccessAllowed();
@@ -310,6 +312,56 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             }
         });
 
+        updateMapping(newMap);
+    }
+
+    /**
+     * @return readonly map of current mappings. to modify mappings use {@link #setPointerMapping(Map)}
+     */
+    @Override
+    public Map<? extends VirtualFilePointer, ? extends Charset> getAllPointersMappings() {
+        return Collections.unmodifiableMap(myMapping);
+    }
+
+    /**
+     * Applies a whole mapping at once. Every caller that has more than one directory to configure must use this rather
+     * than a {@link #setEncoding} per directory: that one starts a modal reload each time, and a modal progress pumps
+     * the event queue, so a second queued call re-enters this code on the EDT and nests another progress.
+     */
+    @RequiredUIAccess
+    @Override
+    public void setPointerMapping(Map<? extends VirtualFilePointer, ? extends Charset> mapping) {
+        myProject.getApplication().assertIsDispatchThread();
+        FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
+        Map<VirtualFilePointer, Charset> newMap = new HashMap<>(mapping.size());
+
+        // ChangeFileEncodingAction should not start progress "reload files..."
+        suppressReloadDuring(() -> {
+            ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+            for (Map.Entry<? extends VirtualFilePointer, ? extends Charset> entry : mapping.entrySet()) {
+                VirtualFilePointer filePointer = entry.getKey();
+                Charset charset = entry.getValue();
+                if (charset == null) {
+                    throw new IllegalArgumentException("Null charset for " + filePointer + "; mapping: " + mapping);
+                }
+                if (filePointer == null) {
+                    myProjectCharset = charset;
+                }
+                else {
+                    VirtualFile virtualFile = filePointer.getFile();
+                    if (virtualFile != null && !fileIndex.isInContent(virtualFile)) {
+                        continue;
+                    }
+                    newMap.put(filePointer, charset);
+                }
+            }
+        });
+
+        updateMapping(newMap);
+    }
+
+    private void updateMapping(Map<VirtualFilePointer, Charset> newMap) {
+        Map<VirtualFilePointer, Charset> oldMap = new HashMap<>(myMapping);
         myMapping.clear();
         myMapping.putAll(newMap);
 
