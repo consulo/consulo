@@ -17,6 +17,7 @@ package consulo.it.vfs;
 
 import consulo.it.HeadlessApplicationExtension;
 import consulo.it.internal.HeadlessContentFileTypeDetector;
+import consulo.it.internal.HeadlessFileTypeManager;
 import consulo.it.internal.HeadlessDetectedFileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -88,6 +89,43 @@ public class ContentBasedFileTypeDetectionTest {
         assertThat(file.getFileType()).isSameAs(HeadlessDetectedFileType.INSTANCE);
         assertThat(HeadlessContentFileTypeDetector.detectCallCount(file.getName()))
             .as("the second lookup must come from the detection cache")
+            .isEqualTo(1);
+    }
+
+    /**
+     * The detection cache is persisted in a file attribute, so a result that has not changed must not be written back.
+     * {@code isFileOfType} resolves the type the same way a plain lookup does, so asking about a type must not cost a
+     * second write either - it runs on nearly every editor pass, and the writes go to the VFS records.
+     */
+    @Test
+    public void anUnchangedDetectionIsWrittenToTheAttributeOnlyOnce() throws Exception {
+        VirtualFile file = writeFile("write-once", MARKED_CONTENT);
+        HeadlessFileTypeManager.resetFlagWriteCount();
+
+        assertThat(file.getFileType()).isSameAs(HeadlessDetectedFileType.INSTANCE);
+        assertThat(HeadlessFileTypeManager.flagWriteCount(file))
+            .as("the first detection must persist its result once")
+            .isEqualTo(1);
+
+        assertThat(file.getFileType()).isSameAs(HeadlessDetectedFileType.INSTANCE);
+        assertThat(FileTypeRegistry.getInstance().isFileOfType(file, HeadlessDetectedFileType.INSTANCE)).isTrue();
+        assertThat(FileTypeRegistry.getInstance().isFileOfType(file, UnknownFileType.INSTANCE)).isFalse();
+
+        assertThat(HeadlessFileTypeManager.flagWriteCount(file))
+            .as("re-asking for a type that did not change must not write the attribute again")
+            .isEqualTo(1);
+    }
+
+    @Test
+    public void plainTextDetectionIsAlsoWrittenOnlyOnce() throws Exception {
+        VirtualFile file = writeFile("write-once-text", "nothing special in here\n".getBytes(StandardCharsets.UTF_8));
+        HeadlessFileTypeManager.resetFlagWriteCount();
+
+        assertThat(file.getFileType()).isSameAs(PlainTextFileType.INSTANCE);
+        assertThat(file.getFileType()).isSameAs(PlainTextFileType.INSTANCE);
+
+        assertThat(HeadlessFileTypeManager.flagWriteCount(file))
+            .as("a text result that did not change must be persisted once")
             .isEqualTo(1);
     }
 

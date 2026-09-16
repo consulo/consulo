@@ -44,7 +44,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Mock {@code FileTypeManager} for the integration-test harness. The production impl
@@ -63,9 +65,30 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
     private final FileTypeDetectionService myDetectionService;
 
+    private static final Map<String, AtomicInteger> ourFlagWrites = new ConcurrentHashMap<>();
+
+    /**
+     * How often the detection cache was written to the persistent file attribute for {@code file}. Detection results
+     * that did not change must not be written again, so a test can hold this to one write per file.
+     */
+    public static int flagWriteCount(VirtualFile file) {
+        AtomicInteger count = ourFlagWrites.get(file.getPath());
+        return count == null ? 0 : count.get();
+    }
+
+    public static void resetFlagWriteCount() {
+        ourFlagWrites.clear();
+    }
+
     @Inject
     public HeadlessFileTypeManager(Application application) {
         myDetectionService = new FileTypeDetectionService(application, 0, this) {
+            @Override
+            protected void writeFlagsToCache(VirtualFile file, int flags) {
+                ourFlagWrites.computeIfAbsent(file.getPath(), path -> new AtomicInteger()).incrementAndGet();
+                super.writeFlagsToCache(file, flags);
+            }
+
             @Override
             protected FileType getDefaultTextFileType() {
                 return PlainTextFileType.INSTANCE;
