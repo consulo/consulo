@@ -368,6 +368,34 @@ public abstract class FileTypeDetectionService {
         return fileType;
     }
 
+    /**
+     * Whether the content of {@code file} is detected as {@code type}, without persisting a plain text or binary
+     * verdict. This runs on nearly every editor pass for files the name cannot classify, and the detection cache is an
+     * inline VFS record attribute - persisting every such answer would write into the records file for every file the
+     * IDE merely looks at. Only a type a detector actually claimed is worth caching.
+     */
+    public boolean isDetectedFromContentAs(VirtualFile file, FileType type) {
+        if (!isDetectable(file)) {
+            return false;
+        }
+
+        FileType detectedFromContentFileType = file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
+        if (detectedFromContentFileType != null) {
+            return detectedFromContentFileType.equals(type);
+        }
+
+        try {
+            FileType detected = detectFromContent(file, null, FileTypeDetector.EP_NAME.getExtensionList());
+            if (detected != UnknownFileType.INSTANCE && detected != getDefaultTextFileType()) {
+                cacheAutoDetectedFileType(file, detected);
+            }
+            return detected.equals(type);
+        }
+        catch (IOException ignored) {
+            return false;
+        }
+    }
+
     // read auto-detection flags from the persistent FS file attributes. If file attributes are absent, return 0 for flags
     // returns three bits value for AUTO_DETECTED_AS_TEXT_MASK, AUTO_DETECTED_AS_BINARY_MASK and AUTO_DETECT_WAS_RUN_MASK bits
     protected byte readFlagsFromCache(VirtualFile file) {

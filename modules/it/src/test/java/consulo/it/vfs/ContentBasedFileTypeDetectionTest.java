@@ -129,6 +129,23 @@ public class ContentBasedFileTypeDetectionTest {
             .isEqualTo(1);
     }
 
+    /**
+     * The detection cache is an inline VFS record attribute, and {@code isFileOfType} runs on nearly every editor pass.
+     * A plain text or binary verdict reached through it must not be persisted, or the IDE writes into the records file
+     * for every file it merely looks at.
+     */
+    @Test
+    public void askingAboutATypeNeverPersistsAPlainTextVerdict() throws Exception {
+        VirtualFile file = writeFile("no-write-on-ask", "nothing special in here\n".getBytes(StandardCharsets.UTF_8));
+        HeadlessFileTypeManager.resetFlagWriteCount();
+
+        assertThat(FileTypeRegistry.getInstance().isFileOfType(file, HeadlessDetectedFileType.INSTANCE)).isFalse();
+
+        assertThat(HeadlessFileTypeManager.flagWriteCount(file))
+            .as("a type question whose answer is plain text must not touch the persistent cache")
+            .isZero();
+    }
+
     @Test
     public void isFileOfTypeAnswersFromContentToo() throws Exception {
         VirtualFile marked = writeFile("of-type-marked", MARKED_CONTENT);

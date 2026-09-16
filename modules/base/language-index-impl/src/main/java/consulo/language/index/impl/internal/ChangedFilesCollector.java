@@ -189,7 +189,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
 
     void ensureUpToDate() {
         if (!FileBasedIndexImpl.isUpToDateCheckEnabled()) {
-            if (Boolean.getBoolean(DEBUG_PROPERTY) && getEventMerger().hasChanges()) {
+            if (Boolean.getBoolean(DEBUG_PROPERTY)) {
                 LOG.warn("DIRTY-DEBUG drain-disabled pending=" + getEventMerger().getApproximateChangesCount()
                     + " ids=" + Arrays.toString(getEventMerger().getPendingFileIds())
                     + " collector=" + System.identityHashCode(this)
@@ -294,8 +294,9 @@ final class ChangedFilesCollector extends IndexedFilesListener {
         int publishedEventIndex = getEventMerger().getPublishedEventIndex();
         int processedEventIndex = myProcessedEventIndex.get();
         if (processedEventIndex == publishedEventIndex) {
-            if (Boolean.getBoolean(DEBUG_PROPERTY) && getEventMerger().hasChanges()) {
+            if (Boolean.getBoolean(DEBUG_PROPERTY)) {
                 LOG.warn("DIRTY-DEBUG drain-skipped index=" + publishedEventIndex
+                    + " hasChanges=" + getEventMerger().hasChanges()
                     + " pending=" + getEventMerger().getApproximateChangesCount()
                     + " ids=" + Arrays.toString(getEventMerger().getPendingFileIds())
                     + " collector=" + System.identityHashCode(this)

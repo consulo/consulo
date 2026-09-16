@@ -56,6 +56,11 @@ public final class VfsEventsMerger {
     while (true) { // CAS-like loop:
       ChangeInfo existingChangeInfo = myChangeInfos.get(fileId);
       if (existingChangeInfo != null && existingChangeInfo.eventMask == mask) {
+        if (Boolean.getBoolean(IndexedFilesListener.DEBUG_PROPERTY)) {
+          FileBasedIndexImpl.LOG.warn("DIRTY-DEBUG merger-duplicate id=" + fileId + " mask=" + mask
+            + " pending=" + myChangeInfos.size() + " publishedIndex=" + myPublishedEventIndex.get()
+            + " thread=" + Thread.currentThread().getName());
+        }
         return; // nothing to update
       }
 
@@ -72,6 +77,12 @@ public final class VfsEventsMerger {
       }
     }
     myPublishedEventIndex.incrementAndGet();
+
+    if (Boolean.getBoolean(IndexedFilesListener.DEBUG_PROPERTY)) {
+      FileBasedIndexImpl.LOG.warn("DIRTY-DEBUG merger-record id=" + fileId + " mask=" + mask
+        + " pending=" + myChangeInfos.size() + " publishedIndex=" + myPublishedEventIndex.get()
+        + " thread=" + Thread.currentThread().getName());
+    }
   }
 
   @FunctionalInterface

@@ -2297,21 +2297,37 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
+    private static final AtomicInteger ourRejectedRequestLogBudget = new AtomicInteger(200);
+
     private final FileIndexingRequestUpdateTask myForceUpdateTask = new FileIndexingRequestUpdateTask();
 
     private void forceUpdate(@Nullable Project project, @Nullable SearchScope filter, @Nullable VirtualFile restrictedTo) {
         Collection<FileIndexingRequest> allFilesToUpdate = getAllFilesToUpdate();
 
         if (!allFilesToUpdate.isEmpty()) {
-            List<FileIndexingRequest> virtualFilesToBeUpdatedForProject = ContainerUtil.filter(
-                allFilesToUpdate,
-                new ProjectFilesCondition(createProjectIndexableFiles(project), filter, restrictedTo)
-            );
+            IdFilter indexableFilesFilter = createProjectIndexableFiles(project);
+            ProjectFilesCondition condition = new ProjectFilesCondition(indexableFilesFilter, filter, restrictedTo);
+            List<FileIndexingRequest> virtualFilesToBeUpdatedForProject = ContainerUtil.filter(allFilesToUpdate, condition);
 
             if (indexingDebugEnabled()) {
                 LOG.warn("INDEX-DEBUG forceUpdate project=" + (project == null ? "null" : project.getName())
                     + " candidates=" + allFilesToUpdate.size() + " accepted=" + virtualFilesToBeUpdatedForProject.size()
                     + " restrictedTo=" + (restrictedTo == null ? "null" : restrictedTo.getName()));
+
+                if (virtualFilesToBeUpdatedForProject.isEmpty()) {
+                    for (FileIndexingRequest request : allFilesToUpdate) {
+                        if (ourRejectedRequestLogBudget.decrementAndGet() < 0) {
+                            break;
+                        }
+                        VirtualFile requestFile = request.getFile();
+                        int requestId = request.getFileId();
+                        LOG.warn("INDEX-DEBUG forceUpdate-rejected id=" + requestId
+                            + " file=" + (requestFile == null ? "null" : requestFile.getPath())
+                            + " delete=" + request.isDeleteRequest()
+                            + " inFilter=" + (indexableFilesFilter == null ? "no-filter" : indexableFilesFilter.containsFileId(requestId))
+                            + " inScope=" + (requestFile == null ? "null" : belongsToScope(requestFile, restrictedTo, filter)));
+                    }
+                }
             }
 
             if (!virtualFilesToBeUpdatedForProject.isEmpty()) {

@@ -491,7 +491,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             return false;
         }
 
-        return type.equals(myDetectionService.getOrDetectFromContent(file, null));
+        return myDetectionService.isDetectedFromContentAs(file, type);
     }
 
     @Override
