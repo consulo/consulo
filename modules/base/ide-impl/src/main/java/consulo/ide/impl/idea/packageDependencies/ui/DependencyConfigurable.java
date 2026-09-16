@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.ide.util.scopeChooser.PackageSetChooserCombo;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
@@ -30,6 +28,7 @@ import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.table.ListTableModel;
@@ -43,242 +42,256 @@ import java.util.*;
 import java.util.List;
 
 public class DependencyConfigurable implements Configurable {
-  private final Project myProject;
-  private MyTableModel myDenyRulesModel;
-  private MyTableModel myAllowRulesModel;
-  private TableView<DependencyRule> myDenyTable;
-  private TableView<DependencyRule> myAllowTable;
+    private final Project myProject;
+    private MyTableModel myDenyRulesModel;
+    private MyTableModel myAllowRulesModel;
+    private TableView<DependencyRule> myDenyTable;
+    private TableView<DependencyRule> myAllowTable;
 
-  private final ColumnInfo<DependencyRule, NamedScope> DENY_USAGES_OF = new LeftColumn(AnalysisScopeBundle.message("dependency.configurable.deny.table.column1"));
-  private final ColumnInfo<DependencyRule, NamedScope> DENY_USAGES_IN = new RightColumn(AnalysisScopeBundle.message("dependency.configurable.deny.table.column2"));
-  private final ColumnInfo<DependencyRule, NamedScope> ALLOW_USAGES_OF = new LeftColumn(AnalysisScopeBundle.message("dependency.configurable.allow.table.column1"));
-  private final ColumnInfo<DependencyRule, NamedScope> ALLOW_USAGES_ONLY_IN = new RightColumn(AnalysisScopeBundle.message("dependency.configurable.allow.table.column2"));
+    private final ColumnInfo<DependencyRule, NamedScope> DENY_USAGES_OF =
+        new LeftColumn(AnalysisScopeLocalize.dependencyConfigurableDenyTableColumn1());
+    private final ColumnInfo<DependencyRule, NamedScope> DENY_USAGES_IN =
+        new RightColumn(AnalysisScopeLocalize.dependencyConfigurableDenyTableColumn2());
+    private final ColumnInfo<DependencyRule, NamedScope> ALLOW_USAGES_OF =
+        new LeftColumn(AnalysisScopeLocalize.dependencyConfigurableAllowTableColumn1());
+    private final ColumnInfo<DependencyRule, NamedScope> ALLOW_USAGES_ONLY_IN =
+        new RightColumn(AnalysisScopeLocalize.dependencyConfigurableAllowTableColumn2());
 
-  private JPanel myWholePanel;
-  private JPanel myDenyPanel;
-  private JPanel myAllowPanel;
-  private JCheckBox mySkipImports;
-  private static final Logger LOG = Logger.getInstance(DependencyConfigurable.class);
+    private JPanel myWholePanel;
+    private JPanel myDenyPanel;
+    private JPanel myAllowPanel;
+    private JCheckBox mySkipImports;
+    private static final Logger LOG = Logger.getInstance(DependencyConfigurable.class);
 
-  public DependencyConfigurable(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public LocalizeValue getDisplayName() {
-    return AnalysisScopeLocalize.dependencyConfigurableDisplayName();
-  }
-
-  @Override
-  public JComponent createComponent() {
-    myDenyRulesModel = new MyTableModel(myProject, new ColumnInfo[]{DENY_USAGES_OF, DENY_USAGES_IN}, true);
-    myDenyRulesModel.setSortable(false);
-
-    myAllowRulesModel = new MyTableModel(myProject, new ColumnInfo[]{ALLOW_USAGES_OF, ALLOW_USAGES_ONLY_IN}, false);
-    myAllowRulesModel.setSortable(false);
-
-    myDenyTable = new TableView<DependencyRule>(myDenyRulesModel);
-    myDenyPanel.add(createRulesPanel(myDenyRulesModel, myDenyTable), BorderLayout.CENTER);
-    myAllowTable = new TableView<DependencyRule>(myAllowRulesModel);
-    myAllowPanel.add(createRulesPanel(myAllowRulesModel, myAllowTable), BorderLayout.CENTER);
-    return myWholePanel;
-  }
-
-  private JPanel createRulesPanel(MyTableModel model, TableView<DependencyRule> table) {
-    table.setSurrendersFocusOnKeystroke(true);
-    table.setPreferredScrollableViewportSize(new Dimension(300, 150));
-    table.setShowGrid(true);
-    table.setRowHeight(new PackageSetChooserCombo(myProject, null).getPreferredSize().height);
-
-    return ToolbarDecorator.createDecorator(table).createPanel();
-  }
-
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myDenyTable;
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-    stopTableEditing();
-    DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
-    validationManager.removeAllRules();
-    Map<String, PackageSet> unUsed = new HashMap<>(validationManager.getUnnamedScopes());
-    List<DependencyRule> modelItems = new ArrayList<DependencyRule>();
-    modelItems.addAll(myDenyRulesModel.getItems());
-    modelItems.addAll(myAllowRulesModel.getItems());
-    for (DependencyRule rule : modelItems) {
-      validationManager.addRule(rule);
-      NamedScope fromScope = rule.getFromScope();
-      if (fromScope instanceof NamedScope.UnnamedScope) {
-        PackageSet fromPackageSet = fromScope.getValue();
-        LOG.assertTrue(fromPackageSet != null);
-        unUsed.remove(fromPackageSet.getText());
-      }
-      NamedScope toScope = rule.getToScope();
-      if (toScope instanceof NamedScope.UnnamedScope) {
-        PackageSet toPackageSet = toScope.getValue();
-        LOG.assertTrue(toPackageSet != null);
-        unUsed.remove(toPackageSet.getText());
-      }
-    }
-    for (String text : unUsed.keySet()) {//cleanup
-      validationManager.getUnnamedScopes().remove(text);
+    public DependencyConfigurable(Project project) {
+        myProject = project;
     }
 
-    validationManager.setSkipImportStatements(mySkipImports.isSelected());
-
-    DaemonCodeAnalyzer.getInstance(myProject).restart();
-  }
-
-  private void stopTableEditing() {
-    myDenyTable.stopEditing();
-    myAllowTable.stopEditing();
-  }
-
-  @Override
-  public void reset() {
-    DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
-    DependencyRule[] rules = validationManager.getAllRules();
-    ArrayList<DependencyRule> denyList = new ArrayList<DependencyRule>();
-    ArrayList<DependencyRule> allowList = new ArrayList<DependencyRule>();
-    for (DependencyRule rule : rules) {
-      if (rule.isDenyRule()) {
-        denyList.add(rule.createCopy());
-      }
-      else {
-        allowList.add(rule.createCopy());
-      }
+    @Override
+    public LocalizeValue getDisplayName() {
+        return AnalysisScopeLocalize.dependencyConfigurableDisplayName();
     }
-    myDenyRulesModel.setItems(denyList);
-    myAllowRulesModel.setItems(allowList);
-    mySkipImports.setSelected(validationManager.skipImportStatements());
-  }
 
-  @Override
-  public boolean isModified() {
-    DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
-    if (validationManager.skipImportStatements() != mySkipImports.isSelected()) return true;
-    List<DependencyRule> rules = new ArrayList<DependencyRule>();
-    rules.addAll(myDenyRulesModel.getItems());
-    rules.addAll(myAllowRulesModel.getItems());
-    return !Arrays.asList(validationManager.getAllRules()).equals(rules);
-  }
+    @Override
+    @RequiredUIAccess
+    public JComponent createComponent() {
+        myDenyRulesModel = new MyTableModel(myProject, new ColumnInfo[]{DENY_USAGES_OF, DENY_USAGES_IN}, true);
+        myDenyRulesModel.setSortable(false);
 
-  @Override
-  public void disposeUIResources() {
-  }
+        myAllowRulesModel = new MyTableModel(myProject, new ColumnInfo[]{ALLOW_USAGES_OF, ALLOW_USAGES_ONLY_IN}, false);
+        myAllowRulesModel.setSortable(false);
 
-  private static final DefaultTableCellRenderer
-    CELL_RENDERER = new DefaultTableCellRenderer() {
-      @Override
-      public Component getTableCellRendererComponent(JTable table,
-                                                     Object value,
-                                                     boolean isSelected,
-                                                     boolean hasFocus,
-                                                     int row,
-                                                     int column) {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        setText(value == null ? "" : ((NamedScope)value).getName());
-        return this;
-      }
+        myDenyTable = new TableView<>(myDenyRulesModel);
+        myDenyPanel.add(createRulesPanel(myDenyRulesModel, myDenyTable), BorderLayout.CENTER);
+        myAllowTable = new TableView<>(myAllowRulesModel);
+        myAllowPanel.add(createRulesPanel(myAllowRulesModel, myAllowTable), BorderLayout.CENTER);
+        return myWholePanel;
+    }
+
+    private JPanel createRulesPanel(MyTableModel model, TableView<DependencyRule> table) {
+        table.setSurrendersFocusOnKeystroke(true);
+        table.setPreferredScrollableViewportSize(new Dimension(300, 150));
+        table.setShowGrid(true);
+        table.setRowHeight(new PackageSetChooserCombo(myProject, null).getPreferredSize().height);
+
+        return ToolbarDecorator.createDecorator(table).createPanel();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public JComponent getPreferredFocusedComponent() {
+        return myDenyTable;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        stopTableEditing();
+        DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
+        validationManager.removeAllRules();
+        Map<String, PackageSet> unUsed = new HashMap<>(validationManager.getUnnamedScopes());
+        List<DependencyRule> modelItems = new ArrayList<>();
+        modelItems.addAll(myDenyRulesModel.getItems());
+        modelItems.addAll(myAllowRulesModel.getItems());
+        for (DependencyRule rule : modelItems) {
+            validationManager.addRule(rule);
+            NamedScope fromScope = rule.getFromScope();
+            if (fromScope instanceof NamedScope.UnnamedScope) {
+                PackageSet fromPackageSet = fromScope.getValue();
+                LOG.assertTrue(fromPackageSet != null);
+                unUsed.remove(fromPackageSet.getText());
+            }
+            NamedScope toScope = rule.getToScope();
+            if (toScope instanceof NamedScope.UnnamedScope) {
+                PackageSet toPackageSet = toScope.getValue();
+                LOG.assertTrue(toPackageSet != null);
+                unUsed.remove(toPackageSet.getText());
+            }
+        }
+        for (String text : unUsed.keySet()) {//cleanup
+            validationManager.getUnnamedScopes().remove(text);
+        }
+
+        validationManager.setSkipImportStatements(mySkipImports.isSelected());
+
+        DaemonCodeAnalyzer.getInstance(myProject).restart();
+    }
+
+    private void stopTableEditing() {
+        myDenyTable.stopEditing();
+        myAllowTable.stopEditing();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void reset() {
+        DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
+        DependencyRule[] rules = validationManager.getAllRules();
+        List<DependencyRule> denyList = new ArrayList<>();
+        List<DependencyRule> allowList = new ArrayList<>();
+        for (DependencyRule rule : rules) {
+            if (rule.isDenyRule()) {
+                denyList.add(rule.createCopy());
+            }
+            else {
+                allowList.add(rule.createCopy());
+            }
+        }
+        myDenyRulesModel.setItems(denyList);
+        myAllowRulesModel.setItems(allowList);
+        mySkipImports.setSelected(validationManager.skipImportStatements());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean isModified() {
+        DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
+        if (validationManager.skipImportStatements() != mySkipImports.isSelected()) {
+            return true;
+        }
+        List<DependencyRule> rules = new ArrayList<>();
+        rules.addAll(myDenyRulesModel.getItems());
+        rules.addAll(myAllowRulesModel.getItems());
+        return !Arrays.asList(validationManager.getAllRules()).equals(rules);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void disposeUIResources() {
+    }
+
+    private static final DefaultTableCellRenderer
+        CELL_RENDERER = new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(
+            JTable table,
+            Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setText(value == null ? "" : ((NamedScope) value).getName());
+            return this;
+        }
     };
 
-  public abstract class MyColumnInfo extends ColumnInfo<DependencyRule, NamedScope> {
-    protected MyColumnInfo(String name) {
-      super(name);
-    }
-
-    @Override
-    public boolean isCellEditable(DependencyRule rule) {
-      return true;
-    }
-
-    @Override
-    public TableCellRenderer getRenderer(DependencyRule rule) {
-      return CELL_RENDERER;
-    }
-
-    @Override
-    public TableCellEditor getEditor(DependencyRule packageSetDependencyRule) {
-      return new AbstractTableCellEditor() {
-        private PackageSetChooserCombo myCombo;
-
-        @Override
-        public Object getCellEditorValue() {
-          return myCombo.getSelectedScope();
+    public abstract class MyColumnInfo extends ColumnInfo<DependencyRule, NamedScope> {
+        protected MyColumnInfo(LocalizeValue name) {
+            super(name);
         }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-          myCombo = new PackageSetChooserCombo(myProject, value == null ? null : ((NamedScope)value).getName());
-          return new CellEditorComponentWithBrowseButton<JComponent>(myCombo, this);
+        public boolean isCellEditable(DependencyRule rule) {
+            return true;
         }
-      };
+
+        @Override
+        public TableCellRenderer getRenderer(DependencyRule rule) {
+            return CELL_RENDERER;
+        }
+
+        @Override
+        public TableCellEditor getEditor(DependencyRule packageSetDependencyRule) {
+            return new AbstractTableCellEditor() {
+                private PackageSetChooserCombo myCombo;
+
+                @Override
+                public Object getCellEditorValue() {
+                    return myCombo.getSelectedScope();
+                }
+
+                @Override
+                public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                    myCombo = new PackageSetChooserCombo(myProject, value == null ? null : ((NamedScope) value).getName());
+                    return new CellEditorComponentWithBrowseButton<>(myCombo, this);
+                }
+            };
+        }
+
+        @Override
+        public abstract void setValue(DependencyRule rule, NamedScope packageSet);
     }
 
-    @Override
-    public abstract void setValue(DependencyRule rule, NamedScope packageSet);
-  }
+    private class RightColumn extends MyColumnInfo {
+        public RightColumn(LocalizeValue name) {
+            super(name);
+        }
 
-  private class RightColumn extends MyColumnInfo {
-    public RightColumn(String name) {
-      super(name);
+        @Override
+        public NamedScope valueOf(DependencyRule rule) {
+            return rule.getFromScope();
+        }
+
+        @Override
+        public void setValue(DependencyRule rule, NamedScope set) {
+            rule.setFromScope(set);
+        }
     }
 
-    @Override
-    public NamedScope valueOf(DependencyRule rule) {
-      return rule.getFromScope();
+    private class LeftColumn extends MyColumnInfo {
+        public LeftColumn(LocalizeValue name) {
+            super(name);
+        }
+
+        @Override
+        public NamedScope valueOf(DependencyRule rule) {
+            return rule.getToScope();
+        }
+
+        @Override
+        public void setValue(DependencyRule rule, NamedScope set) {
+            rule.setToScope(set);
+        }
     }
 
-    @Override
-    public void setValue(DependencyRule rule, NamedScope set) {
-      rule.setFromScope(set);
-    }
-  }
+    private static class MyTableModel extends ListTableModel<DependencyRule> implements EditableModel {
+        private final Project myProject;
+        private final boolean myDenyRule;
 
-  private class LeftColumn extends MyColumnInfo {
-    public LeftColumn(String name) {
-      super(name);
-    }
+        public MyTableModel(Project project, ColumnInfo[] columnInfos, boolean isDenyRule) {
+            super(columnInfos);
+            myProject = project;
+            myDenyRule = isDenyRule;
+        }
 
-    @Override
-    public NamedScope valueOf(DependencyRule rule) {
-      return rule.getToScope();
-    }
+        @Override
+        public void addRow() {
+            List<DependencyRule> newList = new ArrayList<>(getItems());
+            NamedScope scope = DefaultScopesProvider.getAllScope();
+            newList.add(new DependencyRule(scope, scope, myDenyRule));
+            setItems(newList);
+        }
 
-    @Override
-    public void setValue(DependencyRule rule, NamedScope set) {
-      rule.setToScope(set);
+        @Override
+        public void exchangeRows(int index1, int index2) {
+            List<DependencyRule> newList = new ArrayList<>(getItems());
+            DependencyRule r1 = newList.get(index1);
+            DependencyRule r2 = newList.get(index2);
+            newList.set(index1, r2);
+            newList.set(index2, r1);
+            setItems(newList);
+        }
     }
-  }
-
-  private static class MyTableModel extends ListTableModel<DependencyRule> implements EditableModel {
-    private final Project myProject;
-    private final boolean myDenyRule;
-
-    public MyTableModel(Project project, ColumnInfo[] columnInfos, boolean isDenyRule) {
-      super(columnInfos);
-      myProject = project;
-      myDenyRule = isDenyRule;
-    }
-
-    @Override
-    public void addRow() {
-      ArrayList<DependencyRule> newList = new ArrayList<DependencyRule>(getItems());
-      NamedScope scope = DefaultScopesProvider.getAllScope();
-      newList.add(new DependencyRule(scope, scope, myDenyRule));
-      setItems(newList);
-    }
-
-    @Override
-    public void exchangeRows(int index1, int index2) {
-      ArrayList<DependencyRule> newList = new ArrayList<DependencyRule>(getItems());
-      DependencyRule r1 = newList.get(index1);
-      DependencyRule r2 = newList.get(index2);
-      newList.set(index1, r2);
-      newList.set(index2, r1);
-      setItems(newList);
-    }
-  }
 }

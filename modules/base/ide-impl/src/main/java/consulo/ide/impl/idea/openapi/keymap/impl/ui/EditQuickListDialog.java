@@ -16,54 +16,54 @@
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.ui.ex.impl.internal.action.QuickListImpl;
-import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 
 import javax.swing.*;
 
 public class EditQuickListDialog extends DialogWrapper {
-  private QuickListImpl myList;
-  private final QuickListImpl[] myAllQuickLists;
-  private QuickListPanel myPanel;
-  private final Project myProject;
+    private QuickListImpl myList;
+    private final QuickListImpl[] myAllQuickLists;
+    private QuickListPanel myPanel;
+    private final Project myProject;
 
-  public EditQuickListDialog(Project project, QuickListImpl list, QuickListImpl[] allQuickLists) {
-    super(project, true);
-    myProject = project;
-    myList = list;
-    myAllQuickLists = allQuickLists;
-    setTitle(KeyMapBundle.message("edit.quick.list.dialog.title"));
-    init();
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    myPanel = new QuickListPanel(myList, myAllQuickLists);
-    return myPanel.getPanel();
-  }
-
-  public QuickListImpl getList() {
-    return myList;
-  }
-
-  @Override
-  protected void doOKAction() {
-    ListModel model = myPanel.getActionsList().getModel();
-    int size = model.getSize();
-    String[] ids = new String[size];
-    for (int i = 0; i < size; i++) {
-      String actionId = (String)model.getElementAt(i);
-      ids[i] = actionId;
+    public EditQuickListDialog(Project project, QuickListImpl list, QuickListImpl[] allQuickLists) {
+        super(project, true);
+        myProject = project;
+        myList = list;
+        myAllQuickLists = allQuickLists;
+        setTitle(KeyMapLocalize.editQuickListDialogTitle());
+        init();
     }
 
-    myList = new QuickListImpl(myPanel.getDisplayName(), myPanel.getDescription(), ids, myList.isReadonly());
+    @Override
+    protected JComponent createCenterPanel() {
+        myPanel = new QuickListPanel(myList, myAllQuickLists);
+        return myPanel.getPanel();
+    }
 
-    super.doOKAction();
-  }
+    public QuickListImpl getList() {
+        return myList;
+    }
 
-  @Override
-  protected String getDimensionServiceKey() {
-    return "#consulo.ide.impl.idea.openapi.keymap.impl.ui.EditQuickListDialog";
-  }
+    @Override
+    protected void doOKAction() {
+        ListModel model = myPanel.getActionsList().getModel();
+        int size = model.getSize();
+        String[] ids = new String[size];
+        for (int i = 0; i < size; i++) {
+            String actionId = (String) model.getElementAt(i);
+            ids[i] = actionId;
+        }
+
+        myList = new QuickListImpl(myPanel.getDisplayName(), myPanel.getDescription(), ids, myList.isReadonly());
+
+        super.doOKAction();
+    }
+
+    @Override
+    protected String getDimensionServiceKey() {
+        return "#consulo.ide.impl.idea.openapi.keymap.impl.ui.EditQuickListDialog";
+    }
 }

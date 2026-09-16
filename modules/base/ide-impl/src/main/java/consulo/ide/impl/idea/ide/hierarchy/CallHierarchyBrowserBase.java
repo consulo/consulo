@@ -49,7 +49,6 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         return null;
     }
 
-    
     @Override
     protected Key<Object> getBrowserDataKey() {
         return CALL_HIERARCHY_BROWSER_DATA_KEY;
@@ -74,18 +73,15 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    
     protected String getActionPlace() {
         return ActionPlaces.CALL_HIERARCHY_VIEW_TOOLBAR;
     }
 
-    
     @Override
     protected LocalizeValue getPrevOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyCallPrevOccurenceName();
     }
 
-    
     @Override
     protected LocalizeValue getNextOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyCallNextOccurenceName();

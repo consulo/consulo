@@ -5,9 +5,10 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.ui.UIAccess;
 import consulo.component.ComponentManager;
+import consulo.document.localize.DocumentLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -18,183 +19,182 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public interface FileDocumentManager extends SavingRequestor {
-  
-  public static FileDocumentManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(FileDocumentManager.class);
-  }
 
-  /**
-   * Returns the document for the specified virtual file.<p/>
-   * <p>
-   * Documents are cached on weak or strong references, depending on the nature of the virtual file. If the document for the given virtual file is not yet cached,
-   * the file's contents are read from VFS and loaded into heap memory. An appropriate encoding is used. All line separators are converted to {@code \n}.<p/>
-   * <p>
-   * Should be invoked in a read action.
-   *
-   * @param file the file for which the document is requested.
-   * @return the document, or null if the file represents a directory, or is binary without an associated decompiler,
-   * or is too large.
-   * @see VirtualFile#contentsToByteArray()
-   * @see Application#runReadAction(java.util.function.Supplier)
-   */
-  public abstract @Nullable Document getDocument(VirtualFile file);
-
-  /**
-   * Returns the document for the specified file which has already been loaded into memory.<p/>
-   * <p>
-   * Client code shouldn't normally use this method, because it's unpredictable and any garbage collection can result in it returning null.
-   *
-   * @param file the file for which the document is requested.
-   * @return the document, or null if the specified virtual file hasn't been loaded into memory.
-   */
-  public abstract @Nullable Document getCachedDocument(VirtualFile file);
-
-  /**
-   * Returns the virtual file corresponding to the specified document.
-   *
-   * @param document the document for which the virtual file is requested.
-   * @return the file, or null if the document wasn't created from a virtual file.
-   */
-  public abstract @Nullable VirtualFile getFile(Document document);
-
-  /**
-   * Saves all unsaved documents to disk. This operation can modify documents that will be saved
-   * (due to 'Strip trailing spaces on Save' functionality). When saving, {@code \n} line separators are converted into
-   * the ones used normally on the system, or the ones explicitly specified by the user. Encoding settings are honored.<p/>
-   * <p>
-   * Should be invoked on the event dispatch thread.
-   */
-  public abstract void saveAllDocuments();
-
-  /**
-   * Saves all unsaved documents to disk from a background thread holding a write action.
-   * Unlike {@link #saveAllDocuments()} this variant does not require the event dispatch thread;
-   * it only requires write access (so it can be run inside a coroutine write-lock step off the EDT).
-   * Error notifications are dispatched back to the UI thread via the given {@link UIAccess}.
-   */
-  public abstract void saveAllDocuments(UIAccess uiAccess);
-
-  /**
-   * Saves the specified document to disk. This operation can modify the document (due to 'Strip
-   * trailing spaces on Save' functionality). When saving, {@code \n} line separators are converted into
-   * the ones used normally on the system, or the ones explicitly specified by the user. Encoding settings are honored.<p/>
-   * <p>
-   * Should be invoked on the event dispatch thread.
-   *
-   * @param document the document to save.
-   */
-  public abstract void saveDocument(Document document);
-
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("'isExplicit' obsolete")
-  public abstract void saveDocument(Document document, boolean isExplicit);
-
-  /**
-   * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.<p/>
-   * <p>
-   * Should be invoked on the event dispatch thread.
-   *
-   * @param document the document to save.
-   */
-  public abstract void saveDocumentAsIs(Document document);
-
-  /**
-   * Returns all documents that have unsaved changes.
-   *
-   * @return the documents that have unsaved changes.
-   */
-  public abstract Document[] getUnsavedDocuments();
-
-  /**
-   * Checks if the document has unsaved changes.
-   *
-   * @param document the document to check.
-   * @return true if the document has unsaved changes, false otherwise.
-   */
-  public abstract boolean isDocumentUnsaved(Document document);
-
-  /**
-   * Checks if the document corresponding to the specified file has unsaved changes.
-   *
-   * @param file the file to check.
-   * @return true if the file has unsaved changes, false otherwise.
-   */
-  public abstract boolean isFileModified(VirtualFile file);
-
-  /**
-   * Check if only beginning of the file was loaded for Document.
-   *
-   * @see FileUtilRt#isTooLarge
-   */
-  public abstract boolean isPartialPreviewOfALargeFile(Document document);
-
-  /**
-   * Discards unsaved changes for the specified document and reloads it from disk.
-   *
-   * @param document the document to reload.
-   */
-  public abstract void reloadFromDisk(Document document);
-
-  
-  public abstract String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project);
-
-  /**
-   * Requests writing access on the given document, possibly involving interaction with user.
-   *
-   * @param document document
-   * @param project  project
-   * @return true if writing access allowed
-   * @see consulo.ide.impl.idea.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(Project, VirtualFile...)
-   */
-  public abstract boolean requestWriting(Document document, @Nullable ComponentManager project);
-
-  /**
-   * Requests writing access info on the given document. Can involve interaction with user.
-   */
-  default WriteAccessStatus requestWritingStatus(Document document, @Nullable ComponentManager project) {
-    return requestWriting(document, project) ? WriteAccessStatus.WRITABLE : WriteAccessStatus.NON_WRITABLE;
-  }
-
-  public static boolean fileForDocumentCheckedOutSuccessfully(Document document, ComponentManager project) {
-    return getInstance().requestWriting(document, project);
-  }
-
-  /**
-   * Discards unsaved changes for the specified files.
-   *
-   * @param files the files to discard the changes for.
-   */
-  public abstract void reloadFiles(VirtualFile... files);
-
-  /**
-   * Stores the write access status (true if the document has the write access; false otherwise)
-   * and a message about the reason for the read-only status.
-   */
-  public static class WriteAccessStatus {
-    public static final WriteAccessStatus NON_WRITABLE = new WriteAccessStatus(false);
-    public static final WriteAccessStatus WRITABLE = new WriteAccessStatus(true);
-
-    private final boolean myWithWriteAccess;
-    
-    private final String myReadOnlyMessage;
-
-    private WriteAccessStatus(boolean withWriteAccess) {
-      myWithWriteAccess = withWriteAccess;
-      myReadOnlyMessage = withWriteAccess ? "" : DocumentBundle.message("editing.read.only.file.hint");
+    public static FileDocumentManager getInstance() {
+        return Application.get().getComponent(FileDocumentManager.class);
     }
 
-    public WriteAccessStatus(String readOnlyMessage) {
-      myWithWriteAccess = false;
-      myReadOnlyMessage = readOnlyMessage;
+    /**
+     * Returns the document for the specified virtual file.<p/>
+     * <p>
+     * Documents are cached on weak or strong references, depending on the nature of the virtual file. If the document for the given virtual file is not yet cached,
+     * the file's contents are read from VFS and loaded into heap memory. An appropriate encoding is used. All line separators are converted to {@code \n}.<p/>
+     * <p>
+     * Should be invoked in a read action.
+     *
+     * @param file the file for which the document is requested.
+     * @return the document, or null if the file represents a directory, or is binary without an associated decompiler,
+     * or is too large.
+     * @see VirtualFile#contentsToByteArray()
+     * @see Application#runReadAction(java.util.function.Supplier)
+     */
+    public abstract @Nullable Document getDocument(VirtualFile file);
+
+    /**
+     * Returns the document for the specified file which has already been loaded into memory.<p/>
+     * <p>
+     * Client code shouldn't normally use this method, because it's unpredictable and any garbage collection can result in it returning null.
+     *
+     * @param file the file for which the document is requested.
+     * @return the document, or null if the specified virtual file hasn't been loaded into memory.
+     */
+    public abstract @Nullable Document getCachedDocument(VirtualFile file);
+
+    /**
+     * Returns the virtual file corresponding to the specified document.
+     *
+     * @param document the document for which the virtual file is requested.
+     * @return the file, or null if the document wasn't created from a virtual file.
+     */
+    public abstract @Nullable VirtualFile getFile(Document document);
+
+    /**
+     * Saves all unsaved documents to disk. This operation can modify documents that will be saved
+     * (due to 'Strip trailing spaces on Save' functionality). When saving, {@code \n} line separators are converted into
+     * the ones used normally on the system, or the ones explicitly specified by the user. Encoding settings are honored.<p/>
+     * <p>
+     * Should be invoked on the event dispatch thread.
+     */
+    public abstract void saveAllDocuments();
+
+    /**
+     * Saves all unsaved documents to disk from a background thread holding a write action.
+     * Unlike {@link #saveAllDocuments()} this variant does not require the event dispatch thread;
+     * it only requires write access (so it can be run inside a coroutine write-lock step off the EDT).
+     * Error notifications are dispatched back to the UI thread via the given {@link UIAccess}.
+     */
+    public abstract void saveAllDocuments(UIAccess uiAccess);
+
+    /**
+     * Saves the specified document to disk. This operation can modify the document (due to 'Strip
+     * trailing spaces on Save' functionality). When saving, {@code \n} line separators are converted into
+     * the ones used normally on the system, or the ones explicitly specified by the user. Encoding settings are honored.<p/>
+     * <p>
+     * Should be invoked on the event dispatch thread.
+     *
+     * @param document the document to save.
+     */
+    public abstract void saveDocument(Document document);
+
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("'isExplicit' obsolete")
+    public abstract void saveDocument(Document document, boolean isExplicit);
+
+    /**
+     * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.<p/>
+     * <p>
+     * Should be invoked on the event dispatch thread.
+     *
+     * @param document the document to save.
+     */
+    public abstract void saveDocumentAsIs(Document document);
+
+    /**
+     * Returns all documents that have unsaved changes.
+     *
+     * @return the documents that have unsaved changes.
+     */
+    public abstract Document[] getUnsavedDocuments();
+
+    /**
+     * Checks if the document has unsaved changes.
+     *
+     * @param document the document to check.
+     * @return true if the document has unsaved changes, false otherwise.
+     */
+    public abstract boolean isDocumentUnsaved(Document document);
+
+    /**
+     * Checks if the document corresponding to the specified file has unsaved changes.
+     *
+     * @param file the file to check.
+     * @return true if the file has unsaved changes, false otherwise.
+     */
+    public abstract boolean isFileModified(VirtualFile file);
+
+    /**
+     * Check if only beginning of the file was loaded for Document.
+     *
+     * @see FileUtilRt#isTooLarge
+     */
+    public abstract boolean isPartialPreviewOfALargeFile(Document document);
+
+    /**
+     * Discards unsaved changes for the specified document and reloads it from disk.
+     *
+     * @param document the document to reload.
+     */
+    public abstract void reloadFromDisk(Document document);
+
+
+    public abstract String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project);
+
+    /**
+     * Requests writing access on the given document, possibly involving interaction with user.
+     *
+     * @param document document
+     * @param project  project
+     * @return true if writing access allowed
+     * @see consulo.ide.impl.idea.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(Project, VirtualFile...)
+     */
+    public abstract boolean requestWriting(Document document, @Nullable ComponentManager project);
+
+    /**
+     * Requests writing access info on the given document. Can involve interaction with user.
+     */
+    default WriteAccessStatus requestWritingStatus(Document document, @Nullable ComponentManager project) {
+        return requestWriting(document, project) ? WriteAccessStatus.WRITABLE : WriteAccessStatus.NON_WRITABLE;
     }
 
-    public boolean hasWriteAccess() {
-      return myWithWriteAccess;
+    public static boolean fileForDocumentCheckedOutSuccessfully(Document document, ComponentManager project) {
+        return getInstance().requestWriting(document, project);
     }
 
-    
-    public String getReadOnlyMessage() {
-      return myReadOnlyMessage;
+    /**
+     * Discards unsaved changes for the specified files.
+     *
+     * @param files the files to discard the changes for.
+     */
+    public abstract void reloadFiles(VirtualFile... files);
+
+    /**
+     * Stores the write access status (true if the document has the write access; false otherwise)
+     * and a message about the reason for the read-only status.
+     */
+    public static class WriteAccessStatus {
+        public static final WriteAccessStatus NON_WRITABLE = new WriteAccessStatus(false);
+        public static final WriteAccessStatus WRITABLE = new WriteAccessStatus(true);
+
+        private final boolean myWithWriteAccess;
+
+        private final LocalizeValue myReadOnlyMessage;
+
+        private WriteAccessStatus(boolean withWriteAccess) {
+            myWithWriteAccess = withWriteAccess;
+            myReadOnlyMessage = withWriteAccess ? LocalizeValue.empty() : DocumentLocalize.editingReadOnlyFileHint();
+        }
+
+        public WriteAccessStatus(LocalizeValue readOnlyMessage) {
+            myWithWriteAccess = false;
+            myReadOnlyMessage = readOnlyMessage;
+        }
+
+        public boolean hasWriteAccess() {
+            return myWithWriteAccess;
+        }
+
+        public LocalizeValue getReadOnlyMessage() {
+            return myReadOnlyMessage;
+        }
     }
-  }
 }

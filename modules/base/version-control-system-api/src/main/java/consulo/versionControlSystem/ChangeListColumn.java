@@ -16,11 +16,13 @@
 package consulo.versionControlSystem;
 
 import consulo.application.util.DateFormatUtil;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Comparator;
 
 /**
@@ -28,97 +30,94 @@ import java.util.Comparator;
  * @since 2006-11-27
  */
 public abstract class ChangeListColumn<T extends ChangeList> {
-  public abstract String getTitle();
-  public abstract Object getValue(T changeList);
+    public abstract LocalizeValue getTitle();
 
-  public @Nullable Comparator<T> getComparator() {
-    return null;
-  }
+    public abstract Object getValue(T changeList);
 
-  // TODO: CompositeCommittedChangesProvider.getColumns() needs to be updated if new standard columns are added 
-
-  public static ChangeListColumn<CommittedChangeList> DATE = new ChangeListColumn<CommittedChangeList>() {
-    public String getTitle() {
-      return VcsBundle.message("column.name.revision.list.date");
+    public @Nullable Comparator<T> getComparator() {
+        return null;
     }
 
-    public Object getValue(CommittedChangeList changeList) {
-      return DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate());
-    }
+    // TODO: CompositeCommittedChangesProvider.getColumns() needs to be updated if new standard columns are added
 
-    public Comparator<CommittedChangeList> getComparator() {
-      return new Comparator<CommittedChangeList>() {
-        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
-          return o1.getCommitDate().compareTo(o2.getCommitDate());
+    public static ChangeListColumn<CommittedChangeList> DATE = new ChangeListColumn<>() {
+        @Override
+        public LocalizeValue getTitle() {
+            return VcsLocalize.columnNameRevisionListDate();
         }
-      };
-    }
-  };
 
-  public static ChangeListColumn<CommittedChangeList> NAME = new ChangeListColumn<CommittedChangeList>() {
-    public String getTitle() {
-      return VcsBundle.message("column.name.revision.list.committer");
-    }
-
-    public Object getValue(CommittedChangeList changeList) {
-      return changeList.getCommitterName();
-    }
-
-    public Comparator<CommittedChangeList> getComparator() {
-      return new Comparator<CommittedChangeList>() {
-        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
-          return Comparing.compare((String) getValue(o1), (String) getValue(o2));
+        @Override
+        public Object getValue(CommittedChangeList changeList) {
+            return DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate());
         }
-      };
-    }
-  };
 
-  public static ChangeListColumn<CommittedChangeList> NUMBER = new ChangeListNumberColumn(VcsBundle.message("column.name.revision.list.number"));
-
-  public static ChangeListColumn<CommittedChangeList> DESCRIPTION = new ChangeListColumn<CommittedChangeList>() {
-    public String getTitle() {
-      return VcsBundle.message("column.name.revision.list.description");
-    }
-
-    public Object getValue(CommittedChangeList changeList) {
-      return changeList.getName();
-    }
-
-    public Comparator<CommittedChangeList> getComparator() {
-      return new Comparator<CommittedChangeList>() {
-        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
-          return o1.getName().compareTo(o2.getName());
+        @Override
+        public Comparator<CommittedChangeList> getComparator() {
+            return (o1, o2) -> o1.getCommitDate().compareTo(o2.getCommitDate());
         }
-      };
-    }
-  };
+    };
 
-  public static boolean isCustom(ChangeListColumn column) {
-    return column != DATE && column != DESCRIPTION &&
-        column != NAME && !(column instanceof ChangeListNumberColumn);
-  }
-
-  public static class ChangeListNumberColumn extends ChangeListColumn<CommittedChangeList> {
-    private final String myTitle;
-
-    public ChangeListNumberColumn(String title) {
-      myTitle = title;
-    }
-
-    public String getTitle() {
-      return myTitle;
-    }
-
-    public Object getValue(CommittedChangeList changeList) {
-      return changeList.getNumber();
-    }
-
-    public Comparator<CommittedChangeList> getComparator() {
-      return new Comparator<CommittedChangeList>() {
-        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
-          return (int)(o1.getNumber() - o2.getNumber());
+    public static ChangeListColumn<CommittedChangeList> NAME = new ChangeListColumn<>() {
+        @Override
+        public LocalizeValue getTitle() {
+            return VcsLocalize.columnNameRevisionListCommitter();
         }
-      };
+
+        @Override
+        public Object getValue(CommittedChangeList changeList) {
+            return changeList.getCommitterName();
+        }
+
+        @Override
+        public Comparator<CommittedChangeList> getComparator() {
+            return (o1, o2) -> Comparing.compare((String) getValue(o1), (String) getValue(o2));
+        }
+    };
+
+    public static ChangeListColumn<CommittedChangeList> NUMBER = new ChangeListNumberColumn(VcsLocalize.columnNameRevisionListNumber());
+
+    public static ChangeListColumn<CommittedChangeList> DESCRIPTION = new ChangeListColumn<>() {
+        @Override
+        public LocalizeValue getTitle() {
+            return VcsLocalize.columnNameRevisionListDescription();
+        }
+
+        @Override
+        public Object getValue(CommittedChangeList changeList) {
+            return changeList.getName();
+        }
+
+        @Override
+        public Comparator<CommittedChangeList> getComparator() {
+            return (o1, o2) -> o1.getName().compareTo(o2.getName());
+        }
+    };
+
+    public static boolean isCustom(ChangeListColumn column) {
+        return column != DATE && column != DESCRIPTION &&
+            column != NAME && !(column instanceof ChangeListNumberColumn);
     }
-  }
+
+    public static class ChangeListNumberColumn extends ChangeListColumn<CommittedChangeList> {
+        private final LocalizeValue myTitle;
+
+        public ChangeListNumberColumn(LocalizeValue title) {
+            myTitle = title;
+        }
+
+        @Override
+        public LocalizeValue getTitle() {
+            return myTitle;
+        }
+
+        @Override
+        public Object getValue(CommittedChangeList changeList) {
+            return changeList.getNumber();
+        }
+
+        @Override
+        public Comparator<CommittedChangeList> getComparator() {
+            return Comparator.comparingLong(CommittedChangeList::getNumber);
+        }
+    }
 }

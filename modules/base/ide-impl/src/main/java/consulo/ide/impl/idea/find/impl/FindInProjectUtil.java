@@ -3,8 +3,8 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressWrapper;
 import consulo.application.internal.TooManyUsagesStatus;
@@ -30,8 +30,6 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.project.impl.internal.DumbServiceImpl;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -47,6 +45,8 @@ import consulo.navigation.ItemPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.project.impl.internal.DumbServiceImpl;
+import consulo.ui.CheckBox;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.content.Content;
@@ -61,6 +61,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -253,13 +254,13 @@ public class FindInProjectUtil {
         Predicate<? super UsageInfo> consumer
     ) {
         if (findModel.getStringToFind().isEmpty()) {
-            return AccessRule.read(() -> consumer.test(new UsageInfo(psiFile)));
+            return ReadAction.compute(() -> consumer.test(new UsageInfo(psiFile)));
         }
         if (virtualFile.getFileType().isBinary()) {
             return true; // do not decompile .class files
         }
         Document document =
-            AccessRule.read(() -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null);
+            ReadAction.compute(() -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null);
         if (document == null) {
             return true;
         }
@@ -274,7 +275,7 @@ public class FindInProjectUtil {
         do {
             tooManyUsagesStatus.pauseProcessingIfTooManyUsages(); // wait for user out of read action
             before = offsetRef[0];
-            boolean success = AccessRule.read(
+            boolean success = ReadAction.compute(
                 () -> !psiFile.isValid() || processSomeOccurrencesInFile(document, findModel, psiFile, offsetRef, consumer)
             );
             if (!success) {
@@ -459,7 +460,7 @@ public class FindInProjectUtil {
             return "";
         }
 
-        return AccessRule.read(() -> {
+        return ReadAction.compute(() -> {
             List<PsiElement> topLevelRegExpChars = getTopLevelRegExpChars("a", project);
             if (topLevelRegExpChars.size() != 1) {
                 return "";
@@ -485,7 +486,7 @@ public class FindInProjectUtil {
                 ""
             );
         });
-  }
+    }
 
     public static void initStringToFindFromDataContext(FindModel findModel, DataContext dataContext) {
         Editor editor = dataContext.getData(Editor.KEY);
@@ -680,6 +681,27 @@ public class FindInProjectUtil {
         return GlobalSearchScopesCore.directoriesScope(project, withSubdirectories, array);
     }
 
+    public static void initFileFilter(JComboBox<? super String> fileFilter, CheckBox useFileFilter) {
+        fileFilter.setEditable(true);
+        String[] fileMasks = FindSettings.getInstance().getRecentFileMasks();
+        for (int i = fileMasks.length - 1; i >= 0; i--) {
+            fileFilter.addItem(fileMasks[i]);
+        }
+        fileFilter.setEnabled(false);
+
+        useFileFilter.addValueListener(event -> {
+            if (event.getValue()) {
+                fileFilter.setEnabled(true);
+                fileFilter.getEditor().selectAll();
+                fileFilter.getEditor().getEditorComponent().requestFocusInWindow();
+            }
+            else {
+                fileFilter.setEnabled(false);
+            }
+        });
+    }
+
+    @Deprecated
     public static void initFileFilter(JComboBox<? super String> fileFilter, JCheckBox useFileFilter) {
         fileFilter.setEditable(true);
         String[] fileMasks = FindSettings.getInstance().getRecentFileMasks();

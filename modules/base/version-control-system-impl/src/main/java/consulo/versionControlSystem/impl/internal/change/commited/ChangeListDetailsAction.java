@@ -93,13 +93,9 @@ public class ChangeListDetailsAction extends LegacyDumbAwareAction {
         detailsBuilder.append("<br>");
 
         if (provider != null) {
-            CommittedChangeList originalChangeList;
-            if (changeList instanceof ReceivedChangeList receivedChangeList) {
-                originalChangeList = receivedChangeList.getBaseList();
-            }
-            else {
-                originalChangeList = changeList;
-            }
+            CommittedChangeList originalChangeList = changeList instanceof ReceivedChangeList receivedChangeList
+                ? receivedChangeList.getBaseList()
+                : changeList;
             for (ChangeListColumn column : provider.getColumns()) {
                 if (ChangeListColumn.isCustom(column)) {
                     String value = column.getValue(originalChangeList).toString();

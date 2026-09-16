@@ -18,10 +18,9 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.localize.CodeInsightLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Label;
@@ -52,7 +51,7 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
 
         $$$setupUI$$$();
 
-        myLastRunSettings = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
+        myLastRunSettings = new LastRunReformatCodeOptionsProvider(ApplicationPropertiesComponent.getInstance());
 
         boolean canTargetVcsChanges = FormatChangedTextUtil.hasChanges(files, project);
         myOnlyChangedText.setEnabled(canTargetVcsChanges);

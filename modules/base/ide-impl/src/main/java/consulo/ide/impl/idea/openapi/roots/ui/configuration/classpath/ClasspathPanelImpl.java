@@ -147,12 +147,9 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                 }
             }
         };
-        setFixedColumnWidth(ClasspathTableModel.EXPORT_COLUMN, ClasspathTableModel.EXPORT_COLUMN_NAME);
+        setFixedColumnWidth(ClasspathTableModel.EXPORT_COLUMN, ClasspathTableModel.EXPORT_COLUMN_NAME.get());
         // leave space for combobox border
-        setFixedColumnWidth(
-            ClasspathTableModel.SCOPE_COLUMN,
-            DependencyScope.COMPILE.toString() + "     "
-        );
+        setFixedColumnWidth(ClasspathTableModel.SCOPE_COLUMN, DependencyScope.COMPILE.toString() + "     ");
 
         myEntryTable.registerKeyboardAction(
             e -> {
@@ -202,6 +199,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
         new DoubleClickListener() {
             @Override
+            @RequiredUIAccess
             protected boolean onDoubleClick(MouseEvent e) {
                 navigate(
                     AnActionEvent.createFromInputEvent(
@@ -243,14 +241,14 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         );
         actionGroup.add(myEditButton);
         actionGroup.add(new LegacyDumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(isRemoveActionEnabled());
             }
@@ -545,8 +543,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             setPaintFocusBorder(false);
             setFocusBorderAroundIcon(true);
             setBorder(JBUI.Borders.empty(1));
-            if (value instanceof ClasspathTableItem<?>) {
-                ClasspathTableItem<?> tableItem = (ClasspathTableItem<?>)value;
+            if (value instanceof ClasspathTableItem<?> tableItem) {
                 getRender(tableItem).accept(this);
                 setToolTipText(tableItem.getTooltipText());
             }

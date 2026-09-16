@@ -1,0 +1,4 @@
+editing.read.only.file.hint:
+    text: File is read-only
+attempt.to.modify.read.only.document.error.message:
+    text: Attempt to modify read-only document

@@ -11,10 +11,10 @@ import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
@@ -70,9 +70,9 @@ public final class ServersTreeStructure {
     }
 
     public interface LogProvidingNode {
-        @Nullable JComponent getComponent();
+        @Nullable
+        JComponent getComponent();
 
-        
         String getLogId();
     }
 
@@ -129,16 +129,24 @@ public final class ServersTreeStructure {
         }
 
         public void deploy(AnActionEvent e) {
-            doDeploy(e, DefaultRunExecutor.getRunExecutorInstance(),
-                CloudBundle.message("ServersTreeStructure.RemoteServerNode.popup.title.deploy.configuration"), true);
+            doDeploy(
+                e,
+                DefaultRunExecutor.getRunExecutorInstance(),
+                RemoteServerLocalize.serverstreestructureRemoteservernodePopupTitleDeployConfiguration(),
+                true
+            );
         }
 
         public void deployWithDebug(AnActionEvent e) {
-            doDeploy(e, DefaultDebugExecutor.getDebugExecutorInstance(),
-                CloudBundle.message("ServersTreeStructure.RemoteServerNode.popup.title.deploy.debug.configuration"), false);
+            doDeploy(
+                e,
+                DefaultDebugExecutor.getDebugExecutorInstance(),
+                RemoteServerLocalize.serverstreestructureRemoteservernodePopupTitleDeployDebugConfiguration(),
+                false
+            );
         }
 
-        public void doDeploy(AnActionEvent e, final Executor executor, String popupTitle, boolean canCreate) {
+        public void doDeploy(AnActionEvent e, final Executor executor, LocalizeValue popupTitle, boolean canCreate) {
             RemoteServer<?> server = getServer();
             final ServerType<? extends ServerConfiguration> serverType = server.getType();
             final DeploymentConfigurationManager configurationManager = DeploymentConfigurationManager.getInstance(myProject);
@@ -159,7 +167,7 @@ public final class ServersTreeStructure {
             }
 
             ListPopup popup =
-                JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<Object>(popupTitle, runConfigsAndTypes) {
+                JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<Object>(popupTitle.get(), runConfigsAndTypes) {
                     @Override
                     public Image getIconFor(Object runConfigOrSourceType) {
                         return runConfigOrSourceType != null ? serverType.getIcon() : null;
@@ -172,16 +180,19 @@ public final class ServersTreeStructure {
                         }
                         if (runConfigOrSourceType instanceof SingletonDeploymentSourceType) {
                             String displayName = ((SingletonDeploymentSourceType) runConfigOrSourceType).getPresentableName().get();
-                            return CloudBundle.message("create.new.deployment.configuration.for.singleton.type", displayName);
+                            return RemoteServerLocalize.createNewDeploymentConfigurationForSingletonType(displayName).get();
                         }
-                        return CloudBundle.message("create.new.deployment.configuration.generic");
+                        return RemoteServerLocalize.createNewDeploymentConfigurationGeneric().get();
                     }
 
                     @Override
                     public PopupStep<?> onChosen(Object selectedRunConfigOrSourceType, boolean finalChoice) {
                         return doFinalStep(() -> {
                             if (selectedRunConfigOrSourceType instanceof RunnerAndConfigurationSettings) {
-                                ProgramRunnerUtil.executeConfiguration((RunnerAndConfigurationSettings) selectedRunConfigOrSourceType, executor);
+                                ProgramRunnerUtil.executeConfiguration(
+                                    (RunnerAndConfigurationSettings) selectedRunConfigOrSourceType,
+                                    executor
+                                );
                             }
                             else if (selectedRunConfigOrSourceType instanceof SingletonDeploymentSourceType sourceType) {
                                 configurationManager.createAndRunConfiguration(serverType, RemoteServerNode.this.getValue(), sourceType);
@@ -203,9 +214,11 @@ public final class ServersTreeStructure {
 
         @RequiredUIAccess
         public void editConfiguration() {
-            Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, RemoteServerListConfigurable.class, remoteServerListConfigurable -> {
-                remoteServerListConfigurable.selectNodeInTree(getValue());
-            });
+            Application.get()
+                .getInstance(ShowConfigurableService.class)
+                .showAndSelect(myProject, RemoteServerListConfigurable.class, remoteServerListConfigurable -> {
+                    remoteServerListConfigurable.selectNodeInTree(getValue());
+                });
         }
 
         private static @Nullable Image getStatusIcon(ConnectionStatus status) {
@@ -222,11 +235,13 @@ public final class ServersTreeStructure {
         private final RemoteServerNode myServerNode;
         private final DeploymentNodeProducer myNodeProducer;
 
-        public DeploymentNodeImpl(Project project,
-                                  ServerConnection<?> connection,
-                                  RemoteServerNode serverNode,
-                                  Deployment value,
-                                  DeploymentNodeProducer nodeProducer) {
+        public DeploymentNodeImpl(
+            Project project,
+            ServerConnection<?> connection,
+            RemoteServerNode serverNode,
+            Deployment value,
+            DeploymentNodeProducer nodeProducer
+        ) {
             super(project, value);
             myConnection = connection;
             myServerNode = serverNode;
@@ -245,8 +260,8 @@ public final class ServersTreeStructure {
         @Override
         public boolean isDeployActionVisible() {
             DeploymentTask<?> deploymentTask = getValue().getDeploymentTask();
-            return deploymentTask instanceof DeploymentTaskImpl<?> && deploymentTask
-                .getExecutionEnvironment().getRunnerAndConfigurationSettings() != null;
+            return deploymentTask instanceof DeploymentTaskImpl<?>
+                && deploymentTask.getExecutionEnvironment().getRunnerAndConfigurationSettings() != null;
         }
 
         @Override

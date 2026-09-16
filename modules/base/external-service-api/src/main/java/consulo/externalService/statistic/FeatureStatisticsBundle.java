@@ -15,25 +15,34 @@
  */
 package consulo.externalService.statistic;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.externalService.localize.FeatureStatisticsLocalize;
 import org.jetbrains.annotations.PropertyKey;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("Use FeatureStatisticsLocalize")
+@MigratedExtensionsTo(FeatureStatisticsLocalize.class)
 public class FeatureStatisticsBundle extends AbstractBundle {
-  private static final FeatureStatisticsBundle ourInstance = new FeatureStatisticsBundle();
+    private static final FeatureStatisticsBundle ourInstance = new FeatureStatisticsBundle();
 
-  private FeatureStatisticsBundle() {
-    super("consulo.externalService.statistic.FeatureStatisticsBundle");
-  }
+    private FeatureStatisticsBundle() {
+        super("consulo.externalService.statistic.FeatureStatisticsBundle");
+    }
 
-  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key) {
-    return ourInstance.getMessage(key);
-  }
+    public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key) {
+        return ourInstance.getMessage(key);
+    }
 
-  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key, Object... params) {
-    return ourInstance.getMessage(key, params);
-  }
+    public static @Nullable String message(
+        @PropertyKey(resourceBundle = "consulo.externalService.statistic.FeatureStatisticsBundle") String key,
+        Object... params
+    ) {
+        return ourInstance.getMessage(key, params);
+    }
 }

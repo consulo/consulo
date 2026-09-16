@@ -30,61 +30,62 @@ import java.util.List;
  * @since 2006-10-03
  */
 public class CommittedChangesTableModel extends ListTableModel<CommittedChangeList> {
-  private final boolean myAsyncLoad;
-  private static final ChangeListColumn[] ourDefaultColumns = new ChangeListColumn[] { ChangeListColumn.DATE, ChangeListColumn.NAME };
-  private RowSorter.SortKey mySortKey;
+    private final boolean myAsyncLoad;
+    private static final ChangeListColumn[] ourDefaultColumns = new ChangeListColumn[]{ChangeListColumn.DATE, ChangeListColumn.NAME};
+    private RowSorter.SortKey mySortKey;
 
-  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, boolean asyncLoad) {
-    super(buildColumnInfos(ourDefaultColumns), changeLists, 0);
-    myAsyncLoad = asyncLoad;
-  }
-
-  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, ChangeListColumn[] columns, boolean asyncLoad) {
-    super(buildColumnInfos(columns), changeLists, 0);
-    myAsyncLoad = asyncLoad;
-  }
-
-  protected void setSortKey(RowSorter.SortKey sortKey) {
-    mySortKey = sortKey;
-  }
-
-  @Override
-  public RowSorter.SortKey getDefaultSortKey() {
-    return mySortKey;
-  }
-
-  private static ColumnInfo[] buildColumnInfos(ChangeListColumn[] columns) {
-    ColumnInfo[] result = new ColumnInfo[columns.length];
-    for(int i=0; i<columns.length; i++) {
-      result [i] = new ColumnInfoAdapter(columns [i]);
-    }
-    return result;
-  }
-
-  private static class ColumnInfoAdapter extends ColumnInfo {
-    private final ChangeListColumn myColumn;
-
-    public ColumnInfoAdapter(ChangeListColumn column) {
-      super(column.getTitle());
-      myColumn = column;
+    public CommittedChangesTableModel(List<CommittedChangeList> changeLists, boolean asyncLoad) {
+        super(buildColumnInfos(ourDefaultColumns), changeLists, 0);
+        myAsyncLoad = asyncLoad;
     }
 
-    public Object valueOf(Object o) {
-      //noinspection unchecked
-      return myColumn.getValue((ChangeList)o);
+    public CommittedChangesTableModel(List<CommittedChangeList> changeLists, ChangeListColumn[] columns, boolean asyncLoad) {
+        super(buildColumnInfos(columns), changeLists, 0);
+        myAsyncLoad = asyncLoad;
+    }
+
+    protected void setSortKey(RowSorter.SortKey sortKey) {
+        mySortKey = sortKey;
     }
 
     @Override
-    public Comparator getComparator() {
-      return myColumn.getComparator();
+    public RowSorter.SortKey getDefaultSortKey() {
+        return mySortKey;
     }
 
-    public ChangeListColumn getColumn() {
-      return myColumn;
+    private static ColumnInfo[] buildColumnInfos(ChangeListColumn[] columns) {
+        ColumnInfo[] result = new ColumnInfo[columns.length];
+        for (int i = 0; i < columns.length; i++) {
+            result[i] = new ColumnInfoAdapter(columns[i]);
+        }
+        return result;
     }
-  }
 
-  public boolean isAsynchLoad() {
-    return myAsyncLoad;
-  }
+    private static class ColumnInfoAdapter extends ColumnInfo {
+        private final ChangeListColumn myColumn;
+
+        public ColumnInfoAdapter(ChangeListColumn column) {
+            super(column.getTitle());
+            myColumn = column;
+        }
+
+        @Override
+        public Object valueOf(Object o) {
+            //noinspection unchecked
+            return myColumn.getValue((ChangeList) o);
+        }
+
+        @Override
+        public Comparator getComparator() {
+            return myColumn.getComparator();
+        }
+
+        public ChangeListColumn getColumn() {
+            return myColumn;
+        }
+    }
+
+    public boolean isAsynchLoad() {
+        return myAsyncLoad;
+    }
 }

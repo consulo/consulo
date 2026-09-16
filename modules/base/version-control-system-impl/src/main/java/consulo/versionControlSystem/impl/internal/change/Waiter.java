@@ -19,58 +19,61 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Waiter extends Task.Modal {
-  private static final Logger LOG = Logger.getInstance(Waiter.class);
+    private static final Logger LOG = Logger.getInstance(Waiter.class);
 
-  
-  private final Runnable myRunnable;
-  
-  private final AtomicBoolean myStarted = new AtomicBoolean();
-  
-  private final Semaphore mySemaphore = new Semaphore();
+    private final Runnable myRunnable;
 
-  public Waiter(Project project, Runnable runnable, String title, boolean cancellable) {
-    super(project, VcsBundle.message("change.list.manager.wait.lists.synchronization", title), cancellable);
-    myRunnable = runnable;
-    mySemaphore.down();
-    setCancelText(LocalizeValue.localizeTODO("Skip"));
-  }
+    private final AtomicBoolean myStarted = new AtomicBoolean();
 
-  public void run(ProgressIndicator indicator) {
-    indicator.setIndeterminate(true);
-    indicator.setText2(VcsBundle.message("commit.wait.util.synched.text"));
+    private final Semaphore mySemaphore = new Semaphore();
 
-    if (!myStarted.compareAndSet(false, true)) {
-      LOG.error("Waiter running under progress being started again.");
+    public Waiter(Project project, Runnable runnable, String title, boolean cancellable) {
+        super(project, VcsLocalize.changeListManagerWaitListsSynchronization(title), cancellable);
+        myRunnable = runnable;
+        mySemaphore.down();
+        setCancelText(LocalizeValue.localizeTODO("Skip"));
     }
-    else {
-      while (!mySemaphore.waitFor(500)) {
-        indicator.checkCanceled();
-      }
+
+    @Override
+    public void run(ProgressIndicator indicator) {
+        indicator.setIndeterminate(true);
+        indicator.setText2(VcsLocalize.commitWaitUtilSynchedText());
+
+        if (!myStarted.compareAndSet(false, true)) {
+            LOG.error("Waiter running under progress being started again.");
+        }
+        else {
+            while (!mySemaphore.waitFor(500)) {
+                indicator.checkCanceled();
+            }
+        }
     }
-  }
 
-  @Override
-  public void onCancel() {
-    onSuccess();
-  }
-
-  @Override
-  public void onSuccess() {
-    // Be careful with changes here as "Waiter.onSuccess()" is explicitly invoked from "FictiveBackgroundable"
-    if (!myProject.isDisposed()) {
-      myRunnable.run();
-      ChangesViewManagerImpl.getInstance((Project)myProject).scheduleRefresh();
+    @Override
+    @RequiredUIAccess
+    public void onCancel() {
+        onSuccess();
     }
-  }
 
-  public void done() {
-    mySemaphore.up();
-  }
+    @Override
+    @RequiredUIAccess
+    public void onSuccess() {
+        // Be careful with changes here as "Waiter.onSuccess()" is explicitly invoked from "FictiveBackgroundable"
+        if (!myProject.isDisposed()) {
+            myRunnable.run();
+            ChangesViewManagerImpl.getInstance((Project) myProject).scheduleRefresh();
+        }
+    }
+
+    public void done() {
+        mySemaphore.up();
+    }
 }

@@ -18,6 +18,7 @@ package consulo.virtualFileSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
@@ -25,29 +26,25 @@ import java.util.Collection;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public sealed interface ReadonlyStatusHandler permits ReadonlyStatusHandlerInternal {
-  public static boolean ensureFilesWritable(ComponentManager project, VirtualFile... files) {
-    return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();
-  }
+    public static boolean ensureFilesWritable(ComponentManager project, VirtualFile... files) {
+        return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();
+    }
 
-  public static ReadonlyStatusHandler getInstance(ComponentManager project) {
-    return project.getInstance(ReadonlyStatusHandler.class);
-  }
+    public static ReadonlyStatusHandler getInstance(ComponentManager project) {
+        return project.getInstance(ReadonlyStatusHandler.class);
+    }
 
-  public abstract static class OperationStatus {
+    public abstract static class OperationStatus {
+        public abstract VirtualFile[] getReadonlyFiles();
 
-    
-    public abstract VirtualFile[] getReadonlyFiles();
+        public abstract boolean hasReadonlyFiles();
 
-    public abstract boolean hasReadonlyFiles();
+        public abstract LocalizeValue getReadonlyFilesMessage();
+    }
 
-    
-    public abstract String getReadonlyFilesMessage();
+    public abstract OperationStatus ensureFilesWritable(VirtualFile... files);
 
-  }
-
-  public abstract OperationStatus ensureFilesWritable(VirtualFile... files);
-
-  default OperationStatus ensureFilesWritable(Collection<VirtualFile> files) {
-    return ensureFilesWritable(VirtualFileUtil.toVirtualFileArray(files));
-  }
+    default OperationStatus ensureFilesWritable(Collection<VirtualFile> files) {
+        return ensureFilesWritable(VirtualFileUtil.toVirtualFileArray(files));
+    }
 }

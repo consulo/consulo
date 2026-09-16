@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -153,7 +153,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
             return;
         }
 
-        LastRunReformatCodeOptionsProvider provider = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
+        LastRunReformatCodeOptionsProvider provider = new LastRunReformatCodeOptionsProvider(ApplicationPropertiesComponent.getInstance());
         ReformatCodeRunOptions currentRunOptions = provider.getLastRunOptions(file);
 
         TextRangeType processingScope = currentRunOptions.getTextRangeType();

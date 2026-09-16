@@ -20,32 +20,38 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.util.lang.ObjectUtil;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
 import static consulo.project.util.WaitForProgressToShow.runOrInvokeLaterAboveProgress;
 
 class FictiveBackgroundable extends Task.Backgroundable {
-  
-  private final Waiter myWaiter;
-  private final @Nullable ModalityState myState;
+    private final Waiter myWaiter;
+    private final @Nullable ModalityState myState;
 
-  FictiveBackgroundable(Project project,
-                        Runnable runnable,
-                        String title,
-                        boolean cancellable,
-                        @Nullable ModalityState state) {
-    super(project, VcsBundle.message("change.list.manager.wait.lists.synchronization", title), cancellable);
-    myState = state;
-    myWaiter = new Waiter(project, runnable, title, cancellable);
-  }
+    FictiveBackgroundable(
+        Project project,
+        Runnable runnable,
+        String title,
+        boolean cancellable,
+        @Nullable ModalityState state
+    ) {
+        super(project, VcsLocalize.changeListManagerWaitListsSynchronization(title), cancellable);
+        myState = state;
+        myWaiter = new Waiter(project, runnable, title, cancellable);
+    }
 
-  public void run(ProgressIndicator indicator) {
-    myWaiter.run(indicator);
-    runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), ObjectUtil.notNull(myState, ModalityState.nonModal()), (Project)myProject);
-  }
+    @Override
+    public void run(ProgressIndicator indicator) {
+        myWaiter.run(indicator);
+        runOrInvokeLaterAboveProgress(
+            myWaiter::onSuccess,
+            ObjectUtil.notNull(myState, ModalityState.nonModal()),
+            (Project) myProject
+        );
+    }
 
-  public void done() {
-    myWaiter.done();
-  }
+    public void done() {
+        myWaiter.done();
+    }
 }

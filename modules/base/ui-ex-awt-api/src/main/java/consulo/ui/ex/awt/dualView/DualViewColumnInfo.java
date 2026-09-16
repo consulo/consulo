@@ -15,17 +15,18 @@
  */
 package consulo.ui.ex.awt.dualView;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ColumnInfo;
 
 /**
  * @author lesya
  */
-public abstract class DualViewColumnInfo<Item, Aspect> extends ColumnInfo<Item, Aspect>{
-  public DualViewColumnInfo(String name) {
-    super(name);
-  }
+public abstract class DualViewColumnInfo<Item, Aspect> extends ColumnInfo<Item, Aspect> {
+    public DualViewColumnInfo(LocalizeValue name) {
+        super(name);
+    }
 
-  public abstract boolean shouldBeShownIsTheTree();
+    public abstract boolean shouldBeShownIsTheTree();
 
-  public abstract boolean shouldBeShownIsTheTable();
+    public abstract boolean shouldBeShownIsTheTable();
 }
