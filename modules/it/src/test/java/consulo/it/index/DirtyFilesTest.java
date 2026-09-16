@@ -284,9 +284,10 @@ public class DirtyFilesTest {
             () -> !findClasses(second, "Dirty0").isEmpty() && findClasses(second, "Clean0").isEmpty()
         );
 
-        assertThat(findClasses(second, "Clean1"))
-            .as("files which were not dirty must keep the indexes of the first session")
-            .isNotEmpty();
+        waitFor(
+            "files which were not dirty must keep the indexes of the first session",
+            () -> !findClasses(second, "Clean1").isEmpty()
+        );
 
         waitFor(
             "the consumed ids must be dropped from the dirty files of the reopened project",
