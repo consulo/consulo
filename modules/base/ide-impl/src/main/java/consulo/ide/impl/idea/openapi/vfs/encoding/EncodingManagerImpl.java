@@ -25,14 +25,13 @@ import consulo.application.internal.AppLifecycleListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
-import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.*;
+import consulo.virtualFileSystem.impl.internal.encoding.BaseApplicationEncodingManager;
+import consulo.virtualFileSystem.impl.internal.encoding.EncodingManagerState;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
@@ -40,9 +39,6 @@ import jakarta.inject.Singleton;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,10 +47,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 @State(name = "Encoding", storages = @Storage("encoding.xml"))
-public class EncodingManagerImpl implements PersistentStateComponent<EncodingManagerState>, ApplicationEncodingManager, Disposable {
+public class EncodingManagerImpl extends BaseApplicationEncodingManager
+    implements PersistentStateComponent<EncodingManagerState>, Disposable {
     private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
-
-    private EncodingManagerState myState = new EncodingManagerState();
 
     private static final Key<Charset> CACHED_CHARSET_FROM_CONTENT = Key.create("CACHED_CHARSET_FROM_CONTENT");
 
@@ -210,37 +205,6 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         return document.getUserData(CACHED_CHARSET_FROM_CONTENT);
     }
 
-    @Override
-    public EncodingManagerState getState() {
-        return myState;
-    }
-
-    @Override
-    public void loadState(EncodingManagerState state) {
-        myState = state;
-    }
-
-    @Override
-    public Collection<Charset> getFavorites() {
-        Collection<Charset> result = new HashSet<>();
-        Project[] projects = ProjectManager.getInstance().getOpenProjects();
-        for (Project project : projects) {
-            result.addAll(EncodingProjectManager.getInstance(project).getFavorites());
-        }
-        result.addAll(EncodingProjectManagerImpl.widelyKnownCharsets());
-        return result;
-    }
-
-    @Override
-    public @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
-        Project project = guessProject(virtualFile);
-        if (project == null) {
-            return null;
-        }
-        EncodingProjectManager encodingManager = EncodingProjectManager.getInstance(project);
-        return encodingManager.getEncoding(virtualFile, useParentDefaults);
-    }
-
     public void clearDocumentQueue() {
         if (((BoundedTaskExecutor) changedDocumentExecutor).isEmpty()) {
             return;
@@ -265,93 +229,6 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
 
     private static @Nullable Project guessProject(@Nullable VirtualFile virtualFile) {
         return ProjectLocator.getInstance().guessProjectForFile(virtualFile);
-    }
-
-    @Override
-    public void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset) {
-        Project project = guessProject(virtualFileOrDir);
-        if (project != null) {
-            EncodingProjectManager.getInstance(project).setEncoding(virtualFileOrDir, charset);
-        }
-    }
-
-    @Override
-    public boolean isNative2Ascii(VirtualFile virtualFile) {
-        Project project = guessProject(virtualFile);
-        return project != null && EncodingProjectManager.getInstance(project).isNative2Ascii(virtualFile);
-    }
-
-    @Override
-    public boolean isNative2AsciiForPropertiesFiles() {
-        Project project = guessProject(null);
-        return project != null && EncodingProjectManager.getInstance(project).isNative2AsciiForPropertiesFiles();
-    }
-
-    @Override
-    public void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii) {
-        Project project = guessProject(virtualFile);
-        if (project == null) {
-            return;
-        }
-        EncodingProjectManager.getInstance(project).setNative2AsciiForPropertiesFiles(virtualFile, native2Ascii);
-    }
-
-    @Override
-    
-    public Charset getDefaultCharset() {
-        return myState.myDefaultEncoding.dereference();
-    }
-
-    @Override
-    
-    public String getDefaultCharsetName() {
-        return myState.getDefaultCharsetName();
-    }
-
-    @Override
-    public void setDefaultCharsetName(String name) {
-        myState.setDefaultCharsetName(name);
-    }
-
-    @Override
-    public @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
-        Project project = guessProject(virtualFile);
-        if (project == null) {
-            return null;
-        }
-        return EncodingProjectManager.getInstance(project).getDefaultCharsetForPropertiesFiles(virtualFile);
-    }
-
-    @Override
-    public void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, Charset charset) {
-        Project project = guessProject(virtualFile);
-        if (project == null) {
-            return;
-        }
-        EncodingProjectManager.getInstance(project).setDefaultCharsetForPropertiesFiles(virtualFile, charset);
-    }
-
-    @Override
-    
-    public Charset getDefaultConsoleEncoding() {
-        return myState.myDefaultConsoleEncoding.dereference();
-    }
-
-    /**
-     * @return default console encoding reference
-     */
-    @Override
-    
-    public EncodingReference getDefaultConsoleEncodingReference() {
-        return myState.myDefaultConsoleEncoding;
-    }
-
-    /**
-     * @param encodingReference default console encoding reference
-     */
-    @Override
-    public void setDefaultConsoleEncodingReference(EncodingReference encodingReference) {
-        myState.myDefaultConsoleEncoding = encodingReference;
     }
 
     static void firePropertyChange(@Nullable Document document,

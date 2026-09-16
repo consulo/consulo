@@ -164,6 +164,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-virtual-file-system-native-file-type-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-virtual-file-status-impl</artifactId>
             <version>${project.version}</version>
         </dependency>

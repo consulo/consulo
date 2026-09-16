@@ -6,6 +6,7 @@
 module consulo.virtual.file.system.impl {
     requires consulo.virtual.file.system.api;
     requires consulo.util.collection;
+    requires consulo.util.xml.serializer;
 
     requires consulo.process.api;
     requires consulo.application.api;
@@ -23,9 +24,17 @@ module consulo.virtual.file.system.impl {
     requires forms.rt;
 
     exports consulo.virtualFileSystem.impl.internal to consulo.language.index.impl;
+    exports consulo.virtualFileSystem.impl.internal.fileType to
+        consulo.ide.impl,
+        consulo.it;
+    exports consulo.virtualFileSystem.impl.internal.encoding to
+        consulo.ide.impl,
+        consulo.it;
 
     // FIXME used by AtomicFieldUpdater - maybe replace it?
     opens consulo.virtualFileSystem.impl.internal.entry to consulo.util.concurrent;
 
     opens consulo.virtualFileSystem.impl.internal.readOnlyStatus to consulo.util.xml.serializer;
+
+    opens consulo.virtualFileSystem.impl.internal.encoding to consulo.util.xml.serializer;
 }

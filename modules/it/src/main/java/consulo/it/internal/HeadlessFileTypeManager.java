@@ -18,10 +18,15 @@ package consulo.it.internal;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.disposer.Disposable;
+import consulo.document.util.FileContentUtilCore;
 import consulo.language.file.FileTypeManager;
 import consulo.language.internal.FileTypeManagerEx;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.StubVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -29,6 +34,8 @@ import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.impl.internal.fileType.FileTypeDetectionService;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -37,20 +44,55 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Mock {@code FileTypeManager} for the integration-test harness. The production impl
  * ({@code FileTypeManagerImpl}) lives in {@code ide-impl}; file types registered through
- * {@link FileTypeFactory} extensions are resolved by extension and name matcher, everything else is
- * {@link UnknownFileType} and no ignore patterns / user associations are known. Bound only under the
+ * {@link FileTypeFactory} extensions are resolved by extension and name matcher, and whatever the name cannot answer
+ * goes through the real {@link FileTypeDetectionService}, so content-based detection behaves as it does in production.
+ * No ignore patterns / user associations are known. Bound only under the
  * {@link ComponentProfiles#INTEGRATION_TEST} profile.
  *
  * @author VISTALL
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
-public class HeadlessFileTypeManager extends FileTypeManagerEx {
+public class HeadlessFileTypeManager extends FileTypeManagerEx implements Disposable {
     private volatile @Nullable Registry myRegistry;
+
+    private final FileTypeDetectionService myDetectionService;
+
+    @Inject
+    public HeadlessFileTypeManager(Application application) {
+        myDetectionService = new FileTypeDetectionService(application, 0, this) {
+            @Override
+            protected FileType getDefaultTextFileType() {
+                return PlainTextFileType.INSTANCE;
+            }
+
+            @Override
+            protected @Nullable FileType getFileTypeByFileWithoutContent(VirtualFile file) {
+                FileType fileType = getFileTypeByFileName(file.getName());
+                return fileType == UnknownFileType.INSTANCE ? null : fileType;
+            }
+
+            @Override
+            protected void onDetectedFileTypesChanged(List<VirtualFile> changed, List<VirtualFile> crashed) {
+                if (!changed.isEmpty()) {
+                    application.invokeLater(() -> FileContentUtilCore.reparseFiles(changed), application.getDisposed());
+                }
+                if (!crashed.isEmpty()) {
+                    AppExecutorUtil.getAppScheduledExecutorService()
+                        .schedule(() -> FileContentUtilCore.reparseFiles(crashed), 10, TimeUnit.SECONDS);
+                }
+            }
+        };
+    }
+
+    @Override
+    public void dispose() {
+    }
 
     private static class Registry {
         final Map<String, FileType> byExtension = new HashMap<>();
@@ -119,7 +161,22 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx {
 
     @Override
     public boolean isFileOfType(VirtualFile file, FileType type) {
-        return getFileTypeByFile(file) == type;
+        if (FileTypeDetectionService.mightBeReplacedByDetectedFileType(type) || type.equals(UnknownFileType.INSTANCE)) {
+            return file.getFileType().equals(type);
+        }
+
+        FileType fileTypeByFileName = getFileTypeByFileName(file.getName());
+        if (fileTypeByFileName == type) {
+            return true;
+        }
+        if (fileTypeByFileName != UnknownFileType.INSTANCE) {
+            return false;
+        }
+        if (file instanceof StubVirtualFile) {
+            return false;
+        }
+
+        return type.equals(myDetectionService.getOrDetectFromContent(file, null));
     }
 
     @Override
@@ -135,7 +192,25 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx {
 
     @Override
     public FileType getFileTypeByFile(VirtualFile file) {
-        return getFileTypeByFileName(file.getName());
+        return getFileTypeByFile(file, null);
+    }
+
+    @Override
+    public FileType getFileTypeByFile(VirtualFile file, byte @Nullable [] content) {
+        FileType fileType = getFileTypeByFileName(file.getName());
+        if (file instanceof StubVirtualFile) {
+            return fileType;
+        }
+        if (fileType == UnknownFileType.INSTANCE) {
+            return myDetectionService.getOrDetectFromContent(file, content);
+        }
+        if (FileTypeDetectionService.mightBeReplacedByDetectedFileType(fileType)) {
+            FileType detectedFromContent = myDetectionService.getOrDetectFromContent(file, content);
+            if (detectedFromContent != UnknownFileType.INSTANCE && detectedFromContent != PlainTextFileType.INSTANCE) {
+                return detectedFromContent;
+            }
+        }
+        return fileType;
     }
 
     @Override

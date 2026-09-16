@@ -17,87 +17,43 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import consulo.virtualFileSystem.encoding.EncodingReference;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.impl.internal.encoding.BaseApplicationEncodingManager;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The production {@code EncodingManagerImpl} runs on the {@link ComponentProfiles#PRODUCTION} profile only;
- * content loading during indexing needs the application encoding manager, so the headless application provides
- * a UTF-8-only replacement.
+ * The production {@code EncodingManagerImpl} runs on the {@link ComponentProfiles#PRODUCTION} profile only, because it
+ * reacts to editor and document changes; content loading during indexing needs the application encoding manager, so the
+ * headless application reuses the half of it that answers from state alone. There is no project-level encoding
+ * configuration in a headless run, so per-file encodings are always unset.
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
-public class HeadlessApplicationEncodingManager implements ApplicationEncodingManager {
-    @Override
-    public Collection<Charset> getFavorites() {
-        return List.of(StandardCharsets.UTF_8);
+public class HeadlessApplicationEncodingManager extends BaseApplicationEncodingManager {
+    private final AtomicInteger myEncodingLookupCount = new AtomicInteger();
+
+    public int getEncodingLookupCount() {
+        return myEncodingLookupCount.get();
+    }
+
+    public void resetEncodingLookupCount() {
+        myEncodingLookupCount.set(0);
     }
 
     @Override
-    public boolean isNative2Ascii(VirtualFile virtualFile) {
-        return false;
-    }
-
-    @Override
-    public boolean isNative2AsciiForPropertiesFiles() {
-        return false;
-    }
-
-    @Override
-    public Charset getDefaultCharset() {
-        return StandardCharsets.UTF_8;
+    protected @Nullable EncodingProjectManager getProjectEncodingManager(Project project) {
+        return null;
     }
 
     @Override
     public @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
-        return null;
-    }
-
-    @Override
-    public void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset) {
-    }
-
-    @Override
-    public void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii) {
-    }
-
-    @Override
-    public String getDefaultCharsetName() {
-        return StandardCharsets.UTF_8.name();
-    }
-
-    @Override
-    public void setDefaultCharsetName(String name) {
-    }
-
-    @Override
-    public @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
-        return null;
-    }
-
-    @Override
-    public void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset) {
-    }
-
-    @Override
-    public Charset getDefaultConsoleEncoding() {
-        return StandardCharsets.UTF_8;
-    }
-
-    @Override
-    public void setDefaultConsoleEncodingReference(EncodingReference encodingReference) {
-    }
-
-    @Override
-    public EncodingReference getDefaultConsoleEncodingReference() {
-        return EncodingReference.DEFAULT;
+        myEncodingLookupCount.incrementAndGet();
+        return super.getEncoding(virtualFile, useParentDefaults);
     }
 }

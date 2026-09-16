@@ -21,8 +21,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.HashBangChecker;
 
 import org.jspecify.annotations.Nullable;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Consider using <code>hashBangs</code> attribute of <code>fileType</code>
@@ -44,11 +42,6 @@ public abstract class HashBangFileTypeDetector implements FileTypeDetector {
       return myFileType;
     }
     return null;
-  }
-
-  @Override
-  public @Nullable Collection<? extends FileType> getDetectedFileTypes() {
-    return List.of(myFileType);
   }
 
   

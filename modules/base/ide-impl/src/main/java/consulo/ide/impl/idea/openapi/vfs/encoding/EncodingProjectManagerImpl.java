@@ -32,8 +32,8 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.impl.internal.encoding.BaseApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
@@ -49,7 +49,6 @@ import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -244,27 +243,13 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     @Override
     
     public Collection<Charset> getFavorites() {
-        Set<Charset> result = widelyKnownCharsets();
+        Set<Charset> result = BaseApplicationEncodingManager.widelyKnownCharsets();
         result.addAll(myMapping.values());
         result.add(getDefaultCharset());
         return result;
     }
 
     
-    static Set<Charset> widelyKnownCharsets() {
-        Set<Charset> result = new HashSet<>();
-        result.add(StandardCharsets.UTF_8);
-        result.add(CharsetToolkit.getDefaultSystemCharset());
-        result.add(CharsetToolkit.getPlatformCharset());
-        result.add(StandardCharsets.UTF_16);
-        result.add(StandardCharsets.ISO_8859_1);
-        result.add(StandardCharsets.US_ASCII);
-        result.add(EncodingManager.getInstance().getDefaultCharset());
-        result.add(EncodingManager.getInstance().getDefaultCharsetForPropertiesFiles(null));
-        result.remove(null);
-        return result;
-    }
-
     /**
      * @return readonly map of current mappings. to modify mappings use {@link #setMapping(Map)}
      */

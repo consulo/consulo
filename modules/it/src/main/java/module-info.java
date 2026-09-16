@@ -40,6 +40,7 @@ module consulo.it {
     requires consulo.ui.impl;
     requires consulo.ui.ex.api;
     requires consulo.ui.ex.impl;
+    requires consulo.virtual.file.system.impl;
     requires consulo.util.collection;
     requires consulo.util.concurrent;
     requires consulo.util.jdom;

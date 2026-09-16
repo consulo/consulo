@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.encoding;
+package consulo.virtualFileSystem.impl.internal.encoding;
 
 import com.dslplatform.json.CompiledJson;
 import consulo.util.lang.StringUtil;

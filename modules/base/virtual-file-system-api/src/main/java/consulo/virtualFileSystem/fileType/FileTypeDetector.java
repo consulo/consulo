@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.fileType;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -43,14 +44,6 @@ public interface FileTypeDetector {
     @Nullable FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
 
     /**
-     * Returns the file type that this detector is capable of detecting, or null if it can detect
-     * multiple file types.
-     */
-    default @Nullable Collection<? extends FileType> getDetectedFileTypes() {
-        return null;
-    }
-
-    /**
      * Defines how much content is required for this detector to detect file type reliably. At least such amount of bytes
      * will be passed to {@link #detect(VirtualFile, ByteSequence, CharSequence)} if present.
      *
@@ -61,4 +54,10 @@ public interface FileTypeDetector {
     }
 
     int getVersion();
+
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("Not used anymore - isFileOfType runs the full detection and compares its result")
+    default @Nullable Collection<? extends FileType> getDetectedFileTypes() {
+        return null;
+    }
 }

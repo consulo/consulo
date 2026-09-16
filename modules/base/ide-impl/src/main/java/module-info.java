@@ -38,6 +38,7 @@ open module consulo.ide.impl {
     requires consulo.application.content.api;
     requires consulo.document.api;
     requires consulo.virtual.file.system.api;
+    requires consulo.virtual.file.system.impl;
     requires consulo.project.api;
     requires consulo.module.api;
     requires consulo.configurable.api;
