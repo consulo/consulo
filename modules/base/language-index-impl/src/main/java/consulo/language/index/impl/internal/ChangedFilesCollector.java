@@ -189,6 +189,12 @@ final class ChangedFilesCollector extends IndexedFilesListener {
 
     void ensureUpToDate() {
         if (!FileBasedIndexImpl.isUpToDateCheckEnabled()) {
+            if (Boolean.getBoolean(DEBUG_PROPERTY) && getEventMerger().hasChanges()) {
+                LOG.warn("DIRTY-DEBUG drain-disabled pending=" + getEventMerger().getApproximateChangesCount()
+                    + " ids=" + Arrays.toString(getEventMerger().getPendingFileIds())
+                    + " collector=" + System.identityHashCode(this)
+                    + " thread=" + Thread.currentThread().getName());
+            }
             return;
         }
         //assert ApplicationManager.getApplication().isReadAccessAllowed() || ShutDownTracker.isShutdownHookRunning();
