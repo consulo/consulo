@@ -224,8 +224,10 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
             catch (Throwable t) {
                 task.myFutureHistory.completeExceptionally(t);
                 logInfo("Task interrupted: " + task.myTask + ". " + t.getMessage());
-                ProjectIndexingDependenciesService.getInstance(myProject)
-                    .requestHeavyScanningOnProjectOpen("Task interrupted: " + task.myTask);
+                if (!myProject.isDisposed()) {
+                    ProjectIndexingDependenciesService.getInstance(myProject)
+                        .requestHeavyScanningOnProjectOpen("Task interrupted: " + task.myTask);
+                }
 
                 // other exceptions: log and forget
                 Throwable cause = t instanceof CompletionException || t instanceof ExecutionException

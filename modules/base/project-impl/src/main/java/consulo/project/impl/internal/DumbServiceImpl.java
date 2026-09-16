@@ -348,7 +348,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // This would lead to repeated calls to `runEnteredListeners`, which is not permitted by the contract of these listeners.
             // The forced `invokeLater` will ensure that published requests for exit will be executed before new requests for enter.
             // This works given that `invokeLater` is fair, which is true.
-            myApplication.invokeLater(() -> proceedWithPublishingOfIncrementEvents(enteredDumb));
+            myApplication.invokeLater(() -> proceedWithPublishingOfIncrementEvents(enteredDumb), myProject.getDisposed());
         }
 
         LOG.assertTrue(state().isDumb(), "Should be dumb");
@@ -366,7 +366,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 // Otherwise, increment the counter under write action because this will change dumb state
                 boolean enteredDumb = doIncrementStateCounter();
                 if (enteredDumb) {
-                    myApplication.invokeLater(() -> proceedWithPublishingOfIncrementEvents(true));
+                    myApplication.invokeLater(() -> proceedWithPublishingOfIncrementEvents(true), myProject.getDisposed());
                 }
             }
             LOG.assertTrue(state().isDumb(), "Should be dumb");
@@ -417,7 +417,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         if (tryDecrementDumbCounter()) {
             boolean exitDumb = myApplication.runWriteAction((Supplier<Boolean>) this::doDecrementDumbCounter);
             // for rationale for this `invokeLater`, see explanation in `incrementDumbCounterBlocking`
-            myApplication.invokeLater(() -> proceedWithPublishingOfDecrementEvents(exitDumb));
+            myApplication.invokeLater(() -> proceedWithPublishingOfDecrementEvents(exitDumb), myProject.getDisposed());
         }
     }
 
@@ -435,7 +435,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             if (tryDecrementDumbCounter()) {
                 boolean isNowSmart = doDecrementDumbCounter();
                 if (isNowSmart) {
-                    myApplication.invokeLater(() -> proceedWithPublishingOfDecrementEvents(true));
+                    myApplication.invokeLater(() -> proceedWithPublishingOfDecrementEvents(true), myProject.getDisposed());
                 }
             }
             return null;
