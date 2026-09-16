@@ -321,7 +321,9 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             if (!balanced) {
                 LOG.error("Unexpected listener state: dumb mode is going to be entered without exiting");
             }
-            runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+            if (!myProject.isDisposed()) {
+                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+            }
         }
         return isStateChanged;
     }
@@ -404,7 +406,9 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             if (!balanced) {
                 LOG.error("Unexpected listener state: dumb mode is going to be exited without entering");
             }
-            runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
+            if (!myProject.isDisposed()) {
+                runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
+            }
         }
         return isStateChanged;
     }
@@ -454,6 +458,10 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
      */
     private void publishDumbModeChangedEvent(DumbModeEventListenerState desiredListenerState) {
         myApplication.assertIsDispatchThread();
+
+        if (myProject.isDisposed()) {
+            return;
+        }
 
         switch (desiredListenerState) {
             case ENTERED -> {

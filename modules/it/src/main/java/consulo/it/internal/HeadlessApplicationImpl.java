@@ -87,15 +87,17 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
 
     @Override
     public void invokeLater(Runnable runnable) {
-        HeadlessUIAccess.INSTANCE.giveAsync(() -> {
-            runnable.run();
-            return null;
-        });
+        invokeLater(runnable, () -> false);
     }
 
     @Override
     public void invokeLater(Runnable runnable, BooleanSupplier expired) {
-        invokeLater(runnable);
+        HeadlessUIAccess.INSTANCE.giveAsync(() -> {
+            if (!expired.getAsBoolean()) {
+                runnable.run();
+            }
+            return null;
+        });
     }
 
     @Override
@@ -105,7 +107,7 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
 
     @Override
     public void invokeLater(Runnable runnable, ModalityState state, BooleanSupplier expired) {
-        invokeLater(runnable);
+        invokeLater(runnable, expired);
     }
 
     @Override
