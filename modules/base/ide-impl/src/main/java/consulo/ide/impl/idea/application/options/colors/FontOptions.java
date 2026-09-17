@@ -22,6 +22,7 @@ import consulo.colorScheme.internal.FontPreferences;
 import consulo.colorScheme.internal.ModifiableFontPreferences;
 import consulo.ide.impl.idea.application.options.OptionsConstants;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.FontBox;
@@ -347,7 +348,7 @@ public class FontOptions implements OptionsPanel {
     }
 
     @Override
-    public Set<String> processListOptions() {
+    public Set<LocalizeValue> processListOptions() {
         return Set.of();
     }
 }

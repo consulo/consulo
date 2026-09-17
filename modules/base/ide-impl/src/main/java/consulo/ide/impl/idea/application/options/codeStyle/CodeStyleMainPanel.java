@@ -277,9 +277,8 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
         return mySettingsPanels.get(scheme.getName()).isModified();
     }
 
-    
     @RequiredUIAccess
-    public Set<String> processListOptions() {
+    public Set<LocalizeValue> processListOptions() {
         CodeStyleScheme defaultScheme = CodeStyleSchemes.getInstance().getDefaultScheme();
         NewCodeStyleSettingsPanel panel = ensurePanel(defaultScheme);
         return panel.processListOptions();
@@ -293,7 +292,6 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
         }
     }
 
-    
     private static String getSelectedTabPropertyName(TabbedLanguageCodeStylePanel panel) {
         Language language = panel.getDefaultLanguage();
         return SELECTED_TAB + (language != null ? "." + language.getID() : "");

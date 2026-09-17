@@ -20,11 +20,13 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingPresentation;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.List;
 import java.util.Map;
 
 public class CodeStyleSpacesPanel extends OptionTreeWithPreviewPanel {
+    @RequiredUIAccess
     public CodeStyleSpacesPanel(CodeStyleSettings settings) {
         super(settings);
         init();
@@ -41,17 +43,16 @@ public class CodeStyleSpacesPanel extends OptionTreeWithPreviewPanel {
             CodeStyleSettingPresentation.getStandardSettings(getSettingsType());
 
         for (Map.Entry<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> entry : settingsMap.entrySet()) {
-            String groupName = entry.getKey().name;
+            LocalizeValue groupName = entry.getKey().name;
             for (CodeStyleSettingPresentation setting : entry.getValue()) {
                 initBooleanField(setting.getFieldName(), setting.getUiName(), groupName);
             }
         }
-        for (String customOptionsGroup : myCustomOptions.keySet()) {
+        for (LocalizeValue customOptionsGroup : myCustomOptions.keySet()) {
             initCustomOptions(customOptionsGroup);
         }
     }
 
-    
     @Override
     protected LocalizeValue getTabTitle() {
         return ApplicationLocalize.titleSpaces();

@@ -19,6 +19,8 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 
@@ -26,32 +28,36 @@ import javax.swing.*;
 import java.util.List;
 
 class MarginOptionsUtil {
-    public static String getDefaultRightMarginText(CodeStyleSettings settings) {
-        return getDefaultValueText(Integer.toString(settings.getDefaultRightMargin()));
+    public static LocalizeValue getDefaultRightMarginText(CodeStyleSettings settings) {
+        return getDefaultValueText(LocalizeValue.of(Integer.toString(settings.getDefaultRightMargin())));
     }
 
-    static String getDefaultVisualGuidesText(CodeStyleSettings settings) {
+    static LocalizeValue getDefaultVisualGuidesText(CodeStyleSettings settings) {
         List<Integer> softMargins = settings.getDefaultSoftMargins();
         return getDefaultValueText(
             softMargins.size() > 0
-                ? CommaSeparatedIntegersValueEditor.intListToString(settings.getDefaultSoftMargins())
-                : CodeStyleLocalize.settingsSoftMarginsEmptyList().get()
+                ? LocalizeValue.of(CommaSeparatedIntegersValueEditor.intListToString(settings.getDefaultSoftMargins()))
+                : CodeStyleLocalize.settingsSoftMarginsEmptyList()
         );
     }
 
-    static String getDefaultWrapOnTypingText(CodeStyleSettings settings) {
-        return getDefaultValueText(settings.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN ? "Yes" : "No");
+    static LocalizeValue getDefaultWrapOnTypingText(CodeStyleSettings settings) {
+        return getDefaultValueText(
+            settings.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN
+                ? CodeStyleLocalize.settingsDefaultValueYes()
+                : CodeStyleLocalize.settingsDefaultValueNo()
+        );
     }
 
-    static void customizeWrapOnTypingCombo(JComboBox<String> wrapOnTypingCombo, CodeStyleSettings settings) {
+    static void customizeWrapOnTypingCombo(JComboBox<LocalizeValue> wrapOnTypingCombo, CodeStyleSettings settings) {
         wrapOnTypingCombo.setRenderer(new WrapOnTypingListCellRenderer(settings));
     }
 
-    static String getDefaultValueText(String value) {
-        return CodeStyleLocalize.settingsDefaultValuePrefix(value).get();
+    static LocalizeValue getDefaultValueText(LocalizeValue value) {
+        return CodeStyleLocalize.settingsDefaultValuePrefix(value);
     }
 
-    static class WrapOnTypingListCellRenderer extends ColoredListCellRenderer<String> {
+    static class WrapOnTypingListCellRenderer extends ColoredListCellRenderer<LocalizeValue> {
         private final CodeStyleSettings mySettings;
 
         public WrapOnTypingListCellRenderer(CodeStyleSettings settings) {
@@ -60,17 +66,16 @@ class MarginOptionsUtil {
 
         @Override
         protected void customizeCellRenderer(
-            JList<? extends String> list,
-            String value,
+            JList<? extends LocalizeValue> list,
+            LocalizeValue value,
             int index,
             boolean selected,
             boolean hasFocus
         ) {
             for (int i = 0; i < CodeStyleSettingsCustomizable.WRAP_ON_TYPING_VALUES.length; i++) {
-                if (CodeStyleSettingsCustomizable.WRAP_ON_TYPING_VALUES[i] == CommonCodeStyleSettings.WrapOnTyping.DEFAULT.intValue) {
-                    if (CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS[i].equals(value)) {
-                        append(getDefaultWrapOnTypingText(mySettings));
-                    }
+                if (CodeStyleSettingsCustomizable.WRAP_ON_TYPING_VALUES[i] == CommonCodeStyleSettings.WrapOnTyping.DEFAULT.intValue
+                    && CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS[i].equals(value)) {
+                    append(getDefaultWrapOnTypingText(mySettings));
                 }
             }
         }

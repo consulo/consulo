@@ -235,8 +235,8 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         public void showCustomOption(
             Class<? extends CustomCodeStyleSettings> settingsClass,
             String fieldName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             Object... options
         ) {
             myCollectedFields.add(fieldName);
@@ -246,8 +246,8 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         public void showCustomOption(
             Class<? extends CustomCodeStyleSettings> settingsClass,
             String fieldName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorFieldName,
             Object... options

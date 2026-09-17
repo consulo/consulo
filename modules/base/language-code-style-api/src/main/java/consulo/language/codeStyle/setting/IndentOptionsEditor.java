@@ -15,10 +15,10 @@
  */
 package consulo.language.codeStyle.setting;
 
-import consulo.language.codeStyle.CodeStyleBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.IntegerField;
 import consulo.ui.ex.awt.OptionGroup;
 import org.jspecify.annotations.Nullable;
@@ -32,8 +32,8 @@ import static consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvid
 
 @SuppressWarnings({"Duplicates", "deprecation", "DeprecatedIsStillUsed"})
 public class IndentOptionsEditor extends OptionGroup implements CodeStyleSettingsCustomizable {
-    private static final String INDENT_LABEL = CodeStyleBundle.message("editbox.indent.indent");
-    private static final String TAB_SIZE_LABEL = CodeStyleBundle.message("editbox.indent.tab.size");
+    private static final LocalizeValue INDENT_LABEL = CodeStyleLocalize.editboxIndentIndent();
+    private static final LocalizeValue TAB_SIZE_LABEL = CodeStyleLocalize.editboxIndentTabSize();
 
     @Deprecated
     protected JTextField myIndentField;
@@ -81,13 +81,13 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
 
     protected void addIndentField() {
         myIndentField = createIndentTextField(INDENT_LABEL, MIN_INDENT_SIZE, MAX_INDENT_SIZE, DEFAULT_INDENT_SIZE);
-        myIndentLabel = new JLabel(INDENT_LABEL);
+        myIndentLabel = new JLabel(INDENT_LABEL.get());
         add(myIndentLabel, myIndentField);
     }
 
     protected void addTabSizeField() {
         myTabSizeField = createIndentTextField(TAB_SIZE_LABEL, MIN_TAB_SIZE, MAX_TAB_SIZE, DEFAULT_TAB_SIZE);
-        myTabSizeLabel = new JLabel(TAB_SIZE_LABEL);
+        myTabSizeLabel = new JLabel(TAB_SIZE_LABEL.get());
         add(myTabSizeLabel, myTabSizeField);
     }
 
@@ -96,11 +96,11 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
      */
     @Deprecated
     public JTextField createIndentTextField() {
-        return createIndentTextField(null, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
+        return createIndentTextField(LocalizeValue.empty(), Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
     }
 
-    public IntegerField createIndentTextField(@Nullable String valueName, int minSize, int maxSize, int defaultValue) {
-        IntegerField field = new IntegerField(valueName, minSize, maxSize);
+    public IntegerField createIndentTextField(LocalizeValue valueName, int minSize, int maxSize, int defaultValue) {
+        IntegerField field = new IntegerField(valueName.getNullIfEmpty(), minSize, maxSize);
         field.setDefaultValue(defaultValue);
         field.setColumns(4);
         if (defaultValue < 0) {

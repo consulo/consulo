@@ -21,6 +21,7 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.TreeTableSpeedSearch;
@@ -64,10 +65,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     private final List<Option> myOptions = new ArrayList<>();
     private final List<Option> myCustomOptions = new ArrayList<>();
     private final Set<String> myAllowedOptions = new HashSet<>();
-    private final Map<String, String> myRenamedFields = new HashMap<>();
+    private final Map<String, LocalizeValue> myRenamedFields = new HashMap<>();
     private boolean myShowAllStandardOptions;
     protected boolean isFirstUpdate = true;
 
+    @RequiredUIAccess
     public OptionTableWithPreviewPanel(CodeStyleSettings settings) {
         super(settings);
     }
@@ -142,8 +144,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     public void showCustomOption(
         Class<? extends CustomCodeStyleSettings> settingsClass,
         String fieldName,
-        String title,
-        String groupName,
+        LocalizeValue title,
+        LocalizeValue groupName,
         Object... options
     ) {
         showCustomOption(settingsClass, fieldName, title, groupName, null, null, options);
@@ -153,8 +155,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     public void showCustomOption(
         Class<? extends CustomCodeStyleSettings> settingsClass,
         String fieldName,
-        String title,
-        String groupName,
+        LocalizeValue title,
+        LocalizeValue groupName,
         @Nullable OptionAnchor anchor,
         @Nullable String anchorFieldName,
         Object... options
@@ -169,7 +171,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
                     groupName,
                     anchor,
                     anchorFieldName,
-                    (String[]) options[0],
+                    (LocalizeValue[]) options[0],
                     (int[]) options[1]
                 );
             }
@@ -189,7 +191,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     @Override
-    public void renameStandardOption(String fieldName, String newTitle) {
+    public void renameStandardOption(String fieldName, LocalizeValue newTitle) {
         myRenamedFields.put(fieldName, newTitle);
     }
 
@@ -199,7 +201,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
     protected TreeTable createOptionsTree(CodeStyleSettings settings) {
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-        Map<String, DefaultMutableTreeNode> groupsMap = new HashMap<>();
+        Map<LocalizeValue, DefaultMutableTreeNode> groupsMap = new HashMap<>();
 
         List<Option> sorted = sortOptions(ContainerUtil.concat(myOptions, myCustomOptions));
         for (Option each : sorted) {
@@ -207,18 +209,18 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
                 continue;
             }
 
-            String group = each.groupName;
-            MyTreeNode newNode = new MyTreeNode(each, each.title, settings);
+            LocalizeValue group = each.myGroupName;
+            MyTreeNode newNode = new MyTreeNode(each, each.myTitle, settings);
 
             DefaultMutableTreeNode groupNode = groupsMap.get(group);
             if (groupNode != null) {
                 groupNode.add(newNode);
             }
             else {
-                String groupName;
+                LocalizeValue groupName;
 
-                if (group == null) {
-                    groupName = each.title;
+                if (group.isEmpty()) {
+                    groupName = each.myTitle;
                     groupNode = newNode;
                 }
                 else {
@@ -305,7 +307,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         return treeTable;
     }
 
-    private String getRenamedTitle(String fieldOrGroupName, String defaultName) {
+    private LocalizeValue getRenamedTitle(String fieldOrGroupName, LocalizeValue defaultName) {
         return myRenamedFields.getOrDefault(fieldOrGroupName, defaultName);
     }
 
@@ -346,42 +348,31 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         return false;
     }
 
-    protected void addOption(String fieldName, String title) {
-        addOption(fieldName, title, null);
+    protected void addOption(String fieldName, LocalizeValue title) {
+        addOption(fieldName, title, LocalizeValue.empty());
+    }
+
+    protected void addOption(String fieldName, LocalizeValue title, LocalizeValue[] options, int[] values) {
+        addOption(fieldName, title, LocalizeValue.empty(), options, values);
     }
 
     protected void addOption(
         String fieldName,
-        String title,
-        String[] options,
-        int[] values
-    ) {
-        addOption(fieldName, title, null, options, values);
-    }
-
-    protected void addOption(
-        String fieldName,
-        String title,
-        @Nullable String groupName,
+        LocalizeValue title,
+        LocalizeValue groupName,
         int minValue,
         int maxValue,
         int defaultValue,
-        @Nullable Function<Integer, String> defaultValueRenderer
+        @Nullable Function<Integer, LocalizeValue> defaultValueRenderer
     ) {
         myOptions.add(new IntOption(null, fieldName, title, groupName, null, null, minValue, maxValue, defaultValue, defaultValueRenderer));
     }
 
-    protected void addOption(String fieldName, String title, @Nullable String groupName) {
+    protected void addOption(String fieldName, LocalizeValue title, LocalizeValue groupName) {
         myOptions.add(new BooleanOption(null, fieldName, title, groupName, null, null));
     }
 
-    protected void addOption(
-        String fieldName,
-        String title,
-        @Nullable String groupName,
-        String[] options,
-        int[] values
-    ) {
+    protected void addOption(String fieldName, LocalizeValue title, LocalizeValue groupName, LocalizeValue[] options, int[] values) {
         myOptions.add(new SelectionOption(null, fieldName, title, groupName, null, null, options, values));
     }
 
@@ -390,21 +381,20 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     protected abstract static class Option extends OrderedOption {
-        
-        final String title;
-        final @Nullable String groupName;
+        final LocalizeValue myTitle;
+        final LocalizeValue myGroupName;
         private boolean myEnabled = false;
 
         protected Option(
             String optionName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorOptionName
         ) {
             super(optionName, anchor, anchorOptionName);
-            this.title = title;
-            this.groupName = groupName;
+            myTitle = title;
+            myGroupName = groupName;
         }
 
         public void setEnabled(boolean enabled) {
@@ -427,8 +417,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         public FieldOption(
             @Nullable Class<? extends CustomCodeStyleSettings> clazz,
             String fieldName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorFiledName
         ) {
@@ -456,8 +446,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         private BooleanOption(
             Class<? extends CustomCodeStyleSettings> clazz,
             String fieldName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorFiledName
         ) {
@@ -487,33 +477,31 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     private class SelectionOption extends FieldOption {
-        
-        final String[] options;
-        
-        final int[] values;
+        final LocalizeValue[] myOptions;
+        final int[] myValues;
 
         public SelectionOption(
             Class<? extends CustomCodeStyleSettings> clazz,
             String fieldName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorFiledName,
-            String[] options,
+            LocalizeValue[] options,
             int[] values
         ) {
             super(clazz, fieldName, title, groupName, anchor, anchorFiledName);
-            this.options = options;
-            this.values = values;
+            myOptions = options;
+            myValues = values;
         }
 
         @Override
         public Object getValue(CodeStyleSettings settings) {
             try {
                 int value = field.getInt(getSettings(settings));
-                for (int i = 0; i < values.length; i++) {
-                    if (values[i] == value) {
-                        return options[i];
+                for (int i = 0; i < myValues.length; i++) {
+                    if (myValues[i] == value) {
+                        return myOptions[i];
                     }
                 }
                 LOG.error("Invalid option value " + value + " for " + field.getName());
@@ -526,9 +514,9 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         @Override
         public void setValue(Object value, CodeStyleSettings settings) {
             try {
-                for (int i = 0; i < values.length; i++) {
-                    if (options[i].equals(value)) {
-                        field.setInt(getSettings(settings), values[i]);
+                for (int i = 0; i < myValues.length; i++) {
+                    if (myOptions[i].equals(value)) {
+                        field.setInt(getSettings(settings), myValues[i]);
                         return;
                     }
                 }
@@ -543,19 +531,19 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         private final int myMinValue;
         private final int myMaxValue;
         private final int myDefaultValue;
-        private final @Nullable Function<Integer, String> myDefaultValueRenderer;
+        private final @Nullable Function<Integer, LocalizeValue> myDefaultValueRenderer;
 
         public IntOption(
             Class<? extends CustomCodeStyleSettings> clazz,
             String fieldName,
-            String title,
-            @Nullable String groupName,
+            LocalizeValue title,
+            LocalizeValue groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorFiledName,
             int minValue,
             int maxValue,
             int defaultValue,
-            @Nullable Function<Integer, String> defaultValueRenderer
+            @Nullable Function<Integer, LocalizeValue> defaultValueRenderer
         ) {
             super(clazz, fieldName, title, groupName, anchor, anchorFiledName);
             myMinValue = minValue;
@@ -605,8 +593,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             return value instanceof Integer intValue && intValue == myDefaultValue;
         }
 
-        public @Nullable String getDefaultValueText() {
-            return myDefaultValueRenderer != null ? myDefaultValueRenderer.apply(myDefaultValue) : null;
+        public LocalizeValue getDefaultValueText() {
+            return myDefaultValueRenderer != null ? myDefaultValueRenderer.apply(myDefaultValue) : LocalizeValue.empty();
         }
     }
 
@@ -669,7 +657,6 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     private final TreeCellRenderer myTitleRenderer = new TreeCellRenderer() {
         private final JLabel myLabel = new JLabel();
 
-        
         @Override
         public Component getTreeCellRendererComponent(
             JTree tree,
@@ -681,12 +668,12 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             boolean hasFocus
         ) {
             if (value instanceof MyTreeNode node) {
-                myLabel.setText(getRenamedTitle(node.getKey().getOptionName(), node.getText()));
-                myLabel.setFont(myLabel.getFont().deriveFont(node.getKey().groupName == null ? Font.BOLD : Font.PLAIN));
+                myLabel.setText(getRenamedTitle(node.getKey().getOptionName(), node.getText()).get());
+                myLabel.setFont(myLabel.getFont().deriveFont(node.getKey().myGroupName.isEmpty() ? Font.BOLD : Font.PLAIN));
                 myLabel.setEnabled(node.isEnabled());
             }
             else {
-                myLabel.setText(getRenamedTitle(value.toString(), value.toString()));
+                myLabel.setText(String.valueOf(value));
                 myLabel.setFont(myLabel.getFont().deriveFont(Font.BOLD));
                 myLabel.setEnabled(true);
             }
@@ -700,10 +687,10 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
     protected static class MyTreeNode extends DefaultMutableTreeNode {
         private final Option myKey;
-        private final String myText;
+        private final LocalizeValue myText;
         private Object myValue;
 
-        public MyTreeNode(Option key, String text, CodeStyleSettings settings) {
+        public MyTreeNode(Option key, LocalizeValue text, CodeStyleSettings settings) {
             myKey = key;
             myText = text;
             myValue = key.getValue(settings);
@@ -714,7 +701,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             return myKey;
         }
 
-        public String getText() {
+        public LocalizeValue getText() {
             return myText;
         }
 
@@ -758,7 +745,6 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myIntLabel);
         }
 
-        
         @Override
         public Component getTableCellRendererComponent(
             JTable table,
@@ -772,12 +758,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             myRow = row;
             myColumn = column;
             boolean isEnabled = true;
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) ((TreeTable) table).getTree().
-                getPathForRow(row).getLastPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) ((TreeTable) table).getTree().getPathForRow(row).getLastPathComponent();
             Option key = null;
-            if (node instanceof MyTreeNode) {
-                isEnabled = ((MyTreeNode) node).isEnabled();
-                key = ((MyTreeNode) node).getKey();
+            if (node instanceof MyTreeNode treeNode) {
+                isEnabled = treeNode.isEnabled();
+                key = treeNode.getKey();
             }
             if (!table.isEnabled()) {
                 isEnabled = false;
@@ -796,6 +781,12 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
                 myCheckBox.setEnabled(isEnabled);
                 return myCheckBox;
             }
+            else if (value instanceof LocalizeValue locValue) {
+                myComboBox.setText(locValue.get());
+                myComboBox.setBackground(background);
+                myComboBox.setEnabled(isEnabled);
+                return myComboBox;
+            }
             else if (value instanceof String strValue) {
                 myComboBox.setText(strValue);
                 myComboBox.setBackground(background);
@@ -804,7 +795,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             }
             else if (value instanceof Integer) {
                 if (key instanceof IntOption intOption && intOption.isDefaultValue(value)) {
-                    myIntLabel.setText(intOption.getDefaultValueText());
+                    myIntLabel.setText(intOption.getDefaultValueText().get());
                 }
                 else {
                     myIntLabel.setText(value.toString());
@@ -923,20 +914,18 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            DefaultMutableTreeNode defaultNode = (DefaultMutableTreeNode) ((TreeTable) table).getTree().
-                getPathForRow(row).getLastPathComponent();
+            DefaultMutableTreeNode defaultNode =
+                (DefaultMutableTreeNode) ((TreeTable) table).getTree().getPathForRow(row).getLastPathComponent();
             myCurrentEditor = null;
             myCurrentNode = null;
-            if (defaultNode instanceof MyTreeNode) {
-                MyTreeNode node = (MyTreeNode) defaultNode;
+            if (defaultNode instanceof MyTreeNode node) {
                 myCurrentNode = node;
                 if (node.getKey() instanceof BooleanOption) {
                     myCurrentEditor = myBooleanEditor;
                     myBooleanEditor.setSelected(node.getValue() == Boolean.TRUE);
                     myBooleanEditor.setEnabled(node.isEnabled());
                 }
-                else if (node.getKey() instanceof IntOption) {
-                    IntOption intOption = (IntOption) node.getKey();
+                else if (node.getKey() instanceof IntOption intOption) {
                     myCurrentEditor = myIntOptionsEditor;
                     myIntOptionsEditor.setCanBeEmpty(true);
                     myIntOptionsEditor.setMinValue(intOption.getMinValue());
@@ -952,7 +941,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
                     myOptionsEditor.setCell(table, row, column);
                     myOptionsEditor.setText(String.valueOf(node.getValue()));
                     //noinspection ConfusingArgumentToVarargsMethod
-                    myOptionsEditor.setOptions(((SelectionOption) node.getKey()).options);
+                    myOptionsEditor.setOptions(((SelectionOption) node.getKey()).myOptions);
                     myOptionsEditor.setDefaultValue(node.getValue());
                 }
             }
@@ -1004,19 +993,19 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     @Override
-    public Set<String> processListOptions() {
-        Set<String> options = new HashSet<>();
+    public Set<LocalizeValue> processListOptions() {
+        Set<LocalizeValue> options = new HashSet<>();
         collectOptions(options, myOptions);
         collectOptions(options, myCustomOptions);
         return options;
     }
 
-    private static void collectOptions(Set<String> optionNames, List<Option> optionList) {
+    private static void collectOptions(Set<LocalizeValue> optionNames, List<Option> optionList) {
         for (Option option : optionList) {
-            if (option.groupName != null) {
-                optionNames.add(option.groupName);
+            if (option.myGroupName.isNotEmpty()) {
+                optionNames.add(option.myGroupName);
             }
-            optionNames.add(option.title);
+            optionNames.add(option.myTitle);
         }
     }
 }

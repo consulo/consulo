@@ -28,6 +28,7 @@ import consulo.language.psi.search.TodoPattern;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
@@ -74,7 +75,6 @@ class PatternDialog extends DialogWrapper {
             new TextAttributesDescription(null, null, attributes, null, EditorColorsManager.getInstance().getGlobalScheme(), null, null) {
                 @Override
                 public void apply(EditorColorsScheme scheme) {
-
                 }
 
                 @Override
@@ -112,6 +112,7 @@ class PatternDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         myPattern.setPatternString(myPatternStringField.getText().trim());
         myPattern.setCaseSensitive(myCaseSensitiveCheckBox.isSelected());
@@ -143,7 +144,7 @@ class PatternDialog extends DialogWrapper {
             0,
             GridBagConstraints.NORTHWEST,
             GridBagConstraints.HORIZONTAL,
-            new Insets(0, 0, 5, 10),
+            JBUI.insets(0, 0, 5, 10),
             0,
             0
         );

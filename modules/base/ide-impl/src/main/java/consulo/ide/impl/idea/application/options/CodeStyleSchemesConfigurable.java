@@ -314,7 +314,6 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         return myModel;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return CodeStyleLocalize.configurableSchemesDisplayName();
@@ -335,17 +334,15 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         return false;
     }
 
-    
     @Override
     public String getId() {
         return CONFIGURABLE_ID;
     }
 
-    
     @Override
     @RequiredUIAccess
-    public Set<String> processListOptions() {
-        Set<String> result = new HashSet<>();
+    public Set<LocalizeValue> processListOptions() {
+        Set<LocalizeValue> result = new HashSet<>();
         for (CodeStyleConfigurableWrapper panel : myPanels) {
             result.addAll(panel.processListOptions());
         }
@@ -364,7 +361,6 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
             myInitialResetInvoked = false;
         }
 
-        
         @Override
         @RequiredUIAccess
         public LocalizeValue getDisplayName() {
@@ -441,7 +437,6 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
             }
         }
 
-        
         @Override
         @RequiredUIAccess
         public String getId() {
@@ -490,7 +485,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Override
         @RequiredUIAccess
-        public Set<String> processListOptions() {
+        public Set<LocalizeValue> processListOptions() {
             return ensurePanel().processListOptions();
         }
     }

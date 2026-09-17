@@ -15,6 +15,8 @@
  */
 package consulo.language.codeStyle.setting;
 
+import consulo.localize.LocalizeValue;
+
 /**
  * @author Roman.Shein
  * @since 2015-09-15
@@ -23,15 +25,15 @@ public class CodeStyleBoundedIntegerSettingPresentation extends CodeStyleSetting
     protected int myLowerBound;
     protected int myUpperBound;
     protected int myDefaultValue;
-    protected String myDefaultValueUiName;
+    protected LocalizeValue myDefaultValueUiName;
 
     public CodeStyleBoundedIntegerSettingPresentation(
         String fieldName,
-        String uiName,
+        LocalizeValue uiName,
         int lowerBound,
         int upperBound,
         int defaultValue,
-        String defaultValueUiName
+        LocalizeValue defaultValueUiName
     ) {
         super(fieldName, uiName);
         myLowerBound = lowerBound;
@@ -52,9 +54,8 @@ public class CodeStyleBoundedIntegerSettingPresentation extends CodeStyleSetting
         return myDefaultValue;
     }
 
-    
     @Override
-    public String getValueUiName(Object value) {
+    public LocalizeValue getValueUiName(Object value) {
         if (value instanceof Integer intValue) {
             return intValue == myDefaultValue ? myDefaultValueUiName : super.getValueUiName(value);
         }

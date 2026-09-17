@@ -197,12 +197,12 @@ public class OptionsPanelImpl implements OptionsPanel {
     }
 
     @Override
-    public Set<String> processListOptions() {
-        Set<String> result = new HashSet<>();
+    public Set<LocalizeValue> processListOptions() {
+        Set<LocalizeValue> result = new HashSet<>();
         EditorSchemeAttributeDescriptor[] descriptions = myOptions.getCurrentDescriptions();
         for (EditorSchemeAttributeDescriptor description : descriptions) {
             if (description.getGroup().equals(myCategoryName)) {
-                result.add(description.toString());
+                result.add(LocalizeValue.ofNullable(description.toString()));
             }
         }
         return result;

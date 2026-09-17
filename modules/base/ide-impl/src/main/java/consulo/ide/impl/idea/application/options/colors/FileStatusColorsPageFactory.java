@@ -45,12 +45,12 @@ class FileStatusColorsPageFactory implements ColorAndFontPanelFactory {
         return ApplicationLocalize.titleFileStatus();
     }
 
-    private static Collection<String> collectFileTypes() {
-        List<String> result = new ArrayList<>();
+    private static Collection<LocalizeValue> collectFileTypes() {
+        List<LocalizeValue> result = new ArrayList<>();
         FileStatus[] statuses = FileStatusFactory.getInstance().getAllFileStatuses();
 
         for (FileStatus status : statuses) {
-            result.add(status.getText().get());
+            result.add(status.getText());
         }
         return result;
     }
