@@ -26,8 +26,6 @@ import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
@@ -67,7 +65,7 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
   }
 
   @Override
-  protected void processData(Collection<DataNode<TaskData>> nodes, Project project, @Nullable ExternalSystemTasksTreeModel model) {
+  protected void processData(Collection<DataNode<TaskData>> nodes, Project project) {
     if (nodes.isEmpty()) {
       return;
     }
@@ -85,9 +83,5 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
     Map<String, Collection<ExternalTaskPojo>> availableTasks = new HashMap<>(settings.getAvailableTasks());
     availableTasks.putAll(data);
     settings.setAvailableTasks(availableTasks);
-
-    if (model != null) {
-      ExternalSystemUiUtil.apply(settings, model);
-    }
   }
 }

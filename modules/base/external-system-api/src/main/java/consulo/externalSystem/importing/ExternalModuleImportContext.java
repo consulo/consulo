@@ -15,25 +15,91 @@
  */
 package consulo.externalSystem.importing;
 
-import consulo.externalSystem.service.setting.AbstractImportFromExternalSystemControl;
+import consulo.configurable.ConfigurationException;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.service.project.ProjectData;
+import consulo.externalSystem.service.setting.ExternalSystemSettingsConfigurableFactory;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.module.creation.importing.ModuleImportContext;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
+ * Holds everything which belongs to a single import: the settings being edited and the resolved external project. The import
+ * provider is an extension shared by every import, so none of this may live there.
+ *
  * @author VISTALL
- * @since 30-Jan-17
+ * @since 2017-01-30
  */
-public class ExternalModuleImportContext<C extends AbstractImportFromExternalSystemControl> extends ModuleImportContext {
-  private final AbstractExternalModuleImportProvider<C> myImportProvider;
+public class ExternalModuleImportContext extends ModuleImportContext {
+    private final AbstractExternalModuleImportProvider myImportProvider;
 
-  public ExternalModuleImportContext(@Nullable Project project, AbstractExternalModuleImportProvider<C> importProvider) {
-    super(project);
-    myImportProvider = importProvider;
-  }
+    private final ExternalSystemSettingsConfigurableFactory<?, ?> myConfigurableFactory;
 
-  
-  public AbstractExternalModuleImportProvider<C> getImportProvider() {
-    return myImportProvider;
-  }
+    private final ExternalProjectSettings myProjectSettings;
+
+    private final AbstractExternalSystemSettings<?, ?, ?> mySystemSettings;
+
+    private @Nullable DataNode<ProjectData> myExternalProjectNode;
+
+    public ExternalModuleImportContext(@Nullable Project project, AbstractExternalModuleImportProvider importProvider) {
+        super(project);
+        myImportProvider = importProvider;
+        myConfigurableFactory = ExternalSystemApiUtil.getSettingsConfigurableFactoryStrict(importProvider.getExternalSystemId());
+        myProjectSettings = myConfigurableFactory.createProjectSettings();
+        mySystemSettings = myConfigurableFactory.createSystemSettings();
+    }
+
+    public AbstractExternalModuleImportProvider getImportProvider() {
+        return myImportProvider;
+    }
+
+    public ExternalSystemSettingsConfigurableFactory<?, ?> getConfigurableFactory() {
+        return myConfigurableFactory;
+    }
+
+    public ExternalProjectSettings getProjectSettings() {
+        return myProjectSettings;
+    }
+
+    public AbstractExternalSystemSettings<?, ?, ?> getSystemSettings() {
+        return mySystemSettings;
+    }
+
+    public @Nullable DataNode<ProjectData> getExternalProjectNode() {
+        return myExternalProjectNode;
+    }
+
+    public void setExternalProjectNode(@Nullable DataNode<ProjectData> externalProjectNode) {
+        myExternalProjectNode = externalProjectNode;
+    }
+
+    /**
+     * Validates the given path and stores it into {@link #getProjectSettings() the project settings}.
+     *
+     * @param linkedProjectPath path of the external project being imported
+     */
+    public void applyLinkedProjectPath(String linkedProjectPath) throws ConfigurationException {
+        if (StringUtil.isEmpty(linkedProjectPath)) {
+            throw new ConfigurationException(ExternalSystemLocalize.errorProjectUndefined());
+        }
+
+        Project project = getProject();
+        if (project != null) {
+            ExternalSystemManager<?, ?, ?, ?, ?> manager =
+                ExternalSystemApiUtil.getManager(myImportProvider.getExternalSystemId());
+            assert manager != null;
+            AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
+            if (settings.getLinkedProjectSettings(linkedProjectPath) != null) {
+                throw new ConfigurationException(ExternalSystemLocalize.errorProjectAlreadyRegistered());
+            }
+        }
+
+        myProjectSettings.setExternalProjectPath(ExternalSystemApiUtil.normalizePath(linkedProjectPath));
+    }
 }

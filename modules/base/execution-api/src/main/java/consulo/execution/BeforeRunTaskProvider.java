@@ -75,7 +75,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
      * Resolves when the configuration of the task changed, fails when the user walked away from it.
      */
     @RequiredUIAccess
-    public abstract CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task);
+    public abstract CompletableFuture<?> configureTask(RunConfiguration runConfiguration, T task);
 
     public boolean canExecuteTask(RunConfiguration configuration, T task) {
         return true;

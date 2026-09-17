@@ -16,173 +16,181 @@
 package consulo.externalSystem.service.execution;
 
 import consulo.configurable.ConfigurationException;
-import consulo.disposer.Disposable;
-import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.ui.awt.ExternalProjectPathField;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
-import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
-import consulo.ui.Label;
+import consulo.ui.Component;
+import consulo.ui.TextBox;
+import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-
 import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;
 
 /**
+ * Editor of the task execution settings of a run configuration. Unlike the settings pages, this one is driven by
+ * {@link consulo.execution.configuration.ui.SettingsEditor}, which hands a different settings object on every reset, so the settings
+ * are set through {@link #setOriginalSettings} instead of being fixed at construction.
+ *
  * @author Denis Zhdanov
  * @since 2013-05-23
  */
-public class ExternalSystemTaskSettingsControl implements ExternalSystemSettingsControl<ExternalSystemTaskExecutionSettings> {
-  private final ProjectSystemId myExternalSystemId;
-  
-  private final Project myProject;
+public class ExternalSystemTaskSettingsControl {
+    private final ProjectSystemId myExternalSystemId;
 
-  @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private Label myProjectPathLabel;
-  private ExternalProjectPathField myProjectPathField;
-  @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private Label myTasksLabel;
-  private JBTextField myTasksTextField;
-  @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private Label myVmOptionsLabel;
-  private RawCommandLineEditor myVmOptionsEditor;
-  @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private Label myScriptParametersLabel;
-  private RawCommandLineEditor myScriptParametersEditor;
+    private final Project myProject;
 
-  private @Nullable ExternalSystemTaskExecutionSettings myOriginalSettings;
+    private @Nullable Component myComponent;
+    private @Nullable ExternalProjectPathField myProjectPathField;
+    private @Nullable TextBox myTasksBox;
+    private @Nullable TextBoxWithExpandAction myVmOptionsBox;
+    private @Nullable TextBoxWithExpandAction myScriptParametersBox;
 
-  public ExternalSystemTaskSettingsControl(Project project, ProjectSystemId externalSystemId) {
-    myProject = project;
-    myExternalSystemId = externalSystemId;
-  }
+    private @Nullable ExternalSystemTaskExecutionSettings myOriginalSettings;
 
-  public void setOriginalSettings(@Nullable ExternalSystemTaskExecutionSettings originalSettings) {
-    myOriginalSettings = originalSettings;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void fillUi(Disposable uiDisposable, PaintAwarePanel canvas, int indentLevel) {
-    myProjectPathLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()));
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
-    FileChooserDescriptor projectPathChooserDescriptor = null;
-    if (manager instanceof ExternalSystemUiAware extSysUiAware) {
-      projectPathChooserDescriptor = extSysUiAware.getExternalProjectConfigDescriptor();
-    }
-    if (projectPathChooserDescriptor == null) {
-      projectPathChooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-    }
-    String title = ExternalSystemLocalize.settingsLabelSelectProject(myExternalSystemId.getDisplayName().get()).get();
-    myProjectPathField = new ExternalProjectPathField(myProject, myExternalSystemId, projectPathChooserDescriptor, title) {
-      @Override
-      public Dimension getPreferredSize() {
-        return myVmOptionsEditor == null ? super.getPreferredSize() : myVmOptionsEditor.getTextField().getPreferredSize();
-      }
-    };
-    canvas.add(TargetAWT.to(myProjectPathLabel), ExternalSystemUiUtil.getLabelConstraints(0));
-    canvas.add(myProjectPathField, ExternalSystemUiUtil.getFillLineConstraints(0));
-
-    myTasksLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelTasks());
-    myTasksTextField = new JBTextField(ExternalSystemConstants.TEXT_FIELD_WIDTH_IN_COLUMNS);
-    canvas.add(TargetAWT.to(myTasksLabel), ExternalSystemUiUtil.getLabelConstraints(0));
-    canvas.add(myTasksTextField, ExternalSystemUiUtil.getFillLineConstraints(0));
-
-    myVmOptionsLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions());
-    myVmOptionsEditor = new RawCommandLineEditor();
-    myVmOptionsEditor.setDialogCaption(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions().get());
-    canvas.add(TargetAWT.to(myVmOptionsLabel), ExternalSystemUiUtil.getLabelConstraints(0));
-    canvas.add(myVmOptionsEditor, ExternalSystemUiUtil.getFillLineConstraints(0));
-    myScriptParametersLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters());
-    myScriptParametersEditor = new RawCommandLineEditor();
-    myScriptParametersEditor.setDialogCaption(ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters().get());
-    canvas.add(TargetAWT.to(myScriptParametersLabel), ExternalSystemUiUtil.getLabelConstraints(0));
-    canvas.add(myScriptParametersEditor, ExternalSystemUiUtil.getFillLineConstraints(0));
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void reset() {
-    myProjectPathField.setText("");
-    myTasksTextField.setText("");
-    myVmOptionsEditor.setText("");
-    myScriptParametersEditor.setText("");
-    showUi(true);
-
-    if (myOriginalSettings == null) {
-      return;
+    public ExternalSystemTaskSettingsControl(Project project, ProjectSystemId externalSystemId) {
+        myProject = project;
+        myExternalSystemId = externalSystemId;
     }
 
-    String path = myOriginalSettings.getExternalProjectPath();
-    if (StringUtil.isEmpty(path)) {
-      path = "";
-    }
-    myProjectPathField.setText(path);
-    myTasksTextField.setText(StringUtil.join(myOriginalSettings.getTaskNames(), " "));
-    myVmOptionsEditor.setText(myOriginalSettings.getVmOptions());
-    myScriptParametersEditor.setText(myOriginalSettings.getScriptParameters());
-  }
-
-  @Override
-  public boolean isModified() {
-    if (myOriginalSettings == null) {
-      return false;
+    public void setOriginalSettings(@Nullable ExternalSystemTaskExecutionSettings originalSettings) {
+        myOriginalSettings = originalSettings;
     }
 
-    return !Comparing.equal(normalizePath(myProjectPathField.getText()),
-                            normalizePath(myOriginalSettings.getExternalProjectPath()))
-           || !Comparing.equal(normalizePath(myTasksTextField.getText()),
-                               normalizePath(StringUtil.join(myOriginalSettings.getTaskNames(), " ")))
-           || !Comparing.equal(normalizePath(myVmOptionsEditor.getText()),
-                               normalizePath(myOriginalSettings.getVmOptions()))
-           || !Comparing.equal(normalizePath(myScriptParametersEditor.getText()),
-                               normalizePath(myOriginalSettings.getScriptParameters()));
-  }
+    @RequiredUIAccess
+    public Component createUIComponent() {
+        Component component = myComponent;
+        if (component != null) {
+            return component;
+        }
 
-  @Override
-  public void apply(ExternalSystemTaskExecutionSettings settings) {
-    String projectPath = myProjectPathField.getText();
-    settings.setExternalProjectPath(projectPath);
-    settings.setTaskNames(StringUtil.split(myTasksTextField.getText(), " "));
-    settings.setVmOptions(myVmOptionsEditor.getText());
-    settings.setScriptParameters(myScriptParametersEditor.getText());
-  }
+        ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
+        FileChooserDescriptor projectPathChooserDescriptor = null;
+        if (manager instanceof ExternalSystemUiAware extSysUiAware) {
+            projectPathChooserDescriptor = extSysUiAware.getExternalProjectConfigDescriptor();
+        }
+        if (projectPathChooserDescriptor == null) {
+            projectPathChooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
+        }
+        String title = ExternalSystemLocalize.settingsLabelSelectProject(myExternalSystemId.getDisplayName().get()).get();
 
-  @Override
-  public boolean validate(ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
-    String projectPath = myProjectPathField.getText();
-    if (myOriginalSettings == null) {
-      throw new ConfigurationException(String.format(
-        "Can't store external task settings into run configuration. Reason: target run configuration is undefined. Tasks: '%s', " +
-        "external project: '%s', vm options: '%s', script parameters: '%s'",
-        myTasksTextField.getText(), projectPath, myVmOptionsEditor.getText(), myScriptParametersEditor.getText()
-      ));
+        myProjectPathField = new ExternalProjectPathField(myProject, myExternalSystemId, projectPathChooserDescriptor, title);
+        myTasksBox = TextBox.create();
+        myVmOptionsBox = TextBoxWithExpandAction.create(
+            PlatformIconGroup.actionsShow(),
+            ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions().get(),
+            ParametersListUtil.DEFAULT_LINE_PARSER,
+            ParametersListUtil.DEFAULT_LINE_JOINER
+        );
+        myScriptParametersBox = TextBoxWithExpandAction.create(
+            PlatformIconGroup.actionsShow(),
+            ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters().get(),
+            ParametersListUtil.DEFAULT_LINE_PARSER,
+            ParametersListUtil.DEFAULT_LINE_JOINER
+        );
+
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(LabeledBuilder.filled(
+            ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()),
+            TargetAWT.wrap(myProjectPathField)
+        ));
+        layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelTasks(), myTasksBox));
+        layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions(), myVmOptionsBox));
+        layout.add(LabeledBuilder.filled(
+            ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters(),
+            myScriptParametersBox
+        ));
+
+        myComponent = layout;
+        return layout;
     }
-    return true;
-  }
 
-  @Override
-  public void disposeUIResources() {
-    ExternalSystemUiUtil.disposeUi(this);
-  }
+    @RequiredUIAccess
+    public void reset() {
+        if (myProjectPathField == null || myTasksBox == null || myVmOptionsBox == null || myScriptParametersBox == null) {
+            return;
+        }
 
-  @Override
-  public void showUi(boolean show) {
-    ExternalSystemUiUtil.showUi(this, show);
-  }
+        myProjectPathField.setText("");
+        myTasksBox.setValue("");
+        myVmOptionsBox.setValue("");
+        myScriptParametersBox.setValue("");
+
+        if (myOriginalSettings == null) {
+            return;
+        }
+
+        myProjectPathField.setText(StringUtil.notNullize(myOriginalSettings.getExternalProjectPath()));
+        myTasksBox.setValue(StringUtil.join(myOriginalSettings.getTaskNames(), " "));
+        myVmOptionsBox.setValue(StringUtil.notNullize(myOriginalSettings.getVmOptions()));
+        myScriptParametersBox.setValue(StringUtil.notNullize(myOriginalSettings.getScriptParameters()));
+    }
+
+    @RequiredUIAccess
+    public boolean isModified() {
+        if (myOriginalSettings == null
+            || myProjectPathField == null
+            || myTasksBox == null
+            || myVmOptionsBox == null
+            || myScriptParametersBox == null) {
+            return false;
+        }
+
+        return !Comparing.equal(
+            normalizePath(myProjectPathField.getText()),
+            normalizePath(myOriginalSettings.getExternalProjectPath())
+        )
+            || !Comparing.equal(
+            normalizePath(myTasksBox.getValue()),
+            normalizePath(StringUtil.join(myOriginalSettings.getTaskNames(), " "))
+        )
+            || !Comparing.equal(normalizePath(myVmOptionsBox.getValue()), normalizePath(myOriginalSettings.getVmOptions()))
+            || !Comparing.equal(
+            normalizePath(myScriptParametersBox.getValue()),
+            normalizePath(myOriginalSettings.getScriptParameters())
+        );
+    }
+
+    @RequiredUIAccess
+    public void apply(ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
+        if (myProjectPathField == null || myTasksBox == null || myVmOptionsBox == null || myScriptParametersBox == null) {
+            return;
+        }
+
+        String projectPath = myProjectPathField.getText();
+        if (myOriginalSettings == null) {
+            throw new ConfigurationException(String.format(
+                "Can't store external task settings into run configuration. Reason: target run configuration is undefined. Tasks: '%s', "
+                    + "external project: '%s', vm options: '%s', script parameters: '%s'",
+                myTasksBox.getValue(), projectPath, myVmOptionsBox.getValue(), myScriptParametersBox.getValue()
+            ));
+        }
+
+        settings.setExternalProjectPath(projectPath);
+        settings.setTaskNames(StringUtil.split(StringUtil.notNullize(myTasksBox.getValue()), " "));
+        settings.setVmOptions(myVmOptionsBox.getValue());
+        settings.setScriptParameters(myScriptParametersBox.getValue());
+    }
+
+    public void disposeUIResources() {
+        myComponent = null;
+        myProjectPathField = null;
+        myTasksBox = null;
+        myVmOptionsBox = null;
+        myScriptParametersBox = null;
+    }
 }

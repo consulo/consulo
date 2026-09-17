@@ -22,6 +22,17 @@ import consulo.disposer.Disposer;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.event.RunManagerListenerEvent;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
+import consulo.dataContext.UiDataProvider;
+import consulo.disposer.Disposer;
+import consulo.ui.Component;
+import consulo.ui.Tree;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.ContextMenuEvent;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.action.ActionToolbarFactory;
+import consulo.ui.ex.tree.SimpleNode;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
@@ -29,36 +40,31 @@ import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SimpleToolWindowPanel;
-import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
-import java.awt.event.InputEvent;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Tool window panel for an external system. Replaces the old {@link consulo.externalSystem.ui.awt.ExternalSystemTasksPanel}.
+ * Tool window panel for an external system.
  *
  * @author Vladislav.Soroka
  */
-public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements ExternalProjectsView {
+public class ExternalProjectsViewImpl implements ExternalProjectsView, UiDataProvider {
+
+    private static final String VIEW_PLACE = "ExternalSystemView";
 
     private final Disposable myParentDisposable;
     private final Project myProject;
@@ -70,7 +76,9 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
 
     @Nullable
     private ExternalProjectsStructure myStructure;
-    private SimpleTree myTree;
+    private Tree<SimpleNode> myTree;
+    private ExternalSystemTreeStructureModel myTreeModel;
+    private DockLayout myRoot;
 
     private final List<ExternalSystemViewContributor> myViewContributors;
 
@@ -81,12 +89,11 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
                                     Project project,
                                     ToolWindow toolWindow,
                                     ProjectSystemId externalSystemId) {
-        super(true, true);
         myParentDisposable = parentDisposable;
         myProject = project;
         myToolWindow = toolWindow;
         myExternalSystemId = externalSystemId;
-        myUiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
+        myUiAware = ExternalSystemApiUtil.getUiAware(externalSystemId);
         myProjectsManager = ExternalProjectsManager.getInstance(project);
 
         // System-specific contributors must come before the IDE (catch-all) contributor
@@ -106,16 +113,16 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
             myViewContributors.clear();
             myStructure = null;
             myTree = null;
+            myTreeModel = null;
+            myRoot = null;
         });
     }
 
     @Override
     public void uiDataSnapshot(DataSink sink) {
-        super.uiDataSnapshot(sink);
         sink.set(ExternalSystemDataKeys.VIEW, this);
         sink.set(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID, myExternalSystemId);
         sink.set(ExternalSystemDataKeys.UI_AWARE, myUiAware);
-        sink.set(ExternalSystemDataKeys.PROJECTS_TREE, myTree);
 
         @SuppressWarnings("rawtypes")
         List<ExternalSystemNode> selection = getSelectedNodes(ExternalSystemNode.class);
@@ -220,45 +227,74 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
 
     @RequiredUIAccess
     private void initTree() {
-        myTree = new SimpleTree();
-        myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        initStructure();
+
+        myTreeModel = new ExternalSystemTreeStructureModel(myStructure);
+        myTree = Tree.create(myTreeModel);
+        Disposer.register(myParentDisposable, myTree.destroyHook());
+        myStructure.setUnifiedView(myTree, myTreeModel);
+
+        myRoot = DockLayout.create();
 
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup toolbarGroup = (ActionGroup)actionManager.getAction("ExternalSystemView.ActionsToolbar");
         if (toolbarGroup != null) {
-            ActionToolbar toolbar = actionManager.createActionToolbar(
-                myExternalSystemId.getId() + " View Toolbar", toolbarGroup, true);
-            toolbar.setTargetComponent(this);
-            setToolbar(toolbar.getComponent());
+            ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+                myExternalSystemId.getId() + " View Toolbar",
+                toolbarGroup,
+                ActionToolbar.Style.HORIZONTAL
+            );
+            toolbar.setTargetUIComponent(myTree);
+            myRoot.top(toolbar.getUIComponent());
         }
-        setContent(ScrollPaneFactory.createScrollPane(myTree));
+        myRoot.center(ScrollableLayout.create(myTree));
+        myRoot.putUserData(UiDataProvider.KEY, this);
 
-        myTree.addMouseListener(new PopupHandler() {
-            @Override
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            public void invokePopup(Component comp, int x, int y) {
-                String menuId = getMenuId((List<ExternalSystemNode<?>>) (List<?>) getSelectedNodes(ExternalSystemNode.class));
-                if (menuId != null) {
-                    ActionGroup menuGroup = (ActionGroup)actionManager.getAction(menuId);
-                    if (menuGroup != null) {
-                        actionManager.createActionPopupMenu(ExternalProjectsViewImpl.this.getName(), menuGroup)
-                            .getComponent().show(comp, x, y);
-                    }
-                }
-            }
+        myTree.addContextMenuListener(this::showContextMenu);
+    }
 
-            @Nullable
-            private String getMenuId(Collection<? extends ExternalSystemNode<?>> nodes) {
-                String id = null;
-                for (ExternalSystemNode<?> node : nodes) {
-                    String menuId = node.getMenuId();
-                    if (menuId == null) return null;
-                    if (id == null) id = menuId;
-                    else if (!id.equals(menuId)) return null;
-                }
-                return id;
+    @RequiredUIAccess
+    private void showContextMenu(ContextMenuEvent event) {
+        List<ExternalSystemNode<?>> nodes = selectedNodes();
+        String menuId = getMenuId(nodes);
+        if (menuId == null) {
+            return;
+        }
+
+        ActionManager actionManager = ActionManager.getInstance();
+        if (!(actionManager.getAction(menuId) instanceof ActionGroup menuGroup)) {
+            return;
+        }
+
+        ActionPopupMenu menu = actionManager.createActionPopupMenu(VIEW_PLACE, menuGroup);
+        menu.setTargetComponent(myTree);
+        menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private List<ExternalSystemNode<?>> selectedNodes() {
+        return (List)getSelectedNodes(ExternalSystemNode.class);
+    }
+
+    private static @Nullable String getMenuId(Collection<? extends ExternalSystemNode<?>> nodes) {
+        String id = null;
+        for (ExternalSystemNode<?> node : nodes) {
+            String menuId = node.getMenuId();
+            if (menuId == null) {
+                return null;
             }
-        });
+            if (id == null) {
+                id = menuId;
+            }
+            else if (!id.equals(menuId)) {
+                return null;
+            }
+        }
+        return id;
+    }
+
+    public Component getComponent() {
+        return myRoot;
     }
 
     @Override
@@ -278,7 +314,7 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
     }
 
     private void initStructure() {
-        myStructure = new ExternalProjectsStructure(myProject, myTree);
+        myStructure = new ExternalProjectsStructure(myProject);
         Disposer.register(myParentDisposable, myStructure);
         myStructure.init(this);
     }
@@ -346,14 +382,12 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
     }
 
     @Override
-    public void handleDoubleClickOrEnter(ExternalSystemNode<?> node, @Nullable String actionId, InputEvent inputEvent) {
+    public void handleDoubleClickOrEnter(ExternalSystemNode<?> node, @Nullable String actionId, @Nullable InputDetails inputDetails) {
         if (actionId != null) {
             AnAction action = ActionManager.getInstance().getAction(actionId);
             if (action != null) {
                 // Build a DataContext from the view's own data so that VIEW, EXTERNAL_SYSTEM_ID,
                 // SELECTED_NODES, and PROJECT are all available to the action.
-                // Using createFromInputEvent() would derive the context from the tree's AWT component,
-                // which may not reach this panel's getData() in Consulo's component hierarchy.
                 List<ExternalSystemNode> selectedNodes = getSelectedNodes(ExternalSystemNode.class);
                 DataContext dataContext = DataContext.builder()
                     .add(ExternalSystemDataKeys.VIEW, this)
@@ -361,10 +395,10 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
                     .add(ExternalSystemDataKeys.SELECTED_NODES, selectedNodes)
                     .add(Project.KEY, myProject)
                     .build();
-                action.actionPerformed(AnActionEvent.createFromAnAction(action, inputEvent, getName(), dataContext));
+                action.actionPerformed(AnActionEvent.createFromAnAction(action, null, VIEW_PLACE, dataContext, inputDetails));
             }
         }
-        for (Listener listener : myListeners) listener.onDoubleClickOrEnter(node, inputEvent);
+        for (Listener listener : myListeners) listener.onDoubleClickOrEnter(node, inputDetails);
     }
 
     @Override
@@ -445,6 +479,6 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
 
     @SuppressWarnings("unchecked")
     private <T extends ExternalSystemNode<?>> List<T> getSelectedNodes(Class<T> aClass) {
-        return myStructure != null ? myStructure.getSelectedNodes(myTree, aClass) : Collections.emptyList();
+        return myStructure != null && myTree != null ? myStructure.getSelectedNodes(myTree, aClass) : Collections.emptyList();
     }
 }

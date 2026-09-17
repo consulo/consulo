@@ -62,15 +62,17 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
         ExternalProjectsManager.getInstance(project).runWhenInitialized(() -> {
+            Disposable parentDisposable = Disposable.newDisposable("ExternalProjectsView[" + myExternalSystemId.getId() + "]");
             ExternalProjectsViewImpl view = new ExternalProjectsViewImpl(
-                Disposable.newDisposable("ExternalProjectsView[" + myExternalSystemId.getId() + "]"),
+                parentDisposable,
                 project,
                 toolWindow,
                 myExternalSystemId
             );
             ExternalProjectsManager.getInstance(project).registerView(myExternalSystemId, view);
             view.init();
-            Content content = ContentFactory.getInstance().createContent(view, "", true);
+            Content content = ContentFactory.getInstance().createUIContent(view.getComponent(), "", true);
+            content.setDisposer(parentDisposable);
             toolWindow.getContentManager().addUiDataProvider(view);
             contentManager.addContent(content);
         });

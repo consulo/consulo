@@ -17,13 +17,13 @@ package consulo.externalSystem.view;
 
 import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.DataNode;
+import consulo.ui.event.details.InputDetails;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.InputEvent;
 import java.util.List;
 
 /**
@@ -123,8 +123,8 @@ public class ExternalProjectsViewAdapter implements ExternalProjectsView {
     @Override
     public void handleDoubleClickOrEnter(ExternalSystemNode<?> node,
                                          @Nullable String actionId,
-                                         InputEvent inputEvent) {
-        myDelegate.handleDoubleClickOrEnter(node, actionId, inputEvent);
+                                         @Nullable InputDetails inputDetails) {
+        myDelegate.handleDoubleClickOrEnter(node, actionId, inputDetails);
     }
 
     @Override

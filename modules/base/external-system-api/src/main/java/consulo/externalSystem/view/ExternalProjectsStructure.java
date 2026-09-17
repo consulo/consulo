@@ -19,60 +19,81 @@ import consulo.disposer.Disposable;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.project.Project;
-import consulo.ui.ex.awt.tree.*;
+import consulo.ui.Tree;
+import consulo.ui.TreeNode;
+import consulo.ui.ex.tree.SimpleNode;
+import consulo.ui.ex.tree.SimpleTreeStructure;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.TreePath;
 import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Tree structure for the external projects view. Manages a {@link StructureTreeModel} backed
- * by an {@link AsyncTreeModel}, and provides node merging on refresh.
+ * Tree structure for the external projects view. The structure owns the nodes; the tree showing them is handed over with
+ * {@link #setUnifiedView}, and every refresh goes through the handles the model recorded while building.
  *
  * @author Vladislav.Soroka
  */
 public class ExternalProjectsStructure extends SimpleTreeStructure implements Disposable {
     private final Project myProject;
-    private final SimpleTree myTree;
     private ExternalProjectsView myExternalProjectsView;
-    private StructureTreeModel<ExternalProjectsStructure> myTreeModel;
     private RootNode<?> myRoot;
-    private AsyncTreeModel myAsyncTreeModel;
+
+    private @Nullable Tree<SimpleNode> myUnifiedTree;
+    private @Nullable ExternalSystemTreeStructureModel myUnifiedModel;
 
     private final Map<String, ExternalSystemNode<?>> myNodeMapping = new HashMap<>();
 
-    public ExternalProjectsStructure(Project project, SimpleTree tree) {
+    public ExternalProjectsStructure(Project project) {
         myProject = project;
-        myTree = tree;
-        configureTree(tree);
     }
 
     public void init(ExternalProjectsView externalProjectsView) {
         myExternalProjectsView = externalProjectsView;
         myRoot = new RootNode<>();
-        myTreeModel = new StructureTreeModel<>(this, this);
-        myAsyncTreeModel = new AsyncTreeModel(myTreeModel, this);
-        myTree.setModel(myAsyncTreeModel);
     }
 
-   
+    public void setUnifiedView(Tree<SimpleNode> tree, ExternalSystemTreeStructureModel model) {
+        myUnifiedTree = tree;
+        myUnifiedModel = model;
+    }
+
     public Project getProject() {
         return myProject;
     }
 
     public void updateFrom(@Nullable SimpleNode node) {
         if (node != null) {
-            myTreeModel.invalidate(node, true);
+            refresh(node, true);
         }
     }
 
     public void updateUpTo(SimpleNode node) {
-        SimpleNode each = node;
+        refresh(node, true);
+
+        SimpleNode each = node.getParent();
         while (each != null) {
-            myTreeModel.invalidate(each, false);
+            refresh(each, false);
             each = each.getParent();
+        }
+    }
+
+    private void refresh(SimpleNode node, boolean withChildren) {
+        Tree<SimpleNode> tree = myUnifiedTree;
+        ExternalSystemTreeStructureModel model = myUnifiedModel;
+        if (tree == null || model == null) {
+            return;
+        }
+
+        if (node == myRoot) {
+            tree.refreshAll();
+            return;
+        }
+
+        TreeNode<SimpleNode> handle = model.getHandle(node);
+        if (handle != null) {
+            tree.refreshItem(handle, withChildren);
         }
     }
 
@@ -85,7 +106,9 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
     public void cleanupCache() {
         if (myRoot != null) myRoot.cleanUpCache();
         myNodeMapping.clear();
-        myTreeModel.invalidate();
+        if (myUnifiedTree != null) {
+            myUnifiedTree.refreshAll();
+        }
     }
 
     @Override
@@ -97,17 +120,30 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
         return false;
     }
 
-    private static void configureTree(SimpleTree tree) {
-        tree.setRootVisible(false);
-        tree.setShowsRootHandles(true);
-    }
-
     public void select(SimpleNode node) {
-        myTreeModel.select(node, myTree, path -> {});
+        Tree<SimpleNode> tree = myUnifiedTree;
+        ExternalSystemTreeStructureModel model = myUnifiedModel;
+        if (tree == null || model == null) {
+            return;
+        }
+
+        TreeNode<SimpleNode> handle = model.getHandle(node);
+        if (handle != null) {
+            tree.select(handle);
+        }
     }
 
     public void expand(SimpleNode node) {
-        myTreeModel.expand(node, myTree, path -> {});
+        Tree<SimpleNode> tree = myUnifiedTree;
+        ExternalSystemTreeStructureModel model = myUnifiedModel;
+        if (tree == null || model == null) {
+            return;
+        }
+
+        TreeNode<SimpleNode> handle = model.getHandle(node);
+        if (handle != null) {
+            tree.expand(handle);
+        }
     }
 
     @Nullable
@@ -232,13 +268,17 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
     }
 
     public <T extends ExternalSystemNode<?>> void updateNodesAsync(Collection<Class<? extends T>> nodeClasses) {
-        myAsyncTreeModel.accept(path -> {
-            Object obj = path.getLastPathComponent();
-            if (obj != null && anyAssignableFrom(obj.getClass(), nodeClasses)) {
-                myTreeModel.invalidate(path, false);
+        Tree<SimpleNode> tree = myUnifiedTree;
+        ExternalSystemTreeStructureModel model = myUnifiedModel;
+        if (tree == null || model == null) {
+            return;
+        }
+
+        for (Map.Entry<SimpleNode, TreeNode<SimpleNode>> entry : model.getHandles().entrySet()) {
+            if (anyAssignableFrom(entry.getKey().getClass(), nodeClasses)) {
+                tree.refreshItem(entry.getValue(), false);
             }
-            return TreeVisitor.Action.CONTINUE;
-        }, false);
+        }
     }
 
     private static <T> boolean anyAssignableFrom(Class<?> clazz,
@@ -299,21 +339,10 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
     }
 
 
-    public <T extends ExternalSystemNode<?>> List<T> getSelectedNodes(SimpleTree tree,
-                                                                       Class<T> nodeClass) {
-        List<T> result = new ArrayList<>();
-        TreePath[] selectionPaths = tree.getSelectionPaths();
-        if (selectionPaths == null) return result;
-        for (TreePath path : selectionPaths) {
-            // path.getLastPathComponent() returns a StructureTreeModel.Node (DefaultMutableTreeNode wrapper).
-            // Use tree.getNodeFor() which extracts the SimpleNode via DefaultMutableTreeNode.getUserObject().
-            SimpleNode node = tree.getNodeFor(path);
-            if (nodeClass.isInstance(node)) {
-                //noinspection unchecked
-                result.add((T) node);
-            }
-        }
-        return result;
+    public <T extends ExternalSystemNode<?>> List<T> getSelectedNodes(Tree<SimpleNode> tree, Class<T> nodeClass) {
+        TreeNode<SimpleNode> selected = tree.getSelectedNode();
+        SimpleNode node = selected == null ? null : selected.getValue();
+        return nodeClass.isInstance(node) ? List.of(nodeClass.cast(node)) : List.of();
     }
 
     /**

@@ -157,7 +157,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
         final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
-        final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
+        final ExternalSystemUiAware uiAware = ExternalSystemApiUtil.getUiAware(externalSystemId);
         TextFieldCompletionProvider provider = new TextFieldCompletionProviderDumbAware() {
             @Override
             public void addCompletionVariants(String text, int offset, String prefix, CompletionResultSet result) {
@@ -205,7 +205,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
         AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
-        ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
+        ExternalSystemUiAware uiAware = ExternalSystemApiUtil.getUiAware(externalSystemId);
 
         String rawText = editor.getDocument().getText();
         for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : settings.getAvailableProjects().entrySet()) {

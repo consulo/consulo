@@ -83,7 +83,7 @@ public class ProjectNode extends ExternalSystemNode<ProjectData> {
         myTooltipCache = makeDescription();
         ExternalProjectsStructure structure = getStructure();
         if (structure != null) {
-            structure.updateFrom(getParent() instanceof consulo.ui.ex.awt.tree.SimpleNode p ? p : null);
+            structure.updateFrom(getParent() instanceof consulo.ui.ex.tree.SimpleNode p ? p : null);
         }
     }
 

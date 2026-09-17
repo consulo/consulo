@@ -16,6 +16,7 @@
 package consulo.externalSystem.ui.awt;
 
 import consulo.execution.executor.DefaultRunExecutor;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
@@ -70,7 +71,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   public ExternalSystemTasksTreeModel(ProjectSystemId externalSystemId) {
     super(new ExternalSystemNode<>(new ExternalSystemNodeDescriptor<>("", "", "", null)));
     myExternalSystemId = externalSystemId;
-    myUiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
+    myUiAware = ExternalSystemApiUtil.getUiAware(externalSystemId);
   }
 
   private static String getTaskName(ExternalTaskExecutionInfo taskInfo) {

@@ -101,14 +101,6 @@ run.text.starting.multiple.task:
 run.text.starting.single.task:
     text: |
         {0}: Executing external task ''{1}''...
-setting.type.location.deduced:
-    text: '{0} location is deduced'
-setting.type.location.explicit.correct:
-    text: '{0} location is defined'
-setting.type.location.explicit.incorrect:
-    text: '{0} location is incorrect'
-setting.type.location.unknown:
-    text: '{0} location is unknown'
 settings.label.create.empty.content.root.directories:
     text: Create directories for empty content roots automatically
 settings.label.project.format:

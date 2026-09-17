@@ -55,7 +55,6 @@ import consulo.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
@@ -261,6 +260,14 @@ public class ExternalSystemUtil {
      * @param project          current ide project
      * @param externalSystemId id of the external system which project has been un-linked from ide project
      */
+    private static GridBag fillLineConstraints() {
+        return new GridBag().weightx(1)
+            .coverLine()
+            .fillCellHorizontally()
+            .anchor(GridBagConstraints.WEST)
+            .insets(new Insets(7, 7, 0, 7));
+    }
+
     public static void ruleOrphanModules(
         List<Module> orphanModules,
         Project project,
@@ -270,7 +277,7 @@ public class ExternalSystemUtil {
             JPanel content = new JPanel(new GridBagLayout());
             content.add(
                 new JLabel(ExternalSystemLocalize.orphanModulesText(externalSystemId.getReadableName()).get()),
-                ExternalSystemUiUtil.getFillLineConstraints(0)
+                fillLineConstraints()
             );
 
             CheckBoxList<Module> orphanModulesList = new CheckBoxList<>();
@@ -280,7 +287,7 @@ public class ExternalSystemUtil {
                 orphanModulesList.setItemSelected(module, true);
             }
             orphanModulesList.setBorder(IdeBorderFactory.createEmptyBorder(8));
-            content.add(orphanModulesList, ExternalSystemUiUtil.getFillLineConstraints(0));
+            content.add(orphanModulesList, fillLineConstraints());
             content.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 8, 0));
 
             DialogWrapper dialog = new DialogWrapper(project) {

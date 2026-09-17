@@ -15,17 +15,13 @@
  */
 package consulo.externalSystem.impl.internal.service.task;
 
-import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.model.DataNode;
-import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.service.project.ExternalEntityData;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 
 import java.util.Collection;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -41,18 +37,12 @@ public abstract class AbstractToolWindowService<T extends ExternalEntityData> im
         ExternalSystemApiUtil.executeOnEdt(false, new Runnable() {
             @Override
             public void run() {
-                ExternalSystemTasksTreeModel model = ExternalSystemUtil.getToolWindowElement(ExternalSystemTasksTreeModel.class,
-                    project,
-                    ExternalSystemDataKeys.ALL_TASKS_MODEL,
-                    toImport.iterator().next().getData().getOwner());
-                processData(toImport, project, model);
+                processData(toImport, project);
             }
         });
     }
 
-    protected abstract void processData(Collection<DataNode<T>> nodes,
-                                        Project project,
-                                        @Nullable ExternalSystemTasksTreeModel model);
+    protected abstract void processData(Collection<DataNode<T>> nodes, Project project);
 
     @Override
     public void removeData(Collection<? extends Void> toRemove, Project project, boolean synchronous) {

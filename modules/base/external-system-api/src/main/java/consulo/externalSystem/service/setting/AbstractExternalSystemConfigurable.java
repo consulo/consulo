@@ -18,31 +18,31 @@ package consulo.externalSystem.service.setting;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListener;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
-import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.JBUI;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base class that simplifies external system settings management.
@@ -62,201 +62,212 @@ import java.util.List;
  * @since 2013-04-30
  */
 public abstract class AbstractExternalSystemConfigurable<
-  ProjectSettings extends ExternalProjectSettings,
-  L extends ExternalSystemSettingsListener<ProjectSettings>,
-  SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>
+    ProjectSettings extends ExternalProjectSettings,
+    L extends ExternalSystemSettingsListener<ProjectSettings>,
+    SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>
 > implements SearchableConfigurable {
-  private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = new ArrayList<>();
+    private final List<ProjectSettings> myProjectSettings = new ArrayList<>();
+    private final Map<ProjectSettings, ProjectSettingsEntry> myProjectEntries = new LinkedHashMap<>();
 
-  private final ProjectSystemId myExternalSystemId;
-  
-  private final Project myProject;
+    private final ProjectSystemId myExternalSystemId;
+    private final Project myProject;
 
-  private @Nullable ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
-  private @Nullable ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
+    private @Nullable ExternalSystemSettingsConfigurable<SystemSettings> mySystemSettingsConfigurable;
 
-  private PaintAwarePanel myComponent;
-  private JBList<String> myProjectsList;
-  private DefaultListModel<String> myProjectsModel;
+    private @Nullable VerticalLayout myRoot;
+    private @Nullable DockLayout myProjectSettingsHolder;
+    private @Nullable Disposable myUiDisposable;
+    private @Nullable Disposable myContentDisposable;
 
-  protected AbstractExternalSystemConfigurable(Project project, ProjectSystemId externalSystemId) {
-    myProject = project;
-    myExternalSystemId = externalSystemId;
-  }
-
-  @Override
-  public LocalizeValue getDisplayName() {
-    return myExternalSystemId.getDisplayName();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public @Nullable JComponent createComponent(Disposable uiDisposable) {
-    if (myComponent == null) {
-      myComponent = new PaintAwarePanel(new GridBagLayout());
-      SystemSettings settings = getSettings();
-      prepareProjectSettings(settings, uiDisposable);
-      prepareSystemSettings(settings, uiDisposable);
-      ExternalSystemUiUtil.fillBottom(myComponent);
-    }
-    return myComponent;
-  }
-
-  @SuppressWarnings("unchecked")
-  
-  private SystemSettings getSettings() {
-    ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?> manager = (ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?>)ExternalSystemApiUtil.getManager(myExternalSystemId);
-    assert manager != null;
-    return manager.getSettingsProvider().apply(myProject);
-  }
-
-  private void prepareProjectSettings(SystemSettings s, Disposable uiDisposable) {
-    myProjectsModel = new DefaultListModel<>();
-    myProjectsList = new JBList<>(myProjectsModel);
-    myProjectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-    addTitle(ExternalSystemLocalize.settingsTitleLinkedProjects(myExternalSystemId.getReadableName()));
-    myComponent.add(new JBScrollPane(myProjectsList), ExternalSystemUiUtil.getFillLineConstraints(1));
-
-    addTitle(ExternalSystemLocalize.settingsTitleProjectSettings());
-    List<ProjectSettings> settings = new ArrayList<ProjectSettings>(s.getLinkedProjectsSettings());
-    myProjectsList.setVisibleRowCount(Math.max(3, Math.min(5, settings.size())));
-    ContainerUtil.sort(
-        settings,
-        (s1, s2) -> getProjectName(s1.getExternalProjectPath()).compareTo(getProjectName(s2.getExternalProjectPath()))
-    );
-
-    myProjectSettingsControls.clear();
-    for (ProjectSettings setting : settings) {
-      ExternalSystemSettingsControl<ProjectSettings> control = createProjectSettingsControl(setting);
-      control.fillUi(uiDisposable, myComponent, 1);
-      myProjectsModel.addElement(getProjectName(setting.getExternalProjectPath()));
-      myProjectSettingsControls.add(control);
-      control.showUi(false);
+    private record ProjectSettingsEntry(Object configurable, Component component) {
     }
 
-    myProjectsList.addListSelectionListener(e -> {
-      if (e.getValueIsAdjusting()) {
-        return;
-      }
-      int i = myProjectsList.getSelectedIndex();
-      if (i < 0) {
-        return;
-      }
-      if (myActiveProjectSettingsControl != null) {
-        myActiveProjectSettingsControl.showUi(false);
-      }
-      myActiveProjectSettingsControl = myProjectSettingsControls.get(i);
-      myActiveProjectSettingsControl.showUi(true);
-    });
-
-    if (!myProjectsModel.isEmpty()) {
-      addTitle(ExternalSystemLocalize.settingsTitleSystemSettings(myExternalSystemId.getDisplayName()));
-      myProjectsList.setSelectedIndex(0);
+    protected AbstractExternalSystemConfigurable(Project project, ProjectSystemId externalSystemId) {
+        myProject = project;
+        myExternalSystemId = externalSystemId;
     }
-  }
 
-  private void addTitle(LocalizeValue title) {
-    JPanel panel = new JPanel(new GridBagLayout());
-    panel.setBorder(IdeBorderFactory.createTitledBorder(title.get(), false, JBUI.insetsTop(ExternalSystemUiUtil.INSETS)));
-    myComponent.add(panel, ExternalSystemUiUtil.getFillLineConstraints(0));
-  }
-
-  /**
-   * Creates a control for managing given project settings.
-   *
-   * @param settings target external project settings
-   * @return control for managing given project settings
-   */
-  protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(ProjectSettings settings);
-
-  @SuppressWarnings("MethodMayBeStatic")
-  protected String getProjectName(String path) {
-    File file = new File(path);
-    return file.isDirectory() || file.getParentFile() == null ? file.getName() : file.getParentFile().getName();
-  }
-
-  private void prepareSystemSettings(SystemSettings s, Disposable uiDisposable) {
-    mySystemSettingsControl = createSystemSettingsControl(s);
-    if (mySystemSettingsControl != null) {
-      mySystemSettingsControl.fillUi(uiDisposable, myComponent, 1);
+    @Override
+    public LocalizeValue getDisplayName() {
+        return myExternalSystemId.getDisplayName();
     }
-  }
 
-  /**
-   * Creates a control for managing given system-level settings (if any).
-   *
-   * @param settings target system settings
-   * @return a control for managing given system-level settings;
-   * <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
-   */
-  protected abstract @Nullable ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(SystemSettings settings);
-
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
-      if (control.isModified()) {
-        return true;
-      }
-    }
-    return mySystemSettingsControl != null && mySystemSettingsControl.isModified();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    SystemSettings systemSettings = getSettings();
-    L publisher = systemSettings.getPublisher();
-    publisher.onBulkChangeStart();
-    try {
-      List<ProjectSettings> projectSettings = new ArrayList<>();
-      for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
-        ProjectSettings s = newProjectSettings();
-        control.apply(s);
-        projectSettings.add(s);
-      }
-      systemSettings.setLinkedProjectsSettings(projectSettings);
-      for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
-        if (control instanceof AbstractExternalProjectSettingsControl) {
-          AbstractExternalProjectSettingsControl.class.cast(control).updateInitialSettings();
+    @RequiredUIAccess
+    @Override
+    public Component createUIComponent(Disposable uiDisposable) {
+        if (myRoot == null) {
+            myUiDisposable = uiDisposable;
+            myRoot = VerticalLayout.create();
+            buildContent();
         }
-      }
-      if (mySystemSettingsControl != null) {
-        mySystemSettingsControl.apply(systemSettings);
-      }
+        return myRoot;
     }
-    finally {
-      publisher.onBulkChangeEnd();
-    }
-  }
 
-  /**
-   * @return new empty project-level settings object
-   */
-  protected abstract ProjectSettings newProjectSettings();
+    @SuppressWarnings("unchecked")
+    private SystemSettings getSettings() {
+        ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?> manager =
+            (ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?>)ExternalSystemApiUtil.getManager(myExternalSystemId);
+        assert manager != null;
+        return manager.getSettingsProvider().apply(myProject);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
-      control.reset();
-    }
-    if (mySystemSettingsControl != null) {
-      mySystemSettingsControl.reset();
-    }
-  }
+    @RequiredUIAccess
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void buildContent() {
+        VerticalLayout root = myRoot;
+        if (root == null) {
+            return;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
-      control.disposeUIResources();
+        if (myContentDisposable != null) {
+            Disposer.dispose(myContentDisposable);
+        }
+        myContentDisposable = Disposable.newDisposable("external system settings content");
+        Disposer.register(myUiDisposable, myContentDisposable);
+
+        root.removeAll();
+        myProjectSettings.clear();
+        myProjectEntries.clear();
+
+        SystemSettings settings = getSettings();
+
+        myProjectSettings.addAll(settings.getLinkedProjectsSettings());
+        myProjectSettings.sort(Comparator.comparing(setting -> getProjectName(setting.getExternalProjectPath())));
+
+        DockLayout projectSettingsHolder = DockLayout.create();
+        myProjectSettingsHolder = projectSettingsHolder;
+
+        ListBox<ProjectSettings> projectsBox = ListBox.create(myProjectSettings);
+        projectsBox.setRender((presentation, item) -> {
+            ProjectSettings value = item.getValue();
+            presentation.append(value == null ? "" : getProjectName(value.getExternalProjectPath()));
+        });
+        projectsBox.addValueListener(event -> showProjectSettings(event.getValue()));
+
+        root.add(LabeledLayout.create(
+            ExternalSystemLocalize.settingsTitleLinkedProjects(myExternalSystemId.getReadableName()),
+            ScrollableLayout.create(projectsBox)
+        ));
+        root.add(LabeledLayout.create(ExternalSystemLocalize.settingsTitleProjectSettings(), projectSettingsHolder));
+
+        mySystemSettingsConfigurable = getConfigurableFactory().createSystemSettingsConfigurable(
+            settings,
+            ExternalSystemSettingsPlace.SETTINGS
+        );
+        if (mySystemSettingsConfigurable != null) {
+            root.add(LabeledLayout.create(
+                ExternalSystemLocalize.settingsTitleSystemSettings(myExternalSystemId.getDisplayName()),
+                mySystemSettingsConfigurable.createUIComponent(myContentDisposable)
+            ));
+        }
+
+        if (!myProjectSettings.isEmpty()) {
+            projectsBox.setValueByIndex(0);
+        }
     }
-    myProjectSettingsControls.clear();
-    myComponent = null;
-    myProjectsList = null;
-    myProjectsModel = null;
-    mySystemSettingsControl = null;
-  }
+
+    @SuppressWarnings("rawtypes")
+    private ExternalSystemSettingsConfigurableFactory getConfigurableFactory() {
+        return ExternalSystemApiUtil.getSettingsConfigurableFactoryStrict(myExternalSystemId);
+    }
+
+    @RequiredUIAccess
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void showProjectSettings(@Nullable ProjectSettings settings) {
+        DockLayout holder = myProjectSettingsHolder;
+        if (holder == null) {
+            return;
+        }
+
+        holder.removeAll();
+
+        if (settings == null) {
+            return;
+        }
+
+        ProjectSettingsEntry entry = myProjectEntries.get(settings);
+        if (entry == null) {
+            AbstractExternalProjectSettingsConfigurable configurable = getConfigurableFactory()
+                .createProjectSettingsConfigurable(cloneSettings(settings), ExternalSystemSettingsPlace.SETTINGS);
+            entry = new ProjectSettingsEntry(configurable, configurable.createUIComponent(myContentDisposable));
+            myProjectEntries.put(settings, entry);
+        }
+
+        holder.center(entry.component());
+    }
+
+    @SuppressWarnings("unchecked")
+    private AbstractExternalProjectSettingsConfigurable<ProjectSettings> configurableOf(ProjectSettingsEntry entry) {
+        return (AbstractExternalProjectSettingsConfigurable<ProjectSettings>)entry.configurable();
+    }
+
+    @SuppressWarnings("unchecked")
+    private ProjectSettings cloneSettings(ProjectSettings settings) {
+        return (ProjectSettings)settings.clone();
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    protected String getProjectName(String path) {
+        File file = new File(path);
+        return file.isDirectory() || file.getParentFile() == null ? file.getName() : file.getParentFile().getName();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        for (ProjectSettingsEntry entry : myProjectEntries.values()) {
+            if (configurableOf(entry).isModified()) {
+                return true;
+            }
+        }
+        return mySystemSettingsConfigurable != null && mySystemSettingsConfigurable.isModified();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        SystemSettings systemSettings = getSettings();
+        L publisher = systemSettings.getPublisher();
+        publisher.onBulkChangeStart();
+        try {
+            List<ProjectSettings> projectSettings = new ArrayList<>();
+            for (ProjectSettings setting : myProjectSettings) {
+                ProjectSettingsEntry entry = myProjectEntries.get(setting);
+                if (entry == null) {
+                    projectSettings.add(cloneSettings(setting));
+                    continue;
+                }
+
+                AbstractExternalProjectSettingsConfigurable<ProjectSettings> configurable = configurableOf(entry);
+                configurable.apply();
+                projectSettings.add(cloneSettings(configurable.getSettings()));
+            }
+            systemSettings.setLinkedProjectsSettings(projectSettings);
+
+            if (mySystemSettingsConfigurable != null) {
+                mySystemSettingsConfigurable.apply();
+            }
+        }
+        finally {
+            publisher.onBulkChangeEnd();
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        buildContent();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        myProjectSettings.clear();
+        myProjectEntries.clear();
+        myProjectSettingsHolder = null;
+        mySystemSettingsConfigurable = null;
+        myContentDisposable = null;
+        myUiDisposable = null;
+        myRoot = null;
+    }
 }

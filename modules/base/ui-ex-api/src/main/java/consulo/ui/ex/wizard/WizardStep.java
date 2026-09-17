@@ -15,12 +15,9 @@
  */
 package consulo.ui.ex.wizard;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,39 +25,23 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-08-20
  */
 public interface WizardStep<CONTEXT> {
+    @RequiredUIAccess
+    Component getComponent(CONTEXT context, Disposable uiDisposable);
 
- 
-  @RequiredUIAccess
-  Component getComponent(CONTEXT context, Disposable uiDisposable);
+    default @Nullable Component getPreferredFocusedComponent() {
+        return null;
+    }
 
-  default @Nullable Component getPreferredFocusedComponent() {
-    return null;
-  }
+    default void onStepEnter(CONTEXT context) {
+    }
 
- 
-  @Deprecated
-  @DeprecationInfo("Desktop UI version")
-  @RequiredUIAccess
-  default java.awt.Component getSwingComponent(CONTEXT context, Disposable uiDisposable) {
-    return TargetAWT.to(getComponent(context, uiDisposable));
-  }
+    default void onStepLeave(CONTEXT context) {
+    }
 
-  @Deprecated
-  @DeprecationInfo("Desktop UI version")
-  default java.awt.@Nullable Component getSwingPreferredFocusedComponent() {
-    return TargetAWT.to(getPreferredFocusedComponent());
-  }
+    default void validateStep(CONTEXT context) throws WizardStepValidationException {
+    }
 
-  default void onStepEnter(CONTEXT context) {
-  }
-
-  default void onStepLeave(CONTEXT context) {
-  }
-
-  default void validateStep(CONTEXT context) throws WizardStepValidationException {
-  }
-
-  default boolean isVisible(CONTEXT context) {
-    return true;
-  }
+    default boolean isVisible(CONTEXT context) {
+        return true;
+    }
 }

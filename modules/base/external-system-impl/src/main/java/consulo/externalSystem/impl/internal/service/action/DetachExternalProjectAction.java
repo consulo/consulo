@@ -18,10 +18,8 @@ package consulo.externalSystem.impl.internal.service.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
-import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
-import consulo.externalSystem.model.ExternalSystemDataKeys;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.localize.LocalizeValue;
@@ -66,6 +64,18 @@ public class DetachExternalProjectAction extends LegacyDumbAwareAction {
         }
     }
 
+    private static void forgetRecentTasks(ExternalActionUtil.MyInfo info) {
+        String detachedPath = info.externalProject.getPath();
+
+        List<ExternalTaskExecutionInfo> tasks = new ArrayList<>(info.localSettings.getRecentTasks());
+        tasks.removeIf(task -> {
+            String path = task.getSettings().getExternalProjectPath();
+            return detachedPath.equals(path)
+                || detachedPath.equals(ExternalSystemApiUtil.getRootProjectPath(path, info.externalSystemId, info.ideProject));
+        });
+        info.localSettings.setRecentTasks(tasks);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
@@ -75,15 +85,7 @@ public class DetachExternalProjectAction extends LegacyDumbAwareAction {
             return;
         }
 
-        ExternalSystemTasksTreeModel allTasksModel = e.getData(ExternalSystemDataKeys.ALL_TASKS_MODEL);
-        if (allTasksModel != null) {
-            allTasksModel.pruneNodes(info.externalProject);
-        }
-
-        ExternalSystemRecentTasksList recentTasksList = e.getData(ExternalSystemDataKeys.RECENT_TASKS_LIST);
-        if (recentTasksList != null) {
-            recentTasksList.getModel().forgetTasksFrom(info.externalProject.getPath());
-        }
+        forgetRecentTasks(info);
 
         info.localSettings.forgetExternalProjects(Collections.singleton(info.externalProject.getPath()));
         info.settings.unlinkExternalProject(info.externalProject.getPath());

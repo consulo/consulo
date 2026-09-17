@@ -20,17 +20,17 @@ import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ui.ex.awt.tree.SimpleTree;
+import consulo.dataContext.DataContext;
+import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.ex.tree.SimpleNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-import java.awt.event.InputEvent;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -79,7 +79,7 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
     public ExternalSystemNode(ExternalProjectsView externalProjectsView,
                               @Nullable ExternalSystemNode<?> parent,
                               @Nullable DataNode<T> dataNode) {
-        super(externalProjectsView.getProject(), null);
+        super((NodeDescriptor)null);
         myExternalProjectsView = externalProjectsView;
         myDataNode = dataNode;
         myParent = parent;
@@ -372,10 +372,12 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
 
     private SimpleTextAttributes prepareAttributes(SimpleTextAttributes from) {
         ExternalProjectsStructure.ErrorLevel level = getTotalErrorLevel();
-        Color waveColor = level == ExternalProjectsStructure.ErrorLevel.NONE ? null : JBColor.RED;
+        ColorValue waveColor = level == ExternalProjectsStructure.ErrorLevel.NONE ? null : ComponentColors.ERROR_FOREGROUND;
         int style = from.getStyle();
-        if (waveColor != null) style |= SimpleTextAttributes.STYLE_WAVED;
-        return new SimpleTextAttributes(from.getBgColor(), from.getFgColor(), waveColor, style);
+        if (waveColor != null) {
+            style |= SimpleTextAttributes.STYLE_WAVED;
+        }
+        return SimpleTextAttributes.of(from.background(), from.foreground(), waveColor, style);
     }
 
     @Nullable
@@ -389,9 +391,9 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
     }
 
     @Override
-    public void handleDoubleClickOrEnter(SimpleTree tree, InputEvent inputEvent) {
-        String actionId = getActionId();
-        myExternalProjectsView.handleDoubleClickOrEnter(this, actionId, inputEvent);
+    public boolean handleDoubleClickOrEnter(DataContext context, @Nullable InputDetails inputDetails) {
+        myExternalProjectsView.handleDoubleClickOrEnter(this, getActionId(), inputDetails);
+        return true;
     }
 
     @Override

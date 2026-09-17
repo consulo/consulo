@@ -41,6 +41,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
@@ -95,10 +96,14 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     
     @Override
     @RequiredUIAccess
-    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, ExternalSystemBeforeRunTask task) {
-        ExternalSystemEditTaskDialog dialog = new ExternalSystemEditTaskDialog(myProject, task.getTaskExecutionSettings(), mySystemId);
-        dialog.setTitle(ExternalSystemLocalize.tasksSelectTaskTitle(mySystemId.getDisplayName()));
-        return dialog.showAsync().toCompletableFuture();
+    public CompletableFuture<?> configureTask(RunConfiguration runConfiguration, ExternalSystemBeforeRunTask task) {
+        ExternalSystemEditTaskDialogDescriptor descriptor = new ExternalSystemEditTaskDialogDescriptor(
+            ExternalSystemLocalize.tasksSelectTaskTitle(mySystemId.getDisplayName()),
+            myProject,
+            task.getTaskExecutionSettings(),
+            mySystemId
+        );
+        return myProject.getApplication().getInstance(DialogService.class).build(myProject, descriptor).showAsync();
     }
 
     @Override

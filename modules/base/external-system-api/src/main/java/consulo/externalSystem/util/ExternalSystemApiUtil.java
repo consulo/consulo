@@ -40,7 +40,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.runner.RunnerRegistry;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.Key;
@@ -56,6 +55,9 @@ import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfig
 import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.externalSystem.service.project.autoimport.ExternalSystemAutoImportAware;
+import consulo.externalSystem.internal.DefaultExternalSystemUiAware;
+import consulo.externalSystem.service.setting.ExternalSystemSettingsConfigurableFactory;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.logging.Logger;
@@ -347,17 +349,15 @@ public class ExternalSystemApiUtil {
         ExternalSystemManager<?, ?, ?, ?, ?> manager =
             ExternalSystemApiUtil.getManagerStrict(taskInfo.getSettings().getExternalSystemIdString());
 
-        ProjectSystemId externalSystemId = manager.getSystemId();
-
-        ExternalSystemRecentTasksList recentTasksList =
-            getToolWindowElement(ExternalSystemRecentTasksList.class, project, ExternalSystemDataKeys.RECENT_TASKS_LIST, externalSystemId);
-        if (recentTasksList == null) {
-            return;
-        }
-        recentTasksList.setFirst(taskInfo);
-
         AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
-        settings.setRecentTasks(recentTasksList.getModel().getTasks());
+
+        List<ExternalTaskExecutionInfo> tasks = new ArrayList<>(settings.getRecentTasks());
+        tasks.remove(taskInfo);
+        tasks.add(0, taskInfo);
+        while (tasks.size() > ExternalSystemConstants.RECENT_TASKS_NUMBER) {
+            tasks.remove(tasks.size() - 1);
+        }
+        settings.setRecentTasks(tasks);
     }
 
     @SuppressWarnings("unchecked")
@@ -504,6 +504,30 @@ public class ExternalSystemApiUtil {
 
     public static @Nullable ExternalSystemManager<?, ?, ?, ?, ?> getManager(ProjectSystemId externalSystemId) {
         return getManager(externalSystemId.getId());
+    }
+
+    public static ExternalSystemSettingsConfigurableFactory<?, ?> getSettingsConfigurableFactoryStrict(ProjectSystemId externalSystemId) {
+        ExternalSystemSettingsConfigurableFactory<?, ?> factory = getSettingsConfigurableFactory(externalSystemId);
+        if (factory != null) {
+            return factory;
+        }
+
+        throw new IllegalArgumentException(
+            "There no " + ExternalSystemSettingsConfigurableFactory.class.getName() + " for id: " + externalSystemId.getId()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static @Nullable ExternalSystemSettingsConfigurableFactory<?, ?> getSettingsConfigurableFactory(
+        ProjectSystemId externalSystemId
+    ) {
+        return Application.get().getExtensionPoint(ExternalSystemSettingsConfigurableFactory.class)
+            .findFirstSafe(factory -> Objects.equals(externalSystemId, factory.getSystemId()));
+    }
+
+    public static ExternalSystemUiAware getUiAware(ProjectSystemId externalSystemId) {
+        ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
+        return manager instanceof ExternalSystemUiAware uiAware ? uiAware : DefaultExternalSystemUiAware.INSTANCE;
     }
 
     public static Map<Key<?>, List<DataNode<?>>> group(Collection<DataNode<?>> nodes) {

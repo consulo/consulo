@@ -15,64 +15,65 @@
  */
 package consulo.externalSystem.execution;
 
-import consulo.externalSystem.localize.ExternalSystemLocalize;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.service.execution.ExternalSystemTaskSettingsControl;
-import consulo.externalSystem.ui.awt.PaintAwarePanel;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogValue;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+/**
+ * Edits the task execution settings of a single before-run task.
+ */
+public class ExternalSystemEditTaskDialogDescriptor extends DialogDescriptor {
+    private static final Logger LOG = Logger.getInstance(ExternalSystemEditTaskDialogDescriptor.class);
 
-public class ExternalSystemEditTaskDialog extends DialogWrapper {
-
-    
     private final ExternalSystemTaskExecutionSettings myTaskExecutionSettings;
-    
+
     private final ExternalSystemTaskSettingsControl myControl;
-    private @Nullable JComponent contentPane;
 
-    public ExternalSystemEditTaskDialog(Project project,
-                                        ExternalSystemTaskExecutionSettings taskExecutionSettings,
-                                        ProjectSystemId externalSystemId) {
-        super(project, true);
+    public ExternalSystemEditTaskDialogDescriptor(
+        LocalizeValue title,
+        Project project,
+        ExternalSystemTaskExecutionSettings taskExecutionSettings,
+        ProjectSystemId externalSystemId
+    ) {
+        super(title);
         myTaskExecutionSettings = taskExecutionSettings;
-
-        setTitle(ExternalSystemLocalize.tasksEditTaskTitle(externalSystemId.getDisplayName()));
         myControl = new ExternalSystemTaskSettingsControl(project, externalSystemId);
         myControl.setOriginalSettings(taskExecutionSettings);
-        setModal(true);
-        init();
     }
 
     @Override
-    protected JComponent createCenterPanel() {
-        if (contentPane == null) {
-            contentPane = new PaintAwarePanel();
-            myControl.fillUi(getDisposable(), (PaintAwarePanel) contentPane, 0);
-            myControl.reset();
-        }
-        return contentPane;
-    }
-
     @RequiredUIAccess
-    @Override
-    public JComponent getPreferredFocusedComponent() {
-        return null;
+    public Component createCenterComponent(Disposable uiDisposable) {
+        Component component = myControl.createUIComponent();
+        myControl.reset();
+        return component;
     }
 
     @Override
-    protected void dispose() {
-        super.dispose();
-        myControl.disposeUIResources();
-    }
+    @RequiredUIAccess
+    public boolean canHandle(AnAction action, @Nullable DialogValue value) {
+        if (!isDefaultAction(action)) {
+            return super.canHandle(action, value);
+        }
 
-    @Override
-    protected void doOKAction() {
-        myControl.apply(myTaskExecutionSettings);
-        super.doOKAction();
+        try {
+            myControl.apply(myTaskExecutionSettings);
+        }
+        catch (ConfigurationException e) {
+            LOG.error(e);
+            return false;
+        }
+        return true;
     }
 }

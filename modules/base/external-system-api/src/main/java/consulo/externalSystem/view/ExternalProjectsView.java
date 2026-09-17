@@ -17,13 +17,13 @@ package consulo.externalSystem.view;
 
 import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.DataNode;
+import consulo.ui.event.details.InputDetails;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.InputEvent;
 import java.util.List;
 
 /**
@@ -74,7 +74,7 @@ public interface ExternalProjectsView {
 
     void handleDoubleClickOrEnter(ExternalSystemNode<?> node,
                                   @Nullable String actionId,
-                                  InputEvent inputEvent);
+                                  @Nullable InputDetails inputDetails);
 
     void addListener(Listener listener);
 
@@ -84,6 +84,6 @@ public interface ExternalProjectsView {
     void scheduleStructureUpdate();
 
     interface Listener {
-        void onDoubleClickOrEnter(ExternalSystemNode<?> node, InputEvent inputEvent);
+        void onDoubleClickOrEnter(ExternalSystemNode<?> node, @Nullable InputDetails inputDetails);
     }
 }

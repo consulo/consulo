@@ -25,7 +25,6 @@ import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
@@ -56,11 +55,7 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
   }
 
   @Override
-  protected void processData(
-    Collection<DataNode<ModuleData>> nodes,
-    Project project,
-    @Nullable ExternalSystemTasksTreeModel model
-  ) {
+  protected void processData(Collection<DataNode<ModuleData>> nodes, Project project) {
     if (nodes.isEmpty()) {
       return;
     }

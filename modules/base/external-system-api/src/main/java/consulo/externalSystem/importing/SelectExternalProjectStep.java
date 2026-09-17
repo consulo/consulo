@@ -18,31 +18,23 @@ package consulo.externalSystem.importing;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.importing.AbstractExternalModuleImportProvider;
-import consulo.externalSystem.importing.ExternalModuleImportContext;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
-import consulo.externalSystem.service.setting.AbstractImportFromExternalSystemControl;
-import consulo.externalSystem.setting.AbstractExternalSystemSettings;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
-import consulo.externalSystem.ui.awt.PaintAwarePanel;
+import consulo.externalSystem.service.setting.AbstractExternalProjectSettingsConfigurable;
+import consulo.externalSystem.service.setting.ExternalSystemSettingsConfigurable;
+import consulo.externalSystem.service.setting.ExternalSystemSettingsConfigurableFactory;
+import consulo.externalSystem.service.setting.ExternalSystemSettingsPlace;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.TextComponentAccessor;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.ex.wizard.WizardStepValidationException;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.StringUtil;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Handles the following responsibilities:
@@ -57,126 +49,90 @@ import java.awt.*;
  * @author VISTALL
  * @since 2011-08-01
  */
-public class SelectExternalProjectStep<C extends AbstractImportFromExternalSystemControl> implements WizardStep<ExternalModuleImportContext<C>> {
-    private PaintAwarePanel myComponent;
+public class SelectExternalProjectStep implements WizardStep<ExternalModuleImportContext> {
+    private @Nullable VerticalLayout myComponent;
 
-    
-    private AbstractImportFromExternalSystemControl myControl;
+    private FileChooserTextBoxBuilder.@Nullable Controller myLinkedProjectPathBox;
 
-    
-    private TextFieldWithBrowseButton myLinkedProjectPathField;
+    private @Nullable AbstractExternalProjectSettingsConfigurable<?> myProjectSettingsConfigurable;
 
-    @RequiredUIAccess
-    
-    @Override
-    public Component getComponent(ExternalModuleImportContext<C> context, Disposable uiDisposable) {
-        throw new UnsupportedOperationException("desktop only");
-    }
+    private @Nullable ExternalSystemSettingsConfigurable<?> mySystemSettingsConfigurable;
 
     @RequiredUIAccess
-    
     @Override
-    public JComponent getSwingComponent(ExternalModuleImportContext<C> context, Disposable uiDisposable) {
-        return createComponent(context, uiDisposable);
-    }
-
-    public JComponent createComponent(ExternalModuleImportContext<C> context, Disposable uiDisposable) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public Component getComponent(ExternalModuleImportContext context, Disposable uiDisposable) {
         if (myComponent != null) {
             return myComponent;
         }
 
-        myControl = context.getImportProvider().getControl();
-
-        myComponent = new PaintAwarePanel(new GridBagLayout());
-        AbstractExternalModuleImportProvider<C> provider = context.getImportProvider();
+        AbstractExternalModuleImportProvider provider = context.getImportProvider();
+        ExternalSystemSettingsConfigurableFactory factory = context.getConfigurableFactory();
 
         ProjectSystemId externalSystemId = provider.getExternalSystemId();
-
-        JLabel linkedProjectPathLabel =
-            new JLabel(ExternalSystemLocalize.settingsLabelSelectProject(externalSystemId.getDisplayName()).get());
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
-        FileChooserDescriptor fileChooserDescriptor = manager.getExternalProjectDescriptor();
-        myLinkedProjectPathField = new TextFieldWithBrowseButton();
-        myLinkedProjectPathField.addBrowseFolderListener(
-            LocalizeValue.empty(),
-            ExternalSystemLocalize.settingsLabelSelectProject(externalSystemId.getDisplayName()),
-            null,
-            fileChooserDescriptor,
-            TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT
-        );
-        myLinkedProjectPathField.getTextField().getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                myControl.onLinkedProjectPathChange(myLinkedProjectPathField.getText());
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                myControl.onLinkedProjectPathChange(myLinkedProjectPathField.getText());
-            }
+        LocalizeValue selectProjectTitle = ExternalSystemLocalize.settingsLabelSelectProject(externalSystemId.getDisplayName());
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                myControl.onLinkedProjectPathChange(myLinkedProjectPathField.getText());
-            }
-        });
-
-        myComponent.add(linkedProjectPathLabel, ExternalSystemUiUtil.getLabelConstraints(0));
-        myComponent.add(myLinkedProjectPathField, ExternalSystemUiUtil.getFillLineConstraints(0));
-
-        ExternalSystemSettingsControl projectSettings = myControl.getProjectSettingsControl();
-        projectSettings.fillUi(uiDisposable, myComponent, 0);
-
-        ExternalSystemSettingsControl systemSettingsControl = myControl.getSystemSettingsControl();
-        if (systemSettingsControl != null) {
-            systemSettingsControl.fillUi(uiDisposable, myComponent, 0);
-        }
-
-        ExternalSystemUiUtil.fillBottom(myComponent);
+        FileChooserTextBoxBuilder.Controller linkedProjectPathBox = FileChooserTextBoxBuilder.create(context.getProject())
+            .uiDisposable(uiDisposable)
+            .dialogTitle(selectProjectTitle)
+            .fileChooserDescriptor(manager.getExternalProjectDescriptor())
+            .build();
+        myLinkedProjectPathBox = linkedProjectPathBox;
 
         String path = context.getPath();
-
-        myControl.getProjectSettings().setExternalProjectPath(path);
-        myLinkedProjectPathField.setText(path);
+        context.getProjectSettings().setExternalProjectPath(path);
+        linkedProjectPathBox.setValue(StringUtil.notNullize(path));
 
         provider.doPrepare(context);
 
-        projectSettings.reset();
-        if (systemSettingsControl != null) {
-            systemSettingsControl.reset();
+        AbstractExternalProjectSettingsConfigurable<?> projectSettingsConfigurable =
+            factory.createProjectSettingsConfigurable(context.getProjectSettings(), ExternalSystemSettingsPlace.IMPORT);
+        myProjectSettingsConfigurable = projectSettingsConfigurable;
+
+        linkedProjectPathBox.getComponent().addValueListener(
+            event -> projectSettingsConfigurable.onLinkedProjectPathChange(StringUtil.notNullize(event.getValue()))
+        );
+
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(LabeledBuilder.filled(selectProjectTitle, linkedProjectPathBox));
+        layout.add(projectSettingsConfigurable.createUIComponent(uiDisposable));
+
+        ExternalSystemSettingsConfigurable<?> systemSettingsConfigurable =
+            factory.createSystemSettingsConfigurable(context.getSystemSettings(), ExternalSystemSettingsPlace.IMPORT);
+        mySystemSettingsConfigurable = systemSettingsConfigurable;
+        if (systemSettingsConfigurable != null) {
+            layout.add(systemSettingsConfigurable.createUIComponent(uiDisposable));
         }
+
+        myComponent = layout;
         return myComponent;
     }
 
+    @RequiredUIAccess
     @Override
-    public void validateStep(ExternalModuleImportContext<C> context) throws WizardStepValidationException {
+    public void validateStep(ExternalModuleImportContext context) throws WizardStepValidationException {
+        FileChooserTextBoxBuilder.Controller linkedProjectPathBox = myLinkedProjectPathBox;
+        if (linkedProjectPathBox == null) {
+            return;
+        }
+
         try {
-            AbstractExternalModuleImportProvider<C> provider = context.getImportProvider();
-            ProjectSystemId externalSystemId = provider.getExternalSystemId();
-            Project project = context.getProject();
+            context.applyLinkedProjectPath(linkedProjectPathBox.getValue());
 
-            String linkedProjectPath = myLinkedProjectPathField.getText();
-            if (StringUtil.isEmpty(linkedProjectPath)) {
-                throw new ConfigurationException(ExternalSystemLocalize.errorProjectUndefined());
+            if (myProjectSettingsConfigurable != null) {
+                myProjectSettingsConfigurable.apply();
             }
-            else if (project != null) {
-                ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
-                assert manager != null;
-                AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
-                if (settings.getLinkedProjectSettings(linkedProjectPath) != null) {
-                    throw new ConfigurationException(ExternalSystemLocalize.errorProjectAlreadyRegistered());
-                }
+            if (mySystemSettingsConfigurable != null) {
+                mySystemSettingsConfigurable.apply();
             }
-
-            myControl.apply(linkedProjectPath, project);
         }
         catch (ConfigurationException e) {
             throw new WizardStepValidationException(e.getMessage());
         }
 
-        AbstractExternalModuleImportProvider<C> provider = context.getImportProvider();
-
-        provider.ensureProjectIsDefined(context);
+        context.getImportProvider().ensureProjectIsDefined(context);
     }
 }
