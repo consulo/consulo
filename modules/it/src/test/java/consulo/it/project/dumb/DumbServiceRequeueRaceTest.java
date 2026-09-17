@@ -18,6 +18,7 @@ package consulo.it.project.dumb;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.it.HeadlessApplicationExtension;
+import consulo.it.index.ScanningTestSupport;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -98,6 +99,11 @@ public class DumbServiceRequeueRaceTest {
         );
 
         awaitSmart(dumbService);
+        ScanningTestSupport.awaitIdle(project);
+        ScanningTestSupport.waitFor(
+            "the dumb window of the project open must finish publishing before the baseline is taken",
+            () -> events.isEmpty() || EXITED.equals(events.get(events.size() - 1))
+        );
         events.clear();
         notUnderWriteAction.clear();
 
