@@ -441,6 +441,10 @@ public final class UnindexedFilesScanner implements FilesScanningTask, Closeable
 
         scan(indicator, progressReporter, scanningIterators);
 
+        if (myProject.isDisposed()) {
+            return;
+        }
+
         // the full VFS refresh makes sense only after it's loaded, i.e., after scanning files to index is finished
         InitialVfsRefreshService service = InitialVfsRefreshService.getInstance(myProject);
         Application application = myProject.getApplication();

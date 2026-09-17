@@ -85,6 +85,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     private final ComponentScope myComponentScope;
     private final Supplier<ComponentManager> myApplicationGetter;
 
+    private final Object myCachePublishLock = new Object();
+
     private @Nullable Map<Class, Object> myInstanceOfCacheValue = null;
     private @Nullable Map<ExtensionPointCacheKey, Object> myCaches = null;
     private long myModificationCount;
@@ -303,12 +305,19 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         CacheValue<T> cacheValue = myCacheValue;
 
         List<ExtensionValue<T>> extensionCache = cacheValue.myExtensionCache;
-        if (extensionCache == null) {
-            List<ExtensionValue<T>> result = build(cacheValue.myInjectingBindings);
-            CacheValue<T> value = set(result);
-            extensionCache = Objects.requireNonNull(value.myExtensionCache);
+        if (extensionCache != null) {
+            return extensionCache;
         }
-        return extensionCache;
+
+        List<ExtensionValue<T>> result = build(cacheValue.myInjectingBindings);
+
+        synchronized (myCachePublishLock) {
+            List<ExtensionValue<T>> published = myCacheValue.myExtensionCache;
+            if (published != null) {
+                return published;
+            }
+            return Objects.requireNonNull(set(result).myExtensionCache);
+        }
     }
 
     @Override
