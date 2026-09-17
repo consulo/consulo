@@ -59,7 +59,7 @@ import java.util.function.Supplier;
 public abstract class BaseComponentManager extends UserDataHolderBase implements ComponentManager, Disposable {
     private static final Logger LOG = Logger.getInstance(BaseComponentManager.class);
 
-    private InjectingContainer myInjectingContainer;
+    private volatile InjectingContainer myInjectingContainer;
 
     private MessageBusImpl myMessageBus;
 
@@ -429,8 +429,10 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         }
 
         myExtensionArea = null;
-        myInjectingContainer.dispose();
+
+        InjectingContainer injectingContainer = myInjectingContainer;
         myInjectingContainer = null;
+        injectingContainer.dispose();
 
         myNotLazyStepFinished = false;
         myNotLazyServices.clear();
