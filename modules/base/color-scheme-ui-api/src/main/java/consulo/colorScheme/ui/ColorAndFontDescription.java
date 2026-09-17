@@ -53,6 +53,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
         return myName.get();
     }
 
+    @Override
     public LocalizeValue getName() {
         return myName;
     }

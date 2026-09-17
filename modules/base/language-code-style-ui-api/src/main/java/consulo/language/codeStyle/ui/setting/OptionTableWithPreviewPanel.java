@@ -183,7 +183,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         }
         else {
             for (Option each : myCustomOptions) {
-                if (each instanceof FieldOption && ((FieldOption) each).clazz == settingsClass && each.getOptionName().equals(fieldName)) {
+                if (each instanceof FieldOption option && option.myClass == settingsClass && each.getOptionName().equals(fieldName)) {
                     each.setEnabled(true);
                 }
             }
@@ -411,8 +411,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     private abstract class FieldOption extends Option {
-        final @Nullable Class<? extends CustomCodeStyleSettings> clazz;
-        Field field;
+        final @Nullable Class<? extends CustomCodeStyleSettings> myClass;
+        Field myField;
 
         public FieldOption(
             @Nullable Class<? extends CustomCodeStyleSettings> clazz,
@@ -423,11 +423,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             @Nullable String anchorFiledName
         ) {
             super(fieldName, title, groupName, anchor, anchorFiledName);
-            this.clazz = clazz;
+            this.myClass = clazz;
 
             try {
                 Class styleSettingsClass = clazz == null ? CommonCodeStyleSettings.class : clazz;
-                this.field = styleSettingsClass.getField(fieldName);
+                this.myField = styleSettingsClass.getField(fieldName);
             }
             catch (NoSuchFieldException e) {
                 LOG.error(e);
@@ -435,8 +435,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         }
 
         protected Object getSettings(CodeStyleSettings settings) {
-            if (clazz != null) {
-                return settings.getCustomSettings(clazz);
+            if (myClass != null) {
+                return settings.getCustomSettings(myClass);
             }
             return settings.getCommonSettings(getDefaultLanguage());
         }
@@ -457,7 +457,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         @Override
         public Object getValue(CodeStyleSettings settings) {
             try {
-                return field == null ? null : field.getBoolean(getSettings(settings));
+                return myField == null ? null : myField.getBoolean(getSettings(settings));
             }
             catch (IllegalAccessException ignore) {
                 return null;
@@ -467,8 +467,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         @Override
         public void setValue(Object value, CodeStyleSettings settings) {
             try {
-                if (field != null) {
-                    field.setBoolean(getSettings(settings), (Boolean) value);
+                if (myField != null) {
+                    myField.setBoolean(getSettings(settings), (Boolean) value);
                 }
             }
             catch (IllegalAccessException ignored) {
@@ -498,13 +498,13 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         @Override
         public Object getValue(CodeStyleSettings settings) {
             try {
-                int value = field.getInt(getSettings(settings));
+                int value = myField.getInt(getSettings(settings));
                 for (int i = 0; i < myValues.length; i++) {
                     if (myValues[i] == value) {
                         return myOptions[i];
                     }
                 }
-                LOG.error("Invalid option value " + value + " for " + field.getName());
+                LOG.error("Invalid option value " + value + " for " + myField.getName());
             }
             catch (IllegalAccessException ignore) {
             }
@@ -516,11 +516,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             try {
                 for (int i = 0; i < myValues.length; i++) {
                     if (myOptions[i].equals(value)) {
-                        field.setInt(getSettings(settings), myValues[i]);
+                        myField.setInt(getSettings(settings), myValues[i]);
                         return;
                     }
                 }
-                LOG.error("Invalid option value " + value + " for " + field.getName());
+                LOG.error("Invalid option value " + value + " for " + myField.getName());
             }
             catch (IllegalAccessException ignore) {
             }
@@ -555,7 +555,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         @Override
         public Object getValue(CodeStyleSettings settings) {
             try {
-                return field.getInt(getSettings(settings));
+                return myField.getInt(getSettings(settings));
             }
             catch (IllegalAccessException e) {
                 return null;
@@ -567,10 +567,10 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             //noinspection EmptyCatchBlock
             try {
                 if (value instanceof Integer intValue) {
-                    field.setInt(getSettings(settings), intValue);
+                    myField.setInt(getSettings(settings), intValue);
                 }
                 else {
-                    field.setInt(getSettings(settings), myDefaultValue);
+                    myField.setInt(getSettings(settings), myDefaultValue);
                 }
             }
             catch (IllegalAccessException e) {

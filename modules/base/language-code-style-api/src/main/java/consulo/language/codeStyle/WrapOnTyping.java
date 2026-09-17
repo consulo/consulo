@@ -68,4 +68,13 @@ public enum WrapOnTyping {
         }
         return NO_WRAP;
     }
+
+    public static WrapOnTyping fromDisplayName(LocalizeValue displayName) {
+        for (WrapOnTyping wrapOnTyping : WrapOnTyping.values()) {
+            if (displayName.equals(wrapOnTyping.getDisplayName())) {
+                return wrapOnTyping;
+            }
+        }
+        return NO_WRAP;
+    }
 }

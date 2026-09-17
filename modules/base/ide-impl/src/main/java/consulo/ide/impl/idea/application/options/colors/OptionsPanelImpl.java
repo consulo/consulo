@@ -202,7 +202,7 @@ public class OptionsPanelImpl implements OptionsPanel {
         EditorSchemeAttributeDescriptor[] descriptions = myOptions.getCurrentDescriptions();
         for (EditorSchemeAttributeDescriptor description : descriptions) {
             if (description.getGroup().equals(myCategoryName)) {
-                result.add(LocalizeValue.ofNullable(description.toString()));
+                result.add(description.getName());
             }
         }
         return result;

@@ -410,6 +410,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     protected class MyWrappingAndBracesPanel extends WrappingAndBracesPanel {
+        @RequiredUIAccess
         public MyWrappingAndBracesPanel(CodeStyleSettings settings) {
             super(settings);
         }
