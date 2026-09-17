@@ -20,13 +20,17 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleConstraints;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.WrapOnTyping;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.*;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ComboBox;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CommaSeparatedIntegersField;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.MultiMap;
 import org.jspecify.annotations.Nullable;
 
@@ -39,15 +43,16 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     private Map<String, SettingsGroup> myFieldNameToGroup;
     private final CommaSeparatedIntegersField mySoftMarginsEditor =
         new CommaSeparatedIntegersField(null, 0, CodeStyleConstraints.MAX_RIGHT_MARGIN, "Optional");
-    private final JComboBox<LocalizeValue> myWrapOnTypingCombo = new JComboBox<>(WRAP_ON_TYPING_OPTIONS);
+    private final ComboBox<WrapOnTyping> myWrapOnTypingCombo =
+        ComboBox.create(WrapOnTyping.values());
 
     @RequiredUIAccess
     public WrappingAndBracesPanel(CodeStyleSettings settings) {
         super(settings);
-        MarginOptionsUtil.customizeWrapOnTypingCombo(myWrapOnTypingCombo, settings);
+        myWrapOnTypingCombo.setTextRenderer(item -> item.getDisplayNameFor(settings));
         init();
         UIUtil.applyStyle(UIUtil.ComponentStyle.MINI, mySoftMarginsEditor);
-        UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myWrapOnTypingCombo);
+//        UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myWrapOnTypingCombo);
     }
 
     @Override
@@ -191,10 +196,10 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
             return softMarginsLabel;
         }
         else if ("WRAP_ON_TYPING".equals(optionName)) {
-            if (value.equals(CodeStyleLocalize.wrappingWrapOnTypingDefault())) {
-                JLabel wrapLabel = new JLabel(MarginOptionsUtil.getDefaultWrapOnTypingText(getSettings()).get());
-                UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, wrapLabel);
-                return wrapLabel;
+            if (value instanceof WrapOnTyping wrapOnTyping) {
+                Label wrapLabel = Label.create(wrapOnTyping.getDisplayNameFor(getSettings()));
+//                UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, wrapLabel);
+                return (JComponent) TargetAWT.to(wrapLabel);
             }
         }
         return super.getCustomValueRenderer(optionName, value);
@@ -208,6 +213,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     }
 
     @Override
+    @RequiredUIAccess
     protected @Nullable JComponent getCustomNodeEditor(MyTreeNode node) {
         String optionName = node.getKey().getOptionName();
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
@@ -215,15 +221,10 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
             return mySoftMarginsEditor;
         }
         else if ("WRAP_ON_TYPING".equals(optionName)) {
-            if (node.getValue() instanceof LocalizeValue locValue) {
-                for (int i = 0; i < CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS.length; i++) {
-                    if (CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS[i].equals(locValue)) {
-                        myWrapOnTypingCombo.setSelectedIndex(i);
-                        break;
-                    }
-                }
+            if (node.getValue() instanceof WrapOnTyping wrapOnTyping) {
+                myWrapOnTypingCombo.setValue(wrapOnTyping);
             }
-            return myWrapOnTypingCombo;
+            return (JComponent) TargetAWT.to(myWrapOnTypingCombo);
         }
         return super.getCustomNodeEditor(node);
     }
@@ -234,8 +235,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
             return commaSeparatedIntegersField.getValue();
         }
         else if (customEditor == myWrapOnTypingCombo) {
-            int i = myWrapOnTypingCombo.getSelectedIndex();
-            return i >= 0 ? CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS[i] : null;
+            return myWrapOnTypingCombo.getValue();
         }
         return super.getCustomNodeEditorValue(customEditor);
     }

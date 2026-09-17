@@ -17,6 +17,7 @@ package consulo.language.codeStyle.setting;
 
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
+import consulo.language.codeStyle.WrapOnTyping;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
@@ -275,21 +276,35 @@ public interface CodeStyleSettingsCustomizable {
         CodeStyleLocalize.wrappingChopDownIfLong(),
         CodeStyleLocalize.wrappingWrapAlways()
     };
+    int[] WRAP_VALUES = {
+        CommonCodeStyleSettings.DO_NOT_WRAP,
+        CommonCodeStyleSettings.WRAP_AS_NEEDED,
+        CommonCodeStyleSettings.WRAP_AS_NEEDED | CommonCodeStyleSettings.WRAP_ON_EVERY_ITEM,
+        CommonCodeStyleSettings.WRAP_ALWAYS
+    };
+
     LocalizeValue[] WRAP_OPTIONS_FOR_SINGLETON = {
         CodeStyleLocalize.wrappingDoNotWrap(),
         CodeStyleLocalize.wrappingWrapIfLong(),
         CodeStyleLocalize.wrappingWrapAlways()
     };
-    int[] WRAP_VALUES = {CommonCodeStyleSettings.DO_NOT_WRAP, CommonCodeStyleSettings.WRAP_AS_NEEDED, CommonCodeStyleSettings.WRAP_AS_NEEDED | CommonCodeStyleSettings.WRAP_ON_EVERY_ITEM,
-        CommonCodeStyleSettings.WRAP_ALWAYS};
+    int[] WRAP_VALUES_FOR_SINGLETON = {
+        CommonCodeStyleSettings.DO_NOT_WRAP,
+        CommonCodeStyleSettings.WRAP_AS_NEEDED,
+        CommonCodeStyleSettings.WRAP_ALWAYS
+    };
 
-    int[] WRAP_VALUES_FOR_SINGLETON = {CommonCodeStyleSettings.DO_NOT_WRAP, CommonCodeStyleSettings.WRAP_AS_NEEDED, CommonCodeStyleSettings.WRAP_ALWAYS};
     LocalizeValue[] BRACE_OPTIONS = {
         CodeStyleLocalize.wrappingForceBracesDoNotForce(),
         CodeStyleLocalize.wrappingForceBracesWhenMultiline(),
         CodeStyleLocalize.wrappingForceBracesAlways()
     };
-    int[] BRACE_VALUES = {CommonCodeStyleSettings.DO_NOT_FORCE, CommonCodeStyleSettings.FORCE_BRACES_IF_MULTILINE, CommonCodeStyleSettings.FORCE_BRACES_ALWAYS};
+    int[] BRACE_VALUES = {
+        CommonCodeStyleSettings.DO_NOT_FORCE,
+        CommonCodeStyleSettings.FORCE_BRACES_IF_MULTILINE,
+        CommonCodeStyleSettings.FORCE_BRACES_ALWAYS
+    };
+
     LocalizeValue[] BRACE_PLACEMENT_OPTIONS = {
         CodeStyleLocalize.wrappingBracePlacementEndOfLine(),
         CodeStyleLocalize.wrappingBracePlacementNextLineIfWrapped(),
@@ -306,14 +321,14 @@ public interface CodeStyleSettingsCustomizable {
     };
 
     LocalizeValue[] WRAP_ON_TYPING_OPTIONS = {
-        CodeStyleLocalize.wrappingWrapOnTypingNoWrap(),
-        CodeStyleLocalize.wrappingWrapOnTypingWrap(),
-        CodeStyleLocalize.wrappingWrapOnTypingDefault()
+        WrapOnTyping.NO_WRAP.getDisplayName(),
+        WrapOnTyping.WRAP.getDisplayName(),
+        WrapOnTyping.DEFAULT.getDisplayName()
     };
     int[] WRAP_ON_TYPING_VALUES = {
-        CommonCodeStyleSettings.WrapOnTyping.NO_WRAP.intValue,
-        CommonCodeStyleSettings.WrapOnTyping.WRAP.intValue,
-        CommonCodeStyleSettings.WrapOnTyping.DEFAULT.intValue
+        WrapOnTyping.NO_WRAP.getValue(),
+        WrapOnTyping.WRAP.getValue(),
+        WrapOnTyping.DEFAULT.getValue()
     };
 
     void showAllStandardOptions();

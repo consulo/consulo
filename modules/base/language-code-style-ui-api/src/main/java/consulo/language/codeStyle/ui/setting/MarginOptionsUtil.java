@@ -16,15 +16,10 @@
 package consulo.language.codeStyle.ui.setting;
 
 import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
-import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 
-import javax.swing.*;
 import java.util.List;
 
 class MarginOptionsUtil {
@@ -41,43 +36,7 @@ class MarginOptionsUtil {
         );
     }
 
-    static LocalizeValue getDefaultWrapOnTypingText(CodeStyleSettings settings) {
-        return getDefaultValueText(
-            settings.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN
-                ? CodeStyleLocalize.settingsDefaultValueYes()
-                : CodeStyleLocalize.settingsDefaultValueNo()
-        );
-    }
-
-    static void customizeWrapOnTypingCombo(JComboBox<LocalizeValue> wrapOnTypingCombo, CodeStyleSettings settings) {
-        wrapOnTypingCombo.setRenderer(new WrapOnTypingListCellRenderer(settings));
-    }
-
     static LocalizeValue getDefaultValueText(LocalizeValue value) {
         return CodeStyleLocalize.settingsDefaultValuePrefix(value);
-    }
-
-    static class WrapOnTypingListCellRenderer extends ColoredListCellRenderer<LocalizeValue> {
-        private final CodeStyleSettings mySettings;
-
-        public WrapOnTypingListCellRenderer(CodeStyleSettings settings) {
-            mySettings = settings;
-        }
-
-        @Override
-        protected void customizeCellRenderer(
-            JList<? extends LocalizeValue> list,
-            LocalizeValue value,
-            int index,
-            boolean selected,
-            boolean hasFocus
-        ) {
-            for (int i = 0; i < CodeStyleSettingsCustomizable.WRAP_ON_TYPING_VALUES.length; i++) {
-                if (CodeStyleSettingsCustomizable.WRAP_ON_TYPING_VALUES[i] == CommonCodeStyleSettings.WrapOnTyping.DEFAULT.intValue
-                    && CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS[i].equals(value)) {
-                    append(getDefaultWrapOnTypingText(mySettings));
-                }
-            }
-        }
     }
 }
