@@ -190,6 +190,8 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
                 }
             }
         }
+
+        updateFrom(myRoot);
     }
 
     @SuppressWarnings("unchecked")
@@ -276,7 +278,7 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
 
         for (Map.Entry<SimpleNode, TreeNode<SimpleNode>> entry : model.getHandles().entrySet()) {
             if (anyAssignableFrom(entry.getKey().getClass(), nodeClasses)) {
-                tree.refreshItem(entry.getValue(), false);
+                tree.refreshItem(entry.getValue(), true);
             }
         }
     }

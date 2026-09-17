@@ -62,6 +62,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -198,18 +199,37 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
      * @throws WizardStepValidationException if gradle project is not defined and can't be constructed
      */
     @SuppressWarnings("unchecked")
-    public void ensureProjectIsDefined(ExternalModuleImportContext context) throws WizardStepValidationException {
+    /**
+     * Resolves the external project so the wizard has something to import. The resolve runs in the background - the caller is
+     * answered with a future, and a project which cannot be resolved fails it with the reason to show.
+     */
+    public CompletableFuture<?> ensureProjectIsDefined(ExternalModuleImportContext context) {
         String externalSystemName = myExternalSystemId.getReadableName().get();
+
         File projectFile = getProjectFile(context);
         if (projectFile == null) {
-            throw new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get());
+            return CompletableFuture.failedFuture(
+                new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get())
+            );
         }
         projectFile = getExternalProjectConfigToUse(projectFile);
-        SimpleReference<WizardStepValidationException> error = new SimpleReference<>();
+
+        CompletableFuture<Object> result = new CompletableFuture<>();
+
         ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
             @Override
             public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
                 context.setExternalProjectNode(externalProject);
+
+                if (externalProject == null) {
+                    result.completeExceptionally(
+                        new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get())
+                    );
+                    return;
+                }
+
+                applyProjectSettings(context);
+                result.complete(externalProject);
             }
 
             @Override
@@ -217,44 +237,34 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
                 if (!StringUtil.isEmpty(errorDetails)) {
                     LOG.warn(errorDetails);
                 }
-                error.set(new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage).get()));
+                result.completeExceptionally(
+                    new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage).get())
+                );
             }
         };
 
         Project project = getContextOrDefaultProject(context);
-        File finalProjectFile = projectFile;
-        String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
-        SimpleReference<WizardStepValidationException> exRef = new SimpleReference<>();
-        executeAndRestoreDefaultProjectSettings(context, project, () -> {
-            try {
-                ExternalSystemProjectRefresher refresher = ExternalSystemProjectRefresher.getInstance();
+        String externalProjectPath = FileUtil.toCanonicalPath(projectFile.getAbsolutePath());
 
-                refresher.refreshProject(
+        executeAndRestoreDefaultProjectSettings(context, project, result, () -> {
+            try {
+                ExternalSystemProjectRefresher.getInstance().refreshProject(
                     project,
                     myExternalSystemId,
                     externalProjectPath,
                     callback,
                     true,
-                    ProgressExecutionMode.MODAL_SYNC
+                    ProgressExecutionMode.IN_BACKGROUND_ASYNC
                 );
             }
             catch (IllegalArgumentException e) {
-                exRef.set(new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get()));
+                result.completeExceptionally(
+                    new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get())
+                );
             }
         });
-        WizardStepValidationException ex = exRef.get();
-        if (ex != null) {
-            throw ex;
-        }
-        if (context.getExternalProjectNode() == null) {
-            WizardStepValidationException exception = error.get();
-            if (exception != null) {
-                throw exception;
-            }
-        }
-        else {
-            applyProjectSettings(context);
-        }
+
+        return result;
     }
 
     /**
@@ -278,7 +288,12 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
     }
 
     @SuppressWarnings("unchecked")
-    private void executeAndRestoreDefaultProjectSettings(ExternalModuleImportContext context, Project project, Runnable task) {
+    private void executeAndRestoreDefaultProjectSettings(
+        ExternalModuleImportContext context,
+        Project project,
+        CompletableFuture<?> done,
+        Runnable task
+    ) {
         if (!project.isDefault()) {
             task.run();
             return;
@@ -292,17 +307,18 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
         systemSettings.copyFrom(context.getSystemSettings());
         Collection projectSettingsToRestore = systemSettings.getLinkedProjectsSettings();
         systemSettings.setLinkedProjectsSettings(Collections.singleton(getCurrentExternalProjectSettings(context)));
-        try {
-            task.run();
-        }
-        finally {
-            if (systemStateToRestore != null) {
-                ((PersistentStateComponent)systemSettings).loadState(systemStateToRestore);
+
+        Object stateToRestore = systemStateToRestore;
+        done.whenComplete((r, t) -> {
+            if (stateToRestore != null) {
+                ((PersistentStateComponent)systemSettings).loadState(stateToRestore);
             }
             else {
                 systemSettings.setLinkedProjectsSettings(projectSettingsToRestore);
             }
-        }
+        });
+
+        task.run();
     }
 
     

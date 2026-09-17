@@ -19,6 +19,7 @@ import consulo.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -97,6 +98,18 @@ public final class WizardSession<CONTEXT> {
     myPreviousStepIndex = findPrevStepIndex();
 
     return step;
+  }
+
+  /**
+   * Asks the step the user is on whether it will let them move on. Forward movement and finishing both go through
+   * this - stepping back and cancelling do not, since neither keeps what the step holds.
+   */
+  public CompletableFuture<?> validateCurrentStep() {
+    if (myCurrentStepIndex == -1 || mySteps.isEmpty()) {
+      return CompletableFuture.completedFuture(null);
+    }
+
+    return mySteps.get(myCurrentStepIndex).validateStep(myContext);
   }
 
   public void finish() {

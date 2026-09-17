@@ -20,6 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author VISTALL
  * @since 2019-08-20
@@ -38,7 +40,14 @@ public interface WizardStep<CONTEXT> {
     default void onStepLeave(CONTEXT context) {
     }
 
-    default void validateStep(CONTEXT context) throws WizardStepValidationException {
+    /**
+     * Asks the step whether the wizard may move on, and lets it do the work that answer depends on. The answer is a future
+     * because that work - resolving an external project, for one - has no business blocking the thread the user interface runs
+     * on. A failed future keeps the wizard where it is and shows its reason.
+     */
+    @RequiredUIAccess
+    default CompletableFuture<?> validateStep(CONTEXT context) {
+        return CompletableFuture.completedFuture(null);
     }
 
     default boolean isVisible(CONTEXT context) {

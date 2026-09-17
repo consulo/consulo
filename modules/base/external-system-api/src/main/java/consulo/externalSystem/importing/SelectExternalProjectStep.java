@@ -36,6 +36,8 @@ import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Handles the following responsibilities:
  * <pre>
@@ -113,10 +115,10 @@ public class SelectExternalProjectStep implements WizardStep<ExternalModuleImpor
 
     @RequiredUIAccess
     @Override
-    public void validateStep(ExternalModuleImportContext context) throws WizardStepValidationException {
+    public CompletableFuture<?> validateStep(ExternalModuleImportContext context) {
         FileChooserTextBoxBuilder.Controller linkedProjectPathBox = myLinkedProjectPathBox;
         if (linkedProjectPathBox == null) {
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
         try {
@@ -130,9 +132,9 @@ public class SelectExternalProjectStep implements WizardStep<ExternalModuleImpor
             }
         }
         catch (ConfigurationException e) {
-            throw new WizardStepValidationException(e.getMessage());
+            return CompletableFuture.failedFuture(new WizardStepValidationException(e.getMessage()));
         }
 
-        context.getImportProvider().ensureProjectIsDefined(context);
+        return context.getImportProvider().ensureProjectIsDefined(context);
     }
 }

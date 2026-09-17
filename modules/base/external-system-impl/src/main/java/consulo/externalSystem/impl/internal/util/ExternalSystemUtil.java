@@ -273,7 +273,7 @@ public class ExternalSystemUtil {
         Project project,
         ProjectSystemId externalSystemId
     ) {
-        UIUtil.invokeLaterIfNeeded(() -> {
+        project.getUIAccess().giveIfNeed(() -> {
             JPanel content = new JPanel(new GridBagLayout());
             content.add(
                 new JLabel(ExternalSystemLocalize.orphanModulesText(externalSystemId.getReadableName()).get()),
@@ -479,7 +479,7 @@ public class ExternalSystemUtil {
             ExternalSystemNotificationManager.getInstance(project).processExternalProjectRefreshError(error, projectName, externalSystemId);
         };
 
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+        project.getUIAccess().giveAndWaitIfNeed(() -> {
             LocalizeValue title;
             switch (progressExecutionMode) {
                 case MODAL_SYNC:

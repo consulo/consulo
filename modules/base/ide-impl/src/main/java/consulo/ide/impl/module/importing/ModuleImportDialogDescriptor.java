@@ -34,6 +34,8 @@ import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.dialog.action.DialogOkAction;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.SwipeLayout;
@@ -43,6 +45,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletionException;
 
 /**
  * The wizard drives the two buttons of the dialog rather than adding its own - the right button walks forward and
@@ -172,6 +175,33 @@ public class ModuleImportDialogDescriptor<C extends ModuleImportContext> extends
     }
 
     /**
+     * The step the user is on has the last word on whether the dialog moves on - it is where the values entered are read
+     * back and applied, so a step which refuses leaves the dialog open with its reason shown.
+     */
+    /**
+     * The step the user is on has the last word on whether the dialog moves on - it is where the values entered are read back
+     * and whatever they imply is done. That work runs off the user interface thread, so the answer arrives as a future and the
+     * dialog only moves once it resolves.
+     */
+    @RequiredUIAccess
+    private void withValidCurrentStep(@RequiredUIAccess Runnable onValid) {
+        UIAccess uiAccess = UIAccess.current();
+
+        myWizardSession.validateCurrentStep().whenCompleteAsync(
+            (ignored, throwable) -> {
+                if (throwable == null) {
+                    onValid.run();
+                    return;
+                }
+
+                Throwable reason = throwable instanceof CompletionException ? throwable.getCause() : throwable;
+                MessageBoxes.okError(LocalizeValue.of(reason)).showAsync();
+            },
+            uiAccess
+        );
+    }
+
+    /**
      * The right button of the dialog. It is the ok action on the last step - the dialog closes with a value - and a
      * plain step forward before that.
      */
@@ -183,14 +213,16 @@ public class ModuleImportDialogDescriptor<C extends ModuleImportContext> extends
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            if (isLastStep()) {
-                myWizardSession.finish();
+            withValidCurrentStep(() -> {
+                if (isLastStep()) {
+                    myWizardSession.finish();
 
-                super.actionPerformed(e);
-                return;
-            }
+                    ForwardAction.super.actionPerformed(e);
+                    return;
+                }
 
-            goTo(myWizardSession.next(), true);
+                goTo(myWizardSession.next(), true);
+            });
         }
 
         @Override
