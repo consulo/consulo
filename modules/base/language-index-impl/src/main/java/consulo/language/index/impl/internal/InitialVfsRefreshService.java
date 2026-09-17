@@ -89,6 +89,10 @@ public class InitialVfsRefreshService implements Disposable {
 
         application.executeOnPooledThread(() -> {
             try {
+                if (myProject.isDisposed()) {
+                    myJob.complete(null);
+                    return;
+                }
                 LOG.info(projectId + ": marking roots for initial VFS refresh");
                 List<VirtualFile> roots = application.runReadAction(
                     (Supplier<List<VirtualFile>>) () -> ProjectRootManagerEx.getInstanceEx(myProject).markRootsForRefresh()
@@ -105,7 +109,12 @@ public class InitialVfsRefreshService implements Disposable {
                 session.launch();
             }
             catch (Throwable e) {
-                LOG.error(e);
+                if (myProject.isDisposed()) {
+                    LOG.info(projectId + ": initial VFS refresh abandoned, project disposed");
+                }
+                else {
+                    LOG.error(e);
+                }
                 myJob.complete(null);
             }
         });
