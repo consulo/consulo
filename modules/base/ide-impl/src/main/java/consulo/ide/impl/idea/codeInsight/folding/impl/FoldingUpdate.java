@@ -68,10 +68,15 @@ public class FoldingUpdate {
             return getUpdateResult(file, document, quick, project, editor, applyDefaultState).getValue();
         }
 
-        return CachedValuesManager.getManager(project).getCachedValue(editor, CODE_FOLDING_KEY, () -> {
-            PsiFile file1 = PsiDocumentManager.getInstance(project).getPsiFile(document);
-            return getUpdateResult(file1, document, false, project, editor, false);
-        }, false);
+        return CachedValuesManager.getManager(project).getCachedValue(
+            editor,
+            CODE_FOLDING_KEY,
+            () -> {
+                PsiFile file1 = PsiDocumentManager.getInstance(project).getPsiFile(document);
+                return getUpdateResult(file1, document, false, project, editor, false);
+            },
+            false
+        );
     }
 
     private static CachedValueProvider.Result<Runnable> getUpdateResult(
