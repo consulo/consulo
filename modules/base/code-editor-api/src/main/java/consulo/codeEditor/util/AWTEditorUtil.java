@@ -55,6 +55,25 @@ public final class AWTEditorUtil {
         return (nTabs + 1) * tabSize;
     }
 
+    public static float calcVerticalScrollProportion(Editor editor) {
+        Rectangle viewArea = editor.getScrollingModel().getVisibleAreaOnScrollingFinished();
+        if (viewArea.height == 0) {
+            return 0;
+        }
+        LogicalPosition pos = editor.getCaretModel().getLogicalPosition();
+        Point location = editor.logicalPositionToXY(pos);
+        return (location.y - viewArea.y) / (float) viewArea.height;
+    }
+
+    public static void setVerticalScrollProportion(Editor editor, float proportion) {
+        Rectangle viewArea = editor.getScrollingModel().getVisibleArea();
+        LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
+        Point caretLocation = editor.logicalPositionToXY(caretPosition);
+        int yPos = caretLocation.y;
+        yPos -= viewArea.height * proportion;
+        editor.getScrollingModel().scrollVertically(yPos);
+    }
+
     public static int yPositionToLogicalLine(Editor editor, MouseEvent event) {
         return EditorUtil.yPositionToLogicalLine(editor, event.getY());
     }

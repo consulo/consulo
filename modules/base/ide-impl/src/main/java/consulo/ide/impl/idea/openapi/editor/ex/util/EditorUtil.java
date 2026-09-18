@@ -74,23 +74,14 @@ public final class EditorUtil {
         return EditorImplUtil.getVisualLineEndOffset(editor, line);
     }
 
+    @Deprecated
     public static float calcVerticalScrollProportion(Editor editor) {
-        Rectangle viewArea = editor.getScrollingModel().getVisibleAreaOnScrollingFinished();
-        if (viewArea.height == 0) {
-            return 0;
-        }
-        LogicalPosition pos = editor.getCaretModel().getLogicalPosition();
-        Point location = editor.logicalPositionToXY(pos);
-        return (location.y - viewArea.y) / (float) viewArea.height;
+        return AWTEditorUtil.calcVerticalScrollProportion(editor);
     }
 
+    @Deprecated
     public static void setVerticalScrollProportion(Editor editor, float proportion) {
-        Rectangle viewArea = editor.getScrollingModel().getVisibleArea();
-        LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
-        Point caretLocation = editor.logicalPositionToXY(caretPosition);
-        int yPos = caretLocation.y;
-        yPos -= viewArea.height * proportion;
-        editor.getScrollingModel().scrollVertically(yPos);
+        AWTEditorUtil.setVerticalScrollProportion(editor, proportion);
     }
 
     @Deprecated
