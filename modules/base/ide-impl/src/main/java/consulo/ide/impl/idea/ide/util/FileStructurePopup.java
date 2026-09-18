@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -71,6 +70,7 @@ import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;

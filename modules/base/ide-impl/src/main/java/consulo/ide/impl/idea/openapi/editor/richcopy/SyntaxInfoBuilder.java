@@ -15,13 +15,13 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.document.MarkupIterator;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.ast.TokenType;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;

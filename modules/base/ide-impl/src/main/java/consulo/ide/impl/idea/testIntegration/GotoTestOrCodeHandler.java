@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.testIntegration;
 
 import consulo.ide.impl.idea.codeInsight.navigation.GotoTargetHandler;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import jakarta.annotation.Nonnull;
 import consulo.language.editor.testIntegration.TestCreator;
 import consulo.language.editor.testIntegration.TestFinderHelper;
@@ -29,7 +29,6 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;

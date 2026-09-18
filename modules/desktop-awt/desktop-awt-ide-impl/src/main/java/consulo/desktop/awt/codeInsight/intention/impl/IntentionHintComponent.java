@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.codeInsight.hint.PriorityQuestionAction;
 import consulo.ide.impl.idea.codeInsight.hint.ScrollAwareHint;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.language.editor.PlatformDataKeys;
@@ -54,6 +53,7 @@ import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
@@ -489,7 +489,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint, Inte
                 if (shortcut instanceof KeyboardShortcut) {
                     KeyboardShortcut keyboardShortcut = (KeyboardShortcut) shortcut;
                     if (keyboardShortcut.getSecondKeyStroke() == null) {
-                        ((WizardPopup) myPopup).registerAction("activateSelectedElement", keyboardShortcut.getFirstKeyStroke(), new AbstractAction() {
+                        myPopup.registerAction("activateSelectedElement", keyboardShortcut.getFirstKeyStroke(), new AbstractAction() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 myPopup.handleSelect(true);

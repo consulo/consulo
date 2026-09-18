@@ -22,7 +22,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
@@ -36,6 +35,7 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import jakarta.inject.Inject;
 
 

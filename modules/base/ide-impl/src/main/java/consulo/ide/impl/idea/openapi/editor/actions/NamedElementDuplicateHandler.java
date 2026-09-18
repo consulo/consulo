@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
@@ -27,13 +28,13 @@ import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 
@@ -56,8 +57,8 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
     return myOriginal.isEnabled(editor, caret, dataContext);
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public void executeWriteAction(Editor editor, DataContext dataContext) {
     Project project = editor.getProject();
     if (project != null && !editor.getSelectionModel().hasSelection()) {
@@ -78,6 +79,7 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
     myOriginal.execute(editor, dataContext);
   }
 
+  @RequiredReadAction
   private static @Nullable PsiElement findNameIdentifier(Editor editor, PsiFile file, TextRange toDuplicate) {
     int nonWs = CharArrayUtil.shiftForward(editor.getDocument().getCharsSequence(), toDuplicate.getStartOffset(), "\n\t ");
     PsiElement psi = file.findElementAt(nonWs);
@@ -87,8 +89,8 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
       if (range == null || psi instanceof PsiFile || !toDuplicate.contains(psi.getTextRange())) {
         break;
       }
-      if (psi instanceof PsiNameIdentifierOwner) {
-        named = ((PsiNameIdentifierOwner)psi).getNameIdentifier();
+      if (psi instanceof PsiNameIdentifierOwner nameIdentifierOwner) {
+        named = nameIdentifierOwner.getNameIdentifier();
       }
       psi = psi.getParent();
     }
@@ -100,7 +102,6 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
     myOriginal = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_DUPLICATE;

@@ -14,13 +14,13 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.runAnything.RunAnythingCompletionGroup;
 import consulo.ide.runAnything.RunAnythingGeneralGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.internal.RunAnythingCache;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.runAnything.RunAnythingContext;
@@ -593,7 +593,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
     private class CalcThread implements Runnable {
-        
         private final Project myProject;
         
         private final String myPattern;
@@ -698,12 +697,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             assert myCalcThread == this : "There are two CalcThreads running before one of them was cancelled";
         }
 
-        private void buildAllGroups(
-            DataContext dataContext,
-            String pattern,
-            Runnable checkCancellation,
-            boolean isRecent
-        ) {
+        private void buildAllGroups(DataContext dataContext, String pattern, Runnable checkCancellation, boolean isRecent) {
             if (isRecent) {
                 RunAnythingRecentGroup.INSTANCE.collectItems(dataContext, myListModel, pattern, checkCancellation);
             }
@@ -792,7 +786,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
             return myDone;
         }
 
-        
         public String trimHelpPattern() {
             return isHelpMode(myPattern) ? myPattern.substring(HELP_PLACEHOLDER.length()) : myPattern;
         }
@@ -835,6 +828,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         mySkipFocusGain = false;
     }
 
+    @RequiredUIAccess
     public RunAnythingPopupUI(AnActionEvent actionEvent) {
         super(actionEvent.getData(Project.KEY));
 
@@ -857,7 +851,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         initMySearchField();
     }
 
-    
     @Override
     public JBList<Object> createList() {
         myListModel = new RunAnythingSearchListModel.RunAnythingMainListModel();
@@ -935,13 +928,11 @@ public class RunAnythingPopupUI extends BigPopupUI {
         });
     }
 
-    
     @Override
     protected ListCellRenderer<Object> createCellRenderer() {
         return new MyListRenderer();
     }
 
-    
     @Override
     @RequiredUIAccess
     protected JComponent createSettingsPanel() {
@@ -956,7 +947,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 myAvailableExecutingContexts.addAll(executionContexts);
             }
 
-            
             @Override
             public List<RunAnythingContext> getAvailableContexts() {
                 return myAvailableExecutingContexts;
@@ -985,7 +975,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return res;
     }
 
-    
     public CompletableFuture<?> updateToolbarFuture() {
         if (myToolbar == null) {
             return CompletableFuture.completedFuture(null);
@@ -993,7 +982,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return myToolbar.updateActionsAsync();
     }
 
-    
     @Override
     protected String getInitialHint() {
         return IdeLocalize.runAnythingHintInitialText(

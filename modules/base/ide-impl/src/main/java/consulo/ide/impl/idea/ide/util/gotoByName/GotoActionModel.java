@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ui.ex.action.BooleanOptionDescription;
 import consulo.ui.ex.action.OptionDescription;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -43,6 +42,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
@@ -62,9 +62,9 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 import static consulo.ui.ex.SimpleTextAttributes.STYLE_PLAIN;
 import static consulo.ui.ex.SimpleTextAttributes.STYLE_SEARCH_MATCH;
+import static consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 

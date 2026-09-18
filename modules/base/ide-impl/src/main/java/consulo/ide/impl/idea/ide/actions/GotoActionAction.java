@@ -5,54 +5,27 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.progress.ProgressWindowListener;
-import consulo.application.ui.UISettings;
-import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ActionSearchEverywhereContributor;
-import consulo.ui.ex.action.BooleanOptionDescription;
-import consulo.ui.ex.action.OptionDescription;
-import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
-import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
-import consulo.ui.ex.awt.AWTConstants;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ui.UIAccess;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.AWTConstants;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Random;
-import java.util.Set;
-
-import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
+import java.awt.event.InputEvent;
 
 @ActionImpl(id = "GotoAction")
 public class GotoActionAction extends SearchEverywhereBaseAction implements DumbAware {

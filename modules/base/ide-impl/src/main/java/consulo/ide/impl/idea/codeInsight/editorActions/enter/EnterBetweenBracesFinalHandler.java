@@ -5,7 +5,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.CodeInsightSettings;
@@ -15,6 +14,7 @@ import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
