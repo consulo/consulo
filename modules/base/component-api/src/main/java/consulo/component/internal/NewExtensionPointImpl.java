@@ -301,23 +301,25 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return List.of(extensions.toArray(ExtensionValue[]::new));
     }
 
-    private List<ExtensionValue<T>> buildOrGet() {
+    private CacheValue<T> publishedCacheValue() {
         CacheValue<T> cacheValue = myCacheValue;
-
-        List<ExtensionValue<T>> extensionCache = cacheValue.myExtensionCache;
-        if (extensionCache != null) {
-            return extensionCache;
+        if (cacheValue.myExtensionCache != null) {
+            return cacheValue;
         }
 
         List<ExtensionValue<T>> result = build(cacheValue.myInjectingBindings);
 
         synchronized (myCachePublishLock) {
-            List<ExtensionValue<T>> published = myCacheValue.myExtensionCache;
-            if (published != null) {
+            CacheValue<T> published = myCacheValue;
+            if (published.myExtensionCache != null) {
                 return published;
             }
-            return Objects.requireNonNull(set(result).myExtensionCache);
+            return set(result);
         }
+    }
+
+    private List<ExtensionValue<T>> buildOrGet() {
+        return Objects.requireNonNull(publishedCacheValue().myExtensionCache);
     }
 
     @Override
@@ -544,16 +546,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Override
     public List<T> getExtensionList() {
-        CacheValue<T> cacheValue = myCacheValue;
-
-        List<T> extensionCache = cacheValue.myUnwrapExtensionCache;
-        if (extensionCache != null) {
-            return extensionCache;
-        }
-
-        List<ExtensionValue<T>> result = build(cacheValue.myInjectingBindings);
-        CacheValue<T> value = set(result);
-        return Objects.requireNonNull(value.myUnwrapExtensionCache);
+        return Objects.requireNonNull(publishedCacheValue().myUnwrapExtensionCache);
     }
 
     @Override
