@@ -14,7 +14,6 @@ import consulo.fileEditor.internal.StatusBarWidgetKeys;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
@@ -22,6 +21,7 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 

@@ -29,7 +29,7 @@ import jakarta.inject.Inject;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
+import static consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts;
 
 @ActionImpl(id = IdeActions.ACTION_RUN_ANYTHING)
 public class RunAnythingAction extends LegacyDumbAwareAction {

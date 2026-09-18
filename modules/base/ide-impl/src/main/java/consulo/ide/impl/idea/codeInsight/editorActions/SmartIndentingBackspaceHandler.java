@@ -24,11 +24,11 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.project.Project;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 
 @ExtensionImpl
 public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {

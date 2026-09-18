@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.SeparatorComponent;
 import consulo.ide.internal.RunAnythingCache;
 import consulo.ide.runAnything.RunAnythingProvider;
@@ -17,6 +16,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;

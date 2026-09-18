@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -10,6 +9,7 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static consulo.ide.impl.idea.ide.actions.Switcher.SwitcherPanel.RECENT_LOCATIONS;
-import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
+import static consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts;
 
 /**
  * @author Konstantin Bulenkov

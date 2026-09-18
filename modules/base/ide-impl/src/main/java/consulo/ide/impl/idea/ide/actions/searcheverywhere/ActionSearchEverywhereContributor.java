@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getFirstKeyboardShortcutText;
+import static consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts;
 
 public class ActionSearchEverywhereContributor implements SearchEverywhereContributor<GotoActionModel.MatchedValue> {
     private static final Logger LOG = Logger.getInstance(ActionSearchEverywhereContributor.class);

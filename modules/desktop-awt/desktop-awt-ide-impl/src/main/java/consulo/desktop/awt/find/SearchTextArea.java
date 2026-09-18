@@ -8,8 +8,8 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -163,7 +163,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     private void updateFont() {
         if (myTextArea != null) {
             if (Registry.is("ide.find.use.editor.font", false)) {
-                myTextArea.setFont(EditorUtil.getEditorFont());
+                myTextArea.setFont(AWTLanguageEditorUtil.getEditorFont());
             }
             else {
                 myTextArea.setFont(UIManager.getFont("TextField.font"));

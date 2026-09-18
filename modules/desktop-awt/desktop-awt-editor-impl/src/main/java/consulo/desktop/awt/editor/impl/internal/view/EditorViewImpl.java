@@ -3,13 +3,6 @@
  */
 package consulo.desktop.awt.editor.impl.internal.view;
 
-import consulo.desktop.awt.editor.impl.internal.SoftWrapModelImpl;
-import consulo.desktop.awt.editor.impl.internal.DesktopCaretModelImpl;
-import consulo.desktop.awt.editor.impl.internal.InlayModelImpl;
-import consulo.desktop.awt.editor.impl.internal.DesktopScrollingModelImpl;
-import consulo.desktop.awt.editor.impl.internal.DesktopEditorImpl;
-import consulo.desktop.awt.editor.impl.internal.DesktopFoldingModelImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -22,6 +15,7 @@ import consulo.codeEditor.impl.LogicalPositionCache;
 import consulo.codeEditor.impl.internal.RealEditorView;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.internal.CodeEditorAssertion;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.desktop.awt.editor.impl.internal.*;
@@ -29,8 +23,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.internal.DocumentEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

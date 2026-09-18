@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
@@ -30,6 +29,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 

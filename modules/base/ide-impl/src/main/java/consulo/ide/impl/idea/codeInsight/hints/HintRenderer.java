@@ -10,10 +10,10 @@ import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.language.editor.impl.internal.inlay.param.HintUtils;
 import consulo.language.editor.inlay.HintWidthAdjustment;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.GraphicsConfig;
@@ -241,7 +241,7 @@ public class HintRenderer implements EditorCustomElementRenderer {
         public MyFontMetrics(Editor editor, int size, @AWTConstants.FontStyle int fontStyle, boolean useEditorFont) {
             Font font;
             if (useEditorFont) {
-                font = EditorUtil.getEditorFont().deriveFont(fontStyle, size);
+                font = AWTLanguageEditorUtil.getEditorFont().deriveFont(fontStyle, size);
             }
             else {
                 String family = UIManager.getFont("Label.font").getFamily();

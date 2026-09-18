@@ -16,12 +16,12 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 
 /**
  * @author anna

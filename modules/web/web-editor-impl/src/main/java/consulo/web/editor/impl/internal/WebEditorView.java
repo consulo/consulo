@@ -16,15 +16,15 @@
 package consulo.web.editor.impl.internal;
 
 import consulo.codeEditor.LogicalPosition;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.impl.LogicalPositionCache;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorBase;
 
 /**
  * @author VISTALL
- * @since 07/08/2021
+ * @since 2021-08-07
  */
 public class WebEditorView implements Disposable  {
   private final LogicalPositionCache myLogicalPositionCache;
@@ -35,7 +35,6 @@ public class WebEditorView implements Disposable  {
     Disposer.register(this, myLogicalPositionCache);
   }
 
-  
   public LogicalPosition offsetToLogicalPosition(int offset) {
     return myLogicalPositionCache.offsetToLogicalPosition(offset);
   }
@@ -50,6 +49,5 @@ public class WebEditorView implements Disposable  {
 
   @Override
   public void dispose() {
-
   }
 }

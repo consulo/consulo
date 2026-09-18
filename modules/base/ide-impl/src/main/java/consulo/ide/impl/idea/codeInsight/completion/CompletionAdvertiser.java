@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.util.ProcessingContext;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,17 +28,15 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public abstract class CompletionAdvertiser {
+    public abstract @Nullable String advertise(CompletionParameters parameters, ProcessingContext context);
 
-  public abstract @Nullable String advertise(CompletionParameters parameters, ProcessingContext context);
+    public abstract @Nullable String handleEmptyLookup(CompletionParameters parameters, ProcessingContext context);
 
-  public abstract @Nullable String handleEmptyLookup(CompletionParameters parameters, ProcessingContext context);
+    protected static String getShortcut(String id) {
+        return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(id));
+    }
 
-  protected static String getShortcut(String id) {
-    return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(id));
-  }
-
-  protected static boolean shouldShowFeature(CompletionParameters parameters, String id) {
-    return FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(id, parameters.getPosition().getProject());
-  }
-
+    protected static boolean shouldShowFeature(CompletionParameters parameters, String id) {
+        return FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(id, parameters.getPosition().getProject());
+    }
 }

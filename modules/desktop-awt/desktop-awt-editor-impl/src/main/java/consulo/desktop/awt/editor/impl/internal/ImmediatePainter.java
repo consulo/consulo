@@ -8,6 +8,7 @@ import consulo.awt.hacking.SunVolatileImageHacking;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.FontLayoutService;
 import consulo.codeEditor.impl.IterationState;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -19,7 +20,6 @@ import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.logging.Logger;
@@ -179,8 +179,8 @@ class ImmediatePainter {
         float width1 = fontLayoutService.charWidth2D(editor.getFontMetrics(attributes1.getFontType()), c1);
         float width2 = fontLayoutService.charWidth2D(editor.getFontMetrics(attributes2.getFontType()), c2);
 
-        Font font1 = EditorUtil.fontForChar(c1, attributes1.getFontType(), editor).getFont();
-        Font font2 = EditorUtil.fontForChar(c1, attributes2.getFontType(), editor).getFont();
+        Font font1 = EditorImplUtil.fontForChar(c1, attributes1.getFontType(), editor).getFont();
+        Font font2 = EditorImplUtil.fontForChar(c2, attributes2.getFontType(), editor).getFont();
 
         Point2D p2 = editor.offsetToPoint2D(offset);
         float p2x = (float) p2.getX();

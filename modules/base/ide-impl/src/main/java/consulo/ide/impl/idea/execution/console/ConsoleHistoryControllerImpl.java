@@ -16,10 +16,11 @@
 package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessToken;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.codeEditor.*;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -30,8 +31,6 @@ import consulo.execution.ui.console.ConsoleHistoryController;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
@@ -47,6 +46,7 @@ import consulo.project.internal.ProjectExListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.collection.ContainerUtil;
@@ -278,6 +278,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
             });
     }
 
+    @RequiredWriteAction
     protected int insertTextMultiline(String text, Editor editor, Document document) {
         TextRange selection = EditorUtil.getSelectionInAnyMode(editor);
 

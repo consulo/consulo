@@ -17,17 +17,18 @@ package consulo.desktop.awt.execution.console.language;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.colorScheme.EditorFontType;
 import consulo.desktop.awt.editor.impl.internal.DesktopEditorImpl;
 import consulo.execution.ui.console.language.GutterContentProvider;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -66,7 +67,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
       setOpaque(false);
     }
 
-    int spaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, editor);
+    int spaceWidth = EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
     // at line start: icon/one-char symbol + space
     gap = atLineStart ? spaceWidth * GutterContentProvider.MAX_LINE_END_GUTTER_WIDTH_IN_CHAR : spaceWidth;
     maxContentWidth = atLineStart ? gap : 0;
@@ -79,7 +80,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
       @Override
       public void mouseClicked(MouseEvent e) {
         if (!e.isPopupTrigger()) {
-          gutterContentProvider.doAction(EditorUtil.yPositionToLogicalLine(editor, e.getPoint()), editor);
+          gutterContentProvider.doAction(AWTEditorUtil.yPositionToLogicalLine(editor, e.getPoint()), editor);
         }
       }
     });
@@ -123,7 +124,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
     }
     maxContentWidth = Math.max(gutterSize, maxContentWidth);
 
-    editor.getSettings().setAdditionalColumnsCount(1 + (maxContentWidth / EditorUtil.getSpaceWidth(Font.PLAIN, editor)));
+    editor.getSettings().setAdditionalColumnsCount(1 + (maxContentWidth / EditorImplUtil.getSpaceWidth(Font.PLAIN, editor)));
   }
 
   @Override
@@ -207,7 +208,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
 
   @Override
   public void mouseMoved(MouseEvent e) {
-    int line = EditorUtil.yPositionToLogicalLine(editor, e.getPoint());
+    int line = AWTEditorUtil.yPositionToLogicalLine(editor, e.getPoint());
     if (line == lastGutterToolTipLine) {
       return;
     }

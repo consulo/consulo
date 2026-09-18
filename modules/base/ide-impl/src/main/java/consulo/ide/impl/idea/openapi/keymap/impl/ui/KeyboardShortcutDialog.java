@@ -17,10 +17,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.HelpManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.QuickList;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.KeyboardShortcut;

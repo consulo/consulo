@@ -5,10 +5,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.util.lang.CharArrayUtil;
@@ -156,7 +157,7 @@ public class IndentedDeclarativeHintView<View extends DeclarativeHintView<Model>
     }
 
     private static int measureIndentSafely(CharSequence text, int start, int end, Editor editor) {
-        int spaceWidth = EditorUtil.getPlainSpaceWidth(editor);
+        int spaceWidth = EditorImplUtil.getPlainSpaceWidth(editor);
         int tabSize = EditorUtil.getTabSize(editor);
         int columns = 0;
         int off = start;

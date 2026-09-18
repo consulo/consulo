@@ -21,13 +21,12 @@ import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import consulo.codeEditor.impl.VisibleEditorsTracker;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.fileEditor.internal.AsyncEditorLoader;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Animator;
 import consulo.undoRedo.CommandProcessor;
@@ -224,7 +223,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
             }
         }
 
-        int spaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, myEditor);
+        int spaceWidth = EditorImplUtil.getSpaceWidth(Font.PLAIN, myEditor);
         int xInsets = myEditor.getSettings().getAdditionalColumnsCount() * spaceWidth;
 
         int hOffset = scrollType == ScrollType.CENTER ||

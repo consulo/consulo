@@ -2,7 +2,7 @@
 package consulo.desktop.awt.editor.impl.internal.view;
 
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.codeEditor.util.AWTEditorUtil;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -33,7 +33,7 @@ final class TabFragment implements LineFragment {
     @Override
     public int getVisualColumnCount(float startX) {
         float x = getNextTabStop(startX);
-        return EditorUtil.columnsNumber(x - startX, myView.getPlainSpaceWidth());
+        return AWTEditorUtil.columnsNumber(x - startX, myView.getPlainSpaceWidth());
     }
 
     @Override
@@ -104,6 +104,6 @@ final class TabFragment implements LineFragment {
 
     private float getNextTabStop(float x) {
         int leftInset = myView.getInsets().left;
-        return EditorUtil.nextTabStop(x - leftInset, myView.getPlainSpaceWidth(), myView.getTabSize()) + leftInset;
+        return AWTEditorUtil.nextTabStop(x - leftInset, myView.getPlainSpaceWidth(), myView.getTabSize()) + leftInset;
     }
 }

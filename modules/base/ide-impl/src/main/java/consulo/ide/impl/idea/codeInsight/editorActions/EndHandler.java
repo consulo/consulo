@@ -25,7 +25,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.EditorNavigationDelegate;
@@ -34,6 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "first")

@@ -27,9 +27,9 @@ import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.util.FileEditorUtil;
 import consulo.ide.impl.idea.ide.util.FileStructurePopup;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.structureView.StructureViewComposite;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
 import consulo.language.psi.PsiDocumentManager;
@@ -44,11 +44,11 @@ import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @ActionImpl(id = "FileStructurePopup")
 public class ViewStructureAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
@@ -95,7 +95,7 @@ public class ViewStructureAction extends DumbAwareAction implements AnActionWith
         StructureViewModel treeModel;
         if (builder instanceof TreeBasedStructureViewBuilder treeBasedStructureViewBuilder) {
             structureView = null;
-            treeModel = treeBasedStructureViewBuilder.createStructureViewModel(EditorUtil.getEditorEx(fileEditor));
+            treeModel = treeBasedStructureViewBuilder.createStructureViewModel(FileEditorUtil.getEditorEx(fileEditor));
         }
         else {
             structureView = builder.createStructureView(fileEditor, project);
@@ -131,19 +131,14 @@ public class ViewStructureAction extends DumbAwareAction implements AnActionWith
         }).toCoroutine();
     }
 
-    
     @RequiredReadAction
-    public static StructureViewModel createStructureViewModel(
-        Project project,
-        FileEditor fileEditor,
-        StructureView structureView
-    ) {
+    public static StructureViewModel createStructureViewModel(Project project, FileEditor fileEditor, StructureView structureView) {
         StructureViewModel treeModel;
         VirtualFile virtualFile = fileEditor.getFile();
         if (structureView instanceof StructureViewComposite structureViewComposite && virtualFile != null) {
             StructureViewComposite.StructureViewDescriptor[] views = structureViewComposite.getStructureViews();
-            PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(project).findFile(virtualFile));
-            treeModel = new StructureViewCompositeModel(psiFile, EditorUtil.getEditorEx(fileEditor), Arrays.asList(views));
+            PsiFile psiFile = Objects.requireNonNull(PsiManager.getInstance(project).findFile(virtualFile));
+            treeModel = new StructureViewCompositeModel(psiFile, FileEditorUtil.getEditorEx(fileEditor), Arrays.asList(views));
             Disposer.register(structureViewComposite, treeModel);
         }
         else {

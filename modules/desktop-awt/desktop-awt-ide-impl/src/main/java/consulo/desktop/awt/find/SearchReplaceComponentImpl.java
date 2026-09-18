@@ -12,7 +12,6 @@ import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -25,7 +24,7 @@ import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.util.dataholder.Key;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 

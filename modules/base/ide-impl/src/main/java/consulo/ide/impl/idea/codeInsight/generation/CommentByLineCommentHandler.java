@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.codeInsight.generation;
 
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.DocumentUtil;
@@ -24,9 +25,7 @@ import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.CommentUtil;
 import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.*;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -47,6 +46,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -269,7 +269,8 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
                         // Don't tweak caret position if we're already located on the last document line.
                         LogicalPosition position = caret.getLogicalPosition();
                         if (position.line < document.getLineCount() - 1) {
-                            int verticalShift = 1 + block.editor.getSoftWrapModel().getSoftWrapsForLine(position.line).size() - EditorUtil.getSoftWrapCountAfterLineStart(block.editor, position);
+                            int verticalShift = 1 + block.editor.getSoftWrapModel().getSoftWrapsForLine(position.line).size() -
+                                EditorUtil.getSoftWrapCountAfterLineStart(block.editor, position);
                             caret.moveCaretRelatively(0, verticalShift, false, true);
                         }
                         break;

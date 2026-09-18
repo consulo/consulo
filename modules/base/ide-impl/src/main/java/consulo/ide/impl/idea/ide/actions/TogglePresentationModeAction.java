@@ -23,7 +23,6 @@ import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.internal.ToolWindowManagerEx;
@@ -134,7 +133,7 @@ public class TogglePresentationModeAction extends LegacyDumbAwareAction {
         }
         UISettings.getInstance().fireUISettingsChanged();
         StyleManager.get().forceReinitAll();
-        EditorUtil.reinitSettings();
+        EditorFactory.getInstance().refreshAllEditors();
     }
 
     private static void tweakUIDefaults(UISettings settings, boolean inPresentation) {

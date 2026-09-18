@@ -12,6 +12,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.FontSize;
@@ -24,8 +25,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
@@ -68,6 +67,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.ImageKey;
@@ -1881,7 +1881,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
         @Override
         protected void processMouseWheelEvent(MouseWheelEvent e) {
-            if (!EditorSettingsExternalizable.getInstance().isWheelFontChangeEnabled() || !EditorUtil.isChangeFontSize(e)) {
+            if (!EditorSettingsExternalizable.getInstance().isWheelFontChangeEnabled() || !AWTEditorUtil.isChangeFontSize(e)) {
                 super.processMouseWheelEvent(e);
                 return;
             }

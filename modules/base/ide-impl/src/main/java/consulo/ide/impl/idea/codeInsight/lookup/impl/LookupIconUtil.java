@@ -17,33 +17,33 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 26/06/2023
+ * @since 2023-06-26
  */
 public class LookupIconUtil {
-  public static Image augmentIcon(@Nullable Editor editor, @Nullable Image icon, Image standard) {
-    if (Registry.is("editor.scale.completion.icons")) {
-      standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
+    public static Image augmentIcon(@Nullable Editor editor, @Nullable Image icon, Image standard) {
+        if (Registry.is("editor.scale.completion.icons")) {
+            standard = AWTEditorUtil.scaleIconAccordingEditorFont(standard, editor);
 
-      if (icon != null) {
-        icon = EditorUtil.scaleIconAccordingEditorFont(icon, editor);
-      }
+            if (icon != null) {
+                icon = AWTEditorUtil.scaleIconAccordingEditorFont(icon, editor);
+            }
+        }
+
+        if (icon == null) {
+            return standard;
+        }
+
+        if (icon.getWidth() == standard.getWidth() && icon.getHeight() == standard.getHeight()) {
+            return icon;
+        }
+
+        return ImageEffects.layered(standard, icon);
     }
-
-    if (icon == null) {
-      return standard;
-    }
-
-    if (icon.getWidth() == standard.getWidth() && icon.getHeight() == standard.getHeight()) {
-      return icon;
-    }
-
-    return ImageEffects.layered(standard, icon);
-  }
 }

@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.codeInsight.generation;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.*;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -26,10 +27,8 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.CommentUtil;
 import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.*;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyle;
@@ -55,6 +54,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
@@ -136,35 +136,33 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
                 uncommentRange(commentedRange, trim(prefix), trim(suffix), commenter);
             }
         }
+        else if (myCaret.hasSelection()) {
+            int selectionStart = myCaret.getSelectionStart();
+            int selectionEnd = myCaret.getSelectionEnd();
+            if (commenter instanceof IndentedCommenter indentedCommenter) {
+                Boolean value = indentedCommenter.forceIndentedLineComment();
+                if (value != null && Objects.equals(value, Boolean.TRUE)) {
+                    selectionStart = myDocument.getLineStartOffset(myDocument.getLineNumber(selectionStart));
+                    selectionEnd = myDocument.getLineEndOffset(myDocument.getLineNumber(selectionEnd));
+                }
+            }
+            commentRange(selectionStart, selectionEnd, prefix, suffix, commenter);
+        }
         else {
-            if (myCaret.hasSelection()) {
-                int selectionStart = myCaret.getSelectionStart();
-                int selectionEnd = myCaret.getSelectionEnd();
-                if (commenter instanceof IndentedCommenter indentedCommenter) {
-                    Boolean value = indentedCommenter.forceIndentedLineComment();
-                    if (value != null && Objects.equals(value, Boolean.TRUE)) {
-                        selectionStart = myDocument.getLineStartOffset(myDocument.getLineNumber(selectionStart));
-                        selectionEnd = myDocument.getLineEndOffset(myDocument.getLineNumber(selectionEnd));
-                    }
+            EditorModificationUtil.fillVirtualSpaceUntilCaret(editor);
+            int caretOffset = myCaret.getOffset();
+            if (commenter instanceof IndentedCommenter indentedCommenter) {
+                Boolean value = indentedCommenter.forceIndentedLineComment();
+                if (value != null && Objects.equals(value, Boolean.TRUE)) {
+                    int lineNumber = myDocument.getLineNumber(caretOffset);
+                    int start = myDocument.getLineStartOffset(lineNumber);
+                    int end = myDocument.getLineEndOffset(lineNumber);
+                    commentRange(start, end, prefix, suffix, indentedCommenter);
+                    return;
                 }
-                commentRange(selectionStart, selectionEnd, prefix, suffix, commenter);
             }
-            else {
-                EditorUtil.fillVirtualSpaceUntilCaret(editor);
-                int caretOffset = myCaret.getOffset();
-                if (commenter instanceof IndentedCommenter indentedCommenter) {
-                    Boolean value = indentedCommenter.forceIndentedLineComment();
-                    if (value != null && Objects.equals(value, Boolean.TRUE)) {
-                        int lineNumber = myDocument.getLineNumber(caretOffset);
-                        int start = myDocument.getLineStartOffset(lineNumber);
-                        int end = myDocument.getLineEndOffset(lineNumber);
-                        commentRange(start, end, prefix, suffix, indentedCommenter);
-                        return;
-                    }
-                }
-                myDocument.insertString(caretOffset, prefix + suffix);
-                myCaret.moveToOffset(caretOffset + prefix.length());
-            }
+            myDocument.insertString(caretOffset, prefix + suffix);
+            myCaret.moveToOffset(caretOffset + prefix.length());
         }
 
         showMessageIfNeeded();

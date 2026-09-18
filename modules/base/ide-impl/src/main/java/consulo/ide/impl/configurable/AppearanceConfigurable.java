@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
+import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ApplicationConfigurable;
@@ -26,7 +27,6 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SimpleConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
@@ -49,7 +49,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -464,11 +463,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
                 settings.fireUISettingsChanged();
             }
 
-            EditorUtil.reinitSettings();
+            EditorFactory.getInstance().refreshAllEditors();
         });
     }
 
-    
     private static Object getActiveIconLibraryOrNull() {
         IconLibraryManager iconLibraryManager = IconLibraryManager.get();
 

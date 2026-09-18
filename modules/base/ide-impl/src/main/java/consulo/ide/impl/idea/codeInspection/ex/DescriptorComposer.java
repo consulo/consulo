@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefElement;
@@ -29,6 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.net.MalformedURLException;

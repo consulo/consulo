@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.util;
 
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
@@ -27,13 +28,14 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
+import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.logging.util.LoggerUtil;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -161,11 +163,11 @@ public class EditorUtil {
      * @return surrounding logical positions
      * @see #calcSurroundingRange(Editor, VisualPosition, VisualPosition)
      */
-    public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(Editor editor) {
+    public static Couple<LogicalPosition> calcCaretLineRange(Editor editor) {
         return calcSurroundingRange(editor, editor.getCaretModel().getVisualPosition(), editor.getCaretModel().getVisualPosition());
     }
 
-    public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(Caret caret) {
+    public static Couple<LogicalPosition> calcCaretLineRange(Caret caret) {
         return calcSurroundingRange(caret.getEditor(), caret.getVisualPosition(), caret.getVisualPosition());
     }
 
@@ -193,7 +195,7 @@ public class EditorUtil {
      * @see #getNotFoldedLineEndOffset(Editor, int)
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
-    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor, VisualPosition start, VisualPosition end) {
+    public static Couple<LogicalPosition> calcSurroundingRange(Editor editor, VisualPosition start, VisualPosition end) {
         Document document = editor.getDocument();
         FoldingModel foldingModel = editor.getFoldingModel();
 
@@ -231,7 +233,7 @@ public class EditorUtil {
         if (second.line >= document.getLineCount()) {
             second = editor.offsetToLogicalPosition(document.getTextLength());
         }
-        return Pair.create(first, second);
+        return Couple.of(first, second);
     }
 
     /**
@@ -384,11 +386,24 @@ public class EditorUtil {
         return offset - start + shift;
     }
 
+    public static int getDefaultCaretWidth() {
+        return Registry.intValue("editor.caret.width", 2);
+    }
+
     private static int getTabLength(int colNumber, int tabSize) {
         if (tabSize <= 0) {
             tabSize = 1;
         }
         return tabSize - colNumber % tabSize;
+    }
+
+    public static TextRange getSelectionInAnyMode(Editor editor) {
+        SelectionModel selection = editor.getSelectionModel();
+        int[] starts = selection.getBlockSelectionStarts();
+        int[] ends = selection.getBlockSelectionEnds();
+        int start = starts.length > 0 ? starts[0] : selection.getSelectionStart();
+        int end = ends.length > 0 ? ends[ends.length - 1] : selection.getSelectionEnd();
+        return TextRange.create(start, end);
     }
 
     public static int yPositionToLogicalLine(Editor editor, int y) {
@@ -502,14 +517,20 @@ public class EditorUtil {
             Disposer.dispose(disposable);
             return;
         }
-        EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
-            @Override
-            public void editorReleased(EditorFactoryEvent event) {
-                if (event.getEditor() == editor) {
-                    Disposer.dispose(disposable);
+        // for injected editors disposal will happen only when host editor is disposed,
+        // but this seems to be the best we can do (there are no notifications on disposal of injected editor)
+        Editor hostEditor = editor instanceof InjectedEditor injectedEditor ? injectedEditor.getDelegate() : editor;
+        EditorFactory.getInstance().addEditorFactoryListener(
+            new EditorFactoryAdapter() {
+                @Override
+                public void editorReleased(EditorFactoryEvent event) {
+                    if (event.getEditor() == hostEditor) {
+                        Disposer.dispose(disposable);
+                    }
                 }
-            }
-        }, disposable);
+            },
+            disposable
+        );
     }
 
     @RequiredUIAccess
@@ -543,11 +564,8 @@ public class EditorUtil {
         return extentSize.getWidth() != 0 && extentSize.getHeight() != 0;
     }
 
-    private record ViewportReadyAwaiter(
-        JComponent editorComponent,
-        JViewport viewport,
-        Runnable onReady
-    ) implements ChangeListener, Disposable {
+    private record ViewportReadyAwaiter(JComponent editorComponent, JViewport viewport, Runnable onReady)
+        implements ChangeListener, Disposable {
 
         ViewportReadyAwaiter {
             viewport.addChangeListener(this);
