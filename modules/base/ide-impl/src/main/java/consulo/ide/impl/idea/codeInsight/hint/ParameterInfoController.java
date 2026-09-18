@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPresentationManager
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenType;
@@ -56,6 +55,7 @@ import consulo.undoRedo.ProjectUndoManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;

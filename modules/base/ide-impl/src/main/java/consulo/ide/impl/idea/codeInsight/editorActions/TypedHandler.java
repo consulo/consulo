@@ -23,7 +23,6 @@ import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.action.TypedActionHandlerBase;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -52,6 +51,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 

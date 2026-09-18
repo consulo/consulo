@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
@@ -71,6 +70,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.QuickSearchComponent;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -1156,8 +1156,8 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         private @Nullable KeyStroke getShortcut(String actionCodeCompletion) {
             Shortcut[] shortcuts = KeymapUtil.getActiveKeymapShortcuts(actionCodeCompletion).getShortcuts();
             for (Shortcut shortcut : shortcuts) {
-                if (shortcut instanceof KeyboardShortcut) {
-                    return ((KeyboardShortcut) shortcut).getFirstKeyStroke();
+                if (shortcut instanceof KeyboardShortcut kbShortcut) {
+                    return kbShortcut.getFirstKeyStroke();
                 }
             }
             return null;

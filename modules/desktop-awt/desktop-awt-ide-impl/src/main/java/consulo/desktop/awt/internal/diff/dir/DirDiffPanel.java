@@ -38,7 +38,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.desktop.awt.internal.diff.dir.action.DirDiffToolbarActions;
 import consulo.desktop.awt.internal.diff.dir.action.RefreshDirDiffAction;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ui.ex.awt.event.JBLoadingPanelListener;
 import consulo.logging.Logger;
@@ -51,12 +50,12 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

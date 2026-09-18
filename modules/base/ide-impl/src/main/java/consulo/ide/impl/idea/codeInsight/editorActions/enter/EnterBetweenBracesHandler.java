@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.action.EnterBetweenBracesDelegate;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.util.lang.CharArrayUtil;
 
 /**
  * @deprecated Please, use the {@code EnterBetweenBracesDelegate} language-specific implementation instead.

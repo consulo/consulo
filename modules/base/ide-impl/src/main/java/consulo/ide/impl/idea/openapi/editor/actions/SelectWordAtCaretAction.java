@@ -25,11 +25,11 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 

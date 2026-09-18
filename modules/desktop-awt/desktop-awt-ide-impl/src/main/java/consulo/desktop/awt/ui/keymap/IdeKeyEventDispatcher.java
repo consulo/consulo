@@ -34,7 +34,6 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.action.ActionPromoter;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
@@ -60,6 +59,7 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.concurrent.coroutine.CoroutineException;
 
 import java.util.concurrent.CompletionException;

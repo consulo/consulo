@@ -21,7 +21,7 @@ import consulo.language.codeStyle.internal.IndentData;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.CommentUtilCore;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.util.lang.CharArrayUtil;
 
 public class CommentUtil extends CommentUtilCore {
   private CommentUtil() { }

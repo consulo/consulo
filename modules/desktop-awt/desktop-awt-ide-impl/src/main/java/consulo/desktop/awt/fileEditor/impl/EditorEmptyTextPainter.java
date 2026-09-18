@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -34,6 +33,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
@@ -123,7 +123,6 @@ public class EditorEmptyTextPainter {
         painter.appendLine(line);
     }
 
-    
     protected String getActionShortcutText(String actionId) {
         return KeymapUtil.getFirstKeyboardShortcutText(actionId);
     }

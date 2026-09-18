@@ -30,7 +30,6 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
@@ -43,6 +42,7 @@ import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import java.util.*;
