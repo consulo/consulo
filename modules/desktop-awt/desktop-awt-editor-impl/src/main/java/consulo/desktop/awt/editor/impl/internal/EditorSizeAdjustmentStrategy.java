@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.editor.impl.internal;
 
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import gnu.trove.TLongArrayList;
 
@@ -88,7 +88,7 @@ class EditorSizeAdjustmentStrategy {
     boolean increaseWidth = newPreferredSize.width > oldPreferredSize.width;
     Dimension result;
     if (increaseWidth) {
-      int spaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, editor);
+      int spaceWidth = EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
       newPreferredSize.width += myReserveColumns * spaceWidth;
       myReserveColumns += 3;
       result = newPreferredSize;

@@ -15,13 +15,16 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.DelegateColorScheme;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
@@ -52,10 +55,10 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.util.FileEditorUtil;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.EditorPopupHandler;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -1914,7 +1917,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
         VisualPosition visualPosition = xyToVisualPosition(new Point(x, y));
         Caret caret = targetCaret != null ? targetCaret : getCaretModel().getPrimaryCaret();
-        if (consulo.codeEditor.util.EditorUtil.isBlockLikeCaret(caret) && !visualPosition.leansRight && visualPosition.column > 0) {
+        if (EditorUtil.isBlockLikeCaret(caret) && !visualPosition.leansRight && visualPosition.column > 0) {
             // Adjustment for block caret when clicking in the second half of the character
             visualPosition = new VisualPosition(visualPosition.line, visualPosition.column - 1, true);
         }
@@ -3188,7 +3191,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             myLastMousePressedLocation = null;
             runMouseReleasedCommand(e);
             if (!e.isConsumed() && myMousePressedEvent != null && !myMousePressedEvent.isConsumed()
-                && Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this)
+                && Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorImplUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this)
                 && Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
                 runMouseClickedCommand(e);
             }
@@ -3242,7 +3245,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA
                 || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
-                myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
+                myDragOnGutterSelectionStartLine = AWTEditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
             }
 
             if (event.isConsumed() && !forceProcessing) {
@@ -3449,7 +3452,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     Caret caret = getCaretModel().getCaretAt(visualPosition);
                     if (e.getClickCount() == 1) {
                         if (caret == null) {
-                            myLastPressCreatedCaret = !consulo.codeEditor.util.EditorUtil.checkMaxCarets(DesktopEditorImpl.this) && getCaretModel().addCaret(visualPosition) != null;
+                            myLastPressCreatedCaret = !EditorUtil.checkMaxCarets(DesktopEditorImpl.this) && getCaretModel().addCaret(visualPosition) != null;
                         }
                         else {
                             getCaretModel().removeCaret(caret);
@@ -3694,7 +3697,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
         else if (clickVisLine > endVisLine) {
             // Expand selection at forward direction.
-            int endLineOffset = EditorUtil.getVisualLineEndOffset(this, clickVisLine);
+            int endLineOffset = EditorImplUtil.getVisualLineEndOffset(this, clickVisLine);
             getSelectionModel().setSelection(getSelectionModel().getSelectionStart(), endLineOffset);
             getCaretModel().moveToOffset(endLineOffset, true);
         }
@@ -3716,7 +3719,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             if (clickVisLine == endVisLine) {
                 clickVisLine--;
             }
-            int endLineOffset = EditorUtil.getVisualLineEndOffset(this, clickVisLine);
+            int endLineOffset = EditorImplUtil.getVisualLineEndOffset(this, clickVisLine);
             getSelectionModel().setSelection(startSelectionOffset, endLineOffset);
             getCaretModel().moveToOffset(endLineOffset);
         }
@@ -4078,11 +4081,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     public boolean isInDistractionFreeMode() {
-        return EditorUtil.isRealFileEditor(this) && (Registry.is("editor.distraction.free.mode") || isInPresentationMode());
+        return FileEditorUtil.isRealFileEditor(this) && (Registry.is("editor.distraction.free.mode") || isInPresentationMode());
     }
 
     boolean isInPresentationMode() {
-        return UISettings.getInstance().getPresentationMode() && EditorUtil.isRealFileEditor(this);
+        return UISettings.getInstance().getPresentationMode() && FileEditorUtil.isRealFileEditor(this);
     }
 
     public MouseListener getMouseListener() {
@@ -4224,7 +4227,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         protected void processMouseWheelEvent(MouseWheelEvent e) {
             if (mySettings.isWheelFontChangeEnabled()) {
-                if (EditorUtil.isChangeFontSize(e)) {
+                if (AWTEditorUtil.isChangeFontSize(e)) {
                     int size = myScheme.getEditorFontSize() - e.getWheelRotation();
                     if (size >= MIN_FONT_SIZE) {
                         setFontSize(size, SwingUtilities.convertPoint(this, e.getPoint(), getViewport()));

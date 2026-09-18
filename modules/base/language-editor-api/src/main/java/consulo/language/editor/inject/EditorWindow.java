@@ -23,26 +23,20 @@ import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;
 
 public interface EditorWindow extends UserDataHolderEx, InjectedEditor {
-  
-  static Editor getTopLevelEditor(Editor editor) {
-    return editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
-  }
+    static Editor getTopLevelEditor(Editor editor) {
+        return editor instanceof EditorWindow editorWindow ? editorWindow.getDelegate() : editor;
+    }
 
-  boolean isValid();
+    boolean isValid();
 
-  
-  PsiFile getInjectedFile();
+    PsiFile getInjectedFile();
 
-  
-  LogicalPosition hostToInjected(LogicalPosition hPos);
+    LogicalPosition hostToInjected(LogicalPosition hPos);
 
-  
-  LogicalPosition injectedToHost(LogicalPosition pos);
+    LogicalPosition injectedToHost(LogicalPosition pos);
 
-  
-  Editor getDelegate();
+    Editor getDelegate();
 
-  
-  @Override
-  DocumentWindow getDocument();
+    @Override
+    DocumentWindow getDocument();
 }

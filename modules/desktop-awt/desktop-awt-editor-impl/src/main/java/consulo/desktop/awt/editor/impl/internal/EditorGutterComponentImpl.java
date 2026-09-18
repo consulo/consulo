@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl.internal;
 
+import consulo.codeEditor.util.AWTEditorUtil;
+import consulo.fileEditor.util.FileEditorUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import com.jetbrains.FontExtensions;
@@ -41,7 +43,6 @@ import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
@@ -973,7 +974,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         Point editorLocationInWindow = point.getPoint(frame);
 
         int editorLocationX = (int) editorLocationInWindow.getX();
-        int rightMarginX = rightMargin * EditorUtil.getSpaceWidth(Font.PLAIN, myEditor) + editorLocationX;
+        int rightMarginX = rightMargin * EditorImplUtil.getSpaceWidth(Font.PLAIN, myEditor) + editorLocationX;
 
         int width = editorLocationX + editorComponent.getWidth();
         if (rightMarginX < width && editorLocationX < width - rightMarginX) {
@@ -1712,7 +1713,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     private boolean isRealEditor() {
-        return EditorUtil.isRealFileEditor(myEditor);
+        return FileEditorUtil.isRealFileEditor(myEditor);
     }
 
     boolean isLineMarkersShown() {
@@ -2167,7 +2168,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     private int getLineNumAtPoint(Point clickPoint) {
-        return EditorUtil.yPositionToLogicalLine(myEditor, clickPoint);
+        return AWTEditorUtil.yPositionToLogicalLine(myEditor, clickPoint);
     }
 
     private boolean isGutterContextMenuShown() {
@@ -2525,7 +2526,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     @RequiredUIAccess
     private void invokePopup(MouseEvent e) {
-        int logicalLineAtCursor = EditorUtil.yPositionToLogicalLine(myEditor, e);
+        int logicalLineAtCursor = AWTEditorUtil.yPositionToLogicalLine(myEditor, e);
         myLastActionableClick = new ClickInfo(logicalLineAtCursor, getClickedIconCenter(e));
         ActionManager actionManager = ActionManager.getInstance();
         if (myEditor.getMouseEventArea(e) == EditorMouseEventArea.ANNOTATIONS_AREA) {
@@ -2616,7 +2617,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     private int convertPointToLineNumber(Point p) {
         DocumentEx document = myEditor.getDocument();
-        int line = EditorUtil.yPositionToLogicalLine(myEditor, p);
+        int line = AWTEditorUtil.yPositionToLogicalLine(myEditor, p);
         if (!isValidLine(document, line)) {
             return -1;
         }

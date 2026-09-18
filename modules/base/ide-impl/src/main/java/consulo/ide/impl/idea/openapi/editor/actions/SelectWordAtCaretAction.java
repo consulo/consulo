@@ -21,10 +21,10 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -53,7 +53,7 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
             SelectionModel selectionModel = editor.getSelectionModel();
             Document document = editor.getDocument();
 
-            if (EditorUtil.isPasswordEditor(editor)) {
+            if (AWTEditorUtil.isPasswordEditor(editor)) {
                 selectionModel.setSelection(0, document.getTextLength());
                 return;
             }

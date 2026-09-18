@@ -3,8 +3,8 @@ package consulo.desktop.awt.editor.impl.internal.view;
 
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.Inlay;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.impl.internal.WrapElementIterator;
+import consulo.codeEditor.util.AWTEditorUtil;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public final class WrapElementMeasuringIterator extends WrapElementIterator {
         if (fold == null) {
             int codePoint = getCodePoint();
             if (codePoint == '\t') {
-                return EditorUtil.nextTabStop(startX + getInlaysPrefixWidth(), myView.getPlainSpaceWidth(), myView.getTabSize()) +
+                return AWTEditorUtil.nextTabStop(startX + getInlaysPrefixWidth(), myView.getPlainSpaceWidth(), myView.getTabSize()) +
                     getInlaysSuffixWidth();
             }
             else if (codePoint == '\r') { // can only happen when \n part of \r\n line break is folded

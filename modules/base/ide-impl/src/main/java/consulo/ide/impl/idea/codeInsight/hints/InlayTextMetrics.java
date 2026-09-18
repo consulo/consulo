@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.FontInfo;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 
@@ -51,13 +51,10 @@ public final class InlayTextMetrics {
         this.ideScale = ideScale;
     }
 
-    public static InlayTextMetrics create(Editor editor,
-                                          float size,
-                                          int fontType,
-                                          FontRenderContext context) {
+    public static InlayTextMetrics create(Editor editor, float size, int fontType, FontRenderContext context) {
         Font font;
         if (EditorSettingsExternalizable.getInstance().isUseEditorFontInInlays()) {
-            font = EditorUtil.getEditorFont().deriveFont(fontType, size);
+            font = AWTLanguageEditorUtil.getEditorFont().deriveFont(fontType, size);
         }
         else {
             font = UIUtil.getFontWithFallback(UIUtil.getLabelFont().getFamily(), fontType, (int) size);

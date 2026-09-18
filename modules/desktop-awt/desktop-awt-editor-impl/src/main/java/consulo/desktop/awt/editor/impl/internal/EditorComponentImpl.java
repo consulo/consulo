@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.editor.impl.internal;
 
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.application.Application;
 import consulo.application.util.Queryable;
@@ -38,7 +39,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -236,7 +236,7 @@ public class EditorComponentImpl extends JTextComponent
             return myEditor.getLineHeight();
         }
         // if orientation == SwingConstants.HORIZONTAL
-        return EditorUtil.getSpaceWidth(Font.PLAIN, myEditor);
+        return EditorImplUtil.getSpaceWidth(Font.PLAIN, myEditor);
     }
 
     @Override

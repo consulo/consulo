@@ -28,13 +28,14 @@ import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -67,13 +68,12 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 18-Mar-22
+ * @since 2022-03-18
  */
 @Singleton
 @ServiceImpl
 public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelper {
     private static class FileEditorAffectCaretContext extends CaretDataContext {
-
         public FileEditorAffectCaretContext(DataContext delegate, Caret caret) {
             super(delegate, caret);
         }
@@ -86,8 +86,8 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean requestWriting(Editor editor) {
         return EditorModificationUtil.requestWriting(editor);
     }
@@ -136,6 +136,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
+    @RequiredReadAction
     public boolean shouldUseSmartTabs(Project project, Editor editor) {
         if (!(editor instanceof EditorEx)) {
             return false;
@@ -146,7 +147,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
 
     @Override
     public int calcColumnNumber(@Nullable Editor editor, CharSequence text, int start, int offset, int tabSize) {
-        return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
+        return consulo.codeEditor.util.EditorUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
     @Override
@@ -175,13 +176,40 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
+    @RequiredReadAction
     public LineWrapPositionStrategy getLineWrapPositionStrategy(Editor editor) {
         return LanguageLineWrapPositionStrategy.forEditor(editor);
     }
 
     @Override
     public EditorHighlighter createEmptyHighlighter(@Nullable Project project, Document document) {
-        return EditorUtil.createEmptyHighlighter(project, document);
+        EditorHighlighter highlighter = new EmptyEditorHighlighter(new TextAttributes()) {
+            @Override
+            public HighlighterIterator createIterator(int startOffset) {
+                setText(document.getImmutableCharSequence());
+                return super.createIterator(startOffset);
+            }
+
+            @Override
+            public void setColorScheme(EditorColorsScheme scheme) {
+            }
+        };
+        highlighter.setEditor(new HighlighterClient() {
+            @Override
+            public Project getProject() {
+                return project;
+            }
+
+            @Override
+            public void repaint(int start, int end) {
+            }
+
+            @Override
+            public Document getDocument() {
+                return document;
+            }
+        });
+        return highlighter;
     }
 
     @Override

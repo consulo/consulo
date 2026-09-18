@@ -17,9 +17,9 @@ package consulo.ide.impl.language.codeStyle;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -314,22 +314,22 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
 
     @Override
     public int nextTabStop(int x, Object editor, int tabSize) {
-        return EditorUtil.nextTabStop(x, (Editor) editor, tabSize);
+        return EditorImplUtil.nextTabStop(x, (Editor) editor, tabSize);
     }
 
     @Override
     public int nextTabStop(int x, Object editor) {
-        return EditorUtil.nextTabStop(x, (Editor) editor);
+        return EditorImplUtil.nextTabStop(x, (Editor) editor);
     }
 
     @Override
     public int charWidth(char c, @AWTConstants.FontStyle int fontType, Object editor) {
-        return EditorUtil.charWidth(c, fontType, (Editor) editor);
+        return EditorImplUtil.charWidth(c, fontType, (Editor) editor);
     }
 
     @Override
     public int getSpaceWidth(@AWTConstants.FontStyle int fontType, Object editor) {
-        return EditorUtil.getSpaceWidth(fontType, (Editor) editor);
+        return EditorImplUtil.getSpaceWidth(fontType, (Editor) editor);
     }
 
     @RequiredUIAccess

@@ -5,11 +5,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.document.Document;
 import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.impl.internal.completion.CompletionAssertions;
@@ -46,7 +46,7 @@ public class CompletionInitializationUtil {
                                                                                      int invocationCount,
                                                                                      CompletionType completionType) {
         return WriteAction.compute(() -> {
-            EditorUtil.fillVirtualSpaceUntilCaret(editor);
+            EditorModificationUtil.fillVirtualSpaceUntilCaret(editor);
             PsiDocumentManager.getInstance(project).commitAllDocuments();
             CompletionAssertions.checkEditorValid(editor);
 

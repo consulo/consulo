@@ -16,6 +16,9 @@
 package consulo.codeEditor.impl.util;
 
 import consulo.codeEditor.*;
+import consulo.codeEditor.event.CaretActionListener;
+import consulo.codeEditor.event.SelectionEvent;
+import consulo.codeEditor.event.SelectionListener;
 import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
@@ -24,6 +27,7 @@ import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.impl.Interval;
 import consulo.document.impl.TextRangeInterval;
@@ -35,8 +39,10 @@ import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.AWTConstants;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -50,7 +56,7 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
 
 /**
  * @author VISTALL
- * @since 20-Mar-22
+ * @since 2022-03-20
  */
 public class EditorImplUtil {
     private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
@@ -60,6 +66,12 @@ public class EditorImplUtil {
      * sees. Declared here rather than in the editor api because it still carries an awt payload.
      */
     public static final DataTransferType<Transferable> TRANSFERABLE = DataTransferType.create("consulo.editor.transferable");
+
+    public static int getVisualLineEndOffset(Editor editor, int line) {
+        VisualPosition endLineVisualPosition = new VisualPosition(line, getLastVisualLineColumnNumber(editor, line));
+        LogicalPosition endLineLogicalPosition = editor.visualToLogicalPosition(endLineVisualPosition);
+        return editor.logicalPositionToOffset(endLineLogicalPosition);
+    }
 
     public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
@@ -275,11 +287,7 @@ public class EditorImplUtil {
     }
 
     @Deprecated
-    public static int calcColumnNumber(@Nullable Editor editor,
-                                       CharSequence text,
-                                       int start,
-                                       int offset,
-                                       int tabSize) {
+    public static int calcColumnNumber(@Nullable Editor editor, CharSequence text, int start, int offset, int tabSize) {
         return EditorUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
@@ -388,7 +396,6 @@ public class EditorImplUtil {
         return fontForChar(c, fontType, editor).charWidth(c);
     }
 
-    
     public static FontInfo fontForChar(char c, @AWTConstants.FontStyle int style, Editor editor) {
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         return ComplementaryFontsRegistry.getFontAbleToDisplay(c,
@@ -418,5 +425,62 @@ public class EditorImplUtil {
         // whatever another application left there. it is handed on as the platform payload rather than wrapped
         // into an awt transferable, which is what lets a frontend without a toolkit paste at all
         return manager.getContents().thenApply(transfer -> transfer.isEmpty() ? null : transfer);
+    }
+
+    /**
+     * This is similar to {@link SelectionModel#addSelectionListener(SelectionListener, Disposable)}, but when selection changes happen within
+     * the scope of {@link CaretModel#runForEachCaret(CaretAction)} call, there will be only one notification at the end of iteration over
+     * carets.
+     */
+    public static void addBulkSelectionListener(Editor editor, SelectionListener listener, Disposable disposable) {
+        SimpleReference<Couple<int[]>> selectionBeforeBulkChange = new SimpleReference<>();
+        SimpleReference<Boolean> selectionChangedDuringBulkChange = new SimpleReference<>();
+        editor.getSelectionModel().addSelectionListener(
+            new SelectionListener() {
+                @Override
+                public void selectionChanged(SelectionEvent e) {
+                    if (selectionBeforeBulkChange.isNull()) {
+                        listener.selectionChanged(e);
+                    }
+                    else {
+                        selectionChangedDuringBulkChange.set(Boolean.TRUE);
+                    }
+                }
+            },
+            disposable
+        );
+        editor.getCaretModel().addCaretActionListener(
+            new CaretActionListener() {
+                @Override
+                public void beforeAllCaretsAction() {
+                    selectionBeforeBulkChange.set(getSelectionOffsets());
+                    selectionChangedDuringBulkChange.set(null);
+                }
+
+                @Override
+                public void afterAllCaretsAction() {
+                    if (!selectionChangedDuringBulkChange.isNull()) {
+                        Couple<int[]> beforeBulk = selectionBeforeBulkChange.get();
+                        Couple<int[]> afterBulk = getSelectionOffsets();
+                        listener.selectionChanged(new SelectionEvent(
+                            editor,
+                            beforeBulk.first,
+                            beforeBulk.second,
+                            afterBulk.first,
+                            afterBulk.second
+                        ));
+                    }
+                    selectionBeforeBulkChange.set(null);
+                }
+
+                private Couple<int[]> getSelectionOffsets() {
+                    return Couple.of(
+                        editor.getSelectionModel().getBlockSelectionStarts(),
+                        editor.getSelectionModel().getBlockSelectionEnds()
+                    );
+                }
+            },
+            disposable
+        );
     }
 }
