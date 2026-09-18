@@ -254,18 +254,46 @@ combobox.force.braces.while:
     text: 'while ():'
 configurable.schemes.display.name:
     text: Code Style
+editbox.blanklines.after.anonymous.class.header:
+    text: 'After anonymous class header:'
+editbox.blanklines.after.class.header:
+    text: 'After class header:'
+editbox.blanklines.after.imports:
+    text: 'After imports:'
+editbox.blanklines.after.package.statement:
+    text: 'After package statement:'
+editbox.blanklines.around.class:
+    text: 'Around class:'
+editbox.blanklines.around.field:
+    text: 'Around field:'
 editbox.blanklines.around.field.in.interface:
     text: 'Around field in interface:'
+editbox.blanklines.around.method:
+    text: 'Around method:'
 editbox.blanklines.around.method.in.interface:
     text: 'Around method in interface:'
 editbox.blanklines.before.class.end:
     text: 'Before class end:'
+editbox.blanklines.before.imports:
+    text: 'Before imports:'
+editbox.blanklines.before.method.body:
+    text: 'Before method body:'
+editbox.blanklines.before.package.statement:
+    text: 'Before package statement:'
 editbox.indent.continuation.indent:
     text: 'Continuation indent:'
 editbox.indent.indent:
     text: 'Indent:'
 editbox.indent.tab.size:
     text: 'Tab size:'
+editbox.keep.blank.lines:
+    text: 'Keep blank lines:'
+editbox.keep.blanklines.before.rbrace:
+    text: 'Before ''}'':'
+editbox.keep.blanklines.in.code:
+    text: 'In code:'
+editbox.keep.blanklines.in.declarations:
+    text: 'In declarations:'
 editbox.right.margin.columns:
     text: 'Right margin (columns):'
 editbox.scheme.name:
@@ -310,8 +338,16 @@ message.code.style.scheme.import.success:
     text: '{0} settings were imported to {1} scheme.'
 settings.code.style.default.general:
     text: Default
+settings.code.style.general.visual.guides.hint:
+    text: Specify one guide (80) or several (80, 120)
+settings.code.style.visual.guides:
+    text: Visual guides
+settings.default.value.no:
+    text: 'No'
 settings.default.value.prefix:
     text: 'Default: {0}'
+settings.default.value.yes:
+    text: 'Yes'
 settings.soft.margins.empty.list:
     text: None
 title.blank.lines:

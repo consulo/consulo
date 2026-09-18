@@ -20,13 +20,17 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleConstraints;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.WrapOnTyping;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.*;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CommaSeparatedIntegersField;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.MultiMap;
 import org.jspecify.annotations.Nullable;
 
@@ -35,18 +39,20 @@ import java.util.*;
 import java.util.function.Function;
 
 public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
-    private final MultiMap<String, String> myGroupToFields = new MultiMap<>();
+    private final MultiMap<LocalizeValue, String> myGroupToFields = new MultiMap<>();
     private Map<String, SettingsGroup> myFieldNameToGroup;
     private final CommaSeparatedIntegersField mySoftMarginsEditor =
         new CommaSeparatedIntegersField(null, 0, CodeStyleConstraints.MAX_RIGHT_MARGIN, "Optional");
-    private final JComboBox<String> myWrapOnTypingCombo = new ComboBox<>(WRAP_ON_TYPING_OPTIONS);
+    private final ComboBox<WrapOnTyping> myWrapOnTypingCombo = ComboBox.create(WrapOnTyping.values());
+    private final JComponent myWrapOnTypingComboComponent = (JComponent) TargetAWT.to(myWrapOnTypingCombo);
 
+    @RequiredUIAccess
     public WrappingAndBracesPanel(CodeStyleSettings settings) {
         super(settings);
-        MarginOptionsUtil.customizeWrapOnTypingCombo(myWrapOnTypingCombo, settings);
+        myWrapOnTypingCombo.setTextRenderer(item -> item != null ? item.getDisplayNameFor(settings) : LocalizeValue.empty());
         init();
         UIUtil.applyStyle(UIUtil.ComponentStyle.MINI, mySoftMarginsEditor);
-        UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myWrapOnTypingCombo);
+        UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myWrapOnTypingComboComponent);
     }
 
     @Override
@@ -55,37 +61,30 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     }
 
     @Override
-    protected void addOption(String fieldName, String title, @Nullable String groupName) {
+    protected void addOption(String fieldName, LocalizeValue title, LocalizeValue groupName) {
         super.addOption(fieldName, title, groupName);
-        if (groupName != null) {
+        if (groupName.isNotEmpty()) {
             myGroupToFields.putValue(groupName, fieldName);
         }
     }
 
     @Override
-    protected void addOption(
-        String fieldName,
-        String title,
-        @Nullable String groupName,
-        String[] options,
-        int[] values
-    ) {
+    protected void addOption(String fieldName, LocalizeValue title, LocalizeValue groupName, LocalizeValue[] options, int[] values) {
         super.addOption(fieldName, title, groupName, options, values);
-        if (groupName == null) {
+        if (groupName.isEmpty()) {
             myGroupToFields.putValue(title, fieldName);
         }
     }
 
     @Override
     protected void initTables() {
-        for (Map.Entry<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> entry : CodeStyleSettingPresentation.getStandardSettings(
-            getSettingsType()).entrySet()) {
+        for (Map.Entry<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> entry
+            : CodeStyleSettingPresentation.getStandardSettings(getSettingsType()).entrySet()) {
             CodeStyleSettingPresentation.SettingsGroup group = entry.getKey();
             for (CodeStyleSettingPresentation setting : entry.getValue()) {
                 String fieldName = setting.getFieldName();
-                String uiName = setting.getUiName();
-                if (setting instanceof CodeStyleBoundedIntegerSettingPresentation) {
-                    CodeStyleBoundedIntegerSettingPresentation intSetting = (CodeStyleBoundedIntegerSettingPresentation) setting;
+                LocalizeValue uiName = setting.getUiName();
+                if (setting instanceof CodeStyleBoundedIntegerSettingPresentation intSetting) {
                     int defaultValue = intSetting.getDefaultValue();
                     addOption(
                         fieldName,
@@ -97,8 +96,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
                         getDefaultIntValueRenderer(fieldName)
                     );
                 }
-                else if (setting instanceof CodeStyleSelectSettingPresentation) {
-                    CodeStyleSelectSettingPresentation selectSetting = (CodeStyleSelectSettingPresentation) setting;
+                else if (setting instanceof CodeStyleSelectSettingPresentation selectSetting) {
                     addOption(fieldName, uiName, group.name, selectSetting.getOptions(), selectSetting.getValues());
                 }
                 else if (setting instanceof CodeStyleSoftMarginsPresentation) {
@@ -112,20 +110,19 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         }
     }
 
-    private Function<Integer, String> getDefaultIntValueRenderer(String fieldName) {
+    private Function<Integer, LocalizeValue> getDefaultIntValueRenderer(String fieldName) {
         if ("RIGHT_MARGIN".equals(fieldName)) {
             return integer -> MarginOptionsUtil.getDefaultRightMarginText(getSettings());
         }
         else {
-            return integer -> ApplicationLocalize.integerFieldValueDefault().get();
+            return integer -> ApplicationLocalize.integerFieldValueDefault();
         }
     }
 
     protected SettingsGroup getAssociatedSettingsGroup(String fieldName) {
         if (myFieldNameToGroup == null) {
             myFieldNameToGroup = new HashMap<>();
-            Set<String> groups = myGroupToFields.keySet();
-            for (String group : groups) {
+            for (LocalizeValue group : myGroupToFields.keySet()) {
                 Collection<String> fields = myGroupToFields.get(group);
                 SettingsGroup settingsGroup = new SettingsGroup(group, fields);
                 for (String field : fields) {
@@ -136,23 +133,22 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return myFieldNameToGroup.get(fieldName);
     }
 
-    
     @Override
     protected LocalizeValue getTabTitle() {
         return CodeStyleLocalize.wrappingAndBraces();
     }
 
     protected static class SettingsGroup {
-        public final String title;
-        public final Collection<String> commonCodeStyleSettingFieldNames;
+        public final LocalizeValue myTitle;
+        public final Collection<String> myCommonCodeStyleSettingFieldNames;
 
-        public SettingsGroup(String title, Collection<String> commonCodeStyleSettingFieldNames) {
-            this.title = title;
-            this.commonCodeStyleSettingFieldNames = commonCodeStyleSettingFieldNames;
+        public SettingsGroup(LocalizeValue title, Collection<String> commonCodeStyleSettingFieldNames) {
+            myTitle = title;
+            myCommonCodeStyleSettingFieldNames = commonCodeStyleSettingFieldNames;
         }
     }
 
-    private void addSoftMarginsOption(String optionName, String title, @Nullable String groupName) {
+    private void addSoftMarginsOption(String optionName, LocalizeValue title, LocalizeValue groupName) {
         Language language = getDefaultLanguage();
         if (language != null) {
             addCustomOption(new SoftMarginsOption(language, optionName, title, groupName));
@@ -162,12 +158,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     private static class SoftMarginsOption extends Option {
         private final Language myLanguage;
 
-        protected SoftMarginsOption(
-            Language language,
-            String optionName,
-            String title,
-            @Nullable String groupName
-        ) {
+        protected SoftMarginsOption(Language language, String optionName, LocalizeValue title, LocalizeValue groupName) {
             super(optionName, title, groupName, null, null);
             myLanguage = language;
         }
@@ -190,7 +181,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     }
 
     private static List<Integer> castToIntList(@Nullable Object value) {
-        if (value instanceof List list && list.size() > 0 && list.get(0) instanceof Integer) {
+        if (value instanceof List list && !list.isEmpty() && list.get(0) instanceof Integer) {
             //noinspection unchecked
             return (List<Integer>) value;
         }
@@ -200,13 +191,14 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     @Override
     protected @Nullable JComponent getCustomValueRenderer(String optionName, Object value) {
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
-            JLabel softMarginsLabel = new JLabel(getSoftMarginsString(castToIntList(value)));
+            JLabel softMarginsLabel = new JLabel(getSoftMarginsString(castToIntList(value)).get());
             UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, softMarginsLabel);
             return softMarginsLabel;
         }
         else if ("WRAP_ON_TYPING".equals(optionName)) {
-            if (value.equals(CodeStyleLocalize.wrappingWrapOnTypingDefault())) {
-                JLabel wrapLabel = new JLabel(MarginOptionsUtil.getDefaultWrapOnTypingText(getSettings()));
+            if (value instanceof LocalizeValue locValue) {
+                Label label = Label.create(WrapOnTyping.fromDisplayName(locValue).getDisplayNameFor(getSettings()));
+                JComponent wrapLabel = (JComponent) TargetAWT.to(label);
                 UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, wrapLabel);
                 return wrapLabel;
             }
@@ -214,15 +206,15 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return super.getCustomValueRenderer(optionName, value);
     }
 
-    
-    private String getSoftMarginsString(List<Integer> intList) {
+    private LocalizeValue getSoftMarginsString(List<Integer> intList) {
         if (intList.size() > 0) {
-            return CommaSeparatedIntegersValueEditor.intListToString(intList);
+            return LocalizeValue.of(CommaSeparatedIntegersValueEditor.intListToString(intList));
         }
         return MarginOptionsUtil.getDefaultVisualGuidesText(getSettings());
     }
 
     @Override
+    @RequiredUIAccess
     protected @Nullable JComponent getCustomNodeEditor(MyTreeNode node) {
         String optionName = node.getKey().getOptionName();
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
@@ -230,16 +222,10 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
             return mySoftMarginsEditor;
         }
         else if ("WRAP_ON_TYPING".equals(optionName)) {
-            Object value = node.getValue();
-            if (value instanceof String) {
-                for (int i = 0; i < CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS.length; i++) {
-                    if (CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS.equals(value)) {
-                        myWrapOnTypingCombo.setSelectedIndex(i);
-                        break;
-                    }
-                }
+            if (node.getValue() instanceof LocalizeValue localizeValue) {
+                myWrapOnTypingCombo.setValue(WrapOnTyping.fromDisplayName(localizeValue));
             }
-            return myWrapOnTypingCombo;
+            return myWrapOnTypingComboComponent;
         }
         return super.getCustomNodeEditor(node);
     }
@@ -249,9 +235,9 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         if (customEditor instanceof CommaSeparatedIntegersField commaSeparatedIntegersField) {
             return commaSeparatedIntegersField.getValue();
         }
-        else if (customEditor == myWrapOnTypingCombo) {
-            int i = myWrapOnTypingCombo.getSelectedIndex();
-            return i >= 0 ? CodeStyleSettingsCustomizable.WRAP_ON_TYPING_OPTIONS[i] : null;
+        else if (customEditor == myWrapOnTypingComboComponent) {
+            WrapOnTyping wrapOnTyping = myWrapOnTypingCombo.getValue();
+            return wrapOnTyping != null ? wrapOnTyping.getDisplayName() : null;
         }
         return super.getCustomNodeEditorValue(customEditor);
     }

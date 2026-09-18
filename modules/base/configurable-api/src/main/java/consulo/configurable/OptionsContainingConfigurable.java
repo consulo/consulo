@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.configurable;
+
+import consulo.localize.LocalizeValue;
 
 import java.util.Set;
 
 public interface OptionsContainingConfigurable {
-  Set<String> processListOptions();
+    Set<LocalizeValue> processListOptions();
 }

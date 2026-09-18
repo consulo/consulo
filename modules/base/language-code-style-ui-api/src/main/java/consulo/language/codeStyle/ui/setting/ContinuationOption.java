@@ -15,6 +15,7 @@ package consulo.language.codeStyle.ui.setting;
 
 import consulo.language.codeStyle.CodeStyleConstraints;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.IntegerField;
 import consulo.ui.ex.awt.valueEditor.ValueEditor;
 import consulo.language.codeStyle.setting.IndentOptionsEditor;
@@ -51,7 +52,7 @@ public class ContinuationOption implements CodeStyleConstraints {
         if (mySupported) {
             myLabel = new JLabel(myName);
             myField = editor.createIndentTextField(
-                "Continuation indent",
+                LocalizeValue.localizeTODO("Continuation indent"),
                 MIN_INDENT_SIZE,
                 MAX_INDENT_SIZE,
                 myDefaultValue

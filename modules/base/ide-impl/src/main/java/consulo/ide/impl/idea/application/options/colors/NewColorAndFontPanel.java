@@ -25,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,14 +41,14 @@ public class NewColorAndFontPanel extends JPanel {
     private final PreviewPanel myPreviewPanel;
     private final AbstractAction myCopyAction;
     private final LocalizeValue myCategory;
-    private final Collection<String> myOptionList;
+    private final @Nullable Collection<LocalizeValue> myOptionList;
 
     public NewColorAndFontPanel(
         final SchemesPanel schemesPanel,
         final OptionsPanel optionsPanel,
         final PreviewPanel previewPanel,
         LocalizeValue category,
-        Collection<String> optionList,
+        @Nullable Collection<LocalizeValue> optionList,
         ColorSettingsPage page
     ) {
         super(new BorderLayout(0, 10));
@@ -135,7 +136,7 @@ public class NewColorAndFontPanel extends JPanel {
         PreviewPanel previewPanel,
         LocalizeValue category,
         ColorAndFontOptions options,
-        Collection<String> optionList,
+        @Nullable Collection<LocalizeValue> optionList,
         ColorSettingsPage page
     ) {
         SchemesPanel schemesPanel = new SchemesPanel(options);
@@ -149,18 +150,8 @@ public class NewColorAndFontPanel extends JPanel {
         return myOptionsPanel.showOption(option);
     }
 
-    
-    public Set<String> processListOptions() {
-        if (myOptionList == null) {
-            return myOptionsPanel.processListOptions();
-        }
-        else {
-            Set<String> result = new HashSet<>();
-            for (String s : myOptionList) {
-                result.add(s);
-            }
-            return result;
-        }
+    public Set<LocalizeValue> processListOptions() {
+        return myOptionList == null ? myOptionsPanel.processListOptions() : new HashSet<>(myOptionList);
     }
 
     public LocalizeValue getDisplayName() {

@@ -29,6 +29,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -93,23 +94,26 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
     private Runnable myPostUpdateRunnable = null;
 
     public static Key<ShelvedChangeListImpl[]> SHELVED_CHANGELIST_KEY = Key.create("ShelveChangesManager.ShelvedChangeListData");
-    public static Key<ShelvedChangeListImpl[]> SHELVED_RECYCLED_CHANGELIST_KEY = Key.create("ShelveChangesManager.ShelvedRecycledChangeListData");
+    public static Key<ShelvedChangeListImpl[]> SHELVED_RECYCLED_CHANGELIST_KEY =
+        Key.create("ShelveChangesManager.ShelvedRecycledChangeListData");
     public static Key<List<ShelvedChangeImpl>> SHELVED_CHANGE_KEY = Key.create("ShelveChangesManager.ShelvedChange");
     public static Key<List<ShelvedBinaryFileImpl>> SHELVED_BINARY_FILE_KEY = Key.create("ShelveChangesManager.ShelvedBinaryFile");
     private static final Object ROOT_NODE_VALUE = new Object();
     private DefaultMutableTreeNode myRoot;
-    private final Map<Couple<String>, String> myMoveRenameInfo;
+    private final Map<Couple<String>, LocalizeValue> myMoveRenameInfo;
 
     @Inject
-    public ShelvedChangesViewManagerImpl(Project project,
-                                         ChangesViewContentI contentManager,
-                                         ShelveChangesManager shelveChangesManager) {
+    public ShelvedChangesViewManagerImpl(
+        Project project,
+        ChangesViewContentI contentManager,
+        ShelveChangesManager shelveChangesManager
+    ) {
         myProject = project;
         myContentManager = contentManager;
         myShelveChangesManager = (ShelveChangesManagerImpl) shelveChangesManager;
         myProject.getMessageBus().connect().subscribe(ShelveChangesListener.class, manager -> {
             myUpdatePending = true;
-            myProject.getApplication().invokeLater(() -> updateChangesContent(), ModalityState.nonModal());
+            myProject.getApplication().invokeLater(this::updateChangesContent, ModalityState.nonModal());
         });
         myMoveRenameInfo = new HashMap<>();
 
@@ -128,6 +132,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
         new DoubleClickListener() {
             @Override
+            @RequiredUIAccess
             protected boolean onDoubleClick(MouseEvent e) {
                 DiffShelvedChangesAction.showShelvedChangesDiff(DataManager.getInstance().getDataContext(myTree));
                 return true;
@@ -233,8 +238,8 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
     }
 
     private void putMovedMessage(String beforeName, String afterName) {
-        String movedMessage = RelativePathCalculator.getMovedString(beforeName, afterName);
-        if (movedMessage != null) {
+        LocalizeValue movedMessage = RelativePathCalculator.getMovedString(beforeName, afterName);
+        if (movedMessage.isNotEmpty()) {
             myMoveRenameInfo.put(Couple.of(beforeName, afterName), movedMessage);
         }
     }
@@ -301,7 +306,10 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
                 sink.set(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
             }
             sink.set(DeleteProvider.KEY, myDeleteProvider);
-            List<ShelvedChangeImpl> allShelvedChanges = new ArrayList<>(TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class));
+            List<ShelvedChangeImpl> allShelvedChanges = new ArrayList<>(TreeUtil.collectSelectedObjectsOfType(
+                this,
+                ShelvedChangeImpl.class
+            ));
             ArrayDeque<Navigatable> navigatables = new ArrayDeque<>();
             List<ShelvedChangeListImpl> allChangeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeListImpl.class);
             for (ShelvedChangeListImpl changeList : allChangeLists) {
@@ -309,13 +317,10 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
             }
             for (ShelvedChangeImpl shelvedChange : allShelvedChanges) {
                 if (shelvedChange.getBeforePath() != null && !FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
-                    Navigatable navigatable = new Navigatable() {
-                        @Override
-                        public void navigate(boolean requestFocus) {
-                            VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
-                            if (vf != null) {
-                                OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
-                            }
+                    Navigatable navigatable = requestFocus -> {
+                        VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
+                        if (vf != null) {
+                            OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
                         }
                     };
                     navigatables.add(navigatable);
@@ -386,9 +391,9 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
     private static class ShelfTreeCellRenderer extends ColoredTreeCellRenderer {
         private final IssueLinkRenderer myIssueLinkRenderer;
-        private final Map<Couple<String>, String> myMoveRenameInfo;
+        private final Map<Couple<String>, LocalizeValue> myMoveRenameInfo;
 
-        public ShelfTreeCellRenderer(Project project, Map<Couple<String>, String> moveRenameInfo) {
+        public ShelfTreeCellRenderer(Project project, Map<Couple<String>, LocalizeValue> moveRenameInfo) {
             myMoveRenameInfo = moveRenameInfo;
             myIssueLinkRenderer = new IssueLinkRenderer(project, this);
         }
@@ -405,8 +410,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         ) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             Object nodeValue = node.getUserObject();
-            if (nodeValue instanceof ShelvedChangeListImpl) {
-                ShelvedChangeListImpl changeListData = (ShelvedChangeListImpl) nodeValue;
+            if (nodeValue instanceof ShelvedChangeListImpl changeListData) {
                 if (changeListData.isRecycled()) {
                     myIssueLinkRenderer.appendTextWithLinks(changeListData.DESCRIPTION, SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
                 }
@@ -421,23 +425,27 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
                 append(" (" + date + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
                 setIcon(PatchFileType.INSTANCE.getIcon());
             }
-            else if (nodeValue instanceof ShelvedChangeImpl) {
-                ShelvedChangeImpl change = (ShelvedChangeImpl) nodeValue;
-                String movedMessage = myMoveRenameInfo.get(Couple.of(change.getBeforePath(), change.getAfterPath()));
+            else if (nodeValue instanceof ShelvedChangeImpl change) {
+                LocalizeValue movedMessage = myMoveRenameInfo.getOrDefault(
+                    Couple.of(change.getBeforePath(), change.getAfterPath()),
+                    LocalizeValue.empty()
+                );
                 renderFileName(change.getBeforePath(), change.getFileStatus(), movedMessage);
             }
-            else if (nodeValue instanceof ShelvedBinaryFileImpl) {
-                ShelvedBinaryFileImpl binaryFile = (ShelvedBinaryFileImpl) nodeValue;
+            else if (nodeValue instanceof ShelvedBinaryFileImpl binaryFile) {
                 String path = binaryFile.BEFORE_PATH;
                 if (path == null) {
                     path = binaryFile.AFTER_PATH;
                 }
-                String movedMessage = myMoveRenameInfo.get(Couple.of(binaryFile.BEFORE_PATH, binaryFile.AFTER_PATH));
+                LocalizeValue movedMessage = myMoveRenameInfo.getOrDefault(
+                    Couple.of(binaryFile.BEFORE_PATH, binaryFile.AFTER_PATH),
+                    LocalizeValue.empty()
+                );
                 renderFileName(path, binaryFile.getFileStatus(), movedMessage);
             }
         }
 
-        private void renderFileName(String path, FileStatus fileStatus, String movedMessage) {
+        private void renderFileName(String path, FileStatus fileStatus, LocalizeValue movedMessage) {
             path = path.replace('/', File.separatorChar);
             int pos = path.lastIndexOf(File.separatorChar);
             String fileName;
@@ -451,7 +459,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
                 fileName = path;
             }
             append(fileName, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, TargetAWT.to(fileStatus.getColor())));
-            if (movedMessage != null) {
+            if (movedMessage.isNotEmpty()) {
                 append(movedMessage, SimpleTextAttributes.REGULAR_ATTRIBUTES);
             }
             append(" (" + directory + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
@@ -461,6 +469,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
     private class MyChangeListDeleteProvider implements DeleteProvider {
         @Override
+        @RequiredUIAccess
         public void deleteElement(DataContext dataContext) {
             //noinspection unchecked
             List<ShelvedChangeListImpl> shelvedChangeLists = getLists(dataContext);
@@ -509,6 +518,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
     private class MyChangesDeleteProvider implements DeleteProvider {
         @Override
+        @RequiredUIAccess
         public void deleteElement(DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {

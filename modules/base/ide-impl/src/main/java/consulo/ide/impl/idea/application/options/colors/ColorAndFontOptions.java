@@ -261,7 +261,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return ((MyColorScheme) scheme).isReadOnly();
     }
 
-    
     public String[] getSchemeNames() {
         List<MyColorScheme> schemes = new ArrayList<>(mySchemes.values());
         Collections.sort(
@@ -286,7 +285,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return ArrayUtil.toStringArray(names);
     }
 
-    
     public Collection<EditorColorsScheme> getSchemes() {
         return new ArrayList<>(mySchemes.values());
     }
@@ -415,7 +413,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return true;
     }
 
-    
     @Override
     public synchronized Configurable[] buildConfigurables() {
         myDisposeCompleted = false;
@@ -470,7 +467,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
                 return NewColorAndFontPanel.create(preview, page.getDisplayName(), options, null, page);
             }
 
-            
             @Override
             public LocalizeValue getPanelDisplayName() {
                 return page.getDisplayName();
@@ -513,7 +509,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             };
         }
 
-        
         @Override
         public LocalizeValue getPanelDisplayName() {
             return LocalizeValue.localizeTODO("Font");
@@ -526,7 +521,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     private static class ConsoleFontConfigurableFactory implements ColorAndFontPanelFactory, ConfigurableWeight {
-        
         @Override
         @RequiredUIAccess
         public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
@@ -551,7 +545,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             };
         }
 
-        
         @Override
         public LocalizeValue getPanelDisplayName() {
             return LocalizeValue.localizeTODO("Console Font");
@@ -727,7 +720,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ApplicationLocalize.titleColorsAndFonts();
@@ -851,7 +843,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     private static class SchemeTextAttributesDescription extends TextAttributesDescription {
-        
         private final TextAttributes myAttributesToApply;
         
         private final TextAttributesKey key;
@@ -884,7 +875,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             initCheckedStatus();
         }
 
-        
         private static TextAttributes getInitialAttributes(MyColorScheme scheme, TextAttributesKey key) {
             TextAttributes attributes = scheme.getAttributes(key);
             return attributes != null ? attributes : new TextAttributes();
@@ -1015,7 +1005,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         public void setExternalEffectType(EffectType type) {
         }
 
-        
         @Override
         public EffectType getExternalEffectType() {
             return EffectType.LINE_UNDERSCORE;
@@ -1127,7 +1116,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             initFonts();
         }
 
-        
         @Override
         public String getName() {
             return myName;
@@ -1220,19 +1208,18 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             return myIsNew;
         }
 
-        
         @Override
         public String toString() {
             return "temporary scheme for " + myName;
         }
     }
 
-    
     @Override
     public String getId() {
         return getHelpTopic();
     }
 
+    @RequiredUIAccess
     public @Nullable SearchableConfigurable findSubConfigurable(Class pageClass) {
         if (mySubPanelFactories == null) {
             buildConfigurables();
@@ -1257,6 +1244,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return null;
     }
 
+    @RequiredUIAccess
     public @Nullable NewColorAndFontPanel findPage(String pageName) {
         InnerSearchableConfigurable child = (InnerSearchableConfigurable) findSubConfigurable(pageName);
         return child == null ? null : child.createPanel();
@@ -1272,7 +1260,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             myFactory = factory;
         }
 
-        
         @Override
         public LocalizeValue getDisplayName() {
             return myFactory.getPanelDisplayName();
@@ -1282,12 +1269,14 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             return mySubPanel;
         }
 
+        @RequiredUIAccess
         private NewColorAndFontPanel createPanel() {
             if (mySubPanel == null) {
                 mySubPanel = myFactory.createPanel(ColorAndFontOptions.this);
                 mySubPanel.reset(this);
                 mySubPanel.addSchemesListener(new ColorAndFontSettingsListener.Abstract() {
                     @Override
+                    @RequiredUIAccess
                     public void schemeChanged(Object source) {
                         if (!myIsReset) {
                             resetSchemesCombo(source);
@@ -1374,24 +1363,23 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             }
         }
 
-        
         @Override
         public String getId() {
             return ColorAndFontOptions.this.getId() + "." + getDisplayName();
         }
 
         @Override
+        @RequiredUIAccess
         public Runnable enableSearch(String option) {
             return createPanel().showOption(option);
         }
 
-        
         @Override
-        public Set<String> processListOptions() {
+        @RequiredUIAccess
+        public Set<LocalizeValue> processListOptions() {
             return createPanel().processListOptions();
         }
 
-        
         @Override
         public String toString() {
             return "Color And Fonts for " + getDisplayName();
