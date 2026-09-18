@@ -24,12 +24,12 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.EditorPopupHelper;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.component.extension.ExtensionException;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -44,6 +44,8 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.navigation.NavigationContexts;
+
+import java.util.List;
 import java.util.Map;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
 import consulo.language.psi.stub.IndexOption;
@@ -403,7 +405,8 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
             Editor editor = event.getData(Editor.KEY);
             if (editor != null
                 && isMouseShortcut
-                && !EditorUtil.isPointOverText(editor, new RelativePoint((MouseEvent) inputEvent).getPoint(editor.getContentComponent()))) {
+                && !AWTEditorUtil.isPointOverText(editor, new RelativePoint((MouseEvent) inputEvent).getPoint(editor.getContentComponent())
+            )) {
                 event.getPresentation().setEnabled(false);
                 return input;
             }

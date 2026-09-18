@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
+import consulo.codeEditor.util.AWTEditorUtil;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.desktop.awt.editor.impl.internal.MouseMovementTracker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
@@ -21,7 +23,6 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
@@ -292,7 +293,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             && editor.getProject() != null
             && event.getArea() == EditorMouseEventArea.EDITING_AREA
             && event.getMouseEvent().getModifiers() == 0
-            && EditorUtil.isPointOverText(editor, point)
+            && AWTEditorUtil.isPointOverText(editor, point)
             && editor.getFoldingModel().getFoldingPlaceholderAt(point) == null) {
             LogicalPosition logicalPosition = editor.xyToLogicalPosition(point);
             return editor.logicalPositionToOffset(logicalPosition);

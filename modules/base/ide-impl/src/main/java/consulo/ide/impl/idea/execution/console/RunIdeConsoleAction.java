@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.execution.ExecutionManager;
@@ -32,7 +33,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.script.IdeScriptBindings;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.script.IdeScriptEngine;
 import consulo.ide.impl.script.IdeScriptEngineManager;
 import consulo.language.impl.psi.LeafPsiElement;

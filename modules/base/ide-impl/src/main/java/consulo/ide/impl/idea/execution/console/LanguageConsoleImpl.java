@@ -4,11 +4,10 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -25,10 +24,8 @@ import consulo.execution.ui.console.language.LanguageConsoleBuilder;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.util.FileContentUtil;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.Language;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
@@ -49,7 +46,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.util.UndoUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -543,10 +539,10 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
                 int minAdditionalColumns = 2;
                 // calculate content size without additional columns except minimal amount
-                int historySpaceWidth = EditorUtil.getPlainSpaceWidth(history);
+                int historySpaceWidth = EditorImplUtil.getPlainSpaceWidth(history);
                 historySize.width += historySpaceWidth * (minAdditionalColumns - history.getSettings().getAdditionalColumnsCount());
                 // calculate content size without additional columns except minimal amount
-                int inputSpaceWidth = EditorUtil.getPlainSpaceWidth(input);
+                int inputSpaceWidth = EditorImplUtil.getPlainSpaceWidth(input);
                 inputSize.width += inputSpaceWidth * (minAdditionalColumns - input.getSettings().getAdditionalColumnsCount());
                 // calculate additional columns according to the corresponding width
                 int max = Math.max(historySize.width, inputSize.width);

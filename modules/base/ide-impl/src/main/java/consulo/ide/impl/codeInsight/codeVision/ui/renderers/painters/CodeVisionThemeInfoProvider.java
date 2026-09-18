@@ -4,8 +4,8 @@ package consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.impl.internal.inlay.param.HintUtils;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -36,7 +36,7 @@ public class CodeVisionThemeInfoProvider {
     public Font font(Editor editor, int style) {
         float size = lensFontSize(editor);
         if (EditorSettingsExternalizable.getInstance().isUseEditorFontInInlays()) {
-            Font editorFont = EditorUtil.getEditorFont();
+            Font editorFont = AWTLanguageEditorUtil.getEditorFont();
             return editorFont.deriveFont(style, size);
         }
         else {

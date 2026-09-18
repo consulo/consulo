@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.execution.impl;
 
 import com.google.common.base.CharMatcher;
@@ -7,6 +6,7 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.ui.ModalityState;
@@ -37,7 +37,6 @@ import consulo.execution.util.ConsoleBuffer;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
 import consulo.codeEditor.action.TypedActionHandlerBase;
 import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

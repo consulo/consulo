@@ -20,14 +20,11 @@ package consulo.codeEditor;
  * @since 20-Mar-22
  */
 public interface InjectedEditor extends Editor {
-  
-  LogicalPosition hostToInjected(LogicalPosition hPos);
+    LogicalPosition hostToInjected(LogicalPosition hPos);
 
-  
-  LogicalPosition injectedToHost(LogicalPosition pos);
+    LogicalPosition injectedToHost(LogicalPosition pos);
 
-  
-  Editor getDelegate();
+    Editor getDelegate();
 
-  boolean isValid();
+    boolean isValid();
 }

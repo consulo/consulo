@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl.livePreview;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -13,6 +13,7 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
@@ -28,8 +29,8 @@ import consulo.find.FindModel;
 import consulo.find.FindResult;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
@@ -44,8 +45,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.PrintStream;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class LivePreview implements SearchResults.SearchResultsListener, SelectionListener, DocumentListener, EditorColorsListener {
     private static final Key<RangeHighlighter> IN_SELECTION_KEY = Key.create("LivePreview.IN_SELECTION_KEY");
@@ -92,7 +93,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     }
 
     private void dumpState() {
-        if (ApplicationManager.getApplication().isUnitTestMode() && ourTestOutput != null) {
+        if (Application.get().isUnitTestMode() && ourTestOutput != null) {
             dumpEditorMarkupAndSelection(ourTestOutput);
         }
     }
@@ -206,7 +207,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
             ColorValue color = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
             myCursorHighlighter = addHighlighter(cursor.getStartOffset(), cursor.getEndOffset(), new TextAttributes(null, null, color, EffectType.ROUNDED_BOX, Font.PLAIN));
 
-            editor.getScrollingModel().runActionOnScrollingFinished(() -> showReplacementPreview());
+            editor.getScrollingModel().runActionOnScrollingFinished(this::showReplacementPreview);
         }
     }
 
@@ -214,8 +215,8 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         mySearchResults = searchResults;
         searchResultsUpdated(searchResults);
         searchResults.addListener(this);
-        EditorUtil.addBulkSelectionListener(mySearchResults.getEditor(), this, myDisposable);
-        ApplicationManager.getApplication().getMessageBus().connect(myDisposable).subscribe(EditorColorsListener.class, this);
+        consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil.addBulkSelectionListener(mySearchResults.getEditor(), this, myDisposable);
+        Application.get().getMessageBus().connect(myDisposable).subscribe(EditorColorsListener.class, this);
     }
 
     public Delegate getDelegate() {
@@ -346,6 +347,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
     }
 
+    @RequiredUIAccess
     private void showReplacementPreview() {
         hideBalloon();
         if (!mySearchResults.isUpToDate()) {
@@ -374,8 +376,9 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
     }
 
+    @RequiredUIAccess
     private void showBalloon(Editor editor, String replacementPreviewText) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             myReplacementPreviewText = replacementPreviewText;
             return;
         }
@@ -396,7 +399,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     }
 
     private void hideBalloon() {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             myReplacementPreviewText = null;
             return;
         }
@@ -483,6 +486,6 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     }
 
     private static void requestBalloonHiding(Balloon object) {
-        ApplicationManager.getApplication().invokeLater(() -> object.hide());
+        Application.get().invokeLater(object::hide);
     }
 }

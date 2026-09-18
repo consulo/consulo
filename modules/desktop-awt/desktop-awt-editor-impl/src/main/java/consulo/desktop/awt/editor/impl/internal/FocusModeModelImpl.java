@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl.internal;
 
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
@@ -24,7 +25,6 @@ import consulo.document.internal.RangeMarkerEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.ColorValueUtil;
@@ -56,7 +56,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
 
     myEditor.getScrollingModel().addVisibleAreaListener(e -> {
       AWTEvent event = IdeEventQueueProxy.getInstance().getTrueCurrentEvent();
-      if (event instanceof MouseEvent && !EditorUtil.isPrimaryCaretVisible(myEditor)) {
+      if (event instanceof MouseEvent && !AWTEditorUtil.isPrimaryCaretVisible(myEditor)) {
         clearFocusMode(); // clear when scrolling with touchpad or mouse and primary caret is out the visible area
       }
       else {
