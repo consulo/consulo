@@ -9,6 +9,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -215,7 +216,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         mySearchResults = searchResults;
         searchResultsUpdated(searchResults);
         searchResults.addListener(this);
-        consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil.addBulkSelectionListener(mySearchResults.getEditor(), this, myDisposable);
+        EditorImplUtil.addBulkSelectionListener(mySearchResults.getEditor(), this, myDisposable);
         Application.get().getMessageBus().connect(myDisposable).subscribe(EditorColorsListener.class, this);
     }
 
