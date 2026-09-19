@@ -32,47 +32,61 @@ import java.awt.*;
  * @since 29-Apr-22
  */
 public class HintColorUtil {
-  /**
-   * @deprecated use getInformationColor()
-   */
-  @Deprecated
-  public static final Color INFORMATION_COLOR = new JBColor(0xF7F7F7, 0x4B4D4D);
-  public static final Color INFORMATION_BORDER_COLOR = JBColor.namedColor("InformationHint.borderColor", new JBColor(0xE0E0E0, 0x5C5E61));
-  /**
-   * @deprecated use getErrorColor()
-   */
-  @Deprecated
-  public static final Color ERROR_COLOR = new JBColor(0xffdcdc, 0x781732);
+    /**
+     * @deprecated use getInformationColor()
+     */
+    @Deprecated
+    public static final Color INFORMATION_COLOR = new JBColor(0xF7F7F7, 0x4B4D4D);
+    public static final Color INFORMATION_BORDER_COLOR = JBColor.namedColor("InformationHint.borderColor", new JBColor(0xE0E0E0, 0x5C5E61));
+    /**
+     * @deprecated use getErrorColor()
+     */
+    @Deprecated
+    public static final Color ERROR_COLOR = new JBColor(0xffdcdc, 0x781732);
 
-  public static final EditorColorKey INFORMATION_COLOR_KEY = EditorColorKey.createColorKey("INFORMATION_HINT", new LightDarkColorValue(new RGBColor(247, 247, 247), new RGBColor(75, 77, 77)));
-  public static final EditorColorKey QUESTION_COLOR_KEY = EditorColorKey.createColorKey("QUESTION_HINT", new LightDarkColorValue(new RGBColor(181, 208, 251), new RGBColor(55, 108, 137)));
-  public static final EditorColorKey ERROR_COLOR_KEY = EditorColorKey.createColorKey("ERROR_HINT", new LightDarkColorValue(new RGBColor(255, 220, 220), new RGBColor(120, 23, 50)));
+    public static final EditorColorKey INFORMATION_COLOR_KEY = EditorColorKey.createColorKey(
+        "INFORMATION_HINT",
+        new LightDarkColorValue(new RGBColor(247, 247, 247), new RGBColor(75, 77, 77))
+    );
+    public static final EditorColorKey QUESTION_COLOR_KEY = EditorColorKey.createColorKey(
+        "QUESTION_HINT",
+        new LightDarkColorValue(new RGBColor(181, 208, 251), new RGBColor(55, 108, 137))
+    );
+    public static final EditorColorKey ERROR_COLOR_KEY = EditorColorKey.createColorKey(
+        "ERROR_HINT",
+        new LightDarkColorValue(new RGBColor(255, 220, 220), new RGBColor(120, 23, 50))
+    );
 
-  public static final Color QUESTION_UNDERSCORE_COLOR = JBColor.foreground();
+    public static final Color QUESTION_UNDERSCORE_COLOR = JBColor.foreground();
 
-  public static final EditorColorKey RECENT_LOCATIONS_SELECTION_KEY =
-          EditorColorKey.createColorKey("RECENT_LOCATIONS_SELECTION", new LightDarkColorValue(new RGBColor(233, 238, 245), new RGBColor(56, 56, 56)));
+    public static final EditorColorKey RECENT_LOCATIONS_SELECTION_KEY =
+        EditorColorKey.createColorKey(
+            "RECENT_LOCATIONS_SELECTION",
+            new LightDarkColorValue(new RGBColor(233, 238, 245), new RGBColor(56, 56, 56))
+        );
 
-  private HintColorUtil() {
-  }
+    private HintColorUtil() {
+    }
 
-  
-  public static ColorValue getInformationColor() {
-    return ObjectUtil.notNull(EditorColorsUtil.getGlobalOrDefaultColor(INFORMATION_COLOR_KEY), INFORMATION_COLOR_KEY.getDefaultColorValue());
-  }
+    public static ColorValue getInformationColor() {
+        return ObjectUtil.notNull(
+            EditorColorsUtil.getGlobalOrDefaultColor(INFORMATION_COLOR_KEY),
+            INFORMATION_COLOR_KEY.getDefaultColorValue()
+        );
+    }
 
-  
-  public static ColorValue getQuestionColor() {
-    return TargetAWT.from(JBColor.namedColor("ToolTip.background", new JBColor(0xf7f7f7, 0x474a4c)));
-  }
+    public static ColorValue getQuestionColor() {
+        return TargetAWT.from(JBColor.namedColor("ToolTip.background", new JBColor(0xf7f7f7, 0x474a4c)));
+    }
 
-  
-  public static ColorValue getErrorColor() {
-    return ObjectUtil.notNull(EditorColorsUtil.getGlobalOrDefaultColor(ERROR_COLOR_KEY), ERROR_COLOR_KEY.getDefaultColorValue());
-  }
+    public static ColorValue getErrorColor() {
+        return ObjectUtil.notNull(EditorColorsUtil.getGlobalOrDefaultColor(ERROR_COLOR_KEY), ERROR_COLOR_KEY.getDefaultColorValue());
+    }
 
-  
-  public static ColorValue getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
-    return ObjectUtil.notNull(colorsScheme.getColor(RECENT_LOCATIONS_SELECTION_KEY), RECENT_LOCATIONS_SELECTION_KEY.getDefaultColorValue());
-  }
+    public static ColorValue getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
+        return ObjectUtil.notNull(
+            colorsScheme.getColor(RECENT_LOCATIONS_SELECTION_KEY),
+            RECENT_LOCATIONS_SELECTION_KEY.getDefaultColorValue()
+        );
+    }
 }

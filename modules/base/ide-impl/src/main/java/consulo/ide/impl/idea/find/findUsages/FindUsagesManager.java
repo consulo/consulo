@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.find.findUsages;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorBase;
@@ -43,7 +44,6 @@ import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
 import consulo.language.editor.hint.HintManager;
@@ -68,6 +68,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogService;
@@ -766,8 +768,8 @@ public class FindUsagesManager {
 
     @RequiredUIAccess
     private static void showEditorHint(LocalizeValue message, Editor editor) {
-        JComponent component = HintUtil.createInformationLabel(message.get());
-        LightweightHintImpl hint = new LightweightHintImpl(component);
+        JComponent component = HintUtil.createInformationLabel(message);
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(component);
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

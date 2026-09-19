@@ -2,8 +2,7 @@
 package consulo.fileEditor.impl.internal.largeFileEditor;
 
 import com.google.common.collect.EvictingQueue;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
@@ -24,6 +23,7 @@ import consulo.fileEditor.internal.largeFileEditor.ReadingPageResultHandler;
 import consulo.fileEditor.internal.largeFileEditor.SearchResult;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
@@ -35,8 +35,8 @@ import consulo.util.dataholder.Key;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
@@ -128,8 +128,8 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
             JBLayeredPane intermediatePane = new JBLayeredPane() {
                 @Override
                 public void doLayout() {
-                    final Component[] components = getComponents();
-                    final Rectangle bounds = getBounds();
+                    Component[] components = getComponents();
+                    Rectangle bounds = getBounds();
                     for (Component component : components) {
                         if (component == myGlobalScrollBar) {
                             int scrollBarWidth = myGlobalScrollBar.getPreferredSize().width;
@@ -247,6 +247,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         requestUpdate();
     }
 
+    @RequiredUIAccess
     public void fireGlobalScrollBarValueChangedFromOutside(long pageNumber) {
         long pagesAmount;
         try {
@@ -270,7 +271,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     private void requestUpdate() {
         // elimination of duplicates of update() tasks in EDT queue
         if (isUpdateRequested.compareAndSet(false, true)) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            Application.get().invokeLater(() -> {
                 isUpdateRequested.set(false);
                 update();
             });
@@ -294,8 +295,10 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         }
         catch (IOException e) {
             LOG.info(e);
-            Messages.showErrorDialog(EditorBundle.message("large.file.editor.message.error.while.working.with.file.try.to.reopen.it"),
-                CommonBundle.getErrorTitle());
+            Messages.showErrorDialog(
+                EditorBundle.message("large.file.editor.message.error.while.working.with.file.try.to.reopen.it"),
+                CommonLocalize.titleError().get()
+            );
             return;
         }
 
@@ -486,7 +489,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     }
 
     private void clearHighlightedSearchResults() {
-        final HighlightManager highlightManager = HighlightManager.getInstance(dataProvider.getProject());
+        HighlightManager highlightManager = HighlightManager.getInstance(dataProvider.getProject());
         for (RangeHighlighter pageRangeHighlighter : pageRangeHighlighters) {
             highlightManager.removeSegmentHighlighter(editor, pageRangeHighlighter);
         }
@@ -861,6 +864,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         }
     }
 
+    @Override
     public void setCaretToFileEndAndShow() {
         long pagesAmount;
         try {
@@ -873,6 +877,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         setCaretAndShow(pagesAmount, 0);
     }
 
+    @Override
     public void setCaretToFileStartAndShow() {
         setCaretAndShow(0, 0);
     }
@@ -899,7 +904,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     }
 
     private void tellPageWasRead(long pageNumber, Page page) {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             if (page == null) {
                 LOG.warn("page with number " + pageNumber + " is null.");
                 return;
@@ -1091,15 +1096,11 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         pagesCache.clear();
 
         if (isLengthIncreased) {
-            runCaretAndSelectionListeningTransparentCommand(() -> {
-                documentOfPagesModel.removeLastPage(dataProvider.getProject());
-            });
+            runCaretAndSelectionListeningTransparentCommand(() -> documentOfPagesModel.removeLastPage(dataProvider.getProject()));
             isAllowedToFollowTheEndOfFile = true;
         }
         else {
-            runCaretAndSelectionListeningTransparentCommand(() -> {
-                documentOfPagesModel.removeAllPages(dataProvider.getProject());
-            });
+            runCaretAndSelectionListeningTransparentCommand(() -> documentOfPagesModel.removeAllPages(dataProvider.getProject()));
         }
 
         if (lastPage != null) {
@@ -1112,14 +1113,11 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     public void onEncodingChanged() {
         isLocalScrollBarStabilized = false;
         pagesCache.clear();
-        runCaretAndSelectionListeningTransparentCommand(() -> {
-            documentOfPagesModel.removeAllPages(dataProvider.getProject());
-        });
+        runCaretAndSelectionListeningTransparentCommand(() -> documentOfPagesModel.removeAllPages(dataProvider.getProject()));
         requestUpdate();
     }
 
     interface DataProvider {
-
         Page getPage(long pageNumber) throws IOException;
 
         long getPagesAmount() throws IOException;
@@ -1128,6 +1126,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
 
         void requestReadPage(long pageNumber, ReadingPageResultHandler readingPageResultHandler);
 
+        @RequiredUIAccess
         List<SearchResult> getSearchResultsInPage(Page page);
     }
 }

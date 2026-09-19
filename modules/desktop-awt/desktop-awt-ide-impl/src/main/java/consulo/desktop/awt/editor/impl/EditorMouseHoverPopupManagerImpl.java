@@ -1,9 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
-import consulo.codeEditor.util.AWTEditorUtil;
-import consulo.codeEditor.util.EditorUtil;
-import consulo.desktop.awt.editor.impl.internal.MouseMovementTracker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -14,7 +11,11 @@ import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
+import consulo.codeEditor.util.AWTEditorUtil;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.component.ProcessCanceledException;
+import consulo.desktop.awt.editor.impl.internal.MouseMovementTracker;
 import consulo.desktop.awt.language.editor.documentation.DocumentationComponent;
 import consulo.desktop.awt.language.editor.documentation.DocumentationManagerImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
@@ -23,13 +24,10 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
@@ -50,8 +48,14 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.awt.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.SideBorder;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -61,9 +65,9 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -451,7 +455,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             return EditorSettingsExternalizable.getInstance().getTooltipsDelay();
         }
 
-        
+
         @RequiredReadAction
         private VisualPosition getPopupPosition(Editor editor) {
             HighlightInfo highlightInfo = getHighlightInfo();
@@ -586,30 +590,39 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             boolean requestFocus
         ) {
             SimpleReference<WrapperPanel> wrapperPanelRef = new SimpleReference<>();
-            SimpleReference<LightweightHintImpl> mockHintRef = new SimpleReference<>();
+            SimpleReference<LightweightHint> mockHintRef = new SimpleReference<>();
             HintHint hintHint = new HintHint().setAwtTooltip(true).setRequestFocus(requestFocus);
-            LightweightHintImpl hint =
-                renderer.createHint(editor, new Point(), false, EDITOR_INFO_GROUP, hintHint, true, highlightActions, false, expand -> {
+            LightweightHint hint = renderer.createHint(
+                editor,
+                new Point(),
+                false,
+                EDITOR_INFO_GROUP,
+                hintHint,
+                true,
+                highlightActions,
+                false,
+                expand -> {
                     LineTooltipRenderer newRenderer = renderer.createRenderer(renderer.getText(), expand ? 1 : 0);
                     JComponent newComponent =
                         createHighlightInfoComponent(editor, newRenderer, highlightActions, popupBridge, requestFocus);
                     AbstractPopup popup = popupBridge.getPopup();
                     WrapperPanel wrapper = wrapperPanelRef.get();
                     if (newComponent != null && popup != null && wrapper != null) {
-                        LightweightHintImpl mockHint = mockHintRef.get();
+                        LightweightHint mockHint = mockHintRef.get();
                         if (mockHint != null) {
                             closeHintIgnoreBinding(mockHint);
                         }
                         wrapper.setContent(newComponent);
                         validatePopupSize(popup);
                     }
-                });
+                }
+            );
             if (hint == null) {
                 return null;
             }
             mockHintRef.set(hint);
             bindHintHiding(hint, popupBridge);
-            JComponent component = hint.getComponent();
+            JComponent component = ((LightweightHintImpl) hint).getComponent();
             LOG.assertTrue(component instanceof WidthBasedLayout, "Unexpected type of tooltip component: " + component.getClass());
             WrapperPanel wrapper = new WrapperPanel(component);
             wrapperPanelRef.set(wrapper);
@@ -619,7 +632,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             return wrapper;
         }
 
-        private static void bindHintHiding(LightweightHintImpl hint, PopupBridge popupBridge) {
+        private static void bindHintHiding(LightweightHint hint, PopupBridge popupBridge) {
             AtomicBoolean inProcess = new AtomicBoolean();
             hint.addHintListener(e -> {
                 if (hint.getUserData(DISABLE_BINDING) == null && inProcess.compareAndSet(false, true)) {
@@ -646,7 +659,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             });
         }
 
-        private static void closeHintIgnoreBinding(LightweightHintImpl hint) {
+        private static void closeHintIgnoreBinding(LightweightHint hint) {
             hint.putUserData(DISABLE_BINDING, Boolean.TRUE);
             hint.hide();
         }
@@ -676,11 +689,13 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
                 return null;
             }
             class MyDocComponent extends DocumentationComponent {
+                @RequiredUIAccess
                 private MyDocComponent() {
                     super((DocumentationManagerImpl) documentationManager, false);
                 }
 
                 @Override
+                @RequiredUIAccess
                 protected void showHint() {
                     AbstractPopup popup = popupBridge.getPopup();
                     if (popup != null) {

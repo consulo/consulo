@@ -292,6 +292,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
             }
 
             @Override
+            @RequiredUIAccess
             public List<SearchResult> getSearchResultsInPage(Page page) {
                 if (searchManager != null) {
                     return searchManager.getSearchResultsInPage(page);

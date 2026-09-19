@@ -1,9 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.hint.HintColorUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
@@ -16,7 +18,7 @@ import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -55,30 +57,32 @@ public class HintUtil {
     private HintUtil() {
     }
 
-    
     @Deprecated
     public static ColorValue getInformationColor() {
         return HintColorUtil.getInformationColor();
     }
 
-    
     @Deprecated
     public static ColorValue getQuestionColor() {
         return HintColorUtil.getQuestionColor();
     }
 
-    
     @Deprecated
     public static ColorValue getErrorColor() {
         return HintColorUtil.getErrorColor();
     }
 
-    
     @Deprecated
     public static ColorValue getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
         return HintColorUtil.getRecentLocationsSelectionColor(colorsScheme);
     }
 
+    public static JComponent createInformationLabel(LocalizeValue text) {
+        return createInformationLabel(text.get(), null, null, null);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public static JComponent createInformationLabel(String text) {
         return createInformationLabel(text, null, null, null);
     }
@@ -87,7 +91,7 @@ public class HintUtil {
         String text,
         @Nullable HyperlinkListener hyperlinkListener,
         @Nullable MouseListener mouseListener,
-        @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
+        @Nullable SimpleReference<? super Consumer<? super String>> updatedTextConsumer
     ) {
         HintHint hintHint = getInformationHint();
         HintLabel label = createLabel(text, null, hintHint.getTextBackground(), hintHint);
@@ -95,7 +99,6 @@ public class HintUtil {
         return label;
     }
 
-    
     public static HintHint getInformationHint() {
         return new HintHint().setFont(getBoldFont()).setAwtTooltip(true);
     }
@@ -105,7 +108,6 @@ public class HintUtil {
         return BorderFactory.createCompoundBorder(new ColoredSideBorder(Color.white, Color.white, Color.gray, Color.gray, 1), BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
-    
     public static JComponent createInformationLabel(SimpleColoredText text) {
         return createInformationLabel(text, null);
     }
@@ -115,36 +117,34 @@ public class HintUtil {
     }
 
     public static JComponent createQuestionLabel(String text, @Nullable Image icon) {
-        Color bg = TargetAWT.to(getQuestionColor());
+        Color bg = TargetAWT.to(HintColorUtil.getQuestionColor());
         HintHint hintHint = new HintHint().setTextBg(bg).setTextFg(JBColor.foreground()).setFont(getBoldFont()).setAwtTooltip(true);
 
         return createLabel(text, icon, bg, hintHint);
     }
 
     public static @Nullable String getHintLabel(JComponent hintComponent) {
-        if (hintComponent instanceof HintLabel) {
-            return ((HintLabel) hintComponent).getText();
+        if (hintComponent instanceof HintLabel hintLabel) {
+            return hintLabel.getText();
         }
         return null;
     }
 
     public static @Nullable Icon getHintIcon(JComponent hintComponent) {
-        if (hintComponent instanceof HintLabel) {
-            return ((HintLabel) hintComponent).getIcon();
+        if (hintComponent instanceof HintLabel hintLabel) {
+            return hintLabel.getIcon();
         }
         return null;
     }
 
-    
     public static SimpleColoredComponent createInformationComponent() {
         SimpleColoredComponent component = new SimpleColoredComponent();
-        component.setBackground(TargetAWT.to(getInformationColor()));
+        component.setBackground(TargetAWT.to(HintColorUtil.getInformationColor()));
         component.setForeground(JBColor.foreground());
         component.setFont(getBoldFont());
         return component;
     }
 
-    
     public static JComponent createInformationLabel(SimpleColoredText text, @Nullable Image icon) {
         SimpleColoredComponent component = createInformationComponent();
         component.setIcon(icon);
@@ -156,9 +156,9 @@ public class HintUtil {
         String text,
         @Nullable HyperlinkListener hyperlinkListener,
         @Nullable MouseListener mouseListener,
-        @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
+        @Nullable SimpleReference<? super Consumer<? super String>> updatedTextConsumer
     ) {
-        Color bg = TargetAWT.to(getErrorColor());
+        Color bg = TargetAWT.to(HintColorUtil.getErrorColor());
         HintHint hintHint = new HintHint().setTextBg(bg).setTextFg(JBColor.foreground()).setFont(getBoldFont()).setAwtTooltip(true);
 
         HintLabel label = createLabel(text, null, bg, hintHint);
@@ -166,12 +166,10 @@ public class HintUtil {
         return label;
     }
 
-    
     public static JComponent createErrorLabel(String text) {
         return createErrorLabel(text, null, null, null);
     }
 
-    
     private static HintLabel createLabel(String text, @Nullable Image icon, Color color, HintHint hintHint) {
         HintLabel label = new HintLabel();
         label.setText(text, hintHint);
@@ -191,7 +189,6 @@ public class HintUtil {
         return UIUtil.getLabelFont().deriveFont(Font.BOLD);
     }
 
-    
     public static JLabel createAdComponent(String bottomText, Border border, @AWTConstants.HorizontalAlignment int alignment) {
         JLabel label = new JLabel();
         label.setText(bottomText);
@@ -204,7 +201,6 @@ public class HintUtil {
         return label;
     }
 
-    
     public static String prepareHintText(String text, HintHint hintHint) {
         return prepareHintText(new Html(text), hintHint);
     }
@@ -219,7 +215,7 @@ public class HintUtil {
         HintLabel label,
         @Nullable HyperlinkListener hyperlinkListener,
         @Nullable MouseListener mouseListener,
-        @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
+        @Nullable SimpleReference<? super Consumer<? super String>> updatedTextConsumer
     ) {
         if (hyperlinkListener != null) {
             label.myPane.addHyperlinkListener(hyperlinkListener);

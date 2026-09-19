@@ -1,13 +1,16 @@
 package consulo.ide.impl.idea.codeInsight.preview;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -22,7 +25,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
         HintManager.HIDE_BY_SCROLLING |
         HintManager.HIDE_BY_TEXT_CHANGE |
         HintManager.HIDE_IF_OUT_OF_EDITOR;
-    private @Nullable LightweightHintImpl hint;
+    private @Nullable LightweightHint hint;
 
     @Override
     public boolean isSupportedFile(PsiFile psiFile) {
@@ -35,8 +38,9 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
     }
 
     @Override
+    @RequiredUIAccess
     public void show(PsiElement element, Editor editor, Point point, boolean keyTriggered) {
-        LightweightHintImpl newHint = getHint(element);
+        LightweightHint newHint = getHint(element);
         hideCurrentHintIfAny();
         if (newHint == null) {
             return;
@@ -44,9 +48,14 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
 
         hint = newHint;
         HintManagerImpl manager = HintManagerImpl.getInstanceImpl();
-        manager.showEditorHint(newHint, editor,
+        manager.showEditorHint(
+            newHint,
+            editor,
             manager.getHintPosition(newHint, editor, editor.xyToLogicalPosition(point), HintManager.RIGHT_UNDER),
-            HINT_HIDE_FLAGS, 0, false);
+            HINT_HIDE_FLAGS,
+            0,
+            false
+        );
     }
 
     private void hideCurrentHintIfAny() {
@@ -61,7 +70,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
         hideCurrentHintIfAny();
     }
 
-    private static @Nullable LightweightHintImpl getHint(PsiElement element) {
+    private static @Nullable LightweightHint getHint(PsiElement element) {
         for (PreviewHintProvider hintProvider : PreviewHintProvider.EP_NAME.getExtensionList()) {
             JComponent preview;
             try {
@@ -72,7 +81,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
                 continue;
             }
             if (preview != null) {
-                return new LightweightHintImpl(preview);
+                return Application.get().getInstance(LightweightHintFactory.class).create(preview);
             }
         }
         return null;

@@ -1,5 +1,4 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -7,7 +6,6 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.Language;
 import consulo.language.editor.ExpressionTypeProvider;
 import consulo.language.editor.TargetElementUtil;
@@ -23,6 +21,8 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 
@@ -96,7 +96,6 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
         });
     }
 
-    
     @RequiredReadAction
     public Map<PsiElement, ExpressionTypeProvider> getExpressions(PsiFile file, Editor editor) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
@@ -195,7 +194,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
             setInstance(this);
             AccessibleContextUtil.setName(label, "Expression type hint");
             HintManagerImpl hintManager = (HintManagerImpl) HintManager.getInstance();
-            LightweightHintImpl hint = new LightweightHintImpl(label);
+            LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(label);
             hint.addHintListener(e -> Application.get().invokeLater(() -> setInstance(null)));
             Point p = hintManager.getHintPosition(hint, myEditor, HintManager.ABOVE);
             int flags = HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING;

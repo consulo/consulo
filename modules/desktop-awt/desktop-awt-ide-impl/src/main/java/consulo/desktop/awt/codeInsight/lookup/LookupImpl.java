@@ -7,7 +7,6 @@ import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.colorScheme.internal.FontPreferences;
 import consulo.colorScheme.internal.FontPreferencesManager;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;

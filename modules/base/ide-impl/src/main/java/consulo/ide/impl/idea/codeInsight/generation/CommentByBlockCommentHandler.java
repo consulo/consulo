@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.generation;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.document.Document;
@@ -28,7 +28,6 @@ import consulo.ide.impl.idea.codeInsight.CommentUtil;
 import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.*;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyle;
@@ -52,6 +51,8 @@ import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.CharArrayUtil;
@@ -183,7 +184,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
                     hintPosition = targetPosition;
                 }
             }
-            LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(myWarning.get()));
+            LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class)
+                .create(HintUtil.createInformationLabel(myWarning));
             Point p = HintManagerImpl.getInstanceImpl().getHintPosition(hint, myEditor, hintPosition, HintManager.ABOVE);
             HintManagerImpl.getInstanceImpl().showEditorHint(hint, myEditor, p, 0, 0, false);
         }
@@ -274,7 +276,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
             if (commentedRange == null) {
                 return null;
             }
-            // Uncommenter returns range relative to text start, so we need to shift it to make abosolute.
+            // Uncommenter returns range relative to text start, so we need to shift it to make absolute.
             return commentedRange.shiftRight(myCaret.getSelectionStart());
         }
 

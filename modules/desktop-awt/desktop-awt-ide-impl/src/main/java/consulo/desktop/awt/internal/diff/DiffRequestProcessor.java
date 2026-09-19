@@ -20,29 +20,28 @@ import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.dataContext.*;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.action.OpenInEditorAction;
 import consulo.desktop.awt.internal.diff.external.ExternalDiffTool;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.*;
 import consulo.diff.FrameDiffTool.DiffViewer;
-import consulo.diff.internal.DiffSettingsHolder;
-import consulo.diff.internal.DiffSettingsHolder.DiffSettings;
 import consulo.diff.impl.internal.action.NextChangeAction;
 import consulo.diff.impl.internal.action.NextDifferenceAction;
 import consulo.diff.impl.internal.action.PrevChangeAction;
 import consulo.diff.impl.internal.action.PrevDifferenceAction;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.DiffManagerEx;
+import consulo.diff.internal.DiffSettingsHolder;
+import consulo.diff.internal.DiffSettingsHolder.DiffSettings;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.request.*;
 import consulo.diff.util.LineRange;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -55,6 +54,8 @@ import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -766,7 +767,7 @@ public abstract class DiffRequestProcessor implements Disposable {
             "You can disable this feature in " + DiffImplUtil.getSettingsConfigurablePath()
         );
 
-        LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(message));
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(HintUtil.createInformationLabel(message));
         Point point = new Point(myContentPanel.getWidth() / 2, next ? myContentPanel.getHeight() - JBUI.scale(40) : JBUI.scale(40));
 
         if (editor == null) {

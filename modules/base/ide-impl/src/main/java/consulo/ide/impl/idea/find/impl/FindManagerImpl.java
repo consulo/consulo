@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.util.StringSearcher;
 import consulo.codeEditor.*;
@@ -36,7 +37,6 @@ import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
@@ -66,6 +66,8 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ReplacePromptDialog;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.usage.SyntaxHighlighterOverEditorHighlighter;
 import consulo.usage.UsageViewManager;
@@ -83,8 +85,8 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1130,8 +1132,8 @@ public class FindManagerImpl extends FindManager {
                     ? FindLocalize.findSearchAgainFromBottomActionMessage(message)
                     : FindLocalize.findSearchAgainFromBottomHotkeyMessage(message, shortcutsText);
             }
-            JComponent component = HintUtil.createInformationLabel(message.get());
-            LightweightHintImpl hint = new LightweightHintImpl(component);
+            JComponent component = HintUtil.createInformationLabel(message);
+            LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(component);
             HintManagerImpl.getInstanceImpl().showEditorHint(
                 hint,
                 editor,

@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.EditorLastActionTracker;
 import consulo.document.util.TextRange;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.codeEditor.action.EditorLastActionTracker;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
-import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -45,8 +46,8 @@ abstract public class SelectOccurrencesActionHandler extends EditorActionHandler
 
     @RequiredUIAccess
     protected static void showHint(Editor editor) {
-        LocalizeValue message = FindLocalize.selectNextOccurenceNotFoundMessage();
-        LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(message.get()));
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class)
+            .create(HintUtil.createInformationLabel(FindLocalize.selectNextOccurenceNotFoundMessage()));
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

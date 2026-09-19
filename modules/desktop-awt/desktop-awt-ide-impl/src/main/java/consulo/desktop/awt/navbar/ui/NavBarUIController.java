@@ -26,18 +26,18 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.logging.Logger;
 import consulo.navigationBar.NavBarService;
 import consulo.navigationBar.impl.internal.NavBarVmImpl;
 import consulo.navigationBar.model.NavBarVmItem;
 import consulo.navigationBar.model.NavBarVmListener;
-import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import jakarta.inject.Inject;
@@ -83,7 +83,7 @@ public final class NavBarUIController implements Disposable {
     private final Map<StaticNavBarPanel, PanelState> myPanels = new LinkedHashMap<>();
 
     // floating bar job analogue
-    private @Nullable LightweightHintImpl myFloatingHint;
+    private @Nullable LightweightHint myFloatingHint;
 
     private final NavBarService myNavBarService;
 
@@ -206,7 +206,7 @@ public final class NavBarUIController implements Disposable {
     }
 
     private void hideFloatingNavbar() {
-        LightweightHintImpl hint = myFloatingHint;
+        LightweightHint hint = myFloatingHint;
         if (hint != null) {
             myFloatingHint = null;
             hint.hide();

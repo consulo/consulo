@@ -31,6 +31,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 
@@ -45,10 +46,13 @@ public final class NavBarHints {
     private NavBarHints() {
     }
 
-    public static LightweightHintImpl showHint(DataContext dataContext,
-                                               Project project,
-                                               NewNavBarPanel panel,
-                                               @RequiredUIAccess Runnable onCancel) {
+    @RequiredUIAccess
+    public static LightweightHint showHint(
+        DataContext dataContext,
+        Project project,
+        NewNavBarPanel panel,
+        @RequiredUIAccess Runnable onCancel
+    ) {
         JPanel wrappedPanel = wrapNavbarPanel(panel);
         LightweightHintImpl hint = createHint(wrappedPanel, onCancel);
         panel.setOnSizeChange(() -> hint.setSize(wrappedPanel.getPreferredSize()));
@@ -63,9 +67,10 @@ public final class NavBarHints {
         return hint;
     }
 
-    private static void showEditorHint(Editor editor, Project project, LightweightHintImpl hint) {
+    @RequiredUIAccess
+    private static void showEditorHint(Editor editor, Project project, LightweightHint hint) {
         JComponent hintContainer = editor.getContentComponent();
-        Point center = AbstractPopup.getCenterOf(hintContainer, hint.getComponent());
+        Point center = AbstractPopup.getCenterOf(hintContainer, ((LightweightHintImpl) hint).getComponent());
         center.y -= hintContainer.getVisibleRect().height / 4;
         RelativePoint showPoint = guessEvenBetterPopupLocation(RelativePoint.fromScreen(center), project);
         Point absoluteShowPoint = showPoint.getPoint(hintContainer);
@@ -74,7 +79,7 @@ public final class NavBarHints {
             .showEditorHint(hint, editor, absoluteShowPoint, HintManager.HIDE_BY_ESCAPE, 0, true, hintInfo);
     }
 
-    private static void showNonEditorHint(DataContext dataContext, Project project, LightweightHintImpl hint) {
+    private static void showNonEditorHint(DataContext dataContext, Project project, LightweightHint hint) {
         Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (contextComponent == null) {
             return;

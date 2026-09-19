@@ -51,6 +51,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.RoundedLineBorder;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
@@ -443,7 +444,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint, Inte
     }
 
     @TestOnly
-    public LightweightHintImpl getComponentHint() {
+    public LightweightHint getComponentHint() {
         return myComponentHint;
     }
 

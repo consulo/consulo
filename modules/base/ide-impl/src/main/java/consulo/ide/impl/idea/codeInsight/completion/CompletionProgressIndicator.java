@@ -1,14 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.internal.JobScheduler;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ProgressWrapper;
-import consulo.application.internal.JobScheduler;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
 import consulo.application.util.registry.Registry;
@@ -26,10 +24,6 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
-import consulo.ui.UIAccess;
-import consulo.util.collection.ContainerUtil;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.completion.*;
@@ -39,6 +33,7 @@ import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
+import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.pattern.ElementPattern;
@@ -50,21 +45,24 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -817,7 +815,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
         CompletionParameters parameters = getParameters();
         if (myHandler.invokedExplicitly && parameters != null) {
-            LightweightHintImpl hint = showErrorHint(getProject(), getEditor(), getNoSuggestionsMessage(parameters));
+            LightweightHint hint = showErrorHint(getProject(), getEditor(), getNoSuggestionsMessage(parameters));
             if (awaitSecondInvocation) {
                 CompletionServiceImpl.setCompletionPhase(new CompletionPhase.NoSuggestionsHint(hint, this));
                 return;
@@ -836,8 +834,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @RequiredUIAccess
-    private static LightweightHintImpl showErrorHint(Project project, Editor editor, String text) {
-        LightweightHintImpl[] result = {null};
+    private static LightweightHint showErrorHint(Project project, Editor editor, String text) {
+        LightweightHint[] result = {null};
         EditorHintListener listener = (project1, hint, flags) -> result[0] = hint;
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(EditorHintListener.class, listener);
