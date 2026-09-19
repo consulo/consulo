@@ -18,44 +18,44 @@ package consulo.ide.impl.idea.usageView.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
-import consulo.language.editor.hierarchy.CallHierarchyProvider;
-import consulo.language.editor.hierarchy.HierarchyProvider;
+import consulo.language.editor.hierarchy.StandardHierarchyKinds;
+import consulo.language.editor.internal.hierarchy.HierarchyBrowseService;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.*;
 
 @ExtensionImpl
 public class UsageContextCallHierarchyPanelProvider implements UsageContextPanelProvider {
-  
-  @Override
-  public UsageContextPanel create(UsageView usageView) {
-    return new UsageContextCallHierarchyPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation());
-  }
+    @Override
+    public UsageContextPanel create(UsageView usageView) {
+        return new UsageContextCallHierarchyPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation());
+    }
 
-  @Override
-  @RequiredReadAction
-  public boolean isAvailableFor(UsageView usageView) {
-    UsageTarget[] targets = ((UsageViewImpl)usageView).getTargets();
-    if (targets.length == 0) return false;
-    UsageTarget target = targets[0];
-    if (!(target instanceof PsiElementUsageTarget)) return false;
-    PsiElement element = ((PsiElementUsageTarget)target).getElement();
-    if (element == null || !element.isValid()) return false;
+    @Override
+    @RequiredReadAction
+    public boolean isAvailableFor(UsageView usageView) {
+        UsageTarget[] targets = ((UsageViewImpl)usageView).getTargets();
+        if (targets.length == 0) {
+            return false;
+        }
+        UsageTarget target = targets[0];
+        if (!(target instanceof PsiElementUsageTarget psiElementUsageTarget)) {
+            return false;
+        }
+        PsiElement element = psiElementUsageTarget.getElement();
+        if (element == null || !element.isValid()) {
+            return false;
+        }
 
-    Project project = element.getProject();
-    DataContext context = SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(project));
-    HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
-    if (provider == null) return false;
-    PsiElement providerTarget = provider.getTarget(context);
-    return providerTarget != null;
-  }
+        Project project = element.getProject();
+        DataContext context = SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(project));
+        return HierarchyBrowseService.getInstance(project).isAvailable(StandardHierarchyKinds.CALL, context);
+    }
 
-  
-  @Override
-  public String getTabTitle() {
-    return "Call Hierarchy";
-  }
+    @Override
+    public String getTabTitle() {
+        return "Call Hierarchy";
+    }
 }

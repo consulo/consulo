@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,42 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.hierarchy;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.psi.PsiElement;
-
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Implement this interface to provide hierarchy browsing actions (Type Hierarchy, Method Hierarchy,
- * Call Hierarchy) for a custom language.
+ * Offers one kind of hierarchy for one language. A provider finds what the user meant and hands back a
+ * {@link HierarchyModel} describing it; the platform owns the tool window, the tree, the toolbar and the
+ * state, so nothing here touches a component.
  *
  * @author yole
  */
-public interface HierarchyProvider extends LanguageExtension {
-  /**
-   * Returns the element for which the hierarchy should be displayed.
-   *
-   * @param dataContext the data context for the action invocation.
-   * @return the target element, or null if the action is not applicable in this context.
-   */
-  @Nullable PsiElement getTarget(DataContext dataContext);
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface HierarchyProvider<E extends PsiElement> extends LanguageExtension {
+    /**
+     * Which family this provider serves - see {@link StandardHierarchyKinds}.
+     */
+    HierarchyKind getKind();
 
-  /**
-   * Creates a browser for viewing the hierarchy of the specified element.
-   *
-   * @param target the element to view the hierarchy for.
-   * @return the browser instance.
-   */
-  HierarchyBrowser createHierarchyBrowser(PsiElement target);
+    /**
+     * The element a hierarchy should be shown for, or null where this provider has nothing to offer in
+     * the given context.
+     */
+    @RequiredReadAction
+    @Nullable E getTarget(DataContext dataContext);
 
-  /**
-   * Notifies that the toolwindow has been shown and the specified browser is currently being displayed.
-   *
-   * @param hierarchyBrowser the browser instance created by {@link #createHierarchyBrowser(PsiElement)}.
-   */
-  void browserActivated(HierarchyBrowser hierarchyBrowser);
+    @RequiredReadAction
+    HierarchyModel<E> createModel(Project project, E target);
+
+    /**
+     * Called once the hierarchy has been opened, for a provider that wants to react - moving the caret to
+     * the element it resolved, say.
+     */
+    @RequiredUIAccess
+    default void targetSelected(E target) {
+    }
 }

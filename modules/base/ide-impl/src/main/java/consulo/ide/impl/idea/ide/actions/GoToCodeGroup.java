@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationActio
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoImplementationAction;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoSuperAction;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction;
-import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseCallHierarchyGroup;
+import consulo.language.editor.impl.internal.hierarchy.BrowseCallHierarchyGroup;
 import consulo.ide.impl.idea.ide.navigationToolbar.ShowNavBarAction;
 import consulo.ide.impl.idea.testIntegration.GotoTestOrCodeAction;
 import consulo.platform.base.localize.ActionLocalize;

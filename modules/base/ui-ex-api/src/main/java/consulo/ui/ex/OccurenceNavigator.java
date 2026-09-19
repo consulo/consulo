@@ -16,8 +16,11 @@
 package consulo.ui.ex;
 
 import consulo.navigation.Navigatable;
+import consulo.util.dataholder.Key;
 
 public interface OccurenceNavigator {
+  Key<OccurenceNavigator> KEY = Key.create(OccurenceNavigator.class);
+
   OccurenceNavigator EMPTY = new OccurenceNavigator() {
     @Override
     public boolean hasNextOccurence() {

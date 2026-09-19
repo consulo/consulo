@@ -1,0 +1,53 @@
+/*
+ * Copyright 2013-2025 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.language.editor.impl.internal.hierarchy.scope;
+
+import consulo.language.editor.hierarchy.HierarchyScope;
+
+import consulo.content.scope.SearchScope;
+import consulo.language.editor.localize.LanguageEditorLocalize;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+
+/**
+ * @author UNV
+ * @since 2025-04-24
+ */
+public class ThisClassHierarchyScope extends HierarchyScopeBase {
+    public static final ThisClassHierarchyScope INSTANCE = new ThisClassHierarchyScope();
+
+    
+    @Override
+    public LocalizeValue getPresentableName() {
+        return LanguageEditorLocalize.hierarchyScopeThisClass();
+    }
+
+    @Override
+    public boolean isInScope(PsiElement baseClass, PsiElement srcElement) {
+        return PsiTreeUtil.isAncestor(baseClass, srcElement, true);
+    }
+
+    
+    @Override
+    public SearchScope getSearchScope(PsiElement thisClass) {
+        return new LocalSearchScope(thisClass);
+    }
+
+    private ThisClassHierarchyScope() {
+    }
+}

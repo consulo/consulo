@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.util;
 
-import consulo.ide.ui.CellAppearanceEx;
+import consulo.ui.ex.util.CellAppearanceEx;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;

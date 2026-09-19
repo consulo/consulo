@@ -17,21 +17,18 @@ package consulo.ide.impl.idea.usageView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.hierarchy.CallHierarchyBrowserBase;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBaseEx;
-import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.usages.impl.UsageContextPanelBase;
-import consulo.language.editor.hierarchy.CallHierarchyProvider;
-import consulo.language.editor.hierarchy.HierarchyBrowser;
+import consulo.language.editor.hierarchy.StandardHierarchyKinds;
+import consulo.language.editor.internal.hierarchy.HierarchyBrowseService;
+import consulo.language.editor.internal.hierarchy.HierarchyBrowser;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -55,8 +52,8 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
     @RequiredReadAction
     public void updateLayoutLater(@Nullable List<? extends UsageInfo> infos) {
         PsiElement element = infos == null ? null : getElementToSliceOn(infos);
-        if (myBrowser instanceof Disposable disposable) {
-            Disposer.dispose(disposable);
+        if (myBrowser != null) {
+            Disposer.dispose(myBrowser);
             myBrowser = null;
         }
         if (element != null) {
@@ -75,34 +72,18 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
             add(titleComp, BorderLayout.CENTER);
         }
         else {
-            if (myBrowser instanceof Disposable disposable) {
-                Disposer.register(this, disposable);
-            }
-            JComponent panel = myBrowser.getComponent();
-            add(panel, BorderLayout.CENTER);
+            Disposer.register(this, myBrowser);
+            add(TargetAWT.to(myBrowser.getUIComponent()), BorderLayout.CENTER);
         }
         revalidate();
     }
 
     @RequiredReadAction
     private static @Nullable HierarchyBrowser createCallHierarchyPanel(PsiElement element) {
+        Project project = element.getProject();
         DataContext context =
-            SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(element.getProject()));
-        CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
-        if (provider == null) {
-            return null;
-        }
-        PsiElement providerTarget = provider.getTarget(context);
-        if (providerTarget == null) {
-            return null;
-        }
-
-        HierarchyBrowser browser = provider.createHierarchyBrowser(providerTarget);
-        if (browser instanceof HierarchyBrowserBaseEx browserEx) {
-            // do not steal focus when scrolling through nodes
-            browserEx.changeView(CallHierarchyBrowserBase.CALLER_TYPE, false);
-        }
-        return browser;
+            SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(project));
+        return HierarchyBrowseService.getInstance(project).createBrowser(StandardHierarchyKinds.CALL, context);
     }
 
     @RequiredReadAction

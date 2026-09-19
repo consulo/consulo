@@ -21,6 +21,8 @@ module consulo.language.editor.impl {
 
     requires consulo.language.impl;
     requires consulo.navigation.api;
+    requires consulo.project.content.api;
+    requires consulo.project.ui.api;
 
     exports consulo.language.editor.impl.action;
     exports consulo.language.editor.impl.codeVision;
@@ -74,11 +76,18 @@ module consulo.language.editor.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.hierarchy to
+        consulo.desktop.awt.ide.impl,
+        consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.hierarchy.scope to
+        consulo.desktop.awt.ide.impl,
+        consulo.ide.impl;
 
     exports consulo.language.editor.impl.internal.inlay to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inlay.param to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inlay.setting to consulo.ide.impl;
 
+    opens consulo.language.editor.impl.internal.hierarchy to consulo.util.xml.serializer;
     opens consulo.language.editor.impl.internal.inlay.setting to consulo.util.xml.serializer;
     opens consulo.language.editor.impl.internal.readerMode to consulo.util.xml.serializer;
     opens consulo.language.editor.impl.internal.template to

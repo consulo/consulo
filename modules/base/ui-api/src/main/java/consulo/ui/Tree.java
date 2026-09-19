@@ -62,6 +62,15 @@ public interface Tree<E> extends Component, HasDestroyHook, HasTransferHandler<T
     TreeNode<E> getSelectedNode();
 
     /**
+     * Every node the selection covers, in the order the tree holds them. A tree which tracks only one selected
+     * node answers that node alone, so a caller written against several never has to special-case it.
+     */
+    default List<TreeNode<E>> getSelectedNodes() {
+        TreeNode<E> node = getSelectedNode();
+        return node == null ? List.of() : List.of(node);
+    }
+
+    /**
      * Opens the node, building its children first when they were not built yet.
      *
      * @return a future which is done once the node is open

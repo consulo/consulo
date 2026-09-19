@@ -23,6 +23,7 @@ import consulo.ide.impl.wm.impl.ContentEx;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.content.AlertIcon;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jspecify.annotations.Nullable;
@@ -79,6 +80,11 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
     Component oldComponent = myComponent;
     myComponent = component;
     myChangeSupport.firePropertyChange(PROP_COMPONENT, oldComponent, myComponent);
+  }
+
+  @Override
+  public void setUIComponent(consulo.ui.@Nullable Component component) {
+    setComponent(component == null ? null : (JComponent)TargetAWT.to(component));
   }
 
   @Override

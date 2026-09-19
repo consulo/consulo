@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.util.CellAppearanceEx;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;

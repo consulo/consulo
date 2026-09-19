@@ -106,6 +106,11 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
     @RequiredUIAccess
     protected @Nullable OccurenceNavigator getNavigator(DataContext dataContext) {
+        OccurenceNavigator published = dataContext.getData(OccurenceNavigator.KEY);
+        if (published != null) {
+            return published;
+        }
+
         ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(dataContext, false);
         if (contentManager != null) {
             Content content = contentManager.getSelectedContent();

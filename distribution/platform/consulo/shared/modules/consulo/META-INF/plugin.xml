@@ -638,8 +638,7 @@
             <add-to-group group-id="ChangeScheme" anchor="after" relative-to-action="ChangeColorScheme"/>
         </action>
 
-        <action id="TypeHierarchyBase.BaseOnThisType" text="Base on This Type"
-                class="consulo.ide.impl.idea.ide.hierarchy.TypeHierarchyBrowserBase$BaseOnThisTypeAction"/>
+        <reference ref="TypeHierarchyBase.BaseOnThisType"/>
         <reference ref="TypeHierarchy.Class"/>
         <reference ref="TypeHierarchy.Subtypes"/>
         <reference ref="TypeHierarchy.Supertypes"/>

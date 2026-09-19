@@ -24,9 +24,9 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBase;
 import consulo.ide.impl.idea.ide.scratch.ScratchesSearchScope;
 import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.internal.hierarchy.HierarchyBrowser;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;
@@ -49,7 +49,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import javax.swing.*;
 import java.util.*;
 
 @Singleton
@@ -236,12 +235,11 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
             return;
         }
         String name = content.getDisplayName();
-        JComponent component = content.getComponent();
-        if (!(component instanceof HierarchyBrowserBase)) {
+        HierarchyBrowser browser = content.getUserData(HierarchyBrowser.KEY);
+        if (browser == null) {
             return;
         }
-        HierarchyBrowserBase hierarchyBrowserBase = (HierarchyBrowserBase) component;
-        PsiElement[] elements = hierarchyBrowserBase.getAvailableElements();
+        PsiElement[] elements = browser.getAvailableElements();
         if (elements.length > 0) {
             result.add(new LocalSearchScope(elements, "Hierarchy '" + name + "' (visible nodes only)"));
         }

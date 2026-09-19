@@ -304,8 +304,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.ide.fileTemplates.actions;
     exports consulo.ide.impl.idea.ide.fileTemplates.impl;
     exports consulo.ide.impl.idea.ide.fileTemplates.ui;
-    exports consulo.ide.impl.idea.ide.hierarchy;
-    exports consulo.ide.impl.idea.ide.hierarchy.actions;
     exports consulo.ide.impl.idea.ide.highlighter;
     exports consulo.ide.impl.idea.ide.highlighter.custom;
     exports consulo.ide.impl.idea.ide.highlighter.custom.impl;

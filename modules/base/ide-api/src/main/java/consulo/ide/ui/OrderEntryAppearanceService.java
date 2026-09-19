@@ -25,6 +25,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.util.CellAppearanceEx;
 
 import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;

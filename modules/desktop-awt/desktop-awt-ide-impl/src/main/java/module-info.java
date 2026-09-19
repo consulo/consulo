@@ -66,6 +66,30 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.language.ui.api;
     requires consulo.navigation.bar.impl;
 
+    requires consulo.annotation;
+    requires consulo.application.api;
+    requires consulo.application.content.api;
+    requires consulo.application.ui.api;
+    requires consulo.base.icon.library;
+    requires consulo.datacontext.api;
+    requires consulo.disposer.api;
+    requires consulo.language.api;
+    requires consulo.language.editor.api;
+    requires consulo.local.history.api;
+    requires consulo.localize.api;
+    requires consulo.logging.api;
+    requires consulo.navigation.api;
+    requires consulo.project.api;
+    requires consulo.project.ui.view.api;
+    requires consulo.ui.api;
+    requires consulo.ui.ex.api;
+    requires consulo.util.dataholder;
+    requires consulo.util.lang;
+    requires consulo.virtual.file.status.api;
+    requires consulo.virtual.file.system.api;
+
+    requires jakarta.inject;
+
     // TODO remove
     requires gnu.trove;
 

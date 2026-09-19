@@ -52,3 +52,75 @@ navigation.context.notification.text:
     text: Viewing in context [{0}] - navigated from {1}
 navigation.context.view.original:
     text: View original
+action.base.on.this.class:
+    text: Base on This Class
+action.base.on.this.interface:
+    text: Base on This Interface
+action.base.on.this.method:
+    text: Base on This Method
+action.base.on.this.type:
+    text: Base on This Type
+action.browse.call.hierarchy:
+    text: Browse Call Hierarchy
+action.browse.method.hierarchy:
+    text: Browse Method Hierarchy
+action.browse.type.hierarchy:
+    text: Browse Type Hierarchy
+action.callee.methods.hierarchy:
+    text: Callee Methods Hierarchy
+action.caller.methods.hierarchy:
+    text: Caller Methods Hierarchy
+action.description.view.class.hierarchy:
+    text: Switch to Class Hierarchy
+action.description.view.subtypes.hierarchy:
+    text: Switch to Subtypes Hierarchy
+action.description.view.supertypes.hierarchy:
+    text: Switch to Supertypes Hierarchy
+action.hide.non.implementations:
+    text: Hide classes where the method is legally not implemented
+action.refresh:
+    text: Refresh
+action.sort.alphabetically:
+    text: Sort Alphabetically
+action.view.class.hierarchy:
+    text: Class Hierarchy
+action.view.subtypes.hierarchy:
+    text: Subtypes Hierarchy
+action.view.supertypes.hierarchy:
+    text: Supertypes Hierarchy
+hierarchy.call.next.occurence.name:
+    text: Go to next call
+hierarchy.call.prev.occurence.name:
+    text: Go to previous call
+hierarchy.method.next.occurence.name:
+    text: Go to next method
+hierarchy.method.prev.occurence.name:
+    text: Go to previous method
+hierarchy.scope.all:
+    text: All
+hierarchy.scope.project:
+    text: Production
+hierarchy.scope.test:
+    text: Test
+hierarchy.scope.this.class:
+    text: This Class
+hierarchy.type.next.occurence.name:
+    text: Go to next type
+hierarchy.type.prev.occurence.name:
+    text: Go to previous type
+label.scope:
+    text: 'Scope:'
+node.hierarchy.invalid:
+    text: '[Invalid]'
+title.hierarchy.callees.of:
+    text: Callees Of {0}
+title.hierarchy.callers.of:
+    text: Callers Of {0}
+title.hierarchy.class:
+    text: Class {0}
+title.hierarchy.method:
+    text: Method {0}
+title.hierarchy.subtypes:
+    text: Subtypes of {0}
+title.hierarchy.supertypes:
+    text: Supertypes of {0}

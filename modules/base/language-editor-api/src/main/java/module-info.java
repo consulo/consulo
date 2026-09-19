@@ -99,6 +99,14 @@ module consulo.language.editor.api {
         consulo.ide.impl,
         consulo.language.editor.impl;
 
+    exports consulo.language.editor.internal.hierarchy to
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.ide.impl,
+        consulo.it,
+        consulo.language.editor.impl,
+        consulo.web.ide;
+
     exports consulo.language.editor.internal.inspection to
         consulo.ide.impl,
         consulo.language.editor.impl;
