@@ -18,13 +18,13 @@ package consulo.versionControlSystem.impl.internal.change.conflict;
 import consulo.application.Application;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.util.FileListRenderer;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
@@ -36,82 +36,86 @@ import java.util.List;
  */
 public class ChangelistConflictDialog extends DialogWrapper {
 
-  private JPanel myPanel;
+    private JPanel myPanel;
 
-  private JRadioButton myShelveChangesRadioButton;
-  private JRadioButton myMoveChangesToActiveRadioButton;
-  private JRadioButton mySwitchToChangelistRadioButton;
-  private JRadioButton myIgnoreRadioButton;
-  private JList myFileList;
+    private JRadioButton myShelveChangesRadioButton;
+    private JRadioButton myMoveChangesToActiveRadioButton;
+    private JRadioButton mySwitchToChangelistRadioButton;
+    private JRadioButton myIgnoreRadioButton;
+    private JList myFileList;
 
-  private final Project myProject;
+    private final Project myProject;
 
-  public ChangelistConflictDialog(Project project, List<ChangeList> changeLists, List<VirtualFile> conflicts) {
-    super(project);
-    myProject = project;
+    public ChangelistConflictDialog(Project project, List<ChangeList> changeLists, List<VirtualFile> conflicts) {
+        super(project);
+        myProject = project;
 
-    setTitle("Resolve Changelist Conflict");
+        setTitle("Resolve Changelist Conflict");
 
-    myFileList.setCellRenderer(new FileListRenderer());
-    myFileList.setModel(new CollectionListModel(conflicts));
+        myFileList.setCellRenderer(new FileListRenderer());
+        myFileList.setModel(new CollectionListModel(conflicts));
 
-    ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
-    ChangelistConflictResolution resolution = manager.getConflictTracker().getOptions().LAST_RESOLUTION;
+        ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
+        ChangelistConflictResolution resolution = manager.getConflictTracker().getOptions().LAST_RESOLUTION;
 
-    if (changeLists.size() > 1) {
-      mySwitchToChangelistRadioButton.setEnabled(false);
-      if (resolution == ChangelistConflictResolution.SWITCH) {
-        resolution = ChangelistConflictResolution.IGNORE;
-      }
+        if (changeLists.size() > 1) {
+            mySwitchToChangelistRadioButton.setEnabled(false);
+            if (resolution == ChangelistConflictResolution.SWITCH) {
+                resolution = ChangelistConflictResolution.IGNORE;
+            }
+        }
+        mySwitchToChangelistRadioButton.setText(VcsLocalize.switchToChangelist(changeLists.iterator().next().getName()).get());
+        myMoveChangesToActiveRadioButton.setText(VcsLocalize.moveToChangelist(manager.getDefaultChangeList().getName()).get());
+
+        switch (resolution) {
+            case SHELVE:
+                myShelveChangesRadioButton.setSelected(true);
+                break;
+            case MOVE:
+                myMoveChangesToActiveRadioButton.setSelected(true);
+                break;
+            case SWITCH:
+                mySwitchToChangelistRadioButton.setSelected(true);
+                break;
+            case IGNORE:
+                myIgnoreRadioButton.setSelected(true);
+                break;
+        }
+        init();
     }
-    mySwitchToChangelistRadioButton.setText(VcsBundle.message("switch.to.changelist", changeLists.iterator().next().getName()));
-    myMoveChangesToActiveRadioButton.setText(VcsBundle.message("move.to.changelist", manager.getDefaultChangeList().getName()));
-    
-    switch (resolution) {
 
-      case SHELVE:
-        myShelveChangesRadioButton.setSelected(true);
-        break;
-      case MOVE:
-        myMoveChangesToActiveRadioButton.setSelected(true);
-        break;
-      case SWITCH:
-        mySwitchToChangelistRadioButton.setSelected(true) ;
-        break;
-      case IGNORE:
-        myIgnoreRadioButton.setSelected(true);
-        break;
+    @Override
+    protected JComponent createCenterPanel() {
+        return myPanel;
     }
-    init();
-  }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    return myPanel;
-  }
+    public ChangelistConflictResolution getResolution() {
+        if (myShelveChangesRadioButton.isSelected()) {
+            return ChangelistConflictResolution.SHELVE;
+        }
+        if (myMoveChangesToActiveRadioButton.isSelected()) {
+            return ChangelistConflictResolution.MOVE;
+        }
+        if (mySwitchToChangelistRadioButton.isSelected()) {
+            return ChangelistConflictResolution.SWITCH;
+        }
+        return ChangelistConflictResolution.IGNORE;
+    }
 
-  public ChangelistConflictResolution getResolution() {
-    if (myShelveChangesRadioButton.isSelected())
-      return ChangelistConflictResolution.SHELVE;
-    if (myMoveChangesToActiveRadioButton.isSelected())
-      return ChangelistConflictResolution.MOVE;
-    if (mySwitchToChangelistRadioButton.isSelected())
-      return ChangelistConflictResolution.SWITCH;
-    return ChangelistConflictResolution.IGNORE;
-  }
 
-  
-  @Override
-  protected Action[] createLeftSideActions() {
-    return new Action[] { new AbstractAction("&Configure...") {
-      public void actionPerformed(ActionEvent e) {
-        ChangeListManagerImpl manager = (ChangeListManagerImpl)ChangeListManager.getInstance(myProject);
-        Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, ChangelistConflictConfigurable.class);
-      }
-    }};
-  }
+    @Override
+    protected Action[] createLeftSideActions() {
+        return new Action[]{new AbstractAction("&Configure...") {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(ActionEvent e) {
+                Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, ChangelistConflictConfigurable.class);
+            }
+        }};
+    }
 
-  protected String getHelpId() {
-    return "project.propVCSSupport.ChangelistConflict";
-  }
+    @Override
+    protected String getHelpId() {
+        return "project.propVCSSupport.ChangelistConflict";
+    }
 }

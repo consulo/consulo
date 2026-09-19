@@ -15,11 +15,11 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,10 +32,10 @@ import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -44,169 +44,173 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
-import java.util.stream.Stream;
 
 abstract class SpecificFilesViewDialog extends DialogWrapper {
-  protected JPanel myPanel;
-  protected final ChangesListViewImpl myView;
-  protected final ChangeListManager myChangeListManager;
-  protected boolean myInRefresh;
-  protected final Project myProject;
+    protected JPanel myPanel;
+    protected final ChangesListViewImpl myView;
+    protected final ChangeListManager myChangeListManager;
+    protected boolean myInRefresh;
+    protected final Project myProject;
 
-  protected SpecificFilesViewDialog(Project project,
-                                    String title,
-                                    Key<List<VirtualFile>> shownDataKey,
-                                    List<VirtualFile> initDataFiles) {
-    super(project, true);
-    setTitle(title);
-    myProject = project;
-    final Runnable closer = () -> this.close(0);
-    myView = new ChangesListViewImpl(project) {
-      @Override
-      public void uiDataSnapshot(DataSink sink) {
-        super.uiDataSnapshot(sink);
-        sink.set(shownDataKey, getSelectedFiles());
-      }
+    protected SpecificFilesViewDialog(
+        Project project,
+        String title,
+        Key<List<VirtualFile>> shownDataKey,
+        List<VirtualFile> initDataFiles
+    ) {
+        super(project, true);
+        setTitle(title);
+        myProject = project;
+        final Runnable closer = () -> this.close(0);
+        myView = new ChangesListViewImpl(project) {
+            @Override
+            public void uiDataSnapshot(DataSink sink) {
+                super.uiDataSnapshot(sink);
+                sink.set(shownDataKey, getSelectedFiles());
+            }
 
-      @Override
-      protected void editSourceRegistration() {
-        EditSourceOnDoubleClickHandler.install(this, closer);
-        EditSourceOnEnterKeyHandler.install(this, closer);
-      }
-    };
-    myChangeListManager = ChangeListManager.getInstance(project);
-    createPanel();
-    setOKButtonText("Close");
+            @Override
+            protected void editSourceRegistration() {
+                EditSourceOnDoubleClickHandler.install(this, closer);
+                EditSourceOnEnterKeyHandler.install(this, closer);
+            }
+        };
+        myChangeListManager = ChangeListManager.getInstance(project);
+        createPanel();
+        setOKButtonText("Close");
 
-    init();
-    initData(initDataFiles);
-    myView.setMinimumSize(new Dimension(100, 100));
-  }
-
-  
-  @Override
-  protected Action[] createActions() {
-    return new Action[]{getOKAction()};
-  }
-
-  private void initData(List<VirtualFile> files) {
-    TreeState state = TreeState.createOn(myView, (ChangesBrowserNode)myView.getModel().getRoot());
-
-    DefaultTreeModel model = TreeModelBuilder.buildFromVirtualFiles(myProject, myView.isShowFlatten(), files);
-    myView.setModel(model);
-    myView.expandPath(new TreePath(((ChangesBrowserNode)model.getRoot()).getPath()));
-
-    state.applyTo(myView);
-  }
-
-  private void createPanel() {
-    myPanel = new JPanel(new BorderLayout());
-
-    DefaultActionGroup group = new DefaultActionGroup();
-    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("SPECIFIC_FILES_DIALOG", group, true);
-
-    addCustomActions(group, actionToolbar);
-
-    CommonActionsManager cam = CommonActionsManager.getInstance();
-    Expander expander = new Expander();
-    group.addSeparator();
-    group.add(new ToggleShowFlattenAction());
-    group.add(cam.createExpandAllAction(expander, myView));
-    group.add(cam.createCollapseAllAction(expander, myView));
-
-    myPanel.add(actionToolbar.getComponent(), BorderLayout.NORTH);
-    myPanel.add(ScrollPaneFactory.createScrollPane(myView), BorderLayout.CENTER);
-    myView.setShowFlatten(false);
-  }
-
-  protected void addCustomActions(DefaultActionGroup group, ActionToolbar actionToolbar) {
-  }
-
-  @Override
-  protected String getDimensionServiceKey() {
-    return "consulo.versionControlSystem.impl.internal.change.ui.awt.SpecificFilesViewDialog";
-  }
-
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myView;
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    return myPanel;
-  }
-
-  private class Expander implements TreeExpander {
-    @Override
-    public void expandAll() {
-      TreeUtil.expandAll(myView);
+        init();
+        initData(initDataFiles);
+        myView.setMinimumSize(new Dimension(100, 100));
     }
 
     @Override
-    public boolean canExpand() {
-      return !myView.isShowFlatten();
+    protected Action[] createActions() {
+        return new Action[]{getOKAction()};
+    }
+
+    private void initData(List<VirtualFile> files) {
+        TreeState state = TreeState.createOn(myView, (ChangesBrowserNode) myView.getModel().getRoot());
+
+        DefaultTreeModel model = TreeModelBuilder.buildFromVirtualFiles(myProject, myView.isShowFlatten(), files);
+        myView.setModel(model);
+        myView.expandPath(new TreePath(((ChangesBrowserNode) model.getRoot()).getPath()));
+
+        state.applyTo(myView);
+    }
+
+    private void createPanel() {
+        myPanel = new JPanel(new BorderLayout());
+
+        DefaultActionGroup group = new DefaultActionGroup();
+        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("SPECIFIC_FILES_DIALOG", group, true);
+
+        addCustomActions(group, actionToolbar);
+
+        CommonActionsManager cam = CommonActionsManager.getInstance();
+        Expander expander = new Expander();
+        group.addSeparator();
+        group.add(new ToggleShowFlattenAction());
+        group.add(cam.createExpandAllAction(expander, myView));
+        group.add(cam.createCollapseAllAction(expander, myView));
+
+        myPanel.add(actionToolbar.getComponent(), BorderLayout.NORTH);
+        myPanel.add(ScrollPaneFactory.createScrollPane(myView), BorderLayout.CENTER);
+        myView.setShowFlatten(false);
+    }
+
+    protected void addCustomActions(DefaultActionGroup group, ActionToolbar actionToolbar) {
     }
 
     @Override
-    public void collapseAll() {
-      TreeUtil.collapseAll(myView, 1);
-      TreeUtil.expand(myView, 0);
+    protected String getDimensionServiceKey() {
+        return "consulo.versionControlSystem.impl.internal.change.ui.awt.SpecificFilesViewDialog";
     }
 
     @Override
-    public boolean canCollapse() {
-      return !myView.isShowFlatten();
-    }
-  }
-
-  @RequiredUIAccess
-  protected void refreshView() {
-    UIAccess.assertIsUIThread();
-
-    if (myInRefresh) return;
-    myInRefresh = true;
-
-    myChangeListManager.invokeAfterUpdate(() -> {
-      try {
-        initData(getFiles());
-      }
-      finally {
-        myInRefresh = false;
-      }
-    }, InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE, "", Application.get().getCurrentModalityState());
-  }
-
-  
-  protected abstract List<VirtualFile> getFiles();
-
-  protected static ChangesBrowser getBrowserBase(ChangesListViewImpl view) {
-    return DataManager.getInstance().getDataContext(view).getData(ChangesBrowser.DATA_KEY);
-  }
-
-  public static void refreshChanges(Project project, @Nullable ChangesBrowser browser) {
-    if (browser != null) {
-      ChangeListManager.getInstance(project)
-                       .invokeAfterUpdate(browser::rebuildList, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Delete files", null);
-    }
-  }
-
-  public class ToggleShowFlattenAction extends ToggleAction implements DumbAware {
-    public ToggleShowFlattenAction() {
-      super(VcsBundle.message("changes.action.show.directories.text"),
-            VcsBundle.message("changes.action.show.directories.description"),
-            AllIcons.Actions.GroupByPackage);
+    public JComponent getPreferredFocusedComponent() {
+        return myView;
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-      return !myView.isShowFlatten();
+    protected JComponent createCenterPanel() {
+        return myPanel;
     }
 
-    @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      myView.setShowFlatten(!state);
-      refreshView();
+    private class Expander implements TreeExpander {
+        @Override
+        public void expandAll() {
+            TreeUtil.expandAll(myView);
+        }
+
+        @Override
+        public boolean canExpand() {
+            return !myView.isShowFlatten();
+        }
+
+        @Override
+        public void collapseAll() {
+            TreeUtil.collapseAll(myView, 1);
+            TreeUtil.expand(myView, 0);
+        }
+
+        @Override
+        public boolean canCollapse() {
+            return !myView.isShowFlatten();
+        }
     }
-  }
+
+    @RequiredUIAccess
+    protected void refreshView() {
+        UIAccess.assertIsUIThread();
+
+        if (myInRefresh) {
+            return;
+        }
+        myInRefresh = true;
+
+        myChangeListManager.invokeAfterUpdate(() -> {
+            try {
+                initData(getFiles());
+            }
+            finally {
+                myInRefresh = false;
+            }
+        }, InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE, "", Application.get().getCurrentModalityState());
+    }
+
+    protected abstract List<VirtualFile> getFiles();
+
+    protected static ChangesBrowser getBrowserBase(ChangesListViewImpl view) {
+        return DataManager.getInstance().getDataContext(view).getData(ChangesBrowser.DATA_KEY);
+    }
+
+    public static void refreshChanges(Project project, @Nullable ChangesBrowser browser) {
+        if (browser != null) {
+            ChangeListManager.getInstance(project)
+                .invokeAfterUpdate(browser::rebuildList, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Delete files", null);
+        }
+    }
+
+    public class ToggleShowFlattenAction extends ToggleAction implements DumbAware {
+        public ToggleShowFlattenAction() {
+            super(
+                VcsLocalize.changesActionShowDirectoriesText(),
+                VcsLocalize.changesActionShowDirectoriesDescription(),
+                PlatformIconGroup.actionsGroupbypackage()
+            );
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            return !myView.isShowFlatten();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setSelected(AnActionEvent e, boolean state) {
+            myView.setShowFlatten(!state);
+            refreshView();
+        }
+    }
 }

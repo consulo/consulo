@@ -15,8 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.update;
 
-import consulo.application.AllIcons;
 import consulo.language.file.FileTypeManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,75 +27,65 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @author lesya
  */
 public class FileTreeNode extends FileOrDirectoryTreeNode {
-  private static final Collection<VirtualFile> EMPTY_VIRTUAL_FILE_ARRAY = new ArrayList<VirtualFile>();
-
-  public FileTreeNode(String path,
-                      SimpleTextAttributes invalidAttributes,
-                      Project project,
-                      String parentPath) {
-    super(path, invalidAttributes, project, parentPath);
-  }
-
-  @Override
-  public Image getIcon() {
-    if (myFile.isDirectory()) {
-      return AllIcons.Nodes.TreeClosed;
+    public FileTreeNode(String path, SimpleTextAttributes invalidAttributes, Project project, String parentPath) {
+        super(path, invalidAttributes, project, parentPath);
     }
-    return FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon();
-  }
 
-  @Override
-  protected boolean acceptFilter(Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
-    try {
-      VirtualFilePointer filePointer = getFilePointer();
-      if (!filePointer.isValid()) {
+    @Override
+    public Image getIcon() {
+        if (myFile.isDirectory()) {
+            return PlatformIconGroup.nodesTreeclosed();
+        }
+        return FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon();
+    }
+
+    @Override
+    protected boolean acceptFilter(Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+        try {
+            VirtualFilePointer filePointer = getFilePointer();
+            if (!filePointer.isValid()) {
+                return false;
+            }
+            VirtualFile file = filePointer.getFile();
+            if (file != null && file.isValid() && filter.first.contains(file, myProject, filter.second)) {
+                applyFilter(true);
+                return true;
+            }
+        }
+        catch (Throwable e) {
+            // TODO: catch and ignore exceptions: see to FilePatternPackageSet
+            // sometimes for new file DirectoryFileIndex.getContentRootForFile() return random path
+        }
         return false;
-      }
-      VirtualFile file = filePointer.getFile();
-      if (file != null && file.isValid() && filter.first.contains(file, myProject, filter.second)) {
-        applyFilter(true);
-        return true;
-      }
     }
-    catch (Throwable e) {
-      // TODO: catch and ignore exceptions: see to FilePatternPackageSet
-      // sometimes for new file DirectoryFileIndex.getContentRootForFile() return random path
+
+
+    @Override
+    public Collection<VirtualFile> getVirtualFiles() {
+        VirtualFile virtualFile = getFilePointer().getFile();
+        return virtualFile == null ? List.of() : List.of(virtualFile);
     }
-    return false;
-  }
 
-  
-  @Override
-  public Collection<VirtualFile> getVirtualFiles() {
-    VirtualFile virtualFile = getFilePointer().getFile();
-    if (virtualFile == null) return EMPTY_VIRTUAL_FILE_ARRAY;
-    return Collections.singleton(virtualFile);
-  }
 
-  
-  @Override
-  public Collection<File> getFiles() {
-    if (getFilePointer().getFile() == null) {
-      return Collections.singleton(myFile);
+    @Override
+    public Collection<File> getFiles() {
+        return getFilePointer().getFile() == null ? List.of(myFile) : List.of();
     }
-    return AbstractTreeNode.EMPTY_FILE_ARRAY;
-  }
 
-  @Override
-  protected int getItemsCount() {
-    return 1;
-  }
+    @Override
+    protected int getItemsCount() {
+        return 1;
+    }
 
-  @Override
-  protected boolean showStatistics() {
-    return false;
-  }
+    @Override
+    protected boolean showStatistics() {
+        return false;
+    }
 }

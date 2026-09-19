@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.commited;
 
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.util.Comparator;
@@ -24,37 +24,43 @@ import java.util.Comparator;
  * @author yole
  */
 public interface ChangeListGroupingStrategy {
-  void beforeStart();
-  boolean changedSinceApply();
-  String getGroupName(CommittedChangeList changeList);
-  Comparator<CommittedChangeList> getComparator();
+    void beforeStart();
 
-  ChangeListGroupingStrategy USER = new ChangeListGroupingStrategy() {
-    public String toString() {
-      return VcsBundle.message("user.group.title");
-    }
+    boolean changedSinceApply();
 
-    public String getGroupName(CommittedChangeList changeList) {
-      return changeList.getCommitterName();
-    }
+    String getGroupName(CommittedChangeList changeList);
 
-    public void beforeStart() {
-    }
+    Comparator<CommittedChangeList> getComparator();
 
-    public boolean changedSinceApply() {
-      return false;
-    }
-
-    public Comparator<CommittedChangeList> getComparator() {
-      return new Comparator<CommittedChangeList>() {
-        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
-          int rc = o1.getCommitterName().compareToIgnoreCase(o2.getCommitterName());
-          if (rc == 0) {
-            return -o1.getCommitDate().compareTo(o2.getCommitDate());
-          }
-          return rc;
+    ChangeListGroupingStrategy USER = new ChangeListGroupingStrategy() {
+        @Override
+        public String toString() {
+            return VcsLocalize.userGroupTitle().get();
         }
-      };
-    }
-  };
+
+        @Override
+        public String getGroupName(CommittedChangeList changeList) {
+            return changeList.getCommitterName();
+        }
+
+        @Override
+        public void beforeStart() {
+        }
+
+        @Override
+        public boolean changedSinceApply() {
+            return false;
+        }
+
+        @Override
+        public Comparator<CommittedChangeList> getComparator() {
+            return (o1, o2) -> {
+                int rc = o1.getCommitterName().compareToIgnoreCase(o2.getCommitterName());
+                if (rc == 0) {
+                    return -o1.getCommitDate().compareTo(o2.getCommitDate());
+                }
+                return rc;
+            };
+        }
+    };
 }

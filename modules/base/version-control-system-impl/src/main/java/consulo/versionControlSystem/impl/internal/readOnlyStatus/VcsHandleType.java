@@ -15,13 +15,13 @@
  */
 package consulo.versionControlSystem.impl.internal.readOnlyStatus;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.EditFileProvider;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -54,35 +54,37 @@ public class VcsHandleType extends HandleType {
     }
 
     @Override
-    public void processFiles(final Collection<VirtualFile> files, final @Nullable String changelist) {
+    @RequiredUIAccess
+    public void processFiles(Collection<VirtualFile> files, @Nullable String changelist) {
         try {
             EditFileProvider provider = myVcs.getEditFileProvider();
             assert provider != null;
             provider.editFiles(VirtualFileUtil.toVirtualFileArray(files));
         }
         catch (VcsException e) {
-            Messages.showErrorDialog(VcsBundle.message("message.text.cannot.edit.file", e.getLocalizedMessage()),
-                VcsBundle.message("message.title.edit.files"));
+            Messages.showErrorDialog(
+                VcsLocalize.messageTextCannotEditFile(e.getLocalizedMessage()).get(),
+                VcsLocalize.messageTitleEditFiles().get()
+            );
         }
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                for (VirtualFile file : files) {
-                    file.refresh(false, false);
-                }
+        Application.get().runWriteAction(() -> {
+            for (VirtualFile file : files) {
+                file.refresh(false, false);
             }
         });
         if (changelist != null) {
-            myChangeListManager.invokeAfterUpdate(new Runnable() {
-                @Override
-                public void run() {
+            myChangeListManager.invokeAfterUpdate(
+                () -> {
                     LocalChangeList list = myChangeListManager.findChangeList(changelist);
                     if (list != null) {
                         List<Change> changes = ContainerUtil.mapNotNull(files, myChangeFunction);
                         myChangeListManager.moveChangesTo(list, changes.toArray(new Change[changes.size()]));
                     }
-                }
-            }, InvokeAfterUpdateMode.SILENT, "", ModalityState.nonModal());
+                },
+                InvokeAfterUpdateMode.SILENT,
+                "",
+                ModalityState.nonModal()
+            );
         }
     }
 

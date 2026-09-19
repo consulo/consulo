@@ -15,7 +15,8 @@
  */
 package consulo.versionControlSystem.virtualFileSystem;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.BaseVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,127 +30,120 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public abstract class AbstractVcsVirtualFile extends BaseVirtualFile {
-  protected final String myName;
-  protected final String myPath;
-  protected String myRevision;
-  private final VirtualFile myParent;
-  protected int myModificationStamp = 0;
-  private final VirtualFileSystem myFileSystem;
-  protected boolean myProcessingBeforeContentsChange;
+    protected final String myName;
+    protected final String myPath;
+    protected String myRevision;
+    private final VirtualFile myParent;
+    protected int myModificationStamp = 0;
+    private final VirtualFileSystem myFileSystem;
+    protected boolean myProcessingBeforeContentsChange;
 
-  protected AbstractVcsVirtualFile(String path, VirtualFileSystem fileSystem) {
-    myFileSystem = fileSystem;
-    myPath = path;
-    File file = new File(myPath);
-    myName = file.getName();
-    if (!isDirectory())
-      myParent = new VcsVirtualFolder(file.getParent(), this, myFileSystem);
-    else
-      myParent = null;
-  }
-
-  @Override
-  
-  public VirtualFileSystem getFileSystem() {
-    return myFileSystem;
-  }
-
-  @Override
-  public String getPath() {
-    return myPath;
-  }
-
-  @Override
-  
-  public String getName() {
-    return myName;
-  }
-
-  @Override
-  public String getPresentableName() {
-    if (myRevision == null)
-      return myName;
-    else
-      return myName + " (" + myRevision + ")";
-  }
-
-  @Override
-  public boolean isWritable() {
-    return false;
-  }
-
-  @Override
-  public boolean isValid() {
-    return true;
-  }
-
-  @Override
-  public VirtualFile getParent() {
-    return myParent;
-
-  }
-
-  @Override
-  public VirtualFile @Nullable [] getChildren() {
-    return null;
-  }
-
-  @Override
-  public InputStream getInputStream() throws IOException {
-    return VirtualFileUtil.byteStreamSkippingBOM(contentsToByteArray(), this);
-  }
-
-  @Override
-  
-  public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
-    throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
-  }
-
-  @Override
-  
-  public abstract byte[] contentsToByteArray() throws IOException;
-
-  @Override
-  public long getModificationStamp() {
-    return myModificationStamp;
-  }
-
-  @Override
-  public long getTimeStamp() {
-    return myModificationStamp;
-  }
-
-  @Override
-  public long getLength() {
-    try {
-      return contentsToByteArray().length;
-    } catch (IOException e) {
-      return 0;
+    protected AbstractVcsVirtualFile(String path, VirtualFileSystem fileSystem) {
+        myFileSystem = fileSystem;
+        myPath = path;
+        File file = new File(myPath);
+        myName = file.getName();
+        myParent = !isDirectory() ? new VcsVirtualFolder(file.getParent(), this, myFileSystem) : null;
     }
-  }
 
-  @Override
-  public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
-    if (postRunnable != null)
-      postRunnable.run();
-  }
+    @Override
+    public VirtualFileSystem getFileSystem() {
+        return myFileSystem;
+    }
 
-  protected void setRevision(String revision) {
-    myRevision = revision;
-  }
+    @Override
+    public String getPath() {
+        return myPath;
+    }
 
-  protected void fireBeforeContentsChange() {
-    myProcessingBeforeContentsChange = true;
-    try {
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          ((VcsFileSystem)getFileSystem()).fireBeforeContentsChange(this, AbstractVcsVirtualFile.this);
+    @Override
+    public String getName() {
+        return myName;
+    }
+
+    @Override
+    public String getPresentableName() {
+        return myRevision == null ? myName : myName + " (" + myRevision + ")";
+    }
+
+    @Override
+    public boolean isWritable() {
+        return false;
+    }
+
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
+    @Override
+    public VirtualFile getParent() {
+        return myParent;
+
+    }
+
+    @Override
+    public VirtualFile @Nullable [] getChildren() {
+        return null;
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return VirtualFileUtil.byteStreamSkippingBOM(contentsToByteArray(), this);
+    }
+
+    @Override
+    public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
+        throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
+    }
+
+    @Override
+    public abstract byte[] contentsToByteArray() throws IOException;
+
+    @Override
+    public long getModificationStamp() {
+        return myModificationStamp;
+    }
+
+    @Override
+    public long getTimeStamp() {
+        return myModificationStamp;
+    }
+
+    @Override
+    public long getLength() {
+        try {
+            return contentsToByteArray().length;
         }
-      });
+        catch (IOException e) {
+            return 0;
+        }
     }
-    finally {
-      myProcessingBeforeContentsChange = false;
+
+    @Override
+    public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
+        if (postRunnable != null) {
+            postRunnable.run();
+        }
     }
-  }
+
+    protected void setRevision(String revision) {
+        myRevision = revision;
+    }
+
+    @RequiredUIAccess
+    protected void fireBeforeContentsChange() {
+        myProcessingBeforeContentsChange = true;
+        try {
+            Application.get().runWriteAction(new Runnable() {
+                @Override
+                public void run() {
+                    ((VcsFileSystem) getFileSystem()).fireBeforeContentsChange(this, AbstractVcsVirtualFile.this);
+                }
+            });
+        }
+        finally {
+            myProcessingBeforeContentsChange = false;
+        }
+    }
 }

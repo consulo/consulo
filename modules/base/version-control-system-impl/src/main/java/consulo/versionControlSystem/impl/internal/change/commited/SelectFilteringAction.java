@@ -19,6 +19,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.ChangeListFilteringStrategy;
 import consulo.versionControlSystem.change.commited.CommittedChangesFilterKey;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import javax.swing.*;
 
@@ -26,51 +27,55 @@ import javax.swing.*;
  * @author yole
  */
 public class SelectFilteringAction extends LabeledComboBoxAction {
-  private final Project myProject;
-  private final CommittedChangesTreeBrowser myBrowser;
-  private CommittedChangesFilterKey myPreviousSelection;
+    private final Project myProject;
+    private final CommittedChangesTreeBrowser myBrowser;
+    private CommittedChangesFilterKey myPreviousSelection;
 
-  public SelectFilteringAction(Project project, CommittedChangesTreeBrowser browser) {
-    super(VcsBundle.message("committed.changes.filter.title"));
-    myProject = project;
-    myBrowser = browser;
-    myPreviousSelection = null;
-  }
+    public SelectFilteringAction(Project project, CommittedChangesTreeBrowser browser) {
+        super(VcsLocalize.committedChangesFilterTitle().get());
+        myProject = project;
+        myBrowser = browser;
+        myPreviousSelection = null;
+    }
 
-  protected ComboBoxModel createModel() {
-    DefaultComboBoxModel model = new DefaultComboBoxModel(new Object[]{
-      ChangeListFilteringStrategy.NONE,
-      /*new ColumnFilteringStrategy(ChangeListColumn.NAME, provider.getClass()),*/
-      new StructureFilteringStrategy(myProject)
-    });
-    AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
-    boolean addNameFilter = false;
-    for(AbstractVcs vcs: vcss) {
-      CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
-      if (provider != null) {
-        addNameFilter = true;
-        for(ChangeListColumn column: provider.getColumns()) {
-          if (ChangeListColumn.isCustom(column)) {
-            model.addElement(new ColumnFilteringStrategy(column, provider.getClass()));
-          }
+    @Override
+    protected ComboBoxModel createModel() {
+        DefaultComboBoxModel<ChangeListFilteringStrategy> model = new DefaultComboBoxModel<>(new ChangeListFilteringStrategy[]{
+            ChangeListFilteringStrategy.NONE,
+            /*new ColumnFilteringStrategy(ChangeListColumn.NAME, provider.getClass()),*/
+            new StructureFilteringStrategy(myProject)
+        });
+        AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+        boolean addNameFilter = false;
+        for (AbstractVcs vcs : vcss) {
+            CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+            if (provider != null) {
+                addNameFilter = true;
+                for (ChangeListColumn column : provider.getColumns()) {
+                    if (ChangeListColumn.isCustom(column)) {
+                        model.addElement(new ColumnFilteringStrategy(column, provider.getClass()));
+                    }
+                }
+            }
         }
-      }
+        if (addNameFilter) {
+            model.addElement(new ColumnFilteringStrategy(ChangeListColumn.NAME, CommittedChangesProvider.class));
+        }
+        return model;
     }
-    if (addNameFilter) {
-      model.addElement(new ColumnFilteringStrategy(ChangeListColumn.NAME, CommittedChangesProvider.class));
-    }
-    return model;
-  }
 
-  protected void selectionChanged(Object selection) {
-    if (selection == null) return;
-    if (myPreviousSelection != null) {
-        myBrowser.removeFilteringStrategy(myPreviousSelection);
+    @Override
+    protected void selectionChanged(Object selection) {
+        if (selection == null) {
+            return;
+        }
+        if (myPreviousSelection != null) {
+            myBrowser.removeFilteringStrategy(myPreviousSelection);
+        }
+        ChangeListFilteringStrategy strategy = (ChangeListFilteringStrategy) selection;
+        if (!ChangeListFilteringStrategy.NONE.equals(selection)) {
+            myBrowser.setFilteringStrategy(strategy);
+        }
+        myPreviousSelection = strategy.getKey();
     }
-    ChangeListFilteringStrategy strategy = (ChangeListFilteringStrategy)selection;
-    if (!ChangeListFilteringStrategy.NONE.equals(selection)) {
-      myBrowser.setFilteringStrategy(strategy);
-    }
-    myPreviousSelection = strategy.getKey();
-  }
 }

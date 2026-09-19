@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
+import consulo.localize.LocalizeValue;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -25,58 +25,76 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import javax.swing.*;
 
 public class CommitLegendPanel {
+    private final SimpleColoredComponent myRootPanel;
 
-  
-  private final SimpleColoredComponent myRootPanel;
-  
-  private final InfoCalculator myInfoCalculator;
+    private final InfoCalculator myInfoCalculator;
 
-  public CommitLegendPanel(InfoCalculator infoCalculator) {
-    myInfoCalculator = infoCalculator;
-    myRootPanel = new SimpleColoredComponent();
-  }
-
-  
-  public JComponent getComponent() {
-    return myRootPanel;
-  }
-
-  public void update() {
-    myRootPanel.clear();
-    appendText(myInfoCalculator.getNew(), myInfoCalculator.getIncludedNew(), FileStatus.ADDED, VcsBundle.message("commit.legend.new"));
-    appendText(myInfoCalculator.getModified(), myInfoCalculator.getIncludedModified(), FileStatus.MODIFIED, VcsBundle.message("commit.legend.modified"));
-    appendText(myInfoCalculator.getDeleted(), myInfoCalculator.getIncludedDeleted(), FileStatus.DELETED, VcsBundle.message("commit.legend.deleted"));
-    appendText(myInfoCalculator.getUnversioned(), myInfoCalculator.getIncludedUnversioned(), FileStatus.UNKNOWN,
-               VcsBundle.message("commit.legend.unversioned"));
-  }
-
-  protected void appendText(int total, int included, FileStatus fileStatus, String labelName) {
-    if (total > 0) {
-      if (!isPanelEmpty()) {
-        appendSpace();
-      }
-      String pattern = total == included ? "%s %d" : "%s %d of %d";
-      String text = String.format(pattern, labelName, included, total);
-      myRootPanel.append(text, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, TargetAWT.to(fileStatus.getColor())));
+    public CommitLegendPanel(InfoCalculator infoCalculator) {
+        myInfoCalculator = infoCalculator;
+        myRootPanel = new SimpleColoredComponent();
     }
-  }
 
-  private boolean isPanelEmpty() {
-    return !myRootPanel.iterator().hasNext();
-  }
+    public JComponent getComponent() {
+        return myRootPanel;
+    }
 
-  protected final void appendSpace() {
-    myRootPanel.append("   ");
-  }
+    public void update() {
+        myRootPanel.clear();
+        appendText(myInfoCalculator.getNew(), myInfoCalculator.getIncludedNew(), FileStatus.ADDED, VcsLocalize.commitLegendNew());
+        appendText(
+            myInfoCalculator.getModified(),
+            myInfoCalculator.getIncludedModified(),
+            FileStatus.MODIFIED,
+            VcsLocalize.commitLegendModified()
+        );
+        appendText(
+            myInfoCalculator.getDeleted(),
+            myInfoCalculator.getIncludedDeleted(),
+            FileStatus.DELETED,
+            VcsLocalize.commitLegendDeleted()
+        );
+        appendText(
+            myInfoCalculator.getUnversioned(),
+            myInfoCalculator.getIncludedUnversioned(),
+            FileStatus.UNKNOWN,
+            VcsLocalize.commitLegendUnversioned()
+        );
+    }
 
-  public interface InfoCalculator {
-    int getNew();
-    int getModified();
-    int getDeleted();
-    int getUnversioned();
-    int getIncludedNew();
-    int getIncludedModified();
-    int getIncludedDeleted();
-    int getIncludedUnversioned();
-  }
+    protected void appendText(int total, int included, FileStatus fileStatus, LocalizeValue labelName) {
+        if (total > 0) {
+            if (!isPanelEmpty()) {
+                appendSpace();
+            }
+            String pattern = total == included ? "%s %d" : "%s %d of %d";
+            String text = String.format(pattern, labelName.get(), included, total);
+            myRootPanel.append(text, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, TargetAWT.to(fileStatus.getColor())));
+        }
+    }
+
+    private boolean isPanelEmpty() {
+        return !myRootPanel.iterator().hasNext();
+    }
+
+    protected final void appendSpace() {
+        myRootPanel.append("   ");
+    }
+
+    public interface InfoCalculator {
+        int getNew();
+
+        int getModified();
+
+        int getDeleted();
+
+        int getUnversioned();
+
+        int getIncludedNew();
+
+        int getIncludedModified();
+
+        int getIncludedDeleted();
+
+        int getIncludedUnversioned();
+    }
 }
