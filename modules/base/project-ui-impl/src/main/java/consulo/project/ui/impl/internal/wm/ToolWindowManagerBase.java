@@ -49,6 +49,7 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
@@ -1139,10 +1140,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     @Override
     public void invokeLater(Runnable runnable) {
-        myProject.getApplication().invokeLater(runnable, myProject.getDisposed());
+        myProject.getUIAccess().give(() -> {
+            if (myProject.getDisposeState().get() == ThreeState.UNSURE) {
+                return;
+            }
+
+            runnable.run();
+        });
     }
 
-    
     @Override
     @RequiredUIAccess
     public ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor) {
