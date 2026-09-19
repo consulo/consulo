@@ -4,13 +4,11 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
-import consulo.ui.ex.awt.AddEditDeleteListPanel;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.*;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import org.jspecify.annotations.Nullable;
@@ -39,12 +37,17 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         public Panel() {
             myMainComponent = new JPanel(new BorderLayout());
             myEncodingBox = new ConsoleEncodingComboBox();
-            myMainComponent.add(LabeledComponent.sided(myEncodingBox, ExecutionBundle.message("combobox.console.default.encoding.label")), BorderLayout.NORTH);
+            myMainComponent.add(
+                LabeledComponent.sided(myEncodingBox, ExecutionLocalize.comboboxConsoleDefaultEncodingLabel().get()),
+                BorderLayout.NORTH
+            );
 
             Splitter splitter = new Splitter(true);
             myMainComponent.add(splitter, BorderLayout.CENTER);
-            myPositivePanel =
-                new MyAddDeleteListPanel("Fold console lines that contain", "Enter a substring of a console line you'd like to see folded:");
+            myPositivePanel = new MyAddDeleteListPanel(
+                "Fold console lines that contain",
+                "Enter a substring of a console line you'd like to see folded:"
+            );
             myNegativePanel = new MyAddDeleteListPanel("Exceptions", "Enter a substring of a console line you don't want to fold:");
             splitter.setFirstComponent(myPositivePanel);
             splitter.setSecondComponent(myNegativePanel);
@@ -63,32 +66,42 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         }
 
         @Override
+        @RequiredUIAccess
         protected @Nullable String findItemToAdd() {
             return showEditDialog("");
         }
 
+        @RequiredUIAccess
         private @Nullable String showEditDialog(String initialValue) {
-            return Messages.showInputDialog(this, myQuery, "Folding pattern", Messages.getQuestionIcon(), initialValue, new InputValidatorEx() {
-                @RequiredUIAccess
-                @Override
-                public boolean checkInput(String inputString) {
-                    return !StringUtil.isEmpty(inputString);
-                }
-
-                @RequiredUIAccess
-                @Override
-                public boolean canClose(String inputString) {
-                    return !StringUtil.isEmpty(inputString);
-                }
-
-                @Override
-                public @Nullable String getErrorText(String inputString) {
-                    if (!checkInput(inputString)) {
-                        return "Console folding rule string cannot be empty";
+            return Messages.showInputDialog(
+                this,
+                myQuery,
+                "Folding pattern",
+                UIUtil.getQuestionIcon(),
+                initialValue,
+                new InputValidatorEx() {
+                    @Override
+                    @RequiredUIAccess
+                    public boolean checkInput(String inputString) {
+                        return !StringUtil.isEmpty(inputString);
                     }
-                    return null;
+
+                    @Override
+                    @RequiredUIAccess
+                    public boolean canClose(String inputString) {
+                        return !StringUtil.isEmpty(inputString);
+                    }
+
+                    @Override
+                    @RequiredUIAccess
+                    public @Nullable String getErrorText(String inputString) {
+                        if (!checkInput(inputString)) {
+                            return "Console folding rule string cannot be empty";
+                        }
+                        return null;
+                    }
                 }
-            });
+            );
         }
 
         void resetFrom(List<String> patterns) {
@@ -110,6 +123,7 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         }
 
         @Override
+        @RequiredUIAccess
         protected String editSelectedItem(String item) {
             return showEditDialog(item);
         }
@@ -139,18 +153,21 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         myPanel.myPositivePanel.addRule(rule);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         ConsoleFoldingSettings consoleFoldingSettings = mySettings.get();
         return !Arrays.asList(myPanel.myNegativePanel.getListItems()).equals(consoleFoldingSettings.getNegativePatterns()) ||
             !Arrays.asList(myPanel.myPositivePanel.getListItems()).equals(consoleFoldingSettings.getPositivePatterns()) ||
-            !Objects.equals(myApplicationEncodingManager.getDefaultConsoleEncodingReference(), myPanel.myEncodingBox.getSelectedEncodingReference());
+            !Objects.equals(
+                myApplicationEncodingManager.getDefaultConsoleEncodingReference(),
+                myPanel.myEncodingBox.getSelectedEncodingReference()
+            );
 
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         ConsoleFoldingSettings consoleFoldingSettings = mySettings.get();
 
@@ -170,14 +187,13 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         myPanel.myPositivePanel.resetFrom(consoleFoldingSettings.getPositivePatterns());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void disposeUIResources() {
         myPanel = null;
     }
 
     @Override
-    
     public String getId() {
         return "execution.console.folding";
     }
@@ -187,7 +203,6 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Console");

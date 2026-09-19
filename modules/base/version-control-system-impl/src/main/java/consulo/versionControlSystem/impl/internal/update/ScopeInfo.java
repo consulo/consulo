@@ -16,81 +16,81 @@
 package consulo.versionControlSystem.impl.internal.update;
 
 import consulo.project.Project;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ScopeInfo {
-  FilePath[] getRoots(VcsContext context, ActionInfo actionInfo);
-  String getScopeName(VcsContext dataContext, ActionInfo actionInfo);
-  boolean filterExistsInVcs();
+    FilePath[] getRoots(VcsContext context, ActionInfo actionInfo);
 
-  ScopeInfo PROJECT = new ScopeInfo() {
-    public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
-      return VcsBundle.message("update.project.scope.name");
-    }
+    String getScopeName(VcsContext dataContext, ActionInfo actionInfo);
 
-    public boolean filterExistsInVcs() {
-      return true;
-    }
+    boolean filterExistsInVcs();
 
-    public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
-      ArrayList<FilePath> result = new ArrayList<FilePath>();
-      Project project = context.getProject();
-      ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
-      AbstractVcs[] vcses = vcsManager.getAllActiveVcss();
-      for(AbstractVcs vcs: vcses) {
-        if (actionInfo.getEnvironment(vcs) != null) {
-          VirtualFile[] files = vcsManager.getRootsUnderVcs(vcs);
-          for(VirtualFile file: files) {
-            result.add(new FilePathImpl(file));
-          }
+    ScopeInfo PROJECT = new ScopeInfo() {
+        @Override
+        public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
+            return VcsLocalize.updateProjectScopeName().get();
         }
-      }
-      return result.toArray(new FilePath[result.size()]);
-    }
-  };
 
-  ScopeInfo FILES = new ScopeInfo() {
-    public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
-      FilePath[] roots = getRoots(dataContext, actionInfo);
-      if (roots == null || roots.length == 0) {
-        return VcsBundle.message("update.files.scope.name");
-      }
-      boolean directory = roots[0].isDirectory();
-      if (roots.length == 1) {
-        if (directory) {
-          return VcsBundle.message("update.directory.scope.name");
+        @Override
+        public boolean filterExistsInVcs() {
+            return true;
         }
-        else {
-          return VcsBundle.message("update.file.scope.name");
+
+        @Override
+        public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
+            List<FilePath> result = new ArrayList<>();
+            Project project = context.getProject();
+            ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+            AbstractVcs[] vcses = vcsManager.getAllActiveVcss();
+            for (AbstractVcs vcs : vcses) {
+                if (actionInfo.getEnvironment(vcs) != null) {
+                    VirtualFile[] files = vcsManager.getRootsUnderVcs(vcs);
+                    for (VirtualFile file : files) {
+                        result.add(new FilePathImpl(file));
+                    }
+                }
+            }
+            return result.toArray(FilePath[]::new);
         }
-      }
-      else {
-        if (directory) {
-          return VcsBundle.message("update.directories.scope.name");
+    };
+
+    ScopeInfo FILES = new ScopeInfo() {
+        @Override
+        public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
+            FilePath[] roots = getRoots(dataContext, actionInfo);
+            if (roots == null || roots.length == 0) {
+                return VcsLocalize.updateFilesScopeName().get();
+            }
+            boolean directory = roots[0].isDirectory();
+            if (roots.length == 1) {
+                return directory ? VcsLocalize.updateDirectoryScopeName().get() : VcsLocalize.updateFileScopeName().get();
+            }
+            else if (directory) {
+                return VcsLocalize.updateDirectoriesScopeName().get();
+            }
+            else {
+                return VcsLocalize.updateFilesScopeName().get();
+            }
         }
-        else {
-          return VcsBundle.message("update.files.scope.name");
+
+        @Override
+        public boolean filterExistsInVcs() {
+            return true;
         }
-      }
 
-    }
-
-    public boolean filterExistsInVcs() {
-      return true;
-    }
-
-    public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
-      return context.getSelectedFilePaths();
-    }
-
-  };
+        @Override
+        public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
+            return context.getSelectedFilePaths();
+        }
+    };
 }

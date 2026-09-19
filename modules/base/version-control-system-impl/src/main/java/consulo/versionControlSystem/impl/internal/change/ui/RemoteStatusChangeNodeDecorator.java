@@ -17,36 +17,40 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
 public class RemoteStatusChangeNodeDecorator implements ChangeNodeDecorator {
-  private final RemoteRevisionsCache myRemoteRevisionsCache;
-  private final ChangeListRemoteState myListState;
-  private final int myIdx;
+    private final RemoteRevisionsCache myRemoteRevisionsCache;
+    private final ChangeListRemoteState myListState;
+    private final int myIdx;
 
-  public RemoteStatusChangeNodeDecorator(RemoteRevisionsCache remoteRevisionsCache) {
-    this(remoteRevisionsCache, null, -1);
-  }
-
-  public RemoteStatusChangeNodeDecorator(RemoteRevisionsCache remoteRevisionsCache,
-                                         @Nullable ChangeListRemoteState listRemoteState,
-                                         int idx) {
-    myRemoteRevisionsCache = remoteRevisionsCache;
-    myListState = listRemoteState;
-    myIdx = idx;
-  }
-
-  @Override
-  public void decorate(Change change, SimpleColoredComponent component, boolean isShowFlatten) {
-    boolean state = myRemoteRevisionsCache.isUpToDate(change);
-    if (myListState != null) myListState.report(myIdx, state);
-    if (!state) {
-      component.append(" ");
-      component.append(VcsBundle.message("change.nodetitle.change.is.outdated"), SimpleTextAttributes.ERROR_ATTRIBUTES);
+    public RemoteStatusChangeNodeDecorator(RemoteRevisionsCache remoteRevisionsCache) {
+        this(remoteRevisionsCache, null, -1);
     }
-  }
+
+    public RemoteStatusChangeNodeDecorator(
+        RemoteRevisionsCache remoteRevisionsCache,
+        @Nullable ChangeListRemoteState listRemoteState,
+        int idx
+    ) {
+        myRemoteRevisionsCache = remoteRevisionsCache;
+        myListState = listRemoteState;
+        myIdx = idx;
+    }
+
+    @Override
+    public void decorate(Change change, SimpleColoredComponent component, boolean isShowFlatten) {
+        boolean state = myRemoteRevisionsCache.isUpToDate(change);
+        if (myListState != null) {
+            myListState.report(myIdx, state);
+        }
+        if (!state) {
+            component.append(" ");
+            component.append(VcsLocalize.changeNodetitleChangeIsOutdated(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+        }
+    }
 }

@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.update;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -30,6 +29,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
@@ -37,10 +37,8 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.content.ContentManager;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
@@ -148,7 +146,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     public void setCanGroupByChangeList(boolean canGroupByChangeList) {
         myCanGroupByChangeList = canGroupByChangeList;
         if (myCanGroupByChangeList) {
-            myLoadingChangeListsLabel = new JLabel(VcsBundle.message("update.info.loading.changelists"));
+            myLoadingChangeListsLabel = new JLabel(VcsLocalize.updateInfoLoadingChangelists().get());
             add(myLoadingChangeListsLabel, BorderLayout.SOUTH);
             myGroupByChangeList = VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_CHANGELIST;
             if (myGroupByChangeList) {
@@ -257,8 +255,8 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
             }
             return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(mySelectedFile).build();
         });
-        sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> getVirtualFileArray());
-        sink.lazy(VcsDataKeys.IO_FILE_ARRAY, () -> getFileArray());
+        sink.lazy(VirtualFile.KEY_OF_ARRAY, this::getVirtualFileArray);
+        sink.lazy(VcsDataKeys.IO_FILE_ARRAY, this::getFileArray);
         sink.set(PlatformDataKeys.TREE_EXPANDER, myGroupByChangeList
             ? (myTreeBrowser != null ? myTreeBrowser.getTreeExpander() : null)
             : myTreeExpander);
@@ -372,10 +370,8 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         Pair<PackageSetBase, NamedScopesHolder> scopeFilter = getScopeFilter();
         int[] result = new int[1];
         TreeUtil.traverse(myRoot, node -> {
-            if (node instanceof FileTreeNode) {
-                if (((FileTreeNode) node).acceptFilter(scopeFilter, true)) {
-                    result[0]++;
-                }
+            if (node instanceof FileTreeNode fileTreeNode && fileTreeNode.acceptFilter(scopeFilter, true)) {
+                result[0]++;
             }
             return true;
         });
@@ -404,11 +400,13 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
                 if (hasEmptyCaches) {
                     StatusText statusText = myTreeBrowser.getEmptyText();
                     statusText.clear();
-                    statusText.appendText("Click ").appendText(
-                        "Refresh",
-                        SimpleTextAttributes.LINK_ATTRIBUTES,
-                        e -> RefreshIncomingChangesAction.doRefresh(myProject)
-                    ).appendText(" to initialize repository changes cache");
+                    statusText.appendText("Click ")
+                        .appendText(
+                            "Refresh",
+                            SimpleTextAttributes.LINK_ATTRIBUTES,
+                            e -> RefreshIncomingChangesAction.doRefresh(myProject)
+                        )
+                        .appendText(" to initialize repository changes cache");
                 }
             },
             myProject.getDisposed()
@@ -426,6 +424,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             if (!myProject.isDisposed()) {
                 VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_PACKAGES = state;
@@ -451,6 +450,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             myGroupByChangeList = state;
             VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_CHANGELIST = myGroupByChangeList;
@@ -500,7 +500,8 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         return VcsConfiguration.getInstance(myProject).UPDATE_FILTER_SCOPE_NAME;
     }
 
-    @Nullable NamedScope getFilterScope() {
+    @Nullable
+    NamedScope getFilterScope() {
         Pair<PackageSetBase, NamedScopesHolder> filter = getScopeFilter();
         return filter == null ? null : filter.second.getScope(getFilterScopeName());
     }
@@ -510,7 +511,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
             super(
                 LocalizeValue.localizeTODO("Scope Filter"),
                 VcsLocalize.settingsFilterUpdateProjectInfoByScope(),
-                AllIcons.General.Filter
+                PlatformIconGroup.generalFilter()
             );
         }
 
@@ -520,6 +521,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             myShowOnlyFilteredItems = state;
             VcsConfiguration.getInstance(myProject).UPDATE_FILTER_BY_SCOPE = myShowOnlyFilteredItems;

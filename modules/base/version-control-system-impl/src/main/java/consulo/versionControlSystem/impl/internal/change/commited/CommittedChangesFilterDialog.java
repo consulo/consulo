@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 import org.jspecify.annotations.Nullable;
@@ -37,6 +37,7 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
     private final JLabel myErrorLabel = new JLabel();
     private final Alarm myValidateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
     private final Runnable myValidateRunnable = new Runnable() {
+        @Override
         public void run() {
             validateInput();
             myValidateAlarm.addRequest(myValidateRunnable, 500, Application.get().getModalityStateForComponent(myPanel.getComponent()));
@@ -48,13 +49,14 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
         myPanel = panel;
         //noinspection unchecked
         myPanel.setSettings(settings);
-        setTitle(VcsBundle.message("browse.changes.filter.title"));
+        setTitle(VcsLocalize.browseChangesFilterTitle());
         init();
         myErrorLabel.setForeground(Color.red);
         validateInput();
         myValidateAlarm.addRequest(myValidateRunnable, 500, Application.get().getModalityStateForComponent(myPanel.getComponent()));
     }
 
+    @Override
     protected @Nullable JComponent createCenterPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(myPanel.getComponent(), BorderLayout.CENTER);

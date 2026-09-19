@@ -94,14 +94,13 @@ import java.util.function.Consumer;
 import static consulo.ui.ex.SimpleTextAttributes.STYLE_PLAIN;
 
 public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
-
     private static final Logger LOG = Logger.getInstance(ApplyPatchDifferentiatedDialog.class);
     private final ZipperUpdater myLoadQueue;
     private final TextFieldWithBrowseButton myPatchFile;
 
     private final List<AbstractFilePatchInProgress> myPatches;
     private final List<ShelvedBinaryFilePatch> myBinaryShelvedPatches;
-    
+
     private final MyChangeTreeList myChangesTreeList;
     private final @Nullable Collection<Change> myPreselectedChanges;
     private final boolean myUseProjectRootAsPredefinedBase;
@@ -126,6 +125,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     private String myHelpId = "reference.dialogs.vcs.patch.apply";
     private final boolean myShouldUpdateChangeListName;
 
+    @RequiredUIAccess
     public ApplyPatchDifferentiatedDialog(
         Project project,
         ApplyPatchExecutor callback,
@@ -136,6 +136,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         this(project, callback, executors, applyPatchMode, patchFile, null, null, null, null, null, false);
     }
 
+    @RequiredUIAccess
     public ApplyPatchDifferentiatedDialog(
         Project project,
         ApplyPatchExecutor callback,
@@ -224,10 +225,13 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         myCanChangePatchFile = applyPatchMode.isCanChangePatchFile();
         myReset = myCanChangePatchFile ? this::reset : EmptyRunnable.getInstance();
 
-        myChangeListChooser = new ChangeListChooserPanel(project, errorMessage -> {
-            setOKActionEnabled(errorMessage == null && isChangeTreeEnabled());
-            setErrorText(errorMessage);
-        });
+        myChangeListChooser = new ChangeListChooserPanel(
+            project,
+            errorMessage -> {
+                setOKActionEnabled(errorMessage == null && isChangeTreeEnabled());
+                setErrorText(errorMessage);
+            }
+        );
         ChangeListManager changeListManager = ChangeListManager.getInstance(project);
         myChangeListChooser.setChangeLists(changeListManager.getChangeListsCopy());
         if (defaultList != null) {
@@ -246,7 +250,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
                 int inapplicable = myInfoCalculator.getInapplicable();
                 if (inapplicable > 0) {
                     appendSpace();
-                    appendText(inapplicable, inapplicable, FileStatus.MERGED_WITH_CONFLICTS, "Missing Base:");
+                    appendText(inapplicable, inapplicable, FileStatus.MERGED_WITH_CONFLICTS, LocalizeValue.localizeTODO("Missing Base:"));
                 }
             }
         };
@@ -316,7 +320,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         };
     }
 
-    
+
     @Override
     protected Action[] createActions() {
         if (myExecutors.isEmpty()) {
@@ -363,7 +367,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         );
     }
 
-    
+
     private List<FilePatch> getOriginalRemaining() {
         Collection<AbstractFilePatchInProgress> notIncluded = ContainerUtil.subtract(myPatches, getIncluded());
         List<FilePatch> remainingOriginal = new ArrayList<>();
@@ -472,7 +476,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     }
 
     private static class FilePresentationModel {
-        
+
         private final String myPath;
         private @Nullable VirtualFile myVf;
 
@@ -618,7 +622,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             return enabled;
         }
 
-        
+
         private List<AbstractFilePatchInProgress.PatchChange> getOnlyValidChanges(
             Collection<AbstractFilePatchInProgress.PatchChange> changes
         ) {
@@ -856,7 +860,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             return null;
         }
 
-        
+
         @Override
         public String getTextFor(VirtualFile value) {
             return value == null ? "Select base for a path" : value.getPath();
@@ -1226,19 +1230,19 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    
+
     private static DiffRequestProducer createBaseNotFoundErrorRequest(final AbstractFilePatchInProgress patchInProgress) {
         final String beforePath = patchInProgress.getPatch().getBeforeName();
         final String afterPath = patchInProgress.getPatch().getAfterName();
         return new DiffRequestProducer() {
-            
+
             @Override
             public String getName() {
                 File ioCurrentBase = patchInProgress.getIoCurrentBase();
                 return ioCurrentBase == null ? patchInProgress.getCurrentPath() : ioCurrentBase.getPath();
             }
 
-            
+
             @Override
             public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
                 throws DiffRequestProducerException, ProcessCanceledException {
@@ -1259,7 +1263,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             myIndex = index >= 0 ? index : 0;
         }
 
-        
+
         @Override
         public List<? extends DiffRequestProducer> getRequests() {
             return myRequests;
@@ -1276,17 +1280,17 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             myIndex = index;
         }
 
-        
+
         @Override
         public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {
             return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
-                
+
                 @Override
                 protected FilePath getFilePath(int index) {
                     return ChangesUtil.getFilePath(myChanges.get(index));
                 }
 
-                
+
                 @Override
                 protected FileStatus getFileStatus(int index) {
                     return myChanges.get(index).getFileStatus();

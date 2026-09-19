@@ -17,9 +17,9 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackProgressListener;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -29,83 +29,90 @@ import java.util.List;
 import java.util.Set;
 
 public class RollbackProgressModifier implements RollbackProgressListener {
-  private final Set<String> myTakenPaths;
-  private final double myTotal;
-  private final ProgressIndicator myIndicator;
-  private int myCnt;
+    private final Set<String> myTakenPaths;
+    private final double myTotal;
+    private final ProgressIndicator myIndicator;
+    private int myCnt;
 
-  public RollbackProgressModifier(double total, ProgressIndicator indicator) {
-    myTotal = total;
-    myIndicator = indicator;
-    myTakenPaths = new HashSet<String>();
-    myCnt = 0;
-  }
-
-  private void acceptImpl(String name) {
-    if (myIndicator != null) {
-      myIndicator.setText2(VcsBundle.message("rolling.back.file", name));
-      checkName(name);
-      if (! myIndicator.isIndeterminate()) {
-        myIndicator.setFraction(myCnt / myTotal);
-      }
-      myIndicator.checkCanceled();
+    public RollbackProgressModifier(double total, ProgressIndicator indicator) {
+        myTotal = total;
+        myIndicator = indicator;
+        myTakenPaths = new HashSet<>();
+        myCnt = 0;
     }
-  }
 
-  private void checkName(String name) {
-    if (! myTakenPaths.contains(name)) {
-      myTakenPaths.add(name);
-      if (myTotal >= (myCnt + 1)) {
-        ++ myCnt;
-      }
-    }
-  }
-
-  public void determinate() {
-    if (myIndicator != null) {
-      myIndicator.setIndeterminate(false);
-    }
-  }
-
-  public void indeterminate() {
-    if (myIndicator != null) {
-      myIndicator.setIndeterminate(true);
-    }
-  }
-
-  public void accept(Change change) {
-    acceptImpl(ChangesUtil.getFilePath(change).getIOFile().getAbsolutePath());
-  }
-
-  public void accept(FilePath filePath) {
-    acceptImpl(filePath.getIOFile().getAbsolutePath());
-  }
-
-  public void accept(List<FilePath> paths) {
-    if (myIndicator != null) {
-      if (paths != null && (! paths.isEmpty())) {
-        for (int i = 0; i < paths.size(); i++) {
-          FilePath path = paths.get(i);
-          String name = path.getIOFile().getAbsolutePath();
-          checkName(name);
+    private void acceptImpl(String name) {
+        if (myIndicator != null) {
+            myIndicator.setText2(VcsLocalize.rollingBackFile(name));
+            checkName(name);
+            if (!myIndicator.isIndeterminate()) {
+                myIndicator.setFraction(myCnt / myTotal);
+            }
+            myIndicator.checkCanceled();
         }
-        myIndicator.setFraction(myCnt / myTotal);
-        myIndicator.setText2(VcsBundle.message("rolling.back.file", paths.get(0).getIOFile().getAbsolutePath()));
-      }
     }
-  }
 
-  public void accept(File file) {
-    acceptImpl(file.getAbsolutePath());
-  }
-
-  public void accept(VirtualFile file) {
-    acceptImpl(new File(file.getPath()).getAbsolutePath());
-  }
-
-  public void checkCanceled() {
-    if (myIndicator != null) {
-      myIndicator.checkCanceled();
+    private void checkName(String name) {
+        if (!myTakenPaths.contains(name)) {
+            myTakenPaths.add(name);
+            if (myTotal >= (myCnt + 1)) {
+                ++myCnt;
+            }
+        }
     }
-  }
+
+    @Override
+    public void determinate() {
+        if (myIndicator != null) {
+            myIndicator.setIndeterminate(false);
+        }
+    }
+
+    @Override
+    public void indeterminate() {
+        if (myIndicator != null) {
+            myIndicator.setIndeterminate(true);
+        }
+    }
+
+    @Override
+    public void accept(Change change) {
+        acceptImpl(ChangesUtil.getFilePath(change).getIOFile().getAbsolutePath());
+    }
+
+    @Override
+    public void accept(FilePath filePath) {
+        acceptImpl(filePath.getIOFile().getAbsolutePath());
+    }
+
+    @Override
+    public void accept(List<FilePath> paths) {
+        if (myIndicator != null) {
+            if (paths != null && (!paths.isEmpty())) {
+                for (FilePath path : paths) {
+                    String name = path.getIOFile().getAbsolutePath();
+                    checkName(name);
+                }
+                myIndicator.setFraction(myCnt / myTotal);
+                myIndicator.setText2(VcsLocalize.rollingBackFile(paths.get(0).getIOFile().getAbsolutePath()));
+            }
+        }
+    }
+
+    @Override
+    public void accept(File file) {
+        acceptImpl(file.getAbsolutePath());
+    }
+
+    @Override
+    public void accept(VirtualFile file) {
+        acceptImpl(new File(file.getPath()).getAbsolutePath());
+    }
+
+    @Override
+    public void checkCanceled() {
+        if (myIndicator != null) {
+            myIndicator.checkCanceled();
+        }
+    }
 }

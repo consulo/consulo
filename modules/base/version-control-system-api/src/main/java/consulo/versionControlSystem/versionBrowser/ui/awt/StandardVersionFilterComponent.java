@@ -18,15 +18,20 @@ package consulo.versionControlSystem.versionBrowser.ui.awt;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.CheckBox;
+import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSettings> implements ChangesBrowserSettingsEditor<T> {
     private JPanel myPanel;
@@ -40,20 +45,36 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     }
 
     private JTextField myNumBefore;
-    private JCheckBox myUseNumBeforeFilter;
-    private JCheckBox myUseNumAfterFilter;
+    private CheckBox myUseNumBeforeFilter;
+    private CheckBox myUseNumAfterFilter;
     private JTextField myNumAfter;
     private DateFilterComponent myDateFilterComponent;
     private JPanel myVersionNumberPanel;
 
     private T mySettings;
 
+    @RequiredUIAccess
     public StandardVersionFilterComponent(boolean showDateFilter) {
-        $$$setupUI$$$();
+        myPanel = new JPanel();
+        myPanel.setLayout(new GridLayoutManager(2, 1, JBUI.emptyInsets(), -1, -1));
+        myVersionNumberPanel = new JPanel();
+        myVersionNumberPanel.setLayout(new GridLayoutManager(1, 4, JBUI.emptyInsets(), -1, -1));
+        myPanel.add(myVersionNumberPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        myUseNumAfterFilter = CheckBox.create(VcsLocalize.checkboxShowChangesAfterNum());
+        myVersionNumberPanel.add(TargetAWT.to(myUseNumAfterFilter), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myNumAfter = new JTextField();
+        myVersionNumberPanel.add(myNumAfter, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, -1), null, 0, false));
+        myUseNumBeforeFilter = CheckBox.create(VcsLocalize.checkboxShowChangesBeforeNum());
+        myVersionNumberPanel.add(TargetAWT.to(myUseNumBeforeFilter), new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myNumBefore = new JTextField();
+        myVersionNumberPanel.add(myNumBefore, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, -1), null, 0, false));
+        myDateFilterComponent = new DateFilterComponent();
+        myPanel.add(myDateFilterComponent.$$$getRootComponent$$$(), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 
         myDateFilterComponent.getPanel().setVisible(showDateFilter);
     }
 
+    @RequiredUIAccess
     protected void init(T settings) {
         myVersionNumberPanel.setBorder(IdeBorderFactory.createTitledBorder(getChangeNumberTitle(), true));
         installCheckBoxesListeners();
@@ -61,6 +82,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
         updateAllEnabled(null);
     }
 
+    @RequiredUIAccess
     protected void disableVersionNumbers() {
         myNumAfter.setVisible(false);
         myNumBefore.setVisible(false);
@@ -69,41 +91,33 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     }
 
     protected String getChangeNumberTitle() {
-        return VcsBundle.message("border.changes.filter.change.number.filter");
+        return VcsLocalize.borderChangesFilterChangeNumberFilter().get();
     }
 
     private void installCheckBoxesListeners() {
-        ActionListener filterListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateAllEnabled(e);
-            }
-        };
-
-        installCheckBoxListener(filterListener);
+        installCheckBoxListener(this::updateAllEnabled);
     }
 
-    public static void updatePair(JCheckBox checkBox, JComponent textField, ActionEvent e) {
-        textField.setEnabled(checkBox.isSelected());
-        if (e != null && e.getSource() instanceof JCheckBox && ((JCheckBox) e.getSource()).isSelected()) {
-            Object source = e.getSource();
-            if (source == checkBox && checkBox.isSelected()) {
-                IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-                    IdeFocusManager.getGlobalInstance().requestFocus(textField, true);
-                });
+    public static void updatePair(CheckBox checkBox, JComponent textField, ValueComponentEvent<Boolean> e) {
+        textField.setEnabled(checkBox.getValue());
+        if (e != null && e.getValue()) {
+            Object source = e.getComponent();
+            if (source == checkBox && checkBox.getValue()) {
+                IdeFocusManager.getGlobalInstance()
+                    .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(textField, true));
             }
         }
-
     }
 
-    protected void updateAllEnabled(ActionEvent e) {
+    protected void updateAllEnabled(ValueComponentEvent<Boolean> e) {
         updatePair(myUseNumBeforeFilter, myNumBefore, e);
         updatePair(myUseNumAfterFilter, myNumAfter, e);
     }
 
+    @RequiredUIAccess
     protected void initValues(T settings) {
-        myUseNumBeforeFilter.setSelected(settings.USE_CHANGE_BEFORE_FILTER);
-        myUseNumAfterFilter.setSelected(settings.USE_CHANGE_AFTER_FILTER);
+        myUseNumBeforeFilter.setValue(settings.USE_CHANGE_BEFORE_FILTER, false);
+        myUseNumAfterFilter.setValue(settings.USE_CHANGE_AFTER_FILTER, false);
 
         myDateFilterComponent.initValues(settings);
         myNumBefore.setText(settings.CHANGE_BEFORE);
@@ -112,16 +126,16 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
 
     public void saveValues(T settings) {
         myDateFilterComponent.saveValues(settings);
-        settings.USE_CHANGE_BEFORE_FILTER = myUseNumBeforeFilter.isSelected();
-        settings.USE_CHANGE_AFTER_FILTER = myUseNumAfterFilter.isSelected();
+        settings.USE_CHANGE_BEFORE_FILTER = myUseNumBeforeFilter.getValue();
+        settings.USE_CHANGE_AFTER_FILTER = myUseNumAfterFilter.getValue();
 
         settings.CHANGE_BEFORE = myNumBefore.getText();
         settings.CHANGE_AFTER = myNumAfter.getText();
     }
 
-    protected void installCheckBoxListener(ActionListener filterListener) {
-        myUseNumBeforeFilter.addActionListener(filterListener);
-        myUseNumAfterFilter.addActionListener(filterListener);
+    protected void installCheckBoxListener(ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> filterListener) {
+        myUseNumBeforeFilter.addValueListener(filterListener);
+        myUseNumAfterFilter.addValueListener(filterListener);
     }
 
     @Override
@@ -131,6 +145,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     }
 
     @Override
+    @RequiredUIAccess
     public void setSettings(T settings) {
         mySettings = settings;
         initValues(settings);
@@ -139,7 +154,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
 
     @Override
     public String validateInput() {
-        if (myUseNumAfterFilter.isSelected()) {
+        if (myUseNumAfterFilter.getValue()) {
             try {
                 Long.parseLong(myNumAfter.getText());
             }
@@ -147,7 +162,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
                 return getChangeNumberTitle() + " From must be a valid number";
             }
         }
-        if (myUseNumBeforeFilter.isSelected()) {
+        if (myUseNumBeforeFilter.getValue()) {
             try {
                 Long.parseLong(myNumBefore.getText());
             }
@@ -168,68 +183,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
         return getClass().getName();
     }
 
-    /**
-     * Method generated by Consulo GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        myPanel = new JPanel();
-        myPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        myVersionNumberPanel = new JPanel();
-        myVersionNumberPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
-        myPanel.add(myVersionNumberPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        myUseNumAfterFilter = new JCheckBox();
-        this.$$$loadButtonText$$$(myUseNumAfterFilter, VcsBundle.message("checkbox.show.changes.after.num"));
-        myVersionNumberPanel.add(myUseNumAfterFilter, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        myNumAfter = new JTextField();
-        myVersionNumberPanel.add(myNumAfter, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, -1), null, 0, false));
-        myUseNumBeforeFilter = new JCheckBox();
-        this.$$$loadButtonText$$$(myUseNumBeforeFilter, VcsBundle.message("checkbox.show.changes.before.num"));
-        myVersionNumberPanel.add(myUseNumBeforeFilter, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        myNumBefore = new JTextField();
-        myVersionNumberPanel.add(myNumBefore, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, -1), null, 0, false));
-        myDateFilterComponent = new DateFilterComponent();
-        myPanel.add(myDateFilterComponent.$$$getRootComponent$$$(), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadButtonText$$$(AbstractButton component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    /**
-     * @noinspection ALL
-     */
     public JComponent $$$getRootComponent$$$() {
         return myPanel;
     }
 }
-
-  

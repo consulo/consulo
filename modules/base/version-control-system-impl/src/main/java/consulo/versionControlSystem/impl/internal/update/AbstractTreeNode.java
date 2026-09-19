@@ -15,22 +15,21 @@
  */
 package consulo.versionControlSystem.impl.internal.update;
 
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.lang.Pair;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSetBase;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -38,106 +37,104 @@ import java.util.Iterator;
  * @author lesya
  */
 public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
-  protected static final ArrayList<File> EMPTY_FILE_ARRAY = new ArrayList<File>();
-  DefaultTreeModel myTreeModel;
-  private JTree myTree;
-  private String myErrorText;
-  protected SimpleTextAttributes myFilterAttributes;
+    DefaultTreeModel myTreeModel;
+    private JTree myTree;
+    private String myErrorText;
+    protected SimpleTextAttributes myFilterAttributes;
 
-  public void setTree(JTree tree) {
-    myTree = tree;
-    if (children == null) return;
-    for (Object aChildren : children) {
-      AbstractTreeNode node = (AbstractTreeNode)aChildren;
-      node.setTree(tree);
-    }
-  }
-
-  public void setTreeModel(DefaultTreeModel treeModel) {
-    myTreeModel = treeModel;
-    if (children == null) return;
-    for (Object aChildren : children) {
-      AbstractTreeNode node = (AbstractTreeNode)aChildren;
-      node.setTreeModel(treeModel);
-    }
-  }
-
-  public void setErrorText(String errorText) {
-    myErrorText = errorText;
-  }
-
-  public String getErrorText() {
-    return myErrorText;
-  }
-
-  protected boolean acceptFilter(@Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
-    boolean apply = false;
-    if (children != null && filter != null) {
-      for (Iterator it = children.iterator(); it.hasNext(); ) {
-        AbstractTreeNode node = (AbstractTreeNode)it.next();
-        if (node.acceptFilter(filter, showOnlyFilteredItems)) {
-          apply = true;
+    public void setTree(JTree tree) {
+        myTree = tree;
+        if (children == null) {
+            return;
         }
-        else if (showOnlyFilteredItems) {
-          if (node instanceof Disposable) {
-            Disposer.dispose((Disposable)node);
-          }
-          it.remove();
+        for (Object aChildren : children) {
+            AbstractTreeNode node = (AbstractTreeNode) aChildren;
+            node.setTree(tree);
         }
-      }
-      applyFilter(apply);
     }
-    return apply;
-  }
 
-  protected void applyFilter(boolean apply) {
-    myFilterAttributes = apply ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : null;
-  }
-
-  protected DefaultTreeModel getTreeModel() {
-    return myTreeModel;
-  }
-
-  public JTree getTree() {
-    return myTree;
-  }
-
-  public AbstractTreeNode() {
-  }
-
-  public String getText() {
-    StringBuilder result = new StringBuilder();
-    result.append(getName());
-    if (showStatistics()) {
-      result.append(" (");
-      result.append(getStatistics(getItemsCount()));
-      result.append(")");
+    public void setTreeModel(DefaultTreeModel treeModel) {
+        myTreeModel = treeModel;
+        if (children == null) {
+            return;
+        }
+        for (Object aChildren : children) {
+            AbstractTreeNode node = (AbstractTreeNode) aChildren;
+            node.setTreeModel(treeModel);
+        }
     }
-    return result.toString();
-  }
 
-  private static String getStatistics(int itemsCount) {
-    return VcsBundle.message("update.tree.node.size.statistics", itemsCount);
-  }
+    public void setErrorText(String errorText) {
+        myErrorText = errorText;
+    }
 
-  
-  protected abstract String getName();
+    public String getErrorText() {
+        return myErrorText;
+    }
 
-  protected abstract int getItemsCount();
+    protected boolean acceptFilter(@Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+        boolean apply = false;
+        if (children != null && filter != null) {
+            for (Iterator it = children.iterator(); it.hasNext(); ) {
+                AbstractTreeNode node = (AbstractTreeNode) it.next();
+                if (node.acceptFilter(filter, showOnlyFilteredItems)) {
+                    apply = true;
+                }
+                else if (showOnlyFilteredItems) {
+                    if (node instanceof Disposable disposable) {
+                        Disposer.dispose(disposable);
+                    }
+                    it.remove();
+                }
+            }
+            applyFilter(apply);
+        }
+        return apply;
+    }
 
-  protected abstract boolean showStatistics();
+    protected void applyFilter(boolean apply) {
+        myFilterAttributes = apply ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : null;
+    }
 
-  
-  public abstract Image getIcon();
+    protected DefaultTreeModel getTreeModel() {
+        return myTreeModel;
+    }
 
-  
-  public abstract Collection<VirtualFile> getVirtualFiles();
+    public JTree getTree() {
+        return myTree;
+    }
 
-  
-  public abstract Collection<File> getFiles();
+    public AbstractTreeNode() {
+    }
 
-  
-  public abstract SimpleTextAttributes getAttributes();
+    public String getText() {
+        StringBuilder result = new StringBuilder();
+        result.append(getName());
+        if (showStatistics()) {
+            result.append(" (");
+            result.append(getStatistics(getItemsCount()));
+            result.append(")");
+        }
+        return result.toString();
+    }
 
-  public abstract boolean getSupportsDeletion();
+    private static String getStatistics(int itemsCount) {
+        return VcsLocalize.updateTreeNodeSizeStatistics(itemsCount).get();
+    }
+
+    protected abstract String getName();
+
+    protected abstract int getItemsCount();
+
+    protected abstract boolean showStatistics();
+
+    public abstract Image getIcon();
+
+    public abstract Collection<VirtualFile> getVirtualFiles();
+
+    public abstract Collection<File> getFiles();
+
+    public abstract SimpleTextAttributes getAttributes();
+
+    public abstract boolean getSupportsDeletion();
 }

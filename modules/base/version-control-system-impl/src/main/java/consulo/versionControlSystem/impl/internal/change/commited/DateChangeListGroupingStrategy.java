@@ -12,109 +12,109 @@
  */
 package consulo.versionControlSystem.impl.internal.change.commited;
 
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
-* @author irengrig
-*/
+ * @author irengrig
+ */
 public class DateChangeListGroupingStrategy implements ChangeListGroupingStrategy {
-  private final SimpleDateFormat myMonthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
-  private long myTimeToRecalculateAfter;
-  private Calendar myCurrentCalendar;
-  private Calendar myCalendar;
-  private final WeekDayFormatCache myWeekDayFormatCache;
-  private final MonthsCache myMonthsCache;
+    private final SimpleDateFormat myMonthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+    private long myTimeToRecalculateAfter;
+    private Calendar myCurrentCalendar;
+    private Calendar myCalendar;
+    private final WeekDayFormatCache myWeekDayFormatCache;
+    private final MonthsCache myMonthsCache;
 
-  public String toString() {
-    return VcsBundle.message("date.group.title");
-  }
-
-  public boolean changedSinceApply() {
-    return System.currentTimeMillis() > myTimeToRecalculateAfter;
-  }
-
-  public DateChangeListGroupingStrategy() {
-    myCalendar = Calendar.getInstance();
-    myWeekDayFormatCache = new WeekDayFormatCache(myCalendar);
-    myMonthsCache = new MonthsCache(myCalendar);
-  }
-
-  public void beforeStart() {
-    myCurrentCalendar = Calendar.getInstance();
-    myCurrentCalendar.setTimeInMillis(0);
-    // +- seconds etc
-    myCurrentCalendar.set(Calendar.HOUR, 0);
-    myCurrentCalendar.set(Calendar.MINUTE, 0);
-
-    myTimeToRecalculateAfter = myCurrentCalendar.getTimeInMillis() + 23 * 60 * 60 * 1000;
-    myCurrentCalendar.setTime(new Date());
-  }
-
-  @Override
-  public String getGroupName(CommittedChangeList changeList) {
-    return getGroupName(changeList.getCommitDate());
-  }
-
-  public String getGroupName(Date date) {
-    myCalendar.setTime(date);
-    if (myCurrentCalendar.get(Calendar.YEAR) == myCalendar.get(Calendar.YEAR)) {
-      if (myCurrentCalendar.get(Calendar.DAY_OF_YEAR) == myCalendar.get(Calendar.DAY_OF_YEAR)) {
-        return VcsBundle.message("date.group.today");
-      }
-      if (myCurrentCalendar.get(Calendar.WEEK_OF_YEAR) == myCalendar.get(Calendar.WEEK_OF_YEAR)) {
-        return myWeekDayFormatCache.get(myCalendar.get(Calendar.DAY_OF_WEEK));
-      }
-      if (myCurrentCalendar.get(Calendar.WEEK_OF_YEAR) == myCalendar.get(Calendar.WEEK_OF_YEAR)+1) {
-        return VcsBundle.message("date.group.last.week");
-      }
-      return myMonthsCache.get(myCalendar.get(Calendar.MONTH));
-    }
-    return myMonthYearFormat.format(date);
-  }
-
-  public Comparator<CommittedChangeList> getComparator() {
-    return new Comparator<CommittedChangeList>() {
-      public int compare(CommittedChangeList o1, CommittedChangeList o2) {
-        return -o1.getCommitDate().compareTo(o2.getCommitDate());
-      }
-    };
-  }
-
-  private static class MonthsCache {
-    private final SimpleDateFormat myMonthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
-    private final Map<Integer, String> myCache;
-
-    private MonthsCache(Calendar calendarForInit) {
-      myCache = new HashMap<Integer, String>();
-      for (int i = 0; i < 12; i++) {
-        calendarForInit.set(Calendar.MONTH, i);
-        myCache.put(i, myMonthFormat.format(calendarForInit.getTime()));
-      }
+    @Override
+    public String toString() {
+        return VcsLocalize.dateGroupTitle().get();
     }
 
-    public String get(int month) {
-      return myCache.get(month);
-    }
-  }
-
-  private static class WeekDayFormatCache {
-    private final SimpleDateFormat myWeekdayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
-    private final Map<Integer, String> myCache;
-
-    private WeekDayFormatCache(Calendar calendarForInit) {
-      myCache = new HashMap<Integer, String>();
-      for (int i = 1; i < 8; i++) {
-        calendarForInit.set(Calendar.DAY_OF_WEEK, i);
-        myCache.put(i, myWeekdayFormat.format(calendarForInit.getTime()));
-      }
+    @Override
+    public boolean changedSinceApply() {
+        return System.currentTimeMillis() > myTimeToRecalculateAfter;
     }
 
-    public String get(int dayOfWeek) {
-      return myCache.get(dayOfWeek);
+    public DateChangeListGroupingStrategy() {
+        myCalendar = Calendar.getInstance();
+        myWeekDayFormatCache = new WeekDayFormatCache(myCalendar);
+        myMonthsCache = new MonthsCache(myCalendar);
     }
-  }
+
+    @Override
+    public void beforeStart() {
+        myCurrentCalendar = Calendar.getInstance();
+        myCurrentCalendar.setTimeInMillis(0);
+        // +- seconds etc
+        myCurrentCalendar.set(Calendar.HOUR, 0);
+        myCurrentCalendar.set(Calendar.MINUTE, 0);
+
+        myTimeToRecalculateAfter = myCurrentCalendar.getTimeInMillis() + 23 * 60 * 60 * 1000;
+        myCurrentCalendar.setTime(new Date());
+    }
+
+    @Override
+    public String getGroupName(CommittedChangeList changeList) {
+        return getGroupName(changeList.getCommitDate());
+    }
+
+    public String getGroupName(Date date) {
+        myCalendar.setTime(date);
+        if (myCurrentCalendar.get(Calendar.YEAR) == myCalendar.get(Calendar.YEAR)) {
+            if (myCurrentCalendar.get(Calendar.DAY_OF_YEAR) == myCalendar.get(Calendar.DAY_OF_YEAR)) {
+                return VcsLocalize.dateGroupToday().get();
+            }
+            if (myCurrentCalendar.get(Calendar.WEEK_OF_YEAR) == myCalendar.get(Calendar.WEEK_OF_YEAR)) {
+                return myWeekDayFormatCache.get(myCalendar.get(Calendar.DAY_OF_WEEK));
+            }
+            if (myCurrentCalendar.get(Calendar.WEEK_OF_YEAR) == myCalendar.get(Calendar.WEEK_OF_YEAR) + 1) {
+                return VcsLocalize.dateGroupLastWeek().get();
+            }
+            return myMonthsCache.get(myCalendar.get(Calendar.MONTH));
+        }
+        return myMonthYearFormat.format(date);
+    }
+
+    @Override
+    public Comparator<CommittedChangeList> getComparator() {
+        return (o1, o2) -> -o1.getCommitDate().compareTo(o2.getCommitDate());
+    }
+
+    private static class MonthsCache {
+        private final SimpleDateFormat myMonthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+        private final Map<Integer, String> myCache;
+
+        private MonthsCache(Calendar calendarForInit) {
+            myCache = new HashMap<>();
+            for (int i = 0; i < 12; i++) {
+                calendarForInit.set(Calendar.MONTH, i);
+                myCache.put(i, myMonthFormat.format(calendarForInit.getTime()));
+            }
+        }
+
+        public String get(int month) {
+            return myCache.get(month);
+        }
+    }
+
+    private static class WeekDayFormatCache {
+        private final SimpleDateFormat myWeekdayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+        private final Map<Integer, String> myCache;
+
+        private WeekDayFormatCache(Calendar calendarForInit) {
+            myCache = new HashMap<>();
+            for (int i = 1; i < 8; i++) {
+                calendarForInit.set(Calendar.DAY_OF_WEEK, i);
+                myCache.put(i, myWeekdayFormat.format(calendarForInit.getTime()));
+            }
+        }
+
+        public String get(int dayOfWeek) {
+            return myCache.get(dayOfWeek);
+        }
+    }
 }

@@ -18,92 +18,98 @@ package consulo.versionControlSystem.impl.internal.update;
 import consulo.application.util.DateFormatUtil;
 import consulo.project.Project;
 import consulo.util.lang.Clock;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import org.jdom.Element;
 
 public class UpdateInfo {
-  private final Project myProject;
-  private UpdatedFiles myUpdatedFiles;
-  private String myDate;
-  private ActionInfo myActionInfo;
-  private static final String DATE_ATTR = "date";
-  private static final String FILE_INFO_ELEMENTS = "UpdatedFiles";
-  private static final String ACTION_INFO_ATTRIBUTE_NAME = "ActionInfo";
+    private final Project myProject;
+    private UpdatedFiles myUpdatedFiles;
+    private String myDate;
+    private ActionInfo myActionInfo;
+    private static final String DATE_ATTR = "date";
+    private static final String FILE_INFO_ELEMENTS = "UpdatedFiles";
+    private static final String ACTION_INFO_ATTRIBUTE_NAME = "ActionInfo";
 
-  public UpdateInfo(Project project, UpdatedFiles updatedFiles, ActionInfo actionInfo) {
-    myProject = project;
-    myActionInfo = actionInfo;
-    myUpdatedFiles = updatedFiles;
-    myDate = DateFormatUtil.formatPrettyDateTime(Clock.getTime());
-  }
+    public UpdateInfo(Project project, UpdatedFiles updatedFiles, ActionInfo actionInfo) {
+        myProject = project;
+        myActionInfo = actionInfo;
+        myUpdatedFiles = updatedFiles;
+        myDate = DateFormatUtil.formatPrettyDateTime(Clock.getTime());
+    }
 
-  public UpdateInfo(Project project) {
-    myProject = project;
-  }
+    public UpdateInfo(Project project) {
+        myProject = project;
+    }
 
-  public void writeExternal(Element element) {
-    if (myUpdatedFiles == null) return;
-    element.setAttribute(DATE_ATTR, myDate);
-    element.setAttribute(ACTION_INFO_ATTRIBUTE_NAME, myActionInfo.getActionName());
-    Element filesElement = new Element(FILE_INFO_ELEMENTS);
-    myUpdatedFiles.writeExternal(filesElement);
-    element.addContent(filesElement);
-  }
+    public void writeExternal(Element element) {
+        if (myUpdatedFiles == null) {
+            return;
+        }
+        element.setAttribute(DATE_ATTR, myDate);
+        element.setAttribute(ACTION_INFO_ATTRIBUTE_NAME, myActionInfo.getActionName());
+        Element filesElement = new Element(FILE_INFO_ELEMENTS);
+        myUpdatedFiles.writeExternal(filesElement);
+        element.addContent(filesElement);
+    }
 
-  public void readExternal(Element element) {
-    myDate = element.getAttributeValue(DATE_ATTR);
-    Element fileInfoElement = element.getChild(FILE_INFO_ELEMENTS);
-    if (fileInfoElement == null) return;
+    public void readExternal(Element element) {
+        myDate = element.getAttributeValue(DATE_ATTR);
+        Element fileInfoElement = element.getChild(FILE_INFO_ELEMENTS);
+        if (fileInfoElement == null) {
+            return;
+        }
 
-    String actionInfoName = element.getAttributeValue(ACTION_INFO_ATTRIBUTE_NAME);
+        String actionInfoName = element.getAttributeValue(ACTION_INFO_ATTRIBUTE_NAME);
 
-    myActionInfo = getActionInfoByName(actionInfoName);
-    if (myActionInfo == null) return;
+        myActionInfo = getActionInfoByName(actionInfoName);
+        if (myActionInfo == null) {
+            return;
+        }
 
-    UpdatedFiles updatedFiles = UpdatedFiles.create();
-    updatedFiles.readExternal(fileInfoElement);
-    myUpdatedFiles = updatedFiles;
+        UpdatedFiles updatedFiles = UpdatedFiles.create();
+        updatedFiles.readExternal(fileInfoElement);
+        myUpdatedFiles = updatedFiles;
 
-  }
+    }
 
-  private ActionInfo getActionInfoByName(String actionInfoName) {
-    if (ActionInfo.UPDATE.getActionName().equals(actionInfoName)) return ActionInfo.UPDATE;
-    if (ActionInfo.STATUS.getActionName().equals(actionInfoName)) return ActionInfo.STATUS;
-    return null;
-  }
+    private ActionInfo getActionInfoByName(String actionInfoName) {
+        if (ActionInfo.UPDATE.getActionName().equals(actionInfoName)) {
+            return ActionInfo.UPDATE;
+        }
+        if (ActionInfo.STATUS.getActionName().equals(actionInfoName)) {
+            return ActionInfo.STATUS;
+        }
+        return null;
+    }
 
-  public String getHelpId() {
-    return null;
-  }
+    public String getHelpId() {
+        return null;
+    }
 
-  public Project getProject() {
-    return myProject;
-  }
+    public Project getProject() {
+        return myProject;
+    }
 
-  @Deprecated
-  public Project getPoject() {
-    return getProject();
-  }
+    @Deprecated
+    public Project getPoject() {
+        return getProject();
+    }
 
-  public UpdatedFiles getFileInformation() {
-    return myUpdatedFiles;
-  }
+    public UpdatedFiles getFileInformation() {
+        return myUpdatedFiles;
+    }
 
-  public String getCaption() {
-    return VcsBundle.message("toolwindow.title.update.project", myDate);
-  }
+    public String getCaption() {
+        return VcsLocalize.toolwindowTitleUpdateProject(myDate).get();
+    }
 
-  public boolean isEmpty() {
-    if (myUpdatedFiles != null) {
-      return myUpdatedFiles.isEmpty();
-    } else {
-      return true;
-    }    
-  }
+    public boolean isEmpty() {
+        return myUpdatedFiles == null || myUpdatedFiles.isEmpty();
+    }
 
-  public ActionInfo getActionInfo() {
-    return myActionInfo;
-  }
+    public ActionInfo getActionInfo() {
+        return myActionInfo;
+    }
 }

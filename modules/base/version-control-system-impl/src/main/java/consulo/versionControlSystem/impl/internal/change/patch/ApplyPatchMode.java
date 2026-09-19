@@ -15,30 +15,31 @@
  */
 package consulo.versionControlSystem.impl.internal.change.patch;
 
-import consulo.versionControlSystem.VcsBundle;
+import consulo.localize.LocalizeValue;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author irengrig
  * @since 2011-02-25
  */
 public enum ApplyPatchMode {
-  APPLY(VcsBundle.message("patch.apply.dialog.title"), true),
-  UNSHELVE(VcsBundle.message("unshelve.changes.dialog.title"), false),
-  APPLY_PATCH_IN_MEMORY(VcsBundle.message("patch.apply.dialog.title"), false);
+    APPLY(VcsLocalize.patchApplyDialogTitle(), true),
+    UNSHELVE(VcsLocalize.unshelveChangesDialogTitle(), false),
+    APPLY_PATCH_IN_MEMORY(VcsLocalize.patchApplyDialogTitle(), false);
 
-  private final String myTitle;
-  private final boolean myCanChangePatchFile;
+    private final LocalizeValue myTitle;
+    private final boolean myCanChangePatchFile;
 
-  ApplyPatchMode(String title, boolean canChangePatchFile) {
-    myTitle = title;
-    myCanChangePatchFile = canChangePatchFile;
-  }
+    ApplyPatchMode(LocalizeValue title, boolean canChangePatchFile) {
+        myTitle = title;
+        myCanChangePatchFile = canChangePatchFile;
+    }
 
-  public String getTitle() {
-    return myTitle;
-  }
+    public LocalizeValue getTitle() {
+        return myTitle;
+    }
 
-  public boolean isCanChangePatchFile() {
-    return myCanChangePatchFile;
-  }
+    public boolean isCanChangePatchFile() {
+        return myCanChangePatchFile;
+    }
 }
