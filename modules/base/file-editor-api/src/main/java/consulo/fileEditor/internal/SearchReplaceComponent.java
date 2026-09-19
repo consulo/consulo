@@ -29,21 +29,23 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 27/06/2023
+ * @since 2023-06-27
  */
 public interface SearchReplaceComponent extends UiDataProvider {
     public interface Listener extends EventListener {
+        @RequiredUIAccess
         default void searchFieldDocumentChanged() {
         }
 
+        @RequiredUIAccess
         default void replaceFieldDocumentChanged() {
         }
 
+        @RequiredUIAccess
         default void multilineStateChanged() {
         }
     }
 
-    
     public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, JComponent component) {
         return new SearchReplaceComponentBuilder(project, component);
     }
@@ -54,7 +56,6 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     JComponent getComponent();
 
-    
     JTextComponent getSearchTextComponent();
 
     void setStatusText(String status);
@@ -85,7 +86,6 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     String getStatusText();
 
-    
     Color getStatusColor();
 
     void addTextToRecent(String text, boolean search);
@@ -94,7 +94,6 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     boolean isJustClearedSearch();
 
-    
     @RequiredUIAccess
     CompletableFuture<?> prepareAsync();
 }

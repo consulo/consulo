@@ -205,25 +205,15 @@ public abstract class AbstractValueHint {
         LightweightHintFactory factory = Application.get().getInstance(LightweightHintFactory.class);
 
         myCurrentHint = factory.create(component);
-        myCurrentHint.setAutoHideTester(event -> {
-            InputEvent inputEvent = event.getInputEvent();
-            if (inputEvent instanceof MouseEvent) {
-                Component comp = inputEvent.getComponent();
-                if (comp instanceof EditorHolder) {
-                    Editor editor = ((EditorHolder) comp).getEditor();
-                    return !isInsideCurrentRange(editor, ((MouseEvent) inputEvent).getPoint());
-                }
+        myCurrentHint.setAutoHideTester(
+            event -> !(event.getInputEvent() instanceof MouseEvent me && me.getComponent() instanceof EditorHolder eh)
+                || !isInsideCurrentRange(eh.getEditor(), me.getPoint())
+        );
+        myCurrentHint.addHintListener(event -> {
+            if (myHideRunnable != null && !myInsideShow) {
+                myHideRunnable.run();
             }
-            return true;
-        });
-        myCurrentHint.addHintListener(new HintListener() {
-            @Override
-            public void hintHidden(EventObject event) {
-                if (myHideRunnable != null && !myInsideShow) {
-                    myHideRunnable.run();
-                }
-                onHintHidden();
-            }
+            onHintHidden();
         });
 
         // Editor may be disposed before invoker later processes this action

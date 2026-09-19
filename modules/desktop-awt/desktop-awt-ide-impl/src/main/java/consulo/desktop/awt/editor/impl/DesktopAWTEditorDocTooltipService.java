@@ -16,12 +16,12 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.editor.ui.internal.EditorDocTooltip;
 import consulo.language.editor.ui.internal.EditorDocTooltipService;
 import consulo.language.editor.ui.internal.HintManagerEx;
@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -51,16 +51,13 @@ public class DesktopAWTEditorDocTooltipService implements EditorDocTooltipServic
             return null;
         }
 
-        HyperlinkListener hyperlinkListener = linkActivated == null ? null : new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    linkActivated.accept(e.getDescription());
-                }
+        HyperlinkListener hyperlinkListener = linkActivated == null ? null : e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                linkActivated.accept(e.getDescription());
             }
         };
 
-        Ref<Consumer<? super String>> newTextConsumerRef = new Ref<>();
+        SimpleReference<Consumer<? super String>> newTextConsumerRef = new SimpleReference<>();
         JComponent component = HintUtil.createInformationLabel(html, hyperlinkListener, null, newTextConsumerRef);
         component.setBorder(JBUI.Borders.empty(6, 6, 5, 6));
 
@@ -72,19 +69,23 @@ public class DesktopAWTEditorDocTooltipService implements EditorDocTooltipServic
     }
 
     @Override
+    @RequiredUIAccess
     public void hideAllHints() {
         HintManager.getInstance().hideAllHints();
     }
 
     private static JComponent wrapInScrollPaneIfNeeded(JComponent component, Editor editor) {
-        if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (!Application.get().isHeadlessEnvironment()) {
             Dimension preferredSize = component.getPreferredSize();
             Dimension maxSize = getMaxPopupSize(editor);
             if (preferredSize.width > maxSize.width || preferredSize.height > maxSize.height) {
                 // We expect documentation providers to exercise good judgement in limiting the displayed information,
                 // but in any case, we don't want the hint to cover the whole screen, so we also implement certain limiting here.
                 JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(component, true);
-                scrollPane.setPreferredSize(new Dimension(Math.min(preferredSize.width, maxSize.width), Math.min(preferredSize.height, maxSize.height)));
+                scrollPane.setPreferredSize(new Dimension(
+                    Math.min(preferredSize.width, maxSize.width),
+                    Math.min(preferredSize.height, maxSize.height)
+                ));
                 return scrollPane;
             }
         }
@@ -103,7 +104,13 @@ public class DesktopAWTEditorDocTooltipService implements EditorDocTooltipServic
         private final Editor myEditor;
         private final int myOffset;
 
-        DocTooltip(LightweightHintImpl hint, JComponent component, @Nullable Consumer<? super String> newTextConsumer, Editor editor, int offset) {
+        DocTooltip(
+            LightweightHintImpl hint,
+            JComponent component,
+            @Nullable Consumer<? super String> newTextConsumer,
+            Editor editor,
+            int offset
+        ) {
             myHint = hint;
             myComponent = component;
             myNewTextConsumer = newTextConsumer;
@@ -129,8 +136,15 @@ public class DesktopAWTEditorDocTooltipService implements EditorDocTooltipServic
                 constraint = HintManager.UNDER;
                 p = hintManager.getHintPosition(hint, myEditor, position, constraint);
             }
-            hintManager.showEditorHint(hint, myEditor, p, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0, false,
-                hintManager.createHintHint(myEditor, p, hint, constraint).setContentActive(false));
+            hintManager.showEditorHint(
+                hint,
+                myEditor,
+                p,
+                HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING,
+                0,
+                false,
+                hintManager.createHintHint(myEditor, p, hint, constraint).setContentActive(false)
+            );
         }
 
         @Override

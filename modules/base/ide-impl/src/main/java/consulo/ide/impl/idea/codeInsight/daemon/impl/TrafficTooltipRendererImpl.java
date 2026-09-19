@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.hint.HintManager;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
+import consulo.component.util.ComparableObject;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
-import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.TrafficTooltipRenderer;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.HintListener;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.component.util.ComparableObject;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 
 import java.awt.*;
 import java.util.EventObject;
@@ -54,12 +56,12 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   }
 
   @Override
-  public LightweightHintImpl show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint hintHint) {
+  public LightweightHint show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint hintHint) {
     myTrafficLightRenderer = (TrafficLightRenderer)((EditorMarkupModel)editor.getMarkupModel()).getErrorStripeRenderer();
     myPanel = new TrafficProgressPanel(myTrafficLightRenderer, editor, hintHint);
     repaintTooltipWindow();
     LineTooltipRenderer.correctLocation(editor, myPanel, p, alignToRight, true, myPanel.getMinWidth());
-    LightweightHintImpl hint = new LightweightHintImpl(myPanel);
+    LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(myPanel);
 
     HintManagerImpl hintManager = (HintManagerImpl)HintManager.getInstance();
     hintManager.showEditorHint(hint, editor, p,

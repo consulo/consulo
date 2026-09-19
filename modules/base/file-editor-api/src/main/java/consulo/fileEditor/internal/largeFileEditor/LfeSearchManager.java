@@ -9,7 +9,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import java.util.List;
 
 public interface LfeSearchManager {
-
     void updateSearchReplaceComponentActions();
 
     SearchReplaceComponent getSearchReplaceComponent();
@@ -18,13 +17,15 @@ public interface LfeSearchManager {
 
     void onSearchActionHandlerExecuted();
 
-    
     LargeFileEditor getLargeFileEditor();
 
+    @RequiredUIAccess
     void launchNewRangeSearch(long fromPageNumber, long toPageNumber, boolean forwardDirection);
 
+    @RequiredUIAccess
     void gotoNextOccurrence(boolean directionForward);
 
+    @RequiredUIAccess
     void onEscapePressed();
 
     String getStatusText();
@@ -38,6 +39,7 @@ public interface LfeSearchManager {
 
     void dispose();
 
+    @RequiredUIAccess
     List<SearchResult> getSearchResultsInPage(Page page);
 
     boolean isSearchWorkingNow();

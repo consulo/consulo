@@ -20,7 +20,6 @@ import consulo.application.ui.UIFontManager;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
@@ -33,6 +32,7 @@ import consulo.ui.ex.Html;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
@@ -116,7 +116,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             myActions = new AnAction[]{new SettingsActionGroup(actions)};
         }
 
-        
+
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions;
@@ -141,7 +141,10 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private static final CustomShortcutSet runActionCustomShortcutSet = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK));
+    private static final CustomShortcutSet runActionCustomShortcutSet = new CustomShortcutSet(KeyStroke.getKeyStroke(
+        KeyEvent.VK_ENTER,
+        KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK
+    ));
 
     private final TooltipAction tooltipAction;
 
@@ -150,7 +153,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         this.tooltipAction = tooltipAction;
     }
 
-    
+
     @Override
     protected String dressDescription(Editor editor, String tooltipText, boolean expand) {
         if (!LineTooltipRenderer.isActiveHtml(myText) || expand) {
@@ -174,15 +177,15 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         return text.toString();
     }
 
-    
+
     @Override
     protected String getHtmlForProblemWithLink(String problem) {
         //remove "more... (keymap)" info
 
         Html html = new Html(problem).setKeepFont(true);
-        String extendMessage = DaemonLocalize.inspectionExtendedDescription().get();
+        LocalizeValue extendMessage = DaemonLocalize.inspectionExtendedDescription();
         String textToProcess = UIUtil.getHtmlBody(html);
-        int indexOfMore = textToProcess.indexOf(extendMessage);
+        int indexOfMore = textToProcess.indexOf(extendMessage.get());
         if (indexOfMore < 0) {
             return textToProcess;
         }
@@ -192,25 +195,37 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             int keymapEndIndex = textToProcess.indexOf(")", keymapStartIndex);
 
             if (keymapEndIndex > 0) {
-                textToProcess = textToProcess.substring(0, keymapStartIndex) + textToProcess.substring(keymapEndIndex + 1, textToProcess.length());
+                textToProcess = textToProcess.substring(0, keymapStartIndex) +
+                    textToProcess.substring(keymapEndIndex + 1, textToProcess.length());
             }
         }
 
-        return textToProcess.replace(extendMessage, "");
+        return textToProcess.replace(extendMessage.get(), "");
     }
 
     @Override
-    public LightweightHintImpl createHint(Editor editor,
-                                          Point p,
-                                          boolean alignToRight,
-                                          TooltipGroup group,
-                                          HintHint hintHint,
-                                          boolean newLayout,
-                                          boolean highlightActions,
-                                          boolean limitWidthToScreen,
-                                          @Nullable TooltipReloader tooltipReloader) {
-        return super.createHint(editor, p, alignToRight, group, hintHint, newLayout, highlightActions || !(TooltipActionProvider.isShowActions() && tooltipAction != null && hintHint.isAwtTooltip()),
-            limitWidthToScreen, tooltipReloader);
+    public LightweightHint createHint(
+        Editor editor,
+        Point p,
+        boolean alignToRight,
+        TooltipGroup group,
+        HintHint hintHint,
+        boolean newLayout,
+        boolean highlightActions,
+        boolean limitWidthToScreen,
+        @Nullable TooltipReloader tooltipReloader
+    ) {
+        return super.createHint(
+            editor,
+            p,
+            alignToRight,
+            group,
+            hintHint,
+            newLayout,
+            highlightActions || !(TooltipActionProvider.isShowActions() && tooltipAction != null && hintHint.isAwtTooltip()),
+            limitWidthToScreen,
+            tooltipReloader
+        );
     }
 
     @Override
@@ -218,21 +233,22 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         return super.isContentAction(dressedText) || tooltipAction != null;
     }
 
-    
     @Override
     public LineTooltipRenderer createRenderer(@Nullable String text, int width) {
         return new DaemonTooltipWithActionRenderer(text, tooltipAction, width, getEqualityObjects());
     }
 
     @Override
-    protected void fillPanel(Editor editor,
-                             JPanel grid,
-                             LightweightHintImpl hint,
-                             HintHint hintHint,
-                             List<? super AnAction> actions,
-                             TooltipReloader tooltipReloader,
-                             boolean newLayout,
-                             boolean highlightActions) {
+    protected void fillPanel(
+        Editor editor,
+        JPanel grid,
+        LightweightHint hint,
+        HintHint hintHint,
+        List<? super AnAction> actions,
+        TooltipReloader tooltipReloader,
+        boolean newLayout,
+        boolean highlightActions
+    ) {
         super.fillPanel(editor, grid, hint, hintHint, actions, tooltipReloader, newLayout, highlightActions);
 
         boolean hasMore = LineTooltipRenderer.isActiveHtml(myText);
@@ -243,8 +259,19 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
         JComponent settingsComponent = createSettingsComponent(hintHint, tooltipReloader, hasMore);
 
-        GridBagConstraints settingsConstraints =
-            new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, JBUI.insets(newLayout ? 7 : 4, 7, newLayout ? 0 : 4, newLayout ? 2 : 4), 0, 0);
+        GridBagConstraints settingsConstraints = new GridBagConstraints(
+            1,
+            0,
+            1,
+            1,
+            0.0,
+            0.0,
+            GridBagConstraints.NORTH,
+            GridBagConstraints.HORIZONTAL,
+            JBUI.insets(newLayout ? 7 : 4, 7, newLayout ? 0 : 4, newLayout ? 2 : 4),
+            0,
+            0
+        );
 
         grid.add(settingsComponent, settingsConstraints);
 
@@ -253,7 +280,15 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private void addActionsRow(HintHint hintHint, LightweightHintImpl hint, Editor editor, List<? super AnAction> actions, JComponent grid, boolean newLayout, boolean highlightActions) {
+    private void addActionsRow(
+        HintHint hintHint,
+        LightweightHint hint,
+        Editor editor,
+        List<? super AnAction> actions,
+        JComponent grid,
+        boolean newLayout,
+        boolean highlightActions
+    ) {
         if (tooltipAction == null || !hintHint.isAwtTooltip()) {
             return;
         }
@@ -278,24 +313,36 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         int topInset = 5;
         int bottomInset = newLayout ? (highlightActions ? 4 : 10) : 5;
 
-        buttons.add(createActionLabel(tooltipAction.getText(), runFixAction, hintHint.getTextBackground()), gridBag.next().insets(topInset, newLayout ? 10 : 8, bottomInset, 4));
-        buttons.add(createKeymapHint(shortcutRunActionText), gridBag.next().insets(newLayout ? topInset : 0, 4, newLayout ? bottomInset : 0, 12));
+        buttons.add(
+            createActionLabel(tooltipAction.getText(), runFixAction, hintHint.getTextBackground()),
+            gridBag.next().insets(topInset, newLayout ? 10 : 8, bottomInset, 4)
+        );
+        buttons.add(
+            createKeymapHint(shortcutRunActionText),
+            gridBag.next().insets(newLayout ? topInset : 0, 4, newLayout ? bottomInset : 0, 12)
+        );
 
         Consumer<InputEvent> showAllFixes = inputEvent -> {
             hint.hide();
             tooltipAction.showAllActions(editor);
         };
 
-        buttons.add(createActionLabel(LocalizeValue.localizeTODO("More actions..."), showAllFixes, hintHint.getTextBackground()), gridBag.next().insets(topInset, 12, bottomInset, 4));
-        buttons.add(createKeymapHint(shortcutShowAllActionsText), gridBag.next().fillCellHorizontally().insets(newLayout ? topInset : 0, 4, newLayout ? bottomInset : 0, 20));
+        buttons.add(
+            createActionLabel(LocalizeValue.localizeTODO("More actions..."), showAllFixes, hintHint.getTextBackground()),
+            gridBag.next().insets(topInset, 12, bottomInset, 4)
+        );
+        buttons.add(
+            createKeymapHint(shortcutShowAllActionsText),
+            gridBag.next().fillCellHorizontally().insets(newLayout ? topInset : 0, 4, newLayout ? bottomInset : 0, 20)
+        );
 
         actions.add(new AnAction() {
             {
                 registerCustomShortcutSet(runActionCustomShortcutSet, editor.getContentComponent());
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 runFixAction.accept(e.getInputEvent());
             }
@@ -303,17 +350,32 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
         actions.add(new AnAction() {
             {
-                registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS), editor.getContentComponent());
+                registerCustomShortcutSet(
+                    KeymapUtil.getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS),
+                    editor.getContentComponent()
+                );
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 showAllFixes.accept(e.getInputEvent());
             }
         });
 
-        GridBagConstraints buttonsConstraints = new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, JBUI.insetsTop(0), 0, 0);
+        GridBagConstraints buttonsConstraints = new GridBagConstraints(
+            0,
+            1,
+            2,
+            1,
+            0.0,
+            0.0,
+            GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL,
+            JBUI.insetsTop(0),
+            0,
+            0
+        );
 
         grid.add(wrapper, buttonsConstraints);
     }
@@ -378,7 +440,8 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         ShowDocAction docAction = new ShowDocAction(reloader, hasMore);
         actions.add(docAction);
 
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("DaemonSettingToolbar", new WrapperActionGroup(actions), true);
+        ActionToolbar toolbar = ActionManager.getInstance()
+            .createActionToolbar("DaemonSettingToolbar", new WrapperActionGroup(actions), true);
         toolbar.setTargetComponent(null);
         toolbar.setMiniMode(true);
 

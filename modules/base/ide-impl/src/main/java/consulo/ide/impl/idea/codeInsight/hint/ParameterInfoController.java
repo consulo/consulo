@@ -49,6 +49,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.Balloon.Position;
 import consulo.undoRedo.ProjectUndoManager;
@@ -81,7 +82,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     private static final String COMPONENT_TAG = "component";
 
     private final Project myProject;
-    
+
     private final Editor myEditor;
 
     private final RangeMarker myLbraceMarker;
@@ -90,7 +91,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     private boolean myKeepOnHintHidden;
 
     private final CaretListener myEditorCaretListener;
-    
+
     private final ParameterInfoHandler<PsiElement, Object> myHandler;
     private final MyBestLocationPointProvider myProvider;
 
@@ -200,7 +201,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
         PropertyChangeListener lookupListener = evt -> {
             if (LookupManager.PROP_ACTIVE_LOOKUP.equals(evt.getPropertyName())) {
-                Lookup lookup = (Lookup)evt.getNewValue();
+                Lookup lookup = (Lookup) evt.getNewValue();
                 if (lookup != null) {
                     adjustPositionForLookup(lookup);
                 }
@@ -443,7 +444,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
                 }
                 catch (IndexNotReadyException e) {
                     DumbService.getInstance(myProject).showDumbModeNotification(
-                        CodeInsightLocalize.parameterInfoIndexingModeNotSupported().get()
+                        CodeInsightLocalize.parameterInfoIndexingModeNotSupported()
                     );
                 }
                 return null;
@@ -687,7 +688,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     static Pair<Point, Short> chooseBestHintPosition(
         Editor editor,
         VisualPosition pos,
-        LightweightHintImpl hint,
+        LightweightHint hint,
         short preferredPosition,
         boolean showLookupHint
     ) {
@@ -696,7 +697,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
-        Dimension hintSize = hint.getComponent().getPreferredSize();
+        Dimension hintSize = ((LightweightHintImpl) hint).getComponent().getPreferredSize();
         JComponent editorComponent = editor.getComponent();
         JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
 
@@ -780,7 +781,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         @Override
-        
+
         public Editor getEditor() {
             return myEditor;
         }
@@ -966,10 +967,9 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
             myEditor = editor;
         }
 
-        
         @RequiredUIAccess
         private Pair<Point, Short> getBestPointPosition(
-            LightweightHintImpl hint,
+            LightweightHint hint,
             PsiElement list,
             int offset,
             VisualPosition pos,

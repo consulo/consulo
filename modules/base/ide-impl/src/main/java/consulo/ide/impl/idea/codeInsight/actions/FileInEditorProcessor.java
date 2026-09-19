@@ -21,7 +21,6 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiFile;
@@ -34,6 +33,8 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.HyperlinkAdapter;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
@@ -48,174 +49,177 @@ import static consulo.ide.impl.idea.codeInsight.actions.TextRangeType.SELECTED_T
 import static consulo.ide.impl.idea.codeInsight.actions.TextRangeType.VCS_CHANGED_TEXT;
 
 class FileInEditorProcessor {
-  private static final Logger LOG = Logger.getInstance(FileInEditorProcessor.class);
+    private static final Logger LOG = Logger.getInstance(FileInEditorProcessor.class);
 
-  private final Editor myEditor;
+    private final Editor myEditor;
 
-  private boolean myNoChangesDetected = false;
-  private final boolean myProcessChangesTextOnly;
+    private boolean myNoChangesDetected = false;
+    private final boolean myProcessChangesTextOnly;
 
-  private final boolean myShouldOptimizeImports;
-  private final boolean myShouldRearrangeCode;
-  private final boolean myProcessSelectedText;
+    private final boolean myShouldOptimizeImports;
+    private final boolean myShouldRearrangeCode;
+    private final boolean myProcessSelectedText;
 
-  private final Project myProject;
+    private final Project myProject;
 
-  private final PsiFile myFile;
-  private AbstractLayoutCodeProcessor myProcessor;
+    private final PsiFile myFile;
+    private AbstractLayoutCodeProcessor myProcessor;
 
-  public FileInEditorProcessor(PsiFile file, Editor editor, LayoutCodeOptions runOptions)
-  {
-    myFile = file;
-    myProject = file.getProject();
-    myEditor = editor;
+    public FileInEditorProcessor(PsiFile file, Editor editor, LayoutCodeOptions runOptions) {
+        myFile = file;
+        myProject = file.getProject();
+        myEditor = editor;
 
-    myShouldOptimizeImports = runOptions.isOptimizeImports();
-    myShouldRearrangeCode = runOptions.isRearrangeCode();
-    myProcessSelectedText = myEditor != null && runOptions.getTextRangeType() == SELECTED_TEXT;
-    myProcessChangesTextOnly = runOptions.getTextRangeType() == VCS_CHANGED_TEXT;
-  }
-
-  public void processCode() {
-    if (myShouldOptimizeImports) {
-      myProcessor = new OptimizeImportsProcessor(myProject, myFile);
+        myShouldOptimizeImports = runOptions.isOptimizeImports();
+        myShouldRearrangeCode = runOptions.isRearrangeCode();
+        myProcessSelectedText = myEditor != null && runOptions.getTextRangeType() == SELECTED_TEXT;
+        myProcessChangesTextOnly = runOptions.getTextRangeType() == VCS_CHANGED_TEXT;
     }
 
-    if (myProcessChangesTextOnly && !FormatChangedTextUtil.hasChanges(myFile)) {
-      myNoChangesDetected = true;
-    }
-
-    myProcessor = mixWithReformatProcessor(myProcessor);
-    if (myShouldRearrangeCode) {
-      myProcessor = mixWithRearrangeProcessor(myProcessor);
-    }
-
-    if (shouldNotify()) {
-      myProcessor.setCollectInfo(true);
-      myProcessor.setPostRunnable(()-> {
-          LocalizeValue message = prepareMessage();
-          if (!myEditor.isDisposed() && myEditor.getComponent().isShowing()) {
-            HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
-              @Override
-              @RequiredUIAccess
-              protected void hyperlinkActivated(HyperlinkEvent e) {
-                AnAction action = ActionManager.getInstance().getAction("ShowReformatFileDialog");
-                DataManager manager = DataManager.getInstance();
-                DataContext context = manager.getDataContext(myEditor.getContentComponent());
-                action.actionPerformed(AnActionEvent.createFromAnAction(action, null, "", context));
-              }
-            };
-            showHint(myEditor, message, hyperlinkListener);
-          }
-        });
-    }
-
-    myProcessor.run();
-  }
-
-  private AbstractLayoutCodeProcessor mixWithRearrangeProcessor(AbstractLayoutCodeProcessor processor) {
-    if (myProcessSelectedText) {
-      processor = new RearrangeCodeProcessor(processor, myEditor.getSelectionModel());
-    }
-    else {
-      processor = new RearrangeCodeProcessor(processor);
-    }
-    return processor;
-  }
-
-  private AbstractLayoutCodeProcessor mixWithReformatProcessor(@Nullable AbstractLayoutCodeProcessor processor) {
-    if (processor != null) {
-      if (myProcessSelectedText) {
-        processor = new ReformatCodeProcessor(processor, myEditor.getSelectionModel());
-      }
-      else {
-        processor = new ReformatCodeProcessor(processor, myProcessChangesTextOnly);
-      }
-    }
-    else {
-      if (myProcessSelectedText) {
-        processor = new ReformatCodeProcessor(myFile, myEditor.getSelectionModel());
-      }
-      else {
-        processor = new ReformatCodeProcessor(myFile, myProcessChangesTextOnly);
-      }
-    }
-    return processor;
-  }
-
-  private LocalizeValue prepareMessage() {
-    StringBuilder builder = new StringBuilder("<html>");
-    LayoutCodeInfoCollector notifications = myProcessor.getInfoCollector();
-    LOG.assertTrue(notifications != null);
-
-    if (notifications.isEmpty() && !myNoChangesDetected) {
-      if (myProcessChangesTextOnly) {
-        builder.append("No lines changed: changes since last revision are already properly formatted").append("<br>");
-      }
-      else {
-        builder.append("No lines changed: code is already properly formatted").append("<br>");
-      }
-    }
-    else {
-      if (notifications.hasReformatOrRearrangeNotification()) {
-        String reformatInfo = notifications.getReformatCodeNotification();
-        String rearrangeInfo = notifications.getRearrangeCodeNotification();
-
-        builder.append(joinWithCommaAndCapitalize(reformatInfo, rearrangeInfo));
-
-        if (myProcessChangesTextOnly) {
-          builder.append(" in changes since last revision");
+    @RequiredUIAccess
+    public void processCode() {
+        if (myShouldOptimizeImports) {
+            myProcessor = new OptimizeImportsProcessor(myProject, myFile);
         }
 
-        builder.append("<br>");
-      }
-      else if (myNoChangesDetected) {
-        builder.append("No lines changed: no changes since last revision").append("<br>");
-      }
+        if (myProcessChangesTextOnly && !FormatChangedTextUtil.hasChanges(myFile)) {
+            myNoChangesDetected = true;
+        }
 
-      LocalizeValue optimizeImportsNotification = notifications.getOptimizeImportsNotification();
-      if (optimizeImportsNotification.isNotEmpty()) {
-        builder.append(optimizeImportsNotification).append("<br>");
-      }
+        myProcessor = mixWithReformatProcessor(myProcessor);
+        if (myShouldRearrangeCode) {
+            myProcessor = mixWithRearrangeProcessor(myProcessor);
+        }
+
+        if (shouldNotify()) {
+            myProcessor.setCollectInfo(true);
+            myProcessor.setPostRunnable(() -> {
+                LocalizeValue message = prepareMessage();
+                if (!myEditor.isDisposed() && myEditor.getComponent().isShowing()) {
+                    HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
+                        @Override
+                        @RequiredUIAccess
+                        protected void hyperlinkActivated(HyperlinkEvent e) {
+                            AnAction action = ActionManager.getInstance().getAction("ShowReformatFileDialog");
+                            DataManager manager = DataManager.getInstance();
+                            DataContext context = manager.getDataContext(myEditor.getContentComponent());
+                            action.actionPerformed(AnActionEvent.createFromAnAction(action, null, "", context));
+                        }
+                    };
+                    showHint(myEditor, message, hyperlinkListener);
+                }
+            });
+        }
+
+        myProcessor.run();
     }
 
-    String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction("ShowReformatFileDialog"));
-    String color = ColorUtil.toHex(JBColor.gray);
+    private AbstractLayoutCodeProcessor mixWithRearrangeProcessor(AbstractLayoutCodeProcessor processor) {
+        if (myProcessSelectedText) {
+            processor = new RearrangeCodeProcessor(processor, myEditor.getSelectionModel());
+        }
+        else {
+            processor = new RearrangeCodeProcessor(processor);
+        }
+        return processor;
+    }
 
-    builder.append("<span style='color:#").append(color).append("'>")
+    private AbstractLayoutCodeProcessor mixWithReformatProcessor(@Nullable AbstractLayoutCodeProcessor processor) {
+        if (processor != null) {
+            if (myProcessSelectedText) {
+                processor = new ReformatCodeProcessor(processor, myEditor.getSelectionModel());
+            }
+            else {
+                processor = new ReformatCodeProcessor(processor, myProcessChangesTextOnly);
+            }
+        }
+        else {
+            if (myProcessSelectedText) {
+                processor = new ReformatCodeProcessor(myFile, myEditor.getSelectionModel());
+            }
+            else {
+                processor = new ReformatCodeProcessor(myFile, myProcessChangesTextOnly);
+            }
+        }
+        return processor;
+    }
+
+    private LocalizeValue prepareMessage() {
+        StringBuilder builder = new StringBuilder("<html>");
+        LayoutCodeInfoCollector notifications = myProcessor.getInfoCollector();
+        LOG.assertTrue(notifications != null);
+
+        if (notifications.isEmpty() && !myNoChangesDetected) {
+            if (myProcessChangesTextOnly) {
+                builder.append("No lines changed: changes since last revision are already properly formatted").append("<br>");
+            }
+            else {
+                builder.append("No lines changed: code is already properly formatted").append("<br>");
+            }
+        }
+        else {
+            if (notifications.hasReformatOrRearrangeNotification()) {
+                String reformatInfo = notifications.getReformatCodeNotification();
+                String rearrangeInfo = notifications.getRearrangeCodeNotification();
+
+                builder.append(joinWithCommaAndCapitalize(reformatInfo, rearrangeInfo));
+
+                if (myProcessChangesTextOnly) {
+                    builder.append(" in changes since last revision");
+                }
+
+                builder.append("<br>");
+            }
+            else if (myNoChangesDetected) {
+                builder.append("No lines changed: no changes since last revision").append("<br>");
+            }
+
+            LocalizeValue optimizeImportsNotification = notifications.getOptimizeImportsNotification();
+            if (optimizeImportsNotification.isNotEmpty()) {
+                builder.append(optimizeImportsNotification).append("<br>");
+            }
+        }
+
+        String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction("ShowReformatFileDialog"));
+        String color = ColorUtil.toHex(JBColor.gray);
+
+        builder.append("<span style='color:#").append(color).append("'>")
             .append("<a href=''>Show</a> reformat dialog: ").append(shortcutText).append("</span>")
             .append("</html>");
 
-    return LocalizeValue.localizeTODO(builder.toString());
-  }
-
-  
-  private static String joinWithCommaAndCapitalize(String reformatNotification, String rearrangeNotification) {
-    String firstNotificationLine = reformatNotification != null ? reformatNotification : rearrangeNotification;
-    if (reformatNotification != null && rearrangeNotification != null) {
-      firstNotificationLine += ", " + rearrangeNotification;
+        return LocalizeValue.localizeTODO(builder.toString());
     }
-    firstNotificationLine = StringUtil.capitalize(firstNotificationLine);
-    return firstNotificationLine;
-  }
 
-  @RequiredUIAccess
-  public static void showHint(Editor editor, LocalizeValue info, @Nullable HyperlinkListener hyperlinkListener) {
-    JComponent component = HintUtil.createInformationLabel(info.get(), hyperlinkListener, null, null);
-    LightweightHintImpl hint = new LightweightHintImpl(component);
-    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER,
-                                                     HintManager.HIDE_BY_ANY_KEY |
-                                                     HintManager.HIDE_BY_TEXT_CHANGE |
-                                                     HintManager.HIDE_BY_SCROLLING,
-                                                     0, false);
-  }
 
-  private boolean shouldNotify() {
-    Application application = Application.get();
-    if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
-      return false;
+    private static String joinWithCommaAndCapitalize(String reformatNotification, String rearrangeNotification) {
+        String firstNotificationLine = reformatNotification != null ? reformatNotification : rearrangeNotification;
+        if (reformatNotification != null && rearrangeNotification != null) {
+            firstNotificationLine += ", " + rearrangeNotification;
+        }
+        firstNotificationLine = StringUtil.capitalize(firstNotificationLine);
+        return firstNotificationLine;
     }
-    EditorSettingsExternalizable.OptionSet editorOptions = EditorSettingsExternalizable.getInstance().getOptions();
-    return editorOptions.SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION && myEditor != null && !myProcessSelectedText;
-  }
+
+    @RequiredUIAccess
+    public static void showHint(Editor editor, LocalizeValue info, @Nullable HyperlinkListener hyperlinkListener) {
+        JComponent component = HintUtil.createInformationLabel(info.get(), hyperlinkListener, null, null);
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(component);
+        HintManagerImpl.getInstanceImpl().showEditorHint(
+            hint,
+            editor,
+            HintManager.UNDER,
+            HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING,
+            0,
+            false
+        );
+    }
+
+    private boolean shouldNotify() {
+        Application application = Application.get();
+        if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
+            return false;
+        }
+        EditorSettingsExternalizable.OptionSet editorOptions = EditorSettingsExternalizable.getInstance().getOptions();
+        return editorOptions.SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION && myEditor != null && !myProcessSelectedText;
+    }
 }

@@ -45,6 +45,7 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.HintListener;
 import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -55,9 +56,9 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.BitUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -166,6 +167,7 @@ public class HintManagerImpl implements HintManagerEx {
 
         myEditorDocumentListener = new DocumentListener() {
             @Override
+            @RequiredUIAccess
             public void documentChanged(DocumentEvent event) {
                 UIAccess.assertIsUIThread();
                 if (event.getOldLength() == 0 && event.getNewLength() == 0) {
@@ -203,11 +205,11 @@ public class HintManagerImpl implements HintManagerEx {
         myRequestFocusForNextHint = requestFocus;
     }
 
-    
     private HintInfo[] getHintsStackArray() {
         return myHintsStack.toArray(new HintInfo[0]);
     }
 
+    @Override
     @RequiredUIAccess
     public boolean performCurrentQuestionAction() {
         UIAccess.assertIsUIThread();
@@ -463,17 +465,16 @@ public class HintManagerImpl implements HintManagerEx {
 
     @RequiredUIAccess
     private static void doShowInGivenLocation(
-        LightweightHint hint,
+        LightweightHintImpl hint,
         Editor editor,
         Point p,
         HintHint hintInfo,
         boolean updateSize
     ) {
-        LightweightHintImpl impl = (LightweightHintImpl) hint;
         JComponent externalComponent = getExternalComponent(editor);
-        Dimension size = updateSize ? impl.getComponent().getPreferredSize() : impl.getComponent().getSize();
+        Dimension size = updateSize ? hint.getComponent().getPreferredSize() : hint.getComponent().getSize();
 
-        if (impl.isRealPopup() || hintInfo.isPopupForced()) {
+        if (hint.isRealPopup() || hintInfo.isPopupForced()) {
             Point point = new Point(p);
             SwingUtilities.convertPointToScreen(point, externalComponent);
             Rectangle editorScreen = ScreenUtil.getScreenRectangle(point.x, point.y);
@@ -499,8 +500,8 @@ public class HintManagerImpl implements HintManagerEx {
             if (updateSize) {
                 hint.pack();
             }
-            impl.updatePosition(hintInfo.getPreferredPosition());
-            impl.updateLocation(p.x, p.y);
+            hint.updatePosition(hintInfo.getPreferredPosition());
+            hint.updateLocation(p.x, p.y);
         }
         else {
             hint.show(externalComponent, p.x, p.y, editor.getContentComponent(), hintInfo);
@@ -510,7 +511,7 @@ public class HintManagerImpl implements HintManagerEx {
     @Override
     @RequiredUIAccess
     public void updateLocation(LightweightHint hint, Editor editor, Point p) {
-        doShowInGivenLocation(hint, editor, p, createHintHint(editor, p, hint, UNDER), false);
+        doShowInGivenLocation((LightweightHintImpl) hint, editor, p, createHintHint(editor, p, hint, UNDER), false);
     }
 
     @Override
@@ -521,7 +522,7 @@ public class HintManagerImpl implements HintManagerEx {
         Point p,
         @PositionFlags short constraint
     ) {
-        doShowInGivenLocation(hint, editor, p, createHintHint(editor, p, hint, constraint), true);
+        doShowInGivenLocation((LightweightHintImpl) hint, editor, p, createHintHint(editor, p, hint, constraint), true);
     }
 
     @Override
@@ -553,7 +554,7 @@ public class HintManagerImpl implements HintManagerEx {
 
         UIAccess.assertIsUIThread();
         if (dominantArea != null) {
-            return getHintPositionRelativeTo(hint, editor, constraint, dominantArea, pos);
+            return getHintPositionRelativeTo((LightweightHintImpl) hint, editor, constraint, dominantArea, pos);
         }
 
         JRootPane rootPane = editor.getComponent().getRootPane();
@@ -598,7 +599,7 @@ public class HintManagerImpl implements HintManagerEx {
                 JComponent c = info.hint.getComponent();
                 rectangle = SwingUtilities.convertRectangle(c.getParent(), rectangle, lp);
 
-                return getHintPositionRelativeTo(hint, editor, constraint, rectangle, pos);
+                return getHintPositionRelativeTo((LightweightHintImpl) hint, editor, constraint, rectangle, pos);
             }
         }
 
@@ -607,7 +608,7 @@ public class HintManagerImpl implements HintManagerEx {
 
     @RequiredUIAccess
     private Point getHintPositionRelativeTo(
-        LightweightHint hint,
+        LightweightHintImpl hint,
         Editor editor,
         @PositionFlags short constraint,
         Rectangle lookupBounds,
@@ -615,15 +616,13 @@ public class HintManagerImpl implements HintManagerEx {
     ) {
         JComponent externalComponent = getExternalComponent(editor);
 
-        LightweightHintImpl hitImpl = (LightweightHintImpl) hint;
-
-        IdeTooltip ideTooltip = hitImpl.getCurrentIdeTooltip();
+        IdeTooltip ideTooltip = hint.getCurrentIdeTooltip();
         if (ideTooltip != null) {
             Point point = ideTooltip.getPoint();
             return SwingUtilities.convertPoint(ideTooltip.getComponent(), point, externalComponent);
         }
 
-        Dimension hintSize = hitImpl.getComponent().getPreferredSize();
+        Dimension hintSize = hint.getComponent().getPreferredSize();
         int layeredPaneHeight = externalComponent.getHeight();
 
         switch (constraint) {
@@ -699,25 +698,24 @@ public class HintManagerImpl implements HintManagerEx {
         VisualPosition pos2,
         @PositionFlags short constraint
     ) {
-        return getHintPosition(hint, editor, pos1, pos2, constraint, Registry.is("editor.balloonHints"));
+        return getHintPosition((LightweightHintImpl) hint, editor, pos1, pos2, constraint, Registry.is("editor.balloonHints"));
     }
 
     @RequiredUIAccess
     private static Point getHintPosition(
-        LightweightHint hint,
+        LightweightHintImpl hint,
         Editor editor,
         VisualPosition pos1,
         VisualPosition pos2,
         @PositionFlags short constraint,
         boolean showByBalloon
     ) {
-        LightweightHintImpl impl = (LightweightHintImpl) hint;
-        Point p = _getHintPosition(impl, editor, pos1, pos2, constraint, showByBalloon);
+        Point p = _getHintPosition(hint, editor, pos1, pos2, constraint, showByBalloon);
         JComponent externalComponent = getExternalComponent(editor);
-        Dimension hintSize = impl.getComponent().getPreferredSize();
+        Dimension hintSize = hint.getComponent().getPreferredSize();
         if (constraint == ABOVE) {
             if (p.y < 0) {
-                Point p1 = _getHintPosition(impl, editor, pos1, pos2, UNDER, showByBalloon);
+                Point p1 = _getHintPosition(hint, editor, pos1, pos2, UNDER, showByBalloon);
                 if (p1.y + hintSize.height <= externalComponent.getSize().height) {
                     return p1;
                 }
@@ -725,7 +723,7 @@ public class HintManagerImpl implements HintManagerEx {
         }
         else if (constraint == UNDER) {
             if (p.y + hintSize.height > externalComponent.getSize().height) {
-                Point p1 = _getHintPosition(impl, editor, pos1, pos2, ABOVE, showByBalloon);
+                Point p1 = _getHintPosition(hint, editor, pos1, pos2, ABOVE, showByBalloon);
                 if (p1.y >= 0) {
                     return p1;
                 }
@@ -804,7 +802,7 @@ public class HintManagerImpl implements HintManagerEx {
     @RequiredUIAccess
     public void showErrorHint(Editor editor, String text, short position) {
         JComponent label = HintUtil.createErrorLabel(text);
-        LightweightHintImpl hint = new LightweightHintImpl(label);
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(label);
         Point p = getHintPosition(hint, editor, position);
         showEditorHint(hint, editor, p, HIDE_BY_ANY_KEY | HIDE_BY_TEXT_CHANGE | HIDE_BY_SCROLLING, 0, false, position);
     }
@@ -843,7 +841,7 @@ public class HintManagerImpl implements HintManagerEx {
     @RequiredUIAccess
     public void showInformationHint(Editor editor, JComponent component, @PositionFlags short position) {
         AccessibleContextUtil.setName(component, "Hint");
-        LightweightHintImpl hint = new LightweightHintImpl(component);
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(component);
         Point p = getHintPosition(hint, editor, position);
         showEditorHint(hint, editor, p, HIDE_BY_ANY_KEY | HIDE_BY_TEXT_CHANGE | HIDE_BY_SCROLLING, 0, false, position);
     }
@@ -860,7 +858,7 @@ public class HintManagerImpl implements HintManagerEx {
         int timeout
     ) {
         JComponent label = HintUtil.createErrorLabel(hintText);
-        LightweightHintImpl hint = new LightweightHintImpl(label);
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(label);
         VisualPosition pos1 = editor.offsetToVisualPosition(offset1);
         VisualPosition pos2 = editor.offsetToVisualPosition(offset2);
         Point p = getHintPosition(hint, editor, pos1, pos2, constraint);
@@ -902,14 +900,14 @@ public class HintManagerImpl implements HintManagerEx {
         Editor editor,
         int offset1,
         int offset2,
-        LightweightHintImpl hint,
+        LightweightHint hint,
         QuestionAction action,
         @PositionFlags short constraint
     ) {
         VisualPosition pos1 = editor.offsetToVisualPosition(offset1);
         VisualPosition pos2 = editor.offsetToVisualPosition(offset2);
         Point p = getHintPosition(hint, editor, pos1, pos2, constraint);
-        showQuestionHint(editor, p, offset1, offset2, hint, action, constraint);
+        showQuestionHint(editor, p, offset1, offset2, (LightweightHintImpl) hint, action, constraint);
     }
 
     @RequiredUIAccess
@@ -1101,6 +1099,7 @@ public class HintManagerImpl implements HintManagerEx {
         }
     }
 
+    @RequiredUIAccess
     boolean isEscapeHandlerEnabled() {
         UIAccess.assertIsUIThread();
         for (int i = myHintsStack.size() - 1; i >= 0; i--) {

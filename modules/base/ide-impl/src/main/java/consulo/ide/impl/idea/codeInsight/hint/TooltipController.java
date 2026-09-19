@@ -25,6 +25,7 @@ import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.project.Project;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
@@ -38,7 +39,7 @@ import java.awt.event.MouseEvent;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class TooltipController {
-  private LightweightHintImpl myCurrentTooltip;
+  private LightweightHint myCurrentTooltip;
   private TooltipRenderer myCurrentTooltipObject;
   private TooltipGroup myCurrentTooltipGroup;
 
@@ -64,7 +65,7 @@ public class TooltipController {
                                      boolean alignToRight,
                                      TooltipGroup group,
                                      HintHint hintHint) {
-    LightweightHintImpl currentTooltip = myCurrentTooltip;
+    LightweightHintImpl currentTooltip = (LightweightHintImpl) myCurrentTooltip;
     if (currentTooltip == null || !currentTooltip.isVisible()) {
       if (currentTooltip != null) {
         if (!IdeTooltipManagerImpl.getInstanceImpl().isQueuedToShow(currentTooltip.getCurrentIdeTooltip())) {
@@ -98,7 +99,7 @@ public class TooltipController {
 
   private void hideCurrentTooltip() {
     if (myCurrentTooltip != null) {
-      LightweightHintImpl currentTooltip = myCurrentTooltip;
+      LightweightHint currentTooltip = myCurrentTooltip;
       myCurrentTooltip = null;
       currentTooltip.hide();
       myCurrentTooltipGroup = null;
@@ -144,7 +145,7 @@ public class TooltipController {
     p = new Point(p);
     hideCurrentTooltip();
 
-    LightweightHintImpl hint = (LightweightHintImpl)tooltipRenderer.show(editor, p, alignToRight, group, hintInfo);
+    LightweightHint hint = (LightweightHint) tooltipRenderer.show(editor, p, alignToRight, group, hintInfo);
 
     myCurrentTooltipGroup = group;
     myCurrentTooltip = hint;
@@ -158,7 +159,7 @@ public class TooltipController {
     return false;
   }
 
-  public void hide(LightweightHintImpl lightweightHint) {
+  public void hide(LightweightHint lightweightHint) {
     if (myCurrentTooltip != null && myCurrentTooltip.equals(lightweightHint)) {
       hideCurrentTooltip();
     }

@@ -39,15 +39,17 @@ import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import consulo.find.*;
+import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.find.FindInProjectSettings;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction;
-import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -61,6 +63,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
@@ -891,8 +895,8 @@ public class FindUtil {
             };
             editor.getCaretModel().addCaretListener(listener);
         }
-        JComponent component = HintUtil.createInformationLabel(JDOMUtil.escapeText(message.get(), false, false));
-        LightweightHintImpl hint = new LightweightHintImpl(component);
+        JComponent component = HintUtil.createInformationLabel(message.map(s -> JDOMUtil.escapeText(s, false, false)));
+        LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(component);
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

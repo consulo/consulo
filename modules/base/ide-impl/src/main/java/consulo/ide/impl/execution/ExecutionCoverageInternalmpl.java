@@ -39,6 +39,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -56,9 +57,8 @@ import java.util.function.Function;
 @ServiceImpl
 @Singleton
 public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public CompletableFuture<?> showExportDialog(Project project, String presentableName) {
         ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
         dialog.setTitle(ExecutionCoverageLocalize.generateCoverageReportFor(presentableName));
@@ -73,11 +73,7 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
 
     @Override
     @RequiredUIAccess
-    public void showCoverageHit(JPanel panel,
-                                Editor editor,
-                                Point point,
-                                CoverageLine lineData,
-                                String reportText) {
+    public void showCoverageHit(JPanel panel, Editor editor, Point point, CoverageLine lineData, String reportText) {
         final Editor uEditor;
         if (reportText != null) {
             EditorFactory factory = EditorFactory.getInstance();
@@ -93,7 +89,7 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
             uEditor = null;
         }
 
-        LightweightHintImpl hint = new LightweightHintImpl(panel) {
+        LightweightHint hint = new LightweightHintImpl(panel) {
             @Override
             public void hide() {
                 if (uEditor != null) {
@@ -116,15 +112,17 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
 
     @Override
     @RequiredUIAccess
-    public void showColorsSettings(Project project,
-                                   CoverageLine lineData,
-                                   Function<CoverageLine, TextAttributesKey> attributesKeyFunc) {
+    public void showColorsSettings(
+        Project project,
+        CoverageLine lineData,
+        Function<CoverageLine, TextAttributesKey> attributesKeyFunc
+    ) {
         ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions() {
             @Override
             protected List<ColorAndFontPanelFactory> createPanelFactories() {
                 final GeneralColorsPage colorsPage = new GeneralColorsPage(project.getApplication());
                 ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
-                    
+
                     @Override
                     @RequiredUIAccess
                     public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
@@ -132,7 +130,7 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
                         return NewColorAndFontPanel.create(preview, colorsPage.getDisplayName(), options, null, colorsPage);
                     }
 
-                    
+
                     @Override
                     public LocalizeValue getPanelDisplayName() {
                         return ExecutionCoverageLocalize.configurableNameEditorColorsPage(
