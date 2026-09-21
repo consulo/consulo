@@ -45,7 +45,6 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
         myDisplayName = displayName;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return myDisplayName;
@@ -117,9 +116,8 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
         myPanel.onSomethingChanged();
     }
 
-    
     @Override
-    public Set<String> processListOptions() {
+    public Set<LocalizeValue> processListOptions() {
         return myPanel.processListOptions();
     }
 

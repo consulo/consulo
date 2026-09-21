@@ -1434,10 +1434,8 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     public boolean isWrapOnTyping(@Nullable Language language) {
         if (language != null) {
             CommonCodeStyleSettings langSettings = myCommonSettingsManager.getCommonSettings(language);
-            if (langSettings != null) {
-                if (langSettings.WRAP_ON_TYPING != CommonCodeStyleSettings.WrapOnTyping.DEFAULT.intValue) {
-                    return langSettings.WRAP_ON_TYPING == CommonCodeStyleSettings.WrapOnTyping.WRAP.intValue;
-                }
+            if (langSettings != null && !WrapOnTyping.DEFAULT.is(langSettings.WRAP_ON_TYPING)) {
+                return WrapOnTyping.WRAP.is(langSettings.WRAP_ON_TYPING);
             }
         }
         return WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN;

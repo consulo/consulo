@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.colorScheme.ui;
 
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.localize.LocalizeValue;
 
 public interface EditorSchemeAttributeDescriptor {
-  
-  LocalizeValue getGroup();
+    LocalizeValue getName();
 
-  String getType();
+    LocalizeValue getGroup();
 
-  EditorColorsScheme getScheme();
+    String getType();
 
-  default void apply(EditorColorsScheme scheme) {
-  }
+    EditorColorsScheme getScheme();
 
-  boolean isModified();
+    default void apply(EditorColorsScheme scheme) {
+    }
+
+    boolean isModified();
 }

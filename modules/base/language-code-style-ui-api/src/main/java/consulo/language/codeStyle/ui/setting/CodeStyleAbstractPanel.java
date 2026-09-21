@@ -572,7 +572,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return mySettings;
     }
 
-    public Set<String> processListOptions() {
+    public Set<LocalizeValue> processListOptions() {
         return Collections.emptySet();
     }
 

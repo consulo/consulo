@@ -106,13 +106,14 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
         }
     }
 
+    @RequiredUIAccess
     public void onSomethingChanged() {
         if (myTab instanceof CodeStyleAbstractConfigurable codeStyleAbstractConfigurable) {
             codeStyleAbstractConfigurable.onSomethingChanged();
         }
     }
 
-    public Set<String> processListOptions() {
+    public Set<LocalizeValue> processListOptions() {
         if (myTab instanceof OptionsContainingConfigurable optionsContainingConfigurable) {
             return optionsContainingConfigurable.processListOptions();
         }

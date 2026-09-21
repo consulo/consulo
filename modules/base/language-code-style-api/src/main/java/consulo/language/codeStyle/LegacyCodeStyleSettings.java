@@ -874,7 +874,7 @@ public class LegacyCodeStyleSettings extends CommonCodeStyleSettings {
      * @deprecated See {@link LegacyCodeStyleSettings}
      */
     @Deprecated
-    public int WRAP_ON_TYPING = CommonCodeStyleSettings.WrapOnTyping.DEFAULT.intValue;
+    public int WRAP_ON_TYPING = WrapOnTyping.DEFAULT.getValue();
 
     public LegacyCodeStyleSettings() {
         super(null);

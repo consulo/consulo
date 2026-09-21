@@ -37,9 +37,9 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ProjectManager;
+import consulo.ui.*;
 import consulo.ui.ComboBox;
 import consulo.ui.Label;
-import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
@@ -54,8 +54,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.Component;
 import java.awt.*;
+import java.awt.Component;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -149,7 +149,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
             }
         }
 
-        myVisualGuidesLabel.setText(LocalizeValue.join(ApplicationLocalize.settingsCodeStyleVisualGuides(), LocalizeValue.colon()));
+        myVisualGuidesLabel.setText(LocalizeValue.join(CodeStyleLocalize.settingsCodeStyleVisualGuides(), LocalizeValue.colon()));
         myVisualGuidesHint.setForegroundColor(StandardColors.GRAY);
 //        myVisualGuidesHint.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
         myLineSeparatorHint.setForegroundColor(StandardColors.GRAY);
@@ -223,7 +223,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         myRightMarginField =
             new IntegerField(CodeStyleLocalize.editboxRightMarginColumns().get(), 0, MAX_RIGHT_MARGIN);
         myVisualGuides = new CommaSeparatedIntegersField(
-            ApplicationLocalize.settingsCodeStyleVisualGuides().get(),
+            CodeStyleLocalize.settingsCodeStyleVisualGuides().get(),
             0,
             MAX_RIGHT_MARGIN,
             "Optional"
@@ -300,10 +300,9 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
                 false
             )
         );
-        JLabel label2 = new JLabel();
-        this.$$$loadLabelText$$$(label2, ApplicationLocalize.editboxRightMarginColumns());
+        Label label2 = Label.create(CodeStyleLocalize.editboxRightMarginColumns());
         panel1.add(
-            label2,
+            TargetAWT.to(label2),
             new GridConstraints(
                 2,
                 0,
@@ -375,7 +374,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
                 false
             )
         );
-        myVisualGuidesLabel = Label.create(ApplicationLocalize.settingsCodeStyleVisualGuides());
+        myVisualGuidesLabel = Label.create(CodeStyleLocalize.settingsCodeStyleVisualGuides());
         panel1.add(
             TargetAWT.to(myVisualGuidesLabel),
             new GridConstraints(
@@ -394,7 +393,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
                 false
             )
         );
-        myVisualGuidesHint = Label.create(ApplicationLocalize.settingsCodeStyleGeneralVisualGuidesHint());
+        myVisualGuidesHint = Label.create(CodeStyleLocalize.settingsCodeStyleGeneralVisualGuidesHint());
         panel1.add(
             TargetAWT.to(myVisualGuidesHint),
             new GridConstraints(
@@ -747,33 +746,6 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         label1.setTarget(myLineSeparatorCombo);
         myFormatterOffLabel.setTarget(myFormatterOffTagField);
         myFormatterOnLabel.setTarget(myFormatterOnTagField);
-    }
-
-    private void $$$loadLabelText$$$(JLabel component, LocalizeValue text0) {
-        StringBuilder result = new StringBuilder();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        String text = text0.get();
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setDisplayedMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
     }
 
     private static @Nullable Pattern compilePattern(CodeStyleSettings settings, TextBox field, String patternText) {

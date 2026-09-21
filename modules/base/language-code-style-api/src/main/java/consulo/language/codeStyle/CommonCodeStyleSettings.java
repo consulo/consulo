@@ -29,12 +29,13 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -56,8 +57,7 @@ public class CommonCodeStyleSettings {
 
     private ArrangementSettings myArrangementSettings;
     private CodeStyleSettings myRootSettings;
-    private
-    @Nullable IndentOptions myIndentOptions;
+    private @Nullable IndentOptions myIndentOptions;
     private final FileType myFileType;
     private boolean myForceArrangeMenuAvailable;
 
@@ -82,7 +82,6 @@ public class CommonCodeStyleSettings {
         return myLanguage;
     }
 
-    
     public IndentOptions initIndentOptions() {
         myIndentOptions = new IndentOptions();
         return myIndentOptions;
@@ -92,7 +91,6 @@ public class CommonCodeStyleSettings {
         return myFileType;
     }
 
-    
     public CodeStyleSettings getRootSettings() {
         return myRootSettings;
     }
@@ -142,7 +140,7 @@ public class CommonCodeStyleSettings {
     public void copyFrom(CommonCodeStyleSettings source) {
         copyPublicFields(source, this);
         if (myIndentOptions != null) {
-            CommonCodeStyleSettings.IndentOptions sourceIndentOptions = source.getIndentOptions();
+            IndentOptions sourceIndentOptions = source.getIndentOptions();
             if (sourceIndentOptions != null) {
                 myIndentOptions.copyFrom(sourceIndentOptions);
             }
@@ -888,23 +886,11 @@ public class CommonCodeStyleSettings {
 
     public int FORCE_REARRANGE_MODE = REARRANGE_ACCORDIND_TO_DIALOG;
 
-    public enum WrapOnTyping {
-        DEFAULT(-1),
-        NO_WRAP(0),
-        WRAP(1);
-
-        public int intValue;
-
-        WrapOnTyping(int i) {
-            intValue = i;
-        }
-    }
-
     /**
      * Defines if wrapping should occur when typing reaches right margin. <b>Do not use a value of this field directly, call
      * {@link CodeStyleSettings#isWrapOnTyping(Language)} method instead</b>.
      */
-    public int WRAP_ON_TYPING = WrapOnTyping.DEFAULT.intValue;
+    public int WRAP_ON_TYPING = WrapOnTyping.DEFAULT.getValue();
 
     //-------------------------Indent options-------------------------------------------------
     public static class IndentOptions implements Cloneable, JDOMExternalizable {
@@ -929,7 +915,7 @@ public class CommonCodeStyleSettings {
         // endregion
 
         private FileIndentOptionsProvider myFileIndentOptionsProvider;
-        private static final Key<CommonCodeStyleSettings.IndentOptions> INDENT_OPTIONS_KEY = Key.create("INDENT_OPTIONS_KEY");
+        private static final Key<IndentOptions> INDENT_OPTIONS_KEY = Key.create("INDENT_OPTIONS_KEY");
         private boolean myOverrideLanguageOptions;
 
         @Override
@@ -1028,7 +1014,7 @@ public class CommonCodeStyleSettings {
 
         /**
          * @return True if the options can override the ones defined in language settings.
-         * @see CommonCodeStyleSettings.IndentOptions#setOverrideLanguageOptions(boolean)
+         * @see IndentOptions#setOverrideLanguageOptions(boolean)
          */
         public boolean isOverrideLanguageOptions() {
             return myOverrideLanguageOptions;
@@ -1048,16 +1034,12 @@ public class CommonCodeStyleSettings {
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(Object obj) {
-        if (obj instanceof CommonCodeStyleSettings) {
-            if (ReflectionUtil.comparePublicNonFinalFields(this, obj) &&
-                mySoftMargins.equals(((CommonCodeStyleSettings)obj).mySoftMargins) &&
-                Comparing.equal(myIndentOptions, ((CommonCodeStyleSettings)obj).getIndentOptions()) &&
-                arrangementSettingsEqual((CommonCodeStyleSettings)obj)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof CommonCodeStyleSettings settings
+            && ReflectionUtil.comparePublicNonFinalFields(this, obj)
+            && mySoftMargins.equals(settings.mySoftMargins)
+            && Objects.equals(myIndentOptions, settings.getIndentOptions())
+            && arrangementSettingsEqual(settings);
     }
 
     protected boolean arrangementSettingsEqual(CommonCodeStyleSettings obj) {
@@ -1070,7 +1052,6 @@ public class CommonCodeStyleSettings {
         return Comparing.equal(theseSettings, obj.getArrangementSettings());
     }
 
-    
     public List<Integer> getSoftMargins() {
         return mySoftMargins.getValues();
     }

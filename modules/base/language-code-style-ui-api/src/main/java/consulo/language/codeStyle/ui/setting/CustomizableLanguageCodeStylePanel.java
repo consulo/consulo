@@ -27,6 +27,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.util.ProjectUIUtil;
@@ -100,7 +101,6 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
         return super.getFileExt();
     }
 
-    
     @Override
     protected FileType getFileType() {
         if (getDefaultLanguage() != null) {
@@ -151,7 +151,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     }
 
     @Override
-    public void moveStandardOption(String fieldName, String newGroup) {
+    public void moveStandardOption(String fieldName, LocalizeValue newGroup) {
         throw new UnsupportedOperationException();
     }
 
@@ -189,7 +189,6 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     }
 
     protected abstract static class OrderedOption {
-        
         private final String optionName;
         private final @Nullable OptionAnchor anchor;
         private final @Nullable String anchorOptionName;
@@ -200,7 +199,6 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
             this.anchorOptionName = anchorOptionName;
         }
 
-        
         public String getOptionName() {
             return optionName;
         }

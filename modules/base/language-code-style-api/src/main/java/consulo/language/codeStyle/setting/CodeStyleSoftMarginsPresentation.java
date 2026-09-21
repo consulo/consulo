@@ -15,13 +15,12 @@
  */
 package consulo.language.codeStyle.setting;
 
-import consulo.application.ApplicationBundle;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 
 public class CodeStyleSoftMarginsPresentation extends CodeStyleSettingPresentation {
+    public static final String OPTION_NAME = "SoftMargins";
 
-  public static final String OPTION_NAME = "SoftMargins";
-
-  public CodeStyleSoftMarginsPresentation() {
-    super(OPTION_NAME, ApplicationBundle.message("settings.code.style.visual.guides"));
-  }
+    public CodeStyleSoftMarginsPresentation() {
+        super(OPTION_NAME, CodeStyleLocalize.settingsCodeStyleVisualGuides());
+    }
 }

@@ -44,9 +44,10 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
     private final Set<String> myAllowedOptions = new HashSet<>();
     private boolean myAllOptionsAllowed = false;
     private boolean myIsFirstUpdate = true;
-    private final Map<String, String> myRenamedFields = new HashMap<>();
+    private final Map<String, LocalizeValue> myRenamedFields = new HashMap<>();
 
-    private final MultiMap<String, Trinity<Class<? extends CustomCodeStyleSettings>, String, String>> myCustomOptions = new MultiMap<>();
+    private final MultiMap<LocalizeValue, Trinity<Class<? extends CustomCodeStyleSettings>, String, LocalizeValue>> myCustomOptions =
+        new MultiMap<>();
 
     private final JPanel myPanel = new JPanel(new GridBagLayout());
 
@@ -118,8 +119,8 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
         return LanguageCodeStyleSettingsProvider.SettingsType.BLANK_LINES_SETTINGS;
     }
 
-    private @Nullable OptionGroup createOptionsGroup(String groupName, List<CodeStyleSettingPresentation> settings) {
-        OptionGroup optionGroup = new OptionGroup(groupName);
+    private @Nullable OptionGroup createOptionsGroup(LocalizeValue groupName, List<CodeStyleSettingPresentation> settings) {
+        OptionGroup optionGroup = new OptionGroup(groupName.get());
 
         for (CodeStyleSettingPresentation setting : settings) {
             createOption(optionGroup, setting.getUiName(), setting.getFieldName());
@@ -133,25 +134,25 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
         return optionGroup;
     }
 
-    private void initCustomOptions(OptionGroup optionGroup, String groupName) {
-        for (Trinity<Class<? extends CustomCodeStyleSettings>, String, String> each : myCustomOptions.get(groupName)) {
+    private void initCustomOptions(OptionGroup optionGroup, LocalizeValue groupName) {
+        for (Trinity<Class<? extends CustomCodeStyleSettings>, String, LocalizeValue> each : myCustomOptions.get(groupName)) {
             doCreateOption(optionGroup, each.third, new IntOption(each.third, each.first, each.second), each.second);
         }
     }
 
-    private void createOption(OptionGroup optionGroup, String title, String fieldName) {
+    private void createOption(OptionGroup optionGroup, LocalizeValue title, String fieldName) {
         if (myAllOptionsAllowed || myAllowedOptions.contains(fieldName)) {
             doCreateOption(optionGroup, title, new IntOption(title, fieldName), fieldName);
         }
     }
 
-    private void doCreateOption(OptionGroup optionGroup, String title, IntOption option, String fieldName) {
-        String renamed = myRenamedFields.get(fieldName);
+    private void doCreateOption(OptionGroup optionGroup, LocalizeValue title, IntOption option, String fieldName) {
+        LocalizeValue renamed = myRenamedFields.get(fieldName);
         if (renamed != null) {
             title = renamed;
         }
 
-        JBLabel l = new JBLabel(title);
+        JBLabel l = new JBLabel(title.get());
         optionGroup.add(l, option.myIntField);
         myOptions.add(option);
     }
@@ -170,7 +171,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
                 option.myIntField.validateContent();
             }
             catch (ValueValidationException e) {
-                throw new ConfigurationException(e.getMessage());
+                throw new ConfigurationException(e.getLocalizedMessage());
             }
         }
         for (IntOption option : myOptions) {
@@ -221,8 +222,8 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
     public void showCustomOption(
         Class<? extends CustomCodeStyleSettings> settingsClass,
         String fieldName,
-        String title,
-        String groupName,
+        LocalizeValue title,
+        LocalizeValue groupName,
         Object... options
     ) {
         showCustomOption(settingsClass, fieldName, title, groupName, null, null, options);
@@ -232,8 +233,8 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
     public void showCustomOption(
         Class<? extends CustomCodeStyleSettings> settingsClass,
         String fieldName,
-        String title,
-        String groupName,
+        LocalizeValue title,
+        LocalizeValue groupName,
         @Nullable OptionAnchor anchor,
         @Nullable String anchorFieldName,
         Object... options
@@ -250,7 +251,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
     }
 
     @Override
-    public void renameStandardOption(String fieldName, String newTitle) {
+    public void renameStandardOption(String fieldName, LocalizeValue newTitle) {
         if (myIsFirstUpdate) {
             myRenamedFields.put(fieldName, newTitle);
         }
@@ -265,17 +266,17 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
         private Class<? extends CustomCodeStyleSettings> myTargetClass;
         private int myCurrValue = Integer.MAX_VALUE;
 
-        private IntOption(String title, String fieldName) {
+        private IntOption(LocalizeValue title, String fieldName) {
             this(title, CommonCodeStyleSettings.class, fieldName, false);
         }
 
-        private IntOption(String title, Class<? extends CustomCodeStyleSettings> targetClass, String fieldName) {
+        private IntOption(LocalizeValue title, Class<? extends CustomCodeStyleSettings> targetClass, String fieldName) {
             this(title, targetClass, fieldName, false);
             myTargetClass = targetClass;
         }
 
         // dummy is used to distinguish constructors
-        private IntOption(String title, Class<?> fieldClass, String fieldName, boolean dummy) {
+        private IntOption(LocalizeValue title, Class<?> fieldClass, String fieldName, boolean dummy) {
             try {
                 myTarget = fieldClass.getField(fieldName);
             }
@@ -284,7 +285,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
             }
             myIntField = new IntegerField(null, 0, 10);
             myIntField.setColumns(6);
-            myIntField.setName(title);
+            myIntField.setName(title.get());
             myIntField.setMinimumSize(new Dimension(30, myIntField.getMinimumSize().height));
         }
 

@@ -15,25 +15,21 @@
  */
 package consulo.language.codeStyle.setting;
 
+import consulo.localize.LocalizeValue;
+
 /**
  * @author Roman.Shein
  * @since 2015-09-16
  */
 public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresentation {
-    
     protected int[] myValues;
     
-    protected String[] myValueUiNames;
+    protected LocalizeValue[] myValueUiNames;
 
     protected int myLowerBound;
     protected int myUpperBound;
 
-    public CodeStyleSelectSettingPresentation(
-        String fieldName,
-        String uiName,
-        int[] values,
-        String[] valueUiNames
-    ) {
+    public CodeStyleSelectSettingPresentation(String fieldName, LocalizeValue uiName, int[] values, LocalizeValue[] valueUiNames) {
         super(fieldName, uiName);
 
         assert (values.length == valueUiNames.length);
@@ -51,11 +47,9 @@ public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresenta
         }
     }
 
-    
     @Override
-    public String getValueUiName(Object value) {
-        if (value instanceof Integer) {
-            int intValue = (Integer) value;
+    public LocalizeValue getValueUiName(Object value) {
+        if (value instanceof Integer intValue) {
             for (int i = 0; i < myValues.length; ++i) {
                 if (myValues[i] == intValue) {
                     return myValueUiNames[i];
@@ -73,13 +67,11 @@ public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresenta
         return myUpperBound;
     }
 
-    
     public int[] getValues() {
         return myValues;
     }
 
-    
-    public String[] getOptions() {
+    public LocalizeValue[] getOptions() {
         return myValueUiNames;
     }
 }

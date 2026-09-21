@@ -381,7 +381,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
 //========================================================================================================================================
 
     protected class MySpacesPanel extends CodeStyleSpacesPanel {
-
+        @RequiredUIAccess
         public MySpacesPanel(CodeStyleSettings settings) {
             super(settings);
         }
@@ -398,7 +398,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     protected class MyBlankLinesPanel extends CodeStyleBlankLinesPanel {
-
+        @RequiredUIAccess
         public MyBlankLinesPanel(CodeStyleSettings settings) {
             super(settings);
         }
@@ -410,7 +410,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     protected class MyWrappingAndBracesPanel extends WrappingAndBracesPanel {
-
+        @RequiredUIAccess
         public MyWrappingAndBracesPanel(CodeStyleSettings settings) {
             super(settings);
         }
@@ -424,7 +424,6 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     //========================================================================================================================================
 
     private class ConfigurableWrapper extends CodeStyleAbstractPanel {
-
         private final Configurable myConfigurable;
         private JComponent myComponent;
 
@@ -508,8 +507,8 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     @Override
-    public Set<String> processListOptions() {
-        Set<String> result = new HashSet<>();
+    public Set<LocalizeValue> processListOptions() {
+        Set<LocalizeValue> result = new HashSet<>();
         for (CodeStyleAbstractPanel tab : myTabs) {
             result.addAll(tab.processListOptions());
         }

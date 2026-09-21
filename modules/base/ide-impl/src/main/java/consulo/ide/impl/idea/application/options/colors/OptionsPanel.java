@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.localize.LocalizeValue;
+
 import javax.swing.*;
 import java.util.Set;
 
@@ -31,5 +33,5 @@ public interface OptionsPanel {
 
     void selectOption(String typeToSelect);
 
-    Set<String> processListOptions();
+    Set<LocalizeValue> processListOptions();
 }

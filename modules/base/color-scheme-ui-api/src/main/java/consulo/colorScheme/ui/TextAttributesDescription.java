@@ -27,75 +27,83 @@ import consulo.ui.image.Image;
  * @author cdr
  */
 public abstract class TextAttributesDescription extends ColorAndFontDescription {
-  private final TextAttributes myAttributes;
+    private final TextAttributes myAttributes;
 
-  public TextAttributesDescription(LocalizeValue name, LocalizeValue group, TextAttributes attributes, TextAttributesKey type, EditorColorsScheme scheme, Image icon, String toolTip) {
-    super(name, group, type == null ? null : type.getExternalName(), scheme, icon, toolTip);
-    myAttributes = attributes;
-    initCheckedStatus();
-  }
+    public TextAttributesDescription(
+        LocalizeValue name,
+        LocalizeValue group,
+        TextAttributes attributes,
+        TextAttributesKey type,
+        EditorColorsScheme scheme,
+        Image icon,
+        String toolTip
+    ) {
+        super(name, group, type == null ? null : type.getExternalName(), scheme, icon, toolTip);
+        myAttributes = attributes;
+        initCheckedStatus();
+    }
 
-  @Override
-  public int getFontType() {
-    return myAttributes.getFontType();
-  }
+    @Override
+    public int getFontType() {
+        return myAttributes.getFontType();
+    }
 
-  @Override
-  public void setFontType(int type) {
-    myAttributes.setFontType(type);
-  }
+    @Override
+    public void setFontType(int type) {
+        myAttributes.setFontType(type);
+    }
 
-  @Override
-  public ColorValue getExternalEffectColor() {
-    return myAttributes.getEffectColor();
-  }
+    @Override
+    public ColorValue getExternalEffectColor() {
+        return myAttributes.getEffectColor();
+    }
 
-  @Override
-  public EffectType getExternalEffectType() {
-    return myAttributes.getEffectType();
-  }
+    @Override
+    public EffectType getExternalEffectType() {
+        return myAttributes.getEffectType();
+    }
 
-  @Override
-  public void setExternalEffectColor(ColorValue color) {
-    myAttributes.setEffectColor(color);
-  }
+    @Override
+    public void setExternalEffectColor(ColorValue color) {
+        myAttributes.setEffectColor(color);
+    }
 
-  @Override
-  public void setExternalEffectType(EffectType type) {
-    myAttributes.setEffectType(type);
-  }
+    @Override
+    public void setExternalEffectType(EffectType type) {
+        myAttributes.setEffectType(type);
+    }
 
-  @Override
-  public ColorValue getExternalForeground() {
-    return myAttributes.getForegroundColor();
-  }
+    @Override
+    public ColorValue getExternalForeground() {
+        return myAttributes.getForegroundColor();
+    }
 
-  @Override
-  public void setExternalForeground(ColorValue col) {
-    myAttributes.setForegroundColor(col);
-  }
+    @Override
+    public void setExternalForeground(ColorValue col) {
+        myAttributes.setForegroundColor(col);
+    }
 
-  @Override
-  public ColorValue getExternalBackground() {
-    return myAttributes.getBackgroundColor();
-  }
+    @Override
+    public ColorValue getExternalBackground() {
+        return myAttributes.getBackgroundColor();
+    }
 
-  @Override
-  public ColorValue getExternalErrorStripe() {
-    return myAttributes.getErrorStripeColor();
-  }
+    @Override
+    public ColorValue getExternalErrorStripe() {
+        return myAttributes.getErrorStripeColor();
+    }
 
-  @Override
-  public void setExternalBackground(ColorValue col) {
-    myAttributes.setBackgroundColor(col);
-  }
+    @Override
+    public void setExternalBackground(ColorValue col) {
+        myAttributes.setBackgroundColor(col);
+    }
 
-  @Override
-  public void setExternalErrorStripe(ColorValue col) {
-    myAttributes.setErrorStripeColor(col);
-  }
+    @Override
+    public void setExternalErrorStripe(ColorValue col) {
+        myAttributes.setErrorStripeColor(col);
+    }
 
-  protected TextAttributes getTextAttributes() {
-    return myAttributes;
-  }
+    protected TextAttributes getTextAttributes() {
+        return myAttributes;
+    }
 }
