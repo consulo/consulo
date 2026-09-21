@@ -100,7 +100,7 @@ public class ErrorViewTextExporter implements ExporterToTextFile {
 
     public static void exportElement(ErrorTreeElement element, StringBuffer buffer, int baseIntent, String newline) {
         int startLength = buffer.length();
-        buffer.append(element.getKind().getPresentableText());
+        buffer.append(element.getKind().getPresentableText().get());
         buffer.append(element.getExportTextPrefix());
         int localIndent = startLength - buffer.length();
 

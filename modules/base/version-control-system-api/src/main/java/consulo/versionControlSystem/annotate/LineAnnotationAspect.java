@@ -18,8 +18,6 @@ package consulo.versionControlSystem.annotate;
 import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.EditorGutterAction;
 import consulo.localize.LocalizeValue;
-import consulo.versionControlSystem.VcsBundle;
-
 import org.jspecify.annotations.Nullable;
 
 /**

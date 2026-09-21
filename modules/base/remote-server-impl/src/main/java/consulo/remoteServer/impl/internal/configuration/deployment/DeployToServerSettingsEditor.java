@@ -5,7 +5,6 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
@@ -13,6 +12,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
@@ -34,9 +34,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
     private RemoteServer<S> myLastSelectedServer;
     private D myDeploymentConfiguration;
 
-    public DeployToServerSettingsEditor(ServerType<S> type,
-                                        DeploymentConfigurator<D, S> deploymentConfigurator,
-                                        Project project) {
+    public DeployToServerSettingsEditor(ServerType<S> type, DeploymentConfigurator<D, S> deploymentConfigurator, Project project) {
 
         myDeploymentConfigurator = deploymentConfigurator;
         myProject = project;
@@ -135,8 +133,8 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
 
     @Override
     protected JComponent createEditor() {
-        FormBuilder builder = FormBuilder.createFormBuilder()
-            .addLabeledComponent(CloudBundle.message("label.text.server"), myServerCombo);
+        FormBuilder builder =
+            FormBuilder.createFormBuilder().addLabeledComponent(RemoteServerLocalize.labelTextServer().get(), myServerCombo);
 
         addDeploymentSourceUi(builder);
 
@@ -183,7 +181,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
 
         @Override
         protected void addDeploymentSourceUi(FormBuilder formBuilder) {
-            formBuilder.addLabeledComponent(CloudBundle.message("label.text.deployment"), mySourceComboBox);
+            formBuilder.addLabeledComponent(RemoteServerLocalize.labelTextDeployment().get(), mySourceComboBox);
         }
     }
 
@@ -192,10 +190,12 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
 
         private final DeploymentSource myLockedSource;
 
-        public LockedSource(ServerType<S> type,
-                            DeploymentConfigurator<D, S> deploymentConfigurator,
-                            Project project,
-                            DeploymentSource lockedSource) {
+        public LockedSource(
+            ServerType<S> type,
+            DeploymentConfigurator<D, S> deploymentConfigurator,
+            Project project,
+            DeploymentSource lockedSource
+        ) {
             super(type, deploymentConfigurator, project);
             myLockedSource = lockedSource;
         }

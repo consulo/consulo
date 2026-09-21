@@ -123,9 +123,9 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     private volatile boolean myUpdating;
     private final Config myConfig = new Config();
     private final ChangeListListener myChangeListListener;
-   
+
     private final ChangeListManager myChangeListManager;
-   
+
     private final NotificationService myNotificationService;
 
     private final List<TaskRepository> myRepositories = new ArrayList<>();
@@ -475,16 +475,14 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         task.setActive(true);
         addTask(task);
         if (task.isIssue()) {
-            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(
-                () -> ProgressManager.getInstance().run(new consulo.application.progress.Task.Backgroundable(
-                        myProject,
-                        "Updating " + task.getPresentableId()
-                    ) {
-                        @Override
-                        public void run(ProgressIndicator indicator) {
-                            updateIssue(task.getId());
-                        }
-                    }));
+            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> ProgressManager.getInstance().run(
+                new consulo.application.progress.Task.Backgroundable(myProject, "Updating " + task.getPresentableId()) {
+                    @Override
+                    public void run(ProgressIndicator indicator) {
+                        updateIssue(task.getId());
+                    }
+                }
+            ));
         }
         LocalTask oldActiveTask = myActiveTask;
         boolean isChanged = !task.equals(oldActiveTask);
@@ -643,7 +641,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
         // make sure the task is associated with default changelist
         LocalTask defaultTask = findTask(LocalTaskImpl.DEFAULT_TASK_ID);
-        LocalChangeList defaultList = myChangeListManager.findChangeList(LocalChangeList.DEFAULT_NAME);
+        LocalChangeList defaultList = myChangeListManager.findChangeList(LocalChangeList.DEFAULT_NAME.get());
         if (defaultList != null && defaultTask != null) {
             ChangeListInfo listInfo = new ChangeListInfo(defaultList);
             if (!defaultTask.getChangeLists().contains(listInfo)) {
@@ -950,7 +948,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-   
+
     public String constructDefaultBranchName(Task task) {
         return task.isIssue() ? TaskUtil.formatTask(task, myConfig.branchNameFormat) : task.getSummary();
     }

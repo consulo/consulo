@@ -34,9 +34,9 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.diff.VcsDiffDataKeys;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
@@ -88,9 +88,11 @@ public class VcsHistoryUtil {
      * @throws VcsException
      * @throws IOException
      */
-    public static void showDiff(Project project, FilePath path,
-                                VcsFileRevision revision1, VcsFileRevision revision2,
-                                String title1, String title2) throws VcsException, IOException {
+    public static void showDiff(
+        Project project, FilePath path,
+        VcsFileRevision revision1, VcsFileRevision revision2,
+        String title1, String title2
+    ) throws VcsException, IOException {
         byte[] content1 = loadRevisionContent(revision1);
         byte[] content2 = loadRevisionContent(revision2);
 
@@ -117,19 +119,18 @@ public class VcsHistoryUtil {
     }
 
     private static @Nullable Pair<FilePath, VcsRevisionNumber> getRevisionInfo(VcsFileRevision revision) {
-        if (revision instanceof VcsFileRevisionEx) {
-            return Pair.create(((VcsFileRevisionEx) revision).getPath(), revision.getRevisionNumber());
+        if (revision instanceof VcsFileRevisionEx fileRevisionEx) {
+            return Pair.create(fileRevisionEx.getPath(), revision.getRevisionNumber());
         }
         return null;
     }
 
     private static @Nullable FilePath getRevisionPath(VcsFileRevision revision) {
-        if (revision instanceof VcsFileRevisionEx) {
-            return ((VcsFileRevisionEx) revision).getPath();
+        if (revision instanceof VcsFileRevisionEx fileRevisionEx) {
+            return fileRevisionEx.getPath();
         }
         return null;
     }
-
 
     public static byte[] loadRevisionContent(VcsFileRevision revision) throws VcsException, IOException {
         byte[] content = revision.getContent();
@@ -143,8 +144,11 @@ public class VcsHistoryUtil {
         return content;
     }
 
-    public static String loadRevisionContentGuessEncoding(VcsFileRevision revision, @Nullable VirtualFile file,
-                                                          @Nullable Project project) throws VcsException, IOException {
+    public static String loadRevisionContentGuessEncoding(
+        VcsFileRevision revision,
+        @Nullable VirtualFile file,
+        @Nullable Project project
+    ) throws VcsException, IOException {
         byte[] bytes = loadRevisionContent(revision);
         if (file != null) {
             return new String(bytes, file.getCharset());
@@ -158,8 +162,10 @@ public class VcsHistoryUtil {
     }
 
 
-    private static DiffContent createContent(Project project, byte[] content, VcsFileRevision revision,
-                                             FilePath filePath) throws IOException {
+    private static DiffContent createContent(
+        Project project, byte[] content, VcsFileRevision revision,
+        FilePath filePath
+    ) throws IOException {
         DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
         if (isCurrent(revision)) {
             VirtualFile file = filePath.getVirtualFile();
@@ -187,38 +193,40 @@ public class VcsHistoryUtil {
      *
      * @see #showDiff(Project, FilePath, VcsFileRevision, VcsFileRevision, String, String)
      */
-    public static void showDifferencesInBackground(final Project project,
-                                                   final FilePath filePath,
-                                                   final VcsFileRevision older,
-                                                   final VcsFileRevision newer) {
+    public static void showDifferencesInBackground(
+        final Project project,
+        final FilePath filePath,
+        final VcsFileRevision older,
+        final VcsFileRevision newer
+    ) {
         new Task.Backgroundable(project, "Comparing Revisions...") {
             @Override
             public void run(ProgressIndicator indicator) {
                 try {
                     showDiff(project, filePath, older, newer, makeTitle(older), makeTitle(newer));
                 }
-                catch (final VcsException e) {
+                catch (VcsException e) {
                     LOG.info(e);
-                    WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
-                        public void run() {
-                            Messages.showErrorDialog(VcsBundle.message("message.text.cannot.show.differences", e.getLocalizedMessage()),
-                                VcsBundle.message("message.title.show.differences"));
-                        }
-                    }, null, project);
+                    WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+                        () -> Messages.showErrorDialog(
+                            VcsLocalize.messageTextCannotShowDifferences(e.getLocalizedMessage()).get(),
+                            VcsLocalize.messageTitleShowDifferences().get()
+                        ),
+                        null,
+                        project
+                    );
                 }
                 catch (IOException e) {
                     LOG.info(e);
                 }
             }
 
-
             private String makeTitle(VcsFileRevision revision) {
                 return revision.getRevisionNumber().asString() +
-                    (revision instanceof CurrentRevision ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
+                    (revision instanceof CurrentRevision ? " (" + VcsLocalize.diffTitleLocal().get() + ")" : "");
             }
         }.queue();
     }
-
 
     public static Font getCommitDetailsFont() {
         consulo.ui.font.Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);

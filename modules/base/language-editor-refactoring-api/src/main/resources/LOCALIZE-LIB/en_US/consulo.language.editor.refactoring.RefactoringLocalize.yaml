@@ -1357,6 +1357,10 @@ replace.all.occurences:
     text: Replace &all occurrences ({0} occurrences)
 replace.all.occurences.checkbox:
     text: Replace &all occurrences
+replace.all.occurrences:
+    text: Replace all {0} occurrences
+replace.all.occurrences.but.write:
+    text: Replace all occurrences but write
 replace.all.occurrences.of.expression.0.occurrences:
     text: Replace &all occurrences ({0})
 replace.button:
@@ -1409,6 +1413,8 @@ replace.this.code.fragment.and.make.method.static.visible:
     text: (Method will be made static and {0})
 replace.this.code.fragment.and.make.method.visible:
     text: (Method will be made {0})
+replace.this.occurrence.only:
+    text: Replace this occurrence only
 replace.with.method.call.does.not.work.for.constructors:
     text: Replace With Method Call does not work for constructors
 replace.write.access.occurrences:

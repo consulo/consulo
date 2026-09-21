@@ -68,7 +68,15 @@ delete.dialog.title:
     text: Delete
 error.dialog.title:
     text: Error
-errortree.prefix.line:
+error.tree.error:
+    text: 'Error:'
+error.tree.information:
+    text: 'Information:'
+error.tree.note:
+    text: 'Note:'
+error.tree.warning:
+    text: 'Warning:'
+error.tree.prefix.line:
     text: line ({0})
 file.cache.conflict.action:
     text: Reload From Disk
