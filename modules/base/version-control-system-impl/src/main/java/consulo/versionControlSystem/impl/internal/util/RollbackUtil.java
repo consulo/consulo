@@ -29,41 +29,41 @@ import static java.util.Arrays.asList;
  * @author Kirill Likhodedov
  */
 public class RollbackUtil {
-
-  private RollbackUtil() {
-  }
-
-  /**
-   * Finds the most appropriate name for the "Rollback" operation for the given VCSs.
-   * That is: iterates through the all {@link RollbackEnvironment#getRollbackOperationName() RollbackEnvironments} and picks
-   * the operation name if it is equal to all given VCSs.
-   * Otherwise picks the {@link DefaultRollbackEnvironment#ROLLBACK_OPERATION_NAME default name}.
-   * @param vcses affected VCSs.
-   * @return name for the "rollback" operation to be used in the UI.
-   */
-  public static String getRollbackOperationName(Collection<AbstractVcs> vcses) {
-    String operationName = null;
-    for (AbstractVcs vcs : vcses) {
-      RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
-      if (rollbackEnvironment != null) {
-        if (operationName == null) {
-          operationName = rollbackEnvironment.getRollbackOperationName();
-        }
-        else if (!operationName.equals(rollbackEnvironment.getRollbackOperationName())) {
-          // if there are different names, use default
-          return DefaultRollbackEnvironment.ROLLBACK_OPERATION_NAME;
-        }
-      }
+    private RollbackUtil() {
     }
-    return operationName != null ? operationName : DefaultRollbackEnvironment.ROLLBACK_OPERATION_NAME;
-  }
 
-  /**
-   * Finds the appropriate name for the "rollback" operation, looking through all VCSs registered in the project.
-   * @see #getRollbackOperationName(java.util.Collection)
-   */
-  public static String getRollbackOperationName(Project project) {
-    return getRollbackOperationName(asList(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()));
-  }
+    /**
+     * Finds the most appropriate name for the "Rollback" operation for the given VCSs.
+     * That is: iterates through the all {@link RollbackEnvironment#getRollbackOperationName() RollbackEnvironments} and picks
+     * the operation name if it is equal to all given VCSs.
+     * Otherwise picks the {@link DefaultRollbackEnvironment#ROLLBACK_OPERATION_NAME default name}.
+     *
+     * @param vcses affected VCSs.
+     * @return name for the "rollback" operation to be used in the UI.
+     */
+    public static String getRollbackOperationName(Collection<AbstractVcs> vcses) {
+        String operationName = null;
+        for (AbstractVcs vcs : vcses) {
+            RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
+            if (rollbackEnvironment != null) {
+                if (operationName == null) {
+                    operationName = rollbackEnvironment.getRollbackOperationName();
+                }
+                else if (!operationName.equals(rollbackEnvironment.getRollbackOperationName())) {
+                    // if there are different names, use default
+                    return DefaultRollbackEnvironment.ROLLBACK_OPERATION_NAME;
+                }
+            }
+        }
+        return operationName != null ? operationName : DefaultRollbackEnvironment.ROLLBACK_OPERATION_NAME;
+    }
 
+    /**
+     * Finds the appropriate name for the "rollback" operation, looking through all VCSs registered in the project.
+     *
+     * @see #getRollbackOperationName(java.util.Collection)
+     */
+    public static String getRollbackOperationName(Project project) {
+        return getRollbackOperationName(asList(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()));
+    }
 }

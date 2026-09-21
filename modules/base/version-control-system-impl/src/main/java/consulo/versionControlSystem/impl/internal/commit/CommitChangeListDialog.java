@@ -30,14 +30,12 @@ import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.*;
@@ -368,7 +366,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         super(project, true);
         myCommitContext = new CommitContext();
         myProject = project;
-        myVcsConfiguration = ObjectUtil.assertNotNull(VcsConfiguration.getInstance(myProject));
+        myVcsConfiguration = Objects.requireNonNull(VcsConfiguration.getInstance(myProject));
         myExecutors = executors;
         myShowVcsCommit = showVcsCommit;
         myVcs = singleVcs;
@@ -385,8 +383,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
         myIsAlien = isAlien;
         if (isAlien) {
-            myBrowser =
-                new InternalAlienChangeListBrowser(project, changeLists, changes, initialSelection, true, true, singleVcs);
+            myBrowser = new InternalAlienChangeListBrowser(project, changeLists, changes, initialSelection, true, true, singleVcs);
         }
         else {
             //noinspection unchecked
@@ -592,6 +589,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         SwingUtilities.invokeLater(this::changeDetails);
     }
 
+    @RequiredUIAccess
     private void updateOnListSelection() {
         updateComment();
         updateVcsOptionsVisibility();
@@ -664,6 +662,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         saveComments(true);
         DefaultListCleaner defaultListCleaner = new DefaultListCleaner();
 
+        @RequiredUIAccess
         Runnable callCommit = () -> {
             try {
                 CheckinHandler.ReturnResult result = runBeforeCommitHandlers(() -> {
@@ -1224,25 +1223,21 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         return !getIncludedChanges().isEmpty() || !myBrowser.getIncludedUnversionedFiles().isEmpty();
     }
 
-    
     @Override
     public Collection<VirtualFile> getVirtualFiles() {
-        return ContainerUtil.mapNotNull(getIncludedChanges(), (change) -> ChangesUtil.getFilePath(change).getVirtualFile());
+        return ContainerUtil.mapNotNull(getIncludedChanges(), change -> ChangesUtil.getFilePath(change).getVirtualFile());
     }
 
-    
     @Override
     public Collection<Change> getSelectedChanges() {
         return new ArrayList<>(getIncludedChanges());
     }
 
-    
     @Override
     public Collection<File> getFiles() {
         return ContainerUtil.map(getIncludedChanges(), (change) -> ChangesUtil.getFilePath(change).getIOFile());
     }
 
-    
     @Override
     public Project getProject() {
         return myProject;
@@ -1268,7 +1263,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         myCommitMessageArea.setText(currentDescription);
     }
 
-    
     @Override
     public String getCommitMessage() {
         return myCommitMessageArea.getComment();
@@ -1334,7 +1328,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         myLegend.update();
     }
 
-    
     private List<Change> getIncludedChanges() {
         return myBrowser.getCurrentIncludedChanges();
     }
@@ -1375,7 +1368,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     private class CommitExecutorAction extends LocalizeAction {
-        
         private final CommitExecutor myCommitExecutor;
 
         public CommitExecutorAction(CommitExecutor commitExecutor, boolean isDefault) {
@@ -1436,13 +1428,11 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
             bridge.putContextUserData(DiffUserDataKeysEx.SHOW_READ_ONLY_LOCK, true);
         }
 
-        
         @Override
         public List<Change> getSelectedChanges() {
             return myBrowser.getSelectedChanges();
         }
 
-        
         @Override
         public List<Change> getAllChanges() {
             return myBrowser.getAllChanges();

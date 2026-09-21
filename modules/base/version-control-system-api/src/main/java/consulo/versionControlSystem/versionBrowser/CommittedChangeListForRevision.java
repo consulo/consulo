@@ -24,28 +24,29 @@ import java.util.Collection;
 import java.util.Date;
 
 public class CommittedChangeListForRevision extends CommittedChangeListImpl implements VcsRevisionNumberAware {
+    private VcsRevisionNumber myRevisionNumber;
 
-  
-  private VcsRevisionNumber myRevisionNumber;
+    public CommittedChangeListForRevision(
+        String subject,
+        String comment,
+        String committerName,
+        Date commitDate,
+        Collection<Change> changes,
+        VcsRevisionNumber revisionNumber
+    ) {
+        super(subject, comment, committerName, getLong(revisionNumber), commitDate, changes);
+        myRevisionNumber = revisionNumber;
+    }
 
-  public CommittedChangeListForRevision(String subject,
-                                        String comment,
-                                        String committerName,
-                                        Date commitDate,
-                                        Collection<Change> changes,
-                                        VcsRevisionNumber revisionNumber) {
-    super(subject, comment, committerName, getLong(revisionNumber), commitDate, changes);
-    myRevisionNumber = revisionNumber;
-  }
+    @Override
+    public VcsRevisionNumber getRevisionNumber() {
+        return myRevisionNumber;
+    }
 
-  
-  @Override
-  public VcsRevisionNumber getRevisionNumber() {
-    return myRevisionNumber;
-  }
-
-  private static long getLong(VcsRevisionNumber number) {
-    if (number instanceof LongRevisionNumber) return ((LongRevisionNumber)number).getLongRevisionNumber();
-    return 0;
-  }
+    private static long getLong(VcsRevisionNumber number) {
+        if (number instanceof LongRevisionNumber longRevisionNumber) {
+            return longRevisionNumber.getLongRevisionNumber();
+        }
+        return 0;
+    }
 }

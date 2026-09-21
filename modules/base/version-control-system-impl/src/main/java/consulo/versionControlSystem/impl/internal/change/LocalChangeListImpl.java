@@ -18,264 +18,277 @@ import java.util.*;
  * @author yole
  */
 public class LocalChangeListImpl extends LocalChangeList {
-  private static final Logger LOG = Logger.getInstance(LocalChangeListImpl.class);
+    private static final Logger LOG = Logger.getInstance(LocalChangeListImpl.class);
 
-  private final Project myProject;
-  private Collection<Change> myChanges = new HashSet<>();
-  private Collection<Change> myReadChangesCache = null;
-  private String myId;
-  
-  private String myName;
-  private String myComment = "";
-  private @Nullable Object myData;
+    private final Project myProject;
+    private Collection<Change> myChanges = new HashSet<>();
+    private Collection<Change> myReadChangesCache = null;
+    private String myId;
 
-  private boolean myIsDefault = false;
-  private boolean myIsReadOnly = false;
-  private Map<Change, Change> myChangesBeforeUpdate;
+    private String myName;
+    private String myComment = "";
+    private @Nullable Object myData;
 
-  public static LocalChangeListImpl createEmptyChangeListImpl(Project project, String name) {
-    return new LocalChangeListImpl(project, name);
-  }
+    private boolean myIsDefault = false;
+    private boolean myIsReadOnly = false;
+    private Map<Change, Change> myChangesBeforeUpdate;
 
-  private LocalChangeListImpl(Project project, String name) {
-    myProject = project;
-    myId = UUID.randomUUID().toString();
-    setNameImpl(name);
-  }
-
-  private LocalChangeListImpl(LocalChangeListImpl origin) {
-    myId = origin.getId();
-    myProject = origin.myProject;
-    setNameImpl(origin.myName);
-  }
-
-  public Collection<Change> getChanges() {
-    createReadChangesCache();
-    return myReadChangesCache;
-  }
-
-  private void createReadChangesCache() {
-    if (myReadChangesCache == null) {
-      myReadChangesCache = Collections.unmodifiableCollection(new HashSet<>(myChanges));
+    public static LocalChangeListImpl createEmptyChangeListImpl(Project project, String name) {
+        return new LocalChangeListImpl(project, name);
     }
-  }
 
-  
-  @Override
-  public String getId() {
-    return myId;
-  }
-
-  
-  public String getName() {
-    return myName;
-  }
-
-  public void setName(String name) {
-    if (! myName.equals(name)) {
-      setNameImpl(name);
+    private LocalChangeListImpl(Project project, String name) {
+        myProject = project;
+        myId = UUID.randomUUID().toString();
+        setNameImpl(name);
     }
-  }
 
-  public String getComment() {
-    return myComment;
-  }
-
-  // same as for setName()
-  public void setComment(String comment) {
-    if (! Comparing.equal(comment, myComment)) {
-      myComment = comment != null ? comment : "";
+    private LocalChangeListImpl(LocalChangeListImpl origin) {
+        myId = origin.getId();
+        myProject = origin.myProject;
+        setNameImpl(origin.myName);
     }
-  }
 
-  void setNameImpl(String name) {
-    if (StringUtil.isEmptyOrSpaces(name) && Registry.is("vcs.log.empty.change.list.creation")) {
-      LOG.info("Creating a changelist with empty name");
+    @Override
+    public Collection<Change> getChanges() {
+        createReadChangesCache();
+        return myReadChangesCache;
     }
-    myName = name;
-  }
 
-  void setCommentImpl(String comment) {
-    myComment = comment;
-  }
+    private void createReadChangesCache() {
+        if (myReadChangesCache == null) {
+            myReadChangesCache = Collections.unmodifiableCollection(new HashSet<>(myChanges));
+        }
+    }
 
-  public boolean isDefault() {
-    return myIsDefault;
-  }
+    @Override
+    public String getId() {
+        return myId;
+    }
 
-  void setDefault(boolean isDefault) {
-    myIsDefault = isDefault;
-  }
+    @Override
+    public String getName() {
+        return myName;
+    }
 
-  public boolean isReadOnly() {
-    return myIsReadOnly;
-  }
+    @Override
+    public void setName(String name) {
+        if (!myName.equals(name)) {
+            setNameImpl(name);
+        }
+    }
 
-  public void setReadOnly(boolean isReadOnly) {
-    myIsReadOnly = isReadOnly;
-  }
+    @Override
+    public String getComment() {
+        return myComment;
+    }
 
-  void setData(@Nullable Object data) {
-    myData = data;
-  }
+    // same as for setName()
+    @Override
+    public void setComment(String comment) {
+        if (!Comparing.equal(comment, myComment)) {
+            myComment = comment != null ? comment : "";
+        }
+    }
 
-  @Override
-  public @Nullable Object getData() {
-    return myData;
-  }
+    void setNameImpl(String name) {
+        if (StringUtil.isEmptyOrSpaces(name) && Registry.is("vcs.log.empty.change.list.creation")) {
+            LOG.info("Creating a changelist with empty name");
+        }
+        myName = name;
+    }
 
-  void addChange(Change change) {
-    myReadChangesCache = null;
-    myChanges.add(change);
-  }
+    void setCommentImpl(String comment) {
+        myComment = comment;
+    }
 
-  Change removeChange(Change change) {
-    for (Change localChange : myChanges) {
-      if (localChange.equals(change)) {
-        myChanges.remove(localChange);
+    @Override
+    public boolean isDefault() {
+        return myIsDefault;
+    }
+
+    void setDefault(boolean isDefault) {
+        myIsDefault = isDefault;
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return myIsReadOnly;
+    }
+
+    @Override
+    public void setReadOnly(boolean isReadOnly) {
+        myIsReadOnly = isReadOnly;
+    }
+
+    void setData(@Nullable Object data) {
+        myData = data;
+    }
+
+    @Override
+    public @Nullable Object getData() {
+        return myData;
+    }
+
+    void addChange(Change change) {
         myReadChangesCache = null;
-        return localChange;
-      }
+        myChanges.add(change);
     }
-    return null;
-  }
 
-  Collection<Change> startProcessingChanges(Project project, @Nullable VcsDirtyScope scope) {
-    createReadChangesCache();
-    Collection<Change> result = new ArrayList<>();
-    myChangesBeforeUpdate = new HashMap<>(myChanges.size());
-    myChanges.forEach(it -> myChangesBeforeUpdate.put(it, it));
-
-    for (Change oldBoy : myChangesBeforeUpdate.values()) {
-      ContentRevision before = oldBoy.getBeforeRevision();
-      ContentRevision after = oldBoy.getAfterRevision();
-      if (scope == null || before != null && scope.belongsTo(before.getFile()) || after != null && scope.belongsTo(after.getFile())
-          || isIgnoredChange(oldBoy, project)) {
-        result.add(oldBoy);
-        myChanges.remove(oldBoy);
-        myReadChangesCache = null;
-      }
+    Change removeChange(Change change) {
+        for (Change localChange : myChanges) {
+            if (localChange.equals(change)) {
+                myChanges.remove(localChange);
+                myReadChangesCache = null;
+                return localChange;
+            }
+        }
+        return null;
     }
-    return result;
-  }
 
-  private static boolean isIgnoredChange(Change change, Project project) {
-    boolean beforeRevIgnored = change.getBeforeRevision() == null || isIgnoredRevision(change.getBeforeRevision(), project);
-    boolean afterRevIgnored = change.getAfterRevision() == null || isIgnoredRevision(change.getAfterRevision(), project);
-    return beforeRevIgnored && afterRevIgnored;
-  }
+    Collection<Change> startProcessingChanges(Project project, @Nullable VcsDirtyScope scope) {
+        createReadChangesCache();
+        Collection<Change> result = new ArrayList<>();
+        myChangesBeforeUpdate = new HashMap<>(myChanges.size());
+        myChanges.forEach(it -> myChangesBeforeUpdate.put(it, it));
 
-  private static boolean isIgnoredRevision(ContentRevision revision, Project project) {
-    return ReadAction.compute(() -> {
-      if (project.isDisposed()) {
+        for (Change oldBoy : myChangesBeforeUpdate.values()) {
+            ContentRevision before = oldBoy.getBeforeRevision();
+            ContentRevision after = oldBoy.getAfterRevision();
+            if (scope == null || before != null && scope.belongsTo(before.getFile()) || after != null && scope.belongsTo(after.getFile())
+                || isIgnoredChange(oldBoy, project)) {
+                result.add(oldBoy);
+                myChanges.remove(oldBoy);
+                myReadChangesCache = null;
+            }
+        }
+        return result;
+    }
+
+    private static boolean isIgnoredChange(Change change, Project project) {
+        boolean beforeRevIgnored = change.getBeforeRevision() == null || isIgnoredRevision(change.getBeforeRevision(), project);
+        boolean afterRevIgnored = change.getAfterRevision() == null || isIgnoredRevision(change.getAfterRevision(), project);
+        return beforeRevIgnored && afterRevIgnored;
+    }
+
+    private static boolean isIgnoredRevision(ContentRevision revision, Project project) {
+        return ReadAction.compute(() -> {
+            if (project.isDisposed()) {
+                return false;
+            }
+            VirtualFile vFile = revision.getFile().getVirtualFile();
+            return vFile != null && ProjectLevelVcsManager.getInstance(project).isIgnored(vFile);
+        });
+    }
+
+    boolean processChange(Change change) {
+        LOG.debug("[process change] for '" + myName + "' isDefault: " + myIsDefault + " change: " +
+            ChangesUtil.getFilePath(change).getPath());
+        if (myIsDefault) {
+            LOG.debug("[process change] adding because default");
+            addChange(change);
+            return true;
+        }
+
+        for (Change oldChange : myChangesBeforeUpdate.values()) {
+            if (Comparing.equal(oldChange, change)) {
+                LOG.debug("[process change] adding because equal to old: " + ChangesUtil.getFilePath(oldChange).getPath());
+                addChange(change);
+                return true;
+            }
+        }
+        LOG.debug("[process change] not found");
         return false;
-      }
-      VirtualFile vFile = revision.getFile().getVirtualFile();
-      return vFile != null && ProjectLevelVcsManager.getInstance(project).isIgnored(vFile);
-    });
-  }
-
-  boolean processChange(Change change) {
-    LOG.debug("[process change] for '" + myName + "' isDefault: " + myIsDefault + " change: " +
-              ChangesUtil.getFilePath(change).getPath());
-    if (myIsDefault) {
-      LOG.debug("[process change] adding because default");
-      addChange(change);
-      return true;
     }
 
-    for (Change oldChange : myChangesBeforeUpdate.values()) {
-      if (Comparing.equal(oldChange, change)) {
-        LOG.debug("[process change] adding because equal to old: " + ChangesUtil.getFilePath(oldChange).getPath());
-        addChange(change);
-        return true;
-      }
-    }
-    LOG.debug("[process change] not found");
-    return false;
-  }
+    boolean doneProcessingChanges(List<Change> removedChanges, List<Change> addedChanges) {
+        boolean changesDetected = (myChanges.size() != myChangesBeforeUpdate.size());
 
-  boolean doneProcessingChanges(List<Change> removedChanges, List<Change> addedChanges) {
-    boolean changesDetected = (myChanges.size() != myChangesBeforeUpdate.size());
+        for (Change newChange : myChanges) {
+            Change oldChange = findOldChange(newChange);
+            if (oldChange == null) {
+                addedChanges.add(newChange);
+            }
+        }
+        changesDetected |= (!addedChanges.isEmpty());
+        List<Change> removed = new ArrayList<>(myChangesBeforeUpdate.values());
+        // since there are SAME objects...
+        removed.removeAll(myChanges);
+        removedChanges.addAll(removed);
+        changesDetected = changesDetected || (!removedChanges.isEmpty());
 
-    for (Change newChange : myChanges) {
-      Change oldChange = findOldChange(newChange);
-      if (oldChange == null) {
-        addedChanges.add(newChange);
-      }
-    }
-    changesDetected |= (! addedChanges.isEmpty());
-    List<Change> removed = new ArrayList<>(myChangesBeforeUpdate.values());
-    // since there are SAME objects...
-    removed.removeAll(myChanges);
-    removedChanges.addAll(removed);
-    changesDetected = changesDetected || (! removedChanges.isEmpty());
-
-    myReadChangesCache = null;
-    return changesDetected;
-  }
-
-  private @Nullable Change findOldChange(Change newChange) {
-    Change oldChange = myChangesBeforeUpdate.get(newChange);
-    if (oldChange != null && sameBeforeRevision(oldChange, newChange) &&
-        newChange.getFileStatus().equals(oldChange.getFileStatus())) {
-      return oldChange;
-    }
-    return null;
-  }
-
-  private static boolean sameBeforeRevision(Change change1, Change change2) {
-    ContentRevision b1 = change1.getBeforeRevision();
-    ContentRevision b2 = change2.getBeforeRevision();
-    if (b1 != null && b2 != null) {
-      VcsRevisionNumber rn1 = b1.getRevisionNumber();
-      VcsRevisionNumber rn2 = b2.getRevisionNumber();
-      boolean isBinary1 = (b1 instanceof BinaryContentRevision);
-      boolean isBinary2 = (b2 instanceof BinaryContentRevision);
-      return rn1 != VcsRevisionNumber.NULL && rn2 != VcsRevisionNumber.NULL && rn1.compareTo(rn2) == 0 && isBinary1 == isBinary2;
-    }
-    return b1 == null && b2 == null;
-  }
-
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    LocalChangeListImpl list = (LocalChangeListImpl)o;
-    return myName.equals(list.myName);
-  }
-
-  public int hashCode() {
-    return myName.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return myName.trim();
-  }
-
-  public LocalChangeList copy() {
-    LocalChangeListImpl copy = new LocalChangeListImpl(this);
-    copy.myComment = myComment;
-    copy.myIsDefault = myIsDefault;
-    copy.myIsReadOnly = myIsReadOnly;
-    copy.myData = myData;
-
-    if (myChanges != null) {
-      copy.myChanges = new HashSet<>(myChanges);
+        myReadChangesCache = null;
+        return changesDetected;
     }
 
-    if (myChangesBeforeUpdate != null) {
-      copy.myChangesBeforeUpdate = new HashMap<>(myChangesBeforeUpdate);
+    private @Nullable Change findOldChange(Change newChange) {
+        Change oldChange = myChangesBeforeUpdate.get(newChange);
+        if (oldChange != null && sameBeforeRevision(oldChange, newChange) &&
+            newChange.getFileStatus().equals(oldChange.getFileStatus())) {
+            return oldChange;
+        }
+        return null;
     }
 
-    if (myReadChangesCache != null) {
-      copy.myReadChangesCache = new HashSet<>(myReadChangesCache);
+    private static boolean sameBeforeRevision(Change change1, Change change2) {
+        ContentRevision b1 = change1.getBeforeRevision();
+        ContentRevision b2 = change2.getBeforeRevision();
+        if (b1 != null && b2 != null) {
+            VcsRevisionNumber rn1 = b1.getRevisionNumber();
+            VcsRevisionNumber rn2 = b2.getRevisionNumber();
+            boolean isBinary1 = (b1 instanceof BinaryContentRevision);
+            boolean isBinary2 = (b2 instanceof BinaryContentRevision);
+            return rn1 != VcsRevisionNumber.NULL && rn2 != VcsRevisionNumber.NULL && rn1.compareTo(rn2) == 0 && isBinary1 == isBinary2;
+        }
+        return b1 == null && b2 == null;
     }
 
-    return copy;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        LocalChangeListImpl list = (LocalChangeListImpl) o;
+        return myName.equals(list.myName);
+    }
 
-  public void setId(String id) {
-    myId = id;
-  }
+    @Override
+    public int hashCode() {
+        return myName.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return myName.trim();
+    }
+
+    @Override
+    public LocalChangeList copy() {
+        LocalChangeListImpl copy = new LocalChangeListImpl(this);
+        copy.myComment = myComment;
+        copy.myIsDefault = myIsDefault;
+        copy.myIsReadOnly = myIsReadOnly;
+        copy.myData = myData;
+
+        if (myChanges != null) {
+            copy.myChanges = new HashSet<>(myChanges);
+        }
+
+        if (myChangesBeforeUpdate != null) {
+            copy.myChangesBeforeUpdate = new HashMap<>(myChangesBeforeUpdate);
+        }
+
+        if (myReadChangesCache != null) {
+            copy.myReadChangesCache = new HashSet<>(myReadChangesCache);
+        }
+
+        return copy;
+    }
+
+    public void setId(String id) {
+        myId = id;
+    }
 }

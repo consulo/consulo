@@ -86,7 +86,6 @@ import java.util.stream.Collectors;
 @Singleton
 @ServiceImpl
 public class ChangeListManagerImpl extends ChangeListManagerEx implements ChangeListOwner, Disposable, PersistentStateComponent<Element> {
-
     public static final Logger LOG = Logger.getInstance(ChangeListManagerImpl.class);
 
     private final Project myProject;
@@ -299,10 +298,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
      * @return true if the changelists have to be deleted, false if not.
      */
     @RequiredUIAccess
-    private boolean showRemoveEmptyChangeListsProposal(
-        VcsConfiguration config,
-        Collection<? extends LocalChangeList> lists
-    ) {
+    private boolean showRemoveEmptyChangeListsProposal(VcsConfiguration config, Collection<? extends LocalChangeList> lists) {
         if (lists.isEmpty()) {
             return false;
         }
@@ -820,20 +816,17 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
      * better use {@link #getChangeListsCopy()}
      */
     @Override
-    
     public List<LocalChangeList> getChangeLists() {
         synchronized (myDataLock) {
             return getChangeListsCopy();
         }
     }
 
-    
     @Override
     public List<LocalChangeList> getChangeLists(Change change) {
         return getAffectedLists(Collections.singletonList(change));
     }
 
-    
     @Override
     public List<LocalChangeList> getChangeLists(VirtualFile file) {
         synchronized (myDataLock) {
@@ -853,7 +846,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
     public List<LocalChangeList> getAffectedLists(Collection<? extends Change> changes) {
         synchronized (myDataLock) {
             return myWorker.getAffectedLists(changes);
@@ -871,7 +863,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-
     public List<VirtualFile> getAffectedFiles() {
         synchronized (myDataLock) {
             return myWorker.getAffectedFiles();
@@ -879,7 +870,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
     public Collection<Change> getAllChanges() {
         synchronized (myDataLock) {
             return myWorker.getAllChanges();
@@ -887,7 +877,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
     public List<VirtualFile> getUnversionedFiles() {
         synchronized (myDataLock) {
             return myComposite.getUnversionedFileHolder().getFiles().stream()
@@ -896,7 +885,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
               .collect(Collectors.toList());
         }
     }
-
 
     public Couple<Integer> getUnversionedFilesSize() {
         synchronized (myDataLock) {
@@ -918,7 +906,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
      * @return only roots for ignored folders, and ignored files
      */
     @Override
-    
     public List<VirtualFile> getIgnoredFiles() {
         synchronized (myDataLock) {
             return myComposite.getIgnoredFileHolder().getFiles().stream()
@@ -1013,7 +1000,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         return addChangeList(name, comment, null);
     }
 
-    
     @Override
     public LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data) {
         return myProject.getApplication().runReadAction((Supplier<LocalChangeList>) () -> {
@@ -1044,7 +1030,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
      * does no modification to change lists, only notification is sent
      */
     @Override
-    
     public Runnable prepareForChangeDeletion(Collection<Change> changes) {
         Map<String, LocalChangeList> lists = new HashMap<>();
         Map<String, List<Change>> map;
@@ -1097,11 +1082,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
-    public Collection<LocalChangeList> getInvolvedListsFilterChanges(
-        Collection<Change> changes,
-        List<Change> validChanges
-    ) {
+    public Collection<LocalChangeList> getInvolvedListsFilterChanges(Collection<Change> changes, List<Change> validChanges) {
         synchronized (myDataLock) {
             return myWorker.getInvolvedListsFilterChanges(changes, validChanges);
         }
@@ -1175,7 +1156,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
     public FileStatus getStatus(VirtualFile file) {
         synchronized (myDataLock) {
             FilePath fp = VcsUtil.getFilePath(file);
@@ -1204,12 +1184,10 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
     public Collection<Change> getChangesIn(VirtualFile dir) {
         return getChangesIn(VcsUtil.getFilePath(dir));
     }
 
-    
     @Override
     public ThreeState haveChangesUnder(VirtualFile vf) {
         if (!vf.isValid() || !vf.isDirectory()) {
@@ -1221,7 +1199,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    
     public Collection<Change> getChangesIn(FilePath dirPath) {
         synchronized (myDataLock) {
             return myWorker.getChangesIn(dirPath);
@@ -1256,9 +1233,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     // TODO this is for quick-fix for GitAdd problem. To be removed after proper fix
     // (which should introduce something like VcsAddRemoveEnvironment)
     @Deprecated
-    
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public List<VcsException> addUnversionedFiles(
         LocalChangeList list,
         List<VirtualFile> files,
@@ -1352,7 +1328,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         return exceptions;
     }
 
-    
     private List<Change> findChanges(Collection<VirtualFile> files) {
         List<Change> result = new ArrayList<>();
 
@@ -1369,16 +1344,11 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         return result;
     }
 
-    
     public static Predicate<FileStatus> getDefaultUnversionedFileCondition() {
         return status -> status == FileStatus.UNKNOWN;
     }
 
-    
-    private Set<VirtualFile> getUnversionedDescendantsRecursively(
-        List<VirtualFile> items,
-        Predicate<FileStatus> condition
-    ) {
+    private Set<VirtualFile> getUnversionedDescendantsRecursively(List<VirtualFile> items, Predicate<FileStatus> condition) {
         Set<VirtualFile> result = new HashSet<>();
         Predicate<VirtualFile> addToResultProcessor = file -> {
             if (condition.test(getStatus(file))) {
@@ -1668,7 +1638,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     // only a light attempt to show that some dirty scope request is asynchronously coming
     // for users to see changes are not valid
-    // (commit -> asynch synch VFS -> asynch vcs dirty scope)
+    // (commit -> async sync VFS -> async vcs dirty scope)
     public void showLocalChangesInvalidated() {
         synchronized (myDataLock) {
             myShowLocalChangesInvalidated = true;
