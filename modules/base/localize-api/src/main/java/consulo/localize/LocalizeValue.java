@@ -110,6 +110,10 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return this;
     }
 
+    default LocalizeValue orIfEmpty(Supplier<LocalizeValue> defaultValueSupplier) {
+        return this;
+    }
+
     String getId();
 
     String getValue();
