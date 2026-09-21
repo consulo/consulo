@@ -16,20 +16,15 @@
 package consulo.it.ai;
 
 import consulo.ai.*;
-import consulo.application.Application;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * The tool-calling loop is the part of the chat that can silently misbehave, so it is driven here
  * with a scripted provider rather than through the UI.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class AIChatSessionTest {
     /**
      * Answers with whatever the script says, so a tool round can be forced deterministically.
@@ -123,9 +118,7 @@ public class AIChatSessionTest {
     }
 
     @Test
-    public void plainAnswerNeedsNoToolRound(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void plainAnswerNeedsNoToolRound(Project project) throws Exception {
         ScriptedType type = new ScriptedType().then(answer("hello"));
         AIChatSession session = new AIChatSession(project, new AIProvider("scripted", type), type.myModel);
 
@@ -137,9 +130,7 @@ public class AIChatSessionTest {
     }
 
     @Test
-    public void toolRequestIsRunAndFedBack(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void toolRequestIsRunAndFedBack(Project project) throws Exception {
         ScriptedType type = new ScriptedType()
             .then(toolUse("t1", "it_echo", "{\"text\":\"ab\",\"times\":2}"))
             .then(answer("done"));
@@ -164,10 +155,7 @@ public class AIChatSessionTest {
     }
 
     @Test
-    public void unknownToolIsReportedBackInsteadOfFailingTheConversation(Application application, ProjectManager projectManager)
-        throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void unknownToolIsReportedBackInsteadOfFailingTheConversation(Project project) throws Exception {
         ScriptedType type = new ScriptedType()
             .then(toolUse("t1", "no_such_tool", "{}"))
             .then(answer("recovered"));
@@ -184,9 +172,7 @@ public class AIChatSessionTest {
     }
 
     @Test
-    public void toolLoopIsBounded(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void toolLoopIsBounded(Project project) throws Exception {
         // always asks for another tool, so only the guard can end this
         ScriptedType type = new ScriptedType().then(toolUse("t1", "it_echo", "{\"text\":\"x\"}"));
         AIChatSession session = new AIChatSession(project, new AIProvider("scripted", type), type.myModel);
@@ -200,9 +186,7 @@ public class AIChatSessionTest {
     }
 
     @Test
-    public void toolsAreWithheldWhenDisabledOrUnsupported(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void toolsAreWithheldWhenDisabledOrUnsupported(Project project) throws Exception {
         ScriptedType type = new ScriptedType().then(answer("hi"));
         new AIChatSession(project, new AIProvider("scripted", type), type.myModel).toolsEnabled(false).send("x", null).get(30, TimeUnit.SECONDS);
 
@@ -212,12 +196,5 @@ public class AIChatSessionTest {
         new AIChatSession(project, new AIProvider("scripted-tools", withToolsType), withToolsType.myModel).send("x", null).get(30, TimeUnit.SECONDS);
 
         assertThat(withToolsType.myRequests.getFirst().getTools()).isNotEmpty();
-    }
-
-    private static Project openProject(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-ai-chat");
-        return projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(30, TimeUnit.SECONDS);
     }
 }

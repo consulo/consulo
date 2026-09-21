@@ -103,6 +103,8 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
      */
     private final ObservableValue<Integer> myStartedOrStoppedEvent = ObservableValue.of(0);
 
+    private final ObservableValue<Integer> myQueueChangedEvent = ObservableValue.of(0);
+
     private final AtomicLong myModCount = new AtomicLong();
     private final ModificationTracker myModificationTracker = new ModificationTracker() {
         @Override
@@ -136,6 +138,7 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
     public UnindexedFilesScannerExecutorImpl(Project project) {
         myProject = project;
         myCoroutineScope = CoroutineScope.of(project.coroutineContext());
+        myScanningTask.addListener(task -> myQueueChangedEvent.update(value -> value + 1));
 
         Coroutine.first(Loop.loopWhile(value -> !myProject.isDisposed(), CallSubroutine.call(this::scanningTaskExecutionTrigger)))
             .withName("scanning task execution trigger")
@@ -219,6 +222,7 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
                 }
                 else {
                     logInfo("Skipping task: " + task.myTask);
+                    task.myFutureHistory.complete(null);
                 }
             }
             catch (Throwable t) {
@@ -358,6 +362,7 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
             ScheduledScanningTask task = myScanningTask.getAndUpdate(value -> null);
             if (task != null) {
                 task.close();
+                task.myFutureHistory.cancel(false);
             }
             ProgressIndicator runningTask = myRunningTask;
             if (runningTask != null) {
@@ -469,6 +474,7 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
         ScheduledScanningTask task = myScanningTask.getAndUpdate(value -> null);
         if (task != null) {
             task.close();
+            task.myFutureHistory.cancel(false);
         }
         ProgressIndicator runningTask = myRunningTask;
         if (runningTask != null) {
@@ -526,6 +532,11 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
     @Override
     public ObservableValue<Integer> startedOrStoppedEvent() {
         return myStartedOrStoppedEvent;
+    }
+
+    @Override
+    public ObservableValue<Integer> queueChangedEvent() {
+        return myQueueChangedEvent;
     }
 
     @Override

@@ -15,12 +15,12 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.BlockingIterator;
 import consulo.it.index.ScanningTestSupport.TestScans;
 import consulo.language.index.impl.internal.DumbModeWhileScanningTrigger;
@@ -28,7 +28,6 @@ import consulo.language.index.impl.internal.PerProjectIndexingQueue;
 import consulo.language.index.impl.internal.roots.ProjectIndexableFilesIteratorImpl;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.project.impl.internal.DumbServiceImpl;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
@@ -47,12 +46,10 @@ import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.allowOnlyTestScans;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.isDumb;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.partialScan;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,7 +62,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -76,15 +73,13 @@ public class DumbModeWhileScanningTriggerTest {
     private static final int FEW_FILES = 5;
 
     @Test
-    public void manyQueuedFilesEnterDumbModeOnceWhileScanningAndExitAfterIndexing(Application application, ProjectManager projectManager)
-        throws Exception {
+    public void manyQueuedFilesEnterDumbModeOnceWhileScanningAndExitAfterIndexing(HeadlessProjects projects) throws Exception {
         assertThat(DumbServiceImpl.isSynchronousTaskExecution()).as("the trigger must be subscribed in the headless application").isFalse();
 
         Path directory = Files.createTempDirectory("consulo-it-dumb-while-scanning-many");
         Path src = createSandFiles(directory, MANY_FILES, "Many");
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
         awaitIdle(project);
 
         UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
@@ -128,7 +123,6 @@ public class DumbModeWhileScanningTriggerTest {
 
             blocker.release();
             scan.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            awaitSmart(dumbService);
             awaitIdle(project);
             waitFor("the trigger must release its dumb mode", () -> !trigger.isDumbModeForScanningActive().get());
 
@@ -146,14 +140,13 @@ public class DumbModeWhileScanningTriggerTest {
     }
 
     @Test
-    public void fewQueuedFilesDoNotEnterDumbModeWhileScanning(Application application, ProjectManager projectManager) throws Exception {
+    public void fewQueuedFilesDoNotEnterDumbModeWhileScanning(HeadlessProjects projects) throws Exception {
         assertThat(DumbServiceImpl.isSynchronousTaskExecution()).as("the trigger must be subscribed in the headless application").isFalse();
 
         Path directory = Files.createTempDirectory("consulo-it-dumb-while-scanning-few");
         Path src = createSandFiles(directory, FEW_FILES, "Few");
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
         awaitIdle(project);
 
         DumbModeWhileScanningTrigger trigger = DumbModeWhileScanningTrigger.getInstance(project);
@@ -193,7 +186,6 @@ public class DumbModeWhileScanningTriggerTest {
 
                 blocker.release();
                 scan.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                awaitSmart(dumbService);
                 awaitIdle(project);
 
                 assertThat(triggerActivated).as("the trigger must stay inactive below the threshold").isFalse();

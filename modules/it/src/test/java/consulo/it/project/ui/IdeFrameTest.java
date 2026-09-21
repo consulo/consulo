@@ -16,10 +16,8 @@
 package consulo.it.project.ui;
 
 import consulo.application.Application;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrameState;
@@ -27,10 +25,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,17 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class IdeFrameTest {
     @Test
-    public void resolvesIdeFrameAndStatusBarForOpenedProject(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-ideframe");
-
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(30, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
-
+    public void resolvesIdeFrameAndStatusBarForOpenedProject(Application application, Project project) throws Exception {
         // The real ProjectFrameAllocatorImpl allocated a frame through the headless WindowManager.
         WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
         assertThat(windowManager).isNotNull();

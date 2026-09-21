@@ -21,10 +21,9 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.StoreReloadManager;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -52,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class ProjectStateReloadTest {
     private static final long TIMEOUT_SECONDS = 30;
     private static final String STORAGE_FILE = "it-reload-test.xml";
@@ -65,12 +64,10 @@ public class ProjectStateReloadTest {
      */
     @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
-    public void externalChangeReloadsComponentInPlace(Application application, ProjectManager projectManager) throws Exception {
+    public void externalChangeReloadsComponentInPlace(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-state-reload");
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        Project project = projects.open(directory);
 
         // makes the manager register its VFS listener before anything is written
         StoreReloadManager.getInstance(project);

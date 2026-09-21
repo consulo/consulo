@@ -15,7 +15,6 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
@@ -24,7 +23,8 @@ import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkTable;
 import consulo.content.library.Library;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.internal.HeadlessModuleExtensionProvider;
 import consulo.it.internal.HeadlessMutableModuleExtension;
 import consulo.it.internal.HeadlessSdkType;
@@ -38,9 +38,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.extension.ModuleInheritableNamedPointerImpl;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import org.junit.jupiter.api.Test;
@@ -56,10 +54,8 @@ import java.util.zip.ZipEntry;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,7 +66,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -78,14 +74,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 })
 public class LibraryAndSdkIndexingTest {
     @Test
-    public void classesOfAModuleLibraryAreIndexed(Application application, ProjectManager projectManager) throws Exception {
+    public void classesOfAModuleLibraryAreIndexed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-library");
         Files.writeString(directory.resolve("Content.sand"), "class ContentClassNextToLibrary {}");
 
         Path libraryClasses = Files.createTempDirectory("consulo-it-library-classes");
         Files.writeString(libraryClasses.resolve("Lib.sand"), "class ClassFromLibrary {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         Module module = addContentRoot(project, "main", directory);
 
         VirtualFile libraryRoot = findFile(libraryClasses);
@@ -98,7 +94,6 @@ public class LibraryAndSdkIndexingTest {
             rootModel.commit();
         });
 
-        awaitSmart(DumbService.getInstance(project));
         awaitIdle(project);
 
         assertThat(collectRoots(project, LibraryOrigin.class))
@@ -110,7 +105,7 @@ public class LibraryAndSdkIndexingTest {
     }
 
     @Test
-    public void classesOfAnSdkAreIndexed(Application application, ProjectManager projectManager) throws Exception {
+    public void classesOfAnSdkAreIndexed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sdk");
         Files.writeString(directory.resolve("Content.sand"), "class ContentClassNextToSdk {}");
 
@@ -122,7 +117,7 @@ public class LibraryAndSdkIndexingTest {
         Files.writeString(sdkClasses.resolve("Sdk.sand"), "class ClassFromSdk {}");
         Files.writeString(sdkSources.resolve("SdkSource.sand"), "class ClassFromSdkSources {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         Module module = addContentRoot(project, "main", directory);
 
         VirtualFile sdkRoot = findFile(sdkClasses);
@@ -142,7 +137,6 @@ public class LibraryAndSdkIndexingTest {
         try {
             attachSdk(module, sdk);
 
-            awaitSmart(DumbService.getInstance(project));
             awaitIdle(project);
 
             assertThat(collectRoots(project, SdkOrigin.class))
@@ -163,7 +157,7 @@ public class LibraryAndSdkIndexingTest {
      * archive file system rather than to the local one.
      */
     @Test
-    public void classesInAnSdkArchiveAreIndexed(Application application, ProjectManager projectManager) throws Exception {
+    public void classesInAnSdkArchiveAreIndexed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sdk-archive");
         Files.writeString(directory.resolve("Content.sand"), "class ContentClassNextToSdkArchive {}");
 
@@ -175,7 +169,7 @@ public class LibraryAndSdkIndexingTest {
             out.closeEntry();
         }
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         Module module = addContentRoot(project, "main", directory);
 
         VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(findFile(archive));
@@ -195,7 +189,6 @@ public class LibraryAndSdkIndexingTest {
         try {
             attachSdk(module, sdk);
 
-            awaitSmart(DumbService.getInstance(project));
             awaitIdle(project);
 
             assertThat(collectRoots(project, SdkOrigin.class))

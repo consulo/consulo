@@ -15,21 +15,19 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.BlockingIterator;
 import consulo.it.index.ScanningTestSupport.RecordingIterator;
 import consulo.it.index.ScanningTestSupport.TestScans;
 import consulo.language.index.impl.internal.PerProjectIndexingQueue;
 import consulo.language.index.impl.internal.UnindexedFilesScannerExecutorImpl;
 import consulo.language.index.impl.internal.roots.ProjectIndexableFilesIteratorImpl;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,13 +49,11 @@ import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.allowOnlyTestScans;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.fullScan;
 import static consulo.it.index.ScanningTestSupport.heldFullScan;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.partialScan;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,14 +65,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class UnindexedFilesScannerExecutorTest {
     private static final int FILES = 25;
 
     @Test
-    public void partialScanDoesNotCancelRunningFullScan(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-scanner-executor"));
-        awaitSmart(DumbService.getInstance(project));
+    public void partialScanDoesNotCancelRunningFullScan(Project project) throws Exception {
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
 
@@ -103,10 +97,7 @@ public class UnindexedFilesScannerExecutorTest {
     }
 
     @Test
-    public void fullScanCancelsRunningScanAndCompletesExactlyOnce(Application application, ProjectManager projectManager)
-        throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-scanner-executor"));
-        awaitSmart(DumbService.getInstance(project));
+    public void fullScanCancelsRunningScanAndCompletesExactlyOnce(Project project) throws Exception {
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
 
@@ -137,9 +128,7 @@ public class UnindexedFilesScannerExecutorTest {
     }
 
     @Test
-    public void queuedPartialScansAreMergedIntoOne(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-scanner-executor"));
-        awaitSmart(DumbService.getInstance(project));
+    public void queuedPartialScansAreMergedIntoOne(Project project) throws Exception {
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
 
@@ -185,13 +174,10 @@ public class UnindexedFilesScannerExecutorTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void cancelledScanStillFlushesCollectedFilesToIndexer(Application application, ProjectManager projectManager)
-        throws Exception {
+    public void cancelledScanStillFlushesCollectedFilesToIndexer(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-scanner-executor-flush");
         Path src = createSandFiles(directory, FILES, "Foo");
-        Project project = openProject(application, projectManager, directory);
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        Project project = projects.open(directory);
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
         PerProjectIndexingQueue indexingQueue = PerProjectIndexingQueue.getInstance(project);
@@ -215,7 +201,7 @@ public class UnindexedFilesScannerExecutorTest {
                 .as("the scan must report its cancellation")
                 .isInstanceOf(ExecutionException.class);
 
-            awaitSmart(dumbService);
+            awaitIdle(project);
             waitFor("the collected files must be handed to an indexer", () -> indexingQueue.getQueuedFiles().isEmpty());
             awaitIdle(project);
             for (int i = 0; i < FILES; i++) {
@@ -228,9 +214,7 @@ public class UnindexedFilesScannerExecutorTest {
     }
 
     @Test
-    public void isRunningTransitionsAndQueueIsEmptyWhenIdle(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-scanner-executor"));
-        awaitSmart(DumbService.getInstance(project));
+    public void isRunningTransitionsAndQueueIsEmptyWhenIdle(Project project) throws Exception {
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
         assertThat(executor.isRunning().get()).isFalse();

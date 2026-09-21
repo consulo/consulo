@@ -20,13 +20,12 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
 import consulo.it.AllowWriteLockUnderUIThread;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.ScanningType;
 import consulo.language.index.impl.internal.projectFilter.PersistentProjectIndexableFilesFilter;
 import consulo.module.ModuleManager;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -41,13 +40,10 @@ import java.nio.file.Path;
 import static consulo.it.index.ScanningTestSupport.OpenScans;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
-import static consulo.it.index.ScanningTestSupport.closeProject;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.indexingDebug;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.recordScansOfNextOpenedProject;
 import static consulo.it.index.ScanningTestSupport.saveProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
@@ -73,7 +69,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowWriteLockUnderUIThread
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
@@ -89,27 +85,25 @@ public class ProjectReopenSkipsFullScanTest {
      * which is why the module list is asserted too.
      */
     @Test
-    public void reopenedProjectDoesNotScanEverythingAgain(Application application, ProjectManager projectManager) throws Exception {
+    public void reopenedProjectDoesNotScanEverythingAgain(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-reopen-skips-scan");
         createSandFiles(directory, FILES, "Reopen");
 
-        Project first = openProject(application, projectManager, directory);
+        Project first = projects.open(directory);
         addContentRoot(first, directory);
-        awaitSmart(DumbService.getInstance(first));
         awaitIdle(first);
         waitFor("the first session must index the classes", () -> !findClasses(first, "Reopen5").isEmpty());
 
         saveProject(first, application);
-        closeProject(first);
+        projects.close(first);
 
         Disposable disposable = Disposable.newDisposable();
         try {
             OpenScans scans = recordScansOfNextOpenedProject(application, disposable);
 
-            Project second = openProject(application, projectManager, directory);
+            Project second = projects.open(directory);
             assertThat(scans.projects()).as("the recorder must have seen the reopened project").contains(second);
 
-            awaitSmart(DumbService.getInstance(second));
             awaitIdle(second);
 
             assertThat(ModuleManager.getInstance(second).getModules())
@@ -147,18 +141,17 @@ public class ProjectReopenSkipsFullScanTest {
      * Deleting the persisted filter is the only difference to the test above.
      */
     @Test
-    public void reopenWithoutPersistedFilterScansEverything(Application application, ProjectManager projectManager) throws Exception {
+    public void reopenWithoutPersistedFilterScansEverything(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-reopen-without-filter");
         createSandFiles(directory, FILES, "NoFilter");
 
-        Project first = openProject(application, projectManager, directory);
+        Project first = projects.open(directory);
         addContentRoot(first, directory);
-        awaitSmart(DumbService.getInstance(first));
         awaitIdle(first);
         waitFor("the first session must index the classes", () -> !findClasses(first, "NoFilter5").isEmpty());
 
         saveProject(first, application);
-        closeProject(first);
+        projects.close(first);
 
         PersistentProjectIndexableFilesFilter.deletePersistentIndexableFilesFilters();
 
@@ -166,8 +159,7 @@ public class ProjectReopenSkipsFullScanTest {
         try {
             OpenScans scans = recordScansOfNextOpenedProject(application, disposable);
 
-            Project second = openProject(application, projectManager, directory);
-            awaitSmart(DumbService.getInstance(second));
+            Project second = projects.open(directory);
             awaitIdle(second);
 
             assertThat(scans.fullScans())
@@ -189,18 +181,17 @@ public class ProjectReopenSkipsFullScanTest {
      * answer for the new class proves the index was ready when the empty answer for the old one was produced.
      */
     @Test
-    public void fileEditedWhileProjectWasClosedIsReindexed(Application application, ProjectManager projectManager) throws Exception {
+    public void fileEditedWhileProjectWasClosedIsReindexed(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-reopen-edited-file");
         Path src = createSandFiles(directory, FILES, "Before");
 
-        Project first = openProject(application, projectManager, directory);
+        Project first = projects.open(directory);
         addContentRoot(first, directory);
-        awaitSmart(DumbService.getInstance(first));
         awaitIdle(first);
         waitFor("the first session must index the classes", () -> !findClasses(first, "Before5").isEmpty());
 
         saveProject(first, application);
-        closeProject(first);
+        projects.close(first);
 
         Files.writeString(src.resolve("file5.sand"), "class After5 {}");
 
@@ -209,8 +200,7 @@ public class ProjectReopenSkipsFullScanTest {
         try {
             OpenScans scans = recordScansOfNextOpenedProject(application, disposable);
 
-            Project second = openProject(application, projectManager, directory);
-            awaitSmart(DumbService.getInstance(second));
+            Project second = projects.open(directory);
             awaitIdle(second);
 
             assertThat(scans.fullScans())

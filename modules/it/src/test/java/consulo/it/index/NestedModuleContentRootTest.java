@@ -15,10 +15,10 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.index.impl.internal.roots.IndexableFilesIterator;
 import consulo.language.index.impl.internal.roots.ModuleIndexableFilesIteratorImpl;
@@ -28,9 +28,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.internal.FileIndexBase;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,10 +40,8 @@ import java.util.List;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -63,18 +59,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 })
 public class NestedModuleContentRootTest {
     @Test
-    public void moduleNestedInAnotherModuleIsIndexed(Application application, ProjectManager projectManager) throws Exception {
+    public void moduleNestedInAnotherModuleIsIndexed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-nested-module");
         Path inner = directory.resolve("inner");
         Files.createDirectories(inner);
         Files.writeString(directory.resolve("Outer.sand"), "class OuterModuleClass {}");
         Files.writeString(inner.resolve("Inner.sand"), "class InnerModuleClass {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         addContentRoot(project, "outer", directory);
         Module innerModule = addContentRoot(project, "inner", inner);
 
-        awaitSmart(DumbService.getInstance(project));
         awaitIdle(project);
 
         VirtualFile innerFile = findFile(inner);

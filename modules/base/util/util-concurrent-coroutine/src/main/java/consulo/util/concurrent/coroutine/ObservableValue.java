@@ -112,7 +112,7 @@ public final class ObservableValue<T extends @Nullable Object> {
 
     public <R extends @Nullable Object> ObservableValue<R> map(Function<? super T, ? extends R> mapper) {
         ObservableValue<R> mapped = new ObservableValue<>(mapper.apply(get()));
-        addListener(value -> mapped.set(mapper.apply(value)));
+        addListener(value -> mapped.set(mapper.apply(get())));
         return mapped;
     }
 

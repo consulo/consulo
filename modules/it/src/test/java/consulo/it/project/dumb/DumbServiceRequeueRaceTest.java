@@ -17,19 +17,15 @@ package consulo.it.project.dumb;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
 import consulo.it.index.ScanningTestSupport;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class DumbServiceRequeueRaceTest {
     private static final int CYCLES = 300;
     private static final long TIMEOUT_SECONDS = 120;
@@ -68,9 +64,7 @@ public class DumbServiceRequeueRaceTest {
     private static final int MINIMUM_EVENTS = 10;
 
     @Test
-    public void requeueWhileLeavingDumbModeKeepsEventsAlternating(Application application, ProjectManager projectManager)
-        throws Exception {
-        Project project = openProject(application, projectManager);
+    public void requeueWhileLeavingDumbModeKeepsEventsAlternating(Application application, Project project) throws Exception {
         DumbService dumbService = DumbService.getInstance(project);
 
         List<String> events = Collections.synchronizedList(new ArrayList<>());
@@ -98,12 +92,7 @@ public class DumbServiceRequeueRaceTest {
             }
         );
 
-        awaitSmart(dumbService);
         ScanningTestSupport.awaitIdle(project);
-        ScanningTestSupport.waitFor(
-            "the dumb window of the project open must finish publishing before the baseline is taken",
-            () -> events.isEmpty() || EXITED.equals(events.get(events.size() - 1))
-        );
         events.clear();
         notUnderWriteAction.clear();
 
@@ -141,9 +130,7 @@ public class DumbServiceRequeueRaceTest {
         assertThat(queueing.isAlive()).as("the queueing thread must finish").isFalse();
         assertThat(failures).as("every cycle must run its task and come back to smart mode").isEmpty();
 
-        // the exit is published in the write lock step before the one which drains the runWhenSmart queue, so this
-        // callback means the last transition has been published already
-        awaitSmart(dumbService);
+        ScanningTestSupport.awaitIdle(project);
 
         assertThat(notUnderWriteAction).as("every event must be published inside a write action").isEmpty();
         assertThat(dumbService.isDumb()).as("the project must be smart once every task is done").isFalse();
@@ -177,20 +164,5 @@ public class DumbServiceRequeueRaceTest {
                 performed.countDown();
             }
         };
-    }
-
-    private static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
-    }
-
-    private static Project openProject(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-dumb-service-requeue");
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
-        return project;
     }
 }

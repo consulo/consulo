@@ -19,20 +19,16 @@ import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.it.AllowWriteLockUnderUIThread;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
 import consulo.it.index.ScanningTestSupport;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.ui.UIAccess;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -58,7 +54,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class DumbServiceTest {
     private static final int CYCLES = 20;
     private static final long TIMEOUT_SECONDS = 60;
@@ -71,9 +67,7 @@ public class DumbServiceTest {
 
     @AllowWriteLockUnderUIThread
     @Test
-    public void queueTaskFromUiThreadEntersAndExitsDumbMode(Application application, ProjectManager projectManager)
-        throws Exception {
-        Project project = openProject(application, projectManager);
+    public void queueTaskFromUiThreadEntersAndExitsDumbMode(Application application, Project project) throws Exception {
         DumbService dumbService = DumbService.getInstance(project);
         BlockingQueue<Event> events = subscribe(application, project);
 
@@ -99,9 +93,7 @@ public class DumbServiceTest {
     }
 
     @Test
-    public void queueTaskFromBackgroundThreadEntersAndExitsDumbMode(Application application, ProjectManager projectManager)
-        throws Exception {
-        Project project = openProject(application, projectManager);
+    public void queueTaskFromBackgroundThreadEntersAndExitsDumbMode(Application application, Project project) throws Exception {
         DumbService dumbService = DumbService.getInstance(project);
         BlockingQueue<Event> events = subscribe(application, project);
 
@@ -124,9 +116,8 @@ public class DumbServiceTest {
 
     @AllowWriteLockUnderUIThread
     @Test
-    public void queueTaskInsideWriteActionOnUiThreadPublishesBeforeItReturns(Application application, ProjectManager projectManager)
+    public void queueTaskInsideWriteActionOnUiThreadPublishesBeforeItReturns(Application application, Project project)
         throws Exception {
-        Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
         BlockingQueue<Event> events = subscribe(application, project);
 
@@ -158,9 +149,8 @@ public class DumbServiceTest {
     @Test
     public void queueTaskInsideWriteActionOnBackgroundThreadEntersDumbModeAsynchronously(
         Application application,
-        ProjectManager projectManager
+        Project project
     ) throws Exception {
-        Project project = openProject(application, projectManager);
         DumbService dumbService = DumbService.getInstance(project);
         BlockingQueue<Event> events = subscribe(application, project);
 
@@ -219,15 +209,6 @@ public class DumbServiceTest {
         ScanningTestSupport.awaitIdle(project);
         events.clear();
         return events;
-    }
-
-    private static Project openProject(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-dumb-service");
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
-        return project;
     }
 
     private static void awaitTask(CountDownLatch performed, int cycle) throws InterruptedException {

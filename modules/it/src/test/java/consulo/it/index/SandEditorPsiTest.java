@@ -24,7 +24,8 @@ import consulo.document.FileDocumentManager;
 import consulo.application.internal.TransferredWriteActionService;
 import consulo.undoRedo.CommandProcessor;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -34,10 +35,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandClassSearch;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -48,10 +46,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
+import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -60,7 +58,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * (only the enabled variant exists; the disabled one is inert non-tokens), then unsaved edits
  * go through the in-memory document indexing path.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class SandEditorPsiTest {
     private static final long TIMEOUT_SECONDS = 60;
 
@@ -74,7 +72,7 @@ public class SandEditorPsiTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void documentBackedPsiBindsVariantsCorrectly(Application application, ProjectManager projectManager) throws Exception {
+    public void documentBackedPsiBindsVariantsCorrectly(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-editor");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -86,10 +84,7 @@ public class SandEditorPsiTest {
             #end
             """);
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(directoryFile).isNotNull();
@@ -105,8 +100,7 @@ public class SandEditorPsiTest {
             rootModel.commit();
         });
 
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
         waitFor(() -> variantCount(project, "Item") == 1);
 
         VirtualFile file = directoryFile.findFileByRelativePath("src/some.sand");
@@ -179,12 +173,6 @@ public class SandEditorPsiTest {
                 return -1;
             }
         });
-    }
-
-    private static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
     }
 
     private static void waitFor(BooleanSupplier condition) throws Exception {

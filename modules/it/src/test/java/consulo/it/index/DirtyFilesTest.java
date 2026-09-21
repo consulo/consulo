@@ -18,14 +18,13 @@ package consulo.it.index;
 import consulo.application.Application;
 import consulo.it.AllowLogError;
 import consulo.it.AllowWriteLockUnderUIThread;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.index.impl.internal.PersistentDirtyFilesQueue;
 import consulo.language.index.impl.internal.ProjectDirtyFilesQueue;
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.virtualFileSystem.event.AsyncFileListener;
@@ -52,13 +51,10 @@ import consulo.virtualFileSystem.VirtualFileManager;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
-import static consulo.it.index.ScanningTestSupport.closeProject;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.indexingDebug;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.saveProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +73,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowWriteLockUnderUIThread
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
@@ -139,14 +135,13 @@ public class DirtyFilesTest {
      * from the persisted queue, and only the completion of the on-open scanning job takes them out again.
      */
     @Test
-    public void dirtyFileIsPersistedOnCloseAndIndexedOnNextOpen(Application application, ProjectManager projectManager)
+    public void dirtyFileIsPersistedOnCloseAndIndexedOnNextOpen(Application application, HeadlessProjects projects)
         throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-dirty-files");
         Path src = createSandFiles(directory, FILES, "Clean");
 
-        Project first = openProject(application, projectManager, directory);
+        Project first = projects.open(directory);
         addContentRoot(first, directory);
-        awaitSmart(DumbService.getInstance(first));
         awaitIdle(first);
         waitFor("the first session must index the classes", () -> !findClasses(first, "Clean0").isEmpty());
         saveProject(first, application);
@@ -262,7 +257,7 @@ public class DirtyFilesTest {
             indexingDebug(false);
         }
 
-        closeProject(first);
+        projects.close(first);
 
         ProjectDirtyFilesQueue persisted = PersistentDirtyFilesQueue.readProjectDirtyFilesQueue(
             queueFile,
@@ -275,8 +270,7 @@ public class DirtyFilesTest {
             .as("the queue must hold the files which are actually dirty, not every file of the project")
             .doesNotContain(untouchedId);
 
-        Project second = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(second));
+        Project second = projects.open(directory);
         awaitIdle(second);
 
         waitFor(

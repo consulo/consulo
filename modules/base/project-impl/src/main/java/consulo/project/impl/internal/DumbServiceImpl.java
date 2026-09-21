@@ -66,11 +66,14 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Singleton
@@ -109,14 +112,16 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     // DumbService can invoke `launch` from completeJustSubmittedTasks or from queueTaskOnEdt
     private final class DumbTaskLauncher {
         private final ModalityState myModality;
+        private final Runnable myAccounting;
         private boolean myLaunched;
 
         private final AtomicBoolean myClosed = new AtomicBoolean(false);
 
         private volatile @Nullable Throwable myCloseTrace; // for diagnostics
 
-        private DumbTaskLauncher(ModalityState modality) {
+        private DumbTaskLauncher(ModalityState modality, Runnable accounting) {
             myModality = modality;
+            myAccounting = accounting;
         }
 
         void cancel() {
@@ -130,6 +135,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         private void close() {
             if (myClosed.compareAndSet(false, true)) {
                 myCloseTrace = new Throwable("Close trace");
+                myAccounting.run();
                 if (myApplication.isDispatchThread()) {
                     myDumbTaskLaunchers.remove(this);
                     // without redispatching, because it can be invoked from completeJustSubmittedTasks
@@ -178,19 +184,38 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     private volatile @Nullable Thread myWaitIntolerantThread;
 
+    private final ObservableValue<Integer> myPendingTasks = ObservableValue.of(0);
+    private final ObservableValue<Integer> myPendingPublications = ObservableValue.of(0);
+    private final List<CompletableFuture<?>> myIdleFutures = Lists.newLockFreeCopyOnWriteList();
+    private final AtomicLong myIdleTransitions = new AtomicLong();
+    private final Object myIdleMonitorLock = new Object();
+    private volatile @Nullable UnindexedFilesScannerExecutor myIdleMonitorExecutor;
+
     private static final class ScheduledTasksScope {
         private final List<Runnable> myCancellations = Lists.newLockFreeCopyOnWriteList();
+        private volatile boolean myCancelled;
 
         Runnable register(Runnable cancellation) {
+            if (myCancelled) {
+                cancellation.run();
+                return () -> {
+                };
+            }
             myCancellations.add(cancellation);
+            if (myCancelled && myCancellations.remove(cancellation)) {
+                cancellation.run();
+                return () -> {
+                };
+            }
             return () -> myCancellations.remove(cancellation);
         }
 
         void cancel() {
-            List<Runnable> cancellations = new ArrayList<>(myCancellations);
-            myCancellations.clear();
-            for (Runnable cancellation : cancellations) {
-                cancellation.run();
+            myCancelled = true;
+            for (Runnable cancellation : myCancellations) {
+                if (myCancellations.remove(cancellation)) {
+                    cancellation.run();
+                }
             }
         }
 
@@ -263,6 +288,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         // cancel the tasks that were about to be scheduled while DumbService.disposed was called
         myScheduledTasksScope.cancel();
         myTaskQueue.disposePendingTasks();
+        cancelIdleFutures();
     }
 
     @Override
@@ -333,6 +359,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private void incrementDumbCounterBlocking(Throwable trace) {
         if (tryIncrementStateCounter()) {
             myDumbModeStartTrace = trace;
+            publicationScheduled();
             // If already dumb - just increment the counter. We don't need a write action (to not interrupt NBRA), neither we need EDT.
             // Otherwise, increment the counter under write action because this will change dumb state
             boolean enteredDumb = myApplication.runWriteAction((Supplier<Boolean>) this::doIncrementStateCounter);
@@ -350,7 +377,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // This would lead to repeated calls to `runEnteredListeners`, which is not permitted by the contract of these listeners.
             // The forced `invokeLater` will ensure that published requests for exit will be executed before new requests for enter.
             // This works given that `invokeLater` is fair, which is true.
-            myApplication.invokeLater(() -> proceedWithPublishingOfIncrementEvents(enteredDumb), myProject.getDisposed());
+            myApplication.invokeLater(() -> publishIncrementEvents(enteredDumb), myProject.getDisposed());
         }
 
         LOG.assertTrue(state().isDumb(), "Should be dumb");
@@ -364,16 +391,46 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             boolean enterDumbMode = tryIncrementStateCounter();
             if (enterDumbMode) {
                 myDumbModeStartTrace = trace;
+                publicationScheduled();
                 // If already dumb - just increment the counter. We don't need a write action (to not interrupt NBRA), neither we need EDT.
                 // Otherwise, increment the counter under write action because this will change dumb state
                 boolean enteredDumb = doIncrementStateCounter();
                 if (enteredDumb) {
-                    myApplication.invokeLater(() -> proceedWithPublishingOfIncrementEvents(true), myProject.getDisposed());
+                    myApplication.invokeLater(() -> publishIncrementEvents(true), myProject.getDisposed());
+                }
+                else {
+                    publicationDone();
                 }
             }
             LOG.assertTrue(state().isDumb(), "Should be dumb");
             return null;
         });
+    }
+
+    private void publishIncrementEvents(boolean enteredDumb) {
+        try {
+            proceedWithPublishingOfIncrementEvents(enteredDumb);
+        }
+        finally {
+            publicationDone();
+        }
+    }
+
+    private void publishDecrementEvents(boolean exitDumb) {
+        try {
+            proceedWithPublishingOfDecrementEvents(exitDumb);
+        }
+        finally {
+            publicationDone();
+        }
+    }
+
+    private void publicationScheduled() {
+        myPendingPublications.update(count -> count + 1);
+    }
+
+    private void publicationDone() {
+        myPendingPublications.update(count -> count - 1);
     }
 
     private void proceedWithPublishingOfIncrementEvents(boolean enteredDumb) {
@@ -419,9 +476,10 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         // neither we need EDT.
         // Otherwise, decrement the counter under write action because this will change dumb state
         if (tryDecrementDumbCounter()) {
+            publicationScheduled();
             boolean exitDumb = myApplication.runWriteAction((Supplier<Boolean>) this::doDecrementDumbCounter);
             // for rationale for this `invokeLater`, see explanation in `incrementDumbCounterBlocking`
-            myApplication.invokeLater(() -> proceedWithPublishingOfDecrementEvents(exitDumb), myProject.getDisposed());
+            myApplication.invokeLater(() -> publishDecrementEvents(exitDumb), myProject.getDisposed());
         }
     }
 
@@ -437,9 +495,13 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         LOG.assertTrue(state().isDumb(), "Should be dumb");
         return WriteLock.apply(input -> {
             if (tryDecrementDumbCounter()) {
+                publicationScheduled();
                 boolean isNowSmart = doDecrementDumbCounter();
                 if (isNowSmart) {
-                    myApplication.invokeLater(() -> proceedWithPublishingOfDecrementEvents(true), myProject.getDisposed());
+                    myApplication.invokeLater(() -> publishDecrementEvents(true), myProject.getDisposed());
+                }
+                else {
+                    publicationDone();
                 }
             }
             return null;
@@ -512,20 +574,34 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             LOG.error("Unexpected modality: should not be ANY. Replace with NON_MODAL");
             modality = ModalityState.nonModal();
         }
+        Runnable accounting = taskAccounting();
         if (myApplication.isDispatchThread()) {
-            queueTaskOnEdt(task, modality, trace);
+            queueTaskOnEdt(task, modality, trace, accounting);
         }
         else if (Registry.is("ide.dumb.service.use.background.write.action", true) && modality.equals(ModalityState.nonModal())) {
-            queueTaskOnBackground(task, trace);
+            queueTaskOnBackground(task, trace, accounting);
         }
         else {
             ModalityState edtModality = modality;
             invokeLaterOnEdtInScheduledTasksScope(
                 edtModality,
-                () -> queueTaskOnEdt(task, edtModality, trace),
-                () -> Disposer.dispose(task)
+                () -> queueTaskOnEdt(task, edtModality, trace, accounting),
+                () -> {
+                    accounting.run();
+                    Disposer.dispose(task);
+                }
             );
         }
+    }
+
+    private Runnable taskAccounting() {
+        myPendingTasks.update(count -> count + 1);
+        AtomicBoolean done = new AtomicBoolean(false);
+        return () -> {
+            if (done.compareAndSet(false, true)) {
+                myPendingTasks.update(count -> count - 1);
+            }
+        };
     }
 
     private void invokeLaterOnEdtInScheduledTasksScope(ModalityState modality, Runnable block, Runnable onCancelled) {
@@ -544,7 +620,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }, modality);
     }
 
-    private void queueTaskOnEdt(DumbModeTask task, ModalityState modality, Throwable trace) {
+    private void queueTaskOnEdt(DumbModeTask task, ModalityState modality, Throwable trace, Runnable accounting) {
         // First, increment dumb mode, then add the task.
         // If increment failed, task execution will not be scheduled, and we will be stuck in dumb mode.
         // In unit tests, much safer behavior is to ignore the task.
@@ -556,12 +632,12 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
         // we want to invoke LATER. I.e. right now one can invoke completeJustSubmittedTasks and
         // drain the queue synchronously under modal progress
-        DumbTaskLauncher launcher = new DumbTaskLauncher(modality);
+        DumbTaskLauncher launcher = new DumbTaskLauncher(modality, accounting);
         myDumbTaskLaunchers.add(launcher);
         invokeLaterOnEdtInScheduledTasksScope(modality, launcher::launch, () -> myApplication.invokeLater(launcher::cancel, modality));
     }
 
-    private void queueTaskOnBackground(DumbModeTask task, Throwable trace) {
+    private void queueTaskOnBackground(DumbModeTask task, Throwable trace, Runnable accounting) {
         ScheduledTasksScope scope = myScheduledTasksScope;
         Continuation<Void> continuation = Coroutine.<Void, Void>first(incrementDumbCounterSuspending(trace))
             .then(CodeExecution.run(() -> {
@@ -571,7 +647,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 // In prod, both behaviors are bad.
                 myTaskQueue.addTask(task);
 
-                DumbTaskLauncher launcher = new DumbTaskLauncher(ModalityState.nonModal());
+                DumbTaskLauncher launcher = new DumbTaskLauncher(ModalityState.nonModal(), accounting);
                 myDumbTaskLaunchers.add(launcher);
                 launcher.launch();
             }))
@@ -579,6 +655,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         Runnable unregister = scope.register(continuation::cancel);
         continuation.onFinish(c -> unregister.run());
         continuation.onCancel(c -> {
+            accounting.run();
             unregister.run();
             Disposer.dispose(task);
         });
@@ -787,6 +864,90 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
+    public CompletableFuture<?> whenIdle() {
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        if (myIsDisposed) {
+            future.cancel(false);
+            return future;
+        }
+        if (myProject.isDefault()) {
+            future.complete(null);
+            return future;
+        }
+        subscribeIdleMonitor();
+        myIdleFutures.add(future);
+        if (myIsDisposed) {
+            cancelIdleFutures();
+        }
+        else {
+            completeIdleFuturesIfIdle();
+        }
+        return future;
+    }
+
+    private void subscribeIdleMonitor() {
+        if (myIdleMonitorExecutor != null) {
+            return;
+        }
+        synchronized (myIdleMonitorLock) {
+            if (myIdleMonitorExecutor != null) {
+                return;
+            }
+            UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(myProject);
+            Consumer<@Nullable Object> transition = value -> onIdleTransition();
+            myState.addListener(transition);
+            myPendingTasks.addListener(transition);
+            myPendingPublications.addListener(transition);
+            myGuiDumbTaskRunner.getScheduledTasksCount().addListener(transition);
+            myGuiDumbTaskRunner.isRunning().addListener(transition);
+            executor.queueChangedEvent().addListener(transition);
+            executor.isRunning().addListener(transition);
+            executor.startedOrStoppedEvent().addListener(transition);
+            myIdleMonitorExecutor = executor;
+        }
+    }
+
+    private void onIdleTransition() {
+        myIdleTransitions.incrementAndGet();
+        completeIdleFuturesIfIdle();
+    }
+
+    private void completeIdleFuturesIfIdle() {
+        if (myIdleFutures.isEmpty() || myIsDisposed) {
+            return;
+        }
+        long transitions = myIdleTransitions.get();
+        if (!isIdleNow() || myIdleTransitions.get() != transitions || !isIdleNow()) {
+            return;
+        }
+        for (CompletableFuture<?> future : new ArrayList<>(myIdleFutures)) {
+            myIdleFutures.remove(future);
+            future.complete(null);
+        }
+    }
+
+    private boolean isIdleNow() {
+        UnindexedFilesScannerExecutor executor = myIdleMonitorExecutor;
+        if (executor == null) {
+            return false;
+        }
+        return !executor.hasQueuedTasks()
+            && myPendingTasks.get() == 0
+            && !myGuiDumbTaskRunner.hasScheduledTasks()
+            && !executor.isRunning().get()
+            && !myGuiDumbTaskRunner.isRunning().get()
+            && !state().isDumb()
+            && myPendingPublications.get() == 0;
+    }
+
+    private void cancelIdleFutures() {
+        for (CompletableFuture<?> future : new ArrayList<>(myIdleFutures)) {
+            myIdleFutures.remove(future);
+            future.cancel(false);
+        }
+    }
+
+    @Override
     public Project getProject() {
         return myProject;
     }
@@ -869,6 +1030,19 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         // of the EDT
         // queue to give a chance to invoke completeJustSubmittedTasks and index files under modal progress.
         return myScheduledTasksScope.hasChildren() || myGuiDumbTaskRunner.hasScheduledTasks();
+    }
+
+    @TestOnly
+    public String describeIdleState() {
+        UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(myProject);
+        return "scanQueued=" + executor.hasQueuedTasks()
+            + " scanRunning=" + executor.isRunning().get()
+            + " pendingTasks=" + myPendingTasks.get()
+            + " scheduledTasks=" + myGuiDumbTaskRunner.hasScheduledTasks()
+            + " taskRunning=" + myGuiDumbTaskRunner.isRunning().get()
+            + " state=" + state()
+            + " pendingPublications=" + myPendingPublications.get()
+            + " idleFutures=" + myIdleFutures.size();
     }
 
     /**

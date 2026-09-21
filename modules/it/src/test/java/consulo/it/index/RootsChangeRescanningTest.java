@@ -15,7 +15,6 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.content.base.BinariesOrderRootType;
@@ -23,7 +22,8 @@ import consulo.content.library.Library;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.DumbModeEvents;
 import consulo.it.index.ScanningTestSupport.RecordedScans;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -37,9 +37,7 @@ import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +57,6 @@ import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static consulo.it.index.ScanningTestSupport.awaitScanParameters;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createModule;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
@@ -67,7 +64,6 @@ import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.heldFullScan;
 import static consulo.it.index.ScanningTestSupport.isFullScan;
 import static consulo.it.index.ScanningTestSupport.isPartialScan;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.recordScans;
 import static consulo.it.index.ScanningTestSupport.removeModule;
 import static consulo.it.index.ScanningTestSupport.scanOrigins;
@@ -85,7 +81,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -95,11 +91,10 @@ public class RootsChangeRescanningTest {
     private static final int FILES = 5;
 
     @Test
-    public void moduleContentRootChangeScansOnlyThatModule(Application application, ProjectManager projectManager) throws Exception {
+    public void moduleContentRootChangeScansOnlyThatModule(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-roots-change-module");
         createSandFiles(directory, FILES, "Mod");
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
 
         Disposable disposable = Disposable.newDisposable();
@@ -124,13 +119,12 @@ public class RootsChangeRescanningTest {
     }
 
     @Test
-    public void libraryRootChangeScansOnlyThatLibrary(Application application, ProjectManager projectManager) throws Exception {
+    public void libraryRootChangeScansOnlyThatLibrary(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-roots-change-library");
         Path firstRoot = createSandFiles(Files.createTempDirectory("consulo-it-roots-change-library-first"), FILES, "LibFirst");
         Path secondRoot = createSandFiles(Files.createTempDirectory("consulo-it-roots-change-library-second"), FILES, "LibSecond");
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
         Module module = addContentRoot(project, directory);
         awaitIdle(project);
@@ -173,11 +167,10 @@ public class RootsChangeRescanningTest {
     }
 
     @Test
-    public void changeWithoutRescanDoesNoScanningWork(Application application, ProjectManager projectManager) throws Exception {
+    public void changeWithoutRescanDoesNoScanningWork(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-roots-change-no-rescan");
         createSandFiles(directory, FILES, "NoRescan");
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
         addContentRoot(project, directory);
         awaitIdle(project);
@@ -205,15 +198,13 @@ public class RootsChangeRescanningTest {
     }
 
     @Test
-    public void mergedRootsChangesQueueASingleScan(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-roots-change-merge");
+    public void mergedRootsChangesQueueASingleScan(HeadlessProjects projects) throws Exception {
         Path alphaDirectory = Files.createTempDirectory("consulo-it-roots-change-merge-alpha");
         Path betaDirectory = Files.createTempDirectory("consulo-it-roots-change-merge-beta");
         createSandFiles(alphaDirectory, FILES, "Alpha");
         createSandFiles(betaDirectory, FILES, "Beta");
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open();
         awaitIdle(project);
 
         VirtualFile alphaFile = findFile(alphaDirectory);
@@ -248,14 +239,13 @@ public class RootsChangeRescanningTest {
     }
 
     @Test
-    public void rootsChangeDoesNotCancelRunningScan(Application application, ProjectManager projectManager) throws Exception {
+    public void rootsChangeDoesNotCancelRunningScan(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-roots-change-running");
         createSandFiles(directory, FILES, "Running");
         Path extraDirectory = Files.createTempDirectory("consulo-it-roots-change-running-extra");
         createSandFiles(extraDirectory, FILES, "RunningExtra");
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
         Module module = addContentRoot(project, directory);
         awaitIdle(project);

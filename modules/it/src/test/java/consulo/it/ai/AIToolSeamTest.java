@@ -23,20 +23,15 @@ import consulo.ai.AIRole;
 import consulo.ai.AITool;
 import consulo.ai.AIToolManager;
 import consulo.ai.AIToolResult;
-import consulo.application.Application;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
 import consulo.ai.AIProvider;
 import consulo.ai.AIProviderTable;
 import consulo.ai.AIProviderType;
 import consulo.it.internal.HeadlessAIProvider;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,12 +42,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  * The point where MCP and AI meet: the IDE's own MCP toolsets have to surface as {@link AITool}s
  * without {@code ai-api} knowing anything about MCP.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class AIToolSeamTest {
     @Test
-    public void mcpToolsetsSurfaceAsAiTools(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void mcpToolsetsSurfaceAsAiTools(Project project) throws Exception {
         List<AITool> tools = AIToolManager.getInstance().getTools(project);
 
         assertThat(tools).extracting(AITool::getName).contains("it_echo");
@@ -65,9 +58,7 @@ public class AIToolSeamTest {
     }
 
     @Test
-    public void callingAnAiToolRunsTheMcpHandler(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void callingAnAiToolRunsTheMcpHandler(Project project) throws Exception {
         AITool echo = AIToolManager.getInstance().findTool(project, "it_echo");
         assertThat(echo).isNotNull();
 
@@ -77,9 +68,7 @@ public class AIToolSeamTest {
     }
 
     @Test
-    public void toolFailuresComeBackAsErrorResults(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void toolFailuresComeBackAsErrorResults(Project project) throws Exception {
         AITool failing = AIToolManager.getInstance().findTool(project, "it_fail");
         assertThat(failing).isNotNull();
 
@@ -89,9 +78,7 @@ public class AIToolSeamTest {
     }
 
     @Test
-    public void malformedArgumentsDoNotThrow(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void malformedArgumentsDoNotThrow(Project project) throws Exception {
         AITool echo = AIToolManager.getInstance().findTool(project, "it_echo");
         assertThat(echo).isNotNull();
 
@@ -100,9 +87,7 @@ public class AIToolSeamTest {
     }
 
     @Test
-    public void requestCarriesToolsAndStreamsTheAnswer(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void requestCarriesToolsAndStreamsTheAnswer(Project project) throws Exception {
         AIProviderType type = AIProviderTable.getInstance().findType(HeadlessAIProvider.ID);
         assertThat(type).isNotNull();
         AIProvider provider = new AIProvider("seam", type);
@@ -131,9 +116,7 @@ public class AIToolSeamTest {
      * which only the project's coroutine context carries - an application-wide scope has none.
      */
     @Test
-    public void toolsRunInReadWriteAndUiContexts(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager);
-
+    public void toolsRunInReadWriteAndUiContexts(Project project) throws Exception {
         for (String[] toolAndAnswer : new String[][]{{"it_read_action", "read"}, {"it_write_action", "write"}, {"it_ui_action", "ui"}}) {
             AITool tool = AIToolManager.getInstance().findTool(project, toolAndAnswer[0]);
             assertThat(tool).describedAs(toolAndAnswer[0]).isNotNull();
@@ -153,12 +136,5 @@ public class AIToolSeamTest {
         assertThat(message.getText()).isEqualTo("calling a tool");
         assertThat(message.getToolUses()).singleElement()
             .satisfies(toolUse -> assertThat(toolUse.toolName()).isEqualTo("it_echo"));
-    }
-
-    private static Project openProject(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-ai-seam");
-        return projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(30, TimeUnit.SECONDS);
     }
 }

@@ -17,12 +17,11 @@ package consulo.it.project;
 
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.UnindexedFilesScannerStartup;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.ui.UIAccess;
@@ -44,12 +43,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class ProjectStartsDumbTest {
     private static final long TIMEOUT_SECONDS = 60;
 
     @Test
-    public void projectIsDumbWhenOpenedUntilFirstScanCompletes(Application application, ProjectManager projectManager) throws Exception {
+    public void projectIsDumbWhenOpenedUntilFirstScanCompletes(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-project-starts-dumb");
 
         AtomicReference<Boolean> dumbAtOpen = new AtomicReference<>();
@@ -80,10 +79,7 @@ public class ProjectStartsDumbTest {
         });
 
         try {
-            Project project = projectManager
-                .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-                .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            assertThat(project).isNotNull();
+            Project project = projects.open(directory);
 
             assertThat(dumbAtOpen.get()).as("projectOpened must be published for the test project").isNotNull();
             assertThat(dumbAtOpen.get()).as("a freshly opened project must be dumb").isTrue();

@@ -15,21 +15,18 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
 import consulo.sandboxPlugin.lang.psi.stub.SandClassSearch;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -40,10 +37,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
+import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -56,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * opaque raw block and declarations around it survive ({@code BrokenOk} keeps its
  * trailing-garbage declaration). Disabled-region garbage does not exist at all.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class SandPreprocessorVariantsTest {
     private static final long TIMEOUT_SECONDS = 60;
 
@@ -70,7 +67,7 @@ public class SandPreprocessorVariantsTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void directiveVariantsFollowEnvironment(Application application, ProjectManager projectManager) throws Exception {
+    public void directiveVariantsFollowEnvironment(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-preproc");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -106,10 +103,7 @@ public class SandPreprocessorVariantsTest {
             #end
             """);
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(directoryFile).isNotNull();
@@ -125,8 +119,7 @@ public class SandPreprocessorVariantsTest {
             rootModel.commit();
         });
 
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         // guard idiom enabled standalone, self-defined flag enables its own guard, the #else
         // chain segment wins without mode flags, #undef keeps TEMP dead - and every disabled
@@ -179,12 +172,6 @@ public class SandPreprocessorVariantsTest {
 
     private static boolean indexed(Project project, String name) {
         return !SandClassSearch.allVariants(project, name).isEmpty();
-    }
-
-    private static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
     }
 
     private static void waitFor(BooleanSupplier condition) throws Exception {

@@ -98,7 +98,7 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
     private final LocalizeValue myProgressTitle;
     private final LocalizeValue mySuspendedText;
     private final AtomicInteger myBackgroundTasksSubmitted = new AtomicInteger(0);
-    private final AtomicInteger myScheduledTasks = new AtomicInteger(0);
+    private final ObservableValue<Integer> myScheduledTasks = ObservableValue.of(0);
     private final ExecutorService mySchedulingExecutor;
 
     protected MergingQueueGuiExecutor(
@@ -175,10 +175,10 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
                     myBackgroundTasksSubmitted.incrementAndGet();
                     AtomicBoolean actionStarted = new AtomicBoolean(false);
                     AtomicBoolean finished = new AtomicBoolean(false);
-                    myScheduledTasks.incrementAndGet();
+                    myScheduledTasks.update(count -> count + 1);
                     Runnable finishOnce = () -> {
                         if (finished.compareAndSet(false, true)) {
-                            myScheduledTasks.decrementAndGet();
+                            myScheduledTasks.update(count -> count - 1);
                             onFinish.run();
                         }
                     };
@@ -306,5 +306,9 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
 
     public boolean hasScheduledTasks() {
         return myScheduledTasks.get() > 0;
+    }
+
+    public ObservableValue<Integer> getScheduledTasksCount() {
+        return myScheduledTasks;
     }
 }

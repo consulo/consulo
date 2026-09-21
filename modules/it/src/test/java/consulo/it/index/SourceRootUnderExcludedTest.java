@@ -15,12 +15,12 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.index.impl.internal.roots.kind.ModuleRootOrigin;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
@@ -31,9 +31,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.junit.jupiter.api.Test;
@@ -45,12 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createModule;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.indexingDebug;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +60,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -72,7 +68,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 })
 public class SourceRootUnderExcludedTest {
     @Test
-    public void sourceRootUnderExcludedFolderIsIndexed(Application application, ProjectManager projectManager) throws Exception {
+    public void sourceRootUnderExcludedFolderIsIndexed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-source-under-excluded");
 
         Path plain = directory.resolve("plain");
@@ -85,7 +81,7 @@ public class SourceRootUnderExcludedTest {
         Files.writeString(excluded.resolve("Hidden.sand"), "class HiddenInExcluded {}");
         Files.writeString(nestedSource.resolve("Nested.sand"), "class NestedUnderExcluded {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = findFile(directory);
         VirtualFile excludedFile = findFile(excluded);
@@ -100,7 +96,6 @@ public class SourceRootUnderExcludedTest {
             rootModel.commit();
         });
 
-        awaitSmart(DumbService.getInstance(project));
         awaitIdle(project);
 
         ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
@@ -127,7 +122,7 @@ public class SourceRootUnderExcludedTest {
     }
 
     @Test
-    public void moduleFileIndexIteratesIntoTheNestedSourceRoot(Application application, ProjectManager projectManager) throws Exception {
+    public void moduleFileIndexIteratesIntoTheNestedSourceRoot(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-source-under-excluded-iterate");
         Path excluded = directory.resolve("excluded");
         Path nestedSource = excluded.resolve("src");
@@ -135,10 +130,9 @@ public class SourceRootUnderExcludedTest {
         Files.writeString(excluded.resolve("Hidden.sand"), "class HiddenForIteration {}");
         Files.writeString(nestedSource.resolve("Nested.sand"), "class NestedForIteration {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         Module module = declareNestedSourceRoot(project, directory, excluded, nestedSource);
 
-        awaitSmart(DumbService.getInstance(project));
         awaitIdle(project);
 
         List<String> iterated = new ArrayList<>();
@@ -158,17 +152,16 @@ public class SourceRootUnderExcludedTest {
     }
 
     @Test
-    public void scanningProducesAnOriginForTheNestedSourceRoot(Application application, ProjectManager projectManager) throws Exception {
+    public void scanningProducesAnOriginForTheNestedSourceRoot(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-source-under-excluded-origin");
         Path excluded = directory.resolve("excluded");
         Path nestedSource = excluded.resolve("src");
         Files.createDirectories(nestedSource);
         Files.writeString(nestedSource.resolve("Nested.sand"), "class NestedForOrigin {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         Module module = declareNestedSourceRoot(project, directory, excluded, nestedSource);
 
-        awaitSmart(DumbService.getInstance(project));
         awaitIdle(project);
 
         VirtualFile nestedSourceFile = findFile(nestedSource);
@@ -193,17 +186,16 @@ public class SourceRootUnderExcludedTest {
      * that existed when it was expanded.
      */
     @Test
-    public void filesCreatedLaterFollowTheFolderTypes(Application application, ProjectManager projectManager) throws Exception {
+    public void filesCreatedLaterFollowTheFolderTypes(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-source-under-excluded-later");
         Path excluded = directory.resolve("excluded");
         Path nestedSource = excluded.resolve("src");
         Files.createDirectories(nestedSource);
         Files.writeString(nestedSource.resolve("Nested.sand"), "class NestedBeforeTheChange {}");
 
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         declareNestedSourceRoot(project, directory, excluded, nestedSource);
 
-        awaitSmart(DumbService.getInstance(project));
         awaitIdle(project);
         waitFor("the initial scan must index the nested source root", () -> !findClasses(project, "NestedBeforeTheChange").isEmpty());
 

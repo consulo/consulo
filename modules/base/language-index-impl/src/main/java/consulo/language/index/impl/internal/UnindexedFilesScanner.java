@@ -21,6 +21,7 @@ import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposer;
 import consulo.language.index.impl.internal.FilesFilterScanningHandler.IdleFilesFilterScanningHandler;
 import consulo.language.index.impl.internal.FilesFilterScanningHandler.UpdatingFilesFilterScanningHandler;
 import consulo.language.index.impl.internal.IndexingProgressReporter.CheckPauseOnlyProgressIndicator;
@@ -441,7 +442,7 @@ public final class UnindexedFilesScanner implements FilesScanningTask, Closeable
 
         scan(indicator, progressReporter, scanningIterators);
 
-        if (myProject.isDisposed()) {
+        if (myProject.isDisposed() || Disposer.isDisposing(myProject)) {
             return;
         }
 

@@ -18,7 +18,8 @@ package consulo.it.index;
 import consulo.application.Application;
 import consulo.it.AllowLogError;
 import consulo.it.AllowWriteLockUnderUIThread;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.index.impl.internal.projectFilter.ConcurrentFileIds;
 import consulo.language.index.impl.internal.projectFilter.PersistentProjectIndexableFilesFilter;
@@ -26,9 +27,7 @@ import consulo.language.index.impl.internal.projectFilter.ProjectIndexableFilesF
 import consulo.language.index.impl.internal.projectFilter.ProjectIndexableFilesFilterHolder;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IdFilter;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import org.junit.jupiter.api.Test;
@@ -44,12 +43,9 @@ import java.nio.file.Path;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
-import static consulo.it.index.ScanningTestSupport.closeProject;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.saveProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,7 +66,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowWriteLockUnderUIThread
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
@@ -132,13 +128,12 @@ public class PersistentFilterRoundTripTest {
     }
 
     @Test
-    public void filterIsWrittenOnCloseAndLoadedOnOpen(Application application, ProjectManager projectManager) throws Exception {
+    public void filterIsWrittenOnCloseAndLoadedOnOpen(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-filter-round-trip");
         Path src = createSandFiles(directory, FILES, "Filtered");
 
-        Project first = openProject(application, projectManager, directory);
+        Project first = projects.open(directory);
         addContentRoot(first, directory);
-        awaitSmart(DumbService.getInstance(first));
         awaitIdle(first);
         waitFor("the first session must index the classes", () -> !findClasses(first, "Filtered5").isEmpty());
 
@@ -162,10 +157,9 @@ public class PersistentFilterRoundTripTest {
         assertThat(before.containsFileId(outsideId)).as("a file outside the project must not be in the filter").isFalse();
 
         saveProject(first, application);
-        closeProject(first);
+        projects.close(first);
 
-        Project second = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(second));
+        Project second = projects.open(directory);
         awaitIdle(second);
 
         assertThat(holder.wasDataLoadedFromDisk(second))

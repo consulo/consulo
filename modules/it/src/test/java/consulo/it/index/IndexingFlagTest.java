@@ -19,7 +19,8 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.IndexingFlag;
 import consulo.language.index.impl.internal.PerProjectIndexingQueue;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -30,9 +31,7 @@ import consulo.language.index.impl.internal.dependencies.ProjectIndexingDependen
 import consulo.language.index.impl.internal.dependencies.ReadWriteFileIndexingStampImpl;
 import consulo.language.index.impl.internal.dependencies.ScanningRequestToken;
 import consulo.language.psi.stub.IndexedFile;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.mapped.MappedFileStorageHelper;
 import org.junit.jupiter.api.Test;
@@ -54,12 +53,10 @@ import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.allowOnlyTestScans;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.fullScan;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.projectOpenScan;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,7 +78,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -92,19 +89,16 @@ public class IndexingFlagTest {
     private static final String FLAG_ATTRIBUTE_ID = "indexing.flag";
 
     @Test
-    public void warmRescanSkipsIndexedFilesBeforeTakingAReadAction(Application application, ProjectManager projectManager)
+    public void warmRescanSkipsIndexedFilesBeforeTakingAReadAction(Application application, HeadlessProjects projects)
         throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-indexing-flag-warm");
         Path src = createSandFiles(directory, FILES, "Warm");
 
-        Project project = openProject(application, projectManager, directory);
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        Project project = projects.open(directory);
         awaitIdle(project);
 
         addContentRoot(project, directory);
         awaitIdle(project);
-        awaitSmart(dumbService);
 
         for (int i = 0; i < FILES; i++) {
             String name = "Warm" + i;
@@ -156,18 +150,15 @@ public class IndexingFlagTest {
     }
 
     @Test
-    public void invalidateAllStampsMakesEveryFileMissOnce(Application application, ProjectManager projectManager) throws Exception {
+    public void invalidateAllStampsMakesEveryFileMissOnce(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-indexing-flag-invalidate");
         Path src = createSandFiles(directory, FILES, "Invalidated");
 
-        Project project = openProject(application, projectManager, directory);
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        Project project = projects.open(directory);
         awaitIdle(project);
 
         addContentRoot(project, directory);
         awaitIdle(project);
-        awaitSmart(dumbService);
 
         for (int i = 0; i < FILES; i++) {
             String name = "Invalidated" + i;

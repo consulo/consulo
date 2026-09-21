@@ -15,15 +15,14 @@
  */
 package consulo.it.project;
 
-import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.content.library.ProjectLibraryTable;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,9 +32,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static consulo.it.index.ScanningTestSupport.closeProject;
 import static consulo.it.index.ScanningTestSupport.findFile;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -44,159 +41,124 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class ProjectLibraryTableTest {
     @Test
-    public void theTableIsBoundAndProjectScoped(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-libtable"));
-        try {
-            ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+    public void theTableIsBoundAndProjectScoped(Project project) throws Exception {
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
 
-            assertThat(table).as("the headless application must resolve the project library table").isNotNull();
-            assertThat(table.getProject()).isSameAs(project);
-            assertThat(table.getTableLevel()).isEqualTo(ProjectLibraryTable.PROJECT_LEVEL);
-            assertThat(table.isEditable()).isTrue();
-            assertThat(table.getLibraries()).as("a fresh project owns no libraries").isEmpty();
-        }
-        finally {
-            closeProject(project);
-        }
+        assertThat(table).as("the headless application must resolve the project library table").isNotNull();
+        assertThat(table.getProject()).isSameAs(project);
+        assertThat(table.getTableLevel()).isEqualTo(ProjectLibraryTable.PROJECT_LEVEL);
+        assertThat(table.isEditable()).isTrue();
+        assertThat(table.getLibraries()).as("a fresh project owns no libraries").isEmpty();
     }
 
     @Test
-    public void aCommittedLibraryBecomesVisible(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-libtable-add"));
-        try {
-            ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+    public void aCommittedLibraryBecomesVisible(Project project) throws Exception {
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
 
-            createLibrary(table, "committed-library");
+        createLibrary(table, "committed-library");
 
-            assertThat(table.getLibraryByName("committed-library")).isNotNull();
-            assertThat(table.getLibraries()).hasSize(1);
-            assertThat(table.getLibraries()[0].getName()).isEqualTo("committed-library");
-        }
-        finally {
-            closeProject(project);
-        }
+        assertThat(table.getLibraryByName("committed-library")).isNotNull();
+        assertThat(table.getLibraries()).hasSize(1);
+        assertThat(table.getLibraries()[0].getName()).isEqualTo("committed-library");
     }
 
     @Test
-    public void anUncommittedModelChangesNothing(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-libtable-rollback"));
-        try {
-            ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+    public void anUncommittedModelChangesNothing(Project project) throws Exception {
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
 
-            WriteAction.run(() -> {
-                LibraryTable.ModifiableModel model = table.getModifiableModel();
-                model.createLibrary("never-committed");
-                assertThat(model.isChanged()).isTrue();
-            });
+        WriteAction.run(() -> {
+            LibraryTable.ModifiableModel model = table.getModifiableModel();
+            model.createLibrary("never-committed");
+            assertThat(model.isChanged()).isTrue();
+        });
 
-            assertThat(table.getLibraryByName("never-committed"))
-                .as("a model that was never committed must not reach the table")
-                .isNull();
-            assertThat(table.getLibraries()).isEmpty();
-        }
-        finally {
-            closeProject(project);
-        }
+        assertThat(table.getLibraryByName("never-committed"))
+            .as("a model that was never committed must not reach the table")
+            .isNull();
+        assertThat(table.getLibraries()).isEmpty();
     }
 
     @Test
-    public void libraryRootsSurviveTheCommit(Application application, ProjectManager projectManager) throws Exception {
+    public void libraryRootsSurviveTheCommit(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-libtable-roots");
         Path classes = Files.createDirectory(directory.resolve("classes"));
-        Project project = openProject(application, projectManager, directory);
-        try {
-            ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+        Project project = projects.open(directory);
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
 
-            VirtualFile classesRoot = findFile(classes);
-            WriteAction.run(() -> {
-                LibraryTable.ModifiableModel model = table.getModifiableModel();
-                Library library = model.createLibrary("library-with-roots");
-                Library.ModifiableModel libraryModel = library.getModifiableModel();
-                libraryModel.addRoot(classesRoot, BinariesOrderRootType.ID);
-                libraryModel.commit();
-                model.commit();
-            });
+        VirtualFile classesRoot = findFile(classes);
+        WriteAction.run(() -> {
+            LibraryTable.ModifiableModel model = table.getModifiableModel();
+            Library library = model.createLibrary("library-with-roots");
+            Library.ModifiableModel libraryModel = library.getModifiableModel();
+            libraryModel.addRoot(classesRoot, BinariesOrderRootType.ID);
+            libraryModel.commit();
+            model.commit();
+        });
 
-            Library library = table.getLibraryByName("library-with-roots");
-            assertThat(library).isNotNull();
-            assertThat(library.getFiles(BinariesOrderRootType.ID)).containsExactly(classesRoot);
-        }
-        finally {
-            closeProject(project);
-        }
+        Library library = table.getLibraryByName("library-with-roots");
+        assertThat(library).isNotNull();
+        assertThat(library.getFiles(BinariesOrderRootType.ID)).containsExactly(classesRoot);
     }
 
     @Test
-    public void removingALibraryTakesItOutOfTheTable(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-libtable-remove"));
+    public void removingALibraryTakesItOutOfTheTable(Project project) throws Exception {
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+
+        createLibrary(table, "doomed-library");
+        Library library = table.getLibraryByName("doomed-library");
+        assertThat(library).isNotNull();
+
+        WriteAction.run(() -> table.removeLibrary(library));
+
+        assertThat(table.getLibraryByName("doomed-library")).isNull();
+        assertThat(table.getLibraries()).isEmpty();
+    }
+
+    @Test
+    public void listenersSeeTheLibraryComeAndGo(Project project) throws Exception {
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+
+        List<String> events = new ArrayList<>();
+        LibraryTable.Listener listener = new LibraryTable.Listener() {
+            @Override
+            public void afterLibraryAdded(Library newLibrary) {
+                events.add("added:" + newLibrary.getName());
+            }
+
+            @Override
+            public void afterLibraryRenamed(Library library) {
+                events.add("renamed:" + library.getName());
+            }
+
+            @Override
+            public void beforeLibraryRemoved(Library library) {
+                events.add("beforeRemoved:" + library.getName());
+            }
+
+            @Override
+            public void afterLibraryRemoved(Library library) {
+                events.add("afterRemoved:" + library.getName());
+            }
+        };
+        table.addListener(listener);
         try {
-            ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
-
-            createLibrary(table, "doomed-library");
-            Library library = table.getLibraryByName("doomed-library");
+            createLibrary(table, "watched-library");
+            Library library = table.getLibraryByName("watched-library");
             assertThat(library).isNotNull();
-
             WriteAction.run(() -> table.removeLibrary(library));
-
-            assertThat(table.getLibraryByName("doomed-library")).isNull();
-            assertThat(table.getLibraries()).isEmpty();
         }
         finally {
-            closeProject(project);
+            table.removeListener(listener);
         }
-    }
 
-    @Test
-    public void listenersSeeTheLibraryComeAndGo(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-libtable-events"));
-        try {
-            ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
-
-            List<String> events = new ArrayList<>();
-            LibraryTable.Listener listener = new LibraryTable.Listener() {
-                @Override
-                public void afterLibraryAdded(Library newLibrary) {
-                    events.add("added:" + newLibrary.getName());
-                }
-
-                @Override
-                public void afterLibraryRenamed(Library library) {
-                    events.add("renamed:" + library.getName());
-                }
-
-                @Override
-                public void beforeLibraryRemoved(Library library) {
-                    events.add("beforeRemoved:" + library.getName());
-                }
-
-                @Override
-                public void afterLibraryRemoved(Library library) {
-                    events.add("afterRemoved:" + library.getName());
-                }
-            };
-            table.addListener(listener);
-            try {
-                createLibrary(table, "watched-library");
-                Library library = table.getLibraryByName("watched-library");
-                assertThat(library).isNotNull();
-                WriteAction.run(() -> table.removeLibrary(library));
-            }
-            finally {
-                table.removeListener(listener);
-            }
-
-            assertThat(events).containsExactly(
-                "added:watched-library",
-                "beforeRemoved:watched-library",
-                "afterRemoved:watched-library"
-            );
-        }
-        finally {
-            closeProject(project);
-        }
+        assertThat(events).containsExactly(
+            "added:watched-library",
+            "beforeRemoved:watched-library",
+            "afterRemoved:watched-library"
+        );
     }
 
     private static void createLibrary(LibraryTable table, String name) throws Exception {

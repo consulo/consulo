@@ -255,7 +255,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
                     Pair<AnAction, String> ref = resolveActionRef(parentRef.value(), binding);
                     if (ref == null || !(ref.getFirst() instanceof ActionGroup)) {
-                        LOG.error(actionImpl.id() + ": can't find group for " + parentRef.value());
+                        LOG.warn(actionImpl.id() + ": can't find group for " + parentRef.value());
                         continue;
                     }
 
@@ -263,7 +263,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                         defaultActionGroup.add((AnAction) binding, constraints, this);
                     }
                     else {
-                        LOG.error(
+                        LOG.warn(
                             actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " +
                                 ref.getFirst().getClass().getName()
                         );
@@ -309,7 +309,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         else {
             AnAction refAction = myId2Action.get(actionRef.id());
             if (refAction == null) {
-                LOG.error(context + ": can't find reference action id: " + actionRef.id());
+                LOG.warn(context + ": can't find reference action id: " + actionRef.id());
                 return null;
             }
 

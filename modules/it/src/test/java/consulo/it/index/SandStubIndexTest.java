@@ -15,12 +15,12 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndex;
@@ -29,11 +29,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
-import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -45,9 +41,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -55,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * VFS refresh and changed-files reindexing, and a subsequent full rescan (which resets and repopulates the
  * per-project indexable files filter gating stub index queries).
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class SandStubIndexTest {
     private static final long TIMEOUT_SECONDS = 60;
     private static final int FILES = 25;
@@ -72,7 +68,7 @@ public class SandStubIndexTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void stubIndexSurvivesExternalChangesAndRescan(Application application, ProjectManager projectManager) throws Exception {
+    public void stubIndexSurvivesExternalChangesAndRescan(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-stub-index");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -80,10 +76,7 @@ public class SandStubIndexTest {
             Files.writeString(src.resolve("file" + i + ".sand"), "class Foo" + i + " {}");
         }
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(directoryFile).isNotNull();
@@ -99,8 +92,7 @@ public class SandStubIndexTest {
             rootModel.commit();
         });
 
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         // class from the initial scan must be found through the stub index
         waitFor(() -> !findClasses(project, "Foo5").isEmpty());
@@ -125,13 +117,12 @@ public class SandStubIndexTest {
                 return false;
             }
         }));
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         // a full rescan resets and repopulates the per-project filter which gates stub index queries;
         // up-to-date files must stay visible afterwards
         new UnindexedFilesScanner(project, "test").queue();
-        awaitScanningFinished(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         waitFor(() -> !findClasses(project, "Bar5").isEmpty());
     }
@@ -146,17 +137,6 @@ public class SandStubIndexTest {
                 return List.of();
             }
         });
-    }
-
-    private static void awaitScanningFinished(Project project) throws Exception {
-        UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
-        waitFor(() -> !executor.isRunning().get() && !executor.hasQueuedTasks());
-    }
-
-    private static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
     }
 
     private static void waitFor(java.util.function.BooleanSupplier condition) throws Exception {

@@ -15,12 +15,12 @@
  */
 package consulo.it.project.dumb;
 
-import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.BlockingIterator;
 import consulo.it.index.ScanningTestSupport.RecordingIterator;
 import consulo.it.index.ScanningTestSupport.TestScans;
@@ -28,7 +28,6 @@ import consulo.language.index.impl.internal.PerProjectIndexingQueue;
 import consulo.language.index.impl.internal.roots.ProjectIndexableFilesIteratorImpl;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.virtualFileSystem.VirtualFile;
@@ -47,12 +46,10 @@ import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.allowOnlyTestScans;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.heldFullScan;
 import static consulo.it.index.ScanningTestSupport.isDumb;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.partialScan;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +60,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -73,13 +70,12 @@ public class SmartModeSchedulerTest {
     private static final int FILES = 5;
 
     @Test
-    public void runWhenSmartRegisteredDuringScanFiresAfterScanAndIndexing(Application application, ProjectManager projectManager)
+    public void runWhenSmartRegisteredDuringScanFiresAfterScanAndIndexing(HeadlessProjects projects)
         throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-smart-mode-scheduler");
         Path src = createSandFiles(directory, FILES, "Smart");
-        Project project = openProject(application, projectManager, directory);
+        Project project = projects.open(directory);
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
         awaitIdle(project);
 
         UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
@@ -147,10 +143,9 @@ public class SmartModeSchedulerTest {
     }
 
     @Test
-    public void waitForSmartModeTimesOutWhileScanIsHeld(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-smart-mode-scheduler"));
+    public void waitForSmartModeTimesOutWhileScanIsHeld(HeadlessProjects projects) throws Exception {
+        Project project = projects.open();
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
         awaitIdle(project);
         UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
 
@@ -170,10 +165,9 @@ public class SmartModeSchedulerTest {
     }
 
     @Test
-    public void modificationTrackerBumpsAfterScanWithoutIndexing(Application application, ProjectManager projectManager) throws Exception {
-        Project project = openProject(application, projectManager, Files.createTempDirectory("consulo-it-smart-mode-scheduler"));
+    public void modificationTrackerBumpsAfterScanWithoutIndexing(HeadlessProjects projects) throws Exception {
+        Project project = projects.open();
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
         awaitIdle(project);
 
         long before = dumbService.getModificationTracker().getModificationCount();

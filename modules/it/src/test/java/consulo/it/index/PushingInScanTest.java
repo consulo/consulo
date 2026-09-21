@@ -15,17 +15,15 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.TestScans;
 import consulo.it.internal.HeadlessFilePropertyPusher;
 import consulo.module.Module;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,11 +36,9 @@ import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.allowOnlyTestScans;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static consulo.it.index.ScanningTestSupport.fullScan;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -51,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -61,12 +57,10 @@ public class PushingInScanTest {
     private static final int FILES = 10;
 
     @Test
-    public void singleScanPushesPropertiesOnce(Application application, ProjectManager projectManager) throws Exception {
+    public void singleScanPushesPropertiesOnce(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-pushing-in-scan");
         Path src = createSandFiles(directory, FILES, "Pushed");
-        Project project = openProject(application, projectManager, directory);
-        DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        Project project = projects.open(directory);
         awaitIdle(project);
 
         Disposable disposable = Disposable.newDisposable();
@@ -79,7 +73,6 @@ public class PushingInScanTest {
             HeadlessFilePropertyPusher.reset();
 
             scans.queue(fullScan(project, "pushing")).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            awaitSmart(dumbService);
             awaitIdle(project);
 
             String expected = HeadlessFilePropertyPusher.moduleValue(module);

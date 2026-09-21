@@ -15,18 +15,16 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.internal.HeadlessCountedFileType;
 import consulo.it.internal.HeadlessCountingIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
@@ -41,9 +39,7 @@ import java.util.TreeSet;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,7 +54,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -69,15 +65,14 @@ public class ScanningRequiredIndexesTest {
     private static final int COUNTED_FILES = 3;
 
     @Test
-    public void fileTypeHintDecidesWithoutBeingHandedEveryFile(Application application, ProjectManager projectManager) throws Exception {
+    public void fileTypeHintDecidesWithoutBeingHandedEveryFile(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-required-indexes");
         Path src = createSandFiles(directory, SAND_FILES, "Required");
         for (int i = 0; i < COUNTED_FILES; i++) {
             Files.writeString(src.resolve(countedFileName(i)), "counted" + i);
         }
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
 
         HeadlessCountingIndex.reset();

@@ -15,12 +15,12 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.psi.PsiElement;
 import consulo.sandboxPlugin.lang.psi.SandExtendsRef;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
@@ -35,10 +35,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
 import consulo.sandboxPlugin.lang.moduleAware.SandSeedEnv;
 import consulo.sandboxPlugin.lang.psi.SandClass;
@@ -53,10 +50,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
+import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -67,7 +64,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * time; changing the environment (module flags, includer directives) re-seeds the file and
  * flips which branch exists via reparse + reindex.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class SandDisabledBlockTest {
     private static final long TIMEOUT_SECONDS = 60;
 
@@ -81,7 +78,7 @@ public class SandDisabledBlockTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void disabledBlockIsNotParsed(Application application, ProjectManager projectManager) throws Exception {
+    public void disabledBlockIsNotParsed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-disabled");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -93,7 +90,7 @@ public class SandDisabledBlockTest {
             #end
             """);
 
-        Project project = openProjectWithModule(application, projectManager, directory);
+        Project project = openProjectWithModule(projects, directory);
 
         // default environment has no A: the #if branch must not exist - no PSI class, no
         // index entry, and its garbage must produce no error elements
@@ -125,7 +122,7 @@ public class SandDisabledBlockTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void includerSeedsEnabledBranch(Application application, ProjectManager projectManager) throws Exception {
+    public void includerSeedsEnabledBranch(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-disabled-inc");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -142,7 +139,7 @@ public class SandDisabledBlockTest {
             #end
             """);
 
-        Project project = openProjectWithModule(application, projectManager, directory);
+        Project project = openProjectWithModule(projects, directory);
 
         // the included file's own view follows its module flags (no A): the #else variant; the
         // includer defines A, so a second variant seeded with it is indexed and its reference
@@ -303,11 +300,8 @@ public class SandDisabledBlockTest {
         return classes.iterator().next().getContainingFile();
     }
 
-    private static Project openProjectWithModule(Application application, ProjectManager projectManager, Path directory) throws Exception {
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
+    private static Project openProjectWithModule(HeadlessProjects projects, Path directory) throws Exception {
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(directoryFile).isNotNull();
@@ -323,10 +317,7 @@ public class SandDisabledBlockTest {
             rootModel.commit();
         });
 
-        DumbService dumbService = DumbService.getInstance(project);
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
+        awaitIdle(project);
 
         return project;
     }

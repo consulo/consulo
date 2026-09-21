@@ -15,19 +15,17 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.internal.HeadlessCountedFileType;
 import consulo.it.internal.HeadlessCountingIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,9 +40,7 @@ import java.util.TreeSet;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static consulo.it.index.ScanningTestSupport.awaitScanningFinished;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.fullScan;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.waitFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -66,7 +62,7 @@ public class ScanNoWritesUnderReadLockTest {
     private static final int FILES = 12;
 
     @Test
-    public void contentlessIndexValuesAreAppliedAndReadable(Application application, ProjectManager projectManager) throws Exception {
+    public void contentlessIndexValuesAreAppliedAndReadable(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-contentless-apply");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -74,8 +70,7 @@ public class ScanNoWritesUnderReadLockTest {
             Files.writeString(src.resolve(fileName(i)), "applied" + i);
         }
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
 
         addContentRoot(project, directory);

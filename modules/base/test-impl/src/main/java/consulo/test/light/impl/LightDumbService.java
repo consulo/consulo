@@ -28,6 +28,7 @@ import consulo.util.concurrent.coroutine.ObservableValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -141,6 +142,11 @@ public class LightDumbService extends DumbService implements ModificationTracker
     @Override
     public boolean canRunSmart() {
         return true;
+    }
+
+    @Override
+    public CompletableFuture<?> whenIdle() {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

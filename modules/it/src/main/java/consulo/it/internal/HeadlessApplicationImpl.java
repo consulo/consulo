@@ -21,9 +21,11 @@ import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.progress.ProgressManager;
 import consulo.component.internal.ComponentBinding;
+import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.ThreadIssueException;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ref.SimpleReference;
 
 import java.util.List;
@@ -37,6 +39,8 @@ import java.util.function.BooleanSupplier;
  * @author VISTALL
  */
 public class HeadlessApplicationImpl extends UnifiedApplication {
+    private static final Logger LOG = Logger.getInstance(HeadlessApplicationImpl.class);
+
     private static final List<ThreadIssueException> ourThreadIssues = new CopyOnWriteArrayList<>();
 
     private static volatile boolean ourAllowWriteLockUnderUIThread;
@@ -97,6 +101,10 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
                 runnable.run();
             }
             return null;
+        }).whenComplete((result, error) -> {
+            if (error != null && !(error instanceof ControlFlowException)) {
+                LOG.error("Headless UI task failed", error);
+            }
         });
     }
 

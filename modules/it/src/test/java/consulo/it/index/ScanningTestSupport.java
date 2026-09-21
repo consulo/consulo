@@ -23,6 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.ScanningIterators;
 import consulo.language.index.impl.internal.ScanningType;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -41,11 +42,8 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.DumbServiceImpl;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
@@ -73,14 +71,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Shared plumbing of the scanning integration tests: opening a project over a temp directory, giving it a module
- * with a content root, driving the scanner executor with controllable scanning tasks, and waiting for the project
- * to settle.
+ * Shared plumbing of the scanning integration tests: giving a project a module with a content root, driving the
+ * scanner executor with controllable scanning tasks, and waiting for the project to settle.
  *
  * @author VISTALL
  */
@@ -92,31 +88,11 @@ public final class ScanningTestSupport {
     private ScanningTestSupport() {
     }
 
-    public static Project openProject(Application application, ProjectManager projectManager, Path directory) throws Exception {
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
-        return project;
-    }
-
     public static void saveProject(Project project, Application application) throws Exception {
         project.saveAsync(application.getLastUIAccess())
             .runAsync(CoroutineScope.of(project.coroutineContext()), null)
             .toFuture()
             .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-    }
-
-    /**
-     * Closes and disposes the project the way the IDE does, so that the closing half of the indexing state -
-     * the per-project dirty files queue and the persistent indexable files filter - is written to disk.
-     */
-    public static void closeProject(Project project) throws Exception {
-        Boolean closed = ProjectManager.getInstance()
-            .closeAndDisposeAsync(project, project.getUIAccess())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(closed).as("the project must actually close").isTrue();
-        waitFor("the closed project must be disposed", project::isDisposed);
     }
 
     /**
@@ -178,32 +154,20 @@ public final class ScanningTestSupport {
         });
     }
 
-    public static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
-    }
-
     public static boolean isDumb(DumbService dumbService) {
         return ReadAction.compute(dumbService::isDumb);
     }
 
+    /**
+     * @see HeadlessProjects#awaitIdle(Project)
+     */
     public static void awaitIdle(Project project) throws Exception {
-        DumbServiceImpl dumbService = (DumbServiceImpl) DumbService.getInstance(project);
-        UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
-        waitFor(
-            "scanning and dumb queue must become idle",
-            () -> !executor.isRunning().get()
-                && !executor.hasQueuedTasks()
-                && !dumbService.hasScheduledTasks()
-                && !dumbService.isRunning()
-                && !isDumb(dumbService)
-        );
+        HeadlessProjects.awaitIdle(project);
     }
 
     public static void awaitScanningFinished(Project project) throws Exception {
         UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
-        waitFor("scanning must finish", () -> !executor.isRunning().get() && !executor.hasQueuedTasks());
+        waitFor("scanning must finish", () -> !executor.hasQueuedTasks() && !executor.isRunning().get());
     }
 
     /**
@@ -247,21 +211,8 @@ public final class ScanningTestSupport {
         assertThat(condition.getAsBoolean()).as("timed out: %s [%s]", description, details).isTrue();
     }
 
-    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     private static void dumpThreads(String description) {
-        StringBuilder dump = new StringBuilder();
-        dump.append("=== thread dump at timeout of: ").append(description)
-            .append(" [availableProcessors=").append(Runtime.getRuntime().availableProcessors()).append("]\n");
-        for (Map.Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
-            Thread thread = entry.getKey();
-            dump.append('"').append(thread.getName()).append("\" ").append(thread.getState()).append('\n');
-            StackTraceElement[] frames = entry.getValue();
-            for (int i = 0; i < Math.min(frames.length, 30); i++) {
-                dump.append("    at ").append(frames[i]).append('\n');
-            }
-        }
-        dump.append("=== end of thread dump\n");
-        System.err.print(dump);
+        HeadlessProjects.dumpThreads(description);
     }
 
     public static Collection<SandClass> findClasses(Project project, String name) {

@@ -15,12 +15,12 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaStorage;
 import consulo.language.index.impl.internal.IndexingStamp;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -34,8 +34,6 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -46,10 +44,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
+import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -58,7 +56,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * before the provider's plugin was installed) must be reindexed by the next
  * {@code rootsChanged} revalidation, restoring the meta.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class SandMetaHoleGuardTest {
     private static final long TIMEOUT_SECONDS = 60;
 
@@ -72,16 +70,13 @@ public class SandMetaHoleGuardTest {
         "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
     })
     @Test
-    public void missingMetaOnIndexedFileTriggersReindex(Application application, ProjectManager projectManager) throws Exception {
+    public void missingMetaOnIndexedFileTriggersReindex(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-meta-hole");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
         Files.writeString(src.resolve("a.sand"), "class Foo {}");
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(directoryFile).isNotNull();
@@ -98,7 +93,7 @@ public class SandMetaHoleGuardTest {
         });
 
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
         waitFor(() -> hasClass(project, "Foo"));
 
         VirtualFile file = directoryFile.findFileByRelativePath("src/a.sand");
@@ -125,7 +120,7 @@ public class SandMetaHoleGuardTest {
                 + " stubStamp=" + IndexingStamp.isFileIndexedStateCurrent(fileId, StubUpdatingIndex.INDEX_ID)
                 + " dumb=" + dumbService.isDumb()
         );
-        awaitSmart(dumbService);
+        awaitIdle(project);
     }
 
     private static boolean hasClass(Project project, String name) {
@@ -137,12 +132,6 @@ public class SandMetaHoleGuardTest {
                 return false;
             }
         });
-    }
-
-    private static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
     }
 
     private static void waitFor(BooleanSupplier condition) throws Exception {

@@ -15,7 +15,6 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.content.base.BinariesOrderRootType;
@@ -23,7 +22,8 @@ import consulo.content.library.Library;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.RecordedScans;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.index.impl.internal.roots.IndexableFilesIterator;
@@ -33,9 +33,7 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,10 +47,8 @@ import java.util.Set;
 
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
-import static consulo.it.index.ScanningTestSupport.awaitSmart;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findFile;
-import static consulo.it.index.ScanningTestSupport.openProject;
 import static consulo.it.index.ScanningTestSupport.recordScans;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +60,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 @AllowLogError({
     "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
     "consulo.application.impl.internal.BaseApplication",
@@ -74,14 +70,12 @@ public class ProviderGranularityTest {
     private static final int FILES = 3;
 
     @Test
-    public void moduleLibraryWithTwoRootsIsScannedByOneIteratorPerRoot(Application application, ProjectManager projectManager)
-        throws Exception {
+    public void moduleLibraryWithTwoRootsIsScannedByOneIteratorPerRoot(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-granularity-module");
         Path firstRoot = createSandFiles(Files.createTempDirectory("consulo-it-granularity-first"), FILES, "GranFirst");
         Path secondRoot = createSandFiles(Files.createTempDirectory("consulo-it-granularity-second"), FILES, "GranSecond");
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
         Module module = addContentRoot(project, directory);
         awaitIdle(project);
@@ -139,13 +133,12 @@ public class ProviderGranularityTest {
      * table, whose implementation lives in {@code ide-impl} and is not bound in the headless application.
      */
     @Test
-    public void perRootOriginsAreEqualAcrossCollections(Application application, ProjectManager projectManager) throws Exception {
+    public void perRootOriginsAreEqualAcrossCollections(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-granularity-shared");
         Path firstRoot = createSandFiles(Files.createTempDirectory("consulo-it-granularity-shared-first"), FILES, "SharedFirst");
         Path secondRoot = createSandFiles(Files.createTempDirectory("consulo-it-granularity-shared-second"), FILES, "SharedSecond");
 
-        Project project = openProject(application, projectManager, directory);
-        awaitSmart(DumbService.getInstance(project));
+        Project project = projects.open(directory);
         awaitIdle(project);
         Module module = addContentRoot(project, directory);
         awaitIdle(project);

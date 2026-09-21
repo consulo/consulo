@@ -23,6 +23,8 @@ public interface UnindexedFilesScannerExecutor {
 
     ObservableValue<Integer> startedOrStoppedEvent();
 
+    ObservableValue<Integer> queueChangedEvent();
+
     ModificationTracker getModificationTracker();
 
     void suspendScanningAndIndexingThenRun(LocalizeValue activityName, Runnable runnable);

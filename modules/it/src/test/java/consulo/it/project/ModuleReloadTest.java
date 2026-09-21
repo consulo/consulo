@@ -18,13 +18,12 @@ package consulo.it.project;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.StoreReloadManager;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.jdom.JDOMUtil;
@@ -59,7 +58,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author VISTALL
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class ModuleReloadTest {
     private static final long TIMEOUT_SECONDS = 30;
 
@@ -70,12 +69,10 @@ public class ModuleReloadTest {
      */
     @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
-    public void modulesFollowExternalChangesOfModulesXml(Application application, ProjectManager projectManager) throws Exception {
+    public void modulesFollowExternalChangesOfModulesXml(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-module-reload");
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        Project project = projects.open(directory);
 
         // makes the manager register its VFS listener before anything is written
         StoreReloadManager.getInstance(project);
@@ -120,12 +117,10 @@ public class ModuleReloadTest {
      */
     @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
-    public void modulesFollowChangesUnderARefreshStorm(Application application, ProjectManager projectManager) throws Exception {
+    public void modulesFollowChangesUnderARefreshStorm(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-module-reload-storm");
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        Project project = projects.open(directory);
 
         StoreReloadManager reloadManager = StoreReloadManager.getInstance(project);
         ModuleManager moduleManager = ModuleManager.getInstance(project);

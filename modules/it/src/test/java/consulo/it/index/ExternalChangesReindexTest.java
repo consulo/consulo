@@ -15,10 +15,10 @@
  */
 package consulo.it.index;
 
-import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.it.AllowLogError;
-import consulo.it.HeadlessApplicationExtension;
+import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IdFilter;
@@ -29,8 +29,6 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -41,11 +39,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 
+import static consulo.it.index.ScanningTestSupport.awaitIdle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -57,7 +55,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * path has to go through a dumb mode reindex ({@code FileBasedIndexProjectHandler.scheduleReindexingInDumbMode})
  * rather than a lazy update.
  */
-@ExtendWith(HeadlessApplicationExtension.class)
+@ExtendWith(HeadlessProjectExtension.class)
 public class ExternalChangesReindexTest {
     private static final long TIMEOUT_SECONDS = 60;
     private static final int FILES = 30;
@@ -69,7 +67,7 @@ public class ExternalChangesReindexTest {
      */
     @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
-    public void externalMassChangeCausesBoundedReindex(Application application, ProjectManager projectManager) throws Exception {
+    public void externalMassChangeCausesBoundedReindex(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-external-reindex");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
@@ -77,10 +75,7 @@ public class ExternalChangesReindexTest {
             Files.writeString(src.resolve("file" + i + ".txt"), "hello " + i);
         }
 
-        Project project = projectManager
-            .openProjectAsync(directory, application.getLastUIAccess(), new ProjectOpenContext())
-            .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        assertThat(project).isNotNull();
+        Project project = projects.open(directory);
 
         VirtualFile directoryFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(directoryFile).isNotNull();
@@ -97,7 +92,7 @@ public class ExternalChangesReindexTest {
         });
 
         DumbService dumbService = DumbService.getInstance(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         AtomicInteger dumbModeEntries = new AtomicInteger();
         project.getMessageBus().connect().subscribe(
@@ -121,12 +116,12 @@ public class ExternalChangesReindexTest {
 
         // the changed-files reindex is scheduled from a background worker after the events settle
         waitFor(() -> dumbModeEntries.get() >= 1);
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         // give a refresh/index feedback loop a chance to expose itself, then require the count to be small and stable
         int cyclesAfterReindex = dumbModeEntries.get();
         Thread.sleep(TimeUnit.SECONDS.toMillis(3));
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         assertThat(dumbModeEntries.get())
             .as("dumb mode kept cycling after the reindex - refresh and indexing feed each other")
@@ -140,7 +135,7 @@ public class ExternalChangesReindexTest {
         // otherwise index queries silently lose them ("indexed but not resolved")
         new UnindexedFilesScanner(project, "test").queue();
         awaitScanningFinished(project);
-        awaitSmart(dumbService);
+        awaitIdle(project);
 
         IdFilter projectFilter = FileBasedIndex.getInstance().createProjectIndexableFiles(project);
         assertThat(projectFilter).as("project indexable files filter must be available in smart mode").isNotNull();
@@ -154,12 +149,6 @@ public class ExternalChangesReindexTest {
     private static void awaitScanningFinished(Project project) throws Exception {
         UnindexedFilesScannerExecutor executor = UnindexedFilesScannerExecutor.getInstance(project);
         waitFor(() -> !executor.isRunning().get() && !executor.hasQueuedTasks());
-    }
-
-    private static void awaitSmart(DumbService dumbService) throws InterruptedException {
-        CountDownLatch smart = new CountDownLatch(1);
-        dumbService.runWhenSmart(smart::countDown);
-        assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
     }
 
     private static void waitFor(BooleanSupplier condition) throws Exception {

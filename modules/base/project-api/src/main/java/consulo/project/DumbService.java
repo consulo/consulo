@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -506,6 +507,15 @@ public abstract class DumbService {
      * Must be called from the UI thread without a write action.
      */
     public abstract void cancelAllTasksAndWait();
+
+    /**
+     * @return a future completed at the next moment the project has no dumb mode activity at all: no dumb task is queued, scheduled
+     * or running, the project is not dumb, no scanning of indexable files is queued or running, and the listeners of the last dumb
+     * mode transition have been notified. The future is already completed when that is the case at the time of the call, and it is
+     * cancelled when the project is disposed. Unlike {@link #runWhenSmart(Runnable)} this also covers the indexing which a finished
+     * scanning has scheduled but which has not started yet.
+     */
+    public abstract CompletableFuture<?> whenIdle();
 
     public interface DumbState {
         boolean isDumb();
