@@ -28,6 +28,10 @@ import org.jspecify.annotations.Nullable;
 public class HeadlessWrappedLayout extends HeadlessLayoutBase<LayoutConstraint> implements WrappedLayout {
     @Override
     public WrappedLayout set(@Nullable Component component) {
+        removeAll();
+        if (component != null) {
+            add(component, LayoutConstraint.NONE);
+        }
         return this;
     }
 }

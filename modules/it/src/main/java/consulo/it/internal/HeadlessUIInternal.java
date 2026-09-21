@@ -57,6 +57,11 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
+    public Button _Components_button(LocalizeValue text) {
+        return new HeadlessButton(text);
+    }
+
+    @Override
     public DockLayout _Layouts_dock(Space gapInPixels) {
         return new HeadlessDockLayout();
     }
@@ -99,6 +104,11 @@ public class HeadlessUIInternal extends UIInternal {
     @Override
     public HorizontalLayout _Layouts_horizontal(Space gapInPixels) {
         return new HeadlessHorizontalLayout();
+    }
+
+    @Override
+    public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
+        return new HeadlessScrollableLayout(component);
     }
 
     @Override

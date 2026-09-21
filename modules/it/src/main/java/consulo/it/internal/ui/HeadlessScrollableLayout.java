@@ -16,23 +16,19 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.Component;
-import consulo.ui.StaticPosition;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.HorizontalLayoutStyle;
+import consulo.ui.layout.LayoutConstraint;
+import consulo.ui.layout.ScrollableLayout;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Dummy-but-creatable headless {@link HorizontalLayout}.
+ * Dummy-but-creatable headless {@link ScrollableLayout} over the single component it scrolls.
  *
  * @author VISTALL
  */
-public class HeadlessHorizontalLayout extends HeadlessLayoutBase<StaticPosition> implements HorizontalLayout {
-    @Override
-    public HorizontalLayout add(Component component, StaticPosition constraint) {
-        addChild(component);
-        return this;
-    }
-
-    @Override
-    public void addStyle(HorizontalLayoutStyle style) {
+public class HeadlessScrollableLayout extends HeadlessLayoutBase<LayoutConstraint> implements ScrollableLayout {
+    public HeadlessScrollableLayout(@Nullable Component component) {
+        if (component != null) {
+            add(component, LayoutConstraint.NONE);
+        }
     }
 }
