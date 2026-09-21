@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.externalTool.impl.internal;
 
 import consulo.component.persist.scheme.SchemeElement;
@@ -34,17 +33,17 @@ import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Tool implements SchemeElement {
-    
     public final static String ACTION_ID_PREFIX = "Tool_";
     public static final String DEFAULT_GROUP_NAME = "External Tools";
 
@@ -79,7 +78,6 @@ public class Tool implements SchemeElement {
         return myDescription;
     }
 
-    
     public String getGroup() {
         return myGroup;
     }
@@ -228,33 +226,34 @@ public class Tool implements SchemeElement {
         myOutputFilters = new ArrayList<>(Arrays.asList(source.getOutputFilters()));
     }
 
-    @SuppressWarnings("EqualsHashCode")
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Tool)) {
-            return false;
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
         }
-        Tool secondTool = (Tool) obj;
 
-        Tool source = secondTool;
+        return obj instanceof Tool that
+            && Objects.equals(myName, that.myName)
+            && Objects.equals(myDescription, that.myDescription)
+            && Objects.equals(myGroup, that.myGroup)
+            && myShownInMainMenu == that.myShownInMainMenu
+            && myShownInEditor == that.myShownInEditor
+            && myShownInProjectViews == that.myShownInProjectViews
+            && myShownInSearchResultsPopup == that.myShownInSearchResultsPopup
+            && myEnabled == that.myEnabled
+            && myUseConsole == that.myUseConsole
+            && myShowConsoleOnStdOut == that.myShowConsoleOnStdOut
+            && myShowConsoleOnStdErr == that.myShowConsoleOnStdErr
+            && mySynchronizeAfterExecution == that.mySynchronizeAfterExecution
+            && Objects.equals(myWorkingDirectory, that.myWorkingDirectory)
+            && Objects.equals(myProgram, that.myProgram)
+            && Objects.equals(myParameters, that.myParameters)
+            && Objects.equals(myOutputFilters, that.myOutputFilters);
+    }
 
-        return
-            Comparing.equal(myName, source.myName) &&
-                Comparing.equal(myDescription, source.myDescription) &&
-                Comparing.equal(myGroup, source.myGroup) &&
-                myShownInMainMenu == source.myShownInMainMenu &&
-                myShownInEditor == source.myShownInEditor &&
-                myShownInProjectViews == source.myShownInProjectViews &&
-                myShownInSearchResultsPopup == source.myShownInSearchResultsPopup &&
-                myEnabled == source.myEnabled &&
-                myUseConsole == source.myUseConsole &&
-                myShowConsoleOnStdOut == source.myShowConsoleOnStdOut &&
-                myShowConsoleOnStdErr == source.myShowConsoleOnStdErr &&
-                mySynchronizeAfterExecution == source.mySynchronizeAfterExecution &&
-                Comparing.equal(myWorkingDirectory, source.myWorkingDirectory) &&
-                Comparing.equal(myProgram, source.myProgram) &&
-                Comparing.equal(myParameters, source.myParameters) &&
-                Comparing.equal(myOutputFilters, source.myOutputFilters);
+    @Override
+    public int hashCode() {
+        return Objects.hash(myName, myDescription, myGroup, myProgram, myParameters);
     }
 
     public String getActionId() {
@@ -272,6 +271,7 @@ public class Tool implements SchemeElement {
     /**
      * @return <code>true</code> if task has been started successfully
      */
+    @RequiredUIAccess
     public boolean execute(AnActionEvent event, DataContext dataContext, long executionId, @Nullable ProcessListener processListener) {
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {

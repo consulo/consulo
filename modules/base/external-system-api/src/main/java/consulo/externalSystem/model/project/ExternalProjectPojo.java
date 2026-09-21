@@ -19,80 +19,76 @@ import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import consulo.externalSystem.service.project.Identifiable;
 import consulo.externalSystem.service.project.Named;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
- * @since 5/18/13 10:51 PM
+ * @since 2013-05-18
  */
 public class ExternalProjectPojo implements Comparable<ExternalProjectPojo> {
+    private String myName;
 
-  
-  private String myName;
-  
-  private String myPath;
+    private String myPath;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ExternalProjectPojo() {
-    // Used by IJ serialization
-    this("___DUMMY___", "___DUMMY___");
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public ExternalProjectPojo() {
+        // Used by IJ serialization
+        this("___DUMMY___", "___DUMMY___");
+    }
 
-  public ExternalProjectPojo(String name, String path) {
-    myName = name;
-    myPath = path;
-  }
+    public ExternalProjectPojo(String name, String path) {
+        myName = name;
+        myPath = path;
+    }
 
-  
-  public static <T extends Named & ExternalConfigPathAware & Identifiable> ExternalProjectPojo from(T data) {
-    String projectUniqueName = StringUtil.isEmpty(data.getId()) ? data.getExternalName() : data.getId();
-    return new ExternalProjectPojo(projectUniqueName, data.getLinkedExternalProjectPath());
-  }
+    public static <T extends Named & ExternalConfigPathAware & Identifiable> ExternalProjectPojo from(T data) {
+        String projectUniqueName = StringUtil.isEmpty(data.getId()) ? data.getExternalName() : data.getId();
+        return new ExternalProjectPojo(projectUniqueName, data.getLinkedExternalProjectPath());
+    }
 
-  
-  public String getName() {
-    return myName;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  public void setName(String name) {
-    myName = name;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  
-  public String getPath() {
-    return myPath;
-  }
+    public String getPath() {
+        return myPath;
+    }
 
-  public void setPath(String path) {
-    myPath = path;
-  }
+    public void setPath(String path) {
+        myPath = path;
+    }
 
-  @Override
-  public int compareTo(ExternalProjectPojo that) {
-    return myName.compareTo(that.myName);
-  }
+    @Override
+    public int compareTo(ExternalProjectPojo that) {
+        return myName.compareTo(that.myName);
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myName.hashCode();
-    result = 31 * result + myPath.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myName.hashCode() + myPath.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    ExternalProjectPojo pojo = (ExternalProjectPojo)o;
+        ExternalProjectPojo that = (ExternalProjectPojo) o;
 
-    if (!myName.equals(pojo.myName)) return false;
-    if (!myPath.equals(pojo.myPath)) return false;
+        return myName.equals(that.myName)
+            && myPath.equals(that.myPath);
+    }
 
-    return true;
-  }
-
-  @Override
-  public String toString() {
-    return myName;
-  }
+    @Override
+    public String toString() {
+        return myName;
+    }
 }

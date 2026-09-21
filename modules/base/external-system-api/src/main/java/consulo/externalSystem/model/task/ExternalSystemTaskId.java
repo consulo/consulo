@@ -12,20 +12,17 @@ import java.util.concurrent.atomic.AtomicLong;
  * Represents id of the task enqueued to external API for execution.
  *
  * @author Denis Zhdanov
- * @since 11/10/11 9:09 AM
+ * @since 2011-11-10
  */
 public class ExternalSystemTaskId implements Serializable {
+  private static final AtomicLong COUNTER = new AtomicLong();
+  private static final long serialVersionUID = 1L;
 
-  
-  private static final AtomicLong COUNTER          = new AtomicLong();
-  private static final          long       serialVersionUID = 1L;
-
-  
   private final ExternalSystemTaskType myType;
   
-  private final String                 myProjectId;
+  private final String myProjectId;
   
-  private final ProjectSystemId        myProjectSystemId;
+  private final ProjectSystemId myProjectSystemId;
 
   private final long myId;
 
@@ -36,12 +33,10 @@ public class ExternalSystemTaskId implements Serializable {
     myId = taskId;
   }
 
-  
   public String getIdeProjectId() {
     return myProjectId;
   }
 
-  
   public ProjectSystemId getProjectSystemId() {
     return myProjectSystemId;
   }
@@ -57,12 +52,10 @@ public class ExternalSystemTaskId implements Serializable {
     return create(projectSystemId, type, getProjectId(project));
   }
 
-  
   public static ExternalSystemTaskId create(ProjectSystemId projectSystemId, ExternalSystemTaskType type, String ideProjectId) {
     return new ExternalSystemTaskId(projectSystemId, type, ideProjectId, COUNTER.getAndIncrement());
   }
 
-  
   public static String getProjectId(Project project) {
     return project.isDisposed() ? project.getName() : project.getName() + ":" + project.getLocationHash();
   }
@@ -75,18 +68,17 @@ public class ExternalSystemTaskId implements Serializable {
     return null;
   }
 
-  
   public ExternalSystemTaskType getType() {
     return myType;
   }
 
   @Override
   public int hashCode() {
-    return 31 * myType.hashCode() + (int)(myId ^ (myId >>> 32));
+    return 31 * myType.hashCode() + Long.hashCode(myId);
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

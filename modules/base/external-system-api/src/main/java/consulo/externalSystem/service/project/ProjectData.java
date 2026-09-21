@@ -8,10 +8,9 @@ import org.jspecify.annotations.Nullable;
  * Not thread-safe.
  *
  * @author Denis Zhdanov
- * @since 8/1/11 1:30 PM
+ * @since 2011-08-01
  */
 public class ProjectData extends AbstractNamedData implements ExternalConfigPathAware, Identifiable {
-
     private static final long serialVersionUID = 1L;
 
     private final String myLinkedExternalProjectPath;
@@ -57,13 +56,11 @@ public class ProjectData extends AbstractNamedData implements ExternalConfigPath
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + myIdeProjectFileDirectoryPath.hashCode();
-        return result;
+        return 31 * super.hashCode() + myIdeProjectFileDirectoryPath.hashCode();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -74,13 +71,9 @@ public class ProjectData extends AbstractNamedData implements ExternalConfigPath
             return false;
         }
 
-        ProjectData project = (ProjectData) o;
+        ProjectData that = (ProjectData) o;
 
-        if (!myIdeProjectFileDirectoryPath.equals(project.myIdeProjectFileDirectoryPath)) {
-            return false;
-        }
-
-        return true;
+        return myIdeProjectFileDirectoryPath.equals(that.myIdeProjectFileDirectoryPath);
     }
 
     @Override

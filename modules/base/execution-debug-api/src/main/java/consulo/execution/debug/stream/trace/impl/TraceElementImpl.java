@@ -9,45 +9,41 @@ import org.jspecify.annotations.Nullable;
  * @author Vitaliy.Bibaev
  */
 public class TraceElementImpl implements TraceElement, Comparable<TraceElement> {
-  private final int myTime;
-  private final Value myValue;
+    private final int myTime;
+    private final Value myValue;
 
-  public TraceElementImpl(int time, @Nullable Value value) {
-    myTime = time;
-    myValue = value;
-  }
-
-  public static TraceElement ofResultValue(@Nullable Value streamResult) {
-    return new TraceElementImpl(Integer.MAX_VALUE, streamResult);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof TraceElement) {
-      final int time = ((TraceElement)obj).getTime();
-      return time == myTime;
+    public TraceElementImpl(int time, @Nullable Value value) {
+        myTime = time;
+        myValue = value;
     }
 
-    return false;
-  }
+    public static TraceElement ofResultValue(@Nullable Value streamResult) {
+        return new TraceElementImpl(Integer.MAX_VALUE, streamResult);
+    }
 
-  @Override
-  public int hashCode() {
-    return getTime();
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof TraceElement that && that.getTime() == myTime;
+    }
 
-  @Override
-  public int getTime() {
-    return myTime;
-  }
+    @Override
+    public int hashCode() {
+        return getTime();
+    }
 
-  @Override
-  public @Nullable Value getValue() {
-    return myValue;
-  }
+    @Override
+    public int getTime() {
+        return myTime;
+    }
 
-  @Override
-  public int compareTo(TraceElement other) {
-    return Integer.compare(myTime, other.getTime());
-  }
+    @Override
+    public @Nullable Value getValue() {
+        return myValue;
+    }
+
+    @Override
+    public int compareTo(TraceElement other) {
+        return Integer.compare(myTime, other.getTime());
+    }
 }

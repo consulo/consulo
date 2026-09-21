@@ -14,16 +14,13 @@ import java.util.*;
 
 /**
  * @author Denis Zhdanov
- * @since 8/9/11 6:25 PM
+ * @since 2011-08-09
  */
 public class ContentRootData extends AbstractExternalEntityData {
-
   private static final long serialVersionUID = 1L;
 
-  
   private final Map<ExternalSystemSourceType, Collection<SourceRoot>> myData = new HashMap<>();
 
-  
   private final String myRootPath;
 
   /**
@@ -79,7 +76,6 @@ public class ContentRootData extends AbstractExternalEntityData {
     }
   }
 
-  
   public String getRootPath() {
     return myRootPath;
   }
@@ -97,7 +93,6 @@ public class ContentRootData extends AbstractExternalEntityData {
   }
 
   public static class SourceRoot implements Serializable {
-    
     private final String myPath;
 
     private final @Nullable String myPackagePrefix;
@@ -107,7 +102,6 @@ public class ContentRootData extends AbstractExternalEntityData {
       myPackagePrefix = prefix;
     }
 
-    
     public String getPath() {
       return myPath;
     }
@@ -117,20 +111,18 @@ public class ContentRootData extends AbstractExternalEntityData {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof SourceRoot)) return false;
-      SourceRoot root = (SourceRoot)o;
-      if (myPackagePrefix != null ? !myPackagePrefix.equals(root.myPackagePrefix) : root.myPackagePrefix != null) return false;
-      if (!myPath.equals(root.myPath)) return false;
-      return true;
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      return o instanceof SourceRoot that
+        && Objects.equals(myPackagePrefix, that.myPackagePrefix)
+        && myPath.equals(that.myPath);
     }
 
     @Override
     public int hashCode() {
-      int result = myPath.hashCode();
-      result = 31 * result + (myPackagePrefix != null ? myPackagePrefix.hashCode() : 0);
-      return result;
+      return 31 * myPath.hashCode() + Objects.hashCode(myPackagePrefix);
     }
 
     @Override

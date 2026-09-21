@@ -12,10 +12,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Denis Zhdanov
@@ -171,32 +168,17 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof ModuleData)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        ModuleData that = (ModuleData) o;
-
-        if (group != null ? !group.equals(that.group) : that.group != null) {
-            return false;
-        }
-        if (version != null ? !version.equals(that.version) : that.version != null) {
-            return false;
-        }
-
-        return true;
+    public boolean equals(@Nullable Object o) {
+        return o instanceof ModuleData that
+            && super.equals(o)
+            && Objects.equals(group, that.group)
+            && Objects.equals(version, that.version);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (group != null ? group.hashCode() : 0);
-        result = 31 * result + (version != null ? version.hashCode() : 0);
-        return result;
+        int result = 31 * super.hashCode() + Objects.hashCode(group);
+        return 31 * result + Objects.hashCode(version);
     }
 
     @Override

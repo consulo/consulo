@@ -53,6 +53,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.EventObject;
+import java.util.Objects;
 
 /**
  * @author nik
@@ -80,8 +81,7 @@ public abstract class AbstractValueHint {
     private TextRange myCurrentRange;
     private Runnable myHideRunnable;
 
-    public AbstractValueHint(Project project, Editor editor, Point point, ValueHintType type,
-                             TextRange textRange) {
+    public AbstractValueHint(Project project, Editor editor, Point point, ValueHintType type, TextRange textRange) {
         myPoint = point;
         myProject = project;
         myEditor = editor;
@@ -161,9 +161,13 @@ public abstract class AbstractValueHint {
             TextAttributes attributes = scheme.getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR);
             attributes = TextAttributesPatcher.patchAttributesColor(attributes, myCurrentRange, myEditor);
 
-            myHighlighter = myEditor.getMarkupModel().addRangeHighlighter(myCurrentRange.getStartOffset(), myCurrentRange.getEndOffset(),
-                HighlighterLayer.SELECTION + 1, attributes,
-                HighlighterTargetArea.EXACT_RANGE);
+            myHighlighter = myEditor.getMarkupModel().addRangeHighlighter(
+                myCurrentRange.getStartOffset(),
+                myCurrentRange.getEndOffset(),
+                HighlighterLayer.SELECTION + 1,
+                attributes,
+                HighlighterTargetArea.EXACT_RANGE
+            );
             Component internalComponent = myEditor.getContentComponent();
             myStoredCursor = internalComponent.getCursor();
             internalComponent.addKeyListener(myEditorKeyListener);
@@ -185,7 +189,6 @@ public abstract class AbstractValueHint {
         return myProject;
     }
 
-    
     protected Editor getEditor() {
         return myEditor;
     }
@@ -226,17 +229,22 @@ public abstract class AbstractValueHint {
         Point p = hintManager.getHintPosition(myCurrentHint, myEditor, myEditor.xyToLogicalPosition(myPoint), HintManager.UNDER);
         HintHint hint = hintManager.createHintHint(myEditor, p, myCurrentHint, HintManager.UNDER, true);
         hint.setShowImmediately(true);
-        hintManager.showEditorHint(myCurrentHint, myEditor, p,
+        hintManager.showEditorHint(
+            myCurrentHint,
+            myEditor,
+            p,
             HintManager.HIDE_BY_ANY_KEY |
                 HintManager.HIDE_BY_TEXT_CHANGE |
-                HintManager.HIDE_BY_SCROLLING, 0, false,
-            hint);
+                HintManager.HIDE_BY_SCROLLING,
+            0,
+            false,
+            hint
+        );
         myInsideShow = false;
         return true;
     }
 
     protected void onHintHidden() {
-
     }
 
     protected boolean isHintHidden() {
@@ -273,9 +281,11 @@ public abstract class AbstractValueHint {
     }
 
     private static boolean isAltMask(@AWTConstants.InputEventMask int modifiers) {
-        return KeymapUtil.matchActionMouseShortcutsModifiers(KeymapManager.getInstance().getActiveKeymap(),
+        return KeymapUtil.matchActionMouseShortcutsModifiers(
+            KeymapManager.getInstance().getActiveKeymap(),
             modifiers,
-            XDebuggerActions.QUICK_EVALUATE_EXPRESSION);
+            XDebuggerActions.QUICK_EVALUATE_EXPRESSION
+        );
     }
 
     public static @Nullable ValueHintType getHintType(EditorMouseEvent e) {
@@ -298,7 +308,7 @@ public abstract class AbstractValueHint {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -306,22 +316,12 @@ public abstract class AbstractValueHint {
             return false;
         }
 
-        AbstractValueHint hint = (AbstractValueHint) o;
+        AbstractValueHint that = (AbstractValueHint) o;
 
-        if (!myProject.equals(hint.myProject)) {
-            return false;
-        }
-        if (!myEditor.equals(hint.myEditor)) {
-            return false;
-        }
-        if (myType != hint.myType) {
-            return false;
-        }
-        if (myCurrentRange != null ? !myCurrentRange.equals(hint.myCurrentRange) : hint.myCurrentRange != null) {
-            return false;
-        }
-
-        return true;
+        return myProject.equals(that.myProject)
+            && myEditor.equals(that.myEditor)
+            && myType == that.myType
+            && Objects.equals(myCurrentRange, that.myCurrentRange);
     }
 
     @Override
@@ -329,7 +329,7 @@ public abstract class AbstractValueHint {
         int result = myProject.hashCode();
         result = 31 * result + myEditor.hashCode();
         result = 31 * result + myType.hashCode();
-        result = 31 * result + (myCurrentRange != null ? myCurrentRange.hashCode() : 0);
+        result = 31 * result + Objects.hashCode(myCurrentRange);
         return result;
     }
 }

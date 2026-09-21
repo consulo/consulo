@@ -354,17 +354,9 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof ItemWrapper)) {
-                return false;
-            }
-
-            ItemWrapper that = (ItemWrapper) o;
-
-            return myValue != null ? myValue.equals(that.myValue) : that.myValue == null;
+        public boolean equals(@Nullable Object o) {
+            return o == this
+                || o instanceof ItemWrapper that && Objects.equals(myValue, that.myValue);
         }
 
         @Override
@@ -390,11 +382,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             return PopupStep.FINAL_CHOICE;
         }
 
-        public static ItemWrapper wrap(
-            Project project,
-            RunnerAndConfigurationSettings settings,
-            boolean dynamic
-        ) {
+        public static ItemWrapper wrap(Project project, RunnerAndConfigurationSettings settings, boolean dynamic) {
             ItemWrapper result = wrap(project, settings);
             result.setDynamic(dynamic);
             return result;
@@ -531,7 +519,6 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             return selectedValue.hasActions();
         }
 
-        
         @Override
         public String getTextFor(ItemWrapper value) {
             return value.getText();
@@ -548,11 +535,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         }
 
         @Override
-        public PopupStep onChosen(
-            ItemWrapper wrapper,
-            boolean finalChoice,
-            @Nullable InputEvent event
-        ) {
+        public PopupStep onChosen(ItemWrapper wrapper, boolean finalChoice, @Nullable InputEvent event) {
             Executor targetExecutor = myAction.getExecutor();
 
             int eventModifiers = event == null ? 0 : event.getModifiers();
@@ -590,13 +573,10 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
         @Override
         public void setEmptyText(StatusText emptyText) {
-
         }
     }
 
     private static final class ConfigurationActionsStep extends BaseListPopupStep<ActionWrapper> {
-
-        
         private final RunnerAndConfigurationSettings mySettings;
         
         private final Project myProject;
@@ -612,7 +592,6 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             mySettings = settings;
         }
 
-        
         public RunnerAndConfigurationSettings getSettings() {
             return mySettings;
         }
@@ -715,7 +694,6 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             return aValue.getIcon();
         }
 
-        
         @Override
         public String getTextFor(ActionWrapper value) {
             return value.getText();
@@ -942,11 +920,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @RequiredUIAccess
-    public static ItemWrapper[] createSettingsList(
-        Project project,
-        ExecutorProvider executorProvider,
-        boolean createEditAction
-    ) {
+    public static ItemWrapper[] createSettingsList(Project project, ExecutorProvider executorProvider, boolean createEditAction) {
         List<ItemWrapper> result = new ArrayList<>();
 
         if (createEditAction) {
@@ -999,10 +973,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         if (selectedConfiguration != null) {
             boolean isFirst = true;
             final ExecutionTarget activeTarget = ExecutionTargetManager.getActiveTarget(project);
-            for (ExecutionTarget eachTarget : ExecutionTargetManager.getTargetsToChooseFor(
-                project,
-                selectedConfiguration.getConfiguration()
-            )) {
+            for (ExecutionTarget eachTarget
+                : ExecutionTargetManager.getTargetsToChooseFor(project, selectedConfiguration.getConfiguration())) {
                 result.add(new ItemWrapper<>(eachTarget, isFirst) {
                     {
                         setChecked(getValue().equals(activeTarget));
@@ -1078,7 +1050,6 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         return result.toArray(new ItemWrapper[result.size()]);
     }
 
-    
     @RequiredUIAccess
     private static List<RunnerAndConfigurationSettings> populateWithDynamicRunners(
         List<ItemWrapper> result,

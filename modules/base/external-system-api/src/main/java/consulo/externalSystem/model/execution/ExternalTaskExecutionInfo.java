@@ -16,78 +16,77 @@
 package consulo.externalSystem.model.execution;
 
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Essentially this class is {@link ExternalSystemTaskExecutionSettings} plus auxiliary information like execution type (run/debug etc).
- * 
+ *
  * @author Denis Zhdanov
- * @since 6/9/13 4:14 PM
+ * @since 2013-06-09
  */
 public class ExternalTaskExecutionInfo {
-  
-  
-  private ExternalSystemTaskExecutionSettings mySettings;
-  
-  private String myExecutorId;
+    private ExternalSystemTaskExecutionSettings mySettings;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ExternalTaskExecutionInfo() {
-    this(new ExternalSystemTaskExecutionSettings(), "___DUMMY___");
-  }
+    private String myExecutorId;
 
-  public ExternalTaskExecutionInfo(ExternalSystemTaskExecutionSettings settings, String executorId) {
-    mySettings = settings;
-    myExecutorId = executorId;
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public ExternalTaskExecutionInfo() {
+        this(new ExternalSystemTaskExecutionSettings(), "___DUMMY___");
+    }
 
-  
-  public ExternalSystemTaskExecutionSettings getSettings() {
-    return mySettings;
-  }
+    public ExternalTaskExecutionInfo(ExternalSystemTaskExecutionSettings settings, String executorId) {
+        mySettings = settings;
+        myExecutorId = executorId;
+    }
 
-  @SuppressWarnings("UnusedDeclaration")
-  public void setSettings(ExternalSystemTaskExecutionSettings settings) {
-    // Required by IJ serialization.
-    mySettings = settings;
-  }
+    public ExternalSystemTaskExecutionSettings getSettings() {
+        return mySettings;
+    }
 
-  
-  public String getExecutorId() {
-    return myExecutorId;
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public void setSettings(ExternalSystemTaskExecutionSettings settings) {
+        // Required by IJ serialization.
+        mySettings = settings;
+    }
 
-  @SuppressWarnings("UnusedDeclaration")
-  public void setExecutorId(String executorId) {
-    // Required by IJ serialization.
-    myExecutorId = executorId;
-  }
+    public String getExecutorId() {
+        return myExecutorId;
+    }
 
-  public String getDescription() {
-    return StringUtil.join(mySettings.getTaskDescriptions(), "\n");
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public void setExecutorId(String executorId) {
+        // Required by IJ serialization.
+        myExecutorId = executorId;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = mySettings.hashCode();
-    result = 31 * result + myExecutorId.hashCode();
-    return result;
-  }
+    public String getDescription() {
+        return StringUtil.join(mySettings.getTaskDescriptions(), "\n");
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public int hashCode() {
+        int result = mySettings.hashCode();
+        result = 31 * result + myExecutorId.hashCode();
+        return result;
+    }
 
-    ExternalTaskExecutionInfo task = (ExternalTaskExecutionInfo)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    if (!myExecutorId.equals(task.myExecutorId)) return false;
-    if (!mySettings.equals(task.mySettings)) return false;
+        ExternalTaskExecutionInfo that = (ExternalTaskExecutionInfo) o;
 
-    return true;
-  }
+        return myExecutorId.equals(that.myExecutorId)
+            && mySettings.equals(that.mySettings);
+    }
 
-  @Override
-  public String toString() {
-    return StringUtil.join(mySettings.getTaskNames(), " ");
-  }
+    @Override
+    public String toString() {
+        return StringUtil.join(mySettings.getTaskNames(), " ");
+    }
 }

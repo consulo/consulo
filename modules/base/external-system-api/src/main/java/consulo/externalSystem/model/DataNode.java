@@ -176,14 +176,14 @@ public class DataNode<T> implements Serializable {
     }
     catch (IOException e) {
       throw new IllegalStateException(
-              String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
-              e
+          String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
+          e
       );
     }
     catch (ClassNotFoundException e) {
       throw new IllegalStateException(
-              String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
-              e
+          String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
+          e
       );
     }
     finally {
@@ -254,17 +254,15 @@ public class DataNode<T> implements Serializable {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    DataNode node = (DataNode)o;
+    DataNode that = (DataNode)o;
 
-    if (!myChildren.equals(node.myChildren)) return false;
-    if (!getData().equals(node.getData())) return false;
-    if (!myKey.equals(node.myKey)) return false;
-
-    return true;
+    return myChildren.equals(that.myChildren)
+      && getData().equals(that.getData())
+      && myKey.equals(that.myKey);
   }
 
   @Override

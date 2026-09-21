@@ -22,91 +22,88 @@ import org.jspecify.annotations.Nullable;
 /**
  * Represents {@link TaskData} at the ide side. Is required purely for IJ serialization because {@link TaskData} has only final
  * fields which are initialized at constructor and ide serialization is not capable to handle such scenario properly.
- * 
+ *
  * @author Denis Zhdanov
- * @since 5/18/13 11:28 PM
+ * @since 2013-05-18
  */
 public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
-  
-  
-  private String myName;
-  
-  private String myLinkedExternalProjectPath;
-  
-  private @Nullable String myDescription;
+    private String myName;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ExternalTaskPojo() {
-    // Required for IJ serialization.
-    this("___DUMMY___", "___DUMMY___", null);
-  }
+    private String myLinkedExternalProjectPath;
 
-  public ExternalTaskPojo(String name, String linkedExternalProjectPath, @Nullable String description) {
-    myName = name;
-    myLinkedExternalProjectPath = linkedExternalProjectPath;
-    myDescription = description;
-  }
+    private @Nullable String myDescription;
 
-  
-  public static ExternalTaskPojo from(TaskData data) {
-    return new ExternalTaskPojo(data.getName(), data.getLinkedExternalProjectPath(), data.getDescription());
-  }
-  
-  
-  public String getName() {
-    return myName;
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public ExternalTaskPojo() {
+        // Required for IJ serialization.
+        this("___DUMMY___", "___DUMMY___", null);
+    }
 
-  public void setName(String name) {
-    myName = name;
-  }
+    public ExternalTaskPojo(String name, String linkedExternalProjectPath, @Nullable String description) {
+        myName = name;
+        myLinkedExternalProjectPath = linkedExternalProjectPath;
+        myDescription = description;
+    }
 
-  public @Nullable String getDescription() {
-    return myDescription;
-  }
+    public static ExternalTaskPojo from(TaskData data) {
+        return new ExternalTaskPojo(data.getName(), data.getLinkedExternalProjectPath(), data.getDescription());
+    }
 
-  public void setDescription(@Nullable String description) {
-    myDescription = description;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  
-  public String getLinkedExternalProjectPath() {
-    return myLinkedExternalProjectPath;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  @SuppressWarnings("UnusedDeclaration")
-  public void setLinkedExternalProjectPath(String linkedExternalProjectPath) {
-    // Required for IJ serialization.
-    myLinkedExternalProjectPath = linkedExternalProjectPath;
-  }
+    public @Nullable String getDescription() {
+        return myDescription;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myName.hashCode();
-    result = 31 * result + myLinkedExternalProjectPath.hashCode();
-    return result;
-  }
+    public void setDescription(@Nullable String description) {
+        myDescription = description;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public String getLinkedExternalProjectPath() {
+        return myLinkedExternalProjectPath;
+    }
 
-    ExternalTaskPojo that = (ExternalTaskPojo)o;
+    @SuppressWarnings("UnusedDeclaration")
+    public void setLinkedExternalProjectPath(String linkedExternalProjectPath) {
+        // Required for IJ serialization.
+        myLinkedExternalProjectPath = linkedExternalProjectPath;
+    }
 
-    if (!myLinkedExternalProjectPath.equals(that.myLinkedExternalProjectPath)) return false;
-    if (!myName.equals(that.myName)) return false;
-    
-    return true;
-  }
+    @Override
+    public int hashCode() {
+        int result = myName.hashCode();
+        result = 31 * result + myLinkedExternalProjectPath.hashCode();
+        return result;
+    }
 
-  @Override
-  public int compareTo(ExternalTaskPojo that) {
-    return myName.compareTo(that.getName());
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public String toString() {
-    return myName;
-  }
+        ExternalTaskPojo that = (ExternalTaskPojo) o;
+
+        return myLinkedExternalProjectPath.equals(that.myLinkedExternalProjectPath)
+            && myName.equals(that.myName);
+    }
+
+    @Override
+    public int compareTo(ExternalTaskPojo that) {
+        return myName.compareTo(that.getName());
+    }
+
+    @Override
+    public String toString() {
+        return myName;
+    }
 }

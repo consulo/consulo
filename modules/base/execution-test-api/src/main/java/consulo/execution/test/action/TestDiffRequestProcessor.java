@@ -28,7 +28,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public class TestDiffRequestProcessor {
-  
   public static DiffRequestChain createRequestChain(@Nullable Project project, ListSelection<? extends DiffHyperlink> requests) {
     ListSelection<DiffRequestProducer> producers = requests.map(hyperlink -> new DiffHyperlinkRequestProducer(project, hyperlink));
 
@@ -49,17 +48,13 @@ public class TestDiffRequestProcessor {
     }
 
     @Override
-    public
-    
-    
-    String getName() {
+    public String getName() {
       String testName = myHyperlink.getTestName();
       if (testName != null) return testName;
       return myHyperlink.getDiffTitle();
     }
 
     @Override
-    
     public DiffRequest process(UserDataHolder context, ProgressIndicator indicator) throws DiffRequestProducerException {
       String windowTitle = myHyperlink.getDiffTitle();
 
@@ -82,16 +77,16 @@ public class TestDiffRequestProcessor {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      DiffHyperlinkRequestProducer producer = (DiffHyperlinkRequestProducer)o;
-      return Objects.equals(myHyperlink, producer.myHyperlink);
+      DiffHyperlinkRequestProducer that = (DiffHyperlinkRequestProducer)o;
+      return Objects.equals(myHyperlink, that.myHyperlink);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(myHyperlink);
+      return Objects.hashCode(myHyperlink);
     }
   }
 

@@ -52,11 +52,12 @@ public abstract class TryBlockBase implements TryBlock {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       CatchBlockDescriptor that = (CatchBlockDescriptor) o;
-      return Objects.equals(variable, that.variable) && Objects.equals(block, that.block);
+      return Objects.equals(variable, that.variable)
+          && Objects.equals(block, that.block);
     }
 
     @Override

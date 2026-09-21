@@ -17,65 +17,67 @@ package consulo.externalSystem.util;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author Denis Zhdanov
- * @since 1/16/13 6:26 PM
+ * @since 2013-01-16
  */
 public class ArtifactInfo {
+    private final @Nullable String myName;
+    private final @Nullable String myGroup;
+    private final @Nullable String myVersion;
 
-  private final @Nullable String myName;
-  private final @Nullable String myGroup;
-  private final @Nullable String myVersion;
+    public ArtifactInfo(@Nullable String name, @Nullable String group, @Nullable String version) {
+        assert name != null || group != null || version != null;
+        myName = name;
+        myGroup = group;
+        myVersion = version;
+    }
 
-  public ArtifactInfo(@Nullable String name, @Nullable String group, @Nullable String version) {
-    assert name != null || group != null || version != null;
-    myName = name;
-    myGroup = group;
-    myVersion = version;
-  }
+    public @Nullable String getName() {
+        return myName;
+    }
 
-  public @Nullable String getName() {
-    return myName;
-  }
+    // Commented to apply to green code policy. Un-comment if required.
 
-  // Commented to apply to green code policy. Un-comment if required.
-  
-  //@Nullable
-  //public String getGroup() {
-  //  return myGroup;
-  //}
-  
-  public @Nullable String getVersion() {
-    return myVersion;
-  }
+    //public @Nullable String getGroup() {
+    //    return myGroup;
+    //}
 
-  @Override
-  public int hashCode() {
-    int result = myName != null ? myName.hashCode() : 0;
-    result = 31 * result + (myGroup != null ? myGroup.hashCode() : 0);
-    result = 31 * result + (myVersion != null ? myVersion.hashCode() : 0);
-    return result;
-  }
+    public @Nullable String getVersion() {
+        return myVersion;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public int hashCode() {
+        int result = 31 * Objects.hashCode(myName) + Objects.hashCode(myGroup);
+        return 31 * result + Objects.hashCode(myVersion);
+    }
 
-    ArtifactInfo info = (ArtifactInfo)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    if (myGroup != null ? !myGroup.equals(info.myGroup) : info.myGroup != null) return false;
-    if (myName != null ? !myName.equals(info.myName) : info.myName != null) return false;
-    if (myVersion != null ? !myVersion.equals(info.myVersion) : info.myVersion != null) return false;
+        ArtifactInfo info = (ArtifactInfo) o;
 
-    return true;
-  }
+        return Objects.equals(myGroup, info.myGroup)
+            && Objects.equals(myName, info.myName)
+            && Objects.equals(myVersion, info.myVersion);
+    }
 
-  @Override
-  public String toString() {
-    return String.format("%s:%s:%s",
-                         myName == null ? "<no-name>" : myName,
-                         myGroup == null ? "<no-group>" : myGroup,
-                         myVersion == null ? "<no-version>" : myVersion);
-  }
+    @Override
+    public String toString() {
+        return String.format(
+            "%s:%s:%s",
+            myName == null ? "<no-name>" : myName,
+            myGroup == null ? "<no-group>" : myGroup,
+            myVersion == null ? "<no-version>" : myVersion
+        );
+    }
 }

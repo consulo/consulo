@@ -38,11 +38,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     private boolean myIsTestingFinished = false;
     private TestProxyPrinterProvider myTestProxyPrinterProvider = null;
 
-    public GeneralIdBasedToSMTRunnerEventsConvertor(
-        Project project,
-        SMTestProxy.SMRootTestProxy testsRootProxy,
-        String testFrameworkName
-    ) {
+    public GeneralIdBasedToSMTRunnerEventsConvertor(Project project, SMTestProxy.SMRootTestProxy testsRootProxy, String testFrameworkName) {
         super(project, testFrameworkName, testsRootProxy);
         myTestsRootNode = new Node(TreeNodeEvent.ROOT_NODE_ID, null, testsRootProxy);
         myNodeByIdMap.put(myTestsRootNode.getId(), myTestsRootNode);
@@ -254,20 +250,11 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     }
 
     @Override
-    public void onError(
-        String localizedMessage,
-        @Nullable String stackTrace,
-        boolean isCritical
-    ) {
+    public void onError(String localizedMessage, @Nullable String stackTrace, boolean isCritical) {
         onError(null, localizedMessage, stackTrace, isCritical);
     }
 
-    public void onError(
-        @Nullable String nodeId,
-        String localizedMessage,
-        @Nullable String stackTrace,
-        boolean isCritical
-    ) {
+    public void onError(@Nullable String nodeId, String localizedMessage, @Nullable String stackTrace, boolean isCritical) {
         addToInvokeLater(() -> {
             SMTestProxy activeProxy = null;
             if (nodeId != null) {
@@ -428,7 +415,6 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
         myRunningSuiteNodes.remove(node);
     }
 
-    
     private Node findActiveNode() {
         if (!myRunningTestNodes.isEmpty()) {
             return myRunningTestNodes.iterator().next();
@@ -460,7 +446,6 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
             myState = State.NOT_RUNNING;
         }
 
-        
         public String getId() {
             return myId;
         }
@@ -469,12 +454,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
             return myParentNode;
         }
 
-        
         public SMTestProxy getProxy() {
             return myProxy;
         }
 
-        
         public State getState() {
             return myState;
         }
@@ -496,7 +479,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -504,14 +487,14 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
                 return false;
             }
 
-            Node node = (Node) o;
+            Node that = (Node) o;
 
-            return myId == node.myId;
+            return myId == that.myId;
         }
 
         @Override
         public int hashCode() {
-            return myId.hashCode();
+            return System.identityHashCode(myId);
         }
 
         @Override
@@ -525,5 +508,4 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
                 '}';
         }
     }
-
 }
