@@ -105,6 +105,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return myName;
   }
 
+  @Override
   public final int hashCode() {
     return super.hashCode();
   }
@@ -121,7 +122,8 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return true;
   }
 
-  public final boolean equals(Object obj) {
+  @Override
+  public final boolean equals(@Nullable Object obj) {
     return super.equals(obj);
   }
 

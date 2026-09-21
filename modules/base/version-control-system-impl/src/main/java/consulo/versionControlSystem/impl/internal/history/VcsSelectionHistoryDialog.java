@@ -33,10 +33,6 @@ import consulo.diff.util.IntPair;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
-import consulo.versionControlSystem.action.VcsActions;
-import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
-import consulo.versionControlSystem.ui.awt.TableLinkMouseListener;
-import consulo.versionControlSystem.history.CurrentRevision;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -51,11 +47,13 @@ import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.history.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.ui.awt.TableLinkMouseListener;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -265,7 +263,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
             }
 
             IntPair range = getSelectedRevisionsRange();
-            List<VcsFileRevision> oldSelection = myRevisions.subList(range.val1, range.val2);
+            List<VcsFileRevision> oldSelection = myRevisions.subList(range.val1(), range.val2());
 
             myListModel.setItems(newItems);
 
@@ -378,8 +376,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
 
         int count = myRevisions.size();
         IntPair range = getSelectedRevisionsRange();
-        int revIndex1 = range.val2;
-        int revIndex2 = range.val1;
+        int revIndex1 = range.val2();
+        int revIndex2 = range.val1();
 
         if (revIndex1 == count && revIndex2 == count) {
             myDiffPanel.setRequest(NoDiffRequest.INSTANCE);
@@ -499,12 +497,12 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         public void actionPerformed(AnActionEvent e) {
             IntPair range = getSelectedRevisionsRange();
 
-            VcsFileRevision beforeRevision = range.val2 < myRevisions.size() ? myRevisions.get(range.val2) : VcsFileRevision.NULL;
-            VcsFileRevision afterRevision = myRevisions.get(range.val1);
+            VcsFileRevision beforeRevision = range.val2() < myRevisions.size() ? myRevisions.get(range.val2()) : VcsFileRevision.NULL;
+            VcsFileRevision afterRevision = myRevisions.get(range.val1());
 
             FilePath filePath = VcsUtil.getFilePath(myFile);
 
-            if (range.val2 - range.val1 > 1) {
+            if (range.val2() - range.val1() > 1) {
                 getDiffHandler().showDiffForTwo(myProject, filePath, beforeRevision, afterRevision);
             }
             else {

@@ -21,6 +21,7 @@ import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -92,11 +93,9 @@ public class DesktopImageWithTextImpl extends JBUI.ScalableJBIcon implements Ico
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return this == o
-            || o instanceof DesktopImageWithTextImpl that
-            && Objects.equals(myText, that.myText)
-            && Objects.equals(myFont, that.myFont);
+            || o instanceof DesktopImageWithTextImpl that && Objects.equals(myText, that.myText) && Objects.equals(myFont, that.myFont);
     }
 
     @Override

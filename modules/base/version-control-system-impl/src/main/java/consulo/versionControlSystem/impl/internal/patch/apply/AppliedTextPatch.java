@@ -26,7 +26,6 @@ import java.util.List;
 import static consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.HunkStatus.NOT_APPLIED;
 
 public class AppliedTextPatch {
-  
   private final List<AppliedSplitPatchHunk> mySplitPatchHunkList;
 
   public enum HunkStatus {ALREADY_APPLIED, EXACTLY_APPLIED, NOT_APPLIED}
@@ -41,16 +40,16 @@ public class AppliedTextPatch {
       LineRange appliedTo = hunk.getAppliedTo();
       if (appliedTo == null) continue;
 
-      int nextAppliedLine = appliedLines.nextSetBit(appliedTo.start);
-      if (nextAppliedLine != -1 && nextAppliedLine < appliedTo.end) {
+      int nextAppliedLine = appliedLines.nextSetBit(appliedTo.start());
+      if (nextAppliedLine != -1 && nextAppliedLine < appliedTo.end()) {
         hunks.set(i, new AppliedSplitPatchHunk(hunk, -1, -1, NOT_APPLIED));
       }
       else {
-        appliedLines.set(appliedTo.start, appliedTo.end, true);
+        appliedLines.set(appliedTo.start(), appliedTo.end(), true);
       }
     }
 
-    ContainerUtil.sort(hunks, (o1, o2) -> Integer.compare(o1.getLineRangeBefore().start, o2.getLineRangeBefore().start));
+    ContainerUtil.sort(hunks, (o1, o2) -> Integer.compare(o1.getLineRangeBefore().start(), o2.getLineRangeBefore().start()));
 
     return new AppliedTextPatch(hunks);
   }
@@ -59,35 +58,23 @@ public class AppliedTextPatch {
     mySplitPatchHunkList = hunks;
   }
 
-  
   public List<AppliedSplitPatchHunk> getHunks() {
     return mySplitPatchHunkList;
   }
 
   public static class AppliedSplitPatchHunk {
-    
     private final HunkStatus myStatus;
-
-    
     private final List<String> myContextBefore;
-    
     private final List<String> myContextAfter;
-
-    
     private final List<String> myDeletedLines;
-    
     private final List<String> myInsertedLines;
-
     private final int myAppliedToLinesStart;
     private final int myAppliedToLinesEnd;
 
     private final int myStartLineBefore;
     private final int myStartLineAfter;
 
-    public AppliedSplitPatchHunk(GenericPatchApplier.SplitHunk splitHunk,
-                                 int startLineApplied,
-                                 int endLineApplied,
-                                 HunkStatus status) {
+    public AppliedSplitPatchHunk(GenericPatchApplier.SplitHunk splitHunk, int startLineApplied, int endLineApplied, HunkStatus status) {
       myStatus = status;
       myAppliedToLinesStart = startLineApplied;
       myAppliedToLinesEnd = endLineApplied;
@@ -106,10 +93,7 @@ public class AppliedTextPatch {
       }
     }
 
-    private AppliedSplitPatchHunk(AppliedSplitPatchHunk hunk,
-                                  int appliedToLinesStart,
-                                  int appliedToLinesEnd,
-                                  HunkStatus status) {
+    private AppliedSplitPatchHunk(AppliedSplitPatchHunk hunk, int appliedToLinesStart, int appliedToLinesEnd, HunkStatus status) {
       myStatus = status;
       myAppliedToLinesStart = appliedToLinesStart;
       myAppliedToLinesEnd = appliedToLinesEnd;
@@ -122,7 +106,7 @@ public class AppliedTextPatch {
       myStartLineAfter = hunk.myStartLineAfter;
     }
 
-    /*
+    /**
      * Lines that hunk can be applied to
      */
     public LineRange getAppliedTo() {
@@ -130,10 +114,9 @@ public class AppliedTextPatch {
       return new LineRange(myAppliedToLinesStart, myAppliedToLinesEnd);
     }
 
-    /*
+    /**
      * Hunk lines (including context) in base document
      */
-    
     public LineRange getLineRangeBefore() {
       int start = myStartLineBefore;
       return new LineRange(start, start + myContextBefore.size() + myDeletedLines.size() + myContextAfter.size());
@@ -148,27 +131,22 @@ public class AppliedTextPatch {
       return new LineRange(start, start + myContextBefore.size() + myInsertedLines.size() + myContextAfter.size());
     }
 
-    
     public HunkStatus getStatus() {
       return myStatus;
     }
 
-    
     public List<String> getContextBefore() {
       return myContextBefore;
     }
 
-    
     public List<String> getContextAfter() {
       return myContextAfter;
     }
 
-    
     public List<String> getDeletedLines() {
       return myDeletedLines;
     }
 
-    
     public List<String> getInsertedLines() {
       return myInsertedLines;
     }

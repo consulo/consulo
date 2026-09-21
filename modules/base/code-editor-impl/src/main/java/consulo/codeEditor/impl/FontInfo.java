@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.util.Patches;
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -16,8 +15,8 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author max
@@ -203,15 +202,13 @@ public class FontInfo {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    FontInfo fontInfo = (FontInfo)o;
+    FontInfo that = (FontInfo) o;
 
-    if (!myFont.equals(fontInfo.myFont)) return false;
-
-    return true;
+    return myFont.equals(that.myFont);
   }
 
   @Override

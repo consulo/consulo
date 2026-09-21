@@ -27,140 +27,133 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ComparisonMergeUtil {
-  
-  public static List<MergeRange> buildFair(FairDiffIterable fragments1,
-                                           FairDiffIterable fragments2,
-                                           ProgressIndicator indicator) {
-    assert fragments1.getLength1() == fragments2.getLength1();
-    return new FairMergeBuilder().execute(fragments1, fragments2);
-  }
-
-  private static class FairMergeBuilder {
-    
-    private final ChangeBuilder myChangesBuilder = new ChangeBuilder();
-
-    
-    public List<MergeRange> execute(FairDiffIterable fragments1,
-                                    FairDiffIterable fragments2) {
-      PeekIterator<Range> unchanged1 = new PeekIterator<>(fragments1.unchanged());
-      PeekIterator<Range> unchanged2 = new PeekIterator<>(fragments2.unchanged());
-
-      while (!unchanged1.atEnd() && !unchanged2.atEnd()) {
-        Side side = add(unchanged1.peek(), unchanged2.peek());
-        side.select(unchanged1, unchanged2).advance();
-      }
-      return finish(fragments1, fragments2);
+    public static List<MergeRange> buildFair(FairDiffIterable fragments1, FairDiffIterable fragments2, ProgressIndicator indicator) {
+        assert fragments1.getLength1() == fragments2.getLength1();
+        return new FairMergeBuilder().execute(fragments1, fragments2);
     }
 
-    
-    private Side add(Range range1, Range range2) {
-      int start1 = range1.start1;
-      int end1 = range1.end1;
+    private static class FairMergeBuilder {
+        private final ChangeBuilder myChangesBuilder = new ChangeBuilder();
 
-      int start2 = range2.start1;
-      int end2 = range2.end1;
+        public List<MergeRange> execute(FairDiffIterable fragments1, FairDiffIterable fragments2) {
+            PeekIterator<Range> unchanged1 = new PeekIterator<>(fragments1.unchanged());
+            PeekIterator<Range> unchanged2 = new PeekIterator<>(fragments2.unchanged());
 
-      if (end1 <= start2) return Side.LEFT;
-      if (end2 <= start1) return Side.RIGHT;
+            while (!unchanged1.atEnd() && !unchanged2.atEnd()) {
+                Side side = add(unchanged1.peek(), unchanged2.peek());
+                side.select(unchanged1, unchanged2).advance();
+            }
+            return finish(fragments1, fragments2);
+        }
 
-      int startBase = Math.max(start1, start2);
-      int endBase = Math.min(end1, end2);
+        private Side add(Range range1, Range range2) {
+            int start1 = range1.start1();
+            int end1 = range1.end1();
 
-      int startShift1 = startBase - start1;
-      int endCut1 = end1 - endBase;
-      int startShift2 = startBase - start2;
-      int endCut2 = end2 - endBase;
+            int start2 = range2.start1();
+            int end2 = range2.end1();
 
-      int startLeft = range1.start2 + startShift1;
-      int endLeft = range1.end2 - endCut1;
-      int startRight = range2.start2 + startShift2;
-      int endRight = range2.end2 - endCut2;
+            if (end1 <= start2) {
+                return Side.LEFT;
+            }
+            if (end2 <= start1) {
+                return Side.RIGHT;
+            }
 
-      myChangesBuilder.markEqual(startLeft, startBase, startRight, endLeft, endBase, endRight);
+            int startBase = Math.max(start1, start2);
+            int endBase = Math.min(end1, end2);
 
-      return Side.fromLeft(end1 <= end2);
+            int startShift1 = startBase - start1;
+            int endCut1 = end1 - endBase;
+            int startShift2 = startBase - start2;
+            int endCut2 = end2 - endBase;
+
+            int startLeft = range1.start2() + startShift1;
+            int endLeft = range1.end2() - endCut1;
+            int startRight = range2.start2() + startShift2;
+            int endRight = range2.end2() - endCut2;
+
+            myChangesBuilder.markEqual(startLeft, startBase, startRight, endLeft, endBase, endRight);
+
+            return Side.fromLeft(end1 <= end2);
+        }
+
+        private List<MergeRange> finish(FairDiffIterable fragments1, FairDiffIterable fragments2) {
+            int length1 = fragments1.getLength2();
+            int length2 = fragments1.getLength1();
+            int length3 = fragments2.getLength2();
+
+            return myChangesBuilder.finish(length1, length2, length3);
+        }
     }
 
-    
-    private List<MergeRange> finish(FairDiffIterable fragments1, FairDiffIterable fragments2) {
-      int length1 = fragments1.getLength2();
-      int length2 = fragments1.getLength1();
-      int length3 = fragments2.getLength2();
+    private static class ChangeBuilder {
+        private final List<MergeRange> myChanges = new ArrayList<>();
 
-      return myChangesBuilder.finish(length1, length2, length3);
-    }
-  }
+        private int myIndex1 = 0;
+        private int myIndex2 = 0;
+        private int myIndex3 = 0;
 
-  private static class ChangeBuilder {
-    
-    private final List<MergeRange> myChanges = new ArrayList<>();
+        private void addChange(int start1, int start2, int start3, int end1, int end2, int end3) {
+            if (start1 == end1 && start2 == end2 && start3 == end3) {
+                return;
+            }
+            myChanges.add(new MergeRange(start1, end1, start2, end2, start3, end3));
+        }
 
-    private int myIndex1 = 0;
-    private int myIndex2 = 0;
-    private int myIndex3 = 0;
+        public void markEqual(int start1, int start2, int start3, int end1, int end2, int end3) {
+            assert myIndex1 <= start1;
+            assert myIndex2 <= start2;
+            assert myIndex3 <= start3;
+            assert start1 <= end1;
+            assert start2 <= end2;
+            assert start3 <= end3;
 
-    private void addChange(int start1, int start2, int start3, int end1, int end2, int end3) {
-      if (start1 == end1 && start2 == end2 && start3 == end3) return;
-      myChanges.add(new MergeRange(start1, end1, start2, end2, start3, end3));
-    }
+            addChange(myIndex1, myIndex2, myIndex3, start1, start2, start3);
 
-    public void markEqual(int start1, int start2, int start3, int end1, int end2, int end3) {
-      assert myIndex1 <= start1;
-      assert myIndex2 <= start2;
-      assert myIndex3 <= start3;
-      assert start1 <= end1;
-      assert start2 <= end2;
-      assert start3 <= end3;
+            myIndex1 = end1;
+            myIndex2 = end2;
+            myIndex3 = end3;
+        }
 
-      addChange(myIndex1, myIndex2, myIndex3, start1, start2, start3);
+        public List<MergeRange> finish(int length1, int length2, int length3) {
+            assert myIndex1 <= length1;
+            assert myIndex2 <= length2;
+            assert myIndex3 <= length3;
 
-      myIndex1 = end1;
-      myIndex2 = end2;
-      myIndex3 = end3;
-    }
+            addChange(myIndex1, myIndex2, myIndex3, length1, length2, length3);
 
-    
-    public List<MergeRange> finish(int length1, int length2, int length3) {
-      assert myIndex1 <= length1;
-      assert myIndex2 <= length2;
-      assert myIndex3 <= length3;
-
-      addChange(myIndex1, myIndex2, myIndex3, length1, length2, length3);
-
-      return myChanges;
-    }
-  }
-
-  private static class PeekIterator<T> {
-    
-    private final Iterator<T> myIterator;
-    private T myValue = null;
-
-    public PeekIterator(Iterator<T> iterator) {
-      myIterator = iterator;
-      advance();
+            return myChanges;
+        }
     }
 
-    public boolean atEnd() {
-      return myValue == null;
+    private static class PeekIterator<T> {
+        private final Iterator<T> myIterator;
+        private T myValue = null;
+
+        public PeekIterator(Iterator<T> iterator) {
+            myIterator = iterator;
+            advance();
+        }
+
+        public boolean atEnd() {
+            return myValue == null;
+        }
+
+        public boolean hasNext() {
+            return myIterator.hasNext();
+        }
+
+        public T peek() {
+            return myValue;
+        }
+
+        public void advance() {
+            myValue = myIterator.hasNext() ? myIterator.next() : null;
+        }
     }
 
-    public boolean hasNext() {
-      return myIterator.hasNext();
+    public static @Nullable CharSequence tryResolveConflict(CharSequence leftText, CharSequence baseText, CharSequence rightText) {
+        return MergeResolveUtil.tryResolveConflict(leftText, baseText, rightText);
     }
-
-    public T peek() {
-      return myValue;
-    }
-
-    public void advance() {
-      myValue = myIterator.hasNext() ? myIterator.next() : null;
-    }
-  }
-
-  public static @Nullable CharSequence tryResolveConflict(CharSequence leftText,
-                                                CharSequence baseText,
-                                                CharSequence rightText) {
-    return MergeResolveUtil.tryResolveConflict(leftText, baseText, rightText);
-  }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.IndentGuideDescriptor;
 import consulo.codeEditor.IndentsModel;
 import consulo.codeEditor.LogicalPosition;
@@ -28,79 +29,50 @@ import java.util.Map;
  * @author max
  */
 public class IndentsModelImpl implements IndentsModel {
+    private final Map<IntPair, IndentGuideDescriptor> myIndentsByLines = new HashMap<>();
+    private List<IndentGuideDescriptor> myIndents = new ArrayList<>();
 
-  private final Map<IntPair, IndentGuideDescriptor> myIndentsByLines = new HashMap<>();
-  private List<IndentGuideDescriptor> myIndents = new ArrayList<>();
-  
-  private final CodeEditorBase myEditor;
+    private final CodeEditorBase myEditor;
 
-  public IndentsModelImpl(CodeEditorBase editor) {
-    myEditor = editor;
-  }
+    public IndentsModelImpl(CodeEditorBase editor) {
+        myEditor = editor;
+    }
 
-  
-  public List<IndentGuideDescriptor> getIndents() {
-    return myIndents;
-  }
+    public List<IndentGuideDescriptor> getIndents() {
+        return myIndents;
+    }
 
-  @Override
-  public IndentGuideDescriptor getCaretIndentGuide() {
-    LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
-    int column = pos.column;
-    int line = pos.line;
+    @Override
+    @RequiredReadAction
+    public IndentGuideDescriptor getCaretIndentGuide() {
+        LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
+        int column = pos.column;
+        int line = pos.line;
 
-    if (column > 0) {
-      for (IndentGuideDescriptor indent : myIndents) {
-        if (column == indent.indentLevel && line >= indent.startLine && line < indent.endLine) {
-          return indent;
+        if (column > 0) {
+            for (IndentGuideDescriptor indent : myIndents) {
+                if (column == indent.indentLevel && line >= indent.startLine && line < indent.endLine) {
+                    return indent;
+                }
+            }
         }
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public IndentGuideDescriptor getDescriptor(int startLine, int endLine) {
-    return myIndentsByLines.get(new IntPair(startLine, endLine));
-  }
-
-  @Override
-  public void assumeIndents(List<IndentGuideDescriptor> descriptors) {
-    myIndents = descriptors;
-    myIndentsByLines.clear();
-    for (IndentGuideDescriptor descriptor : myIndents) {
-      myIndentsByLines.put(new IntPair(descriptor.startLine, descriptor.endLine), descriptor);
-    }
-  }
-
-  private static class IntPair {
-
-    private final int start;
-    private final int end;
-
-    IntPair(int start, int end) {
-      this.start = start;
-      this.end = end;
+        return null;
     }
 
     @Override
-    public int hashCode() {
-      int result = start;
-      return 31 * result + end;
+    public IndentGuideDescriptor getDescriptor(int startLine, int endLine) {
+        return myIndentsByLines.get(new IntPair(startLine, endLine));
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      IntPair that = (IntPair)o;
-      return start == that.start && end == that.end;
+    public void assumeIndents(List<IndentGuideDescriptor> descriptors) {
+        myIndents = descriptors;
+        myIndentsByLines.clear();
+        for (IndentGuideDescriptor descriptor : myIndents) {
+            myIndentsByLines.put(new IntPair(descriptor.startLine, descriptor.endLine), descriptor);
+        }
     }
 
-    @Override
-    public String toString() {
-      return "start=" + start + ", end=" + end;
+    private record IntPair(int start, int end) {
     }
-  }
 }

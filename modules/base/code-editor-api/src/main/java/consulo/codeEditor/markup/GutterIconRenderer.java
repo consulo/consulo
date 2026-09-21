@@ -38,7 +38,6 @@ import org.jspecify.annotations.Nullable;
  * @see RangeHighlighter#setGutterIconRenderer(GutterIconRenderer)
  */
 public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAware {
-
     /**
      * Returns the icon drawn in the gutter.
      *
@@ -141,7 +140,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
     }
 
     @Override
-    public abstract boolean equals(Object obj);
+    public abstract boolean equals(@Nullable Object obj);
 
     @Override
     public abstract int hashCode();

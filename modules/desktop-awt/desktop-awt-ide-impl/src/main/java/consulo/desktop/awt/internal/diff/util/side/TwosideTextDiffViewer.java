@@ -252,8 +252,8 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         if (mySyncScrollSupport == null) {
             return position;
         }
-        int line = mySyncScrollSupport.getScrollable().transfer(baseSide, position.line);
-        return new LineCol(line, position.column);
+        int line = mySyncScrollSupport.getScrollable().transfer(baseSide, position.line());
+        return new LineCol(line, position.column());
     }
 
     @RequiredUIAccess

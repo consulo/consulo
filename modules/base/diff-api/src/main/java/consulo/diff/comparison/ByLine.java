@@ -25,6 +25,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,6 @@ import static consulo.diff.comparison.iterable.DiffIterableUtil.*;
 import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 public class ByLine {
-  
   public static FairDiffIterable compare(List<? extends CharSequence> lines1,
                                          List<? extends CharSequence> lines2,
                                          ComparisonPolicy policy,
@@ -45,7 +45,6 @@ public class ByLine {
     return doCompare(getLines(lines1, policy), getLines(lines2, policy), policy, indicator);
   }
 
-  
   public static List<MergeRange> compare(List<? extends CharSequence> lines1,
                                          List<? extends CharSequence> lines2,
                                          List<? extends CharSequence> lines3,
@@ -59,7 +58,6 @@ public class ByLine {
   // Impl
   //
 
-  
   static FairDiffIterable doCompare(List<Line> lines1,
                                     List<Line> lines2,
                                     ComparisonPolicy policy,
@@ -81,7 +79,6 @@ public class ByLine {
     }
   }
 
-  
   static List<MergeRange> doCompare(List<Line> lines1,
                                     List<Line> lines2,
                                     List<Line> lines3,
@@ -105,9 +102,7 @@ public class ByLine {
   }
 
   
-  private static FairDiffIterable correctChangesSecondStep(final List<Line> lines1,
-                                                           final List<Line> lines2,
-                                                           final FairDiffIterable changes) {
+  private static FairDiffIterable correctChangesSecondStep(List<Line> lines1, List<Line> lines2, FairDiffIterable changes) {
     /*
      * We want to fix invalid matching here:
      *
@@ -135,7 +130,6 @@ public class ByLine {
      *   b. find a maximum matching between them, maximising amount of equal pairs in it
      *   c. match equal lines using result of the previous step
      */
-
     final ExpandChangeBuilder builder = new ExpandChangeBuilder(lines1, lines2);
     new Object() {
       private CharSequence sample = null;
@@ -144,10 +138,10 @@ public class ByLine {
 
       public void run() {
         for (Range range : changes.iterateUnchanged()) {
-          int count = range.end1 - range.start1;
+          int count = range.end1() - range.start1();
           for (int i = 0; i < count; i++) {
-            int index1 = range.start1 + i;
-            int index2 = range.start2 + i;
+            int index1 = range.start1() + i;
+            int index2 = range.start2() + i;
             Line line1 = lines1.get(index1);
             Line line2 = lines2.get(index2);
 
@@ -236,7 +230,6 @@ public class ByLine {
     return fair(builder.finish());
   }
 
-  
   private static int[] getBestMatchingAlignment(final IntList subLines1,
                                                 final IntList subLines2,
                                                 final List<Line> lines1,
@@ -288,7 +281,6 @@ public class ByLine {
     return best;
   }
 
-  
   private static FairDiffIterable optimizeLineChunks(List<Line> lines1,
                                                      List<Line> lines2,
                                                      FairDiffIterable iterable,
@@ -296,15 +288,12 @@ public class ByLine {
     return new ChunkOptimizer.LineChunkOptimizer(lines1, lines2, iterable, indicator).build();
   }
 
-  /*
+  /**
    * Compare lines in two steps:
    *  - compare ignoring "unimportant" lines
    *  - correct changes (compare all lines gaps between matched chunks)
    */
-  
-  private static FairDiffIterable compareSmart(List<Line> lines1,
-                                               List<Line> lines2,
-                                               ProgressIndicator indicator) {
+  private static FairDiffIterable compareSmart(List<Line> lines1, List<Line> lines2, ProgressIndicator indicator) {
     int threshold = Registry.intValue("diff.unimportant.line.char.count");
     if (threshold == 0) return diff(lines1, lines2, indicator);
 
@@ -315,7 +304,6 @@ public class ByLine {
     return new ChangeCorrector.SmartLineChangeCorrector(bigLines1.second, bigLines2.second, lines1, lines2, changes, indicator).build();
   }
 
-  
   private static Pair<List<Line>, IntList> getBigLines(List<Line> lines, int threshold) {
     List<Line> bigLines = new ArrayList<>(lines.size());
     IntList indexes = IntLists.newArrayList(lines.size());
@@ -330,14 +318,11 @@ public class ByLine {
     return Pair.create(bigLines, indexes);
   }
 
-  
-  private static FairDiffIterable expandRanges(List<Line> lines1,
-                                               List<Line> lines2,
-                                               FairDiffIterable iterable) {
+  private static FairDiffIterable expandRanges(List<Line> lines1, List<Line> lines2, FairDiffIterable iterable) {
     List<Range> changes = new ArrayList<>();
 
     for (Range ch : iterable.iterateChanges()) {
-      Range expanded = TrimUtil.expand(lines1, lines2, ch.start1, ch.start2, ch.end1, ch.end2);
+      Range expanded = TrimUtil.expand(lines1, lines2, ch.start1(), ch.start2(), ch.end1(), ch.end2());
       if (!expanded.isEmpty()) changes.add(expanded);
     }
 
@@ -348,12 +333,10 @@ public class ByLine {
   // Lines
   //
 
-  
   private static List<Line> getLines(List<? extends CharSequence> text, ComparisonPolicy policy) {
     return ContainerUtil.map(text, (line) -> new Line(line, policy));
   }
 
-  
   private static List<Line> convertMode(List<Line> original, ComparisonPolicy policy) {
     List<Line> result = new ArrayList<>(original.size());
     for (Line line : original) {
@@ -363,7 +346,6 @@ public class ByLine {
   }
 
   static class Line {
-    
     private final CharSequence myText;
     
     private final ComparisonPolicy myPolicy;
@@ -377,7 +359,6 @@ public class ByLine {
       myNonSpaceChars = countNonSpaceChars(text);
     }
 
-    
     public CharSequence getContent() {
       return myText;
     }
@@ -387,16 +368,15 @@ public class ByLine {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      Line line = (Line)o;
-      assert myPolicy == line.myPolicy;
+      Line that = (Line) o;
 
-      if (hashCode() != line.hashCode()) return false;
-
-      return equals(getContent(), line.getContent(), myPolicy);
+      return myPolicy == that.myPolicy
+        && hashCode() == that.hashCode()
+        && equals(getContent(), that.getContent(), myPolicy);
     }
 
     @Override
@@ -420,16 +400,12 @@ public class ByLine {
     }
 
     private static boolean equals(CharSequence text1, CharSequence text2, ComparisonPolicy policy) {
-      switch (policy) {
-        case DEFAULT:
-          return StringUtil.equals(text1, text2);
-        case TRIM_WHITESPACES:
-          return StringUtil.equalsTrimWhitespaces(text1, text2);
-        case IGNORE_WHITESPACES:
-          return StringUtil.equalsIgnoreWhitespaces(text1, text2);
-        default:
-          throw new IllegalArgumentException(policy.toString());
-      }
+      return switch (policy) {
+        case DEFAULT -> StringUtil.equals(text1, text2);
+        case TRIM_WHITESPACES -> StringUtil.equalsTrimWhitespaces(text1, text2);
+        case IGNORE_WHITESPACES -> StringUtil.equalsIgnoreWhitespaces(text1, text2);
+        default -> throw new IllegalArgumentException(policy.toString());
+      };
     }
 
     private static int hashCode(CharSequence text, ComparisonPolicy policy) {

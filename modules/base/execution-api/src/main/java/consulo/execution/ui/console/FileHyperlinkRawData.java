@@ -15,69 +15,77 @@
  */
 package consulo.execution.ui.console;
 
+import org.jspecify.annotations.Nullable;
+
 public class FileHyperlinkRawData {
+    private final String myFilePath;
+    private final int myDocumentLine;
+    private final int myDocumentColumn;
+    private final int myHyperlinkStartInd;
+    private final int myHyperlinkEndInd;
 
-  private final String myFilePath;
-  private final int myDocumentLine;
-  private final int myDocumentColumn;
-  private final int myHyperlinkStartInd;
-  private final int myHyperlinkEndInd;
+    public FileHyperlinkRawData(String filePath, int documentLine, int documentColumn, int hyperlinkStartInd, int hyperlinkEndInd) {
+        myFilePath = filePath;
+        myDocumentLine = documentLine;
+        myDocumentColumn = documentColumn;
+        myHyperlinkStartInd = hyperlinkStartInd;
+        myHyperlinkEndInd = hyperlinkEndInd;
+    }
 
-  public FileHyperlinkRawData(String filePath, int documentLine, int documentColumn, int hyperlinkStartInd, int hyperlinkEndInd) {
-    myFilePath = filePath;
-    myDocumentLine = documentLine;
-    myDocumentColumn = documentColumn;
-    myHyperlinkStartInd = hyperlinkStartInd;
-    myHyperlinkEndInd = hyperlinkEndInd;
-  }
+    public String getFilePath() {
+        return myFilePath;
+    }
 
-  
-  public String getFilePath() {
-    return myFilePath;
-  }
+    public int getDocumentLine() {
+        return myDocumentLine;
+    }
 
-  public int getDocumentLine() {
-    return myDocumentLine;
-  }
+    public int getDocumentColumn() {
+        return myDocumentColumn;
+    }
 
-  public int getDocumentColumn() {
-    return myDocumentColumn;
-  }
+    public int getHyperlinkStartInd() {
+        return myHyperlinkStartInd;
+    }
 
-  public int getHyperlinkStartInd() {
-    return myHyperlinkStartInd;
-  }
+    public int getHyperlinkEndInd() {
+        return myHyperlinkEndInd;
+    }
 
-  public int getHyperlinkEndInd() {
-    return myHyperlinkEndInd;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        FileHyperlinkRawData that = (FileHyperlinkRawData) o;
 
-    FileHyperlinkRawData data = (FileHyperlinkRawData)o;
+        return myDocumentLine == that.myDocumentLine
+            && myDocumentColumn == that.myDocumentColumn
+            && myHyperlinkStartInd == that.myHyperlinkStartInd
+            && myHyperlinkEndInd == that.myHyperlinkEndInd
+            && myFilePath.equals(that.myFilePath);
+    }
 
-    return myDocumentLine == data.myDocumentLine &&
-           myDocumentColumn == data.myDocumentColumn &&
-           myHyperlinkStartInd == data.myHyperlinkStartInd &&
-           myHyperlinkEndInd == data.myHyperlinkEndInd &&
-           myFilePath.equals(data.myFilePath);
-  }
+    @Override
+    public int hashCode() {
+        int result = myFilePath.hashCode();
+        result = 31 * result + myDocumentLine;
+        result = 31 * result + myDocumentColumn;
+        result = 31 * result + myHyperlinkStartInd;
+        result = 31 * result + myHyperlinkEndInd;
+        return result;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myFilePath.hashCode();
-    result = 31 * result + myDocumentLine;
-    result = 31 * result + myDocumentColumn;
-    result = 31 * result + myHyperlinkStartInd;
-    result = 31 * result + myHyperlinkEndInd;
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return "filePath=" + myFilePath + ", line=" + myDocumentLine + ", column=" + myDocumentColumn + ", hyperlinkStartOffset=" + myHyperlinkStartInd + ", hyperlinkEndOffset=" + myHyperlinkEndInd;
-  }
+    @Override
+    public String toString() {
+        return "filePath=" + myFilePath +
+            ", line=" + myDocumentLine +
+            ", column=" + myDocumentColumn +
+            ", hyperlinkStartOffset=" + myHyperlinkStartInd +
+            ", hyperlinkEndOffset=" + myHyperlinkEndInd;
+    }
 }

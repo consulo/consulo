@@ -1,5 +1,7 @@
 package consulo.credentialStorage.impl.internal.gpg;
 
+import org.jspecify.annotations.Nullable;
+
 public final class PgpKey {
     private final String keyId;
     private final String userId;
@@ -18,11 +20,9 @@ public final class PgpKey {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PgpKey)) return false;
-        PgpKey pgpKey = (PgpKey) o;
-        return keyId.equals(pgpKey.keyId) && userId.equals(pgpKey.userId);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof PgpKey that && keyId.equals(that.keyId) && userId.equals(that.userId);
     }
 
     @Override

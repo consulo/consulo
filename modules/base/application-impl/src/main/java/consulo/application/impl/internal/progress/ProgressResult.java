@@ -6,39 +6,45 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public final class ProgressResult<T> {
-  private final @Nullable T myResult;
+    private final @Nullable T myResult;
 
-  private final boolean myIsCanceled;
-  private final @Nullable Throwable myThrowable;
+    private final boolean myIsCanceled;
+    private final @Nullable Throwable myThrowable;
 
-  public ProgressResult(@Nullable T result, boolean canceled, @Nullable Throwable throwable) {
-    myResult = result;
-    myIsCanceled = canceled;
-    myThrowable = throwable;
-  }
+    public ProgressResult(@Nullable T result, boolean canceled, @Nullable Throwable throwable) {
+        myResult = result;
+        myIsCanceled = canceled;
+        myThrowable = throwable;
+    }
 
-  public @Nullable T getResult() {
-    return myResult;
-  }
+    public @Nullable T getResult() {
+        return myResult;
+    }
 
-  public boolean isCanceled() {
-    return myIsCanceled;
-  }
+    public boolean isCanceled() {
+        return myIsCanceled;
+    }
 
-  public @Nullable Throwable getThrowable() {
-    return myThrowable;
-  }
+    public @Nullable Throwable getThrowable() {
+        return myThrowable;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    ProgressResult<?> result = (ProgressResult<?>)o;
-    return myIsCanceled == result.myIsCanceled && Objects.equals(myResult, result.myResult) && Objects.equals(myThrowable, result.myThrowable);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ProgressResult<?> result = (ProgressResult<?>) o;
+        return myIsCanceled == result.myIsCanceled
+            && Objects.equals(myResult, result.myResult)
+            && Objects.equals(myThrowable, result.myThrowable);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myResult, myIsCanceled, myThrowable);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myResult, myIsCanceled, myThrowable);
+    }
 }

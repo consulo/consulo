@@ -15,43 +15,49 @@
  */
 package consulo.application.impl.internal.graph;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author nik
  */
 class GraphEdge<Node> {
-  private final Node myStart;
-  private final Node myFinish;
-  private final int myDelta;
+    private final Node myStart;
+    private final Node myFinish;
+    private final int myDelta;
 
-  GraphEdge(Node start, Node finish, int delta) {
-    myStart = start;
-    myFinish = finish;
-    myDelta = delta;
-  }
+    GraphEdge(Node start, Node finish, int delta) {
+        myStart = start;
+        myFinish = finish;
+        myDelta = delta;
+    }
 
-  public Node getStart() {
-    return myStart;
-  }
+    public Node getStart() {
+        return myStart;
+    }
 
-  public Node getFinish() {
-    return myFinish;
-  }
+    public Node getFinish() {
+        return myFinish;
+    }
 
-  public int getDelta() {
-    return myDelta;
-  }
+    public int getDelta() {
+        return myDelta;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    GraphEdge edge = (GraphEdge)o;
-    return myFinish.equals(edge.myFinish) && myStart.equals(edge.myStart);
-  }
+        GraphEdge that = (GraphEdge) o;
+        return myFinish.equals(that.myFinish) && myStart.equals(that.myStart);
+    }
 
-  @Override
-  public int hashCode() {
-    return 31 * myStart.hashCode() + myFinish.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myStart.hashCode() + myFinish.hashCode();
+    }
 }

@@ -3,6 +3,7 @@ package consulo.application.constraint;
 
 import consulo.disposer.Disposable;
 import consulo.util.lang.lazy.LazyValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ public class DisposableExpiration extends AbstractExpiration {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     DisposableExpiration that = (DisposableExpiration)o;

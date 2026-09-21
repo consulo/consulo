@@ -284,8 +284,9 @@ public class QueueProcessor<T> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-      return ((MyOverrideEquals)obj).myDelegate == myDelegate;
+    public boolean equals(@Nullable Object obj) {
+      return obj == this
+        || obj instanceof MyOverrideEquals that && that.myDelegate == myDelegate;
     }
   }
 

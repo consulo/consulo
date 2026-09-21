@@ -19,6 +19,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -109,7 +110,6 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
         return new DesktopLayeredImageImpl(converted);
     }
 
-    
     @Override
     public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
         Image[] converted = new Image[myImages.length];
@@ -129,15 +129,15 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        DesktopLayeredImageImpl image = (DesktopLayeredImageImpl) o;
-        return Arrays.equals(myImages, image.myImages);
+        DesktopLayeredImageImpl that = (DesktopLayeredImageImpl) o;
+        return Arrays.equals(myImages, that.myImages);
     }
 
     @Override

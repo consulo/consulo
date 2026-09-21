@@ -296,8 +296,8 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         Document patchDocument = myPatchEditor.getDocument();
         patchDocument.setText(builder.getPatchContent());
 
-        LineNumberConvertor convertor = builder.getLineConvertor();
-        myPatchEditor.getGutterComponentEx().setLineNumberConvertor(convertor.createConvertor1(), convertor.createConvertor2());
+        LineNumberConvertor converter = builder.getLineConvertor();
+        myPatchEditor.getGutterComponentEx().setLineNumberConvertor(converter.createConvertor1(), converter.createConvertor2());
 
         IntList lines = builder.getSeparatorLines();
         for (int i = 0; i < lines.size(); i++) {
@@ -310,8 +310,8 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         int[] modelToPatchIndexes = DiffImplUtil.getSortedIndexes(
             hunks,
             (h1, h2) -> {
-                LineRange lines1 = h1.getAppliedToLines();
-                LineRange lines2 = h2.getAppliedToLines();
+                LineRange lines1 = h1.appliedToLines();
+                LineRange lines2 = h2.appliedToLines();
                 if (lines1 == null && lines2 == null) {
                     return 0;
                 }
@@ -321,7 +321,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
                 if (lines2 == null) {
                     return 1;
                 }
-                return lines1.start - lines2.start;
+                return lines1.start() - lines2.start();
             }
         );
         int[] patchToModelIndexes = DiffImplUtil.invertIndexes(modelToPatchIndexes);
@@ -330,7 +330,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         for (int modelIndex = 0; modelIndex < hunks.size(); modelIndex++) {
             int patchIndex = modelToPatchIndexes[modelIndex];
             PatchChangeBuilder.Hunk hunk = hunks.get(patchIndex);
-            LineRange resultRange = hunk.getAppliedToLines();
+            LineRange resultRange = hunk.appliedToLines();
 
             ApplyPatchChange change = new ApplyPatchChange(hunk, modelIndex, this);
 
@@ -370,7 +370,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
 
     public void scrollToChange(ApplyPatchChange change, Side masterSide, boolean forceScroll) {
         if (change.getResultRange() == null) {
-            DiffImplUtil.moveCaret(myPatchEditor, change.getPatchRange().start);
+            DiffImplUtil.moveCaret(myPatchEditor, change.getPatchRange().start());
             myPatchEditor.getScrollingModel().scrollToCaret(forceScroll ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
         }
         else {
@@ -379,7 +379,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
 
             int topShift = -1;
             if (!forceScroll) {
-                int masterLine = masterSide.select(resultRange.start, patchRange.start);
+                int masterLine = masterSide.select(resultRange.start(), patchRange.start());
                 EditorEx masterEditor = masterSide.select(myResultEditor, myPatchEditor);
                 int targetY = masterEditor.logicalPositionToXY(new LogicalPosition(masterLine, 0)).y;
                 int scrollOffset = masterEditor.getScrollingModel().getVerticalScrollOffset();
@@ -389,15 +389,15 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
             int[] offsets = SyncScrollSupport.getTargetOffsets(
                 myResultEditor,
                 myPatchEditor,
-                resultRange.start,
-                resultRange.end,
-                patchRange.start,
-                patchRange.end,
+                resultRange.start(),
+                resultRange.end(),
+                patchRange.start(),
+                patchRange.end(),
                 topShift
             );
 
-            DiffImplUtil.moveCaret(myResultEditor, resultRange.start);
-            DiffImplUtil.moveCaret(myPatchEditor, patchRange.start);
+            DiffImplUtil.moveCaret(myResultEditor, resultRange.start());
+            DiffImplUtil.moveCaret(myPatchEditor, patchRange.start());
 
             AWTDiffUtil.scrollToPoint(myResultEditor, new Point(0, offsets[0]), false);
             AWTDiffUtil.scrollToPoint(myPatchEditor, new Point(0, offsets[1]), false);
@@ -485,7 +485,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
             return;
         }
 
-        List<String> newContent = DiffImplUtil.getLines(myPatchEditor.getDocument(), patchRange.start, patchRange.end);
+        List<String> newContent = DiffImplUtil.getLines(myPatchEditor.getDocument(), patchRange.start(), patchRange.end());
         myModel.replaceChange(change.getIndex(), newContent);
 
         markChangeResolved(change);
@@ -608,7 +608,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
                     continue;
                 }
 
-                if (DiffImplUtil.isSelectedByLine(line, range.start, range.end)) {
+                if (DiffImplUtil.isSelectedByLine(line, range.start(), range.end())) {
                     return true;
                 }
             }
@@ -629,7 +629,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
                     continue;
                 }
 
-                if (DiffImplUtil.isSelectedByLine(lines, range.start, range.end)) {
+                if (DiffImplUtil.isSelectedByLine(lines, range.start(), range.end())) {
                     affectedChanges.add(change);
                 }
             }
@@ -750,13 +750,13 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         @Override
         protected int getStartLine(ApplyPatchChange change) {
             //noinspection ConstantConditions
-            return getCurrentSide().select(change.getResultRange(), change.getPatchAffectedRange()).start;
+            return getCurrentSide().select(change.getResultRange(), change.getPatchAffectedRange()).start();
         }
 
         @Override
         protected int getEndLine(ApplyPatchChange change) {
             //noinspection ConstantConditions
-            return getCurrentSide().select(change.getResultRange(), change.getPatchAffectedRange()).end;
+            return getCurrentSide().select(change.getResultRange(), change.getPatchAffectedRange()).end();
         }
 
         @Override
@@ -789,10 +789,10 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
 
                 // do not abort - ranges are ordered in patch order, but they can be not ordered in terms of resultRange
                 handler.process(
-                    resultRange.start,
-                    resultRange.end,
-                    patchRange.start,
-                    patchRange.end,
+                    resultRange.start(),
+                    resultRange.end(),
+                    patchRange.start(),
+                    patchRange.end(),
                     color,
                     change.isResolved()
                 );
@@ -816,8 +816,8 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
             Iterator<int[]> it = map(
                 changes,
                 fragment -> new int[]{
-                    fragment.getResultRange().start,
-                    fragment.getResultRange().end
+                    fragment.getResultRange().start(),
+                    fragment.getResultRange().end()
                 }
             );
             install(it, null, settings);

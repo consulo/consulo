@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.Patches;
 import consulo.colorScheme.internal.FontPreferences;
 import consulo.logging.Logger;
@@ -10,13 +10,12 @@ import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
-
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author max
@@ -56,10 +55,8 @@ public class ComplementaryFontsRegistry {
   private ComplementaryFontsRegistry() {
   }
 
-  @NonNls
   private static final String BOLD_SUFFIX = ".bold";
 
-  @NonNls
   private static final String ITALIC_SUFFIX = ".italic";
 
   // This font renders all characters as empty glyphs, so there's no reason to use it for fallback
@@ -67,7 +64,7 @@ public class ComplementaryFontsRegistry {
 
   static {
     ourFontNames = new ArrayList<>();
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       ourFontNames.add("Monospaced");
     }
     else {
@@ -128,7 +125,6 @@ public class ComplementaryFontsRegistry {
    * @deprecated Use {{@link #getFontAbleToDisplay(int, int, FontPreferences, FontRenderContext)}} instead. To be removed in 2020.2 version.
    */
   @Deprecated
- 
   public static FontInfo getFontAbleToDisplay(int codePoint, @AWTConstants.FontStyle int style, FontPreferences preferences) {
     return getFontAbleToDisplay(codePoint, style, preferences, null);
   }
@@ -244,7 +240,6 @@ public class ComplementaryFontsRegistry {
    * @deprecated Use {{@link #getFontAbleToDisplay(int, int, int, String, FontRenderContext)}} instead. To be removed in 2020.2 version.
    */
   @Deprecated
- 
   public static FontInfo getFontAbleToDisplay(int codePoint, int size, @AWTConstants.FontStyle int style, String defaultFontFamily) {
     return getFontAbleToDisplay(codePoint, size, style, defaultFontFamily, null);
   }
@@ -293,7 +288,6 @@ public class ComplementaryFontsRegistry {
     }
   }
 
- 
   private static FontInfo doGetFontAbleToDisplay(int codePoint, char[] remainingText, int start, int end,
                                                  int size, @AWTConstants.FontStyle int style, boolean useLigatures,
                                                  FontRenderContext context) {
@@ -345,23 +339,18 @@ public class ComplementaryFontsRegistry {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      FontFaceKey key = (FontFaceKey)o;
+      FontFaceKey that = (FontFaceKey)o;
 
-      if (myStyle != key.myStyle) return false;
-      if (!myFamilyName.equals(key.myFamilyName)) return false;
-
-      return true;
+      return myStyle == that.myStyle && myFamilyName.equals(that.myFamilyName);
     }
 
     @Override
     public int hashCode() {
-      int result = myFamilyName.hashCode();
-      result = 31 * result + myStyle;
-      return result;
+      return 31 * myFamilyName.hashCode() + myStyle;
     }
 
     @Override
@@ -387,24 +376,22 @@ public class ComplementaryFontsRegistry {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      FontKey key = (FontKey)o;
+      FontKey that = (FontKey)o;
 
-      if (mySize != key.mySize) return false;
-      if (myUseLigatures != key.myUseLigatures) return false;
-      if (myContext != null ? !myContext.equals(key.myContext) : key.myContext != null) return false;
-
-      return true;
+      return mySize == that.mySize
+          && myUseLigatures == that.myUseLigatures
+          && Objects.equals(myContext, that.myContext);
     }
 
     @Override
     public int hashCode() {
       int result = mySize;
       result = 31 * result + (myUseLigatures ? 1 : 0);
-      result = 31 * result + (myContext != null ? myContext.hashCode() : 0);
+      result = 31 * result + Objects.hashCode(myContext);
       return result;
     }
 

@@ -2,7 +2,6 @@
 package consulo.desktop.awt.ui.impl.action.toolbar;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
@@ -13,22 +12,23 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.internal.ActionTicker;
-import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ui.ex.update.Activatable;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -64,6 +64,7 @@ public class ToolbarNotifier implements Activatable {
     }
 
     @Override
+    @RequiredUIAccess
     public void showNotify() {
         if (myTickerRegistration != null) {
             return;
@@ -176,13 +177,14 @@ public class ToolbarNotifier implements Activatable {
         }
 
         @Override
+        @RequiredUIAccess
         public void run() {
             ToolbarNotifier updater = myUpdaterRef.get();
             if (updater == null) {
                 return;
             }
 
-            if (!updater.myComponent.isVisible() && !ApplicationManager.getApplication().isUnitTestMode()) {
+            if (!updater.myComponent.isVisible() && !Application.get().isUnitTestMode()) {
                 return;
             }
 
@@ -190,19 +192,13 @@ public class ToolbarNotifier implements Activatable {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof MyUpdateRunnable)) {
-                return false;
+        public boolean equals(@Nullable Object obj) {
+            if (obj == this) {
+                return true;
             }
-
-            MyUpdateRunnable that = (MyUpdateRunnable) obj;
-            if (myHash != that.myHash) {
-                return false;
-            }
-
-            ToolbarNotifier updater1 = myUpdaterRef.get();
-            ToolbarNotifier updater2 = that.myUpdaterRef.get();
-            return Comparing.equal(updater1, updater2);
+            return obj instanceof MyUpdateRunnable that
+                && myHash == that.myHash
+                && Objects.equals(myUpdaterRef.get(), that.myUpdaterRef.get());
         }
 
         @Override

@@ -15,6 +15,8 @@
  */
 package consulo.codeEditor;
 
+import org.jspecify.annotations.Nullable;
+
 import java.awt.Point;
 
 /**
@@ -187,18 +189,18 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
     return new LogicalPosition(line, column, value);
   }
 
-  public boolean equals(Object o) {
-    if (!(o instanceof LogicalPosition)) return false;
-    LogicalPosition logicalPosition = (LogicalPosition) o;
-
-    return column == logicalPosition.column && line == logicalPosition.line;
+  @Override
+  public boolean equals(@Nullable Object o) {
+      return o == this
+          || o instanceof LogicalPosition that && column == that.column && line == that.line;
   }
 
+  @Override
   public int hashCode() {
     return 29 * line + column;
   }
 
-  
+  @Override
   public String toString() {
     return "LogicalPosition: (" + line + ", " + column + ")"
            + (visualPositionAware ? "; vp aware" : "")
@@ -212,6 +214,7 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
            + (leansForward ? "; leans forward" : "");
   }
 
+  @Override
   public int compareTo(LogicalPosition position) {
     if (line != position.line) return line - position.line;
     if (column != position.column) return column - position.column;

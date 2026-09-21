@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.dir;
 
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
@@ -22,6 +23,8 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.CacheDiffRequestProcessor;
+import consulo.desktop.awt.internal.diff.dir.action.DirDiffToolbarActions;
+import consulo.desktop.awt.internal.diff.dir.action.RefreshDirDiffAction;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffPlaces;
@@ -35,18 +38,15 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.desktop.awt.internal.diff.dir.action.DirDiffToolbarActions;
-import consulo.desktop.awt.internal.diff.dir.action.RefreshDirDiffAction;
-import consulo.ui.ex.awt.JBLoadingPanel;
-import consulo.ui.ex.awt.event.JBLoadingPanelListener;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.JBLoadingPanelListener;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -58,8 +58,6 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
@@ -67,6 +65,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -125,34 +124,32 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         myTable.setDefaultRenderer(Object.class, renderer);
         myTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         final Project project = myModel.getProject();
-        myTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                int lastIndex = e.getLastIndex();
-                int firstIndex = e.getFirstIndex();
-                DirDiffElementImpl last = myModel.getElementAt(lastIndex);
-                DirDiffElementImpl first = myModel.getElementAt(firstIndex);
-                if (last == null || first == null) {
-                    update(false);
-                    return;
-                }
-                if (last.isSeparator()) {
-                    int ind = lastIndex + ((lastIndex < firstIndex) ? 1 : -1);
-                    myTable.getSelectionModel().addSelectionInterval(ind, ind);
-                }
-                else if (first.isSeparator()) {
-                    int ind = firstIndex + ((firstIndex < lastIndex) ? 1 : -1);
-                    myTable.getSelectionModel().addSelectionInterval(ind, ind);
-                }
-                else {
-                    update(false);
-                }
-                myDiffWindow.setTitle(myModel.getTitle());
+        myTable.getSelectionModel().addListSelectionListener(e -> {
+            int lastIndex = e.getLastIndex();
+            int firstIndex = e.getFirstIndex();
+            DirDiffElementImpl last = myModel.getElementAt(lastIndex);
+            DirDiffElementImpl first = myModel.getElementAt(firstIndex);
+            if (last == null || first == null) {
+                update(false);
+                return;
             }
+            if (last.isSeparator()) {
+                int ind = lastIndex + ((lastIndex < firstIndex) ? 1 : -1);
+                myTable.getSelectionModel().addSelectionInterval(ind, ind);
+            }
+            else if (first.isSeparator()) {
+                int ind = firstIndex + ((firstIndex < lastIndex) ? 1 : -1);
+                myTable.getSelectionModel().addSelectionInterval(ind, ind);
+            }
+            else {
+                update(false);
+            }
+            myDiffWindow.setTitle(myModel.getTitle());
         });
         if (model.isOperationsEnabled()) {
             new AnAction("Change diff operation") {
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
                     changeOperationForSelection();
                 }
@@ -240,13 +237,13 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
             @Override
             public void onLoadingFinish() {
                 if (showHelp && myModel.isOperationsEnabled() && myModel.getRowCount() > 0) {
-                    long count = PropertiesComponent.getInstance().getOrInitLong("dir.diff.space.button.info", 0);
+                    long count = ApplicationPropertiesComponent.getInstance().getOrInitLong("dir.diff.space.button.info", 0);
                     if (count < 3) {
                         JBPopupFactory.getInstance().createBalloonBuilder(new JLabel(" Use Space button to change operation"))
                             .setFadeoutTime(5000)
                             .setContentInsets(JBUI.insets(15))
                             .createBalloon().show(new RelativePoint(myTable, new Point(myTable.getWidth() / 2, 0)), Balloon.Position.above);
-                        PropertiesComponent.getInstance().setValue("dir.diff.space.button.info", String.valueOf(count + 1));
+                        ApplicationPropertiesComponent.getInstance().setValue("dir.diff.space.button.info", String.valueOf(count + 1));
                     }
                 }
                 showHelp = false;
@@ -493,9 +490,11 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         return myTable;
     }
 
+    @Override
     public void dispose() {
         myModel.stopUpdating();
-        PropertiesComponent.getInstance().setValue(DIVIDER_PROPERTY, mySplitPanel.getDividerLocation(), DIVIDER_PROPERTY_DEFAULT_VALUE);
+        ApplicationPropertiesComponent.getInstance()
+            .setValue(DIVIDER_PROPERTY, mySplitPanel.getDividerLocation(), DIVIDER_PROPERTY_DEFAULT_VALUE);
     }
 
     private void createUIComponents() {
@@ -516,8 +515,8 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
     }
 
     public void setupSplitter() {
-        int value = PropertiesComponent.getInstance().getInt(DIVIDER_PROPERTY, DIVIDER_PROPERTY_DEFAULT_VALUE);
-        mySplitPanel.setDividerLocation(Integer.valueOf(value));
+        int value = ApplicationPropertiesComponent.getInstance().getInt(DIVIDER_PROPERTY, DIVIDER_PROPERTY_DEFAULT_VALUE);
+        mySplitPanel.setDividerLocation(value);
     }
 
     @Override
@@ -616,12 +615,14 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         }
 
         @Override
+        @RequiredUIAccess
         protected void goToNextChange(boolean fromDifferences) {
             selectRow(getNextRow(), false);
             updateRequest(false, fromDifferences ? ScrollToPolicy.FIRST_CHANGE : null);
         }
 
         @Override
+        @RequiredUIAccess
         protected void goToPrevChange(boolean fromDifferences) {
             selectRow(getPrevRow(), false);
             updateRequest(false, fromDifferences ? ScrollToPolicy.LAST_CHANGE : null);
@@ -643,7 +644,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -651,16 +652,10 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
                 return false;
             }
 
-            ElementWrapper wrapper = (ElementWrapper) o;
+            ElementWrapper that = (ElementWrapper) o;
 
-            if (sourceElement != null ? !sourceElement.equals(wrapper.sourceElement) : wrapper.sourceElement != null) {
-                return false;
-            }
-            if (targetElement != null ? !targetElement.equals(wrapper.targetElement) : wrapper.targetElement != null) {
-                return false;
-            }
-
-            return true;
+            return Objects.equals(sourceElement, that.sourceElement)
+                && Objects.equals(targetElement, that.targetElement);
         }
 
         @Override

@@ -3,6 +3,8 @@ package consulo.credentialStorage;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Represents a pair of user and password.
  *
@@ -55,20 +57,9 @@ public final class Credentials {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Credentials)) return false;
-        Credentials other = (Credentials) obj;
-        if (userName == null) {
-            if (other.userName != null) return false;
-        }
-        else if (!userName.equals(other.userName)) return false;
-        if (password == null) {
-            return other.password == null;
-        }
-        else {
-            return password.equals(other.password);
-        }
+    public boolean equals(@Nullable Object obj) {
+        return this == obj
+            || obj instanceof Credentials that && Objects.equals(userName, that.userName) && Objects.equals(password, that.password);
     }
 
     @Override

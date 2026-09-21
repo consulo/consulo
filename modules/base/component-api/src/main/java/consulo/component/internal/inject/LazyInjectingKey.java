@@ -22,47 +22,48 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-08-23
  */
 public class LazyInjectingKey<T> implements InjectingKey<T> {
-  private String myClassName;
-  private ClassLoader myClassLoader;
+    private String myClassName;
+    private ClassLoader myClassLoader;
 
-  private @Nullable Class<T> myResolvedClass = null;
+    private @Nullable Class<T> myResolvedClass = null;
 
-  LazyInjectingKey(String className, ClassLoader classLoader) {
-    myClassName = className;
-    myClassLoader = classLoader;
-  }
-
-  @Override
-  public String getTargetClassName() {
-    return myClassName;
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public Class<T> getTargetClass() {
-    if (myResolvedClass != null) {
-      return myResolvedClass;
+    LazyInjectingKey(String className, ClassLoader classLoader) {
+        myClassName = className;
+        myClassLoader = classLoader;
     }
-    try {
-      return myResolvedClass = (Class<T>)Class.forName(myClassName, false, myClassLoader);
+
+    @Override
+    public String getTargetClassName() {
+        return myClassName;
     }
-    catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Class<T> getTargetClass() {
+        if (myResolvedClass != null) {
+            return myResolvedClass;
+        }
+        try {
+            return myResolvedClass = (Class<T>) Class.forName(myClassName, false, myClassLoader);
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof InjectingKey && obj.hashCode() == hashCode();
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof InjectingKey that && that.hashCode() == hashCode();
+    }
 
-  @Override
-  public int hashCode() {
-    return myClassName.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myClassName.hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return myClassName;
-  }
+    @Override
+    public String toString() {
+        return myClassName;
+    }
 }

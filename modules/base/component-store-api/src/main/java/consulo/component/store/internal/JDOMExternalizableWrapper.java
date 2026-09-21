@@ -18,37 +18,39 @@ package consulo.component.store.internal;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 27-Feb-17
+ * @since 2017-02-27
  */
 public class JDOMExternalizableWrapper implements PersistentStateComponent<Element> {
-  private final JDOMExternalizable myJDOMExternalizable;
+    private final JDOMExternalizable myJDOMExternalizable;
 
-  public JDOMExternalizableWrapper(JDOMExternalizable jdomExternalizable) {
-    myJDOMExternalizable = jdomExternalizable;
-  }
+    public JDOMExternalizableWrapper(JDOMExternalizable jdomExternalizable) {
+        myJDOMExternalizable = jdomExternalizable;
+    }
 
-  @Override
-  public Element getState() {
-    Element state = new Element("state");
-    myJDOMExternalizable.writeExternal(state);
-    return state;
-  }
+    @Override
+    public Element getState() {
+        Element state = new Element("state");
+        myJDOMExternalizable.writeExternal(state);
+        return state;
+    }
 
-  @Override
-  public void loadState(Element element) {
-    myJDOMExternalizable.readExternal(element);
-  }
+    @Override
+    public void loadState(Element element) {
+        myJDOMExternalizable.readExternal(element);
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof JDOMExternalizableWrapper && ((JDOMExternalizableWrapper)obj).myJDOMExternalizable.equals(myJDOMExternalizable);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof JDOMExternalizableWrapper that && that.myJDOMExternalizable.equals(myJDOMExternalizable);
+    }
 
-  @Override
-  public int hashCode() {
-    return myJDOMExternalizable.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myJDOMExternalizable.hashCode();
+    }
 }

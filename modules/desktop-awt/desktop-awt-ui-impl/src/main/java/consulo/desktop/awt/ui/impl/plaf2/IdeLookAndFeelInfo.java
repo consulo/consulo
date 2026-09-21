@@ -20,6 +20,7 @@ import consulo.desktop.awt.ui.impl.plaf.LafWithColorScheme;
 import consulo.desktop.awt.ui.impl.plaf.LafWithIconLibrary;
 import consulo.desktop.awt.ui.impl.plaf.LookAndFeelInfoWithClassLoader;
 import consulo.ui.image.IconLibraryManager;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -46,8 +47,9 @@ public class IdeLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implement
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return getClassName().equals(((UIManager.LookAndFeelInfo) obj).getClassName());
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof UIManager.LookAndFeelInfo that && getClassName().equals(that.getClassName());
     }
 
     @Override
@@ -55,13 +57,11 @@ public class IdeLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implement
         return getClassName().hashCode();
     }
 
-    
     @Override
     public String getColorSchemeName() {
         return myDark ? EditorColorsScheme.DARCULA_SCHEME_NAME : EditorColorsScheme.DEFAULT_SCHEME_NAME;
     }
 
-    
     @Override
     public String getIconLibraryId() {
         return myDark ? IconLibraryManager.DARK_LIBRARY_ID : IconLibraryManager.LIGHT_LIBRARY_ID;

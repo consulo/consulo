@@ -183,7 +183,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
 
     public List<String> getPathIndex() {
         if (myPathsIndex == null || myPathsIndex.size() != myMacroMap.size()) {
-            List<Map.Entry<String, String>> entries = new ArrayList<Map.Entry<String, String>>(myMacroMap.entrySet());
+            List<Map.Entry<String, String>> entries = new ArrayList<>(myMacroMap.entrySet());
 
             ObjectIntMap<Map.Entry<String, String>> weights = ObjectMaps.newObjectIntHashMap();
             for (Map.Entry<String, String> entry : entries) {
@@ -199,24 +199,20 @@ public class ReplacePathToMacroMap extends PathMacroMap {
     public String getAttributeValue(Attribute attribute, @Nullable PathMacroFilter filter, boolean caseSensitive, boolean recursively) {
         String oldValue = attribute.getValue();
         if (recursively || (filter != null && filter.recursePathMacros(attribute))) {
-            return substituteRecursively(oldValue, caseSensitive).toString();
+            return substituteRecursively(oldValue, caseSensitive);
         }
         else {
             return substitute(oldValue, caseSensitive);
         }
     }
 
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ReplacePathToMacroMap)) {
-            return false;
-        }
-
-        return myMacroMap.equals(((ReplacePathToMacroMap) obj).myMacroMap);
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof ReplacePathToMacroMap that && myMacroMap.equals(that.myMacroMap);
     }
 
+    @Override
     public int hashCode() {
         return myMacroMap.hashCode();
     }

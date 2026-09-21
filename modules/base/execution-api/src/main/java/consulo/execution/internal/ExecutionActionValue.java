@@ -18,6 +18,7 @@ package consulo.execution.internal;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.util.TextWithMnemonic;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -29,7 +30,6 @@ import java.util.function.Function;
 public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     private static final String REPLACEMENT_CHAR = "⊹";
 
-    
     public static LocalizeValue buildWithConfiguration(Function<String, LocalizeValue> function, String configurationName) {
         String dummyStr = REPLACEMENT_CHAR.repeat(configurationName.length());
 
@@ -37,7 +37,6 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
         return new ExecutionActionValue(dummyValue, dummyStr, configurationName);
     }
 
-    
     private final LocalizeValue myOriginal;
     
     private final String myParamValue;
@@ -61,13 +60,11 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
         return text.replaceFirst(myParamValue, myConfigurationName);
     }
 
-    
     @Override
     public String getId() {
         return myOriginal.getKey() + "->executionAction";
     }
 
-    
     @Override
     public String getValue() {
         return myOriginal.getValue().replace(myParamValue, myConfigurationName);
@@ -84,9 +81,11 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof ExecutionActionValue that
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof ExecutionActionValue that
             && myOriginal.equals(that.myOriginal)
             && myParamValue.equals(that.myParamValue)
             && myConfigurationName.equals(that.myConfigurationName);

@@ -15,6 +15,7 @@
  */
 package consulo.compiler.artifact.impl.internal.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.artifact.ui.*;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
@@ -23,6 +24,7 @@ import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.element.ModuleOutputElementTypeBase;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.component.util.pointer.NamedPointer;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,52 +33,59 @@ import java.util.List;
  * @author nik
  */
 public class ModuleOutputSourceItem extends PackagingSourceItem {
-  private final Module myModule;
-  private final ModuleOutputElementTypeBase myModuleOutputType;
+    private final Module myModule;
+    private final ModuleOutputElementTypeBase myModuleOutputType;
 
-  public ModuleOutputSourceItem(Module module, ModuleOutputElementTypeBase moduleOutputType) {
-    myModule = module;
-    myModuleOutputType = moduleOutputType;
-  }
+    public ModuleOutputSourceItem(Module module, ModuleOutputElementTypeBase moduleOutputType) {
+        myModule = module;
+        myModuleOutputType = moduleOutputType;
+    }
 
-  public Module getModule() {
-    return myModule;
-  }
+    public Module getModule() {
+        return myModule;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof ModuleOutputSourceItem &&
-           myModule.equals(((ModuleOutputSourceItem)obj).myModule) &&
-           myModuleOutputType.equals(((ModuleOutputSourceItem)obj).myModuleOutputType);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof ModuleOutputSourceItem that
+            && myModule.equals(that.myModule)
+            && myModuleOutputType.equals(that.myModuleOutputType);
+    }
 
-  @Override
-  public int hashCode() {
-    return myModule.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myModule.hashCode();
+    }
 
-  @Override
-  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
-    final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
-    return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, myModuleOutputType.getContentFolderType())) {
-      @Override
-      public int getWeight() {
-        return SourceItemWeights.MODULE_OUTPUT_WEIGHT;
-      }
-    };
-  }
+    @Override
+    @RequiredReadAction
+    public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
+        final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
+        return new DelegatedSourceItemPresentation(new ModuleElementPresentation(
+            modulePointer,
+            context,
+            myModuleOutputType.getContentFolderType()
+        )) {
+            @Override
+            public int getWeight() {
+                return SourceItemWeights.MODULE_OUTPUT_WEIGHT;
+            }
+        };
+    }
 
-  @Override
-  
-  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
-    NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
+    @Override
+    @RequiredReadAction
+    public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
+        NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
 
-    return Collections.singletonList(myModuleOutputType.createElement(context.getProject(), modulePointer));
-  }
+        return Collections.singletonList(myModuleOutputType.createElement(context.getProject(), modulePointer));
+    }
 
-  
-  @Override
-  public PackagingElementOutputKind getKindOfProducedElements() {
-    return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;
-  }
+    @Override
+    public PackagingElementOutputKind getKindOfProducedElements() {
+        return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;
+    }
 }

@@ -44,9 +44,7 @@ public class TrimUtil {
   // Trim
   //
 
-  
-  public static Range trim(CharSequence text1, CharSequence text2,
-                           int start1, int start2, int end1, int end2) {
+  public static Range trim(CharSequence text1, CharSequence text2, int start1, int start2, int end1, int end2) {
     start1 = trimStart(text1, start1, end1);
     end1 = trimEnd(text1, start1, end1);
     start2 = trimStart(text2, start2, end2);
@@ -55,7 +53,6 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  
   public static MergeRange trim(CharSequence text1, CharSequence text2, CharSequence text3,
                                 int start1, int start2, int start3, int end1, int end2, int end3) {
     start1 = trimStart(text1, start1, end1);
@@ -98,9 +95,7 @@ public class TrimUtil {
   // Expand
   //
 
-  
-  public static Range expand(List<?> text1, List<?> text2,
-                             int start1, int start2, int end1, int end2) {
+  public static Range expand(List<?> text1, List<?> text2, int start1, int start2, int end1, int end2) {
     int count1 = expandForward(text1, text2, start1, start2, end1, end2);
     start1 += count1;
     start2 += count1;
@@ -112,9 +107,7 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  
-  public static Range expand(CharSequence text1, CharSequence text2,
-                             int start1, int start2, int end1, int end2) {
+  public static Range expand(CharSequence text1, CharSequence text2, int start1, int start2, int end1, int end2) {
     int count1 = expandForward(text1, text2, start1, start2, end1, end2);
     start1 += count1;
     start2 += count1;
@@ -126,9 +119,7 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  
-  public static Range expandW(CharSequence text1, CharSequence text2,
-                              int start1, int start2, int end1, int end2) {
+  public static Range expandW(CharSequence text1, CharSequence text2, int start1, int start2, int end1, int end2) {
     int count1 = expandForwardW(text1, text2, start1, start2, end1, end2);
     start1 += count1;
     start2 += count1;
@@ -140,7 +131,6 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  
   public static MergeRange expandW(CharSequence text1, CharSequence text2, CharSequence text3,
                                    int start1, int start2, int start3, int end1, int end2, int end3) {
     int count1 = expandForwardW(text1, text2, text3, start1, start2, start3, end1, end2, end3);
@@ -316,9 +306,7 @@ public class TrimUtil {
     return oldEnd1 - end1;
   }
 
-  
-  public static IntPair expandForwardIW(CharSequence text1, CharSequence text2,
-                                        int start1, int start2, int end1, int end2) {
+  public static IntPair expandForwardIW(CharSequence text1, CharSequence text2, int start1, int start2, int end1, int end2) {
     while (start1 < end1 && start2 < end2) {
       char c1 = text1.charAt(start1);
       char c2 = text2.charAt(start2);
@@ -347,9 +335,7 @@ public class TrimUtil {
     return new IntPair(start1, start2);
   }
 
-  
-  public static IntPair expandBackwardIW(CharSequence text1, CharSequence text2,
-                                         int start1, int start2, int end1, int end2) {
+  public static IntPair expandBackwardIW(CharSequence text1, CharSequence text2, int start1, int start2, int end1, int end2) {
     while (start1 < end1 && start2 < end2) {
       char c1 = text1.charAt(end1 - 1);
       char c2 = text2.charAt(end2 - 1);
@@ -378,16 +364,14 @@ public class TrimUtil {
     return new IntPair(end1, end2);
   }
 
-  
-  public static Range expandIW(CharSequence text1, CharSequence text2,
-                               int start1, int start2, int end1, int end2) {
+  public static Range expandIW(CharSequence text1, CharSequence text2, int start1, int start2, int end1, int end2) {
     IntPair start = expandForwardIW(text1, text2, start1, start2, end1, end2);
-    start1 = start.val1;
-    start2 = start.val2;
+    start1 = start.val1();
+    start2 = start.val2();
 
     IntPair end = expandBackwardIW(text1, text2, start1, start2, end1, end2);
-    end1 = end.val1;
-    end2 = end.val2;
+    end1 = end.val1();
+    end2 = end.val2();
 
     return new Range(start1, end1, start2, end2);
   }
@@ -396,34 +380,26 @@ public class TrimUtil {
   // Misc
   //
 
-  
   public static Range expand(CharSequence text1, CharSequence text2, Range range) {
-    return expand(text1, text2, range.start1, range.start2, range.end1, range.end2);
+    return expand(text1, text2, range.start1(), range.start2(), range.end1(), range.end2());
   }
 
-  
   public static Range expandW(CharSequence text1, CharSequence text2, Range range) {
-    return expandW(text1, text2, range.start1, range.start2, range.end1, range.end2);
+    return expandW(text1, text2, range.start1(), range.start2(), range.end1(), range.end2());
   }
 
-  
   public static Range trim(CharSequence text1, CharSequence text2, Range range) {
-    return trim(text1, text2, range.start1, range.start2, range.end1, range.end2);
+    return trim(text1, text2, range.start1(), range.start2(), range.end1(), range.end2());
   }
 
-  
-  public static MergeRange trim(CharSequence text1, CharSequence text2, CharSequence text3,
-                                MergeRange range) {
-    return trim(text1, text2, text3, range.start1, range.start2, range.start3, range.end1, range.end2, range.end3);
+  public static MergeRange trim(CharSequence text1, CharSequence text2, CharSequence text3, MergeRange range) {
+    return trim(text1, text2, text3, range.start1(), range.start2(), range.start3(), range.end1(), range.end2(), range.end3());
   }
 
-  
-  public static MergeRange expandW(CharSequence text1, CharSequence text2, CharSequence text3,
-                                   MergeRange range) {
-    return expandW(text1, text2, text3, range.start1, range.start2, range.start3, range.end1, range.end2, range.end3);
+  public static MergeRange expandW(CharSequence text1, CharSequence text2, CharSequence text3, MergeRange range) {
+    return expandW(text1, text2, text3, range.start1(), range.start2(), range.start3(), range.end1(), range.end2(), range.end3());
   }
 
-  
   public static Range expandIW(CharSequence text1, CharSequence text2) {
     return expandIW(text1, text2, 0, 0, text1.length(), text2.length());
   }

@@ -55,11 +55,13 @@ public final class EnvironmentVariablesData {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    EnvironmentVariablesData data = (EnvironmentVariablesData)o;
-    return myPassParentEnvs == data.myPassParentEnvs && myEnvs.equals(data.myEnvs) && Objects.equals(myEnvironmentFile, data.myEnvironmentFile);
+    EnvironmentVariablesData that = (EnvironmentVariablesData) o;
+    return myPassParentEnvs == that.myPassParentEnvs
+      && myEnvs.equals(that.myEnvs)
+      && Objects.equals(myEnvironmentFile, that.myEnvironmentFile);
   }
 
   @Override
@@ -76,7 +78,6 @@ public final class EnvironmentVariablesData {
     return "envs=" + myEnvs + ", passParentEnvs=" + myPassParentEnvs + ", environmentFile=" + myEnvironmentFile;
   }
 
-  
   public static EnvironmentVariablesData readExternal(Element element) {
     Element envsElement = element.getChild(ENVS);
     if (envsElement == null) {
@@ -121,24 +122,18 @@ public final class EnvironmentVariablesData {
    *                       (iteration order should be reliable user-specified, like {@link LinkedHashMap} or {@link ImmutableMap})
    * @param passParentEnvs true if system environment should be passed
    */
-  public static
-  
-  EnvironmentVariablesData create(Map<String, String> envs, boolean passParentEnvs) {
+  public static EnvironmentVariablesData create(Map<String, String> envs, boolean passParentEnvs) {
     return passParentEnvs && envs.isEmpty() ? DEFAULT : new EnvironmentVariablesData(envs, passParentEnvs, null);
   }
 
-  public
-  
-  EnvironmentVariablesData with(Map<String, String> envs) {
+  public EnvironmentVariablesData with(Map<String, String> envs) {
     return new EnvironmentVariablesData(envs, myPassParentEnvs, myEnvironmentFile);
   }
 
-  
   public EnvironmentVariablesData with(boolean passParentEnvs) {
     return new EnvironmentVariablesData(myEnvs, passParentEnvs, myEnvironmentFile);
   }
 
-  
   public EnvironmentVariablesData with(@Nullable String environmentFile) {
     return new EnvironmentVariablesData(myEnvs, myPassParentEnvs, environmentFile);
   }

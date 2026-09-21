@@ -17,28 +17,31 @@ package consulo.diff.old;
 
 import consulo.document.util.TextRange;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 public class FormattingOld extends Word {
-  @TestOnly
-  public FormattingOld(String baseText, TextRange range) {
-    this(DiffString.create(baseText), range);
-  }
+    @TestOnly
+    public FormattingOld(String baseText, TextRange range) {
+        this(DiffString.create(baseText), range);
+    }
 
-  public FormattingOld(DiffString text, TextRange range) {
-    super(text, range);
-  }
+    public FormattingOld(DiffString text, TextRange range) {
+        super(text, range);
+    }
 
-  public int hashCode() {
-    return -1;
-  }
+    @Override
+    public int hashCode() {
+        return -1;
+    }
 
-  public boolean equals(Object obj) {
-    return obj instanceof FormattingOld;
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof FormattingOld;
+    }
 
-  @Override
-  public boolean isWhitespace() {
-    return true;
-  }
+    @Override
+    public boolean isWhitespace() {
+        return true;
+    }
 }

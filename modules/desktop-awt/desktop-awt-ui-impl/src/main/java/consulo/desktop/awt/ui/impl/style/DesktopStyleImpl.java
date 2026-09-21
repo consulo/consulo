@@ -32,6 +32,7 @@ import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.StyleColorValue;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -130,26 +131,22 @@ public class DesktopStyleImpl extends StyleImpl {
         return super.getColorValue(colorValue);
     }
 
-    
     @Override
     public Image getImage(Image image) {
         if (image instanceof DesktopAWTImage awtImage) {
-            return ((DesktopAWTImage) image).copyWithForceLibraryId(getIconLibraryId());
+            return awtImage.copyWithForceLibraryId(getIconLibraryId());
         }
         return image;
     }
 
-    
     public UIManager.LookAndFeelInfo getLookAndFeelInfo() {
         return myLookAndFeelInfo;
     }
 
-    
     public String getClassName() {
         return myLookAndFeelInfo.getClassName();
     }
 
-    
     @Override
     public String getId() {
         if (myLookAndFeelInfo instanceof IdeLookAndFeelInfo ideLookAndFeelInfo) {
@@ -158,17 +155,15 @@ public class DesktopStyleImpl extends StyleImpl {
         return getClassName();
     }
 
-    
     @Override
     public String getName() {
         return myLookAndFeelInfo.getName();
     }
 
-    
     @Override
     public String getIconLibraryId() {
-        if (myLookAndFeelInfo instanceof LafWithIconLibrary) {
-            return ((LafWithIconLibrary) myLookAndFeelInfo).getIconLibraryId();
+        if (myLookAndFeelInfo instanceof LafWithIconLibrary lafWithIconLib) {
+            return lafWithIconLib.getIconLibraryId();
         }
         return IconLibraryManager.LIGHT_LIBRARY_ID;
     }
@@ -179,7 +174,7 @@ public class DesktopStyleImpl extends StyleImpl {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

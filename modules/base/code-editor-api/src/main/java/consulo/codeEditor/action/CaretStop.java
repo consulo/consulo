@@ -16,49 +16,54 @@
 package consulo.codeEditor.action;
 
 import consulo.util.xml.serializer.annotation.Attribute;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 // from kotlin
 public final class CaretStop {
-  public static final CaretStop NONE = new CaretStop(false, false);
-  public static final CaretStop START = new CaretStop(true, false);
-  public static final CaretStop END = new CaretStop(false, true);
-  public static final CaretStop BOTH = new CaretStop(true, true);
+    public static final CaretStop NONE = new CaretStop(false, false);
+    public static final CaretStop START = new CaretStop(true, false);
+    public static final CaretStop END = new CaretStop(false, true);
+    public static final CaretStop BOTH = new CaretStop(true, true);
 
-  @Attribute("start")
-  private final boolean atStart;
-  @Attribute("end")
-  private final boolean atEnd;
+    @Attribute("start")
+    private final boolean atStart;
+    @Attribute("end")
+    private final boolean atEnd;
 
-  public CaretStop(boolean atStart, boolean atEnd) {
-    this.atStart = atStart;
-    this.atEnd = atEnd;
-  }
+    public CaretStop(boolean atStart, boolean atEnd) {
+        this.atStart = atStart;
+        this.atEnd = atEnd;
+    }
 
-  public boolean isAtStart() {
-    return atStart;
-  }
+    public boolean isAtStart() {
+        return atStart;
+    }
 
-  public boolean isAtEnd() {
-    return atEnd;
-  }
+    public boolean isAtEnd() {
+        return atEnd;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    CaretStop caretStop = (CaretStop)o;
-    return atStart == caretStop.atStart && atEnd == caretStop.atEnd;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CaretStop that = (CaretStop) o;
+        return atStart == that.atStart && atEnd == that.atEnd;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(atStart, atEnd);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(atStart, atEnd);
+    }
 
-  @Override
-  public String toString() {
-    return "CaretStop{" + "atStart=" + atStart + ", atEnd=" + atEnd + '}';
-  }
+    @Override
+    public String toString() {
+        return "CaretStop{" + "atStart=" + atStart + ", atEnd=" + atEnd + '}';
+    }
 }

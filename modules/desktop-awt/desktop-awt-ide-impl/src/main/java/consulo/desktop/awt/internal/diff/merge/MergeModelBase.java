@@ -48,12 +48,10 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     private final Document myDocument;
     private final @Nullable UndoManager myUndoManager;
 
-    
     private IntList myStartLines = IntLists.newArrayList();
     
     private IntList myEndLines = IntLists.newArrayList();
 
-    
     private final IntSet myChangesToUpdate = IntSets.newHashSet();
     private int myBulkChangeUpdateDepth;
 
@@ -104,8 +102,8 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         myEndLines.clear();
 
         for (LineRange range : changes) {
-            myStartLines.add(range.start);
-            myEndLines.add(range.end);
+            myStartLines.add(range.start());
+            myEndLines.add(range.end());
         }
     }
 
@@ -159,7 +157,6 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     // Undo
     //
 
-    
     @RequiredUIAccess
     protected abstract S storeChangeState(int index);
 
@@ -205,7 +202,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
 
             List<S> corruptedStates = new SmartList<>();
             for (int index = 0; index < getChangesCount(); index++) {
-                S oldState = processDocumentChange(index, lineRange.start, lineRange.end, shift);
+                S oldState = processDocumentChange(index, lineRange.start(), lineRange.end(), shift);
                 if (oldState == null) {
                     continue;
                 }

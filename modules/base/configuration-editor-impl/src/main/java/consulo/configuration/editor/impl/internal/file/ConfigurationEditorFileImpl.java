@@ -22,6 +22,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,59 +39,53 @@ public class ConfigurationEditorFileImpl extends LightVirtualFileBase implements
     private final ConfigurationEditorFileSystemImpl myFileSystem;
     private final Map<String, String> myRequestedParams;
 
-    public ConfigurationEditorFileImpl(String path,
-                                       ConfigurationEditorFileType type,
-                                       ConfigurationEditorFileSystemImpl fileSystem,
-                                       Map<String, String> requestedParams) {
+    public ConfigurationEditorFileImpl(
+        String path,
+        ConfigurationEditorFileType type,
+        ConfigurationEditorFileSystemImpl fileSystem,
+        Map<String, String> requestedParams
+    ) {
         super(type.getId(), type, 0);
         myPath = path;
         myFileSystem = fileSystem;
         myRequestedParams = requestedParams;
     }
 
-    
     @Override
     public Map<String, String> getRequestedParams() {
         return myRequestedParams;
     }
 
-    
     @Override
     public ConfigurationEditorFileSystemImpl getFileSystem() {
         return myFileSystem;
     }
 
-    
     @Override
     public String getPath() {
         return myPath;
     }
 
-    
     @Override
     public LocalizeValue getLocalizedName() {
         return getProvider().getName();
     }
 
-    
     @Override
     public String getName() {
         return getProvider().getName().map(Presentation.NO_MNEMONIC).get();
     }
 
     @Override
-    
     public ConfigurationFileEditorProvider getProvider() {
         return ((ConfigurationEditorFileType) getFileType()).getProvider();
     }
 
-    
     @Override
     public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public byte[] contentsToByteArray() throws IOException {
         return ArrayUtil.EMPTY_BYTE_ARRAY;
@@ -102,11 +97,9 @@ public class ConfigurationEditorFileImpl extends LightVirtualFileBase implements
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ConfigurationEditorFileImpl cef) {
-            return Objects.equals(getProvider().getId(), cef.getProvider().getId());
-        }
-        return super.equals(obj);
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof ConfigurationEditorFileImpl that && Objects.equals(getProvider().getId(), that.getProvider().getId());
     }
 
     @Override

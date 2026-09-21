@@ -16,6 +16,7 @@
 package consulo.application.util;
 
 import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -25,26 +26,22 @@ import java.util.function.Function;
  * @since 2026-02-19
  */
 class TestLocalizedValue implements LocalizeValue {
-    
     private final String myValue;
 
     TestLocalizedValue(String value) {
         myValue = value;
     }
 
-    
     @Override
     public String getId() {
         return "";
     }
 
-    
     @Override
     public String get() {
         return myValue;
     }
 
-    
     @Override
     public String getValue() {
         return myValue;
@@ -55,17 +52,15 @@ class TestLocalizedValue implements LocalizeValue {
         return 0;
     }
 
-    
     @Override
     public LocalizeValue map(Function<String, String> mapper) {
         return new TestLocalizedValue(mapper.apply(myValue));
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return obj == this
-            || obj instanceof TestLocalizedValue that
-            && Objects.equals(myValue, that.myValue);
+            || obj instanceof TestLocalizedValue that && Objects.equals(myValue, that.myValue);
     }
 
     @Override

@@ -16,32 +16,38 @@
 package consulo.document.impl;
 
 import consulo.util.io.FileUtil;
+import org.jspecify.annotations.Nullable;
 
 public class DocumentFilePath {
-  private final String myPath;
+    private final String myPath;
 
-  public DocumentFilePath(String path) {
-    myPath = path;
-  }
+    public DocumentFilePath(String path) {
+        myPath = path;
+    }
 
-  public String getPath() {
-    return myPath;
-  }
+    public String getPath() {
+        return myPath;
+    }
 
-  @Override
-  public String toString() {
-    return myPath;
-  }
+    @Override
+    public String toString() {
+        return myPath;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    return FileUtil.pathsEqual(myPath, ((DocumentFilePath)o).myPath);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DocumentFilePath that = (DocumentFilePath) o;
+        return FileUtil.pathsEqual(myPath, that.myPath);
+    }
 
-  @Override
-  public int hashCode() {
-    return FileUtil.pathHashCode(myPath);
-  }
+    @Override
+    public int hashCode() {
+        return FileUtil.pathHashCode(myPath);
+    }
 }

@@ -450,17 +450,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PluginDescriptorImpl)) {
-            return false;
-        }
-
-        PluginDescriptorImpl pluginDescriptor = (PluginDescriptorImpl) o;
-
-        return myName == null ? pluginDescriptor.myName == null : myName.equals(pluginDescriptor.myName);
+        return o instanceof PluginDescriptorImpl
+            && Objects.equals(myName, ((PluginDescriptorImpl) o).myName);
     }
 
     @Override

@@ -141,7 +141,7 @@ public abstract class SdkType implements SdkTypeId {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return o == this
             || o instanceof SdkType sdkType
             && myId.equals(sdkType.myId);
