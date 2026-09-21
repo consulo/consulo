@@ -26,6 +26,7 @@ import consulo.compiler.artifact.element.ZipArtifactType;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.compiler.artifact.ui.*;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,46 +35,48 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactSourceItem extends PackagingSourceItem {
-  private final Artifact myArtifact;
+    private final Artifact myArtifact;
 
-  public ArtifactSourceItem(Artifact artifact) {
-    myArtifact = artifact;
-  }
+    public ArtifactSourceItem(Artifact artifact) {
+        myArtifact = artifact;
+    }
 
-  @Override
-  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
-    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(context.getProject()).create(myArtifact, context.getArtifactModel());
-    return new DelegatedSourceItemPresentation(new ArtifactElementPresentation(pointer, context)) {
-      @Override
-      public int getWeight() {
-        return SourceItemWeights.ARTIFACT_WEIGHT;
-      }
-    };
-  }
+    @Override
+    public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
+        final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(context.getProject())
+            .create(myArtifact, context.getArtifactModel());
+        return new DelegatedSourceItemPresentation(new ArtifactElementPresentation(pointer, context)) {
+            @Override
+            public int getWeight() {
+                return SourceItemWeights.ARTIFACT_WEIGHT;
+            }
+        };
+    }
 
-  @Override
-  
-  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
-    Project project = context.getProject();
-    ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).create(myArtifact, context.getArtifactModel());
-    return Collections.singletonList(PackagingElementFactory.getInstance(context.getProject()).createArtifactElement(pointer, project));
-  }
+    @Override
+    public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
+        Project project = context.getProject();
+        ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).create(myArtifact, context.getArtifactModel());
+        return Collections.singletonList(PackagingElementFactory.getInstance(context.getProject()).createArtifactElement(pointer, project));
+    }
 
-  public boolean equals(Object obj) {
-    return obj instanceof ArtifactSourceItem && myArtifact.equals(((ArtifactSourceItem)obj).myArtifact);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof ArtifactSourceItem that && myArtifact.equals(that.myArtifact);
+    }
 
-  
-  @Override
-  public PackagingElementOutputKind getKindOfProducedElements() {
-    return myArtifact.getArtifactType() instanceof ZipArtifactType ? PackagingElementOutputKind.JAR_FILES : PackagingElementOutputKind.OTHER;
-  }
+    @Override
+    public PackagingElementOutputKind getKindOfProducedElements() {
+        return myArtifact.getArtifactType() instanceof ZipArtifactType ? PackagingElementOutputKind.JAR_FILES : PackagingElementOutputKind.OTHER;
+    }
 
-  public Artifact getArtifact() {
-    return myArtifact;
-  }
+    public Artifact getArtifact() {
+        return myArtifact;
+    }
 
-  public int hashCode() {
-    return myArtifact.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myArtifact.hashCode();
+    }
 }

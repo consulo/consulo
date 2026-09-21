@@ -23,6 +23,7 @@ import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.ArtifactPointerUtil;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   @Override
   public BeforeRunTask clone() {
     AbstractArtifactsBeforeRunTask task = (AbstractArtifactsBeforeRunTask)super.clone();
-    task.myArtifactPointers = new ArrayList<ArtifactPointer>(myArtifactPointers);
+    task.myArtifactPointers = new ArrayList<>(myArtifactPointers);
     return task;
   }
 
@@ -77,7 +78,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   }
 
   public void setArtifactPointers(List<ArtifactPointer> artifactPointers) {
-    myArtifactPointers = new ArrayList<ArtifactPointer>(artifactPointers);
+    myArtifactPointers = new ArrayList<>(artifactPointers);
   }
 
   public void addArtifact(Artifact artifact) {
@@ -96,17 +97,15 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     if (!super.equals(o)) return false;
 
-    AbstractArtifactsBeforeRunTask that = (AbstractArtifactsBeforeRunTask)o;
+    AbstractArtifactsBeforeRunTask that = (AbstractArtifactsBeforeRunTask) o;
 
-    if (!myArtifactPointers.equals(that.myArtifactPointers)) return false;
-    if (!myProject.equals(that.myProject)) return false;
-
-    return true;
+    return myArtifactPointers.equals(that.myArtifactPointers)
+      && myProject.equals(that.myProject);
   }
 
   @Override

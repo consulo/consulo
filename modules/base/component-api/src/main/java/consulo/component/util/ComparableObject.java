@@ -16,38 +16,37 @@
 package consulo.component.util;
 
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 public interface ComparableObject {
-  Object[] NONE = ArrayUtil.EMPTY_OBJECT_ARRAY;
+    Object[] NONE = ArrayUtil.EMPTY_OBJECT_ARRAY;
 
-  
-  Object[] getEqualityObjects();
+    Object[] getEqualityObjects();
 
-  class Impl implements ComparableObject {
-    private final Object[] myObjects;
+    class Impl implements ComparableObject {
+        private final Object[] myObjects;
 
-    public Impl() {
-      this(NONE);
+        public Impl() {
+            this(NONE);
+        }
+
+        public Impl(Object... objects) {
+            myObjects = objects;
+        }
+
+        @Override
+        public Object[] getEqualityObjects() {
+            return myObjects;
+        }
+
+        @Override
+        public final boolean equals(@Nullable Object obj) {
+            return ComparableObjectCheck.equals(this, obj);
+        }
+
+        @Override
+        public final int hashCode() {
+            return ComparableObjectCheck.hashCode(this, super.hashCode());
+        }
     }
-
-    public Impl(Object... objects) {
-      myObjects = objects;
-    }
-
-    
-    @Override
-    public Object[] getEqualityObjects() {
-      return myObjects;
-    }
-
-    @Override
-    public final boolean equals(Object obj) {
-      return ComparableObjectCheck.equals(this, obj);
-    }
-
-    @Override
-    public final int hashCode() {
-      return ComparableObjectCheck.hashCode(this, super.hashCode());
-    }
-  }
 }

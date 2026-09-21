@@ -21,51 +21,49 @@ import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 class RangesDiffIterable extends ChangeDiffIterableBase {
-  
-  private final List<? extends Range> myRanges;
+    private final List<? extends Range> myRanges;
 
-  public RangesDiffIterable(List<? extends Range> ranges, int length1, int length2) {
-    super(length1, length2);
-    myRanges = ranges;
-  }
-
-  
-  @Override
-  protected ChangeIterable createChangeIterable() {
-    return new RangesChangeIterable();
-  }
-
-  private class RangesChangeIterable implements ChangeIterable {
-    private int myIndex = 0;
-
-    @Override
-    public boolean valid() {
-      return myIndex != myRanges.size();
+    public RangesDiffIterable(List<? extends Range> ranges, int length1, int length2) {
+        super(length1, length2);
+        myRanges = ranges;
     }
 
     @Override
-    public void next() {
-      myIndex++;
+    protected ChangeIterable createChangeIterable() {
+        return new RangesChangeIterable();
     }
 
-    @Override
-    public int getStart1() {
-      return myRanges.get(myIndex).start1;
-    }
+    private class RangesChangeIterable implements ChangeIterable {
+        private int myIndex = 0;
 
-    @Override
-    public int getStart2() {
-      return myRanges.get(myIndex).start2;
-    }
+        @Override
+        public boolean valid() {
+            return myIndex != myRanges.size();
+        }
 
-    @Override
-    public int getEnd1() {
-      return myRanges.get(myIndex).end1;
-    }
+        @Override
+        public void next() {
+            myIndex++;
+        }
 
-    @Override
-    public int getEnd2() {
-      return myRanges.get(myIndex).end2;
+        @Override
+        public int getStart1() {
+            return myRanges.get(myIndex).start1();
+        }
+
+        @Override
+        public int getStart2() {
+            return myRanges.get(myIndex).start2();
+        }
+
+        @Override
+        public int getEnd1() {
+            return myRanges.get(myIndex).end1();
+        }
+
+        @Override
+        public int getEnd2() {
+            return myRanges.get(myIndex).end2();
+        }
     }
-  }
 }

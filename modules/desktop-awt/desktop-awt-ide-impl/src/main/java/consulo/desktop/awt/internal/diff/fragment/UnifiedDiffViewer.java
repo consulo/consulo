@@ -17,9 +17,8 @@ package consulo.desktop.awt.internal.diff.fragment;
 
 import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
-import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.*;
@@ -61,6 +60,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
@@ -70,6 +70,7 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.undoRedo.UndoManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
@@ -135,7 +136,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         myDocument = EditorFactory.getInstance().createDocument("");
         myEditor = DiffImplUtil.createEditor(myDocument, myProject, true, true);
 
-        List<JComponent> titles = AWTDiffUtil.createTextTitles(myRequest, ContainerUtil.list(myEditor, myEditor));
+        List<JComponent> titles = AWTDiffUtil.createTextTitles(myRequest, Arrays.asList(myEditor, myEditor));
         UnifiedContentPanel contentPanel = new UnifiedContentPanel(titles, myEditor);
 
         myPanel = new UnifiedDiffPanel(myProject, contentPanel, this, myContext);
@@ -288,7 +289,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
             ThrowableComputable<CharSequence[], RuntimeException> action1 =
                 () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-            CharSequence[] texts = AccessRule.read(action1);
+            CharSequence[] texts = ReadAction.compute(action1);
 
             List<LineFragment> fragments = DiffImplUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
 
@@ -314,12 +315,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
                 return new TwosideDocumentData(builder, highlighter, rangeHighlighter);
             };
-            TwosideDocumentData data = AccessRule.read(action);
+            TwosideDocumentData data = ReadAction.compute(action);
             UnifiedFragmentBuilder builder = data.getBuilder();
 
             FileType fileType = content2.getContentType() == null ? content1.getContentType() : content2.getContentType();
 
-            LineNumberConvertor convertor = builder.getConvertor();
+            LineNumberConvertor converter = builder.getConvertor();
             List<LineRange> changedLines = builder.getChangedLines();
             boolean isContentsEqual = builder.isEqual();
 
@@ -328,11 +329,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 data.getHighlighter(),
                 data.getRangeHighlighter(),
                 fileType,
-                convertor.createConvertor1(),
-                convertor.createConvertor2()
+                converter.createConvertor1(),
+                converter.createConvertor2()
             );
 
-            return apply(editorData, builder.getBlocks(), convertor, changedLines, isContentsEqual);
+            return apply(editorData, builder.getBlocks(), converter, changedLines, isContentsEqual);
         }
         catch (DiffTooBigException e) {
             return () -> {
@@ -409,7 +410,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     private Runnable apply(
         CombinedEditorData data,
         List<ChangedBlock> blocks,
-        LineNumberConvertor convertor,
+        LineNumberConvertor converter,
         List<LineRange> changedLines,
         boolean isContentsEqual
     ) {
@@ -418,7 +419,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
             LineCol oldCaretPosition = LineCol.fromOffset(myDocument, myEditor.getCaretModel().getPrimaryCaret().getOffset());
             @SuppressWarnings("RequiredXAction")
-            Pair<int[], Side> oldCaretLineTwoside = transferLineFromOneside(oldCaretPosition.line);
+            Pair<int[], Side> oldCaretLineTwoside = transferLineFromOneside(oldCaretPosition.line());
 
             //noinspection RequiredXAction
             clearDiffPresentation();
@@ -467,19 +468,19 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                     if (range.isEmpty()) {
                         continue;
                     }
-                    TextRange textRange = DiffImplUtil.getLinesRange(myDocument, range.start, range.end);
+                    TextRange textRange = DiffImplUtil.getLinesRange(myDocument, range.start(), range.end());
                     guarderRangeBlocks.add(createGuardedBlock(textRange.getStartOffset(), textRange.getEndOffset()));
                 }
                 int textLength = myDocument.getTextLength(); // there are 'fake' newline at the very end
                 guarderRangeBlocks.add(createGuardedBlock(textLength, textLength));
             }
 
-            myChangedBlockData = new ChangedBlockData(diffChanges, guarderRangeBlocks, convertor, isContentsEqual);
+            myChangedBlockData = new ChangedBlockData(diffChanges, guarderRangeBlocks, converter, isContentsEqual);
 
             @SuppressWarnings("RequiredXAction")
             int newCaretLine =
                 transferLineToOneside(oldCaretLineTwoside.second, oldCaretLineTwoside.second.select(oldCaretLineTwoside.first));
-            myEditor.getCaretModel().moveToOffset(LineCol.toOffset(myDocument, newCaretLine, oldCaretPosition.column));
+            myEditor.getCaretModel().moveToOffset(LineCol.toOffset(myDocument, newCaretLine, oldCaretPosition.column()));
 
             myFoldingModel.install(changedLines, myRequest, getFoldingModelSettings());
 
@@ -557,22 +558,22 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return Pair.create(lines, myMasterSide);
         }
 
-        LineNumberConvertor lineConvertor = myChangedBlockData.getLineNumberConvertor();
+        LineNumberConvertor lineConverter = myChangedBlockData.getLineNumberConvertor();
 
         Side side = myMasterSide;
-        lines[0] = lineConvertor.convert1(line);
-        lines[1] = lineConvertor.convert2(line);
+        lines[0] = lineConverter.convert1(line);
+        lines[1] = lineConverter.convert2(line);
 
         if (lines[0] == -1 && lines[1] == -1) {
-            lines[0] = lineConvertor.convertApproximate1(line);
-            lines[1] = lineConvertor.convertApproximate2(line);
+            lines[0] = lineConverter.convertApproximate1(line);
+            lines[1] = lineConverter.convertApproximate2(line);
         }
         else if (lines[0] == -1) {
-            lines[0] = lineConvertor.convertApproximate1(line);
+            lines[0] = lineConverter.convertApproximate1(line);
             side = Side.RIGHT;
         }
         else if (lines[1] == -1) {
-            lines[1] = lineConvertor.convertApproximate2(line);
+            lines[1] = lineConverter.convertApproximate2(line);
             side = Side.LEFT;
         }
 
@@ -625,12 +626,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 LineCol onesideStartPosition = LineCol.fromOffset(myDocument, e.getOffset());
                 LineCol onesideEndPosition = LineCol.fromOffset(myDocument, e.getOffset() + e.getOldLength());
 
-                int line1 = onesideStartPosition.line;
-                int line2 = onesideEndPosition.line + 1;
+                int line1 = onesideStartPosition.line();
+                int line2 = onesideEndPosition.line() + 1;
                 int shift = DiffImplUtil.countLinesShift(e);
 
-                int twosideStartLine = transferLineFromOnesideStrict(myMasterSide, onesideStartPosition.line);
-                int twosideEndLine = transferLineFromOnesideStrict(myMasterSide, onesideEndPosition.line);
+                int twosideStartLine = transferLineFromOnesideStrict(myMasterSide, onesideStartPosition.line());
+                int twosideEndLine = transferLineFromOnesideStrict(myMasterSide, onesideEndPosition.line());
                 if (twosideStartLine == -1 || twosideEndLine == -1) {
                     // this should never happen
                     logDebugInfo(e, onesideStartPosition, onesideEndPosition, twosideStartLine, twosideEndLine);
@@ -638,8 +639,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                     return;
                 }
 
-                int twosideStartOffset = twosideDocument.getLineStartOffset(twosideStartLine) + onesideStartPosition.column;
-                int twosideEndOffset = twosideDocument.getLineStartOffset(twosideEndLine) + onesideEndPosition.column;
+                int twosideStartOffset = twosideDocument.getLineStartOffset(twosideStartLine) + onesideStartPosition.column();
+                int twosideEndOffset = twosideDocument.getLineStartOffset(twosideEndLine) + onesideEndPosition.column();
                 twosideDocument.replaceString(twosideStartOffset, twosideEndOffset, e.getNewFragment());
 
                 for (UnifiedDiffChange change : myChangedBlockData.getDiffChanges()) {
@@ -683,8 +684,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             info.append("onesideEndPosition - ").append(onesideEndPosition).append('\n');
             info.append("twosideStartLine - ").append(twosideStartLine).append('\n');
             info.append("twosideEndLine - ").append(twosideEndLine).append('\n');
-            Pair<int[], Side> pair1 = transferLineFromOneside(onesideStartPosition.line);
-            Pair<int[], Side> pair2 = transferLineFromOneside(onesideEndPosition.line);
+            Pair<int[], Side> pair1 = transferLineFromOneside(onesideStartPosition.line());
+            Pair<int[], Side> pair2 = transferLineFromOneside(onesideEndPosition.line());
             info.append("non-strict transferStartLine - ").append(pair1.first[0]).append("-").append(pair1.first[1])
                 .append(":").append(pair1.second).append('\n');
             info.append("non-strict transferEndLine - ").append(pair2.first[0]).append("-").append(pair2.first[1])
@@ -803,7 +804,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 .getAction(focusedSide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"))
                 .getShortcutSet());
             getTemplatePresentation().setText(focusedSide.select("Revert", "Accept"));
-            getTemplatePresentation().setIcon(focusedSide.select(AllIcons.Diff.Remove, AllIcons.Actions.Checked));
+            getTemplatePresentation().setIcon(focusedSide.select(PlatformIconGroup.diffRemove(), PlatformIconGroup.actionsChecked()));
         }
 
         @RequiredWriteAction
@@ -1049,11 +1050,10 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     //
 
     private class MyPrevNextDifferenceIterable extends PrevNextDifferenceIterableBase<UnifiedDiffChange> {
-
         @Override
         @RequiredUIAccess
         protected List<UnifiedDiffChange> getChanges() {
-            return consulo.ide.impl.idea.util.containers.ContainerUtil.notNullize(getDiffChanges());
+            return Lists.notNullize(getDiffChanges());
         }
 
         @Override
@@ -1111,7 +1111,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
         @Override
         protected List<HighlightPolicy> getAvailableSettings() {
-            ArrayList<HighlightPolicy> settings = ContainerUtil.newArrayList(HighlightPolicy.values());
+            List<HighlightPolicy> settings = ContainerUtil.newArrayList(HighlightPolicy.values());
             settings.remove(HighlightPolicy.DO_NOT_HIGHLIGHT);
             return settings;
         }
@@ -1135,7 +1135,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
         @Override
         protected List<IgnorePolicy> getAvailableSettings() {
-            ArrayList<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
+            List<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
             settings.remove(IgnorePolicy.IGNORE_WHITESPACES_CHUNKS);
             return settings;
         }
@@ -1497,15 +1497,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         }
 
         @RequiredUIAccess
-        public void install(
-            @Nullable List<LineRange> changedLines,
-            UserDataHolder context,
-            Settings settings
-        ) {
-            Iterator<int[]> it = map(changedLines, line -> new int[]{
-                line.start,
-                line.end
-            });
+        public void install(@Nullable List<LineRange> changedLines, UserDataHolder context, Settings settings) {
+            Iterator<int[]> it = map(changedLines, line -> new int[]{line.start(), line.end()});
             install(it, context, settings);
         }
 

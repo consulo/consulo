@@ -20,6 +20,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.util.collection.ArrayUtil;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,9 +104,11 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof LayeredIcon icon
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof LayeredIcon icon
             && super.equals(o)
             && myHeight == icon.myHeight
             && myWidth == icon.myWidth

@@ -26,6 +26,7 @@ import consulo.diff.util.Range;
 import consulo.util.lang.Couple;
 import consulo.util.lang.MergingCharSequence;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,16 +137,16 @@ public class ByWord {
 
     List<LineBlock> lineBlocks = new ArrayList<>(wordBlocks.size());
     for (LineFragmentSplitter.WordBlock block : wordBlocks) {
-      Range offsets = block.offsets;
-      Range words = block.words;
+      Range offsets = block.offsets();
+      Range words = block.words();
 
-      CharSequence subtext1 = text1.subSequence(offsets.start1, offsets.end1);
-      CharSequence subtext2 = text2.subSequence(offsets.start2, offsets.end2);
+      CharSequence subtext1 = text1.subSequence(offsets.start1(), offsets.end1());
+      CharSequence subtext2 = text2.subSequence(offsets.start2(), offsets.end2());
 
-      List<InlineChunk> subwords1 = words1.subList(words.start1, words.end1);
-      List<InlineChunk> subwords2 = words2.subList(words.start2, words.end2);
+      List<InlineChunk> subwords1 = words1.subList(words.start1(), words.end1());
+      List<InlineChunk> subwords2 = words2.subList(words.start2(), words.end2());
 
-      FairDiffIterable subiterable = fair(trim(wordChanges, words.start1, words.end1, words.start2, words.end2));
+      FairDiffIterable subiterable = fair(trim(wordChanges, words.start1(), words.end1(), words.start2(), words.end2()));
 
       FairDiffIterable delimitersIterable = matchAdjustmentDelimiters(
         subtext1,
@@ -153,8 +154,8 @@ public class ByWord {
         subwords1,
         subwords2,
         subiterable,
-        offsets.start1,
-        offsets.start2,
+        offsets.start1(),
+        offsets.start2(),
         indicator
       );
       DiffIterable iterable = matchAdjustmentWhitespaces(subtext1, subtext2, delimitersIterable, policy, indicator);
@@ -221,17 +222,15 @@ public class ByWord {
     ComparisonPolicy policy,
     ProgressIndicator indicator
   ) {
-    switch (policy) {
-      case DEFAULT:
-        return new DefaultCorrector(iterable, text1, text2, indicator).build();
-      case TRIM_WHITESPACES:
+    return switch (policy) {
+      case DEFAULT -> new DefaultCorrector(iterable, text1, text2, indicator).build();
+      case TRIM_WHITESPACES -> {
         DiffIterable defaultIterable = new DefaultCorrector(iterable, text1, text2, indicator).build();
-        return new TrimSpacesCorrector(defaultIterable, text1, text2, indicator).build();
-      case IGNORE_WHITESPACES:
-        return new IgnoreSpacesCorrector(iterable, text1, text2, indicator).build();
-      default:
-        throw new IllegalArgumentException(policy.name());
-    }
+        yield new TrimSpacesCorrector(defaultIterable, text1, text2, indicator).build();
+      }
+      case IGNORE_WHITESPACES -> new IgnoreSpacesCorrector(iterable, text1, text2, indicator).build();
+      default -> throw new IllegalArgumentException(policy.name());
+    };
   }
 
   
@@ -243,17 +242,15 @@ public class ByWord {
     ComparisonPolicy policy,
     ProgressIndicator indicator
   ) {
-    switch (policy) {
-      case DEFAULT:
-        return new MergeDefaultCorrector(conflicts, text1, text2, text3, indicator).build();
-      case TRIM_WHITESPACES:
+    return switch (policy) {
+      case DEFAULT -> new MergeDefaultCorrector(conflicts, text1, text2, text3, indicator).build();
+      case TRIM_WHITESPACES -> {
         List<MergeRange> defaultConflicts = new MergeDefaultCorrector(conflicts, text1, text2, text3, indicator).build();
-        return new MergeTrimSpacesCorrector(defaultConflicts, text1, text2, text3, indicator).build();
-      case IGNORE_WHITESPACES:
-        return new MergeIgnoreSpacesCorrector(conflicts, text1, text2, text3, indicator).build();
-      default:
-        throw new IllegalArgumentException(policy.name());
-    }
+        yield new MergeTrimSpacesCorrector(defaultConflicts, text1, text2, text3, indicator).build();
+      }
+      case IGNORE_WHITESPACES -> new MergeIgnoreSpacesCorrector(conflicts, text1, text2, text3, indicator).build();
+      default -> throw new IllegalArgumentException(policy.name());
+    };
   }
 
   //
@@ -331,10 +328,10 @@ public class ByWord {
       matchForward(-1, -1);
 
       for (Range ch : myChanges.iterateUnchanged()) {
-        int count = ch.end1 - ch.start1;
+        int count = ch.end1() - ch.start1();
         for (int i = 0; i < count; i++) {
-          int index1 = ch.start1 + i;
-          int index2 = ch.start2 + i;
+          int index1 = ch.start1() + i;
+          int index2 = ch.start2() + i;
 
           int start1 = getStartOffset1(index1);
           int start2 = getStartOffset2(index2);
@@ -417,7 +414,7 @@ public class ByWord {
       DiffIterable changes = ByChar.comparePunctuation(sequence1, sequence2, myIndicator);
 
       for (Range ch : changes.iterateUnchanged()) {
-        myBuilder.markEqual(start1 + ch.start1, start2 + ch.start2, start1 + ch.end1, start2 + ch.end2);
+        myBuilder.markEqual(start1 + ch.start1(), start2 + ch.start2(), start1 + ch.end1(), start2 + ch.end2());
       }
     }
 
@@ -441,10 +438,10 @@ public class ByWord {
       Couple<FairDiffIterable> changes = comparePunctuation2Side(sequence1, sequence21, sequence22, myIndicator);
 
       for (Range ch : changes.first.iterateUnchanged()) {
-        myBuilder.markEqual(start1 + ch.start1, start12 + ch.start2, start1 + ch.end1, start12 + ch.end2);
+        myBuilder.markEqual(start1 + ch.start1(), start12 + ch.start2(), start1 + ch.end1(), start12 + ch.end2());
       }
       for (Range ch : changes.second.iterateUnchanged()) {
-        myBuilder.markEqual(start1 + ch.start1, start22 + ch.start2, start1 + ch.end1, start22 + ch.end2);
+        myBuilder.markEqual(start1 + ch.start1(), start22 + ch.start2(), start1 + ch.end1(), start22 + ch.end2());
       }
     }
 
@@ -457,10 +454,10 @@ public class ByWord {
 
       // Mirrored ch.*1 and ch.*2 as we use "compare2Side" that works with 2 right side, while we have 2 left here
       for (Range ch : changes.first.iterateUnchanged()) {
-        myBuilder.markEqual(start11 + ch.start2, start2 + ch.start1, start11 + ch.end2, start2 + ch.end1);
+        myBuilder.markEqual(start11 + ch.start2(), start2 + ch.start1(), start11 + ch.end2(), start2 + ch.end1());
       }
       for (Range ch : changes.second.iterateUnchanged()) {
-        myBuilder.markEqual(start21 + ch.start2, start2 + ch.start1, start21 + ch.end2, start2 + ch.end1);
+        myBuilder.markEqual(start21 + ch.start2(), start2 + ch.start1(), start21 + ch.end2(), start2 + ch.end1());
       }
     }
 
@@ -508,16 +505,16 @@ public class ByWord {
     List<Range> ranges1 = new ArrayList<>();
     List<Range> ranges2 = new ArrayList<>();
     for (Range ch : changes.iterateUnchanged()) {
-      if (ch.end2 <= offset) {
-        ranges1.add(new Range(ch.start1, ch.end1, ch.start2, ch.end2));
+      if (ch.end2() <= offset) {
+        ranges1.add(new Range(ch.start1(), ch.end1(), ch.start2(), ch.end2()));
       }
-      else if (ch.start2 >= offset) {
-        ranges2.add(new Range(ch.start1, ch.end1, ch.start2 - offset, ch.end2 - offset));
+      else if (ch.start2() >= offset) {
+        ranges2.add(new Range(ch.start1(), ch.end1(), ch.start2() - offset, ch.end2() - offset));
       }
       else {
-        int len2 = offset - ch.start2;
-        ranges1.add(new Range(ch.start1, ch.start1 + len2, ch.start2, offset));
-        ranges2.add(new Range(ch.start1 + len2, ch.end1, 0, ch.end2 - offset));
+        int len2 = offset - ch.start2();
+        ranges1.add(new Range(ch.start1(), ch.start1() + len2, ch.start2(), offset));
+        ranges2.add(new Range(ch.start1() + len2, ch.end1(), 0, ch.end2() - offset));
       }
     }
     return Couple.of(ranges1, ranges2);
@@ -528,24 +525,14 @@ public class ByWord {
   //
 
   private static class DefaultCorrector {
-    
     private final DiffIterable myIterable;
-    
     private final CharSequence myText1;
-    
     private final CharSequence myText2;
-    
     private final ProgressIndicator myIndicator;
 
-    
     private final List<Range> myChanges;
 
-    public DefaultCorrector(
-      DiffIterable iterable,
-      CharSequence text1,
-      CharSequence text2,
-      ProgressIndicator indicator
-    ) {
+    public DefaultCorrector(DiffIterable iterable, CharSequence text1, CharSequence text2, ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -554,14 +541,13 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    
     public DiffIterable build() {
       for (Range range : myIterable.iterateChanges()) {
-        int endCut = expandBackwardW(myText1, myText2, range.start1, range.start2, range.end1, range.end2);
-        int startCut = expandForwardW(myText1, myText2, range.start1, range.start2, range.end1 - endCut, range.end2 - endCut);
+        int endCut = expandBackwardW(myText1, myText2, range.start1(), range.start2(), range.end1(), range.end2());
+        int startCut = expandForwardW(myText1, myText2, range.start1(), range.start2(), range.end1() - endCut, range.end2() - endCut);
 
         Range expand =
-          new Range(range.start1 + startCut, range.end1 - endCut, range.start2 + startCut, range.end2 - endCut);
+          new Range(range.start1() + startCut, range.end1() - endCut, range.start2() + startCut, range.end2() - endCut);
 
         if (!expand.isEmpty()) {
           myChanges.add(expand);
@@ -573,18 +559,12 @@ public class ByWord {
   }
 
   private static class MergeDefaultCorrector {
-    
     private final List<MergeRange> myIterable;
-    
     private final CharSequence myText1;
-    
     private final CharSequence myText2;
-    
     private final CharSequence myText3;
-    
     private final ProgressIndicator myIndicator;
 
-    
     private final List<MergeRange> myChanges;
 
     public MergeDefaultCorrector(
@@ -607,16 +587,16 @@ public class ByWord {
     public List<MergeRange> build() {
       for (MergeRange range : myIterable) {
         int endCut = expandBackwardW(myText1, myText2, myText3,
-                                     range.start1, range.start2, range.start3,
-                                     range.end1, range.end2, range.end3);
+                                     range.start1(), range.start2(), range.start3(),
+                                     range.end1(), range.end2(), range.end3());
         int startCut = expandForwardW(myText1, myText2, myText3,
-                                      range.start1, range.start2, range.start3,
-                                      range.end1 - endCut, range.end2 - endCut, range.end3 - endCut);
+                                      range.start1(), range.start2(), range.start3(),
+                                      range.end1() - endCut, range.end2() - endCut, range.end3() - endCut);
 
         MergeRange expand = new MergeRange(
-          range.start1 + startCut, range.end1 - endCut,
-          range.start2 + startCut, range.end2 - endCut,
-          range.start3 + startCut, range.end3 - endCut
+          range.start1() + startCut, range.end1() - endCut,
+          range.start2() + startCut, range.end2() - endCut,
+          range.start3() + startCut, range.end3() - endCut
         );
 
         if (!expand.isEmpty()) {
@@ -629,24 +609,14 @@ public class ByWord {
   }
 
   private static class IgnoreSpacesCorrector {
-    
     private final DiffIterable myIterable;
-    
     private final CharSequence myText1;
-    
     private final CharSequence myText2;
-    
     private final ProgressIndicator myIndicator;
 
-    
     private final List<Range> myChanges;
 
-    public IgnoreSpacesCorrector(
-      DiffIterable iterable,
-      CharSequence text1,
-      CharSequence text2,
-      ProgressIndicator indicator
-    ) {
+    public IgnoreSpacesCorrector(DiffIterable iterable, CharSequence text1, CharSequence text2, ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -655,7 +625,6 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    
     public DiffIterable build() {
       for (Range range : myIterable.iterateChanges()) {
         // match spaces if we can, ignore them if we can't
@@ -672,18 +641,12 @@ public class ByWord {
   }
 
   private static class MergeIgnoreSpacesCorrector {
-    
     private final List<MergeRange> myIterable;
-    
     private final CharSequence myText1;
-    
     private final CharSequence myText2;
-    
     private final CharSequence myText3;
-    
     private final ProgressIndicator myIndicator;
 
-    
     private final List<MergeRange> myChanges;
 
     public MergeIgnoreSpacesCorrector(
@@ -702,7 +665,6 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    
     public List<MergeRange> build() {
       for (MergeRange range : myIterable) {
         MergeRange expanded = expandW(myText1, myText2, myText3, range);
@@ -718,24 +680,14 @@ public class ByWord {
   }
 
   private static class TrimSpacesCorrector {
-    
     private final DiffIterable myIterable;
-    
     private final CharSequence myText1;
-    
     private final CharSequence myText2;
-    
     private final ProgressIndicator myIndicator;
 
-    
     private final List<Range> myChanges;
 
-    public TrimSpacesCorrector(
-      DiffIterable iterable,
-      CharSequence text1,
-      CharSequence text2,
-      ProgressIndicator indicator
-    ) {
+    public TrimSpacesCorrector(DiffIterable iterable, CharSequence text1, CharSequence text2, ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -744,13 +696,12 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    
     public DiffIterable build() {
       for (Range range : myIterable.iterateChanges()) {
-        int start1 = range.start1;
-        int start2 = range.start2;
-        int end1 = range.end1;
-        int end2 = range.end2;
+        int start1 = range.start1();
+        int start2 = range.start2();
+        int end1 = range.end1();
+        int end2 = range.end2();
 
         if (isLeadingTrailingSpace(myText1, start1)) {
           start1 = trimStart(myText1, start1, end1);
@@ -777,18 +728,12 @@ public class ByWord {
   }
 
   private static class MergeTrimSpacesCorrector {
-    
     private final List<MergeRange> myIterable;
-    
     private final CharSequence myText1;
-    
     private final CharSequence myText2;
-    
     private final CharSequence myText3;
-    
     private final ProgressIndicator myIndicator;
 
-    
     private final List<MergeRange> myChanges;
 
     public MergeTrimSpacesCorrector(
@@ -810,12 +755,12 @@ public class ByWord {
     
     public List<MergeRange> build() {
       for (MergeRange range : myIterable) {
-        int start1 = range.start1;
-        int start2 = range.start2;
-        int start3 = range.start3;
-        int end1 = range.end1;
-        int end2 = range.end2;
-        int end3 = range.end3;
+        int start1 = range.start1();
+        int start2 = range.start2();
+        int start3 = range.start3();
+        int end1 = range.end1();
+        int end2 = range.end2();
+        int end3 = range.end3();
 
         if (isLeadingTrailingSpace(myText1, start1)) {
           start1 = trimStart(myText1, start1, end1);
@@ -892,7 +837,6 @@ public class ByWord {
     return count;
   }
 
-  
   public static List<InlineChunk> getInlineChunks(CharSequence text) {
     List<InlineChunk> chunks = new ArrayList<>();
 
@@ -939,7 +883,6 @@ public class ByWord {
   }
 
   static class WordChunk implements InlineChunk {
-    
     private final CharSequence myText;
     private final int myOffset1;
     private final int myOffset2;
@@ -952,29 +895,29 @@ public class ByWord {
       myHash = hash;
     }
 
-    
     public CharSequence getContent() {
       return myText.subSequence(myOffset1, myOffset2);
     }
 
+    @Override
     public int getOffset1() {
       return myOffset1;
     }
 
+    @Override
     public int getOffset2() {
       return myOffset2;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      WordChunk word = (WordChunk)o;
+      WordChunk that = (WordChunk) o;
 
-      if (myHash != word.myHash) return false;
-
-      return StringUtil.equals(getContent(), word.getContent());
+      return myHash == that.myHash
+        && StringUtil.equals(getContent(), that.getContent());
     }
 
     @Override
@@ -1001,11 +944,9 @@ public class ByWord {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      return true;
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o != null && getClass() == o.getClass();
     }
 
     @Override
@@ -1015,10 +956,8 @@ public class ByWord {
   }
 
   public static class LineBlock {
-    
     public final List<DiffFragment> fragments;
 
-    
     public final Range offsets;
 
     public final int newlines1;

@@ -103,15 +103,12 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    
     public String getCoverageDataFileName() {
         return myCoverageDataFileProvider.getCoverageDataFilePath();
     }
 
     @Override
-    public
-    
-    CoverageFileProvider getCoverageDataFileProvider() {
+    public CoverageFileProvider getCoverageDataFileProvider() {
         return myCoverageDataFileProvider;
     }
 
@@ -226,7 +223,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -234,9 +231,8 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
             return false;
         }
 
-        String thisName = myCoverageDataFileProvider.getCoverageDataFilePath();
-        String thatName = ((BaseCoverageSuite) o).myCoverageDataFileProvider.getCoverageDataFilePath();
-        return thisName.equals(thatName);
+        BaseCoverageSuite that = (BaseCoverageSuite) o;
+        return myCoverageDataFileProvider.getCoverageDataFilePath().equals(that.myCoverageDataFileProvider.getCoverageDataFilePath());
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.content;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.diff.content.DiffContentBase;
@@ -39,7 +40,6 @@ import java.nio.charset.Charset;
 public class DocumentContentImpl extends DiffContentBase implements DocumentContent {
   private final @Nullable Project myProject;
 
-  
   private final Document myDocument;
 
   private final @Nullable FileType myType;
@@ -73,7 +73,6 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     return myProject;
   }
 
-  
   @Override
   public Document getDocument() {
     return myDocument;
@@ -116,7 +115,6 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
   }
 
   private static class MyNavigatable implements Navigatable {
-    
     private final Project myProject;
     
     private final VirtualFile myTargetFile;
@@ -133,33 +131,35 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean requestFocus) {
       Document targetDocument = FileDocumentManager.getInstance().getDocument(myTargetFile);
       LineCol targetPosition = translatePosition(myDocument, targetDocument, myPosition);
       OpenFileDescriptor descriptor = OpenFileDescriptorFactory.getInstance(myProject)
                                                                .newBuilder(myTargetFile)
-                                                               .line(targetPosition.line)
-                                                               .column(targetPosition.column)
+                                                               .line(targetPosition.line())
+                                                               .column(targetPosition.column())
                                                                .build();
       if (descriptor.canNavigate()) descriptor.navigate(true);
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
       return myTargetFile.isValid();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
       return false;
     }
 
-    
     private static LineCol translatePosition(Document fromDocument, @Nullable Document toDocument, LineCol position) {
       try {
         if (toDocument == null) return position;
-        int targetLine = Diff.translateLine(fromDocument.getCharsSequence(), toDocument.getCharsSequence(), position.line, true);
-        return new LineCol(targetLine, position.column);
+        int targetLine = Diff.translateLine(fromDocument.getCharsSequence(), toDocument.getCharsSequence(), position.line(), true);
+        return new LineCol(targetLine, position.column());
       }
       catch (FilesTooBigForDiffException ignore) {
         return position;

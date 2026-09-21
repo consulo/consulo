@@ -46,10 +46,10 @@ public class RangesBuilder {
     List<VcsRange> result = new ArrayList<>();
     for (Range range : iterable.iterateChanges()) {
       List<VcsRange.InnerRange> inner = innerWhitespaceChanges
-        ? createInnerRanges(vcs.subList(range.start1, range.end1), current.subList(range.start2, range.end2))
+        ? createInnerRanges(vcs.subList(range.start1(), range.end1()), current.subList(range.start2(), range.end2()))
         : null;
-      result.add(new VcsRange(range.start2 + currentShift, range.end2 + currentShift,
-                              range.start1 + vcsShift, range.end1 + vcsShift, inner));
+      result.add(new VcsRange(range.start2() + currentShift, range.end2() + currentShift,
+                              range.start1() + vcsShift, range.end1() + vcsShift, inner));
     }
     return result;
   }
@@ -74,23 +74,20 @@ public class RangesBuilder {
   public static List<VcsRange> createRanges(FairDiffIterable iterable) {
     List<VcsRange> result = new ArrayList<>();
     for (Range range : iterable.iterateChanges()) {
-      result.add(new VcsRange(range.start2, range.end2, range.start1, range.end1));
+      result.add(new VcsRange(range.start2(), range.end2(), range.start1(), range.end1()));
     }
     return result;
   }
 
-  public static FairDiffIterable compareLines(CharSequence text1,
-                                              CharSequence text2,
-                                              LineOffsets lineOffsets1,
-                                              LineOffsets lineOffsets2) {
+  public static FairDiffIterable compareLines(CharSequence text1, CharSequence text2, LineOffsets lineOffsets1, LineOffsets lineOffsets2) {
     Range range = TrimUtil.expand(text1, text2, 0, 0, text1.length(), text2.length());
     if (range.isEmpty()) {
       return DiffIterableUtil.fair(DiffIterableUtil.create(Collections.emptyList(), lineOffsets1.getLineCount(), lineOffsets2.getLineCount()));
     }
 
     int contextLines = 5;
-    int start = Math.max(lineOffsets1.getLineNumber(range.start1) - contextLines, 0);
-    int tail = Math.max(lineOffsets1.getLineCount() - lineOffsets1.getLineNumber(range.end1) - 1 - contextLines, 0);
+    int start = Math.max(lineOffsets1.getLineNumber(range.start1()) - contextLines, 0);
+    int tail = Math.max(lineOffsets1.getLineCount() - lineOffsets1.getLineNumber(range.end1()) - 1 - contextLines, 0);
     Range lineRange = new Range(start, lineOffsets1.getLineCount() - tail, start, lineOffsets2.getLineCount() - tail);
 
     FairDiffIterable iterable = compareLines(lineRange, text1, text2, lineOffsets1, lineOffsets2);
@@ -102,8 +99,8 @@ public class RangesBuilder {
                                               CharSequence text2,
                                               LineOffsets lineOffsets1,
                                               LineOffsets lineOffsets2) {
-    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
-    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1(), lineRange.end1());
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2(), lineRange.end2());
     return compareLines(lines1, lines2);
   }
 
@@ -112,8 +109,8 @@ public class RangesBuilder {
                                                             CharSequence text2,
                                                             LineOffsets lineOffsets1,
                                                             LineOffsets lineOffsets2) {
-    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
-    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1(), lineRange.end1());
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2(), lineRange.end2());
     return createInnerRanges(lines1, lines2);
   }
 
@@ -124,15 +121,15 @@ public class RangesBuilder {
     for (Pair<Range, Boolean> pair : DiffIterableUtil.iterateAll(iwIterable)) {
       Range range = pair.first;
       boolean equals = pair.second;
-      result.add(new VcsRange.InnerRange(range.start2, range.end2, getChangeType(range, equals)));
+      result.add(new VcsRange.InnerRange(range.start2(), range.end2(), getChangeType(range, equals)));
     }
     return result;
   }
 
   private static byte getChangeType(Range range, boolean equals) {
     if (equals) return VcsRange.EQUAL;
-    int deleted = range.end1 - range.start1;
-    int inserted = range.end2 - range.start2;
+    int deleted = range.end1() - range.start1();
+    int inserted = range.end2() - range.start2();
     if (deleted > 0 && inserted > 0) return VcsRange.MODIFIED;
     if (deleted > 0) return VcsRange.DELETED;
     if (inserted > 0) return VcsRange.INSERTED;
@@ -144,8 +141,8 @@ public class RangesBuilder {
                                                  CharSequence text2,
                                                  LineOffsets lineOffsets1,
                                                  LineOffsets lineOffsets2) {
-    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
-    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1(), lineRange.end1());
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2(), lineRange.end2());
     return tryCompareLines(lines1, lines2);
   }
 
@@ -154,8 +151,8 @@ public class RangesBuilder {
                                                   CharSequence text2,
                                                   LineOffsets lineOffsets1,
                                                   LineOffsets lineOffsets2) {
-    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1, lineRange.end1);
-    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2, lineRange.end2);
+    List<String> lines1 = DiffRangeUtil.getLines(text1, lineOffsets1, lineRange.start1(), lineRange.end1());
+    List<String> lines2 = DiffRangeUtil.getLines(text2, lineOffsets2, lineRange.start2(), lineRange.end2());
     return fastCompareLines(lines1, lines2);
   }
 
@@ -182,10 +179,10 @@ public class RangesBuilder {
   private static FairDiffIterable processLines(List<String> lines1, List<String> lines2, FairDiffIterable iwIterable) {
     DiffIterableUtil.ExpandChangeBuilder builder = new DiffIterableUtil.ExpandChangeBuilder(lines1, lines2);
     for (Range range : iwIterable.iterateUnchanged()) {
-      int count = range.end1 - range.start1;
+      int count = range.end1() - range.start1();
       for (int i = 0; i < count; i++) {
-        int index1 = range.start1 + i;
-        int index2 = range.start2 + i;
+        int index1 = range.start1() + i;
+        int index2 = range.start2() + i;
         if (lines1.get(index1).equals(lines2.get(index2))) {
           builder.markEqual(index1, index2);
         }
@@ -222,14 +219,14 @@ public class RangesBuilder {
                                       LineOffsets lineOffsets2,
                                       List<Range> lineRanges) {
     boolean allRangesValid = lineRanges.stream().allMatch(it ->
-      isValidLineRange(lineOffsets1, it.start1, it.end1) &&
-        isValidLineRange(lineOffsets2, it.start2, it.end2));
+      isValidLineRange(lineOffsets1, it.start1(), it.end1()) &&
+        isValidLineRange(lineOffsets2, it.start2(), it.end2()));
     if (!allRangesValid) return false;
 
     var iterable = DiffIterableUtil.create(lineRanges, lineOffsets1.getLineCount(), lineOffsets2.getLineCount());
     for (Range range : iterable.iterateUnchanged()) {
-      List<String> lines1 = DiffRangeUtil.getLines(content1, lineOffsets1, range.start1, range.end1);
-      List<String> lines2 = DiffRangeUtil.getLines(content2, lineOffsets2, range.start2, range.end2);
+      List<String> lines1 = DiffRangeUtil.getLines(content1, lineOffsets1, range.start1(), range.end1());
+      List<String> lines2 = DiffRangeUtil.getLines(content2, lineOffsets2, range.start2(), range.end2());
       if (!lines1.equals(lines2)) {
         return false;
       }
@@ -240,5 +237,4 @@ public class RangesBuilder {
   private static boolean isValidLineRange(LineOffsets lineOffsets, int start, int end) {
     return start >= 0 && start <= end && end <= lineOffsets.getLineCount();
   }
-
 }

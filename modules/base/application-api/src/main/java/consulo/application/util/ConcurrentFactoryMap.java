@@ -292,9 +292,8 @@ public abstract class ConcurrentFactoryMap<K extends @Nullable Object, V extends
       }
 
       @Override
-      public boolean equals(Object obj) {
-        //noinspection unchecked
-        return myEntry.equals(obj instanceof EntryWrapper ? ((EntryWrapper<K, V>)obj).myEntry : obj);
+      public boolean equals(@Nullable Object obj) {
+        return myEntry.equals(obj instanceof EntryWrapper entryWrapper ? entryWrapper.myEntry : obj);
       }
     }
   }

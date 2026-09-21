@@ -15,15 +15,14 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem.patch;
 
-import consulo.application.AllIcons;
 import consulo.application.progress.DumbProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.markup.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.InputDetails;
 import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.markup.*;
 import consulo.desktop.awt.internal.diff.merge.MergeModelBase;
 import consulo.diff.comparison.ByWord;
 import consulo.diff.comparison.ComparisonPolicy;
@@ -79,19 +78,16 @@ class ApplyPatchChange {
     public ApplyPatchChange(PatchChangeBuilder.Hunk hunk, int index, ApplyPatchViewer viewer) {
         myIndex = index;
         myViewer = viewer;
-        myPatchDeletionRange = hunk.getPatchDeletionRange();
-        myPatchInsertionRange = hunk.getPatchInsertionRange();
-        myStatus = hunk.getStatus();
+        myPatchDeletionRange = hunk.patchDeletionRange();
+        myPatchInsertionRange = hunk.patchInsertionRange();
+        myStatus = hunk.status();
 
         myPatchInnerDifferences = calcPatchInnerDifferences(hunk, viewer);
     }
 
-    private static @Nullable List<DiffFragment> calcPatchInnerDifferences(
-        PatchChangeBuilder.Hunk hunk,
-        ApplyPatchViewer viewer
-    ) {
-        LineRange deletionRange = hunk.getPatchDeletionRange();
-        LineRange insertionRange = hunk.getPatchInsertionRange();
+    private static @Nullable List<DiffFragment> calcPatchInnerDifferences(PatchChangeBuilder.Hunk hunk, ApplyPatchViewer viewer) {
+        LineRange deletionRange = hunk.patchDeletionRange();
+        LineRange insertionRange = hunk.patchInsertionRange();
 
         if (deletionRange.isEmpty() || insertionRange.isEmpty()) {
             return null;
@@ -99,8 +95,8 @@ class ApplyPatchChange {
 
         try {
             Document patchDocument = viewer.getPatchEditor().getDocument();
-            CharSequence deleted = DiffImplUtil.getLinesContent(patchDocument, deletionRange.start, deletionRange.end);
-            CharSequence inserted = DiffImplUtil.getLinesContent(patchDocument, insertionRange.start, insertionRange.end);
+            CharSequence deleted = DiffImplUtil.getLinesContent(patchDocument, deletionRange.start(), deletionRange.end());
+            CharSequence inserted = DiffImplUtil.getLinesContent(patchDocument, insertionRange.start(), insertionRange.end());
 
             return ByWord.compare(deleted, inserted, ComparisonPolicy.DEFAULT, DumbProgressIndicator.INSTANCE);
         }
@@ -140,8 +136,8 @@ class ApplyPatchChange {
         }
         EditorEx editor = myViewer.getResultEditor();
 
-        int startLine = resultRange.start;
-        int endLine = resultRange.end;
+        int startLine = resultRange.start();
+        int endLine = resultRange.end();
 
         TextDiffType type = getDiffType();
         boolean resolved = isRangeApplied();
@@ -150,8 +146,8 @@ class ApplyPatchChange {
     }
 
     private void createStatusHighlighter() {
-        int line1 = myPatchDeletionRange.start;
-        int line2 = myPatchInsertionRange.end;
+        int line1 = myPatchDeletionRange.start();
+        int line2 = myPatchInsertionRange.end();
 
         Color color = getStatusColor();
         if (isResolved()) {
@@ -230,27 +226,22 @@ class ApplyPatchChange {
         return myIndex;
     }
 
-    
     public HunkStatus getStatus() {
         return myStatus;
     }
 
-    
     public LineRange getPatchRange() {
-        return new LineRange(myPatchDeletionRange.start, myPatchInsertionRange.end);
+        return new LineRange(myPatchDeletionRange.start(), myPatchInsertionRange.end());
     }
 
-    
     public LineRange getPatchAffectedRange() {
         return isRangeApplied() ? myPatchInsertionRange : myPatchDeletionRange;
     }
 
-    
     public LineRange getPatchDeletionRange() {
         return myPatchDeletionRange;
     }
 
-    
     public LineRange getPatchInsertionRange() {
         return myPatchInsertionRange;
     }
@@ -274,7 +265,6 @@ class ApplyPatchChange {
         myResolved = resolved;
     }
 
-    
     public TextDiffType getDiffType() {
         return DiffImplUtil.getDiffType(!myPatchDeletionRange.isEmpty(), !myPatchInsertionRange.isEmpty());
     }
@@ -283,21 +273,15 @@ class ApplyPatchChange {
         return myResolved || getStatus() == HunkStatus.ALREADY_APPLIED;
     }
 
-    
     private String getStatusText() {
-        switch (myStatus) {
-            case ALREADY_APPLIED:
-                return "Already applied";
-            case EXACTLY_APPLIED:
-                return "Automatically applied";
-            case NOT_APPLIED:
-                return "Not applied";
-            default:
-                throw new IllegalStateException();
-        }
+        return switch (myStatus) {
+            case ALREADY_APPLIED -> "Already applied";
+            case EXACTLY_APPLIED -> "Automatically applied";
+            case NOT_APPLIED -> "Not applied";
+            default -> throw new IllegalStateException();
+        };
     }
 
-    
     private Color getStatusColor() {
         return switch (myStatus) {
             case ALREADY_APPLIED -> JBColor.YELLOW.darker();
@@ -333,7 +317,7 @@ class ApplyPatchChange {
         EditorEx editor = myViewer.getPatchEditor();
         Document document = editor.getDocument();
 
-        int line = getPatchRange().start;
+        int line = getPatchRange().start();
         int offset = line == DiffImplUtil.getLineCount(document) ? document.getTextLength() : document.getLineStartOffset(line);
 
         RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(
@@ -385,19 +369,14 @@ class ApplyPatchChange {
     private GutterIconRenderer createIgnoreRenderer() {
         return createIconRenderer(
             DiffLocalize.mergeDialogIgnoreChangeActionName(),
-            AllIcons.Diff.Remove,
+            PlatformIconGroup.diffRemove(),
             () -> DiffImplUtil.newWriteCommand()
                 .name(DiffLocalize.mergeDialogIgnoreChangeCommand())
                 .run(() -> myViewer.markChangeResolved(this))
         );
     }
 
-    
-    private static GutterIconRenderer createIconRenderer(
-        LocalizeValue text,
-        Image icon,
-        @RequiredUIAccess final Runnable perform
-    ) {
+    private static GutterIconRenderer createIconRenderer(LocalizeValue text, Image icon, @RequiredUIAccess Runnable perform) {
         final String tooltipText = DiffImplUtil.createTooltipText(text.get(), null);
         return new DiffGutterRenderer(icon, tooltipText) {
             @Override
@@ -416,13 +395,12 @@ class ApplyPatchChange {
     // State
     //
 
-    
     public State storeState() {
         LineRange resultRange = getResultRange();
         return new State(
             myIndex,
-            resultRange != null ? resultRange.start : -1,
-            resultRange != null ? resultRange.end : -1,
+            resultRange != null ? resultRange.start() : -1,
+            resultRange != null ? resultRange.end() : -1,
             myResolved
         );
     }

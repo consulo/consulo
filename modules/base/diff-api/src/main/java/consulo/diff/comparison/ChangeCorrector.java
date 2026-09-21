@@ -38,16 +38,11 @@ abstract class ChangeCorrector {
   
   private final FairDiffIterable myChanges;
 
-  
   protected final ProgressIndicator myIndicator;
 
-  
   protected final DiffIterableUtil.ChangeBuilder myBuilder;
 
-  public ChangeCorrector(int length1,
-                         int length2,
-                         FairDiffIterable changes,
-                         ProgressIndicator indicator) {
+  public ChangeCorrector(int length1, int length2, FairDiffIterable changes, ProgressIndicator indicator) {
     myLength1 = length1;
     myLength2 = length2;
     myChanges = changes;
@@ -56,7 +51,6 @@ abstract class ChangeCorrector {
     myBuilder = new DiffIterableUtil.ChangeBuilder(length1, length2);
   }
 
-  
   public FairDiffIterable build() {
     execute();
     return fair(myBuilder.finish());
@@ -67,10 +61,10 @@ abstract class ChangeCorrector {
     int last2 = 0;
 
     for (Range ch : myChanges.iterateUnchanged()) {
-      int count = ch.end1 - ch.start1;
+      int count = ch.end1() - ch.start1();
       for (int i = 0; i < count; i++) {
-        int index1 = getOriginalIndex1(ch.start1 + i);
-        int index2 = getOriginalIndex2(ch.start2 + i);
+        int index1 = getOriginalIndex1(ch.start1() + i);
+        int index2 = getOriginalIndex2(ch.start2() + i);
 
         matchGap(last1, index1, last2, index2);
         myBuilder.markEqual(index1, index2);
@@ -120,17 +114,17 @@ abstract class ChangeCorrector {
     protected void matchGap(int start1, int end1, int start2, int end2) {
       Range expand = expand(myText1, myText2, start1, start2, end1, end2);
 
-      CharSequence inner1 = myText1.subSequence(expand.start1, expand.end1);
-      CharSequence inner2 = myText2.subSequence(expand.start2, expand.end2);
+      CharSequence inner1 = myText1.subSequence(expand.start1(), expand.end1());
+      CharSequence inner2 = myText2.subSequence(expand.start2(), expand.end2());
       FairDiffIterable innerChanges = ByChar.compare(inner1, inner2, myIndicator);
 
-      myBuilder.markEqual(start1, start2, expand.start1, expand.start2);
+      myBuilder.markEqual(start1, start2, expand.start1(), expand.start2());
 
       for (Range chunk : innerChanges.iterateUnchanged()) {
-        myBuilder.markEqual(expand.start1 + chunk.start1, expand.start2 + chunk.start2, chunk.end1 - chunk.start1);
+        myBuilder.markEqual(expand.start1() + chunk.start1(), expand.start2() + chunk.start2(), chunk.end1() - chunk.start1());
       }
 
-      myBuilder.markEqual(expand.end1, expand.end2, end1, end2);
+      myBuilder.markEqual(expand.end1(), expand.end2(), end1, end2);
     }
 
     @Override
@@ -145,13 +139,9 @@ abstract class ChangeCorrector {
   }
 
   public static class SmartLineChangeCorrector extends ChangeCorrector {
-    
     private final IntList myIndexes1;
-    
     private final IntList myIndexes2;
-    
     private final List<Line> myLines1;
-    
     private final List<Line> myLines2;
 
     public SmartLineChangeCorrector(IntList indexes1,
@@ -171,17 +161,17 @@ abstract class ChangeCorrector {
     protected void matchGap(int start1, int end1, int start2, int end2) {
       Range expand = expand(myLines1, myLines2, start1, start2, end1, end2);
 
-      List<Line> inner1 = myLines1.subList(expand.start1, expand.end1);
-      List<Line> inner2 = myLines2.subList(expand.start2, expand.end2);
+      List<Line> inner1 = myLines1.subList(expand.start1(), expand.end1());
+      List<Line> inner2 = myLines2.subList(expand.start2(), expand.end2());
       FairDiffIterable innerChanges = diff(inner1, inner2, myIndicator);
 
-      myBuilder.markEqual(start1, start2, expand.start1, expand.start2);
+      myBuilder.markEqual(start1, start2, expand.start1(), expand.start2());
 
       for (Range chunk : innerChanges.iterateUnchanged()) {
-        myBuilder.markEqual(expand.start1 + chunk.start1, expand.start2 + chunk.start2, chunk.end1 - chunk.start1);
+        myBuilder.markEqual(expand.start1() + chunk.start1(), expand.start2() + chunk.start2(), chunk.end1() - chunk.start1());
       }
 
-      myBuilder.markEqual(expand.end1, expand.end2, end1, end2);
+      myBuilder.markEqual(expand.end1(), expand.end2(), end1, end2);
     }
 
     @Override

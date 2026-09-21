@@ -15,21 +15,21 @@
  */
 package consulo.application.util.matcher;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
  * Almost copy&paste from document-api TextRange, we don't need dep to it
  *
  * @author VISTALL
- * @since 04-Apr-22
+ * @since 2022-04-04
  */
 public class MatcherTextRange {
-  
   public static MatcherTextRange from(int offset, int length) {
     return create(offset, offset + length);
   }
 
-  
   public static MatcherTextRange create(int startOffset, int endOffset) {
     return new MatcherTextRange(startOffset, endOffset);
   }
@@ -59,11 +59,11 @@ public class MatcherTextRange {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    MatcherTextRange textRange = (MatcherTextRange)o;
-    return myStartOffset == textRange.myStartOffset && myEndOffset == textRange.myEndOffset;
+    MatcherTextRange that = (MatcherTextRange) o;
+    return myStartOffset == that.myStartOffset && myEndOffset == that.myEndOffset;
   }
 
   @Override

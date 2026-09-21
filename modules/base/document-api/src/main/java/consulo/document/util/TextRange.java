@@ -63,12 +63,9 @@ public class TextRange implements Segment, Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof TextRange)) {
-            return false;
-        }
-        TextRange range = (TextRange) obj;
-        return myStartOffset == range.myStartOffset && myEndOffset == range.myEndOffset;
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof TextRange that && myStartOffset == that.myStartOffset && myEndOffset == that.myEndOffset;
     }
 
     @Override

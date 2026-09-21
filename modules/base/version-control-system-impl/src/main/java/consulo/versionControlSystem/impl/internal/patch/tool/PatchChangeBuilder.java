@@ -33,167 +33,122 @@ import java.util.Comparator;
 import java.util.List;
 
 public class PatchChangeBuilder {
-  
-  private final StringBuilder myBuilder = new StringBuilder();
-  
-  private final List<Hunk> myHunks = new ArrayList<>();
-  
-  private final LineNumberConvertor.Builder myConverter = new LineNumberConvertor.Builder();
-  
-  private final IntList myChangedLines = IntLists.newArrayList();
+    private final StringBuilder myBuilder = new StringBuilder();
 
-  private int totalLines = 0;
+    private final List<Hunk> myHunks = new ArrayList<>();
 
-  
-  public static CharSequence getPatchedContent(AppliedTextPatch patch, String localContent) {
-    PatchChangeBuilder builder = new PatchChangeBuilder();
-    builder.exec(patch.getHunks());
+    private final LineNumberConvertor.Builder myConverter = new LineNumberConvertor.Builder();
 
-    Document document = DocumentFactory.getInstance().createDocument(localContent, true);
-    List<Hunk> appliedHunks = ContainerUtil.filter(builder.getHunks(), (h) -> h.getStatus() == HunkStatus.EXACTLY_APPLIED);
-    ContainerUtil.sort(appliedHunks, Comparator.comparingInt(h -> h.getAppliedToLines().start));
+    private final IntList myChangedLines = IntLists.newArrayList();
 
-    for (int i = appliedHunks.size() - 1; i >= 0; i--) {
-      Hunk hunk = appliedHunks.get(i);
-      LineRange appliedTo = hunk.getAppliedToLines();
-      List<String> inserted = hunk.getInsertedLines();
+    private int totalLines = 0;
 
-      DiffImplUtil.applyModification(document, appliedTo.start, appliedTo.end, inserted);
-    }
 
-    return document.getText();
-  }
+    public static CharSequence getPatchedContent(AppliedTextPatch patch, String localContent) {
+        PatchChangeBuilder builder = new PatchChangeBuilder();
+        builder.exec(patch.getHunks());
 
-  public void exec(List<AppliedSplitPatchHunk> splitHunks) {
-    int lastBeforeLine = -1;
-    for (AppliedSplitPatchHunk hunk : splitHunks) {
-      List<String> contextBefore = hunk.getContextBefore();
-      List<String> contextAfter = hunk.getContextAfter();
+        Document document = DocumentFactory.getInstance().createDocument(localContent, true);
+        List<Hunk> appliedHunks = ContainerUtil.filter(builder.getHunks(), (h) -> h.status() == HunkStatus.EXACTLY_APPLIED);
+        ContainerUtil.sort(appliedHunks, Comparator.comparingInt(h -> h.appliedToLines().start()));
 
-      LineRange beforeRange = hunk.getLineRangeBefore();
-      LineRange afterRange = hunk.getLineRangeAfter();
+        for (int i = appliedHunks.size() - 1; i >= 0; i--) {
+            Hunk hunk = appliedHunks.get(i);
+            LineRange appliedTo = hunk.appliedToLines();
+            List<String> inserted = hunk.insertedLines();
 
-      int overlappedContext = 0;
-      if (lastBeforeLine != -1) {
-        if (lastBeforeLine >= beforeRange.start) {
-          overlappedContext = lastBeforeLine - beforeRange.start + 1;
+            DiffImplUtil.applyModification(document, appliedTo.start(), appliedTo.end(), inserted);
         }
-        else if (lastBeforeLine < beforeRange.start - 1) {
-          appendSeparator();
+
+        return document.getText();
+    }
+
+    public void exec(List<AppliedSplitPatchHunk> splitHunks) {
+        int lastBeforeLine = -1;
+        for (AppliedSplitPatchHunk hunk : splitHunks) {
+            List<String> contextBefore = hunk.getContextBefore();
+            List<String> contextAfter = hunk.getContextAfter();
+
+            LineRange beforeRange = hunk.getLineRangeBefore();
+            LineRange afterRange = hunk.getLineRangeAfter();
+
+            int overlappedContext = 0;
+            if (lastBeforeLine != -1) {
+                if (lastBeforeLine >= beforeRange.start()) {
+                    overlappedContext = lastBeforeLine - beforeRange.start() + 1;
+                }
+                else if (lastBeforeLine < beforeRange.start() - 1) {
+                    appendSeparator();
+                }
+            }
+
+            List<String> trimContext = contextBefore.subList(overlappedContext, contextBefore.size());
+            addContext(trimContext, beforeRange.start() + overlappedContext, afterRange.start() + overlappedContext);
+
+            int deletion = totalLines;
+            appendLines(hunk.getDeletedLines());
+            int insertion = totalLines;
+            appendLines(hunk.getInsertedLines());
+            int hunkEnd = totalLines;
+
+            myConverter.put1(deletion, beforeRange.start() + contextBefore.size(), insertion - deletion);
+            myConverter.put2(insertion, afterRange.start() + contextBefore.size(), hunkEnd - insertion);
+
+            addContext(contextAfter, beforeRange.end() - contextAfter.size(), afterRange.end() - contextAfter.size());
+            lastBeforeLine = beforeRange.end() - 1;
+
+            LineRange deletionRange = new LineRange(deletion, insertion);
+            LineRange insertionRange = new LineRange(insertion, hunkEnd);
+
+            myHunks.add(new Hunk(hunk.getInsertedLines(), deletionRange, insertionRange, hunk.getAppliedTo(), hunk.getStatus()));
         }
-      }
-
-      List<String> trimContext = contextBefore.subList(overlappedContext, contextBefore.size());
-      addContext(trimContext, beforeRange.start + overlappedContext, afterRange.start + overlappedContext);
-
-      int deletion = totalLines;
-      appendLines(hunk.getDeletedLines());
-      int insertion = totalLines;
-      appendLines(hunk.getInsertedLines());
-      int hunkEnd = totalLines;
-
-      myConverter.put1(deletion, beforeRange.start + contextBefore.size(), insertion - deletion);
-      myConverter.put2(insertion, afterRange.start + contextBefore.size(), hunkEnd - insertion);
-
-      addContext(contextAfter, beforeRange.end - contextAfter.size(), afterRange.end - contextAfter.size());
-      lastBeforeLine = beforeRange.end - 1;
-
-      LineRange deletionRange = new LineRange(deletion, insertion);
-      LineRange insertionRange = new LineRange(insertion, hunkEnd);
-
-      myHunks.add(new Hunk(hunk.getInsertedLines(), deletionRange, insertionRange, hunk.getAppliedTo(), hunk.getStatus()));
-    }
-  }
-
-  private void addContext(List<String> context, int beforeLineNumber, int afterLineNumber) {
-    myConverter.put1(totalLines, beforeLineNumber, context.size());
-    myConverter.put2(totalLines, afterLineNumber, context.size());
-    appendLines(context);
-  }
-
-  private void appendLines(List<String> lines) {
-    for (String line : lines) {
-      myBuilder.append(line).append("\n");
-    }
-    totalLines += lines.size();
-  }
-
-  private void appendSeparator() {
-    myChangedLines.add(totalLines);
-    myBuilder.append("\n");
-    totalLines++;
-  }
-
-  //
-  // Result
-  //
-
-  
-  public CharSequence getPatchContent() {
-    return myBuilder;
-  }
-
-  
-  public List<Hunk> getHunks() {
-    return myHunks;
-  }
-
-  
-  public LineNumberConvertor getLineConvertor() {
-    return myConverter.build();
-  }
-
-  
-  public IntList getSeparatorLines() {
-    return myChangedLines;
-  }
-
-  public static class Hunk {
-    
-    private final List<String> myInsertedLines;
-    
-    private final LineRange myPatchDeletionRange;
-    
-    private final LineRange myPatchInsertionRange;
-
-    private final @Nullable LineRange myAppliedToLines;
-    
-    private final HunkStatus myStatus;
-
-    public Hunk(List<String> insertedLines,
-                LineRange patchDeletionRange,
-                LineRange patchInsertionRange,
-                @Nullable LineRange appliedToLines,
-                HunkStatus status) {
-      myInsertedLines = insertedLines;
-      myPatchDeletionRange = patchDeletionRange;
-      myPatchInsertionRange = patchInsertionRange;
-      myAppliedToLines = appliedToLines;
-      myStatus = status;
     }
 
-    
-    public LineRange getPatchDeletionRange() {
-      return myPatchDeletionRange;
+    private void addContext(List<String> context, int beforeLineNumber, int afterLineNumber) {
+        myConverter.put1(totalLines, beforeLineNumber, context.size());
+        myConverter.put2(totalLines, afterLineNumber, context.size());
+        appendLines(context);
     }
 
-    
-    public LineRange getPatchInsertionRange() {
-      return myPatchInsertionRange;
+    private void appendLines(List<String> lines) {
+        for (String line : lines) {
+            myBuilder.append(line).append("\n");
+        }
+        totalLines += lines.size();
     }
 
-    
-    public HunkStatus getStatus() {
-      return myStatus;
+    private void appendSeparator() {
+        myChangedLines.add(totalLines);
+        myBuilder.append("\n");
+        totalLines++;
     }
 
-    public LineRange getAppliedToLines() {
-      return myAppliedToLines;
+    //
+    // Result
+    //
+
+    public CharSequence getPatchContent() {
+        return myBuilder;
     }
 
-    
-    private List<String> getInsertedLines() {
-      return myInsertedLines;
+    public List<Hunk> getHunks() {
+        return myHunks;
     }
-  }
+
+    public LineNumberConvertor getLineConvertor() {
+        return myConverter.build();
+    }
+
+    public IntList getSeparatorLines() {
+        return myChangedLines;
+    }
+
+    public record Hunk(
+        List<String> insertedLines,
+        LineRange patchDeletionRange,
+        LineRange patchInsertionRange,
+        @Nullable LineRange appliedToLines,
+        HunkStatus status
+    ) {
+    }
 }

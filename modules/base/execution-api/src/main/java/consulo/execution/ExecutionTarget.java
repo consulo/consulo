@@ -24,52 +24,51 @@ import org.jspecify.annotations.Nullable;
  * Targets are collected from {@link ExecutionTargetProvider}
  */
 public abstract class ExecutionTarget {
-  /**
-   * Id is used to save selected target between restarts
-   */
-  public abstract String getId();
+    /**
+     * Id is used to save selected target between restarts
+     */
+    public abstract String getId();
 
-  
-  
-  public abstract String getDisplayName();
+    public abstract String getDisplayName();
 
-  public abstract @Nullable Image getIcon();
+    public abstract @Nullable Image getIcon();
 
-  /**
-   * Implementation-specific logic should decide whether to suggest this target for the given configuration.
-   */
-  public abstract boolean canRun(RunConfiguration configuration);
+    /**
+     * Implementation-specific logic should decide whether to suggest this target for the given configuration.
+     */
+    public abstract boolean canRun(RunConfiguration configuration);
 
-  /**
-   * Checks if the target is ready to be selected as a default choice in the Run Configurations popup
-   *
-   * @return true if the target is ready, false otherwise
-   */
-  public boolean isReady() {
-    return true;
-  }
+    /**
+     * Checks if the target is ready to be selected as a default choice in the Run Configurations popup
+     *
+     * @return true if the target is ready, false otherwise
+     */
+    public boolean isReady() {
+        return true;
+    }
 
-  /**
-   * Implementation-specific logic to determine if an external plugin is responsible for managing this target.
-   *
-   * @return true if the target is externally managed, or false for the platform to manage
-   */
-  public boolean isExternallyManaged() {
-    return false;
-  }
+    /**
+     * Implementation-specific logic to determine if an external plugin is responsible for managing this target.
+     *
+     * @return true if the target is externally managed, or false for the platform to manage
+     */
+    public boolean isExternallyManaged() {
+        return false;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj == this || (getClass().isInstance(obj) && getId().equals(((ExecutionTarget)obj).getId()));
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || (getClass().isInstance(obj) && getId().equals(((ExecutionTarget) obj).getId()));
+    }
 
-  @Override
-  public int hashCode() {
-    return getId().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return getId();
-  }
+    @Override
+    public String toString() {
+        return getId();
+    }
 }

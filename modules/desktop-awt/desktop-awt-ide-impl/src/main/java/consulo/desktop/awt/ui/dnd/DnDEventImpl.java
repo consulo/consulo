@@ -290,9 +290,11 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof DnDEventImpl that
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof DnDEventImpl that
             && myDropPossible == that.myDropPossible
             && myHighlighting == that.myHighlighting
             && Objects.equals(myAttachedObject, that.myAttachedObject)
@@ -302,9 +304,9 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     @Override
     public int hashCode() {
         int result;
-        result = (myAttachedObject != null ? myAttachedObject.hashCode() : 0);
+        result = Objects.hashCode(myAttachedObject);
         result = 29 * result + (myDropPossible ? 1 : 0);
-        result = 29 * result + (myExpectedDropResult != null ? myExpectedDropResult.hashCode() : 0);
+        result = 29 * result + Objects.hashCode(myExpectedDropResult);
         result = 29 * result + myHighlighting;
         return result;
     }

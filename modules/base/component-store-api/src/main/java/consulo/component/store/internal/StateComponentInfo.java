@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 27-Feb-17
+ * @since 2017-02-27
  */
 public class StateComponentInfo {
   public static @Nullable StateComponentInfo build(Object o, @Nullable ComponentManager project) {
@@ -129,8 +129,9 @@ public class StateComponentInfo {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return obj instanceof StateComponentInfo other && other.myComponent.equals(myComponent);
+  public boolean equals(@Nullable Object obj) {
+    return obj == this
+      || obj instanceof StateComponentInfo that && that.myComponent.equals(myComponent);
   }
 
   @Override

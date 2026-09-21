@@ -2,6 +2,8 @@ package consulo.credentialStorage;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Represents the combined service name and user information used for authentication.
  */
@@ -72,30 +74,21 @@ public final class CredentialAttributes {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CredentialAttributes)) {
-            return false;
-        }
-        CredentialAttributes that = (CredentialAttributes) o;
-        if (isPasswordMemoryOnly != that.isPasswordMemoryOnly) {
-            return false;
-        }
-        if (cacheDeniedItems != that.cacheDeniedItems) {
-            return false;
-        }
-        if (!serviceName.equals(that.serviceName)) {
-            return false;
-        }
-        return userName != null ? userName.equals(that.userName) : that.userName == null;
+        return o instanceof CredentialAttributes that
+            && isPasswordMemoryOnly == that.isPasswordMemoryOnly
+            && cacheDeniedItems == that.cacheDeniedItems
+            && serviceName.equals(that.serviceName)
+            && Objects.equals(userName, that.userName);
     }
 
     @Override
     public int hashCode() {
         int result = serviceName.hashCode();
-        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + Objects.hashCode(userName);
         result = 31 * result + (isPasswordMemoryOnly ? 1 : 0);
         result = 31 * result + (cacheDeniedItems ? 1 : 0);
         return result;

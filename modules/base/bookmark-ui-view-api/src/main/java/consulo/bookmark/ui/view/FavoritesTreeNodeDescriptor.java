@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.bookmark.ui.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -29,98 +29,102 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  * @since 2005-02-15
  */
 public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<AbstractTreeNode> {
-  public static final FavoritesTreeNodeDescriptor[] EMPTY_ARRAY = new FavoritesTreeNodeDescriptor[0];
+    public static final FavoritesTreeNodeDescriptor[] EMPTY_ARRAY = new FavoritesTreeNodeDescriptor[0];
 
-  private final Project myProject;
-  private final AbstractTreeNode myElement;
+    private final Project myProject;
+    private final AbstractTreeNode myElement;
 
-  public FavoritesTreeNodeDescriptor(Project project, NodeDescriptor parentDescriptor, AbstractTreeNode element) {
-    super(parentDescriptor);
-    myProject = project;
-    myElement = element;
-  }
-
-  @Override
-  protected void update(PresentationData presentation) {
-    myElement.update();
-    presentation.copyFrom(myElement.getPresentation());
-  }
-
- /* protected boolean isMarkReadOnly() {
-    final Object parentValue = myElement.getParent() == null ? null : myElement.getParent().getValue();
-    return parentValue instanceof PsiDirectory || parentValue instanceof PackageElement;
-  }*/
-
-  public String getLocation() {
-    return getLocation(myElement, myProject);
-  }
-
-  public static String getLocation(AbstractTreeNode element, Project project) {
-    Object nodeElement = element.getValue();
-    if (nodeElement instanceof SmartPsiElementPointer) {
-      nodeElement = ((SmartPsiElementPointer)nodeElement).getElement();
-    }
-    if (nodeElement instanceof PsiElement) {
-      if (nodeElement instanceof PsiDirectory) {
-        return ((PsiDirectory)nodeElement).getVirtualFile().getPresentableUrl();
-      }
-      if (nodeElement instanceof PsiFile) {
-        PsiFile containingFile = (PsiFile)nodeElement;
-        VirtualFile virtualFile = containingFile.getVirtualFile();
-        return virtualFile != null ? virtualFile.getPresentableUrl() : "";
-      }
+    public FavoritesTreeNodeDescriptor(Project project, NodeDescriptor parentDescriptor, AbstractTreeNode element) {
+        super(parentDescriptor);
+        myProject = project;
+        myElement = element;
     }
 
-    if (nodeElement instanceof LibraryGroupElement) {
-      return ((LibraryGroupElement)nodeElement).getModule().getName();
-    }
-    if (nodeElement instanceof NamedLibraryElement) {
-      NamedLibraryElement namedLibraryElement = ((NamedLibraryElement)nodeElement);
-      Module module = namedLibraryElement.getModule();
-      return (module != null ? module.getName() : "") + ":" + namedLibraryElement.getOrderEntry().getPresentableName();
+    @Override
+    protected void update(PresentationData presentation) {
+        myElement.update();
+        presentation.copyFrom(myElement.getPresentation());
     }
 
-    for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
-      String location = provider.getElementLocation(nodeElement);
-      if (location != null) return location;
+    /*protected boolean isMarkReadOnly() {
+        Object parentValue = myElement.getParent() == null ? null : myElement.getParent().getValue();
+        return parentValue instanceof PsiDirectory || parentValue instanceof PackageElement;
+    }*/
+
+    @RequiredReadAction
+    public @Nullable String getLocation() {
+        return getLocation(myElement, myProject);
     }
-    return null;
-  }
 
-  @Override
-  public AbstractTreeNode getElement() {
-    return myElement;
-  }
+    @RequiredReadAction
+    public static @Nullable String getLocation(AbstractTreeNode element, Project project) {
+        Object nodeElement = element.getValue();
+        if (nodeElement instanceof SmartPsiElementPointer smartPtr) {
+            nodeElement = smartPtr.getElement();
+        }
+        if (nodeElement instanceof PsiElement) {
+            if (nodeElement instanceof PsiDirectory dir) {
+                return dir.getVirtualFile().getPresentableUrl();
+            }
+            if (nodeElement instanceof PsiFile containingFile) {
+                VirtualFile virtualFile = containingFile.getVirtualFile();
+                return virtualFile != null ? virtualFile.getPresentableUrl() : "";
+            }
+        }
 
-  public boolean equals(Object object) {
-    if (!(object instanceof FavoritesTreeNodeDescriptor)) return false;
-    return ((FavoritesTreeNodeDescriptor)object).getElement().equals(myElement);
-  }
+        if (nodeElement instanceof LibraryGroupElement libGroup) {
+            return libGroup.getModule().getName();
+        }
+        if (nodeElement instanceof NamedLibraryElement namedLib) {
+            Module module = namedLib.getModule();
+            return (module != null ? module.getName() : "") + ":" + namedLib.getOrderEntry().getPresentableName();
+        }
 
-  public int hashCode() {
-    return myElement.hashCode();
-  }
+        for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
+            String location = provider.getElementLocation(nodeElement);
+            if (location != null) {
+                return location;
+            }
+        }
+        return null;
+    }
 
-  public FavoritesTreeNodeDescriptor getFavoritesRoot() {
-    FavoritesTreeNodeDescriptor descriptor = this;
-    while (descriptor.getParentDescriptor() instanceof FavoritesTreeNodeDescriptor) {
-      FavoritesTreeNodeDescriptor parent = (FavoritesTreeNodeDescriptor)descriptor.getParentDescriptor();
-      if (parent != null && parent.getParentDescriptor() == null) {
+    @Override
+    public AbstractTreeNode getElement() {
+        return myElement;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object object) {
+        return object == this
+            || object instanceof FavoritesTreeNodeDescriptor that && that.getElement().equals(myElement);
+    }
+
+    @Override
+    public int hashCode() {
+        return myElement.hashCode();
+    }
+
+    public FavoritesTreeNodeDescriptor getFavoritesRoot() {
+        FavoritesTreeNodeDescriptor descriptor = this;
+        while (descriptor.getParentDescriptor() instanceof FavoritesTreeNodeDescriptor favDecr) {
+            if (favDecr.getParentDescriptor() == null) {
+                return descriptor;
+            }
+            descriptor = favDecr;
+        }
         return descriptor;
-      }
-      descriptor = parent;
     }
-    return descriptor;
-  }
 
-  @Override
-  public PresentableNodeDescriptor getChildToHighlightAt(int index) {
-    return myElement.getChildToHighlightAt(index);
-  }
+    @Override
+    public PresentableNodeDescriptor getChildToHighlightAt(int index) {
+        return myElement.getChildToHighlightAt(index);
+    }
 }

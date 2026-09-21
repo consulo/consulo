@@ -602,8 +602,9 @@ public class UiInspectorAction extends UiMouseAction {
             }
 
             @Override
-            public boolean equals(Object obj) {
-                return obj instanceof ComponentNode componentNode && componentNode.getComponent() == getComponent();
+            public boolean equals(@Nullable Object obj) {
+                return obj == this
+                    || obj instanceof ComponentNode that && that.getComponent() == getComponent();
             }
 
             @SuppressWarnings({"unchecked", "UseOfObsoleteCollectionType"})
@@ -1479,7 +1480,7 @@ public class UiInspectorAction extends UiMouseAction {
         public void setValueAt(Object value, int row, int col) {
             PropertyBean bean = myProperties.get(row);
             try {
-                myProperties.set(row, new PropertyBean(bean.propertyName, ObjectUtil.notNull(updater(bean)).apply(value)));
+                myProperties.set(row, new PropertyBean(bean.propertyName, Objects.requireNonNull(updater(bean)).apply(value)));
             }
             catch (Exception ignored) {
             }

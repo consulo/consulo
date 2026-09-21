@@ -15,24 +15,25 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.Length;
-import consulo.ui.TransferHandler;
-import consulo.ui.DragAndDropTransferHandler;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferTarget;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel;
+import consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.TransferHandler;
+import consulo.ui.TreeNode;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
-import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MorphColor;
 import consulo.ui.ex.awt.UIUtil;
@@ -40,43 +41,25 @@ import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel;
-import consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.LeafState;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.*;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.DropMode;
-import consulo.ui.Point2D;
-import consulo.ui.PopupOwner;
-
-import javax.swing.JTree;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
-import java.util.Arrays;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -258,8 +241,9 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof MyTreeNodeImpl<?> node && Objects.equals(myValue, node.myValue);
+        public boolean equals(@Nullable Object obj) {
+            return obj == this
+                || obj instanceof MyTreeNodeImpl<?> node && Objects.equals(myValue, node.myValue);
         }
 
         @Override
@@ -295,7 +279,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                     presentation.clearText();
                 }
 
-                
                 @Override
                 public TextItemPresentation withIcon(@Nullable Image image) {
                     presentation.setIcon(image);
@@ -334,7 +317,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             return myRootNode;
         }
 
-
         @Override
         @SuppressWarnings("unchecked")
         public Object[] getChildElements(Object element) {
@@ -367,11 +349,14 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
         private List<MyTreeNodeImpl<K>> buildChildren(MyTreeNodeImpl<K> parent) {
             List<MyTreeNodeImpl<K>> nodes = new ArrayList<>();
-            myModel.buildChildren(k -> {
-                MyTreeNodeImpl<K> node = new MyTreeNodeImpl<>(k, parent, this);
-                nodes.add(node);
-                return node;
-            }, parent.getValue());
+            myModel.buildChildren(
+                k -> {
+                    MyTreeNodeImpl<K> node = new MyTreeNodeImpl<>(k, parent, this);
+                    nodes.add(node);
+                    return node;
+                },
+                parent.getValue()
+            );
 
             Comparator<TreeNode<K>> comparator = myModel.getNodeComparator();
             if (comparator != null) {
@@ -389,7 +374,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             return element instanceof MyTreeNodeImpl node ? node.myParent : null;
         }
 
-        
         @Override
         @SuppressWarnings("unchecked")
         public NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
@@ -398,7 +382,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
         @Override
         public void commit() {
-
         }
 
         @Override
@@ -412,7 +395,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             super(new DesktopAsyncTreeModel(structureTreeModel, DesktopTreeImpl.this, executor, myDestroyHook));
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopTreeImpl.this;
@@ -423,7 +405,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     private final MyStructureWrapper<E> myStructure;
     private final DesktopStructureTreeModel<MyStructureWrapper<E>> myStructureTreeModel;
     private final TreeExecutor myExecutor;
-
 
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
 
@@ -507,7 +488,11 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
             TreeNode<E> node = nodeOf(path);
             if (node != null) {
-                getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(this, node, DesktopAWTInputDetails.currentEvent(tree)));
+                getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(
+                    this,
+                    node,
+                    DesktopAWTInputDetails.currentEvent(tree)
+                ));
             }
         });
 

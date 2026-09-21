@@ -15,8 +15,9 @@
  */
 package consulo.diff.comparison;
 
+import org.jspecify.annotations.Nullable;
+
 abstract class TextChunk {
-  
   private final CharSequence myText;
   private final int myOffset1;
   private final int myOffset2;
@@ -31,14 +32,12 @@ abstract class TextChunk {
   public abstract int hashCode();
 
   @Override
-  public abstract boolean equals(Object obj);
+  public abstract boolean equals(@Nullable Object obj);
 
-  
   public CharSequence getContent() {
     return myText.subSequence(myOffset1, myOffset2);
   }
 
-  
   public CharSequence getOriginalText() {
     return myText;
   }

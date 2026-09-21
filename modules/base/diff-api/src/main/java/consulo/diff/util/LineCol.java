@@ -18,70 +18,35 @@ package consulo.diff.util;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 
-public class LineCol {
-  // counting from zero
-  public final int line;
-  public final int column;
+// counting from zero
+public record LineCol(int line, int column) {
+    public LineCol(int line) {
+        this(line, 0);
+    }
 
-  public LineCol(int line) {
-    this(line, 0);
-  }
+    public static LineCol fromOffset(Document document, int offset) {
+        int line = document.getLineNumber(offset);
+        int column = offset - document.getLineStartOffset(line);
+        return new LineCol(line, column);
+    }
 
-  public LineCol(int line, int column) {
-    this.line = line;
-    this.column = column;
-  }
+    public static LineCol fromCaret(Editor editor) {
+        return fromOffset(editor.getDocument(), editor.getCaretModel().getOffset());
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public static int toOffset(Document document, LineCol linecol) {
+        return linecol.toOffset(document);
+    }
 
-    LineCol col = (LineCol)o;
+    public static int toOffset(Document document, int line, int col) {
+        return new LineCol(line, col).toOffset(document);
+    }
 
-    if (line != col.line) return false;
-    if (column != col.column) return false;
+    public int toOffset(Document document) {
+        return document.getLineStartOffset(line) + column;
+    }
 
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = line;
-    result = 31 * result + column;
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return String.format("{ line: %s, column: %s }", line, column);
-  }
-
-  
-  public static LineCol fromOffset(Document document, int offset) {
-    int line = document.getLineNumber(offset);
-    int column = offset - document.getLineStartOffset(line);
-    return new LineCol(line, column);
-  }
-
-  
-  public static LineCol fromCaret(Editor editor) {
-    return fromOffset(editor.getDocument(), editor.getCaretModel().getOffset());
-  }
-
-  public static int toOffset(Document document, LineCol linecol) {
-    return linecol.toOffset(document);
-  }
-
-  public static int toOffset(Document document, int line, int col) {
-    return new LineCol(line, col).toOffset(document);
-  }
-
-  public int toOffset(Document document) {
-    return document.getLineStartOffset(line) + column;
-  }
-
-  public int toOffset(Editor editor) {
-    return toOffset(editor.getDocument());
-  }
+    public int toOffset(Editor editor) {
+        return toOffset(editor.getDocument());
+    }
 }

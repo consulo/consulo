@@ -65,39 +65,18 @@ public class AttributesFlyweight {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof FlyweightKey)) {
-                return false;
-            }
-
-            FlyweightKey key = (FlyweightKey) o;
-
-            if (fontType != key.fontType) {
-                return false;
-            }
-            if (!Objects.equals(background, key.background)) {
-                return false;
-            }
-            if (!Objects.equals(effectColor, key.effectColor)) {
-                return false;
-            }
-            if (effectType != key.effectType) {
-                return false;
-            }
-            if (!Objects.equals(errorStripeColor, key.errorStripeColor)) {
-                return false;
-            }
-            if (!Objects.equals(foreground, key.foreground)) {
-                return false;
-            }
-            if (!myAdditionalEffects.equals(key.myAdditionalEffects)) {
-                return false;
-            }
-
-            return true;
+            return o instanceof FlyweightKey that
+                && fontType == that.fontType
+                && Objects.equals(background, that.background)
+                && Objects.equals(effectColor, that.effectColor)
+                && effectType == that.effectType
+                && Objects.equals(errorStripeColor, that.errorStripeColor)
+                && Objects.equals(foreground, that.foreground)
+                && myAdditionalEffects.equals(that.myAdditionalEffects);
         }
 
         @Override
@@ -439,7 +418,7 @@ public class AttributesFlyweight {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -449,29 +428,13 @@ public class AttributesFlyweight {
 
         AttributesFlyweight that = (AttributesFlyweight) o;
 
-        if (myFontType != that.myFontType) {
-            return false;
-        }
-        if (!Objects.equals(myBackground, that.myBackground)) {
-            return false;
-        }
-        if (!Objects.equals(myEffectColor, that.myEffectColor)) {
-            return false;
-        }
-        if (myEffectType != that.myEffectType) {
-            return false;
-        }
-        if (!Objects.equals(myErrorStripeColor, that.myErrorStripeColor)) {
-            return false;
-        }
-        if (!Objects.equals(myForeground, that.myForeground)) {
-            return false;
-        }
-        if (!myAdditionalEffects.equals(that.myAdditionalEffects)) {
-            return false;
-        }
-
-        return true;
+        return myFontType == that.myFontType
+            && Objects.equals(myBackground, that.myBackground)
+            && Objects.equals(myEffectColor, that.myEffectColor)
+            && myEffectType == that.myEffectType
+            && Objects.equals(myErrorStripeColor, that.myErrorStripeColor)
+            && Objects.equals(myForeground, that.myForeground)
+            && myAdditionalEffects.equals(that.myAdditionalEffects);
     }
 
     @Override

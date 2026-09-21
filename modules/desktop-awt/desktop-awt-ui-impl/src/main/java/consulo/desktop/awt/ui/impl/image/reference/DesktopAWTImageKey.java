@@ -96,7 +96,6 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
     return ourLibraryManager.getModificationCount() + ourUIModificationTracker.getModificationCount();
   }
 
-  
   private ImageReference resolveReference() {
     long l = currentCount();
     long lastModCount = myModificationCount;
@@ -116,26 +115,24 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
     return ref;
   }
 
-  
   @Override
   public String getGroupId() {
     return myGroupId;
   }
 
-  
   @Override
   public String getImageId() {
     return myImageId;
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     DesktopAWTImageKey that = (DesktopAWTImageKey)o;
-    return Objects.equals(myForceIconLibraryId, that.myForceIconLibraryId) && Objects.equals(myGroupId, that.myGroupId) && Objects.equals(
-      myImageId,
-      that.myImageId);
+    return Objects.equals(myForceIconLibraryId, that.myForceIconLibraryId)
+        && Objects.equals(myGroupId, that.myGroupId)
+        && Objects.equals(myImageId, that.myImageId);
   }
 
   @Override
@@ -146,29 +143,19 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
   @Override
   public String toString() {
     return "DesktopImageKeyImpl{" +
-      "myForceIconLibraryId='" +
-      myForceIconLibraryId +
-      '\'' +
-      ", myGroupId='" +
-      myGroupId +
-      '\'' +
-      ", myImageId='" +
-      myImageId +
-      '\'' +
-      ", myWidth=" +
-      myWidth +
-      ", myHeight=" +
-      myHeight +
+      "myForceIconLibraryId='" + myForceIconLibraryId + '\'' +
+      ", myGroupId='" + myGroupId + '\'' +
+      ", myImageId='" + myImageId + '\'' +
+      ", myWidth=" + myWidth +
+      ", myHeight=" + myHeight +
       '}';
   }
 
-  
   @Override
   public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
     return new DesktopAWTImageKey(libraryId, myGroupId, myImageId, myWidth, myHeight);
   }
 
-  
   @Override
   public DesktopAWTImage copyWithNewSize(int width, int height) {
     return new DesktopAWTImageKey(myForceIconLibraryId, myGroupId, myImageId, width, height);

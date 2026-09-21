@@ -23,7 +23,6 @@ import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.ui.impl.components.PaintingParent;
-import consulo.desktop.awt.ui.impl.image.RetrievableIcon;
 import consulo.desktop.awt.ui.impl.tabs.TabLabel;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
@@ -313,13 +312,11 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         return isDone() ? TargetAWT.to(myScaledDelegateIcon) : evaluate();
     }
 
-    
     @Override
     public Icon evaluate() {
         return TargetAWT.to(evaluateImage());
     }
 
-    
     public Image evaluateImage() {
         consulo.ui.image.Image result;
         try {
@@ -442,8 +439,9 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Image image && equalIcons(this, image);
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof Image that && equalIcons(this, that);
     }
 
     @Override
@@ -451,7 +449,6 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         return "Deferred. Base=" + myScaledDelegateIcon;
     }
 
-    
     public Image getDelegateIcon() {
         return myDelegateIcon;
     }

@@ -230,7 +230,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -249,14 +249,8 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
             }
         }
 
-        if (myUseLigatures != that.myUseLigatures) {
-            return false;
-        }
-        if (myLineSpacing != that.myLineSpacing) {
-            return false;
-        }
-
-        return true;
+        return myUseLigatures == that.myUseLigatures
+            && myLineSpacing == that.myLineSpacing;
     }
 
     @Override

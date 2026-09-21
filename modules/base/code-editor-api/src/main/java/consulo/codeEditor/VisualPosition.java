@@ -15,13 +15,15 @@
  */
 package consulo.codeEditor;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a visual position in the editor. Visual positions take folding into account -
  * for example, if the top 10 lines of the document are folded, the 10th line in the document
  * will have the line number 1 in its visual position.
  * <p>
- * Visual position corresponds to a boundary between two characters and can be associated with either a preceding or succeeding character 
- * (see {@link #leansRight}). This association makes a difference in a bidirectional text, where a mapping from visual to logical position 
+ * Visual position corresponds to a boundary between two characters and can be associated with either a preceding or succeeding character
+ * (see {@link #leansRight}). This association makes a difference in a bidirectional text, where a mapping from visual to logical position
  * is not continuous.
  *
  * @see LogicalPosition
@@ -30,87 +32,82 @@ package consulo.codeEditor;
  * @see Editor#xyToVisualPosition(java.awt.Point)
  */
 public class VisualPosition {
-  public final int line;
-  public final int column;
-  /**
-   * If <code>true</code>, this position is associated with succeeding character (in visual order), otherwise it's associated with 
-   * preceding character. This can make difference in bidirectional text, where visual positions which differ only in this flag's value
-   * can correspond to a different logical positions.
-   * <p>
-   * This field has no impact on equality and comparison relationships between <code>VisualPosition</code> instances.
-   */
-  public final boolean leansRight;
+    public final int line;
+    public final int column;
+    /**
+     * If <code>true</code>, this position is associated with succeeding character (in visual order), otherwise it's associated with
+     * preceding character. This can make difference in bidirectional text, where visual positions which differ only in this flag's value
+     * can correspond to a different logical positions.
+     * <p>
+     * This field has no impact on equality and comparison relationships between <code>VisualPosition</code> instances.
+     */
+    public final boolean leansRight;
 
-  public VisualPosition(int line, int column) {
-    this(line, column, false);
-  }
-
-  public VisualPosition(int line, int column, boolean leansRight) {
-    if (line < 0) throw new IllegalArgumentException("line must be non negative: "+line);
-    if (column < 0) throw new IllegalArgumentException("column must be non negative: "+column);
-    this.line = line;
-    this.column = column;
-    this.leansRight = leansRight;
-  }
-
-  /**
-   * Allows to answer if current visual position is located after the given one.
-   * <p/>
-   * One visual position is considered to be 'after' another only if one of the following is true:
-   * <pre>
-   * <ul>
-   *   <li>its visual line is greater;</li>
-   *   <li>it has the same visual line but its column is greater;</li>
-   * </ul>
-   * </pre>
-   *
-   * @param other   visual position to compare with the current one
-   * @return        <code>true</code> if current position is 'after' the given one; <code>false</code> otherwise
-   */
-  public boolean after(VisualPosition other) {
-    if (line == other.line) {
-      return column > other.column;
+    public VisualPosition(int line, int column) {
+        this(line, column, false);
     }
-    return line > other.line;
-  }
 
-  /**
-   * Constructs a new <code>VisualPosition</code> instance with a given value of {@link #leansRight} flag.
-   */
-  public VisualPosition leanRight(boolean value) {
-    return new VisualPosition(line, column, value);
-  }
+    public VisualPosition(int line, int column, boolean leansRight) {
+        if (line < 0) {
+            throw new IllegalArgumentException("line must be non negative: " + line);
+        }
+        if (column < 0) {
+            throw new IllegalArgumentException("column must be non negative: " + column);
+        }
+        this.line = line;
+        this.column = column;
+        this.leansRight = leansRight;
+    }
 
-  
-  public String toString() {
-    return "VisualPosition: (" + line + ", " + column+")" + (leansRight ? " leans right" : "");
-  }
+    /**
+     * Allows to answer if current visual position is located after the given one.
+     * <p/>
+     * One visual position is considered to be 'after' another only if one of the following is true:
+     * <pre>
+     * <ul>
+     *   <li>its visual line is greater;</li>
+     *   <li>it has the same visual line but its column is greater;</li>
+     * </ul>
+     * </pre>
+     *
+     * @param other visual position to compare with the current one
+     * @return <code>true</code> if current position is 'after' the given one; <code>false</code> otherwise
+     */
+    public boolean after(VisualPosition other) {
+        if (line == other.line) {
+            return column > other.column;
+        }
+        return line > other.line;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof VisualPosition)) return false;
+    /**
+     * Constructs a new <code>VisualPosition</code> instance with a given value of {@link #leansRight} flag.
+     */
+    public VisualPosition leanRight(boolean value) {
+        return new VisualPosition(line, column, value);
+    }
 
-    VisualPosition that = (VisualPosition)o;
+    @Override
+    public String toString() {
+        return "VisualPosition: (" + line + ", " + column + ")" + (leansRight ? " leans right" : "");
+    }
 
-    if (column != that.column) return false;
-    if (line != that.line) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof VisualPosition that && column == that.column && line == that.line;
+    }
 
-    return true;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * line + column;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = line;
-    result = 31 * result + column;
-    return result;
-  }
+    public int getLine() {
+        return line;
+    }
 
-  public int getLine() {
-    return line;
-  }
-
-  public int getColumn() {
-    return column;
-  }
+    public int getColumn() {
+        return column;
+    }
 }

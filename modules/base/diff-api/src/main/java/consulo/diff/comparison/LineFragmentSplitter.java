@@ -30,21 +30,12 @@ import java.util.List;
  * Given matchings on words, split initial line block into 'logically different' line blocks
  */
 class LineFragmentSplitter {
-  
   private final CharSequence myText1;
-  
   private final CharSequence myText2;
-
-  
   private final List<InlineChunk> myWords1;
-  
   private final List<InlineChunk> myWords2;
-  
   private final FairDiffIterable myIterable;
-  
   private final ProgressIndicator myIndicator;
-
-  
   private final List<WordBlock> myResult = new ArrayList<>();
 
   public LineFragmentSplitter(CharSequence text1,
@@ -73,10 +64,10 @@ class LineFragmentSplitter {
   
   public List<WordBlock> run() {
     for (Range range : myIterable.iterateUnchanged()) {
-      int count = range.end1 - range.start1;
+      int count = range.end1() - range.start1();
       for (int i = 0; i < count; i++) {
-        int index1 = range.start1 + i;
-        int index2 = range.start2 + i;
+        int index1 = range.start1() + i;
+        int index2 = range.start2() + i;
 
         if (isNewline(myWords1, index1) && isNewline(myWords2, index2)) { // split by matched newlines
           addLineChunk(index1, index2);
@@ -118,7 +109,6 @@ class LineFragmentSplitter {
     last2 = end2;
   }
 
-  
   private WordBlock createBlock(int start1, int start2, int end1, int end2) {
     int startOffset1 = getOffset(myWords1, myText1, start1);
     int startOffset2 = getOffset(myWords2, myText2, start2);
@@ -141,16 +131,16 @@ class LineFragmentSplitter {
   }
 
   private boolean isEqualsIgnoreWhitespace(WordBlock block) {
-    CharSequence sequence1 = myText1.subSequence(block.offsets.start1, block.offsets.end1);
-    CharSequence sequence2 = myText2.subSequence(block.offsets.start2, block.offsets.end2);
+    CharSequence sequence1 = myText1.subSequence(block.offsets.start1(), block.offsets.end1());
+    CharSequence sequence2 = myText2.subSequence(block.offsets.start2(), block.offsets.end2());
 
     return StringUtil.equalsIgnoreWhitespaces(sequence1, sequence2);
   }
 
   
   private static WordBlock mergeBlocks(WordBlock start, WordBlock end) {
-    return new WordBlock(new Range(start.words.start1, end.words.end1, start.words.start2, end.words.end2),
-                         new Range(start.offsets.start1, end.offsets.end1, start.offsets.start2, end.offsets.end2));
+    return new WordBlock(new Range(start.words.start1(), end.words.end1(), start.words.start2(), end.words.end2()),
+                         new Range(start.offsets.start1(), end.offsets.end1(), start.offsets.start2(), end.offsets.end2()));
   }
 
   private static int getOffset(List<InlineChunk> words, CharSequence text, int index) {
@@ -171,10 +161,10 @@ class LineFragmentSplitter {
   }
 
   private boolean noWordsInside(WordBlock block) {
-    for (int i = block.words.start1; i < block.words.end1; i++) {
+    for (int i = block.words.start1(); i < block.words.end1(); i++) {
       if (!(myWords1.get(i) instanceof NewlineChunk)) return false;
     }
-    for (int i = block.words.start2; i < block.words.end2; i++) {
+    for (int i = block.words.start2(); i < block.words.end2(); i++) {
       if (!(myWords2.get(i) instanceof NewlineChunk)) return false;
     }
     return true;
@@ -184,15 +174,6 @@ class LineFragmentSplitter {
   // Helpers
   //
 
-  public static class WordBlock {
-    
-    public final Range words;
-    
-    public final Range offsets;
-
-    public WordBlock(Range words, Range offsets) {
-      this.words = words;
-      this.offsets = offsets;
-    }
+  public record WordBlock(Range words, Range offsets) {
   }
 }

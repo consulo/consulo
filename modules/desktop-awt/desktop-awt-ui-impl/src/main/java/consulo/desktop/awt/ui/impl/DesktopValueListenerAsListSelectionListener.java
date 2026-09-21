@@ -21,22 +21,25 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 2017-09-12
  */
 class DesktopValueListenerAsListSelectionListener<E> implements ListSelectionListener {
     private DesktopListBoxImpl<E> myBox;
     private JBList<E> myDesktopListBox;
     private ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> myValueListener;
 
-    public DesktopValueListenerAsListSelectionListener(DesktopListBoxImpl<E> box,
-                                                       JBList<E> desktopListBox,
-                                                       ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+    public DesktopValueListenerAsListSelectionListener(
+        DesktopListBoxImpl<E> box,
+        JBList<E> desktopListBox,
+        ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener
+    ) {
         myBox = box;
         myDesktopListBox = desktopListBox;
         myValueListener = valueListener;
@@ -48,15 +51,21 @@ class DesktopValueListenerAsListSelectionListener<E> implements ListSelectionLis
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof DesktopValueListenerAsListSelectionListener &&
-            ((DesktopValueListenerAsListSelectionListener) obj).myValueListener.equals(((DesktopValueListenerAsListSelectionListener) obj).myValueListener);
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof DesktopValueListenerAsListSelectionListener that
+            && myValueListener.equals(that.myValueListener);
     }
 
     @Override
     @RequiredUIAccess
     public void valueChanged(ListSelectionEvent e) {
-        myValueListener
-            .onEvent(new ValueComponentEvent<>(myBox, myDesktopListBox.getSelectedValue(), DesktopAWTInputDetails.currentEvent(myDesktopListBox)));
+        myValueListener.onEvent(new ValueComponentEvent<>(
+            myBox,
+            myDesktopListBox.getSelectedValue(),
+            DesktopAWTInputDetails.currentEvent(myDesktopListBox)
+        ));
     }
 }

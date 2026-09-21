@@ -13,80 +13,82 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution;
 
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2009-05-18
  */
 public abstract class BeforeRunTask<T extends BeforeRunTask> implements Cloneable {
-  
-  protected final Key<T> myProviderId;
-  private boolean myIsEnabled;
+    protected final Key<T> myProviderId;
+    private boolean myIsEnabled;
 
-  protected BeforeRunTask(Key<T> providerId) {
-    myProviderId = providerId;
-  }
-
-  
-  public final Key<T> getProviderId() {
-    return myProviderId;
-  }
-
-  public boolean isEnabled() {
-    return myIsEnabled;
-  }
-
-  public void setEnabled(boolean isEnabled) {
-    myIsEnabled = isEnabled;
-  }
-
-  public void writeExternal(Element element) {
-    element.setAttribute("enabled", String.valueOf(myIsEnabled));
-  }
-
-  public void readExternal(Element element) {
-    String attrValue = element.getAttributeValue("enabled");
-    if (attrValue == null) {
-      attrValue = element.getAttributeValue("value"); // maintain compatibility with old format
+    protected BeforeRunTask(Key<T> providerId) {
+        myProviderId = providerId;
     }
-    if (attrValue == null) {
-      attrValue = "true";
+
+    public final Key<T> getProviderId() {
+        return myProviderId;
     }
-    myIsEnabled = Boolean.valueOf(attrValue).booleanValue();
-  }
 
-  //Task may aggregate several items or targets to do (e.g. BuildArtifactsBeforeRunTask)
-  public int getItemsCount() {
-    return 1;
-  }
-
-  @Override
-  public BeforeRunTask clone() {
-    try {
-      return (BeforeRunTask)super.clone();
+    public boolean isEnabled() {
+        return myIsEnabled;
     }
-    catch (CloneNotSupportedException ignored) {
-      return null;
+
+    public void setEnabled(boolean isEnabled) {
+        myIsEnabled = isEnabled;
     }
-  }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public void writeExternal(Element element) {
+        element.setAttribute("enabled", String.valueOf(myIsEnabled));
+    }
 
-    BeforeRunTask that = (BeforeRunTask)o;
-    if (myProviderId != that.myProviderId) return false;
-    if (myIsEnabled != that.myIsEnabled) return false;
+    public void readExternal(Element element) {
+        String attrValue = element.getAttributeValue("enabled");
+        if (attrValue == null) {
+            attrValue = element.getAttributeValue("value"); // maintain compatibility with old format
+        }
+        if (attrValue == null) {
+            attrValue = "true";
+        }
+        myIsEnabled = Boolean.valueOf(attrValue);
+    }
 
-    return true;
-  }
+    //Task may aggregate several items or targets to do (e.g. BuildArtifactsBeforeRunTask)
+    public int getItemsCount() {
+        return 1;
+    }
 
-  public int hashCode() {
-    return 31 * myProviderId.hashCode() + (myIsEnabled ? 1 : 0);
-  }
+    @Override
+    public BeforeRunTask clone() {
+        try {
+            return (BeforeRunTask) super.clone();
+        }
+        catch (CloneNotSupportedException ignored) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        BeforeRunTask that = (BeforeRunTask) o;
+        return myProviderId == that.myProviderId
+            && myIsEnabled == that.myIsEnabled;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * myProviderId.hashCode() + (myIsEnabled ? 1 : 0);
+    }
 }

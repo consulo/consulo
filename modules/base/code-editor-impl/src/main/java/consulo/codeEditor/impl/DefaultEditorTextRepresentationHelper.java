@@ -20,6 +20,7 @@ import consulo.codeEditor.EditorTextRepresentationHelper;
 import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -32,102 +33,107 @@ import java.awt.font.FontRenderContext;
  * @since 2010-07-27
  */
 public class DefaultEditorTextRepresentationHelper implements EditorTextRepresentationHelper {
+    /**
+     * We don't expect the user to have too many different font sizes and font types within the editor, however, need to
+     * provide a defense from unlimited cache growing.
+     */
+    private static final int MAX_SYMBOLS_WIDTHS_CACHE_SIZE = 1000;
 
-  /**
-   * We don't expect the user to have too many different font sizes and font types within the editor, however, need to
-   * provide a defense from unlimited cache growing.
-   */
-  private static final int MAX_SYMBOLS_WIDTHS_CACHE_SIZE = 1000;
+    /** We cache symbol widths here because it's detected to be a bottleneck. */
+    private final ObjectIntMap<Key> mySymbolWidthCache = ObjectMaps.newObjectIntHashMap();
 
-  /** We cache symbol widths here because it's detected to be a bottleneck. */
-  private final ObjectIntMap<Key> mySymbolWidthCache = ObjectMaps.newObjectIntHashMap();
+    private final Key mySharedKey = new Key();
 
-  private final Key mySharedKey = new Key();
+    /**
+     * This is performance-related optimization because profiling shows that it's rather expensive to call
+     * {@link Editor#getColorsScheme()} often due to contention in 'assert read access'.
+     */
+    private final Editor myEditor;
+    private FontRenderContext myFontRenderContext;
 
-  /**
-   * This is performance-related optimization because profiling shows that it's rather expensive to call
-   * {@link Editor#getColorsScheme()} often due to contention in 'assert read access'.
-   */
-  private final Editor             myEditor;
-  private FontRenderContext myFontRenderContext;
-
-  public DefaultEditorTextRepresentationHelper(Editor editor) {
-    myEditor = editor;
-  }
-
-  @Override
-  public int charWidth(int c, int fontType) {
-    // Symbol width retrieval is detected to be a bottleneck, hence, we perform a caching here in assumption that every representation
-    // helper is editor-bound and cache size is not too big.
-    mySharedKey.fontType = fontType;
-
-    mySharedKey.c = c;
-    return charWidth(c);
-  }
-
-  private int charWidth(int c) {
-    int result = mySymbolWidthCache.getInt(mySharedKey);
-    if (result > 0) {
-      return result;
-    }
-    Key key = mySharedKey.clone();
-    FontInfo font = ComplementaryFontsRegistry.getFontAbleToDisplay(c, key.fontType, myEditor.getColorsScheme().getFontPreferences(),
-                                                                    myFontRenderContext);
-    result = font.charWidth(c);
-    if (mySymbolWidthCache.size() >= MAX_SYMBOLS_WIDTHS_CACHE_SIZE) {
-      // Don't expect to be here.
-      mySymbolWidthCache.clear();
-    }
-    mySymbolWidthCache.putInt(key, result);
-    return result;
-  }
-
-  public void clearSymbolWidthCache() {
-    mySymbolWidthCache.clear();
-  }
-
-  public void updateContext() {
-    FontRenderContext oldContext = myFontRenderContext;
-    myFontRenderContext = FontInfo.getFontRenderContext(myEditor.getContentComponent());
-    if (!myFontRenderContext.equals(oldContext)) clearSymbolWidthCache();
-  }
-
-  private static class Key {
-    @AWTConstants.FontStyle private int fontType;
-    private int c;
-
-    private Key() {
-      this(Font.PLAIN, ' ');
-    }
-
-    Key(@AWTConstants.FontStyle int fontType, int c) {
-      this.fontType = fontType;
-      this.c = c;
+    public DefaultEditorTextRepresentationHelper(Editor editor) {
+        myEditor = editor;
     }
 
     @Override
-    protected Key clone() {
-      return new Key(fontType, c);
+    public int charWidth(int c, int fontType) {
+        // Symbol width retrieval is detected to be a bottleneck, hence, we perform a caching here in assumption that every representation
+        // helper is editor-bound and cache size is not too big.
+        mySharedKey.fontType = fontType;
+
+        mySharedKey.c = c;
+        return charWidth(c);
     }
 
-    @Override
-    public int hashCode() {
-      int result = fontType;
-      result = 31 * result + c;
-      return result;
+    private int charWidth(int c) {
+        int result = mySymbolWidthCache.getInt(mySharedKey);
+        if (result > 0) {
+            return result;
+        }
+        Key key = mySharedKey.clone();
+        FontInfo font = ComplementaryFontsRegistry.getFontAbleToDisplay(c, key.fontType, myEditor.getColorsScheme().getFontPreferences(),
+            myFontRenderContext
+        );
+        result = font.charWidth(c);
+        if (mySymbolWidthCache.size() >= MAX_SYMBOLS_WIDTHS_CACHE_SIZE) {
+            // Don't expect to be here.
+            mySymbolWidthCache.clear();
+        }
+        mySymbolWidthCache.putInt(key, result);
+        return result;
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      Key key = (Key)o;
-
-      if (fontType != key.fontType) return false;
-      if (c != key.c) return false;
-
-      return true;
+    public void clearSymbolWidthCache() {
+        mySymbolWidthCache.clear();
     }
-  }
+
+    public void updateContext() {
+        FontRenderContext oldContext = myFontRenderContext;
+        myFontRenderContext = FontInfo.getFontRenderContext(myEditor.getContentComponent());
+        if (!myFontRenderContext.equals(oldContext)) {
+            clearSymbolWidthCache();
+        }
+    }
+
+    private static class Key {
+        @AWTConstants.FontStyle
+        private int fontType;
+        private int c;
+
+        private Key() {
+            this(Font.PLAIN, ' ');
+        }
+
+        Key(@AWTConstants.FontStyle int fontType, int c) {
+            this.fontType = fontType;
+            this.c = c;
+        }
+
+        @Override
+        protected Key clone() {
+            return new Key(fontType, c);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = fontType;
+            result = 31 * result + c;
+            return result;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            Key that = (Key) o;
+
+            return fontType == that.fontType
+                && c == that.c;
+        }
+    }
 }

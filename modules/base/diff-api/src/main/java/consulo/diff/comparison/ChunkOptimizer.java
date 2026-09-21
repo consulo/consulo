@@ -33,32 +33,21 @@ import static consulo.diff.comparison.iterable.DiffIterableUtil.fair;
 import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 abstract class ChunkOptimizer<T> {
-  
   protected final List<T> myData1;
-  
   protected final List<T> myData2;
-  
   private final FairDiffIterable myIterable;
-
-  
   protected final ProgressIndicator myIndicator;
-
-  
   private final List<Range> myRanges;
 
-  public ChunkOptimizer(List<T> data1,
-                        List<T> data2,
-                        FairDiffIterable iterable,
-                        ProgressIndicator indicator) {
+  public ChunkOptimizer(List<T> data1, List<T> data2, FairDiffIterable iterable, ProgressIndicator indicator) {
     myData1 = data1;
     myData2 = data2;
     myIterable = iterable;
     myIndicator = indicator;
 
-    myRanges = new ArrayList<Range>();
+    myRanges = new ArrayList<>();
   }
 
-  
   public FairDiffIterable build() {
     for (Range range : myIterable.iterateUnchanged()) {
       myRanges.add(range);
@@ -73,17 +62,17 @@ abstract class ChunkOptimizer<T> {
 
     Range range1 = myRanges.get(myRanges.size() - 2);
     Range range2 = myRanges.get(myRanges.size() - 1);
-    if (range1.end1 != range2.start1 && range1.end2 != range2.start2) {
+    if (range1.end1() != range2.start1() && range1.end2() != range2.start2()) {
       // if changes do not touch and we still can perform one of these optimisations,
       // it means that given DiffIterable is not LCS (because we can build a smaller one). This should not happen.
       return;
     }
 
-    int count1 = range1.end1 - range1.start1;
-    int count2 = range2.end1 - range2.start1;
+    int count1 = range1.end1() - range1.start1();
+    int count2 = range2.end1() - range2.start1();
 
-    int equalForward = expandForward(myData1, myData2, range1.end1, range1.end2, range1.end1 + count2, range1.end2 + count2);
-    int equalBackward = expandBackward(myData1, myData2, range2.start1 - count1, range2.start2 - count1, range2.start1, range2.start2);
+    int equalForward = expandForward(myData1, myData2, range1.end1(), range1.end2(), range1.end1() + count2, range1.end2() + count2);
+    int equalBackward = expandBackward(myData1, myData2, range2.start1() - count1, range2.start2() - count1, range2.start1(), range2.start2());
 
     // nothing to do
     if (equalForward == 0 && equalBackward == 0) return;
@@ -92,7 +81,7 @@ abstract class ChunkOptimizer<T> {
     if (equalForward == count2) {
       myRanges.remove(myRanges.size() - 1);
       myRanges.remove(myRanges.size() - 1);
-      myRanges.add(new Range(range1.start1, range1.end1 + count2, range1.start2, range1.end2 + count2));
+      myRanges.add(new Range(range1.start1(), range1.end1() + count2, range1.start2(), range1.end2() + count2));
       processLastRanges();
       return;
     }
@@ -101,19 +90,19 @@ abstract class ChunkOptimizer<T> {
     if (equalBackward == count1) {
       myRanges.remove(myRanges.size() - 1);
       myRanges.remove(myRanges.size() - 1);
-      myRanges.add(new Range(range2.start1 - count1, range2.end1, range2.start2 - count1, range2.end2));
+      myRanges.add(new Range(range2.start1() - count1, range2.end1(), range2.start2() - count1, range2.end2()));
       processLastRanges();
       return;
     }
 
-    Side touchSide = Side.fromLeft(range1.end1 == range2.start1);
+    Side touchSide = Side.fromLeft(range1.end1() == range2.start1());
 
     int shift = getShift(touchSide, equalForward, equalBackward, range1, range2);
     if (shift != 0) {
       myRanges.remove(myRanges.size() - 1);
       myRanges.remove(myRanges.size() - 1);
-      myRanges.add(new Range(range1.start1, range1.end1 + shift, range1.start2, range1.end2 + shift));
-      myRanges.add(new Range(range2.start1 + shift, range2.end1, range2.start2 + shift, range2.end2));
+      myRanges.add(new Range(range1.start1(), range1.end1() + shift, range1.start2(), range1.end2() + shift));
+      myRanges.add(new Range(range2.start1() + shift, range2.end1(), range2.start2() + shift, range2.end2()));
     }
   }
 
@@ -158,7 +147,7 @@ abstract class ChunkOptimizer<T> {
     protected int getShift(Side touchSide, int equalForward, int equalBackward, Range range1, Range range2) {
       List<ByWord.InlineChunk> touchWords = touchSide.select(myData1, myData2);
       CharSequence touchText = touchSide.select(myText1, myText2);
-      int touchStart = touchSide.select(range2.start1, range2.start2);
+      int touchStart = touchSide.select(range2.start1(), range2.start2());
 
       // check if chunks are already separated by whitespaces
       if (isSeparatedWithWhitespace(touchText, touchWords.get(touchStart - 1), touchWords.get(touchStart))) return 0;
@@ -256,7 +245,7 @@ abstract class ChunkOptimizer<T> {
                                               Range range1, Range range2,
                                               int threshold) {
       List<Line> touchLines = touchSide.select(myData1, myData2);
-      int touchStart = touchSide.select(range2.start1, range2.start2);
+      int touchStart = touchSide.select(range2.start1(), range2.start2());
 
       int shiftForward = findNextUnimportantLine(touchLines, touchStart, equalForward + 1, threshold);
       int shiftBackward = findPrevUnimportantLine(touchLines, touchStart - 1, equalBackward + 1, threshold);
@@ -274,8 +263,8 @@ abstract class ChunkOptimizer<T> {
                                             int threshold) {
       Side nonTouchSide = touchSide.other();
       List<Line> nonTouchLines = nonTouchSide.select(myData1, myData2);
-      int changeStart = nonTouchSide.select(range1.end1, range1.end2);
-      int changeEnd = nonTouchSide.select(range2.start1, range2.start2);
+      int changeStart = nonTouchSide.select(range1.end1(), range1.end2());
+      int changeEnd = nonTouchSide.select(range2.start1(), range2.start2());
 
       int shiftForward = findNextUnimportantLine(nonTouchLines, changeStart, equalForward + 1, threshold);
       int shiftBackward = findPrevUnimportantLine(nonTouchLines, changeEnd - 1, equalBackward + 1, threshold);

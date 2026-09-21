@@ -35,12 +35,10 @@ import java.util.List;
 public class DiffIterableUtil {
   private static boolean SHOULD_VERIFY_ITERABLE = Registry.is("diff.verify.iterable");
 
-  /*
+  /**
    * Compare two integer arrays
    */
- 
-  public static FairDiffIterable diff(int[] data1, int[] data2, ProgressIndicator indicator)
-          throws DiffTooBigException {
+  public static FairDiffIterable diff(int[] data1, int[] data2, ProgressIndicator indicator) throws DiffTooBigException {
     indicator.checkCanceled();
 
     try {
@@ -53,12 +51,10 @@ public class DiffIterableUtil {
     }
   }
 
-  /*
+  /**
    * Compare two arrays, basing on equals() and hashCode() of it's elements
    */
- 
-  public static <T> FairDiffIterable diff(T[] data1, T[] data2, ProgressIndicator indicator)
-          throws DiffTooBigException {
+  public static <T> FairDiffIterable diff(T[] data1, T[] data2, ProgressIndicator indicator) throws DiffTooBigException {
     indicator.checkCanceled();
 
     try {
@@ -71,12 +67,10 @@ public class DiffIterableUtil {
     }
   }
 
-  /*
+  /**
    * Compare two lists, basing on equals() and hashCode() of it's elements
    */
- 
-  public static <T> FairDiffIterable diff(List<T> objects1, List<T> objects2, ProgressIndicator indicator)
-          throws DiffTooBigException {
+  public static <T> FairDiffIterable diff(List<T> objects1, List<T> objects2, ProgressIndicator indicator) throws DiffTooBigException {
     indicator.checkCanceled();
 
     // TODO: compare lists instead of arrays in Diff
@@ -89,42 +83,36 @@ public class DiffIterableUtil {
   // Iterable
   //
 
- 
   public static DiffIterable create(Diff.@Nullable Change change, int length1, int length2) {
     DiffChangeDiffIterable iterable = new DiffChangeDiffIterable(change, length1, length2);
     verify(iterable);
     return iterable;
   }
 
- 
   public static DiffIterable createFragments(List<? extends DiffFragment> fragments, int length1, int length2) {
     DiffIterable iterable = new DiffFragmentsDiffIterable(fragments, length1, length2);
     verify(iterable);
     return iterable;
   }
 
- 
   public static DiffIterable create(List<? extends Range> ranges, int length1, int length2) {
     DiffIterable iterable = new RangesDiffIterable(ranges, length1, length2);
     verify(iterable);
     return iterable;
   }
 
- 
   public static DiffIterable createUnchanged(List<? extends Range> ranges, int length1, int length2) {
     DiffIterable invert = invert(create(ranges, length1, length2));
     verify(invert);
     return invert;
   }
 
- 
   public static DiffIterable invert(DiffIterable iterable) {
     DiffIterable wrapper = new InvertedDiffIterableWrapper(iterable);
     verify(wrapper);
     return wrapper;
   }
 
- 
   public static FairDiffIterable fair(DiffIterable iterable) {
     if (iterable instanceof FairDiffIterable) return (FairDiffIterable)iterable;
     FairDiffIterable wrapper = new FairDiffIterableWrapper(iterable);
@@ -132,7 +120,6 @@ public class DiffIterableUtil {
     return wrapper;
   }
 
- 
   public static DiffIterable trim(DiffIterable iterable, int start1, int end1, int start2, int end2) {
     return new SubiterableDiffIterable(iterable, start1, end1, start2, end2);
   }
@@ -145,8 +132,8 @@ public class DiffIterableUtil {
   }
 
   public static int getRangeDelta(Range range) {
-    int deleted = range.end1 - range.start1;
-    int inserted = range.end2 - range.start2;
+    int deleted = range.end1() - range.start1();
+    int inserted = range.end2() - range.start2();
     return inserted - deleted;
   }
 
@@ -154,10 +141,8 @@ public class DiffIterableUtil {
   // Misc
   //
 
- 
   public static Iterable<Pair<Range, Boolean>> iterateAll(final DiffIterable iterable) {
     return () -> new Iterator<>() {
-     
       private final Iterator<Range> myChanges = iterable.changes();
      
       private final Iterator<Range> myUnchanged = iterable.unchanged();
@@ -180,7 +165,7 @@ public class DiffIterableUtil {
           equals = false;
         }
         else {
-          equals = lastUnchanged.start1 < lastChanged.start1 || lastUnchanged.start2 < lastChanged.start2;
+          equals = lastUnchanged.start1() < lastChanged.start1() || lastUnchanged.start2() < lastChanged.start2();
         }
 
         if (equals) {
@@ -231,16 +216,16 @@ public class DiffIterableUtil {
     verify(iterable);
 
     for (Range range : iterable.iterateUnchanged()) {
-      assert range.end1 - range.start1 == range.end2 - range.start2;
+      assert range.end1() - range.start1() == range.end2() - range.start2();
     }
   }
 
   private static void verify(Iterable<Range> iterable) {
     for (Range range : iterable) {
       // verify range
-      assert range.start1 <= range.end1;
-      assert range.start2 <= range.end2;
-      assert range.start1 != range.end1 || range.start2 != range.end2;
+      assert range.start1() <= range.end1();
+      assert range.start2() <= range.end2();
+      assert range.start1() != range.end1() || range.start2() != range.end2();
     }
   }
 
@@ -253,12 +238,12 @@ public class DiffIterableUtil {
       Range range = pair.first;
       Boolean equal = pair.second;
 
-      assert last1 == range.start1;
-      assert last2 == range.start2;
+      assert last1 == range.start1();
+      assert last2 == range.start2();
       assert !Comparing.equal(lastEquals, equal);
 
-      last1 = range.end1;
-      last2 = range.end2;
+      last1 = range.end1();
+      last2 = range.end2();
       lastEquals = equal;
     }
 
@@ -338,7 +323,6 @@ public class DiffIterableUtil {
       }
     }
 
-   
     public DiffIterable finish() {
       finish(myLength1, myLength2);
       return create(myFirstChange, myLength1, myLength2);
@@ -346,9 +330,7 @@ public class DiffIterableUtil {
   }
 
   public static class ExpandChangeBuilder extends ChangeBuilder {
-   
     private final List<?> myObjects1;
-   
     private final List<?> myObjects2;
 
     public ExpandChangeBuilder(List<?> objects1, List<?> objects2) {
@@ -360,7 +342,7 @@ public class DiffIterableUtil {
     @Override
     protected void addChange(int start1, int start2, int end1, int end2) {
       Range range = TrimUtil.expand(myObjects1, myObjects2, start1, start2, end1, end2);
-      if (!range.isEmpty()) super.addChange(range.start1, range.start2, range.end1, range.end2);
+      if (!range.isEmpty()) super.addChange(range.start1(), range.start2(), range.end1(), range.end2());
     }
   }
 
@@ -369,12 +351,7 @@ public class DiffIterableUtil {
   //
 
   @SuppressWarnings("unused")
- 
-  public static <T> List<LineRangeData> extractDataRanges(
-    List<T> objects1,
-    List<T> objects2,
-    DiffIterable iterable
-  ) {
+  public static <T> List<LineRangeData> extractDataRanges(List<T> objects1, List<T> objects2, DiffIterable iterable) {
     List<LineRangeData> result = new ArrayList<>();
 
     for (Pair<Range, Boolean> pair : iterateAll(iterable)) {
@@ -384,10 +361,10 @@ public class DiffIterableUtil {
       List<T> data1 = new ArrayList<>();
       List<T> data2 = new ArrayList<>();
 
-      for (int i = range.start1; i < range.end1; i++) {
+      for (int i = range.start1(); i < range.end1(); i++) {
         data1.add(objects1.get(i));
       }
-      for (int i = range.start2; i < range.end2; i++) {
+      for (int i = range.start2(); i < range.end2(); i++) {
         data2.add(objects2.get(i));
       }
 

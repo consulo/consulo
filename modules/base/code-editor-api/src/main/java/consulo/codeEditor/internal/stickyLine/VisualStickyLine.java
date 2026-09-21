@@ -2,6 +2,7 @@
 package consulo.codeEditor.internal.stickyLine;
 
 import consulo.document.util.TextRange;
+import org.jspecify.annotations.Nullable;
 
 public class VisualStickyLine implements StickyLine {
     private final StickyLine origin;
@@ -59,12 +60,11 @@ public class VisualStickyLine implements StickyLine {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof VisualStickyLine)) return false;
-        VisualStickyLine other = (VisualStickyLine) obj;
-        return primaryVisualLine == other.primaryVisualLine &&
-            scopeVisualLine == other.scopeVisualLine;
+    public boolean equals(@Nullable Object obj) {
+        return this == obj
+            || obj instanceof VisualStickyLine that
+            && primaryVisualLine == that.primaryVisualLine
+            && scopeVisualLine == that.scopeVisualLine;
     }
 
     @Override
