@@ -13,64 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContextFactory;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 
 /**
  * @author max
  */
 public abstract class LocalChangeList implements Cloneable, ChangeList {
-  
   public static final String DEFAULT_NAME = VcsBundle.message("changes.default.changelist.name");
 
-  public static LocalChangeList createEmptyChangeList(Project project, String name) {
-    return VcsContextFactory.getInstance().createLocalChangeList(project, name);
-  }
+    public static LocalChangeList createEmptyChangeList(Project project, String name) {
+        return VcsContextFactory.getInstance().createLocalChangeList(project, name);
+    }
 
-  public abstract Collection<Change> getChanges();
+    @Override
+    public abstract Collection<Change> getChanges();
 
-  /**
-   * Logical id that identifies the changelist and should survive name changing.
-   * @return changelist id
-   */
-  public String getId() {
-    return getName();
-  }
+    /**
+     * Logical id that identifies the changelist and should survive name changing.
+     *
+     * @return changelist id
+     */
+    public String getId() {
+        return getName();
+    }
 
-  
-  public abstract String getName();
+    @Override
+    public abstract String getName();
 
-  public abstract void setName(String name);
+    public abstract void setName(String name);
 
-  public abstract @Nullable String getComment();
+    @Override
+    public abstract @Nullable String getComment();
 
-  public abstract void setComment(@Nullable String comment);
+    public abstract void setComment(@Nullable String comment);
 
-  public abstract boolean isDefault();
+    public abstract boolean isDefault();
 
-  public abstract boolean isReadOnly();
+    public abstract boolean isReadOnly();
 
-  public abstract void setReadOnly(boolean isReadOnly);
+    public abstract void setReadOnly(boolean isReadOnly);
 
-  /**
-   * Get additional data associated with this changelist.
-   */
-  public abstract @Nullable Object getData();
+    /**
+     * Get additional data associated with this changelist.
+     */
+    public abstract @Nullable Object getData();
 
-  public abstract LocalChangeList copy();
+    public abstract LocalChangeList copy();
 
-  public boolean hasDefaultName() {
-    return DEFAULT_NAME.equals(getName());
-  }
+    public boolean hasDefaultName() {
+        return DEFAULT_NAME.equals(getName());
+    }
 
-  public boolean isBlank() {
-    return hasDefaultName() && getData() == null;
-  }
+    public boolean isBlank() {
+        return hasDefaultName() && getData() == null;
+    }
 }

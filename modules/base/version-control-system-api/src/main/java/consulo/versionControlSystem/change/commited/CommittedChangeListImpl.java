@@ -19,6 +19,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,80 +29,85 @@ import java.util.Date;
  * @since 2006-10-20
  */
 public class CommittedChangeListImpl implements CommittedChangeList {
-  private final String myCommitterName;
-  private final Date myCommitDate;
-  private final String myName;
-  private String myComment;
-  private final long myNumber;
-  protected ArrayList<Change> myChanges;
+    private final String myCommitterName;
+    private final Date myCommitDate;
+    private final String myName;
+    private String myComment;
+    private final long myNumber;
+    protected ArrayList<Change> myChanges;
 
-  public CommittedChangeListImpl(String name, String comment, String committerName,
-                                 long number, Date commitDate, Collection<Change> changes) {
-    myCommitterName = committerName;
-    myCommitDate = commitDate;
-    myName = name;
-    myComment = comment;
-    myChanges = new ArrayList<Change>(changes);
-    myNumber = number;
-  }
+    public CommittedChangeListImpl(
+        String name,
+        String comment,
+        String committerName,
+        long number,
+        Date commitDate,
+        Collection<Change> changes
+    ) {
+        myCommitterName = committerName;
+        myCommitDate = commitDate;
+        myName = name;
+        myComment = comment;
+        myChanges = new ArrayList<>(changes);
+        myNumber = number;
+    }
 
-  @Override
-  public String getCommitterName() {
-    return myCommitterName;
-  }
+    @Override
+    public String getCommitterName() {
+        return myCommitterName;
+    }
 
-  @Override
-  public Date getCommitDate() {
-    return myCommitDate;
-  }
+    @Override
+    public Date getCommitDate() {
+        return myCommitDate;
+    }
 
-  @Override
-  public long getNumber() {
-    return myNumber;
-  }
+    @Override
+    public long getNumber() {
+        return myNumber;
+    }
 
-  @Override
-  public String getBranch() {
-    return null;
-  }
+    @Override
+    public String getBranch() {
+        return null;
+    }
 
-  @Override
-  public AbstractVcs getVcs() {
-    return null;
-  }
+    @Override
+    public AbstractVcs getVcs() {
+        return null;
+    }
 
-  @Override
-  public Collection<Change> getChangesWithMovedTrees() {
-    return getChangesWithMovedTreesImpl(this);
-  }
+    @Override
+    public Collection<Change> getChangesWithMovedTrees() {
+        return getChangesWithMovedTreesImpl(this);
+    }
 
-  @Override
-  public boolean isModifiable() {
-    return true;
-  }
+    @Override
+    public boolean isModifiable() {
+        return true;
+    }
 
-  @Override
-  public void setDescription(String newMessage) {
-    myComment = newMessage;
-  }
+    @Override
+    public void setDescription(String newMessage) {
+        myComment = newMessage;
+    }
 
-  public static Collection<Change> getChangesWithMovedTreesImpl(CommittedChangeList list) {
-    return list.getChanges();
-  }
+    public static Collection<Change> getChangesWithMovedTreesImpl(CommittedChangeList list) {
+        return list.getChanges();
+    }
 
-  @Override
-  public Collection<Change> getChanges() {
-    return myChanges;
-  }
+    @Override
+    public Collection<Change> getChanges() {
+        return myChanges;
+    }
 
-  @Override
-  
-  public String getName() {
-    return myName;
-  }
+    @Override
+    public String getName() {
+        return myName;
+    }
 
-  @Override
-  public String getComment() {
-    return myComment;
-  }
+    @Override
+    public String getComment() {
+        return myComment;
+    }
 }
