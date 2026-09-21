@@ -16,108 +16,109 @@
 package consulo.versionControlSystem.impl.internal.util;
 
 import consulo.platform.Platform;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
 public class RelativePathCalculator {
-  private final int ourNumOfAllowedStepsAbove = 1;
-  private static final int ourAllowedStepsDown = 2;
+    private final int ourNumOfAllowedStepsAbove = 1;
+    private static final int ourAllowedStepsDown = 2;
 
-  private final String myShifted;
-  private final String myBase;
+    private final String myShifted;
+    private final String myBase;
 
-  private String myResult;
-  private boolean myRename;
+    private String myResult;
+    private boolean myRename;
 
-  public RelativePathCalculator(String base, String shifted) {
-    myShifted = shifted;
-    myBase = base;
-  }
-
-  private static boolean stringEqual(String s1, String s2) {
-    return Platform.current().fs().isCaseSensitive() ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
-  }
-
-  public void execute() {
-    if (myShifted == null || myBase == null) {
-      myResult = null;
-      return;
-    }
-    if (stringEqual(myShifted, myBase)) {
-      myResult = ".";
-      myRename = false;
-      return;
-    }
-    String[] baseParts = split(myBase);
-    String[] shiftedParts = split(myShifted);
-
-    myRename = checkRename(baseParts, shiftedParts);
-
-    int cnt = 0;
-    while (true) {
-      if ((baseParts.length <= cnt) || (shiftedParts.length <= cnt)) {
-        // means that directory moved to a file or vise versa -> error
-        return;
-      }
-      if (! stringEqual(baseParts[cnt], shiftedParts[cnt])) {
-        break;
-      }
-      ++ cnt;
+    public RelativePathCalculator(String base, String shifted) {
+        myShifted = shifted;
+        myBase = base;
     }
 
-    int stepsUp = baseParts.length - cnt - 1;
-    if ((! myRename) && (stepsUp > ourNumOfAllowedStepsAbove) && ((shiftedParts.length - cnt) <= ourAllowedStepsDown)) {
-      myResult = myShifted;
-      return;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < stepsUp; i++) {
-      sb.append("../");
+    private static boolean stringEqual(String s1, String s2) {
+        return Platform.current().fs().isCaseSensitive() ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
     }
 
-    for (int i = cnt; i < shiftedParts.length; i++) {
-      String shiftedPart = shiftedParts[i];
-      sb.append(shiftedPart);
-      if (i < (shiftedParts.length - 1)) {
-        sb.append('/');
-      }
-    }
-
-    myResult = sb.toString();
-  }
-
-  public boolean isRename() {
-    return myRename;
-  }
-
-  private boolean checkRename(String[] baseParts, String[] shiftedParts) {
-    if (baseParts.length == shiftedParts.length) {
-      for (int i = 0; i < baseParts.length; i++) {
-        if (! stringEqual(baseParts[i], shiftedParts[i])) {
-          return i == (baseParts.length - 1);
+    public void execute() {
+        if (myShifted == null || myBase == null) {
+            myResult = null;
+            return;
         }
-      }
+        if (stringEqual(myShifted, myBase)) {
+            myResult = ".";
+            myRename = false;
+            return;
+        }
+        String[] baseParts = split(myBase);
+        String[] shiftedParts = split(myShifted);
+
+        myRename = checkRename(baseParts, shiftedParts);
+
+        int cnt = 0;
+        while (true) {
+            if (baseParts.length <= cnt || shiftedParts.length <= cnt) {
+                // means that directory moved to a file or vise versa -> error
+                return;
+            }
+            if (!stringEqual(baseParts[cnt], shiftedParts[cnt])) {
+                break;
+            }
+            ++cnt;
+        }
+
+        int stepsUp = baseParts.length - cnt - 1;
+        if (!myRename && stepsUp > ourNumOfAllowedStepsAbove && shiftedParts.length - cnt <= ourAllowedStepsDown) {
+            myResult = myShifted;
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < stepsUp; i++) {
+            sb.append("../");
+        }
+
+        for (int i = cnt; i < shiftedParts.length; i++) {
+            String shiftedPart = shiftedParts[i];
+            sb.append(shiftedPart);
+            if (i < (shiftedParts.length - 1)) {
+                sb.append('/');
+            }
+        }
+
+        myResult = sb.toString();
     }
-    return false;
-  }
 
-  public String getResult() {
-    return myResult;
-  }
-
-  public static @Nullable String getMovedString(String beforeName, String afterName) {
-    if ((beforeName != null) && (afterName != null) && (! stringEqual(beforeName, afterName))) {
-      RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);
-      calculator.execute();
-      String key = (calculator.isRename()) ? "change.file.renamed.to.text" : "change.file.moved.to.text";
-      return VcsBundle.message(key, calculator.getResult());
+    public boolean isRename() {
+        return myRename;
     }
-    return null;
-  }
 
-  public static String[] split(String s) {
-    return s.replace(File.separatorChar, '/').split("/");
-  }
+    private boolean checkRename(String[] baseParts, String[] shiftedParts) {
+        if (baseParts.length == shiftedParts.length) {
+            for (int i = 0; i < baseParts.length; i++) {
+                if (!stringEqual(baseParts[i], shiftedParts[i])) {
+                    return i == (baseParts.length - 1);
+                }
+            }
+        }
+        return false;
+    }
+
+    public String getResult() {
+        return myResult;
+    }
+
+    public static @Nullable String getMovedString(String beforeName, String afterName) {
+        if (beforeName != null && afterName != null && !stringEqual(beforeName, afterName)) {
+            RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);
+            calculator.execute();
+            return calculator.isRename()
+                ? VcsLocalize.changeFileRenamedToText(calculator.getResult()).get()
+                : VcsLocalize.changeFileMovedToText(calculator.getResult()).get();
+        }
+        return null;
+    }
+
+    public static String[] split(String s) {
+        return s.replace(File.separatorChar, '/').split("/");
+    }
 }

@@ -18,6 +18,7 @@ package consulo.versionControlSystem.change.commited;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 
@@ -25,70 +26,78 @@ import java.util.Collections;
  * @author yole
  */
 public class ReceivedChangeList extends CommittedChangeListImpl {
-  
-  private final CommittedChangeList myBaseList;
-  private final int myBaseCount;
-  private boolean myForcePartial;
+    private final CommittedChangeList myBaseList;
+    private final int myBaseCount;
+    private boolean myForcePartial;
 
-  public ReceivedChangeList(CommittedChangeList baseList) {
-    super(baseList.getName(), baseList.getComment(), baseList.getCommitterName(),
-          baseList.getNumber(), baseList.getCommitDate(), Collections.<Change>emptyList());
-    myBaseList = baseList;
-    myBaseCount = baseList.getChanges().size();
-    myForcePartial = false;
-  }
-
-  public void addChange(Change change) {
-    myChanges.add(change);
-  }
-
-  public boolean isPartial() {
-    return myForcePartial || myChanges.size() < myBaseCount;
-  }
-
-  public void setForcePartial(boolean forcePartial) {
-    myForcePartial = forcePartial;
-  }
-
-  @Override
-  public AbstractVcs getVcs() {
-    return myBaseList.getVcs();
-  }
-
-  
-  public CommittedChangeList getBaseList() {
-    return myBaseList;
-  }
-
-  @Override
-  public void setDescription(String newMessage) {
-    myBaseList.setDescription(newMessage);
-  }
-
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    ReceivedChangeList that = (ReceivedChangeList)o;
-
-    if (!myBaseList.equals(that.myBaseList)) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    return myBaseList.hashCode();
-  }
-
-  public static CommittedChangeList unwrap(CommittedChangeList changeList) {
-    if (changeList instanceof ReceivedChangeList) {
-      changeList = ((ReceivedChangeList) changeList).getBaseList();
+    public ReceivedChangeList(CommittedChangeList baseList) {
+        super(
+            baseList.getName(),
+            baseList.getComment(),
+            baseList.getCommitterName(),
+            baseList.getNumber(),
+            baseList.getCommitDate(),
+            Collections.<Change>emptyList()
+        );
+        myBaseList = baseList;
+        myBaseCount = baseList.getChanges().size();
+        myForcePartial = false;
     }
-    return changeList;
-  }
 
-  @Override
-  public String toString() {
-    return myBaseList.toString();
-  }
+    public void addChange(Change change) {
+        myChanges.add(change);
+    }
+
+    public boolean isPartial() {
+        return myForcePartial || myChanges.size() < myBaseCount;
+    }
+
+    public void setForcePartial(boolean forcePartial) {
+        myForcePartial = forcePartial;
+    }
+
+    @Override
+    public AbstractVcs getVcs() {
+        return myBaseList.getVcs();
+    }
+
+    public CommittedChangeList getBaseList() {
+        return myBaseList;
+    }
+
+    @Override
+    public void setDescription(String newMessage) {
+        myBaseList.setDescription(newMessage);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ReceivedChangeList that = (ReceivedChangeList) o;
+
+        return myBaseList.equals(that.myBaseList);
+    }
+
+    @Override
+    public int hashCode() {
+        return myBaseList.hashCode();
+    }
+
+    public static CommittedChangeList unwrap(CommittedChangeList changeList) {
+        if (changeList instanceof ReceivedChangeList receivedChangeList) {
+            changeList = receivedChangeList.getBaseList();
+        }
+        return changeList;
+    }
+
+    @Override
+    public String toString() {
+        return myBaseList.toString();
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.rollback;
 
 import consulo.versionControlSystem.VcsBundle;
@@ -26,7 +25,6 @@ import java.util.List;
  * @author yole
  */
 public abstract class DefaultRollbackEnvironment implements RollbackEnvironment {
-
     public static final String ROLLBACK_OPERATION_NAME = VcsBundle.message("changes.action.rollback.text");
 
     @Override
@@ -35,8 +33,7 @@ public abstract class DefaultRollbackEnvironment implements RollbackEnvironment 
     }
 
     @Override
-    public void rollbackModifiedWithoutCheckout(List<VirtualFile> files, List<VcsException> exceptions,
-                                                RollbackProgressListener listener) {
+    public void rollbackModifiedWithoutCheckout(List<VirtualFile> files, List<VcsException> exceptions, RollbackProgressListener listener) {
         throw new UnsupportedOperationException();
     }
 

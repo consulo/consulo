@@ -27,7 +27,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
@@ -46,6 +45,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class RollbackWorker {
     private final Project myProject;
@@ -217,7 +217,7 @@ public class RollbackWorker {
                 for (Change change : changesToRefresh) {
                     ContentRevision beforeRevision = change.getBeforeRevision();
                     ContentRevision afterRevision = change.getAfterRevision();
-                    if ((!change.isIsReplaced()) && beforeRevision != null && Comparing.equal(beforeRevision, afterRevision)) {
+                    if (!change.isIsReplaced() && beforeRevision != null && Objects.equals(beforeRevision, afterRevision)) {
                         manager.fileDirty(beforeRevision.getFile());
                     }
                     else {

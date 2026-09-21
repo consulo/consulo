@@ -29,7 +29,7 @@ public interface NewErrorTreeViewPanel extends OccurenceNavigator, MutableErrorT
     }
 
     static String createExportPrefix(int line) {
-        return line < 0 ? "" : UILocalize.errortreePrefixLine(line).get();
+        return line < 0 ? "" : UILocalize.errorTreePrefixLine(line).get();
     }
 
     static String createRendererPrefix(int line, int column) {

@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.refactoring.introduce.inplace;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorPopupHelper;
@@ -9,7 +10,6 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.util.TextRange;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
@@ -53,9 +53,9 @@ public abstract class OccurrencesChooser<T> {
         @Override
         public String formatDescription(int occurrencesCount) {
             return switch (this) {
-                case NO -> RefactoringBundle.message("replace.this.occurrence.only");
-                case NO_WRITE -> RefactoringBundle.message("replace.all.occurrences.but.write");
-                case ALL -> RefactoringBundle.message("replace.all.occurrences", occurrencesCount);
+                case NO -> RefactoringLocalize.replaceThisOccurrenceOnly().get();
+                case NO_WRITE -> RefactoringLocalize.replaceAllOccurrencesButWrite().get();
+                case ALL -> RefactoringLocalize.replaceAllOccurrences(occurrencesCount).get();
                 default -> throw new IllegalStateException("Unexpected value: " + this);
             };
         }
@@ -64,6 +64,7 @@ public abstract class OccurrencesChooser<T> {
     public static <T extends PsiElement> OccurrencesChooser<T> simpleChooser(Editor editor) {
         return new OccurrencesChooser<>(editor) {
             @Override
+            @RequiredReadAction
             protected TextRange getOccurrenceRange(T occurrence) {
                 return occurrence.getTextRange();
             }

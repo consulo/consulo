@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.versionBrowser;
 
 import consulo.versionControlSystem.AbstractVcs;
@@ -21,6 +20,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Date;
 
@@ -28,34 +28,35 @@ import java.util.Date;
  * @author max
  */
 public interface CommittedChangeList extends ChangeList {
-  String getCommitterName();
+    String getCommitterName();
 
-  Date getCommitDate();
+    Date getCommitDate();
 
-  long getNumber();
+    long getNumber();
 
-  /**
-   * Returns the branch on which this changelist occurred. This method may return null if
-   * the changelist did not occur on a branch or if branching is not supported.
-   *
-   * @return the branch of this changelist, or null if not applicable.
-   */
-  @Nullable String getBranch();
+    /**
+     * Returns the branch on which this changelist occurred. This method may return null if
+     * the changelist did not occur on a branch or if branching is not supported.
+     *
+     * @return the branch of this changelist, or null if not applicable.
+     */
+    @Nullable
+    String getBranch();
 
-  /**
-   * Returns the VCS by which the changelist was generated. This method must return a not null
-   * value for changelists returned by {@link consulo.ide.impl.idea.openapi.vcs.CachingCommittedChangesProvider}.
-   *
-   * @return the VCS instance.
-   */
-  AbstractVcs getVcs();
+    /**
+     * Returns the VCS by which the changelist was generated. This method must return a not null
+     * value for changelists returned by {@link consulo.ide.impl.idea.openapi.vcs.CachingCommittedChangesProvider}.
+     *
+     * @return the VCS instance.
+     */
+    AbstractVcs getVcs();
 
-  Collection<Change> getChangesWithMovedTrees();
+    Collection<Change> getChangesWithMovedTrees();
 
-  /**
-   * @return true if this change list can be modified, for example, by reverting some of the changes.
-   */
-  boolean isModifiable();
+    /**
+     * @return true if this change list can be modified, for example, by reverting some of the changes.
+     */
+    boolean isModifiable();
 
-  void setDescription(String newMessage);
+    void setDescription(String newMessage);
 }

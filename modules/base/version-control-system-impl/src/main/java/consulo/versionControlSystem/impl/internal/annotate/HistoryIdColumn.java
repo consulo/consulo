@@ -29,41 +29,45 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 class HistoryIdColumn extends AnnotationFieldGutter {
-  private final Map<VcsRevisionNumber, Integer> myHistoryIds;
+    private final Map<VcsRevisionNumber, Integer> myHistoryIds;
 
-  HistoryIdColumn(FileAnnotation annotation,
-                  TextAnnotationPresentation presentation,
-                  Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme,
-                  Map<VcsRevisionNumber, Integer> ids) {
-    super(annotation, presentation, colorScheme);
-    myHistoryIds = ids;
-  }
-
-  @Override
-  public String getLineText(int line, Editor editor) {
-    if (!isAvailable()) return "";
-    VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(line);
-    if (revisionNumber != null) {
-      Integer num = myHistoryIds.get(revisionNumber);
-      if (num != null) {
-        String size = String.valueOf(myHistoryIds.size());
-        String value = num.toString();
-        while (value.length() < size.length()) {
-          value = " " + value;
-        }
-        return value;
-      }
+    HistoryIdColumn(
+        FileAnnotation annotation,
+        TextAnnotationPresentation presentation,
+        Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme,
+        Map<VcsRevisionNumber, Integer> ids
+    ) {
+        super(annotation, presentation, colorScheme);
+        myHistoryIds = ids;
     }
-    return "";
-  }
 
-  @Override
-  public boolean isShowByDefault() {
-    return false;
-  }
+    @Override
+    public String getLineText(int line, Editor editor) {
+        if (!isAvailable()) {
+            return "";
+        }
+        VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(line);
+        if (revisionNumber != null) {
+            Integer num = myHistoryIds.get(revisionNumber);
+            if (num != null) {
+                String size = String.valueOf(myHistoryIds.size());
+                String value = num.toString();
+                while (value.length() < size.length()) {
+                    value = " " + value;
+                }
+                return value;
+            }
+        }
+        return "";
+    }
 
-  @Override
-  public String getID() {
-    return VcsBundle.message("annotation.commit.number");
-  }
+    @Override
+    public boolean isShowByDefault() {
+        return false;
+    }
+
+    @Override
+    public String getID() {
+        return VcsBundle.message("annotation.commit.number");
+    }
 }

@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author UNV
@@ -53,9 +54,15 @@ public final class EmptyLocalizedValue implements LocalizedValue {
     public @Nullable String getNullIfEmpty() {
         return null;
     }
+
     @Override
     public LocalizedValue orIfEmpty(LocalizedValue defaultValue) {
         return defaultValue;
+    }
+
+    @Override
+    public LocalizedValue orIfEmpty(Supplier<LocalizedValue> defaultValueSupplier) {
+        return defaultValueSupplier.get();
     }
 
     @Override

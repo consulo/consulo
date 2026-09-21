@@ -33,36 +33,47 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
     static LocalizedValue empty() {
         return EmptyLocalizedValue.INSTANCE;
     }
+
     static LocalizedValue space() {
         return ConstantLocalizedValue.SPACE;
     }
+
     static LocalizedValue colon() {
         return ConstantLocalizedValue.COLON;
     }
+
     static LocalizedValue dot() {
         return ConstantLocalizedValue.DOT;
     }
+
     static LocalizedValue questionMark() {
         return ConstantLocalizedValue.QUESTION_MARK;
     }
+
     static LocalizedValue localizeTODO(String text) {
         return of(text);
     }
+
     static LocalizedValue of(String text) {
         return text.isEmpty() ? empty() : new ConstantLocalizedValue(text);
     }
+
     static LocalizedValue of(char c) {
         return new ConstantLocalizedValue(String.valueOf(c));
     }
+
     static LocalizedValue ofNullable(@Nullable String text) {
         return text == null ? empty() : of(text);
     }
+
     static LocalizedValue join(LocalizedValue... values) {
         return values.length == 0 ? empty() : new JoinedLocalizedValue(LocalizationManager.get(), values);
     }
+
     static LocalizedValue join(String separator, LocalizedValue... values) {
         return values.length == 0 ? empty() : new SeparatorJoinedLocalizedValue(LocalizationManager.get(), separator, values);
     }
+
     static LocalizedValue joinWithSeparator(LocalizedValue separator, LocalizedValue... values) {
         return values.length == 0 ? empty() : new SeparatorJoinedLocalizedValue2(LocalizationManager.get(), separator, values);
     }
@@ -78,8 +89,11 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
     default boolean isNotEmpty() {
         return !isEmpty();
     }
+
     String getId();
+
     String getValue();
+
     @Override
     default String get() {
         return getValue();
@@ -88,26 +102,37 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
     default @Nullable String getNullIfEmpty() {
         return getValue();
     }
+
     default LocalizedValue orIfEmpty(LocalizedValue defaultValue) {
         return this;
     }
 
+    default LocalizedValue orIfEmpty(Supplier<LocalizedValue> defaultValueSupplier) {
+        return this;
+    }
+
     byte getModificationCount();
+
     default Optional<LocalizationKey> getKey() {
         return Optional.empty();
     }
+
     default LocalizedValue map(Function<String, String> mapper) {
         return new MappedLocalizedValue(LocalizationManager.get(), this, mapper);
     }
+
     default LocalizedValue map(BiFunction<LocalizationManager, String, String> mapper) {
         return new MappedLocalizedValue2(LocalizationManager.get(), this, mapper);
     }
+
     default LocalizedValue toUpperCase() {
         return map(DefaultMapFunctions.TO_UPPER_CASE);
     }
+
     default LocalizedValue toLowerCase() {
         return map(DefaultMapFunctions.TO_LOWER_CASE);
     }
+
     default LocalizedValue capitalize() {
         return map(DefaultMapFunctions.CAPITALIZE);
     }

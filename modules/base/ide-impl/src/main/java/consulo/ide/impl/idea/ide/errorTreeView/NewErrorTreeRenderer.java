@@ -152,10 +152,9 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
         }
     }
 
-    
     public static String calcPrefix(@Nullable ErrorTreeElement element) {
         if (element instanceof SimpleMessageElement || element instanceof NavigatableMessageElement) {
-            String prefix = element.getKind().getPresentableText();
+            String prefix = element.getKind().getPresentableText().get();
 
             if (element instanceof NavigatableMessageElement navigatableMessageElement) {
                 String rendPrefix = navigatableMessageElement.getRendererTextPrefix();
@@ -212,4 +211,3 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
             && node.getUserObject() instanceof ErrorTreeNodeDescriptor errorTreeNodeDescr ? errorTreeNodeDescr.getElement() : null;
     }
 }
-

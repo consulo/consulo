@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
 import java.util.Collection;
@@ -22,10 +21,9 @@ import java.util.Collection;
  * @author max
  */
 public interface ChangeList {
-  Collection<Change> getChanges();
+    Collection<Change> getChanges();
 
-  
-  String getName();
+    String getName();
 
-  String getComment();
+    String getComment();
 }

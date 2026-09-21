@@ -6,12 +6,12 @@ import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.RuntimeConfigurationWarning;
 import consulo.execution.configuration.RuntimeConfigurationError;
 import consulo.localize.LocalizeValue;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.impl.internal.configuration.RemoteServerConnectionTester;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
@@ -54,7 +54,7 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
         IN_PROGRESS {
             @Override
             public void validateConnection() throws RuntimeConfigurationException {
-                throw new RuntimeConfigurationWarning(CloudBundle.message("remote.server.combo.message.test.connection.in.progress"));
+                throw new RuntimeConfigurationWarning(RemoteServerLocalize.remoteServerComboMessageTestConnectionInProgress());
             }
         },
         SUCCESSFUL {
@@ -67,7 +67,8 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
             @Override
             public void validateConnection() throws RuntimeConfigurationException {
                 throw new RuntimeConfigurationError(
-                    CloudBundle.message("remote.server.combo.message.test.connection.failed")/*, () -> createAndEditNewServer()*/);
+                    RemoteServerLocalize.remoteServerComboMessageTestConnectionFailed()/*, () -> createAndEditNewServer()*/
+                );
             }
         };
 
@@ -88,8 +89,10 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
             ui.setIcon(getServerType().getIcon());
 
             boolean failed = myTestConnectionStateA.get() == TestConnectionState.FAILED;
-            ui.append(CloudBundle.message("remote.server.combo.auto.detected.server", getServerType().getPresentableName()),
-                failed ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES);
+            ui.append(
+                RemoteServerLocalize.remoteServerComboAutoDetectedServer(getServerType().getPresentableName()),
+                failed ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES
+            );
         }
 
         public void validateConnection() throws RuntimeConfigurationException {

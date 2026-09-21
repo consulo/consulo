@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -79,19 +78,22 @@ public class CommonRefactoringUtil {
     // order of usages across different files is irrelevant
     @RequiredReadAction
     public static void sortDepthFirstRightLeftOrder(UsageInfo[] usages) {
-        Arrays.sort(usages, (usage1, usage2) -> {
-            PsiElement element1 = usage1.getElement(), element2 = usage2.getElement();
-            if (element1 == element2) {
-                return 0;
+        Arrays.sort(
+            usages,
+            (usage1, usage2) -> {
+                PsiElement element1 = usage1.getElement(), element2 = usage2.getElement();
+                if (element1 == element2) {
+                    return 0;
+                }
+                if (element1 == null) {
+                    return 1;
+                }
+                if (element2 == null) {
+                    return -1;
+                }
+                return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
             }
-            if (element1 == null) {
-                return 1;
-            }
-            if (element2 == null) {
-                return -1;
-            }
-            return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
-        });
+        );
     }
 
     /**

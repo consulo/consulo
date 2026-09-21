@@ -52,6 +52,7 @@ public class EmptyLocalizedValueTest {
     void testOrIfEmpty() {
         LocalizedValue otherValue = LocalizedValue.dot();
         assertThat(value.orIfEmpty(otherValue)).isSameAs(otherValue);
+        assertThat(value.orIfEmpty(() -> otherValue)).isSameAs(otherValue);
     }
 
     @Test
