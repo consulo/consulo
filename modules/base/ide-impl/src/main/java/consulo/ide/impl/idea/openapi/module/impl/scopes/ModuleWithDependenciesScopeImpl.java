@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.module.impl.scopes;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.language.localize.LanguageLocalize;
-import consulo.language.psi.PsiBundle;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -35,9 +34,9 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -54,6 +53,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     }
 
     private final Module myModule;
+
     @ScopeConstant
     private final int myOptions;
 
@@ -133,7 +133,6 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         }
     }
 
-    
     @Override
     public Module getModule() {
         return myModule;
@@ -143,7 +142,6 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         return (myOptions & option) != 0;
     }
 
-    
     @Override
     public String getDisplayName() {
         if (hasOption(COMPILE)) {

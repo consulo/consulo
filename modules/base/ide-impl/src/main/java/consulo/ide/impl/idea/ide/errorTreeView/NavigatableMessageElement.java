@@ -25,47 +25,52 @@ import org.jspecify.annotations.Nullable;
  * @since 2004-11-12
  */
 public class NavigatableMessageElement extends ErrorTreeElement {
-  private final GroupingElement myParent;
-  private final String[] myMessage;
-  private final Navigatable myNavigatable;
-  private final String myExportText;
-  private final String myRendererTextPrefix;
+    private final GroupingElement myParent;
+    private final String[] myMessage;
+    private final Navigatable myNavigatable;
+    private final String myExportText;
+    private final String myRendererTextPrefix;
 
-  public NavigatableMessageElement(ErrorTreeElementKind kind,
-                                   @Nullable GroupingElement parent,
-                                   String[] message,
-                                   Navigatable navigatable,
-                                   String exportText,
-                                   String rendererTextPrefix) {
-    super(kind);
-    myParent = parent;
-    myMessage = message;
-    myNavigatable = navigatable;
-    myExportText = exportText;
-    myRendererTextPrefix = rendererTextPrefix;
-  }
+    public NavigatableMessageElement(
+        ErrorTreeElementKind kind,
+        @Nullable GroupingElement parent,
+        String[] message,
+        Navigatable navigatable,
+        String exportText,
+        String rendererTextPrefix
+    ) {
+        super(kind);
+        myParent = parent;
+        myMessage = message;
+        myNavigatable = navigatable;
+        myExportText = exportText;
+        myRendererTextPrefix = rendererTextPrefix;
+    }
 
-  public Navigatable getNavigatable() {
-    return myNavigatable;
-  }
+    public Navigatable getNavigatable() {
+        return myNavigatable;
+    }
 
-  public String[] getText() {
-    return myMessage;
-  }
+    @Override
+    public String[] getText() {
+        return myMessage;
+    }
 
-  public Object getData() {
-    return myParent.getData();
-  }
+    @Override
+    public Object getData() {
+        return myParent.getData();
+    }
 
-  public @Nullable GroupingElement getParent() {
-    return myParent;
-  }
+    public @Nullable GroupingElement getParent() {
+        return myParent;
+    }
 
-  public String getExportTextPrefix() {
-    return getKind().getPresentableText() + myExportText;
-  }
+    @Override
+    public String getExportTextPrefix() {
+        return getKind().getPresentableText().get() + myExportText;
+    }
 
-  public String getRendererTextPrefix() {
-    return myRendererTextPrefix;
-  }
+    public String getRendererTextPrefix() {
+        return myRendererTextPrefix;
+    }
 }

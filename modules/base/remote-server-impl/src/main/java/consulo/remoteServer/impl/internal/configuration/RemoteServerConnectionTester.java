@@ -5,8 +5,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.localize.LocalizeValue;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.configuration.RemoteServer;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.remoteServer.runtime.ServerConnector;
@@ -49,7 +49,7 @@ public class RemoteServerConnectionTester {
             }
         });
 
-        new Task.Backgroundable(null, CloudBundle.message("task.title.connecting"), true) {
+        new Task.Backgroundable(null, RemoteServerLocalize.taskTitleConnecting(), true) {
             @Override
             public void run(ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);

@@ -2,12 +2,12 @@
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
 import consulo.application.util.RecursionManager;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.impl.internal.configuration.RemoteServerListConfigurable;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.UserActivityProviderComponent;
 import consulo.ui.ex.awt.*;
@@ -243,11 +243,10 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
     }
 
     private class CreateNewServerItem implements TransientItem {
-
         @Override
         public void render(SimpleColoredComponent ui) {
             ui.setIcon(Image.empty(myServerType.getIcon().getWidth(), myServerType.getIcon().getHeight()));
-            ui.append(CloudBundle.message("remote.server.combo.create.new.server"), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            ui.append(RemoteServerLocalize.remoteServerComboCreateNewServer(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
 
         @Override
@@ -302,7 +301,8 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         @Override
         public void render(SimpleColoredComponent ui) {
             RemoteServer<?> server = findRemoteServer();
-            SimpleTextAttributes attributes = server == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
+            SimpleTextAttributes attributes =
+                server == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
             ui.setIcon(server == null ? null : myServerType.getIcon());
             ui.append(StringUtil.notNullize(myServerName), attributes);
         }
@@ -337,7 +337,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         @Override
         public void render(SimpleColoredComponent ui) {
             ui.setIcon(null);
-            ui.append(CloudBundle.message("remote.server.combo.no.servers"), SimpleTextAttributes.ERROR_ATTRIBUTES);
+            ui.append(RemoteServerLocalize.remoteServerComboNoServers(), SimpleTextAttributes.ERROR_ATTRIBUTES);
         }
     }
 }

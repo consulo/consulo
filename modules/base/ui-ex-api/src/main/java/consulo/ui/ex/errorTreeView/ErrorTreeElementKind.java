@@ -15,52 +15,47 @@
  */
 package consulo.ui.ex.errorTreeView;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.MessageCategory;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2004-11-12
  */
 public enum ErrorTreeElementKind {
-  INFO("INFO", UIBundle.message("errortree.information")),
-  ERROR("ERROR", UIBundle.message("errortree.error")),
-  WARNING("WARNING", UIBundle.message("errortree.warning")),
-  NOTE("NOTE", UIBundle.message("errortree.note")),
-  GENERIC("GENERIC", "");
+    INFO("INFO", UILocalize.errorTreeInformation()),
+    ERROR("ERROR", UILocalize.errorTreeError()),
+    WARNING("WARNING", UILocalize.errorTreeWarning()),
+    NOTE("NOTE", UILocalize.errorTreeNote()),
+    GENERIC("GENERIC", LocalizeValue.empty());
 
-  private final String myText;
-  private final String myPresentableText;
+    private final String myText;
+    private final LocalizeValue myPresentableText;
 
-  private ErrorTreeElementKind(String text, String presentableText) {
-    myText = text;
-    myPresentableText = presentableText;
-  }
-
-  public String toString() {
-    return myText; // for debug purposes
-  }
-
-  public String getPresentableText() {
-    return myPresentableText;
-  }
-
-  
-  public static ErrorTreeElementKind convertMessageFromCompilerErrorType(int type) {
-    switch (type) {
-      case MessageCategory.ERROR:
-        return ERROR;
-      case MessageCategory.WARNING:
-        return WARNING;
-      case MessageCategory.INFORMATION:
-        return INFO;
-      case MessageCategory.STATISTICS:
-        return INFO;
-      case MessageCategory.SIMPLE:
-        return GENERIC;
-      case MessageCategory.NOTE:
-        return NOTE;
-      default:
-        return GENERIC;
+    private ErrorTreeElementKind(String text, LocalizeValue presentableText) {
+        myText = text;
+        myPresentableText = presentableText;
     }
-  }}
+
+    @Override
+    public String toString() {
+        return myText; // for debug purposes
+    }
+
+    public LocalizeValue getPresentableText() {
+        return myPresentableText;
+    }
+
+    public static ErrorTreeElementKind convertMessageFromCompilerErrorType(int type) {
+        return switch (type) {
+            case MessageCategory.ERROR -> ERROR;
+            case MessageCategory.WARNING -> WARNING;
+            case MessageCategory.INFORMATION -> INFO;
+            case MessageCategory.STATISTICS -> INFO;
+            case MessageCategory.SIMPLE -> GENERIC;
+            case MessageCategory.NOTE -> NOTE;
+            default -> GENERIC;
+        };
+    }
+}

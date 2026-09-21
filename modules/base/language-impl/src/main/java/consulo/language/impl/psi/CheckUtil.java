@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
-import consulo.language.psi.PsiBundle;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -27,40 +26,42 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 public class CheckUtil {
-  private CheckUtil() { }
-
-  public static void checkWritable(PsiElement element) throws IncorrectOperationException {
-    if (!element.isWritable()) {
-      if (element instanceof PsiDirectory) {
-        throw new IncorrectOperationException(
-          PsiBundle.message("cannot.modify.a.read.only.directory", ((PsiDirectory)element).getVirtualFile().getPresentableUrl()));
-      }
-      else {
-        PsiFile file = element.getContainingFile();
-        if (file == null) {
-          throw new IncorrectOperationException();
-        }
-        VirtualFile virtualFile = file.getVirtualFile();
-        if (virtualFile == null) {
-          throw new IncorrectOperationException();
-        }
-        throw new IncorrectOperationException(PsiBundle.message("cannot.modify.a.read.only.file", virtualFile.getPresentableUrl()));
-      }
+    private CheckUtil() {
     }
-  }
 
-  public static void checkDelete(VirtualFile file) throws IncorrectOperationException {
-    VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
-      @Override
-      public boolean visitFile(VirtualFile file) {
-        if (FileTypeRegistry.getInstance().isFileIgnored(file)) {
-          return false;
+    public static void checkWritable(PsiElement element) throws IncorrectOperationException {
+        if (!element.isWritable()) {
+            if (element instanceof PsiDirectory directory) {
+                throw new IncorrectOperationException(
+                    LanguageLocalize.cannotModifyAReadOnlyDirectory(directory.getVirtualFile().getPresentableUrl())
+                );
+            }
+            else {
+                PsiFile file = element.getContainingFile();
+                if (file == null) {
+                    throw new IncorrectOperationException();
+                }
+                VirtualFile virtualFile = file.getVirtualFile();
+                if (virtualFile == null) {
+                    throw new IncorrectOperationException();
+                }
+                throw new IncorrectOperationException(LanguageLocalize.cannotModifyAReadOnlyFile(virtualFile.getPresentableUrl()));
+            }
         }
-        if (!file.isWritable()) {
-          throw new IncorrectOperationException(PsiBundle.message("cannot.delete.a.read.only.file", file.getPresentableUrl()));
-        }
-        return true;
-      }
-    });
-  }
+    }
+
+    public static void checkDelete(VirtualFile file) throws IncorrectOperationException {
+        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
+            @Override
+            public boolean visitFile(VirtualFile file) {
+                if (FileTypeRegistry.getInstance().isFileIgnored(file)) {
+                    return false;
+                }
+                if (!file.isWritable()) {
+                    throw new IncorrectOperationException(LanguageLocalize.cannotDeleteAReadOnlyFile(file.getPresentableUrl()));
+                }
+                return true;
+            }
+        });
+    }
 }
