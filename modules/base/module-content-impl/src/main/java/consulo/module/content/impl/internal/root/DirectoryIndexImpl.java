@@ -45,6 +45,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 @ServiceImpl
@@ -91,7 +92,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
             }
 
             @Override
-            public void modulesRenamed(Project project, List<Module> modules) {
+            public void modulesRenamed(Project project, Map<Module, String> modulesWithOldName) {
                 myRootIndex = null;
             }
         });

@@ -76,10 +76,10 @@ public class HierarchyBrowseServiceImpl implements HierarchyBrowseService {
 
     @Override
     public boolean isSupported(HierarchyKind kind) {
-        if (!HierarchyBrowserFactory.getInstance().isSupported()) {
-            return false;
-        }
-        return myProject.getApplication().getExtensionPoint(HierarchyProvider.class).anyMatchSafe(provider -> kind.equals(provider.getKind()));
+        return myProject
+            .getApplication()
+            .getExtensionPoint(HierarchyProvider.class)
+            .anyMatchSafe(provider -> kind.equals(provider.getKind()));
     }
 
     @Override

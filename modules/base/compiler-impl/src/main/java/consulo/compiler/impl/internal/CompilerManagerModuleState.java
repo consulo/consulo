@@ -16,13 +16,17 @@
 package consulo.compiler.impl.internal;
 
 import com.dslplatform.json.CompiledJson;
+import com.sun.jna.platform.win32.COM.util.annotation.ComObject;
+import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -37,7 +41,24 @@ public class CompilerManagerModuleState {
     @Attribute
     public boolean exclude = true;
 
+    @Attribute
+    public boolean inherit = true;
+
     @Property(surroundWithTag = false)
     @AbstractCollection(surroundWithTag = false)
     public List<CompilerManagerOutputState> outputs = new ArrayList<>();
+
+    public CompilerManagerOutputState findByType(String typeId) {
+        for (CompilerManagerOutputState output : outputs) {
+            if (Objects.equals(output.type, typeId)) {
+                return output;
+            }
+        }
+        return null;
+    }
+
+    public void add(CompilerManagerOutputState state) {
+        outputs.add(state);
+        Lists.quickSort(outputs, Comparator.comparing(it -> it.type));
+    }
 }

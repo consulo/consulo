@@ -15,13 +15,16 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ReadAction;
 import consulo.compiler.CompilerConfiguration;
-import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.setting.ExcludedEntriesConfiguration;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.module.Module;
-import consulo.module.ModuleManager;
+import consulo.module.event.ModuleListener;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
@@ -30,23 +33,80 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2013-06-10
  */
 @Singleton
 @ServiceImpl
-public class CompilerConfigurationImpl extends CompilerConfiguration {
+@State(name = "CompilerManager", storages = @Storage("compiler.xml"))
+public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<CompilerManagerState>, Disposable {
     private static final String DEFAULT_OUTPUT_URL = "out";
 
     private final Project myProject;
-    private final ModuleManager myModuleManager;
     private @Nullable String myOutputDirUrl;
 
+    private final ExcludedEntriesConfiguration myExcludedEntriesConfiguration = new ExcludedEntriesConfiguration();
+
+    private final Map<String, CompilerManagerModuleState> myModulesConfiguration = new ConcurrentSkipListMap<>();
+
     @Inject
-    public CompilerConfigurationImpl(Project project, ModuleManager moduleManager) {
+    public CompilerConfigurationImpl(Project project) {
         myProject = project;
-        myModuleManager = moduleManager;
+
+        project.getMessageBus().connect(this).subscribe(ModuleListener.class, new ModuleListener() {
+            @Override
+            public void moduleRemoved(Project project, Module module) {
+                myModulesConfiguration.remove(module.getName());
+            }
+
+            @Override
+            public void modulesRenamed(Project project, Map<Module, String> modulesWithOldName) {
+                for (Map.Entry<Module, String> entry : modulesWithOldName.entrySet()) {
+                    Module module = entry.getKey();
+                    String oldName = entry.getValue();
+
+                    CompilerManagerModuleState managerModuleState = forModule(oldName);
+                    if (managerModuleState != null) {
+                        managerModuleState.name = module.getName();
+                    }
+                }
+            }
+        });
+        
+        Disposer.register(this, myExcludedEntriesConfiguration);
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    public @Nullable CompilerManagerModuleState forModule(String moduleName) {
+        return myModulesConfiguration.get(moduleName);
+    }
+
+    public void editModuleState(String moduleName, Consumer<CompilerManagerModuleState> consumer) {
+        consumer.accept(myModulesConfiguration.computeIfAbsent(moduleName, s -> {
+            CompilerManagerModuleState state = new CompilerManagerModuleState();
+            state.name = moduleName;
+            return state;
+        }));
+    }
+
+    @Override
+    public boolean isExcludedFromCompilation(Path file) {
+        return myExcludedEntriesConfiguration.isExcluded(file);
+    }
+
+    @Override
+    public ExcludedEntriesConfiguration getExcludedEntriesConfiguration() {
+        return myExcludedEntriesConfiguration;
     }
 
     @Override
@@ -65,36 +125,42 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
         myOutputDirUrl = compilerOutputUrl;
     }
 
-    @RequiredReadAction
-    public void getState(CompilerManagerState state) {
+    @Override
+    public CompilerManagerState getState() {
+        CompilerManagerState state = new CompilerManagerState();
+
         state.url = myOutputDirUrl;
 
-        for (Module module : myModuleManager.getModules()) {
-            ModuleCompilerPathsManagerImpl moduleCompilerPathsManager =
-                (ModuleCompilerPathsManagerImpl) ModuleCompilerPathsManager.getInstance(module);
-            CompilerManagerModuleState moduleState = moduleCompilerPathsManager.getState();
-            if (moduleState != null) {
-                state.modules.add(moduleState);
-            }
+        if (!myExcludedEntriesConfiguration.isEmpty()) {
+            state.excludeFromCompilation = myExcludedEntriesConfiguration.getState();
         }
+
+        for (CompilerManagerModuleState managerModuleState : myModulesConfiguration.values()) {
+            state.modules.add(managerModuleState);
+        }
+
+        return state;
     }
 
+    @Override
     public void loadState(CompilerManagerState state) {
         if (state.url != null) {
             setCompilerOutputUrl(state.url);
         }
+
+        if (state.excludeFromCompilation != null) {
+            myExcludedEntriesConfiguration.loadState(state.excludeFromCompilation);
+        }
+
+        myModulesConfiguration.clear();
 
         for (CompilerManagerModuleState moduleState : state.modules) {
             String name = moduleState.name;
             if (name == null) {
                 continue;
             }
-            Module module = ReadAction.compute(() -> myModuleManager.findModuleByName(name));
-            if (module != null) {
-                ModuleCompilerPathsManagerImpl moduleCompilerPathsManager =
-                    (ModuleCompilerPathsManagerImpl) ModuleCompilerPathsManager.getInstance(module);
-                moduleCompilerPathsManager.loadState(moduleState);
-            }
+
+            myModulesConfiguration.put(name, moduleState);
         }
     }
 }

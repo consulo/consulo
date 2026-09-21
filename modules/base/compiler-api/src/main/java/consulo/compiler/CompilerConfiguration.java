@@ -17,6 +17,7 @@ package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.compiler.setting.ExcludedEntriesConfiguration;
 import consulo.project.Project;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
@@ -43,4 +44,8 @@ public abstract class CompilerConfiguration {
     public abstract @Nullable String getCompilerOutputUrl();
 
     public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
+
+    public abstract boolean isExcludedFromCompilation(Path file);
+
+    public abstract ExcludedEntriesConfiguration getExcludedEntriesConfiguration();
 }

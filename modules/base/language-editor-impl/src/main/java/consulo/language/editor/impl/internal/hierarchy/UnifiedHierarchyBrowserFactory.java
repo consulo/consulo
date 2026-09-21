@@ -27,20 +27,12 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Stands in for the frontends which cannot draw a hierarchy yet. Answering {@code false} from
- * {@link #isSupported()} hides every hierarchy action instead of letting one fail when invoked.
- *
  * @author VISTALL
  * @since 2026-09-19
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 public class UnifiedHierarchyBrowserFactory implements HierarchyBrowserFactory {
-    @Override
-    public boolean isSupported() {
-        return false;
-    }
-
     @Override
     @RequiredUIAccess
     public @Nullable HierarchyBrowser createBrowser(Project project, HierarchyModel<? extends PsiElement> model) {

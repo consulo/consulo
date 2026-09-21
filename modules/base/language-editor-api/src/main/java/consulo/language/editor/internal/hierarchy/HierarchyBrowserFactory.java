@@ -32,11 +32,6 @@ import org.jspecify.annotations.Nullable;
  * Application scoped on purpose: which implementation is bound follows the frontend profile alone, the
  * factory itself holds no state, and the project a browser belongs to is handed to
  * {@link #createBrowser(Project, HierarchyModel)} per call.
- * <p>
- * A frontend which cannot draw a hierarchy yet binds a stub answering {@code false} from
- * {@link #isSupported()}, so the hierarchy actions are hidden rather than failing when invoked.
- * <p>
- * Not plugin-facing.
  *
  * @author VISTALL
  * @since 2026-09-19
@@ -46,12 +41,6 @@ public interface HierarchyBrowserFactory {
     static HierarchyBrowserFactory getInstance() {
         return Application.get().getInstance(HierarchyBrowserFactory.class);
     }
-
-    /**
-     * Whether this frontend can draw a hierarchy at all. Checked while updating an action, so it must not
-     * build anything.
-     */
-    boolean isSupported();
 
     /**
      * Builds a browser over the given model, showing it nowhere. Answers null where this frontend cannot

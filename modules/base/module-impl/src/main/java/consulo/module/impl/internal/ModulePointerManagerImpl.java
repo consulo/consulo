@@ -28,9 +28,10 @@ import consulo.module.event.ModuleListener;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nik
@@ -38,44 +39,44 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> implements ModulePointerManager {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public ModulePointerManagerImpl(Project project) {
-    myProject = project;
-    project.getMessageBus().connect().subscribe(ModuleListener.class, new ModuleAdapter() {
-      @Override
-      public void beforeModuleRemoved(Project project, Module module) {
-        unregisterPointer(module);
-      }
+    @Inject
+    public ModulePointerManagerImpl(Project project) {
+        myProject = project;
+        project.getMessageBus().connect().subscribe(ModuleListener.class, new ModuleListener() {
+            @Override
+            public void beforeModuleRemoved(Project project, Module module) {
+                unregisterPointer(module);
+            }
 
-      @Override
-      public void moduleAdded(Project project, Module module) {
-        updatePointers(module);
-      }
+            @Override
+            public void moduleAdded(Project project, Module module) {
+                updatePointers(module);
+            }
 
-      @Override
-      public void modulesRenamed(Project project, List<Module> modules) {
-        for (Module module : modules) {
-          updatePointers(module);
-        }
-      }
-    });
-  }
-
-  @Override
-  protected void registerPointer(Module value, NamedPointerImpl<Module> pointer) {
-    super.registerPointer(value, pointer);
-
-    Disposer.register(value, () -> unregisterPointer(value));
-  }
-
-  @Override
-  @RequiredReadAction
-  protected @Nullable Module findByName(String name) {
-    if (!myProject.isModulesReady()) {
-      return null;
+            @Override
+            public void modulesRenamed(Project project, Map<Module, String> modulesWithOldName) {
+                for (Module module : modulesWithOldName.keySet()) {
+                    updatePointers(module);
+                }
+            }
+        });
     }
-    return ModuleManager.getInstance(myProject).findModuleByName(name);
-  }
+
+    @Override
+    protected void registerPointer(Module value, NamedPointerImpl<Module> pointer) {
+        super.registerPointer(value, pointer);
+
+        Disposer.register(value, () -> unregisterPointer(value));
+    }
+
+    @Override
+    @RequiredReadAction
+    protected @Nullable Module findByName(String name) {
+        if (!myProject.isModulesReady()) {
+            return null;
+        }
+        return ModuleManager.getInstance(myProject).findModuleByName(name);
+    }
 }

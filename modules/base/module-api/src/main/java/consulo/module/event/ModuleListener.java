@@ -22,6 +22,7 @@ import consulo.project.Project;
 
 import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author max
@@ -37,6 +38,11 @@ public interface ModuleListener extends EventListener {
     default void moduleRemoved(Project project, Module module) {
     }
 
+    default void modulesRenamed(Project project, Map<Module, String> modulesWithOldName) {
+        modulesRenamed(project, List.copyOf(modulesWithOldName.keySet()));
+    }
+
+    @Deprecated
     default void modulesRenamed(Project project, List<Module> modules) {
     }
 }

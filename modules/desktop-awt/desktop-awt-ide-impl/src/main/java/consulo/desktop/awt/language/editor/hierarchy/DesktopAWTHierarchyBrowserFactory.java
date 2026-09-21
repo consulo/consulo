@@ -35,11 +35,6 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.AWT)
 public class DesktopAWTHierarchyBrowserFactory implements HierarchyBrowserFactory {
     @Override
-    public boolean isSupported() {
-        return true;
-    }
-
-    @Override
     @RequiredUIAccess
     public HierarchyBrowser createBrowser(Project project, HierarchyModel<? extends PsiElement> model) {
         return new DesktopAWTHierarchyBrowser(project, model);

@@ -352,9 +352,9 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         myMessageBus.syncPublisher(ModuleListener.class).beforeModuleRemoved(myProject, module);
     }
 
-    protected void fireModulesRenamed(List<Module> modules) {
-        if (!modules.isEmpty()) {
-            myMessageBus.syncPublisher(ModuleListener.class).modulesRenamed(myProject, modules);
+    protected void fireModulesRenamed(Map<Module, String> modulesWithOldNames) {
+        if (!modulesWithOldNames.isEmpty()) {
+            myMessageBus.syncPublisher(ModuleListener.class).modulesRenamed(myProject, modulesWithOldNames);
         }
     }
 
@@ -954,11 +954,11 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 Map<Module, String> modulesToNewNamesMap = moduleModel.myModuleToNewName;
                 Set<Module> modulesToBeRenamed = modulesToNewNamesMap.keySet();
                 modulesToBeRenamed.removeAll(moduleModel.myModulesToDispose);
-                List<Module> modules = new ArrayList<>();
+                Map<Module, String> modulesWithOldNames = new LinkedHashMap<>();
                 for (Module moduleToBeRenamed : modulesToBeRenamed) {
                     ModuleEx module = (ModuleEx) moduleToBeRenamed;
                     moduleModel.myModules.remove(moduleToBeRenamed);
-                    modules.add(moduleToBeRenamed);
+                    modulesWithOldNames.put(module, module.getName());
                     module.rename(modulesToNewNamesMap.get(moduleToBeRenamed));
                     moduleModel.myModules.add(module);
                 }
@@ -980,7 +980,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                     cleanCachedStuff();
                 }
                 cleanCachedStuff();
-                fireModulesRenamed(modules);
+                fireModulesRenamed(modulesWithOldNames);
                 cleanCachedStuff();
             },
             info
