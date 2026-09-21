@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.hierarchy;
+package consulo.test.light.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
@@ -28,13 +28,13 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 2026-09-19
+ * @since 2026-09-21
  */
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedHierarchyBrowserFactory implements HierarchyBrowserFactory {
-    @Override
+public class LightHierarchyBrowserFactory implements HierarchyBrowserFactory {
     @RequiredUIAccess
+    @Override
     public @Nullable HierarchyBrowser createBrowser(Project project, HierarchyModel<? extends PsiElement> model) {
         return null;
     }

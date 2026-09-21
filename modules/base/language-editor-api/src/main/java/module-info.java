@@ -104,6 +104,7 @@ module consulo.language.editor.api {
         consulo.desktop.qt.ide.impl,
         consulo.ide.impl,
         consulo.it,
+        consulo.test.impl,
         consulo.language.editor.impl,
         consulo.web.ide;
 

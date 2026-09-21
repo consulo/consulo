@@ -12,6 +12,7 @@ module consulo.test.impl {
   requires transitive consulo.language.api;
   requires transitive consulo.ui.api;
   requires transitive consulo.ui.ex.api;
+  requires transitive consulo.language.editor.api;
 
   requires consulo.ui.impl;
   requires consulo.component.impl;
