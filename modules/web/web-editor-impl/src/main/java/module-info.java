@@ -56,4 +56,6 @@ module consulo.web.editor.impl {
 
     opens consulo.web.editor.impl.internal to
         flow.server;
+
+    opens consulo.web.editor.impl.internal.gutter to tools.jackson.databind;
 }
