@@ -2,6 +2,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.impl.internal.inlay.setting;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.language.Language;
@@ -61,6 +62,7 @@ public abstract class InlayProviderSettingsModel {
 
     public abstract JComponent getComponent();
 
+    @RequiredReadAction
     public Runnable collectData(Editor editor, PsiFile file) {
         return () -> collectAndApply(editor, file);
     }

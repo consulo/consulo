@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -39,6 +40,7 @@ public class ChangeOnClickPresentation extends StatefulPresentation<ChangeOnClic
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         if (getState().clicked) {
             super.mouseClicked(event, translated);

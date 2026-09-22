@@ -61,10 +61,12 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     }
 
     @Override
+    @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
     }
 
     @Override
+    @RequiredUIAccess
     public void doApplyInformationToEditor() {
         myProject.getUIAccess().give(this::showImports);
     }

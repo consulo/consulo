@@ -4,13 +4,12 @@ package consulo.language.editor.impl.internal.inlay.setting;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponentWithModificationTracker;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.util.xml.serializer.XmlSerializerUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -19,10 +18,8 @@ import java.util.Objects;
 @ServiceImpl
 @Singleton
 public class DeclarativeInlayHintsSettings implements PersistentStateComponentWithModificationTracker<DeclarativeInlayHintsSettingsState> {
-
     public static DeclarativeInlayHintsSettings getInstance() {
-        return ApplicationManager.getApplication()
-            .getInstance(DeclarativeInlayHintsSettings.class);
+        return Application.get().getInstance(DeclarativeInlayHintsSettings.class);
     }
 
     private long myModificationCount;
@@ -53,9 +50,7 @@ public class DeclarativeInlayHintsSettings implements PersistentStateComponentWi
         return providerId + "#" + optionId;
     }
 
-    public void setOptionEnabled(String optionId,
-                                 String providerId,
-                                 boolean isEnabled) {
+    public void setOptionEnabled(String optionId, String providerId, boolean isEnabled) {
         String serializedId = getSerializedId(providerId, optionId);
         Boolean previous = getState().getEnabledOptions().put(serializedId, isEnabled);
         if (previous == null || previous != isEnabled) {

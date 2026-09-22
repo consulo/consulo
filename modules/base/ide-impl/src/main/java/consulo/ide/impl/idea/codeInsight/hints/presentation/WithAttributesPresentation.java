@@ -6,6 +6,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 
@@ -14,10 +15,12 @@ public class WithAttributesPresentation extends StaticDelegatePresentation {
     private final EditorColorsScheme colorsScheme;
     private final AttributesFlags flags;
 
-    public WithAttributesPresentation(InlayPresentation presentation,
-                                      TextAttributesKey textAttributesKey,
-                                      Editor editor,
-                                      AttributesFlags flags) {
+    public WithAttributesPresentation(
+        InlayPresentation presentation,
+        TextAttributesKey textAttributesKey,
+        Editor editor,
+        AttributesFlags flags
+    ) {
         super(presentation);
         this.textAttributesKey = textAttributesKey;
         this.colorsScheme = editor.getColorsScheme();
@@ -25,6 +28,7 @@ public class WithAttributesPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         TextAttributes other = colorsScheme.getAttributes(textAttributesKey);
         if (other == null) {

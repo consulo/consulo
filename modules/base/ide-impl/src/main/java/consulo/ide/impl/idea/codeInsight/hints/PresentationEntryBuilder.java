@@ -37,12 +37,9 @@ public class PresentationEntryBuilder {
     }
 
     private void buildSubtreeForIdOnly(byte index) {
-        state.processChildren(index, new Predicate<Byte>() {
-            @Override
-            public boolean test(Byte childIndex) {
-                buildNode(childIndex);
-                return true;
-            }
+        state.processChildren(index, childIndex -> {
+            buildNode(childIndex);
+            return true;
         });
     }
 
@@ -116,12 +113,9 @@ public class PresentationEntryBuilder {
                 InlayMouseArea clickArea = new InlayMouseArea(actionData);
                 InlayMouseArea saved = currentClickArea;
                 this.currentClickArea = clickArea;
-                state.processChildren(childIndex, new Predicate<Byte>() {
-                    @Override
-                    public boolean test(Byte ch) {
-                        buildNode(ch);
-                        return true;
-                    }
+                state.processChildren(childIndex, ch -> {
+                    buildNode(ch);
+                    return true;
                 });
                 this.currentClickArea = saved;
                 break;
@@ -147,14 +141,11 @@ public class PresentationEntryBuilder {
             byte branchTag = collapsed
                 ? InlayTags.COLLAPSIBLE_LIST_COLLAPSED_BRANCH_TAG
                 : InlayTags.COLLAPSIBLE_LIST_EXPANDED_BRANCH_TAG;
-            state.processChildren(index, new Predicate<Byte>() {
-                @Override
-                public boolean test(Byte childIndex) {
-                    if (state.getBytePayload(childIndex) == branchTag) {
-                        buildSubtreeForIdOnly(childIndex);
-                    }
-                    return true;
+            state.processChildren(index, childIndex -> {
+                if (state.getBytePayload(childIndex) == branchTag) {
+                    buildSubtreeForIdOnly(childIndex);
                 }
+                return true;
             });
         }
         finally {

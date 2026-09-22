@@ -19,6 +19,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
@@ -67,11 +68,13 @@ public class DocRenderPassFactory implements TextEditorHighlightingPassFactory, 
         }
 
         @Override
+        @RequiredReadAction
         public void doCollectInformation(ProgressIndicator progress) {
             myItems = calculateItemsToRender(myEditor, myFile);
         }
 
         @Override
+        @RequiredUIAccess
         public void doApplyInformationToEditor() {
             boolean resetToDefault =
                 myEditor.getUserData(MODIFICATION_STAMP) == null || myEditor.getUserData(RESET_TO_DEFAULT) != null;
@@ -133,6 +136,7 @@ public class DocRenderPassFactory implements TextEditorHighlightingPassFactory, 
         return text == null ? "Documentation is not available" : text;
     }
 
+    @RequiredUIAccess
     public static void applyItemsToRender(Editor editor, Project project, Items items, boolean collapseNewRegions) {
         editor.putUserData(MODIFICATION_STAMP, PsiModificationTracker.getInstance(project).getModificationCount());
         editor.putUserData(ICONS_ENABLED, DocRenderDummyLineMarkerProvider.isGutterIconEnabled());

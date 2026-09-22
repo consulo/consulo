@@ -2,6 +2,7 @@
 package consulo.language.editor.inlay;
 
 import consulo.colorScheme.TextAttributes;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 
@@ -14,11 +15,13 @@ public interface InlayPresentation extends InputHandler {
     /**
      * @return the width of this presentation in pixels.
      */
+    @RequiredUIAccess
     int getWidth();
 
     /**
      * @return the height of this presentation in pixels.
      */
+    @RequiredUIAccess
     int getHeight();
 
     /**
@@ -27,6 +30,7 @@ public interface InlayPresentation extends InputHandler {
      * @param g          graphics to draw on; valid drawing area is (0,0)–(width−1,height−1)
      * @param attributes text attributes to use when painting
      */
+    @RequiredUIAccess
     void paint(Graphics2D g, TextAttributes attributes);
 
     /**
@@ -62,6 +66,7 @@ public interface InlayPresentation extends InputHandler {
      * @param previousPresentation the previous presentation
      * @return true if this presentation should be reused, false to replace it
      */
+    @RequiredUIAccess
     default boolean updateState(InlayPresentation previousPresentation) {
         return true;
     }

@@ -54,7 +54,7 @@ public class DeclarativeInlayHintsPassFactory
         }
         List<InlayProviderInfo> result = new ArrayList<>();
         for (InlayProviderInfo info : infos) {
-            if (DumbService.isDumbAware(info.getProvider())) {
+            if (DumbService.isDumbAware(info.provider())) {
                 result.add(info);
             }
         }
@@ -109,18 +109,17 @@ public class DeclarativeInlayHintsPassFactory
         if (enabledGlobally) {
             passProviders = new ArrayList<>();
             for (InlayProviderInfo info : getSuitableToFileProviders(psiFile)) {
-                Boolean providerEnabled = settings.isProviderEnabled(info.getProviderId());
+                Boolean providerEnabled = settings.isProviderEnabled(info.providerId());
                 if (Objects.equals(providerEnabled, Boolean.TRUE) || (providerEnabled == null && info.isEnabledByDefault())) {
                     Map<String, Boolean> optionsToEnabled = new HashMap<>();
-                    for (var optionInfo : info.getOptions()) {
-                        Boolean opt = settings.isOptionEnabled(optionInfo.getId(), info.getProviderId());
+                    for (var optionInfo : info.options()) {
+                        Boolean opt = settings.isOptionEnabled(optionInfo.getId(), info.providerId());
                         boolean isOptEnabled = (opt != null) ? opt : optionInfo.isEnabledByDefault();
                         if (optionsToEnabled.put(optionInfo.getId(), isOptEnabled) != null) {
                             throw new IllegalArgumentException("Duplicate option key: " + optionInfo.getId());
                         }
                     }
-                    passProviders.add(new InlayProviderPassInfo(
-                        info.getProvider(), info.getProviderId(), optionsToEnabled));
+                    passProviders.add(new InlayProviderPassInfo(info.provider(), info.providerId(), optionsToEnabled));
                 }
             }
         }

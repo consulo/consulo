@@ -1,6 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.codeInsight.hints.settings;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -39,14 +40,17 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     private final List<ImmediateConfigurable.Case> cases;
 
     @SuppressWarnings("unchecked")
-    public DeclarativeHintsProviderSettingsModel(DeclarativeInlayHintsProvider providerDescription,
-                                                 boolean isEnabled,
-                                                 Language language,
-                                                 Project project) {
+    public DeclarativeHintsProviderSettingsModel(
+        DeclarativeInlayHintsProvider providerDescription,
+        boolean isEnabled,
+        Language language,
+        Project project
+    ) {
         super(isEnabled, providerDescription.getId(), language);
         this.providerDescription = providerDescription;
         this.project = project;
-        this.customSettingsProvider = (DeclarativeInlayHintsCustomSettingsProvider<Object>) DeclarativeInlayHintsCustomSettingsProvider.getCustomSettingsProvider(getId(), language);
+        this.customSettingsProvider = (DeclarativeInlayHintsCustomSettingsProvider<Object>)
+            DeclarativeInlayHintsCustomSettingsProvider.getCustomSettingsProvider(getId(), language);
         if (customSettingsProvider == null) {
             customSettingsProvider = new DefaultSettingsProvider();
         }
@@ -59,7 +63,8 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
                 option.description.id(),
                 () -> option.isEnabled,
                 newValue -> option.isEnabled = newValue,
-                option.description.description()))
+                option.description.description()
+            ))
             .collect(Collectors.toList());
     }
 
@@ -84,7 +89,6 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         return providerDescription.getGroup();
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return providerDescription.getName();
@@ -110,13 +114,16 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     public PsiFile createFile(Project project, FileType fileType, Document document) {
         PsiFile file = super.createFile(project, fileType, document);
         String preview = providerDescription.getPreviewFileText().get();
-        PreviewEntries entries = new PreviewEntries(null,
-            DeclarativeHintsDumpUtil.extractHints(preview));
+        PreviewEntries entries = new PreviewEntries(
+            null,
+            DeclarativeHintsDumpUtil.extractHints(preview)
+        );
         file.putUserData(PREVIEW_ENTRIES, entries);
         return file;
     }
 
     @Override
+    @RequiredReadAction
     public Runnable collectData(Editor editor, PsiFile file) {
         String providerId = providerDescription.getId();
         Map<String, Boolean> enabledOptions = options.stream()
@@ -126,15 +133,22 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         boolean enabled = caseId != null ?
             options.stream().anyMatch(opt -> opt.description.id().equals(caseId) && opt.isEnabled)
             : isEnabled();
-        DeclarativeInlayHintsPass pass = new DeclarativeInlayHintsPass(file, editor,
-            List.of(new InlayProviderPassInfo(providerDescription, providerId, enabledOptions)), false, !enabled);
+        DeclarativeInlayHintsPass pass = new DeclarativeInlayHintsPass(
+            file,
+            editor,
+            List.of(new InlayProviderPassInfo(providerDescription, providerId, enabledOptions)),
+            false,
+            !enabled
+        );
         pass.doCollectInformation(new EmptyProgressIndicator());
         return pass::doApplyInformationToEditor;
     }
 
     @Override
     public String getCasePreview(ImmediateConfigurable.Case optionCase) {
-        if (optionCase == null) return getPreviewText();
+        if (optionCase == null) {
+            return getPreviewText();
+        }
         String preview = providerDescription.getPreviewFileText().get();
         return InlayDumpUtil.removeInlays(preview);
     }
@@ -147,7 +161,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     @Override
     public String getCaseDescription(ImmediateConfigurable.Case optionCase) {
         return providerDescription.getOptions().stream()
-            .filter(o -> o.id().equals(optionCase.getId()))
+            .filter(o -> o.id().equals(optionCase.id()))
             .findFirst()
             .map(o -> o.description().get())
             .orElse(null);
@@ -171,12 +185,18 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
 
     @Override
     public boolean isModified() {
-        if (isEnabled() != isProviderEnabledInSettings()) return true;
-        if (customSettingsProvider.isDifferentFrom(project, savedSettings)) return true;
+        if (isEnabled() != isProviderEnabledInSettings()) {
+            return true;
+        }
+        if (customSettingsProvider.isDifferentFrom(project, savedSettings)) {
+            return true;
+        }
         for (MutableOption option : options) {
             Boolean saved = settings.isOptionEnabled(option.description.id(), getId());
             boolean inSettings = saved != null ? saved : option.description.isEnabledByDefault();
-            if (option.isEnabled != inSettings) return true;
+            if (option.isEnabled != inSettings) {
+                return true;
+            }
         }
         return false;
     }
@@ -242,7 +262,6 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
             return false;
         }
 
-        
         @Override
         public Language getLanguage() {
             return null;

@@ -1,6 +1,8 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.codeInsight.hints;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 public interface DeclarativeHintViewWithMargins extends DeclarativeHintView<InlayData> {
     /**
      * The horizontal margin before the hint content.
@@ -13,5 +15,6 @@ public interface DeclarativeHintViewWithMargins extends DeclarativeHintView<Inla
      * @param storage     storage for text metrics
      * @param forceUpdate whether to force recomputation of cached widths
      */
+    @RequiredUIAccess
     int getBoxWidth(InlayTextMetricsStorage storage, boolean forceUpdate);
 }

@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -52,11 +51,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     private static final String PRESENTABLE_NAME = "Injected fragments";
@@ -209,7 +210,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
         InjectedLanguageManagerInternal injectedLanguageManager =
             (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(myProject);
-        Processor<PsiElement> collectInjectableProcessor = Processors.cancelableCollectProcessor(hosts);
+        Predicate<PsiElement> collectInjectableProcessor = Processors.cancelableCollectProcessor(hosts);
         injectedLanguageManager.processInjectableElements(elements1, collectInjectableProcessor);
         injectedLanguageManager.processInjectableElements(elements2, collectInjectableProcessor);
 
@@ -424,7 +425,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
             patched.setHint(info.hasHint());
 
             if (info.myQuickFixActionRanges != null) {
-                for (consulo.util.lang.Pair<IntentionActionDescriptor, TextRange> pair : info.myQuickFixActionRanges) {
+                for (Pair<IntentionActionDescriptor, TextRange> pair : info.myQuickFixActionRanges) {
                     TextRange quickfixTextRange = pair.getSecond();
                     List<TextRange> editableQF = injectedLanguageManager.intersectWithAllEditableFragments(injectedPsi, quickfixTextRange);
                     for (TextRange editableRange : editableQF) {
@@ -544,6 +545,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     }
 
     @Override
+    @RequiredUIAccess
     protected void applyInformationWithProgress() {
     }
 }

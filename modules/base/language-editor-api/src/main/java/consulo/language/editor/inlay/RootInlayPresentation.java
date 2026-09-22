@@ -2,6 +2,7 @@
 package consulo.language.editor.inlay;
 
 import consulo.codeEditor.Editor;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public interface RootInlayPresentation<Content> extends InlayPresentation {
     /**
@@ -15,6 +16,7 @@ public interface RootInlayPresentation<Content> extends InlayPresentation {
      * @param factory                the factory to create sub-presentations
      * @return true if something has changed
      */
+    @RequiredUIAccess
     boolean update(Content newPresentationContent, Editor editor, InlayPresentationFactory factory);
 
     /**

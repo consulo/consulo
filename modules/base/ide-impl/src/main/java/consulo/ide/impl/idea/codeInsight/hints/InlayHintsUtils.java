@@ -13,6 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.SyntaxTraverser;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 
 import java.awt.*;
@@ -22,10 +23,12 @@ public class InlayHintsUtils {
     private InlayHintsUtils() {
     }
 
+    @RequiredUIAccess
     public static void fireContentChanged(InlayPresentation presentation) {
         presentation.fireContentChanged(new Rectangle(presentation.getWidth(), presentation.getHeight()));
     }
 
+    @RequiredUIAccess
     public static void fireUpdateEvent(InlayPresentation presentation, Dimension previousDimension) {
         Dimension current = new Dimension(presentation.getWidth(), presentation.getHeight());
         if (!current.equals(previousDimension)) {
@@ -34,14 +37,18 @@ public class InlayHintsUtils {
         presentation.fireContentChanged(new Rectangle(presentation.getWidth(), presentation.getHeight()));
     }
 
+    @RequiredUIAccess
     public static Dimension dimension(InlayPresentation presentation) {
         return new Dimension(presentation.getWidth(), presentation.getHeight());
     }
 
-    private static <Content> boolean updateIfSame(RootInlayPresentation<Content> oldRoot,
-                                                  RootInlayPresentation<?> newRoot,
-                                                  Editor editor,
-                                                  InlayPresentationFactory factory) {
+    @RequiredUIAccess
+    private static <Content> boolean updateIfSame(
+        RootInlayPresentation<Content> oldRoot,
+        RootInlayPresentation<?> newRoot,
+        Editor editor,
+        InlayPresentationFactory factory
+    ) {
         if (!oldRoot.getKey().equals(newRoot.getKey())) {
             return false;
         }
@@ -58,8 +65,7 @@ public class InlayHintsUtils {
                 break;
             }
         }
-        return TextRange.create(start.getTextRange().getStartOffset(),
-            element.getTextRange().getEndOffset());
+        return TextRange.create(start.getTextRange().getStartOffset(), element.getTextRange().getEndOffset());
     }
 
     @RequiredReadAction
@@ -68,12 +74,12 @@ public class InlayHintsUtils {
         if (prev == null) {
             return true;
         }
-        while (prev instanceof PsiWhiteSpace) {
-            String text = prev.getText();
-            if (text.contains("\n") || prev.getTextRange().getStartOffset() == 0) {
+        while (prev instanceof PsiWhiteSpace whiteSpace) {
+            String text = whiteSpace.getText();
+            if (text.contains("\n") || whiteSpace.getTextRange().getStartOffset() == 0) {
                 return true;
             }
-            prev = PsiTreeUtil.prevLeaf(prev, true);
+            prev = PsiTreeUtil.prevLeaf(whiteSpace, true);
         }
         return false;
     }

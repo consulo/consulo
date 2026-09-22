@@ -13,52 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUpdate;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 
 class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
-  private static final Key<Boolean> THE_FIRST_TIME_KEY = Key.create("FirstInjectedFoldingPass");
-  private Runnable myRunnable;
-  private final Editor myEditor;
-  private final PsiFile myFile;
+    private static final Key<Boolean> THE_FIRST_TIME_KEY = Key.create("FirstInjectedFoldingPass");
+    private Runnable myRunnable;
+    private final Editor myEditor;
+    private final PsiFile myFile;
 
-  InjectedCodeFoldingPass(Project project, Editor editor, PsiFile file) {
-    super(project, editor.getDocument(), false);
-    myEditor = editor;
-    myFile = file;
-  }
+    InjectedCodeFoldingPass(Project project, Editor editor, PsiFile file) {
+        super(project, editor.getDocument(), false);
+        myEditor = editor;
+        myFile = file;
+    }
 
-  @Override
-  public void doCollectInformation(ProgressIndicator progress) {
-    boolean firstTime = CodeFoldingPass.isFirstTime(myFile, myEditor, THE_FIRST_TIME_KEY);
-    Runnable runnable = FoldingUpdate.updateInjectedFoldRegions(myEditor, myFile, firstTime);
-    synchronized (this) {
-      myRunnable = runnable;
+    @Override
+    @RequiredReadAction
+    public void doCollectInformation(ProgressIndicator progress) {
+        boolean firstTime = CodeFoldingPass.isFirstTime(myFile, myEditor, THE_FIRST_TIME_KEY);
+        Runnable runnable = FoldingUpdate.updateInjectedFoldRegions(myEditor, myFile, firstTime);
+        synchronized (this) {
+            myRunnable = runnable;
+        }
     }
-  }
 
-  @Override
-  public void doApplyInformationToEditor() {
-    Runnable runnable;
-    synchronized (this) {
-      runnable = myRunnable;
+    @Override
+    @RequiredUIAccess
+    public void doApplyInformationToEditor() {
+        Runnable runnable;
+        synchronized (this) {
+            runnable = myRunnable;
+        }
+        if (runnable != null) {
+            try {
+                runnable.run();
+            }
+            catch (IndexNotReadyException ignored) {
+            }
+            CodeFoldingPass.clearFirstTimeFlag(myFile, myEditor, THE_FIRST_TIME_KEY);
+        }
     }
-    if (runnable != null) {
-      try {
-        runnable.run();
-      }
-      catch (IndexNotReadyException ignored) {
-      }
-      CodeFoldingPass.clearFirstTimeFlag(myFile, myEditor, THE_FIRST_TIME_KEY);
-    }
-  }
 }

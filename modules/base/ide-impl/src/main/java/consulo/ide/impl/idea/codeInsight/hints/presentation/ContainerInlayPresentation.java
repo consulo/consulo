@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.InlayPresentationFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.GraphicsUtil;
@@ -20,11 +21,13 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
     private final float backgroundAlpha;
     private boolean presentationIsUnderCursor = false;
 
-    public ContainerInlayPresentation(InlayPresentation presentation,
-                                      InlayPresentationFactory.Padding padding,
-                                      InlayPresentationFactory.RoundedCorners roundedCorners,
-                                      ColorValue background,
-                                      float backgroundAlpha) {
+    public ContainerInlayPresentation(
+        InlayPresentation presentation,
+        InlayPresentationFactory.Padding padding,
+        InlayPresentationFactory.RoundedCorners roundedCorners,
+        ColorValue background,
+        float backgroundAlpha
+    ) {
         super(presentation);
         this.padding = padding;
         this.roundedCorners = roundedCorners;
@@ -33,16 +36,19 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return leftInset() + presentation.getWidth() + rightInset();
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return topInset() + presentation.getHeight() + bottomInset();
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         if (background != null) {
             Color preservedBackground = g.getBackground();
@@ -57,23 +63,26 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
             }
             g.setColor(preservedBackground);
         }
-        
+
         try (var ignored = GraphicsUtil.withTranslated(g, leftInset(), topInset())) {
             presentation.paint(g, attributes);
         }
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         handleMouse(translated, p -> presentation.mouseClicked(event, p));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         handleMouse(translated, p -> presentation.mouseMoved(event, p));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         try {
             presentation.mouseExited();
@@ -83,7 +92,8 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
         }
     }
 
-    private void handleMouse(Point original, Consumer<Point> action) {
+    @RequiredUIAccess
+    private void handleMouse(Point original, @RequiredUIAccess Consumer<Point> action) {
         int x = original.x;
         int y = original.y;
         if (!isInInnerBounds(x, y)) {
@@ -97,6 +107,7 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
         action.accept(translated);
     }
 
+    @RequiredUIAccess
     private boolean isInInnerBounds(int x, int y) {
         return x >= leftInset() && x < leftInset() + presentation.getWidth()
             && y >= topInset() && y < topInset() + presentation.getHeight();

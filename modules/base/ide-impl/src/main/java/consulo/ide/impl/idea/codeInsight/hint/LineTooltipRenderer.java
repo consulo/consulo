@@ -153,7 +153,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         }
         JPanel grid = new MyPanel();
         GridBag bag = new GridBag().anchor(GridBagConstraints.CENTER)
-            //weight is required for correct working scrollpane inside gridbaglayout
+            //weight is required for correct working scroll-pane inside grid-bag-layout
             .weightx(1.0).weighty(1.0).fillCell();
 
         pane.setBorder(JBUI.Borders.empty(
@@ -289,6 +289,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
             }
 
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
                 hintHint.setRequestFocus(ScreenReader.isActive() && e.getInputEvent() instanceof KeyEvent);

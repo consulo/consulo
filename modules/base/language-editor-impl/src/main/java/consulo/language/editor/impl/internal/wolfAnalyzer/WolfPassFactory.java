@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.wolfAnalyzer;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -24,6 +23,7 @@ import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -31,25 +31,26 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class WolfPassFactory implements TextEditorHighlightingPassFactory {
-  private long myPsiModificationCount;
+    private long myPsiModificationCount;
 
-  @Override
-  public void register(Registrar registrar) {
-    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
-  }
-
-  @Override
-  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, final Editor editor) {
-    final long psiModificationCount = PsiManager.getInstance(file.getProject()).getModificationTracker().getModificationCount();
-    if (psiModificationCount == myPsiModificationCount) {
-      return null; //optimization
+    @Override
+    public void register(Registrar registrar) {
+        registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
     }
-    return new WolfHighlightingPass(file.getProject(), editor.getDocument(), file) {
-      @Override
-      protected void applyInformationWithProgress() {
-        super.applyInformationWithProgress();
-        myPsiModificationCount = psiModificationCount;
-      }
-    };
-  }
+
+    @Override
+    public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, final Editor editor) {
+        final long psiModificationCount = PsiManager.getInstance(file.getProject()).getModificationTracker().getModificationCount();
+        if (psiModificationCount == myPsiModificationCount) {
+            return null; //optimization
+        }
+        return new WolfHighlightingPass(file.getProject(), editor.getDocument(), file) {
+            @Override
+            @RequiredUIAccess
+            protected void applyInformationWithProgress() {
+                super.applyInformationWithProgress();
+                myPsiModificationCount = psiModificationCount;
+            }
+        };
+    }
 }

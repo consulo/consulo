@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.internal.highlight;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -38,146 +39,161 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author cdr
  */
 public abstract class ProgressableTextEditorHighlightingPass extends TextEditorHighlightingPass {
-  private volatile boolean myFinished;
-  private volatile long myProgressLimit;
-  private final AtomicLong myProgressCount = new AtomicLong();
-  private volatile long myNextChunkThreshold; // the value myProgressCount should exceed to generate next fireProgressAdvanced event
-  private final String myPresentableName;
-  protected final PsiFile myFile;
-  private final @Nullable Editor myEditor;
-  
-  protected final TextRange myRestrictRange;
-  
-  protected final HighlightInfoProcessor myHighlightInfoProcessor;
-  protected HighlightingSession myHighlightingSession;
+    private volatile boolean myFinished;
+    private volatile long myProgressLimit;
+    private final AtomicLong myProgressCount = new AtomicLong();
+    private volatile long myNextChunkThreshold; // the value myProgressCount should exceed to generate next fireProgressAdvanced event
+    private final String myPresentableName;
+    protected final PsiFile myFile;
+    private final @Nullable Editor myEditor;
 
-  protected ProgressableTextEditorHighlightingPass(Project project,
-                                                   @Nullable Document document,
-                                                   String presentableName,
-                                                   @Nullable PsiFile file,
-                                                   @Nullable Editor editor,
-                                                   TextRange restrictRange,
-                                                   boolean runIntentionPassAfter,
-                                                   HighlightInfoProcessor highlightInfoProcessor) {
-    super(project, document, runIntentionPassAfter);
-    myPresentableName = presentableName;
-    myFile = file;
-    myEditor = editor;
-    myRestrictRange = restrictRange;
-    myHighlightInfoProcessor = highlightInfoProcessor;
-  }
+    protected final TextRange myRestrictRange;
 
-  @Override
-  protected boolean isValid() {
-    return super.isValid() && (myFile == null || myFile.isValid());
-  }
+    protected final HighlightInfoProcessor myHighlightInfoProcessor;
+    protected HighlightingSession myHighlightingSession;
 
-  private void sessionFinished() {
-    advanceProgress(Math.max(1, myProgressLimit - myProgressCount.get()));
-  }
-
-  @Override
-  public final void doCollectInformation(ProgressIndicator progress) {
-    if (!(progress instanceof DaemonProgressIndicator)) {
-      throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
-    }
-    myFinished = false;
-    if (myFile != null) {
-      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(myFile, (DaemonProgressIndicator)progress, getColorsScheme());
-    }
-    try {
-      collectInformationWithProgress(progress);
-    }
-    finally {
-      if (myFile != null) {
-        sessionFinished();
-      }
-    }
-  }
-
-  protected abstract void collectInformationWithProgress(ProgressIndicator progress);
-
-  @Override
-  public final void doApplyInformationToEditor() {
-    myFinished = true;
-    applyInformationWithProgress();
-    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
-    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
-  }
-
-  protected abstract void applyInformationWithProgress();
-
-  /**
-   * @return number in the [0..1] range;
-   * <0 means progress is not available
-   */
-  public double getProgress() {
-    long progressLimit = getProgressLimit();
-    if (progressLimit == 0) return -1;
-    long progressCount = getProgressCount();
-    return progressCount > progressLimit ? 1 : (double)progressCount / progressLimit;
-  }
-
-  private long getProgressLimit() {
-    return myProgressLimit;
-  }
-
-  private long getProgressCount() {
-    return myProgressCount.get();
-  }
-
-  public boolean isFinished() {
-    return myFinished;
-  }
-
-  // null means do not show progress
-  public @Nullable String getPresentableName() {
-    return myPresentableName;
-  }
-
-  protected Editor getEditor() {
-    return myEditor;
-  }
-
-  public void setProgressLimit(long limit) {
-    myProgressLimit = limit;
-    myNextChunkThreshold = Math.max(1, limit / 100); // 1% precision
-  }
-
-  public void advanceProgress(long delta) {
-    if (myHighlightingSession != null) {
-      // session can be null in e.g. inspection batch mode
-      long current = myProgressCount.addAndGet(delta);
-      if (current >= myNextChunkThreshold) {
-        double progress = getProgress();
-        myNextChunkThreshold += Math.max(1, myProgressLimit / 100);
-        myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, getEditor(), progress);
-      }
-    }
-  }
-
-  @RequiredUIAccess
-  void waitForHighlightInfosApplied() {
-    UIAccess.assertIsUIThread();
-    HighlightingSessionImpl session = (HighlightingSessionImpl)myHighlightingSession;
-    if (session != null) {
-      session.waitForHighlightInfosApplied();
-    }
-  }
-
-  public static class EmptyPass extends TextEditorHighlightingPass {
-    public EmptyPass(Project project, @Nullable Document document) {
-      super(project, document, false);
+    protected ProgressableTextEditorHighlightingPass(
+        Project project,
+        @Nullable Document document,
+        String presentableName,
+        @Nullable PsiFile file,
+        @Nullable Editor editor,
+        TextRange restrictRange,
+        boolean runIntentionPassAfter,
+        HighlightInfoProcessor highlightInfoProcessor
+    ) {
+        super(project, document, runIntentionPassAfter);
+        myPresentableName = presentableName;
+        myFile = file;
+        myEditor = editor;
+        myRestrictRange = restrictRange;
+        myHighlightInfoProcessor = highlightInfoProcessor;
     }
 
     @Override
-    public void doCollectInformation(ProgressIndicator progress) {
+    @RequiredReadAction
+    protected boolean isValid() {
+        return super.isValid() && (myFile == null || myFile.isValid());
+    }
+
+    private void sessionFinished() {
+        advanceProgress(Math.max(1, myProgressLimit - myProgressCount.get()));
     }
 
     @Override
-    public void doApplyInformationToEditor() {
-      FileStatusMap statusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
-      statusMap.markFileUpToDate(getDocument(), getId());
+    @RequiredReadAction
+    public final void doCollectInformation(ProgressIndicator progress) {
+        if (!(progress instanceof DaemonProgressIndicator)) {
+            throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
+        }
+        myFinished = false;
+        if (myFile != null) {
+            myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(
+                myFile,
+                (DaemonProgressIndicator) progress,
+                getColorsScheme()
+            );
+        }
+        try {
+            collectInformationWithProgress(progress);
+        }
+        finally {
+            if (myFile != null) {
+                sessionFinished();
+            }
+        }
     }
-  }
+
+    @RequiredReadAction
+    protected abstract void collectInformationWithProgress(ProgressIndicator progress);
+
+    @Override
+    @RequiredUIAccess
+    public final void doApplyInformationToEditor() {
+        myFinished = true;
+        applyInformationWithProgress();
+        DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
+        daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
+    }
+
+    @RequiredUIAccess
+    protected abstract void applyInformationWithProgress();
+
+    /**
+     * @return number in the [0..1] range;
+     * <0 means progress is not available
+     */
+    public double getProgress() {
+        long progressLimit = getProgressLimit();
+        if (progressLimit == 0) {
+            return -1;
+        }
+        long progressCount = getProgressCount();
+        return progressCount > progressLimit ? 1 : (double) progressCount / progressLimit;
+    }
+
+    private long getProgressLimit() {
+        return myProgressLimit;
+    }
+
+    private long getProgressCount() {
+        return myProgressCount.get();
+    }
+
+    public boolean isFinished() {
+        return myFinished;
+    }
+
+    // null means do not show progress
+    public @Nullable String getPresentableName() {
+        return myPresentableName;
+    }
+
+    protected Editor getEditor() {
+        return myEditor;
+    }
+
+    public void setProgressLimit(long limit) {
+        myProgressLimit = limit;
+        myNextChunkThreshold = Math.max(1, limit / 100); // 1% precision
+    }
+
+    public void advanceProgress(long delta) {
+        if (myHighlightingSession != null) {
+            // session can be null in e.g. inspection batch mode
+            long current = myProgressCount.addAndGet(delta);
+            if (current >= myNextChunkThreshold) {
+                double progress = getProgress();
+                myNextChunkThreshold += Math.max(1, myProgressLimit / 100);
+                myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, getEditor(), progress);
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    void waitForHighlightInfosApplied() {
+        UIAccess.assertIsUIThread();
+        HighlightingSessionImpl session = (HighlightingSessionImpl) myHighlightingSession;
+        if (session != null) {
+            session.waitForHighlightInfosApplied();
+        }
+    }
+
+    public static class EmptyPass extends TextEditorHighlightingPass {
+        public EmptyPass(Project project, @Nullable Document document) {
+            super(project, document, false);
+        }
+
+        @Override
+        @RequiredReadAction
+        public void doCollectInformation(ProgressIndicator progress) {
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void doApplyInformationToEditor() {
+            FileStatusMap statusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
+            statusMap.markFileUpToDate(getDocument(), getId());
+        }
+    }
 }

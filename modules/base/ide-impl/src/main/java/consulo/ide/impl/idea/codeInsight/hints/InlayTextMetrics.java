@@ -29,28 +29,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 
-public final class InlayTextMetrics {
-    private final Editor editor;
-    private final int fontHeight;
-    private final int fontBaseline;
-    private final FontMetrics fontMetrics;
-    private final int fontType;
-    private final float ideScale;
-
-    private InlayTextMetrics(Editor editor,
-                             int fontHeight,
-                             int fontBaseline,
-                             FontMetrics fontMetrics,
-                             int fontType,
-                             float ideScale) {
-        this.editor = editor;
-        this.fontHeight = fontHeight;
-        this.fontBaseline = fontBaseline;
-        this.fontMetrics = fontMetrics;
-        this.fontType = fontType;
-        this.ideScale = ideScale;
-    }
-
+public record InlayTextMetrics(
+    Editor editor,
+    int fontHeight,
+    int fontBaseline,
+    FontMetrics fontMetrics,
+    int fontType,
+    float ideScale
+) {
     public static InlayTextMetrics create(Editor editor, float size, int fontType, FontRenderContext context) {
         Font font;
         if (EditorSettingsExternalizable.getInstance().isUseEditorFontInInlays()) {
@@ -65,36 +51,28 @@ public final class InlayTextMetrics {
         return new InlayTextMetrics(editor, fh, fb, metrics, fontType, UISettings.getInstance().getIdeScale());
     }
 
-    public Font getFont() {
-        return fontMetrics.getFont();
+    public Font font() {
+        return fontMetrics().getFont();
     }
 
-    public int getFontHeight() {
-        return fontHeight;
+    public int ascent() {
+        return editor().getAscent();
     }
 
-    public int getFontBaseline() {
-        return fontBaseline;
+    public int descent() {
+        return editor() instanceof RealEditor realEditor ? realEditor.getDescent() : 0;
     }
 
-    public int getAscent() {
-        return editor.getAscent();
-    }
-
-    public int getDescent() {
-        return (editor instanceof RealEditor ? ((RealEditor) editor).getDescent() : 0);
-    }
-
-    public int getLineHeight() {
-        return editor.getLineHeight();
+    public int lineHeight() {
+        return editor().getLineHeight();
     }
 
     public int offsetFromTop() {
-        return (getLineHeight() - fontHeight) / 2;
+        return (lineHeight() - fontHeight()) / 2;
     }
 
-    public int getStringWidth(String text) {
-        return fontMetrics.stringWidth(text);
+    public int stringWidth(String text) {
+        return fontMetrics().stringWidth(text);
     }
 
     private static FontRenderContext getFontRenderContext(JComponent component) {

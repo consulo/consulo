@@ -49,19 +49,11 @@ public class InlaySettingUtil {
         return Boolean.TRUE.equals(editor.getUserData(SETTINGS_EDITOR_MARKER));
     }
 
-    public static EditorTextField createEditor(Language language,
-                                               Project project,
-                                               Consumer<? super Editor> updateHints) {
-        FileType fileType = language.getAssociatedFileType() != null
-            ? language.getAssociatedFileType()
-            : PlainTextFileType.INSTANCE;
+    public static EditorTextField createEditor(Language language, Project project, Consumer<? super Editor> updateHints) {
+        FileType fileType = language.getAssociatedFileType() != null ? language.getAssociatedFileType() : PlainTextFileType.INSTANCE;
 
         Document document = EditorFactory.getInstance().createDocument("");
-        EditorTextField editorField = new EditorTextField(document,
-            project,
-            fileType,
-            true,
-            false) {
+        EditorTextField editorField = new EditorTextField(document, project, fileType, true, false) {
             @Override
             protected EditorEx createEditor() {
                 EditorEx editor = super.createEditor();

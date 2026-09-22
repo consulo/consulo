@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.BasePresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -17,22 +18,26 @@ public class IconPresentation extends BasePresentation {
         this.component = component;
     }
 
+    @RequiredUIAccess
     public void setIcon(Image icon) {
         this.icon = icon;
         fireContentChanged(new Rectangle(getWidth(), getHeight()));
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return icon.getWidth();
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return icon.getHeight();
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         Graphics2D graphics = (Graphics2D) g.create();
         graphics.setComposite(AlphaComposite.SrcAtop.derive(1.0f));

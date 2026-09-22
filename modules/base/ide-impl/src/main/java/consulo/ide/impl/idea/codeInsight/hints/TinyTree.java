@@ -22,10 +22,7 @@ public class TinyTree<T> {
     private final ByteArrayList payload;
     private final ArrayList<T> data;
 
-    private TinyTree(ByteArrayList firstChild,
-                     ByteArrayList nextChild,
-                     ByteArrayList payload,
-                     ArrayList<T> data) {
+    private TinyTree(ByteArrayList firstChild, ByteArrayList nextChild, ByteArrayList payload, ArrayList<T> data) {
         this.firstChild = firstChild;
         this.nextChild = nextChild;
         this.payload = payload;
@@ -110,10 +107,7 @@ public class TinyTree<T> {
      * Processes sync children of this tree and another. If the number of children differs,
      * iterates up to the minimum of both.
      */
-    public void syncProcessChildren(byte myIndex,
-                                    byte otherIndex,
-                                    TinyTree<T> other,
-                                    BiFunction<Byte, Byte, Boolean> f) {
+    public void syncProcessChildren(byte myIndex, byte otherIndex, TinyTree<T> other, BiFunction<Byte, Byte, Boolean> f) {
         byte curThis = firstChild.getByte(myIndex);
         byte curOther = other.firstChild.getByte(otherIndex);
         while (curThis != NO_ELEMENT && curOther != NO_ELEMENT) {
@@ -125,9 +119,7 @@ public class TinyTree<T> {
         }
     }
 
-    public boolean isSameAs(TinyTree<T> other,
-                            BiFunction<Byte, Byte, Boolean> isPayloadSame,
-                            BiFunction<T, T, Boolean> isDataSame) {
+    public boolean isSameAs(TinyTree<T> other, BiFunction<Byte, Byte, Boolean> isPayloadSame, BiFunction<T, T, Boolean> isDataSame) {
         if (size() != other.size()) return false;
         if (!firstChild.equals(other.firstChild)) return false;
         if (!nextChild.equals(other.nextChild)) return false;
@@ -145,9 +137,11 @@ public class TinyTree<T> {
     }
 
     public boolean isSameAs(TinyTree<T> other) {
-        return isSameAs(other,
+        return isSameAs(
+            other,
             (a, b) -> a.byteValue() == b.byteValue(),
-            (a, b) -> a.equals(b));
+            Object::equals
+        );
     }
 
     public int size() {

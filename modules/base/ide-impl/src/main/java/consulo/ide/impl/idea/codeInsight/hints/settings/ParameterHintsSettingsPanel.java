@@ -8,14 +8,11 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import javax.swing.*;
 
 public class ParameterHintsSettingsPanel extends JPanel {
-
     public ParameterHintsSettingsPanel(Language language, boolean excludeListSupported) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         if (excludeListSupported) {
             Hyperlink hyperlink = Hyperlink.create(LanguageEditorLocalize.settingsInlayJavaExcludeList());
-            hyperlink.addHyperlinkListener(event -> {
-                new ExcludeListDialog(language).show();
-            });
+            hyperlink.addHyperlinkListener(event -> new ExcludeListDialog(language).show());
             add(TargetAWT.to(hyperlink));
         }
     }

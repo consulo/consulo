@@ -40,6 +40,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
@@ -67,10 +68,11 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   }
 
   @Override
+  @RequiredReadAction
   public void doCollectInformation(ProgressIndicator progress) {
     assert myDocument != null;
     Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
-    if (stamp != null && stamp.longValue() == nowStamp()) return;
+    if (stamp != null && stamp == nowStamp()) return;
 
     myDescriptors = buildDescriptors();
 
@@ -93,9 +95,10 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   }
 
   @Override
+  @RequiredUIAccess
   public void doApplyInformationToEditor() {
     Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
-    if (stamp != null && stamp.longValue() == nowStamp()) return;
+    if (stamp != null && stamp == nowStamp()) return;
 
     List<RangeHighlighter> oldHighlighters = myEditor.getUserData(INDENT_HIGHLIGHTERS_IN_EDITOR_KEY);
     List<RangeHighlighter> newHighlighters = new ArrayList<>();
@@ -144,6 +147,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     myEditor.getIndentsModel().assumeIndents(myDescriptors);
   }
 
+  @RequiredReadAction
   private List<IndentGuideDescriptor> buildDescriptors() {
     if (!myEditor.getSettings().isIndentGuidesShown()) return Collections.emptyList();
 
@@ -232,6 +236,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     /**
      * Calculates line indents for the {@link #myDocument target document}.
      */
+    @RequiredReadAction
     void calculate() {
       assert myDocument != null;
       FileType fileType = myFile.getFileType();

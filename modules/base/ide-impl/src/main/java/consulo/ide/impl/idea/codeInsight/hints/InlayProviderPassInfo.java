@@ -22,31 +22,11 @@ import java.util.Map;
 /**
  * @param optionToEnabled exhaustive set of options for a given provider
  */
-public final class InlayProviderPassInfo {
-    private final DeclarativeInlayHintsProvider provider;
-    private final String providerId;
-    private final Map<String, Boolean> optionToEnabled;
-
-    public InlayProviderPassInfo(DeclarativeInlayHintsProvider provider,
-                                 String providerId,
-                                 Map<String, Boolean> optionToEnabled) {
-        this.provider = provider;
-        this.providerId = providerId;
-        this.optionToEnabled = optionToEnabled;
-    }
-
-    public DeclarativeInlayHintsProvider getProvider() {
-        return provider;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public Map<String, Boolean> getOptionToEnabled() {
-        return optionToEnabled;
-    }
-
+public record InlayProviderPassInfo(
+    DeclarativeInlayHintsProvider provider,
+    String providerId,
+    Map<String, Boolean> optionToEnabled
+) {
     @Override
     public String toString() {
         return "InlayProviderPassInfo(providerId='" + providerId + "', provider=" + provider + ")";

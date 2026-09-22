@@ -18,7 +18,6 @@ import consulo.language.editor.inlay.InlayPresentationFactory;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.editor.ui.internal.HintManagerEx;
 import consulo.language.psi.PsiElement;
-import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -127,6 +126,7 @@ public class PresentationFactory implements InlayPresentationFactory {
         return new DynamicInsetPresentation(rounding, offsetFromTopProvider);
     }
 
+    @RequiredUIAccess
     public InlayPresentation opaqueBorderedRoundWithBackgroundAndSmallInset(InlayPresentation base, ColorValue borderColor) {
         RoundWithBackgroundPresentation inner = new RoundWithBackgroundPresentation(
             new InsetPresentation(base, base.getHeight() / 2, base.getHeight() / 2, 0, 0),
@@ -200,7 +200,7 @@ public class PresentationFactory implements InlayPresentationFactory {
     ) {
         SimpleReference<BiStatePresentation> presentationToChange = SimpleReference.create();
 
-        Pair<InlayPresentation, InlayPresentation> braces = matchingBraces(prefix, suffix);
+        Couple<InlayPresentation> braces = matchingBraces(prefix, suffix);
 
         BiStatePresentation content = new BiStatePresentation(
             () -> onClick(collapsed, MouseButton.Left, (event, translated) -> {
@@ -223,7 +223,7 @@ public class PresentationFactory implements InlayPresentationFactory {
         return seq(prefixExposed, content, suffixExposed);
     }
 
-    public Pair<InlayPresentation, InlayPresentation> matchingBraces(InlayPresentation left, InlayPresentation right) {
+    public Couple<InlayPresentation> matchingBraces(InlayPresentation left, InlayPresentation right) {
         List<InlayPresentation> list = List.of(left, right);
         List<InlayPresentation> matched = matching(list);
         return Couple.of(matched.get(0), matched.get(1));
@@ -390,17 +390,20 @@ public class PresentationFactory implements InlayPresentationFactory {
     ) {
         BiStatePresentation state = new BiStatePresentation(() -> defaultPres, () -> clicked, initialState) {
             @Override
+            @RequiredUIAccess
             public int getWidth() {
                 return Math.max(defaultPres.getWidth(), clicked.getWidth());
             }
 
             @Override
+            @RequiredUIAccess
             public int getHeight() {
                 return Math.max(defaultPres.getHeight(), clicked.getHeight());
             }
         };
         StaticDelegatePresentation wrapper = new StaticDelegatePresentation(state) {
             @Override
+            @RequiredUIAccess
             public void mouseClicked(MouseEvent e, Point p) {
                 if (clickListener != null) {
                     clickListener.onClick(e, p);
@@ -409,6 +412,7 @@ public class PresentationFactory implements InlayPresentationFactory {
             }
 
             @Override
+            @RequiredUIAccess
             public void mouseMoved(MouseEvent e, Point p) {
                 if (hoverListener != null) {
                     hoverListener.onHover(e, p);
@@ -416,6 +420,7 @@ public class PresentationFactory implements InlayPresentationFactory {
             }
 
             @Override
+            @RequiredUIAccess
             public void mouseExited() {
                 if (hoverListener != null) {
                     hoverListener.onHoverFinished();

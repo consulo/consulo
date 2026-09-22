@@ -24,10 +24,10 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
-import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
@@ -57,7 +57,6 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.internal.EditorTracker;
-import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -78,11 +77,11 @@ import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -108,7 +107,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     private final UpdateRunnable myUpdateRunnable;
 
-    
     private volatile Future<?> myUpdateRunnableFuture = CompletableFuture.completedFuture(null);
     private boolean myUpdateByTimerEnabled = true; // guarded by this
     private final Collection<VirtualFile> myDisabledHintsFiles = new HashSet<>();
@@ -170,21 +168,15 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         myUpdateRunnableFuture.cancel(true);
     }
 
-    
     @TestOnly
     @RequiredReadAction
-    public static List<HighlightInfo> getHighlights(
-        Document document,
-        @Nullable HighlightSeverity minSeverity,
-        Project project
-    ) {
+    public static List<HighlightInfo> getHighlights(Document document, @Nullable HighlightSeverity minSeverity, Project project) {
         List<HighlightInfo> infos = new ArrayList<>();
         processHighlights(document, project, minSeverity, 0, document.getTextLength(), Processors.cancelableCollectProcessor(infos));
         return infos;
     }
 
     @Override
-    
     @TestOnly
     public List<HighlightInfo> getFileLevelHighlights(Project project, PsiFile file) {
         VirtualFile vFile = file.getViewProvider().getVirtualFile();
@@ -241,12 +233,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     @RequiredUIAccess
-    public void addFileLevelHighlight(
-        Project project,
-        int group,
-        HighlightInfo i,
-        PsiFile psiFile
-    ) {
+    public void addFileLevelHighlight(Project project, int group, HighlightInfo i, PsiFile psiFile) {
         HighlightInfoImpl info = (HighlightInfoImpl)i;
 
         VirtualFile vFile = psiFile.getViewProvider().getVirtualFile();
@@ -277,12 +264,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    
-    public List<HighlightInfo> runMainPasses(
-        PsiFile psiFile,
-        Document document,
-        ProgressIndicator progress
-    ) {
+    @RequiredReadAction
+    public List<HighlightInfo> runMainPasses(PsiFile psiFile, Document document, ProgressIndicator progress) {
         Application app = myProject.getApplication();
         if (app.isDispatchThread()) {
             throw new IllegalStateException("Must not run highlighting from under EDT");
@@ -614,7 +597,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return isHighlightingAvailable(file) && !(file instanceof PsiCompiledElement);
     }
 
-    
     @Override
     public ProgressIndicator createDaemonProgressIndicator() {
         return new DaemonProgressIndicator();
@@ -644,7 +626,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         stopProcess(true, reason);
     }
 
-    
     public List<ProgressableTextEditorHighlightingPass> getPassesToShowProgressFor(Document document) {
         List<HighlightingPass> allPasses = myPassExecutorService.getAllSubmittedPasses();
         return allPasses.stream()
@@ -822,7 +803,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return false;
     }
 
-    
     @RequiredUIAccess
     public static List<LineMarkerInfo<?>> getLineMarkers(Document document, Project project) {
         UIAccess.assertIsUIThread();
@@ -1099,7 +1079,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         myPassExecutorService.submitPasses(passes, editorDocuments, progress);
     }
 
-    
+    @RequiredUIAccess
     private synchronized DaemonProgressIndicator createUpdateProgress(Collection<FileEditor> fileEditors) {
         DaemonProgressIndicator old = myUpdateProgress;
         if (!old.isCanceled()) {
@@ -1138,12 +1118,10 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @TestOnly
-    
     public synchronized DaemonProgressIndicator getUpdateProgress() {
         return myUpdateProgress;
     }
 
-    
     @RequiredUIAccess
     private Collection<FileEditor> getSelectedEditors() {
         UIAccess.assertIsUIThread();

@@ -22,8 +22,7 @@ public class ParameterInlayProviderSettingsModel extends InlayProviderSettingsMo
     private final List<ImmediateConfigurable.Case> cases;
     private final List<OptionState> optionStates;
 
-    public ParameterInlayProviderSettingsModel(InlayParameterHintsProvider provider,
-                                               Language language) {
+    public ParameterInlayProviderSettingsModel(InlayParameterHintsProvider provider, Language language) {
         super(ParameterNameHintsSettings.getInstance().isEnabledForLanguage(language), ID, language);
         this.provider = provider;
         this.panel = new ParameterHintsSettingsPanel(language, provider.isBlackListSupported());
@@ -46,7 +45,6 @@ public class ParameterInlayProviderSettingsModel extends InlayProviderSettingsMo
         }).collect(Collectors.toList());
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return LanguageEditorLocalize.settingsInlayParameterHintsPanelName();
@@ -74,7 +72,7 @@ public class ParameterInlayProviderSettingsModel extends InlayProviderSettingsMo
 
     @Override
     public String getCaseDescription(ImmediateConfigurable.Case caseInfo) {
-        return provider.getProperty("inlay.parameters." + caseInfo.getId());
+        return provider.getProperty("inlay.parameters." + caseInfo.id());
     }
 
     @Override

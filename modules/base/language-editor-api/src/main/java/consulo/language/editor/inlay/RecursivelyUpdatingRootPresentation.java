@@ -3,6 +3,7 @@ package consulo.language.editor.inlay;
 
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -22,9 +23,8 @@ public class RecursivelyUpdatingRootPresentation extends BasePresentation implem
     }
 
     @Override
-    public boolean update(InlayPresentation newPresentationContent,
-                          Editor editor,
-                          InlayPresentationFactory factory) {
+    @RequiredUIAccess
+    public boolean update(InlayPresentation newPresentationContent, Editor editor, InlayPresentationFactory factory) {
         InlayPresentation previous = this.current;
         previous.removeListener(listener);
         this.current = newPresentationContent;
@@ -54,16 +54,19 @@ public class RecursivelyUpdatingRootPresentation extends BasePresentation implem
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return current.getWidth();
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return current.getHeight();
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         current.paint(g, attributes);
     }
@@ -74,21 +77,25 @@ public class RecursivelyUpdatingRootPresentation extends BasePresentation implem
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         current.mouseClicked(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mousePressed(MouseEvent event, Point translated) {
         current.mousePressed(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         current.mouseMoved(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         current.mouseExited();
     }
@@ -97,11 +104,13 @@ public class RecursivelyUpdatingRootPresentation extends BasePresentation implem
 
     private class MyPresentationListener implements PresentationListener {
         @Override
+        @RequiredUIAccess
         public void contentChanged(Rectangle area) {
             fireContentChanged(area);
         }
 
         @Override
+        @RequiredUIAccess
         public void sizeChanged(Dimension previous, Dimension current) {
             fireSizeChanged(previous, current);
         }

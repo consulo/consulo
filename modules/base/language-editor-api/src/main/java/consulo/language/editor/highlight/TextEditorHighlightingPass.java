@@ -15,6 +15,7 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -47,8 +48,8 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         this(project, document, true);
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public final void collectInformation(ProgressIndicator progress) {
         if (!isValid()) {
             return; //Document has changed.
@@ -94,7 +95,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public final void applyInformationToEditor() {
         if (!isValid()) {
             return; // Document has changed.
@@ -110,8 +111,10 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         doApplyInformationToEditor();
     }
 
+    @RequiredReadAction
     public abstract void doCollectInformation(ProgressIndicator progress);
 
+    @RequiredUIAccess
     public abstract void doApplyInformationToEditor();
 
     public final int getId() {
@@ -122,12 +125,10 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myId = id;
     }
 
-    
     public List<HighlightInfo> getInfos() {
         return Collections.emptyList();
     }
 
-    
     public final int[] getCompletionPredecessorIds() {
         return myCompletionPredecessorIds;
     }
@@ -140,7 +141,6 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         return myDocument;
     }
 
-    
     public final int[] getStartingPredecessorIds() {
         return myStartingPredecessorIds;
     }

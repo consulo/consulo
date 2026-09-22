@@ -18,23 +18,26 @@ package consulo.fileEditor.highlight;
 import consulo.application.progress.ProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public interface HighlightingPass {
-  HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
-  /**
-   * pass is intended to perform analysis stuff and hold collected information internally
-   * until {@link #collectInformation(ProgressIndicator)} is called.
-   * This method is called from a background thread.
-   *
-   * @param progress to check for highlighting process is cancelled. Pass is to check progress.isCanceled() as often as possible and
-   * throw {@link ProcessCanceledException} if <code>true</code> is returned.
-   */
-  @RequiredReadAction
-  void collectInformation(ProgressIndicator progress);
+    HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
 
-  /**
-   * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.
-   * This method is called from the event dispatch thread.
-   */ 
-  void applyInformationToEditor();
+    /**
+     * pass is intended to perform analysis stuff and hold collected information internally
+     * until {@link #collectInformation(ProgressIndicator)} is called.
+     * This method is called from a background thread.
+     *
+     * @param progress to check for highlighting process is cancelled. Pass is to check progress.isCanceled() as often as possible and
+     *                 throw {@link ProcessCanceledException} if <code>true</code> is returned.
+     */
+    @RequiredReadAction
+    void collectInformation(ProgressIndicator progress);
+
+    /**
+     * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.
+     * This method is called from the event dispatch thread.
+     */
+    @RequiredUIAccess
+    void applyInformationToEditor();
 }

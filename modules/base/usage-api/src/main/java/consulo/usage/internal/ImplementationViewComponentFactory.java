@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ImplementationViewComponentFactory {
-    
     @RequiredUIAccess
     ImplementationViewComponent create(PsiElement[] elements, int index);
 }

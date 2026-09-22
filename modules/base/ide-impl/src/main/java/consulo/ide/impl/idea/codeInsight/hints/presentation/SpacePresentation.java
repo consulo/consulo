@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.BasePresentation;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 
@@ -17,16 +18,19 @@ public class SpacePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return width;
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return height;
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
     }
 
@@ -36,11 +40,11 @@ public class SpacePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean updateState(InlayPresentation previousPresentation) {
-        if (!(previousPresentation instanceof SpacePresentation)) {
+        if (!(previousPresentation instanceof SpacePresentation previous)) {
             return true;
         }
-        SpacePresentation previous = (SpacePresentation) previousPresentation;
         return width != previous.width || height != previous.height;
     }
 }

@@ -37,6 +37,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
 import consulo.util.dataholder.Key;
@@ -289,6 +290,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     @Override
+    @RequiredUIAccess
     protected void applyInformationWithProgress() {
         getFile().putUserData(HAS_ERROR_ELEMENT, myHasErrorElement);
 

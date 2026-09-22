@@ -17,6 +17,7 @@ public interface DeclarativeHintView<Model> {
     @RequiredUIAccess
     int calcWidthInPixels(Inlay<?> inlay, InlayTextMetricsStorage fontMetricsStorage);
 
+    @RequiredUIAccess
     void paint(
         Inlay<?> inlay,
         Graphics2D g,
@@ -25,27 +26,15 @@ public interface DeclarativeHintView<Model> {
         InlayTextMetricsStorage fontMetricsStorage
     );
 
-    void handleLeftClick(
-        EditorMouseEvent e,
-        Point pointInsideInlay,
-        InlayTextMetricsStorage fontMetricsStorage,
-        boolean controlDown
-    );
+    @RequiredUIAccess
+    void handleLeftClick(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage, boolean controlDown);
 
-    LightweightHint handleHover(
-        EditorMouseEvent e,
-        Point pointInsideInlay,
-        InlayTextMetricsStorage fontMetricsStorage
-    );
+    @RequiredUIAccess
+    LightweightHint handleHover(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage);
 
-    void handleRightClick(
-        EditorMouseEvent e,
-        Point pointInsideInlay,
-        InlayTextMetricsStorage fontMetricsStorage
-    );
+    @RequiredUIAccess
+    void handleRightClick(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage);
 
-    InlayMouseArea getMouseArea(
-        Point pointInsideInlay,
-        InlayTextMetricsStorage fontMetricsStorage
-    );
+    @RequiredUIAccess
+    InlayMouseArea getMouseArea(Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage);
 }

@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.inlay;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -14,6 +16,7 @@ public interface InputHandler {
      *
      * @param translated event point in coordinate system of associated presentation.
      */
+    @RequiredUIAccess
     default void mouseClicked(MouseEvent event, Point translated) {
     }
 
@@ -22,6 +25,7 @@ public interface InputHandler {
      *
      * @param translated event point in coordinate system of associated presentation.
      */
+    @RequiredUIAccess
     default void mousePressed(MouseEvent event, Point translated) {
     }
 
@@ -30,6 +34,7 @@ public interface InputHandler {
      *
      * @param translated event point in coordinate system of associated presentation.
      */
+    @RequiredUIAccess
     default void mouseReleased(MouseEvent event, Point translated) {
     }
 
@@ -38,12 +43,14 @@ public interface InputHandler {
      *
      * @param translated event point in coordinate system of associated presentation.
      */
+    @RequiredUIAccess
     default void mouseMoved(MouseEvent event, Point translated) {
     }
 
     /**
      * Called when mouse leaves presentation.
      */
+    @RequiredUIAccess
     default void mouseExited() {
     }
 

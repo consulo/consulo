@@ -1,12 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -30,6 +26,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.NotNullList;
 import gnu.trove.TIntObjectHashMap;
@@ -37,12 +34,14 @@ import gnu.trove.TIntObjectHashMap;
 import java.util.*;
 import java.util.function.BiConsumer;
 
+/**
+ * @author max
+ */
 public class LineMarkersPass extends TextEditorHighlightingPass {
   private static final Logger LOG = Logger.getInstance(LineMarkersPass.class);
 
   private volatile List<LineMarkerInfo<PsiElement>> myMarkers = Collections.emptyList();
 
-  
   private final PsiFile myFile;
   
   private final TextRange myPriorityBounds;
@@ -60,7 +59,6 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     myRestrictRange = restrictRange;
   }
 
-  
   @Override
   public Document getDocument() {
     //noinspection ConstantConditions
@@ -68,6 +66,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
   }
 
   @Override
+  @RequiredUIAccess
   public void doApplyInformationToEditor() {
     try {
       LineMarkersUtil.setLineMarkersToEditor(myProject, getDocument(), myRestrictRange, myMarkers, getId());
@@ -76,8 +75,8 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     }
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public void doCollectInformation(ProgressIndicator progress) {
     List<LineMarkerInfo<PsiElement>> lineMarkers = new ArrayList<>();
     FileViewProvider viewProvider = myFile.getViewProvider();
@@ -89,14 +88,22 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
         Collection<LineMarkerProvider> providers = getMarkerProviders(root, language, myProject);
         List<LineMarkerProvider> providersList = new ArrayList<>(providers);
 
-        queryProviders(elements.inside, root, providersList, (element, info) -> {
-          lineMarkers.add(info);
-          ApplicationManager.getApplication().invokeLater(() -> {
-            if (isValid()) {
-              LineMarkersUtil.addLineMarkerToEditorIncrementally(myProject, getDocument(), info);
-            }
-          }, myProject.getDisposed());
-        });
+        queryProviders(
+          elements.inside,
+          root,
+          providersList,
+          (element, info) -> {
+            lineMarkers.add(info);
+            Application.get().invokeLater(
+              () -> {
+                if (isValid()) {
+                  LineMarkersUtil.addLineMarkerToEditorIncrementally(myProject, getDocument(), info);
+                }
+              },
+              myProject.getDisposed()
+            );
+          }
+        );
         queryProviders(elements.outside, root, providersList, (element, info) -> lineMarkers.add(info));
       });
     }
@@ -107,9 +114,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     }
   }
 
-  
-  private static List<LineMarkerInfo<PsiElement>> mergeLineMarkers(List<LineMarkerInfo<PsiElement>> markers,
-                                                                   Document document) {
+  private static List<LineMarkerInfo<PsiElement>> mergeLineMarkers(List<LineMarkerInfo<PsiElement>> markers, Document document) {
     List<MergeableLineMarkerInfo<PsiElement>> forMerge = new ArrayList<>();
     TIntObjectHashMap<List<MergeableLineMarkerInfo<PsiElement>>> sameLineMarkers = new TIntObjectHashMap<>();
 
@@ -139,10 +144,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     return result;
   }
 
-  
-  public static List<LineMarkerProvider> getMarkerProviders(PsiFile psiFile,
-                                                            Language language,
-                                                            Project project) {
+  public static List<LineMarkerProvider> getMarkerProviders(PsiFile psiFile, Language language, Project project) {
     DumbService dumbService = DumbService.getInstance(project);
     LineMarkerSettings settings = LineMarkerSettings.getInstance();
 

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
@@ -24,56 +23,59 @@ import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 
 class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDumbAware {
-  private static final Key<Boolean> THE_FIRST_TIME = Key.create("FirstFoldingPass");
-  private volatile Runnable myRunnable;
+    private static final Key<Boolean> THE_FIRST_TIME = Key.create("FirstFoldingPass");
+    private volatile Runnable myRunnable;
 
-  CodeFoldingPass(Editor editor, PsiFile file) {
-    super(editor, file, false);
-  }
-
-  @RequiredReadAction
-  @Override
-  public void doCollectInformation(ProgressIndicator progress) {
-    boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);
-    myRunnable = CodeFoldingManager.getInstance(myProject).updateFoldRegionsAsync(myEditor, firstTime);
-  }
-
-  static boolean isFirstTime(PsiFile file, Editor editor, Key<Boolean> key) {
-    return file.getUserData(key) == null || editor.getUserData(key) == null;
-  }
-
-  static void clearFirstTimeFlag(PsiFile file, Editor editor, Key<Boolean> key) {
-    file.putUserData(key, Boolean.FALSE);
-    editor.putUserData(key, Boolean.FALSE);
-  }
-
-  @Override
-  public void doApplyInformationToEditor() {
-    Runnable runnable = myRunnable;
-    if (runnable != null){
-      try {
-        runnable.run();
-      }
-      catch (IndexNotReadyException ignored) {
-      }
+    CodeFoldingPass(Editor editor, PsiFile file) {
+        super(editor, file, false);
     }
 
-    if (InjectedLanguageManager.getInstance(myFile.getProject()).getTopLevelFile(myFile) == myFile) {
-      clearFirstTimeFlag(myFile, myEditor, THE_FIRST_TIME);
+    @Override
+    @RequiredReadAction
+    public void doCollectInformation(ProgressIndicator progress) {
+        boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);
+        myRunnable = CodeFoldingManager.getInstance(myProject).updateFoldRegionsAsync(myEditor, firstTime);
     }
-  }
 
-  /**
-   * Checks the ability to update folding in the Dumb Mode. True by default.
-   * @return true if the language implementation can update folding ranges
-   */
-  @Override
-  public boolean isDumbAware() {
-    return FoldingUpdate.supportsDumbModeFolding(myEditor);
-  }
+    static boolean isFirstTime(PsiFile file, Editor editor, Key<Boolean> key) {
+        return file.getUserData(key) == null || editor.getUserData(key) == null;
+    }
+
+    static void clearFirstTimeFlag(PsiFile file, Editor editor, Key<Boolean> key) {
+        file.putUserData(key, Boolean.FALSE);
+        editor.putUserData(key, Boolean.FALSE);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void doApplyInformationToEditor() {
+        Runnable runnable = myRunnable;
+        if (runnable != null) {
+            try {
+                runnable.run();
+            }
+            catch (IndexNotReadyException ignored) {
+            }
+        }
+
+        if (InjectedLanguageManager.getInstance(myFile.getProject()).getTopLevelFile(myFile) == myFile) {
+            clearFirstTimeFlag(myFile, myEditor, THE_FIRST_TIME);
+        }
+    }
+
+    /**
+     * Checks the ability to update folding in the Dumb Mode. True by default.
+     *
+     * @return true if the language implementation can update folding ranges
+     */
+    @Override
+    public boolean isDumbAware() {
+        return FoldingUpdate.supportsDumbModeFolding(myEditor);
+    }
 }

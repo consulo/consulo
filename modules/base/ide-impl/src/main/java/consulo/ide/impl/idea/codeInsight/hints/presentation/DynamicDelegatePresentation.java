@@ -5,6 +5,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.BasePresentation;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.PresentationListener;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -26,6 +27,7 @@ public class DynamicDelegatePresentation extends BasePresentation {
         return delegate;
     }
 
+    @RequiredUIAccess
     public void setDelegate(InlayPresentation newDelegate) {
         Dimension previousDim = getDimension(delegate);
         Dimension newDim = getDimension(newDelegate);
@@ -40,40 +42,47 @@ public class DynamicDelegatePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return delegate.getWidth();
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return delegate.getHeight();
     }
 
     @Override
+    @RequiredUIAccess
     public boolean updateState(InlayPresentation previousPresentation) {
-        if (!(previousPresentation instanceof DynamicDelegatePresentation)) {
+        if (!(previousPresentation instanceof DynamicDelegatePresentation dynamicDelegatePresentation)) {
             fireSizeChanged(getDimension(delegate), getDimension(delegate));
             return true;
         }
-        return delegate.updateState(((DynamicDelegatePresentation) previousPresentation).delegate);
+        return delegate.updateState(dynamicDelegatePresentation.delegate);
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         delegate.paint(g, attributes);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         delegate.mouseClicked(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         delegate.mouseMoved(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         delegate.mouseExited();
     }
@@ -83,17 +92,20 @@ public class DynamicDelegatePresentation extends BasePresentation {
         return delegate.toString();
     }
 
+    @RequiredUIAccess
     private Dimension getDimension(InlayPresentation presentation) {
         return new Dimension(presentation.getWidth(), presentation.getHeight());
     }
 
     private class DelegateListener implements PresentationListener {
         @Override
+        @RequiredUIAccess
         public void contentChanged(Rectangle area) {
             fireContentChanged(area);
         }
 
         @Override
+        @RequiredUIAccess
         public void sizeChanged(Dimension previous, Dimension current) {
             fireSizeChanged(previous, current);
         }

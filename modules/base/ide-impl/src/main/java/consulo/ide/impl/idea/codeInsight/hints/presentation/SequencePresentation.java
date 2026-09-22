@@ -5,6 +5,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.BasePresentation;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.PresentationListener;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,6 +28,7 @@ public class SequencePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         int width = 0;
         for (InlayPresentation presentation : presentations) {
@@ -36,6 +38,7 @@ public class SequencePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         int height = 0;
         for (InlayPresentation presentation : presentations) {
@@ -45,6 +48,7 @@ public class SequencePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         int xOffset = 0;
         try {
@@ -60,7 +64,8 @@ public class SequencePresentation extends BasePresentation {
         }
     }
 
-    private void handleMouse(Point original, BiConsumer<InlayPresentation, Point> action) {
+    @RequiredUIAccess
+    private void handleMouse(Point original, @RequiredUIAccess BiConsumer<InlayPresentation, Point> action) {
         int x = original.x;
         int y = original.y;
         if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight()) {
@@ -84,21 +89,25 @@ public class SequencePresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         handleMouse(translated, (p, pt) -> p.mouseClicked(event, pt));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         handleMouse(translated, (p, pt) -> p.mouseMoved(event, pt));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         changePresentationUnderCursor(null);
     }
 
     @Override
+    @RequiredUIAccess
     public boolean updateState(InlayPresentation previousPresentation) {
         if (!(previousPresentation instanceof SequencePresentation)) {
             return true;
@@ -124,6 +133,7 @@ public class SequencePresentation extends BasePresentation {
             .collect(Collectors.joining(" ", "[", "]"));
     }
 
+    @RequiredUIAccess
     private void changePresentationUnderCursor(InlayPresentation presentation) {
         if (presentationUnderCursor != presentation) {
             if (presentationUnderCursor != null) {
@@ -141,16 +151,19 @@ public class SequencePresentation extends BasePresentation {
         }
 
         @Override
+        @RequiredUIAccess
         public void contentChanged(Rectangle area) {
             area.add(shiftOfCurrent(), 0);
             SequencePresentation.this.fireContentChanged(area);
         }
 
         @Override
+        @RequiredUIAccess
         public void sizeChanged(Dimension previous, Dimension current) {
             SequencePresentation.this.fireSizeChanged(previous, current);
         }
 
+        @RequiredUIAccess
         private int shiftOfCurrent() {
             int shift = 0;
             for (InlayPresentation p : presentations) {

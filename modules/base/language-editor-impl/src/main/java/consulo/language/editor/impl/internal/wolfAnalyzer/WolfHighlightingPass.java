@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.wolfAnalyzer;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
@@ -26,25 +26,36 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author cdr
  */
 class WolfHighlightingPass extends ProgressableTextEditorHighlightingPass implements DumbAware {
-  WolfHighlightingPass(Project project, Document document, PsiFile file) {
-    super(project, document, DaemonLocalize.passWolf().get(), file, null, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty());
-  }
-
-  @Override
-  protected void collectInformationWithProgress(ProgressIndicator progress) {
-    WolfTheProblemSolver solver = WolfTheProblemSolver.getInstance(myProject);
-    if (solver instanceof WolfTheProblemSolverImpl) {
-      ((WolfTheProblemSolverImpl)solver).startCheckingIfVincentSolvedProblemsYet(progress, this);
+    WolfHighlightingPass(Project project, Document document, PsiFile file) {
+        super(
+            project,
+            document,
+            DaemonLocalize.passWolf().get(),
+            file,
+            null,
+            TextRange.EMPTY_RANGE,
+            false,
+            HighlightInfoProcessor.getEmpty()
+        );
     }
-  }
 
-  @Override
-  protected void applyInformationWithProgress() {
+    @Override
+    @RequiredReadAction
+    protected void collectInformationWithProgress(ProgressIndicator progress) {
+        WolfTheProblemSolver solver = WolfTheProblemSolver.getInstance(myProject);
+        if (solver instanceof WolfTheProblemSolverImpl wolfTheProblemSolver) {
+            wolfTheProblemSolver.startCheckingIfVincentSolvedProblemsYet(progress, this);
+        }
+    }
 
-  }
+    @Override
+    @RequiredUIAccess
+    protected void applyInformationWithProgress() {
+    }
 }

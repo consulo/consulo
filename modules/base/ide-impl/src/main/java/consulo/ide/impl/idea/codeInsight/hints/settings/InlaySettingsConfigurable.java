@@ -30,8 +30,8 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
         this.project = project;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public JComponent createComponent(Disposable disposable) {
         if (panel == null) {
             panel = new InlaySettingsPanel(project);
@@ -39,8 +39,8 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
         return panel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return panel.getTree();
     }
@@ -51,14 +51,14 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
         return panel.isModified();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply() {
         panel.apply();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void reset() {
         panel.reset();
     }
@@ -72,13 +72,11 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
         panel.selectModel(language, selector);
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LanguageEditorLocalize.settingsInlayHintsPanelName();
     }
 
-    
     @Override
     public String getId() {
         return INLAY_ID;
@@ -100,7 +98,7 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
         panel = null;
     }
 
-    //    public static boolean showInlaySettings(Project project, Language language, Predicate<InlayProviderSettingsModel> selector) {
+//    public static boolean showInlaySettings(Project project, Language language, Predicate<InlayProviderSettingsModel> selector) {
 //        ShowSettingsUtil.getInstance().showSettingsDialog(project, InlaySettingsConfigurable.class, configurable -> {
 //            if (selector != null) {
 //                ((InlaySettingsConfigurable) configurable).selectModel(language, selector);

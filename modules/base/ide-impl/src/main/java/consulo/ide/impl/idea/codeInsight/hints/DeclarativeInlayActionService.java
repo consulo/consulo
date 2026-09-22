@@ -17,6 +17,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @ServiceImpl
 @Singleton
 public class DeclarativeInlayActionService {
-
+    @RequiredUIAccess
     public void invokeInlayMenu(InlayData hintData, EditorMouseEvent e, RelativePoint relativePoint) {
         Project project = e.getEditor().getProject();
         if (project == null) {
@@ -47,7 +48,7 @@ public class DeclarativeInlayActionService {
         if (providerInfo == null) {
             return;
         }
-        LocalizeValue providerName = providerInfo.getProviderName();
+        LocalizeValue providerName = providerInfo.providerName();
 
         InlayMenuGroup inlayMenuActionGroup = ActionManager.getInstance().getAction(InlayMenuGroup.class);
 
@@ -58,7 +59,8 @@ public class DeclarativeInlayActionService {
             .add(UIExAWTDataKey.CONTEXT_COMPONENT, e.getEditor().getComponent())
             .add(DeclarativeInlayHintsProvider.PROVIDER_ID, providerId)
             .add(DeclarativeInlayHintsProvider.PROVIDER_NAME, providerName)
-            .add(DeclarativeInlayHintsProvider.INLAY_PAYLOADS,
+            .add(
+                DeclarativeInlayHintsProvider.INLAY_PAYLOADS,
                 hintData.getPayloads() != null
                     ? hintData.getPayloads().stream()
                     .collect(Collectors.toMap(DeclarativeInlayPayload::getPayloadName, DeclarativeInlayPayload::getPayload))
@@ -66,17 +68,17 @@ public class DeclarativeInlayActionService {
             )
             .build();
 
-        ListPopup popupMenu = JBPopupFactory.getInstance()
-            .createActionGroupPopup(
-                null,
-                inlayMenuActionGroup,
-                dataContext,
-                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                false
-            );
+        ListPopup popupMenu = JBPopupFactory.getInstance().createActionGroupPopup(
+            null,
+            inlayMenuActionGroup,
+            dataContext,
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+            false
+        );
         popupMenu.show(relativePoint);
     }
 
+    @RequiredUIAccess
     public void invokeActionHandler(InlayActionData actionData, EditorMouseEvent e) {
         String handlerId = actionData.getHandlerId();
         InlayActionHandler handler = InlayActionHandler.getActionHandler(handlerId);
