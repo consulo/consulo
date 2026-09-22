@@ -932,7 +932,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
-    public void showBy(consulo.ui.Component component, InputDetails inputDetails) {
+    public void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails) {
+        if (inputDetails == null) {
+            showUnderneathOf(TargetAWT.to(component));
+            return;
+        }
+
         Point2D positionOnScreen = inputDetails.getPositionOnScreen();
         show(TargetAWT.to(component), positionOnScreen.x(), positionOnScreen.y(), true);
     }

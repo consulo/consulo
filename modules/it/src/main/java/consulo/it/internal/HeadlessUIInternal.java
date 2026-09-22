@@ -27,6 +27,7 @@ import consulo.ui.image.EmptyImage;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.impl.model.FlatDataModelImpl;
@@ -50,7 +51,7 @@ import consulo.ui.impl.ScriptedInputBoxBuilder;
  *
  * @author VISTALL
  */
-public class HeadlessUIInternal extends UIInternal {
+public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public CheckBox _Components_checkBox() {
         return new HeadlessCheckBox();

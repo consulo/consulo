@@ -284,7 +284,7 @@ public final class UnifiedActionMenuExpander {
      *                with, and nothing ever puts that icon back.
      */
     @RequiredUIAccess
-    public static void performAction(
+    public static CompletableFuture<?> performAction(
         AnAction action,
         DataContext context,
         String place,
@@ -302,12 +302,13 @@ public final class UnifiedActionMenuExpander {
             new AnActionEvent(null, context, place, presentation, actionManager, 0, !toolbar, toolbar, inputDetails);
         event.setInjectedContext(action.isInInjectedContext());
 
-        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+        return ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).handleAsync((enabled, throwable) -> {
             if (throwable != null) {
                 if (!isProcessCanceled(throwable)) {
                     LOG.warn("Failed to update action before performing: " + action, throwable);
                 }
-                return;
+
+                return null;
             }
 
             if (Boolean.TRUE.equals(enabled)) {
@@ -315,6 +316,8 @@ public final class UnifiedActionMenuExpander {
                 actionManager.performActionDumbAware(action, event);
                 actionManager.queueActionPerformedEvent(action, context, event);
             }
+
+            return null;
         }, uiAccess);
     }
 

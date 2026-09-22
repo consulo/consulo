@@ -21,7 +21,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2025-03-04
  */
-public class ComboBoxStyle {
+public class AWTComboBoxStyle {
     public static void makeBorderInline(JComboBox<?> comboBox) {
         comboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 1; innerOutlineWidth: 1; arc: 0");
     }

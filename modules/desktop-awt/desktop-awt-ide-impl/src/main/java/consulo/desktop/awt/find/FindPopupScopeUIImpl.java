@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awt.internal.ComboBoxStyle;
+import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -78,7 +78,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
         Arrays.sort(names, String.CASE_INSENSITIVE_ORDER);
         myModuleComboBox = new ComboBox<>(names);
-        ComboBoxStyle.makeBorderInline(myModuleComboBox);
+        AWTComboBoxStyle.makeBorderInline(myModuleComboBox);
         myModuleComboBox.setMinimumAndPreferredWidth(JBUIScale.scale(300)); // as ScopeChooser
         myModuleComboBox.setRenderer(SimpleListCellRenderer.create("", Function.identity()));
 
@@ -88,7 +88,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
         myDirectoryChooser = new FindPopupDirectoryChooser(myFindPopupPanel);
 
         myScopeCombo = new ScopeChooserCombo();
-        ComboBoxStyle.makeBorderInline(myScopeCombo.getComboBox());
+        AWTComboBoxStyle.makeBorderInline(myScopeCombo.getComboBox());
 
         Object selection = ObjectUtil.coalesce(
             myHelper.getModel().getCustomScope(),

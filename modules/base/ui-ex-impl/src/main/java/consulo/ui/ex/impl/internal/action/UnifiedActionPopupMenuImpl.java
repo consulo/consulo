@@ -86,7 +86,6 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
         UIAccess uiAccess = UIAccess.current();
         UnifiedActionUtil.expandActionGroup(myGroup, context, myPlace, myManager, presentationFactory, popupMenu::add)
             .whenCompleteAsync((r, throwable) -> {
-                myManager.addActionPopup(this);
                 popupMenu.show(x, y);
             }, uiAccess);
     }

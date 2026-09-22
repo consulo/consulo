@@ -81,6 +81,7 @@ module consulo.application.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac,
+        consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
         consulo.language.index.impl,
         consulo.project.impl,

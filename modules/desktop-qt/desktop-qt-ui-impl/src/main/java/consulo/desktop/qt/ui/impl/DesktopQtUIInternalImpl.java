@@ -36,6 +36,7 @@ import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
+import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
@@ -66,7 +67,7 @@ import java.util.ArrayList;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtUIInternalImpl extends UIInternal {
+public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx {
     private final TaskBar myTaskBar = new DummyTaskBarImpl();
 
     @Override

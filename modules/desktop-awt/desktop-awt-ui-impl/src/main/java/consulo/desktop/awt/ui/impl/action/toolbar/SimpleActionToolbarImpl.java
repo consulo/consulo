@@ -18,6 +18,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.desktop.awt.ui.impl.action.ComboBoxActionButton;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -223,7 +224,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
                     continue;
                 }
             }
-            else if (action instanceof CustomComponentAction) {
+            else if (action instanceof CustomComponentAction || action instanceof ComboBoxAction) {
                 add(CUSTOM_COMPONENT_CONSTRAINT, getCustomComponent(action));
             }
             else if (action instanceof CustomUIComponentAction) {
@@ -237,7 +238,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
         for (AnAction action : rightAligned) {
             JComponent button;
-            if (action instanceof CustomComponentAction) {
+            if (action instanceof CustomComponentAction || action instanceof ComboBoxAction) {
                 button = getCustomComponent(action);
             }
             else if (action instanceof CustomUIComponentAction) {
@@ -280,7 +281,9 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         Presentation presentation = myEngine.getPresentation(action);
         JComponent customComponent = presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
         if (customComponent == null) {
-            customComponent = ((CustomComponentAction) action).createCustomComponent(presentation, myEngine.getPlace());
+            customComponent = action instanceof CustomComponentAction customComponentAction
+                ? customComponentAction.createCustomComponent(presentation, myEngine.getPlace())
+                : ComboBoxActionButton.createCustomComponent((ComboBoxAction) action, presentation);
             presentation.putClientProperty(CustomComponentAction.COMPONENT_KEY, customComponent);
             UIUtil.putClientProperty(customComponent, CustomComponentAction.ACTION_KEY, action);
 

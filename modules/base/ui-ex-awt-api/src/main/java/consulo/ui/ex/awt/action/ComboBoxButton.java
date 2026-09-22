@@ -15,12 +15,15 @@
  */
 package consulo.ui.ex.awt.action;
 
+import consulo.annotation.DeprecationInfo;
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2018-07-12
  */
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.action.ComboBoxAction, which is drawn by the toolbar of each frontend")
 public interface ComboBoxButton {
   String LIKE_BUTTON = "ComboBoxButton.likeButton";
 

@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
-import consulo.ui.ex.awt.internal.ComboBoxStyle;
+import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -66,7 +66,7 @@ public class FindPopupDirectoryChooser {
         myProject = panel.getProject();
         myFindPopupPanel = panel;
         myDirectoryComboBox = new ComboBox<>(200);
-        ComboBoxStyle.makeBorderInline(myDirectoryComboBox);
+        AWTComboBoxStyle.makeBorderInline(myDirectoryComboBox);
 
         Component editorComponent = myDirectoryComboBox.getEditor().getEditorComponent();
         if (editorComponent instanceof JTextField) {

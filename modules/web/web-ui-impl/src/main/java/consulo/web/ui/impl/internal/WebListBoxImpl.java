@@ -25,6 +25,7 @@ import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
 import consulo.ui.event.ListDoubleClickEvent;
+import consulo.ui.event.ClickEvent;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
@@ -61,6 +62,8 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         toVaadinComponent().addClassName("web-list-box");
 
         setRender(TextItemRender.defaultRender());
+
+        myClickInstalled = true;
     }
 
     /**
@@ -196,6 +199,21 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
             "dblclick",
             details -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item, details))
         );
+
+        // the press is answered by the row rather than by the list, so the whole row answers it - the padding a row
+        // carries is part of it - and the item pressed is known outright instead of being read back from a selection
+        // which a press landing between rows would leave standing at the row chosen before
+        WebInputDetails.addClickListener(
+            component.getElement(),
+            details -> {
+                if (item != null) {
+                    setValue(item, true);
+                }
+
+                getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details));
+            }
+        );
+
         return component;
     }
 

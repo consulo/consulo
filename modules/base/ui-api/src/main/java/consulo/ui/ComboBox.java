@@ -33,7 +33,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2016-06-09
  */
-public interface ComboBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E> {
+public interface ComboBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E>, HasComponentStyle<ComboBoxStyle> {
     @SafeVarargs
     static <E> ComboBox<E> create(E... elements) {
         return UIInternal.get()._Components_comboBox(FlatDataModel.of(Arrays.asList(elements)));

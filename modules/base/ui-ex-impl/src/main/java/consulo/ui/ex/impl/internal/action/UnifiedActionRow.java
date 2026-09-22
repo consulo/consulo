@@ -15,8 +15,10 @@
  */
 package consulo.ui.ex.impl.internal.action;
 
+import consulo.application.Application;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -36,8 +38,16 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.ex.action.ComboBoxAction;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.PresentationFactory;
-import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import kava.beans.PropertyChangeListener;
 import consulo.ui.ex.internal.ActionTicker;
 import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.layout.HorizontalLayout;
@@ -82,6 +92,8 @@ public class UnifiedActionRow {
     private List<AnAction> myActions = List.of();
     private @Nullable ProgressIndicator myIndicator;
     private @Nullable Disposable myTickerRegistration;
+    private @Nullable MessageBusConnection myActionConnection;
+    private boolean myUpdatePending;
 
     private final TimerListener myTimerListener = new TimerListener() {
         @Override
@@ -126,10 +138,27 @@ public class UnifiedActionRow {
 
         myTickerRegistration = ActionTicker.getInstance().addListener(UIAccess.current(), myTimerListener);
 
+        MessageBusConnection connection = Application.get().getMessageBus().connect();
+        connection.subscribe(AnActionListener.class, new AnActionListener() {
+            @Override
+            public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+                requestUpdate();
+            }
+        });
+        myActionConnection = connection;
+
         updateAsync();
     }
 
     private void stopTicking() {
+        myUpdatePending = false;
+
+        MessageBusConnection connection = myActionConnection;
+        myActionConnection = null;
+        if (connection != null) {
+            connection.disconnect();
+        }
+
         Disposable registration = myTickerRegistration;
         if (registration == null) {
             return;
@@ -137,6 +166,33 @@ public class UnifiedActionRow {
 
         myTickerRegistration = null;
         Disposer.dispose(registration);
+    }
+
+    private void requestUpdate() {
+        UIAccess uiAccess = myLayout.getUIAccess();
+        if (uiAccess == null) {
+            return;
+        }
+
+        uiAccess.giveIfNeed(() -> {
+            if (myIndicator != null) {
+                myUpdatePending = true;
+                return;
+            }
+
+            updateAsync();
+        });
+    }
+
+    @RequiredUIAccess
+    private void drainPendingUpdate() {
+        if (!myUpdatePending) {
+            return;
+        }
+
+        myUpdatePending = false;
+
+        updateAsync();
     }
 
     public Component getComponent() {
@@ -183,12 +239,14 @@ public class UnifiedActionRow {
                 }
 
                 result.complete(myActions);
+                drainPendingUpdate();
                 return;
             }
 
             apply(nodes);
 
             result.complete(myActions);
+            drainPendingUpdate();
         }, uiAccess);
 
         return result;
@@ -235,6 +293,11 @@ public class UnifiedActionRow {
                 continue;
             }
 
+            if (node.action() instanceof ComboBoxAction comboBoxAction) {
+                add(createComboBox(node, comboBoxAction));
+                continue;
+            }
+
             add(node.children() == null ? createActionButton(node) : createActionMenu(node));
         }
     }
@@ -266,9 +329,99 @@ public class UnifiedActionRow {
     }
 
     @RequiredUIAccess
-    private Component createActionButton(UnifiedActionMenuExpander.MenuNode node) {
-        boolean showText = myStyle == ActionToolbar.Style.BUTTON || node.icon() == null;
+    private Component createComboBox(UnifiedActionMenuExpander.MenuNode node, ComboBoxAction action) {
+        Presentation presentation = myPresentationFactory.getPresentation(action);
 
+        Object initialValue = new Object();
+
+        ComboBoxWithCustomPopup<Object> comboBox;
+        try {
+            comboBox = ComboBoxWithCustomPopup.create(FlatDataModel.of(List.of(initialValue)));
+        }
+        catch (UnsupportedOperationException e) {
+            // a frontend without the control still has to show the action, and the selector of the run
+            // configuration is unusable without its text
+            return createActionButton(node, true);
+        }
+
+        comboBox.setRender((itemPresentation, item) -> {
+            itemPresentation.append(presentation.getTextValue().map(Presentation.NO_MNEMONIC));
+            itemPresentation.withIcon(presentation.getIcon());
+        });
+
+        comboBox.setValue(initialValue, false);
+        comboBox.setEnabled(presentation.isEnabled());
+        comboBox.setToolTipText(presentation.getDescription());
+
+        presentation.putClientProperty(ComboBoxAction.COMPONENT_KEY, comboBox);
+
+        PropertyChangeListener listener = event -> {
+            String propertyName = event.getPropertyName();
+
+            if (Presentation.PROP_TEXT.equals(propertyName)
+                || Presentation.PROP_ICON.equals(propertyName)
+                || Presentation.PROP_ENABLED.equals(propertyName)
+                || Presentation.PROP_DESCRIPTION.equals(propertyName)) {
+                applyPresentation(comboBox, presentation, propertyName);
+            }
+        };
+        comboBox.addAttachListener(event -> {
+            presentation.addPropertyChangeListener(listener);
+
+            comboBox.setEnabled(presentation.isEnabled());
+            comboBox.setToolTipText(presentation.getDescription());
+            revalidateValue(comboBox);
+        });
+        comboBox.addDetachListener(event -> presentation.removePropertyChangeListener(listener));
+
+        comboBox.addClickListener(event -> {
+            DataContext context = myContextSupplier.get();
+
+            JBPopup popup = action.createPopup(context, null);
+            if (popup != null) {
+                popup.showBy(comboBox, event.getInputDetails());
+            }
+        });
+
+        return comboBox;
+    }
+
+    private void applyPresentation(ComboBoxWithCustomPopup<Object> comboBox, Presentation presentation, String propertyName) {
+        UIAccess uiAccess = comboBox.getUIAccess();
+        if (uiAccess == null) {
+            return;
+        }
+
+        uiAccess.giveIfNeed(() -> {
+            if (Presentation.PROP_ENABLED.equals(propertyName)) {
+                comboBox.setEnabled(presentation.isEnabled());
+            }
+            else if (Presentation.PROP_DESCRIPTION.equals(propertyName)) {
+                comboBox.setToolTipText(presentation.getDescription());
+            }
+            else {
+                revalidateValue(comboBox);
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private void revalidateValue(ComboBoxWithCustomPopup<Object> comboBox) {
+        Object value = new Object();
+
+        MutableFlatDataModel<Object> model = (MutableFlatDataModel<Object>) comboBox.getDataModel();
+        model.replaceAll(List.of(value));
+
+        comboBox.setValue(value, false);
+    }
+
+    @RequiredUIAccess
+    private Component createActionButton(UnifiedActionMenuExpander.MenuNode node) {
+        return createActionButton(node, myStyle == ActionToolbar.Style.BUTTON || node.icon() == null);
+    }
+
+    @RequiredUIAccess
+    private Component createActionButton(UnifiedActionMenuExpander.MenuNode node, boolean showText) {
         Button button = createButton(node, showText);
 
         AnAction action = node.action();
@@ -281,9 +434,7 @@ public class UnifiedActionRow {
                     myPresentationFactory,
                     event.getInputDetails(),
                     true
-                );
-
-                updateAsync();
+                ).whenComplete((result, throwable) -> requestUpdate());
             });
         }
 
@@ -296,7 +447,7 @@ public class UnifiedActionRow {
         // configuration is unusable without its text - it is the only thing which says what would be run
         boolean showText = myStyle == ActionToolbar.Style.BUTTON
             || node.icon() == null
-            || node.action() instanceof ComboBoxAction;
+            || node.action() instanceof consulo.ui.ex.awt.action.ComboBoxAction;
 
         // a popup group is the very same button a leaf action gets, the group only differs in what the click
         // does. a dedicated menu widget was tried and never lined up with the buttons standing next to it

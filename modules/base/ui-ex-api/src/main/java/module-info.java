@@ -76,6 +76,7 @@ module consulo.ui.ex.api {
         consulo.module.content.api,
         consulo.project.ui.api,
         consulo.project.ui.impl,
+        consulo.test.impl,
         consulo.ui.ex.awt.api,
         consulo.ui.ex.impl,
         consulo.version.control.system.impl,

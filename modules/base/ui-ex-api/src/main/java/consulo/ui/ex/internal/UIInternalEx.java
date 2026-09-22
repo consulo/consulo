@@ -15,7 +15,9 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.internal.UIInternal;
+import consulo.ui.model.FlatDataModel;
 
 /**
  * @author VISTALL
@@ -24,5 +26,9 @@ import consulo.ui.internal.UIInternal;
 public interface UIInternalEx {
     static UIInternalEx get() {
         return (UIInternalEx) UIInternal.get();
+    }
+
+    default <E> ComboBoxWithCustomPopup<E> _Components_comboBoxWithCustomPopup(FlatDataModel<E> model) {
+        throw new UnsupportedOperationException();
     }
 }

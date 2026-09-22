@@ -25,6 +25,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
@@ -76,6 +77,19 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     private void applySpeedSearch(MyComboBox<E> component) {
         if (mySpeedSearchConverter != null) {
             ComboboxSpeedSearch.installSpeedSearch(component, mySpeedSearchConverter::apply);
+        }
+    }
+
+    @Override
+    public void addStyle(ComboBoxStyle style) {
+        switch (style) {
+            case TRANSPARENT_BACKGROUND:
+                MyComboBox<E> component = toAWTComponent();
+                component.setOpaque(false);
+                break;
+            case INPLACE:
+                AWTComboBoxStyle.makeBorderInline(toAWTComponent());
+                break;
         }
     }
 

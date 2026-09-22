@@ -37,7 +37,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.AWTTitlelessDecorator;
-import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
@@ -222,7 +221,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
 
     private static boolean isNeedGap(AnAction group) {
         AnAction firstAction = getFirstAction(group);
-        return firstAction instanceof ComboBoxAction;
+        return firstAction instanceof ComboBoxAction || firstAction instanceof consulo.ui.ex.awt.action.ComboBoxAction;
     }
 
     private static @Nullable AnAction getFirstAction(AnAction group) {

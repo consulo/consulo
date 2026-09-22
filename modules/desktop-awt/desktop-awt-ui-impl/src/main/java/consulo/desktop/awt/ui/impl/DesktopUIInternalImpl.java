@@ -61,6 +61,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.FlatDataModelImpl;
+import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
@@ -88,7 +89,7 @@ import java.util.ArrayList;
  * @author VISTALL
  * @since 2016-06-09
  */
-public class DesktopUIInternalImpl extends UIInternal {
+public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         LaterInvocator.addModalityStateListener(listener, parentDisposable);

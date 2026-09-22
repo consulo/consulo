@@ -11,6 +11,7 @@ import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.logging.Logger;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
@@ -31,6 +32,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, MnemonicNavigationFilter<ActionPopupItem>, SpeedSearchFilter<ActionPopupItem> {
+    private static final Logger LOG = Logger.getInstance(ActionPopupStep.class);
 
     private final List<ActionPopupItem> myItems;
     private final String myTitle;
@@ -356,6 +358,11 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         event.setInjectedContext(action.isInInjectedContext());
         UIAccess uiAccess = Application.get().getLastUIAccess();
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to update the action chosen in a popup: " + action, throwable);
+                return;
+            }
+
             if (Boolean.TRUE.equals(enabled)) {
                 ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
             }

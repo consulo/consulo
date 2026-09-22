@@ -23,9 +23,9 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.clipboard.Clipboard;
-import consulo.web.ui.impl.internal.clipboard.WebClipboardImpl;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
+import consulo.web.ui.impl.internal.clipboard.WebClipboardImpl;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -79,6 +79,28 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     @Override
     public boolean isValid() {
         return myUI.isAttached() && myUI.getSession() != null;
+    }
+
+    @Override
+    public void giveIfNeed(Runnable runnable) {
+        if (myUI == UI.getCurrent()) {
+            runnable.run();
+        }
+        else {
+            execute(runnable);
+        }
+    }
+
+    @Override
+    public void giveAndWaitIfNeed(Runnable runnable) {
+        ComponentStoreImpl.assertIfInsideSavingSession();
+
+        if (myUI == UI.getCurrent()) {
+            runnable.run();
+        }
+        else {
+            myUI.accessSynchronously(runnable::run);
+        }
     }
 
     @Override

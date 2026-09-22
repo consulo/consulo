@@ -17,7 +17,6 @@ package consulo.execution.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.dataContext.DataContext;
@@ -27,7 +26,6 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.impl.internal.action.runPopup.*;
-import consulo.execution.internal.RunConfigurationStartHistory;
 import consulo.execution.internal.RunCurrentFileExecutor;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
@@ -37,22 +35,15 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.ui.ex.awt.action.ComboBoxButton;
-import consulo.ui.ex.awt.popup.AWTListPopup;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.action.ComboBoxAction;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
-import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -140,7 +131,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             }
             presentation.setDisabledMnemonic(true);
             presentation.setText(LocalizeValue.localizeTODO(name));
-            presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, null);
+            presentation.putClientProperty(ComboBoxAction.LIKE_BUTTON, null);
             setConfigurationIcon(presentation, settings, project);
         }
         else {
@@ -152,7 +143,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
             presentation.setText(ExecutionLocalize.runComboBoxAddConfiguration());
             presentation.putClientProperty(
-                ComboBoxButton.LIKE_BUTTON,
+                ComboBoxAction.LIKE_BUTTON,
                 (Runnable) () -> ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS)
                     .actionPerformed(AnActionEvent.createFromDataContext("", null, DataManager.getInstance().getDataContext()))
             );
@@ -190,8 +181,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
 
     @Override
-    public ActionGroup createPopupActionGroup(JComponent button) {
-        Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
+    protected ActionGroup createPopupActionGroup(DataContext context) {
+        Project project = context.getData(Project.KEY);
         if (project == null) {
             return ActionGroup.EMPTY_GROUP;
         }
@@ -284,47 +275,4 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return separator;
     }
 
-    @Override
-    public JBPopup createPopup(JComponent component, DataContext context, Runnable onDispose) {
-        ActionGroup group = createPopupActionGroup(component, context);
-
-        Project project = context.getRequiredData(Project.KEY);
-
-        RunConfigurationStartHistory runConfigurationStartHistory = RunConfigurationStartHistory.getInstance(project);
-
-        AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createActionGroupPopup(
-            getPopupTitle(),
-            group,
-            context,
-            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-            shouldShowDisabledActions(),
-            onDispose,
-            getMaxRows(),
-            getPreselectCondition(),
-            getPopupActionPlace(),
-            (o, isHoldingFilter) -> {
-                if (Boolean.TRUE) {
-                    // TODO hack until support
-                    return true;
-                }
-
-                if (!(o instanceof UserDataHolder userDataHolder)) {
-                    return false;
-                }
-
-                String searchTag = userDataHolder.getUserData(ActionFilterUtil.SEARCH_TAG);
-                return searchTag == null || switch (searchTag) {
-                    case ActionFilterUtil.TAG_REGULAR_HIDE -> runConfigurationStartHistory.isAllConfigurationsExpanded();
-                    default -> true;
-                };
-
-            }
-        );
-
-        popup.getListModel().syncModel();
-
-        popup.setMinimumSize(new Dimension(270, 0));
-
-        return popup;
-    }
 }

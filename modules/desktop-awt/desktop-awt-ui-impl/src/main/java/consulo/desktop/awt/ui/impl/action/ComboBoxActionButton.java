@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,48 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.action;
+package consulo.desktop.awt.ui.impl.action;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ComboBoxAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
+import java.awt.*;
 
 /**
+ * A control which looks like a combo box but drops the popup of its action down.
+ *
  * @author VISTALL
- * @since 2018-07-12
- * <p>
- * Component which looks like ComboBox but will show action popup.
+ * @since 2026-09-22
  */
-@Deprecated
-@DeprecationInfo("Use consulo.ui.ex.action.ComboBoxAction, which is drawn by the toolbar of each frontend")
-public final class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
-    private static final String uiClassID = "ComboBoxButtonUI";
+public final class ComboBoxActionButton extends JComboBox<Object> {
+    private static final String uiClassID = "ComboBoxActionButtonUI";
 
     private static final int POPUP_REOPEN_THRESHOLD_MS = 200;
 
-    private final ComboBoxAction myComboBoxAction;
+    public static JComponent createCustomComponent(ComboBoxAction action, Presentation presentation) {
+        NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
+        panel.setBorder(JBUI.Borders.empty(0, 4));
+        panel.add(new ComboBoxActionButton(action, presentation), BorderLayout.CENTER);
+        return panel;
+    }
+
+    private final ComboBoxAction myAction;
     private final Presentation myPresentation;
 
-    private Runnable myCurrentPopupCanceler;
+    private @Nullable Runnable myCurrentPopupCanceler;
     private long myPopupHiddenAt = 0;
-    private PropertyChangeListener myButtonSynchronizer;
+    private @Nullable PropertyChangeListener myButtonSynchronizer;
 
-    private Runnable myOnClickListener;
+    private @Nullable Runnable myOnClickListener;
 
-    public ComboBoxButtonImpl(ComboBoxAction comboBoxAction, Presentation presentation) {
-        myComboBoxAction = comboBoxAction;
+    public ComboBoxActionButton(ComboBoxAction action, Presentation presentation) {
+        myAction = action;
         myPresentation = presentation;
 
         setRenderer(new ColoredListCellRenderer<>() {
@@ -62,7 +70,8 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
             protected void customizeCellRenderer(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
                 if (myPresentation.isDisabledMnemonic()) {
                     append(myPresentation.getTextValue());
-                } else {
+                }
+                else {
                     append(myPresentation.getTextValue().map(Presentation.NO_MNEMONIC));
                 }
                 setIcon(myPresentation.getIcon());
@@ -71,7 +80,6 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
         setFocusable(ScreenReader.isActive());
 
-        // add and select one value
         revalidateValue();
         updateSize();
         updateTooltipText(presentation.getDescription());
@@ -101,6 +109,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
             hidePopupImpl();
             return;
         }
+
         if (System.currentTimeMillis() - myPopupHiddenAt < POPUP_REOPEN_THRESHOLD_MS) {
             return;
         }
@@ -110,7 +119,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
             return;
         }
 
-        JBPopup popup = createPopup(() -> {
+        JBPopup popup = myAction.createPopup(getDataContext(), () -> {
             myCurrentPopupCanceler = null;
             myPopupHiddenAt = System.currentTimeMillis();
             updateSize();
@@ -120,41 +129,29 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         myCurrentPopupCanceler = popup::cancel;
     }
 
-    public Runnable getCurrentPopupCanceler() {
+    public @Nullable Runnable getCurrentPopupCanceler() {
         return myCurrentPopupCanceler;
     }
 
-    public Runnable getOnClickListener() {
+    public @Nullable Runnable getOnClickListener() {
         return myOnClickListener;
     }
 
-    private JBPopup createPopup(Runnable onDispose) {
-        return myComboBoxAction.createPopup(this, getDataContext(), myPresentation, onDispose);
-    }
-
-    protected void updateSize() {
+    private void updateSize() {
         revalidateValue();
 
         invalidate();
         repaint();
     }
 
-    protected DataContext getDataContext() {
+    private DataContext getDataContext() {
         return DataManager.getInstance().getDataContext(this);
-    }
-
-    @Override
-    public String getToolTipText() {
-        String text = myComboBoxAction.getTooltipText(this);
-        if (text != null) {
-            return text;
-        }
-        return super.getToolTipText();
     }
 
     @Override
     public void addNotify() {
         super.addNotify();
+
         if (myButtonSynchronizer == null) {
             myButtonSynchronizer = new MyButtonSynchronizer();
             myPresentation.addPropertyChangeListener(myButtonSynchronizer);
@@ -168,6 +165,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
             myPresentation.removePropertyChangeListener(myButtonSynchronizer);
             myButtonSynchronizer = null;
         }
+
         super.removeNotify();
     }
 
@@ -185,16 +183,16 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
                 updateSize();
             }
             else if (Presentation.PROP_ENABLED.equals(propertyName)) {
-                setEnabled(((Boolean) evt.getNewValue()).booleanValue());
+                setEnabled((Boolean) evt.getNewValue());
             }
-            else if (ComboBoxButton.LIKE_BUTTON.equals(propertyName)) {
+            else if (ComboBoxAction.LIKE_BUTTON.equals(propertyName)) {
                 setLikeButton((Runnable) evt.getNewValue());
             }
         }
     }
 
     private void updateTooltipText(LocalizeValue description) {
-        String tooltip = KeymapUtil.createTooltipText(description.getValue(), myComboBoxAction);
+        String tooltip = KeymapUtil.createTooltipText(description.getValue(), myAction);
         setToolTipText(!tooltip.isEmpty() ? tooltip : null);
     }
 
@@ -203,18 +201,12 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         return uiClassID;
     }
 
-    
-    @Override
-    public ComboBoxAction getComboBoxAction() {
-        return myComboBoxAction;
-    }
-
     private void setLikeButton(@Nullable Runnable onClick) {
         myOnClickListener = onClick;
 
         ComboBoxUI ui = getUI();
-        if (ui instanceof ComboBoxButtonUI comboBoxButtonUI) {
-            comboBoxButtonUI.updateArrowState(onClick == null);
+        if (ui instanceof ComboBoxActionButtonUI comboBoxActionButtonUI) {
+            comboBoxActionButtonUI.updateArrowState(onClick == null);
         }
     }
 }

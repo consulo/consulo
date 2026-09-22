@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.ui.Length;
 import consulo.ui.ComboBox;
+import consulo.ui.ComboBoxStyle;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
@@ -72,6 +73,10 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
                     .onEvent(new ValueComponentEvent(this, getValue(), DesktopQtCurrentInput.current(component)));
             }
         });
+    }
+
+    @Override
+    public void addStyle(ComboBoxStyle style) {
     }
 
     @Override

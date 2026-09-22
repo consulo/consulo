@@ -32,6 +32,26 @@ vaadin-list-box.web-list-box vaadin-item::part(content)
   min-width: 0;
 }
 
+/* a press on a row is answered by the render inside it rather than by the row itself, so any run of the row the
+   render does not reach is a run a press falls through - the chrome the item and its content part keep for
+   themselves is handed over to the render, which then fills the row and leaves no part of it dead to a press */
+vaadin-list-box.web-list-box vaadin-item
+{
+  padding: 0;
+}
+
+vaadin-list-box.web-list-box vaadin-item::part(content)
+{
+  padding: 0;
+}
+
+vaadin-list-box.web-list-box vaadin-item:not(:has(> .web-list-box-separator)) > *
+{
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px 11px 5px 7px;
+}
+
 /* the lazy list has no vaadin-item to put a row in - what a render made is the row - so the chrome an item would
    have carried is put on it here, and a row of either list ends up looking the same.
    the list wraps every render of its own accord, so the row is the wrapper and what the render made is inside it */

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.ui.Point2D;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.KeyCode;
@@ -136,6 +137,8 @@ public final class DesktopQtCurrentInput {
     }
 
     private static void remember(Snapshot snapshot) {
+        ActivityTracker.getInstance().inc();
+
         ourCurrent = snapshot;
 
         long generation = ++ourGeneration;

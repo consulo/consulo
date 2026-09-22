@@ -60,10 +60,7 @@ public class ActionTickerImpl implements ActionTicker, Disposable {
     private volatile ScheduledFuture<?> myFuture;
     private volatile int myDelay = TIMER_DELAY;
 
-    /**
-     * Read and written only from the scheduler thread.
-     */
-    private int myLastActivityCount;
+    private volatile int myLastActivityCount;
 
     @Inject
     public ActionTickerImpl(Application application, ApplicationConcurrency concurrency) {

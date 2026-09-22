@@ -143,7 +143,10 @@ public class DesktopQtEditorKeyHandler {
             return false;
         }
 
-        EditorActionManager.getInstance().getTypedAction().actionPerformed(myEditor, text.charAt(0), myEditor.getDataContext());
+        DataContext context = myEditor.getDataContext();
+
+        ((ActionManagerEx) ActionManager.getInstance()).fireBeforeEditorTyping(text.charAt(0), context);
+        EditorActionManager.getInstance().getTypedAction().actionPerformed(myEditor, text.charAt(0), context);
         return true;
     }
 

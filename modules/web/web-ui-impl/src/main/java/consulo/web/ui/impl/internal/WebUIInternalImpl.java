@@ -39,6 +39,8 @@ import consulo.ui.ex.impl.internal.UnifiedAlertImpl;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
@@ -71,7 +73,7 @@ import java.util.ArrayList;
  * @since 2016-06-11
  */
 @NullMarked
-public class WebUIInternalImpl extends UIInternal {
+public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     private final DummyTaskBarImpl myTaskBar = new DummyTaskBarImpl();
 
     @Override
@@ -167,6 +169,11 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model) {
         return new WebComboBoxImpl<>(model);
+    }
+
+    @Override
+    public <E> ComboBoxWithCustomPopup<E> _Components_comboBoxWithCustomPopup(FlatDataModel<E> model) {
+        return new WebComboBoxWithCustomPopupImpl<>(model);
     }
 
     @Override

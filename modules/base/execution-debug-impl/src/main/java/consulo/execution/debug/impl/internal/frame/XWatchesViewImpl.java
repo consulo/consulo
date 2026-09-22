@@ -48,7 +48,7 @@ import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
-import consulo.ui.ex.awt.internal.ComboBoxStyle;
+import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
@@ -234,7 +234,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                 ).get());
             }
         };
-        ComboBoxStyle.makeBorderInline(myEvaluateComboBox.getComboBox());
+        AWTComboBoxStyle.makeBorderInline(myEvaluateComboBox.getComboBox());
 
         JComponent editorComponent = myEvaluateComboBox.getEditorComponent();
         editorComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)

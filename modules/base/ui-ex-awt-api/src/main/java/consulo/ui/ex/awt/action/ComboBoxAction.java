@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -31,6 +32,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.function.Predicate;
 
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.action.ComboBoxAction, which is drawn by the toolbar of each frontend")
 public abstract class ComboBoxAction extends AnAction implements CustomComponentAction, AnActionWithSyncUpdate {
     private String myPopupTitle;
 

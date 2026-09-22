@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,97 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import consulo.ui.ComboBox;
+import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.vaadin.WebSingleListComponentBase;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-19
+ * @since 2026-09-22
  */
 @SuppressWarnings("unchecked")
-public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBoxImpl.Vaadin> implements ComboBox<V> {
+public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBase<V, WebComboBoxWithCustomPopupImpl.Vaadin>
+    implements ComboBoxWithCustomPopup<V> {
+
     public class Vaadin extends Select<V> implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
-            return WebComboBoxImpl.this;
+            return WebComboBoxWithCustomPopupImpl.this;
+        }
+
+        @Override
+        protected void onAttach(AttachEvent attachEvent) {
+            super.onAttach(attachEvent);
+
+            getElement().executeJs("""
+                const el = this;
+                if (el.__consuloComboShell) {
+                    return;
+                }
+                el.__consuloComboShell = true;
+
+                const block = event => {
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                };
+                el.addEventListener('mousedown', block, true);
+                el.addEventListener('click', event => {
+                    block(event);
+                    el.dispatchEvent(new MouseEvent($0, {
+                        clientX: event.clientX,
+                        clientY: event.clientY,
+                        screenX: event.screenX,
+                        screenY: event.screenY,
+                        button: event.button,
+                        altKey: event.altKey,
+                        ctrlKey: event.ctrlKey,
+                        shiftKey: event.shiftKey,
+                        metaKey: event.metaKey
+                    }));
+                }, true);
+                """, SHELL_PRESS_EVENT);
         }
     }
 
-    public WebComboBoxImpl(FlatDataModel<V> model) {
+    private static final String SHELL_PRESS_EVENT = "consulo-combo-shell-press";
+
+    public WebComboBoxWithCustomPopupImpl(FlatDataModel<V> model) {
         super(model);
 
         setRender(TextItemRender.defaultRender());
+
+        WebInputDetails.addClickListener(
+            toVaadinComponent().getElement(),
+            SHELL_PRESS_EVENT,
+            details -> {
+                // the press is killed in the capture phase, so the tracker of activity never sees it unless
+                // the control which swallowed it says so itself
+                ActivityTracker.getInstance().inc();
+
+                getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details));
+            }
+        );
+
+        myClickInstalled = true;
+    }
+
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
 
     @Override
@@ -90,10 +150,5 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
 
     private boolean isSelected(@Nullable V item) {
         return item != null && item.equals(getValue());
-    }
-
-    @Override
-    public Vaadin createVaadinComponent() {
-        return new Vaadin();
     }
 }

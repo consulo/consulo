@@ -16,11 +16,18 @@
 package consulo.ui.ex;
 
 import consulo.ui.ComboBox;
+import consulo.ui.ex.internal.UIInternalEx;
+import consulo.ui.model.FlatDataModel;
 
 /**
+ * A combo box which never opens the list of its items. A press is reported as a click, so whoever placed the control
+ * decides what drops down.
+ *
  * @author VISTALL
  * @since 2026-08-02
  */
 public interface ComboBoxWithCustomPopup<E> extends ComboBox<E> {
-    void forceShowPopup();
+    static <E> ComboBoxWithCustomPopup<E> create(FlatDataModel<E> model) {
+        return UIInternalEx.get()._Components_comboBoxWithCustomPopup(model);
+    }
 }

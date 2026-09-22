@@ -33,7 +33,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
-import consulo.ui.ex.awt.internal.ComboBoxStyle;
+import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -111,7 +111,7 @@ public class XFramesView extends XDebugView {
 
         myThreadComboBox = new ComboBox<>();
         myThreadComboBox.setFont(AWTLanguageEditorUtil.getEditorFont());
-        ComboBoxStyle.makeBorderInline(myThreadComboBox);
+        AWTComboBoxStyle.makeBorderInline(myThreadComboBox);
         myThreadComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {

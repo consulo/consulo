@@ -178,7 +178,14 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         }
 
         UI ui = ui();
-        if (ui != null) {
+        if (ui == null) {
+            return;
+        }
+
+        if (ui.hasModalComponent()) {
+            ui.addToModalComponent(popover);
+        }
+        else {
             ui.add(popover);
         }
     }

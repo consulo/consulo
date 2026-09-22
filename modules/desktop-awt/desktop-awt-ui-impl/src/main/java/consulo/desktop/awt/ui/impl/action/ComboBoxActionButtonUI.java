@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.action;
-
-import consulo.annotation.DeprecationInfo;
+package consulo.desktop.awt.ui.impl.action;
 
 /**
  * @author VISTALL
- * @since 2024-11-24
+ * @since 2026-09-22
  */
-@Deprecated
-@DeprecationInfo("Use consulo.ui.ex.action.ComboBoxAction, which is drawn by the toolbar of each frontend")
-public interface ComboBoxButtonUI {
+public interface ComboBoxActionButtonUI {
     void updateArrowState(boolean visible);
 }

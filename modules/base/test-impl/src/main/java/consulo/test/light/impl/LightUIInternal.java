@@ -25,6 +25,7 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.EmptyImage;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
@@ -44,7 +45,7 @@ import consulo.ui.impl.ScriptedInputBoxBuilder;
  * @author VISTALL
  * @since 2023-11-08
  */
-public class LightUIInternal extends UIInternal {
+public class LightUIInternal extends UIInternal implements UIInternalEx {
   @Override
   public CheckBox _Components_checkBox() {
     return null;
