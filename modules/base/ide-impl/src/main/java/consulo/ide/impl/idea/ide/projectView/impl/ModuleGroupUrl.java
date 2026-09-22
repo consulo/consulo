@@ -13,44 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.ui.view.tree.ModuleGroup;
+import org.jspecify.annotations.Nullable;
 
 public class ModuleGroupUrl extends AbstractUrl {
-  private static final String ELEMENT_TYPE = "module_group";
+    private static final String ELEMENT_TYPE = "module_group";
 
-  public ModuleGroupUrl(String url) {
-    super(url, null, ELEMENT_TYPE);
-  }
-
-  @Override
-  public Object[] createPath(Project project) {
-    String[] groupPath = url.split(";");
-    return new Object[]{new ModuleGroup(groupPath)};
-  }
-
-  @Override
-  protected AbstractUrl createUrl(String moduleName, String url) {
-      return new ModuleGroupUrl(url);
-  }
-
-  @Override
-  public AbstractUrl createUrlByElement(Object element) {
-    if (element instanceof ModuleGroup) {
-      ModuleGroup group = (ModuleGroup)element;
-      String[] groupPath = group.getGroupPath();
-      StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < groupPath.length; i++) {
-        String s = groupPath[i];
-        sb.append(s);
-        sb.append(";");
-      }
-      return new ModuleGroupUrl(sb.toString());
+    public ModuleGroupUrl(String url) {
+        super(url, null, ELEMENT_TYPE);
     }
-    return null;
-  }
+
+    @Override
+    public Object @Nullable [] createPath(Project project) {
+        String[] groupPath = url.split(";");
+        return new Object[]{new ModuleGroup(groupPath)};
+    }
+
+    @Override
+    protected AbstractUrl createUrl(String moduleName, String url) {
+        return new ModuleGroupUrl(url);
+    }
+
+    @Override
+    public AbstractUrl createUrlByElement(Object element) {
+        if (element instanceof ModuleGroup) {
+            ModuleGroup group = (ModuleGroup) element;
+            String[] groupPath = group.getGroupPath();
+            StringBuilder sb = new StringBuilder();
+            for (String s : groupPath) {
+                sb.append(s).append(";");
+            }
+            return new ModuleGroupUrl(sb.toString());
+        }
+        return null;
+    }
 }

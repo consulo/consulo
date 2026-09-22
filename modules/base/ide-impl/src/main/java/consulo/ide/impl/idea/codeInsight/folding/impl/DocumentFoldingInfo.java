@@ -27,6 +27,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,11 +35,9 @@ class DocumentFoldingInfo implements CodeFoldingState {
     private static final Logger LOG = Logger.getInstance(DocumentFoldingInfo.class);
     private static final Key<FoldingInfo> FOLDING_INFO_KEY = Key.create("FOLDING_INFO");
 
-    
     private final Project myProject;
     private final VirtualFile myFile;
 
-    
     private final List<Info> myInfos = Lists.newLockFreeCopyOnWriteList();
     
     private final List<RangeMarker> myRangeMarkers = Lists.newLockFreeCopyOnWriteList();
@@ -145,7 +144,6 @@ class DocumentFoldingInfo implements CodeFoldingState {
         }
     }
 
-    
     @RequiredReadAction
     private static Map<PsiElement, FoldingDescriptor> buildRanges(Editor editor, PsiFile psiFile) {
         FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(psiFile.getLanguage());
@@ -281,14 +279,14 @@ class DocumentFoldingInfo implements CodeFoldingState {
     @Override
     public int hashCode() {
         int result = myProject.hashCode();
-        result = 31 * result + (myFile != null ? myFile.hashCode() : 0);
+        result = 31 * result + Objects.hashCode(myFile);
         result = 31 * result + myInfos.hashCode();
         result = 31 * result + myRangeMarkers.hashCode();
         return result;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -296,21 +294,18 @@ class DocumentFoldingInfo implements CodeFoldingState {
             return false;
         }
 
-        DocumentFoldingInfo info = (DocumentFoldingInfo) o;
+        DocumentFoldingInfo that = (DocumentFoldingInfo) o;
 
-        if (myFile != null ? !myFile.equals(info.myFile) : info.myFile != null) {
-            return false;
-        }
-        if (!myProject.equals(info.myProject) || !myInfos.equals(info.myInfos)) {
+        if (!Objects.equals(myFile, that.myFile) || !myProject.equals(that.myProject) || !myInfos.equals(that.myInfos)) {
             return false;
         }
 
-        if (myRangeMarkers.size() != info.myRangeMarkers.size()) {
+        if (myRangeMarkers.size() != that.myRangeMarkers.size()) {
             return false;
         }
         for (int i = 0; i < myRangeMarkers.size(); i++) {
             RangeMarker marker = myRangeMarkers.get(i);
-            RangeMarker other = info.myRangeMarkers.get(i);
+            RangeMarker other = that.myRangeMarkers.get(i);
             if (marker == other || !marker.isValid() || !other.isValid()) {
                 continue;
             }

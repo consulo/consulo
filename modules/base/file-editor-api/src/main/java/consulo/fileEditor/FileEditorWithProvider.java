@@ -15,47 +15,8 @@
  */
 package consulo.fileEditor;
 
-import java.util.Objects;
-
 /**
  * from kotlin
  */
-public final class FileEditorWithProvider {
-  private final FileEditor myFileEditor;
-  private final FileEditorProvider myProvider;
-
-  public FileEditorWithProvider(FileEditor fileEditor, FileEditorProvider provider) {
-    myFileEditor = fileEditor;
-    myProvider = provider;
-  }
-
-  public FileEditor getFileEditor() {
-    return myFileEditor;
-  }
-
-  public FileEditorProvider getProvider() {
-    return myProvider;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    FileEditorWithProvider that = (FileEditorWithProvider)o;
-    return Objects.equals(myFileEditor, that.myFileEditor) && Objects.equals(myProvider, that.myProvider);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(myFileEditor, myProvider);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("FileEditorWithProvider{");
-    sb.append("myFileEditor=").append(myFileEditor);
-    sb.append(", myProvider=").append(myProvider);
-    sb.append('}');
-    return sb.toString();
-  }
+public record FileEditorWithProvider(FileEditor fileEditor, FileEditorProvider provider) {
 }

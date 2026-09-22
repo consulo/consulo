@@ -18,7 +18,6 @@ import java.awt.*;
 import static consulo.ui.ex.SimpleTextAttributes.*;
 
 public class RunAnythingItemBase extends RunAnythingItem {
-    
     private final String myCommand;
     protected final @Nullable Image myIcon;
 
@@ -27,7 +26,6 @@ public class RunAnythingItemBase extends RunAnythingItem {
         myIcon = icon;
     }
 
-    
     @Override
     public String getCommand() {
         return myCommand;
@@ -37,7 +35,6 @@ public class RunAnythingItemBase extends RunAnythingItem {
         return null;
     }
 
-    
     @Override
     public Component createComponent(@Nullable String pattern, boolean isSelected, boolean hasFocus) {
         Component oldComponent = createComponent(isSelected);
@@ -84,7 +81,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -92,9 +89,9 @@ public class RunAnythingItemBase extends RunAnythingItem {
             return false;
         }
 
-        RunAnythingItemBase base = (RunAnythingItemBase)o;
+        RunAnythingItemBase that = (RunAnythingItemBase)o;
 
-        return myCommand.equals(base.myCommand);
+        return myCommand.equals(that.myCommand);
     }
 
     @Override
@@ -102,11 +99,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
         return myCommand.hashCode();
     }
 
-    protected static void appendDescription(
-        SimpleColoredComponent component,
-        @Nullable String description,
-        Color foreground
-    ) {
+    protected static void appendDescription(SimpleColoredComponent component, @Nullable String description, Color foreground) {
         if (description != null) {
             SimpleTextAttributes smallAttributes = new SimpleTextAttributes(STYLE_SMALLER, foreground);
             component.append(StringUtil.shortenTextWithEllipsis(description, 40, 0), smallAttributes);
@@ -114,7 +107,6 @@ public class RunAnythingItemBase extends RunAnythingItem {
         }
     }
 
-    
     private static SimpleTextAttributes getDescriptionAttributes(boolean isSelected) {
         return new SimpleTextAttributes(
             STYLE_PLAIN,

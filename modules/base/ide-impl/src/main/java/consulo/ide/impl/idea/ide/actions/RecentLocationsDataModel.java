@@ -95,7 +95,7 @@ public class RecentLocationsDataModel {
     private SynchronizedClearableLazy<List<RecentLocationItem>> calculateItems(boolean changed) {
         return new SynchronizedClearableLazy<>(() -> {
             List<RecentLocationItem> items = createPlaceLinePairs(changed);
-            myEditorsToRelease.addAll(ContainerUtil.map(items, RecentLocationItem::getEditor));
+            myEditorsToRelease.addAll(ContainerUtil.map(items, RecentLocationItem::editor));
             return items;
         });
     }

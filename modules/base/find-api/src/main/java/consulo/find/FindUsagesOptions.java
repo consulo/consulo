@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.find;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -25,90 +24,92 @@ import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 public class FindUsagesOptions implements Cloneable {
-  
-  public SearchScope searchScope;
+    public SearchScope searchScope;
 
-  public boolean isSearchForTextOccurrences = true;
+    public boolean isSearchForTextOccurrences = true;
 
-  public boolean isUsages;
-  public SearchRequestCollector fastTrack;
+    public boolean isUsages;
+    public SearchRequestCollector fastTrack;
 
-  @RequiredReadAction
-  public FindUsagesOptions(Project project) {
-    this(project, null);
-  }
-
-  @RequiredReadAction
-  public FindUsagesOptions(Project project, @Nullable DataContext dataContext) {
-    this(calcScope(project, dataContext));
-  }
-
-  
-  private static SearchScope calcScope(Project project, @Nullable DataContext dataContext) {
-    String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
-    List<SearchScope> predefined = PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(project, dataContext, true, false, false,
-                                                                                                   false);
-    SearchScope resultScope = null;
-    for (SearchScope scope : predefined) {
-      if (scope.getDisplayName().equals(defaultScopeName)) {
-        resultScope = scope;
-        break;
-      }
+    @RequiredReadAction
+    public FindUsagesOptions(Project project) {
+        this(project, null);
     }
-    if (resultScope == null) {
-      resultScope = ProjectScopes.getProjectScope(project);
+
+    @RequiredReadAction
+    public FindUsagesOptions(Project project, @Nullable DataContext dataContext) {
+        this(calcScope(project, dataContext));
     }
-    return resultScope;
-  }
 
-  public FindUsagesOptions(SearchScope searchScope) {
-    this.searchScope = searchScope;
-  }
-
-  @Override
-  public FindUsagesOptions clone() {
-    try {
-      return (FindUsagesOptions)super.clone();
+    private static SearchScope calcScope(Project project, @Nullable DataContext dataContext) {
+        String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
+        List<SearchScope> predefined = PredefinedSearchScopeProvider.getInstance()
+            .getPredefinedScopes(project, dataContext, true, false, false, false);
+        SearchScope resultScope = null;
+        for (SearchScope scope : predefined) {
+            if (scope.getDisplayName().equals(defaultScopeName)) {
+                resultScope = scope;
+                break;
+            }
+        }
+        if (resultScope == null) {
+            resultScope = ProjectScopes.getProjectScope(project);
+        }
+        return resultScope;
     }
-    catch (CloneNotSupportedException e) {
-      throw new RuntimeException(e);
+
+    public FindUsagesOptions(SearchScope searchScope) {
+        this.searchScope = searchScope;
     }
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public FindUsagesOptions clone() {
+        try {
+            return (FindUsagesOptions) super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    FindUsagesOptions that = (FindUsagesOptions)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    if (isSearchForTextOccurrences != that.isSearchForTextOccurrences) return false;
-    if (isUsages != that.isUsages) return false;
-    return searchScope.equals(that.searchScope);
-  }
+        FindUsagesOptions that = (FindUsagesOptions) o;
 
-  @Override
-  public int hashCode() {
-    int result = searchScope.hashCode();
-    result = 31 * result + (isSearchForTextOccurrences ? 1 : 0);
-    result = 31 * result + (isUsages ? 1 : 0);
-    return result;
-  }
+        return isSearchForTextOccurrences == that.isSearchForTextOccurrences
+            && isUsages == that.isUsages
+            && searchScope.equals(that.searchScope);
+    }
 
-  @Override
-  public String toString() {
-    return getClass().getSimpleName() + "{" +
-           "searchScope=" + searchScope +
-           ", isSearchForTextOccurrences=" + isSearchForTextOccurrences +
-           ", isUsages=" + isUsages +
-           '}';
-  }
+    @Override
+    public int hashCode() {
+        int result = searchScope.hashCode();
+        result = 31 * result + Boolean.hashCode(isSearchForTextOccurrences);
+        result = 31 * result + Boolean.hashCode(isUsages);
+        return result;
+    }
 
-  
-  public String generateUsagesString() {
-    return "Usages";
-  }
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+            "searchScope=" + searchScope +
+            ", isSearchForTextOccurrences=" + isSearchForTextOccurrences +
+            ", isUsages=" + isUsages +
+            '}';
+    }
+
+    public String generateUsagesString() {
+        return "Usages";
+    }
 }

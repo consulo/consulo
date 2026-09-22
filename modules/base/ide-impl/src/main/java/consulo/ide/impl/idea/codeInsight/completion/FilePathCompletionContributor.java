@@ -47,7 +47,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -140,7 +139,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
                                 ProgressManager.checkCanceled();
 
                                 VirtualFile virtualFile = file.getVirtualFile();
-                                if (virtualFile == null || !virtualFile.isValid() || Comparing.equal(virtualFile, contextFile)) {
+                                if (virtualFile == null || !virtualFile.isValid() || Objects.equals(virtualFile, contextFile)) {
                                     continue;
                                 }
                                 List<FileReferenceHelper> helperList = new ArrayList<>();
@@ -276,7 +275,6 @@ public class FilePathCompletionContributor extends CompletionContributor {
         return null;
     }
 
-    
     @Override
     public Language getLanguage() {
         return Language.ANY;
@@ -309,14 +307,12 @@ public class FilePathCompletionContributor extends CompletionContributor {
             return String.format("%s%s", myName, myInfo == null ? "" : " (" + myInfo + ")");
         }
 
-        
         @Override
         public Object getObject() {
             return myFile;
         }
 
         @Override
-        
         public String getLookupString() {
             return myName;
         }
@@ -385,7 +381,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }

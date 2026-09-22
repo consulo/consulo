@@ -51,7 +51,6 @@ import consulo.ui.style.StandardColors;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.ObjectUtil;
@@ -302,8 +301,8 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         SmartList<JComponent> result = new SmartList<>();
         JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
         for (Component each : container.getComponents()) {
-            if (each instanceof NonOpaquePanel) {
-                result.add(((NonOpaquePanel)each).getTargetComponent());
+            if (each instanceof NonOpaquePanel nonOpaquePanel) {
+                result.add(nonOpaquePanel.getTargetComponent());
             }
         }
         return Collections.unmodifiableList(result);
@@ -406,7 +405,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      */
     @Override
     public FileEditor getSelectedEditor() {
-        return getSelectedEditorWithProvider().getFileEditor();
+        return getSelectedEditorWithProvider().fileEditor();
     }
 
     @Override

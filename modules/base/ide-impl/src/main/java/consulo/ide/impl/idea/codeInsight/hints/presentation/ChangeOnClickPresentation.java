@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -58,11 +59,9 @@ public class ChangeOnClickPresentation extends StatefulPresentation<ChangeOnClic
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof State)) return false;
-            State other = (State) obj;
-            return this.clicked == other.clicked;
+        public boolean equals(@Nullable Object obj) {
+            return this == obj
+                || obj instanceof State that && this.clicked == that.clicked;
         }
 
         @Override

@@ -62,13 +62,15 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
     }
 
     @Override
-    public void render(Graphics2D graphics,
-                       InlayTextMetrics metrics,
-                       TextAttributes attributes,
-                       boolean isDisabled,
-                       int yOffset,
-                       int rectHeight,
-                       Editor editor) {
+    public void render(
+        Graphics2D graphics,
+        InlayTextMetrics metrics,
+        TextAttributes attributes,
+        boolean isDisabled,
+        int yOffset,
+        int rectHeight,
+        Editor editor
+    ) {
         int centerImage = computeHeight(metrics) / 2;
         int centerRect = rectHeight / 2;
 

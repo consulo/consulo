@@ -8,7 +8,6 @@ import consulo.ui.image.Image;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class PresentationEntryBuilder {
     private final TinyTree<?> state;

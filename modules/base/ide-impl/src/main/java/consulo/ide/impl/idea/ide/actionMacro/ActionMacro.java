@@ -22,6 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
@@ -34,6 +35,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,7 @@ import java.util.List;
 public class ActionMacro implements JDOMExternalizable {
   private String myName;
 
-  private final ArrayList<ActionDescriptor> myActions = new ArrayList<ActionDescriptor>();
+  private final List<ActionDescriptor> myActions = new ArrayList<>();
   public static final String MACRO_ACTION_PREFIX = "Macro.";
   private static final String ATTRIBUTE_NAME = "name";
   private static final String ELEMENT_TYPING = "typing";
@@ -71,9 +73,10 @@ public class ActionMacro implements JDOMExternalizable {
   }
 
   public ActionDescriptor[] getActions() {
-    return myActions.toArray(new ActionDescriptor[myActions.size()]);
+    return myActions.toArray(ActionDescriptor[]::new);
   }
 
+  @Override
   public void readExternal(Element macro) throws InvalidDataException {
     setName(macro.getAttributeValue(ATTRIBUTE_NAME));
     List actions = macro.getChildren();
@@ -109,6 +112,7 @@ public class ActionMacro implements JDOMExternalizable {
     return KeyCodeTypeCommand.unparseKeyCodes(keyCodes);
   }
 
+  @Override
   public void writeExternal(Element macro) throws WriteExternalException {
     macro.setAttribute(ATTRIBUTE_NAME, myName);
     ActionDescriptor[] actions = getActions();
@@ -135,10 +139,12 @@ public class ActionMacro implements JDOMExternalizable {
     }
   }
 
+  @Override
   public String toString() {
     return myName;
   }
 
+  @Override
   protected Object clone() {
     ActionMacro copy = new ActionMacro(myName);
     for (int i = 0; i < myActions.size(); i++) {
@@ -149,23 +155,15 @@ public class ActionMacro implements JDOMExternalizable {
     return copy;
   }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ActionMacro)) return false;
-
-    ActionMacro actionMacro = (ActionMacro)o;
-
-    if (!myActions.equals(actionMacro.myActions)) return false;
-    if (!myName.equals(actionMacro.myName)) return false;
-
-    return true;
+  @Override
+  public boolean equals(@Nullable Object o) {
+    return this == o
+      || o instanceof ActionMacro that && myActions.equals(that.myActions) && myName.equals(that.myName);
   }
 
+  @Override
   public int hashCode() {
-    int result;
-    result = myName.hashCode();
-    result = 29 * result + myActions.hashCode();
-    return result;
+    return 29 * myName.hashCode() + myActions.hashCode();
   }
 
   public void deleteAction(int idx) {
@@ -197,6 +195,7 @@ public class ActionMacro implements JDOMExternalizable {
   public interface ActionDescriptor {
     Object clone();
 
+    @RequiredUIAccess
     void playBack(DataContext context);
 
     void generateTo(StringBuffer script);
@@ -237,16 +236,18 @@ public class ActionMacro implements JDOMExternalizable {
       return new TypedDescriptor(myText, myKeyCodes, myModifiers);
     }
 
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof TypedDescriptor)) return false;
-      return myText.equals(((TypedDescriptor)o).myText);
+    @Override
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o instanceof TypedDescriptor that && myText.equals(that.myText);
     }
 
+    @Override
     public int hashCode() {
       return myText.hashCode();
     }
 
+    @Override
     public void generateTo(StringBuffer script) {
       if (TypeCommand.containsUnicode(myText)) {
         script.append(KeyCodeTypeCommand.PREFIX).append(" ");
@@ -268,10 +269,12 @@ public class ActionMacro implements JDOMExternalizable {
       }
     }
 
+    @Override
     public String toString() {
       return IdeLocalize.actionDescriptorTyping(myText).get();
     }
 
+    @Override
     public void playBack(DataContext context) {
       Editor editor = context.getData(Editor.KEY);
       if (editor == null) {
@@ -293,24 +296,27 @@ public class ActionMacro implements JDOMExternalizable {
   }
 
   public static class ShortcutActionDesciption implements ActionDescriptor {
-
     private final String myKeyStroke;
 
     public ShortcutActionDesciption(String stroke) {
       myKeyStroke = stroke;
     }
 
+    @Override
     public Object clone() {
       return new ShortcutActionDesciption(myKeyStroke);
     }
 
+    @Override
     public void playBack(DataContext context) {
     }
 
+    @Override
     public void generateTo(StringBuffer script) {
       script.append("%[").append(myKeyStroke).append("]\n");
     }
 
+    @Override
     public String toString() {
       return IdeLocalize.actionDescriptorKeystroke(myKeyStroke).get();
     }
@@ -331,24 +337,29 @@ public class ActionMacro implements JDOMExternalizable {
       return actionId;
     }
 
+    @Override
     public String toString() {
       return IdeLocalize.actionDescriptorAction(actionId).get();
     }
 
+    @Override
     public Object clone() {
       return new IdActionDescriptor(actionId);
     }
 
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof IdActionDescriptor)) return false;
-      return actionId.equals(((IdActionDescriptor)o).actionId);
+    @Override
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o instanceof IdActionDescriptor that && actionId.equals(that.actionId);
     }
 
+    @Override
     public int hashCode() {
       return actionId.hashCode();
     }
 
+    @Override
+    @RequiredUIAccess
     public void playBack(DataContext context) {
       AnAction action = ActionManager.getInstance().getAction(getActionId());
       if (action == null) return;
@@ -361,6 +372,7 @@ public class ActionMacro implements JDOMExternalizable {
       action.actionPerformed(event);
     }
 
+    @Override
     public void generateTo(StringBuffer script) {
       script.append("%action ").append(getActionId()).append("\n");
     }

@@ -425,7 +425,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
                         if (!hasFocus()) {
                             return;
                         }
-                        JComponent focus = myEditor.getSelectedEditorWithProvider().getFileEditor().getPreferredFocusedComponent();
+                        JComponent focus = myEditor.getSelectedEditorWithProvider().fileEditor().getPreferredFocusedComponent();
                         if (focus != null && !focus.hasFocus()) {
                             IdeFocusManager.getGlobalInstance().requestFocus(focus, true);
                         }
@@ -735,7 +735,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     }
 
     @Override
-    public VirtualFile getSelectedFile() {
+    public @Nullable VirtualFile getSelectedFile() {
         checkConsistency();
         DesktopFileEditorWithProviderComposite editor = getSelectedEditor();
         return editor == null ? null : editor.getFile();

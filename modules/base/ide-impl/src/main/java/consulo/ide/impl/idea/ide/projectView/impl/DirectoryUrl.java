@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.application.ReadAction;
@@ -26,47 +25,55 @@ import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
  */
 public class DirectoryUrl extends AbstractUrl {
-  private static final String ELEMENT_TYPE = "directory";
+    private static final String ELEMENT_TYPE = "directory";
 
-  public DirectoryUrl(String url, String moduleName) {
-    super(url, moduleName,ELEMENT_TYPE);
-  }
-  public static DirectoryUrl create(PsiDirectory directory) {
-    Project project = directory.getProject();
-    VirtualFile virtualFile = directory.getVirtualFile();
-    Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
-    return new DirectoryUrl(virtualFile.getUrl(), module != null ? module.getName() : null);
-  }
-
-  @Override
-  public Object[] createPath(Project project) {
-    if (moduleName != null) {
-      Module module = ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
-      if (module == null) return null;
+    public DirectoryUrl(String url, String moduleName) {
+        super(url, moduleName, ELEMENT_TYPE);
     }
-    VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-    VirtualFile file = virtualFileManager.findFileByUrl(url);
-    if (file == null) return null;
-    PsiDirectory directory = ReadAction.compute(() -> PsiManager.getInstance(project).findDirectory(file));
-    if (directory == null) return null;
-    return new Object[]{directory};
-  }
 
-  @Override
-  protected AbstractUrl createUrl(String moduleName, String url) {
-      return new DirectoryUrl(url, moduleName);
-  }
-
-  @Override
-  public AbstractUrl createUrlByElement(Object element) {
-    if (element instanceof PsiDirectory) {
-      return create((PsiDirectory)element);
+    public static DirectoryUrl create(PsiDirectory directory) {
+        Project project = directory.getProject();
+        VirtualFile virtualFile = directory.getVirtualFile();
+        Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
+        return new DirectoryUrl(virtualFile.getUrl(), module != null ? module.getName() : null);
     }
-    return null;
-  }
+
+    @Override
+    public Object @Nullable [] createPath(Project project) {
+        if (moduleName != null) {
+            Module module = ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
+            if (module == null) {
+                return null;
+            }
+        }
+        VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+        VirtualFile file = virtualFileManager.findFileByUrl(url);
+        if (file == null) {
+            return null;
+        }
+        PsiDirectory directory = ReadAction.compute(() -> PsiManager.getInstance(project).findDirectory(file));
+        if (directory == null) {
+            return null;
+        }
+        return new Object[]{directory};
+    }
+
+    @Override
+    protected AbstractUrl createUrl(String moduleName, String url) {
+        return new DirectoryUrl(url, moduleName);
+    }
+
+    @Override
+    public AbstractUrl createUrlByElement(Object element) {
+        if (element instanceof PsiDirectory dir) {
+            return create(dir);
+        }
+        return null;
+    }
 }

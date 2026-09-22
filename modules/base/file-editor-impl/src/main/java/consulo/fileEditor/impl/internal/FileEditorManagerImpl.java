@@ -210,7 +210,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         });
     }
 
-    
     protected FileEditorWithProviderComposite createEditorWithProviderComposite(
         VirtualFile file,
         FileEditor[] editors,
@@ -260,7 +259,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return mySplitters;
     }
 
-    
     @Override
     public Set<FileEditorsSplitters> getAllSplitters() {
         Set<FileEditorsSplitters> all = new LinkedHashSet<>();
@@ -360,7 +358,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return false;
     }
 
-    
     public String getFileTooltipText(VirtualFile file) {
         List<EditorTabTitleProvider> availableProviders = DumbService.getDumbAwareExtensions(myProject, EditorTabTitleProvider.EP_NAME);
         for (EditorTabTitleProvider provider : availableProviders) {
@@ -475,7 +472,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    
     public FileEditorWindow[] getWindows() {
         List<FileEditorWindow> windows = new ArrayList<>();
         Set<FileEditorsSplitters> all = getAllSplitters();
@@ -629,7 +625,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     //-------------------------------------- Open File ----------------------------------------
 
     @Override
-    
     @RequiredUIAccess
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
         VirtualFile file,
@@ -690,12 +685,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredUIAccess
-    private void openAssociatedFile(
-        UIAccess uiAccess,
-        VirtualFile file,
-        FileEditorWindow wndToOpenIn,
-        FileEditorsSplitters splitters
-    ) {
+    private void openAssociatedFile(UIAccess uiAccess, VirtualFile file, FileEditorWindow wndToOpenIn, FileEditorsSplitters splitters) {
         FileEditorWindow[] windows = splitters.getWindows();
 
         if (file != null && windows.length == 2) {
@@ -713,14 +703,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    @RequiredUIAccess
-    
     @Override
-    public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
-        VirtualFile file,
-        boolean focusEditor,
-        FileEditorWindow window
-    ) {
+    @RequiredUIAccess
+    public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(VirtualFile file, boolean focusEditor, FileEditorWindow window) {
         if (!file.isValid()) {
             throw new IllegalArgumentException("file is not valid: " + file);
         }
@@ -729,7 +714,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return openFileImpl2(UIAccess.get(), window, file, focusEditor);
     }
 
-    
     @RequiredUIAccess
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl2(
         UIAccess uiAccess,
@@ -1028,7 +1012,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    
     @Override
     public ActionCallback notifyPublisher(Runnable runnable) {
         IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
@@ -1063,7 +1046,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
 
         FileEditorProvider[] editorProviders = composite.getProviders();
-        FileEditorProvider selectedProvider = composite.getSelectedEditorWithProvider().getProvider();
+        FileEditorProvider selectedProvider = composite.getSelectedEditorWithProvider().provider();
 
         for (int i = 0; i < editorProviders.length; i++) {
             if (editorProviders[i].getEditorTypeId().equals(fileEditorProviderId) && !selectedProvider.equals(editorProviders[i])) {
@@ -1111,7 +1094,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return newComposite;
     }
 
-    
     @Override
     @RequiredUIAccess
     public List<FileEditor> openEditor(OpenFileDescriptor descriptor, boolean focusEditor) {
@@ -1183,7 +1165,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    
     public Project getProject() {
         return myProject;
     }
@@ -1240,7 +1221,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return VirtualFileUtil.toVirtualFileArray(openFiles);
     }
 
-    
     @Override
     @RequiredUIAccess
     public VirtualFile[] getSelectedFiles() {
@@ -1256,7 +1236,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    
     public FileEditor[] getSelectedEditors() {
         Set<FileEditor> selectedEditors = new HashSet<>();
         for (FileEditorsSplitters each : getAllSplitters()) {
@@ -1267,7 +1246,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    
     @RequiredUIAccess
     public FileEditorsSplitters getSplitters() {
         FileEditorsSplitters active = null;
@@ -1281,7 +1259,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @RequiredUIAccess
     public @Nullable FileEditor getSelectedEditor(VirtualFile file) {
         FileEditorWithProvider selectedEditorWithProvider = getSelectedEditorWithProvider(file);
-        return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.getFileEditor();
+        return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.fileEditor();
     }
 
     @Override
@@ -1318,7 +1296,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    
     @RequiredUIAccess
     public FileEditor[] getEditors(VirtualFile file) {
         assertReadAccess();
@@ -1338,7 +1315,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return EMPTY_EDITOR_ARRAY;
     }
 
-    
     @Override
     public FileEditor[] getAllEditors(VirtualFile file) {
         List<FileEditorWithProviderComposite> editorComposites = getEditorComposites(file);
@@ -1361,7 +1337,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return null;
     }
 
-    
     private List<FileEditorWithProviderComposite> getEditorComposites(VirtualFile file) {
         List<FileEditorWithProviderComposite> result = new ArrayList<>();
         Set<FileEditorsSplitters> all = getAllSplitters();
@@ -1388,7 +1363,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return result.toArray(new FileEditor[result.size()]);
     }
 
-    
     public List<JComponent> getTopComponents(FileEditor editor) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         return composite != null ? composite.getTopComponents(editor) : Collections.emptyList();
@@ -1436,10 +1410,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public void addFileEditorManagerListener(
-        FileEditorManagerListener listener,
-        Disposable parentDisposable
-    ) {
+    public void addFileEditorManagerListener(FileEditorManagerListener listener, Disposable parentDisposable) {
         myProject.getMessageBus().connect(parentDisposable).subscribe(FileEditorManagerListener.class, listener);
     }
 
@@ -1550,7 +1521,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    
     private static Trinity<VirtualFile, FileEditor, FileEditorProvider> extract(@Nullable FileEditorComposite composite) {
         VirtualFile file;
         FileEditor editor;
@@ -1563,8 +1533,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         else {
             file = composite.getFile();
             FileEditorWithProvider pair = composite.getSelectedEditorWithProvider();
-            editor = pair.getFileEditor();
-            provider = pair.getProvider();
+            editor = pair.fileEditor();
+            provider = pair.provider();
         }
         return new Trinity<>(file, editor, provider);
     }
@@ -1919,7 +1889,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    
     public VirtualFile[] getSiblings(VirtualFile file) {
         return getOpenFiles();
     }
@@ -1949,7 +1918,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return splitters;
     }
 
-    
     public List<Pair<VirtualFile, FileEditorWindow>> getSelectionHistory() {
         List<Pair<VirtualFile, FileEditorWindow>> copy = new ArrayList<>();
         for (Pair<VirtualFile, FileEditorWindow> pair : mySelectionHistory) {
@@ -1982,7 +1950,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         updateFileName(file);
     }
 
-    
     @Override
     public AsyncResult<Void> getReady(Object requestor) {
         return myBusyObject.getReady(requestor);

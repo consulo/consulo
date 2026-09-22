@@ -13,42 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
  */
 public class ModuleUrl extends AbstractUrl {
-  private static final String ELEMENT_TYPE = "module";
+    private static final String ELEMENT_TYPE = "module";
 
-  public ModuleUrl(String url, String moduleName) {
-    super(url, moduleName,ELEMENT_TYPE);
-  }
-
-  @Override
-  public Object[] createPath(Project project) {
-    Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
-    if (module == null) return null;
-    return new Object[]{module};
-  }
-
-  @Override
-  protected AbstractUrl createUrl(String moduleName, String url) {
-      return new ModuleUrl(url, moduleName);
-  }
-
-  @Override
-  public AbstractUrl createUrlByElement(Object element) {
-    if (element instanceof Module) {
-      Module module = (Module)element;
-      return new ModuleUrl("", module.getName());
+    public ModuleUrl(String url, String moduleName) {
+        super(url, moduleName, ELEMENT_TYPE);
     }
-    return null;
-  }
+
+    @Override
+    @RequiredReadAction
+    public Object @Nullable [] createPath(Project project) {
+        Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
+        if (module == null) {
+            return null;
+        }
+        return new Object[]{module};
+    }
+
+    @Override
+    protected AbstractUrl createUrl(String moduleName, String url) {
+        return new ModuleUrl(url, moduleName);
+    }
+
+    @Override
+    public AbstractUrl createUrlByElement(Object element) {
+        if (element instanceof Module module) {
+            return new ModuleUrl("", module.getName());
+        }
+        return null;
+    }
 }
