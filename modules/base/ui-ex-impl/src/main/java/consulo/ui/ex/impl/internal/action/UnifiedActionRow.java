@@ -73,6 +73,8 @@ import java.util.function.Supplier;
 public class UnifiedActionRow {
     private static final Logger LOG = Logger.getInstance(UnifiedActionRow.class);
 
+    private static final int POPUP_REOPEN_THRESHOLD_MS = 200;
+
     private static final Space GAP = Space.X_SMALL;
     // a labeled button is as wide as its text, and two of them standing 2px apart read as one control - the gap
     // which suits a band of 24x24 icons is not enough for the ok/cancel row of a dialog
@@ -374,12 +376,35 @@ public class UnifiedActionRow {
         });
         comboBox.addDetachListener(event -> presentation.removePropertyChangeListener(listener));
 
+        PopupState popupState = new PopupState();
+
         comboBox.addClickListener(event -> {
+            JBPopup current = popupState.myPopup;
+            if (current != null) {
+                popupState.myPopup = null;
+                current.cancel();
+                return;
+            }
+
+            // the press which takes a popup away arrives here as a click of its own, and a control answering
+            // that one would put the popup straight back
+            if (System.currentTimeMillis() - popupState.myHiddenAt < POPUP_REOPEN_THRESHOLD_MS) {
+                return;
+            }
+
             DataContext context = myContextSupplier.get();
 
-            JBPopup popup = action.createPopup(context, null);
+            JBPopup popup = action.createPopup(context, () -> {
+                popupState.myPopup = null;
+                popupState.myHiddenAt = System.currentTimeMillis();
+            });
+
             if (popup != null) {
-                popup.showBy(comboBox, event.getInputDetails());
+                popupState.myPopup = popup;
+
+                // a list dropped by a combo hangs from the control rather than from wherever it was pressed,
+                // which is what passing no details of the press asks for
+                popup.showBy(comboBox, null);
             }
         });
 
@@ -403,6 +428,11 @@ public class UnifiedActionRow {
                 revalidateValue(comboBox);
             }
         });
+    }
+
+    private static final class PopupState {
+        private @Nullable JBPopup myPopup;
+        private long myHiddenAt;
     }
 
     @RequiredUIAccess

@@ -36,6 +36,7 @@ import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -208,6 +209,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model) {
         return new DesktopQtComboBoxImpl<>(model);
+    }
+
+    @Override
+    public <E> ComboBoxWithCustomPopup<E> _Components_comboBoxWithCustomPopup(FlatDataModel<E> model) {
+        return new DesktopQtComboBoxWithCustomPopupImpl<>(model);
     }
 
     @Override

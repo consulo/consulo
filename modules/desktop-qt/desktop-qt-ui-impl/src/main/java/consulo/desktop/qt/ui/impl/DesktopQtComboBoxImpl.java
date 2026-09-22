@@ -15,6 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
+import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.Length;
 import consulo.ui.ComboBox;
 import consulo.ui.ComboBoxStyle;
@@ -23,6 +25,7 @@ import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
 import io.qt.widgets.QComboBox;
 import io.qt.widgets.QWidget;
@@ -34,16 +37,20 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> implements ComboBox<E> {
+public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> implements ComboBox<E>, DesktopQtIconOwner {
     private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
 
     private final FlatDataModel<E> myModel;
 
     private int mySelectedIndex = 0;
     private boolean myFireListeners = true;
+    private boolean myRebuilding;
 
     public DesktopQtComboBoxImpl(FlatDataModel<E> model) {
         myModel = model;
+
+        // a component is bound more than once, so the model is followed from here rather than from a bind
+        myModel.addListener(event -> rebuildIfBound());
     }
 
     @Override
@@ -53,19 +60,12 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
 
     @Override
     protected void initialize(QComboBox component) {
-        for (int i = 0; i < myModel.getSize(); i++) {
-            E element = myModel.get(i);
-
-            DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-
-            myRenderer.render(presentation, RenderItem.of(element, i == mySelectedIndex));
-
-            component.addItem(presentation.toString());
-        }
-
-        component.setCurrentIndex(mySelectedIndex);
-
         component.currentIndexChanged.connect(index -> {
+            // emptying the widget reports a choice of nothing, which would take the stored index with it
+            if (myRebuilding) {
+                return;
+            }
+
             mySelectedIndex = index;
 
             if (myFireListeners) {
@@ -73,6 +73,54 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
                     .onEvent(new ValueComponentEvent(this, getValue(), DesktopQtCurrentInput.current(component)));
             }
         });
+
+        rebuild(component);
+    }
+
+    private void rebuild(QComboBox component) {
+        myRebuilding = true;
+        try {
+            component.clear();
+
+            for (int i = 0; i < myModel.getSize(); i++) {
+                E element = myModel.get(i);
+
+                DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
+
+                myRenderer.render(presentation, RenderItem.of(element, i == mySelectedIndex));
+
+                Image image = presentation.getImage();
+                if (image instanceof DesktopQtImage qtImage) {
+                    component.addItem(qtImage.toQIcon(), presentation.toString());
+                }
+                else {
+                    component.addItem(presentation.toString());
+                }
+            }
+
+            mySelectedIndex = mySelectedIndex >= 0 && mySelectedIndex < component.count()
+                ? mySelectedIndex
+                : component.count() - 1;
+
+            component.setCurrentIndex(mySelectedIndex);
+            component.updateGeometry();
+        }
+        finally {
+            myRebuilding = false;
+        }
+    }
+
+    private void rebuildIfBound() {
+        QComboBox component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            rebuild(component);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void refreshIcons() {
+        rebuildIfBound();
     }
 
     @Override
@@ -87,6 +135,8 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
     @Override
     public void setRender(TextItemRender<E> render) {
         myRenderer = render;
+
+        rebuildIfBound();
     }
 
     @Override
