@@ -35,15 +35,9 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
 
     private final static int MAX_COMPUTATION_THREADS = 10;
 
-    private final
-    
-    WeakReference<PsiFile> myFileRef;
-    private final
-    
-    AsyncComputation myComputation;
-    private final
-    
-    Lock myComputationLock = new ReentrantLock();
+    private final WeakReference<PsiFile> myFileRef;
+    private final AsyncComputation myComputation;
+    private final Lock myComputationLock = new ReentrantLock();
 
     private final static ExecutorService ourExecutorService =
         AppExecutorUtil.createBoundedApplicationPoolExecutor("CodeStyleCachedValueProvider", MAX_COMPUTATION_THREADS);
