@@ -133,7 +133,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @RequiredReadAction
-    
     private TextChunk[] initChunks() {
         PsiFile psiFile = getPsiFile();
         Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
@@ -160,7 +159,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    
     public UsagePresentation getPresentation() {
         return this;
     }
@@ -339,7 +337,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return range;
     }
 
-    
     private Project getProject() {
         return getUsageInfo().getProject();
     }
@@ -413,7 +410,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    
     public String getPath() {
         return getFile().getPath();
     }
@@ -464,7 +460,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return getUsageInfo().isNonCodeUsage;
     }
 
-    
     public UsageInfo getUsageInfo() {
         return myUsageInfo;
     }
@@ -483,7 +478,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         reference.handleElementRename(newName);
     }
 
-    
     @RequiredReadAction
     public static UsageInfo2UsageAdapter[] convert(UsageInfo[] usageInfos) {
         UsageInfo2UsageAdapter[] result = new UsageInfo2UsageAdapter[usageInfos.length];
@@ -501,10 +495,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    
     public UsageInfo[] getMergedInfos() {
         Object infos = myMergedUsageInfos;
-        return infos instanceof UsageInfo ? new UsageInfo[]{(UsageInfo)infos} : (UsageInfo[])infos;
+        return infos instanceof UsageInfo usageInfo ? new UsageInfo[]{usageInfo} : (UsageInfo[])infos;
     }
 
     private long myModificationStamp;
@@ -515,7 +508,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return containingFile == null ? -1L : containingFile.getViewProvider().getModificationStamp();
     }
 
-    
     @Override
     @RequiredReadAction
     public TextChunk[] getText() {
@@ -530,7 +522,6 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return chunks;
     }
 
-    
     @Override
     @RequiredReadAction
     public String getPlainText() {

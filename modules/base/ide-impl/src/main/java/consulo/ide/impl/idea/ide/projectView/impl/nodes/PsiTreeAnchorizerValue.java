@@ -64,7 +64,7 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -77,6 +77,6 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(myPointer);
+        return Objects.hashCode(myPointer);
     }
 }

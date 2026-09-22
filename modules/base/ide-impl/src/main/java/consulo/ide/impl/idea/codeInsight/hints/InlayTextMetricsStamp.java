@@ -16,63 +16,6 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import java.awt.font.FontRenderContext;
-import java.util.Objects;
 
-final class InlayTextMetricsStamp {
-    private final float editorFontSize2D;
-    private final String familyName;
-    private final float ideScale;
-    private final FontRenderContext fontRenderContext;
-
-    InlayTextMetricsStamp(float editorFontSize2D,
-                          String familyName,
-                          float ideScale,
-                          FontRenderContext fontRenderContext) {
-        this.editorFontSize2D = editorFontSize2D;
-        this.familyName = familyName;
-        this.ideScale = ideScale;
-        this.fontRenderContext = fontRenderContext;
-    }
-
-    public float getEditorFontSize2D() {
-        return editorFontSize2D;
-    }
-
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    public float getIdeScale() {
-        return ideScale;
-    }
-
-    public FontRenderContext getFontRenderContext() {
-        return fontRenderContext;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof InlayTextMetricsStamp)) return false;
-        InlayTextMetricsStamp that = (InlayTextMetricsStamp) o;
-        return Float.compare(that.editorFontSize2D, editorFontSize2D) == 0 &&
-            Float.compare(that.ideScale, ideScale) == 0 &&
-            Objects.equals(familyName, that.familyName) &&
-            Objects.equals(fontRenderContext, that.fontRenderContext);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(editorFontSize2D, familyName, ideScale, fontRenderContext);
-    }
-
-    @Override
-    public String toString() {
-        return "InlayTextMetricsStamp{" +
-            "editorFontSize2D=" + editorFontSize2D +
-            ", familyName='" + familyName + '\'' +
-            ", ideScale=" + ideScale +
-            ", fontRenderContext=" + fontRenderContext +
-            '}';
-    }
+record InlayTextMetricsStamp(float editorFontSize2D, String familyName, float ideScale, FontRenderContext fontRenderContext) {
 }

@@ -1,6 +1,10 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileEditor.impl.internal.largeFileEditor;
 
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
+
 public final class AbsoluteSymbolPosition {
     long pageNumber;
     int symbolOffsetInPage;
@@ -20,13 +24,14 @@ public final class AbsoluteSymbolPosition {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof AbsoluteSymbolPosition other) {
-            if (pageNumber == other.pageNumber && symbolOffsetInPage == other.symbolOffsetInPage) {
-                return true;
-            }
-        }
-        return false;
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof AbsoluteSymbolPosition that && pageNumber == that.pageNumber && symbolOffsetInPage == that.symbolOffsetInPage;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pageNumber, symbolOffsetInPage);
     }
 
     boolean isLessOrEqualsThen(AbsoluteSymbolPosition other) {

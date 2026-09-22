@@ -17,15 +17,21 @@ package consulo.fileEditor.text;
 
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementations of this interface are expected to provide correct {@link #equals(Object)} & {@link #hashCode()} implementations.
  */
 public interface CodeFoldingState {
-  @RequiredUIAccess
-  void setToEditor(Editor editor);
+    @RequiredUIAccess
+    void setToEditor(Editor editor);
 
-  boolean equals(Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
-  String toString();
+    @Override
+    int hashCode();
+
+    @Override
+    String toString();
 }

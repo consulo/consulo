@@ -13,66 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.project.ui.view.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+
+import java.util.Objects;
 
 /**
  * @author cdr
  */
 public abstract class AbstractUrl {
-  protected final String url;
-  protected final String moduleName;
-  private final String myType;
+    protected final String url;
+    protected final String moduleName;
+    private final String myType;
 
-  protected AbstractUrl(String url, String moduleName,  String type) {
-    myType = type;
-    this.url = url == null ? "" : url;
-    this.moduleName = moduleName;
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public void write(Element element) {
-    element.setAttribute("url", url);
-    if (moduleName != null) {
-      element.setAttribute("module", moduleName);
+    protected AbstractUrl(String url, String moduleName, String type) {
+        myType = type;
+        this.url = url == null ? "" : url;
+        this.moduleName = moduleName;
     }
-    element.setAttribute("type", myType);
-  }
 
-  public abstract @Nullable Object[] createPath(Project project);
-
-  // return null if cannot recognize the element
-  public AbstractUrl createUrl(String type, String moduleName, String url){
-    if (type.equals(myType)) {
-      return createUrl(moduleName, url);
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    public void write(Element element) {
+        element.setAttribute("url", url);
+        if (moduleName != null) {
+            element.setAttribute("module", moduleName);
+        }
+        element.setAttribute("type", myType);
     }
-    return null;
-  }
-  protected abstract AbstractUrl createUrl(String moduleName, String url);
-  public abstract AbstractUrl createUrlByElement(Object element);
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @RequiredReadAction
+    public abstract Object @Nullable [] createPath(Project project);
 
-    AbstractUrl that = (AbstractUrl)o;
+    // return null if cannot recognize the element
+    public AbstractUrl createUrl(String type, String moduleName, String url) {
+        if (type.equals(myType)) {
+            return createUrl(moduleName, url);
+        }
+        return null;
+    }
 
-    if (moduleName != null ? !moduleName.equals(that.moduleName) : that.moduleName != null) return false;
-    if (myType != null ? !myType.equals(that.myType) : that.myType != null) return false;
-    if (url != null ? !url.equals(that.url) : that.url != null) return false;
+    protected abstract AbstractUrl createUrl(String moduleName, String url);
 
-    return true;
-  }
+    public abstract AbstractUrl createUrlByElement(Object element);
 
-  public int hashCode() {
-    int result;
-    result = (url != null ? url.hashCode() : 0);
-    result = 29 * result + (moduleName != null ? moduleName.hashCode() : 0);
-    result = 29 * result + (myType != null ? myType.hashCode() : 0);
-    return result;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AbstractUrl that = (AbstractUrl) o;
+
+        return Objects.equals(moduleName, that.moduleName)
+            && Objects.equals(myType, that.myType)
+            && Objects.equals(url, that.url);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(url);
+        result = 29 * result + Objects.hashCode(moduleName);
+        return 29 * result + Objects.hashCode(myType);
+    }
 }

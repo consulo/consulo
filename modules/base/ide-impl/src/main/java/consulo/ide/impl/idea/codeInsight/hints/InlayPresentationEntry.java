@@ -6,6 +6,7 @@ import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
@@ -40,13 +41,15 @@ public abstract class InlayPresentationEntry {
         return clickArea != null && clickArea.getActionData() != null;
     }
 
-    public abstract void render(Graphics2D graphics,
-                                InlayTextMetrics metrics,
-                                TextAttributes attributes,
-                                boolean isDisabled,
-                                int yOffset,
-                                int rectHeight,
-                                Editor editor);
+    public abstract void render(
+        Graphics2D graphics,
+        InlayTextMetrics metrics,
+        TextAttributes attributes,
+        boolean isDisabled,
+        int yOffset,
+        int rectHeight,
+        Editor editor
+    );
 
     /**
      * The entry as a run of an {@link consulo.codeEditor.InlayContent}, for the frontends which cannot call
@@ -61,7 +64,6 @@ public abstract class InlayPresentationEntry {
 
     public abstract int computeHeight(InlayTextMetrics metrics);
 
-    public abstract void handleClick(EditorMouseEvent e,
-                                     InlayPresentationList list,
-                                     boolean controlDown);
+    @RequiredUIAccess
+    public abstract void handleClick(EditorMouseEvent e, InlayPresentationList list, boolean controlDown);
 }

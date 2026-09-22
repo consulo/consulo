@@ -47,7 +47,6 @@ public class RunAnythingContext {
             myProject = project;
         }
 
-        
         public Project getProject() {
             return myProject;
         }
@@ -58,7 +57,7 @@ public class RunAnythingContext {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -71,7 +70,7 @@ public class RunAnythingContext {
 
         @Override
         public int hashCode() {
-            return Objects.hash(myProject);
+            return Objects.hashCode(myProject);
         }
     }
 
@@ -84,7 +83,6 @@ public class RunAnythingContext {
     }
 
     public static final class RecentDirectoryContext extends RunAnythingContext {
-        
         private final String myPath;
 
         public RecentDirectoryContext(String path) {
@@ -96,26 +94,26 @@ public class RunAnythingContext {
             myPath = path;
         }
 
-        
+        @Override
         public String getPath() {
             return myPath;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            RecentDirectoryContext that = (RecentDirectoryContext)o;
+            RecentDirectoryContext that = (RecentDirectoryContext) o;
             return Objects.equals(myPath, that.myPath);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(myPath);
+            return Objects.hashCode(myPath);
         }
     }
 
@@ -136,7 +134,6 @@ public class RunAnythingContext {
             return myModule.getModuleDirPath();
         }
 
-        
         private static String calcDescription(Module module) {
             String basePath = module.getProject().getBasePath();
             if (basePath != null) {
@@ -158,30 +155,28 @@ public class RunAnythingContext {
             return "undefined";
         }
 
-        
         public Module getModule() {
             return myModule;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            ModuleContext that = (ModuleContext)o;
+            ModuleContext that = (ModuleContext) o;
             return Objects.equals(myModule, that.myModule);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(myModule);
+            return Objects.hashCode(myModule);
         }
     }
 
-    
     protected final LocalizeValue label;
     
     protected final LocalizeValue description;
@@ -205,12 +200,10 @@ public class RunAnythingContext {
         return null;
     }
 
-    
     public LocalizeValue getLabel() {
         return label;
     }
 
-    
     public LocalizeValue getDescription() {
         return description;
     }

@@ -1,6 +1,7 @@
 package consulo.http.impl.internal.ssl;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.jspecify.annotations.Nullable;
 
 import javax.security.auth.x500.X500Principal;
 import java.security.cert.CertificateEncodingException;
@@ -157,8 +158,8 @@ public class CertificateWrapper {
     }
 
     @Override
-    public final boolean equals(Object other) {
-        return other instanceof CertificateWrapper certWrapper && myCertificate.equals(certWrapper.getCertificate());
+    public final boolean equals(@Nullable Object other) {
+        return other == this || other instanceof CertificateWrapper that && myCertificate.equals(that.getCertificate());
     }
 
     @Override

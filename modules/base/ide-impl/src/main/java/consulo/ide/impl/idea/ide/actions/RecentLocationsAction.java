@@ -207,7 +207,6 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         popup.pack(false, false);
     }
 
-    
     public static JBCheckBox createCheckbox(ShortcutSet checkboxShortcutSet, boolean showChanged) {
         String text = "<html>" +
             IdeLocalize.recentLocationsTitleText() +
@@ -259,7 +258,6 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         listWithFilter.getSpeedSearch().reset();
     }
 
-    
     private static JPanel createMainPanel(ListWithFilter listWithFilter, CaptionPanel topPanel) {
         JPanel mainPanel = new JPanel(new BorderLayout());
         UIUtil.putClientProperty(mainPanel, CaptionPanel.KEY, topPanel);
@@ -268,7 +266,6 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         return mainPanel;
     }
 
-    
     private static CaptionPanel createHeaderPanel(JLabel title, JComponent checkbox) {
         CaptionPanel topPanel = new CaptionPanel();
         topPanel.add(title, BorderLayout.WEST);
@@ -286,7 +283,6 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         return topPanel;
     }
 
-    
     private static JLabel createTitle(boolean showChanged) {
         JBLabel title = new JBLabel();
         title.setFont(title.getFont().deriveFont(Font.BOLD));
@@ -302,11 +298,10 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         );
     }
 
-    
     private static Function<RecentLocationItem, String> getNamer() {
         return value -> {
-            EditorEx editor = value.getEditor();
-            return value.getInfo().getFile().getName() + " " + editor.getDocument().getText();
+            EditorEx editor = value.editor();
+            return value.info().getFile().getName() + " " + editor.getDocument().getText();
         };
     }
 
@@ -355,12 +350,12 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         for (RecentLocationItem item : selectedValue) {
             if (showChanged) {
                 ContainerUtil
-                    .filter(ideDocumentHistory.getChangePlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
+                    .filter(ideDocumentHistory.getChangePlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.info()))
                     .forEach(ideDocumentHistory::removeChangePlace);
             }
             else {
                 ContainerUtil
-                    .filter(ideDocumentHistory.getBackPlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
+                    .filter(ideDocumentHistory.getBackPlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.info()))
                     .forEach(ideDocumentHistory::removeBackPlace);
             }
         }
@@ -379,7 +374,7 @@ public class RecentLocationsAction extends LegacyDumbAwareAction {
         SimpleReference<? super Boolean> navigationRef
     ) {
         ContainerUtil.reverse(list.getSelectedValuesList())
-            .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));
+            .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.info()));
 
         navigationRef.set(true);
         popup.closeOk(null);

@@ -41,7 +41,6 @@ public class WSLDistribution {
 
   private static final Key<ProcessListener> SUDO_LISTENER_KEY = Key.create("WSL sudo listener");
 
-  
   private final WslDistributionDescriptor myDescriptor;
   
   private final Path myExecutablePath;
@@ -234,7 +233,6 @@ public class WSLDistribution {
     return commandLine;
   }
 
-  
   protected String getRunCommandLineParameter() {
     return RUN_PARAMETER;
   }
@@ -263,7 +261,6 @@ public class WSLDistribution {
     return path;
   }
 
-  
   public String resolveSymlink(String path) {
     return resolveSymlink(path, RESOLVE_SYMLINK_TIMEOUT);
   }
@@ -334,17 +331,14 @@ public class WSLDistribution {
     return Character.toLowerCase(windowsAbsolutePath.charAt(0)) + FileUtil.toSystemIndependentName(windowsAbsolutePath.substring(2));
   }
 
-  
   public String getId() {
     return myDescriptor.getId();
   }
 
-  
   public String getMsId() {
     return myDescriptor.getMsId();
   }
 
-  
   public String getPresentableName() {
     return myDescriptor.getPresentableName();
   }
@@ -363,15 +357,13 @@ public class WSLDistribution {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
     WSLDistribution that = (WSLDistribution)o;
 
-    if (!myDescriptor.equals(that.myDescriptor)) return false;
-
-    return true;
+    return myDescriptor.equals(that.myDescriptor);
   }
 
   @Override

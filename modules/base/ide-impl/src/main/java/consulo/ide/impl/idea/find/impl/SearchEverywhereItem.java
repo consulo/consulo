@@ -16,6 +16,7 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.fileEditor.VfsPresentationUtil;
 import consulo.language.editor.scratch.ScratchUtil;
@@ -59,17 +60,19 @@ public class SearchEverywhereItem {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SearchEverywhereItem other = (SearchEverywhereItem) o;
-        // Compare by file and offset
-        VirtualFile thisFile = myUsage.getFile();
-        VirtualFile otherFile = other.myUsage.getFile();
-        if (thisFile == null || otherFile == null) return false;
-        if (!thisFile.equals(otherFile)) return false;
-        if (myUsage.getNavigationOffset() != other.myUsage.getNavigationOffset()) return false;
-        return getPresentableText().equals(other.getPresentableText());
+    @RequiredReadAction
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SearchEverywhereItem that = (SearchEverywhereItem) o;
+        VirtualFile file = myUsage.getFile();
+        return file != null && file.equals(that.myUsage.getFile())
+            && myUsage.getNavigationOffset() == that.myUsage.getNavigationOffset()
+            && getPresentableText().equals(that.getPresentableText());
     }
 
     @Override

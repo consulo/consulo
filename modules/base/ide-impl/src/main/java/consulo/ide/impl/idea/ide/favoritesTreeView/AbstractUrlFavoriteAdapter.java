@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 public class AbstractUrlFavoriteAdapter extends AbstractUrl {
-  private final BookmarkNodeProvider myNodeProvider;
+    private final BookmarkNodeProvider myNodeProvider;
 
-  public AbstractUrlFavoriteAdapter(String url, String moduleName, BookmarkNodeProvider nodeProvider) {
-    super(url, moduleName, nodeProvider.getFavoriteTypeId());
-    myNodeProvider = nodeProvider;
-  }
+    public AbstractUrlFavoriteAdapter(String url, String moduleName, BookmarkNodeProvider nodeProvider) {
+        super(url, moduleName, nodeProvider.getFavoriteTypeId());
+        myNodeProvider = nodeProvider;
+    }
 
-  @Override
-  public Object[] createPath(Project project) {
-    return myNodeProvider.createPathFromUrl(project, url, moduleName);
-  }
+    @Override
+    public Object @Nullable [] createPath(Project project) {
+        return myNodeProvider.createPathFromUrl(project, url, moduleName);
+    }
 
-  @Override
-  protected AbstractUrl createUrl(String moduleName, String url) {
-    return null;
-  }
+    @Override
+    protected AbstractUrl createUrl(String moduleName, String url) {
+        return null;
+    }
 
-  @Override
-  public AbstractUrl createUrlByElement(Object element) {
-    return null;
-  }
+    @Override
+    public AbstractUrl createUrlByElement(Object element) {
+        return null;
+    }
 }

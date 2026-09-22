@@ -1,6 +1,10 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileEditor.internal.largeFileEditor;
 
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
+
 public final class Position {
     public long pageNumber;
     public int symbolOffsetInPage;
@@ -21,17 +25,13 @@ public final class Position {
     }
 
     @Override
-    public boolean equals(Object target) {
-        if (this == target) {
-            return true;
-        }
+    public boolean equals(@Nullable Object target) {
+        return this == target
+            || target instanceof Position that && pageNumber == that.pageNumber && symbolOffsetInPage == that.symbolOffsetInPage;
+    }
 
-        if (target instanceof Position) {
-            if (pageNumber == ((Position) target).pageNumber
-                && symbolOffsetInPage == ((Position) target).symbolOffsetInPage) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(pageNumber, symbolOffsetInPage);
     }
 }

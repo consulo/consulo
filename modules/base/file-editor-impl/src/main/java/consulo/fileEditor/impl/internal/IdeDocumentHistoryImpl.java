@@ -274,20 +274,19 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         if (selectedEditorWithProvider == null) {
             return null;
         }
-        return createPlaceInfo(selectedEditorWithProvider.getFileEditor(), selectedEditorWithProvider.getProvider());
+        return createPlaceInfo(selectedEditorWithProvider.fileEditor(), selectedEditorWithProvider.provider());
     }
 
     private static @Nullable PlaceInfo getPlaceInfoFromFocus() {
-        FileEditor fileEditor = CurrentEditorProvider.getInstance().getCurrentEditor();
-        if (fileEditor instanceof TextEditor && fileEditor.isValid()) {
-            VirtualFile file = fileEditor.getFile();
+        if (CurrentEditorProvider.getInstance().getCurrentEditor() instanceof TextEditor textEditor && textEditor.isValid()) {
+            VirtualFile file = textEditor.getFile();
             if (file != null) {
                 return new PlaceInfo(
                     file,
-                    fileEditor.getState(FileEditorStateLevel.NAVIGATION),
+                    textEditor.getState(FileEditorStateLevel.NAVIGATION),
                     TextEditorProvider.getInstance().getEditorTypeId(),
                     null,
-                    getCaretPosition(fileEditor),
+                    getCaretPosition(textEditor),
                     System.currentTimeMillis()
                 );
             }
@@ -486,7 +485,6 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
-    
     public List<PlaceInfo> getBackPlaces() {
         return List.copyOf(myBackPlaces);
     }

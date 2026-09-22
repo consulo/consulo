@@ -13,41 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 public class LibraryModuleGroupUrl extends AbstractUrl {
+    private static final String ELEMENT_TYPE = "libraryModuleGroup";
 
-  private static final String ELEMENT_TYPE = "libraryModuleGroup";
-
-  public LibraryModuleGroupUrl(String moduleName) {
-    super(null, moduleName, ELEMENT_TYPE);
-  }
-
-  @Override
-  public Object[] createPath(Project project) {
-    Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
-    if (module == null) return null;
-    return new Object[]{new LibraryGroupElement(module)};
-  }
-
-  @Override
-  protected AbstractUrl createUrl(String moduleName, String url) {
-      return new LibraryModuleGroupUrl(moduleName);
-  }
-
-  @Override
-  public AbstractUrl createUrlByElement(Object element) {
-    if (element instanceof LibraryGroupElement) {
-      LibraryGroupElement libraryGroupElement = (LibraryGroupElement)element;
-      return new LibraryModuleGroupUrl(libraryGroupElement.getModule() != null ? libraryGroupElement.getModule().getName() : null);
+    public LibraryModuleGroupUrl(String moduleName) {
+        super(null, moduleName, ELEMENT_TYPE);
     }
-    return null;
-  }
+
+    @Override
+    @RequiredReadAction
+    public Object @Nullable [] createPath(Project project) {
+        Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
+        if (module == null) {
+            return null;
+        }
+        return new Object[]{new LibraryGroupElement(module)};
+    }
+
+    @Override
+    protected AbstractUrl createUrl(String moduleName, String url) {
+        return new LibraryModuleGroupUrl(moduleName);
+    }
+
+    @Override
+    public AbstractUrl createUrlByElement(Object element) {
+        if (element instanceof LibraryGroupElement libraryGroupElement) {
+            return new LibraryModuleGroupUrl(libraryGroupElement.getModule() != null ? libraryGroupElement.getModule().getName() : null);
+        }
+        return null;
+    }
 }
