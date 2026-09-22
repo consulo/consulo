@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -15,17 +16,17 @@ public class RoundWithBackgroundPresentation extends StaticDelegatePresentation 
     private final ColorValue color;
     private final float backgroundAlpha;
 
-    public RoundWithBackgroundPresentation(InlayPresentation presentation,
-                                           int arcWidth,
-                                           int arcHeight) {
+    public RoundWithBackgroundPresentation(InlayPresentation presentation, int arcWidth, int arcHeight) {
         this(presentation, arcWidth, arcHeight, null, 0.55f);
     }
 
-    public RoundWithBackgroundPresentation(InlayPresentation presentation,
-                                           int arcWidth,
-                                           int arcHeight,
-                                           ColorValue color,
-                                           float backgroundAlpha) {
+    public RoundWithBackgroundPresentation(
+        InlayPresentation presentation,
+        int arcWidth,
+        int arcHeight,
+        ColorValue color,
+        float backgroundAlpha
+    ) {
         super(presentation);
         this.arcWidth = arcWidth;
         this.arcHeight = arcHeight;
@@ -42,6 +43,7 @@ public class RoundWithBackgroundPresentation extends StaticDelegatePresentation 
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         ColorValue backgroundColor = (color != null) ? color : attributes.getBackgroundColor();
         if (backgroundColor != null) {

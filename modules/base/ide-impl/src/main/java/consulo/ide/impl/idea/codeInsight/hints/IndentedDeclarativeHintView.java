@@ -13,7 +13,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.util.lang.CharArrayUtil;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -42,16 +42,18 @@ public class IndentedDeclarativeHintView<View extends DeclarativeHintView<Model>
         this.inlay = inlay;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void updateModel(Model newModel) {
         view.updateModel(newModel);
     }
 
+    @RequiredReadAction
     private int getViewIndentMargin() {
         return getViewIndentMargin(null);
     }
 
+    @RequiredReadAction
     private int getViewIndentMargin(Inlay<?> inlayParam) {
         if (this.inlay != null) {
             return calcViewIndentMargin(this.inlay.getOffset(), this.inlay.getEditor());
@@ -64,57 +66,70 @@ public class IndentedDeclarativeHintView<View extends DeclarativeHintView<Model>
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public int calcWidthInPixels(Inlay<?> inlay, InlayTextMetricsStorage fontMetricsStorage) {
         return getViewIndentMargin(inlay) + view.calcWidthInPixels(inlay, fontMetricsStorage);
     }
 
     @Override
-    public void paint(Inlay<?> inlay,
-                      Graphics2D g,
-                      Rectangle2D targetRegion,
-                      TextAttributes textAttributes,
-                      InlayTextMetricsStorage fontMetricsStorage) {
+    @RequiredUIAccess
+    public void paint(
+        Inlay<?> inlay,
+        Graphics2D g,
+        Rectangle2D targetRegion,
+        TextAttributes textAttributes,
+        InlayTextMetricsStorage fontMetricsStorage
+    ) {
         view.paint(inlay, g, toViewRectangle(targetRegion), textAttributes, fontMetricsStorage);
     }
 
     @Override
-    public void handleLeftClick(EditorMouseEvent e,
-                                Point pointInsideInlay,
-                                InlayTextMetricsStorage fontMetricsStorage,
-                                boolean controlDown) {
+    @RequiredUIAccess
+    public void handleLeftClick(
+        EditorMouseEvent e,
+        Point pointInsideInlay,
+        InlayTextMetricsStorage fontMetricsStorage,
+        boolean controlDown
+    ) {
         Point translated = toPointInsideViewOrNull(pointInsideInlay);
-        if (translated == null) return;
+        if (translated == null) {
+            return;
+        }
         view.handleLeftClick(e, translated, fontMetricsStorage, controlDown);
     }
 
     @Override
-    public LightweightHint handleHover(EditorMouseEvent e,
-                                       Point pointInsideInlay,
-                                       InlayTextMetricsStorage fontMetricsStorage) {
+    @RequiredUIAccess
+    public LightweightHint handleHover(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage) {
         Point translated = toPointInsideViewOrNull(pointInsideInlay);
-        if (translated == null) return null;
+        if (translated == null) {
+            return null;
+        }
         return view.handleHover(e, translated, fontMetricsStorage);
     }
 
     @Override
-    public void handleRightClick(EditorMouseEvent e,
-                                 Point pointInsideInlay,
-                                 InlayTextMetricsStorage fontMetricsStorage) {
+    @RequiredUIAccess
+    public void handleRightClick(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage) {
         Point translated = toPointInsideViewOrNull(pointInsideInlay);
-        if (translated == null) return;
+        if (translated == null) {
+            return;
+        }
         view.handleRightClick(e, translated, fontMetricsStorage);
     }
 
     @Override
-    public InlayMouseArea getMouseArea(Point pointInsideInlay,
-                                       InlayTextMetricsStorage fontMetricsStorage) {
+    @RequiredUIAccess
+    public InlayMouseArea getMouseArea(Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage) {
         Point translated = toPointInsideViewOrNull(pointInsideInlay);
-        if (translated == null) return null;
+        if (translated == null) {
+            return null;
+        }
         return view.getMouseArea(translated, fontMetricsStorage);
     }
 
+    @RequiredReadAction
     private Point toPointInsideViewOrNull(Point pointInsideInlay) {
         int indentMargin = getViewIndentMargin();
         if (pointInsideInlay.x < indentMargin) {
@@ -123,6 +138,7 @@ public class IndentedDeclarativeHintView<View extends DeclarativeHintView<Model>
         return new Point(pointInsideInlay.x - indentMargin, pointInsideInlay.y);
     }
 
+    @RequiredReadAction
     private Rectangle2D toViewRectangle(Rectangle2D rect) {
         int indentMargin = getViewIndentMargin();
         return new Rectangle2D.Double(
@@ -133,17 +149,17 @@ public class IndentedDeclarativeHintView<View extends DeclarativeHintView<Model>
         );
     }
 
-    public static Pair<Integer, Integer> calcIndentAnchorOffset(int offset, Document document) {
+    public static Couple<Integer> calcIndentAnchorOffset(int offset, Document document) {
         int lineStartOffset = DocumentUtil.getLineStartOffset(offset, document);
         int textStartOffset = CharArrayUtil.shiftForward(document.getImmutableCharSequence(), lineStartOffset, " \t");
-        return new Pair<>(lineStartOffset, textStartOffset);
+        return Couple.of(lineStartOffset, textStartOffset);
     }
 
     @RequiredReadAction
     private static int calcViewIndentMargin(int offset, Editor editor) {
         Document document = editor.getDocument();
         CharSequence text = document.getImmutableCharSequence();
-        Pair<Integer, Integer> pair = calcIndentAnchorOffset(offset, document);
+        Couple<Integer> pair = calcIndentAnchorOffset(offset, document);
         int lineStartOffset = pair.getFirst();
         int textStartOffset = pair.getSecond();
         if (editor.getInlayModel().isInBatchMode()) {

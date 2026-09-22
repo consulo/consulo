@@ -34,6 +34,7 @@ public class StickyLinesPass extends EditorBoundHighlightingPass implements Dumb
     }
 
     @Override
+    @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
         if (myDocument == null) {
             return;

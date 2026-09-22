@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.inlay;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 import java.awt.*;
 
 /**
@@ -12,6 +14,7 @@ public interface PresentationListener {
      *
      * @param area region (in this presentation’s coordinate space) that changed
      */
+    @RequiredUIAccess
     void contentChanged(Rectangle area);
 
     /**
@@ -20,5 +23,6 @@ public interface PresentationListener {
      * @param previous the old size
      * @param current  the new size
      */
+    @RequiredUIAccess
     void sizeChanged(Dimension previous, Dimension current);
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -143,7 +142,6 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
                     }
                 }
             }
-
         }
     }
 
@@ -155,11 +153,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
      * @return a pair where first element is read usages and second is write usages
      */
     @RequiredReadAction
-    public static Couple<Collection<TextRange>> getHighlightUsages(
-        PsiElement target,
-        PsiElement psiElement,
-        boolean withDeclarations
-    ) {
+    public static Couple<Collection<TextRange>> getHighlightUsages(PsiElement target, PsiElement psiElement, boolean withDeclarations) {
         return getUsages(target, psiElement, withDeclarations, true);
     }
 
@@ -174,7 +168,6 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
         return getUsages(target, psiElement, withDeclarations, false).first;
     }
 
-    
     @RequiredReadAction
     private static Couple<Collection<TextRange>> getUsages(
         PsiElement target,

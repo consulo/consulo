@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.idea.codeInsight.hints.InsetValueProvider;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 
 import java.awt.*;
@@ -14,8 +15,7 @@ public class DynamicInsetPresentation extends StaticDelegatePresentation {
     private final InsetValueProvider valueProvider;
     private boolean isPresentationUnderCursor = false;
 
-    public DynamicInsetPresentation(InlayPresentation presentation,
-                                    InsetValueProvider valueProvider) {
+    public DynamicInsetPresentation(InlayPresentation presentation, InsetValueProvider valueProvider) {
         super(presentation);
         this.valueProvider = valueProvider;
     }
@@ -37,32 +37,35 @@ public class DynamicInsetPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return presentation.getWidth() + getLeft() + getRight();
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return presentation.getHeight() + getTop() + getDown();
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         try (var ignored = GraphicsUtil.withTranslated(g, getLeft(), getTop())) {
             presentation.paint(g, attributes);
         }
     }
 
-    private void handleMouse(Point original, BiConsumer<InlayPresentation, Point> action) {
+    @RequiredUIAccess
+    private void handleMouse(Point original, @RequiredUIAccess BiConsumer<InlayPresentation, Point> action) {
         int x = original.x;
         int y = original.y;
         int left = getLeft();
         int top = getTop();
         int width = presentation.getWidth();
         int height = presentation.getHeight();
-        boolean cursorIsOutOfBounds =
-            x < left || x >= left + width ||
-                y < top || y >= top + height;
+        boolean cursorIsOutOfBounds = x < left || left + width <= x
+            || y < top || top + height <= y;
         if (cursorIsOutOfBounds) {
             if (isPresentationUnderCursor) {
                 presentation.mouseExited();
@@ -75,16 +78,19 @@ public class DynamicInsetPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         handleMouse(translated, (p, pt) -> p.mouseClicked(event, pt));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         handleMouse(translated, (p, pt) -> p.mouseMoved(event, pt));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         presentation.mouseExited();
         isPresentationUnderCursor = false;

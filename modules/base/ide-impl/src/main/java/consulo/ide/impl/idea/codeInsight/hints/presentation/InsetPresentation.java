@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 
 import java.awt.*;
@@ -25,28 +26,31 @@ public class InsetPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return presentation.getWidth() + left + right;
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return presentation.getHeight() + top + down;
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         try (var ignored = GraphicsUtil.withTranslated(g, left, top)) {
             presentation.paint(g, attributes);
         }
     }
 
-    private void handleMouse(Point original, BiConsumer<InlayPresentation, Point> action) {
+    @RequiredUIAccess
+    private void handleMouse(Point original, @RequiredUIAccess BiConsumer<InlayPresentation, Point> action) {
         int x = original.x;
         int y = original.y;
-        boolean cursorIsOutOfBounds =
-            x < left || x >= left + presentation.getWidth() ||
-                y < top || y >= top + presentation.getHeight();
+        boolean cursorIsOutOfBounds = x < left || left + presentation.getWidth() <= x
+            || y < top || top + presentation.getHeight() <= y;
 
         if (cursorIsOutOfBounds) {
             if (isPresentationUnderCursor) {
@@ -62,16 +66,19 @@ public class InsetPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         handleMouse(translated, (p, point) -> p.mouseClicked(event, point));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         handleMouse(translated, (p, point) -> p.mouseMoved(event, point));
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         presentation.mouseExited();
         isPresentationUnderCursor = false;

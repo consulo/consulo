@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
@@ -12,6 +13,7 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.util.lang.Pair;
@@ -75,10 +77,12 @@ class TrafficProgressPanel extends JPanel {
           HighlightInfoProcessor.getEmpty()
         ) {
           @Override
+          @RequiredReadAction
           protected void collectInformationWithProgress(ProgressIndicator progress) {
           }
 
           @Override
+          @RequiredUIAccess
           protected void applyInformationWithProgress() {
           }
         }

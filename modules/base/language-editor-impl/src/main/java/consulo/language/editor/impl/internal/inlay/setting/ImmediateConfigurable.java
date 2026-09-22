@@ -20,45 +20,19 @@ public interface ImmediateConfigurable {
         return Collections.emptyList();
     }
 
-    class Case {
-        private final LocalizeValue name;
-        private final String id;
-        private final BooleanSupplier loadFromSettings;
-        private final Consumer<Boolean> onUserChanged;
-        private final LocalizeValue extendedDescription;
-
-        public Case(LocalizeValue name,
-                    String id,
-                    BooleanSupplier loadFromSettings,
-                    Consumer<Boolean> onUserChanged,
-                    LocalizeValue extendedDescription) {
-            this.name = name;
-            this.id = id;
-            this.loadFromSettings = loadFromSettings;
-            this.onUserChanged = onUserChanged;
-            this.extendedDescription = extendedDescription;
-        }
-
-        
-        public LocalizeValue getName() {
-            return name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
+    record Case(
+        LocalizeValue name,
+        String id,
+        BooleanSupplier loadFromSettings,
+        Consumer<Boolean> onUserChanged,
+        LocalizeValue extendedDescription
+    ) {
         public boolean getValue() {
             return loadFromSettings.getAsBoolean();
         }
 
         public void setValue(boolean value) {
             onUserChanged.accept(value);
-        }
-
-        
-        public LocalizeValue getExtendedDescription() {
-            return extendedDescription;
         }
     }
 }

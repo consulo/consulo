@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @ServiceImpl
 @Singleton
 public class DeclarativeInlayActionService {
-    @RequiredReadAction
+    @RequiredUIAccess
     public void invokeInlayMenu(InlayData hintData, EditorMouseEvent e, RelativePoint relativePoint) {
         Project project = e.getEditor().getProject();
         if (project == null) {

@@ -3,24 +3,25 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.InlayPresentationFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.function.BiConsumer;
 
 /**
- * Pure presentation. If you need to preserve state between updates you should use {@link StatefulPresentation} or {@link ChangeOnClickPresentation}
+ * Pure presentation. If you need to preserve state between updates you should use
+ * {@link StatefulPresentation} or {@link ChangeOnClickPresentation}
  */
 public class OnClickPresentation extends StaticDelegatePresentation {
     private final InlayPresentationFactory.ClickListener clickListener;
 
-    public OnClickPresentation(InlayPresentation presentation,
-                               InlayPresentationFactory.ClickListener clickListener) {
+    public OnClickPresentation(InlayPresentation presentation, InlayPresentationFactory.ClickListener clickListener) {
         super(presentation);
         this.clickListener = clickListener;
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         super.mouseClicked(event, translated);
         clickListener.onClick(event, translated);

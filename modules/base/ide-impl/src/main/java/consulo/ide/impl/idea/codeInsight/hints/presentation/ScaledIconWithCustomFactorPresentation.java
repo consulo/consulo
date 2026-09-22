@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.ide.impl.idea.codeInsight.hints.InlayTextMetricsStorage;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import java.awt.*;
@@ -9,21 +10,25 @@ import java.awt.*;
 public class ScaledIconWithCustomFactorPresentation extends ScaledIconPresentation {
     private final float iconScaleFactor;
 
-    public ScaledIconWithCustomFactorPresentation(InlayTextMetricsStorage metricsStorage,
-                                                  boolean isSmall,
-                                                  Image icon,
-                                                  Component component,
-                                                  float iconScaleFactor) {
+    public ScaledIconWithCustomFactorPresentation(
+        InlayTextMetricsStorage metricsStorage,
+        boolean isSmall,
+        Image icon,
+        Component component,
+        float iconScaleFactor
+    ) {
         super(metricsStorage, isSmall, icon, component);
         this.iconScaleFactor = iconScaleFactor;
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return (int) Math.ceil(super.getHeight() * iconScaleFactor);
     }
 
     @Override
+    @RequiredUIAccess
     protected double getScaleFactor() {
         return super.getScaleFactor() * iconScaleFactor;
     }

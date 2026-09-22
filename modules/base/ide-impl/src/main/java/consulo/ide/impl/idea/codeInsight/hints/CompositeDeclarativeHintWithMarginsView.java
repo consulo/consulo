@@ -32,6 +32,7 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
 
     protected abstract int getSubViewCount();
 
+    @RequiredUIAccess
     private SubViewMetrics getSubViewMetrics(InlayTextMetricsStorage fontMetricsStorage) {
         SubViewMetrics metrics = computedSubViewMetrics;
         InlayTextMetricsStamp currentStamp = getCurrentTextMetricsStamp(fontMetricsStorage);
@@ -45,6 +46,7 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
         return metrics;
     }
 
+    @RequiredUIAccess
     protected InlayTextMetricsStamp getCurrentTextMetricsStamp(InlayTextMetricsStorage fontMetricsStorage) {
         return fontMetricsStorage.getCurrentStamp();
     }
@@ -54,63 +56,97 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
     }
 
     @Override
+    @RequiredUIAccess
     public int calcWidthInPixels(Inlay<?> inlay, InlayTextMetricsStorage fontMetricsStorage) {
         return getSubViewMetrics(fontMetricsStorage).fullWidth;
     }
 
     @Override
-    public void paint(Inlay<?> inlay, Graphics2D g, Rectangle2D targetRegion, TextAttributes textAttributes,
-                      InlayTextMetricsStorage fontMetricsStorage) {
-        forEachSubViewBounds(fontMetricsStorage, (subView, leftBound, rightBound) -> {
-            int width = rightBound - leftBound;
-            Rectangle currentRegion = new Rectangle((int) targetRegion.getX() + leftBound,
-                (int) targetRegion.getY(),
-                width,
-                (int) targetRegion.getHeight());
-            subView.paint(inlay, g, currentRegion, textAttributes, fontMetricsStorage);
-            return true;
-        });
+    @RequiredUIAccess
+    public void paint(
+        Inlay<?> inlay,
+        Graphics2D g,
+        Rectangle2D targetRegion,
+        TextAttributes textAttributes,
+        InlayTextMetricsStorage fontMetricsStorage
+    ) {
+        forEachSubViewBounds(
+            fontMetricsStorage,
+            (subView, leftBound, rightBound) -> {
+                int width = rightBound - leftBound;
+                Rectangle currentRegion = new Rectangle(
+                    (int) targetRegion.getX() + leftBound,
+                    (int) targetRegion.getY(),
+                    width,
+                    (int) targetRegion.getHeight()
+                );
+                subView.paint(inlay, g, currentRegion, textAttributes, fontMetricsStorage);
+                return true;
+            }
+        );
     }
 
     @Override
-    public void handleLeftClick(EditorMouseEvent e, Point pointInsideInlay,
-                                InlayTextMetricsStorage fontMetricsStorage, boolean controlDown) {
-        forSubViewAtPoint(pointInsideInlay, fontMetricsStorage,
-            (subView, translated) -> subView.handleLeftClick(e, translated, fontMetricsStorage, controlDown));
+    @RequiredUIAccess
+    public void handleLeftClick(
+        EditorMouseEvent e,
+        Point pointInsideInlay,
+        InlayTextMetricsStorage fontMetricsStorage,
+        boolean controlDown
+    ) {
+        forSubViewAtPoint(
+            pointInsideInlay,
+            fontMetricsStorage,
+            (subView, translated) -> subView.handleLeftClick(e, translated, fontMetricsStorage, controlDown)
+        );
     }
 
     @Override
-    public LightweightHint handleHover(EditorMouseEvent e, Point pointInsideInlay,
-                                       InlayTextMetricsStorage fontMetricsStorage) {
+    @RequiredUIAccess
+    public LightweightHint handleHover(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage) {
         class HintHolder {
             LightweightHint hint;
         }
         HintHolder holder = new HintHolder();
-        forSubViewAtPoint(pointInsideInlay, fontMetricsStorage,
-            (subView, translated) -> holder.hint = subView.handleHover(e, translated, fontMetricsStorage));
+        forSubViewAtPoint(
+            pointInsideInlay,
+            fontMetricsStorage,
+            (subView, translated) -> holder.hint = subView.handleHover(e, translated, fontMetricsStorage)
+        );
         return holder.hint;
     }
 
     @Override
-    public void handleRightClick(EditorMouseEvent e, Point pointInsideInlay,
-                                 InlayTextMetricsStorage fontMetricsStorage) {
-        forSubViewAtPoint(pointInsideInlay, fontMetricsStorage,
-            (subView, translated) -> subView.handleRightClick(e, translated, fontMetricsStorage));
+    @RequiredUIAccess
+    public void handleRightClick(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage) {
+        forSubViewAtPoint(
+            pointInsideInlay,
+            fontMetricsStorage,
+            (subView, translated) -> subView.handleRightClick(e, translated, fontMetricsStorage)
+        );
     }
 
     @Override
+    @RequiredUIAccess
     public InlayMouseArea getMouseArea(Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage) {
         class AreaHolder {
             InlayMouseArea area;
         }
         AreaHolder holder = new AreaHolder();
-        forSubViewAtPoint(pointInsideInlay, fontMetricsStorage,
-            (subView, translated) -> holder.area = subView.getMouseArea(translated, fontMetricsStorage));
+        forSubViewAtPoint(
+            pointInsideInlay,
+            fontMetricsStorage,
+            (subView, translated) -> holder.area = subView.getMouseArea(translated, fontMetricsStorage)
+        );
         return holder.area;
     }
 
-    private void forSubViewAtPoint(Point pointInsideInlay, InlayTextMetricsStorage fontMetricsStorage,
-                                   BiConsumer<SubView, Point> action) {
+    @RequiredUIAccess
+    private void forSubViewAtPoint(
+        Point pointInsideInlay,
+        InlayTextMetricsStorage fontMetricsStorage,
+        @RequiredUIAccess BiConsumer<SubView, Point> action
+    ) {
         int x = pointInsideInlay.x;
         forEachSubViewBounds(fontMetricsStorage, (subView, leftBound, rightBound) -> {
             if (x >= leftBound && x < rightBound) {
@@ -121,8 +157,11 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
         });
     }
 
-    private void forEachSubViewBounds(InlayTextMetricsStorage fontMetricsStorage,
-                                      TriPredicate<SubView, Integer, Integer> action) {
+    @RequiredUIAccess
+    private void forEachSubViewBounds(
+        InlayTextMetricsStorage fontMetricsStorage,
+        @RequiredUIAccess TriPredicate<SubView, Integer, Integer> action
+    ) {
         int[] sortedBounds = getSubViewMetrics(fontMetricsStorage).sortedBounds;
         for (int index = 0; index < getSubViewCount(); index++) {
             int leftBound = sortedBounds[2 * index];
@@ -134,19 +173,20 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
         }
     }
 
-    private SubViewMetrics computeSubViewMetrics(boolean ignoreInitialMargin,
-                                                 InlayTextMetricsStorage fontMetricsStorage,
-                                                 boolean forceUpdate) {
+    @RequiredUIAccess
+    private SubViewMetrics computeSubViewMetrics(
+        boolean ignoreInitialMargin,
+        InlayTextMetricsStorage fontMetricsStorage,
+        boolean forceUpdate
+    ) {
         int count = getSubViewCount();
-        int[] sortedBounds = new int[count * 2];
-        int xSoFar = 0;
-        int previousMargin = 0;
-        var first = getSubView(0);
+        SubView first = getSubView(0);
         int margin0 = first.getMargin();
+        int[] sortedBounds = new int[count * 2];
         sortedBounds[0] = ignoreInitialMargin ? 0 : margin0;
         sortedBounds[1] = sortedBounds[0] + first.getBoxWidth(fontMetricsStorage, forceUpdate);
-        previousMargin = margin0;
-        xSoFar = sortedBounds[1];
+        int previousMargin = margin0;
+        int xSoFar = sortedBounds[1];
         for (int i = 1; i < count; i++) {
             var sub = getSubView(i);
             int margin = sub.getMargin();
@@ -164,8 +204,8 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
         computedSubViewMetrics = null;
     }
 
-    private static <M, S extends DeclarativeHintViewWithMargins> InlayPresentationList createPresentationList(CompositeDeclarativeHintWithMarginsView<M, S> view,
-                                                                                                              InlayData inlayData) {
+    private static <M, S extends DeclarativeHintViewWithMargins>
+    InlayPresentationList createPresentationList(CompositeDeclarativeHintWithMarginsView<M, S> view, InlayData inlayData) {
         return new InlayPresentationList(inlayData, view::invalidateComputedSubViewMetrics);
     }
 
@@ -202,8 +242,8 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
             return presentationList;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void updateModel(InlayData newModel) {
             presentationList.updateModel(newModel);
         }
@@ -241,8 +281,8 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
             return presentationLists.get(index);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void updateModel(List<InlayData> newModel) {
             if (newModel.size() == presentationLists.size()) {
                 for (int i = 0; i < presentationLists.size(); i++) {
@@ -280,14 +320,14 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
     }
 
     private static int getPriority(DeclarativeInlayPosition pos) {
-        if (pos instanceof DeclarativeInlayPosition.AboveLineIndentedPosition) {
-            return ((DeclarativeInlayPosition.AboveLineIndentedPosition) pos).getPriority();
+        if (pos instanceof DeclarativeInlayPosition.AboveLineIndentedPosition aip) {
+            return aip.getPriority();
         }
-        else if (pos instanceof DeclarativeInlayPosition.EndOfLinePosition) {
-            return ((DeclarativeInlayPosition.EndOfLinePosition) pos).getPriority();
+        else if (pos instanceof DeclarativeInlayPosition.EndOfLinePosition elp) {
+            return elp.getPriority();
         }
-        else if (pos instanceof DeclarativeInlayPosition.InlineInlayPosition) {
-            return ((DeclarativeInlayPosition.InlineInlayPosition) pos).getPriority();
+        else if (pos instanceof DeclarativeInlayPosition.InlineInlayPosition iip) {
+            return iip.getPriority();
         }
         throw new IllegalArgumentException("Unknown InlayPosition: " + pos.getClass());
     }

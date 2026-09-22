@@ -22,6 +22,7 @@ public class TextPlaceholderPresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return EditorImplUtil.getPlainSpaceWidth(textMetricsStorage.getEditor()) * length;
     }
@@ -29,7 +30,7 @@ public class TextPlaceholderPresentation extends BasePresentation {
     @Override
     @RequiredUIAccess
     public int getHeight() {
-        return getMetrics().getFontHeight();
+        return getMetrics().fontHeight();
     }
 
     @RequiredUIAccess
@@ -38,6 +39,7 @@ public class TextPlaceholderPresentation extends BasePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
     }
 

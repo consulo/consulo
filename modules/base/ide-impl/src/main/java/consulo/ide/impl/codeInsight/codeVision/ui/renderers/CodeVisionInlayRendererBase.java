@@ -17,6 +17,7 @@ import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.language.editor.codeVision.ClickableTextCodeVisionEntry;
 import consulo.language.editor.codeVision.CodeVisionEntry;
 import consulo.language.editor.codeVision.TextCodeVisionEntry;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -25,6 +26,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -108,17 +110,20 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         updateMouseState(true, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         updateMouseState(false, null);
     }
 
     // Consuming to prevent showing context menu
     @Override
+    @RequiredUIAccess
     public void mousePressed(MouseEvent event, Point translated) {
         if (hoveredEntry == null) return;
         if (event.isShiftDown()) return;
@@ -131,6 +136,7 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseReleased(MouseEvent event, Point translated) {
         CodeVisionEntry clickedEntry = hoveredEntry;
         if (clickedEntry == null) return;
@@ -202,7 +208,7 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
 
         // If new entry: start debounce timer for tooltip (same 1000ms as JetBrains)
         if (entry != null) {
-            final CodeVisionEntry finalEntry = entry;
+            CodeVisionEntry finalEntry = entry;
             tooltipTimer = new Timer(1000, e -> {
                 tooltipTimer = null;
                 showTooltip(finalEntry);
@@ -243,8 +249,8 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
         int x = inlayBounds.x + entryBounds.x + (entryBounds.width / 2);
         int y = inlayBounds.y + (inlayBounds.height / 2);
 
-        java.awt.Component contentComponent = inlay.getEditor().getContentComponent();
-        java.awt.Component component = inlay.getEditor().getComponent();
+        Component contentComponent = inlay.getEditor().getContentComponent();
+        Component component = inlay.getEditor().getComponent();
         RelativePoint relativePoint = new RelativePoint(contentComponent, new Point(x, y));
         IdeTooltip tooltip = new IdeTooltip(component, relativePoint.getPoint(component), new JLabel(text));
         currentTooltip = IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, false, false);

@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.InlayPresentationFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -11,15 +12,18 @@ public class MouseHandlingPresentation extends StaticDelegatePresentation {
     private final InlayPresentationFactory.ClickListener clickListener;
     private final InlayPresentationFactory.HoverListener hoverListener;
 
-    public MouseHandlingPresentation(InlayPresentation presentation,
-                                     InlayPresentationFactory.ClickListener clickListener,
-                                     InlayPresentationFactory.HoverListener hoverListener) {
+    public MouseHandlingPresentation(
+        InlayPresentation presentation,
+        InlayPresentationFactory.ClickListener clickListener,
+        InlayPresentationFactory.HoverListener hoverListener
+    ) {
         super(presentation);
         this.clickListener = clickListener;
         this.hoverListener = hoverListener;
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         super.mouseClicked(event, translated);
         if (clickListener != null) {
@@ -28,6 +32,7 @@ public class MouseHandlingPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         super.mouseMoved(event, translated);
         if (hoverListener != null) {
@@ -36,6 +41,7 @@ public class MouseHandlingPresentation extends StaticDelegatePresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         super.mouseExited();
         if (hoverListener != null) {

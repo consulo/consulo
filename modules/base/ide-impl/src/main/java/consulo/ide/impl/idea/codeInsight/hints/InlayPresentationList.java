@@ -1,12 +1,8 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.codeInsight.hints;
 
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.DefaultLanguageHighlighterColors;
-import consulo.codeEditor.EditorColors;
-import consulo.codeEditor.Inlay;
-import consulo.codeEditor.InlayContentSegment;
-import consulo.codeEditor.RealEditor;
+import consulo.application.Application;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -74,6 +70,7 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
         return sums;
     }
 
+    @RequiredUIAccess
     private int[] getPartialWidthSums(InlayTextMetricsStorage storage, boolean forceRecompute) {
         if (partialWidthSums == null || forceRecompute) {
             InlayTextMetrics metrics = getMetrics(storage);
@@ -83,10 +80,8 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
     }
 
     @Override
-    public void handleLeftClick(EditorMouseEvent e,
-                                Point pointInsideInlay,
-                                InlayTextMetricsStorage storage,
-                                boolean controlDown) {
+    @RequiredUIAccess
+    public void handleLeftClick(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage storage, boolean controlDown) {
         InlayPresentationEntry entry = findEntryByPoint(storage, pointInsideInlay);
         if (entry == null) {
             return;
@@ -96,13 +91,10 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
     }
 
     @Override
-    public void handleRightClick(EditorMouseEvent e,
-                                 Point pointInsideInlay,
-                                 InlayTextMetricsStorage storage) {
-        DeclarativeInlayActionService service =
-            ApplicationManager.getApplication().getService(DeclarativeInlayActionService.class);
-        service.invokeInlayMenu(model, e,
-            new RelativePoint(e.getMouseEvent().getLocationOnScreen()));
+    @RequiredUIAccess
+    public void handleRightClick(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage storage) {
+        DeclarativeInlayActionService service = Application.get().getService(DeclarativeInlayActionService.class);
+        service.invokeInlayMenu(model, e, new RelativePoint(e.getMouseEvent().getLocationOnScreen()));
     }
 
     private int[] getMarginAndPadding() {
@@ -115,16 +107,19 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
     }
 
     @Override
+    @RequiredUIAccess
     public int getBoxWidth(InlayTextMetricsStorage storage, boolean forceRecompute) {
         int padding = getMarginAndPadding()[1];
         return 2 * padding + getTextWidth(storage, forceRecompute);
     }
 
+    @RequiredUIAccess
     private int getTextWidth(InlayTextMetricsStorage storage, boolean forceRecompute) {
         int[] sums = getPartialWidthSums(storage, forceRecompute);
         return sums.length > 0 ? sums[sums.length - 1] : 0;
     }
 
+    @RequiredUIAccess
     private InlayPresentationEntry findEntryByPoint(InlayTextMetricsStorage storage, Point pointInsideInlay) {
         int[] sums = getPartialWidthSums(storage, false);
         int initialLeft = getMarginAndPadding()[1];
@@ -141,19 +136,17 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
     }
 
     @Override
-    public LightweightHint handleHover(EditorMouseEvent e,
-                                       Point pointInsideInlay,
-                                       InlayTextMetricsStorage storage) {
+    @RequiredUIAccess
+    public LightweightHint handleHover(EditorMouseEvent e, Point pointInsideInlay, InlayTextMetricsStorage storage) {
         String tooltip = model.getTooltip();
         if (tooltip == null) {
             return null;
         }
-        return new PresentationFactory(e.getEditor())
-            .showTooltip(e.getMouseEvent(), tooltip);
+        return new PresentationFactory(e.getEditor()).showTooltip(e.getMouseEvent(), tooltip);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void updateModel(InlayData newModel) {
         updateStateTree(newModel.getTree(), model.getTree(), (byte) 0, (byte) 0);
         this.model = newModel;
@@ -162,10 +155,7 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
         onStateUpdated.run();
     }
 
-    private <T> void updateStateTree(TinyTree<T> treeToUpdate,
-                                     TinyTree<T> fromTree,
-                                     byte updateIndex,
-                                     byte fromIndex) {
+    private <T> void updateStateTree(TinyTree<T> treeToUpdate, TinyTree<T> fromTree, byte updateIndex, byte fromIndex) {
         byte tag = treeToUpdate.getBytePayload(updateIndex);
         byte fromTag = fromTree.getBytePayload(fromIndex);
 
@@ -182,21 +172,27 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
             (fromChild, updateChild) -> {
                 updateStateTree(treeToUpdate, fromTree, updateChild, fromChild);
                 return true;
-            });
+            }
+        );
     }
 
+    @RequiredUIAccess
     public void toggleTreeState(byte parentIndexToSwitch) {
         TinyTree<?> tree = model.getTree();
         byte payload = tree.getBytePayload(parentIndexToSwitch);
         if (payload == InlayTags.COLLAPSIBLE_LIST_EXPLICITLY_COLLAPSED_TAG ||
             payload == InlayTags.COLLAPSIBLE_LIST_IMPLICITLY_COLLAPSED_TAG) {
-            tree.setBytePayload(InlayTags.COLLAPSIBLE_LIST_EXPLICITLY_EXPANDED_TAG,
-                parentIndexToSwitch);
+            tree.setBytePayload(
+                InlayTags.COLLAPSIBLE_LIST_EXPLICITLY_EXPANDED_TAG,
+                parentIndexToSwitch
+            );
         }
         else if (payload == InlayTags.COLLAPSIBLE_LIST_EXPLICITLY_EXPANDED_TAG ||
             payload == InlayTags.COLLAPSIBLE_LIST_IMPLICITLY_EXPANDED_TAG) {
-            tree.setBytePayload(InlayTags.COLLAPSIBLE_LIST_EXPLICITLY_COLLAPSED_TAG,
-                parentIndexToSwitch);
+            tree.setBytePayload(
+                InlayTags.COLLAPSIBLE_LIST_EXPLICITLY_COLLAPSED_TAG,
+                parentIndexToSwitch
+            );
         }
         else {
             throw new IllegalStateException("Unexpected payload: " + payload);
@@ -205,19 +201,23 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
     }
 
     @Override
+    @RequiredUIAccess
     public int calcWidthInPixels(Inlay<?> inlay, InlayTextMetricsStorage storage) {
         return getBoxWidth(storage, false);
     }
 
     @Override
-    public void paint(Inlay<?> inlay,
-                      Graphics2D g,
-                      Rectangle2D targetRegion,
-                      TextAttributes textAttributes,
-                      InlayTextMetricsStorage storage) {
+    @RequiredUIAccess
+    public void paint(
+        Inlay<?> inlay,
+        Graphics2D g,
+        Rectangle2D targetRegion,
+        TextAttributes textAttributes,
+        InlayTextMetricsStorage storage
+    ) {
         RealEditor editor = (RealEditor) inlay.getEditor();
         InlayTextMetrics metrics = getMetrics(storage);
-        int gap = ((int) targetRegion.getHeight() < metrics.getLineHeight() + 2) ? 1 : 2;
+        int gap = ((int) targetRegion.getHeight() < metrics.lineHeight() + 2) ? 1 : 2;
         TextAttributes attrs = editor.getColorsScheme().getAttributes(getColorKey());
 
         try (var ignored = GraphicsUtil.withTranslated(g, targetRegion.getX(), targetRegion.getY())) {
@@ -288,10 +288,9 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
         return segments;
     }
 
+    @RequiredUIAccess
     private InlayTextMetrics getMetrics(InlayTextMetricsStorage storage) {
-        return storage.getFontMetrics(
-            model.getHintFormat().getFontSize() == HintFontSize.ABitSmallerThanInEditor
-        );
+        return storage.getFontMetrics(model.getHintFormat().getFontSize() == HintFontSize.ABitSmallerThanInEditor);
     }
 
     @TestOnly
@@ -300,8 +299,8 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
     }
 
     @Override
-    public InlayMouseArea getMouseArea(Point pointInsideInlay,
-                                       InlayTextMetricsStorage storage) {
+    @RequiredUIAccess
+    public InlayMouseArea getMouseArea(Point pointInsideInlay, InlayTextMetricsStorage storage) {
         InlayPresentationEntry entry = findEntryByPoint(storage, pointInsideInlay);
         return entry != null ? entry.getClickArea() : null;
     }

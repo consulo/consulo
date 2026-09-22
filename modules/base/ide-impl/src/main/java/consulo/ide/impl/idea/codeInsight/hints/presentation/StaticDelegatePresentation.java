@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.PresentationListener;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -16,16 +17,19 @@ public abstract class StaticDelegatePresentation implements InlayPresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public int getWidth() {
         return presentation.getWidth();
     }
 
     @Override
+    @RequiredUIAccess
     public int getHeight() {
         return presentation.getHeight();
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         presentation.paint(g, attributes);
     }
@@ -51,11 +55,10 @@ public abstract class StaticDelegatePresentation implements InlayPresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean updateState(InlayPresentation previousPresentation) {
-        if (!(previousPresentation instanceof StaticDelegatePresentation)) {
-            return true;
-        }
-        return presentation.updateState(((StaticDelegatePresentation) previousPresentation).presentation);
+        return !(previousPresentation instanceof StaticDelegatePresentation staticDelegatePresentation)
+            || presentation.updateState(staticDelegatePresentation.presentation);
     }
 
     @Override
@@ -64,21 +67,25 @@ public abstract class StaticDelegatePresentation implements InlayPresentation {
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent event, Point translated) {
         presentation.mouseClicked(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mousePressed(MouseEvent event, Point translated) {
         presentation.mousePressed(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         presentation.mouseMoved(event, translated);
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         presentation.mouseExited();
     }

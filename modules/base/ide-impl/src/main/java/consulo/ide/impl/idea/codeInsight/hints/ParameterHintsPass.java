@@ -23,6 +23,7 @@ import consulo.language.editor.inlay.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -42,10 +43,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
     private final HintInfoFilter myHintInfoFilter;
     private final boolean myForceImmediateUpdate;
 
-    public ParameterHintsPass(PsiElement element,
-                              Editor editor,
-                              HintInfoFilter hintsFilter,
-                              boolean forceImmediateUpdate) {
+    public ParameterHintsPass(PsiElement element, Editor editor, HintInfoFilter hintsFilter, boolean forceImmediateUpdate) {
         super(editor, element.getContainingFile(), true);
         myRootElement = element;
         myHintInfoFilter = hintsFilter;
@@ -58,6 +56,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
      * <p>
      * Return promise in EDT.
      */
+    @RequiredReadAction
     public static CancellablePromise<?> asyncUpdate(PsiElement element, Editor editor) {
         MethodInfoExcludeListFilter filter = MethodInfoExcludeListFilter.forLanguage(element.getLanguage());
         AsyncPromise<Object> promise = new AsyncPromise<>();
@@ -75,9 +74,11 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
     }
 
     @RequiredReadAction
-    private static ParameterHintsPass collectInlaysInPass(Editor editor,
-                                                          MethodInfoExcludeListFilter filter,
-                                                          SmartPsiElementPointer<PsiElement> elementPtr) {
+    private static ParameterHintsPass collectInlaysInPass(
+        Editor editor,
+        MethodInfoExcludeListFilter filter,
+        SmartPsiElementPointer<PsiElement> elementPtr
+    ) {
         PsiElement element = elementPtr.getElement();
         if (element == null || editor.isDisposed()) {
             return null;
@@ -152,16 +153,20 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
         });
     }
 
-    private static HintWidthAdjustment convertHintPresentation(HintWidthAdjustment widthAdjustment,
-                                                               InlayParameterHintsProvider provider) {
+    private static HintWidthAdjustment convertHintPresentation(
+        HintWidthAdjustment widthAdjustment,
+        InlayParameterHintsProvider provider
+    ) {
         if (widthAdjustment != null) {
             String hintText = widthAdjustment.getHintTextToMatch();
             if (hintText != null) {
                 String adjusterHintPresentation = provider.getInlayPresentation(hintText);
                 if (!hintText.equals(adjusterHintPresentation)) {
-                    widthAdjustment = new HintWidthAdjustment(widthAdjustment.getEditorTextToMatch(),
+                    widthAdjustment = new HintWidthAdjustment(
+                        widthAdjustment.getEditorTextToMatch(),
                         adjusterHintPresentation,
-                        widthAdjustment.getAdjustmentPosition());
+                        widthAdjustment.getAdjustmentPosition()
+                    );
                 }
             }
         }
@@ -169,11 +174,18 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
     }
 
     @Override
+    @RequiredUIAccess
     public void doApplyInformationToEditor() {
         EditorScrollingPositionKeeper.perform(myEditor, false, () -> {
             ParameterHintsPresentationManager manager = ParameterHintsPresentationManager.getInstance();
             List<Inlay<?>> hints = hintsInRootElementArea(manager);
-            ParameterHintsUpdater updater = new ParameterHintsUpdater(myEditor, hints, myHints, myShowOnlyIfExistedBeforeHints, myForceImmediateUpdate);
+            ParameterHintsUpdater updater = new ParameterHintsUpdater(
+                myEditor,
+                hints,
+                myHints,
+                myShowOnlyIfExistedBeforeHints,
+                myForceImmediateUpdate
+            );
             updater.update();
         });
 

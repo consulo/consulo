@@ -9,16 +9,6 @@ import java.util.Objects;
 public interface HashingStrategy<T> {
     final class CanonicalHashingStrategy<T> implements HashingStrategy<T> {
         static final HashingStrategy<?> INSTANCE = new CanonicalHashingStrategy<>();
-
-        @Override
-        public int hashCode(@Nullable T value) {
-            return Objects.hashCode(value);
-        }
-
-        @Override
-        public boolean equals(@Nullable T o1, @Nullable T o2) {
-            return Objects.equals(o1, o2);
-        }
     }
 
     final class IdentityHashingStrategy<T> implements HashingStrategy<T> {

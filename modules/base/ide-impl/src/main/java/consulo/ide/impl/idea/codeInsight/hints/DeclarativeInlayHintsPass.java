@@ -58,18 +58,19 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
     }
 
     @Override
+    @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
         List<CollectionInfo<DeclarativeInlayHintsCollector.OwnBypassCollector>> ownCollectors = new ArrayList<>();
         List<CollectionInfo<DeclarativeInlayHintsCollector.SharedBypassCollector>> sharedCollectors = new ArrayList<>();
         List<DeclarativeInlayTreeSinkImpl> sinks = new ArrayList<>();
         for (InlayProviderPassInfo providerInfo : providerInfos) {
-            DeclarativeInlayHintsProvider provider = providerInfo.getProvider();
+            DeclarativeInlayHintsProvider provider = providerInfo.provider();
             if (DumbService.isDumb(myProject) && !(provider instanceof DumbAware)) {
                 continue;
             }
             DeclarativeInlayTreeSinkImpl sink = new DeclarativeInlayTreeSinkImpl(
-                providerInfo.getProviderId(),
-                providerInfo.getOptionToEnabled(),
+                providerInfo.providerId(),
+                providerInfo.optionToEnabled(),
                 isPreview,
                 isProviderDisabled,
                 provider.getClass(),
@@ -100,6 +101,7 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
     }
 
     @Override
+    @RequiredUIAccess
     public void doApplyInformationToEditor() {
         EditorScrollingPositionKeeper positionKeeper = new EditorScrollingPositionKeeper(editor);
         positionKeeper.savePosition();
@@ -165,10 +167,7 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
     public static final String passSourceId = DeclarativeInlayHintsPass.class.getName();
 
     @RequiredUIAccess
-    public static void applyInlayData(Editor editor,
-                                      Project project,
-                                      PreprocessedInlayData preprocessedInlayData,
-                                      String sourceId) {
+    public static void applyInlayData(Editor editor, Project project, PreprocessedInlayData preprocessedInlayData, String sourceId) {
         var inlayModel = editor.getInlayModel();
         Document document = editor.getDocument();
 
@@ -176,14 +175,14 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
             groupRelevantExistingInlays(
                 sourceId,
                 inlayModel.getInlineElementsInRange(0, document.getTextLength(), DeclarativeInlayRenderer.class),
-                inlay -> inlay.getOffset()
+                Inlay::getOffset
             );
 
         Int2ObjectOpenHashMap<SmartList<Inlay<? extends DeclarativeInlayRenderer>>> offsetToExistingEolInlays =
             groupRelevantExistingInlays(
                 sourceId,
                 inlayModel.getAfterLineEndElementsInRange(0, document.getTextLength(), DeclarativeInlayRenderer.class),
-                inlay -> inlay.getOffset()
+                Inlay::getOffset
             );
 
         var offsetToExistingBlockInlays =

@@ -7,14 +7,14 @@ import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.ui.annotation.RequiredUIAccess;
-import org.jspecify.annotations.Nullable;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -36,9 +36,7 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
         if (clickArea != null && project != null) {
             InlayActionData actionData = clickArea.getActionData();
             if (controlDown) {
-                Application.get()
-                    .getService(DeclarativeInlayActionService.class)
-                    .invokeActionHandler(actionData, e);
+                Application.get().getService(DeclarativeInlayActionService.class).invokeActionHandler(actionData, e);
             }
         }
         if (parentIndexToSwitch != (byte) -1) {
@@ -63,7 +61,7 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
             if (foreground != null) {
                 int width = computeWidth(metrics);
                 int height = computeHeight(metrics);
-                Font font = metrics.getFont();
+                Font font = metrics.font();
                 graphics.setFont(font);
                 graphics.setRenderingHint(
                     RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -72,7 +70,7 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
                 graphics.setColor(TargetAWT.to(foreground));
                 int baseline = Math.max(
                     editor.getAscent(),
-                    (rectHeight + metrics.getAscent() - metrics.getDescent()) / 2
+                    (rectHeight + metrics.ascent() - metrics.descent()) / 2
                 ) - 1;
                 graphics.drawString(text, 0, baseline);
                 ColorValue effectColor = attributes.getEffectColor();
@@ -98,12 +96,12 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
 
     @Override
     public int computeWidth(InlayTextMetrics metrics) {
-        return metrics.getStringWidth(text);
+        return metrics.stringWidth(text);
     }
 
     @Override
     public int computeHeight(InlayTextMetrics metrics) {
-        return metrics.getFontHeight();
+        return metrics.fontHeight();
     }
 
     @Override
@@ -119,7 +117,6 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
 
     @Override
     public String toString() {
-        return "TextInlayPresentationEntry(text='" + text +
-            "', parentIndexToSwitch=" + parentIndexToSwitch + ")";
+        return "TextInlayPresentationEntry(text='" + text + "', parentIndexToSwitch=" + parentIndexToSwitch + ")";
     }
 }

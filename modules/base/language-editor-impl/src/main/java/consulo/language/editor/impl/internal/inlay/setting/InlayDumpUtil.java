@@ -35,8 +35,7 @@ public final class InlayDumpUtil {
     }
 
     public static String dumpInlays(String sourceText, Editor editor) {
-        return dumpInlays(sourceText, editor, null,
-            (renderer, inlay) -> renderer.toString(), 0, false);
+        return dumpInlays(sourceText, editor, null, (renderer, inlay) -> renderer.toString(), 0, false);
     }
 
     public static String dumpInlays(
@@ -65,17 +64,14 @@ public final class InlayDumpUtil {
 
         List<InlayData> inlayData = new ArrayList<>();
         for (Inlay<?> inlay : inlineElements) {
-            inlayData.add(new InlayData(inlay.getOffset(), InlayDumpPlacement.Inline,
-                renderer.apply(inlay.getRenderer(), inlay)));
+            inlayData.add(new InlayData(inlay.getOffset(), InlayDumpPlacement.Inline, renderer.apply(inlay.getRenderer(), inlay)));
         }
         for (Inlay<?> inlay : afterLineElements) {
-            inlayData.add(new InlayData(inlay.getOffset(), InlayDumpPlacement.Inline,
-                renderer.apply(inlay.getRenderer(), inlay)));
+            inlayData.add(new InlayData(inlay.getOffset(), InlayDumpPlacement.Inline, renderer.apply(inlay.getRenderer(), inlay)));
         }
         for (Inlay<?> inlay : blockElements) {
             int anchor = document.getLineStartOffset(document.getLineNumber(inlay.getOffset()));
-            inlayData.add(new InlayData(anchor, InlayDumpPlacement.BlockAbove,
-                renderer.apply(inlay.getRenderer(), inlay)));
+            inlayData.add(new InlayData(anchor, InlayDumpPlacement.BlockAbove, renderer.apply(inlay.getRenderer(), inlay)));
         }
         inlayData.sort(Comparator.comparingInt(d -> d.anchorOffset));
 

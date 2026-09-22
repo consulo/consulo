@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -13,14 +14,11 @@ public class ChangeOnHoverPresentation extends StatefulPresentation<ChangeOnHove
     private final Supplier<InlayPresentation> hover;
     private final Predicate<MouseEvent> onHoverPredicate;
 
-    public ChangeOnHoverPresentation(InlayPresentation noHover,
-                                     Supplier<InlayPresentation> hover) {
+    public ChangeOnHoverPresentation(InlayPresentation noHover, Supplier<InlayPresentation> hover) {
         this(noHover, hover, mouseEvent -> true);
     }
 
-    public ChangeOnHoverPresentation(InlayPresentation noHover,
-                                     Supplier<InlayPresentation> hover,
-                                     Predicate<MouseEvent> onHoverPredicate) {
+    public ChangeOnHoverPresentation(InlayPresentation noHover, Supplier<InlayPresentation> hover, Predicate<MouseEvent> onHoverPredicate) {
         super(new State(false), STATE_MARK);
         this.noHover = noHover;
         this.hover = hover;
@@ -38,6 +36,7 @@ public class ChangeOnHoverPresentation extends StatefulPresentation<ChangeOnHove
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(MouseEvent event, Point translated) {
         super.mouseMoved(event, translated);
         if (!onHoverPredicate.test(event)) {
@@ -50,6 +49,7 @@ public class ChangeOnHoverPresentation extends StatefulPresentation<ChangeOnHove
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseExited() {
         if (getState().isInside()) {
             setState(new State(false));

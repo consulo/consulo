@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.colorScheme.TextAttributes;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -16,15 +17,14 @@ public class RoundWithBackgroundBorderedPresentation extends StaticDelegatePrese
         this(presentation, null, 1);
     }
 
-    public RoundWithBackgroundBorderedPresentation(RoundWithBackgroundPresentation presentation,
-                                                   ColorValue borderColor,
-                                                   int borderWidth) {
+    public RoundWithBackgroundBorderedPresentation(RoundWithBackgroundPresentation presentation, ColorValue borderColor, int borderWidth) {
         super(presentation);
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;
     }
 
     @Override
+    @RequiredUIAccess
     public void paint(Graphics2D g, TextAttributes attributes) {
         RoundWithBackgroundPresentation roundWithBackground = (RoundWithBackgroundPresentation) presentation;
         roundWithBackground.paint(g, attributes);

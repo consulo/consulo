@@ -29,9 +29,8 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class ImplementationViewComponentFactoryImpl implements ImplementationViewComponentFactory {
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public ImplementationViewComponent create(PsiElement[] elements, int index) {
         return new ImplementationViewComponentImpl(elements, index);
     }

@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.codeInsight.hints.settings;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -21,6 +21,7 @@ import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.HtmlLabel;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBSplitter;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -58,9 +59,10 @@ public class InlaySettingsPanel extends JPanel {
         List<InlayProviderSettingsModel> models = InlaySettingsProvider.getExtensions()
             .stream()
             .flatMap(provider -> provider.getSupportedLanguages(project).stream()
-            .flatMap(lang -> provider.createModels(project, lang).stream()))
+                .flatMap(lang -> provider.createModels(project, lang).stream()))
             .collect(Collectors.toList());
-        this.groups = models.stream().collect(Collectors.groupingBy(InlayProviderSettingsModel::getGroup, TreeMap::new, Collectors.toList()));
+        this.groups = models.stream()
+            .collect(Collectors.groupingBy(InlayProviderSettingsModel::getGroup, TreeMap::new, Collectors.toList()));
         Map<InlayGroup, InlayGroupSettingProvider> globalSettings = new HashMap<>();
         for (InlayGroup group : groups.keySet()) {
             globalSettings.put(group, InlayGroupSettingProvider.findForGroup(group));
@@ -114,12 +116,19 @@ public class InlaySettingsPanel extends JPanel {
         this.tree = new CheckboxTree(new InlaySettingsTreeRenderer(), root, new CheckboxTree.CheckPolicy(true, true, true, false)) {
             @Override
             protected void installSpeedSearch() {
-                TreeSpeedSearch.installOn(this, true,
-                    node -> getNameImpl((DefaultMutableTreeNode) node.getLastPathComponent(),
-                        (DefaultMutableTreeNode) node.getParentPath().getLastPathComponent()).get());
+                TreeSpeedSearch.installOn(
+                    this,
+                    true,
+                    node -> getNameImpl(
+                        (DefaultMutableTreeNode) node.getLastPathComponent(),
+                        (DefaultMutableTreeNode) node.getParentPath().getLastPathComponent()
+                    ).get()
+                );
             }
         };
-        this.tree.addTreeSelectionListener(e -> updateRightPanel((DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent()));
+        this.tree.addTreeSelectionListener(
+            e -> updateRightPanel((DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent())
+        );
         if (nodeToSelect == null) {
             TreeUtil.expand(tree, 1);
         }
@@ -129,7 +138,11 @@ public class InlaySettingsPanel extends JPanel {
 
         JBSplitter splitter = new JBSplitter(false, "inlay.settings.proportion.key", 0.45f);
         splitter.setHonorComponentsMinimumSize(false);
-        splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(tree, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(
+            tree,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        ));
         splitter.setSecondComponent(rightPanel);
         add(splitter, BorderLayout.CENTER);
     }
@@ -147,30 +160,30 @@ public class InlaySettingsPanel extends JPanel {
 
     protected LocalizeValue getNameImpl(DefaultMutableTreeNode node, DefaultMutableTreeNode parent) {
         Object obj = node.getUserObject();
-        if (obj instanceof InlayGroupSettingProvider) {
-            return ((InlayGroupSettingProvider) obj).getGroup().title();
+        if (obj instanceof InlayGroupSettingProvider gsp) {
+            return gsp.getGroup().title();
         }
-        if (obj instanceof InlayGroup) {
-            return ((InlayGroup) obj).title();
+        if (obj instanceof InlayGroup g) {
+            return g.title();
         }
-        if (obj instanceof Language) {
-            return ((Language) obj).getDisplayName();
+        if (obj instanceof Language l) {
+            return l.getDisplayName();
         }
-        if (obj instanceof InlayProviderSettingsModel) {
-            return (parent.getUserObject() instanceof InlayGroup)
-                ? ((InlayProviderSettingsModel) obj).getLanguage().getDisplayName()
-                : ((InlayProviderSettingsModel) obj).getName();
+        if (obj instanceof InlayProviderSettingsModel sm) {
+            return parent.getUserObject() instanceof InlayGroup ? sm.getLanguage().getDisplayName() : sm.getName();
         }
-        if (obj instanceof ImmediateConfigurable.Case) {
-            return ((ImmediateConfigurable.Case) obj).getName();
+        if (obj instanceof ImmediateConfigurable.Case c) {
+            return c.name();
         }
         return LocalizeValue.empty();
     }
 
-    private DefaultMutableTreeNode addModelNode(InlayProviderSettingsModel model,
-                                                DefaultMutableTreeNode parent,
-                                                String lastId,
-                                                DefaultMutableTreeNode toSelect) {
+    private DefaultMutableTreeNode addModelNode(
+        InlayProviderSettingsModel model,
+        DefaultMutableTreeNode parent,
+        String lastId,
+        DefaultMutableTreeNode toSelect
+    ) {
         model.setOnChangeListener(() -> {
             if (currentEditor != null) {
                 ImmediateConfigurable.Case targetCase = null;
@@ -215,9 +228,7 @@ public class InlaySettingsPanel extends JPanel {
         private final Supplier<Editor> editorProvider;
         private final InlayProviderSettingsModel model;
 
-        CaseCheckedNode(ImmediateConfigurable.Case caze,
-                        Supplier<Editor> editorProvider,
-                        InlayProviderSettingsModel model) {
+        CaseCheckedNode(ImmediateConfigurable.Case caze, Supplier<Editor> editorProvider, InlayProviderSettingsModel model) {
             super(caze);
             this.caze = caze;
             this.editorProvider = editorProvider;
@@ -234,23 +245,23 @@ public class InlaySettingsPanel extends JPanel {
         }
     }
 
+    @RequiredUIAccess
     private void updateRightPanel(DefaultMutableTreeNode node) {
         rightPanel.removeAll();
         currentEditor = null;
         Object obj = node.getUserObject();
-        if (obj instanceof InlayGroup) {
-            addDescription(((InlayGroup) obj).description().get());
+        if (obj instanceof InlayGroup g) {
+            addDescription(g.description().get());
         }
-        else if (obj instanceof InlayGroupSettingProvider) {
-            addDescription(((InlayGroupSettingProvider) obj).getGroup().description().get());
-            rightPanel.add(((InlayGroupSettingProvider) obj).getComponent());
+        else if (obj instanceof InlayGroupSettingProvider gsp) {
+            addDescription(gsp.getGroup().description().get());
+            rightPanel.add(gsp.getComponent());
         }
         else if (obj instanceof Language) {
             configureLanguageNode(node);
             configurePreview((InlayProviderSettingsModel) ((CheckedTreeNode) node.getFirstChild()).getUserObject(), node);
         }
-        else if (obj instanceof InlayProviderSettingsModel) {
-            InlayProviderSettingsModel m = (InlayProviderSettingsModel) obj;
+        else if (obj instanceof InlayProviderSettingsModel m) {
             if (m.isMergedNode() && m.getDescription() == null) {
                 configureLanguageNode(node);
             }
@@ -268,8 +279,7 @@ public class InlaySettingsPanel extends JPanel {
                 configurePreview(m, node);
             }
         }
-        else if (obj instanceof ImmediateConfigurable.Case) {
-            ImmediateConfigurable.Case c = (ImmediateConfigurable.Case) obj;
+        else if (obj instanceof ImmediateConfigurable.Case c) {
             InlayProviderSettingsModel m = (InlayProviderSettingsModel) ((CheckedTreeNode) node.getParent()).getUserObject();
             addDescription(m.getCaseDescription(c));
             addPreview(m.getCasePreview(c), m, c, node);
@@ -279,6 +289,7 @@ public class InlaySettingsPanel extends JPanel {
         rightPanel.repaint();
     }
 
+    @RequiredUIAccess
     private void configurePreview(InlayProviderSettingsModel model, DefaultMutableTreeNode node) {
         String previewText = model.getCasePreview(null) != null ? model.getCasePreview(null) : model.getPreviewText();
         if (previewText != null) {
@@ -300,38 +311,44 @@ public class InlaySettingsPanel extends JPanel {
         addDescription(desc);
     }
 
-    private void addPreview(String text,
-                            InlayProviderSettingsModel model,
-                            ImmediateConfigurable.Case caze,
-                            DefaultMutableTreeNode node) {
+    @RequiredUIAccess
+    private void addPreview(String text, InlayProviderSettingsModel model, ImmediateConfigurable.Case caze, DefaultMutableTreeNode node) {
         if (text == null) {
             return;
         }
-        EditorTextField editorField = InlaySettingUtil.createEditor(model.getCasePreviewLanguage(null) != null
-            ? model.getCasePreviewLanguage(null) : model.getLanguage(), project, editor -> {
-            currentEditor = editor;
-            PREVIEW_KEY.set(editor, node);
-            CASE_KEY.set(editor, caze);
+        EditorTextField editorField = InlaySettingUtil.createEditor(
+            model.getCasePreviewLanguage(null) != null ? model.getCasePreviewLanguage(null) : model.getLanguage(),
+            project,
+            editor -> {
+                currentEditor = editor;
+                PREVIEW_KEY.set(editor, node);
+                CASE_KEY.set(editor, caze);
 
-            editor.getSettings().setLineNumbersShown(false);
-            editor.getSettings().setCaretRowShown(false);
-            editor.getSettings().setRightMarginShown(false);
+                editor.getSettings().setLineNumbersShown(false);
+                editor.getSettings().setCaretRowShown(false);
+                editor.getSettings().setRightMarginShown(false);
 
-            updateHints(editor, model, caze);
-        });
+                updateHints(editor, model, caze);
+            }
+        );
         editorField.setText(text);
         rightPanel.add(ScrollPaneFactory.createScrollPane(editorField, true), "growx");
     }
 
-    private void updateHints(Editor editor,
-                             InlayProviderSettingsModel model,
-                             ImmediateConfigurable.Case caze) {
+    private void updateHints(Editor editor, InlayProviderSettingsModel model, ImmediateConfigurable.Case caze) {
         ReadAction.nonBlocking(() -> {
-                var file = model.createFile(project, getFileTypeForPreview(model), editor.getDocument(), caze != null ? caze.getId() : null);
+                var file = model.createFile(
+                    project,
+                    getFileTypeForPreview(model),
+                    editor.getDocument(),
+                    caze != null ? caze.id() : null
+                );
                 return model.collectData(editor, file);
             })
-            .finishOnUiThread(application -> application.getModalityStateForComponent(this), continuation ->
-                ApplicationManager.getApplication().runWriteAction(continuation))
+            .finishOnUiThread(
+                application -> application.getModalityStateForComponent(this),
+                continuation -> Application.get().runWriteAction(continuation)
+            )
             .expireWhen(editor::isDisposed)
             .inSmartMode(project)
             .submitDefault();
@@ -345,14 +362,12 @@ public class InlaySettingsPanel extends JPanel {
 
     private String getProviderId(DefaultMutableTreeNode node) {
         Object obj = node.getUserObject();
-        if (obj instanceof InlayProviderSettingsModel) {
-            InlayProviderSettingsModel m = (InlayProviderSettingsModel) obj;
+        if (obj instanceof InlayProviderSettingsModel m) {
             return m.getLanguage().getID() + "." + m.getId();
         }
-        if (obj instanceof ImmediateConfigurable.Case) {
-            ImmediateConfigurable.Case c = (ImmediateConfigurable.Case) obj;
+        if (obj instanceof ImmediateConfigurable.Case c) {
             InlayProviderSettingsModel m = (InlayProviderSettingsModel) ((CheckedTreeNode) node.getParent()).getUserObject();
-            return m.getLanguage().getID() + "." + m.getId() + "." + c.getId();
+            return m.getLanguage().getID() + "." + m.getId() + "." + c.id();
         }
         return "";
     }
@@ -363,20 +378,19 @@ public class InlaySettingsPanel extends JPanel {
 
     private void reset(CheckedTreeNode node, InlayHintsSettings settings) {
         Object obj = node.getUserObject();
-        if (obj instanceof InlayGroupSettingProvider) {
-            ((InlayGroupSettingProvider) obj).reset();
-            node.setChecked(((InlayGroupSettingProvider) obj).isEnabled());
+        if (obj instanceof InlayGroupSettingProvider gsp) {
+            gsp.reset();
+            node.setChecked(gsp.isEnabled());
         }
-        else if (obj instanceof InlayProviderSettingsModel) {
-            InlayProviderSettingsModel m = (InlayProviderSettingsModel) obj;
+        else if (obj instanceof InlayProviderSettingsModel m) {
             m.reset();
             node.setChecked(isModelEnabled(m, settings));
         }
-        else if (obj instanceof ImmediateConfigurable.Case) {
-            node.setChecked(isCaseEnabled((ImmediateConfigurable.Case) obj, (CheckedTreeNode) node.getParent(), settings));
+        else if (obj instanceof ImmediateConfigurable.Case c) {
+            node.setChecked(isCaseEnabled(c, (CheckedTreeNode) node.getParent(), settings));
         }
-        else if (obj instanceof Language) {
-            node.setChecked(settings.hintsEnabled((Language) obj));
+        else if (obj instanceof Language l) {
+            node.setChecked(settings.hintsEnabled(l));
         }
         for (Enumeration<?> e = node.children(); e.hasMoreElements(); ) {
             reset((CheckedTreeNode) e.nextElement(), settings);
@@ -417,27 +431,25 @@ public class InlaySettingsPanel extends JPanel {
             apply((CheckedTreeNode) e.nextElement(), settings);
         }
         Object obj = node.getUserObject();
-        if (obj instanceof InlayGroupSettingProvider) {
-            ((InlayGroupSettingProvider) obj).setEnabled(node.isChecked());
-            ((InlayGroupSettingProvider) obj).apply();
+        if (obj instanceof InlayGroupSettingProvider gsp) {
+            gsp.setEnabled(node.isChecked());
+            gsp.apply();
         }
-        else if (obj instanceof InlayProviderSettingsModel) {
-            InlayProviderSettingsModel m = (InlayProviderSettingsModel) obj;
+        else if (obj instanceof InlayProviderSettingsModel m) {
             m.setEnabled(node.isChecked());
             m.apply();
             if (m.isMergedNode()) {
                 settings.setHintsEnabledForLanguage(m.getLanguage(), true);
             }
         }
-        else if (obj instanceof ImmediateConfigurable.Case) {
-            ImmediateConfigurable.Case c = (ImmediateConfigurable.Case) obj;
+        else if (obj instanceof ImmediateConfigurable.Case c) {
             c.setValue(node.isChecked());
             if (node.isChecked()) {
                 settings.setEnabledGlobally(true);
             }
         }
-        else if (obj instanceof Language) {
-            settings.setHintsEnabledForLanguage((Language) obj, node.isChecked());
+        else if (obj instanceof Language l) {
+            settings.setHintsEnabledForLanguage(l, node.isChecked());
         }
     }
 
@@ -459,19 +471,19 @@ public class InlaySettingsPanel extends JPanel {
 
     private boolean isModified(CheckedTreeNode node, InlayHintsSettings settings) {
         Object obj = node.getUserObject();
-        if (obj instanceof InlayGroupSettingProvider && ((InlayGroupSettingProvider) obj).isModified()) {
+        if (obj instanceof InlayGroupSettingProvider gsp && gsp.isModified()) {
             return true;
         }
-        if (obj instanceof InlayProviderSettingsModel) {
-            InlayProviderSettingsModel m = (InlayProviderSettingsModel) obj;
+        if (obj instanceof InlayProviderSettingsModel m) {
             if (m.isModified() || node.isChecked() != isModelEnabled(m, settings)) {
                 return true;
             }
         }
-        if (obj instanceof ImmediateConfigurable.Case && node.isChecked() != isCaseEnabled((ImmediateConfigurable.Case) obj, (CheckedTreeNode) node.getParent(), settings)) {
+        if (obj instanceof ImmediateConfigurable.Case c
+            && node.isChecked() != isCaseEnabled(c, (CheckedTreeNode) node.getParent(), settings)) {
             return true;
         }
-        if (obj instanceof Language && settings.hintsEnabled((Language) obj) != node.isChecked()) {
+        if (obj instanceof Language l && settings.hintsEnabled(l) != node.isChecked()) {
             return true;
         }
         for (Enumeration<?> e = node.children(); e.hasMoreElements(); ) {
@@ -487,8 +499,10 @@ public class InlaySettingsPanel extends JPanel {
             return null;
         }
         return () -> {
-            DefaultMutableTreeNode node = TreeUtil.findNode((DefaultMutableTreeNode) tree.getModel().getRoot(),
-                n -> getNameImpl(n, (DefaultMutableTreeNode) n.getParent()).get().toLowerCase().startsWith(option.toLowerCase()));
+            DefaultMutableTreeNode node = TreeUtil.findNode(
+                (DefaultMutableTreeNode) tree.getModel().getRoot(),
+                n -> getNameImpl(n, (DefaultMutableTreeNode) n.getParent()).get().toLowerCase().startsWith(option.toLowerCase())
+            );
             if (node != null) {
                 TreeUtil.selectNode(tree, node);
             }
@@ -497,18 +511,19 @@ public class InlaySettingsPanel extends JPanel {
 
     public void selectModel(Language language, Predicate<InlayProviderSettingsModel> selector) {
         Set<Language> langs = new HashSet<>(LanguageUtil.getBaseLanguages(language).toList());
-        DefaultMutableTreeNode node = TreeUtil.findNode((DefaultMutableTreeNode) tree.getModel().getRoot(),
+        DefaultMutableTreeNode node = TreeUtil.findNode(
+            (DefaultMutableTreeNode) tree.getModel().getRoot(),
             n -> {
                 Object u = n.getUserObject();
                 if (selector == null) {
-                    return u instanceof InlayProviderSettingsModel && langs.contains(((InlayProviderSettingsModel) u).getLanguage());
+                    return u instanceof InlayProviderSettingsModel psm && langs.contains(psm.getLanguage());
                 }
-                else if (u instanceof InlayProviderSettingsModel) {
-                    InlayProviderSettingsModel m = (InlayProviderSettingsModel) u;
+                else if (u instanceof InlayProviderSettingsModel m) {
                     return selector.test(m) && langs.contains(m.getLanguage());
                 }
                 return false;
-            });
+            }
+        );
         if (node != null) {
             TreeUtil.selectNode(tree, node);
         }
@@ -520,18 +535,20 @@ public class InlaySettingsPanel extends JPanel {
         }
 
         @Override
-        public void customizeRenderer(JTree tree,
-                                      Object value,
-                                      boolean selected,
-                                      boolean expanded,
-                                      boolean leaf,
-                                      int row,
-                                      boolean hasFocus) {
+        public void customizeRenderer(
+            JTree tree,
+            Object value,
+            boolean selected,
+            boolean expanded,
+            boolean leaf,
+            int row,
+            boolean hasFocus
+        ) {
             if (!(value instanceof DefaultMutableTreeNode defaultMutableTreeNode)) {
                 return;
             }
 
-            LocalizeValue name = getNameImpl(defaultMutableTreeNode, (DefaultMutableTreeNode) ((DefaultMutableTreeNode) value).getParent());
+            LocalizeValue name = getNameImpl(defaultMutableTreeNode, (DefaultMutableTreeNode) defaultMutableTreeNode.getParent());
             getTextRenderer().append(name);
         }
     }
