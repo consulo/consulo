@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.frame;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
@@ -41,8 +41,8 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author nik
@@ -86,7 +86,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
 
     @Override
     public void processSessionEvent(SessionEvent event, XDebugSession session) {
-        if (ApplicationManager.getApplication().isDispatchThread()) { // mark nodes obsolete asap
+        if (Application.get().isDispatchThread()) { // mark nodes obsolete asap
             getTree().markNodesObsolete();
         }
 
@@ -202,7 +202,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
             }
 
             @Override
-            public boolean equals(Object o) {
+            public boolean equals(@Nullable Object o) {
                 if (this == o) {
                     return true;
                 }
@@ -210,8 +210,8 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
                     return false;
                 }
 
-                Entry entry = (Entry) o;
-                return myNode.equals(entry.myNode);
+                Entry that = (Entry) o;
+                return myNode.equals(that.myNode);
             }
 
             @Override

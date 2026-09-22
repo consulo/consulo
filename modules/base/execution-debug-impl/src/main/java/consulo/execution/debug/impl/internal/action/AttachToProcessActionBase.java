@@ -47,7 +47,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         Key.create("AttachToProcessAction.RECENT_ITEMS_KEY");
     private static final Logger LOG = Logger.getInstance(AttachToProcessActionBase.class);
 
-    
     private final Supplier<? extends List<XAttachDebuggerProvider>> myAttachProvidersSupplier;
     
     private final LocalizeValue myAttachActionsListTitle;
@@ -140,7 +139,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         }.queue();
     }
 
-    
     protected List<? extends AttachItem> getTopLevelItems(ProgressIndicator indicator, Project project) {
         List<AttachItem> attachHostItems = collectAttachHostsItems(project, indicator);
 
@@ -174,7 +172,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         }
     }
 
-    
     public List<AttachItem> collectAttachHostsItems(Project project, ProgressIndicator indicator) {
         List<AttachItem> currentItems = new ArrayList<>();
 
@@ -198,7 +195,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         return currentItems;
     }
 
-    
     private static List<AttachToProcessItem> getRecentItems(
         List<? extends AttachToProcessItem> currentItems,
         XAttachHost host,
@@ -245,7 +241,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         return result;
     }
 
-    
     private static Collection<ProcessInfo> getProcessInfos(XAttachHost host) {
         try {
             return host.getProcessList();
@@ -261,7 +256,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         }
     }
 
-    
     private List<XAttachDebuggerProvider> getProvidersApplicableForHost(XAttachHost host) {
         return ContainerUtil.filter(
             myAttachProvidersSupplier.get(),
@@ -269,16 +263,10 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         );
     }
 
-    
-    public List<AttachToProcessItem> collectAttachProcessItems(
-        Project project,
-        XAttachHost host,
-        ProgressIndicator indicator
-    ) {
+    public List<AttachToProcessItem> collectAttachProcessItems(Project project, XAttachHost host, ProgressIndicator indicator) {
         return doCollectAttachProcessItems(project, host, getProcessInfos(host), indicator, getProvidersApplicableForHost(host));
     }
 
-    
     static List<AttachToProcessItem> doCollectAttachProcessItems(
         Project project,
         XAttachHost host,
@@ -347,7 +335,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         }
     }
 
-    
     public static List<RecentItem> getRecentItems(XAttachHost host, Project project) {
         Map<XAttachHost, LinkedHashSet<RecentItem>> recentItems = project.getUserData(RECENT_ITEMS_KEY);
         return recentItems == null || !recentItems.containsKey(host)
@@ -356,25 +343,16 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
     }
 
     public static class RecentItem {
-        
         private final XAttachHost myHost;
-        
         private final ProcessInfo myProcessInfo;
-        
         private final XAttachPresentationGroup myGroup;
-        
         private final String myDebuggerName;
 
         public RecentItem(XAttachHost host, AttachToProcessItem item) {
             this(host, item.getProcessInfo(), item.getGroup(), item.getSelectedDebugger().getDebuggerDisplayName());
         }
 
-        private RecentItem(
-            XAttachHost host,
-            ProcessInfo info,
-            XAttachPresentationGroup group,
-            String debuggerName
-        ) {
+        private RecentItem(XAttachHost host, ProcessInfo info, XAttachPresentationGroup group, String debuggerName) {
             myHost = host;
             myProcessInfo = info;
             myGroup = group;
@@ -391,36 +369,32 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
             return new RecentItem(host, info, group, debuggerName);
         }
 
-        
         public XAttachHost getHost() {
             return myHost;
         }
 
-        
         public ProcessInfo getProcessInfo() {
             return myProcessInfo;
         }
 
-        
         public XAttachPresentationGroup getGroup() {
             return myGroup;
         }
 
-        
         public String getDebuggerName() {
             return myDebuggerName;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            RecentItem item = (RecentItem) o;
-            return Objects.equals(myProcessInfo.getCommandLine(), item.myProcessInfo.getCommandLine());
+            RecentItem that = (RecentItem) o;
+            return Objects.equals(myProcessInfo.getCommandLine(), that.myProcessInfo.getCommandLine());
         }
 
         @Override
@@ -430,7 +404,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
     }
 
     public static abstract class AttachItem<T> implements Comparable<AttachItem<T>> {
-        
         XAttachPresentationGroup<T> myGroup;
         boolean myIsFirstInGroup;
         
@@ -462,7 +435,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
             myIsFirstInGroup = true;
         }
 
-        
         XAttachPresentationGroup<T> getGroup() {
             return myGroup;
         }
@@ -511,7 +483,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
             return true;
         }
 
-        
         @Override
         public String getText(Project project) {
             return myGroup.getItemDisplayText(project, myInfo, myDataHolder);
@@ -529,7 +500,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
     }
 
     public static class AttachToProcessItem extends AttachItem<ProcessInfo> {
-        
         private final List<XAttachDebugger> myDebuggers;
         private final int mySelectedDebugger;
         
@@ -607,12 +577,10 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
             );
         }
 
-        
         public ProcessInfo getProcessInfo() {
             return myInfo;
         }
 
-        
         public XAttachHost getHost() {
             return myHost;
         }
@@ -635,18 +603,15 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
             return (pid == -1 ? "" : pid + " ") + shortenedText;
         }
 
-        
         public List<XAttachDebugger> getDebuggers() {
             return myDebuggers;
         }
 
         @Override
-        
         public List<AttachToProcessItem> getSubItems() {
             return mySubItems;
         }
 
-        
         public XAttachDebugger getSelectedDebugger() {
             return myDebuggers.get(mySelectedDebugger);
         }
@@ -664,7 +629,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
     }
 
     private static class MyBasePopupStep<T extends AttachItem> extends BaseListPopupStep<T> {
-        
         final Project myProject;
 
         MyBasePopupStep(Project project, LocalizeValue title, List<T> values) {
@@ -709,7 +673,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
             return value.getIcon(myProject);
         }
 
-        
         @Override
         public String getTextFor(AttachItem value) {
             return value.getText(myProject);
@@ -755,11 +718,7 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
         }
 
         @Override
-        public PopupStep onChosen(
-            AttachItem selectedValue,
-            boolean finalChoice,
-            @Nullable InputEvent event
-        ) {
+        public PopupStep onChosen(AttachItem selectedValue, boolean finalChoice, @Nullable InputEvent event) {
             return onChosen(selectedValue, finalChoice);
         }
 
@@ -769,7 +728,6 @@ public abstract class AttachToProcessActionBase extends LegacyAnAction {
                 setDefaultOptionIndex(selectedItem);
             }
 
-            
             @Override
             public String getTextFor(AttachToProcessItem value) {
                 return value.getSelectedDebugger().getDebuggerDisplayName();

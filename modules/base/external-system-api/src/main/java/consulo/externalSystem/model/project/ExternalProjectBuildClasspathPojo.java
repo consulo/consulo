@@ -15,6 +15,8 @@
  */
 package consulo.externalSystem.model.project;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,80 +24,80 @@ import java.util.Map;
 
 /**
  * @author Vladislav.Soroka
- * @since 1/14/14
+ * @since 2014-01-14
  */
 public class ExternalProjectBuildClasspathPojo {
+    /**
+     * Common for all project modules build classpath. E.g. it can be build system SDK libraries, configured at project level.
+     */
+    private List<String> myProjectBuildClasspath;
 
-  /**
-   * Common for all project modules build classpath. E.g. it can be build system SDK libraries, configured at project level.
-   */
-  private List<String> myProjectBuildClasspath;
-  
-  private Map<String, ExternalModuleBuildClasspathPojo> myModulesBuildClasspath;
-  
-  private String myName;
+    private Map<String, ExternalModuleBuildClasspathPojo> myModulesBuildClasspath;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ExternalProjectBuildClasspathPojo() {
-    // Used by IJ serialization
-    this("___DUMMY___", new ArrayList<>(), new HashMap<>());
-  }
+    private String myName;
 
-  public ExternalProjectBuildClasspathPojo(String name, List<String> projectBuildClasspath, Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
-    myName = name;
-    myProjectBuildClasspath = projectBuildClasspath;
-    myModulesBuildClasspath = modulesBuildClasspath;
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public ExternalProjectBuildClasspathPojo() {
+        // Used by IJ serialization
+        this("___DUMMY___", new ArrayList<>(), new HashMap<>());
+    }
 
-  
-  public String getName() {
-    return myName;
-  }
+    public ExternalProjectBuildClasspathPojo(
+        String name,
+        List<String> projectBuildClasspath,
+        Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath
+    ) {
+        myName = name;
+        myProjectBuildClasspath = projectBuildClasspath;
+        myModulesBuildClasspath = modulesBuildClasspath;
+    }
 
-  public void setName(String name) {
-    myName = name;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  
-  public Map<String, ExternalModuleBuildClasspathPojo> getModulesBuildClasspath() {
-    return myModulesBuildClasspath;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  public void setModulesBuildClasspath(Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
-    myModulesBuildClasspath = modulesBuildClasspath;
-  }
+    public Map<String, ExternalModuleBuildClasspathPojo> getModulesBuildClasspath() {
+        return myModulesBuildClasspath;
+    }
 
-  
-  public List<String> getProjectBuildClasspath() {
-    return myProjectBuildClasspath;
-  }
+    public void setModulesBuildClasspath(Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
+        myModulesBuildClasspath = modulesBuildClasspath;
+    }
 
-  public void setProjectBuildClasspath(List<String> projectBuildClasspath) {
-    myProjectBuildClasspath = projectBuildClasspath;
-  }
+    public List<String> getProjectBuildClasspath() {
+        return myProjectBuildClasspath;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myModulesBuildClasspath.hashCode();
-    result = 31 * result + myModulesBuildClasspath.hashCode();
-    return result;
-  }
+    public void setProjectBuildClasspath(List<String> projectBuildClasspath) {
+        myProjectBuildClasspath = projectBuildClasspath;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public int hashCode() {
+        return 31 * myModulesBuildClasspath.hashCode() + myName.hashCode();
+    }
 
-    ExternalProjectBuildClasspathPojo pojo = (ExternalProjectBuildClasspathPojo)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    if (!myModulesBuildClasspath.equals(pojo.myModulesBuildClasspath)) return false;
-    if (!myName.equals(pojo.myName)) return false;
+        ExternalProjectBuildClasspathPojo that = (ExternalProjectBuildClasspathPojo) o;
 
-    return true;
-  }
+        return myModulesBuildClasspath.equals(that.myModulesBuildClasspath)
+            && myName.equals(that.myName);
+    }
 
-  @Override
-  public String toString() {
-    return myName;
-  }
+    @Override
+    public String toString() {
+        return myName;
+    }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.externalSystem.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Serializable;
 
 /**
@@ -24,78 +26,77 @@ import java.io.Serializable;
  * That makes it possible to register custom {@link DataNode} processor per-{@link Key}
  * <p/>
  * Thread-safe.
- * 
+ *
+ * @param <T> data class
  * @author Denis Zhdanov
- * @since 4/12/13 11:49 AM
- * @param <T>  data class
+ * @since 2013-04-12
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Key<T> implements Serializable, Comparable<Key<?>> {
+    private static final long serialVersionUID = 1L;
 
-  private static final long serialVersionUID = 1L;
-  
-  
-  private final String myDataClass;
-  
-  private final int myProcessingWeight;
+    private final String myDataClass;
 
-  /**
-   * Creates new <code>Key</code> object.
-   * 
-   * @param dataClass         class of the payload data which will be associated with the current key
-   * @param processingWeight  there is a possible case that when a {@link DataNode} object has children of more than on type (children
-   *                          with more than one different {@link Key} we might want to process one type of children before another.
-   *                          That's why we need a way to define that processing order. This parameter serves exactly for that -
-   *                          lower value means that key's payload should be processed <b>before</b> payload of the key with a greater
-   *                          value
-   */
-  public Key(String dataClass, int processingWeight) {
-    myDataClass = dataClass;
-    myProcessingWeight = processingWeight;
-  }
+    private final int myProcessingWeight;
 
-  
-  public static <T> Key<T> create(Class<T> dataClass, int processingWeight) {
-    return new Key<T>(dataClass.getName(), processingWeight);
-  }
+    /**
+     * Creates new <code>Key</code> object.
+     *
+     * @param dataClass        class of the payload data which will be associated with the current key
+     * @param processingWeight there is a possible case that when a {@link DataNode} object has children of more than on type (children
+     *                         with more than one different {@link Key} we might want to process one type of children before another.
+     *                         That's why we need a way to define that processing order. This parameter serves exactly for that -
+     *                         lower value means that key's payload should be processed <b>before</b> payload of the key with a greater
+     *                         value
+     */
+    public Key(String dataClass, int processingWeight) {
+        myDataClass = dataClass;
+        myProcessingWeight = processingWeight;
+    }
 
-  /**
-   * There is a possible case that when a {@link DataNode} object has children of more than on type (children with more than
-   * one different {@link Key} we might want to process one type of children before another. That's why we need a way to define
-   * that processing order. This property serves exactly for that - lower value means that key's payload should be processed
-   * <b>before</b> payload of the key with a greater value.
-   * 
-   * @return    processing weight for data associated with the current key
-   */
-  public int getProcessingWeight() {
-    return myProcessingWeight;
-  }
+    public static <T> Key<T> create(Class<T> dataClass, int processingWeight) {
+        return new Key<>(dataClass.getName(), processingWeight);
+    }
 
-  @Override
-  public int hashCode() {
-    return myDataClass.hashCode();
-  }
+    /**
+     * There is a possible case that when a {@link DataNode} object has children of more than on type (children with more than
+     * one different {@link Key} we might want to process one type of children before another. That's why we need a way to define
+     * that processing order. This property serves exactly for that - lower value means that key's payload should be processed
+     * <b>before</b> payload of the key with a greater value.
+     *
+     * @return processing weight for data associated with the current key
+     */
+    public int getProcessingWeight() {
+        return myProcessingWeight;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public int hashCode() {
+        return myDataClass.hashCode();
+    }
 
-    Key key = (Key)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    if (!myDataClass.equals(key.myDataClass)) return false;
+        Key that = (Key) o;
 
-    return true;
-  }
+        return myDataClass.equals(that.myDataClass);
+    }
 
-  @Override
-  public int compareTo(Key<?> that) {
-    return myProcessingWeight - that.myProcessingWeight;
-  }
+    @Override
+    public int compareTo(Key<?> that) {
+        return myProcessingWeight - that.myProcessingWeight;
+    }
 
-  @Override
-  public String toString() {
-    int i = myDataClass.lastIndexOf('.');
-    return i > 0 ? myDataClass.substring(i + 1) : myDataClass;
-  }
+    @Override
+    public String toString() {
+        int i = myDataClass.lastIndexOf('.');
+        return i > 0 ? myDataClass.substring(i + 1) : myDataClass;
+    }
 }

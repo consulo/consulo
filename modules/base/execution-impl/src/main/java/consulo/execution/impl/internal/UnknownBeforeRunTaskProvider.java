@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal;
 
 import consulo.dataContext.DataContext;
@@ -29,11 +28,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.jdom.JDOMUtil;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
-import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
@@ -49,13 +47,11 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         myId = Key.create(mirrorProviderName);
     }
 
-    
     @Override
     public Key<UnknownTask> getId() {
         return myId;
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchRunUnknownTask();
@@ -66,7 +62,6 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         return PlatformIconGroup.actionsHelp();
     }
 
-    
     @Override
     public LocalizeValue getDescription(UnknownTask task) {
         return LocalizeValue.join(
@@ -76,9 +71,8 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         );
     }
 
-    
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, UnknownTask task) {
         return CompletableFuture.failedFuture(new CancellationException());
     }
@@ -100,7 +94,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
     }
 
     public static final class UnknownTask extends BeforeRunTask<UnknownTask> {
-        private Element myConfig;
+        private @Nullable Element myConfig = null;
 
         public UnknownTask(Key<UnknownTask> providerId) {
             super(providerId);
@@ -115,12 +109,11 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         public void writeExternal(Element element) {
             if (myConfig != null) {
                 element.removeContent();
-                List attributes = myConfig.getAttributes();
-                for (Object attribute : attributes) {
-                    element.setAttribute((Attribute) ((Attribute) attribute).clone());
+                for (Attribute attribute : myConfig.getAttributes()) {
+                    element.setAttribute(attribute.clone());
                 }
-                for (Object child : myConfig.getChildren()) {
-                    element.addContent((Element) ((Element) child).clone());
+                for (Element child : myConfig.getChildren()) {
+                    element.addContent(child.clone());
                 }
             }
         }
@@ -131,7 +124,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -144,18 +137,12 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
 
             UnknownTask that = (UnknownTask) o;
 
-            if (!JDOMUtil.areElementsEqual(myConfig, that.myConfig)) {
-                return false;
-            }
-
-            return true;
+            return JDOMUtil.areElementsEqual(myConfig, that.myConfig);
         }
 
         @Override
         public int hashCode() {
-            int result = super.hashCode();
-            result = 31 * result + (myConfig != null ? myConfig.hashCode() : 0);
-            return result;
+            return 31 * super.hashCode() + JDOMUtil.getTreeHash(myConfig, true);
         }
     }
 }

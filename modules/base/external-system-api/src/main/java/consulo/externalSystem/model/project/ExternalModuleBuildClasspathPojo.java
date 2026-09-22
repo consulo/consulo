@@ -15,71 +15,69 @@
  */
 package consulo.externalSystem.model.project;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Vladislav.Soroka
- * @since 1/14/14
+ * @since 2014-01-14
  */
 public class ExternalModuleBuildClasspathPojo {
+    private List<String> myEntries;
 
-  
-  private List<String> myEntries;
-  
-  private String myPath;
+    private String myPath;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ExternalModuleBuildClasspathPojo() {
-    // Used by IJ serialization
-    this("___DUMMY___", new ArrayList<>());
-  }
+    @SuppressWarnings("UnusedDeclaration")
+    public ExternalModuleBuildClasspathPojo() {
+        // Used by IJ serialization
+        this("___DUMMY___", new ArrayList<>());
+    }
 
-  public ExternalModuleBuildClasspathPojo(String path, List<String> entries) {
-    myPath = path;
-    myEntries = entries;
-  }
+    public ExternalModuleBuildClasspathPojo(String path, List<String> entries) {
+        myPath = path;
+        myEntries = entries;
+    }
 
-  
-  public String getPath() {
-    return myPath;
-  }
+    public String getPath() {
+        return myPath;
+    }
 
-  public void setPath(String path) {
-    myPath = path;
-  }
+    public void setPath(String path) {
+        myPath = path;
+    }
 
-  
-  public List<String> getEntries() {
-    return myEntries;
-  }
+    public List<String> getEntries() {
+        return myEntries;
+    }
 
-  public void setEntries(List<String> entries) {
-    myEntries = entries;
-  }
+    public void setEntries(List<String> entries) {
+        myEntries = entries;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myEntries.hashCode();
-    result = 31 * result + myPath.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myEntries.hashCode() + myPath.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    ExternalModuleBuildClasspathPojo pojo = (ExternalModuleBuildClasspathPojo)o;
+        ExternalModuleBuildClasspathPojo that = (ExternalModuleBuildClasspathPojo) o;
 
-    if (!myEntries.equals(pojo.myEntries)) return false;
-    if (!myPath.equals(pojo.myPath)) return false;
+        return myEntries.equals(that.myEntries)
+            && myPath.equals(that.myPath);
+    }
 
-    return true;
-  }
-
-  @Override
-  public String toString() {
-    return myPath;
-  }
+    @Override
+    public String toString() {
+        return myPath;
+    }
 }

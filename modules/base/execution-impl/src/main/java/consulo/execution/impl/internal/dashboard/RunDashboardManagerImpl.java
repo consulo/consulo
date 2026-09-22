@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
-import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -58,15 +57,14 @@ import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.Comparing;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
@@ -214,11 +212,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         });
         connection.subscribe(ExecutionListener.class, new ExecutionListener() {
             @Override
-            public void processStarted(
-                String executorId,
-                ExecutionEnvironment env,
-                ProcessHandler handler
-            ) {
+            public void processStarted(String executorId, ExecutionEnvironment env, ProcessHandler handler) {
                 updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
             }
 
@@ -426,10 +420,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myState.openRunningConfigInTab = value;
     }
 
-    static List<RunDashboardCustomizer> getCustomizers(
-        RunnerAndConfigurationSettings settings,
-        @Nullable RunContentDescriptor descriptor
-    ) {
+    static List<RunDashboardCustomizer> getCustomizers(RunnerAndConfigurationSettings settings, @Nullable RunContentDescriptor descriptor) {
         return Application.get().getExtensionPoint(RunDashboardCustomizer.class)
             .collectFiltered(new SmartList<>(), customizer -> customizer.isApplicable(settings, descriptor));
     }
@@ -759,8 +750,8 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
 
         for (Component component : descriptor.getComponent().getComponents()) {
-            if (component instanceof ActionToolbar) {
-                return ((ActionToolbar)component);
+            if (component instanceof ActionToolbar actionToolbar) {
+                return actionToolbar;
             }
         }
         return null;
@@ -914,7 +905,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -922,15 +913,13 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
                 return false;
             }
 
-            RunDashboardServiceImpl service = (RunDashboardServiceImpl)o;
-            return mySettings.equals(service.mySettings) && Comparing.equal(myContent, service.myContent);
+            RunDashboardServiceImpl that = (RunDashboardServiceImpl) o;
+            return mySettings.equals(that.mySettings) && Objects.equals(myContent, that.myContent);
         }
 
         @Override
         public int hashCode() {
-            int result = mySettings.hashCode();
-            result = 31 * result + (myContent != null ? myContent.hashCode() : 0);
-            return result;
+            return 31 * mySettings.hashCode() + Objects.hashCode(myContent);
         }
     }
 

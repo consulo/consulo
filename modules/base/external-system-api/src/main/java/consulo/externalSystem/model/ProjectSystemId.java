@@ -4,6 +4,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -18,7 +19,6 @@ import java.util.Locale;
  * @since 2012-02-14
  */
 public class ProjectSystemId implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     public static final ProjectSystemId IDE = new ProjectSystemId("IDE", LocalizeValue.localizeTODO("IDE"));
@@ -43,16 +43,11 @@ public class ProjectSystemId implements Serializable {
         this(id, displayName, PlatformIconGroup.actionsHelp());
     }
 
-    public ProjectSystemId(String id,
-                           LocalizeValue displayName,
-                           Image icon) {
+    public ProjectSystemId(String id, LocalizeValue displayName, Image icon) {
         this(id, displayName, icon, PlatformIconGroup.nodesModule());
     }
 
-    public ProjectSystemId(String id,
-                           LocalizeValue displayName,
-                           Image icon,
-                           Image moduleIcon) {
+    public ProjectSystemId(String id, LocalizeValue displayName, Image icon, Image moduleIcon) {
         myId = id;
         myCapitalizedId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
         myDisplayName = displayName;
@@ -99,7 +94,7 @@ public class ProjectSystemId implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -107,9 +102,9 @@ public class ProjectSystemId implements Serializable {
             return false;
         }
 
-        ProjectSystemId owner = (ProjectSystemId) o;
+        ProjectSystemId that = (ProjectSystemId) o;
 
-        return myId.equals(owner.myId);
+        return myId.equals(that.myId);
     }
 
     @Override

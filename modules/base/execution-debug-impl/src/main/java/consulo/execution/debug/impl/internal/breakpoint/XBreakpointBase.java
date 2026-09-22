@@ -39,23 +39,25 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.CommonXmlStrings;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author nik
  */
 @SuppressWarnings("ComparableType")
-public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState> extends UserDataHolderBase implements XBreakpoint<P>, Comparable<Self> {
+public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState>
+    extends UserDataHolderBase implements XBreakpoint<P>, Comparable<Self> {
+
     private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
     private static final String BR_NBSP = "<br>" + CommonXmlStrings.NBSP;
     private final XBreakpointType<Self, P> myType;
@@ -104,13 +106,11 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         myLogExpression = expression != null ? expression.toXExpression() : null;
     }
 
-    
     @Override
     public final Project getProject() {
         return myBreakpointManager.getProject();
     }
 
-    
     @Override
     public XBreakpointManagerImpl getBreakpointManager() {
         return myBreakpointManager;
@@ -207,7 +207,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     @Override
     public void setLogExpression(@Nullable String expression) {
-        if (!Comparing.equal(getLogExpression(), expression)) {
+        if (!Objects.equals(getLogExpression(), expression)) {
             myLogExpression = XExpression.fromText(expression);
             fireBreakpointChanged();
         }
@@ -224,7 +224,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     @Override
     public void setLogExpressionObject(@Nullable XExpression expression) {
-        if (!Comparing.equal(myLogExpression, expression)) {
+        if (!Objects.equals(myLogExpression, expression)) {
             myLogExpression = expression;
             fireBreakpointChanged();
         }
@@ -238,7 +238,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     @Override
     public void setCondition(@Nullable String condition) {
-        if (!Comparing.equal(condition, getCondition())) {
+        if (!Objects.equals(condition, getCondition())) {
             myCondition = XExpression.fromText(condition);
             fireBreakpointChanged();
         }
@@ -255,7 +255,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     @Override
     public void setConditionExpression(@Nullable XExpression condition) {
-        if (!Comparing.equal(condition, myCondition)) {
+        if (!Objects.equals(condition, myCondition)) {
             myCondition = condition;
             fireBreakpointChanged();
         }
@@ -276,7 +276,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    
     public XBreakpointType<Self, P> getType() {
         return myType;
     }
@@ -338,7 +337,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return Collections.emptyList();
     }
 
-    
     public String getDescription() {
         StringBuilder builder = new StringBuilder();
         builder.append(CommonXmlStrings.HTML_START).append(CommonXmlStrings.BODY_START);
@@ -459,7 +457,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return null;
     }
 
-    
     public Image getIcon() {
         if (myIcon == null) {
             updateIcon();
@@ -489,7 +486,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         myCustomizedPresentation = presentation;
     }
 
-    
     public GutterIconRenderer createGutterIconRenderer() {
         return new BreakpointGutterIconRenderer();
     }
@@ -506,7 +502,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     protected class BreakpointGutterIconRenderer extends GutterIconRenderer implements DumbAware {
         @Override
-        
         public Image getIcon() {
             return XBreakpointBase.this.getIcon();
         }
@@ -541,7 +536,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             );
         }
 
-        
         @Override
         public Alignment getAlignment() {
             return BreakpointEditorUtil.isBreakPointsOnLineNumbers() ? Alignment.LINE_NUMBERS : Alignment.RIGHT;
@@ -552,7 +546,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             return null;
         }
 
-        
         @Override
         public LocalizeValue getTooltipValue() {
             return LocalizeValue.localizeTODO(getDescription());
@@ -568,10 +561,10 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer gutterIconRenderer
-                && getBreakpoint() == gutterIconRenderer.getBreakpoint()
-                && Comparing.equal(getIcon(), gutterIconRenderer.getIcon());
+        public boolean equals(@Nullable Object obj) {
+            return obj instanceof XBreakpointBase<?, ?, ?>.BreakpointGutterIconRenderer that
+                && getBreakpoint() == that.getBreakpoint()
+                && Objects.equals(getIcon(), that.getIcon());
         }
 
         @Override

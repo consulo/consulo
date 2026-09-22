@@ -13,128 +13,128 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.externalTool.impl.internal;
 
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
-import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * @author dyoma
  */
 public class FilterInfo implements JDOMExternalizable {
-  private static final String FILTER_NAME = "NAME";
-  private static final String FILTER_DESCRIPTION = "DESCRIPTION";
-  private static final String FILTER_REGEXP = "REGEXP";
+    private static final String FILTER_NAME = "NAME";
+    private static final String FILTER_DESCRIPTION = "DESCRIPTION";
+    private static final String FILTER_REGEXP = "REGEXP";
 
-  private String myName = ExternalToolLocalize.toolsFiltersNameDefault().get();
-  private String myDescription;
-  private String myRegExp;
-  private static final String ELEMENT_OPTION = "option";
-  private static final String ATTRIBUTE_VALUE = "value";
-  private static final String ATTRIBUTE_NAME = "name";
+    private String myName = ExternalToolLocalize.toolsFiltersNameDefault().get();
+    private String myDescription;
+    private String myRegExp;
+    private static final String ELEMENT_OPTION = "option";
+    private static final String ATTRIBUTE_VALUE = "value";
+    private static final String ATTRIBUTE_NAME = "name";
 
-  public FilterInfo() {
-  }
+    public FilterInfo() {
+    }
 
-  public FilterInfo(String regExp, String name, String description) {
-    myRegExp = regExp;
-    myName = name;
-    myDescription = description;
-  }
+    public FilterInfo(String regExp, String name, String description) {
+        myRegExp = regExp;
+        myName = name;
+        myDescription = description;
+    }
 
-  public String getDescription() {
-    return myDescription;
-  }
+    public String getDescription() {
+        return myDescription;
+    }
 
-  public void setDescription(String description) {
-    myDescription = description;
-  }
+    public void setDescription(String description) {
+        myDescription = description;
+    }
 
-  public String getName() {
-    return myName;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  public void setName(String name) {
-    myName = name;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  public String getRegExp() {
-    return myRegExp;
-  }
+    public String getRegExp() {
+        return myRegExp;
+    }
 
-  public void setRegExp(String regExp) {
-    myRegExp = regExp;
-  }
+    public void setRegExp(String regExp) {
+        myRegExp = regExp;
+    }
 
-  public int hashCode() {
-    return Comparing.hashcode(myName) +
-           Comparing.hashcode(myDescription) +
-           Comparing.hashcode(myRegExp);
-  }
+    @Override
+    public int hashCode() {
+        return 31 * (31 * Objects.hashCode(myName) + Objects.hashCode(myDescription)) + Objects.hashCode(myRegExp);
+    }
 
-  public boolean equals(Object object) {
-    if (!(object instanceof FilterInfo)) return false;
-    FilterInfo other = (FilterInfo)object;
-    return Comparing.equal(myName, other.myName) &&
-           Comparing.equal(myDescription, other.myDescription) &&
-           Comparing.equal(myRegExp, other.myRegExp);
-  }
-
-  public FilterInfo createCopy() {
-    return new FilterInfo(myRegExp, myName, myDescription);
-  }
-
-  @Override
-  public void readExternal(Element element) {
-    for (Iterator i2 = element.getChildren(ELEMENT_OPTION).iterator(); i2.hasNext(); ) {
-      Element optionElement = (Element)i2.next();
-      String value = optionElement.getAttributeValue(ATTRIBUTE_VALUE);
-      String name = optionElement.getAttributeValue(ATTRIBUTE_NAME);
-
-      if (FILTER_NAME.equals(name)) {
-        if (value != null) {
-          myName = convertString(value);
+    @Override
+    public boolean equals(@Nullable Object object) {
+        if (object == this) {
+            return true;
         }
-      }
-      if (FILTER_DESCRIPTION.equals(name)) {
-        myDescription = convertString(value);
-      }
-      if (FILTER_REGEXP.equals(name)) {
-        myRegExp = convertString(value);
-      }
-    }
-  }
-
-  @Override
-  public void writeExternal(Element filterElement) {
-    Element option = new Element(ELEMENT_OPTION);
-    filterElement.addContent(option);
-    option.setAttribute(ATTRIBUTE_NAME, FILTER_NAME);
-    if (myName != null) {
-      option.setAttribute(ATTRIBUTE_VALUE, myName);
+        return object instanceof FilterInfo that
+            && Objects.equals(myName, that.myName)
+            && Objects.equals(myDescription, that.myDescription)
+            && Objects.equals(myRegExp, that.myRegExp);
     }
 
-    option = new Element(ELEMENT_OPTION);
-    filterElement.addContent(option);
-    option.setAttribute(ATTRIBUTE_NAME, FILTER_DESCRIPTION);
-    if (myDescription != null) {
-      option.setAttribute(ATTRIBUTE_VALUE, myDescription);
+    public FilterInfo createCopy() {
+        return new FilterInfo(myRegExp, myName, myDescription);
     }
 
-    option = new Element(ELEMENT_OPTION);
-    filterElement.addContent(option);
-    option.setAttribute(ATTRIBUTE_NAME, FILTER_REGEXP);
-    if (myRegExp != null) {
-      option.setAttribute(ATTRIBUTE_VALUE, myRegExp);
-    }
-  }
+    @Override
+    public void readExternal(Element element) {
+        for (Element optionElement : element.getChildren(ELEMENT_OPTION)) {
+            String value = optionElement.getAttributeValue(ATTRIBUTE_VALUE);
+            String name = optionElement.getAttributeValue(ATTRIBUTE_NAME);
 
-  public static String convertString(String s) {
-    return ToolManager.convertString(s);
-  }
+            if (FILTER_NAME.equals(name)) {
+                if (value != null) {
+                    myName = convertString(value);
+                }
+            }
+            if (FILTER_DESCRIPTION.equals(name)) {
+                myDescription = convertString(value);
+            }
+            if (FILTER_REGEXP.equals(name)) {
+                myRegExp = convertString(value);
+            }
+        }
+    }
+
+    @Override
+    public void writeExternal(Element filterElement) {
+        Element option = new Element(ELEMENT_OPTION);
+        filterElement.addContent(option);
+        option.setAttribute(ATTRIBUTE_NAME, FILTER_NAME);
+        if (myName != null) {
+            option.setAttribute(ATTRIBUTE_VALUE, myName);
+        }
+
+        option = new Element(ELEMENT_OPTION);
+        filterElement.addContent(option);
+        option.setAttribute(ATTRIBUTE_NAME, FILTER_DESCRIPTION);
+        if (myDescription != null) {
+            option.setAttribute(ATTRIBUTE_VALUE, myDescription);
+        }
+
+        option = new Element(ELEMENT_OPTION);
+        filterElement.addContent(option);
+        option.setAttribute(ATTRIBUTE_NAME, FILTER_REGEXP);
+        if (myRegExp != null) {
+            option.setAttribute(ATTRIBUTE_VALUE, myRegExp);
+        }
+    }
+
+    public static String convertString(String s) {
+        return ToolManager.convertString(s);
+    }
 }

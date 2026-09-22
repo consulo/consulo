@@ -24,6 +24,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingReference;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.nio.charset.Charset;
@@ -69,7 +70,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -87,14 +88,12 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
     }
 
     public static class SeparatorItem extends EncodingItem {
-        
         private final LocalizeValue myText;
 
         public SeparatorItem(LocalizeValue text) {
             myText = text;
         }
 
-        
         @Override
         public LocalizeValue getDisplayName() {
             return myText;

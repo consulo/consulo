@@ -162,7 +162,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         return myDownloadUrls;
     }
 
-    
     @Override
     public Set<String> getTags() {
         return myTags;
@@ -227,13 +226,11 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         return description;
     }
 
-    
     @Override
     public List<ExtensionPreview> getExtensionPreviews() {
         return myPluginExtensionPreviews;
     }
 
-    
     @Override
     public byte[] getIconBytes(boolean isDarkTheme) {
         if (isDarkTheme && myIconDarkBytes.length > 0) {
@@ -325,10 +322,9 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(@Nullable Object object) {
         return object == this
-            || object instanceof PluginNode that
-            && id.equals(that.id);
+            || object instanceof PluginNode that && id.equals(that.id);
     }
 
     public void addDependency(PluginId... depends) {
@@ -356,13 +352,11 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
     }
 
     @Override
-    
     public PluginId[] getDependentPluginIds() {
         return myDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myDependencies.toArray(new PluginId[myDependencies.size()]);
     }
 
     @Override
-    
     public PluginId[] getOptionalDependentPluginIds() {
         return myOptionalDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myOptionalDependencies.toArray(new PluginId[myOptionalDependencies.size()]);
     }

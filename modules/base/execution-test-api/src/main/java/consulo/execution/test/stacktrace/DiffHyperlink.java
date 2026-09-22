@@ -26,130 +26,134 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfoBase;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * @author anna
  * @since 2007-08-15
  */
 public class DiffHyperlink implements Printable {
-  private static final String NEW_LINE = "\n";
-  private static final Logger LOG = Logger.getInstance(DiffHyperlink.class);
+    private static final String NEW_LINE = "\n";
+    private static final Logger LOG = Logger.getInstance(DiffHyperlink.class);
 
-  protected final String myExpected;
-  protected final String myActual;
-  protected final String myFilePath;
-  protected final String myActualFilePath;
-  private boolean myPrintOneLine;
-  private final HyperlinkInfo myDiffHyperlink = new DiffHyperlinkInfo();
-  private String myTestProxyName;
+    protected final String myExpected;
+    protected final String myActual;
+    protected final String myFilePath;
+    protected final String myActualFilePath;
+    private boolean myPrintOneLine;
+    private final HyperlinkInfo myDiffHyperlink = new DiffHyperlinkInfo();
+    private String myTestProxyName;
 
-  public DiffHyperlink(String expected, String actual, String filePath) {
-    this(expected, actual, filePath, true);
-  }
-
-  public DiffHyperlink(String expected, String actual, String filePath, boolean printOneLine) {
-    this(expected, actual, filePath, null, printOneLine);
-  }
-
-  public DiffHyperlink(String expected, String actual, String expectedFilePath, String actualFilePath, boolean printOneLine) {
-    myExpected = expected;
-    myActual = actual;
-    myFilePath = normalizeSeparators(expectedFilePath);
-    myActualFilePath = normalizeSeparators(actualFilePath);
-    myPrintOneLine = printOneLine;
-  }
-
-  public void setTestProxyName(String name) {
-    myTestProxyName = name;
-  }
-
-  private static String normalizeSeparators(String filePath) {
-    return filePath == null ? null : filePath.replace(File.separatorChar, '/');
-  }
-
-  public @Nullable String getTestName() {
-    return myTestProxyName;
-  }
-
-  protected String getTitle() {
-    return ExecutionLocalize.stringsEqualFailedDialogTitle().get();
-  }
-
-  public String getDiffTitle() {
-    return getTitle();
-  }
-
-  public String getLeft() {
-    return myExpected;
-  }
-
-  public String getRight() {
-    return myActual;
-  }
-
-  public String getFilePath() {
-    return myFilePath;
-  }
-
-  public String getActualFilePath() {
-    return myActualFilePath;
-  }
-
-  public void printOn(Printer printer) {
-    if (!hasMoreThanOneLine(myActual.trim()) && !hasMoreThanOneLine(myExpected.trim()) && myPrintOneLine) {
-      printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-      printer.print(ExecutionLocalize.diffContentExpectedForFileTitle().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
-      printer.print(myExpected + NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-      printer.print(ExecutionLocalize.junitActualTextLabel().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
-      printer.print(myActual + NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+    public DiffHyperlink(String expected, String actual, String filePath) {
+        this(expected, actual, filePath, true);
     }
-    printer.print(" ", ConsoleViewContentType.ERROR_OUTPUT);
-    printer.printHyperlink(ExecutionLocalize.junitClickToSeeDiffLink().get(), myDiffHyperlink);
-    printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-  }
 
-  private static boolean hasMoreThanOneLine(String string) {
-    return string.indexOf('\n') != -1 || string.indexOf('\r') != -1;
-  }
+    public DiffHyperlink(String expected, String actual, String filePath, boolean printOneLine) {
+        this(expected, actual, filePath, null, printOneLine);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof DiffHyperlink)) return false;
+    public DiffHyperlink(String expected, String actual, String expectedFilePath, String actualFilePath, boolean printOneLine) {
+        myExpected = expected;
+        myActual = actual;
+        myFilePath = normalizeSeparators(expectedFilePath);
+        myActualFilePath = normalizeSeparators(actualFilePath);
+        myPrintOneLine = printOneLine;
+    }
 
-    DiffHyperlink hyperlink = (DiffHyperlink)o;
+    public void setTestProxyName(String name) {
+        myTestProxyName = name;
+    }
 
-    if (myActual != null ? !myActual.equals(hyperlink.myActual) : hyperlink.myActual != null) return false;
-    if (myExpected != null ? !myExpected.equals(hyperlink.myExpected) : hyperlink.myExpected != null) return false;
-    if (myFilePath != null ? !myFilePath.equals(hyperlink.myFilePath) : hyperlink.myFilePath != null) return false;
-    if (myActualFilePath != null ? !myActualFilePath.equals(hyperlink.myActualFilePath) : hyperlink.myActualFilePath != null) return false;
+    private static String normalizeSeparators(String filePath) {
+        return filePath == null ? null : filePath.replace(File.separatorChar, '/');
+    }
 
-    return true;
-  }
+    public @Nullable String getTestName() {
+        return myTestProxyName;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myExpected != null ? myExpected.hashCode() : 0;
-    result = 31 * result + (myActual != null ? myActual.hashCode() : 0);
-    result = 31 * result + (myFilePath != null ? myFilePath.hashCode() : 0);
-    result = 31 * result + (myActualFilePath != null ? myActualFilePath.hashCode() : 0);
-    return result;
-  }
+    protected String getTitle() {
+        return ExecutionLocalize.stringsEqualFailedDialogTitle().get();
+    }
 
-  public class DiffHyperlinkInfo extends HyperlinkInfoBase {
+    public String getDiffTitle() {
+        return getTitle();
+    }
+
+    public String getLeft() {
+        return myExpected;
+    }
+
+    public String getRight() {
+        return myActual;
+    }
+
+    public String getFilePath() {
+        return myFilePath;
+    }
+
+    public String getActualFilePath() {
+        return myActualFilePath;
+    }
+
     @Override
-    public void navigate(Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
-      DataManager dataManager = DataManager.getInstance();
-      DataContext dataContext = hyperlinkLocationPoint != null ? dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();
-      ViewAssertEqualsDiffAction.openDiff(dataContext, DiffHyperlink.this);
+    public void printOn(Printer printer) {
+        if (!hasMoreThanOneLine(myActual.trim()) && !hasMoreThanOneLine(myExpected.trim()) && myPrintOneLine) {
+            printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+            printer.print(ExecutionLocalize.diffContentExpectedForFileTitle().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
+            printer.print(myExpected + NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+            printer.print(ExecutionLocalize.junitActualTextLabel().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
+            printer.print(myActual + NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+        }
+        printer.print(" ", ConsoleViewContentType.ERROR_OUTPUT);
+        printer.printHyperlink(ExecutionLocalize.junitClickToSeeDiffLink().get(), myDiffHyperlink);
+        printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
     }
 
-    public DiffHyperlink getPrintable() {
-      return DiffHyperlink.this;
+    private static boolean hasMoreThanOneLine(String string) {
+        return string.indexOf('\n') != -1 || string.indexOf('\r') != -1;
     }
-  }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        return o instanceof DiffHyperlink that
+            && Objects.equals(myActual, that.myActual)
+            && Objects.equals(myExpected, that.myExpected)
+            && Objects.equals(myFilePath, that.myFilePath)
+            && Objects.equals(myActualFilePath, that.myActualFilePath);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(myExpected);
+        result = 31 * result + Objects.hashCode(myActual);
+        result = 31 * result + Objects.hashCode(myFilePath);
+        result = 31 * result + Objects.hashCode(myActualFilePath);
+        return result;
+    }
+
+    public class DiffHyperlinkInfo extends HyperlinkInfoBase {
+        @Override
+        @RequiredUIAccess
+        public void navigate(Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+            DataManager dataManager = DataManager.getInstance();
+            DataContext dataContext = hyperlinkLocationPoint != null
+                ? dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent())
+                : dataManager.getDataContext();
+            ViewAssertEqualsDiffAction.openDiff(dataContext, DiffHyperlink.this);
+        }
+
+        public DiffHyperlink getPrintable() {
+            return DiffHyperlink.this;
+        }
+    }
 }

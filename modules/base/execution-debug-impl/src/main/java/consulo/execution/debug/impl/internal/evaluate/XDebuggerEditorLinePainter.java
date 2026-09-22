@@ -65,7 +65,6 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       myDarkColor = darkColor;
     }
 
-    
     @Override
     public RGBColor toRGB() {
       return isDarkEditor() ? myLightColor : myDarkColor;
@@ -236,16 +235,14 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      Variable variable = (Variable)o;
+      Variable that = (Variable)o;
 
-      if (lineNumber != variable.lineNumber) return false;
-      if (!name.equals(variable.name)) return false;
-
-      return true;
+      return lineNumber == that.lineNumber
+        && name.equals(that.name);
     }
 
     @Override

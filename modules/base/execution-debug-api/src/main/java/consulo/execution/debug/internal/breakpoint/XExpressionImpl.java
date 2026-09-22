@@ -18,75 +18,78 @@ package consulo.execution.debug.internal.breakpoint;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.language.Language;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author egor
  */
 public class XExpressionImpl implements XExpression {
-  
-  private final String myExpression;
-  private final Language myLanguage;
-  private final String myCustomInfo;
-  private final EvaluationMode myMode;
+    private final String myExpression;
+    private final Language myLanguage;
+    private final String myCustomInfo;
+    private final EvaluationMode myMode;
 
-  public XExpressionImpl(String expression, Language language, String customInfo) {
-    this(expression, language, customInfo, EvaluationMode.EXPRESSION);
-  }
+    public XExpressionImpl(String expression, Language language, String customInfo) {
+        this(expression, language, customInfo, EvaluationMode.EXPRESSION);
+    }
 
-  public XExpressionImpl(String expression, Language language, String customInfo, EvaluationMode mode) {
-    myExpression = expression;
-    myLanguage = language;
-    myCustomInfo = customInfo;
-    myMode = mode;
-  }
+    public XExpressionImpl(String expression, Language language, String customInfo, EvaluationMode mode) {
+        myExpression = expression;
+        myLanguage = language;
+        myCustomInfo = customInfo;
+        myMode = mode;
+    }
 
-  
-  @Override
-  public String getExpression() {
-    return myExpression;
-  }
+    @Override
+    public String getExpression() {
+        return myExpression;
+    }
 
-  @Override
-  public Language getLanguage() {
-    return myLanguage;
-  }
+    @Override
+    public Language getLanguage() {
+        return myLanguage;
+    }
 
-  @Override
-  public String getCustomInfo() {
-    return myCustomInfo;
-  }
+    @Override
+    public String getCustomInfo() {
+        return myCustomInfo;
+    }
 
-  @Override
-  public EvaluationMode getMode() {
-    return myMode;
-  }
+    @Override
+    public EvaluationMode getMode() {
+        return myMode;
+    }
 
-  @Override
-  public String toString() {
-    return myExpression;
-  }
+    @Override
+    public String toString() {
+        return myExpression;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    XExpressionImpl that = (XExpressionImpl)o;
+        XExpressionImpl that = (XExpressionImpl) o;
 
-    if (myCustomInfo != null ? !myCustomInfo.equals(that.myCustomInfo) : that.myCustomInfo != null) return false;
-    if (!myExpression.equals(that.myExpression)) return false;
-    if (myLanguage != null ? !myLanguage.equals(that.myLanguage) : that.myLanguage != null) return false;
-    if (myMode != that.myMode) return false;
+        return Objects.equals(myCustomInfo, that.myCustomInfo)
+            && myExpression.equals(that.myExpression)
+            && Objects.equals(myLanguage, that.myLanguage)
+            && myMode == that.myMode;
+    }
 
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = myExpression.hashCode();
-    result = 31 * result + (myLanguage != null ? myLanguage.hashCode() : 0);
-    result = 31 * result + (myCustomInfo != null ? myCustomInfo.hashCode() : 0);
-    result = 31 * result + (myMode != null ? myMode.hashCode() : 0);
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = myExpression.hashCode();
+        result = 31 * result + Objects.hashCode(myLanguage);
+        result = 31 * result + Objects.hashCode(myCustomInfo);
+        result = 31 * result + Objects.hashCode(myMode);
+        return result;
+    }
 }
