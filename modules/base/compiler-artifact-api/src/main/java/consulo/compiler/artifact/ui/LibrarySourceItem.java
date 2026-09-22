@@ -15,19 +15,19 @@
  */
 package consulo.compiler.artifact.ui;
 
-import consulo.application.AllIcons;
-import consulo.virtualFileSystem.VirtualFilePresentation;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.content.internal.LibraryEx;
-import consulo.content.library.Library;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.internal.SourceItemWeights;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePresentation;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -47,8 +47,9 @@ public class LibrarySourceItem extends PackagingSourceItem {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return obj instanceof LibrarySourceItem && myLibrary.equals(((LibrarySourceItem)obj).myLibrary);
+  public boolean equals(@Nullable Object obj) {
+    return obj == this
+        || obj instanceof LibrarySourceItem that && myLibrary.equals(that.myLibrary);
   }
 
   @Override
@@ -56,19 +57,16 @@ public class LibrarySourceItem extends PackagingSourceItem {
     return myLibrary.hashCode();
   }
 
-  
   public Library getLibrary() {
     return myLibrary;
   }
 
-  
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return LibraryPackagingElement.getKindForLibrary(myLibrary);
   }
 
   @Override
-  
   public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
     return PackagingElementFactory.getInstance(context.getProject()).createLibraryElements(myLibrary);
   }
@@ -103,16 +101,15 @@ public class LibrarySourceItem extends PackagingSourceItem {
     }
 
     @Override
-    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
-                       SimpleTextAttributes commentAttributes) {
+    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
       String name = myLibrary.getName();
       if (name != null) {
-        presentationData.setIcon(AllIcons.Nodes.PpLib);
+        presentationData.setIcon(PlatformIconGroup.nodesPplib());
         presentationData.addText(name, mainAttributes);
         presentationData.addText(LibraryElementPresentation.getLibraryTableComment(myLibrary), commentAttributes);
       }
       else {
-        if (((LibraryEx)myLibrary).isDisposed()) {
+        if (myLibrary.isDisposed()) {
           //todo[nik] disposed library should not be shown in the tree
           presentationData.addText("Invalid Library", SimpleTextAttributes.ERROR_ATTRIBUTES);
           return;

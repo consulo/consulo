@@ -26,6 +26,7 @@ import consulo.application.progress.DumbProgressIndicator;
 import consulo.util.lang.Pair;
 import consulo.application.util.LineTokenizer;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,24 +76,24 @@ public class Block {
         Boolean equals = pair.second;
         Range range = pair.first;
         if (!equals) {
-          if (Math.max(myStart, range.start2) < Math.min(myEnd, range.end2)) {
+          if (Math.max(myStart, range.start2()) < Math.min(myEnd, range.end2())) {
             // ranges intersect
-            if (range.start2 <= myStart) start = range.start1;
-            if (range.end2 > myEnd) end = range.end1;
+            if (range.start2() <= myStart) start = range.start1();
+            if (range.end2() > myEnd) end = range.end1();
           }
-          if (range.start2 > myStart) {
+          if (range.start2() > myStart) {
             if (start == -1) start = myStart - shift;
-            if (end == -1 && range.start2 >= myEnd) end = myEnd - shift;
+            if (end == -1 && range.start2() >= myEnd) end = myEnd - shift;
           }
 
-          shift += (range.end2 - range.start2) - (range.end1 - range.start1);
+          shift += (range.end2() - range.start2()) - (range.end1() - range.start1());
         }
         else {
           // intern strings, reducing memory usage
-          int count = range.end1 - range.start1;
+          int count = range.end1() - range.start1();
           for (int i = 0; i < count; i++) {
-            int prevIndex = range.start1 + i;
-            int sourceIndex = range.start2 + i;
+            int prevIndex = range.start1() + i;
+            int sourceIndex = range.start2() + i;
             if (prevContent[prevIndex].equals(mySource[sourceIndex])) {
               prevContent[prevIndex] = mySource[sourceIndex];
             }
@@ -123,16 +124,20 @@ public class Block {
     return Arrays.asList(mySource).subList(myStart, myEnd);
   }
 
+  @Override
   public int hashCode() {
     return Arrays.hashCode(mySource) ^ myStart ^ myEnd;
   }
 
-  public boolean equals(Object object) {
-    if (!(object instanceof Block)) return false;
-    Block other = (Block)object;
-    return Arrays.equals(mySource, other.mySource)
-           && myStart == other.myStart
-           && myEnd == other.myEnd;
+  @Override
+  public boolean equals(@Nullable Object object) {
+      if (object == this) {
+          return true;
+      }
+      return object instanceof Block that
+          && Arrays.equals(mySource, that.mySource)
+          && myStart == that.myStart
+          && myEnd == that.myEnd;
   }
 
   public int getStart() {
@@ -143,6 +148,7 @@ public class Block {
     return myEnd;
   }
 
+  @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
 

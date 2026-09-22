@@ -15,41 +15,42 @@
  */
 package consulo.component.internal.inject;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
 class SimpleInjectingKey<T> implements InjectingKey<T> {
-  private final Class<T> myClass;
+    private final Class<T> myClass;
 
-  public SimpleInjectingKey(Class<T> aClass) {
-    myClass = aClass;
-  }
+    public SimpleInjectingKey(Class<T> aClass) {
+        myClass = aClass;
+    }
 
-  
-  @Override
-  public String getTargetClassName() {
-    return myClass.getName();
-  }
+    @Override
+    public String getTargetClassName() {
+        return myClass.getName();
+    }
 
-  
-  @Override
-  public Class<T> getTargetClass() {
-    return myClass;
-  }
+    @Override
+    public Class<T> getTargetClass() {
+        return myClass;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof InjectingKey && obj.hashCode() == hashCode();
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof InjectingKey that && that.hashCode() == hashCode();
+    }
 
-  @Override
-  public int hashCode() {
-    return myClass.getName().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myClass.getName().hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return myClass.getName();
-  }
+    @Override
+    public String toString() {
+        return myClass.getName();
+    }
 }

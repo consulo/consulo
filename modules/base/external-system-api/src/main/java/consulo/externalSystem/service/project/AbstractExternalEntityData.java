@@ -1,43 +1,40 @@
 package consulo.externalSystem.service.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
- * @since 8/25/11 3:44 PM
+ * @since 2011-08-25
  */
 public abstract class AbstractExternalEntityData implements ExternalEntityData {
+    private static final long serialVersionUID = 1L;
 
-  private static final long serialVersionUID = 1L;
-  
-  
-  private ProjectSystemId myOwner;
-  
-  public AbstractExternalEntityData(ProjectSystemId owner) {
-    myOwner = owner;
-  }
+    private ProjectSystemId myOwner;
 
-  @Override
-  
-  public ProjectSystemId getOwner() {
-    return myOwner;
-  }
-
-  @Override
-  public int hashCode() {
-    return myOwner.hashCode();
-  }
-
-  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
+    public AbstractExternalEntityData(ProjectSystemId owner) {
+        myOwner = owner;
     }
-    if (getClass() != obj.getClass()) {
-      return false;
+
+    @Override
+    public ProjectSystemId getOwner() {
+        return myOwner;
     }
-    AbstractExternalEntityData that = (AbstractExternalEntityData)obj;
-    return myOwner.equals(that.myOwner);
-  }
-} 
+
+    @Override
+    public int hashCode() {
+        return myOwner.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        AbstractExternalEntityData that = (AbstractExternalEntityData) obj;
+        return myOwner.equals(that.myOwner);
+    }
+}

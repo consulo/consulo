@@ -14,7 +14,6 @@ import consulo.ui.ex.util.InvokerSupplier;
 import consulo.util.collection.*;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Promises;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.NotNullizer;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -28,28 +27,19 @@ final class ServiceModel implements Disposable, InvokerSupplier {
     private static final Logger LOG = Logger.getInstance(ServiceModel.class);
 
     static final TreeTraversal NOT_LOADED_LAST_BFS = new TreeTraversal("NOT_LOADED_LAST_BFS") {
-        
         @Override
-        public <T> It<T> createIterator(
-            Iterable<? extends T> roots,
-            Function<T, ? extends Iterable<? extends T>> tree
-        ) {
+        public <T> It<T> createIterator(Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             return new NotLoadedLastBfsIt<>(roots, tree);
         }
     };
     static final TreeTraversal ONLY_LOADED_BFS = new TreeTraversal("ONLY_LOADED_BFS") {
-        
         @Override
-        public <T> It<T> createIterator(
-            Iterable<? extends T> roots,
-            Function<T, ? extends Iterable<? extends T>> tree
-        ) {
+        public <T> It<T> createIterator(Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             return new OnlyLoadedBfsIt<>(roots, tree);
         }
     };
     private static final NotNullizer ourNotNullizer = new NotNullizer("ServiceViewTreeTraversal.NotNull");
 
-    
     private final Project myProject;
     private final Invoker myInvoker = InvokerFactory.getInstance().forBackgroundThreadWithoutReadAction(this);
     private final List<ServiceViewItem> myRoots = Lists.newLockFreeCopyOnWriteList();
@@ -63,7 +53,6 @@ final class ServiceModel implements Disposable, InvokerSupplier {
     public void dispose() {
     }
 
-    
     @Override
     public Invoker getInvoker() {
         return myInvoker;
@@ -142,7 +131,6 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         return null;
     }
 
-    
     CancellablePromise<?> handle(ServiceEventListener.ServiceEvent e) {
         Runnable handler = () -> {
             LOG.debug("Handle event: " + e);
@@ -663,7 +651,6 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             return myProvidingContributor;
         }
 
-        
         private Object getService() {
             return myProvidingContributor != null ? myProvidingContributor : getValue();
         }
@@ -680,7 +667,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -688,16 +675,14 @@ final class ServiceModel implements Disposable, InvokerSupplier {
                 return false;
             }
 
-            ServiceGroupNode node = (ServiceGroupNode)o;
-            return getValue().equals(node.getValue()) && Comparing.equal(getParent(), node.getParent());
+            ServiceGroupNode that = (ServiceGroupNode) o;
+            return getValue().equals(that.getValue())
+                && Objects.equals(getParent(), that.getParent());
         }
 
         @Override
         public int hashCode() {
-            int result = super.hashCode();
-            ServiceViewItem parent = getParent();
-            result = 31 * result + (parent != null ? parent.hashCode() : 0);
-            return result;
+            return 31 * super.hashCode() + Objects.hashCode(getParent());
         }
     }
 

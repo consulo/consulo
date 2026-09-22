@@ -18,27 +18,27 @@ package consulo.content.library;
 import org.jspecify.annotations.Nullable;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class DummyLibraryProperties extends LibraryProperties<Object> {
-  public static final DummyLibraryProperties INSTANCE = new DummyLibraryProperties();
+    public static final DummyLibraryProperties INSTANCE = new DummyLibraryProperties();
 
-  @Override
-  public @Nullable Object getState() {
-    return null;
-  }
+    @Override
+    public @Nullable Object getState() {
+        return null;
+    }
 
-  @Override
-  public void loadState(Object state) {
-  }
+    @Override
+    public void loadState(Object state) {
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof DummyLibraryProperties;
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof DummyLibraryProperties;
+    }
 
-  @Override
-  public int hashCode() {
-    return 0;
-  }
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

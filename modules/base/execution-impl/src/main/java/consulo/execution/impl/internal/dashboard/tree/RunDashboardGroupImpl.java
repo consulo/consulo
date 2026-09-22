@@ -17,48 +17,44 @@ package consulo.execution.impl.internal.dashboard.tree;
 
 import consulo.execution.dashboard.RunDashboardGroup;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author konstantin.aleev
  */
 public class RunDashboardGroupImpl<T> implements RunDashboardGroup {
-  private final T myValue;
-  private final String myName;
-  private final Image myIcon;
+    private final T myValue;
+    private final String myName;
+    private final Image myIcon;
 
-  public RunDashboardGroupImpl(T value, String name, Image icon) {
-    myValue = value;
-    myName = name;
-    myIcon = icon;
-  }
-
-  public T getValue() {
-    return myValue;
-  }
-
-  @Override
-  public String getName() {
-    return myName;
-  }
-
-  @Override
-  public Image getIcon() {
-    return myIcon;
-  }
-
-  @Override
-  public int hashCode() {
-    return myValue.hashCode();
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    public RunDashboardGroupImpl(T value, String name, Image icon) {
+        myValue = value;
+        myName = name;
+        myIcon = icon;
     }
-    if (obj instanceof RunDashboardGroupImpl) {
-      return myValue.equals(((RunDashboardGroupImpl<?>)obj).myValue);
+
+    public T getValue() {
+        return myValue;
     }
-    return false;
-  }
+
+    @Override
+    public String getName() {
+        return myName;
+    }
+
+    @Override
+    public Image getIcon() {
+        return myIcon;
+    }
+
+    @Override
+    public int hashCode() {
+        return myValue.hashCode();
+    }
+
+    @Override
+    public final boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof RunDashboardGroupImpl<?> that && myValue.equals(that.myValue);
+    }
 }

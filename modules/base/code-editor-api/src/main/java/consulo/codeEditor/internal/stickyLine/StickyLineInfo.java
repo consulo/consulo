@@ -10,16 +10,14 @@ import org.jspecify.annotations.Nullable;
  * See also {@link StickyLine}
  */
 public record StickyLineInfo(int textOffset, int endOffset, @Nullable String debugText) {
-
     public StickyLineInfo(TextRange textRange) {
         this(textRange.getStartOffset(), textRange.getEndOffset(), null);
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof StickyLineInfo info)) return false;
-        return endOffset == info.endOffset && textOffset == info.textOffset;
+    public boolean equals(@Nullable Object other) {
+        return this == other
+            || other instanceof StickyLineInfo that && endOffset == that.endOffset && textOffset == that.textOffset;
     }
 
     @Override

@@ -506,7 +506,7 @@ public class FoldingModelSupport {
                 FoldedRangeState range = ranges.get(myIndex[index]);
                 LineRange lineRange = range.getLineRange();
 
-                if (lineRange.end <= start) {
+                if (lineRange.end() <= start) {
                     continue;
                 }
                 if (lineRange.contains(start, end)) {
@@ -518,7 +518,7 @@ public class FoldingModelSupport {
                     }
                     assert false : "Invalid LineRange" + range.expanded + ", " + range.collapsed + ", " + new LineRange(start, end);
                 }
-                if (lineRange.start >= start) {
+                if (lineRange.start() >= start) {
                     return null; // we could need current range for enclosing next-level foldings
                 }
             }
@@ -615,39 +615,34 @@ public class FoldingModelSupport {
     //
 
     private Iterable<FoldedBlock> getFoldedBlocks() {
-        return new Iterable<>() {
+        return () -> new Iterator<>() {
+            private int myGroupIndex = 0;
+            private int myBlockIndex = 0;
+
             @Override
-            public Iterator<FoldedBlock> iterator() {
-                return new Iterator<>() {
-                    private int myGroupIndex = 0;
-                    private int myBlockIndex = 0;
+            public boolean hasNext() {
+                return myGroupIndex < myFoldings.size();
+            }
 
-                    @Override
-                    public boolean hasNext() {
-                        return myGroupIndex < myFoldings.size();
-                    }
+            @Override
+            public FoldedBlock next() {
+                FoldedBlock[] group = myFoldings.get(myGroupIndex);
+                FoldedBlock folding = group[myBlockIndex];
 
-                    @Override
-                    public FoldedBlock next() {
-                        FoldedBlock[] group = myFoldings.get(myGroupIndex);
-                        FoldedBlock folding = group[myBlockIndex];
+                if (group.length > myBlockIndex + 1) {
+                    myBlockIndex++;
+                }
+                else {
+                    myGroupIndex++;
+                    myBlockIndex = 0;
+                }
 
-                        if (group.length > myBlockIndex + 1) {
-                            myBlockIndex++;
-                        }
-                        else {
-                            myGroupIndex++;
-                            myBlockIndex = 0;
-                        }
+                return folding;
+            }
 
-                        return folding;
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
         };
     }

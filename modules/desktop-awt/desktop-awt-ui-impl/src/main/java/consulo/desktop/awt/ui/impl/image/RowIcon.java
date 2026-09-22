@@ -19,11 +19,14 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
     private final Alignment myAlignment;
@@ -95,7 +98,7 @@ public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
     
     @TestOnly
     Icon[] getAllIcons() {
-        List<Icon> icons = java.util.Arrays.stream(myIcons).filter(java.util.Objects::nonNull).collect(java.util.stream.Collectors.toList());
+        List<Icon> icons = Arrays.stream(myIcons).filter(Objects::nonNull).collect(Collectors.toList());
         return icons.toArray(new Icon[icons.size()]);
     }
 
@@ -105,8 +108,9 @@ public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof RowIcon && Arrays.equals(((RowIcon) obj).myIcons, myIcons);
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof RowIcon that && Arrays.equals(that.myIcons, myIcons);
     }
 
     public int getIconCount() {

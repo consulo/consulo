@@ -281,8 +281,7 @@ public class GenericPatchApplier {
   // applies in a way that patch _can_ be solved manually even in the case of total mismatch
   public void trySolveSomehow() {
     assert !myNotExact.isEmpty();
-    for (Iterator<SplitHunk> iterator = myNotExact.iterator(); iterator.hasNext(); ) {
-      SplitHunk hunk = iterator.next();
+    for (SplitHunk hunk : myNotExact) {
       hunk.cutSameTail();
       if (!testForPartialContextMatch(hunk, new LongTryMismatchSolver(hunk), ourMaxWalk, null)) {
         if (complementIfShort(hunk)) {
@@ -589,9 +588,9 @@ public class GenericPatchApplier {
                                   AppliedTextPatch.HunkStatus hunkStatus) {
     if (hunk != null) {
       // +1 to the end  because end range is always not included -> [i;j); except add modification;
-      int newStart = lineWithPartContextApplied.getStartOffset() + contextRangeShift.val1;
+      int newStart = lineWithPartContextApplied.getStartOffset() + contextRangeShift.val1();
       int newEnd = hunk.isInsertion() && hunkStatus != AppliedTextPatch.HunkStatus.ALREADY_APPLIED
-                   ? newStart : lineWithPartContextApplied.getEndOffset() + 1 - contextRangeShift.val2;
+                   ? newStart : lineWithPartContextApplied.getEndOffset() + 1 - contextRangeShift.val2();
       myAppliedInfo.add(new AppliedTextPatch.AppliedSplitPatchHunk(hunk, newStart, newEnd, hunkStatus));
     }
   }
@@ -668,6 +667,7 @@ public class GenericPatchApplier {
       myForward = forward;
     }
 
+    @Override
     public boolean isUsesAlreadyApplied() {
       return myUsesAlreadyApplied;
     }
@@ -987,7 +987,7 @@ public class GenericPatchApplier {
           return beforePair;
         }
 
-        // take longer coinsiding
+        // take longer coinciding
         int beforeCommon = myBeforeAfter.getBefore().size() - beforeCheckResult;
         int afterCommon = myBeforeAfter.getAfter().size() - afterCheckResult;
         if (beforeCommon > 0 && afterCommon > 0) {
@@ -1045,9 +1045,9 @@ public class GenericPatchApplier {
       linesToSb(sb, hunk.getAfterAll(), true);
     }
     iterateTransformations(range -> {
-      List<String> baseLineslist = myLines.subList(range.getStartOffset(), range.getEndOffset() + 1);
+      List<String> baseLinesList = myLines.subList(range.getStartOffset(), range.getEndOffset() + 1);
       boolean withLineBreak = !containsLastLine(range) || myBaseFileEndsWithNewLine;
-      linesToSb(sb, baseLineslist, withLineBreak);
+      linesToSb(sb, baseLinesList, withLineBreak);
     }, range -> {
       MyAppliedData appliedData = myTransformations.get(range);
       List<String> list = appliedData.getList();
@@ -1317,7 +1317,7 @@ public class GenericPatchApplier {
 
     @Override
     public int compare(SplitHunk o1, SplitHunk o2) {
-      return Integer.valueOf(o1.getStartLineBefore()).compareTo(Integer.valueOf(o2.getStartLineBefore()));
+      return Integer.valueOf(o1.getStartLineBefore()).compareTo(o2.getStartLineBefore());
     }
   }
 }

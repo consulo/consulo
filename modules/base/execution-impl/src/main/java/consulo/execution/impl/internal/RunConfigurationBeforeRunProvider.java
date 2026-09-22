@@ -16,7 +16,6 @@
 package consulo.execution.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
@@ -30,6 +29,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
@@ -61,7 +61,6 @@ import java.util.concurrent.CompletableFuture;
  */
 @ExtensionImpl
 public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask> {
-
     public static final Key<RunConfigurableBeforeRunTask> ID = Key.create("RunConfigurationTask");
 
     private static final Logger LOG = Logger.getInstance(RunConfigurationBeforeRunProvider.class);
@@ -73,7 +72,6 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         myProject = project;
     }
 
-    
     @Override
     public Key<RunConfigurableBeforeRunTask> getId() {
         return ID;
@@ -81,7 +79,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
 
     @Override
     public Image getIcon(RunConfiguration runConfiguration) {
-        return AllIcons.Actions.Execute;
+        return PlatformIconGroup.actionsExecute();
     }
 
     @Override
@@ -92,21 +90,16 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         return ProgramRunnerUtil.getConfigurationIcon(task.getSettings(), false);
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchRunAnotherConfiguration();
     }
 
-    
     @Override
     public LocalizeValue getDescription(RunConfigurableBeforeRunTask task) {
-        if (task.getSettings() == null) {
-            return ExecutionLocalize.beforeLaunchRunAnotherConfiguration();
-        }
-        else {
-            return ExecutionLocalize.beforeLaunchRunCertainConfiguration(task.getSettings().getName());
-        }
+        return task.getSettings() == null
+            ? ExecutionLocalize.beforeLaunchRunAnotherConfiguration()
+            : ExecutionLocalize.beforeLaunchRunCertainConfiguration(task.getSettings().getName());
     }
 
     @Override
@@ -117,17 +110,19 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     @Override
     public @Nullable RunConfigurableBeforeRunTask createTask(RunConfiguration runConfiguration) {
         if (runConfiguration.getProject().isInitialized()) {
-            Collection<RunnerAndConfigurationSettings> configurations = RunManagerImpl.getInstanceImpl(runConfiguration.getProject()).getSortedConfigurations();
-            if (configurations.isEmpty() || (configurations.size() == 1 && configurations.iterator().next().getConfiguration() == runConfiguration)) {
+            Collection<RunnerAndConfigurationSettings> configurations = RunManagerImpl.getInstanceImpl(runConfiguration.getProject())
+                .getSortedConfigurations();
+            if (configurations.isEmpty() || (configurations.size() == 1 && configurations.iterator()
+                .next()
+                .getConfiguration() == runConfiguration)) {
                 return null;
             }
         }
         return new RunConfigurableBeforeRunTask();
     }
 
-    
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
         SelectionDialog dialog = new SelectionDialog(task.getSettings(), getAvailableConfigurations(runConfiguration));
         return dialog.showAsync()
@@ -135,7 +130,6 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
             .thenRun(() -> task.setSettings(dialog.getSelectedSettings()));
     }
 
-    
     private List<RunnerAndConfigurationSettings> getAvailableConfigurations(RunConfiguration runConfiguration) {
         Project project = runConfiguration.getProject();
         if (project == null || !project.isInitialized()) {
@@ -169,9 +163,14 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         return runner.canRun(executorId, settings.getConfiguration());
     }
 
-    
     @Override
-    public CompletableFuture<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, RunConfigurableBeforeRunTask task) {
+    public CompletableFuture<Void> executeTaskAsync(
+        UIAccess uiAccess,
+        DataContext context,
+        RunConfiguration configuration,
+        ExecutionEnvironment env,
+        RunConfigurableBeforeRunTask task
+    ) {
         RunnerAndConfigurationSettings settings = task.getSettings();
         if (settings == null) {
             return CompletableFuture.failedFuture(new CancellationException());
@@ -265,7 +264,8 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
                 return;
             }
             if (myConfigurationName != null && myConfigurationType != null) {
-                Collection<RunnerAndConfigurationSettings> configurations = RunManagerImpl.getInstanceImpl(myProject).getSortedConfigurations();
+                Collection<RunnerAndConfigurationSettings> configurations = RunManagerImpl.getInstanceImpl(myProject)
+                    .getSortedConfigurations();
                 for (RunnerAndConfigurationSettings runConfiguration : configurations) {
                     ConfigurationType type = runConfiguration.getType();
                     if (myConfigurationName.equals(runConfiguration.getName()) && type != null && myConfigurationType.equals(type.getId())) {
@@ -287,7 +287,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -300,28 +300,20 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
 
             RunConfigurableBeforeRunTask that = (RunConfigurableBeforeRunTask) o;
 
-            if (myConfigurationName != null ? !myConfigurationName.equals(that.myConfigurationName) : that.myConfigurationName != null) {
-                return false;
-            }
-            if (myConfigurationType != null ? !myConfigurationType.equals(that.myConfigurationType) : that.myConfigurationType != null) {
-                return false;
-            }
-
-            return true;
+            return Objects.equals(myConfigurationName, that.myConfigurationName)
+                && Objects.equals(myConfigurationType, that.myConfigurationType);
         }
 
         @Override
         public int hashCode() {
-            int result = super.hashCode();
-            result = 31 * result + (myConfigurationName != null ? myConfigurationName.hashCode() : 0);
-            result = 31 * result + (myConfigurationType != null ? myConfigurationType.hashCode() : 0);
-            return result;
+            int result = 31 * super.hashCode() + Objects.hashCode(myConfigurationName);
+            return 31 * result + Objects.hashCode(myConfigurationType);
         }
     }
 
     private class SelectionDialog extends DialogWrapper {
         private RunnerAndConfigurationSettings mySelectedSettings;
-        
+
         private final List<RunnerAndConfigurationSettings> mySettings;
         private JBList myJBList;
 
@@ -368,7 +360,10 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
                         RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
                         setIcon(runManager.getConfigurationIcon(settings));
                         RunConfiguration configuration = settings.getConfiguration();
-                        append(configuration.getName(), settings.isTemporary() ? SimpleTextAttributes.GRAY_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                        append(
+                            configuration.getName(),
+                            settings.isTemporary() ? SimpleTextAttributes.GRAY_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES
+                        );
                     }
                 }
             });

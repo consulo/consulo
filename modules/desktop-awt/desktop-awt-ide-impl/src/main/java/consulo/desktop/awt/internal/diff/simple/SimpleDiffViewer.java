@@ -331,7 +331,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
         List<SimpleDiffChange> invalid = new ArrayList<>();
         for (SimpleDiffChange change : myDiffChanges) {
-            if (change.processChange(lineRange.start, lineRange.end, shift, side)) {
+            if (change.processChange(lineRange.start(), lineRange.end(), shift, side)) {
                 invalid.add(change);
             }
         }

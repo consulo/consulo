@@ -15,12 +15,14 @@
  */
 package consulo.container.internal.plugin.classloader;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 11/03/2021
+ * @since 2021-03-11
  */
 public class ProxyDescription {
   private final Class mySuperClass;
@@ -51,11 +53,13 @@ public class ProxyDescription {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     ProxyDescription that = (ProxyDescription)o;
-    return myInterceptObjectMethods == that.myInterceptObjectMethods && Objects.equals(mySuperClass, that.mySuperClass) && Arrays.equals(myInterfaces, that.myInterfaces);
+    return myInterceptObjectMethods == that.myInterceptObjectMethods
+        && Objects.equals(mySuperClass, that.mySuperClass)
+        && Arrays.equals(myInterfaces, that.myInterfaces);
   }
 
   @Override

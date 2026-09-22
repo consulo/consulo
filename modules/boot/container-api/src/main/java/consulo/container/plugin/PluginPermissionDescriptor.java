@@ -15,52 +15,55 @@
  */
 package consulo.container.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 24/10/2021
+ * @since 2021-10-24
  */
 public final class PluginPermissionDescriptor {
-  private final PluginPermissionType myType;
-  private final Set<String> myOptions;
+    private final PluginPermissionType myType;
+    private final Set<String> myOptions;
 
-  public PluginPermissionDescriptor(PluginPermissionType type, Set<String> options) {
-    myType = type;
-    myOptions = Collections.unmodifiableSet(options);
-  }
+    public PluginPermissionDescriptor(PluginPermissionType type, Set<String> options) {
+        myType = type;
+        myOptions = Collections.unmodifiableSet(options);
+    }
 
-  public PluginPermissionType getType() {
-    return myType;
-  }
+    public PluginPermissionType getType() {
+        return myType;
+    }
 
-  public Set<String> getOptions() {
-    return myOptions;
-  }
+    public Set<String> getOptions() {
+        return myOptions;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    PluginPermissionDescriptor that = (PluginPermissionDescriptor)o;
+        PluginPermissionDescriptor that = (PluginPermissionDescriptor) o;
 
-    if (myType != that.myType) return false;
-    if (!myOptions.equals(that.myOptions)) return false;
+        return myType == that.myType && myOptions.equals(that.myOptions);
+    }
 
-    return true;
-  }
+    @Override
+    public int hashCode() {
+        int result = myType.hashCode();
+        result = 31 * result + myOptions.hashCode();
+        return result;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myType.hashCode();
-    result = 31 * result + myOptions.hashCode();
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return "PluginPermissionDescriptor{" + "myType=" + myType + ", myOptions=" + myOptions + '}';
-  }
+    @Override
+    public String toString() {
+        return "PluginPermissionDescriptor{" + "myType=" + myType + ", myOptions=" + myOptions + '}';
+    }
 }

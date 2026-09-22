@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSystemTree;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -28,15 +28,13 @@ import consulo.virtualFileSystem.VirtualFilePresentation;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class LocalFsFinder implements FileLookup.Finder, FileLookup {
-
   private File myBaseDir = Platform.current().user().homePath().toFile();
 
   @Override
@@ -171,22 +169,22 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
     @Override
     public @Nullable Image getIcon() {
-      return myFile != null ? (myFile.isDirectory() ? AllIcons.Nodes.TreeClosed : VirtualFilePresentation.getIcon(myFile)) : null;
+      return myFile != null ? (myFile.isDirectory() ? PlatformIconGroup.nodesTreeclosed() : VirtualFilePresentation.getIcon(myFile)) : null;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      VfsFile vfsFile = (VfsFile)o;
+      VfsFile that = (VfsFile)o;
 
-      return myFile != null ? myFile.equals(vfsFile.myFile) : vfsFile.myFile == null;
+      return Objects.equals(myFile, that.myFile);
     }
 
     @Override
     public int hashCode() {
-      return (myFile != null ? myFile.hashCode() : 0);
+      return Objects.hashCode(myFile);
     }
   }
 
@@ -219,25 +217,15 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     }
 
     @Override
-    public List<LookupFile> getChildren(final LookupFilter filter) {
-      List<LookupFile> result = new ArrayList<LookupFile>();
-      File[] files = myIoFile.listFiles(new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-          return filter.isAccepted(new IoFile(pathname));
-        }
-      });
+    public List<LookupFile> getChildren(LookupFilter filter) {
+      List<LookupFile> result = new ArrayList<>();
+      File[] files = myIoFile.listFiles(pathname -> filter.isAccepted(new IoFile(pathname)));
       if (files == null) return result;
 
       for (File each : files) {
         result.add(new IoFile(each));
       }
-      Collections.sort(result, new Comparator<LookupFile>() {
-        @Override
-        public int compare(LookupFile o1, LookupFile o2) {
-          return FileUtil.comparePaths(o1.getName(), o2.getName());
-        }
-      });
+      Collections.sort(result, (o1, o2) -> FileUtil.comparePaths(o1.getName(), o2.getName()));
 
       return result;
     }
@@ -248,18 +236,18 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      IoFile ioFile = (IoFile)o;
+      IoFile that = (IoFile) o;
 
-      return myIoFile != null ? myIoFile.equals(ioFile.myIoFile) : ioFile.myIoFile == null;
+      return Objects.equals(myIoFile, that.myIoFile);
     }
 
     @Override
     public int hashCode() {
-      return (myIoFile != null ? myIoFile.hashCode() : 0);
+      return Objects.hashCode(myIoFile);
     }
   }
 }

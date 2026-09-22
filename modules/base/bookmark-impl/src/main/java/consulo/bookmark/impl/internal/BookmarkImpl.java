@@ -41,12 +41,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class BookmarkImpl implements Bookmark {
     private final VirtualFile myFile;
@@ -57,13 +58,7 @@ public class BookmarkImpl implements Bookmark {
     private String myDescription;
     private char myMnemonic = 0;
 
-    public BookmarkImpl(
-        Project project,
-        VirtualFile file,
-        int line,
-        String description,
-        boolean addHighlighter
-    ) {
+    public BookmarkImpl(Project project, VirtualFile file, int line, String description, boolean addHighlighter) {
         myFile = file;
         myProject = project;
         myDescription = description;
@@ -295,10 +290,13 @@ public class BookmarkImpl implements Bookmark {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof MyGutterIconRenderer iconRenderer
-                && Comparing.equal(getTooltipValue(), iconRenderer.getTooltipValue())
-                && Comparing.equal(getIcon(), iconRenderer.getIcon());
+        public boolean equals(@Nullable Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            return obj instanceof MyGutterIconRenderer that
+                && Objects.equals(getTooltipValue(), that.getTooltipValue())
+                && Objects.equals(getIcon(), that.getIcon());
         }
 
         @Override

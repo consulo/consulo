@@ -32,6 +32,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -105,7 +106,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -113,17 +114,13 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
             return false;
         }
 
-        BreakpointItem item = (BreakpointItem) o;
+        BreakpointItem that = (BreakpointItem) o;
 
-        if (getBreakpoint() != null ? !getBreakpoint().equals(item.getBreakpoint()) : item.getBreakpoint() != null) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(getBreakpoint(), that.getBreakpoint());
     }
 
     @Override
     public int hashCode() {
-        return getBreakpoint() != null ? getBreakpoint().hashCode() : 0;
+        return Objects.hashCode(getBreakpoint());
     }
 }

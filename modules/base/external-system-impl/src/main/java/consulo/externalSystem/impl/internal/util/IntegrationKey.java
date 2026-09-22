@@ -17,87 +17,85 @@ package consulo.externalSystem.impl.internal.util;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unique key which encapsulates information about target ide and external projects.
  * <p/>
  * Thread-safe.
- * 
+ *
  * @author Denis Zhdanov
- * @since 4/10/13 11:39 AM
+ * @since 2013-04-10
  */
 public class IntegrationKey {
+    private final String myIdeProjectName;
 
-  
-  private final String          myIdeProjectName;
-  
-  private final String          myIdeProjectLocationHash;
-  
-  private final ProjectSystemId myExternalSystemId;
-  
-  private final String          myExternalProjectConfigPath;
+    private final String myIdeProjectLocationHash;
 
-  public IntegrationKey(Project ideProject, ProjectSystemId externalSystemId, String externalProjectConfigPath) {
-    this(ideProject.getName(), ideProject.getLocationHash(), externalSystemId, externalProjectConfigPath);
-  }
+    private final ProjectSystemId myExternalSystemId;
 
-  public IntegrationKey(String ideProjectName,
-                        String ideProjectLocationHash,
-                        ProjectSystemId externalSystemId,
-                        String externalProjectConfigPath)
-  {
-    myIdeProjectName = ideProjectName;
-    myIdeProjectLocationHash = ideProjectLocationHash;
-    myExternalSystemId = externalSystemId;
-    myExternalProjectConfigPath = externalProjectConfigPath;
-  }
+    private final String myExternalProjectConfigPath;
 
-  
-  public String getIdeProjectName() {
-    return myIdeProjectName;
-  }
+    public IntegrationKey(Project ideProject, ProjectSystemId externalSystemId, String externalProjectConfigPath) {
+        this(ideProject.getName(), ideProject.getLocationHash(), externalSystemId, externalProjectConfigPath);
+    }
 
-  
-  public String getIdeProjectLocationHash() {
-    return myIdeProjectLocationHash;
-  }
+    public IntegrationKey(
+        String ideProjectName,
+        String ideProjectLocationHash,
+        ProjectSystemId externalSystemId,
+        String externalProjectConfigPath
+    ) {
+        myIdeProjectName = ideProjectName;
+        myIdeProjectLocationHash = ideProjectLocationHash;
+        myExternalSystemId = externalSystemId;
+        myExternalProjectConfigPath = externalProjectConfigPath;
+    }
 
-  
-  public ProjectSystemId getExternalSystemId() {
-    return myExternalSystemId;
-  }
+    public String getIdeProjectName() {
+        return myIdeProjectName;
+    }
 
-  
-  public String getExternalProjectConfigPath() {
-    return myExternalProjectConfigPath;
-  }
+    public String getIdeProjectLocationHash() {
+        return myIdeProjectLocationHash;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myIdeProjectName.hashCode();
-    result = 31 * result + myIdeProjectLocationHash.hashCode();
-    result = 31 * result + myExternalSystemId.hashCode();
-    result = 31 * result + myExternalProjectConfigPath.hashCode();
-    return result;
-  }
+    public ProjectSystemId getExternalSystemId() {
+        return myExternalSystemId;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public String getExternalProjectConfigPath() {
+        return myExternalProjectConfigPath;
+    }
 
-    IntegrationKey key = (IntegrationKey)o;
+    @Override
+    public int hashCode() {
+        int result = myIdeProjectName.hashCode();
+        result = 31 * result + myIdeProjectLocationHash.hashCode();
+        result = 31 * result + myExternalSystemId.hashCode();
+        result = 31 * result + myExternalProjectConfigPath.hashCode();
+        return result;
+    }
 
-    if (!myExternalSystemId.equals(key.myExternalSystemId)) return false;
-    if (!myIdeProjectLocationHash.equals(key.myIdeProjectLocationHash)) return false;
-    if (!myIdeProjectName.equals(key.myIdeProjectName)) return false;
-    if (!myExternalProjectConfigPath.equals(key.myExternalProjectConfigPath)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    return true;
-  }
+        IntegrationKey that = (IntegrationKey) o;
 
-  @Override
-  public String toString() {
-    return String.format("%s project '%s'", myExternalSystemId.toString().toLowerCase(), myIdeProjectName);
-  }
+        return myExternalSystemId.equals(that.myExternalSystemId)
+            && myIdeProjectLocationHash.equals(that.myIdeProjectLocationHash)
+            && myIdeProjectName.equals(that.myIdeProjectName)
+            && myExternalProjectConfigPath.equals(that.myExternalProjectConfigPath);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s project '%s'", myExternalSystemId.toString().toLowerCase(), myIdeProjectName);
+    }
 }

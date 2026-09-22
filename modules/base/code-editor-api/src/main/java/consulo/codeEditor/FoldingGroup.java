@@ -15,6 +15,8 @@
  */
 package consulo.codeEditor;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -23,43 +25,45 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author peter
  */
 public final class FoldingGroup {
-  private static final AtomicLong ourCounter = new AtomicLong();
+    private static final AtomicLong ourCounter = new AtomicLong();
 
-  private final String myDebugName;
-  private final long myId;
+    private final String myDebugName;
+    private final long myId;
 
-  private FoldingGroup(String debugName) {
-    myDebugName = debugName;
-    myId = ourCounter.incrementAndGet();
-  }
+    private FoldingGroup(String debugName) {
+        myDebugName = debugName;
+        myId = ourCounter.incrementAndGet();
+    }
 
-  public static FoldingGroup newGroup(String debugName) {
-    return new FoldingGroup(debugName);
-  }
+    public static FoldingGroup newGroup(String debugName) {
+        return new FoldingGroup(debugName);
+    }
 
-  public long getId() {
-    return myId;
-  }
+    public long getId() {
+        return myId;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    FoldingGroup group = (FoldingGroup)o;
+        FoldingGroup that = (FoldingGroup) o;
 
-    if (myId != group.myId) return false;
+        return myId == that.myId;
+    }
 
-    return true;
-  }
+    @Override
+    public int hashCode() {
+        return (int) (myId ^ (myId >>> 32));
+    }
 
-  @Override
-  public int hashCode() {
-    return (int)(myId ^ (myId >>> 32));
-  }
-
-  @Override
-  public String toString() {
-    return myDebugName;
-  }
+    @Override
+    public String toString() {
+        return myDebugName;
+    }
 }

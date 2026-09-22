@@ -787,7 +787,7 @@ public abstract class DiffRequestProcessor implements Disposable {
                 position = new LogicalPosition(editor.getCaretModel().getLogicalPosition().line + (next ? 1 : 0), 0);
             }
             else {
-                position = new LogicalPosition(next ? changeRange.end : changeRange.start, 0);
+                position = new LogicalPosition(next ? changeRange.end() : changeRange.start(), 0);
             }
             int y = editor.logicalPositionToXY(position).y - shift;
 

@@ -50,22 +50,22 @@ class ExpandedDiffIterable extends ChangeDiffIterableBase {
 
         @Override
         public int getStart1() {
-            return myLast.start1 + myOffset1;
+            return myLast.start1() + myOffset1;
         }
 
         @Override
         public int getStart2() {
-            return myLast.start2 + myOffset2;
+            return myLast.start2() + myOffset2;
         }
 
         @Override
         public int getEnd1() {
-            return myLast.end1 + myOffset1;
+            return myLast.end1() + myOffset1;
         }
 
         @Override
         public int getEnd2() {
-            return myLast.end2 + myOffset2;
+            return myLast.end2() + myOffset2;
         }
     }
 }

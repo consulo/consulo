@@ -15,78 +15,80 @@
  */
 package consulo.compiler.artifact.impl.internal.ui;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.util.lang.Comparing;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.SourceItemPresentation;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.ui.ex.SimpleTextAttributes;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author nik
  */
 public class ModuleGroupItem extends PackagingSourceItem {
-  private final String myGroupName;
-  private final String[] myPath;
-
-  public ModuleGroupItem(String[] path) {
-    super(false);
-    myGroupName = path[path.length - 1];
-    myPath = path;
-  }
-
-  public boolean equals(Object obj) {
-    return obj instanceof ModuleGroupItem && Comparing.equal(myPath, ((ModuleGroupItem)obj).myPath);
-  }
-
-  public int hashCode() {
-    return Arrays.hashCode(myPath);
-  }
-
-  @Override
-  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
-    return new ModuleGroupSourceItemPresentation(myGroupName);
-  }
-
-  
-  @Override
-  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
-    return Collections.emptyList();
-  }
-
-  public String[] getPath() {
-    return myPath;
-  }
-
-  private static class ModuleGroupSourceItemPresentation extends SourceItemPresentation {
     private final String myGroupName;
+    private final String[] myPath;
 
-    public ModuleGroupSourceItemPresentation(String groupName) {
-      myGroupName = groupName;
+    public ModuleGroupItem(String[] path) {
+        super(false);
+        myGroupName = path[path.length - 1];
+        myPath = path;
     }
 
     @Override
-    public String getPresentableName() {
-      return myGroupName;
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof ModuleGroupItem that && Arrays.equals(myPath, that.myPath);
     }
 
     @Override
-    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
-                       SimpleTextAttributes commentAttributes) {
-      presentationData.setIcon(AllIcons.Nodes.ModuleGroup);
-      presentationData.addText(myGroupName, mainAttributes);
+    public int hashCode() {
+        return Arrays.hashCode(myPath);
     }
 
     @Override
-    public int getWeight() {
-      return SourceItemWeights.MODULE_GROUP_WEIGHT;
+    public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
+        return new ModuleGroupSourceItemPresentation(myGroupName);
     }
-  }
+
+    @Override
+    public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
+        return Collections.emptyList();
+    }
+
+    public String[] getPath() {
+        return myPath;
+    }
+
+    private static class ModuleGroupSourceItemPresentation extends SourceItemPresentation {
+        private final String myGroupName;
+
+        public ModuleGroupSourceItemPresentation(String groupName) {
+            myGroupName = groupName;
+        }
+
+        @Override
+        public String getPresentableName() {
+            return myGroupName;
+        }
+
+        @Override
+        public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+            presentationData.setIcon(PlatformIconGroup.nodesModulegroup());
+            presentationData.addText(myGroupName, mainAttributes);
+        }
+
+        @Override
+        public int getWeight() {
+            return SourceItemWeights.MODULE_GROUP_WEIGHT;
+        }
+    }
 }

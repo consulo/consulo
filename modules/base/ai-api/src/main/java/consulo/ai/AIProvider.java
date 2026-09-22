@@ -76,7 +76,7 @@ public final class AIProvider {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(@Nullable Object other) {
         return other instanceof AIProvider provider && myName.equals(provider.myName);
     }
 

@@ -30,8 +30,8 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, RootProvider {
@@ -615,24 +615,22 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    LibraryImpl library = (LibraryImpl)o;
+    LibraryImpl that = (LibraryImpl) o;
 
-    if (!Objects.equals(myName, library.myName)) return false;
-    if (!myRoots.equals(library.myRoots)) return false;
-    if (!Objects.equals(myKind, library.myKind)) return false;
-    if (!Objects.equals(myProperties, library.myProperties)) return false;
-    return Comparing.equal(myExcludedRoots, library.myExcludedRoots);
+    return Objects.equals(myName, that.myName)
+      && myRoots.equals(that.myRoots)
+      && Objects.equals(myKind, that.myKind)
+      && Objects.equals(myProperties, that.myProperties)
+      && Objects.equals(myExcludedRoots, that.myExcludedRoots);
   }
 
   @Override
   public int hashCode() {
-    int result = myName != null ? myName.hashCode() : 0;
-    result = 31 * result + myRoots.hashCode();
-    return result;
+    return 31 * Objects.hashCode(myName) + myRoots.hashCode();
   }
 
   @Override

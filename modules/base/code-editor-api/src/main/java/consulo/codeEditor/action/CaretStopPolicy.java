@@ -16,49 +16,54 @@
 package consulo.codeEditor.action;
 
 import consulo.util.xml.serializer.annotation.OptionTag;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 // from kotlin
 public final class CaretStopPolicy {
-  public static final CaretStopPolicy NONE = new CaretStopPolicy(CaretStop.NONE, CaretStop.NONE);
-  public static final CaretStopPolicy WORD_START = new CaretStopPolicy(CaretStop.START, CaretStop.BOTH);
-  public static final CaretStopPolicy WORD_END = new CaretStopPolicy(CaretStop.END, CaretStop.BOTH);
-  public static final CaretStopPolicy BOTH = new CaretStopPolicy(CaretStop.BOTH, CaretStop.BOTH);
+    public static final CaretStopPolicy NONE = new CaretStopPolicy(CaretStop.NONE, CaretStop.NONE);
+    public static final CaretStopPolicy WORD_START = new CaretStopPolicy(CaretStop.START, CaretStop.BOTH);
+    public static final CaretStopPolicy WORD_END = new CaretStopPolicy(CaretStop.END, CaretStop.BOTH);
+    public static final CaretStopPolicy BOTH = new CaretStopPolicy(CaretStop.BOTH, CaretStop.BOTH);
 
-  @OptionTag("WORD")
-  private final CaretStop wordStop;
-  @OptionTag("LINE")
-  private final CaretStop lineStop;
+    @OptionTag("WORD")
+    private final CaretStop wordStop;
+    @OptionTag("LINE")
+    private final CaretStop lineStop;
 
-  public CaretStopPolicy(CaretStop wordStop, CaretStop lineStop) {
-    this.wordStop = wordStop;
-    this.lineStop = lineStop;
-  }
+    public CaretStopPolicy(CaretStop wordStop, CaretStop lineStop) {
+        this.wordStop = wordStop;
+        this.lineStop = lineStop;
+    }
 
-  public CaretStop getWordStop() {
-    return wordStop;
-  }
+    public CaretStop getWordStop() {
+        return wordStop;
+    }
 
-  public CaretStop getLineStop() {
-    return lineStop;
-  }
+    public CaretStop getLineStop() {
+        return lineStop;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    CaretStopPolicy that = (CaretStopPolicy)o;
-    return Objects.equals(wordStop, that.wordStop) && Objects.equals(lineStop, that.lineStop);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CaretStopPolicy that = (CaretStopPolicy) o;
+        return Objects.equals(wordStop, that.wordStop) && Objects.equals(lineStop, that.lineStop);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(wordStop, lineStop);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(wordStop, lineStop);
+    }
 
-  @Override
-  public String toString() {
-    return "CaretStopPolicy{" + "wordStop=" + wordStop + ", lineStop=" + lineStop + '}';
-  }
+    @Override
+    public String toString() {
+        return "CaretStopPolicy{" + "wordStop=" + wordStop + ", lineStop=" + lineStop + '}';
+    }
 }

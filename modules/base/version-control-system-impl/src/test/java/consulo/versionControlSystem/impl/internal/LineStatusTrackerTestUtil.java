@@ -54,8 +54,8 @@ public final class LineStatusTrackerTestUtil {
             DiffIterableUtil.create(diffRanges, lineOffsets1.getLineCount(), lineOffsets2.getLineCount()));
 
         for (Range range : iterable.iterateUnchanged()) {
-            List<String> lines1 = DiffRangeUtil.getLines(content1, lineOffsets1, range.start1, range.end1);
-            List<String> lines2 = DiffRangeUtil.getLines(content2, lineOffsets2, range.start2, range.end2);
+            List<String> lines1 = DiffRangeUtil.getLines(content1, lineOffsets1, range.start1(), range.end1());
+            List<String> lines2 = DiffRangeUtil.getLines(content2, lineOffsets2, range.start2(), range.end2());
             assertEquals(lines1, lines2);
         }
     }

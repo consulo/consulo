@@ -20,17 +20,17 @@ import consulo.externalSystem.service.project.AbstractExternalEntityData;
 import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Container for external system task information.
  * 
  * @author Denis Zhdanov
- * @since 5/15/13 10:59 AM
+ * @since 2013-05-15
  */
 public class TaskData extends AbstractExternalEntityData implements ExternalConfigPathAware, Comparable<TaskData> {
-
   private static final long serialVersionUID = 1L;
 
-  
   private final String myName;
   
   private final String myLinkedExternalProjectPath;
@@ -47,13 +47,11 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
     myDescription = description;
   }
 
-  
   public String getName() {
     return myName;
   }
 
   @Override
-  
   public String getLinkedExternalProjectPath() {
     return myLinkedExternalProjectPath;
   }
@@ -92,23 +90,21 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
     int result = super.hashCode();
     result = 31 * result + myName.hashCode();
     result = 31 * result + myLinkedExternalProjectPath.hashCode();
-    result = 31 * result + (myDescription != null ? myDescription.hashCode() : 0);
+    result = 31 * result + Objects.hashCode(myDescription);
     return result;
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     if (!super.equals(o)) return false;
 
-    TaskData data = (TaskData)o;
+    TaskData that = (TaskData)o;
 
-    if (myDescription != null ? !myDescription.equals(data.myDescription) : data.myDescription != null) return false;
-    if (!myLinkedExternalProjectPath.equals(data.myLinkedExternalProjectPath)) return false;
-    if (!myName.equals(data.myName)) return false;
-
-    return true;
+    return Objects.equals(myDescription, that.myDescription)
+      && myLinkedExternalProjectPath.equals(that.myLinkedExternalProjectPath)
+      && myName.equals(that.myName);
   }
 
   @Override

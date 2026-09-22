@@ -16,40 +16,42 @@
 package consulo.document;
 
 import consulo.document.util.TextRange;
+import org.jspecify.annotations.Nullable;
 
 public class DocumentFragment {
-  private final Document myDocument;
-  private final TextRange myTextRange;
+    private final Document myDocument;
+    private final TextRange myTextRange;
 
-  public DocumentFragment(Document document, int startOffset, int endOffset) {
-    myDocument = document;
-    myTextRange = new TextRange(startOffset, endOffset);
-  }
+    public DocumentFragment(Document document, int startOffset, int endOffset) {
+        myDocument = document;
+        myTextRange = new TextRange(startOffset, endOffset);
+    }
 
-  public Document getDocument() {
-    return myDocument;
-  }
+    public Document getDocument() {
+        return myDocument;
+    }
 
-  public TextRange getTextRange() {
-    return myTextRange;
-  }
+    public TextRange getTextRange() {
+        return myTextRange;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof DocumentFragment)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DocumentFragment)) {
+            return false;
+        }
 
-    DocumentFragment documentFragment = (DocumentFragment)o;
+        DocumentFragment that = (DocumentFragment) o;
 
-    if (!myDocument.equals(documentFragment.myDocument)) return false;
-    if (!myTextRange.equals(documentFragment.myTextRange)) return false;
+        return myDocument.equals(that.myDocument)
+            && myTextRange.equals(that.myTextRange);
+    }
 
-    return true;
-  }
-
-  public int hashCode() {
-    int result;
-    result = myDocument.hashCode();
-    result = 29 * result + myTextRange.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 29 * myDocument.hashCode() + myTextRange.hashCode();
+    }
 }

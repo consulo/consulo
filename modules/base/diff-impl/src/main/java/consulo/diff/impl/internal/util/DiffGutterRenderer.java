@@ -16,6 +16,7 @@
 package consulo.diff.impl.internal.util;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -25,7 +26,6 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 public abstract class DiffGutterRenderer extends GutterIconRenderer {
-    
     private final Image myIcon;
     
     private final LocalizeValue myTooltip;
@@ -39,13 +39,11 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
         this(icon, LocalizeValue.ofNullable(tooltip));
     }
 
-    
     @Override
     public Image getIcon() {
         return myIcon;
     }
 
-    
     @Override
     public LocalizeValue getTooltipValue() {
         return myTooltip;
@@ -61,7 +59,6 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
         return true;
     }
 
-    
     @Override
     public Alignment getAlignment() {
         return Alignment.LEFT;
@@ -71,6 +68,7 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
     public @Nullable AnAction getClickAction() {
         return new DumbAwareAction() {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 performAction(e);
             }
@@ -78,7 +76,7 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return obj == this;
     }
 

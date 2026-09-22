@@ -17,43 +17,17 @@ package consulo.diff.util;
 
 import consulo.logging.Logger;
 
-public class LineRange {
+public record LineRange(int start, int end) {
   private static final Logger LOG = Logger.getInstance(LineRange.class);
 
-  public final int start;
-  public final int end;
-
-  public LineRange(int start, int end) {
-    this.start = start;
-    this.end = end;
-
+  public LineRange {
     if (start > end) {
-      LOG.error("LineRange is invalid: " + toString());
+      LOG.error("LineRange is invalid: [" + start + ", " + end + ")");
     }
   }
 
   public boolean contains(int start, int end) {
     return this.start <= start && this.end >= end;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    LineRange range = (LineRange)o;
-
-    if (start != range.start) return false;
-    if (end != range.end) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = start;
-    result = 31 * result + end;
-    return result;
   }
 
   @Override

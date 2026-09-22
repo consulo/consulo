@@ -18,64 +18,68 @@ package consulo.desktop.awt.ui.impl.facade;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 11/28/2020
+ * @since 2020-11-28
  */
 class AWTColorValue implements ColorValue {
-  private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
+    private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
-  private final Color myColor;
+    private final Color myColor;
 
-  private RGBColor myLastRGBColor;
+    private RGBColor myLastRGBColor;
 
-  private long myModificationCount = -1;
+    private long myModificationCount = -1;
 
-  AWTColorValue(Color color) {
-    myColor = color;
-  }
-
-  
-  @Override
-  public RGBColor toRGB() {
-    long oldMod = myModificationCount;
-
-    long modificationCount = ourUIModificationTracker.getModificationCount();
-
-    RGBColor lastRGBColor = myLastRGBColor;
-
-    if(oldMod == modificationCount) {
-      if(lastRGBColor == null) {
-        return myLastRGBColor = convert();
-      }
-      else {
-        return lastRGBColor;
-      }
+    AWTColorValue(Color color) {
+        myColor = color;
     }
-    else {
-      myModificationCount = modificationCount;
-      return myLastRGBColor = convert();
+
+    @Override
+    public RGBColor toRGB() {
+        long oldMod = myModificationCount;
+
+        long modificationCount = ourUIModificationTracker.getModificationCount();
+
+        RGBColor lastRGBColor = myLastRGBColor;
+
+        if (oldMod == modificationCount) {
+            if (lastRGBColor == null) {
+                return myLastRGBColor = convert();
+            }
+            else {
+                return lastRGBColor;
+            }
+        }
+        else {
+            myModificationCount = modificationCount;
+            return myLastRGBColor = convert();
+        }
     }
-  }
 
-  private RGBColor convert() {
-    return new RGBColor(myColor.getRed(), myColor.getGreen(), myColor.getBlue(), myColor.getAlpha());
-  }
+    private RGBColor convert() {
+        return new RGBColor(myColor.getRed(), myColor.getGreen(), myColor.getBlue(), myColor.getAlpha());
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    AWTColorValue that = (AWTColorValue)o;
-    return Objects.equals(myColor, that.myColor);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AWTColorValue that = (AWTColorValue) o;
+        return Objects.equals(myColor, that.myColor);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myColor);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myColor);
+    }
 }

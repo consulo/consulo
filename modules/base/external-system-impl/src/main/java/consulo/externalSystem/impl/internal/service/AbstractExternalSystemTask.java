@@ -9,6 +9,7 @@ import consulo.externalSystem.service.notification.ExternalSystemProgressNotific
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -21,203 +22,220 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 2012-01-24
  */
 public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
-  private static final Logger LOG = Logger.getInstance(AbstractExternalSystemTask.class);
+    private static final Logger LOG = Logger.getInstance(AbstractExternalSystemTask.class);
 
-  private final AtomicReference<ExternalSystemTaskState> myState =
-    new AtomicReference<ExternalSystemTaskState>(ExternalSystemTaskState.NOT_STARTED);
-  private final AtomicReference<Throwable> myError = new AtomicReference<Throwable>();
+    private final AtomicReference<ExternalSystemTaskState> myState = new AtomicReference<>(ExternalSystemTaskState.NOT_STARTED);
+    private final AtomicReference<Throwable> myError = new AtomicReference<>();
 
-  private final transient Project myIdeProject;
+    private final transient Project myIdeProject;
 
-  private final ExternalSystemTaskId myId;
-  
-  private final ProjectSystemId myExternalSystemId;
-  
-  private final String myExternalProjectPath;
+    private final ExternalSystemTaskId myId;
 
-  protected AbstractExternalSystemTask(ProjectSystemId id,
-                                       ExternalSystemTaskType type,
-                                       Project project,
-                                       String externalProjectPath) {
-    myExternalSystemId = id;
-    myIdeProject = project;
-    myId = ExternalSystemTaskId.create(id, type, myIdeProject);
-    myExternalProjectPath = externalProjectPath;
-  }
+    private final ProjectSystemId myExternalSystemId;
 
-  public ProjectSystemId getExternalSystemId() {
-    return myExternalSystemId;
-  }
+    private final String myExternalProjectPath;
 
-  public ExternalSystemTaskId getId() {
-    return myId;
-  }
-
-  public ExternalSystemTaskState getState() {
-    return myState.get();
-  }
-
-  protected void setState(ExternalSystemTaskState state) {
-    myState.set(state);
-  }
-
-  protected boolean compareAndSetState(ExternalSystemTaskState expect, ExternalSystemTaskState update) {
-    return myState.compareAndSet(expect, update);
-  }
-
-  @Override
-  public Throwable getError() {
-    return myError.get();
-  }
-
-  public Project getIdeProject() {
-    return myIdeProject;
-  }
-
-  public String getExternalProjectPath() {
-    return myExternalProjectPath;
-  }
-
-  public void refreshState() {
-    if (getState() != ExternalSystemTaskState.IN_PROGRESS) {
-      return;
-    }
-    ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
-    try {
-      RemoteExternalSystemFacade facade = manager.getFacade(myIdeProject, myExternalProjectPath, myExternalSystemId);
-      setState(facade.isTaskInProgress(getId()) ? ExternalSystemTaskState.IN_PROGRESS : ExternalSystemTaskState.FAILED);
-    }
-    catch (Throwable e) {
-      setState(ExternalSystemTaskState.FAILED);
-      myError.set(e);
-      if (!myIdeProject.isDisposed()) {
-        LOG.warn(e);
-      }
-    }
-  }
-
-  @Override
-  public void execute(final ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners) {
-    indicator.setIndeterminate(true);
-    ExternalSystemTaskNotificationListenerAdapter adapter = new ExternalSystemTaskNotificationListenerAdapter() {
-      @Override
-      public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
-        indicator.setText(wrapProgressText(event.getDescription()));
-      }
-    };
-    ExternalSystemTaskNotificationListener[] ls;
-    if (listeners.length > 0) {
-      ls = ArrayUtil.append(listeners, adapter);
-    }
-    else {
-      ls = new ExternalSystemTaskNotificationListener[]{adapter};
+    protected AbstractExternalSystemTask(
+        ProjectSystemId id,
+        ExternalSystemTaskType type,
+        Project project,
+        String externalProjectPath
+    ) {
+        myExternalSystemId = id;
+        myIdeProject = project;
+        myId = ExternalSystemTaskId.create(id, type, myIdeProject);
+        myExternalProjectPath = externalProjectPath;
     }
 
-    execute(ls);
-  }
-
-  @Override
-  public void execute(ExternalSystemTaskNotificationListener... listeners) {
-    if (!compareAndSetState(ExternalSystemTaskState.NOT_STARTED, ExternalSystemTaskState.IN_PROGRESS)) return;
-
-    ExternalSystemProgressNotificationManager progressManager = Application.get().getInstance(ExternalSystemProgressNotificationManager.class);
-    for (ExternalSystemTaskNotificationListener listener : listeners) {
-      progressManager.addNotificationListener(getId(), listener);
-    }
-    ExternalSystemProcessingManager processingManager = Application.get().getInstance(ExternalSystemProcessingManager.class);
-    try {
-      processingManager.add(this);
-      doExecute();
-      setState(ExternalSystemTaskState.FINISHED);
-    }
-    catch (Throwable e) {
-      setState(ExternalSystemTaskState.FAILED);
-      myError.set(e);
-      LOG.warn(e);
-    }
-    finally {
-      for (ExternalSystemTaskNotificationListener listener : listeners) {
-        progressManager.removeNotificationListener(listener);
-      }
-      processingManager.release(getId());
-    }
-  }
-
-  protected abstract void doExecute() throws Exception;
-
-  @Override
-  public boolean cancel(final ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners) {
-    indicator.setIndeterminate(true);
-    ExternalSystemTaskNotificationListenerAdapter adapter = new ExternalSystemTaskNotificationListenerAdapter() {
-      @Override
-      public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
-        indicator.setText(wrapProgressText(event.getDescription()));
-      }
-    };
-    ExternalSystemTaskNotificationListener[] ls;
-    if (listeners.length > 0) {
-      ls = ArrayUtil.append(listeners, adapter);
-    }
-    else {
-      ls = new ExternalSystemTaskNotificationListener[]{adapter};
+    public ProjectSystemId getExternalSystemId() {
+        return myExternalSystemId;
     }
 
-    return cancel(ls);
-  }
-
-  @Override
-  public boolean cancel(ExternalSystemTaskNotificationListener... listeners) {
-    ExternalSystemTaskState currentTaskState = getState();
-    if (currentTaskState.isStopped()) return true;
-
-    ExternalSystemProgressNotificationManager progressManager = Application.get().getInstance(ExternalSystemProgressNotificationManager.class);
-    for (ExternalSystemTaskNotificationListener listener : listeners) {
-      progressManager.addNotificationListener(getId(), listener);
+    @Override
+    public ExternalSystemTaskId getId() {
+        return myId;
     }
 
-    if (!compareAndSetState(currentTaskState, ExternalSystemTaskState.CANCELING)) return false;
-
-    boolean result = false;
-    try {
-      result = doCancel();
-      setState(result ? ExternalSystemTaskState.CANCELED : ExternalSystemTaskState.CANCELLATION_FAILED);
-      return result;
+    @Override
+    public ExternalSystemTaskState getState() {
+        return myState.get();
     }
-    catch (Throwable e) {
-      setState(ExternalSystemTaskState.CANCELLATION_FAILED);
-      myError.set(e);
-      LOG.warn(e);
+
+    protected void setState(ExternalSystemTaskState state) {
+        myState.set(state);
     }
-    finally {
-      for (ExternalSystemTaskNotificationListener listener : listeners) {
-        progressManager.removeNotificationListener(listener);
-      }
+
+    protected boolean compareAndSetState(ExternalSystemTaskState expect, ExternalSystemTaskState update) {
+        return myState.compareAndSet(expect, update);
     }
-    return result;
-  }
 
-  protected abstract boolean doCancel() throws Exception;
+    @Override
+    public Throwable getError() {
+        return myError.get();
+    }
 
-  protected String wrapProgressText(String text) {
-    return ExternalSystemLocalize.progressUpdateText(getExternalSystemId(), text).get();
-  }
+    public Project getIdeProject() {
+        return myIdeProject;
+    }
 
-  @Override
-  public int hashCode() {
-    return myId.hashCode() + myExternalSystemId.hashCode();
-  }
+    public String getExternalProjectPath() {
+        return myExternalProjectPath;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public void refreshState() {
+        if (getState() != ExternalSystemTaskState.IN_PROGRESS) {
+            return;
+        }
+        ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+        try {
+            RemoteExternalSystemFacade facade = manager.getFacade(myIdeProject, myExternalProjectPath, myExternalSystemId);
+            setState(facade.isTaskInProgress(getId()) ? ExternalSystemTaskState.IN_PROGRESS : ExternalSystemTaskState.FAILED);
+        }
+        catch (Throwable e) {
+            setState(ExternalSystemTaskState.FAILED);
+            myError.set(e);
+            if (!myIdeProject.isDisposed()) {
+                LOG.warn(e);
+            }
+        }
+    }
 
-    AbstractExternalSystemTask task = (AbstractExternalSystemTask)o;
-    return myId.equals(task.myId) && myExternalSystemId.equals(task.myExternalSystemId);
-  }
+    @Override
+    public void execute(final ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners) {
+        indicator.setIndeterminate(true);
+        ExternalSystemTaskNotificationListenerAdapter adapter = new ExternalSystemTaskNotificationListenerAdapter() {
+            @Override
+            public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
+                indicator.setText(wrapProgressText(event.getDescription()));
+            }
+        };
+        ExternalSystemTaskNotificationListener[] ls;
+        if (listeners.length > 0) {
+            ls = ArrayUtil.append(listeners, adapter);
+        }
+        else {
+            ls = new ExternalSystemTaskNotificationListener[]{adapter};
+        }
 
-  @Override
-  public String toString() {
-    return String.format("%s task %s: %s", myExternalSystemId.getReadableName(), myId, myState);
-  }
+        execute(ls);
+    }
+
+    @Override
+    public void execute(ExternalSystemTaskNotificationListener... listeners) {
+        if (!compareAndSetState(ExternalSystemTaskState.NOT_STARTED, ExternalSystemTaskState.IN_PROGRESS)) {
+            return;
+        }
+
+        ExternalSystemProgressNotificationManager progressManager = Application.get()
+            .getInstance(ExternalSystemProgressNotificationManager.class);
+        for (ExternalSystemTaskNotificationListener listener : listeners) {
+            progressManager.addNotificationListener(getId(), listener);
+        }
+        ExternalSystemProcessingManager processingManager = Application.get().getInstance(ExternalSystemProcessingManager.class);
+        try {
+            processingManager.add(this);
+            doExecute();
+            setState(ExternalSystemTaskState.FINISHED);
+        }
+        catch (Throwable e) {
+            setState(ExternalSystemTaskState.FAILED);
+            myError.set(e);
+            LOG.warn(e);
+        }
+        finally {
+            for (ExternalSystemTaskNotificationListener listener : listeners) {
+                progressManager.removeNotificationListener(listener);
+            }
+            processingManager.release(getId());
+        }
+    }
+
+    protected abstract void doExecute() throws Exception;
+
+    @Override
+    public boolean cancel(final ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners) {
+        indicator.setIndeterminate(true);
+        ExternalSystemTaskNotificationListenerAdapter adapter = new ExternalSystemTaskNotificationListenerAdapter() {
+            @Override
+            public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
+                indicator.setText(wrapProgressText(event.getDescription()));
+            }
+        };
+        ExternalSystemTaskNotificationListener[] ls;
+        if (listeners.length > 0) {
+            ls = ArrayUtil.append(listeners, adapter);
+        }
+        else {
+            ls = new ExternalSystemTaskNotificationListener[]{adapter};
+        }
+
+        return cancel(ls);
+    }
+
+    @Override
+    public boolean cancel(ExternalSystemTaskNotificationListener... listeners) {
+        ExternalSystemTaskState currentTaskState = getState();
+        if (currentTaskState.isStopped()) {
+            return true;
+        }
+
+        ExternalSystemProgressNotificationManager progressManager = Application.get()
+            .getInstance(ExternalSystemProgressNotificationManager.class);
+        for (ExternalSystemTaskNotificationListener listener : listeners) {
+            progressManager.addNotificationListener(getId(), listener);
+        }
+
+        if (!compareAndSetState(currentTaskState, ExternalSystemTaskState.CANCELING)) {
+            return false;
+        }
+
+        boolean result = false;
+        try {
+            result = doCancel();
+            setState(result ? ExternalSystemTaskState.CANCELED : ExternalSystemTaskState.CANCELLATION_FAILED);
+            return result;
+        }
+        catch (Throwable e) {
+            setState(ExternalSystemTaskState.CANCELLATION_FAILED);
+            myError.set(e);
+            LOG.warn(e);
+        }
+        finally {
+            for (ExternalSystemTaskNotificationListener listener : listeners) {
+                progressManager.removeNotificationListener(listener);
+            }
+        }
+        return result;
+    }
+
+    protected abstract boolean doCancel() throws Exception;
+
+    protected String wrapProgressText(String text) {
+        return ExternalSystemLocalize.progressUpdateText(getExternalSystemId(), text).get();
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * myId.hashCode() + myExternalSystemId.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AbstractExternalSystemTask that = (AbstractExternalSystemTask) o;
+        return myId.equals(that.myId)
+            && myExternalSystemId.equals(that.myExternalSystemId);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s task %s: %s", myExternalSystemId.getReadableName(), myId, myState);
+    }
 }

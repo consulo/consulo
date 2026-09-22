@@ -20,6 +20,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,9 +81,11 @@ public class ExcludeEntryDescription implements Disposable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj == this
-            || obj instanceof ExcludeEntryDescription that
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof ExcludeEntryDescription that
             && that.myIsFile == myIsFile
             && that.myIncludeSubdirectories == myIncludeSubdirectories
             && Objects.equals(that.getUrl(), getUrl());

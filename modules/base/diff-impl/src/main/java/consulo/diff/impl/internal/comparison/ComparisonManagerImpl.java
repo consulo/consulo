@@ -49,7 +49,6 @@ import java.util.function.Consumer;
 public class ComparisonManagerImpl implements ComparisonManagerEx {
   public static final Logger LOG = Logger.getInstance(ComparisonManagerImpl.class);
 
-  
   @Override
   public List<LineFragment> compareLines(CharSequence text1,
                                          CharSequence text2,
@@ -61,7 +60,6 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
     return convertIntoLineFragments(lines1, lines2, iterable);
   }
 
-  
   @Override
   public List<MergeLineFragment> compareLines(CharSequence text1,
                                               CharSequence text2,
@@ -75,7 +73,6 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
     return convertIntoMergeLineFragments(ranges);
   }
 
-  
   @Override
   public List<LineFragment> compareLinesInner(CharSequence text1,
                                               CharSequence text2,
@@ -125,8 +122,8 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
           int currentEndLine2 = i != lineBlocks.size() - 1 ? currentStartLine2 + block.newlines2 : fragment.getEndLine2();
 
           fineFragments.add(new LineFragmentImpl(currentStartLine1, currentEndLine1, currentStartLine2, currentEndLine2,
-                                                 offsets.start1 + startOffset1, offsets.end1 + startOffset1,
-                                                 offsets.start2 + startOffset2, offsets.end2 + startOffset2,
+                                                 offsets.start1() + startOffset1, offsets.end1() + startOffset1,
+                                                 offsets.start2() + startOffset2, offsets.end2() + startOffset2,
                                                  block.fragments));
 
           currentStartLine1 = currentEndLine1;
@@ -141,7 +138,6 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
     return fineFragments;
   }
 
-  
   @Override
   @Deprecated
   public List<LineFragment> compareLinesInner(CharSequence text1,
@@ -152,7 +148,6 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
     return compareLinesInner(text1, text2, policy, indicator);
   }
 
-  
   @Override
   public List<DiffFragment> compareWords(CharSequence text1,
                                          CharSequence text2,
@@ -161,7 +156,6 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
     return ByWord.compare(text1, text2, policy, indicator);
   }
 
-  
   @Override
   public List<DiffFragment> compareChars(CharSequence text1,
                                          CharSequence text2,
@@ -177,7 +171,6 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
     return convertIntoDiffFragments(ByChar.compareTwoStep(text1, text2, indicator));
   }
 
-  
   public List<Range> compareLines(List<? extends CharSequence> lines1,
                                   List<? extends CharSequence> lines2,
                                   ComparisonPolicy policy,
@@ -196,31 +189,26 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
   //
 
   @Override
-  
   public List<DiffFragment> convertIntoDiffFragments(DiffIterable changes) {
     List<DiffFragment> fragments = new ArrayList<>();
     for (Range ch : changes.iterateChanges()) {
-      fragments.add(new DiffFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2));
+      fragments.add(new DiffFragmentImpl(ch.start1(), ch.end1(), ch.start2(), ch.end2()));
     }
     return fragments;
   }
 
-  
-  public static List<LineFragment> convertIntoLineFragments(List<Line> lines1,
-                                                            List<Line> lines2,
-                                                            FairDiffIterable changes) {
+  public static List<LineFragment> convertIntoLineFragments(List<Line> lines1, List<Line> lines2, FairDiffIterable changes) {
     List<LineFragment> fragments = new ArrayList<>();
     for (Range ch : changes.iterateChanges()) {
-      IntPair offsets1 = getOffsets(lines1, ch.start1, ch.end1);
-      IntPair offsets2 = getOffsets(lines2, ch.start2, ch.end2);
+      IntPair offsets1 = getOffsets(lines1, ch.start1(), ch.end1());
+      IntPair offsets2 = getOffsets(lines2, ch.start2(), ch.end2());
 
-      fragments.add(new LineFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2,
-                                         offsets1.val1, offsets1.val2, offsets2.val1, offsets2.val2));
+      fragments.add(new LineFragmentImpl(ch.start1(), ch.end1(), ch.start2(), ch.end2(),
+                                         offsets1.val1(), offsets1.val2(), offsets2.val1(), offsets2.val2()));
     }
     return fragments;
   }
 
-  
   private static IntPair getOffsets(List<Line> lines, int startIndex, int endIndex) {
     if (startIndex == endIndex) {
       int offset;
@@ -241,13 +229,13 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
 
   
   public static List<MergeLineFragment> convertIntoMergeLineFragments(List<MergeRange> conflicts) {
-    return ContainerUtil.map(conflicts, ch -> new MergeLineFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2, ch.start3, ch.end3));
+    return ContainerUtil.map(conflicts, ch -> new MergeLineFragmentImpl(ch.start1(), ch.end1(), ch.start2(), ch.end2(), ch.start3(), ch.end3()));
   }
 
   @Override
   
   public List<MergeWordFragment> convertIntoMergeWordFragments(List<MergeRange> conflicts) {
-    return ContainerUtil.map(conflicts, ch -> new MergeWordFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2, ch.start3, ch.end3));
+    return ContainerUtil.map(conflicts, ch -> new MergeWordFragmentImpl(ch.start1(), ch.end1(), ch.start2(), ch.end2(), ch.start3(), ch.end3()));
   }
 
   //

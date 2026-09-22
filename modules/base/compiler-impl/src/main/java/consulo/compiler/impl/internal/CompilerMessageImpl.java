@@ -132,9 +132,11 @@ public final class CompilerMessageImpl implements CompilerMessage {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof CompilerMessageImpl that
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof CompilerMessageImpl that
             && myColumn == that.myColumn
             && myRow == that.myRow
             && myCategory.equals(that.myCategory)
@@ -146,7 +148,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     public int hashCode() {
         int result = myCategory.hashCode();
         result = 29 * result + myMessage.hashCode();
-        result = 29 * result + (myUrl != null ? myUrl.hashCode() : 0);
+        result = 29 * result + Objects.hashCode(myUrl);
         result = 29 * result + myRow;
         return 29 * result + myColumn;
     }

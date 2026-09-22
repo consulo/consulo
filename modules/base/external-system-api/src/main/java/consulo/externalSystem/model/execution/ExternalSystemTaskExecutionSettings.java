@@ -21,136 +21,124 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Keeps external system task execution parameters. Basically, this is a model class which holds data represented when
  * a user opens run configuration editor for corresponding external system.
  *
  * @author Denis Zhdanov
- * @since 24.05.13 12:20
+ * @since 2013-05-24
  */
 @Tag("ExternalSystemSettings")
 public class ExternalSystemTaskExecutionSettings implements Cloneable {
+    public static final String TAG_NAME = "ExternalSystemSettings";
 
-  
-  public static final String TAG_NAME = "ExternalSystemSettings";
+    private List<String> myTaskNames = new ArrayList<>();
+    private List<String> myTaskDescriptions = new ArrayList<>();
 
-  private List<String> myTaskNames = new ArrayList<>();
-  private List<String> myTaskDescriptions = new ArrayList<>();
+    private @Nullable String myExecutionName;
+    private String myExternalSystemIdString;
+    private String myExternalProjectPath;
+    private String myVmOptions;
+    private String myScriptParameters;
 
-  private @Nullable String myExecutionName;
-  private String myExternalSystemIdString;
-  private String myExternalProjectPath;
-  private String myVmOptions;
-  private String myScriptParameters;
-
-  public @Nullable String getExecutionName() {
-    return myExecutionName;
-  }
-
-  public void setExecutionName(@Nullable String executionName) {
-    myExecutionName = executionName;
-  }
-
-  public String getExternalSystemIdString() {
-    return myExternalSystemIdString;
-  }
-
-  public void setExternalSystemIdString(String externalSystemIdString) {
-    myExternalSystemIdString = externalSystemIdString;
-  }
-
-  public String getExternalProjectPath() {
-    return myExternalProjectPath;
-  }
-
-  public void setExternalProjectPath(String externalProjectPath) {
-    myExternalProjectPath = externalProjectPath;
-  }
-
-  public String getVmOptions() {
-    return myVmOptions;
-  }
-
-  public void setVmOptions(String vmOptions) {
-    myVmOptions = vmOptions;
-  }
-
-  public String getScriptParameters() {
-    return myScriptParameters;
-  }
-
-  public void setScriptParameters(String scriptParameters) {
-    myScriptParameters = scriptParameters;
-  }
-
-  public List<String> getTaskNames() {
-    return myTaskNames;
-  }
-
-  public void setTaskNames(List<String> taskNames) {
-    myTaskNames = taskNames;
-  }
-
-  public List<String> getTaskDescriptions() {
-    return myTaskDescriptions;
-  }
-
-  public void setTaskDescriptions(List<String> taskDescriptions) {
-    myTaskDescriptions = taskDescriptions;
-  }
-
-  @Override
-  public ExternalSystemTaskExecutionSettings clone() {
-    ExternalSystemTaskExecutionSettings result = new ExternalSystemTaskExecutionSettings();
-    result.setExecutionName(getExecutionName());
-    result.setExternalSystemIdString(getExternalSystemIdString());
-    result.setExternalProjectPath(getExternalProjectPath());
-    result.setVmOptions(getVmOptions());
-    result.setScriptParameters(getScriptParameters());
-    result.setTaskNames(new ArrayList<>(getTaskNames()));
-    result.setTaskDescriptions(new ArrayList<>(getTaskDescriptions()));
-    return result;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = myTaskNames != null ? myTaskNames.hashCode() : 0;
-    result = 31 * result + (myExecutionName != null ? myExecutionName.hashCode() : 0);
-    result = 31 * result + (myExternalSystemIdString != null ? myExternalSystemIdString.hashCode() : 0);
-    result = 31 * result + (myExternalProjectPath != null ? myExternalProjectPath.hashCode() : 0);
-    result = 31 * result + (myVmOptions != null ? myVmOptions.hashCode() : 0);
-    result = 31 * result + (myScriptParameters != null ? myScriptParameters.hashCode() : 0);
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    ExternalSystemTaskExecutionSettings settings = (ExternalSystemTaskExecutionSettings)o;
-
-    if (myExecutionName != null ? !myExecutionName.equals(settings.myExecutionName) : settings.myExecutionName != null) {
-      return false;
+    public @Nullable String getExecutionName() {
+        return myExecutionName;
     }
 
-    if (myExternalProjectPath != null
-        ? !myExternalProjectPath.equals(settings.myExternalProjectPath)
-        : settings.myExternalProjectPath != null)
-    {
-      return false;
+    public void setExecutionName(@Nullable String executionName) {
+        myExecutionName = executionName;
     }
-    if (myExternalSystemIdString != null
-        ? !myExternalSystemIdString.equals(settings.myExternalSystemIdString)
-        : settings.myExternalSystemIdString != null)
-    {
-      return false;
-    }
-    if (myTaskNames != null ? !myTaskNames.equals(settings.myTaskNames) : settings.myTaskNames != null) return false;
-    if (StringUtil.isEmpty(myVmOptions) ^ StringUtil.isEmpty(settings.myVmOptions)) return false;
-    if (StringUtil.isEmpty(myScriptParameters) ^ StringUtil.isEmpty(settings.myScriptParameters)) return false;
 
-    return true;
-  }
+    public String getExternalSystemIdString() {
+        return myExternalSystemIdString;
+    }
+
+    public void setExternalSystemIdString(String externalSystemIdString) {
+        myExternalSystemIdString = externalSystemIdString;
+    }
+
+    public String getExternalProjectPath() {
+        return myExternalProjectPath;
+    }
+
+    public void setExternalProjectPath(String externalProjectPath) {
+        myExternalProjectPath = externalProjectPath;
+    }
+
+    public String getVmOptions() {
+        return myVmOptions;
+    }
+
+    public void setVmOptions(String vmOptions) {
+        myVmOptions = vmOptions;
+    }
+
+    public String getScriptParameters() {
+        return myScriptParameters;
+    }
+
+    public void setScriptParameters(String scriptParameters) {
+        myScriptParameters = scriptParameters;
+    }
+
+    public List<String> getTaskNames() {
+        return myTaskNames;
+    }
+
+    public void setTaskNames(List<String> taskNames) {
+        myTaskNames = taskNames;
+    }
+
+    public List<String> getTaskDescriptions() {
+        return myTaskDescriptions;
+    }
+
+    public void setTaskDescriptions(List<String> taskDescriptions) {
+        myTaskDescriptions = taskDescriptions;
+    }
+
+    @Override
+    public ExternalSystemTaskExecutionSettings clone() {
+        ExternalSystemTaskExecutionSettings result = new ExternalSystemTaskExecutionSettings();
+        result.setExecutionName(getExecutionName());
+        result.setExternalSystemIdString(getExternalSystemIdString());
+        result.setExternalProjectPath(getExternalProjectPath());
+        result.setVmOptions(getVmOptions());
+        result.setScriptParameters(getScriptParameters());
+        result.setTaskNames(new ArrayList<>(getTaskNames()));
+        result.setTaskDescriptions(new ArrayList<>(getTaskDescriptions()));
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(myTaskNames);
+        result = 31 * result + Objects.hashCode(myExecutionName);
+        result = 31 * result + Objects.hashCode(myExternalSystemIdString);
+        result = 31 * result + Objects.hashCode(myExternalProjectPath);
+        result = 31 * result + Boolean.hashCode(StringUtil.isEmpty(myVmOptions));
+        result = 31 * result + Boolean.hashCode(StringUtil.isEmpty(myScriptParameters));
+        return result;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ExternalSystemTaskExecutionSettings that = (ExternalSystemTaskExecutionSettings) o;
+
+        return Objects.equals(myExecutionName, that.myExecutionName)
+            && Objects.equals(myExternalProjectPath, that.myExternalProjectPath)
+            && Objects.equals(myExternalSystemIdString, that.myExternalSystemIdString)
+            && Objects.equals(myTaskNames, that.myTaskNames)
+            && StringUtil.isEmpty(myVmOptions) == StringUtil.isEmpty(that.myVmOptions)
+            && StringUtil.isEmpty(myScriptParameters) == StringUtil.isEmpty(that.myScriptParameters);
+    }
 }

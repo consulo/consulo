@@ -16,14 +16,15 @@
 package consulo.content.library;
 
 import consulo.component.persist.PersistentStateComponent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public abstract class LibraryProperties<T> implements PersistentStateComponent<T> {
-  @Override
-  public abstract boolean equals(Object obj);
+    @Override
+    public abstract boolean equals(@Nullable Object obj);
 
-  @Override
-  public abstract int hashCode();
+    @Override
+    public abstract int hashCode();
 }

@@ -13,69 +13,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.configuration.log;
 
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class PredefinedLogFile implements JDOMExternalizable {
-  private static final String ID_ATTRIBUTE = "id";
-  private static final String ENABLED_ATTRIBUTE = "enabled";
-  private String myId;
-  private boolean myEnabled;
+    private static final String ID_ATTRIBUTE = "id";
+    private static final String ENABLED_ATTRIBUTE = "enabled";
+    private String myId;
+    private boolean myEnabled;
 
-  public PredefinedLogFile() {
-  }
+    public PredefinedLogFile() {
+    }
 
-  public PredefinedLogFile(PredefinedLogFile logFile) {
-    myEnabled = logFile.myEnabled;
-    myId = logFile.myId;
-  }
+    public PredefinedLogFile(PredefinedLogFile logFile) {
+        myEnabled = logFile.myEnabled;
+        myId = logFile.myId;
+    }
 
-  public PredefinedLogFile(String id, boolean enabled) {
-    myEnabled = enabled;
-    myId = id;
-  }
+    public PredefinedLogFile(String id, boolean enabled) {
+        myEnabled = enabled;
+        myId = id;
+    }
 
-  public boolean isEnabled() {
-    return myEnabled;
-  }
+    public boolean isEnabled() {
+        return myEnabled;
+    }
 
-  public void setEnabled(boolean enabled) {
-    myEnabled = enabled;
-  }
+    public void setEnabled(boolean enabled) {
+        myEnabled = enabled;
+    }
 
-  public String getId() {
-    return myId;
-  }
+    public String getId() {
+        return myId;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    PredefinedLogFile that = (PredefinedLogFile)o;
-    return myId.equals(that.myId);
-  }
+        PredefinedLogFile that = (PredefinedLogFile) o;
+        return myId.equals(that.myId);
+    }
 
-  public int hashCode() {
-    return myId.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myId.hashCode();
+    }
 
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    myId = element.getAttributeValue(ID_ATTRIBUTE);
-    myEnabled = Boolean.parseBoolean(element.getAttributeValue(ENABLED_ATTRIBUTE));
-  }
+    @Override
+    public void readExternal(Element element) throws InvalidDataException {
+        myId = element.getAttributeValue(ID_ATTRIBUTE);
+        myEnabled = Boolean.parseBoolean(element.getAttributeValue(ENABLED_ATTRIBUTE));
+    }
 
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    element.setAttribute(ID_ATTRIBUTE, myId);
-    element.setAttribute(ENABLED_ATTRIBUTE, String.valueOf(myEnabled));
-  }
+    @Override
+    public void writeExternal(Element element) throws WriteExternalException {
+        element.setAttribute(ID_ATTRIBUTE, myId);
+        element.setAttribute(ENABLED_ATTRIBUTE, String.valueOf(myEnabled));
+    }
 }

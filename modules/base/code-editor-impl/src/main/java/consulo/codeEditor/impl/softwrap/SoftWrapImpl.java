@@ -17,6 +17,7 @@ package consulo.codeEditor.impl.softwrap;
 
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.internal.TextChangeImpl;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link SoftWrap} implementation that is built around {@link TextChangeImpl}.
@@ -25,7 +26,6 @@ import consulo.codeEditor.internal.TextChangeImpl;
  * @since 2010-09-01
  */
 public class SoftWrapImpl implements SoftWrap {
-
   private final TextChangeImpl myChange;
   private final int myIndentInColumns;
   private final int myIndentInPixels;
@@ -46,13 +46,11 @@ public class SoftWrapImpl implements SoftWrap {
     return myChange.getEnd();
   }
 
-  
   @Override
   public CharSequence getText() {
     return myChange.getText();
   }
 
-  
   @Override
   public char[] getChars() {
     return myChange.getChars();
@@ -84,12 +82,14 @@ public class SoftWrapImpl implements SoftWrap {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     
-    SoftWrapImpl that = (SoftWrapImpl)o;
-    return myIndentInColumns == that.myIndentInColumns && myIndentInPixels == that.myIndentInPixels && myChange.equals(that.myChange);
+    SoftWrapImpl that = (SoftWrapImpl) o;
+    return myIndentInColumns == that.myIndentInColumns
+        && myIndentInPixels == that.myIndentInPixels
+        && myChange.equals(that.myChange);
   }
 
   @Override

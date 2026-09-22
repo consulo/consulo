@@ -15,11 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.desktop.awt.ui.impl.image.RetrievableIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
@@ -29,61 +28,65 @@ import java.util.Objects;
  * @since 2018-05-06
  */
 public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
-  private final consulo.ui.image.Image myImage;
-  private final float myAlpha;
+    private final consulo.ui.image.Image myImage;
+    private final float myAlpha;
 
-  public DesktopTransparentImageImpl(Image image, float alpha) {
-    myImage = image;
-    myAlpha = alpha;
-  }
-
-  @Override
-  public @Nullable Icon retrieveIcon() {
-    return TargetAWT.to(myImage);
-  }
-
-  @Override
-  public int getIconHeight() {
-    return myImage.getHeight();
-  }
-
-  @Override
-  public int getIconWidth() {
-    return myImage.getWidth();
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    Graphics2D g2 = (Graphics2D)g;
-    Composite saveComposite = g2.getComposite();
-    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, myAlpha));
-    Icon icon = retrieveIcon();
-    if (icon != null) {
-      icon.paintIcon(c, g2, x, y);
+    public DesktopTransparentImageImpl(Image image, float alpha) {
+        myImage = image;
+        myAlpha = alpha;
     }
-    g2.setComposite(saveComposite);
-  }
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+    @Override
+    public @Nullable Icon retrieveIcon() {
+        return TargetAWT.to(myImage);
+    }
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+    @Override
+    public int getIconHeight() {
+        return myImage.getHeight();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    DesktopTransparentImageImpl that = (DesktopTransparentImageImpl)o;
-    return Float.compare(that.myAlpha, myAlpha) == 0 && Objects.equals(myImage, that.myImage);
-  }
+    @Override
+    public int getIconWidth() {
+        return myImage.getWidth();
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myImage, myAlpha);
-  }
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+        Graphics2D g2 = (Graphics2D) g;
+        Composite saveComposite = g2.getComposite();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, myAlpha));
+        Icon icon = retrieveIcon();
+        if (icon != null) {
+            icon.paintIcon(c, g2, x, y);
+        }
+        g2.setComposite(saveComposite);
+    }
+
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DesktopTransparentImageImpl that = (DesktopTransparentImageImpl) o;
+        return Float.compare(that.myAlpha, myAlpha) == 0 && Objects.equals(myImage, that.myImage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myImage, myAlpha);
+    }
 }

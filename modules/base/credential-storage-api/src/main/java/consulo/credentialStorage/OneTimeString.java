@@ -4,6 +4,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -154,9 +155,12 @@ public final class OneTimeString extends CharArrayCharSequence {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof CharSequence) {
-            return StringUtil.equals(this, (CharSequence) obj);
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof CharSequence that) {
+            return StringUtil.equals(this, that);
         }
         return super.equals(obj);
     }

@@ -4,6 +4,7 @@ package consulo.codeEditor.impl;
 import consulo.document.RangeMarker;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,10 +44,7 @@ public final class GuardedBlocksIndex {
 
     public boolean isGuarded(int offset) {
         int i = indexOfNearestLeft(offset);
-        if (i != -1) {
-            return guards[i];
-        }
-        return false;
+        return i != -1 && guards[i];
     }
 
     private int indexOfNearestLeft(int offset) {
@@ -77,14 +75,9 @@ public final class GuardedBlocksIndex {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof GuardedBlocksIndex index)) {
-            return false;
-        }
-        return toString().equals(index.toString());
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof GuardedBlocksIndex that && toString().equals(that.toString());
     }
 
     @Override
@@ -155,7 +148,6 @@ public final class GuardedBlocksIndex {
             this.document = document;
         }
 
-        
         GuardedBlocksIndex build(int start, int end) {
             return build(start, end, document.getGuardedBlocks());
         }

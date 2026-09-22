@@ -20,18 +20,13 @@
 package consulo.versionControlSystem.impl.internal;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.comparison.TrimUtil;
 import consulo.diff.comparison.iterable.DiffIterableUtil;
 import consulo.diff.comparison.iterable.FairDiffIterable;
 import consulo.diff.internal.DiffImplUtil;
-import consulo.diff.util.DiffRangeUtil;
-import consulo.diff.util.LineOffsets;
-import consulo.diff.util.LineOffsetsUtil;
-import consulo.diff.util.Range;
-import consulo.diff.util.Side;
+import consulo.diff.util.*;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
@@ -105,7 +100,7 @@ public class DocumentTracker implements Disposable {
         myDocument2.addDocumentListener(myDocumentListener2);
 
         myApplicationListener = new MyApplicationListener();
-        ApplicationManager.getApplication().addApplicationListener(myApplicationListener);
+        Application.get().addApplicationListener(myApplicationListener);
     }
 
     @RequiredUIAccess
@@ -116,7 +111,7 @@ public class DocumentTracker implements Disposable {
 
         myDocument1.removeDocumentListener(myDocumentListener1);
         myDocument2.removeDocumentListener(myDocumentListener2);
-        ApplicationManager.getApplication().removeApplicationListener(myApplicationListener);
+        Application.get().removeApplicationListener(myApplicationListener);
 
         myLock.lock();
         try {
@@ -357,22 +352,22 @@ public class DocumentTracker implements Disposable {
 
         @Override
         public int getStart() {
-            return myRange.start2;
+            return myRange.start2();
         }
 
         @Override
         public int getEnd() {
-            return myRange.end2;
+            return myRange.end2();
         }
 
         @Override
         public int getVcsStart() {
-            return myRange.start1;
+            return myRange.start1();
         }
 
         @Override
         public int getVcsEnd() {
-            return myRange.end1;
+            return myRange.end1();
         }
 
         @Nullable
@@ -429,6 +424,7 @@ public class DocumentTracker implements Disposable {
             }
         }
 
+        @RequiredUIAccess
         void unfreeze(Side side) {
             FreezeData data = getData(side);
             if (data == null || data.counter == 0) {
@@ -553,6 +549,7 @@ public class DocumentTracker implements Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         public void bulkUpdateFinished(Document document) {
             unfreeze(mySide);
         }
@@ -597,7 +594,7 @@ public class DocumentTracker implements Disposable {
     private class MyApplicationListener implements ApplicationListener {
         @Override
         public void afterWriteActionFinished(Object action) {
-            Application application = ApplicationManager.getApplication();
+            Application application = Application.get();
             if (application.isDispatchThread()) {
                 application.runReadAction(() -> refreshDirty(true));
             }
@@ -910,7 +907,7 @@ public class DocumentTracker implements Disposable {
                 Range range1 = block.getRange();
                 Range range2 = it2.peek();
 
-                if (rangeStart(range1, mySide) <= range2.start1) {
+                if (rangeStart(range1, mySide) <= range2.start1()) {
                     handleBlock(it1.next());
                 }
                 else {
@@ -934,11 +931,11 @@ public class DocumentTracker implements Disposable {
         }
 
         private void handleChange(Range range) {
-            flush(range.start1);
+            flush(range.start1());
 
             myDirtyChangeShift += getRangeDelta(range, Side.LEFT);
 
-            markDirtyRange(range.start1, range.end1);
+            markDirtyRange(range.start1(), range.end1());
 
             myDirtyBlocksModified = true;
         }
@@ -1059,7 +1056,7 @@ public class DocumentTracker implements Disposable {
         }
 
         private boolean shouldMergeBlocks(Block block1, Block block2) {
-            if (myForceMergeNearbyBlocks && block2.getRange().start2 - block1.getRange().end2 < NEARBY_BLOCKS_LINES) {
+            if (myForceMergeNearbyBlocks && block2.getRange().start2() - block1.getRange().end2() < NEARBY_BLOCKS_LINES) {
                 return true;
             }
             if (isWhitespaceOnlySeparated(block1, block2)) return true;
@@ -1067,8 +1064,8 @@ public class DocumentTracker implements Disposable {
         }
 
         private boolean isWhitespaceOnlySeparated(Block block1, Block block2) {
-            DiffRangeUtil.LinesRange range1 = DiffRangeUtil.getLinesRange(myLineOffsets1, block1.getRange().start1, block1.getRange().end1, false);
-            DiffRangeUtil.LinesRange range2 = DiffRangeUtil.getLinesRange(myLineOffsets1, block2.getRange().start1, block2.getRange().end1, false);
+            DiffRangeUtil.LinesRange range1 = DiffRangeUtil.getLinesRange(myLineOffsets1, block1.getRange().start1(), block1.getRange().end1(), false);
+            DiffRangeUtil.LinesRange range2 = DiffRangeUtil.getLinesRange(myLineOffsets1, block2.getRange().start1(), block2.getRange().end1(), false);
             int start = range1.endOffset;
             int end = range2.startOffset;
             return TrimUtil.trimStart(myText1, start, end) == end;
@@ -1107,8 +1104,8 @@ public class DocumentTracker implements Disposable {
         private Block mergeBlocks(Block block1, Block block2) {
             boolean isDirty = block1.isDirty() || block2.isDirty();
             boolean isTooBig = block1.isTooBig() || block2.isTooBig();
-            Range range = new Range(block1.getRange().start1, block2.getRange().end1,
-                block1.getRange().start2, block2.getRange().end2);
+            Range range = new Range(block1.getRange().start1(), block2.getRange().end1(),
+                block1.getRange().start2(), block2.getRange().end2());
             Block merged = new Block(range, isDirty, isTooBig);
 
             for (Handler handler : myHandlers) {
@@ -1168,7 +1165,7 @@ public class DocumentTracker implements Disposable {
 
             List<Block> result = new ArrayList<>();
             for (Range range : iterable.iterateChanges()) {
-                result.add(new Block(shiftRange(range, block.getRange().start1, block.getRange().start2), false, isTooBig));
+                result.add(new Block(shiftRange(range, block.getRange().start1(), block.getRange().start2()), false, isTooBig));
             }
             return result;
         }
@@ -1176,8 +1173,8 @@ public class DocumentTracker implements Disposable {
         private int calcSize(List<Block> blocks) {
             int result = 0;
             for (Block block : blocks) {
-                result += block.getRange().end1 - block.getRange().start1;
-                result += block.getRange().end2 - block.getRange().start2;
+                result += block.getRange().end1() - block.getRange().start1();
+                result += block.getRange().end2() - block.getRange().start2();
             }
             return result;
         }
@@ -1189,10 +1186,10 @@ public class DocumentTracker implements Disposable {
                                           List<Block> blocks) {
             int result = 0;
             for (Block block : blocks) {
-                for (int line = block.getRange().start1; line < block.getRange().end1; line++) {
+                for (int line = block.getRange().start1(); line < block.getRange().end1(); line++) {
                     if (!isWhitespaceLine(text1, lineOffsets1, line)) result++;
                 }
-                for (int line = block.getRange().start2; line < block.getRange().end2; line++) {
+                for (int line = block.getRange().start2(); line < block.getRange().end2(); line++) {
                     if (!isWhitespaceLine(text2, lineOffsets2, line)) result++;
                 }
             }
@@ -1256,7 +1253,7 @@ public class DocumentTracker implements Disposable {
     }
 
     private static Range shiftRange(Range range, int shift1, int shift2) {
-        return new Range(range.start1 + shift1, range.end1 + shift1, range.start2 + shift2, range.end2 + shift2);
+        return new Range(range.start1() + shift1, range.end1() + shift1, range.start2() + shift2, range.end2() + shift2);
     }
 
     private static Range createRange(Side side, int start, int end, int otherStart, int otherEnd) {
@@ -1264,10 +1261,10 @@ public class DocumentTracker implements Disposable {
     }
 
     private static int rangeStart(Range range, Side side) {
-        return side.isLeft() ? range.start1 : range.start2;
+        return side.isLeft() ? range.start1() : range.start2();
     }
 
     private static int rangeEnd(Range range, Side side) {
-        return side.isLeft() ? range.end1 : range.end2;
+        return side.isLeft() ? range.end1() : range.end2();
     }
 }

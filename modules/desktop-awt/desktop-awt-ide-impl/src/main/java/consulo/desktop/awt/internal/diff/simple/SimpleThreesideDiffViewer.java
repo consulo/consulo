@@ -56,7 +56,6 @@ import java.util.List;
 public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     public static final Logger LOG = Logger.getInstance(SimpleThreesideDiffViewer.class);
 
-    
     private final List<SimpleThreesideDiffChange> myDiffChanges = new ArrayList<>();
     
     private final List<SimpleThreesideDiffChange> myInvalidDiffChanges = new ArrayList<>();
@@ -65,7 +64,6 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         super(context, (ContentDiffRequest) request);
     }
 
-    
     @Override
     protected List<AnAction> createToolbarActions() {
         List<AnAction> group = new ArrayList<>();
@@ -88,7 +86,6 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         return group;
     }
 
-    
     @Override
     protected List<AnAction> createPopupActions() {
         List<AnAction> group = new ArrayList<>();
@@ -119,7 +116,6 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         myInitialScrollHelper.onSlowRediff();
     }
 
-    
     @Override
     @RequiredUIAccess
     protected Runnable performRediff(ProgressIndicator indicator) {
@@ -187,17 +183,12 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         }
     }
 
-    private static @Nullable CharSequence getChunkContent(
-        MergeLineFragment fragment,
-        List<Document> documents,
-        ThreeSide side
-    ) {
+    private static @Nullable CharSequence getChunkContent(MergeLineFragment fragment, List<Document> documents, ThreeSide side) {
         int startLine = fragment.getStartLine(side);
         int endLine = fragment.getEndLine(side);
         return startLine != endLine ? DiffImplUtil.getLinesContent(side.select(documents), startLine, endLine) : null;
     }
 
-    
     private Runnable apply(
         List<MergeLineFragment> fragments,
         List<MergeConflictType> conflictTypes,
@@ -266,7 +257,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
 
         List<SimpleThreesideDiffChange> invalid = new ArrayList<>();
         for (SimpleThreesideDiffChange change : myDiffChanges) {
-            if (change.processChange(lineRange.start, lineRange.end, shift, side)) {
+            if (change.processChange(lineRange.start(), lineRange.end(), shift, side)) {
                 invalid.add(change);
             }
         }
@@ -286,7 +277,6 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         return policy;
     }
 
-    
     private HighlightPolicy getHighlightPolicy() {
         HighlightPolicy policy = getTextSettings().getHighlightPolicy();
         if (policy == HighlightPolicy.BY_WORD_SPLIT) {
@@ -302,13 +292,11 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     // Getters
     //
 
-    
     @Override
     public List<SimpleThreesideDiffChange> getChanges() {
         return myDiffChanges;
     }
 
-    
     @Override
     protected DiffDividerDrawUtil.DividerPaintable getDividerPaintable(Side side) {
         return new MyDividerPaintable(side);
@@ -332,13 +320,11 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
             super(getTextSettings());
         }
 
-        
         @Override
         protected IgnorePolicy getCurrentSetting() {
             return getIgnorePolicy();
         }
 
-        
         @Override
         protected List<IgnorePolicy> getAvailableSettings() {
             List<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
@@ -364,7 +350,6 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
             return getHighlightPolicy();
         }
 
-        
         @Override
         protected List<HighlightPolicy> getAvailableSettings() {
             return ContainerUtil.list(HighlightPolicy.BY_LINE, HighlightPolicy.BY_WORD);

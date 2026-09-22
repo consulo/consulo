@@ -16,7 +16,6 @@
 package consulo.compiler.artifact.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.ArtifactElementType;
 import consulo.compiler.artifact.element.PackagingElement;
@@ -25,6 +24,7 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
 import consulo.compiler.artifact.ui.SourceItemPresentation;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import org.jspecify.annotations.Nullable;
@@ -39,67 +39,72 @@ import java.util.List;
  */
 @ExtensionImpl(order = "last")
 public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
-  @Override
-  
-  public Collection<? extends PackagingSourceItem> getSourceItems(ArtifactEditorContext editorContext,
-                                                                  Artifact artifact,
-                                                                  @Nullable PackagingSourceItem parent) {
-    if (parent == null) {
-      if (!ArtifactElementType.getAvailableArtifacts(editorContext, artifact, true).isEmpty()) {
-        return Collections.singletonList(new ArtifactsGroupSourceItem());
-      }
-    }
-    else if (parent instanceof ArtifactsGroupSourceItem) {
-      List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
-      for (Artifact another : ArtifactElementType.getAvailableArtifacts(editorContext, artifact, true)) {
-        items.add(new ArtifactSourceItem(another));
-      }
-      return items;
-    }
-    return Collections.emptyList();
-  }
-
-  private static class ArtifactsGroupSourceItem extends PackagingSourceItem {
-    private ArtifactsGroupSourceItem() {
-      super(false);
-    }
-
-    public boolean equals(Object obj) {
-      return obj instanceof ArtifactsGroupSourceItem;
-    }
-
-    public int hashCode() {
-      return 0;
-    }
-
     @Override
-    public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
-      return new ArtifactsGroupPresentation();
+    public Collection<? extends PackagingSourceItem> getSourceItems(
+        ArtifactEditorContext editorContext,
+        Artifact artifact,
+        @Nullable PackagingSourceItem parent
+    ) {
+        if (parent == null) {
+            if (!ArtifactElementType.getAvailableArtifacts(editorContext, artifact, true).isEmpty()) {
+                return Collections.singletonList(new ArtifactsGroupSourceItem());
+            }
+        }
+        else if (parent instanceof ArtifactsGroupSourceItem) {
+            List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
+            for (Artifact another : ArtifactElementType.getAvailableArtifacts(editorContext, artifact, true)) {
+                items.add(new ArtifactSourceItem(another));
+            }
+            return items;
+        }
+        return Collections.emptyList();
     }
 
-    @Override
-    
-    public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
-      return Collections.emptyList();
+    private static class ArtifactsGroupSourceItem extends PackagingSourceItem {
+        private ArtifactsGroupSourceItem() {
+            super(false);
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            return obj instanceof ArtifactsGroupSourceItem;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
+            return new ArtifactsGroupPresentation();
+        }
+
+        @Override
+        public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
+            return Collections.emptyList();
+        }
+
+        private static class ArtifactsGroupPresentation extends SourceItemPresentation {
+            @Override
+            public String getPresentableName() {
+                return "Artifacts";
+            }
+
+            @Override
+            public void render(
+                PresentationData presentationData,
+                SimpleTextAttributes mainAttributes,
+                SimpleTextAttributes commentAttributes
+            ) {
+                presentationData.setIcon(PlatformIconGroup.nodesArtifact());
+                presentationData.addText("Artifacts", mainAttributes);
+            }
+
+            @Override
+            public int getWeight() {
+                return SourceItemWeights.ARTIFACTS_GROUP_WEIGHT;
+            }
+        }
     }
-
-    private static class ArtifactsGroupPresentation extends SourceItemPresentation {
-      @Override
-      public String getPresentableName() {
-        return "Artifacts";
-      }
-
-      @Override
-      public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
-                         SimpleTextAttributes commentAttributes) {
-        presentationData.setIcon(AllIcons.Nodes.Artifact);
-        presentationData.addText("Artifacts", mainAttributes);
-      }
-
-      @Override
-      public int getWeight() {
-        return SourceItemWeights.ARTIFACTS_GROUP_WEIGHT;
-      }
-    }
-  }
 }

@@ -20,7 +20,6 @@ import consulo.diff.util.Range;
 import java.util.Iterator;
 
 class SubiterableDiffIterable extends ChangeDiffIterableBase {
-  
   private final DiffIterable myIterable;
   private final int myStart1;
   private final int myStart2;
@@ -63,11 +62,11 @@ class SubiterableDiffIterable extends ChangeDiffIterableBase {
 
       while (myIterator.hasNext()) {
         Range range = myIterator.next();
-        if (range.end1 < myStart1 || range.end2 < myStart2) continue;
-        if (range.start1 > myEnd1 || range.start2 > myEnd2) break;
+        if (range.end1() < myStart1 || range.end2() < myStart2) continue;
+        if (range.start1() > myEnd1 || range.start2() > myEnd2) break;
 
-        myLast = new Range(Math.max(myStart1, range.start1) - myStart1, Math.min(myEnd1, range.end1) - myStart1,
-                           Math.max(myStart2, range.start2) - myStart2, Math.min(myEnd2, range.end2) - myStart2);
+        myLast = new Range(Math.max(myStart1, range.start1()) - myStart1, Math.min(myEnd1, range.end1()) - myStart1,
+                           Math.max(myStart2, range.start2()) - myStart2, Math.min(myEnd2, range.end2()) - myStart2);
         if (!myLast.isEmpty()) break;
         myLast = null;
       }
@@ -75,22 +74,22 @@ class SubiterableDiffIterable extends ChangeDiffIterableBase {
 
     @Override
     public int getStart1() {
-      return myLast.start1;
+      return myLast.start1();
     }
 
     @Override
     public int getStart2() {
-      return myLast.start2;
+      return myLast.start2();
     }
 
     @Override
     public int getEnd1() {
-      return myLast.end1;
+      return myLast.end1();
     }
 
     @Override
     public int getEnd2() {
-      return myLast.end2;
+      return myLast.end2();
     }
   }
 }

@@ -17,6 +17,7 @@ package consulo.compiler.artifact.ui;
 
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,33 +25,31 @@ import java.util.List;
  * @author nik
  */
 public abstract class PackagingSourceItem {
-  private boolean myProvideElements;
+    private boolean myProvideElements;
 
-  protected PackagingSourceItem() {
-    this(true);
-  }
+    protected PackagingSourceItem() {
+        this(true);
+    }
 
-  protected PackagingSourceItem(boolean provideElements) {
-    myProvideElements = provideElements;
-  }
+    protected PackagingSourceItem(boolean provideElements) {
+        myProvideElements = provideElements;
+    }
 
-  @Override
-  public abstract boolean equals(Object obj);
+    @Override
+    public abstract boolean equals(@Nullable Object obj);
 
-  @Override
-  public abstract int hashCode();
+    @Override
+    public abstract int hashCode();
 
-  public abstract SourceItemPresentation createPresentation(ArtifactEditorContext context);
+    public abstract SourceItemPresentation createPresentation(ArtifactEditorContext context);
 
-  
-  public abstract List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context);
+    public abstract List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context);
 
-  public boolean isProvideElements() {
-    return myProvideElements;
-  }
+    public boolean isProvideElements() {
+        return myProvideElements;
+    }
 
-  
-  public PackagingElementOutputKind getKindOfProducedElements() {
-    return PackagingElementOutputKind.OTHER;
-  }
+    public PackagingElementOutputKind getKindOfProducedElements() {
+        return PackagingElementOutputKind.OTHER;
+    }
 }

@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.font.Font;
 import consulo.util.lang.BitUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -26,81 +27,85 @@ import java.util.Objects;
  * @since 2020-06-04
  */
 public final class DesktopFontImpl implements Font {
-  private final java.awt.Font myFont;
-  private final int myFontStyle;
+    private final java.awt.Font myFont;
+    private final int myFontStyle;
 
-  public DesktopFontImpl(String fontName, int fontSize, int fontStyle) {
-    myFontStyle = fontStyle;
+    public DesktopFontImpl(String fontName, int fontSize, int fontStyle) {
+        myFontStyle = fontStyle;
 
-    int style = 0;
-    style = BitUtil.set(style, java.awt.Font.PLAIN, BitUtil.isSet(fontStyle, Font.PLAIN));
-    style = BitUtil.set(style, java.awt.Font.BOLD, BitUtil.isSet(fontStyle, Font.BOLD));
-    style = BitUtil.set(style, java.awt.Font.ITALIC, BitUtil.isSet(fontStyle, Font.ITALIC));
+        int style = 0;
+        style = BitUtil.set(style, java.awt.Font.PLAIN, BitUtil.isSet(fontStyle, Font.PLAIN));
+        style = BitUtil.set(style, java.awt.Font.BOLD, BitUtil.isSet(fontStyle, Font.BOLD));
+        style = BitUtil.set(style, java.awt.Font.ITALIC, BitUtil.isSet(fontStyle, Font.ITALIC));
 
-    myFont = new java.awt.Font(fontName, style, JBUI.scaleFontSize(fontSize));
-  }
+        myFont = new java.awt.Font(fontName, style, JBUI.scaleFontSize(fontSize));
+    }
 
-  public DesktopFontImpl(java.awt.Font font) {
-    myFont = font;
+    public DesktopFontImpl(java.awt.Font font) {
+        myFont = font;
 
-    int result = 0;
-    result = BitUtil.set(result, Font.PLAIN, BitUtil.isSet(font.getStyle(), java.awt.Font.PLAIN));
-    result = BitUtil.set(result, Font.BOLD, BitUtil.isSet(font.getStyle(), java.awt.Font.BOLD));
-    result = BitUtil.set(result, Font.ITALIC, BitUtil.isSet(font.getStyle(), java.awt.Font.ITALIC));
+        int result = 0;
+        result = BitUtil.set(result, Font.PLAIN, BitUtil.isSet(font.getStyle(), java.awt.Font.PLAIN));
+        result = BitUtil.set(result, Font.BOLD, BitUtil.isSet(font.getStyle(), java.awt.Font.BOLD));
+        result = BitUtil.set(result, Font.ITALIC, BitUtil.isSet(font.getStyle(), java.awt.Font.ITALIC));
 
-    myFontStyle = result;
-  }
+        myFontStyle = result;
+    }
 
-  public java.awt.Font getFont() {
-    return myFont;
-  }
+    public java.awt.Font getFont() {
+        return myFont;
+    }
 
-  @Override
-  public String getName() {
-    return myFont.getFontName();
-  }
+    @Override
+    public String getName() {
+        return myFont.getFontName();
+    }
 
-  @Override
-  public String getFontName() {
-    return myFont.getFontName();
-  }
+    @Override
+    public String getFontName() {
+        return myFont.getFontName();
+    }
 
-  @Override
-  public String getFamily() {
-    return myFont.getFamily();
-  }
+    @Override
+    public String getFamily() {
+        return myFont.getFamily();
+    }
 
-  @Override
-  public int getFontStyle() {
-    return myFontStyle;
-  }
+    @Override
+    public int getFontStyle() {
+        return myFontStyle;
+    }
 
-  @Override
-  public int getFontSize() {
-    return myFont.getSize();
-  }
+    @Override
+    public int getFontSize() {
+        return myFont.getSize();
+    }
 
-  @Override
-  public Font buildNewFont(int newSize) {
-    java.awt.Font newFont = myFont.deriveFont((float)newSize);
-    return new DesktopFontImpl(newFont);
-  }
+    @Override
+    public Font buildNewFont(int newSize) {
+        java.awt.Font newFont = myFont.deriveFont((float) newSize);
+        return new DesktopFontImpl(newFont);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    DesktopFontImpl that = (DesktopFontImpl)o;
-    return Objects.equals(myFont, that.myFont);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DesktopFontImpl that = (DesktopFontImpl) o;
+        return Objects.equals(myFont, that.myFont);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myFont);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myFont);
+    }
 
-  @Override
-  public String toString() {
-    return myFont.toString();
-  }
+    @Override
+    public String toString() {
+        return myFont.toString();
+    }
 }

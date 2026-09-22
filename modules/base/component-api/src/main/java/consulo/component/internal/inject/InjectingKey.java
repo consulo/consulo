@@ -15,6 +15,8 @@
  */
 package consulo.component.internal.inject;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -22,28 +24,27 @@ import java.util.Objects;
  * @since 2018-08-23
  */
 public interface InjectingKey<T> {
-  
-  static <K> InjectingKey<K> of(Class<K> clazz) {
-    Objects.requireNonNull(clazz);
-    return new SimpleInjectingKey<>(clazz);
-  }
+    static <K> InjectingKey<K> of(Class<K> clazz) {
+        Objects.requireNonNull(clazz);
+        return new SimpleInjectingKey<>(clazz);
+    }
 
-  
-  static <K> InjectingKey<K> of(String className, ClassLoader classLoader) {
-    Objects.requireNonNull(className);
-    Objects.requireNonNull(classLoader);
-    return new LazyInjectingKey<>(className, classLoader);
-  }
+    static <K> InjectingKey<K> of(String className, ClassLoader classLoader) {
+        Objects.requireNonNull(className);
+        Objects.requireNonNull(classLoader);
+        return new LazyInjectingKey<>(className, classLoader);
+    }
 
-  
-  String getTargetClassName();
+    String getTargetClassName();
 
-  
-  Class<T> getTargetClass();
+    Class<T> getTargetClass();
 
-  boolean equals(Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
-  String toString();
+    @Override
+    String toString();
 
-  int hashCode();
+    @Override
+    int hashCode();
 }

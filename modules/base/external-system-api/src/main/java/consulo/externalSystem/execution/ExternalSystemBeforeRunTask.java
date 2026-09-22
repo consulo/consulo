@@ -21,14 +21,13 @@ import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSetting
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  * @since 2014-05-30
  */
 public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBeforeRunTask> {
-
-    
     private final ExternalSystemTaskExecutionSettings myTaskExecutionSettings;
 
     public ExternalSystemBeforeRunTask(Key<ExternalSystemBeforeRunTask> providerId, ProjectSystemId systemId) {
@@ -37,7 +36,6 @@ public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBef
         myTaskExecutionSettings.setExternalSystemIdString(systemId.getId());
     }
 
-    
     public ExternalSystemTaskExecutionSettings getTaskExecutionSettings() {
         return myTaskExecutionSettings;
     }
@@ -50,7 +48,9 @@ public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBef
         if (myTaskExecutionSettings.getExternalProjectPath() != null) {
             element.setAttribute("externalProjectPath", myTaskExecutionSettings.getExternalProjectPath());
         }
-        if (myTaskExecutionSettings.getVmOptions() != null) element.setAttribute("vmOptions", myTaskExecutionSettings.getVmOptions());
+        if (myTaskExecutionSettings.getVmOptions() != null) {
+            element.setAttribute("vmOptions", myTaskExecutionSettings.getVmOptions());
+        }
         if (myTaskExecutionSettings.getScriptParameters() != null) {
             element.setAttribute("scriptParameters", myTaskExecutionSettings.getScriptParameters());
         }
@@ -66,22 +66,17 @@ public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBef
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ExternalSystemBeforeRunTask)) return false;
-        if (!super.equals(o)) return false;
-
-        ExternalSystemBeforeRunTask task = (ExternalSystemBeforeRunTask) o;
-
-        if (!myTaskExecutionSettings.equals(task.myTaskExecutionSettings)) return false;
-
-        return true;
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof ExternalSystemBeforeRunTask that
+            && super.equals(o)
+            && myTaskExecutionSettings.equals(that.myTaskExecutionSettings);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + myTaskExecutionSettings.hashCode();
-        return result;
+        return 31 * super.hashCode() + myTaskExecutionSettings.hashCode();
     }
 }

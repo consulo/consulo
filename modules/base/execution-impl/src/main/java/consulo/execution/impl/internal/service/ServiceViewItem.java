@@ -17,108 +17,116 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class ServiceViewItem implements ColoredItem {
-  private final Object myValue;
-  private volatile ServiceViewItem myParent;
-  private final ServiceViewContributor<?> myContributor;
-  private ServiceViewDescriptor myViewDescriptor;
-  final List<ServiceViewItem> myChildren = new CopyOnWriteArrayList<>();
-  private volatile boolean myPresentationUpdated;
-  private volatile boolean myRemoved;
-  private PresentationData myPresentation;
+    private final Object myValue;
+    private volatile ServiceViewItem myParent;
+    private final ServiceViewContributor<?> myContributor;
+    private ServiceViewDescriptor myViewDescriptor;
+    final List<ServiceViewItem> myChildren = new CopyOnWriteArrayList<>();
+    private volatile boolean myPresentationUpdated;
+    private volatile boolean myRemoved;
+    private PresentationData myPresentation;
 
-  ServiceViewItem(Object value, @Nullable ServiceViewItem parent, ServiceViewContributor<?> contributor,
-                  ServiceViewDescriptor viewDescriptor) {
-    myValue = value;
-    myParent = parent;
-    myContributor = contributor;
-    myViewDescriptor = viewDescriptor;
-  }
-
-  
-  Object getValue() {
-    return myValue;
-  }
-
-  
-  ServiceViewContributor<?> getContributor() {
-    return myContributor;
-  }
-
-  
-  ServiceViewContributor<?> getRootContributor() {
-    return myParent == null ? myContributor : myParent.getRootContributor();
-  }
-
-  
-  ServiceViewDescriptor getViewDescriptor() {
-    if (!myPresentationUpdated) {
-      myPresentationUpdated = true;
-      if (myValue instanceof NodeDescriptor) {
-        ((NodeDescriptor<?>)myValue).update();
-      }
+    ServiceViewItem(
+        Object value,
+        @Nullable ServiceViewItem parent,
+        ServiceViewContributor<?> contributor,
+        ServiceViewDescriptor viewDescriptor
+    ) {
+        myValue = value;
+        myParent = parent;
+        myContributor = contributor;
+        myViewDescriptor = viewDescriptor;
     }
-    return myViewDescriptor;
-  }
 
-  void setViewDescriptor(ServiceViewDescriptor viewDescriptor) {
-    AppUIUtil.invokeOnEdt(() -> {
-      myViewDescriptor = viewDescriptor;
-      myPresentationUpdated = false;
-    });
-  }
+    Object getValue() {
+        return myValue;
+    }
 
-  @Nullable ServiceViewItem getParent() {
-    return myParent;
-  }
+    ServiceViewContributor<?> getContributor() {
+        return myContributor;
+    }
 
-  void setParent(@Nullable ServiceViewItem parent) {
-    myParent = parent;
-  }
+    ServiceViewContributor<?> getRootContributor() {
+        return myParent == null ? myContributor : myParent.getRootContributor();
+    }
 
-  
-  List<ServiceViewItem> getChildren() {
-    return myChildren;
-  }
+    ServiceViewDescriptor getViewDescriptor() {
+        if (!myPresentationUpdated) {
+            myPresentationUpdated = true;
+            if (myValue instanceof NodeDescriptor<?> nodeDescriptor) {
+                nodeDescriptor.update();
+            }
+        }
+        return myViewDescriptor;
+    }
 
-  @Override
-  public @Nullable ColorValue getColor() {
-    ServiceViewDescriptor descriptor = getViewDescriptor();
-    return descriptor instanceof ColoredItem ? ((ColoredItem)descriptor).getColor() : null;
-  }
+    void setViewDescriptor(ServiceViewDescriptor viewDescriptor) {
+        AppUIUtil.invokeOnEdt(() -> {
+            myViewDescriptor = viewDescriptor;
+            myPresentationUpdated = false;
+        });
+    }
 
-  void markRemoved() {
-    myRemoved = true;
-  }
+    @Nullable
+    ServiceViewItem getParent() {
+        return myParent;
+    }
 
-  boolean isRemoved() {
-    return myRemoved || myParent != null && myParent.isRemoved();
-  }
+    void setParent(@Nullable ServiceViewItem parent) {
+        myParent = parent;
+    }
 
-  ItemPresentation getItemPresentation(@Nullable ServiceViewOptions viewOptions, ServiceViewItemState state) {
-    if (isRemoved()) return myPresentation;
+    List<ServiceViewItem> getChildren() {
+        return myChildren;
+    }
 
-    ItemPresentation presentation =
-      viewOptions == null ? getViewDescriptor().getPresentation() : getViewDescriptor().getCustomPresentation(viewOptions, state);
-    myPresentation = presentation instanceof PresentationData presentationData ? presentationData
-      : new PresentationData(presentation.getPresentableText(), presentation.getLocationString(), presentation.getIcon(false), null);
-    return myPresentation;
-  }
+    @Override
+    public @Nullable ColorValue getColor() {
+        ServiceViewDescriptor descriptor = getViewDescriptor();
+        return descriptor instanceof ColoredItem ? ((ColoredItem) descriptor).getColor() : null;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    ServiceViewItem node = (ServiceViewItem)o;
-    return myValue.equals(node.myValue);
-  }
+    void markRemoved() {
+        myRemoved = true;
+    }
 
-  @Override
-  public int hashCode() {
-    return myValue.hashCode();
-  }
+    boolean isRemoved() {
+        return myRemoved || myParent != null && myParent.isRemoved();
+    }
 
-  @Override
-  public String toString() {
-    return myValue.toString();
-  }
+    ItemPresentation getItemPresentation(@Nullable ServiceViewOptions viewOptions, ServiceViewItemState state) {
+        if (isRemoved()) {
+            return myPresentation;
+        }
+
+        ItemPresentation presentation = viewOptions == null
+            ? getViewDescriptor().getPresentation()
+            : getViewDescriptor().getCustomPresentation(viewOptions, state);
+        myPresentation = presentation instanceof PresentationData presentationData
+            ? presentationData
+            : new PresentationData(presentation.getPresentableText(), presentation.getLocationString(), presentation.getIcon(false), null);
+        return myPresentation;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ServiceViewItem that = (ServiceViewItem) o;
+        return myValue.equals(that.myValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return myValue.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return myValue.toString();
+    }
 }

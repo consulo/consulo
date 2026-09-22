@@ -19,77 +19,81 @@ import consulo.document.util.TextRange;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
+@SuppressWarnings("deprecation")
 public class Word {
-  private static final Logger LOG = Logger.getInstance(Word.class);
-  
-  private final DiffString myBaseText;
-  
-  private final TextRange myRange;
-  
-  private final DiffString myText;
+    private static final Logger LOG = Logger.getInstance(Word.class);
 
-  @TestOnly
-  public Word(String baseText, TextRange range) {
-    this(DiffString.create(baseText), range);
-  }
+    private final DiffString myBaseText;
 
-  public Word(DiffString baseText, TextRange range) {
-    myBaseText = baseText;
-    myRange = range;
-    myText = myBaseText.substring(myRange.getStartOffset(), myRange.getEndOffset());
-    LOG.assertTrue(myRange.getStartOffset() >= 0);
-    LOG.assertTrue(myRange.getEndOffset() >= myRange.getStartOffset(), myRange);
-  }
+    private final TextRange myRange;
 
-  public int hashCode() {
-    return myText.hashCode();
-  }
+    private final DiffString myText;
 
-  public boolean equals(Object obj) {
-    if (!(obj instanceof Word)) return false;
-    Word other = (Word)obj;
-    return getText().equals(other.getText());
-  }
+    @TestOnly
+    public Word(String baseText, TextRange range) {
+        this(DiffString.create(baseText), range);
+    }
 
-  
-  public DiffString getText() {
-    return myText;
-  }
+    public Word(DiffString baseText, TextRange range) {
+        myBaseText = baseText;
+        myRange = range;
+        myText = myBaseText.substring(myRange.getStartOffset(), myRange.getEndOffset());
+        LOG.assertTrue(myRange.getStartOffset() >= 0);
+        LOG.assertTrue(myRange.getEndOffset() >= myRange.getStartOffset(), myRange);
+    }
 
-  
-  public DiffString getPrefix(int fromPosition) {
-    LOG.assertTrue(fromPosition >= 0, fromPosition);
-    int wordStart = myRange.getStartOffset();
-    LOG.assertTrue(fromPosition <= wordStart, fromPosition + " " + wordStart);
-    return myBaseText.substring(fromPosition, wordStart);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof Word that && getText().equals(that.getText());
+    }
 
-  public int getEnd() {
-    return myRange.getEndOffset();
-  }
+    @Override
+    public int hashCode() {
+        return myText.hashCode();
+    }
 
-  public int getStart() {
-    return myRange.getStartOffset();
-  }
+    public DiffString getText() {
+        return myText;
+    }
 
-  public String toString() {
-    return myText.toString();
-  }
+    public DiffString getPrefix(int fromPosition) {
+        LOG.assertTrue(fromPosition >= 0, fromPosition);
+        int wordStart = myRange.getStartOffset();
+        LOG.assertTrue(fromPosition <= wordStart, fromPosition + " " + wordStart);
+        return myBaseText.substring(fromPosition, wordStart);
+    }
 
-  public boolean isWhitespace() {
-    return false;
-  }
+    public int getEnd() {
+        return myRange.getEndOffset();
+    }
 
-  public boolean atEndOfLine() {
-    int start = myRange.getStartOffset();
-    if (start == 0) return true;
-    if (myBaseText.charAt(start - 1) == '\n') return true;
-    int end = myRange.getEndOffset();
-    if (end == myBaseText.length()) return true;
-    if (myBaseText.charAt(end) == '\n') return true;
-    return false;
-  }
+    public int getStart() {
+        return myRange.getStartOffset();
+    }
+
+    @Override
+    public String toString() {
+        return myText.toString();
+    }
+
+    public boolean isWhitespace() {
+        return false;
+    }
+
+    public boolean atEndOfLine() {
+        int start = myRange.getStartOffset();
+        if (start == 0) {
+            return true;
+        }
+        if (myBaseText.charAt(start - 1) == '\n') {
+            return true;
+        }
+        int end = myRange.getEndOffset();
+        return end == myBaseText.length() || myBaseText.charAt(end) == '\n';
+    }
 }
