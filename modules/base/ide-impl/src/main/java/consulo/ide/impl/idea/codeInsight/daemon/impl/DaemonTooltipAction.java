@@ -24,6 +24,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
@@ -34,80 +35,85 @@ import java.util.Objects;
  * from kotlin
  */
 public class DaemonTooltipAction implements TooltipAction {
-  private final LocalizeValue myFixText;
-  private final int myActualOffset;
+    private final LocalizeValue myFixText;
+    private final int myActualOffset;
 
-  public DaemonTooltipAction(LocalizeValue fixText, int actualOffset) {
-    myFixText = fixText;
-    myActualOffset = actualOffset;
-  }
-
-  
-  @Override
-  public LocalizeValue getText() {
-    return myFixText;
-  }
-
-  @Override
-  public void execute(Editor editor, @Nullable InputEvent event) {
-    Project project = editor.getProject();
-
-    if (project == null) {
-      return;
+    public DaemonTooltipAction(LocalizeValue fixText, int actualOffset) {
+        myFixText = fixText;
+        myActualOffset = actualOffset;
     }
 
-    // TooltipActionsLogger.logExecute(project, inputEvent);
-
-    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (psiFile == null) {
-      return;
+    @Override
+    public LocalizeValue getText() {
+        return myFixText;
     }
 
-    List<IntentionActionDescriptor> intentions = ShowIntentionsPass.getAvailableFixes(editor, psiFile, -1, myActualOffset);
+    @Override
+    @RequiredUIAccess
+    public void execute(Editor editor, @Nullable InputEvent event) {
+        Project project = editor.getProject();
 
-    for (IntentionActionDescriptor descriptor : intentions) {
-      IntentionAction action = descriptor.getAction();
+        if (project == null) {
+            return;
+        }
 
-      if (myFixText.equals(action.getText())) {
-        //unfortunately it is very common case when quick fixes/refactorings use caret position
+        // TooltipActionsLogger.logExecute(project, inputEvent);
+
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (psiFile == null) {
+            return;
+        }
+
+        List<IntentionActionDescriptor> intentions = ShowIntentionsPass.getAvailableFixes(editor, psiFile, -1, myActualOffset);
+
+        for (IntentionActionDescriptor descriptor : intentions) {
+            IntentionAction action = descriptor.getAction();
+
+            if (myFixText.equals(action.getText())) {
+                //unfortunately it is very common case when quick fixes/refactorings use caret position
+                editor.getCaretModel().moveToOffset(myActualOffset);
+
+                ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, myFixText.get());
+                return;
+            }
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showAllActions(Editor editor) {
         editor.getCaretModel().moveToOffset(myActualOffset);
 
-        ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, myFixText.get());
-        return;
-      }
-    }
-  }
+        Project project = editor.getProject();
 
-  @Override
-  public void showAllActions(Editor editor) {
-    editor.getCaretModel().moveToOffset(myActualOffset);
+        if (project == null) {
+            return;
+        }
 
-    Project project = editor.getProject();
+        //TooltipActionsLogger.logShowAll(project);
 
-    if (project == null) {
-      return;
-    }
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (psiFile == null) {
+            return;
+        }
 
-    //TooltipActionsLogger.logShowAll(project);
-
-    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (psiFile == null) {
-      return;
+        new ShowIntentionActionsHandler().invoke(project, editor, psiFile);
     }
 
-    new ShowIntentionActionsHandler().invoke(project, editor, psiFile);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DaemonTooltipAction that = (DaemonTooltipAction) o;
+        return myActualOffset == that.myActualOffset && Objects.equals(myFixText, that.myFixText);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    DaemonTooltipAction that = (DaemonTooltipAction)o;
-    return myActualOffset == that.myActualOffset && Objects.equals(myFixText, that.myFixText);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(myFixText, myActualOffset);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myFixText, myActualOffset);
+    }
 }

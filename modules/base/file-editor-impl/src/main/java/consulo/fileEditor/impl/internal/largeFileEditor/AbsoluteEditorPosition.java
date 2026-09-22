@@ -1,8 +1,11 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileEditor.impl.internal.largeFileEditor;
 
-public final class AbsoluteEditorPosition {
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
+public final class AbsoluteEditorPosition {
     long pageNumber;
     int verticalScrollOffset;
 
@@ -22,9 +25,17 @@ public final class AbsoluteEditorPosition {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof AbsoluteEditorPosition
-            && pageNumber == ((AbsoluteEditorPosition) obj).pageNumber
-            && verticalScrollOffset == ((AbsoluteEditorPosition) obj).verticalScrollOffset;
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof AbsoluteEditorPosition that
+            && pageNumber == that.pageNumber
+            && verticalScrollOffset == that.verticalScrollOffset;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pageNumber, verticalScrollOffset);
     }
 }

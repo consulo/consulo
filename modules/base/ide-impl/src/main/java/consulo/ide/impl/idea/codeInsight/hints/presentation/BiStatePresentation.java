@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.language.editor.inlay.InlayPresentation;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -12,9 +13,7 @@ public class BiStatePresentation extends StatefulPresentation<BiStatePresentatio
     private final Supplier<InlayPresentation> first;
     private final Supplier<InlayPresentation> second;
 
-    public BiStatePresentation(Supplier<InlayPresentation> first,
-                               Supplier<InlayPresentation> second,
-                               boolean initiallyFirstEnabled) {
+    public BiStatePresentation(Supplier<InlayPresentation> first, Supplier<InlayPresentation> second, boolean initiallyFirstEnabled) {
         super(new State(initiallyFirstEnabled), STATE_MARK);
         this.first = first;
         this.second = second;
@@ -50,15 +49,9 @@ public class BiStatePresentation extends StatefulPresentation<BiStatePresentatio
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof State)) {
-                return false;
-            }
-            State state = (State) o;
-            return currentFirst == state.currentFirst;
+        public boolean equals(@Nullable Object o) {
+            return this == o
+                || o instanceof State that && currentFirst == that.currentFirst;
         }
 
         @Override

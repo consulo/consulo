@@ -12,6 +12,7 @@ import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayOptionInfo;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.InlayHintsSettings;
 import consulo.language.psi.PsiFile;
@@ -26,11 +27,8 @@ import java.util.*;
  * Factory for creating declarative inlay hints passes.
  */
 @ExtensionImpl
-public class DeclarativeInlayHintsPassFactory
-    implements TextEditorHighlightingPassFactory, DumbAware {
-
-    private static final Key<Long> PSI_MODIFICATION_STAMP =
-        Key.create("declarative.inlays.psi.modification.stamp");
+public class DeclarativeInlayHintsPassFactory implements TextEditorHighlightingPassFactory, DumbAware {
+    private static final Key<Long> PSI_MODIFICATION_STAMP = Key.create("declarative.inlays.psi.modification.stamp");
 
     @RequiredReadAction
     public static DeclarativeInlayHintsPass createPassForPreview(
@@ -54,7 +52,7 @@ public class DeclarativeInlayHintsPassFactory
         }
         List<InlayProviderInfo> result = new ArrayList<>();
         for (InlayProviderInfo info : infos) {
-            if (DumbService.isDumbAware(info.getProvider())) {
+            if (DumbService.isDumbAware(info.provider())) {
                 result.add(info);
             }
         }
@@ -109,18 +107,17 @@ public class DeclarativeInlayHintsPassFactory
         if (enabledGlobally) {
             passProviders = new ArrayList<>();
             for (InlayProviderInfo info : getSuitableToFileProviders(psiFile)) {
-                Boolean providerEnabled = settings.isProviderEnabled(info.getProviderId());
+                Boolean providerEnabled = settings.isProviderEnabled(info.providerId());
                 if (Objects.equals(providerEnabled, Boolean.TRUE) || (providerEnabled == null && info.isEnabledByDefault())) {
                     Map<String, Boolean> optionsToEnabled = new HashMap<>();
-                    for (var optionInfo : info.getOptions()) {
-                        Boolean opt = settings.isOptionEnabled(optionInfo.getId(), info.getProviderId());
-                        boolean isOptEnabled = (opt != null) ? opt : optionInfo.isEnabledByDefault();
+                    for (DeclarativeInlayOptionInfo optionInfo : info.options()) {
+                        Boolean opt = settings.isOptionEnabled(optionInfo.getId(), info.providerId());
+                        boolean isOptEnabled = opt != null ? opt : optionInfo.isEnabledByDefault();
                         if (optionsToEnabled.put(optionInfo.getId(), isOptEnabled) != null) {
                             throw new IllegalArgumentException("Duplicate option key: " + optionInfo.getId());
                         }
                     }
-                    passProviders.add(new InlayProviderPassInfo(
-                        info.getProvider(), info.getProviderId(), optionsToEnabled));
+                    passProviders.add(new InlayProviderPassInfo(info.provider(), info.providerId(), optionsToEnabled));
                 }
             }
         }
@@ -134,7 +131,6 @@ public class DeclarativeInlayHintsPassFactory
     @Override
     public void register(Registrar registrar) {
         int[] deps = new int[]{Pass.UPDATE_ALL};
-        registrar.registerTextEditorHighlightingPass(
-            this, deps, null, false, -1);
+        registrar.registerTextEditorHighlightingPass(this, deps, null, false, -1);
     }
 }

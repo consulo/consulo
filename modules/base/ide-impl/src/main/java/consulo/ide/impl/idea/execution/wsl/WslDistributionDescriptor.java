@@ -6,6 +6,7 @@ import consulo.process.ExecutionException;
 import consulo.process.util.ProcessOutput;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -74,7 +75,7 @@ final class WslDistributionDescriptor {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     WslDistributionDescriptor that = (WslDistributionDescriptor)o;

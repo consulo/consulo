@@ -39,157 +39,156 @@ import org.jspecify.annotations.Nullable;
  * @since 2009-04-20
  */
 public class ScopeToolState {
-  private NamedScope myScope;
-  
-  private final String myScopeId;
-  private InspectionToolWrapper<InspectionTool> myToolWrapper;
-  private boolean myEnabled;
-  private HighlightDisplayLevel myLevel;
+    private NamedScope myScope;
 
-  private SimpleReference<UnnamedConfigurable> myConfigurableRef;
+    private final String myScopeId;
+    private InspectionToolWrapper<InspectionTool> myToolWrapper;
+    private boolean myEnabled;
+    private HighlightDisplayLevel myLevel;
 
-  private static final Logger LOG = Logger.getInstance(ScopeToolState.class);
+    private SimpleReference<UnnamedConfigurable> myConfigurableRef;
 
-  public ScopeToolState(NamedScope scope,
-                        InspectionToolWrapper toolWrapper,
-                        boolean enabled,
-                        HighlightDisplayLevel level) {
-    this(scope.getScopeId(), toolWrapper, enabled, level);
-    myScope = scope;
-  }
+    private static final Logger LOG = Logger.getInstance(ScopeToolState.class);
 
-  public ScopeToolState(String scopeName,
-                        InspectionToolWrapper toolWrapper,
-                        boolean enabled,
-                        HighlightDisplayLevel level) {
-    myScopeId = scopeName;
-    myToolWrapper = toolWrapper;
-    myEnabled = enabled;
-    myLevel = level;
-  }
-
-  public @Nullable NamedScope getScope(Project project) {
-    if (myScope == null) {
-      if (project != null) {
-        myScope = NamedScopesHolder.getScope(project, myScopeId);
-      }
-    }
-    return myScope;
-  }
-
-  
-  public String getScopeId() {
-    return myScopeId;
-  }
-
-  
-  public InspectionToolWrapper getTool() {
-    return myToolWrapper;
-  }
-
-  public boolean isEnabled() {
-    return myEnabled;
-  }
-
-  
-  public HighlightDisplayLevel getLevel() {
-    return myLevel;
-  }
-
-  public void setEnabled(boolean enabled) {
-    myEnabled = enabled;
-  }
-
-  public void setLevel(HighlightDisplayLevel level) {
-    myLevel = level;
-  }
-
-  @RequiredUIAccess
-  public @Nullable Component getConfigurablePanel(Disposable parentDisposable) {
-    if (myConfigurableRef != null) {
-      UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
-      return unnamedConfigurable == null ? null : unnamedConfigurable.createUIComponent(parentDisposable);
+    public ScopeToolState(NamedScope scope, InspectionToolWrapper toolWrapper, boolean enabled, HighlightDisplayLevel level) {
+        this(scope.getScopeId(), toolWrapper, enabled, level);
+        myScope = scope;
     }
 
-    UnnamedConfigurable configurable = myToolWrapper.getToolState().createConfigurable();
-    myConfigurableRef = SimpleReference.create(configurable);
-    if (configurable == null) return null;
-    else {
-      Component uiComponent = configurable.createUIComponent(parentDisposable);
-      configurable.initialize();
-      configurable.reset();
-      return uiComponent;
-    }
-  }
-
-  @RequiredUIAccess
-  public boolean isModified() {
-    SimpleReference<UnnamedConfigurable> configurableRef = myConfigurableRef;
-    if (configurableRef == null) {
-      return false;
+    public ScopeToolState(String scopeName, InspectionToolWrapper toolWrapper, boolean enabled, HighlightDisplayLevel level) {
+        myScopeId = scopeName;
+        myToolWrapper = toolWrapper;
+        myEnabled = enabled;
+        myLevel = level;
     }
 
-    UnnamedConfigurable unnamedConfigurable = configurableRef.get();
-    return unnamedConfigurable != null && unnamedConfigurable.isModified();
-  }
-
-  @RequiredUIAccess
-  public void resetConfigPanel() {
-    if (myConfigurableRef != null) {
-      UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
-      if (unnamedConfigurable != null) {
-        unnamedConfigurable.disposeUIResources();
-      }
+    public @Nullable NamedScope getScope(Project project) {
+        if (myScope == null) {
+            if (project != null) {
+                myScope = NamedScopesHolder.getScope(project, myScopeId);
+            }
+        }
+        return myScope;
     }
-    myConfigurableRef = null;
-  }
 
-  @RequiredUIAccess
-  public void disposeUIResources() {
-    if (myConfigurableRef != null) {
-      UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
-      if (unnamedConfigurable != null) {
-        unnamedConfigurable.disposeUIResources();
-      }
+    public String getScopeId() {
+        return myScopeId;
     }
-    myConfigurableRef = null;
-  }
 
-  @RequiredUIAccess
-  public void applyConfigPanel() throws ConfigurationException {
-    if (myConfigurableRef != null) {
-      UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
-      if (unnamedConfigurable != null) {
-        unnamedConfigurable.apply();
-      }
+    public InspectionToolWrapper getTool() {
+        return myToolWrapper;
     }
-  }
 
-  public void setTool(InspectionToolWrapper tool) {
-    myToolWrapper = tool;
-  }
-
-  public boolean equalTo(ScopeToolState state2) {
-    if (isEnabled() != state2.isEnabled()) return false;
-    if (getLevel() != state2.getLevel()) return false;
-    InspectionToolWrapper toolWrapper = getTool();
-    InspectionToolWrapper toolWrapper2 = state2.getTool();
-    if (!toolWrapper.isInitialized() && !toolWrapper2.isInitialized()) return true;
-    try {
-      String tempRoot = "root";
-      Element oldToolSettings = new Element(tempRoot);
-      toolWrapper.writeExternal(oldToolSettings);
-      Element newToolSettings = new Element(tempRoot);
-      toolWrapper2.writeExternal(newToolSettings);
-      return JDOMUtil.areElementsEqual(oldToolSettings, newToolSettings);
+    public boolean isEnabled() {
+        return myEnabled;
     }
-    catch (WriteExternalException e) {
-      LOG.error(e);
-    }
-    return false;
-  }
 
-  public void scopesChanged() {
-    myScope = null;
-  }
+    public HighlightDisplayLevel getLevel() {
+        return myLevel;
+    }
+
+    public void setEnabled(boolean enabled) {
+        myEnabled = enabled;
+    }
+
+    public void setLevel(HighlightDisplayLevel level) {
+        myLevel = level;
+    }
+
+    @RequiredUIAccess
+    public @Nullable Component getConfigurablePanel(Disposable parentDisposable) {
+        if (myConfigurableRef != null) {
+            UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
+            return unnamedConfigurable == null ? null : unnamedConfigurable.createUIComponent(parentDisposable);
+        }
+
+        UnnamedConfigurable configurable = myToolWrapper.getToolState().createConfigurable();
+        myConfigurableRef = SimpleReference.create(configurable);
+        if (configurable == null) {
+            return null;
+        }
+        else {
+            Component uiComponent = configurable.createUIComponent(parentDisposable);
+            configurable.initialize();
+            configurable.reset();
+            return uiComponent;
+        }
+    }
+
+    @RequiredUIAccess
+    public boolean isModified() {
+        SimpleReference<UnnamedConfigurable> configurableRef = myConfigurableRef;
+        if (configurableRef == null) {
+            return false;
+        }
+
+        UnnamedConfigurable unnamedConfigurable = configurableRef.get();
+        return unnamedConfigurable != null && unnamedConfigurable.isModified();
+    }
+
+    @RequiredUIAccess
+    public void resetConfigPanel() {
+        if (myConfigurableRef != null) {
+            UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
+            if (unnamedConfigurable != null) {
+                unnamedConfigurable.disposeUIResources();
+            }
+        }
+        myConfigurableRef = null;
+    }
+
+    @RequiredUIAccess
+    public void disposeUIResources() {
+        if (myConfigurableRef != null) {
+            UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
+            if (unnamedConfigurable != null) {
+                unnamedConfigurable.disposeUIResources();
+            }
+        }
+        myConfigurableRef = null;
+    }
+
+    @RequiredUIAccess
+    public void applyConfigPanel() throws ConfigurationException {
+        if (myConfigurableRef != null) {
+            UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
+            if (unnamedConfigurable != null) {
+                unnamedConfigurable.apply();
+            }
+        }
+    }
+
+    public void setTool(InspectionToolWrapper tool) {
+        myToolWrapper = tool;
+    }
+
+    public boolean equalTo(ScopeToolState state2) {
+        if (isEnabled() != state2.isEnabled()) {
+            return false;
+        }
+        if (getLevel() != state2.getLevel()) {
+            return false;
+        }
+        InspectionToolWrapper toolWrapper = getTool();
+        InspectionToolWrapper toolWrapper2 = state2.getTool();
+        if (!toolWrapper.isInitialized() && !toolWrapper2.isInitialized()) {
+            return true;
+        }
+        try {
+            String tempRoot = "root";
+            Element oldToolSettings = new Element(tempRoot);
+            toolWrapper.writeExternal(oldToolSettings);
+            Element newToolSettings = new Element(tempRoot);
+            toolWrapper2.writeExternal(newToolSettings);
+            return JDOMUtil.areElementsEqual(oldToolSettings, newToolSettings);
+        }
+        catch (WriteExternalException e) {
+            LOG.error(e);
+        }
+        return false;
+    }
+
+    public void scopesChanged() {
+        myScope = null;
+    }
 }

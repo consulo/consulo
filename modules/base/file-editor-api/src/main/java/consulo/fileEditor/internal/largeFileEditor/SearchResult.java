@@ -2,9 +2,11 @@
 package consulo.fileEditor.internal.largeFileEditor;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public final class SearchResult {
-
     public static final Key<SearchResult> KEY = new Key<>("lfe.SearchResult");
 
     public final Position startPosition;
@@ -13,13 +15,15 @@ public final class SearchResult {
     public final String foundString;
     public final String contextPostfix;
 
-    public SearchResult(long startPageNumber,
-                        int startOffsetInPage,
-                        long endPageNumber,
-                        int endOffsetInPage,
-                        String contextPrefix,
-                        String foundString,
-                        String contextPostfix) {
+    public SearchResult(
+        long startPageNumber,
+        int startOffsetInPage,
+        long endPageNumber,
+        int endOffsetInPage,
+        @Nullable String contextPrefix,
+        @Nullable String foundString,
+        @Nullable String contextPostfix
+    ) {
         startPosition = new Position(startPageNumber, startOffsetInPage);
         endPosition = new Position(endPageNumber, endOffsetInPage);
         this.contextPrefix = contextPrefix == null ? "" : contextPrefix;
@@ -32,24 +36,26 @@ public final class SearchResult {
         return String.format("p%ds%d-p%ds%d: pref{%s},orig{%s},post{%s}",
             startPosition.pageNumber, startPosition.symbolOffsetInPage,
             endPosition.pageNumber, endPosition.symbolOffsetInPage,
-            contextPrefix, foundString, contextPostfix);
+            contextPrefix, foundString, contextPostfix
+        );
     }
 
     @Override
-    public boolean equals(Object target) {
+    public boolean equals(@Nullable Object target) {
         if (this == target) {
             return true;
         }
 
-        if (target instanceof SearchResult targetResult) {
-            if (startPosition.equals(targetResult.startPosition)
-                && endPosition.equals(targetResult.endPosition)
-                && contextPrefix.equals(targetResult.contextPrefix)
-                && foundString.equals(targetResult.foundString)
-                && contextPostfix.equals(targetResult.contextPostfix)) {
-                return true;
-            }
-        }
-        return false;
+        return target instanceof SearchResult that
+            && startPosition.equals(that.startPosition)
+            && endPosition.equals(that.endPosition)
+            && contextPrefix.equals(that.contextPrefix)
+            && foundString.equals(that.foundString)
+            && contextPostfix.equals(that.contextPostfix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startPosition, endPosition, contextPrefix, foundString, contextPostfix);
     }
 }

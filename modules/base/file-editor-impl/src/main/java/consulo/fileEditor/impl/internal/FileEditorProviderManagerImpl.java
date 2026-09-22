@@ -16,8 +16,8 @@
 package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -69,7 +69,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
                 }
                 return provider.accept(project, file);
             };
-            if (AccessRule.read(action)) {
+            if (ReadAction.compute(action)) {
                 sharedProviders.add(provider);
                 doNotShowTextEditor |= provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR;
             }
@@ -115,7 +115,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
         if (providers.length < 2) {
             return;
         }
-        myState.getSelectedProviders().put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
+        myState.getSelectedProviders().put(computeKey(providers), composite.getSelectedEditorWithProvider().provider().getEditorTypeId());
     }
 
     private static String computeKey(FileEditorProvider[] providers) {

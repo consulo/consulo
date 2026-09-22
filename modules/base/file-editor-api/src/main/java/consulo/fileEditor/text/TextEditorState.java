@@ -75,12 +75,12 @@ public final class TextEditorState implements FileEditorState {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof TextEditorState that)) {
-            return false;
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
         }
-
-        return Arrays.equals(CARETS, that.CARETS)
+        return o instanceof TextEditorState that
+            && Arrays.equals(CARETS, that.CARETS)
             && RELATIVE_CARET_POSITION == that.RELATIVE_CARET_POSITION
             && Objects.equals(getFoldingState(), that.getFoldingState());
     }

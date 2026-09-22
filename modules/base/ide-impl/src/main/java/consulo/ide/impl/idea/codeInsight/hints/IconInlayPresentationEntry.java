@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
@@ -23,6 +23,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -44,15 +45,14 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
     }
 
     @Override
+    @RequiredUIAccess
     public void handleClick(EditorMouseEvent e, InlayPresentationList list, boolean controlDown) {
         Editor editor = e.getEditor();
         Project project = editor.getProject();
         if (clickArea != null && project != null) {
             InlayActionData actionData = clickArea.getActionData();
             if (controlDown) {
-                ApplicationManager.getApplication()
-                    .getInstance(DeclarativeInlayActionService.class)
-                    .invokeActionHandler(actionData, e);
+                Application.get().getInstance(DeclarativeInlayActionService.class).invokeActionHandler(actionData, e);
             }
         }
 
@@ -62,13 +62,15 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
     }
 
     @Override
-    public void render(Graphics2D graphics,
-                       InlayTextMetrics metrics,
-                       TextAttributes attributes,
-                       boolean isDisabled,
-                       int yOffset,
-                       int rectHeight,
-                       Editor editor) {
+    public void render(
+        Graphics2D graphics,
+        InlayTextMetrics metrics,
+        TextAttributes attributes,
+        boolean isDisabled,
+        int yOffset,
+        int rectHeight,
+        Editor editor
+    ) {
         int centerImage = computeHeight(metrics) / 2;
         int centerRect = rectHeight / 2;
 

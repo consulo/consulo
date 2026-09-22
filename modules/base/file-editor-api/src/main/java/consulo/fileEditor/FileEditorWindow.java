@@ -23,96 +23,93 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 27-Oct-17
+ * @since 2017-10-27
  */
 public interface FileEditorWindow {
-  FileEditorWindow[] EMPTY_ARRAY = new FileEditorWindow[0];
+    FileEditorWindow[] EMPTY_ARRAY = new FileEditorWindow[0];
 
-  Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
-  Key<FileEditorWindow> DATA_KEY = Key.create("editorWindow");
+    Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
+    Key<FileEditorWindow> DATA_KEY = Key.create("editorWindow");
 
-  
-  FileEditorManager getManager();
+    FileEditorManager getManager();
 
-  void closeAllExcept(VirtualFile selectedFile);
+    void closeAllExcept(VirtualFile selectedFile);
 
-  @Nullable FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);
+    @Nullable
+    FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);
 
-  void unsplit(boolean setCurrent);
+    void unsplit(boolean setCurrent);
 
-  boolean isDisposed();
+    boolean isDisposed();
 
-  
-  FileEditorWithProviderComposite[] getEditors();
+    FileEditorWithProviderComposite[] getEditors();
 
-  
-  FileEditorWindow[] findSiblings();
+    FileEditorWindow[] findSiblings();
 
-  
-  VirtualFile[] getFiles();
+    VirtualFile[] getFiles();
 
-  @Nullable FileEditorWithProviderComposite findFileComposite(VirtualFile file);
+    @Nullable
+    FileEditorWithProviderComposite findFileComposite(VirtualFile file);
 
-  @Nullable FileEditorWithProviderComposite getSelectedEditor();
+    @Nullable
+    FileEditorWithProviderComposite getSelectedEditor();
 
-  
-  FileEditorsSplitters getOwner();
+    FileEditorsSplitters getOwner();
 
-  
-  FileEditorTabbedContainer getContainer();
+    FileEditorTabbedContainer getContainer();
 
-  VirtualFile getSelectedFile();
+    @Nullable
+    VirtualFile getSelectedFile();
 
-  int getTabCount();
+    int getTabCount();
 
-  boolean inSplitter();
+    boolean inSplitter();
 
-  default void closeFile(VirtualFile file) {
-    closeFile(file, true);
-  }
+    default void closeFile(VirtualFile file) {
+        closeFile(file, true);
+    }
 
-  default void closeFile(VirtualFile file, boolean disposeIfNeeded) {
-    closeFile(file, disposeIfNeeded, true);
-  }
+    default void closeFile(VirtualFile file, boolean disposeIfNeeded) {
+        closeFile(file, disposeIfNeeded, true);
+    }
 
-  void closeFile(VirtualFile file, boolean disposeIfNeeded, boolean transferFocus);
+    void closeFile(VirtualFile file, boolean disposeIfNeeded, boolean transferFocus);
 
-  void clear();
+    void clear();
 
-  int findFileIndex(VirtualFile fileToFind);
+    int findFileIndex(VirtualFile fileToFind);
 
-  void setTabsPlacement(int placement);
+    void setTabsPlacement(int placement);
 
-  boolean isFilePinned(VirtualFile file);
+    boolean isFilePinned(VirtualFile file);
 
-  void setFilePinned(VirtualFile file, boolean pinned);
+    void setFilePinned(VirtualFile file, boolean pinned);
 
-  boolean isFileOpen(VirtualFile virtualFile);
+    boolean isFileOpen(VirtualFile virtualFile);
 
-  void changeOrientation();
+    void changeOrientation();
 
-  void unsplitAll();
+    void unsplitAll();
 
-  @RequiredUIAccess
-  default void setEditor(@Nullable FileEditorWithProviderComposite editor, boolean focusEditor) {
-    setEditor(editor, true, focusEditor);
-  }
+    @RequiredUIAccess
+    default void setEditor(@Nullable FileEditorWithProviderComposite editor, boolean focusEditor) {
+        setEditor(editor, true, focusEditor);
+    }
 
-  @RequiredUIAccess
-  void setEditor(@Nullable FileEditorWithProviderComposite editor, boolean selectEditor, boolean focusEditor);
+    @RequiredUIAccess
+    void setEditor(@Nullable FileEditorWithProviderComposite editor, boolean selectEditor, boolean focusEditor);
 
-  void setAsCurrentWindow(boolean value);
+    void setAsCurrentWindow(boolean value);
 
-  boolean isValid();
+    boolean isValid();
 
-  void restoreClosedTab();
+    void restoreClosedTab();
 
-  boolean hasClosedTabs();
+    boolean hasClosedTabs();
 
-  void requestFocus(boolean force);
+    void requestFocus(boolean force);
 
-  
-  default Component getUIComponent() {
-    throw new UnsupportedOperationException("Unsupported platform");
-  }
+    default Component getUIComponent() {
+        throw new UnsupportedOperationException("Unsupported platform");
+    }
 }

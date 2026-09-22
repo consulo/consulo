@@ -15,89 +15,87 @@
  */
 package consulo.fileChooser.node;
 
-import consulo.util.lang.Comparing;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.File;
+import java.util.Objects;
 
 public class FileElement {
-  private final @Nullable VirtualFile myFile;
-  private final String myName;
-  private @Nullable String myPath = null;
-  private @Nullable FileElement myParent = null;
+    private final @Nullable VirtualFile myFile;
+    private final String myName;
+    private @Nullable String myPath = null;
+    private @Nullable FileElement myParent = null;
 
-  public FileElement(@Nullable VirtualFile file, String name) {
-    myFile = file;
-    myName = name;
-  }
-
-  public void setParent(FileElement parent) {
-    myParent = parent;
-  }
-
-  public @Nullable FileElement getParent() {
-    return myParent;
-  }
-
-  public final @Nullable VirtualFile getFile() {
-    return myFile;
-  }
-
-  public final String getName() {
-    return myName;
-  }
-
-  public final String getPath() {
-    if (myPath == null) {
-      StringBuilder sb = new StringBuilder();
-      FileElement element = this;
-      while (element != null) {
-        if (element.myParent != null || !element.myName.equals(File.separator)) {
-          sb.insert(0, element.myName);
-        }
-        element = element.myParent;
-        if (element != null) {
-          sb.insert(0, File.separator);
-        }
-      }
-      myPath = sb.toString();
+    public FileElement(@Nullable VirtualFile file, String name) {
+        myFile = file;
+        myName = name;
     }
-    return myPath;
-  }
 
-  @Override
-  public int hashCode() {
-    return myFile == null ? 0 : myFile.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof FileElement) {
-      if (Comparing.equal(((FileElement)obj).myFile, myFile)) return true;
+    public void setParent(FileElement parent) {
+        myParent = parent;
     }
-    return false;
-  }
 
-  @Override
-  public final String toString() {
-    return myName;
-  }
+    public @Nullable FileElement getParent() {
+        return myParent;
+    }
 
-  public final boolean isHidden() {
-    return isFileHidden(myFile);
-  }
+    public final @Nullable VirtualFile getFile() {
+        return myFile;
+    }
 
-  public final boolean isArchive() {
-    return isArchive(getFile());
-  }
+    public final String getName() {
+        return myName;
+    }
 
-  public static boolean isFileHidden(@Nullable VirtualFile file) {
-    return FileChooserUtil.isFileHidden(file);
-  }
+    public final String getPath() {
+        if (myPath == null) {
+            StringBuilder sb = new StringBuilder();
+            FileElement element = this;
+            while (element != null) {
+                if (element.myParent != null || !element.myName.equals(File.separator)) {
+                    sb.insert(0, element.myName);
+                }
+                element = element.myParent;
+                if (element != null) {
+                    sb.insert(0, File.separator);
+                }
+            }
+            myPath = sb.toString();
+        }
+        return myPath;
+    }
 
-  public static boolean isArchive(@Nullable VirtualFile file) {
-    return FileChooserUtil.isArchive(file);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(myFile);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof FileElement that && Objects.equals(myFile, that.myFile);
+    }
+
+    @Override
+    public final String toString() {
+        return myName;
+    }
+
+    public final boolean isHidden() {
+        return isFileHidden(myFile);
+    }
+
+    public final boolean isArchive() {
+        return isArchive(getFile());
+    }
+
+    public static boolean isFileHidden(@Nullable VirtualFile file) {
+        return FileChooserUtil.isFileHidden(file);
+    }
+
+    public static boolean isArchive(@Nullable VirtualFile file) {
+        return FileChooserUtil.isArchive(file);
+    }
 }

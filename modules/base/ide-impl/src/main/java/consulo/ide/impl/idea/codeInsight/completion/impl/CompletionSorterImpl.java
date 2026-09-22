@@ -22,6 +22,7 @@ import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.util.collection.ContainerUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,10 +104,9 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return this == o
-            || o instanceof CompletionSorterImpl that
-            && myMembers.equals(that.myMembers);
+            || o instanceof CompletionSorterImpl that && myMembers.equals(that.myMembers);
     }
 
     @Override

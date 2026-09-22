@@ -361,7 +361,7 @@ public class CommonProxy extends ProxySelector {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -369,13 +369,13 @@ public class CommonProxy extends ProxySelector {
                 return false;
             }
 
-            HostInfo info = (HostInfo)o;
-            return myPort == info.myPort && myHost.equals(info.myHost) && Comparing.equal(myProtocol, info.myProtocol);
+            HostInfo info = (HostInfo) o;
+            return myPort == info.myPort && myHost.equals(info.myHost) && Objects.equals(myProtocol, info.myProtocol);
         }
 
         @Override
         public int hashCode() {
-            int result = myProtocol != null ? myProtocol.hashCode() : 0;
+            int result = Objects.hashCode(myProtocol);
             result = 31 * result + myHost.hashCode();
             result = 31 * result + myPort;
             return result;

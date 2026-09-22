@@ -16,37 +16,32 @@
 package consulo.ide.impl.idea.codeInsight.lookup;
 
 import consulo.language.editor.completion.lookup.Classifier;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public abstract class ClassifierFactory<T> {
-  private final String myId;
+    private final String myId;
 
-  protected ClassifierFactory(String id) {
-    myId = id;
-  }
+    protected ClassifierFactory(String id) {
+        myId = id;
+    }
 
-  public String getId() {
-    return myId;
-  }
+    public String getId() {
+        return myId;
+    }
 
-  public abstract Classifier<T> createClassifier(Classifier<T> next);
+    public abstract Classifier<T> createClassifier(Classifier<T> next);
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ClassifierFactory)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ClassifierFactory that && myId.equals(that.myId);
+    }
 
-    ClassifierFactory that = (ClassifierFactory)o;
-
-    if (!myId.equals(that.myId)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myId.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myId.hashCode();
+    }
 }

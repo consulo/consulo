@@ -179,9 +179,11 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof FindModel findModel
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof FindModel findModel
             && isCaseSensitive == findModel.isCaseSensitive
             && isCustomScope == findModel.isCustomScope
             && isFindAll == findModel.isFindAll
@@ -217,37 +219,37 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
     @Override
     public int hashCode() {
         int result = 0;
-        result = 31 * result + (myStringToFind != null ? myStringToFind.hashCode() : 0);
-        result = 31 * result + (myStringToReplace != null ? myStringToReplace.hashCode() : 0);
-        result = 31 * result + (isSearchHighlighters ? 1 : 0);
-        result = 31 * result + (isReplaceState ? 1 : 0);
-        result = 31 * result + (isWholeWordsOnly ? 1 : 0);
+        result = 31 * result + Objects.hashCode(myStringToFind);
+        result = 31 * result + Objects.hashCode(myStringToReplace);
+        result = 31 * result + Boolean.hashCode(isSearchHighlighters);
+        result = 31 * result + Boolean.hashCode(isReplaceState);
+        result = 31 * result + Boolean.hashCode(isWholeWordsOnly);
         result = 31 * result + (searchContext.ordinal());
-        result = 31 * result + (isFromCursor ? 1 : 0);
-        result = 31 * result + (isForward ? 1 : 0);
-        result = 31 * result + (isGlobal ? 1 : 0);
-        result = 31 * result + (isRegularExpressions ? 1 : 0);
-        result = 31 * result + (isCaseSensitive ? 1 : 0);
-        result = 31 * result + (isMultipleFiles ? 1 : 0);
-        result = 31 * result + (isPromptOnReplace ? 1 : 0);
-        result = 31 * result + (isReplaceAll ? 1 : 0);
-        result = 31 * result + (isOpenNewTab ? 1 : 0);
-        result = 31 * result + (isOpenInNewTabEnabled ? 1 : 0);
-        result = 31 * result + (isOpenNewTabVisible ? 1 : 0);
-        result = 31 * result + (isProjectScope ? 1 : 0);
-        result = 31 * result + (isFindAll ? 1 : 0);
-        result = 31 * result + (isFindAllEnabled ? 1 : 0);
-        result = 31 * result + (moduleName != null ? moduleName.hashCode() : 0);
-        result = 31 * result + (directoryName != null ? directoryName.hashCode() : 0);
-        result = 31 * result + (isWithSubdirectories ? 1 : 0);
-        result = 31 * result + (fileFilter != null ? fileFilter.hashCode() : 0);
-        result = 31 * result + (customScopeName != null ? customScopeName.hashCode() : 0);
-        result = 31 * result + (customScope != null ? customScope.hashCode() : 0);
-        result = 31 * result + (isCustomScope ? 1 : 0);
-        result = 31 * result + (isMultiline ? 1 : 0);
-        result = 31 * result + (isPreserveCase ? 1 : 0);
-        result = 31 * result + (mySearchInProjectFiles ? 1 : 0);
-        result = 31 * result + (myPattern != null ? myPattern.hashCode() : 0);
+        result = 31 * result + Boolean.hashCode(isFromCursor);
+        result = 31 * result + Boolean.hashCode(isForward);
+        result = 31 * result + Boolean.hashCode(isGlobal);
+        result = 31 * result + Boolean.hashCode(isRegularExpressions);
+        result = 31 * result + Boolean.hashCode(isCaseSensitive);
+        result = 31 * result + Boolean.hashCode(isMultipleFiles);
+        result = 31 * result + Boolean.hashCode(isPromptOnReplace);
+        result = 31 * result + Boolean.hashCode(isReplaceAll);
+        result = 31 * result + Boolean.hashCode(isOpenNewTab);
+        result = 31 * result + Boolean.hashCode(isOpenInNewTabEnabled);
+        result = 31 * result + Boolean.hashCode(isOpenNewTabVisible);
+        result = 31 * result + Boolean.hashCode(isProjectScope);
+        result = 31 * result + Boolean.hashCode(isFindAll);
+        result = 31 * result + Boolean.hashCode(isFindAllEnabled);
+        result = 31 * result + Objects.hashCode(moduleName);
+        result = 31 * result + Objects.hashCode(directoryName);
+        result = 31 * result + Boolean.hashCode(isWithSubdirectories);
+        result = 31 * result + Objects.hashCode(fileFilter);
+        result = 31 * result + Objects.hashCode(customScopeName);
+        result = 31 * result + Objects.hashCode(customScope);
+        result = 31 * result + Boolean.hashCode(isCustomScope);
+        result = 31 * result + Boolean.hashCode(isMultiline);
+        result = 31 * result + Boolean.hashCode(isPreserveCase);
+        result = 31 * result + Boolean.hashCode(mySearchInProjectFiles);
+        result = 31 * result + Objects.hashCode(myPattern);
         return result;
     }
 

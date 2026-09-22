@@ -56,7 +56,7 @@ public class InlayTextMetricsStorage {
         InlayTextMetrics metrics = small ? smallTextMetrics : normalTextMetrics;
         if (metrics == null) {
             float size = small ? getSmallTextSize() : getNormalTextSize();
-            metrics = InlayTextMetrics.create(editor, size, getFontType(), current.getFontRenderContext());
+            metrics = InlayTextMetrics.create(editor, size, getFontType(), current.fontRenderContext());
             if (small) smallTextMetrics = metrics;
             else normalTextMetrics = metrics;
         }

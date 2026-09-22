@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -139,7 +140,6 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
         return map;
     }
 
-    
     public static Set<ExpressionTypeProvider> getHandlers(Project project, Language... languages) {
         DumbService dumbService = DumbService.getInstance(project);
         return JBIterable.of(languages)
@@ -149,15 +149,9 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
 
     static final class DisplayedTypeInfo {
         private static volatile DisplayedTypeInfo ourCurrentInstance;
-        final
-        
-        PsiElement myElement;
-        final
-        
-        ExpressionTypeProvider<?> myProvider;
-        final
-        
-        Editor myEditor;
+        final PsiElement myElement;
+        final ExpressionTypeProvider<?> myProvider;
+        final Editor myEditor;
 
         DisplayedTypeInfo(PsiElement element, ExpressionTypeProvider<?> provider, Editor editor) {
             myElement = element;
@@ -167,18 +161,17 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
 
         @Override
         @SuppressWarnings("EqualsHashCode")
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            DisplayedTypeInfo info = (DisplayedTypeInfo) o;
-            return Objects.equals(myElement, info.myElement) && Objects.equals(myProvider, info.myProvider) && Objects.equals(
-                myEditor,
-                info.myEditor
-            );
+            DisplayedTypeInfo that = (DisplayedTypeInfo) o;
+            return Objects.equals(myElement, that.myElement)
+                && Objects.equals(myProvider, that.myProvider)
+                && Objects.equals(myEditor, that.myEditor);
         }
 
         /**
@@ -206,4 +199,3 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
         }
     }
 }
-

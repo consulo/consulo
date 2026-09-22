@@ -5,6 +5,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.BasePresentation;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.PresentationListener;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -150,11 +151,9 @@ public abstract class StatefulPresentation<S> extends BasePresentation {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof StateMark)) return false;
-            StateMark<?> that = (StateMark<?>) o;
-            return Objects.equals(id, that.id);
+        public boolean equals(@Nullable Object o) {
+            return this == o
+                || o instanceof StateMark<?> that && Objects.equals(id, that.id);
         }
 
         @Override

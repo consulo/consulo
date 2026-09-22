@@ -39,7 +39,7 @@ public class InlayHintsProviderFactory {
         List<InlayProviderInfo> infos = findProvidersForLanguage(language);
 
         for (InlayProviderInfo info : infos) {
-            if (Objects.equals(info.getProviderId(), providerId)) {
+            if (Objects.equals(info.providerId(), providerId)) {
                 return info;
             }
         }

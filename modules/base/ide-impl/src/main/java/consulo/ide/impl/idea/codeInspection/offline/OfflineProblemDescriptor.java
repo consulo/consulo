@@ -135,7 +135,7 @@ public class OfflineProblemDescriptor {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -145,29 +145,28 @@ public class OfflineProblemDescriptor {
 
         OfflineProblemDescriptor that = (OfflineProblemDescriptor) o;
 
-      return myLine == that.myLine
-          && myProblemIndex == that.myProblemIndex
-          && Objects.equals(myDescription, that.myDescription)
-          && Objects.equals(myFQName, that.myFQName)
-          && Objects.equals(myHints, that.myHints)
-          && Objects.equals(myModuleName, that.myModuleName)
-          && Arrays.equals(myParentFQName, that.myParentFQName)
-          && Arrays.equals(myParentType, that.myParentType)
-          && Objects.equals(myType, that.myType);
+        return myLine == that.myLine
+            && myProblemIndex == that.myProblemIndex
+            && Objects.equals(myDescription, that.myDescription)
+            && Objects.equals(myFQName, that.myFQName)
+            && Objects.equals(myHints, that.myHints)
+            && Objects.equals(myModuleName, that.myModuleName)
+            && Arrays.equals(myParentFQName, that.myParentFQName)
+            && Arrays.equals(myParentType, that.myParentType)
+            && Objects.equals(myType, that.myType);
     }
 
     @Override
     public int hashCode() {
-        int result;
-        result = (myType != null ? myType.hashCode() : 0);
-        result = 31 * result + (myFQName != null ? myFQName.hashCode() : 0);
-        result = 31 * result + (myDescription != null ? myDescription.hashCode() : 0);
-        result = 31 * result + (myHints != null ? myHints.hashCode() : 0);
+        int result = Objects.hashCode(myType);
+        result = 31 * result + Objects.hashCode(myFQName);
+        result = 31 * result + Objects.hashCode(myDescription);
+        result = 31 * result + Objects.hashCode(myHints);
         result = 31 * result + myProblemIndex;
         result = 31 * result + myLine;
-        result = 31 * result + (myParentType != null ? Arrays.hashCode(myParentType) : 0);
-        result = 31 * result + (myParentFQName != null ? Arrays.hashCode(myParentFQName) : 0);
-        result = 31 * result + (myModuleName != null ? myModuleName.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(myParentType);
+        result = 31 * result + Arrays.hashCode(myParentFQName);
+        result = 31 * result + Objects.hashCode(myModuleName);
         return result;
     }
 

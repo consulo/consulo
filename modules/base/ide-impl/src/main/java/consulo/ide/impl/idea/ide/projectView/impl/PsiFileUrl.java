@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.project.ui.view.internal.AbstractUrl;
@@ -23,55 +23,55 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author anna
  * @author Konstantin Bulenkov
  */
 public class PsiFileUrl extends AbstractUrl {
-  
-  private static final String ELEMENT_TYPE = "psiFile";
+    private static final String ELEMENT_TYPE = "psiFile";
 
-  public PsiFileUrl(String url) {
-    super(url, null, ELEMENT_TYPE);
-  }
-
-  @Override
-  public Object[] createPath(Project project) {
-    VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
-    if (file == null || !file.isValid()){
-      return null;
+    public PsiFileUrl(String url) {
+        super(url, null, ELEMENT_TYPE);
     }
-    return new Object[]{PsiManager.getInstance(project).findFile(file)};
-  }
 
-  @Override
-  protected AbstractUrl createUrl(String moduleName, String url) {
-      return new PsiFileUrl(url);
-  }
-
-  @Override
-  public AbstractUrl createUrlByElement(Object element) {
-    if (element instanceof PsiFile) {
-      VirtualFile file = ((PsiFile)element).getVirtualFile();
-      if (file != null){
-        return new PsiFileUrl(file.getUrl());
-      }
+    @Override
+    @RequiredReadAction
+    public Object @Nullable [] createPath(Project project) {
+        VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
+        if (file == null || !file.isValid()) {
+            return null;
+        }
+        return new Object[]{PsiManager.getInstance(project).findFile(file)};
     }
-    return null;
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o instanceof PsiFileUrl) {
-     return StringUtil.equals(url, ((PsiFileUrl)o).url);
+    @Override
+    protected AbstractUrl createUrl(String moduleName, String url) {
+        return new PsiFileUrl(url);
     }
-    return false;
-  }
 
-  @Override
-  public int hashCode() {
-    return url == null ? 0 : url.hashCode();
-  }
+    @Override
+    public AbstractUrl createUrlByElement(Object element) {
+        if (element instanceof PsiFile) {
+            VirtualFile file = ((PsiFile) element).getVirtualFile();
+            if (file != null) {
+                return new PsiFileUrl(file.getUrl());
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof PsiFileUrl that && StringUtil.equals(url, that.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(url);
+    }
 }

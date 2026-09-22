@@ -85,6 +85,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
 
     connection.subscribe(FileEditorManagerBeforeListener.class, new FileEditorManagerBeforeListener.Adapter() {
       @Override
+      @RequiredUIAccess
       public void beforeFileClosed(FileEditorManager source, VirtualFile file) {
         updateHistoryEntry(file, false);
       }
@@ -110,9 +111,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * Makes file most recent one
    */
   @RequiredUIAccess
-  private void fileOpenedImpl(VirtualFile file,
-                              @Nullable FileEditor fallbackEditor,
-                              @Nullable FileEditorProvider fallbackProvider) {
+  private void fileOpenedImpl(VirtualFile file, @Nullable FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider) {
     UIAccess.assertIsUIThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
@@ -160,6 +159,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     }
   }
 
+  @RequiredUIAccess
   public void updateHistoryEntry(@Nullable VirtualFile file, boolean changeEntryOrderOnly) {
     updateHistoryEntry(file, null, null, changeEntryOrderOnly);
   }
@@ -217,7 +217,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     FileEditorWithProvider selectedEditorWithProvider = editorManager.getSelectedEditorWithProvider(file);
     if (selectedEditorWithProvider != null) {
       //LOG.assertTrue(selectedEditorWithProvider != null);
-      entry.setSelectedProvider(selectedEditorWithProvider.getProvider());
+      entry.setSelectedProvider(selectedEditorWithProvider.provider());
       LOG.assertTrue(entry.getSelectedProvider() != null);
 
       if (changeEntryOrderOnly) {

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.bookmark.ui.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -33,85 +33,98 @@ import java.util.Collection;
  */
 @Deprecated
 public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
-  public abstract @Nullable Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
+    @Override
+    public abstract @Nullable Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
 
-  public @Nullable AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
-    return null;
-  }
-
-  /**
-   * Checks if the specified project view node element (the value of {@link AbstractTreeNode}) contains
-   * the specified virtual file as one of its children.
-   *
-   * @param element the value element of a project view node.
-   * @param vFile   the file to check.
-   * @return true if the file is contained, false if not or if <code>element</code> is not an element supported by this provider.
-   */
-  public abstract boolean elementContainsFile(Object element, VirtualFile vFile);
-
-  /**
-   * Returns the weight of the specified project view node element to use when sorting the favorites list.
-   *
-   * @param element the element for which the weight is requested.
-   * @param isSortByType
-   * @return the weight, or -1 if <code>element</code> is not an element supported by this provider.
-   */
-  public abstract int getElementWeight(Object element, boolean isSortByType);
-
-  /**
-   * Returns the location text (grey text in parentheses) to display in the Favorites view for the specified element.
-   *
-   * @param element the element for which the location is requested.
-   * @return the location text, or -1 if <code>element</code> is not an element supported by this provider.
-   */
-  public abstract @Nullable String getElementLocation(Object element);
-
-  /**
-   * Checks if the specified element is invalid and needs to be removed from the tree.
-   *
-   * @param element the element to check.
-   * @return true if the element is invalid, false if the element is valid or not supported by this provider.
-   */
-  public abstract boolean isInvalidElement(Object element);
-
-  /**
-   * Returns the identifier used to persist favorites for this provider.
-   *
-   * @return the string identifier.
-   */
-  public abstract String getFavoriteTypeId();
-
-  /**
-   * Returns the persistent URL for the specified element.
-   *
-   * @param element
-   * @return the URL, or null if the element is not supported by this provider.
-   */
-  public abstract @Nullable String getElementUrl(Object element);
-
-  /**
-   * Returns the name of the module containing the specified element.
-   *
-   * @param element
-   * @return the name of the module, or null if the element is not supported by this provider or the module name is unknown.
-   */
-  public abstract @Nullable String getElementModuleName(Object element);
-
-  /**
-   * Returns the path of node objects to be added to the favorites tree for the specified persisted URL and module name.
-   *
-   * @param project the project to which the favorite is related.
-   * @param url the loaded URL (initially returned from {@link #getElementUrl }).
-   * @param moduleName the name of the module containing the element (initially returned from {@link #getElementModuleName})
-   * @return the path of objects to be added to the tree, or null if it was not possible to locate an object with the
-   * specified URL.
-   */
-  public abstract @Nullable Object[] createPathFromUrl(Project project, String url, String moduleName);
-
-  public @Nullable PsiElement getPsiElement(Object element) {
-    if (element instanceof PsiElement) {
-      return (PsiElement)element;
+    @Override
+    public @Nullable AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
+        return null;
     }
-    return null;
-  }
+
+    /**
+     * Checks if the specified project view node element (the value of {@link AbstractTreeNode}) contains
+     * the specified virtual file as one of its children.
+     *
+     * @param element the value element of a project view node.
+     * @param vFile   the file to check.
+     * @return true if the file is contained, false if not or if <code>element</code> is not an element supported by this provider.
+     */
+    @Override
+    public abstract boolean elementContainsFile(Object element, VirtualFile vFile);
+
+    /**
+     * Returns the weight of the specified project view node element to use when sorting the favorites list.
+     *
+     * @param element      the element for which the weight is requested.
+     * @param isSortByType
+     * @return the weight, or -1 if <code>element</code> is not an element supported by this provider.
+     */
+    @Override
+    public abstract int getElementWeight(Object element, boolean isSortByType);
+
+    /**
+     * Returns the location text (grey text in parentheses) to display in the Favorites view for the specified element.
+     *
+     * @param element the element for which the location is requested.
+     * @return the location text, or -1 if <code>element</code> is not an element supported by this provider.
+     */
+    @Override
+    public abstract @Nullable String getElementLocation(Object element);
+
+    /**
+     * Checks if the specified element is invalid and needs to be removed from the tree.
+     *
+     * @param element the element to check.
+     * @return true if the element is invalid, false if the element is valid or not supported by this provider.
+     */
+    @Override
+    @RequiredReadAction
+    public abstract boolean isInvalidElement(Object element);
+
+    /**
+     * Returns the identifier used to persist favorites for this provider.
+     *
+     * @return the string identifier.
+     */
+    @Override
+    public abstract String getFavoriteTypeId();
+
+    /**
+     * Returns the persistent URL for the specified element.
+     *
+     * @param element
+     * @return the URL, or null if the element is not supported by this provider.
+     */
+    @Override
+    public abstract @Nullable String getElementUrl(Object element);
+
+    /**
+     * Returns the name of the module containing the specified element.
+     *
+     * @param element
+     * @return the name of the module, or null if the element is not supported by this provider or the module name is unknown.
+     */
+    @Override
+    public abstract @Nullable String getElementModuleName(Object element);
+
+    /**
+     * Returns the path of node objects to be added to the favorites tree for the specified persisted URL and module name.
+     *
+     * @param project    the project to which the favorite is related.
+     * @param url        the loaded URL (initially returned from {@link #getElementUrl }).
+     * @param moduleName the name of the module containing the element (initially returned from {@link #getElementModuleName})
+     * @return the path of objects to be added to the tree, or null if it was not possible to locate an object with the
+     * specified URL.
+     */
+    @Override
+    @RequiredReadAction
+    public abstract Object @Nullable [] createPathFromUrl(Project project, String url, String moduleName);
+
+    @Override
+    public @Nullable PsiElement getPsiElement(Object element) {
+        if (element instanceof PsiElement psiElement) {
+            return psiElement;
+        }
+        return null;
+    }
 }
