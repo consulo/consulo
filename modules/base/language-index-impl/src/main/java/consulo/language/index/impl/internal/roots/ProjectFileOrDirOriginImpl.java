@@ -3,6 +3,7 @@ package consulo.language.index.impl.internal.roots;
 
 import consulo.language.index.impl.internal.roots.kind.ProjectFileOrDirOrigin;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 class ProjectFileOrDirOriginImpl implements ProjectFileOrDirOrigin {
     private final VirtualFile myFileOrDir;
@@ -17,14 +18,9 @@ class ProjectFileOrDirOriginImpl implements ProjectFileOrDirOrigin {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ProjectFileOrDirOriginImpl other)) {
-            return false;
-        }
-        return myFileOrDir.equals(other.myFileOrDir);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ProjectFileOrDirOriginImpl that && myFileOrDir.equals(that.myFileOrDir);
     }
 
     @Override

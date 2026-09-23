@@ -27,10 +27,10 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.util.interner.Interner;
-import consulo.util.lang.StringHash;
 import consulo.util.lang.StringEscapeUtil;
+import consulo.util.lang.StringHash;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.*;
@@ -61,7 +61,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         catch (Exception ex) {
             Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
             LOG.warn("error processing place: " + displayName + " [" + text + "]", cause);
-            return new LazyPresentablePattern<T>(new Node(ERROR_NODE, text, null));
+            return new LazyPresentablePattern<>(new Node(ERROR_NODE, text, null));
         }
     }
 
@@ -123,11 +123,11 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         State state = State.init;
         Object target;
         String methodName;
-        ArrayList<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
     }
 
     private static <T> T processElementPatternText(String text, Function<Frame, Object> executor) {
-        Stack<Frame> stack = new Stack<Frame>();
+        Stack<Frame> stack = new Stack<>();
         int curPos = 0;
         Frame curFrame = new Frame();
         Object curResult = null;
@@ -343,7 +343,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         Object[] arguments,
         Collection<Method> staticMethods
     ) throws Throwable {
-        Ref<Boolean> convertVarArgs = Ref.create(Boolean.FALSE);
+        SimpleReference<Boolean> convertVarArgs = SimpleReference.create(Boolean.FALSE);
         Collection<Method> methods = target == null ? staticMethods : Arrays.asList(target.getClass().getMethods());
         Method method = findMethod(methodName, arguments, methods, convertVarArgs);
         if (method != null) {
@@ -372,7 +372,12 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         throw new NoSuchMethodException("unknown symbol: " + methodName + "(" + StringUtil.join(arguments, String::valueOf, ", ") + ")");
     }
 
-    private static @Nullable Method findMethod(String methodName, Object[] arguments, Collection<Method> methods, Ref<Boolean> convertVarArgs) {
+    private static @Nullable Method findMethod(
+        String methodName,
+        Object[] arguments,
+        Collection<Method> methods,
+        SimpleReference<Boolean> convertVarArgs
+    ) {
         main:
         for (Method method : methods) {
             if (!methodName.equals(method.getName())) {
@@ -411,8 +416,8 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
     @Override
     public String dumpContextDeclarations() {
         StringBuilder sb = new StringBuilder();
-        Map<Class, Collection<Class>> classes = new HashMap<Class, Collection<Class>>();
-        Set<Class> missingClasses = new HashSet<Class>();
+        Map<Class, Collection<Class>> classes = new HashMap<>();
+        Set<Class> missingClasses = new HashSet<>();
         classes.put(Object.class, missingClasses);
         for (Method method : myStaticMethods) {
             for (Class<?> type = method.getReturnType(); type != null && ElementPattern.class.isAssignableFrom(type);
@@ -421,7 +426,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
                 if (enclosingClass != null) {
                     Collection<Class> list = classes.get(enclosingClass);
                     if (list == null) {
-                        list = new HashSet<Class>();
+                        list = new HashSet<>();
                         classes.put(enclosingClass, list);
                     }
                     list.add(type);
@@ -465,8 +470,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         }
         int implementsIdx = 1;
         for (Type superInterface : aClass.getGenericInterfaces()) {
-            Class rawSuperInterface =
-                (Class) (superInterface instanceof ParameterizedType ? ((ParameterizedType) superInterface).getRawType() : superClass);
+            Class rawSuperInterface = (Class) (superInterface instanceof ParameterizedType parType ? parType.getRawType() : superClass);
             if (classes.containsKey(rawSuperInterface)) {
                 if (implementsIdx++ == 1) {
                     sb.append(isInterface ? " extends " : " implements ");
@@ -623,7 +627,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
     }
 
     private static class FalsePattern extends InitialPatternCondition<Object> implements ElementPattern<Object> {
-        private final ElementPatternCondition<Object> myCondition = new ElementPatternCondition<Object>(this);
+        private final ElementPatternCondition<Object> myCondition = new ElementPatternCondition<>(this);
 
         protected FalsePattern() {
             super(Object.class);
@@ -646,7 +650,6 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
     }
 
     public class LazyPresentablePattern<T> implements CompilableElementPattern<T> {
-
         private ElementPattern<T> myCompiledPattern;
         private final Node myNode;
         private final long myHashCode;
@@ -717,9 +720,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
                     toString(nodeArg, sb);
                 }
                 else if (arg instanceof String strArg) {
-                    sb.append('\"');
-                    StringUtil.escapeStringCharacters(strArg, sb);
-                    sb.append('\"');
+                    StringEscapeUtil.quote(strArg, '"', sb);
                 }
                 else if (arg instanceof Number) {
                     sb.append(arg);
@@ -739,7 +740,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
             else {
                 args = new Object[node.args.length];
                 for (int i = 0, len = node.args.length; i < len; i++) {
-                    args[i] = node.args[i] instanceof Node ? execute((Node) node.args[i]) : node.args[i];
+                    args[i] = node.args[i] instanceof Node nodeArg ? execute(nodeArg) : node.args[i];
                 }
             }
             return invokeMethod(target, methodName, args, myStaticMethods);
@@ -751,8 +752,9 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof LazyPresentablePattern && ((LazyPresentablePattern) obj).myHashCode == myHashCode;
+        public boolean equals(@Nullable Object obj) {
+            return obj == this
+                || obj instanceof LazyPresentablePattern that && that.myHashCode == myHashCode;
         }
     }
 }

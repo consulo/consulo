@@ -13,100 +13,105 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
 public class StoredContent extends Content {
-  private static final int UNAVAILABLE = 0;
+    private static final int UNAVAILABLE = 0;
 
-  private int myContentId;
+    private int myContentId;
 
-  public static StoredContent acquireContent(byte[] bytes) {
-    return new StoredContent(getFS().storeUnlinkedContent(bytes));
-  }
-
-  public static StoredContent acquireContent(VirtualFile f) {
-    return new StoredContent(getFS().acquireContent(f));
-  }
-
-  public static StoredContent transientContent(VirtualFile f) {
-    return new StoredContent(getFS().getCurrentContentId(f)) {
-      @Override
-      public void release() {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public void write(DataOutput out) throws IOException {
-        throw new UnsupportedOperationException();
-      }
-    };
-  }
-
-  @TestOnly
-  public StoredContent(int contentId) {
-    myContentId = contentId;
-  }
-
-  public StoredContent(DataInput in) throws IOException {
-    myContentId = in.readInt();
-  }
-
-  @Override
-  public void write(DataOutput out) throws IOException {
-    out.writeInt(myContentId);
-  }
-
-  @Override
-  public byte[] getBytes() {
-    //todo handle unavailable content 
-    //if (!isAvailable()) throw new RuntimeException("content is not available");
-    try {
-      if (myContentId == UNAVAILABLE) return ArrayUtil.EMPTY_BYTE_ARRAY;
-      return getFS().contentsToByteArray(myContentId);
+    public static StoredContent acquireContent(byte[] bytes) {
+        return new StoredContent(getFS().storeUnlinkedContent(bytes));
     }
-    catch (IOException e) {
-      throw new RuntimeException("cannot get stored content", e);
+
+    public static StoredContent acquireContent(VirtualFile f) {
+        return new StoredContent(getFS().acquireContent(f));
     }
-  }
 
-  @Override
-  public boolean isAvailable() {
-    //return myContentId != UNAVAILABLE;
-    return true;
-  }
+    public static StoredContent transientContent(VirtualFile f) {
+        return new StoredContent(getFS().getCurrentContentId(f)) {
+            @Override
+            public void release() {
+                throw new UnsupportedOperationException();
+            }
 
-  private static PersistentFS getFS() {
-    return ((PersistentFS)PersistentFS.getInstance());
-  }
+            @Override
+            public void write(DataOutput out) throws IOException {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 
-  public int getContentId() {
-    return myContentId;
-  }
+    @TestOnly
+    public StoredContent(int contentId) {
+        myContentId = contentId;
+    }
 
-  @Override
-  public void release() {
-    if (myContentId == UNAVAILABLE) return;
-    getFS().releaseContent(myContentId);
-    myContentId = UNAVAILABLE;
-  }
+    public StoredContent(DataInput in) throws IOException {
+        myContentId = in.readInt();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    return myContentId == ((StoredContent)o).myContentId;
-  }
+    @Override
+    public void write(DataOutput out) throws IOException {
+        out.writeInt(myContentId);
+    }
 
-  @Override
-  public int hashCode() {
-    return myContentId;
-  }
+    @Override
+    public byte[] getBytes() {
+        //todo handle unavailable content
+        //if (!isAvailable()) throw new RuntimeException("content is not available");
+        try {
+            if (myContentId == UNAVAILABLE) {
+                return ArrayUtil.EMPTY_BYTE_ARRAY;
+            }
+            return getFS().contentsToByteArray(myContentId);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("cannot get stored content", e);
+        }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        //return myContentId != UNAVAILABLE;
+        return true;
+    }
+
+    private static PersistentFS getFS() {
+        return PersistentFS.getInstance();
+    }
+
+    public int getContentId() {
+        return myContentId;
+    }
+
+    @Override
+    public void release() {
+        if (myContentId == UNAVAILABLE) {
+            return;
+        }
+        getFS().releaseContent(myContentId);
+        myContentId = UNAVAILABLE;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return o == this
+            || o instanceof StoredContent that && myContentId == that.myContentId;
+    }
+
+    @Override
+    public int hashCode() {
+        return myContentId;
+    }
 }

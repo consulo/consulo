@@ -13,67 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.inject.advanced;
 
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.ArrayFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
-* @author Gregory.Shrago
-*/
+ * @author Gregory.Shrago
+ */
 // todo inline class
 public class InjectionPlace {
+    public static final InjectionPlace[] EMPTY_ARRAY = new InjectionPlace[0];
 
-  public static final InjectionPlace[] EMPTY_ARRAY = new InjectionPlace[0];
+    public static final ArrayFactory<InjectionPlace> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new InjectionPlace[count];
 
-  public static final ArrayFactory<InjectionPlace> ARRAY_FACTORY = new ArrayFactory<InjectionPlace>() {
-    
-    @Override
-    public InjectionPlace[] create(int count) {
-      return count == 0? EMPTY_ARRAY : new InjectionPlace[count];
+    private final ElementPattern<PsiElement> myElementPattern;
+    private final boolean myEnabled;
+
+    public InjectionPlace(ElementPattern<PsiElement> myElementPattern, boolean enabled) {
+        this.myElementPattern = myElementPattern;
+        myEnabled = enabled;
     }
-  };
 
-  private final ElementPattern<PsiElement> myElementPattern;
-  private final boolean myEnabled;
+    public InjectionPlace enabled(boolean enabled) {
+        return new InjectionPlace(myElementPattern, enabled);
+    }
 
-  public InjectionPlace(ElementPattern<PsiElement> myElementPattern, boolean enabled) {
-    this.myElementPattern = myElementPattern;
-    myEnabled = enabled;
-  }
+    public String getText() {
+        return myElementPattern.toString();
+    }
 
-  public InjectionPlace enabled(boolean enabled) {
-    return new InjectionPlace(myElementPattern, enabled);
-  }
+    public ElementPattern<PsiElement> getElementPattern() {
+        return myElementPattern;
+    }
 
-  public String getText() {
-    return myElementPattern.toString();
-  }
+    public boolean isEnabled() {
+        return myEnabled;
+    }
 
-  public ElementPattern<PsiElement> getElementPattern() {
-    return myElementPattern;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  public boolean isEnabled() {
-    return myEnabled;
-  }
+        InjectionPlace that = (InjectionPlace) o;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        return myElementPattern.equals(that.myElementPattern);
+    }
 
-    InjectionPlace place = (InjectionPlace)o;
-
-    if (!myElementPattern.equals(place.myElementPattern)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myElementPattern.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myElementPattern.hashCode();
+    }
 }

@@ -17,8 +17,8 @@ package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -35,8 +35,8 @@ import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Set;
@@ -50,7 +50,7 @@ import java.util.Set;
 public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     private static final Logger LOG = Logger.getInstance(PsiAnchorFactoryImpl.class);
 
-    
+    @Override
     @RequiredReadAction
     public PsiAnchor create(PsiElement element) {
         PsiUtilCore.ensureValid(element);
@@ -68,7 +68,6 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         return anchor;
     }
 
-    
     @RequiredReadAction
     private PsiAnchor doCreateAnchor(PsiElement element) {
         if (element instanceof PsiFile file) {
@@ -128,7 +127,6 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         );
     }
 
-    
     @RequiredReadAction
     private PsiAnchor wrapperOrHardReference(PsiElement element) {
         for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
@@ -158,17 +156,19 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         return null;
     }
 
+    @RequiredReadAction
     private static boolean canHaveStub(PsiFile file) {
-        if (!(file instanceof PsiFileImpl)) {
+        if (!(file instanceof PsiFileImpl fileImpl)) {
             return false;
         }
 
         VirtualFile vFile = file.getVirtualFile();
 
-        IStubFileElementType elementType = ((PsiFileImpl) file).getElementTypeForStubBuilder();
+        IStubFileElementType elementType = fileImpl.getElementTypeForStubBuilder();
         return elementType != null && vFile != null && elementType.shouldBuildStubFor(vFile);
     }
 
+    @RequiredReadAction
     public static int calcStubIndex(StubBasedPsiElement psi) {
         if (psi instanceof PsiFile) {
             return 0;
@@ -189,13 +189,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         private final int myStartOffset;
         private final int myEndOffset;
 
-        private TreeRangeReference(
-            PsiFile file,
-            int startOffset,
-            int endOffset,
-            IdentikitImpl info,
-            VirtualFile virtualFile
-        ) {
+        private TreeRangeReference(PsiFile file, int startOffset, int endOffset, IdentikitImpl info, VirtualFile virtualFile) {
             myVirtualFile = virtualFile;
             myProject = file.getProject();
             myStartOffset = startOffset;
@@ -204,6 +198,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
+        @RequiredReadAction
         public @Nullable PsiElement retrieve() {
             PsiFile psiFile = getFile();
             if (psiFile == null || !psiFile.isValid()) {
@@ -233,9 +228,11 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        public boolean equals(Object o) {
-            return o == this
-                || o instanceof TreeRangeReference that
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof TreeRangeReference that
                 && myEndOffset == that.myEndOffset
                 && myStartOffset == that.myStartOffset
                 && myInfo.equals(that.myInfo)
@@ -266,7 +263,6 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
             myLanguage = findLanguage(psiFile);
         }
 
-        
         @RequiredReadAction
         private static Language findLanguage(PsiFile file) {
             FileViewProvider vp = file.getViewProvider();
@@ -300,12 +296,14 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        public boolean equals(Object o) {
-            return o == this
-                || o instanceof PsiFileReference reference
-                && myFile.equals(reference.myFile)
-                && myLanguage.equals(reference.myLanguage)
-                && myProject.equals(reference.myProject);
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof PsiFileReference that
+                && myFile.equals(that.myFile)
+                && myLanguage.equals(that.myLanguage)
+                && myProject.equals(that.myProject);
         }
 
         @Override
@@ -315,7 +313,6 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     }
 
     private static class PsiDirectoryReference implements PsiAnchor {
-        
         private final VirtualFile myFile;
         
         private final Project myProject;
@@ -347,11 +344,9 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             return o == this
-                || o instanceof PsiDirectoryReference reference
-                && myFile.equals(reference.myFile)
-                && myProject.equals(reference.myProject);
+                || o instanceof PsiDirectoryReference that && myFile.equals(that.myFile) && myProject.equals(that.myProject);
         }
 
         @Override
@@ -397,7 +392,6 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     }
 
     public static class StubIndexReference implements PsiAnchor {
-        
         private final VirtualFile myVirtualFile;
         
         private final Project myProject;
@@ -407,12 +401,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         
         private final IStubElementType myElementType;
 
-        private StubIndexReference(
-            PsiFile file,
-            int index,
-            Language language,
-            IStubElementType elementType
-        ) {
+        private StubIndexReference(PsiFile file, int index, Language language, IStubElementType elementType) {
             myLanguage = language;
             myElementType = elementType;
             myVirtualFile = file.getVirtualFile();
@@ -437,15 +426,14 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
 
         @Override
         public PsiElement retrieve() {
-            return AccessRule.read(() -> restoreFromStubIndex((PsiFileWithStubSupport) getFile(), myIndex, myElementType, false));
+            return ReadAction.compute(() -> restoreFromStubIndex((PsiFileWithStubSupport) getFile(), myIndex, myElementType, false));
         }
 
-        
         public String diagnoseNull() {
-            PsiFile file = AccessRule.read(this::getFile);
+            PsiFile file = ReadAction.compute(this::getFile);
             try {
                 PsiElement element =
-                    AccessRule.read(() -> restoreFromStubIndex((PsiFileWithStubSupport) file, myIndex, myElementType, true));
+                    ReadAction.compute(() -> restoreFromStubIndex((PsiFileWithStubSupport) file, myIndex, myElementType, true));
                 return "No diagnostics, element=" + element + "@" + (element == null ? 0 : System.identityHashCode(element));
             }
             catch (AssertionError e) {
@@ -461,9 +449,11 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        public boolean equals(Object o) {
-            return o == this
-                || o instanceof StubIndexReference that
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof StubIndexReference that
                 && myIndex == that.myIndex
                 && myVirtualFile.equals(that.myVirtualFile)
                 && Objects.equals(myElementType, that.myElementType)
@@ -498,7 +488,6 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
             return getTextRange().getEndOffset();
         }
 
-        
         @RequiredReadAction
         private TextRange getTextRange() {
             PsiElement resolved = retrieve();
@@ -508,12 +497,10 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
             return resolved.getTextRange();
         }
 
-        
         public VirtualFile getVirtualFile() {
             return myVirtualFile;
         }
 
-        
         public Project getProject() {
             return myProject;
         }

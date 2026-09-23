@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.inject.advanced;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.file.FileTypeManager;
@@ -37,7 +37,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -164,7 +164,6 @@ public class InjectorUtils {
         }
     }
 
-    
     public static Collection<String> getActiveInjectionSupportIds() {
         return LanguageSupportCache.getInstance().getAllSupportIds();
     }
@@ -183,7 +182,6 @@ public class InjectorUtils {
         return support == null ? ArrayUtil.EMPTY_CLASS_ARRAY : support.getPatternClasses();
     }
 
-    
     public static LanguageInjectionSupport findNotNullInjectionSupport(String id) {
         LanguageInjectionSupport result = findInjectionSupport(id);
         assert result != null : id + " injector not found";
@@ -275,7 +273,8 @@ public class InjectorUtils {
         return true;
     }
 
-    public static BaseInjection findCommentInjection(PsiElement context, final String supportId, final Ref<PsiElement> causeRef) {
+    @RequiredReadAction
+    public static BaseInjection findCommentInjection(PsiElement context, String supportId, SimpleReference<PsiElement> causeRef) {
         return findNearestComment(context, new Function<PsiComment, BaseInjection>() {
             @Override
             public @Nullable BaseInjection apply(PsiComment comment) {
@@ -321,13 +320,14 @@ public class InjectorUtils {
         return injection;
     }
 
+    @RequiredReadAction
     public static @Nullable <T> T findNearestComment(PsiElement element, Function<PsiComment, T> processor) {
         if (element instanceof PsiComment) {
             return null;
         }
         PsiFile containingFile = element.getContainingFile();
 
-        List<PsiLanguageInjectionHost> otherHosts = new SmartList<PsiLanguageInjectionHost>();
+        List<PsiLanguageInjectionHost> otherHosts = new SmartList<>();
 
         boolean commentOrSpaces = false;
 
@@ -392,6 +392,7 @@ public class InjectorUtils {
         return true;
     }
 
+    @RequiredReadAction
     public static @Nullable PsiElement prevOrParent(PsiElement e, PsiElement scope) {
         if (e == null || e == scope) {
             return null;

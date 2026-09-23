@@ -17,6 +17,7 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -32,6 +33,7 @@ public sealed class AbstractJoinedLocalizedValue extends CachingLocalizedValue
         super(manager);
         myValues = values;
     }
+
     @Override
     public String getId() {
         StringBuilder sb = new StringBuilder().append('[');
@@ -43,6 +45,7 @@ public sealed class AbstractJoinedLocalizedValue extends CachingLocalizedValue
         }
         return sb.append("]->join").toString();
     }
+
     @Override
     protected String calcValue() {
         StringBuilder builder = new StringBuilder();
@@ -58,9 +61,8 @@ public sealed class AbstractJoinedLocalizedValue extends CachingLocalizedValue
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return o == this
-            || o instanceof AbstractJoinedLocalizedValue that
-            && Arrays.equals(myValues, that.myValues);
+            || o instanceof AbstractJoinedLocalizedValue that && Arrays.equals(myValues, that.myValues);
     }
 }

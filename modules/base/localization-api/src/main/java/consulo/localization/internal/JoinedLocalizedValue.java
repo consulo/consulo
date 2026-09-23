@@ -17,6 +17,7 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,9 +30,8 @@ public final class JoinedLocalizedValue extends AbstractJoinedLocalizedValue {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return o == this
-            || super.equals(o)
-            && o instanceof JoinedLocalizedValue that;
+            || super.equals(o) && o instanceof JoinedLocalizedValue;
     }
 }

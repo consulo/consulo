@@ -17,7 +17,6 @@
 package consulo.language.index.impl.internal;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.content.ContentIterator;
 import consulo.language.index.impl.internal.events.FileIndexingRequest;
@@ -37,6 +36,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -59,12 +59,12 @@ public final class FileBasedIndexProjectHandler {
 
     public static boolean mightHaveManyChangedFilesInProject(Project project, FileBasedIndexImpl index) {
         long start = System.currentTimeMillis();
-        return !index.processChangedFiles(project, new Processor<>() {
+        return !index.processChangedFiles(project, new Predicate<>() {
             int filesInProjectToBeIndexed;
             long sizeOfFilesToBeIndexed;
 
             @Override
-            public boolean process(VirtualFile file) {
+            public boolean test(VirtualFile file) {
                 ++filesInProjectToBeIndexed;
                 if (file.isValid() && !file.isDirectory()) {
                     sizeOfFilesToBeIndexed += file.getLength();
@@ -170,7 +170,7 @@ public final class FileBasedIndexProjectHandler {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             // We need equals because otherwise UnindexedFilesIndexer will not be able to merge files (it merges files per provider,
             // not globally, i.e. the same file assigned to different providers may be indexed twice)
             if (this == o) {

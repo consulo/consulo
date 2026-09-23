@@ -76,11 +76,14 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    public boolean equals(Object o) {
-        return o != null &&
-            getClass() == o.getClass() &&
-            myManager == ((PsiPackageBase) o).myManager &&
-            myQualifiedName.equals(((PsiPackageBase) o).myQualifiedName);
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof PsiPackageBase that
+            && getClass() == o.getClass()
+            && myManager == that.myManager
+            && myQualifiedName.equals(that.myQualifiedName);
     }
 
     @Override

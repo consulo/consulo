@@ -4,6 +4,7 @@ package consulo.language.index.impl.internal.roots;
 import consulo.language.index.impl.internal.roots.kind.ModuleRootOrigin;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,14 +29,9 @@ class ModuleRootOriginImpl implements ModuleRootOrigin {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ModuleRootOriginImpl other)) {
-            return false;
-        }
-        return myModule.equals(other.myModule) && myRoots.equals(other.myRoots);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ModuleRootOriginImpl that && myModule.equals(that.myModule) && myRoots.equals(that.myRoots);
     }
 
     @Override

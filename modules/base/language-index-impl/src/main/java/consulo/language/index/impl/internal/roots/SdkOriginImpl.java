@@ -4,6 +4,7 @@ package consulo.language.index.impl.internal.roots;
 import consulo.content.bundle.Sdk;
 import consulo.language.index.impl.internal.roots.kind.SdkOrigin;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -28,14 +29,9 @@ class SdkOriginImpl implements SdkOrigin {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SdkOriginImpl other)) {
-            return false;
-        }
-        return mySdk.equals(other.mySdk) && myRootsToIndex.equals(other.myRootsToIndex);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof SdkOriginImpl that && mySdk.equals(that.mySdk) && myRootsToIndex.equals(that.myRootsToIndex);
     }
 
     @Override

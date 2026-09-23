@@ -3,6 +3,7 @@ package consulo.language.index.impl.internal.roots;
 
 import consulo.language.psi.stub.IndexableSetContributor;
 import consulo.language.index.impl.internal.roots.kind.IndexableSetContributorOrigin;
+import org.jspecify.annotations.Nullable;
 
 class IndexableSetContributorOriginImpl implements IndexableSetContributorOrigin {
     private final IndexableSetContributor myIndexableSetContributor;
@@ -17,14 +18,9 @@ class IndexableSetContributorOriginImpl implements IndexableSetContributorOrigin
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof IndexableSetContributorOriginImpl other)) {
-            return false;
-        }
-        return myIndexableSetContributor.equals(other.myIndexableSetContributor);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof IndexableSetContributorOriginImpl that && myIndexableSetContributor.equals(that.myIndexableSetContributor);
     }
 
     @Override

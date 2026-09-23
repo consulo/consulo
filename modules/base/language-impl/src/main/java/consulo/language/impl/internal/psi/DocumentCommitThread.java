@@ -34,6 +34,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -43,6 +44,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.function.BooleanSupplier;
 
@@ -66,10 +68,8 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     @Override
-    public void commitAsynchronously(Project project,
-                                     Document document,
-                                     Object reason,
-                                     ModalityState modality) {
+    @RequiredUIAccess
+    public void commitAsynchronously(Project project, Document document, Object reason, ModalityState modality) {
         assert !isDisposed : "already disposed";
         if (!project.isInitialized()) {
             return;
@@ -101,6 +101,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     @Override
+    @RequiredReadAction
     public void commitSynchronously(Document document, Project project, PsiFile psiFile) {
         assert !isDisposed;
 
@@ -116,13 +117,15 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         }
 
         CommitTask task = new CommitTask(project, document, SYNC_COMMIT_REASON, project.getApplication().getDefaultModalityState(),
-            PsiDocumentManager.getInstance(project).getLastCommittedText(document));
+            PsiDocumentManager.getInstance(project).getLastCommittedText(document)
+        );
 
         commitUnderProgress(task, true).run();
     }
 
     // returns finish commit Runnable (to be invoked later in EDT) or null on failure
-    
+
+    @RequiredReadAction
     private Runnable commitUnderProgress(CommitTask task, boolean synchronously) {
         Document document = task.getDocument();
         Project project = task.project;
@@ -149,11 +152,13 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         return createFinishCommitRunnable(task, synchronously, finishProcessors, reparseInjectedProcessors);
     }
 
-    
-    private Runnable createFinishCommitRunnable(CommitTask task,
-                                                boolean synchronously,
-                                                List<? extends BooleanSupplier> finishProcessors,
-                                                List<? extends BooleanSupplier> reparseInjectedProcessors) {
+
+    private Runnable createFinishCommitRunnable(
+        CommitTask task,
+        boolean synchronously,
+        List<? extends BooleanSupplier> finishProcessors,
+        List<? extends BooleanSupplier> reparseInjectedProcessors
+    ) {
         return () -> {
             Document document = task.getDocument();
             Project project = task.project;
@@ -164,8 +169,13 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             if (documentManager.isEventSystemEnabled(document)) {
                 documentManager.assertCommitThread();
             }
-            boolean success = documentManager.finishCommit(document, finishProcessors, reparseInjectedProcessors,
-                synchronously, task.reason);
+            boolean success = documentManager.finishCommit(
+                document,
+                finishProcessors,
+                reparseInjectedProcessors,
+                synchronously,
+                task.reason
+            );
             if (synchronously) {
                 assert success;
             }
@@ -182,9 +192,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         };
     }
 
-    
-    private BooleanSupplier handleCommitWithoutPsi(PsiDocumentManagerBase documentManager,
-                                                   CommitTask task) {
+    private BooleanSupplier handleCommitWithoutPsi(PsiDocumentManagerBase documentManager, CommitTask task) {
         return () -> {
             log(task.project, "Finishing without PSI", task);
             Document document = task.getDocument();
@@ -203,24 +211,24 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     private static class CommitTask {
-        
         private final Document document;
-        
+
         final Project project;
         private final int modificationSequence;
         // store initial document modification sequence here to check if it changed later before commit in EDT
 
-        
         final Object reason;
-        
+
         final ModalityState myCreationModality;
         private final CharSequence myLastCommittedText;
 
-        CommitTask(Project project,
-                   Document document,
-                   Object reason,
-                   ModalityState modality,
-                   CharSequence lastCommittedText) {
+        CommitTask(
+            Project project,
+            Document document,
+            Object reason,
+            ModalityState modality,
+            CharSequence lastCommittedText
+        ) {
             this.document = document;
             this.project = project;
             this.reason = reason;
@@ -229,7 +237,6 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             modificationSequence = ((DocumentEx) document).getModificationSequence();
         }
 
-        
         @Override
         public String toString() {
             Document document = getDocument();
@@ -240,24 +247,14 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof CommitTask)) {
-                return false;
-            }
-
-            CommitTask task = (CommitTask) o;
-
-            return Comparing.equal(getDocument(), task.getDocument()) && project.equals(task.project);
+        public boolean equals(@Nullable Object o) {
+            return this == o
+                || o instanceof CommitTask that && Objects.equals(getDocument(), that.getDocument()) && project.equals(that.project);
         }
 
         @Override
         public int hashCode() {
-            int result = getDocument().hashCode();
-            result = 31 * result + project.hashCode();
-            return result;
+            return 31 * getDocument().hashCode() + project.hashCode();
         }
 
         boolean isStillValid() {
@@ -265,20 +262,20 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             return ((DocumentEx) document).getModificationSequence() == modificationSequence;
         }
 
-        
         Document getDocument() {
             return document;
         }
-
     }
 
     // returns runnable to execute under write action in AWT to finish the commit, updates "outChangedRange"
-    
-    private static BooleanSupplier doCommit(CommitTask task,
-                                            PsiFile file,
-                                            FileASTNode oldFileNode,
-                                            ProperTextRange changedPsiRange,
-                                            List<? super BooleanSupplier> outReparseInjectedProcessors) {
+
+    private static BooleanSupplier doCommit(
+        CommitTask task,
+        PsiFile file,
+        FileASTNode oldFileNode,
+        ProperTextRange changedPsiRange,
+        List<? super BooleanSupplier> outReparseInjectedProcessors
+    ) {
         Document document = task.getDocument();
         CharSequence newDocumentText = document.getImmutableCharSequence();
 
@@ -359,9 +356,14 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             file.putUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY, Boolean.TRUE);
             try {
                 BlockSupport blockSupport = BlockSupport.getInstance(file.getProject());
-                DiffLog diffLog = blockSupport.reparseRange(file, file.getNode(), new TextRange(0, documentText.length()), documentText,
+                DiffLog diffLog = blockSupport.reparseRange(
+                    file,
+                    file.getNode(),
+                    new TextRange(0, documentText.length()),
+                    documentText,
                     new StandardProgressIndicatorBase(),
-                    oldFileNode.getText());
+                    oldFileNode.getText()
+                );
                 diffLog.doActualPsiChange(file);
 
                 if (oldFileNode.getTextLength() != document.getTextLength()) {
@@ -373,5 +375,4 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             }
         }
     }
-
 }

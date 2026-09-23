@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.internal.psi.include;
 
 import consulo.language.psi.include.FileIncludeInfo;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -24,37 +24,38 @@ import java.io.File;
  * @author Dmitry Avdeev
  */
 class FileIncludeInfoImpl extends FileIncludeInfo {
+    public final String providerId;
 
-  public final String providerId;
+    public FileIncludeInfoImpl(String path, int offset, boolean runtimeOnly, String providerId) {
+        super(new File(path).getName(), path, offset, runtimeOnly);
+        this.providerId = providerId;
+    }
 
-  public FileIncludeInfoImpl(String path, int offset, boolean runtimeOnly, String providerId) {
-    super(new File(path).getName(), path, offset, runtimeOnly);
-    this.providerId = providerId;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @SuppressWarnings({"RedundantIfStatement"})
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        FileIncludeInfoImpl that = (FileIncludeInfoImpl) o;
 
-    FileIncludeInfoImpl that = (FileIncludeInfoImpl)o;
+        return fileName.equals(that.fileName)
+            && path.equals(that.path)
+            && offset == that.offset
+            && runtimeOnly == that.runtimeOnly
+            && providerId.equals(that.providerId);
+    }
 
-    if (!fileName.equals(that.fileName)) return false;
-    if (!path.equals(that.path)) return false;
-    if (offset != that.offset) return false;
-    if (runtimeOnly != that.runtimeOnly) return false;
-    if (!providerId.equals(that.providerId)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = fileName.hashCode();
-    result = 31 * result + path.hashCode();
-    result = 31 * result + offset;
-    result = 31 * result + (runtimeOnly ? 1 : 0);
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = fileName.hashCode();
+        result = 31 * result + path.hashCode();
+        result = 31 * result + offset;
+        result = 31 * result + Boolean.hashCode(runtimeOnly);
+        result = 31 * result + providerId.hashCode();
+        return result;
+    }
 }

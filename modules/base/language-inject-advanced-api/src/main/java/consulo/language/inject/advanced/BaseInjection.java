@@ -38,10 +38,7 @@ import org.intellij.lang.annotations.RegExp;
 import org.jdom.CDATA;
 import org.jdom.Element;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,10 +46,8 @@ import java.util.regex.Pattern;
  * Injection base class: Contains properties for language-id, prefix and suffix.
  */
 public class BaseInjection implements Injection, PersistentStateComponent<Element> {
-
   public static final Key<BaseInjection> INJECTION_KEY = Key.create("INJECTION_KEY");
 
-  
   private final String mySupportId;
   private String myDisplayName;
 
@@ -60,7 +55,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   private String myPrefix = "";
   private String mySuffix = "";
 
-  
   private String myValuePattern = "";
   private Pattern myCompiledValuePattern;
   private boolean mySingleFile;
@@ -69,10 +63,8 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     mySupportId = id;
   }
 
-  
   private InjectionPlace[] myPlaces = InjectionPlace.EMPTY_ARRAY;
 
-  
   public InjectionPlace[] getInjectionPlaces() {
     return myPlaces;
   }
@@ -81,7 +73,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     myPlaces = places;
   }
 
-  
   public String getSupportId() {
     return mySupportId;
   }
@@ -92,13 +83,11 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   @Override
-  
   public String getInjectedLanguageId() {
     return myInjectedLanguageId;
   }
 
   @Override
-  
   public String getDisplayName() {
     return myDisplayName;
   }
@@ -112,7 +101,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   @Override
-  
   public String getPrefix() {
     return myPrefix;
   }
@@ -122,7 +110,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   @Override
-  
   public String getSuffix() {
     return mySuffix;
   }
@@ -132,7 +119,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   @Override
-  
   public List<TextRange> getInjectedArea(PsiElement element) {
     TextRange textRange = ElementManipulators.getValueTextRange(element);
     if (myCompiledValuePattern == null) {
@@ -175,12 +161,11 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   public boolean sameLanguageParameters(BaseInjection that) {
-    if (!myInjectedLanguageId.equals(that.myInjectedLanguageId)) return false;
-    if (!myPrefix.equals(that.myPrefix)) return false;
-    if (!mySuffix.equals(that.mySuffix)) return false;
-    if (!myValuePattern.equals(that.myValuePattern)) return false;
-    if (mySingleFile != that.mySingleFile) return false;
-    return true;
+    return myInjectedLanguageId.equals(that.myInjectedLanguageId)
+      && myPrefix.equals(that.myPrefix)
+      && mySuffix.equals(that.mySuffix)
+      && myValuePattern.equals(that.myValuePattern)
+      && mySingleFile == that.mySingleFile;
   }
 
   @SuppressWarnings({"unchecked"})
@@ -188,14 +173,14 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return new BaseInjection(mySupportId).copyFrom(this);
   }
 
-  @SuppressWarnings({"RedundantIfStatement"})
-  public boolean equals(Object o) {
+  @Override
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || !(o instanceof BaseInjection)) return false;
 
     BaseInjection that = (BaseInjection)o;
 
-    if (!Comparing.equal(getDisplayName(), that.getDisplayName())) return false;
+    if (!Objects.equals(getDisplayName(), that.getDisplayName())) return false;
     if (!sameLanguageParameters(that)) return false;
     if (myPlaces.length != that.myPlaces.length) return false;
     for (int i = 0, len = myPlaces.length; i < len; i++) {
@@ -204,13 +189,12 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
       }
     }
     // enabled flag is not counted this way:
-    if (!Arrays.equals(myPlaces, that.myPlaces)) return false;
-    return true;
+    return Arrays.equals(myPlaces, that.myPlaces);
   }
 
+  @Override
   public int hashCode() {
-    int result;
-    result = myInjectedLanguageId.hashCode();
+    int result = myInjectedLanguageId.hashCode();
     result = 31 * result + myPrefix.hashCode();
     result = 31 * result + mySuffix.hashCode();
     result = 31 * result + myValuePattern.hashCode();
@@ -283,12 +267,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     if (mySingleFile) {
       e.addContent(new Element("single-file"));
     }
-    Arrays.sort(myPlaces, new Comparator<InjectionPlace>() {
-      @Override
-      public int compare(InjectionPlace o1, InjectionPlace o2) {
-        return Comparing.compare(o1.getText(), o2.getText());
-      }
-    });
+    Arrays.sort(myPlaces, (o1, o2) -> Comparing.compare(o1.getText(), o2.getText()));
     for (InjectionPlace place : myPlaces) {
       Element child = new Element("place").setContent(new CDATA(place.getText()));
       if (!place.isEnabled()) child.setAttribute("disabled", "true");
@@ -300,7 +279,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   protected void writeExternalImpl(Element e) {}
 
-  
   public String getValuePattern() {
     return myValuePattern;
   }
@@ -343,7 +321,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   private static List<TextRange> getMatchingRanges(Matcher matcher, int length) {
-    List<TextRange> list = new SmartList<TextRange>();
+    List<TextRange> list = new SmartList<>();
     int start = 0;
     while (start < length && matcher.find(start)) {
       int groupCount = matcher.groupCount();

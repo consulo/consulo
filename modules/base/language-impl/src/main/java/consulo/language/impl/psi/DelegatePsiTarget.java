@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.PsiElement;
@@ -23,72 +24,83 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public class DelegatePsiTarget implements PsiTarget {
-  private final PsiElement myElement;
+    private final PsiElement myElement;
 
-  public DelegatePsiTarget(PsiElement element) {
-    myElement = element.getNavigationElement();
-  }
-
-  public int getTextOffset() {
-    if (this instanceof PsiDeclaredTarget) {
-      TextRange range = ((PsiDeclaredTarget)this).getNameIdentifierRange();
-      if (range != null) {
-        return range.getStartOffset() + myElement.getTextRange().getStartOffset();
-      }
+    public DelegatePsiTarget(PsiElement element) {
+        myElement = element.getNavigationElement();
     }
 
-    return myElement.getTextOffset();
-  }
+    @RequiredReadAction
+    public int getTextOffset() {
+        if (this instanceof PsiDeclaredTarget target) {
+            TextRange range = target.getNameIdentifierRange();
+            if (range != null) {
+                return range.getStartOffset() + myElement.getTextRange().getStartOffset();
+            }
+        }
 
-  @Override
-  public void navigate(boolean requestFocus) {
-    int offset = getTextOffset();
-    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(myElement);
-    if (virtualFile != null && virtualFile.isValid()) {
-      OpenFileDescriptorFactory.getInstance(myElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
+        return myElement.getTextOffset();
     }
-  }
 
-  @Override
-  public boolean canNavigate() {
-    return EditSourceUtil.canNavigate(myElement);
-  }
+    @Override
+    @RequiredReadAction
+    public void navigate(boolean requestFocus) {
+        int offset = getTextOffset();
+        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(myElement);
+        if (virtualFile != null && virtualFile.isValid()) {
+            OpenFileDescriptorFactory.getInstance(myElement.getProject())
+                .builder(virtualFile)
+                .offset(offset)
+                .build()
+                .navigate(requestFocus);
+        }
+    }
 
-  @Override
-  public boolean canNavigateToSource() {
-    return EditSourceUtil.canNavigate(myElement);
-  }
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return EditSourceUtil.canNavigate(myElement);
+    }
 
-  @Override
-  
-  public final PsiElement getNavigationElement() {
-    return myElement;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return EditSourceUtil.canNavigate(myElement);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public final PsiElement getNavigationElement() {
+        return myElement;
+    }
 
-    DelegatePsiTarget psiTarget = (DelegatePsiTarget)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    if (!myElement.equals(psiTarget.myElement)) return false;
+        DelegatePsiTarget that = (DelegatePsiTarget) o;
 
-    return true;
-  }
+        return myElement.equals(that.myElement);
+    }
 
-  @Override
-  public int hashCode() {
-    return myElement.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myElement.hashCode();
+    }
 
-  @Override
-  public boolean isValid() {
-    return getNavigationElement().isValid();
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        return getNavigationElement().isValid();
+    }
 }

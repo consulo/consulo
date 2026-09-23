@@ -15,6 +15,8 @@
  */
 package consulo.localization.internal;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @author UNV
@@ -45,10 +47,9 @@ public final class ConstantLocalizedValue extends AbstractLocalizedValue {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return this == o
-            || o instanceof ConstantLocalizedValue that
-            && myValue.equals(that.myValue);
+            || o instanceof ConstantLocalizedValue that && myValue.equals(that.myValue);
     }
 
     @Override

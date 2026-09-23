@@ -17,6 +17,7 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -48,9 +49,11 @@ public final class MappedLocalizedValue2 extends CachingLocalizedValue {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof MappedLocalizedValue2 that
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof MappedLocalizedValue2 that
             && Objects.equals(myDelegate, that.myDelegate)
             && Objects.equals(myMapper, that.myMapper);
     }

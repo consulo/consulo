@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.change;
 
 import consulo.localHistory.impl.internal.Content;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -25,51 +25,53 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public abstract class Change {
-  private final long myId;
+    private final long myId;
 
-  protected Change(long id) {
-    myId = id;
-  }
+    protected Change(long id) {
+        myId = id;
+    }
 
-  protected Change(DataInput in) throws IOException {
-    myId = in.readLong();
-  }
+    protected Change(DataInput in) throws IOException {
+        myId = in.readLong();
+    }
 
-  public void write(DataOutput out) throws IOException {
-    out.writeLong(myId);
-  }
+    public void write(DataOutput out) throws IOException {
+        out.writeLong(myId);
+    }
 
-  public long getId() {
-    return myId;
-  }
+    public long getId() {
+        return myId;
+    }
 
-  public abstract boolean affectsPath(String paths);
+    public abstract boolean affectsPath(String paths);
 
-  public abstract boolean affectsProject(String projectId);
+    public abstract boolean affectsProject(String projectId);
 
-  public abstract boolean affectsMatching(Pattern pattern);
+    public abstract boolean affectsMatching(Pattern pattern);
 
-  public abstract boolean isCreationalFor(String path);
+    public abstract boolean isCreationalFor(String path);
 
-  public abstract List<Content> getContentsToPurge();
+    public abstract List<Content> getContentsToPurge();
 
-  public void accept(ChangeVisitor v) throws ChangeVisitor.StopVisitingException {
-  }
+    public void accept(ChangeVisitor v) throws ChangeVisitor.StopVisitingException {
+    }
 
-  @Override
-  public final boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public final boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    Change change = (Change)o;
+        Change that = (Change) o;
 
-    if (myId != change.myId) return false;
+        return myId == that.myId;
+    }
 
-    return true;
-  }
-
-  @Override
-  public final int hashCode() {
-    return (int)(myId ^ (myId >>> 32));
-  }
+    @Override
+    public final int hashCode() {
+        return Long.hashCode(myId);
+    }
 }
