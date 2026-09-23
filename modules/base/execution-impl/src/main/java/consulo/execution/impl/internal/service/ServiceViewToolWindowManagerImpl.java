@@ -15,7 +15,9 @@
  */
 package consulo.execution.impl.internal.service;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.execution.service.ServiceViewManager;
 import consulo.execution.service.ServiceViewToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 19.05.2024
  */
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 @Singleton
 public class ServiceViewToolWindowManagerImpl implements ServiceViewToolWindowManager {
   private final ServiceViewManagerImpl myServiceViewManager;
