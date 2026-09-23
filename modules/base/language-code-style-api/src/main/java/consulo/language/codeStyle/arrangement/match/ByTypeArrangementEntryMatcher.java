@@ -19,6 +19,7 @@ import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.language.codeStyle.arrangement.TypeAwareArrangementEntry;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,58 +33,58 @@ import java.util.Set;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since 7/17/12 11:19 AM
+ * @since 2012-07-17
  */
 public class ByTypeArrangementEntryMatcher implements ArrangementEntryMatcher {
+    private final Set<ArrangementAtomMatchCondition> myTypes = new HashSet<>();
 
-  
-  private final Set<ArrangementAtomMatchCondition> myTypes = new HashSet<>();
-
-  public ByTypeArrangementEntryMatcher(ArrangementAtomMatchCondition interestedType) {
-    myTypes.add(interestedType);
-  }
-
-  public ByTypeArrangementEntryMatcher(Collection<ArrangementAtomMatchCondition> interestedTypes) {
-    myTypes.addAll(interestedTypes);
-  }
-
-  @Override
-  public boolean isMatched(ArrangementEntry entry) {
-    if (entry instanceof TypeAwareArrangementEntry) {
-      Set<ArrangementSettingsToken> types = ((TypeAwareArrangementEntry)entry).getTypes();
-      for (ArrangementAtomMatchCondition condition : myTypes) {
-        Object value = condition.getValue();
-        boolean isInverted = value instanceof Boolean && !((Boolean)value);
-        if (isInverted == types.contains(condition.getType())) {
-          return false;
-        }
-      }
-      return true;
+    public ByTypeArrangementEntryMatcher(ArrangementAtomMatchCondition interestedType) {
+        myTypes.add(interestedType);
     }
-    return false;
-  }
 
-  
-  public Set<ArrangementAtomMatchCondition> getTypes() {
-    return myTypes;
-  }
+    public ByTypeArrangementEntryMatcher(Collection<ArrangementAtomMatchCondition> interestedTypes) {
+        myTypes.addAll(interestedTypes);
+    }
 
-  @Override
-  public int hashCode() {
-    return myTypes.hashCode();
-  }
+    @Override
+    public boolean isMatched(ArrangementEntry entry) {
+        if (entry instanceof TypeAwareArrangementEntry arrangementEntry) {
+            Set<ArrangementSettingsToken> types = arrangementEntry.getTypes();
+            for (ArrangementAtomMatchCondition condition : myTypes) {
+                boolean isInverted = condition.getValue() instanceof Boolean bValue && !bValue;
+                if (isInverted == types.contains(condition.getType())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public Set<ArrangementAtomMatchCondition> getTypes() {
+        return myTypes;
+    }
 
-    ByTypeArrangementEntryMatcher that = (ByTypeArrangementEntryMatcher)o;
-    return myTypes.equals(that.myTypes);
-  }
+    @Override
+    public int hashCode() {
+        return myTypes.hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return String.format("of type '%s'", myTypes);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ByTypeArrangementEntryMatcher that = (ByTypeArrangementEntryMatcher) o;
+        return myTypes.equals(that.myTypes);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("of type '%s'", myTypes);
+    }
 }

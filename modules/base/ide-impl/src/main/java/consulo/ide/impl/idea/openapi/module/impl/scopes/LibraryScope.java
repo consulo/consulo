@@ -22,43 +22,49 @@ import consulo.language.internal.LibraryScopeBase;
 import consulo.project.Project;
 import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class LibraryScope extends LibraryScopeBase {
-  private final Library myLibrary;
+    private final Library myLibrary;
 
-  public LibraryScope(Project project, Library library) {
-    super(project, library.getFiles(BinariesOrderRootType.ID), library.getFiles(SourcesOrderRootType.ID));
-    myLibrary = library;
-  }
-
-  @Override
-  public String getDisplayName() {
-    String name = myLibrary.getName();
-    if (name == null) {
-      String[] urls = myLibrary.getUrls(BinariesOrderRootType.ID);
-      if (urls.length > 0) {
-        name = PathUtil.getFileName(VirtualFileUtil.urlToPath(urls[0]));
-      }
-      else {
-        name = "empty";
-      }
+    public LibraryScope(Project project, Library library) {
+        super(project, library.getFiles(BinariesOrderRootType.ID), library.getFiles(SourcesOrderRootType.ID));
+        myLibrary = library;
     }
-    return "Library '" + name + "'";
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public String getDisplayName() {
+        String name = myLibrary.getName();
+        if (name == null) {
+            String[] urls = myLibrary.getUrls(BinariesOrderRootType.ID);
+            if (urls.length > 0) {
+                name = PathUtil.getFileName(VirtualFileUtil.urlToPath(urls[0]));
+            }
+            else {
+                name = "empty";
+            }
+        }
+        return "Library '" + name + "'";
+    }
 
-    return myLibrary.equals(((LibraryScope)o).myLibrary);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public int hashCode() {
-    return 31 * super.hashCode() + myLibrary.hashCode();
-  }
+        LibraryScope that = (LibraryScope) o;
+        return myLibrary.equals(that.myLibrary);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * super.hashCode() + myLibrary.hashCode();
+    }
 }

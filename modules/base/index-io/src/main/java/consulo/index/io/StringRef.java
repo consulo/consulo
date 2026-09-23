@@ -19,6 +19,7 @@ import com.uber.nullaway.annotations.Contract;
 import consulo.index.io.data.DataInputOutputUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -27,100 +28,101 @@ import java.io.IOException;
  * @author max
  */
 public class StringRef {
-  public static final StringRef[] EMPTY_ARRAY = new StringRef[0];
+    public static final StringRef[] EMPTY_ARRAY = new StringRef[0];
 
-  private int id;
-  private String name;
-  private final @Nullable AbstractStringEnumerator store;
+    private int id;
+    private String name;
+    private final @Nullable AbstractStringEnumerator store;
 
-  private StringRef(String name) {
-    this.name = name;
-    id = -1;
-    store = null;
-  }
-
-  private StringRef(int id, AbstractStringEnumerator store) {
-    this.id = id;
-    this.store = store;
-  }
-
-  public String getString() {
-    String name = this.name;
-    if (name == null) {
-      try {
-        this.name = name = store.valueOf(id);
-      }
-      catch (IOException e) {
-        store.markCorrupted();
-        throw new RuntimeException(e);
-      }
+    private StringRef(String name) {
+        this.name = name;
+        id = -1;
+        store = null;
     }
-    return name;
-  }
 
-  public void writeTo(DataOutput out, AbstractStringEnumerator store) throws IOException {
-    int nameId = getId(store);
-    out.writeByte(nameId & 0xFF);
-    DataInputOutputUtil.writeINT(out, nameId >> 8);
-  }
-
-  public int getId(AbstractStringEnumerator store) {
-    if (id == -1) {
-      try {
-        id = store.enumerate(name);
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+    private StringRef(int id, AbstractStringEnumerator store) {
+        this.id = id;
+        this.store = store;
     }
-    return id;
-  }
 
-  @Override
-  public String toString() {
-    return getString();
-  }
+    public String getString() {
+        String name = this.name;
+        if (name == null) {
+            try {
+                this.name = name = store.valueOf(id);
+            }
+            catch (IOException e) {
+                store.markCorrupted();
+                throw new RuntimeException(e);
+            }
+        }
+        return name;
+    }
 
-  public int length() {
-    return getString().length();
-  }
+    public void writeTo(DataOutput out, AbstractStringEnumerator store) throws IOException {
+        int nameId = getId(store);
+        out.writeByte(nameId & 0xFF);
+        DataInputOutputUtil.writeINT(out, nameId >> 8);
+    }
 
-  @Override
-  public int hashCode() {
-    return toString().hashCode();
-  }
+    public int getId(AbstractStringEnumerator store) {
+        if (id == -1) {
+            try {
+                id = store.enumerate(name);
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return id;
+    }
 
-  @Override
-  public boolean equals(Object that) {
-    return that == this || that instanceof StringRef && toString().equals(that.toString());
-  }
+    @Override
+    public String toString() {
+        return getString();
+    }
 
-  @Contract("null -> null")
-  public static @Nullable String toString(@Nullable StringRef ref) {
-    return ref != null ? ref.getString() : null;
-  }
+    public int length() {
+        return getString().length();
+    }
 
-  @Contract("null -> null; !null -> !null")
-  public static @Nullable StringRef fromString(@Nullable String source) {
-    return source == null ? null : new StringRef(source);
-  }
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 
-  public static StringRef fromNullableString(@Nullable String source) {
-    return new StringRef(source == null ? "" : source);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof StringRef that && toString().equals(that.toString());
+    }
 
-  public static @Nullable StringRef fromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
-    int nameId = DataInputOutputUtil.readINT(in);
+    @Contract("null -> null")
+    public static @Nullable String toString(@Nullable StringRef ref) {
+        return ref != null ? ref.getString() : null;
+    }
 
-    return nameId != 0 ? new StringRef(nameId, store) : null;
-  }
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable StringRef fromString(@Nullable String source) {
+        return source == null ? null : new StringRef(source);
+    }
 
-  public static @Nullable String stringFromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
-    int nameId = DataInputOutputUtil.readINT(in);
-    return nameId != 0 ? store.valueOf(nameId) : null;
-  }
+    public static StringRef fromNullableString(@Nullable String source) {
+        return new StringRef(source == null ? "" : source);
+    }
 
-  public static StringRef[] createArray(int count) {
-    return count == 0 ? EMPTY_ARRAY : new StringRef[count];
-  }
+    public static @Nullable StringRef fromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
+        int nameId = DataInputOutputUtil.readINT(in);
+
+        return nameId != 0 ? new StringRef(nameId, store) : null;
+    }
+
+    public static @Nullable String stringFromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
+        int nameId = DataInputOutputUtil.readINT(in);
+        return nameId != 0 ? store.valueOf(nameId) : null;
+    }
+
+    public static StringRef[] createArray(int count) {
+        return count == 0 ? EMPTY_ARRAY : new StringRef[count];
+    }
 }

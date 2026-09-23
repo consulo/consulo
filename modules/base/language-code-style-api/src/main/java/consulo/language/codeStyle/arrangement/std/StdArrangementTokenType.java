@@ -15,6 +15,8 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Type of {@link StdArrangementSettingsToken}. Defines UI role used to display the token. Used to differentiate between semantically
  * different tokens when constructing matchers.
@@ -24,53 +26,47 @@ package consulo.language.codeStyle.arrangement.std;
  * @since 2013-07-31
  */
 public class StdArrangementTokenType {
-  
-  private final StdArrangementTokenUiRole myUiRole;
-  
-  private final String myId;
+    private final StdArrangementTokenUiRole myUiRole;
 
-  public StdArrangementTokenType(StdArrangementTokenUiRole uiRole, String id) {
-    myUiRole = uiRole;
-    myId = id;
-  }
+    private final String myId;
 
-  
-  public StdArrangementTokenUiRole getUiRole() {
-    return myUiRole;
-  }
-
-  public boolean is(ArrangementSettingsToken token) {
-    return token instanceof StdArrangementSettingsToken && this.equals(((StdArrangementSettingsToken)token).getTokenType());
-  }
-
-  @Override
-  public int hashCode() {
-    return myId.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {return true;}
-    if (o == null || !(o instanceof StdArrangementTokenType)) {
-      return false;
+    public StdArrangementTokenType(StdArrangementTokenUiRole uiRole, String id) {
+        myUiRole = uiRole;
+        myId = id;
     }
-    StdArrangementTokenType oType = (StdArrangementTokenType) o;
-    return oType.myId.equals(myId) && myUiRole == oType.myUiRole;
-  }
 
-  public static final String GENERAL_ID = "GENERAL";
-  public static final String GROUPING_ID = "GROUPING";
-  public static final String MODIFIER_ID = "MODIFIER";
-  public static final String REG_EXP_ID = "REG_EXP";
-  public static final String ENTRY_TYPE_ID = "ENTRY_TYPE";
-  public static final String ORDER_ID = "ORDER";
-  public static final String ALIAS_ID = "ALIAS";
+    public StdArrangementTokenUiRole getUiRole() {
+        return myUiRole;
+    }
 
-  public static final StdArrangementTokenType GENERAL = new StdArrangementTokenType(StdArrangementTokenUiRole.LABEL, GENERAL_ID);
-  public static final StdArrangementTokenType GROUPING = new StdArrangementTokenType(StdArrangementTokenUiRole.CHECKBOX, GROUPING_ID);
-  public static final StdArrangementTokenType MODIFIER = new StdArrangementTokenType(StdArrangementTokenUiRole.BULB, MODIFIER_ID);
-  public static final StdArrangementTokenType REG_EXP = new StdArrangementTokenType(StdArrangementTokenUiRole.TEXT_FIELD, REG_EXP_ID);
-  public static final StdArrangementTokenType ENTRY_TYPE = new StdArrangementTokenType(StdArrangementTokenUiRole.BULB, ENTRY_TYPE_ID);
-  public static final StdArrangementTokenType ORDER = new StdArrangementTokenType(StdArrangementTokenUiRole.COMBO_BOX, ORDER_ID);
-  public static final StdArrangementTokenType ALIAS = new StdArrangementTokenType(StdArrangementTokenUiRole.BULB, ALIAS_ID);
+    public boolean is(ArrangementSettingsToken token) {
+        return token instanceof StdArrangementSettingsToken settingsToken && this.equals(settingsToken.getTokenType());
+    }
+
+    @Override
+    public int hashCode() {
+        return myId.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return o == this
+            || o instanceof StdArrangementTokenType oType && oType.myId.equals(myId) && myUiRole == oType.myUiRole;
+    }
+
+    public static final String GENERAL_ID = "GENERAL";
+    public static final String GROUPING_ID = "GROUPING";
+    public static final String MODIFIER_ID = "MODIFIER";
+    public static final String REG_EXP_ID = "REG_EXP";
+    public static final String ENTRY_TYPE_ID = "ENTRY_TYPE";
+    public static final String ORDER_ID = "ORDER";
+    public static final String ALIAS_ID = "ALIAS";
+
+    public static final StdArrangementTokenType GENERAL = new StdArrangementTokenType(StdArrangementTokenUiRole.LABEL, GENERAL_ID);
+    public static final StdArrangementTokenType GROUPING = new StdArrangementTokenType(StdArrangementTokenUiRole.CHECKBOX, GROUPING_ID);
+    public static final StdArrangementTokenType MODIFIER = new StdArrangementTokenType(StdArrangementTokenUiRole.BULB, MODIFIER_ID);
+    public static final StdArrangementTokenType REG_EXP = new StdArrangementTokenType(StdArrangementTokenUiRole.TEXT_FIELD, REG_EXP_ID);
+    public static final StdArrangementTokenType ENTRY_TYPE = new StdArrangementTokenType(StdArrangementTokenUiRole.BULB, ENTRY_TYPE_ID);
+    public static final StdArrangementTokenType ORDER = new StdArrangementTokenType(StdArrangementTokenUiRole.COMBO_BOX, ORDER_ID);
+    public static final StdArrangementTokenType ALIAS = new StdArrangementTokenType(StdArrangementTokenUiRole.BULB, ALIAS_ID);
 }

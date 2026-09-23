@@ -27,6 +27,7 @@ import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCon
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
 import consulo.util.collection.ContainerUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,170 +35,177 @@ import java.util.*;
  * @author Svetlana.Zemlyanskaya
  */
 public class StdArrangementExtendableSettings extends StdArrangementSettings implements ArrangementExtendableSettings {
-  
-  private final Set<StdArrangementRuleAliasToken> myRulesAliases = new HashSet<StdArrangementRuleAliasToken>();
+    private final Set<StdArrangementRuleAliasToken> myRulesAliases = new HashSet<>();
 
-  // cached values
-  
-  private final List<ArrangementSectionRule> myExtendedSectionRules = Collections.synchronizedList(new ArrayList<ArrangementSectionRule>());
+    // cached values
 
-  public StdArrangementExtendableSettings() {
-    super();
-  }
+    private final List<ArrangementSectionRule> myExtendedSectionRules = Collections.synchronizedList(new ArrayList<ArrangementSectionRule>());
 
-  public StdArrangementExtendableSettings(List<ArrangementGroupingRule> groupingRules,
-                                          List<ArrangementSectionRule> sectionRules,
-                                          Collection<StdArrangementRuleAliasToken> rulesAliases) {
-    super(groupingRules, sectionRules);
-    myRulesAliases.addAll(rulesAliases);
-  }
-
-  public static StdArrangementExtendableSettings createByMatchRules(List<ArrangementGroupingRule> groupingRules,
-                                                                    List<StdArrangementMatchRule> matchRules,
-                                                                    Collection<StdArrangementRuleAliasToken> rulesAliases) {
-    List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
-    for (StdArrangementMatchRule rule : matchRules) {
-      sectionRules.add(ArrangementSectionRule.create(rule));
+    public StdArrangementExtendableSettings() {
+        super();
     }
-    return new StdArrangementExtendableSettings(groupingRules, sectionRules, rulesAliases);
-  }
 
-  @Override
-  public Set<StdArrangementRuleAliasToken> getRuleAliases() {
-    return myRulesAliases;
-  }
-
-  private Set<StdArrangementRuleAliasToken> cloneTokenDefinitions() {
-    Set<StdArrangementRuleAliasToken> definitions = new HashSet<StdArrangementRuleAliasToken>();
-    for (StdArrangementRuleAliasToken definition : myRulesAliases) {
-      definitions.add(definition.clone());
+    public StdArrangementExtendableSettings(
+        List<ArrangementGroupingRule> groupingRules,
+        List<ArrangementSectionRule> sectionRules,
+        Collection<StdArrangementRuleAliasToken> rulesAliases
+    ) {
+        super(groupingRules, sectionRules);
+        myRulesAliases.addAll(rulesAliases);
     }
-    return definitions;
-  }
 
-  @Override
-  public List<ArrangementSectionRule> getExtendedSectionRules() {
-    synchronized (myExtendedSectionRules) {
-      if (myExtendedSectionRules.isEmpty()) {
-        Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition = new HashMap<String, StdArrangementRuleAliasToken>(myRulesAliases.size());
-        for (StdArrangementRuleAliasToken alias : myRulesAliases) {
-          String id = alias.getId();
-          tokenIdToDefinition.put(id, alias);
+    public static StdArrangementExtendableSettings createByMatchRules(
+        List<ArrangementGroupingRule> groupingRules,
+        List<StdArrangementMatchRule> matchRules,
+        Collection<StdArrangementRuleAliasToken> rulesAliases
+    ) {
+        List<ArrangementSectionRule> sectionRules = new ArrayList<>();
+        for (StdArrangementMatchRule rule : matchRules) {
+            sectionRules.add(ArrangementSectionRule.create(rule));
         }
+        return new StdArrangementExtendableSettings(groupingRules, sectionRules, rulesAliases);
+    }
 
-        List<ArrangementSectionRule> sections = getSections();
-        for (ArrangementSectionRule section : sections) {
-          List<StdArrangementMatchRule> extendedRules = new ArrayList<StdArrangementMatchRule>();
-          for (StdArrangementMatchRule rule : section.getMatchRules()) {
-            appendExpandedRules(rule, extendedRules, tokenIdToDefinition);
-          }
-          myExtendedSectionRules.add(ArrangementSectionRule.create(section.getStartComment(), section.getEndComment(), extendedRules));
+    @Override
+    public Set<StdArrangementRuleAliasToken> getRuleAliases() {
+        return myRulesAliases;
+    }
+
+    private Set<StdArrangementRuleAliasToken> cloneTokenDefinitions() {
+        Set<StdArrangementRuleAliasToken> definitions = new HashSet<>();
+        for (StdArrangementRuleAliasToken definition : myRulesAliases) {
+            definitions.add(definition.clone());
         }
-      }
-    }
-    return myExtendedSectionRules;
-  }
-
-  public void appendExpandedRules(StdArrangementMatchRule rule,
-                                  List<StdArrangementMatchRule> rules,
-                                  Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition) {
-    List<StdArrangementMatchRule> sequence = getRuleSequence(rule, tokenIdToDefinition);
-    if (sequence == null || sequence.isEmpty()) {
-      rules.add(rule);
-      return;
+        return definitions;
     }
 
-    ArrangementCompositeMatchCondition ruleTemplate = removeAliasRuleToken(rule.getMatcher().getCondition());
-    for (StdArrangementMatchRule matchRule : sequence) {
-      ArrangementCompositeMatchCondition extendedRule = ruleTemplate.clone();
-      extendedRule.addOperand(matchRule.getMatcher().getCondition());
-      rules.add(new StdArrangementMatchRule(new StdArrangementEntryMatcher(extendedRule)));
-    }
-  }
+    @Override
+    public List<ArrangementSectionRule> getExtendedSectionRules() {
+        synchronized (myExtendedSectionRules) {
+            if (myExtendedSectionRules.isEmpty()) {
+                Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition = new HashMap<>(myRulesAliases.size());
+                for (StdArrangementRuleAliasToken alias : myRulesAliases) {
+                    String id = alias.getId();
+                    tokenIdToDefinition.put(id, alias);
+                }
 
-  
-  private List<StdArrangementMatchRule> getRuleSequence(StdArrangementMatchRule rule,
-                                                        final Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition) {
-    final List<StdArrangementMatchRule> seqRule = new ArrayList<>();
-    rule.getMatcher().getCondition().invite(new ArrangementMatchConditionVisitor() {
-      @Override
-      public void visit(ArrangementAtomMatchCondition condition) {
-        StdArrangementRuleAliasToken token = tokenIdToDefinition.get(condition.getType().getId());
-        if (token != null && !token.getDefinitionRules().isEmpty()) {
-          seqRule.addAll(token.getDefinitionRules());
+                List<ArrangementSectionRule> sections = getSections();
+                for (ArrangementSectionRule section : sections) {
+                    List<StdArrangementMatchRule> extendedRules = new ArrayList<>();
+                    for (StdArrangementMatchRule rule : section.getMatchRules()) {
+                        appendExpandedRules(rule, extendedRules, tokenIdToDefinition);
+                    }
+                    myExtendedSectionRules.add(ArrangementSectionRule.create(
+                        section.getStartComment(),
+                        section.getEndComment(),
+                        extendedRules
+                    ));
+                }
+            }
         }
-      }
+        return myExtendedSectionRules;
+    }
 
-      @Override
-      public void visit(ArrangementCompositeMatchCondition condition) {
-        for (ArrangementMatchCondition operand : condition.getOperands()) {
-          if (!seqRule.isEmpty()) {
+    public void appendExpandedRules(
+        StdArrangementMatchRule rule,
+        List<StdArrangementMatchRule> rules,
+        Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition
+    ) {
+        List<StdArrangementMatchRule> sequence = getRuleSequence(rule, tokenIdToDefinition);
+        if (sequence == null || sequence.isEmpty()) {
+            rules.add(rule);
             return;
-          }
-          operand.invite(this);
         }
-      }
-    });
-    return seqRule;
-  }
 
-  
-  private static ArrangementCompositeMatchCondition removeAliasRuleToken(ArrangementMatchCondition original) {
-    final ArrangementCompositeMatchCondition composite = new ArrangementCompositeMatchCondition();
-    original.invite(new ArrangementMatchConditionVisitor() {
-      @Override
-      public void visit(ArrangementAtomMatchCondition condition) {
-        if (!ArrangementUtil.isAliasedCondition(condition)) {
-          composite.addOperand(condition);
+        ArrangementCompositeMatchCondition ruleTemplate = removeAliasRuleToken(rule.getMatcher().getCondition());
+        for (StdArrangementMatchRule matchRule : sequence) {
+            ArrangementCompositeMatchCondition extendedRule = ruleTemplate.clone();
+            extendedRule.addOperand(matchRule.getMatcher().getCondition());
+            rules.add(new StdArrangementMatchRule(new StdArrangementEntryMatcher(extendedRule)));
         }
-      }
-
-      @Override
-      public void visit(ArrangementCompositeMatchCondition condition) {
-        for (ArrangementMatchCondition c : condition.getOperands()) {
-          c.invite(this);
-        }
-      }
-    });
-    return composite;
-  }
-
-  @Override
-  public void addRule(StdArrangementMatchRule rule) {
-    addSectionRule(rule);
-    myRulesByPriority.clear();
-    myExtendedSectionRules.clear();
-  }
-
-  
-  @Override
-  public List<? extends ArrangementMatchRule> getRulesSortedByPriority() {
-    synchronized (myExtendedSectionRules) {
-      if (myRulesByPriority.isEmpty()) {
-        for (ArrangementSectionRule rule : getExtendedSectionRules()) {
-          myRulesByPriority.addAll(rule.getMatchRules());
-        }
-        ContainerUtil.sort(myRulesByPriority);
-      }
     }
-    return myRulesByPriority;
-  }
 
-  
-  @Override
-  public StdArrangementExtendableSettings clone() {
-    return new StdArrangementExtendableSettings(cloneGroupings(), cloneSectionRules(), cloneTokenDefinitions());
-  }
+    private List<StdArrangementMatchRule> getRuleSequence(
+        StdArrangementMatchRule rule,
+        final Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition
+    ) {
+        final List<StdArrangementMatchRule> seqRule = new ArrayList<>();
+        rule.getMatcher().getCondition().invite(new ArrangementMatchConditionVisitor() {
+            @Override
+            public void visit(ArrangementAtomMatchCondition condition) {
+                StdArrangementRuleAliasToken token = tokenIdToDefinition.get(condition.getType().getId());
+                if (token != null && !token.getDefinitionRules().isEmpty()) {
+                    seqRule.addAll(token.getDefinitionRules());
+                }
+            }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    StdArrangementExtendableSettings settings = (StdArrangementExtendableSettings)o;
+            @Override
+            public void visit(ArrangementCompositeMatchCondition condition) {
+                for (ArrangementMatchCondition operand : condition.getOperands()) {
+                    if (!seqRule.isEmpty()) {
+                        return;
+                    }
+                    operand.invite(this);
+                }
+            }
+        });
+        return seqRule;
+    }
 
-    if (!super.equals(settings)) return false;
-    if (!myRulesAliases.equals(settings.myRulesAliases)) return false;
+    private static ArrangementCompositeMatchCondition removeAliasRuleToken(ArrangementMatchCondition original) {
+        final ArrangementCompositeMatchCondition composite = new ArrangementCompositeMatchCondition();
+        original.invite(new ArrangementMatchConditionVisitor() {
+            @Override
+            public void visit(ArrangementAtomMatchCondition condition) {
+                if (!ArrangementUtil.isAliasedCondition(condition)) {
+                    composite.addOperand(condition);
+                }
+            }
 
-    return true;
-  }
+            @Override
+            public void visit(ArrangementCompositeMatchCondition condition) {
+                for (ArrangementMatchCondition c : condition.getOperands()) {
+                    c.invite(this);
+                }
+            }
+        });
+        return composite;
+    }
+
+    @Override
+    public void addRule(StdArrangementMatchRule rule) {
+        addSectionRule(rule);
+        myRulesByPriority.clear();
+        myExtendedSectionRules.clear();
+    }
+
+    @Override
+    public List<? extends ArrangementMatchRule> getRulesSortedByPriority() {
+        synchronized (myExtendedSectionRules) {
+            if (myRulesByPriority.isEmpty()) {
+                for (ArrangementSectionRule rule : getExtendedSectionRules()) {
+                    myRulesByPriority.addAll(rule.getMatchRules());
+                }
+                ContainerUtil.sort(myRulesByPriority);
+            }
+        }
+        return myRulesByPriority;
+    }
+
+    @Override
+    public StdArrangementExtendableSettings clone() {
+        return new StdArrangementExtendableSettings(cloneGroupings(), cloneSectionRules(), cloneTokenDefinitions());
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StdArrangementExtendableSettings that = (StdArrangementExtendableSettings) o;
+        return super.equals(that) && myRulesAliases.equals(that.myRulesAliases);
+    }
 }

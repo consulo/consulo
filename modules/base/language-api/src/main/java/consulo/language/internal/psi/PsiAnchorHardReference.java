@@ -29,6 +29,7 @@ public class PsiAnchorHardReference implements PsiAnchor {
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable PsiElement retrieve() {
         return myElement.isValid() ? myElement : null;
     }
@@ -51,10 +52,9 @@ public class PsiAnchorHardReference implements PsiAnchor {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return o == this
-            || o instanceof PsiAnchorHardReference that
-            && myElement.equals(that.myElement);
+            || o instanceof PsiAnchorHardReference that && myElement.equals(that.myElement);
     }
 
     @Override

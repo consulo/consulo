@@ -17,64 +17,63 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Container for matching strategies to be used during file entries arrangement. 
+ * Container for matching strategies to be used during file entries arrangement.
  * <p/>
  * Example: we can define a rule like 'private final non-static fields' or 'public static methods' etc.
  * <p/>
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
- * @since 7/17/12 11:07 AM
+ * @since 2012-07-17
  */
 public class ArrangementMatchRule {
+    public static final ArrangementSettingsToken DEFAULT_ORDER_TYPE = StdArrangementTokens.Order.KEEP;
 
-  
-  public static final ArrangementSettingsToken DEFAULT_ORDER_TYPE = StdArrangementTokens.Order.KEEP;
+    private final ArrangementEntryMatcher myMatcher;
 
-  
-  private final ArrangementEntryMatcher  myMatcher;
-  
-  private final ArrangementSettingsToken myOrderType;
+    private final ArrangementSettingsToken myOrderType;
 
-  public ArrangementMatchRule(ArrangementEntryMatcher matcher) {
-    this(matcher, DEFAULT_ORDER_TYPE);
-  }
+    public ArrangementMatchRule(ArrangementEntryMatcher matcher) {
+        this(matcher, DEFAULT_ORDER_TYPE);
+    }
 
-  public ArrangementMatchRule(ArrangementEntryMatcher matcher, ArrangementSettingsToken orderType) {
-    myMatcher = matcher;
-    myOrderType = orderType;
-  }
+    public ArrangementMatchRule(ArrangementEntryMatcher matcher, ArrangementSettingsToken orderType) {
+        myMatcher = matcher;
+        myOrderType = orderType;
+    }
 
-  
-  public ArrangementEntryMatcher getMatcher() {
-    return myMatcher;
-  }
+    public ArrangementEntryMatcher getMatcher() {
+        return myMatcher;
+    }
 
-  
-  public ArrangementSettingsToken getOrderType() {
-    return myOrderType;
-  }
+    public ArrangementSettingsToken getOrderType() {
+        return myOrderType;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myMatcher.hashCode();
-    result = 31 * result + myOrderType.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myMatcher.hashCode() + myOrderType.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    ArrangementMatchRule that = (ArrangementMatchRule)o;
-    return myOrderType == that.myOrderType && myMatcher.equals(that.myMatcher);
-  }
+        ArrangementMatchRule that = (ArrangementMatchRule) o;
+        return myOrderType == that.myOrderType
+            && myMatcher.equals(that.myMatcher);
+    }
 
-  @Override
-  public String toString() {
-    return String.format("matcher: %s, sort type: %s", myMatcher, myOrderType);
-  }
+    @Override
+    public String toString() {
+        return String.format("matcher: %s, sort type: %s", myMatcher, myOrderType);
+    }
 }

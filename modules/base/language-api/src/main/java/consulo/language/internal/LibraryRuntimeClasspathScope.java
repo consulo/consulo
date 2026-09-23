@@ -80,7 +80,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean equals(Object object) {
+  public boolean equals(@Nullable Object object) {
     if (object == this) return true;
     if (object == null || object.getClass() != LibraryRuntimeClasspathScope.class) return false;
 

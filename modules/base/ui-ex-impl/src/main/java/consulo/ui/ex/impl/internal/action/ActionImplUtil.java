@@ -16,8 +16,6 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.action.util.ActionUtil;
-import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.ui.UISettings;
@@ -34,8 +32,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.util.TextWithMnemonic;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -49,7 +47,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
@@ -160,10 +157,7 @@ public class ActionImplUtil {
      */
     @Deprecated
     @DeprecationInfo("We must use async impl!")
-    public static boolean performDumbAwareUpdate(
-        AnAction action,
-        AnActionEvent e
-    ) {
+    public static boolean performDumbAwareUpdate(AnAction action, AnActionEvent e) {
         ensureUpdateSession(e);
 
         Presentation presentation = e.getPresentation();

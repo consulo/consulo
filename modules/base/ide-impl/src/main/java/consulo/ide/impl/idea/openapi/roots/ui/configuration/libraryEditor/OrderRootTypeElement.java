@@ -17,31 +17,33 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class OrderRootTypeElement extends LibraryTableTreeContentElement<OrderRootTypeElement> {
-  private final String myRootTypeId;
+    private final String myRootTypeId;
 
-  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, String rootTypeId, String nodeText, Image icon) {
-    super(rootElementDescriptor);
-    myRootTypeId = rootTypeId;
-    setIcon(icon);
-    myName = nodeText;
-  }
+    public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, String rootTypeId, String nodeText, Image icon) {
+        super(rootElementDescriptor);
+        myRootTypeId = rootTypeId;
+        setIcon(icon);
+        myName = nodeText;
+    }
 
-  public String getOrderRootType() {
-    return myRootTypeId;
-  }
+    public String getOrderRootType() {
+        return myRootTypeId;
+    }
 
-  @Override
-  public int hashCode() {
-    return myRootTypeId.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myRootTypeId.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof OrderRootTypeElement && ((OrderRootTypeElement)obj).getOrderRootType().equals(myRootTypeId);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof OrderRootTypeElement that && myRootTypeId.equals(that.getOrderRootType());
+    }
 }

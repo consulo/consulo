@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,32 +24,37 @@ import java.util.Set;
  * From kotlin
  */
 public class SelectionSnapshot {
-  private final String pattern;
-  private final Set<Object> chosenElements;
+    private final String pattern;
+    private final Set<Object> chosenElements;
 
-  public SelectionSnapshot(String pattern, Set<Object> chosenElements) {
-    this.pattern = pattern;
-    this.chosenElements = chosenElements;
-  }
+    public SelectionSnapshot(String pattern, Set<Object> chosenElements) {
+        this.pattern = pattern;
+        this.chosenElements = chosenElements;
+    }
 
-  public Set<Object> getChosenElements() {
-    return chosenElements;
-  }
+    public Set<Object> getChosenElements() {
+        return chosenElements;
+    }
 
-  public boolean hasSamePattern(ChooseByNameBase popup) {
-    return Objects.equals(popup.transformPattern(pattern), popup.transformPattern(popup.getTrimmedText()));
-  }
+    public boolean hasSamePattern(ChooseByNameBase popup) {
+        return Objects.equals(popup.transformPattern(pattern), popup.transformPattern(popup.getTrimmedText()));
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    SelectionSnapshot that = (SelectionSnapshot)o;
-    return Objects.equals(pattern, that.pattern) && Objects.equals(chosenElements, that.chosenElements);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SelectionSnapshot that = (SelectionSnapshot) o;
+        return Objects.equals(pattern, that.pattern)
+            && Objects.equals(chosenElements, that.chosenElements);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(pattern, chosenElements);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(pattern, chosenElements);
+    }
 }
