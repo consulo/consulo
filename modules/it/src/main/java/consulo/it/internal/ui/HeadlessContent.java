@@ -92,6 +92,16 @@ public class HeadlessContent extends UserDataHolderBase implements Content {
     public void setUIPreferredFocusableComponent(Component component) {
     }
 
+    @Override
+    public JComponent getComponent() {
+        return null;
+    }
+
+    @Override
+    public JComponent getPreferredFocusableComponent() {
+        return null;
+    }
+
     /**
      * There is no awt behind a headless run, so a swing component is noted and dropped rather than unwrapped.
      */

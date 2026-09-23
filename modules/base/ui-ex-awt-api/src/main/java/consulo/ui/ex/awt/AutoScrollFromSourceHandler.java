@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -38,13 +39,13 @@ import javax.swing.*;
 public abstract class AutoScrollFromSourceHandler implements Disposable {
     protected final Project myProject;
     protected final Alarm myAlarm;
-    protected JComponent myComponent;
+    protected Component myComponent;
 
-    public AutoScrollFromSourceHandler(Project project, JComponent view) {
+    public AutoScrollFromSourceHandler(Project project, Component view) {
         this(project, view, null);
     }
 
-    public AutoScrollFromSourceHandler(Project project, JComponent view, @Nullable Disposable parentDisposable) {
+    public AutoScrollFromSourceHandler(Project project, Component view, @Nullable Disposable parentDisposable) {
         myProject = project;
 
         if (parentDisposable != null) {

@@ -18,12 +18,14 @@ package consulo.ui.ex.keymap;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
+import java.io.InputStream;
+import java.util.function.BiConsumer;
+
 /**
  * @author VISTALL
  * @since 17-Jun-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BundledKeymapProvider {
-  
-  String[] getKeymapFiles();
+    void loadKeymaps(BiConsumer<String, InputStream> consumer);
 }

@@ -57,6 +57,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.SingleAlarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
 import consulo.util.collection.ArrayUtil;
@@ -576,7 +577,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     private FileEditorPositionListener myFileEditorPositionListener;
 
     private MyAutoScrollFromSourceHandler(Project project, Disposable parentDisposable) {
-      super(project, getTree(), parentDisposable);
+      super(project, TargetAWT.wrap(getTree()), parentDisposable);
     }
 
     @Override

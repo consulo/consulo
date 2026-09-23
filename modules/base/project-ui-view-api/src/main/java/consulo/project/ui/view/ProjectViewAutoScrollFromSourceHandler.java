@@ -22,8 +22,10 @@ import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.ex.awt.AutoScrollFromSourceHandler;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
@@ -32,11 +34,11 @@ import javax.swing.*;
  * @since 02-Apr-22
  */
 public abstract class ProjectViewAutoScrollFromSourceHandler extends AutoScrollFromSourceHandler {
-  public ProjectViewAutoScrollFromSourceHandler(Project project, JComponent view) {
+  public ProjectViewAutoScrollFromSourceHandler(Project project, Component view) {
     super(project, view);
   }
 
-  public ProjectViewAutoScrollFromSourceHandler(Project project, JComponent view, @Nullable Disposable parentDisposable) {
+  public ProjectViewAutoScrollFromSourceHandler(Project project, Component view, @Nullable Disposable parentDisposable) {
     super(project, view, parentDisposable);
   }
 
@@ -49,7 +51,7 @@ public abstract class ProjectViewAutoScrollFromSourceHandler extends AutoScrollF
       @Override
       public void selectionChanged(FileEditorManagerEvent event) {
         FileEditor editor = event.getNewEditor();
-        if (editor != null && myComponent.isShowing() && isAutoScrollEnabled()) {
+        if (editor != null && TargetAWT.to(myComponent).isShowing() && isAutoScrollEnabled()) {
           myAlarm.cancelAllRequests();
           myAlarm.addRequest(() -> selectElementFromEditor(editor), getAlarmDelay(), getModalityState());
         }

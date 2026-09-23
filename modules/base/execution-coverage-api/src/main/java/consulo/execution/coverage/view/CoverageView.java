@@ -363,7 +363,7 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
 
     private class MyAutoScrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
         public MyAutoScrollFromSourceHandler() {
-            super(CoverageView.this.myProject, CoverageView.this, CoverageView.this);
+            super(CoverageView.this.myProject, TargetAWT.wrap(CoverageView.this), CoverageView.this);
         }
 
         @Override

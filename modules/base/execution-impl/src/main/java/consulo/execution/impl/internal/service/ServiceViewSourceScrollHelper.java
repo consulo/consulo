@@ -71,7 +71,7 @@ final class ServiceViewSourceScrollHelper {
 
   private static final class ServiceViewAutoScrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
     ServiceViewAutoScrollFromSourceHandler(Project project, ToolWindow toolWindow) {
-      super(project, toolWindow.getComponent(), toolWindow.getContentManager());
+      super(project, toolWindow.getUIComponent(), toolWindow.getContentManager());
     }
 
     @Override

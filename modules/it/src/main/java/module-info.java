@@ -57,6 +57,7 @@ module consulo.it {
     provides consulo.logging.attachment.AttachmentFactory with consulo.it.internal.HeadlessAttachmentFactory;
     provides consulo.platform.internal.PlatformInternal with consulo.it.internal.HeadlessPlatformInternal;
     provides consulo.ui.internal.UIInternal with consulo.it.internal.HeadlessUIInternal;
+    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.it.internal.HeadlessTargetAWTFacade;
 }
 
 

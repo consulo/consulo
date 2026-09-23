@@ -106,6 +106,7 @@ module consulo.ui.ex.api {
         consulo.desktop.qt.ui.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
+        consulo.it,
         consulo.web.ui.impl;
 
     uses TargetAWTFacade;

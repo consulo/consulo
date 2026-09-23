@@ -24,6 +24,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -33,7 +34,7 @@ public class FavoritesAutoscrollFromSourceHandler extends ProjectViewAutoScrollF
   private final FavoritesViewSelectInTarget mySelectInTarget = new FavoritesViewSelectInTarget(myProject);
 
   public FavoritesAutoscrollFromSourceHandler(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder.getTree(), builder);
+    super(project, TargetAWT.wrap(builder.getTree()), builder);
   }
 
   @Override

@@ -16,6 +16,7 @@
 package consulo.ui.ex.toolWindow;
 
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import org.jspecify.annotations.Nullable;
@@ -25,52 +26,49 @@ import org.jspecify.annotations.Nullable;
  * @since 12-Oct-17
  */
 public interface ToolWindowInternalDecorator extends Disposable {
-  /**
-   * Catches all event from tool window and modifies decorator's appearance.
-   */
-  String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
-  String TOGGLE_PINNED_MODE_ACTION_ID = "TogglePinnedMode";
-  String TOGGLE_DOCK_MODE_ACTION_ID = "ToggleDockMode";
-  String TOGGLE_FLOATING_MODE_ACTION_ID = "ToggleFloatingMode";
-  String TOGGLE_WINDOWED_MODE_ACTION_ID = "ToggleWindowedMode";
-  String TOGGLE_SIDE_MODE_ACTION_ID = "ToggleSideMode";
-  String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
+    /**
+     * Catches all event from tool window and modifies decorator's appearance.
+     */
+    String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
+    String TOGGLE_PINNED_MODE_ACTION_ID = "TogglePinnedMode";
+    String TOGGLE_DOCK_MODE_ACTION_ID = "ToggleDockMode";
+    String TOGGLE_FLOATING_MODE_ACTION_ID = "ToggleFloatingMode";
+    String TOGGLE_WINDOWED_MODE_ACTION_ID = "ToggleWindowedMode";
+    String TOGGLE_SIDE_MODE_ACTION_ID = "ToggleSideMode";
+    String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
 
-  
-  WindowInfo getWindowInfo();
+    WindowInfo getWindowInfo();
 
-  void apply(WindowInfo windowInfo);
+    void apply(WindowInfo windowInfo);
 
-  
-  ToolWindow getToolWindow();
+    ToolWindow getToolWindow();
 
-  void addInternalDecoratorListener(InternalDecoratorListener l);
+    void addInternalDecoratorListener(InternalDecoratorListener l);
 
-  void removeInternalDecoratorListener(InternalDecoratorListener l);
+    void removeInternalDecoratorListener(InternalDecoratorListener l);
 
-  void fireActivated();
+    void fireActivated();
 
-  void fireHidden();
+    void fireHidden();
 
-  void fireHiddenSide();
+    void fireHiddenSide();
 
-  
-  ActionGroup createPopupGroup();
+    ActionGroup createPopupGroup();
 
-  boolean isFocused();
+    boolean isFocused();
 
-  boolean hasFocus();
+    boolean hasFocus();
 
-  default void setTitleActions(AnAction... actions) {
-  }
+    default void setTitleActions(AnAction... actions) {
+    }
 
-  default void setTabActions(AnAction... actions) {
-  }
+    default void setTabActions(AnAction... actions) {
+    }
 
-  default void setAdditionalGearActions(@Nullable ActionGroup gearActions) {
-  }
+    default void setAdditionalGearActions(@Nullable ActionGroup gearActions) {
+    }
 
-  default int getHeaderHeight() {
-    throw new AbstractMethodError("Desktop Only");
-  }
+    default int getHeaderHeight() {
+        throw new AbstractMethodError("Desktop Only");
+    }
 }
