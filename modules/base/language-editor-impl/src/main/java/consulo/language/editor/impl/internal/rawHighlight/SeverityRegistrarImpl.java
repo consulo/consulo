@@ -73,7 +73,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         STANDARD_SEVERITIES.put(highlightSeverity.getName(), highlightInfoType);
     }
 
-    
     public static SeverityRegistrar getSeverityRegistrar(@Nullable Project project) {
         return SeverityRegistrar.getSeverityRegistrar(project);
     }
@@ -98,7 +97,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
     }
 
     @Override
-    
     public HighlightInfoTypeImpl getHighlightInfoTypeBySeverity(HighlightSeverity severity) {
         HighlightInfoType infoType = STANDARD_SEVERITIES.get(severity.getName());
         if (infoType != null) {
@@ -398,18 +396,18 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         }
 
         @Override
-        public boolean equals(Object o) {
-            return o == this
-                || o instanceof SeverityBasedTextAttributes that
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof SeverityBasedTextAttributes that
                 && myAttributes.equals(that.myAttributes)
                 && myType.equals(that.myType);
         }
 
         @Override
         public int hashCode() {
-            int result = myAttributes.hashCode();
-            result = 31 * result + myType.hashCode();
-            return result;
+            return 31 * myAttributes.hashCode() + myType.hashCode();
         }
     }
 

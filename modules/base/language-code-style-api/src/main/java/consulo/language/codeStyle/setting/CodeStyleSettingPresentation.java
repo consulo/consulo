@@ -27,10 +27,9 @@ import static consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable.*
 
 /**
  * @author Roman.Shein
- * @since 15.09.2015.
+ * @since 2015-09-15
  */
 public class CodeStyleSettingPresentation {
-
   public static class SettingsGroup {
     public final @Nullable String name;
 
@@ -39,14 +38,9 @@ public class CodeStyleSettingPresentation {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (o instanceof SettingsGroup) {
-        SettingsGroup other = (SettingsGroup)o;
-        return name != null && name.equals(other.name);
-      }
-      else {
-        return false;
-      }
+    public boolean equals(@Nullable Object o) {
+      return o == this
+        || o instanceof SettingsGroup that && name != null && name.equals(that.name);
     }
 
     @Override
@@ -59,10 +53,8 @@ public class CodeStyleSettingPresentation {
     }
   }
 
-  
   protected String myFieldName;
 
-  
   protected String myUiName;
 
   public CodeStyleSettingPresentation(String fieldName, String uiName) {
@@ -70,12 +62,10 @@ public class CodeStyleSettingPresentation {
     myUiName = uiName;
   }
 
-  
   public String getFieldName() {
     return myFieldName;
   }
 
-  
   public String getUiName() {
     return myUiName;
   }
@@ -84,14 +74,14 @@ public class CodeStyleSettingPresentation {
     myUiName = newName;
   }
 
-  
   public String getValueUiName(Object value) {
     return value.toString();
   }
 
   @Override
-  public boolean equals(Object o) {
-    return (o instanceof CodeStyleSettingPresentation) && ((CodeStyleSettingPresentation)o).getFieldName().equals(getFieldName());
+  public boolean equals(@Nullable Object o) {
+    return o == this
+        || o instanceof CodeStyleSettingPresentation that && that.getFieldName().equals(getFieldName());
   }
 
   @Override

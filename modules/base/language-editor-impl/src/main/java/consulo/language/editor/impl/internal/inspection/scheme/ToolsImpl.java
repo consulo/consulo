@@ -79,7 +79,6 @@ public class ToolsImpl implements Tools {
     myEnabled = enabled;
   }
 
-  
   public ScopeToolState addTool(NamedScope scope,
                                 InspectionToolWrapper toolWrapper,
                                 boolean enabled,
@@ -87,7 +86,6 @@ public class ToolsImpl implements Tools {
     return insertTool(scope, toolWrapper, enabled, level, myTools != null ? myTools.size() : 0);
   }
 
-  
   public ScopeToolState prependTool(NamedScope scope,
                                     InspectionToolWrapper toolWrapper,
                                     boolean enabled,
@@ -102,7 +100,6 @@ public class ToolsImpl implements Tools {
     return insertTool(new ScopeToolState(scopeName, toolWrapper, enabled, level), myTools != null ? myTools.size() : 0);
   }
 
-  
   private ScopeToolState insertTool(NamedScope scope,
                                     InspectionToolWrapper toolWrapper,
                                     boolean enabled,
@@ -111,10 +108,9 @@ public class ToolsImpl implements Tools {
     return insertTool(new ScopeToolState(scope, toolWrapper, enabled, level), idx);
   }
 
-  
   private ScopeToolState insertTool(ScopeToolState scopeToolState, int idx) {
     if (myTools == null) {
-      myTools = new ArrayList<ScopeToolState>();
+      myTools = new ArrayList<>();
       if (scopeToolState.isEnabled()) {
         setEnabled(true);
       }
@@ -123,7 +119,6 @@ public class ToolsImpl implements Tools {
     return scopeToolState;
   }
 
-  
   @Override
   public InspectionToolWrapper getInspectionTool(PsiElement element) {
     if (myTools != null) {
@@ -150,15 +145,13 @@ public class ToolsImpl implements Tools {
     return myDefaultState.getTool();
   }
 
-  
   @Override
   public String getShortName() {
     return myShortName;
   }
 
-  
   public List<InspectionToolWrapper> getAllTools() {
-    List<InspectionToolWrapper> result = new ArrayList<InspectionToolWrapper>();
+    List<InspectionToolWrapper> result = new ArrayList<>();
     for (ScopeToolState state : getTools()) {
       InspectionToolWrapper toolWrapper = state.getTool();
       result.add(toolWrapper);
@@ -189,9 +182,7 @@ public class ToolsImpl implements Tools {
     }
   }
 
-  void readExternal(Element toolElement,
-                    InspectionProfile profile,
-                    Map<String, List<String>> dependencies) throws InvalidDataException {
+  void readExternal(Element toolElement, InspectionProfile profile, Map<String, List<String>> dependencies) throws InvalidDataException {
     String levelName = toolElement.getAttributeValue(LEVEL_ATTRIBUTE);
     ProfileManager profileManager = profile.getProfileManager();
     SeverityRegistrar registrar = ((SeverityProvider)profileManager).getOwnSeverityRegistrar();
@@ -246,7 +237,7 @@ public class ToolsImpl implements Tools {
       String scopeName = scopeNames.get(i);
       List<String> order = dependencies.get(scopeName);
       if (order == null) {
-        order = new ArrayList<String>();
+        order = new ArrayList<>();
         dependencies.put(scopeName, order);
       }
       for (int j = i + 1; j < scopeNames.size(); j++) {
@@ -262,7 +253,6 @@ public class ToolsImpl implements Tools {
     myEnabled = isEnabled;
   }
 
-  
   @Override
   public InspectionToolWrapper getTool() {
     if (myTools == null) return myDefaultState.getTool();
@@ -270,7 +260,6 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  
   public List<ScopeToolState> getTools() {
     if (myTools == null) return Collections.singletonList(myDefaultState);
     List<ScopeToolState> result = new ArrayList<ScopeToolState>(myTools);
@@ -279,7 +268,6 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  
   public ScopeToolState getDefaultState() {
     return myDefaultState;
   }
@@ -451,7 +439,6 @@ public class ToolsImpl implements Tools {
     }
   }
 
-  
   public HighlightDisplayLevel getLevel(NamedScope scope, Project project) {
     if (myTools != null && scope != null) {
       for (ScopeToolState state : myTools) {
@@ -465,14 +452,19 @@ public class ToolsImpl implements Tools {
 
   @Override
   @SuppressWarnings("EqualsHashCode")
-  public boolean equals(Object o) {
-    ToolsImpl tools = (ToolsImpl)o;
-    if (myEnabled != tools.myEnabled) return false;
-    if (getTools().size() != tools.getTools().size()) return false;
-    for (int i = 0; i < getTools().size(); i++) {
-      ScopeToolState state = getTools().get(i);
-      ScopeToolState toolState = tools.getTools().get(i);
-      if (!state.equalTo(toolState)) {
+  public boolean equals(@Nullable Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof ToolsImpl that)) {
+      return false;
+    }
+    if (myEnabled != that.myEnabled) return false;
+    List<ScopeToolState> thisTools = getTools(), thatTools = that.getTools();
+    int size = thisTools.size();
+    if (size != thatTools.size()) return false;
+    for (int i = 0; i < size; i++) {
+      if (!thisTools.get(i).equalTo(thatTools.get(i))) {
         return false;
       }
     }

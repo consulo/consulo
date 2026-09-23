@@ -88,7 +88,6 @@ public class HighlightInfoImpl implements HighlightInfo {
     public List<Pair<IntentionActionDescriptor, TextRange>> myQuickFixActionRanges;
     public List<Pair<IntentionActionDescriptor, RangeMarker>> myQuickFixActionMarkers;
 
-    
     private final LocalizeValue myDescription;
     
     private final LocalizeValue myToolTip;
@@ -141,19 +140,16 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myNavigationShift;
     }
 
-    
     @Override
     public LocalizeValue getToolTip() {
         return myToolTip;
     }
 
-    
     @Override
     public LocalizeValue getDescription() {
         return myDescription;
     }
 
-    
     @Override
     public HighlightInfoType getType() {
         return myType;
@@ -184,7 +180,6 @@ public class HighlightInfoImpl implements HighlightInfo {
         setFlag(BIJECTIVE_MASK, bijective);
     }
 
-    
     @Override
     public HighlightSeverity getSeverity() {
         return mySeverity;
@@ -272,7 +267,6 @@ public class HighlightInfoImpl implements HighlightInfo {
         return attributes == null ? null : attributes.getErrorStripeColor();
     }
 
-    
     private static EditorColorsScheme getColorsScheme(@Nullable EditorColorsScheme customScheme) {
         return customScheme != null ? customScheme : EditorColorsManager.getInstance().getGlobalScheme();
     }
@@ -344,9 +338,11 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj == this
-            || obj instanceof HighlightInfoImpl that
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof HighlightInfoImpl that
             && that.getSeverity() == getSeverity()
             && that.myStartOffset == myStartOffset
             && that.myEndOffset == myEndOffset
@@ -357,16 +353,18 @@ public class HighlightInfoImpl implements HighlightInfo {
             && that.getDescription().equals(getDescription());
     }
 
-    public boolean equalsByActualOffset(HighlightInfoImpl info) {
-        return info == this
-            || info.getSeverity() == getSeverity()
-            && info.getActualStartOffset() == getActualStartOffset()
-            && info.getActualEndOffset() == getActualEndOffset()
-            && Objects.equals(info.myType, myType)
-            && Objects.equals(info.myGutterIconRenderer, myGutterIconRenderer)
-            && Objects.equals(info.myForcedTextAttributes, myForcedTextAttributes)
-            && Objects.equals(info.myForcedTextAttributesKey, myForcedTextAttributesKey)
-            && info.getDescription().equals(getDescription());
+    public boolean equalsByActualOffset(HighlightInfoImpl that) {
+        if (that == this) {
+            return true;
+        }
+        return that.getSeverity() == getSeverity()
+            && that.getActualStartOffset() == getActualStartOffset()
+            && that.getActualEndOffset() == getActualEndOffset()
+            && Objects.equals(that.myType, myType)
+            && Objects.equals(that.myGutterIconRenderer, myGutterIconRenderer)
+            && Objects.equals(that.myForcedTextAttributes, myForcedTextAttributes)
+            && Objects.equals(that.myForcedTextAttributesKey, myForcedTextAttributesKey)
+            && that.getDescription().equals(getDescription());
     }
 
     @Override
@@ -376,28 +374,27 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     @Override
     public String toString() {
-        String s = "HighlightInfo(" + myStartOffset + "," + myEndOffset + ")";
+        StringBuilder sb = new StringBuilder().append("HighlightInfo(").append(myStartOffset).append(",").append(myEndOffset).append(")");
         if (getActualStartOffset() != myStartOffset || getActualEndOffset() != myEndOffset) {
-            s += "; actual: (" + getActualStartOffset() + "," + getActualEndOffset() + ")";
+            sb.append("; actual: (").append(getActualStartOffset()).append(",").append(getActualEndOffset()).append(")");
         }
         if (myHighlighter != null) {
-            s += " text='" + getText() + "'";
+            sb.append(" text='").append(getText()).append("'");
         }
         if (getDescription().isNotEmpty()) {
-            s += ", description='" + getDescription() + "'";
+            sb.append(", description='").append(getDescription()).append("'");
         }
-        s += " severity=" + getSeverity();
-        s += " group=" + getGroup();
+        sb.append(" severity=").append(getSeverity());
+        sb.append(" group=").append(getGroup());
         if (myQuickFixActionRanges != null) {
-            s += "; quickFixes: " + myQuickFixActionRanges;
+            sb.append("; quickFixes: ").append(myQuickFixActionRanges);
         }
         if (myGutterIconRenderer != null) {
-            s += "; gutter: " + myGutterIconRenderer;
+            sb.append("; gutter: ").append(myGutterIconRenderer);
         }
-        return s;
+        return sb.toString();
     }
 
-    
     public static Builder newHighlightInfo(HighlightInfoType type) {
         return new HighlightInfoBuilder(type);
     }
@@ -425,12 +422,10 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myProblemGroup;
     }
 
-    
     public static HighlightInfoImpl fromAnnotation(Annotation annotation) {
         return fromAnnotation(annotation, false);
     }
 
-    
     public static HighlightInfoImpl fromAnnotation(Annotation annotation, boolean batchMode) {
         TextAttributes forcedAttributes = annotation.getEnforcedTextAttributes();
         TextAttributesKey key = annotation.getTextAttributes();
@@ -472,7 +467,6 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     private static final String ANNOTATOR_INSPECTION_SHORT_NAME = "Annotator";
 
-    
     private static HighlightInfoType convertType(Annotation annotation) {
         ProblemHighlightType type = annotation.getHighlightType();
         return switch (type) {
@@ -540,7 +534,6 @@ public class HighlightInfoImpl implements HighlightInfo {
         return highlighter.getDocument().getText(TextRange.create(highlighter));
     }
 
-    
     @Override
     public FixBuilder newFix(IntentionAction action) {
         return new MyFixBuilder(action);

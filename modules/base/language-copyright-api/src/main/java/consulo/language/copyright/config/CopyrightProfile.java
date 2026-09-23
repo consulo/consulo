@@ -13,99 +13,100 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.copyright.config;
 
 import consulo.language.copyright.util.EntityUtil;
 import consulo.util.xml.serializer.SmartSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 public class CopyrightProfile implements Comparable<CopyrightProfile> {
-  @SuppressWarnings("SpellCheckingInspection")
-  public static final String DEFAULT_COPYRIGHT_NOTICE = EntityUtil.encode("Copyright (c) $today.year. Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" +
-                                                                          "Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. \n" +
-                                                                          "Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. \n" +
-                                                                          "Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. \n" +
-                                                                          "Vestibulum commodo. Ut rhoncus gravida arcu. ");
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String DEFAULT_COPYRIGHT_NOTICE = EntityUtil.encode(
+        "Copyright (c) $today.year. Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" +
+            "Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. \n" +
+            "Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. \n" +
+            "Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. \n" +
+            "Vestibulum commodo. Ut rhoncus gravida arcu. ");
 
-  private static final SmartSerializer ourSerializer = SmartSerializer.skipEmptySerializer();
+    private static final SmartSerializer ourSerializer = SmartSerializer.skipEmptySerializer();
 
-  private String notice = DEFAULT_COPYRIGHT_NOTICE;
-  private String keyword = EntityUtil.encode("Copyright");
-  private String allowReplaceKeyword = "";
-  
-  protected String myName;
+    private String notice = DEFAULT_COPYRIGHT_NOTICE;
+    private String keyword = EntityUtil.encode("Copyright");
+    private String allowReplaceKeyword = "";
 
-  //read external
-  public CopyrightProfile() {
-    this("");
-  }
+    protected String myName;
 
-  public void copyFrom(CopyrightProfile profile) {
-    Element config = new Element("config");
-    profile.writeExternal(config);
-    readExternal(config);
-  }
+    //read external
+    public CopyrightProfile() {
+        this("");
+    }
 
-  public void readExternal(Element element) {
-    ourSerializer.readExternal(this, element);
-  }
+    public void copyFrom(CopyrightProfile profile) {
+        Element config = new Element("config");
+        profile.writeExternal(config);
+        readExternal(config);
+    }
 
-  public void writeExternal(Element element) {
-    ourSerializer.writeExternal(this, element);
-  }
+    public void readExternal(Element element) {
+        ourSerializer.readExternal(this, element);
+    }
 
-  public CopyrightProfile(String profileName) {
-    myName = profileName;
-  }
+    public void writeExternal(Element element) {
+        ourSerializer.writeExternal(this, element);
+    }
 
-  
-  @OptionTag("myName")
-  public String getName() {
-    return myName;
-  }
+    public CopyrightProfile(String profileName) {
+        myName = profileName;
+    }
 
-  public void setName(String name) {
-    myName = name;
-  }
+    @OptionTag("myName")
+    public String getName() {
+        return myName;
+    }
 
-  public String getNotice() {
-    return notice;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  public String getKeyword() {
-    return keyword;
-  }
+    public String getNotice() {
+        return notice;
+    }
 
-  public void setNotice(String text) {
-    notice = text;
-  }
+    public String getKeyword() {
+        return keyword;
+    }
 
-  public void setKeyword(String keyword) {
-    this.keyword = keyword;
-  }
+    public void setNotice(String text) {
+        notice = text;
+    }
 
-  public String getAllowReplaceKeyword() {
-    return allowReplaceKeyword;
-  }
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
 
-  public void setAllowReplaceKeyword(String allowReplaceKeyword) {
-    this.allowReplaceKeyword = allowReplaceKeyword;
-  }
+    public String getAllowReplaceKeyword() {
+        return allowReplaceKeyword;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    return this == o || o instanceof CopyrightProfile && myName.equals(((CopyrightProfile)o).myName);
-  }
+    public void setAllowReplaceKeyword(String allowReplaceKeyword) {
+        this.allowReplaceKeyword = allowReplaceKeyword;
+    }
 
-  @Override
-  public int hashCode() {
-    return myName.hashCode();
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof CopyrightProfile that && myName.equals(that.myName);
+    }
 
-  @Override
-  public int compareTo(CopyrightProfile o) {
-    return getName().compareToIgnoreCase(o.getName());
-  }
+    @Override
+    public int hashCode() {
+        return myName.hashCode();
+    }
+
+    @Override
+    public int compareTo(CopyrightProfile o) {
+        return getName().compareToIgnoreCase(o.getName());
+    }
 }

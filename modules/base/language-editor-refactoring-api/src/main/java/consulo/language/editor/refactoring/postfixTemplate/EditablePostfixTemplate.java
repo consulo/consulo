@@ -21,6 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +36,6 @@ import java.util.function.Function;
  * @see <a href="https://plugins.jetbrains.com/docs/intellij/advanced-postfix-templates.html">Advanced Postfix Templates (IntelliJ Platform Docs)</a>
  */
 public abstract class EditablePostfixTemplate extends PostfixTemplate {
-    
     private final Template myLiveTemplate;
 
     public EditablePostfixTemplate(
@@ -61,7 +61,6 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
         myLiveTemplate = liveTemplate;
     }
 
-    
     public Template getLiveTemplate() {
         return myLiveTemplate;
     }
@@ -99,11 +98,9 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof EditablePostfixTemplate template
-            && super.equals(o)
-            && Objects.equals(myLiveTemplate, template.myLiveTemplate);
+    public boolean equals(@Nullable Object o) {
+        return o == this
+            || o instanceof EditablePostfixTemplate that && super.equals(o) && Objects.equals(myLiveTemplate, that.myLiveTemplate);
     }
 
     @Override
@@ -141,12 +138,10 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
         return getElementToRemove(element).getTextRange();
     }
 
-    
     protected Function<PsiElement, String> getElementRenderer() {
-        return element -> element.getText();
+        return PsiElement::getText;
     }
 
-    
     @Override
     public PostfixTemplateProvider getProvider() {
         PostfixTemplateProvider provider = super.getProvider();
@@ -164,7 +159,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
             .run(() -> expandForChooseExpression(element, editor));
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     private void expandForChooseExpression(PsiElement element, Editor editor) {
         Project project = element.getProject();
         Document document = editor.getDocument();

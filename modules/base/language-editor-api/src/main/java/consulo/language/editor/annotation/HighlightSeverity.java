@@ -20,6 +20,9 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Defines a highlighting severity level for an annotation.
@@ -108,7 +111,7 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -118,19 +121,14 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
 
         HighlightSeverity that = (HighlightSeverity) o;
 
-        if (myVal != that.myVal) {
-            return false;
-        }
-        return myName.equals(that.myName);
+        return myVal == that.myVal && myName.equals(that.myName);
     }
 
     @Override
     public int hashCode() {
-        int result = myName != null ? myName.hashCode() : 0;
-        return 31 * result + myVal;
+        return 31 * Objects.hashCode(myName) + myVal;
     }
 
-    
     public String getName() {
         return myName;
     }

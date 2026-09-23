@@ -18,6 +18,7 @@ package consulo.language.editor.impl.internal.markup;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -26,56 +27,62 @@ import java.util.Objects;
  * from kotlin
  */
 public final class StatusItem {
-  private final String myText;
-  private final Image myIcon;
-  private final String myType;
+    private final String myText;
+    private final Image myIcon;
+    private final String myType;
 
-  public StatusItem(String text) {
-    this(text, null, null);
-  }
+    public StatusItem(String text) {
+        this(text, null, null);
+    }
 
-  public StatusItem(String text, @Nullable Image icon) {
-    this(text, icon, null);
-  }
+    public StatusItem(String text, @Nullable Image icon) {
+        this(text, icon, null);
+    }
 
-  public StatusItem(String text, @Nullable Image icon, @Nullable String type) {
-    myText = text;
-    myIcon = icon;
-    myType = type;
-  }
+    public StatusItem(String text, @Nullable Image icon, @Nullable String type) {
+        myText = text;
+        myIcon = icon;
+        myType = type;
+    }
 
-  public Image getIcon() {
-    return myIcon;
-  }
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  public String getText() {
-    return myText;
-  }
+    public String getText() {
+        return myText;
+    }
 
-  public String getType() {
-    return myType;
-  }
+    public String getType() {
+        return myType;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    StatusItem that = (StatusItem)o;
-    return Objects.equals(myText, that.myText) && Objects.equals(myIcon, that.myIcon) && Objects.equals(myType, that.myType);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StatusItem that = (StatusItem) o;
+        return Objects.equals(myText, that.myText)
+            && Objects.equals(myIcon, that.myIcon)
+            && Objects.equals(myType, that.myType);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myText, myIcon, myType);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myText, myIcon, myType);
+    }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("StatusItem{");
-    sb.append("myText='").append(myText).append('\'');
-    sb.append(", myIcon=").append(myIcon);
-    sb.append(", myType='").append(myType).append('\'');
-    sb.append('}');
-    return sb.toString();
-  }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("StatusItem{");
+        sb.append("myText='").append(myText).append('\'');
+        sb.append(", myIcon=").append(myIcon);
+        sb.append(", myType='").append(myType).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -3,6 +3,7 @@ package consulo.language.editor.inlay;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -105,18 +106,9 @@ public interface InlayPresentationFactory {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Padding)) {
-                return false;
-            }
-            Padding that = (Padding) o;
-            return left == that.left
-                && right == that.right
-                && top == that.top
-                && bottom == that.bottom;
+        public boolean equals(@Nullable Object o) {
+            return this == o
+                || o instanceof Padding that && left == that.left && right == that.right && top == that.top && bottom == that.bottom;
         }
 
         @Override
@@ -158,23 +150,14 @@ public interface InlayPresentationFactory {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof RoundedCorners)) {
-                return false;
-            }
-            RoundedCorners that = (RoundedCorners) o;
-            return arcWidth == that.arcWidth
-                && arcHeight == that.arcHeight;
+        public boolean equals(@Nullable Object o) {
+            return this == o
+                || o instanceof RoundedCorners that && arcWidth == that.arcWidth && arcHeight == that.arcHeight;
         }
 
         @Override
         public int hashCode() {
-            int result = arcWidth;
-            result = 31 * result + arcHeight;
-            return result;
+            return 31 * arcWidth + arcHeight;
         }
 
         @Override

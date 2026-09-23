@@ -16,6 +16,7 @@
 package consulo.language.editor.generation;
 
 import consulo.ui.ex.ColoredTextContainer;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -23,11 +24,13 @@ import javax.swing.*;
  * @author peter
  */
 public interface MemberChooserObject {
-  void renderTreeNode(ColoredTextContainer component, JTree tree);
+    void renderTreeNode(ColoredTextContainer component, JTree tree);
 
-  String getText();
+    String getText();
 
-  boolean equals(Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
-  int hashCode();
+    @Override
+    int hashCode();
 }

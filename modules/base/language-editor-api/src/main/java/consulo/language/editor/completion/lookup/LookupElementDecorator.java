@@ -15,7 +15,10 @@
  */
 package consulo.language.editor.completion.lookup;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.completion.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -24,175 +27,185 @@ import java.util.Set;
  * @see consulo.ide.impl.idea.codeInsight.completion.PrioritizedLookupElement
  */
 public abstract class LookupElementDecorator<T extends LookupElement> extends LookupElement {
-  private final T myDelegate;
+    private final T myDelegate;
 
-  protected LookupElementDecorator(T delegate) {
-    myDelegate = delegate;
-    myDelegate.copyUserDataTo(this);
-  }
+    protected LookupElementDecorator(T delegate) {
+        myDelegate = delegate;
+        myDelegate.copyUserDataTo(this);
+    }
 
-  public T getDelegate() {
-    return myDelegate;
-  }
+    public T getDelegate() {
+        return myDelegate;
+    }
 
-  @Override
-  public boolean isValid() {
-    return super.isValid() && myDelegate.isValid();
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        return super.isValid() && myDelegate.isValid();
+    }
 
-  @Override
-  
-  public String getLookupString() {
-    return myDelegate.getLookupString();
-  }
+    @Override
+    public String getLookupString() {
+        return myDelegate.getLookupString();
+    }
 
-  @Override
-  public Set<String> getAllLookupStrings() {
-    return myDelegate.getAllLookupStrings();
-  }
+    @Override
+    public Set<String> getAllLookupStrings() {
+        return myDelegate.getAllLookupStrings();
+    }
 
-  
-  @Override
-  public Object getObject() {
-    return myDelegate.getObject();
-  }
-
-  @Override
-  public void handleInsert(InsertionContext context) {
-    myDelegate.handleInsert(context);
-  }
-
-  @Override
-  public AutoCompletionPolicy getAutoCompletionPolicy() {
-    return myDelegate.getAutoCompletionPolicy();
-  }
-
-  @Override
-  public String toString() {
-    return myDelegate.toString();
-  }
-
-  @Override
-  public void renderElement(LookupElementPresentation presentation) {
-    myDelegate.renderElement(presentation);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    LookupElementDecorator that = (LookupElementDecorator)o;
-
-    if (!myDelegate.equals(that.myDelegate)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myDelegate.hashCode();
-  }
-
-  @Override
-  public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
-    //noinspection rawtypes
-    LookupElementRenderer renderer = myDelegate.getExpensiveRenderer();
-    return renderer == null ? null : new LookupElementRenderer<LookupElementDecorator<?>>() {
-      @Override
-      public void renderElement(LookupElementDecorator<?> element, LookupElementPresentation presentation) {
-        //noinspection unchecked
-        renderer.renderElement(element.myDelegate, presentation);
-      }
-    };
-  }
-
-  
-  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(T element, InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
-    return new InsertingDecorator<T>(element, insertHandler);
-  }
-
-  
-  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(T element, LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
-    return new VisagisteDecorator<T>(element, visagiste);
-  }
-
-  @Override
-  public <T> T as(ClassConditionKey<T> conditionKey) {
-    T t = super.as(conditionKey);
-    return t == null ? myDelegate.as(conditionKey) : t;
-  }
-
-  @Override
-  public boolean isCaseSensitive() {
-    return myDelegate.isCaseSensitive();
-  }
-
-  private static class InsertingDecorator<T extends LookupElement> extends LookupElementDecorator<T> {
-    private final InsertHandler<? super LookupElementDecorator<T>> myInsertHandler;
-
-    public InsertingDecorator(T element, InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
-      super(element);
-      myInsertHandler = insertHandler;
+    @Override
+    public Object getObject() {
+        return myDelegate.getObject();
     }
 
     @Override
     public void handleInsert(InsertionContext context) {
-      myInsertHandler.handleInsert(context, this);
+        myDelegate.handleInsert(context);
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      if (!super.equals(o)) return false;
-
-      InsertingDecorator that = (InsertingDecorator)o;
-
-      if (!myInsertHandler.equals(that.myInsertHandler)) return false;
-
-      return true;
+    public AutoCompletionPolicy getAutoCompletionPolicy() {
+        return myDelegate.getAutoCompletionPolicy();
     }
 
     @Override
-    public int hashCode() {
-      int result = super.hashCode();
-      result = 31 * result + myInsertHandler.hashCode();
-      return result;
-    }
-  }
-
-  private static class VisagisteDecorator<T extends LookupElement> extends LookupElementDecorator<T> {
-    private final LookupElementRenderer<? super LookupElementDecorator<T>> myVisagiste;
-
-    public VisagisteDecorator(T element, LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
-      super(element);
-      myVisagiste = visagiste;
+    public String toString() {
+        return myDelegate.toString();
     }
 
     @Override
     public void renderElement(LookupElementPresentation presentation) {
-      myVisagiste.renderElement(this, presentation);
+        myDelegate.renderElement(presentation);
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      if (!super.equals(o)) return false;
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-      VisagisteDecorator that = (VisagisteDecorator)o;
+        LookupElementDecorator that = (LookupElementDecorator) o;
 
-      if (!myVisagiste.getClass().equals(that.myVisagiste.getClass())) return false;
-
-      return true;
+        return myDelegate.equals(that.myDelegate);
     }
 
     @Override
     public int hashCode() {
-      int result = super.hashCode();
-      result = 31 * result + myVisagiste.getClass().hashCode();
-      return result;
+        return myDelegate.hashCode();
     }
-  }
+
+    @Override
+    public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+        //noinspection rawtypes
+        LookupElementRenderer renderer = myDelegate.getExpensiveRenderer();
+        return renderer == null ? null : new LookupElementRenderer<LookupElementDecorator<?>>() {
+            @Override
+            public void renderElement(LookupElementDecorator<?> element, LookupElementPresentation presentation) {
+                //noinspection unchecked
+                renderer.renderElement(element.myDelegate, presentation);
+            }
+        };
+    }
+
+    public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(
+        T element,
+        InsertHandler<? super LookupElementDecorator<T>> insertHandler
+    ) {
+        return new InsertingDecorator<>(element, insertHandler);
+    }
+
+    public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(
+        T element,
+        LookupElementRenderer<? super LookupElementDecorator<T>> visagiste
+    ) {
+        return new VisagisteDecorator<>(element, visagiste);
+    }
+
+    @Override
+    public <T> T as(ClassConditionKey<T> conditionKey) {
+        T t = super.as(conditionKey);
+        return t == null ? myDelegate.as(conditionKey) : t;
+    }
+
+    @Override
+    public boolean isCaseSensitive() {
+        return myDelegate.isCaseSensitive();
+    }
+
+    private static class InsertingDecorator<T extends LookupElement> extends LookupElementDecorator<T> {
+        private final InsertHandler<? super LookupElementDecorator<T>> myInsertHandler;
+
+        public InsertingDecorator(T element, InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
+            super(element);
+            myInsertHandler = insertHandler;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void handleInsert(InsertionContext context) {
+            myInsertHandler.handleInsert(context, this);
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            if (!super.equals(o)) {
+                return false;
+            }
+
+            InsertingDecorator that = (InsertingDecorator) o;
+
+            return myInsertHandler.equals(that.myInsertHandler);
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * super.hashCode() + myInsertHandler.hashCode();
+        }
+    }
+
+    private static class VisagisteDecorator<T extends LookupElement> extends LookupElementDecorator<T> {
+        private final LookupElementRenderer<? super LookupElementDecorator<T>> myVisagiste;
+
+        public VisagisteDecorator(T element, LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
+            super(element);
+            myVisagiste = visagiste;
+        }
+
+        @Override
+        public void renderElement(LookupElementPresentation presentation) {
+            myVisagiste.renderElement(this, presentation);
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            if (!super.equals(o)) {
+                return false;
+            }
+
+            VisagisteDecorator that = (VisagisteDecorator) o;
+
+            return myVisagiste.getClass().equals(that.myVisagiste.getClass());
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * super.hashCode() + myVisagiste.getClass().hashCode();
+        }
+    }
 }

@@ -259,7 +259,7 @@ public class DocRenderItemImpl implements DocRenderItem {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             return obj instanceof MyGutterIconRenderer;
         }
 

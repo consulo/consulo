@@ -191,15 +191,17 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof PostfixTemplate template)) return false;
-    return Objects.equals(myId, template.myId) &&
-      Objects.equals(myPresentableName, template.myPresentableName) &&
-      Objects.equals(myKey, template.myKey) &&
-      Objects.equals(getDescription(), template.getDescription()) &&
-      Objects.equals(myExample, template.myExample) &&
-      Objects.equals(myProvider, template.myProvider);
+  public boolean equals(@Nullable Object o) {
+    if (o == this) {
+      return true;
+    }
+    return o instanceof PostfixTemplate that
+      && Objects.equals(myId, that.myId)
+      && Objects.equals(myPresentableName, that.myPresentableName)
+      && Objects.equals(myKey, that.myKey)
+      && Objects.equals(getDescription(), that.getDescription())
+      && Objects.equals(myExample, that.myExample)
+      && Objects.equals(myProvider, that.myProvider);
   }
 
   @Override
@@ -207,7 +209,6 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
     return Objects.hash(myId, myPresentableName, myKey, getDescription(), myExample, myProvider);
   }
 
-  
   @RequiredReadAction
   public static PsiFile copyFile(PsiFile file, StringBuilder fileContentWithoutKey) {
     PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(file.getProject());

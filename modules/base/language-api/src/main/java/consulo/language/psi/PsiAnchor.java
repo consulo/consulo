@@ -36,8 +36,8 @@ public interface PsiAnchor {
         return new PsiAnchorHardReference(element);
     }
 
-    @RequiredReadAction
     @Deprecated
+    @RequiredReadAction
     static PsiAnchor create(PsiElement element) {
         PsiUtilCore.ensureValid(element);
 

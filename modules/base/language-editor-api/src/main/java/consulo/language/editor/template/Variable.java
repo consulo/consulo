@@ -13,130 +13,129 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.language.editor.template.macro.MacroParser;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class Variable implements Cloneable {
-  private final String myName;
-  private boolean myAlwaysStopAt;
+    private final String myName;
+    private boolean myAlwaysStopAt;
 
-  private String myExpressionString;
-  private Expression myExpression = null;
+    private String myExpressionString;
+    private Expression myExpression = null;
 
-  private String myDefaultValueString;
-  private Expression myDefaultValueExpression;
-  private boolean mySkipOnStart;
+    private String myDefaultValueString;
+    private Expression myDefaultValueExpression;
+    private boolean mySkipOnStart;
 
-  public Variable(String name, Expression expression, Expression defaultValueExpression, boolean alwaysStopAt, boolean skipOnStart) {
-    myName = name;
-    myExpression = expression;
-    myDefaultValueExpression = defaultValueExpression;
-    myAlwaysStopAt = alwaysStopAt;
-    mySkipOnStart = skipOnStart;
-  }
-
-  public Variable(String name, String expression, String defaultValueString, boolean alwaysStopAt) {
-    myName = name;
-    myExpressionString = expression;
-    myDefaultValueString = defaultValueString;
-    myAlwaysStopAt = alwaysStopAt;
-    mySkipOnStart = false;
-  }
-
-  public String getExpressionString() {
-    return myExpressionString;
-  }
-
-  public void setExpressionString(String expressionString) {
-    myExpressionString = expressionString;
-    myExpression = null;
-  }
-
-  public Expression getExpression() {
-    if (myExpression == null) {
-      if (myName.equals(Template.SELECTION)) {
-        myExpression = new SelectionNode();
-      }
-      else {
-        myExpression = MacroParser.parse(myExpressionString);
-      }
+    public Variable(String name, Expression expression, Expression defaultValueExpression, boolean alwaysStopAt, boolean skipOnStart) {
+        myName = name;
+        myExpression = expression;
+        myDefaultValueExpression = defaultValueExpression;
+        myAlwaysStopAt = alwaysStopAt;
+        mySkipOnStart = skipOnStart;
     }
-    return myExpression;
-  }
 
-  public String getDefaultValueString() {
-    return myDefaultValueString;
-  }
-
-  public void setDefaultValueString(String defaultValueString) {
-    myDefaultValueString = defaultValueString;
-    myDefaultValueExpression = null;
-  }
-
-  public Expression getDefaultValueExpression() {
-    if (myDefaultValueExpression == null) {
-      myDefaultValueExpression = MacroParser.parse(myDefaultValueString);
+    public Variable(String name, String expression, String defaultValueString, boolean alwaysStopAt) {
+        myName = name;
+        myExpressionString = expression;
+        myDefaultValueString = defaultValueString;
+        myAlwaysStopAt = alwaysStopAt;
+        mySkipOnStart = false;
     }
-    return myDefaultValueExpression;
-  }
 
-  public String getName() {
-    return myName;
-  }
+    public String getExpressionString() {
+        return myExpressionString;
+    }
 
-  public boolean isAlwaysStopAt() {
-    if (myName.equals(Template.SELECTION)) return false;
-    return myAlwaysStopAt;
-  }
+    public void setExpressionString(String expressionString) {
+        myExpressionString = expressionString;
+        myExpression = null;
+    }
 
-  public void setAlwaysStopAt(boolean alwaysStopAt) {
-    myAlwaysStopAt = alwaysStopAt;
-  }
+    public Expression getExpression() {
+        if (myExpression == null) {
+            if (myName.equals(Template.SELECTION)) {
+                myExpression = new SelectionNode();
+            }
+            else {
+                myExpression = MacroParser.parse(myExpressionString);
+            }
+        }
+        return myExpression;
+    }
 
-  @Override
-  public Object clone() {
-    return new Variable(myName, myExpressionString, myDefaultValueString, myAlwaysStopAt);
-  }
+    public String getDefaultValueString() {
+        return myDefaultValueString;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Variable)) return false;
+    public void setDefaultValueString(String defaultValueString) {
+        myDefaultValueString = defaultValueString;
+        myDefaultValueExpression = null;
+    }
 
-    Variable variable = (Variable) o;
+    public Expression getDefaultValueExpression() {
+        if (myDefaultValueExpression == null) {
+            myDefaultValueExpression = MacroParser.parse(myDefaultValueString);
+        }
+        return myDefaultValueExpression;
+    }
 
-    if (myAlwaysStopAt != variable.myAlwaysStopAt) return false;
-    if (mySkipOnStart != variable.mySkipOnStart) return false;
-    if (myDefaultValueString != null ? !myDefaultValueString.equals(variable.myDefaultValueString) : variable.myDefaultValueString != null) return false;
-    if (myExpressionString != null ? !myExpressionString.equals(variable.myExpressionString) : variable.myExpressionString != null) return false;
-    if (myName != null ? !myName.equals(variable.myName) : variable.myName != null) return false;
+    public String getName() {
+        return myName;
+    }
 
-    return true;
-  }
+    public boolean isAlwaysStopAt() {
+        return !myName.equals(Template.SELECTION) && myAlwaysStopAt;
+    }
 
-  public int hashCode() {
-    int result;
-    result = (myName != null ? myName.hashCode() : 0);
-    result = 29 * result + (myAlwaysStopAt ? 1 : 0);
-    result = 29 * result + (mySkipOnStart ? 1 : 0);
-    result = 29 * result + (myExpressionString != null ? myExpressionString.hashCode() : 0);
-    result = 29 * result + (myDefaultValueString != null ? myDefaultValueString.hashCode() : 0);
-    return result;
-  }
+    public void setAlwaysStopAt(boolean alwaysStopAt) {
+        myAlwaysStopAt = alwaysStopAt;
+    }
 
-  @Override
-  public String toString() {
-    return "Variable{" +
-           "myName='" + myName + '\'' +
-           ", myAlwaysStopAt=" + myAlwaysStopAt +
-           ", myExpressionString='" + myExpressionString + '\'' +
-           ", myDefaultValueString='" + myDefaultValueString + '\'' +
-           ", mySkipOnStart=" + mySkipOnStart +
-           '}';
-  }
+    @Override
+    public Object clone() {
+        return new Variable(myName, myExpressionString, myDefaultValueString, myAlwaysStopAt);
+    }
 
-  public boolean skipOnStart() {
-    return mySkipOnStart;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof Variable that
+            && myAlwaysStopAt == that.myAlwaysStopAt
+            && mySkipOnStart == that.mySkipOnStart
+            && Objects.equals(myDefaultValueString, that.myDefaultValueString)
+            && Objects.equals(myExpressionString, that.myExpressionString)
+            && Objects.equals(myName, that.myName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(myName);
+        result = 29 * result + Boolean.hashCode(myAlwaysStopAt);
+        result = 29 * result + Boolean.hashCode(mySkipOnStart);
+        result = 29 * result + Objects.hashCode(myExpressionString);
+        result = 29 * result + Objects.hashCode(myDefaultValueString);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Variable{" +
+            "myName='" + myName + '\'' +
+            ", myAlwaysStopAt=" + myAlwaysStopAt +
+            ", myExpressionString='" + myExpressionString + '\'' +
+            ", myDefaultValueString='" + myDefaultValueString + '\'' +
+            ", mySkipOnStart=" + mySkipOnStart +
+            '}';
+    }
+
+    public boolean skipOnStart() {
+        return mySkipOnStart;
+    }
 }

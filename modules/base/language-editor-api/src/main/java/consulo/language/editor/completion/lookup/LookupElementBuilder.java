@@ -93,8 +93,8 @@ public final class LookupElementBuilder extends LookupElement {
 
     @RequiredReadAction
     public static LookupElementBuilder create(Object lookupObject, String lookupString) {
-        if (lookupObject instanceof PsiElement) {
-            PsiUtilCore.ensureValid((PsiElement) lookupObject);
+        if (lookupObject instanceof PsiElement elem) {
+            PsiUtilCore.ensureValid(elem);
         }
         return new LookupElementBuilder(lookupString, lookupObject);
     }
@@ -640,7 +640,7 @@ public final class LookupElementBuilder extends LookupElement {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -651,8 +651,9 @@ public final class LookupElementBuilder extends LookupElement {
         LookupElementBuilder that = (LookupElementBuilder) o;
 
         InsertHandler<LookupElement> insertHandler = that.myInsertHandler;
-        if (myInsertHandler != null && insertHandler != null ? !myInsertHandler.getClass()
-            .equals(insertHandler.getClass()) : myInsertHandler != insertHandler) {
+        if (myInsertHandler != null && insertHandler != null
+            ? !myInsertHandler.getClass().equals(insertHandler.getClass())
+            : myInsertHandler != insertHandler) {
             return false;
         }
         if (!myLookupString.equals(that.myLookupString)) {
@@ -663,11 +664,7 @@ public final class LookupElementBuilder extends LookupElement {
         }
 
         LookupElementRenderer<LookupElement> renderer = that.myRenderer;
-        if (myRenderer != null && renderer != null ? !myRenderer.getClass().equals(renderer.getClass()) : myRenderer != renderer) {
-            return false;
-        }
-
-        return true;
+        return myRenderer != null && renderer != null ? myRenderer.getClass().equals(renderer.getClass()) : myRenderer == renderer;
     }
 
     @Override
@@ -677,8 +674,7 @@ public final class LookupElementBuilder extends LookupElement {
 
     @Override
     public int hashCode() {
-        int result = 0;
-        result = 31 * result + (myInsertHandler != null ? myInsertHandler.getClass().hashCode() : 0);
+        int result = (myInsertHandler != null ? myInsertHandler.getClass().hashCode() : 0);
         result = 31 * result + (myLookupString.hashCode());
         result = 31 * result + (myObject.hashCode());
         result = 31 * result + (myRenderer != null ? myRenderer.getClass().hashCode() : 0);
