@@ -20,6 +20,7 @@ import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
+import consulo.ui.internal.InvalidUIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
@@ -143,7 +144,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
      */
     default UIAccess getUIAccess() {
         UIAccess uiAccess = getUserData(UIAccess.KEY);
-
-        return uiAccess == null || !uiAccess.isValid() ? getApplication().getLastUIAccess() : uiAccess;
+        return uiAccess == null || !uiAccess.isValid() ? InvalidUIAccess.INSTANCE : uiAccess;
     }
 }

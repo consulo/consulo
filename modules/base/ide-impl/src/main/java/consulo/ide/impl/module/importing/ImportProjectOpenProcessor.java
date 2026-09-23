@@ -142,8 +142,8 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
 
   private CoroutineStep<ImportRequest, ImportRequest> askOpenOrReimport(UIAccess uiAccess) {
     return CompletableFutureStep.await(request -> {
-      // Headless or no existing project — go straight to import
-      if (uiAccess.isHeadless() || !DefaultProjectOpenProcessor.getInstance().canOpenProject(Path.of(request.expectedProjectPath))) {
+
+      if (!DefaultProjectOpenProcessor.getInstance().canOpenProject(Path.of(request.expectedProjectPath))) {
         return CompletableFuture.completedFuture(request);
       }
 

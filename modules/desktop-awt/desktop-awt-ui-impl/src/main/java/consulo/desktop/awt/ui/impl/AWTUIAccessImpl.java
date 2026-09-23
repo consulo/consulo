@@ -55,11 +55,6 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
     }
 
     @Override
-    public boolean isHeadless() {
-        return GraphicsEnvironment.isHeadless();
-    }
-
-    @Override
     public boolean isInModalContext() {
         return LaterInvocator.isInModalContext();
     }

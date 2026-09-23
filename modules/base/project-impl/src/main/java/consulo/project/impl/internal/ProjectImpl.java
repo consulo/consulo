@@ -74,6 +74,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
     private Supplier<StartupManager> myStartupManagerProvider = LazyValue.notNull(() -> getInstance(StartupManager.class));
+
     private Supplier<CoroutineContext> myCoroutineContext = LazyValue.notNull(() -> {
         Application application = getApplication();
         CoroutineContext context = application.coroutineContext().copy();

@@ -245,7 +245,9 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return true if the current thread is the Swing dispatch thread, false otherwise.
      */
-    boolean isDispatchThread();
+    default boolean isDispatchThread() {
+        return UIAccess.isUIThread();
+    }
 
     /**
      * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -254,6 +256,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @param runnable the runnable to execute.
      */
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     void invokeLater(@RequiredUIAccess Runnable runnable);
 
     /**
@@ -264,6 +268,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param runnable the runnable to execute.
      * @param expired  condition to check before execution.
      */
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     void invokeLater(@RequiredUIAccess Runnable runnable, BooleanSupplier expired);
 
     /**
@@ -274,6 +280,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param runnable the runnable to execute.
      * @param state    the state in which the runnable will be executed.
      */
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state);
 
     /**
@@ -286,12 +294,16 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param state    the state in which the runnable will be executed.
      * @param expired  condition to check before execution.
      */
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state, BooleanSupplier expired);
 
     /**
      * Same as {@link #invokeAndWait(Runnable, ModalityState)}, using {@link #getDefaultModalityState()}.
      */
     @RequiredUIAccess
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     default void invokeAndWait(@RequiredUIAccess Runnable runnable) throws ProcessCanceledException {
         invokeAndWait(runnable, getDefaultModalityState());
     }
@@ -309,6 +321,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param modalityState the state in which the runnable will be executed.
      */
     @RequiredUIAccess
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     void invokeAndWait(@RequiredUIAccess Runnable runnable, ModalityState modalityState);
 
     /**
@@ -384,12 +398,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return true if IDE is running in command line  mode, false otherwise
      */
+    @Deprecated
+    @DeprecationInfo("Unused")
     default boolean isCommandLine() {
         return false;
     }
 
     default ProgressIndicatorProvider getProgressManager() {
-        return getComponent(ProgressIndicatorProvider.class);
+        return getInstance(ProgressIndicatorProvider.class);
     }
 
     @Override
@@ -478,6 +494,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * @return last UIAccess for application
      */
+    @Deprecated
+    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
     UIAccess getLastUIAccess();
 
     /**

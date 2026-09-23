@@ -27,93 +27,90 @@ import java.util.concurrent.*;
  * @since 14/09/2023
  */
 public abstract class BaseUIAccessScheduler extends AbstractExecutorService implements UIAccessScheduler {
-  private final ScheduledExecutorService myScheduledExecutorService;
+    private final ScheduledExecutorService myScheduledExecutorService;
 
-  public BaseUIAccessScheduler( ScheduledExecutorService scheduledExecutorService) {
-    myScheduledExecutorService = scheduledExecutorService;
-  }
+    public BaseUIAccessScheduler(ScheduledExecutorService scheduledExecutorService) {
+        myScheduledExecutorService = scheduledExecutorService;
+    }
 
-  
-  @Override
-  public ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit) {
-    return myScheduledExecutorService.schedule(() -> runWithModalityState(command, modalityState), delay, unit);
-  }
+    @Override
+    public ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit) {
+        return myScheduledExecutorService.schedule(() -> runWithModalityState(command, modalityState), delay, unit);
+    }
 
-  public abstract void runWithModalityState(Runnable runnable, ModalityState modalityState);
+    public abstract void runWithModalityState(Runnable runnable, ModalityState modalityState);
 
-  
-  @Override
-  public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
-    return myScheduledExecutorService.schedule(wrap(command), delay, unit);
-  }
 
-  
-  @Override
-  public <V> ScheduledFuture<V> schedule(Callable<V> callable,
-                                         long delay,
-                                         TimeUnit unit) {
-    return myScheduledExecutorService.schedule(() -> uiAccess().<V>giveAndWaitIfNeed(() -> {
-      try {
-        return callable.call();
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }), delay, unit);
-  }
+    @Override
+    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+        return myScheduledExecutorService.schedule(wrap(command), delay, unit);
+    }
 
-  
-  @Override
-  public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
-                                                long initialDelay,
-                                                long period,
-                                                TimeUnit unit) {
-    return myScheduledExecutorService.scheduleAtFixedRate(wrap(command), initialDelay, period, unit);
-  }
+    @Override
+    public <V> ScheduledFuture<V> schedule(Callable<V> callable,
+                                           long delay,
+                                           TimeUnit unit) {
+        return myScheduledExecutorService.schedule(() -> uiAccess().<V>giveAndWaitIfNeed(() -> {
+            try {
+                return callable.call();
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }), delay, unit);
+    }
 
-  
-  @Override
-  public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
-                                                   long initialDelay,
-                                                   long delay,
-                                                   TimeUnit unit) {
-    return myScheduledExecutorService.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
-  }
 
-  private Runnable wrap(Runnable command) {
-    return () -> uiAccess().execute(command);
-  }
+    @Override
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
+                                                  long initialDelay,
+                                                  long period,
+                                                  TimeUnit unit) {
+        return myScheduledExecutorService.scheduleAtFixedRate(wrap(command), initialDelay, period, unit);
+    }
 
-  @Override
-  public void execute(Runnable command) {
-    uiAccess().execute(command);
-  }
 
-  @Override
-  public void shutdown() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
+                                                     long initialDelay,
+                                                     long delay,
+                                                     TimeUnit unit) {
+        return myScheduledExecutorService.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
+    }
 
-  @Override
-  public List<Runnable> shutdownNow() {
-    throw new UnsupportedOperationException();
-  }
+    private Runnable wrap(Runnable command) {
+        return () -> uiAccess().execute(command);
+    }
 
-  @Override
-  public boolean isShutdown() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void execute(Runnable command) {
+        uiAccess().execute(command);
+    }
 
-  @Override
-  public boolean isTerminated() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void shutdown() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public List<Runnable> shutdownNow() {
+        throw new UnsupportedOperationException();
+    }
 
-  
-  protected abstract UIAccess uiAccess();
+    @Override
+    public boolean isShutdown() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isTerminated() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        throw new UnsupportedOperationException();
+    }
+
+    protected abstract UIAccess uiAccess();
 }
