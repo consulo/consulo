@@ -121,7 +121,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
   public SearchScope intersectWith(LocalSearchScope localScope2) {
     PsiElement[] elements2 = localScope2.getScope();
-    List<PsiElement> result = new ArrayList<PsiElement>(elements2.length);
+    List<PsiElement> result = new ArrayList<>(elements2.length);
     for (PsiElement element2 : elements2) {
       if (PsiSearchScopeUtil.isInScope(this, element2)) {
         result.add(element2);
@@ -427,13 +427,9 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof IntersectionScope)) return false;
-
-      IntersectionScope that = (IntersectionScope)o;
-
-      return myScope1.equals(that.myScope1) && myScope2.equals(that.myScope2);
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o instanceof IntersectionScope that && myScope1.equals(that.myScope1) && myScope2.equals(that.myScope2);
     }
 
     @Override
@@ -481,7 +477,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
     @Override
     public boolean isSearchOutsideRootModel() {
-      return ContainerUtil.find(myScopes, scope -> scope.isSearchOutsideRootModel()) != null;
+      return ContainerUtil.find(myScopes, GlobalSearchScope::isSearchOutsideRootModel) != null;
     }
 
     @Override
@@ -514,17 +510,16 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
     @Override
     public boolean isSearchInLibraries() {
-      return ContainerUtil.find(myScopes, scope -> scope.isSearchInLibraries()) != null;
+      return ContainerUtil.find(myScopes, GlobalSearchScope::isSearchInLibraries) != null;
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof UnionScope)) return false;
-
-      UnionScope that = (UnionScope)o;
-
-      return new HashSet<GlobalSearchScope>(Arrays.asList(myScopes)).equals(new HashSet<GlobalSearchScope>(Arrays.asList(that.myScopes)));
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      return o instanceof UnionScope that
+        && new HashSet<>(Arrays.asList(myScopes)).equals(new HashSet<>(Arrays.asList(that.myScopes)));
     }
 
     @Override
@@ -580,7 +575,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       if (scope instanceof FileTypeRestrictionScope) {
         FileTypeRestrictionScope restrict = (FileTypeRestrictionScope)scope;
         if (restrict.myBaseScope == myBaseScope) {
-          List<FileType> intersection = new ArrayList<FileType>(Arrays.asList(restrict.myFileTypes));
+          List<FileType> intersection = new ArrayList<>(Arrays.asList(restrict.myFileTypes));
           intersection.retainAll(Arrays.asList(myFileTypes));
           return new FileTypeRestrictionScope(myBaseScope, intersection.toArray(new FileType[intersection.size()]));
         }
@@ -600,21 +595,14 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof FileTypeRestrictionScope)) return false;
-      if (!super.equals(o)) return false;
-
-      FileTypeRestrictionScope that = (FileTypeRestrictionScope)o;
-
-      return Arrays.equals(myFileTypes, that.myFileTypes);
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o instanceof FileTypeRestrictionScope that && super.equals(o) && Arrays.equals(myFileTypes, that.myFileTypes);
     }
 
     @Override
     public int hashCode() {
-      int result = super.hashCode();
-      result = 31 * result + Arrays.hashCode(myFileTypes);
-      return result;
+      return 31 * super.hashCode() + Arrays.hashCode(myFileTypes);
     }
 
     @Override
@@ -742,8 +730,9 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean equals(Object o) {
-      return this == o || o instanceof FilesScope && myFiles.equals(((FilesScope)o).myFiles);
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o instanceof FilesScope that && myFiles.equals(that.myFiles);
     }
 
     @Override

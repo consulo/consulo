@@ -61,9 +61,11 @@ public class PackageEntry {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj == this
-            || obj instanceof PackageEntry that
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof PackageEntry that
             && myWithSubpackages == that.myWithSubpackages
             && isStatic() == that.isStatic()
             && Objects.equals(myPackageName, that.myPackageName);
@@ -97,11 +99,7 @@ public class PackageEntry {
         return this == BLANK_LINE_ENTRY || this == ALL_OTHER_IMPORTS_ENTRY || this == ALL_OTHER_STATIC_IMPORTS_ENTRY;
     }
 
-    public boolean isBetterMatchForPackageThan(
-        @Nullable PackageEntry entry,
-        String packageName,
-        boolean isStatic
-    ) {
+    public boolean isBetterMatchForPackageThan(@Nullable PackageEntry entry, String packageName, boolean isStatic) {
         if (isStatic() != isStatic || !matchesPackageName(packageName)) {
             return false;
         }

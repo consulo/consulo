@@ -15,43 +15,46 @@
  */
 package consulo.language.psi.stub.todo;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author Eugene Zhuravlev
  * @since 2008-01-20
  */
 public class TodoIndexEntry {
-  private final String pattern;
-  private final boolean caseSensitive;
+    private final String pattern;
+    private final boolean caseSensitive;
 
-  public TodoIndexEntry(String pattern, boolean caseSensitive) {
-    this.pattern = pattern;
-    this.caseSensitive = caseSensitive;
-  }
+    public TodoIndexEntry(String pattern, boolean caseSensitive) {
+        this.pattern = pattern;
+        this.caseSensitive = caseSensitive;
+    }
 
-  public String getPattern() {
-    return pattern;
-  }
+    public String getPattern() {
+        return pattern;
+    }
 
-  public boolean isCaseSensitive() {
-    return caseSensitive;
-  }
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    TodoIndexEntry that = (TodoIndexEntry)o;
+        TodoIndexEntry that = (TodoIndexEntry) o;
 
-    if (caseSensitive != that.caseSensitive) return false;
-    if (!pattern.equals(that.pattern)) return false;
+        return caseSensitive == that.caseSensitive
+            && pattern.equals(that.pattern);
+    }
 
-    return true;
-  }
-
-  public int hashCode() {
-    int result;
-    result = pattern.hashCode();
-    result = 31 * result + (caseSensitive ? 1 : 0);
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * pattern.hashCode() + Boolean.hashCode(caseSensitive);
+    }
 }

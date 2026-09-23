@@ -15,47 +15,49 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author peter
  */
-public class FilterPattern extends ObjectPattern<Object,FilterPattern> {
-  private final @Nullable ElementFilter myFilter;
+public class FilterPattern extends ObjectPattern<Object, FilterPattern> {
+    private final @Nullable ElementFilter myFilter;
 
-  public FilterPattern(final @Nullable ElementFilter filter) {
-    super(new InitialPatternCondition<Object>(Object.class) {
-      @Override
-      public boolean accepts(@Nullable Object o, ProcessingContext context) {
-        return filter == null ||
-               o != null &&
-               filter.isClassAcceptable(o.getClass()) &&
-               filter.isAcceptable(o, o instanceof PsiElement ? (PsiElement)o : null);
-      }
-    });
-    myFilter = filter;
-  }
+    public FilterPattern(final @Nullable ElementFilter filter) {
+        super(new InitialPatternCondition<>(Object.class) {
+            @Override
+            @RequiredReadAction
+            public boolean accepts(@Nullable Object o, ProcessingContext context) {
+                if (filter == null) {
+                    return true;
+                }
+                return o != null
+                    && filter.isClassAcceptable(o.getClass())
+                    && filter.isAcceptable(o, o instanceof PsiElement elem ? elem : null);
+            }
+        });
+        myFilter = filter;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FilterPattern)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof FilterPattern that && Objects.equals(myFilter, that.myFilter);
+    }
 
-    FilterPattern that = (FilterPattern)o;
+    @Override
+    public int hashCode() {
+        return (myFilter != null ? myFilter.hashCode() : 0);
+    }
 
-    if (myFilter != null ? !myFilter.equals(that.myFilter) : that.myFilter != null) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    return (myFilter != null ? myFilter.hashCode() : 0);
-  }
-
-  @Override
-  public String toString() {
-    return super.toString() + " & " + myFilter;
-  }
+    @Override
+    public String toString() {
+        return super.toString() + " & " + myFilter;
+    }
 }

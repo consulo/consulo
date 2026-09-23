@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.image.ImageKey;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -59,14 +60,12 @@ public class HeadlessImageKey implements ImageKey {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof HeadlessImageKey that)) {
-            return false;
-        }
-        return myWidth == that.myWidth
+        return o instanceof HeadlessImageKey that
+            && myWidth == that.myWidth
             && myHeight == that.myHeight
             && myGroupId.equals(that.myGroupId)
             && myImageId.equals(that.myImageId);

@@ -15,6 +15,7 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 
 import org.jspecify.annotations.Nullable;
@@ -23,157 +24,171 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public final class PsiElementRef<T extends PsiElement> {
-  private static final Logger LOG = Logger.getInstance(PsiElementRef.class);
-  private volatile PsiRefColleague<T> myColleague;
+    private static final Logger LOG = Logger.getInstance(PsiElementRef.class);
+    private volatile PsiRefColleague<T> myColleague;
 
-  public PsiElementRef(PsiRefColleague<T> colleague) {
-    myColleague = colleague;
-  }
-
-  public final boolean isImaginary() {
-    return getPsiElement() == null;
-  }
-
-  public final @Nullable T getPsiElement() {
-    return myColleague.getPsiElement();
-  }
-
-  public final T ensurePsiElementExists() {
-    PsiRefColleague.Real<T> realColleague = myColleague.makeReal();
-    myColleague = realColleague;
-    return realColleague.getPsiElement();
-  }
-
-  public final PsiElement getRoot() {
-    return myColleague.getRoot();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    return o instanceof PsiElementRef && myColleague.equals(((PsiElementRef) o).myColleague);
-  }
-
-  @Override
-  public int hashCode() {
-    return myColleague.hashCode();
-  }
-
-  public final boolean isValid() {
-    return myColleague.isValid();
-  }
-
-  public static <T extends PsiElement> PsiElementRef<T> real(T element) {
-    return new PsiElementRef<T>(new PsiRefColleague.Real<T>(element));
-  }
-
-  public static <Child extends PsiElement, Parent extends PsiElement>
-  PsiElementRef<Child> imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
-    return new PsiElementRef<Child>(new PsiRefColleague.Imaginary<Child, Parent>(parent, creator));
-  }
-
-  public PsiManager getPsiManager() {
-    return myColleague.getRoot().getManager();
-  }
-
-  private interface PsiRefColleague<T extends PsiElement> {
-    boolean isValid();
-
-    @Nullable T getPsiElement();
-
-    Real<T> makeReal();
-
-    PsiElement getRoot();
-
-    class Real<T extends PsiElement> implements PsiRefColleague<T> {
-      private final T myElement;
-
-      public Real(T element) {
-        LOG.assertTrue(element.isValid());
-        myElement = element;
-      }
-
-      @Override
-      public T getPsiElement() {
-        return myElement;
-      }
-
-      @Override
-      public boolean isValid() {
-        return myElement.isValid();
-      }
-
-      @Override
-      public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Real that = (Real) o;
-
-        return myElement.equals(that.myElement);
-      }
-
-      @Override
-      public int hashCode() {
-        return myElement.hashCode();
-      }
-
-      @Override
-      public Real<T> makeReal() {
-        return this;
-      }
-
-      @Override
-      public PsiElement getRoot() {
-        return myElement;
-      }
+    public PsiElementRef(PsiRefColleague<T> colleague) {
+        myColleague = colleague;
     }
 
-    class Imaginary<Child extends PsiElement, Parent extends PsiElement> implements PsiRefColleague<Child> {
-      private final PsiElementRef<? extends Parent> myParent;
-      private final PsiRefElementCreator<Parent, Child> myCreator;
-
-      public Imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
-        myParent = parent;
-        myCreator = creator;
-      }
-
-      @Override
-      public boolean isValid() {
-        return myParent.isValid();
-      }
-
-      @Override
-      public @Nullable Child getPsiElement() {
-        return null;
-      }
-
-      @Override
-      public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Imaginary that = (Imaginary)o;
-
-        return myCreator.equals(that.myCreator)
-          && myParent.equals(that.myParent);
-      }
-
-      @Override
-      public int hashCode() {
-        int result = myParent.hashCode();
-        result = 31 * result + myCreator.hashCode();
-        return result;
-      }
-
-      @Override
-      public Real<Child> makeReal() {
-        return new Real<Child>(myCreator.createChild(myParent.ensurePsiElementExists()));
-      }
-
-      @Override
-      public PsiElement getRoot() {
-        return myParent.getRoot();
-      }
+    public final boolean isImaginary() {
+        return getPsiElement() == null;
     }
-  }
+
+    public final @Nullable T getPsiElement() {
+        return myColleague.getPsiElement();
+    }
+
+    public final T ensurePsiElementExists() {
+        PsiRefColleague.Real<T> realColleague = myColleague.makeReal();
+        myColleague = realColleague;
+        return realColleague.getPsiElement();
+    }
+
+    public final PsiElement getRoot() {
+        return myColleague.getRoot();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return o == this
+            || o instanceof PsiElementRef that && myColleague.equals(that.myColleague);
+    }
+
+    @Override
+    public int hashCode() {
+        return myColleague.hashCode();
+    }
+
+    public final boolean isValid() {
+        return myColleague.isValid();
+    }
+
+    @RequiredReadAction
+    public static <T extends PsiElement> PsiElementRef<T> real(T element) {
+        return new PsiElementRef<>(new PsiRefColleague.Real<>(element));
+    }
+
+    public static <Child extends PsiElement, Parent extends PsiElement>
+    PsiElementRef<Child> imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
+        return new PsiElementRef<>(new PsiRefColleague.Imaginary<>(parent, creator));
+    }
+
+    public PsiManager getPsiManager() {
+        return myColleague.getRoot().getManager();
+    }
+
+    private interface PsiRefColleague<T extends PsiElement> {
+        boolean isValid();
+
+        @Nullable
+        T getPsiElement();
+
+        Real<T> makeReal();
+
+        PsiElement getRoot();
+
+        class Real<T extends PsiElement> implements PsiRefColleague<T> {
+            private final T myElement;
+
+            @RequiredReadAction
+            public Real(T element) {
+                LOG.assertTrue(element.isValid());
+                myElement = element;
+            }
+
+            @Override
+            public T getPsiElement() {
+                return myElement;
+            }
+
+            @Override
+            @RequiredReadAction
+            public boolean isValid() {
+                return myElement.isValid();
+            }
+
+            @Override
+            public boolean equals(@Nullable Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || getClass() != o.getClass()) {
+                    return false;
+                }
+
+                Real that = (Real) o;
+
+                return myElement.equals(that.myElement);
+            }
+
+            @Override
+            public int hashCode() {
+                return myElement.hashCode();
+            }
+
+            @Override
+            public Real<T> makeReal() {
+                return this;
+            }
+
+            @Override
+            public PsiElement getRoot() {
+                return myElement;
+            }
+        }
+
+        class Imaginary<Child extends PsiElement, Parent extends PsiElement> implements PsiRefColleague<Child> {
+            private final PsiElementRef<? extends Parent> myParent;
+            private final PsiRefElementCreator<Parent, Child> myCreator;
+
+            public Imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
+                myParent = parent;
+                myCreator = creator;
+            }
+
+            @Override
+            public boolean isValid() {
+                return myParent.isValid();
+            }
+
+            @Override
+            public @Nullable Child getPsiElement() {
+                return null;
+            }
+
+            @Override
+            public boolean equals(@Nullable Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || getClass() != o.getClass()) {
+                    return false;
+                }
+
+                Imaginary that = (Imaginary) o;
+
+                return myCreator.equals(that.myCreator)
+                    && myParent.equals(that.myParent);
+            }
+
+            @Override
+            public int hashCode() {
+                int result = myParent.hashCode();
+                result = 31 * result + myCreator.hashCode();
+                return result;
+            }
+
+            @Override
+            @RequiredReadAction
+            public Real<Child> makeReal() {
+                return new Real<>(myCreator.createChild(myParent.ensurePsiElementExists()));
+            }
+
+            @Override
+            public PsiElement getRoot() {
+                return myParent.getRoot();
+            }
+        }
+    }
 }

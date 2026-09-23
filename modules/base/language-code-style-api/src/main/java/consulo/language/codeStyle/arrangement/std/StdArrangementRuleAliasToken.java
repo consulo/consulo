@@ -16,91 +16,90 @@
 package consulo.language.codeStyle.arrangement.std;
 
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Svetlana.Zemlyanskaya
  */
 public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken implements Cloneable {
-  private String myName;
+    private String myName;
 
-  /**
-   * All usages of alias token will be replaced by this sequence of rules
-   */
-  private List<StdArrangementMatchRule> myDefinitionRules;
+    /**
+     * All usages of alias token will be replaced by this sequence of rules
+     */
+    private List<StdArrangementMatchRule> myDefinitionRules;
 
-  public StdArrangementRuleAliasToken(String name) {
-    this(name, List.of());
-  }
-
-  public StdArrangementRuleAliasToken(String name,
-                                      List<StdArrangementMatchRule> definitionRules) {
-    this(createIdByName(name), name, definitionRules);
-    myDefinitionRules = definitionRules;
-  }
-
-  public StdArrangementRuleAliasToken(String id, String name,
-                                      List<StdArrangementMatchRule> definitionRules) {
-    super(id, createRepresentationValue(name), StdArrangementTokenType.ALIAS);
-    myName = name;
-    myDefinitionRules = definitionRules;
-  }
-
-  
-  private static String createRepresentationValue(String name) {
-    return "by " + name;
-  }
-
-  private static String createIdByName(String name) {
-    return name.replaceAll("\\s+", "_");
-  }
-
-  public String getName() {
-    return myName;
-  }
-
-  public List<StdArrangementMatchRule> getDefinitionRules() {
-    return myDefinitionRules;
-  }
-
-  public void setDefinitionRules(List<StdArrangementMatchRule> definitionRules) {
-    myDefinitionRules = definitionRules;
-  }
-
-  public void setTokenName(String name) {
-    myId = name.replaceAll("\\s+", "_");
-    myRepresentationName = createRepresentationValue(name);
-    myName = name;
-  }
-
-  @Override
-  protected StdArrangementRuleAliasToken clone() {
-    List<StdArrangementMatchRule> newValue = new ArrayList<StdArrangementMatchRule>(myDefinitionRules.size());
-    for (StdArrangementMatchRule rule : myDefinitionRules) {
-      newValue.add(rule.clone());
+    public StdArrangementRuleAliasToken(String name) {
+        this(name, List.of());
     }
-    return new StdArrangementRuleAliasToken(getName(), newValue);
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public StdArrangementRuleAliasToken(String name, List<StdArrangementMatchRule> definitionRules) {
+        this(createIdByName(name), name, definitionRules);
+        myDefinitionRules = definitionRules;
+    }
 
-    StdArrangementRuleAliasToken token = (StdArrangementRuleAliasToken)o;
+    public StdArrangementRuleAliasToken(String id, String name, List<StdArrangementMatchRule> definitionRules) {
+        super(id, createRepresentationValue(name), StdArrangementTokenType.ALIAS);
+        myName = name;
+        myDefinitionRules = definitionRules;
+    }
 
-    if (!super.equals(o)) return false;
-    if (myDefinitionRules != null ? !myDefinitionRules.equals(token.myDefinitionRules) : token.myDefinitionRules != null) return false;
+    private static String createRepresentationValue(String name) {
+        return "by " + name;
+    }
 
-    return true;
-  }
+    private static String createIdByName(String name) {
+        return name.replaceAll("\\s+", "_");
+    }
 
-  @Override
-  public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (myDefinitionRules != null ? myDefinitionRules.hashCode() : 0);
-    return result;
-  }
+    public String getName() {
+        return myName;
+    }
+
+    public List<StdArrangementMatchRule> getDefinitionRules() {
+        return myDefinitionRules;
+    }
+
+    public void setDefinitionRules(List<StdArrangementMatchRule> definitionRules) {
+        myDefinitionRules = definitionRules;
+    }
+
+    public void setTokenName(String name) {
+        myId = name.replaceAll("\\s+", "_");
+        myRepresentationName = createRepresentationValue(name);
+        myName = name;
+    }
+
+    @Override
+    protected StdArrangementRuleAliasToken clone() {
+        List<StdArrangementMatchRule> newValue = new ArrayList<>(myDefinitionRules.size());
+        for (StdArrangementMatchRule rule : myDefinitionRules) {
+            newValue.add(rule.clone());
+        }
+        return new StdArrangementRuleAliasToken(getName(), newValue);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        StdArrangementRuleAliasToken that = (StdArrangementRuleAliasToken) o;
+
+        return super.equals(o)
+            && Objects.equals(myDefinitionRules, that.myDefinitionRules);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * super.hashCode() + Objects.hashCode(myDefinitionRules);
+    }
 }

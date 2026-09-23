@@ -24,7 +24,9 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
+import java.util.Objects;
 
 import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.END_SECTION;
 import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.START_SECTION;
@@ -33,109 +35,109 @@ import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Se
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementSectionRule implements Cloneable {
-  private final @Nullable String myStartComment;
-  private final @Nullable String myEndComment;
-  private final List<StdArrangementMatchRule> myMatchRules;
+    private final @Nullable String myStartComment;
+    private final @Nullable String myEndComment;
+    private final List<StdArrangementMatchRule> myMatchRules;
 
-  private ArrangementSectionRule(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
-    myStartComment = start;
-    myEndComment = end;
-    myMatchRules = rules;
-  }
-
-  public List<StdArrangementMatchRule> getMatchRules() {
-    return myMatchRules;
-  }
-
-  public static ArrangementSectionRule create(StdArrangementMatchRule... rules) {
-    return create(null, null, rules);
-  }
-
-  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, StdArrangementMatchRule... rules) {
-    return create(start, end, ContainerUtil.newArrayList(rules));
-  }
-
-  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
-    List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
-    if (StringUtil.isNotEmpty(start)) {
-      matchRules.add(createSectionRule(start, START_SECTION));
-    }
-    matchRules.addAll(rules);
-    if (StringUtil.isNotEmpty(end)) {
-      matchRules.add(createSectionRule(end, END_SECTION));
-    }
-    return new ArrangementSectionRule(start, end, matchRules);
-  }
-
-  private static @Nullable StdArrangementMatchRule createSectionRule(@Nullable String comment, ArrangementSettingsToken token) {
-    if (StringUtil.isEmpty(comment)) {
-      return null;
-    }
-    ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(token);
-    ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(StdArrangementTokens.Regexp.TEXT, comment);
-    ArrangementMatchCondition condition = ArrangementUtil.combine(type, text);
-    return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
-  }
-
-  public @Nullable String getStartComment() {
-    return myStartComment;
-  }
-
-  public @Nullable String getEndComment() {
-    return myEndComment;
-  }
-
-  @Override
-  public int hashCode() {
-    int factor = 31;
-    int hash = StringUtil.notNullize(myStartComment).hashCode() + factor * StringUtil.notNullize(myEndComment).hashCode();
-    for (StdArrangementMatchRule rule : myMatchRules) {
-      factor *= factor;
-      hash += rule.hashCode() * factor;
-    }
-    return hash;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    private ArrangementSectionRule(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
+        myStartComment = start;
+        myEndComment = end;
+        myMatchRules = rules;
     }
 
-    ArrangementSectionRule section = (ArrangementSectionRule)o;
-    if (!StringUtil.equals(myStartComment, section.myStartComment) || !StringUtil.equals(myEndComment, section.myEndComment) || myMatchRules.size() != section.getMatchRules().size()) {
-      return false;
+    public List<StdArrangementMatchRule> getMatchRules() {
+        return myMatchRules;
     }
 
-    List<StdArrangementMatchRule> matchRules = section.getMatchRules();
-    for (int i = 0; i < myMatchRules.size(); i++) {
-      StdArrangementMatchRule rule1 = myMatchRules.get(i);
-      StdArrangementMatchRule rule2 = matchRules.get(i);
-      if (!rule1.equals(rule2)) {
-        return false;
-      }
+    public static ArrangementSectionRule create(StdArrangementMatchRule... rules) {
+        return create(null, null, rules);
     }
 
-    return true;
-  }
-
-  @Override
-  public String toString() {
-    if (StringUtil.isEmpty(myStartComment)) {
-      return "Section: [" + StringUtil.join(myMatchRules, ",") + "]";
+    public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, StdArrangementMatchRule... rules) {
+        return create(start, end, ContainerUtil.newArrayList(rules));
     }
-    return "Section " + "(" + myStartComment + (StringUtil.isEmpty(myEndComment) ? "" : ", " + myEndComment) + ")";
-  }
 
-  @Override
-  public ArrangementSectionRule clone() {
-    List<StdArrangementMatchRule> rules = ContainerUtil.newArrayList();
-    for (StdArrangementMatchRule myMatchRule : myMatchRules) {
-      rules.add(myMatchRule.clone());
+    public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
+        List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
+        if (StringUtil.isNotEmpty(start)) {
+            matchRules.add(createSectionRule(start, START_SECTION));
+        }
+        matchRules.addAll(rules);
+        if (StringUtil.isNotEmpty(end)) {
+            matchRules.add(createSectionRule(end, END_SECTION));
+        }
+        return new ArrangementSectionRule(start, end, matchRules);
     }
-    return new ArrangementSectionRule(myStartComment, myEndComment, rules);
-  }
+
+    private static @Nullable StdArrangementMatchRule createSectionRule(@Nullable String comment, ArrangementSettingsToken token) {
+        if (StringUtil.isEmpty(comment)) {
+            return null;
+        }
+        ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(token);
+        ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(StdArrangementTokens.Regexp.TEXT, comment);
+        ArrangementMatchCondition condition = ArrangementUtil.combine(type, text);
+        return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
+    }
+
+    public @Nullable String getStartComment() {
+        return myStartComment;
+    }
+
+    public @Nullable String getEndComment() {
+        return myEndComment;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 31 * Objects.hashCode(myStartComment) + Objects.hashCode(myEndComment);
+        for (StdArrangementMatchRule rule : myMatchRules) {
+            hash = 31 * hash + rule.hashCode();
+        }
+        return hash;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ArrangementSectionRule section = (ArrangementSectionRule) o;
+        if (!StringUtil.equals(myStartComment, section.myStartComment)
+            || !StringUtil.equals(myEndComment, section.myEndComment)
+            || myMatchRules.size() != section.getMatchRules().size()) {
+            return false;
+        }
+
+        List<StdArrangementMatchRule> matchRules = section.getMatchRules();
+        for (int i = 0; i < myMatchRules.size(); i++) {
+            StdArrangementMatchRule rule1 = myMatchRules.get(i);
+            StdArrangementMatchRule rule2 = matchRules.get(i);
+            if (!rule1.equals(rule2)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (StringUtil.isEmpty(myStartComment)) {
+            return "Section: [" + StringUtil.join(myMatchRules, ",") + "]";
+        }
+        return "Section " + "(" + myStartComment + (StringUtil.isEmpty(myEndComment) ? "" : ", " + myEndComment) + ")";
+    }
+
+    @Override
+    public ArrangementSectionRule clone() {
+        List<StdArrangementMatchRule> rules = ContainerUtil.newArrayList();
+        for (StdArrangementMatchRule myMatchRule : myMatchRules) {
+            rules.add(myMatchRule.clone());
+        }
+        return new ArrangementSectionRule(myStartComment, myEndComment, rules);
+    }
 }

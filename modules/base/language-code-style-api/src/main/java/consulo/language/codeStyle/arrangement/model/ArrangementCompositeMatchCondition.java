@@ -16,6 +16,7 @@
 package consulo.language.codeStyle.arrangement.model;
 
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,73 +26,68 @@ import java.util.Set;
  * Encapsulates composite match condition, e.g. "an entry has type 'field' and modifier 'static'".
  * <p/>
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
- * @since 8/8/12 1:18 PM
+ * @since 2012-08-08
  */
 public class ArrangementCompositeMatchCondition implements ArrangementMatchCondition {
+    private final Set<ArrangementMatchCondition> myOperands = new HashSet<>();
 
-  
-  private final Set<ArrangementMatchCondition> myOperands = new HashSet<ArrangementMatchCondition>();
-
-  public ArrangementCompositeMatchCondition() {
-  }
-
-  public ArrangementCompositeMatchCondition(Collection<? extends ArrangementMatchCondition> conditions) {
-    myOperands.addAll(conditions);
-  }
-
-  
-  public Set<ArrangementMatchCondition> getOperands() {
-    return myOperands;
-  }
-
-  
-  public ArrangementCompositeMatchCondition addOperand(ArrangementMatchCondition condition) {
-    myOperands.add(condition);
-    return this;
-  }
-
-  public void removeOperand(ArrangementMatchCondition condition) {
-    myOperands.remove(condition);
-  }
-  
-  @Override
-  public void invite(ArrangementMatchConditionVisitor visitor) {
-    visitor.visit(this);
-  }
-
-  
-  @Override
-  public ArrangementCompositeMatchCondition clone() {
-    ArrangementCompositeMatchCondition result = new ArrangementCompositeMatchCondition();
-    for (ArrangementMatchCondition operand : myOperands) {
-      result.addOperand(operand.clone());
-    }
-    return result;
-  }
-
-  @Override
-  public int hashCode() {
-    return myOperands.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    public ArrangementCompositeMatchCondition() {
     }
 
-    ArrangementCompositeMatchCondition setting = (ArrangementCompositeMatchCondition)o;
+    public ArrangementCompositeMatchCondition(Collection<? extends ArrangementMatchCondition> conditions) {
+        myOperands.addAll(conditions);
+    }
 
-    return myOperands.equals(setting.myOperands);
-  }
+    public Set<ArrangementMatchCondition> getOperands() {
+        return myOperands;
+    }
 
-  @Override
-  public String toString() {
-    return String.format("(%s)", StringUtil.join(myOperands, " and "));
-  }
+    public ArrangementCompositeMatchCondition addOperand(ArrangementMatchCondition condition) {
+        myOperands.add(condition);
+        return this;
+    }
+
+    public void removeOperand(ArrangementMatchCondition condition) {
+        myOperands.remove(condition);
+    }
+
+    @Override
+    public void invite(ArrangementMatchConditionVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public ArrangementCompositeMatchCondition clone() {
+        ArrangementCompositeMatchCondition result = new ArrangementCompositeMatchCondition();
+        for (ArrangementMatchCondition operand : myOperands) {
+            result.addOperand(operand.clone());
+        }
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return myOperands.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ArrangementCompositeMatchCondition that = (ArrangementCompositeMatchCondition) o;
+
+        return myOperands.equals(that.myOperands);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%s)", StringUtil.join(myOperands, " and "));
+    }
 }

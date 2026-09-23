@@ -17,50 +17,37 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya
  */
 public class ByTextArrangementEntryMatcher implements ArrangementEntryMatcher {
-  
-  private final String myText;
+    private final String myText;
 
-  public ByTextArrangementEntryMatcher(String text) {
-    myText = text;
-  }
-
-  @Override
-  public boolean isMatched(ArrangementEntry entry) {
-    if (entry instanceof TextAwareArrangementEntry) {
-      return StringUtil.equals(((TextAwareArrangementEntry)entry).getText(), myText);
-    }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return myText.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof ByTextArrangementEntryMatcher)) {
-      return false;
+    public ByTextArrangementEntryMatcher(String text) {
+        myText = text;
     }
 
-    ByTextArrangementEntryMatcher matcher = (ByTextArrangementEntryMatcher)o;
-    if (!myText.equals(matcher.myText)) {
-      return false;
+    @Override
+    public boolean isMatched(ArrangementEntry entry) {
+        return entry instanceof TextAwareArrangementEntry arrangementEntry
+            && StringUtil.equals(arrangementEntry.getText(), myText);
     }
 
-    return true;
-  }
+    @Override
+    public int hashCode() {
+        return myText.hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return "with text " + myText;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ByTextArrangementEntryMatcher that && myText.equals(that.myText);
+    }
+
+    @Override
+    public String toString() {
+        return "with text " + myText;
+    }
 }

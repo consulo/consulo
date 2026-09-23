@@ -21,6 +21,7 @@ import consulo.language.psi.stub.StubOutputStream;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,198 +32,195 @@ import java.util.List;
  * @author yole
  */
 public class QualifiedName implements Comparable<QualifiedName> {
-  public static final QualifiedName ROOT = new QualifiedName(0);
+    public static final QualifiedName ROOT = new QualifiedName(0);
 
-  
-  private final List<String> myComponents;
+    private final List<String> myComponents;
 
-  private QualifiedName(int count) {
-    myComponents = new ArrayList<>(count);
-  }
-
-  public static QualifiedName fromComponents(Collection<String> components) {
-    if(components.isEmpty()) {
-      return ROOT;
+    private QualifiedName(int count) {
+        myComponents = new ArrayList<>(count);
     }
-    QualifiedName qName = new QualifiedName(components.size());
-    qName.myComponents.addAll(components);
-    return qName;
-  }
 
-  
-  public static QualifiedName fromComponents(String... components) {
-    if(components.length == 0) {
-      return ROOT;
+    public static QualifiedName fromComponents(Collection<String> components) {
+        if (components.isEmpty()) {
+            return ROOT;
+        }
+        QualifiedName qName = new QualifiedName(components.size());
+        qName.myComponents.addAll(components);
+        return qName;
     }
-    QualifiedName result = new QualifiedName(components.length);
-    Collections.addAll(result.myComponents, components);
-    return result;
-  }
 
-  public QualifiedName append(String name) {
-    QualifiedName result = new QualifiedName(myComponents.size() + 1);
-    result.myComponents.addAll(myComponents);
-    result.myComponents.add(name);
-    return result;
-  }
-
-  public QualifiedName append(QualifiedName qName) {
-    QualifiedName result = new QualifiedName(myComponents.size() + qName.getComponentCount());
-    result.myComponents.addAll(myComponents);
-    result.myComponents.addAll(qName.getComponents());
-    return result;
-  }
-
-  
-  public QualifiedName removeLastComponent() {
-    return removeTail(1);
-  }
-
-  
-  public QualifiedName removeTail(int count) {
-    int size = myComponents.size();
-    QualifiedName result = new QualifiedName(size);
-    result.myComponents.addAll(myComponents);
-    for (int i = 0; i < count && !result.myComponents.isEmpty(); i++) {
-      result.myComponents.remove(result.myComponents.size() - 1);
+    public static QualifiedName fromComponents(String... components) {
+        if (components.length == 0) {
+            return ROOT;
+        }
+        QualifiedName result = new QualifiedName(components.length);
+        Collections.addAll(result.myComponents, components);
+        return result;
     }
-    return result;
-  }
 
-  
-  public QualifiedName removeHead(int count) {
-    int size = myComponents.size();
-    QualifiedName result = new QualifiedName(size);
-    result.myComponents.addAll(myComponents);
-    for (int i = 0; i < count && !result.myComponents.isEmpty(); i++) {
-      result.myComponents.remove(0);
+    public QualifiedName append(String name) {
+        QualifiedName result = new QualifiedName(myComponents.size() + 1);
+        result.myComponents.addAll(myComponents);
+        result.myComponents.add(name);
+        return result;
     }
-    return result;
-  }
 
-  
-  public List<String> getComponents() {
-    return myComponents;
-  }
-
-  public int getComponentCount() {
-    return myComponents.size();
-  }
-
-  public boolean matches(String... components) {
-    if (myComponents.size() != components.length) {
-      return false;
+    public QualifiedName append(QualifiedName qName) {
+        QualifiedName result = new QualifiedName(myComponents.size() + qName.getComponentCount());
+        result.myComponents.addAll(myComponents);
+        result.myComponents.addAll(qName.getComponents());
+        return result;
     }
-    for (int i = 0; i < myComponents.size(); i++) {
-      if (!myComponents.get(i).equals(components[i])) {
-        return false;
-      }
+
+    public QualifiedName removeLastComponent() {
+        return removeTail(1);
     }
-    return true;
-  }
 
-  public boolean matchesPrefix(QualifiedName prefix) {
-    if (getComponentCount() < prefix.getComponentCount()) {
-      return false;
+    public QualifiedName removeTail(int count) {
+        int size = myComponents.size();
+        QualifiedName result = new QualifiedName(size);
+        result.myComponents.addAll(myComponents);
+        for (int i = 0; i < count && !result.myComponents.isEmpty(); i++) {
+            result.myComponents.remove(result.myComponents.size() - 1);
+        }
+        return result;
     }
-    for (int i = 0; i < prefix.getComponentCount(); i++) {
-      String component = getComponents().get(i);
-      if (component == null || !component.equals(prefix.getComponents().get(i))) {
-        return false;
-      }
+
+    public QualifiedName removeHead(int count) {
+        int size = myComponents.size();
+        QualifiedName result = new QualifiedName(size);
+        result.myComponents.addAll(myComponents);
+        for (int i = 0; i < count && !result.myComponents.isEmpty(); i++) {
+            result.myComponents.remove(0);
+        }
+        return result;
     }
-    return true;
-  }
 
-  public boolean endsWith(String suffix) {
-    return suffix.equals(getLastComponent());
-  }
-
-  public static void serialize(@Nullable QualifiedName qName, StubOutputStream dataStream) throws IOException {
-    if (qName == null) {
-      dataStream.writeVarInt(0);
+    public List<String> getComponents() {
+        return myComponents;
     }
-    else {
-      dataStream.writeVarInt(qName.getComponentCount());
-      for (String s : qName.myComponents) {
-        dataStream.writeName(s);
-      }
+
+    public int getComponentCount() {
+        return myComponents.size();
     }
-  }
 
-  public static @Nullable QualifiedName deserialize(StubInputStream dataStream) throws IOException {
-    QualifiedName qName;
-    int size = dataStream.readVarInt();
-    if (size == 0) {
-      qName = null;
+    public boolean matches(String... components) {
+        if (myComponents.size() != components.length) {
+            return false;
+        }
+        for (int i = 0; i < myComponents.size(); i++) {
+            if (!myComponents.get(i).equals(components[i])) {
+                return false;
+            }
+        }
+        return true;
     }
-    else {
-      qName = new QualifiedName(size);
-      for (int i = 0; i < size; i++) {
-        StringRef name = dataStream.readName();
-        qName.myComponents.add(name == null ? null : name.getString());
-      }
+
+    public boolean matchesPrefix(QualifiedName prefix) {
+        if (getComponentCount() < prefix.getComponentCount()) {
+            return false;
+        }
+        for (int i = 0; i < prefix.getComponentCount(); i++) {
+            String component = getComponents().get(i);
+            if (component == null || !component.equals(prefix.getComponents().get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
-    return qName;
-  }
 
-  public @Nullable String getFirstComponent() {
-    if (myComponents.isEmpty()) {
-      return null;
+    public boolean endsWith(String suffix) {
+        return suffix.equals(getLastComponent());
     }
-    return myComponents.get(0);
-  }
 
-  public @Nullable String getLastComponent() {
-    if (myComponents.isEmpty()) {
-      return null;
+    public static void serialize(@Nullable QualifiedName qName, StubOutputStream dataStream) throws IOException {
+        if (qName == null) {
+            dataStream.writeVarInt(0);
+        }
+        else {
+            dataStream.writeVarInt(qName.getComponentCount());
+            for (String s : qName.myComponents) {
+                dataStream.writeName(s);
+            }
+        }
     }
-    return myComponents.get(myComponents.size() - 1);
-  }
 
-  public @Nullable QualifiedName getParent() {
-    if (myComponents.isEmpty()) {
-      return null;
+    public static @Nullable QualifiedName deserialize(StubInputStream dataStream) throws IOException {
+        QualifiedName qName;
+        int size = dataStream.readVarInt();
+        if (size == 0) {
+            qName = null;
+        }
+        else {
+            qName = new QualifiedName(size);
+            for (int i = 0; i < size; i++) {
+                StringRef name = dataStream.readName();
+                qName.myComponents.add(name == null ? null : name.getString());
+            }
+        }
+        return qName;
     }
-    return fromComponents(myComponents.subList(0, myComponents.size() - 1));
-  }
 
-  @Override
-  public String toString() {
-    return join(".");
-  }
-
-  public String join(String separator) {
-    return StringUtil.join(myComponents, separator);
-  }
-
-  
-  public static QualifiedName fromDottedString(String refName) {
-    if(StringUtil.isEmpty(refName)) {
-      return ROOT;
+    public @Nullable String getFirstComponent() {
+        if (myComponents.isEmpty()) {
+            return null;
+        }
+        return myComponents.get(0);
     }
-    return fromComponents(refName.split("\\."));
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    QualifiedName that = (QualifiedName)o;
-    return myComponents.equals(that.myComponents);
-  }
+    public @Nullable String getLastComponent() {
+        if (myComponents.isEmpty()) {
+            return null;
+        }
+        return myComponents.get(myComponents.size() - 1);
+    }
 
-  @Override
-  public int hashCode() {
-    return myComponents.hashCode();
-  }
+    public @Nullable QualifiedName getParent() {
+        if (myComponents.isEmpty()) {
+            return null;
+        }
+        return fromComponents(myComponents.subList(0, myComponents.size() - 1));
+    }
 
-  public QualifiedName subQualifiedName(int fromIndex, int toIndex) {
-    return fromComponents(myComponents.subList(fromIndex, toIndex));
-  }
+    @Override
+    public String toString() {
+        return join(".");
+    }
 
-  @Override
-  public int compareTo(QualifiedName other) {
-    return toString().compareTo(other.toString());
-  }
+    public String join(String separator) {
+        return StringUtil.join(myComponents, separator);
+    }
+
+    public static QualifiedName fromDottedString(String refName) {
+        if (StringUtil.isEmpty(refName)) {
+            return ROOT;
+        }
+        return fromComponents(refName.split("\\."));
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        QualifiedName that = (QualifiedName) o;
+        return myComponents.equals(that.myComponents);
+    }
+
+    @Override
+    public int hashCode() {
+        return myComponents.hashCode();
+    }
+
+    public QualifiedName subQualifiedName(int fromIndex, int toIndex) {
+        return fromComponents(myComponents.subList(fromIndex, toIndex));
+    }
+
+    @Override
+    public int compareTo(QualifiedName other) {
+        return toString().compareTo(other.toString());
+    }
 }

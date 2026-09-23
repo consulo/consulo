@@ -15,40 +15,41 @@
  */
 package consulo.language;
 
+import org.jspecify.annotations.Nullable;
+
 final class ExactMatcher extends LanguageMatcher {
+    private final Language myLanguage;
 
-  private final
-  
-  Language myLanguage;
+    ExactMatcher(Language language) {
+        myLanguage = language;
+    }
 
-  ExactMatcher(Language language) {
-    myLanguage = language;
-  }
+    @Override
+    public boolean matchesLanguage(Language language) {
+        return myLanguage.is(language);
+    }
 
-  @Override
-  public boolean matchesLanguage(Language language) {
-    return myLanguage.is(language);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        ExactMatcher that = (ExactMatcher) o;
 
-    ExactMatcher matcher = (ExactMatcher)o;
+        return myLanguage.equals(that.myLanguage);
+    }
 
-    if (!myLanguage.equals(matcher.myLanguage)) return false;
+    @Override
+    public int hashCode() {
+        return myLanguage.hashCode();
+    }
 
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myLanguage.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return myLanguage.toString();
-  }
+    @Override
+    public String toString() {
+        return myLanguage.toString();
+    }
 }

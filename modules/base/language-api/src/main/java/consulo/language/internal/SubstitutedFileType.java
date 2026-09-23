@@ -98,7 +98,7 @@ public class SubstitutedFileType extends LanguageFileType {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -106,22 +106,14 @@ public class SubstitutedFileType extends LanguageFileType {
             return false;
         }
 
-        SubstitutedFileType type = (SubstitutedFileType) o;
+        SubstitutedFileType that = (SubstitutedFileType) o;
 
-        if (!myOriginalFileType.equals(type.myOriginalFileType)) {
-            return false;
-        }
-        if (!myFileType.equals(type.myFileType)) {
-            return false;
-        }
-
-        return true;
+        return myOriginalFileType.equals(that.myOriginalFileType)
+            && myFileType.equals(that.myFileType);
     }
 
     @Override
     public int hashCode() {
-        int result = myOriginalFileType.hashCode();
-        result = 31 * result + myFileType.hashCode();
-        return result;
+        return 31 * myOriginalFileType.hashCode() + myFileType.hashCode();
     }
 }

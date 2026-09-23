@@ -248,10 +248,13 @@ public class GlobalSearchScopesCore {
     }
 
     @Override
-    public boolean equals(Object obj) {
-      return obj instanceof DirectoryScope directoryScope
-          && myDirectory.equals(directoryScope.myDirectory)
-          && myWithSubdirectories == directoryScope.myWithSubdirectories;
+    public boolean equals(@Nullable Object obj) {
+      if (obj == this) {
+        return true;
+      }
+      return obj instanceof DirectoryScope that
+          && myDirectory.equals(that.myDirectory)
+          && myWithSubdirectories == that.myWithSubdirectories;
     }
 
     @Override
@@ -363,7 +366,7 @@ public class GlobalSearchScopesCore {
       }
       if (scope instanceof DirectoriesScope) {
         DirectoriesScope other = (DirectoriesScope)scope;
-        List<VirtualFile> newDirectories = new ArrayList<VirtualFile>(myDirectories.length + other.myDirectories.length);
+        List<VirtualFile> newDirectories = new ArrayList<>(myDirectories.length + other.myDirectories.length);
         newDirectories.addAll(Arrays.asList(other.myDirectories));
         BitSet newWithSubdirectories = (BitSet)myWithSubdirectories.clone();
         VirtualFile[] directories = other.myDirectories;

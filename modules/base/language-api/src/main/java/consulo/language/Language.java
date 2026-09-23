@@ -192,15 +192,9 @@ public abstract class Language extends UserDataHolderBase {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Language)) {
-            return false;
-        }
-        Language language = (Language) o;
-        return Objects.equals(myID, language.myID);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof Language that && Objects.equals(myID, that.myID);
     }
 
     @Override
@@ -249,19 +243,17 @@ public abstract class Language extends UserDataHolderBase {
 
     public @Nullable LanguageFileType findMyFileType(FileType[] types) {
         for (FileType fileType : types) {
-            if (fileType instanceof LanguageFileType) {
-                LanguageFileType languageFileType = (LanguageFileType) fileType;
-                if (languageFileType.getLanguage() == this && !languageFileType.isSecondary()) {
-                    return languageFileType;
-                }
+            if (fileType instanceof LanguageFileType languageFileType
+                && languageFileType.getLanguage() == this
+                && !languageFileType.isSecondary()) {
+                return languageFileType;
             }
         }
         for (FileType fileType : types) {
-            if (fileType instanceof LanguageFileType) {
-                LanguageFileType languageFileType = (LanguageFileType) fileType;
-                if (isKindOf(languageFileType.getLanguage()) && !languageFileType.isSecondary()) {
-                    return languageFileType;
-                }
+            if (fileType instanceof LanguageFileType languageFileType
+                && isKindOf(languageFileType.getLanguage())
+                && !languageFileType.isSecondary()) {
+                return languageFileType;
             }
         }
         return null;

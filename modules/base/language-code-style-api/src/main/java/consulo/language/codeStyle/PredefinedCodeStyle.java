@@ -18,6 +18,7 @@ package consulo.language.codeStyle;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.Language;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Rustam Vishnyakov
@@ -43,18 +44,14 @@ public abstract class PredefinedCodeStyle {
     public abstract void apply(CodeStyleSettings settings);
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return obj == this
-            || obj instanceof PredefinedCodeStyle that
-            && myName.equals(that.getName())
-            && myLanguage.equals(that.getLanguage());
+            || obj instanceof PredefinedCodeStyle that && myName.equals(that.getName()) && myLanguage.equals(that.getLanguage());
     }
 
     @Override
     public int hashCode() {
-        int result = myName.hashCode();
-        result = 31 * result + myLanguage.hashCode();
-        return result;
+        return 31 * myName.hashCode() + myLanguage.hashCode();
     }
 
     public String getName() {
@@ -66,7 +63,6 @@ public abstract class PredefinedCodeStyle {
         return myName;
     }
 
-    
     public Language getLanguage() {
         return myLanguage;
     }
