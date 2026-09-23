@@ -356,9 +356,13 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void addProgress(ProgressIndicator indicator, TaskInfo info) {
-    if (myInfoAndProgressPanel != null) {
-      myInfoAndProgressPanel.addProgress(indicator, info);
+    UnifiedInfoAndProgressPanel panel = myInfoAndProgressPanel;
+    if (panel == null) {
+      return;
     }
+
+    // a task announces itself from whatever thread starts it, and the panel it goes into is built of components
+    uiAccess().giveIfNeed(() -> panel.addProgress(indicator, info));
   }
 
   @Override

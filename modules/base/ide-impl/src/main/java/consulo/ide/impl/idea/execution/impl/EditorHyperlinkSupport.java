@@ -26,6 +26,9 @@ import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import consulo.ui.cursor.StandardCursors;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
 
@@ -58,27 +61,32 @@ public class EditorHyperlinkSupport {
     myFilterRunner = new AsyncFilterRunner(this, myEditor);
 
     editor.addEditorMouseListener(new EditorMouseListener() {
-      private MouseEvent myInitialMouseEvent = null;
+      private LogicalPosition myPressedAt = null;
 
       @Override
       public void mousePressed(EditorMouseEvent e) {
-        myInitialMouseEvent = e.getMouseEvent();
+        myPressedAt = e.getLogicalPosition();
       }
 
       @Override
       public void mouseReleased(EditorMouseEvent e) {
-        MouseEvent initialMouseEvent = myInitialMouseEvent;
-        myInitialMouseEvent = null;
-        MouseEvent mouseEvent = e.getMouseEvent();
-        if (mouseEvent.getButton() == MouseEvent.BUTTON1 && !mouseEvent.isPopupTrigger()) {
-          if (initialMouseEvent != null && (mouseEvent.getComponent() != initialMouseEvent.getComponent() || !mouseEvent.getPoint().equals(initialMouseEvent.getPoint()))) {
-            return;
-          }
+        LogicalPosition pressedAt = myPressedAt;
+        myPressedAt = null;
 
-          Runnable runnable = getLinkNavigationRunnable(myEditor.xyToLogicalPosition(e.getMouseEvent().getPoint()));
-          if (runnable != null) {
-            runnable.run();
-          }
+        if (e.isPopupTrigger() || !isLeftButton(e)) {
+          return;
+        }
+
+        LogicalPosition releasedAt = e.getLogicalPosition();
+
+        // a press which travelled before it was let go is a selection being made, not a link being followed
+        if (pressedAt != null && !pressedAt.equals(releasedAt)) {
+          return;
+        }
+
+        Runnable runnable = getLinkNavigationRunnable(releasedAt);
+        if (runnable != null) {
+          runnable.run();
         }
       }
     });
@@ -87,7 +95,7 @@ public class EditorHyperlinkSupport {
       @Override
       public void mouseMoved(EditorMouseEvent e) {
         if (e.getArea() != EditorMouseEventArea.EDITING_AREA) return;
-        HyperlinkInfo info = getHyperlinkInfoByPoint(e.getMouseEvent().getPoint());
+        HyperlinkInfo info = getHyperlinkInfoAt(e.getLogicalPosition());
         myEditor.setCustomCursor(EditorHyperlinkSupport.class, info == null ? null : StandardCursors.HAND);
       }
     });
@@ -237,6 +245,26 @@ public class EditorHyperlinkSupport {
     highlighter.putUserData(HYPERLINK, new HyperlinkInfoTextAttributes(hyperlinkInfo, followedHyperlinkAttributes));
   }
 
+  private static boolean isLeftButton(EditorMouseEvent e) {
+    InputDetails details = e.getInputDetails();
+    if (details instanceof MouseInputDetails mouse) {
+      return mouse.getButton() == MouseInputDetails.MouseButton.LEFT;
+    }
+
+    MouseEvent mouseEvent = e.getMouseEvent();
+    return mouseEvent == null || mouseEvent.getButton() == MouseEvent.BUTTON1;
+  }
+
+  public @Nullable HyperlinkInfo getHyperlinkInfoAt(LogicalPosition pos) {
+    if (EditorUtil.inVirtualSpace(myEditor, pos)) {
+      return null;
+    }
+
+    return getHyperlinkInfoByLineAndCol(pos.line, pos.column);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use getHyperlinkInfoAt(LogicalPosition)")
   public @Nullable HyperlinkInfo getHyperlinkInfoByPoint(Point p) {
     LogicalPosition pos = myEditor.xyToLogicalPosition(new Point(p.x, p.y));
     if (EditorUtil.inVirtualSpace(myEditor, pos)) {

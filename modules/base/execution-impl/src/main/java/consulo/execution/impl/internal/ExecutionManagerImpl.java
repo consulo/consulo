@@ -294,7 +294,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                     );
                 }
                 LOG.info(e);
-                project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
+                processNotStarted(entry, executor, environment);
             };
 
             try {
@@ -351,21 +351,30 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                         environment.setContentToReuse(descriptor);
                     }
                     else {
-                        project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
+                        processNotStarted(entry, executor, environment);
                     }
                 }, project::isDisposed));
             }
-            catch (ExecutionException e) {
+            catch (Throwable e) {
                 errorHandler.accept(e);
             }
         };
 
         compileAndRun(UIAccess.current(), startRunnable, environment, () -> {
             if (!project.isDisposed()) {
-                myInProgress.remove(entry);
-                project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
+                processNotStarted(entry, executor, environment);
             }
         });
+    }
+
+    /**
+     * A run which never produced a process leaves nothing to answer for it, so what marked it as starting has to
+     * be taken back - an executor still counted as starting refuses every later run of the same configuration.
+     */
+    private void processNotStarted(InProgressEntry entry, Executor executor, ExecutionEnvironment environment) {
+        myInProgress.remove(entry);
+
+        myProject.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
     }
 
     @Override

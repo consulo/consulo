@@ -27,7 +27,9 @@ import consulo.execution.internal.layout.RunnerLayoutUiImpl;
 import consulo.execution.ui.layout.*;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.ComponentWithActions;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -154,6 +156,24 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
+    public Content createUIContent(String contentId,
+                                   @Nullable Component component,
+                                   String displayName,
+                                   @Nullable Image icon,
+                                   @Nullable Component toFocus) {
+        return createContent(contentId,
+            (JComponent)TargetAWT.to(component),
+            displayName,
+            icon,
+            (JComponent)TargetAWT.to(toFocus));
+    }
+
+    @Override
+    public Component getUIComponent() {
+        return TargetAWT.from(getComponent());
+    }
+
+    @Override
     public JComponent getComponent() {
         return myViewsContentManager.getComponent();
     }
@@ -203,7 +223,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     private boolean shouldRequestFocus() {
-        Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        java.awt.Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         return focused != null && SwingUtilities.isDescendingFrom(focused, getContentManager().getComponent());
     }
 

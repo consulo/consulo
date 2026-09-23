@@ -159,7 +159,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         myRunContentDescriptor = new RunContentDescriptor(
             myConsole,
             session.getDebugProcess().getProcessHandler(),
-            myUi.getComponent(),
+            myUi,
             session.getSessionName(),
             icon,
             myRebuildWatchesRunnable,

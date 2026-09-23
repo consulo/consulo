@@ -18,6 +18,7 @@ package consulo.it.internal;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
+import consulo.logging.Logger;
 import consulo.it.internal.ui.HeadlessContent;
 import consulo.it.internal.ui.HeadlessContentManager;
 import consulo.ui.Component;
@@ -39,6 +40,8 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
 public class HeadlessContentFactory implements ContentFactory {
+    private static final Logger LOG = Logger.getInstance(HeadlessContentFactory.class);
+
     @Override
     public ContentManager createContentManager(ContentUI contentUI, boolean canCloseContents, ComponentManager project) {
         return new HeadlessContentManager(contentUI, canCloseContents);
@@ -52,5 +55,12 @@ public class HeadlessContentFactory implements ContentFactory {
     @Override
     public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
         return new HeadlessContent(component, displayName, isLockable);
+    }
+
+    @Override
+    public Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+        LOG.warn("Content of '" + displayName + "' is a swing component, which a headless run cannot show");
+
+        return createUIContent(null, displayName, isLockable);
     }
 }

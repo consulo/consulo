@@ -20,6 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.FrameTitleBuilder;
@@ -96,6 +97,10 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
      */
     public void removeFromTree() {
         TargetVaadin.to(myRootView.getRootPanel().getComponent()).getElement().removeFromTree(false);
+
+        if (ToolWindowManager.getInstance(myProject) instanceof WebToolWindowManagerImpl toolWindowManager) {
+            toolWindowManager.removeToolWindowsFromTree();
+        }
     }
 
     public @Nullable VaadinRootLayout getRootLayout() {

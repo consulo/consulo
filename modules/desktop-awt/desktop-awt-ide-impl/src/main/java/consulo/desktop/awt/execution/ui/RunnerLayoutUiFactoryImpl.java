@@ -16,6 +16,7 @@
 
 package consulo.desktop.awt.execution.ui;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -25,7 +26,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 public class RunnerLayoutUiFactoryImpl implements RunnerLayoutUiFactory {
   private final Project myProject;
 

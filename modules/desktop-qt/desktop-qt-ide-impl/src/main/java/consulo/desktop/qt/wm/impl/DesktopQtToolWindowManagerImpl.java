@@ -133,12 +133,6 @@ public class DesktopQtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    @RequiredUIAccess
-    protected void doWhenFirstShown(Object component, Runnable runnable) {
-        UIAccess.get().give(runnable);
-    }
-
-    @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
         return new MyInternalDecoratorListenerBase() {
             @Override
@@ -176,11 +170,6 @@ public class DesktopQtToolWindowManagerImpl extends ToolWindowManagerBase {
         boolean dumbAware
     ) {
         return new DesktopQtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
-    }
-
-    @Override
-    public boolean isUnified() {
-        return true;
     }
 
     @Override

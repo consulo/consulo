@@ -54,12 +54,14 @@ public final class BuildConsoleUtils {
         print(consoleView, notification, text);
     }
 
-    public static void print(BuildTextConsoleView consoleView, NotificationGroup group, BuildIssue buildIssue) {
+    public static void print(BuildTextConsole consoleView, NotificationGroup group, BuildIssue buildIssue) {
         Project project = consoleView.getProject();
         Map<String, NotificationListener> listenerMap = new LinkedHashMap<>();
         for (BuildIssueQuickFix quickFix : buildIssue.getQuickFixes()) {
             listenerMap.put(quickFix.getId(), (notification, event) -> {
-                BuildView buildView = findBuildView(consoleView);
+                // the quick fix is offered the context of the view around the console, which only a swing
+                // hierarchy can be walked for
+                BuildView buildView = consoleView instanceof Component component ? findBuildView(component) : null;
                 quickFix.runQuickFix(
                     project,
                     buildView != null ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null
@@ -131,8 +133,6 @@ public final class BuildConsoleUtils {
         consoleView.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT);
     }
 
-    //@ApiStatus.Internal
-    
     public static String getMessageTitle(String message) {
         message = stripHtml(message, true);
         int sepIndex = message.indexOf(". ");
@@ -146,8 +146,6 @@ public final class BuildConsoleUtils {
         return StringUtil.trimEnd(message.trim(), '.');
     }
 
-    //@ApiStatus.Experimental
-    
     public static DataProvider getDataProvider(Object buildId, AbstractViewManager buildListener) {
         BuildView buildView = buildListener.getBuildView(buildId);
         return buildView != null
@@ -155,8 +153,6 @@ public final class BuildConsoleUtils {
             : dataId -> null;
     }
 
-    //@ApiStatus.Experimental
-    
     public static DataProvider getDataProvider(Object buildId, BuildProgressListener buildListener) {
         DataProvider provider;
         if (buildListener instanceof BuildView buildView) {

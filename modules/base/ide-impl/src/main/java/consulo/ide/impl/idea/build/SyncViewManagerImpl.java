@@ -29,13 +29,11 @@ public class SyncViewManagerImpl extends AbstractViewManager implements SyncView
         return "Sync";
     }
 
-    
     @Override
     public LocalizeValue getViewName() {
         return BuildLocalize.syncViewTitle();
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> createBuildProgress() {
         BuildRootProgressImpl progress = new BuildRootProgressImpl();

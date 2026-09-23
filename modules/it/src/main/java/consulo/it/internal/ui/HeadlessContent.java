@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.component.util.BusyObject;
+import consulo.logging.Logger;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.ex.action.ActionGroup;
@@ -29,6 +30,8 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
 
+import java.util.function.Supplier;
+
 /**
  * Headless {@link Content}: a plain value holder without any presentation logic, produced by
  * {@link consulo.it.internal.HeadlessContentFactory}.
@@ -36,6 +39,8 @@ import javax.swing.JComponent;
  * @author VISTALL
  */
 public class HeadlessContent extends UserDataHolderBase implements Content {
+    private static final Logger LOG = Logger.getInstance(HeadlessContent.class);
+
     private @Nullable Component myUIComponent;
     private String myDisplayName;
     private String myTabName;
@@ -85,6 +90,24 @@ public class HeadlessContent extends UserDataHolderBase implements Content {
 
     @Override
     public void setUIPreferredFocusableComponent(Component component) {
+    }
+
+    /**
+     * There is no awt behind a headless run, so a swing component is noted and dropped rather than unwrapped.
+     */
+    @Override
+    public void setComponent(JComponent component) {
+        LOG.warn("Component of '" + myDisplayName + "' is a swing component, which a headless run cannot show");
+    }
+
+    @Override
+    public void setPreferredFocusableComponent(JComponent component) {
+        LOG.warn("Focusable component of '" + myDisplayName + "' is a swing component, which a headless run cannot show");
+    }
+
+    @Override
+    public void setPreferredFocusedComponent(Supplier<JComponent> computable) {
+        LOG.warn("Focused component of '" + myDisplayName + "' is a swing component, which a headless run cannot show");
     }
 
     @Override

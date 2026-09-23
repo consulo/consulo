@@ -522,9 +522,29 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             }
 
             // a node whose children were never fetched has nothing to rebuild - it holds the placeholder, and
-            // opening it fetches them
+            // opening it fetches them. What it says of itself is read again all the same: a node is refreshed
+            // because something behind it changed, and the row was built from what the model said before that
             if (!refreshChildren || node.isNotLoaded()) {
-                getDataProvider().refreshItem(node);
+                UI presentationUi = UI.getCurrent();
+                if (presentationUi == null) {
+                    getDataProvider().refreshItem(node);
+                    return;
+                }
+
+                myExecutor.execute(WebTreeImpl.this, () -> {
+                    node.computePresentation();
+                    return null;
+                }).whenComplete((ignored, error) -> {
+                    if (error != null) {
+                        logBuildError(error);
+                        return;
+                    }
+
+                    presentationUi.access(() -> {
+                        getDataProvider().refreshItem(node);
+                        presentationUi.push();
+                    });
+                });
                 return;
             }
 

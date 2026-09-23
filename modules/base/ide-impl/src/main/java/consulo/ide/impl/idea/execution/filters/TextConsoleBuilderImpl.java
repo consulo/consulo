@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.filters;
 
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.content.scope.SearchScope;
+import consulo.execution.impl.internal.console.ConsoleViewFactory;
 import consulo.execution.ui.console.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.process.ProcessHandler;
@@ -64,7 +65,8 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   }
 
   protected ConsoleView createConsole() {
-    return new ConsoleViewImpl(myProject, myScope, myViewer, myState, myUsePredefinedMessageFilter);
+    return ConsoleViewFactory.getInstance()
+      .createConsoleView(myProject, myScope, myViewer, myState, myUsePredefinedMessageFilter);
   }
 
   @Override

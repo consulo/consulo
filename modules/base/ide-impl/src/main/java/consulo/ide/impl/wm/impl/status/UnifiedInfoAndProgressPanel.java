@@ -103,6 +103,14 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
         }
 
         runQuery();
+
+        // a task announces itself from the thread which starts it and is shown a moment later, by which time a
+        // short one is already over. A delegate attached after the end is never told of it, so the bar would go
+        // on showing a task nobody is running
+        if (originalEx.isFinished(info)) {
+            removeProgress(compact);
+            removeProgress(expanded);
+        }
     }
 
     @RequiredUIAccess

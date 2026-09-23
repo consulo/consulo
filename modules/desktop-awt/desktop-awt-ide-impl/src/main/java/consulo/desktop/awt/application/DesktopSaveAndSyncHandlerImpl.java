@@ -15,7 +15,9 @@
  */
 package consulo.desktop.awt.application;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.ide.BaseSaveAndSyncHandler;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
 import consulo.application.impl.internal.LaterInvocator;
@@ -48,35 +50,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Vladimir Kondratyev
  */
 @Singleton
-@ServiceImpl
-public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Disposable {
-    private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
-
-    private final Application myApplication;
+@ServiceImpl(profiles = ComponentProfiles.AWT)
+public class DesktopSaveAndSyncHandlerImpl extends BaseSaveAndSyncHandler {
     private final Runnable myIdleListener;
     private final PropertyChangeListener myGeneralSettingsListener;
-    private final GeneralSettings mySettings;
-    private final ProgressManager myProgressManager;
-    private final AtomicInteger myBlockSaveOnFrameDeactivationCount = new AtomicInteger();
-    private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
-    private volatile long myRefreshSessionId;
-
-    private Future<?> myRefreshDelayAlarm = CompletableFuture.completedFuture(null);
 
     @Inject
     public DesktopSaveAndSyncHandlerImpl(Application application,
                                          GeneralSettings generalSettings,
                                          ProgressManager progressManager,
                                          FileDocumentManager fileDocumentManager) {
-        mySettings = generalSettings;
-        myApplication = application;
-        myProgressManager = progressManager;
+        super(application, generalSettings, progressManager, fileDocumentManager);
 
-        myIdleListener = () -> {
-            if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-                ((FileDocumentManagerEx) fileDocumentManager).saveAllDocuments(false);
-            }
-        };
+        myIdleListener = this::saveAllDocumentsIfInactive;
         IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
 
         myGeneralSettingsListener = new PropertyChangeListener() {
@@ -95,111 +81,8 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
 
     @Override
     public void dispose() {
-        RefreshQueue.getInstance().cancelSession(myRefreshSessionId);
+        super.dispose();
         mySettings.removePropertyChangeListener(myGeneralSettingsListener);
         IdeEventQueue.getInstance().removeIdleListener(myIdleListener);
-    }
-
-    public void onFrameActivated() {
-        if (!myApplication.isDisposed() && mySettings.isSyncOnFrameActivation()) {
-            scheduleRefresh();
-        }
-    }
-
-    public void onFrameDeactivated() {
-        LOG.debug("save(): enter");
-        if (canSyncOrSave()) {
-            saveProjectsAndDocuments();
-        }
-        LOG.debug("save(): exit");
-    }
-
-    private boolean canSyncOrSave() {
-        return !LaterInvocator.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
-    }
-
-    @Override
-    public void saveProjectsAndDocuments() {
-        if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
-            myApplication.saveAllWithProgress(myApplication.getLastUIAccess());
-        }
-    }
-
-    @Override
-    public void scheduleRefresh() {
-        myRefreshDelayAlarm.cancel(false);
-        myRefreshDelayAlarm = myApplication.getLastUIAccess().getScheduler().schedule(this::doScheduledRefresh, 300, TimeUnit.MILLISECONDS);
-    }
-
-    private void doScheduledRefresh() {
-        if (canSyncOrSave()) {
-            refreshOpenFiles();
-        }
-        maybeRefresh(myApplication.getNoneModalityState());
-    }
-
-    public void maybeRefresh(ModalityState modalityState) {
-        if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
-            RefreshQueue queue = RefreshQueue.getInstance();
-            queue.cancelSession(myRefreshSessionId);
-
-            RefreshSession session = queue.createSession(true, true, null, modalityState);
-            session.addAllFiles(ManagingFS.getInstance().getLocalRoots());
-            myRefreshSessionId = session.getId();
-            session.launch();
-            LOG.debug("vfs refreshed");
-        }
-        else if (LOG.isDebugEnabled()) {
-            LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0) + ", isSyncOnFrameActivation: " + mySettings
-                .isSyncOnFrameActivation());
-        }
-    }
-
-    @Override
-    public void refreshOpenFiles() {
-        List<VirtualFile> files = new ArrayList<>();
-
-        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            for (VirtualFile file : FileEditorManager.getInstance(project).getSelectedFiles()) {
-                if (file instanceof VirtualFileWithId) {
-                    files.add(file);
-                }
-            }
-        }
-
-        if (!files.isEmpty()) {
-            // refresh open files synchronously so it doesn't wait for potentially longish refresh request in the queue to finish
-            RefreshQueue.getInstance().refresh(false, false, null, files);
-        }
-    }
-
-    @Override
-    public void blockSaveOnFrameDeactivation() {
-        myBlockSaveOnFrameDeactivationCount.incrementAndGet();
-    }
-
-    @Override
-    public void unblockSaveOnFrameDeactivation() {
-        myBlockSaveOnFrameDeactivationCount.decrementAndGet();
-    }
-
-    @Override
-    public void blockSyncOnFrameActivation() {
-        myBlockSyncOnFrameActivationCount.incrementAndGet();
-    }
-
-    @Override
-    public void unblockSyncOnFrameActivation() {
-        myBlockSyncOnFrameActivationCount.decrementAndGet();
-    }
-
-    @Override
-    public boolean isSaveOnFrameDeactivation() {
-        return mySettings.isSaveOnFrameDeactivation();
-    }
-
-    @Override
-    public boolean isSyncOnFrameActivation() {
-        return mySettings.isSyncOnFrameActivation();
     }
 }

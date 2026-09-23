@@ -24,7 +24,6 @@ import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
-import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import org.jspecify.annotations.Nullable;
@@ -33,7 +32,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2023-05-27
  */
-public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLayoutImpl.Vaadin> implements VerticalLayout {
+public class WebVerticalLayoutImpl extends WebLayoutImpl<WebVerticalLayoutImpl.Vaadin, LayoutConstraint> implements VerticalLayout {
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.VerticalLayout implements FromVaadinComponentWrapper {
         public Vaadin() {
             // a layout adds nothing on its own, only the gap the caller asked for

@@ -8,6 +8,7 @@ import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.impl.internal.ui.BaseContentCloseListener;
@@ -18,6 +19,7 @@ import consulo.project.Project;
 import consulo.project.internal.StartupManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.Application;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -49,6 +51,8 @@ import static consulo.ui.ex.content.ContentUtilEx.getFullName;
 @Singleton
 @ServiceImpl
 public final class BuildContentManagerImpl implements BuildContentManager {
+    private static final Logger LOG = Logger.getInstance(BuildContentManagerImpl.class);
+
     /**
      * @deprecated use Build_Tab_Title_Supplier instead
      */
@@ -208,9 +212,14 @@ public final class BuildContentManagerImpl implements BuildContentManager {
 
     public void startBuildNotified(
         BuildDescriptor buildDescriptor,
-        Content content,
+        @Nullable Content content,
         @Nullable BuildProcessHandler processHandler
     ) {
+        if (content == null) {
+            LOG.error("Build '" + buildDescriptor.getTitle() + "' was started without a content to show it in");
+            return;
+        }
+
         if (processHandler != null) {
             Map<Object, CloseListener> closeListenerMap = content.getUserData(CONTENT_CLOSE_LISTENERS);
             if (closeListenerMap == null) {
@@ -229,15 +238,25 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         content.setIcon(PlatformIconGroup.toolwindowsToolwindowbuildactive());
 
         invokeLaterIfNeeded(() -> {
-            JComponent component = content.getComponent();
-            component.invalidate();
+            // nudging the layout of the tab is a swing concern; a frontend drawing its own components has
+            // nothing to invalidate
+            if (!Application.get().isUnifiedApplication()) {
+                JComponent component = content.getComponent();
+                component.invalidate();
+            }
+
             if (!liveContentsMap.isEmpty()) {
                 getOrCreateToolWindow().setIcon(PlatformIconGroup.toolwindowsToolwindowbuildactive());
             }
         });
     }
 
-    public void finishBuildNotified(BuildDescriptor buildDescriptor, Content content) {
+    public void finishBuildNotified(BuildDescriptor buildDescriptor, @Nullable Content content) {
+        if (content == null) {
+            LOG.error("Build '" + buildDescriptor.getTitle() + "' finished without a content to show it in");
+            return;
+        }
+
         Map<Object, CloseListener> closeListenerMap = content.getUserData(CONTENT_CLOSE_LISTENERS);
         if (closeListenerMap != null) {
             CloseListener closeListener = closeListenerMap.remove(buildDescriptor.getId());

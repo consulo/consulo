@@ -96,12 +96,6 @@ public class HeadlessToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    @RequiredUIAccess
-    protected void doWhenFirstShown(Object component, Runnable runnable) {
-        UIAccess.get().give(runnable);
-    }
-
-    @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
         return new MyInternalDecoratorListenerBase() {
             @Override
@@ -195,11 +189,6 @@ public class HeadlessToolWindowManagerImpl extends ToolWindowManagerBase {
     public void setSideToolAndAnchor(String id, ToolWindowAnchor anchor, int order, boolean isSide) {
         setToolWindowAnchor(id, anchor, order);
         setSideTool(id, isSide);
-    }
-
-    @Override
-    public boolean isUnified() {
-        return true;
     }
 
     @Override

@@ -18,6 +18,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SystemNotifications;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -52,8 +53,8 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
 
     protected final Project myProject;
     protected final BuildContentManager myBuildContentManager;
-    private final AtomicClearableLazyValue<MultipleBuildsView> myBuildsViewValue;
-    private final Set<MultipleBuildsView> myPinnedViews;
+    private final AtomicClearableLazyValue<BuildsView> myBuildsViewValue;
+    private final Set<BuildsView> myPinnedViews;
     private final AtomicBoolean isDisposed = new AtomicBoolean(false);
     private final DisposableWrapperList<BuildProgressListener> myListeners = new DisposableWrapperList<>();
 
@@ -62,8 +63,9 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         myBuildContentManager = buildContentManager;
         myBuildsViewValue = new AtomicClearableLazyValue<>() {
             @Override
-            protected MultipleBuildsView compute() {
-                MultipleBuildsView buildsView = new MultipleBuildsView(myProject, myBuildContentManager, AbstractViewManager.this);
+            protected BuildsView compute() {
+                BuildsView buildsView = BuildsViewFactory.getInstance()
+                    .createBuildsView(myProject, myBuildContentManager, AbstractViewManager.this);
                 Disposer.register(AbstractViewManager.this, buildsView);
                 return buildsView;
             }
@@ -93,7 +95,9 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     protected Map<BuildDescriptor, BuildView> getBuildsMap() {
-        return myBuildsViewValue.getValue().getBuildsMap();
+        BuildsView buildsView = myBuildsViewValue.getValue();
+
+        return buildsView instanceof MultipleBuildsView multipleBuildsView ? multipleBuildsView.getBuildsMap() : Map.of();
     }
 
     @Override
@@ -102,7 +106,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
             return;
         }
 
-        MultipleBuildsView buildsView;
+        BuildsView buildsView;
         if (event instanceof StartBuildEvent) {
             configurePinnedContent();
             buildsView = myBuildsViewValue.getValue();
@@ -124,28 +128,32 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         }
     }
 
-    private @Nullable MultipleBuildsView getMultipleBuildsView(Object buildId) {
-        MultipleBuildsView buildsView = myBuildsViewValue.getValue();
+    private @Nullable BuildsView getMultipleBuildsView(Object buildId) {
+        BuildsView buildsView = myBuildsViewValue.getValue();
         if (!buildsView.shouldConsume(buildId)) {
             buildsView = ContainerUtil.find(myPinnedViews, pinnedView -> pinnedView.shouldConsume(buildId));
         }
         return buildsView;
     }
 
+    /**
+     * The view of a build is a component of awt, so a frontend drawing anything else answers that it has none.
+     */
     public @Nullable BuildView getBuildView(Object buildId) {
-        MultipleBuildsView buildsView = getMultipleBuildsView(buildId);
-        if (buildsView == null) {
-            return null;
-        }
-
-        return buildsView.getBuildView(buildId);
+        return getMultipleBuildsView(buildId) instanceof MultipleBuildsView multipleBuildsView
+            ? multipleBuildsView.getBuildView(buildId)
+            : null;
     }
 
     void configureToolbar(DefaultActionGroup toolbarActions, MultipleBuildsView buildsView, BuildView view) {
-        toolbarActions.removeAll();
-        toolbarActions.addAll(view.createConsoleActions());
-        toolbarActions.add(new PinBuildViewAction(buildsView));
+        configureToolbar(toolbarActions, buildsView, view.createConsoleActions());
         toolbarActions.add(BuildTreeFilters.createFilteringActionsGroup(view));
+    }
+
+    void configureToolbar(DefaultActionGroup toolbarActions, BuildsView buildsView, AnAction[] consoleActions) {
+        toolbarActions.removeAll();
+        toolbarActions.addAll(consoleActions);
+        toolbarActions.add(new PinBuildViewAction(buildsView));
     }
 
     protected @Nullable Image getContentIcon() {
@@ -181,7 +189,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         myBuildsViewValue.drop();
     }
 
-    void onBuildsViewRemove(MultipleBuildsView buildsView) {
+    void onBuildsViewRemove(BuildsView buildsView) {
         if (isDisposed.get()) {
             return;
         }
@@ -215,7 +223,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     private void configurePinnedContent() {
-        MultipleBuildsView buildsView = myBuildsViewValue.getValue();
+        BuildsView buildsView = myBuildsViewValue.getValue();
         Content content = buildsView.getContent();
         if (content != null && content.isPinned()) {
             String tabName = getPinnedTabName(buildsView);
@@ -233,28 +241,27 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         }
     }
 
-    private String getPinnedTabName(MultipleBuildsView buildsView) {
-        Map<BuildDescriptor, BuildView> buildsMap = buildsView.getBuildsMap();
-
-        BuildDescriptor buildInfo = buildsMap.keySet().stream()
+    private String getPinnedTabName(BuildsView buildsView) {
+        BuildDescriptor buildInfo = buildsView.getBuildDescriptors().stream()
             .reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2)
             .orElse(null);
         if (buildInfo != null) {
             String title = buildInfo.getTitle().get();
             String viewName = getViewName().get().split(" ")[0];
             String tabName = viewName + ": " + StringUtil.trimStart(title, viewName);
-            if (buildsMap.size() > 1) {
-                return LanguageLocalize.tabTitleMore(tabName, buildsMap.size() - 1).get();
+            int buildCount = buildsView.getBuildDescriptors().size();
+            if (buildCount > 1) {
+                return LanguageLocalize.tabTitleMore(tabName, buildCount - 1).get();
             }
             return tabName;
         }
         return getViewName().get();
     }
 
-    private static class PinBuildViewAction extends LegacyDumbAwareAction implements Toggleable {
+    static class PinBuildViewAction extends LegacyDumbAwareAction implements Toggleable {
         private final Content myContent;
 
-        PinBuildViewAction(MultipleBuildsView buildsView) {
+        PinBuildViewAction(BuildsView buildsView) {
             super(PlatformIconGroup.generalPin_tab());
             myContent = buildsView.getContent();
         }

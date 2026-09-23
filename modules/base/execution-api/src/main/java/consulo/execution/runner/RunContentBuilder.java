@@ -157,9 +157,7 @@ public class RunContentBuilder extends RunTab {
   }
 
   public static void buildConsoleUiDefault(RunnerLayoutUi ui, ExecutionConsole console) {
-    Content consoleContent = ui.createContent(ExecutionConsole.CONSOLE_CONTENT_ID, console.getComponent(), "Console",
-                                                    ExecutionIconGroup.console(),
-                                                    console.getPreferredFocusableComponent());
+    Content consoleContent = ui.createContent(ExecutionConsole.CONSOLE_CONTENT_ID, console, "Console", ExecutionIconGroup.console());
 
     consoleContent.setCloseable(false);
     addAdditionalConsoleEditorActions(console, consoleContent);

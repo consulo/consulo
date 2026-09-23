@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.impl.internal.console;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.InputFilter;

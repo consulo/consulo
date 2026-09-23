@@ -35,6 +35,7 @@ import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.impl.internal.action.UnifiedActionRow;
 import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.ui.style.ComponentColors;
@@ -43,6 +44,7 @@ import consulo.ui.layout.HorizontalLayout;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
+import kava.beans.PropertyChangeListener;
 import java.util.function.Supplier;
 
 /**
@@ -69,6 +71,16 @@ public class UnifiedToolWindowHeader implements Disposable {
     private final DefaultActionGroup myTabActions = new DefaultActionGroup();
 
     private final PresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
+
+    private final PropertyChangeListener myContentPropertyListener = event -> {
+        String propertyName = event.getPropertyName();
+        if (Content.PROP_ICON.equals(propertyName) || Content.PROP_DISPLAY_NAME.equals(propertyName)) {
+            UIAccess uiAccess = myLayout.getUIAccess();
+            if (uiAccess != null) {
+                uiAccess.giveIfNeed(this::rebuildTabs);
+            }
+        }
+    };
 
     private final UnifiedActionRow myTabActionRow = createActionRow(() -> myTabActions);
     private final UnifiedActionRow myTitleActionRow = createActionRow(
@@ -100,12 +112,18 @@ public class UnifiedToolWindowHeader implements Disposable {
                 @Override
                 @RequiredUIAccess
                 public void contentAdded(ContentManagerEvent event) {
+                    // a tab is drawn from what the content says of itself, and a content says it later too -
+                    // the icon of a build turns green only once the build is over
+                    event.getContent().addPropertyChangeListener(myContentPropertyListener);
+
                     rebuildTabs();
                 }
 
                 @Override
                 @RequiredUIAccess
                 public void contentRemoved(ContentManagerEvent event) {
+                    event.getContent().removePropertyChangeListener(myContentPropertyListener);
+
                     rebuildTabs();
                 }
 
@@ -198,7 +216,8 @@ public class UnifiedToolWindowHeader implements Disposable {
     @RequiredUIAccess
     private Component createTab(ContentManager contentManager, Content content, boolean selected) {
         Button tab = Button.create(LocalizeValue.of(content.getTabName()));
-        tab.setIcon(content.getIcon());
+        // the icon of a content is shown only where it was asked for, the way the toolkit bound tabs do it
+        tab.setIcon(Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON)) ? content.getIcon() : null);
         // never the primary style - that paints the accent color of the toolkit, which is not a color of the theme.
         // the borderless text follows the theme already, the foreground of a component is not settable on every
         // frontend

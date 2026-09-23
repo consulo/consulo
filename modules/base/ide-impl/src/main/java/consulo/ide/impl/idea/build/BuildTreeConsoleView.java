@@ -101,33 +101,16 @@ import static consulo.util.lang.StringUtil.isEmpty;
 /**
  * @author Vladislav.Soroka
  */
-public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildConsoleView, Filterable<ExecutionNodeImpl>, OccurenceNavigator {
+public class BuildTreeConsoleView extends BaseBuildTreeConsoleView implements UiDataProvider, OccurenceNavigator {
     private static final Logger LOG = Logger.getInstance(BuildTreeConsoleView.class);
 
     private static final String TREE = "tree";
     private static final String SPLITTER_PROPERTY = "BuildView.Splitter.Proportion";
     private final JPanel myPanel = new JPanel();
-    private final Map<Object, ExecutionNodeImpl> nodesMap = new ConcurrentHashMap<>();
-
-    private final
-    Project myProject;
-    private final
-    DefaultBuildDescriptor myBuildDescriptor;
-    private final
-    String myWorkingDir;
     private final ConsoleViewHandler myConsoleViewHandler;
-    private final AtomicBoolean myFinishedBuildEventReceived = new AtomicBoolean();
-    private final AtomicBoolean myDisposed = new AtomicBoolean();
-    private final AtomicBoolean myShownFirstError = new AtomicBoolean();
-    private final AtomicBoolean myExpandedFirstMessage = new AtomicBoolean();
-    private final boolean myNavigateToTheFirstErrorLocation;
     private final StructureTreeModel<AbstractTreeStructure> myTreeModel;
     private final Tree myTree;
-    private final ExecutionNodeImpl myRootNode;
-    private final ExecutionNodeImpl myBuildProgressRootNode;
-    private final Set<Predicate<? super ExecutionNodeImpl>> myNodeFilters;
     private final ProblemOccurrenceNavigatorSupport myOccurrenceNavigatorSupport;
-    private final Set<BuildEvent> myDeferredEvents = ConcurrentHashMap.newKeySet();
 
     public BuildTreeConsoleView(
         Project project,
@@ -135,23 +118,13 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         @Nullable ExecutionConsole executionConsole,
         BuildViewSettingsProvider buildViewSettingsProvider
     ) {
-        myProject = project;
-        myBuildDescriptor = buildDescriptor instanceof DefaultBuildDescriptor defaultBuildDescriptor
-            ? defaultBuildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
-        myNodeFilters = ConcurrentHashMap.newKeySet();
-        myWorkingDir = FileUtil.toSystemIndependentName(buildDescriptor.getWorkingDir());
-        myNavigateToTheFirstErrorLocation = project.getInstance(CompilerWorkspaceConfiguration.class).isAutoShowErrorsInEditor();
-
-        myRootNode = new ExecutionNodeImpl(myProject, null, true, this::isCorrectThread);
-        myBuildProgressRootNode = new ExecutionNodeImpl(myProject, myRootNode, true, this::isCorrectThread);
-        myRootNode.setFilter(getFilter());
-        myRootNode.add(myBuildProgressRootNode);
+        super(project, buildDescriptor);
 
         AbstractTreeStructure treeStructure = new MyTreeStructure();
         myTreeModel = new StructureTreeModel<>(
             treeStructure,
             null,
-            InvokerFactory.getInstance().forBackgroundThreadWithoutReadAction(this),
+            myInvoker,
             this
         );
         AsyncTreeModel asyncTreeModel = new AsyncTreeModel(myTreeModel, this);
@@ -181,11 +154,9 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         myOccurrenceNavigatorSupport = new ProblemOccurrenceNavigatorSupport(myTree);
     }
 
-    private boolean isCorrectThread() {
-        return myTreeModel == null || myTreeModel.getInvoker().isValidThread();
-    }
 
-    private void installContextMenu() {
+    @Override
+    protected void installContextMenu() {
         invokeLaterIfNeeded(() -> {
             DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
             List<AnAction> restartActions = myBuildDescriptor.getRestartActions();
@@ -244,273 +215,17 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         scheduleUpdate(getRootElement(), true);
     }
 
-    @Override
-    public boolean isFilteringEnabled() {
-        return true;
-    }
 
-    @Override
-    public
-    Predicate<ExecutionNodeImpl> getFilter() {
-        return executionNode -> executionNode == getBuildProgressRootNode()
-            || executionNode.isRunning()
-            || executionNode.isFailed()
-            || myNodeFilters.stream().anyMatch(predicate -> predicate.test(executionNode));
-    }
 
-    @Override
-    public void addFilter(Predicate<? super ExecutionNodeImpl> executionTreeFilter) {
-        myNodeFilters.add(executionTreeFilter);
-        updateFilter();
-    }
 
-    @Override
-    public void removeFilter(Predicate<? super ExecutionNodeImpl> filter) {
-        myNodeFilters.remove(filter);
-        updateFilter();
-    }
 
-    @Override
-    public boolean contains(Predicate<? super ExecutionNodeImpl> filter) {
-        return myNodeFilters.contains(filter);
-    }
 
-    private void updateFilter() {
-        ExecutionNodeImpl rootElement = getRootElement();
-        myTreeModel.getInvoker().runOrInvokeLater(() -> {
-            rootElement.setFilter(getFilter());
-            scheduleUpdate(rootElement, true);
-        });
-    }
 
-    private ExecutionNodeImpl getRootElement() {
-        return myRootNode;
-    }
 
-    private ExecutionNodeImpl getBuildProgressRootNode() {
-        return myBuildProgressRootNode;
-    }
 
-    @Override
-    public void print(String text, ConsoleViewContentType contentType) {
-    }
 
-    private
-    @Nullable ExecutionNodeImpl getOrMaybeCreateParentNode(BuildEvent event) {
-        ExecutionNodeImpl parentNode = event.getParentId() == null ? null : nodesMap.get(event.getParentId());
-        if (event instanceof MessageEvent messageEvent) {
-            parentNode = createMessageParentNodes(messageEvent, parentNode);
-            if (parentNode != null) {
-                scheduleUpdate(parentNode, true); // To update its parent.
-            }
-        }
-        return parentNode;
-    }
 
-    private void onEventInternal(Object buildId, BuildEvent event) {
-        Set<ExecutionNodeImpl> structureChanged = new SmartHashSet<>();
-        ExecutionNodeImpl parentNode = getOrMaybeCreateParentNode(event);
-        Object eventId = event.getId();
-        ExecutionNodeImpl currentNode = nodesMap.get(eventId);
-        ExecutionNodeImpl buildProgressRootNode = getBuildProgressRootNode();
-        Runnable selectErrorNodeTask = null;
-        boolean isMessageEvent = event instanceof MessageEvent;
-        if (event instanceof StartEvent || isMessageEvent) {
-            if (currentNode == null) {
-                if (event instanceof DuplicateMessageAware) {
-                    if (myFinishedBuildEventReceived.get()) {
-                        if (parentNode != null && parentNode.findFirstChild(node -> event.getMessage().get().equals(node.getName())) != null) {
-                            return;
-                        }
-                    }
-                    else {
-                        myDeferredEvents.add(event);
-                        return;
-                    }
-                }
-                if (event instanceof StartBuildEvent) {
-                    currentNode = buildProgressRootNode;
-                    installContextMenu();
-                    currentNode.setTitle(myBuildDescriptor.getTitle());
-                }
-                else {
-                    currentNode = new ExecutionNodeImpl(myProject, parentNode, false, this::isCorrectThread);
 
-                    if (isMessageEvent) {
-                        currentNode.setAlwaysLeaf(event instanceof FileMessageEvent);
-                        MessageEvent messageEvent = (MessageEvent)event;
-                        currentNode.setStartTime(messageEvent.getEventTime());
-                        addIfNotNull(structureChanged, currentNode.setEndTime(messageEvent.getEventTime()));
-                        Navigatable messageEventNavigatable = messageEvent.getNavigatable(myProject);
-                        currentNode.setNavigatable(messageEventNavigatable);
-                        MessageEventResult messageEventResult = messageEvent.getResult();
-                        addIfNotNull(structureChanged, currentNode.setResult(messageEventResult));
-
-                        if (messageEventResult instanceof FailureResult failureResult) {
-                            for (Failure failure : failureResult.getFailures()) {
-                                selectErrorNodeTask = selectErrorNodeTask != null
-                                    ? selectErrorNodeTask
-                                    : showErrorIfFirst(currentNode, failure.getNavigatable());
-                            }
-                        }
-                        if (messageEvent.getKind() == MessageEvent.Kind.ERROR) {
-                            selectErrorNodeTask = selectErrorNodeTask != null
-                                ? selectErrorNodeTask
-                                : showErrorIfFirst(currentNode, messageEventNavigatable);
-                        }
-
-                        if (parentNode != null) {
-                            if (parentNode != buildProgressRootNode) {
-                                myConsoleViewHandler.addOutput(parentNode, buildId, event);
-                                myConsoleViewHandler.addOutput(parentNode, "\n", true);
-                            }
-                            reportMessageKind(messageEvent.getKind(), parentNode);
-                        }
-                        myConsoleViewHandler.addOutput(currentNode, buildId, event);
-                    }
-                    if (parentNode != null) {
-                        structureChanged.add(parentNode);
-                        parentNode.add(currentNode);
-                    }
-                }
-                nodesMap.put(eventId, currentNode);
-            }
-            else {
-                LOG.warn("start event id collision found:" + eventId + ", was also in node: " + currentNode.getTitle());
-                return;
-            }
-        }
-        else {
-            boolean isProgress = event instanceof ProgressBuildEvent;
-            currentNode = nodesMap.get(eventId);
-            if (currentNode == null) {
-                if (isProgress) {
-                    currentNode = new ExecutionNodeImpl(
-                        myProject,
-                        parentNode,
-                        parentNode == buildProgressRootNode,
-                        this::isCorrectThread
-                    );
-                    nodesMap.put(eventId, currentNode);
-                    if (parentNode != null) {
-                        structureChanged.add(parentNode);
-                        parentNode.add(currentNode);
-                    }
-                }
-                else if (event instanceof OutputBuildEvent && parentNode != null) {
-                    myConsoleViewHandler.addOutput(parentNode, buildId, event);
-                }
-                else if (event instanceof PresentableBuildEvent presentableBuildEvent) {
-                    currentNode = addAsPresentableEventNode(
-                        presentableBuildEvent,
-                        structureChanged,
-                        parentNode,
-                        eventId,
-                        buildProgressRootNode
-                    );
-                }
-            }
-
-            if (isProgress) {
-                ProgressBuildEvent progressBuildEvent = (ProgressBuildEvent)event;
-                long total = progressBuildEvent.getTotal();
-                long progress = progressBuildEvent.getProgress();
-                if (currentNode == myBuildProgressRootNode) {
-                    myConsoleViewHandler.updateProgressBar(total, progress);
-                }
-            }
-        }
-
-        if (currentNode == null) {
-            return;
-        }
-
-        currentNode.setName(event.getMessage());
-        currentNode.setHint(event.getHint());
-        if (currentNode.getStartTime() == 0) {
-            currentNode.setStartTime(event.getEventTime());
-        }
-
-        if (event instanceof FinishEvent finishEvent) {
-            EventResult result = finishEvent.getResult();
-            if (result instanceof DerivedResult derivedResult) {
-                result = calculateDerivedResult(derivedResult, currentNode);
-            }
-            addIfNotNull(structureChanged, currentNode.setResult(result));
-            addIfNotNull(structureChanged, currentNode.setEndTime(event.getEventTime()));
-            SkippedResult skippedResult = new SkippedResultImpl();
-            finishChildren(structureChanged, currentNode, skippedResult);
-            if (result instanceof FailureResult failureResult) {
-                for (Failure failure : failureResult.getFailures()) {
-                    Runnable task = addChildFailureNode(
-                        currentNode,
-                        failure,
-                        event.getMessage(),
-                        event.getEventTime(),
-                        structureChanged
-                    );
-                    if (selectErrorNodeTask == null) {
-                        selectErrorNodeTask = task;
-                    }
-                }
-            }
-        }
-
-        if (event instanceof FinishBuildEvent) {
-            myFinishedBuildEventReceived.set(true);
-            LocalizeValue aHint = event.getHint();
-            String time = DateFormatUtil.formatDateTime(event.getEventTime());
-            aHint = aHint.isEmpty() ? BuildLocalize.buildEventMessageAt(time) : BuildLocalize.buildEventMessage0At1(aHint, time);
-            currentNode.setHint(aHint);
-            myDeferredEvents.forEach(buildEvent -> onEventInternal(buildId, buildEvent));
-            if (myConsoleViewHandler.myExecutionNode == null) {
-                invokeLater(() -> myConsoleViewHandler.setNode(buildProgressRootNode));
-            }
-            myConsoleViewHandler.stopProgressBar();
-        }
-        if (structureChanged.isEmpty()) {
-            scheduleUpdate(currentNode, false);
-        }
-        else {
-            for (ExecutionNodeImpl node : structureChanged) {
-                scheduleUpdate(node, true);
-            }
-        }
-        if (selectErrorNodeTask != null) {
-            myExpandedFirstMessage.set(true);
-            Runnable finalSelectErrorTask = selectErrorNodeTask;
-            myTreeModel.invalidate(getRootElement(), true).onProcessed(p -> finalSelectErrorTask.run());
-        }
-        else if (isMessageEvent && myExpandedFirstMessage.compareAndSet(false, true)) {
-            ExecutionNodeImpl finalCurrentNode = currentNode;
-            myTreeModel.invalidate(getRootElement(), false)
-                .onProcessed(p -> TreeUtil.promiseMakeVisible(myTree, visitor(finalCurrentNode)));
-        }
-    }
-
-    private ExecutionNodeImpl addAsPresentableEventNode(
-        PresentableBuildEvent event,
-        Set<ExecutionNodeImpl> structureChanged,
-        @Nullable ExecutionNodeImpl parentNode,
-        Object eventId,
-        ExecutionNodeImpl buildProgressRootNode
-    ) {
-        ExecutionNodeImpl executionNode = new ExecutionNodeImpl(
-            myProject,
-            parentNode,
-            parentNode == buildProgressRootNode,
-            this::isCorrectThread
-        );
-        BuildEventPresentationData presentationData = event.getPresentationData();
-        executionNode.applyFrom(presentationData);
-        nodesMap.put(eventId, executionNode);
-        if (parentNode != null) {
-            structureChanged.add(parentNode);
-            parentNode.add(executionNode);
-        }
-        myConsoleViewHandler.maybeAddExecutionConsole(executionNode, presentationData);
-        return executionNode;
-    }
 
     //@ApiStatus.Internal
     @RequiredUIAccess
@@ -523,52 +238,8 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         return console;
     }
 
-    private static EventResult calculateDerivedResult(DerivedResult result, ExecutionNodeImpl node) {
-        if (node.getResult() != null) {
-            return node.getResult(); // if another thread set result for child
-        }
-        if (node.isFailed()) {
-            return result.createFailureResult();
-        }
 
-        return result.createDefaultResult();
-    }
 
-    private void reportMessageKind(MessageEvent.Kind eventKind, ExecutionNodeImpl parentNode) {
-        if (eventKind == MessageEvent.Kind.ERROR
-            || eventKind == MessageEvent.Kind.WARNING
-            || eventKind == MessageEvent.Kind.INFO) {
-            ExecutionNodeImpl executionNode = parentNode;
-            do {
-                ExecutionNodeImpl updatedRoot = executionNode.reportChildMessageKind(eventKind);
-                if (updatedRoot != null) {
-                    scheduleUpdate(updatedRoot, true);
-                }
-                else {
-                    scheduleUpdate(executionNode, false);
-                }
-            }
-            while ((executionNode = executionNode.getParent()) != null);
-            scheduleUpdate(getRootElement(), false);
-        }
-    }
-
-    private @Nullable Runnable showErrorIfFirst(ExecutionNodeImpl node, @Nullable Navigatable navigatable) {
-        if (myShownFirstError.compareAndSet(false, true)) {
-            return () -> {
-                TreeUtil.promiseSelect(myTree, visitor(node));
-                if (myNavigateToTheFirstErrorLocation && navigatable != null && navigatable != NonNavigatable.INSTANCE) {
-                    Application app = Application.get();
-                    app.invokeLater(
-                        () -> navigatable.navigate(true),
-                        app.getDefaultModalityState(),
-                        myProject.getDisposed()
-                    );
-                }
-            };
-        }
-        return null;
-    }
 
     @Override
     public boolean hasNextOccurence() {
@@ -605,148 +276,26 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         return new TreeVisitor.ByTreePath<>(treePath, o -> (ExecutionNodeImpl)TreeUtil.getUserObject(o));
     }
 
-    private @Nullable Runnable addChildFailureNode(
-        ExecutionNodeImpl parentNode,
-        Failure failure,
-        LocalizeValue defaultFailureMessage,
-        long eventTime,
-        Set<ExecutionNodeImpl> structureChanged
-    ) {
-        LocalizeValue message = failure.getMessage().orIfEmpty(failure.getDescription());
-        if (message.isEmpty()) {
-            Throwable error = failure.getError();
-            message = error != null ? LocalizeValue.of(error) : defaultFailureMessage;
-        }
-        LocalizeValue failureNodeName = message.map(BuildConsoleUtils::getMessageTitle);
-        Navigatable failureNavigatable = failure.getNavigatable();
-        FilePosition filePosition = null;
-        if (failureNavigatable instanceof OpenFileDescriptorImpl fileDescriptor) {
-            File file = VirtualFileUtil.virtualToIoFile(fileDescriptor.getFile());
-            filePosition = new FilePosition(file, fileDescriptor.getLine(), fileDescriptor.getColumn());
-            parentNode = createMessageParentNodes(eventTime, filePosition, failureNavigatable, parentNode);
-        }
-        else if (failureNavigatable instanceof FileNavigatable fileNavigatable) {
-            filePosition = fileNavigatable.getFilePosition();
-            parentNode = createMessageParentNodes(eventTime, filePosition, failureNavigatable, parentNode);
-        }
 
-        ExecutionNodeImpl failureNode = parentNode.findFirstChild(executionNode -> failureNodeName.equals(executionNode.getName()));
-        if (failureNode == null) {
-            failureNode = new ExecutionNodeImpl(myProject, parentNode, true, this::isCorrectThread);
-            failureNode.setName(failureNodeName);
-            if (filePosition != null && filePosition.startLine() >= 0) {
-                String hint = ":" + (filePosition.startLine() + 1);
-                failureNode.setHint(hint);
-            }
-            parentNode.add(failureNode);
-            reportMessageKind(MessageEvent.Kind.ERROR, parentNode);
-        }
-        if (failureNavigatable != null && failureNavigatable != NonNavigatable.INSTANCE) {
-            failureNode.setNavigatable(failureNavigatable);
-        }
 
-        List<Failure> failures;
-        EventResult result = failureNode.getResult();
-        if (result instanceof FailureResult failureResult) {
-            failures = new ArrayList<>(failureResult.getFailures());
-            failures.add(failure);
-        }
-        else {
-            failures = Collections.singletonList(failure);
-        }
-        ExecutionNodeImpl updatedRoot = failureNode.setResult(new FailureResultImpl(failures));
-        if (updatedRoot == null) {
-            updatedRoot = parentNode;
-        }
-        structureChanged.add(updatedRoot);
-        myConsoleViewHandler.addOutput(failureNode, failure);
-        return showErrorIfFirst(failureNode, failureNavigatable);
-    }
 
-    private static void finishChildren(
-        Set<ExecutionNodeImpl> structureChanged,
-        ExecutionNodeImpl node,
-        EventResult result
-    ) {
-        List<ExecutionNodeImpl> childList = node.getChildList();
-        if (childList.isEmpty()) {
-            return;
-        }
-        // Make a copy of the list since child.setResult may remove items from the collection.
-        for (ExecutionNodeImpl child : new ArrayList<>(childList)) {
-            if (!child.isRunning()) {
-                continue;
-            }
-            finishChildren(structureChanged, child, result);
-            addIfNotNull(structureChanged, child.setResult(result));
-        }
-    }
 
-    @Override
-    public void scrollTo(int offset) {
-    }
 
-    @Override
-    public void attachToProcess(ProcessHandler processHandler) {
-    }
 
-    @Override
-    public boolean isOutputPaused() {
-        return false;
-    }
 
-    @Override
-    public void setOutputPaused(boolean value) {
-    }
 
-    @Override
-    public boolean hasDeferredOutput() {
-        return false;
-    }
 
-    @Override
-    public void performWhenNoDeferredOutput(Runnable runnable) {
-    }
 
-    @Override
-    public void setHelpId(String helpId) {
-    }
 
-    @Override
-    public void addMessageFilter(Filter filter) {
-    }
 
-    @Override
-    public void printHyperlink(String hyperlinkText, @Nullable HyperlinkInfo info) {
-    }
 
-    @Override
-    public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter) {
-    }
 
-    @Override
-    public @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
-        return null;
-    }
-
-    @Override
-    public int getContentSize() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return false;
-    }
 
     @Override
     public AnAction[] createConsoleActions() {
         return AnAction.EMPTY_ARRAY;
     }
 
-    @Override
-    public void allowHeavyFilters() {
-    }
 
     @Override
     public JComponent getComponent() {
@@ -758,106 +307,40 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         return myTree;
     }
 
-    @Override
-    public void dispose() {
-        myDisposed.set(true);
-    }
 
-    public boolean isDisposed() {
-        return myDisposed.get();
-    }
+
 
     @Override
-    public void onEvent(Object buildId, BuildEvent event) {
-        myTreeModel.getInvoker().invoke(() -> onEventInternal(buildId, event));
-    }
-
-    void scheduleUpdate(ExecutionNodeImpl executionNode, boolean parentStructureChanged) {
+    protected void scheduleUpdate(ExecutionNodeImpl executionNode, boolean parentStructureChanged) {
         ExecutionNodeImpl node = (executionNode.getParent() == null || !parentStructureChanged) ? executionNode : executionNode.getParent();
         myTreeModel.invalidate(node, parentStructureChanged);
     }
 
-    private ExecutionNodeImpl createMessageParentNodes(MessageEvent messageEvent, ExecutionNodeImpl parentNode) {
-        Object messageEventParentId = messageEvent.getParentId();
-        if (messageEventParentId == null) {
-            return null;
-        }
-        if (messageEvent instanceof FileMessageEvent fileMessageEvent) {
-            return createMessageParentNodes(
-                messageEvent.getEventTime(),
-                fileMessageEvent.getFilePosition(),
-                messageEvent.getNavigatable(myProject),
-                parentNode
-            );
-        }
-        else {
-            return parentNode;
+    @Override
+    protected void invalidateAll(boolean structure, @Nullable Runnable after) {
+        Promise<?> promise = myTreeModel.invalidate(getRootElement(), structure);
+        if (after != null) {
+            promise.onProcessed(p -> after.run());
         }
     }
 
-    private ExecutionNodeImpl createMessageParentNodes(
-        long eventTime,
-        FilePosition filePosition,
-        @Nullable Navigatable navigatable,
-        ExecutionNodeImpl parentNode
-    ) {
-        String filePath = FileUtil.toSystemIndependentName(filePosition.getFile().getPath());
-        String parentsPath = "";
-
-        String relativePath = FileUtil.getRelativePath(myWorkingDir, filePath, '/');
-        if (relativePath != null) {
-            if (relativePath.equals(".")) {
-                return parentNode;
-            }
-            if (!relativePath.startsWith("../../")) {
-                parentsPath = myWorkingDir;
-            }
-        }
-
-        if (isEmpty(parentsPath)) {
-            File userHomeDir = Platform.current().user().homePath().toFile();
-            if (FileUtil.isAncestor(userHomeDir, new File(filePath), true)) {
-                relativePath = UserHomeFileUtil.getLocationRelativeToUserHome(filePath, false);
-            }
-            else {
-                relativePath = filePath;
-            }
-        }
-        else {
-            relativePath = getRelativePath(parentsPath, filePath);
-        }
-        Path path = Paths.get(relativePath);
-        String nodeName = path.getFileName().toString();
-        Path pathParent = path.getParent();
-        String pathHint = pathParent == null ? null : pathParent.toString();
-        parentNode = getOrCreateMessagesNode(
-            eventTime,
-            filePath,
-            parentNode,
-            nodeName,
-            pathHint,
-            () -> {
-                VirtualFile file = VirtualFileUtil.findFileByIoFile(filePosition.getFile(), false);
-                if (file != null) {
-                    return file.getFileType().getIcon();
-                }
-                return null;
-            },
-            navigatable,
-            nodesMap,
-            myProject
-        );
-        return parentNode;
+    @Override
+    protected void makeNodeVisible(ExecutionNodeImpl node) {
+        TreeUtil.promiseMakeVisible(myTree, visitor(node));
     }
 
-    private static String getRelativePath(String basePath, String filePath) {
-        String path = ObjectUtil.notNull(FileUtil.getRelativePath(basePath, filePath, '/'), filePath);
-        File userHomeDir = Platform.current().user().homePath().toFile();
-        if (path.startsWith("..") && FileUtil.isAncestor(userHomeDir, new File(filePath), true)) {
-            return UserHomeFileUtil.getLocationRelativeToUserHome(filePath, false);
-        }
-        return path;
+    @Override
+    protected void selectNode(ExecutionNodeImpl node) {
+        TreeUtil.promiseSelect(myTree, visitor(node));
     }
+
+    @Override
+    protected BuildNodeConsoleHandler getConsoleHandler() {
+        return myConsoleViewHandler;
+    }
+
+
+
 
     public void hideRootNode() {
         invokeLaterIfNeeded(() -> {
@@ -936,45 +419,13 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         return tree;
     }
 
-    private
-    ExecutionNodeImpl getOrCreateMessagesNode(
-        long eventTime,
-        String nodeId,
-        ExecutionNodeImpl parentNode,
-        String nodeName,
-        @Nullable @BuildEventsNls.Hint String hint,
-        @Nullable Supplier<? extends Image> iconProvider,
-        @Nullable Navigatable navigatable,
-        Map<Object, ExecutionNodeImpl> nodesMap,
-        Project project
-    ) {
-        ExecutionNodeImpl node = nodesMap.get(nodeId);
-        if (node == null) {
-            node = new ExecutionNodeImpl(project, parentNode, false, this::isCorrectThread);
-            node.setName(nodeName);
-            if (hint != null) {
-                node.setHint(hint);
-            }
-            node.setStartTime(eventTime);
-            node.setEndTime(eventTime);
-            if (iconProvider != null) {
-                node.setIconProvider(iconProvider);
-            }
-            if (navigatable != null) {
-                node.setNavigatable(navigatable);
-            }
-            parentNode.add(node);
-            nodesMap.put(nodeId, node);
-        }
-        return node;
-    }
 
     //@ApiStatus.Internal
     public Promise<?> invokeLater(Runnable task) {
         return myTreeModel.getInvoker().invokeLater(task);
     }
 
-    private static class ConsoleViewHandler implements Disposable {
+    private static class ConsoleViewHandler implements BuildNodeConsoleHandler {
         private static final String EMPTY_CONSOLE_NAME = "empty";
         private final Project myProject;
         private final JPanel myPanel;
@@ -1074,12 +525,13 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
             return textConsoleToolbarActionGroup;
         }
 
-        private void updateProgressBar(long total, long progress) {
+        @Override
+        public void updateProgressBar(long total, long progress) {
             myProject.getUIAccess().give(() -> myPanelWithProgress.updateProgress(total, progress));
         }
 
-        private
-        @Nullable ExecutionConsole getCurrentConsole() {
+        @Override
+        public @Nullable ExecutionConsole getCurrentConsole() {
             String nodeConsoleViewName = myNodeConsoleViewName.get();
             if (nodeConsoleViewName == null) {
                 return null;
@@ -1096,7 +548,8 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
             return null;
         }
 
-        private boolean setNode(ExecutionNodeImpl node) {
+        @Override
+        public boolean setNode(@Nullable ExecutionNodeImpl node) {
             String nodeConsoleViewName = getNodeConsoleViewName(node);
             myNodeConsoleViewName.set(nodeConsoleViewName);
             ExecutionConsole view = myView.getView(nodeConsoleViewName);
@@ -1148,15 +601,18 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
             });
         }
 
-        private void addOutput(ExecutionNodeImpl node, String text, boolean stdOut) {
+        @Override
+        public void addOutput(ExecutionNodeImpl node, String text, boolean stdOut) {
             addOutput(node, view -> view.append(text, stdOut));
         }
 
-        private void addOutput(ExecutionNodeImpl node, Object buildId, BuildEvent event) {
+        @Override
+        public void addOutput(ExecutionNodeImpl node, Object buildId, BuildEvent event) {
             addOutput(node, view -> view.onEvent(buildId, event));
         }
 
-        private void addOutput(ExecutionNodeImpl node, Failure failure) {
+        @Override
+        public void addOutput(ExecutionNodeImpl node, Failure failure) {
             addOutput(node, view -> view.append(failure));
         }
 
@@ -1172,11 +628,17 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         }
 
         @Override
+        public boolean hasNode() {
+            return myExecutionNode != null;
+        }
+
+        @Override
         public void dispose() {
             deferredNodeOutput.clear();
         }
 
-        private void stopProgressBar() {
+        @Override
+        public void stopProgressBar() {
             myPanelWithProgress.stopLoading();
         }
 

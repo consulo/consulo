@@ -41,10 +41,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.ui.util.ShowNotifier;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.ui.layout.DockLayout;
 import consulo.web.ui.impl.internal.WebRootPaneImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowInternalDecorator;
@@ -97,7 +100,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
         myFrame = windowManager.getIdeFrame(myProject);
 
-        WebToolWindowPanelImpl toolWindowPanel = new WebToolWindowPanelImpl();
+        WebToolWindowPanelImpl toolWindowPanel = new WebToolWindowPanelImpl(myProject);
 
         myToolWindowPanel = toolWindowPanel;
 
@@ -140,13 +143,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         dock.center(label);
         return label;
     }
-
-    @Override
-    @RequiredUIAccess
-    protected void doWhenFirstShown(Object component, Runnable runnable) {
-        UIAccess.get().give(runnable);
-    }
-
     
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
@@ -189,11 +185,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         boolean dumbAware
     ) {
         return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
-    }
-
-    @Override
-    public boolean isUnified() {
-        return true;
     }
 
     @Override
@@ -262,5 +253,33 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     @Override
     public void doContentRename(DataContext dataContext, ToolWindow toolWindow, @Nullable Content content, LocalizeValue labelText, BiConsumer<Content, String> consumer) {
 
+    }
+
+    /**
+     * Takes every hidden tool window out of the state tree of the ui it was attached to. A tool window which
+     * is hidden hangs off no parent, so the reset of the frame root does not reach it - and a node which goes
+     * on remembering the ui it was attached to fires no attach events when the next one takes it in, so the
+     * tool window comes up empty the first time it is shown again. The ones which are showing are left alone:
+     * they ride along with the root panel, and taking them out of the tree here would take them out of the
+     * layout holding them as well, with nothing to put them back.
+     */
+    @RequiredUIAccess
+    public void removeToolWindowsFromTree() {
+        for (ToolWindow toolWindow : getToolWindows()) {
+            ToolWindowInternalDecorator decorator = getInternalDecorator(toolWindow.getId());
+            if (!(decorator instanceof UnifiedToolWindowInternalDecorator unifiedDecorator)) {
+                continue;
+            }
+
+            com.vaadin.flow.component.Component vaadinComponent = TargetVaadin.to(unifiedDecorator.getComponent());
+            if (vaadinComponent == null) {
+                continue;
+            }
+
+            com.vaadin.flow.dom.Element element = vaadinComponent.getElement();
+            if (element.getParent() == null) {
+                element.removeFromTree(false);
+            }
+        }
     }
 }

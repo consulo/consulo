@@ -194,8 +194,16 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         }
 
         content.setExecutionId(executionId);
-        content.setComponent(descriptor.getComponent());
-        content.setPreferredFocusedComponent(descriptor.getPreferredFocusComputable());
+
+        consulo.ui.Component uiComponent = descriptor.getUIComponent();
+        if (uiComponent != null) {
+            content.setUIComponent(uiComponent);
+        }
+        else {
+            content.setComponent(descriptor.getComponent());
+            content.setPreferredFocusedComponent(descriptor.getPreferredFocusComputable());
+        }
+
         content.putUserData(RunContentDescriptor.KEY, descriptor);
         content.putUserData(EXECUTOR_KEY, executor);
         content.setDisplayName(descriptor.getDisplayName());
@@ -396,7 +404,10 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
     private Content createNewContent(RunContentDescriptor descriptor, Executor executor) {
         String processDisplayName = descriptor.getDisplayName();
-        Content content = ContentFactory.getInstance().createContent(descriptor.getComponent(), processDisplayName, true);
+        consulo.ui.Component uiComponent = descriptor.getUIComponent();
+        Content content = uiComponent != null
+            ? ContentFactory.getInstance().createUIContent(uiComponent, processDisplayName, true)
+            : ContentFactory.getInstance().createContent(descriptor.getComponent(), processDisplayName, true);
         content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
         Image icon = descriptor.getIcon();
         content.setIcon(icon == null ? executor.getToolWindowIcon() : icon);

@@ -17,6 +17,7 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.component.util.BusyObject;
+import consulo.logging.Logger;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
@@ -34,6 +35,8 @@ import javax.swing.*;
 import java.util.function.Supplier;
 
 public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx {
+  private static final Logger LOG = Logger.getInstance(UnifiedContentImpl.class);
+
   private String myDisplayName;
   private String myDescription;
   private Component myComponent;
@@ -103,6 +106,38 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   @Override
   public void setUIPreferredFocusedComponent(Supplier<Component> computable) {
     myFocusRequest = computable;
+  }
+
+  /**
+   * A swing component handed here is what a frontend of its own wrapped around a component of the platform, so it
+   * is unwrapped rather than refused. One which never came from here has nothing behind it, and what the content
+   * already shows is kept instead of taking the tool window down.
+   */
+  @Override
+  public void setComponent(JComponent component) {
+    Component uiComponent = TargetAWT.from(component);
+    if (uiComponent == null) {
+      LOG.warn("Component of '" + myDisplayName + "' is a swing component, which this frontend cannot show");
+      return;
+    }
+
+    setUIComponent(uiComponent);
+  }
+
+  @Override
+  public void setPreferredFocusableComponent(JComponent component) {
+    Component uiComponent = TargetAWT.from(component);
+    if (uiComponent == null) {
+      LOG.warn("Focusable component of '" + myDisplayName + "' is a swing component, which this frontend cannot show");
+      return;
+    }
+
+    setUIPreferredFocusableComponent(uiComponent);
+  }
+
+  @Override
+  public void setPreferredFocusedComponent(Supplier<JComponent> computable) {
+    setUIPreferredFocusedComponent(() -> TargetAWT.from(computable.get()));
   }
 
   @Override

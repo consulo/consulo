@@ -15,6 +15,8 @@
  */
 package consulo.execution.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.DefaultExecutionResult;
@@ -22,6 +24,7 @@ import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.process.ProcessHandler;
+import consulo.ui.Component;
 import consulo.ui.ex.HelpIdProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.Content;
@@ -39,6 +42,7 @@ public class RunContentDescriptor implements Disposable {
   private ExecutionConsole myExecutionConsole;
   private ProcessHandler myProcessHandler;
   private JComponent myComponent;
+  private @Nullable Component myUIComponent;
   private final String myDisplayName;
   private final Image myIcon;
   private final String myHelpId;
@@ -107,9 +111,28 @@ public class RunContentDescriptor implements Disposable {
   }
 
   public RunContentDescriptor(RunProfile profile, ExecutionResult executionResult, RunnerLayoutUi ui) {
-    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(), profile.getIcon(), null,
+    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui, profile.getName(), profile.getIcon(), null,
          executionResult instanceof DefaultExecutionResult ? ((DefaultExecutionResult)executionResult).getRestartActions() : null);
+  }
+
+  public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
+                              @Nullable ProcessHandler processHandler,
+                              RunnerLayoutUi ui,
+                              String displayName,
+                              @Nullable Image icon,
+                              @Nullable Runnable activationCallback,
+                              @Nullable AnAction[] restartActions) {
+    this(executionConsole, processHandler, (JComponent)null, displayName, icon, activationCallback, restartActions);
+
     myRunnerLayoutUi = ui;
+
+    // the tabs of a run are drawn by whichever frontend is up, and only that one answers with a component
+    if (Application.get().isUnifiedApplication()) {
+      myUIComponent = ui.getUIComponent();
+    }
+    else {
+      myComponent = ui.getComponent();
+    }
   }
 
   public Runnable getActivationCallback() {
@@ -131,6 +154,7 @@ public class RunContentDescriptor implements Disposable {
   public void dispose() {
     myExecutionConsole = null;
     myComponent = null;
+    myUIComponent = null;
     myProcessHandler = null;
     myContent = null;
   }
@@ -156,9 +180,22 @@ public class RunContentDescriptor implements Disposable {
     return false;
   }
 
+  public @Nullable Component getUIComponent() {
+    return myUIComponent;
+  }
+
+  public void setUIComponent(@Nullable Component component) {
+    myUIComponent = component;
+  }
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  @Deprecated
+  @DeprecationInfo("Use getUIComponent")
   public JComponent getComponent() {
     return myComponent;
   }
+  // endregion
 
   public String getDisplayName() {
     return myDisplayName;

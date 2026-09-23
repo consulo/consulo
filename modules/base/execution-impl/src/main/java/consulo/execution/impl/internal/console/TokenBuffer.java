@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.impl;
+package consulo.execution.impl.internal.console;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
@@ -31,10 +31,10 @@ import java.util.List;
  * Add token via {@link #print(String, ConsoleViewContentType, HyperlinkInfo)}
  * Get all tokens via {@link #drain()}
  */
-class TokenBuffer {
+public class TokenBuffer {
     // special token which means that the deferred text starts with "\r" so it shouldn't be appended to the document end.
     // Instead, the last line of the document should be removed
-    static final TokenInfo CR_TOKEN = new TokenInfo(ConsoleViewContentType.SYSTEM_OUTPUT, "\r", null);
+    public static final TokenInfo CR_TOKEN = new TokenInfo(ConsoleViewContentType.SYSTEM_OUTPUT, "\r", null);
     // if size becomes > maxCapacity we should trim tokens from the beginning
     private final int maxCapacity;
     // each call to print() is stored here
@@ -44,11 +44,11 @@ class TokenBuffer {
     // index of text start in the first TokeInfo. This TokenInfo can become sliced after total size overflows maxCapacity
     private int startIndex;
 
-    TokenBuffer(int maxCapacity) {
+    public TokenBuffer(int maxCapacity) {
         this.maxCapacity = maxCapacity;
     }
 
-    void print(String text, ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
+    public void print(String text, ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
         int start = 0;
         while (start < text.length()) {
             if (hasTrailingCR()) {
@@ -136,11 +136,11 @@ class TokenBuffer {
         //assert tokens.toList().stream().mapToInt(TokenInfo::length).sum() == size;
     }
 
-    int length() {
+    public int length() {
         return size - startIndex;
     }
 
-    void clear() {
+    public void clear() {
         tokens.clear();
         startIndex = 0;
         size = 0;
@@ -155,7 +155,7 @@ class TokenBuffer {
     }
 
     
-    static CharSequence getRawText(List<? extends TokenInfo> tokens) {
+    public static CharSequence getRawText(List<? extends TokenInfo> tokens) {
         int size = 0;
         for (TokenInfo token : tokens) {
             size += token.getText().length();
@@ -170,7 +170,7 @@ class TokenBuffer {
     // the first token may be CR_TOKEN meaning that instead of appending it we should delete the last line of the document
     // all the remaining text is guaranteed not to contain CR_TOKEN - they can be appended safely to the document end
     
-    List<TokenInfo> drain() {
+    public List<TokenInfo> drain() {
         if (hasTrailingCR()) {
             removeLastLine();
         }
@@ -194,23 +194,23 @@ class TokenBuffer {
         return list;
     }
 
-    int getCycleBufferSize() {
+    public int getCycleBufferSize() {
         return maxCapacity;
     }
 
-    static class TokenInfo {
+    public static class TokenInfo {
         
-        final ConsoleViewContentType contentType;
+        public final ConsoleViewContentType contentType;
         private final String text;
         private final HyperlinkInfo myHyperlinkInfo;
 
-        TokenInfo(ConsoleViewContentType contentType, String text, @Nullable HyperlinkInfo hyperlinkInfo) {
+        public TokenInfo(ConsoleViewContentType contentType, String text, @Nullable HyperlinkInfo hyperlinkInfo) {
             this.contentType = contentType;
             myHyperlinkInfo = hyperlinkInfo;
             this.text = text;
         }
 
-        int length() {
+        public int length() {
             return text.length();
         }
 
@@ -219,12 +219,12 @@ class TokenBuffer {
             return contentType + "[" + length() + "]";
         }
 
-        HyperlinkInfo getHyperlinkInfo() {
+        public HyperlinkInfo getHyperlinkInfo() {
             return myHyperlinkInfo;
         }
 
         
-        String getText() {
+        public String getText() {
             return text;
         }
     }

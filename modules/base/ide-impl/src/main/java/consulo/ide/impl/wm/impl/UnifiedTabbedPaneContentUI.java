@@ -15,7 +15,11 @@
  */
 package consulo.ide.impl.wm.impl;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -24,13 +28,22 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Stub tabbed-pane content UI for unified frontends: shows the selected content without real tab headers.
+ * Tabs of a content manager for the frontends which render {@link consulo.ui} components rather than swing -
+ * a row of tab buttons over the view which is selected. A lone content is the whole of what the manager holds
+ * and needs no tab of its own.
  */
 public class UnifiedTabbedPaneContentUI implements ContentUI, ContentManagerListener {
     private final DockLayout myRoot = DockLayout.create();
+    private final HorizontalLayout myTabs = HorizontalLayout.create(Space.X_SMALL);
+
+    {
+        myRoot.top(myTabs);
+    }
 
     private @Nullable ContentManager myManager;
 
@@ -60,11 +73,46 @@ public class UnifiedTabbedPaneContentUI implements ContentUI, ContentManagerList
 
     @RequiredUIAccess
     private void updateSelection() {
+        rebuildTabs();
+
         Content content = myManager == null ? null : myManager.getSelectedContent();
         Component component = content == null ? null : content.getUIComponent();
         if (component != null) {
             myRoot.center(component);
         }
+    }
+
+    @RequiredUIAccess
+    private void rebuildTabs() {
+        myTabs.removeAll();
+
+        ContentManager manager = myManager;
+        if (manager == null || manager.getContentCount() < 2) {
+            return;
+        }
+
+        Content selected = manager.getSelectedContent();
+
+        for (Content content : manager.getContents()) {
+            myTabs.add(createTab(manager, content, content == selected));
+        }
+    }
+
+    @RequiredUIAccess
+    private Component createTab(ContentManager manager, Content content, boolean selected) {
+        Button tab = Button.create(LocalizeValue.of(content.getTabName()));
+        tab.setIcon(content.getIcon());
+        tab.addStyle(ButtonStyle.BORDERLESS);
+        tab.addClickListener(event -> manager.setSelectedContent(content, true));
+
+        HorizontalLayout tabLayout = HorizontalLayout.create(Space.NONE);
+        tabLayout.add(tab);
+
+        if (selected) {
+            tabLayout.setBackgroundColor(ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND);
+        }
+
+        return tabLayout;
     }
 
     @Override

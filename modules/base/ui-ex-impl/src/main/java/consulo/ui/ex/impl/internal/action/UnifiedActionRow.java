@@ -75,9 +75,7 @@ public class UnifiedActionRow {
 
     private static final int POPUP_REOPEN_THRESHOLD_MS = 200;
 
-    private static final Space GAP = Space.X_SMALL;
-    // a labeled button is as wide as its text, and two of them standing 2px apart read as one control - the gap
-    // which suits a band of 24x24 icons is not enough for the ok/cancel row of a dialog
+    private static final Space GAP = Space.MEDIUM;
     private static final Space BUTTON_GAP = Space.LARGE;
 
     private final Supplier<ActionGroup> myGroupSupplier;
@@ -245,7 +243,14 @@ public class UnifiedActionRow {
                 return;
             }
 
-            apply(nodes);
+            try {
+                apply(nodes);
+            }
+            catch (Throwable e) {
+                // nobody reads what a stage of a completion chain threw, and a row which gave up halfway
+                // through is left standing empty
+                LOG.error("Failed to build the actions of " + myPlace, e);
+            }
 
             result.complete(myActions);
             drainPendingUpdate();
@@ -284,10 +289,12 @@ public class UnifiedActionRow {
             return;
         }
 
-        mySignature = signature;
-
         myLayout.removeAll();
         myToggleButtons.clear();
+
+        // the signature stands for what is on screen, so it is taken only once the row is there - one which was
+        // never drawn would answer every later update with the early return above and stay empty for good
+        mySignature = "";
 
         for (UnifiedActionMenuExpander.MenuNode node : nodes) {
             if (node.isSeparator()) {
@@ -302,6 +309,8 @@ public class UnifiedActionRow {
 
             add(node.children() == null ? createActionButton(node) : createActionMenu(node));
         }
+
+        mySignature = signature;
     }
 
     @RequiredUIAccess

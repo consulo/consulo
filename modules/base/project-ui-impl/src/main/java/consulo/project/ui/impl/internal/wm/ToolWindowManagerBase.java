@@ -20,7 +20,9 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithAsyncGet;
+import consulo.ui.Component;
 import consulo.ui.UIAction;
+import consulo.ui.util.ShowNotifier;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -998,13 +1000,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     protected abstract Object createInitializingLabel();
 
     @RequiredUIAccess
-    protected abstract void doWhenFirstShown(Object component, Runnable runnable);
-
-    public boolean isUnified() {
-        return false;
+    protected void doWhenFirstShown(Object component, Runnable runnable) {
+        ShowNotifier.once((Component) component, runnable);
     }
 
-    
     @RequiredUIAccess
     protected ToolWindow registerToolWindow(
         String id,

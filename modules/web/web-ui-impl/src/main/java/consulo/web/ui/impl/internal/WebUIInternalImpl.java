@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal;
 
+import consulo.ui.event.ModalityStateListener;
 import consulo.ui.RadioGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -74,6 +75,7 @@ import java.util.ArrayList;
  */
 @NullMarked
 public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
+
     private final DummyTaskBarImpl myTaskBar = new DummyTaskBarImpl();
 
     @Override
@@ -605,5 +607,13 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
         return new UnifiedInputBoxBuilderImpl<>(PasswordBox::create);
+    }
+
+    /**
+     * Nothing of the platform is modal from the frontend's side, so a listener of the state has nothing to be
+     * told about - it is taken and dropped rather than refused, which would take the caller down with it.
+     */
+    @Override
+    public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
     }
 }

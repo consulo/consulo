@@ -82,9 +82,15 @@ public class FakeRerunAction extends LegacyDumbAwareAction {
             RunContentDescriptor contentDescriptor = project == null ? null
                 : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
             if (contentDescriptor != null) {
-                JComponent component = contentDescriptor.getComponent();
-                if (component != null) {
-                    environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
+                consulo.ui.Component uiComponent = contentDescriptor.getUIComponent();
+                if (uiComponent != null) {
+                    environment = DataManager.getInstance().getDataContext(uiComponent).getData(ExecutionEnvironment.KEY);
+                }
+                else {
+                    JComponent component = contentDescriptor.getComponent();
+                    if (component != null) {
+                        environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
+                    }
                 }
             }
         }

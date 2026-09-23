@@ -19,6 +19,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.logging.Logger;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
+import consulo.project.Project;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,6 +47,8 @@ import java.util.Map;
  */
 public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
     private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
+
+    private static final String ROOT_SPLITTER_ATTRIBUTE = "consulo-root-splitter";
 
     public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent, FlexComponent {
         private Div myTopDiv = new Div();
@@ -214,31 +218,18 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Primary = new HashMap<>();
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Secondary = new HashMap<>();
 
-    private ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+    private final UnifiedToolWindowSplitters mySplitters;
 
-    private ThreeComponentSplitLayout myVerticalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
-
-    private boolean myWidescreen;
-
-    public WebToolWindowPanelImpl() {
+    @RequiredUIAccess
+    public WebToolWindowPanelImpl(Project project) {
         Vaadin vaadinComponent = getVaadinComponent();
 
         vaadinComponent.myTopDiv.add(TargetVaadin.to(myTopStripe));
         vaadinComponent.myCenterDiv.add(TargetVaadin.to(myLeftStripe));
 
-        // same nesting as the awt panel - the outer splitter holds the stripes of its own orientation,
-        // the inner one is placed in its center and ends up holding the editor
-        ThreeComponentSplitLayout rootSplitter = myWidescreen ? myHorizontalSplitter : myVerticalSplitter;
-        if (myWidescreen) {
-            myHorizontalSplitter.setCenterComponent(myVerticalSplitter);
-        }
-        else {
-            myVerticalSplitter.setCenterComponent(myHorizontalSplitter);
-        }
+        mySplitters = new UnifiedToolWindowSplitters(project, project, this::setRootSplitter);
 
-        VaadinSizeUtil.setWidthFull(rootSplitter);
-        com.vaadin.flow.component.Component splitter = TargetVaadin.to(rootSplitter);
-        vaadinComponent.myCenterDiv.add(splitter);
+        attachRootSplitter(mySplitters.getRootSplitter());
         vaadinComponent.myCenterDiv.add(TargetVaadin.to(myRightStripe));
 
         // tttttttttttttttttttttttttttttttt
@@ -251,7 +242,48 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         // the bottom stripe is not part of the panel - the tool window manager hands it to the status bar,
         // where it shares one row with the widgets, like the awt frame does
 
+    }
+
+    /**
+     * The splitter which is the outer one sits between the two side stripes, so the one taking its place goes
+     * back in at the same index.
+     */
+    @RequiredUIAccess
+    private void setRootSplitter(ThreeComponentSplitLayout rootSplitter) {
+        Div centerDiv = getVaadinComponent().myCenterDiv;
+
+        int index = centerDiv.getComponentCount() - 1;
+        for (int i = 0; i < centerDiv.getComponentCount(); i++) {
+            if (centerDiv.getComponentAt(i).getElement().hasAttribute(ROOT_SPLITTER_ATTRIBUTE)) {
+                index = i;
+                centerDiv.remove(centerDiv.getComponentAt(i));
+                break;
+            }
+        }
+
+        attachRootSplitter(rootSplitter, index);
+    }
+
+    @RequiredUIAccess
+    private void attachRootSplitter(ThreeComponentSplitLayout rootSplitter) {
+        attachRootSplitter(rootSplitter, -1);
+    }
+
+    @RequiredUIAccess
+    private void attachRootSplitter(ThreeComponentSplitLayout rootSplitter, int index) {
+        VaadinSizeUtil.setWidthFull(rootSplitter);
+
+        com.vaadin.flow.component.Component splitter = TargetVaadin.to(rootSplitter);
         splitter.addClassName("web-tool-window-content");
+        splitter.getElement().setAttribute(ROOT_SPLITTER_ATTRIBUTE, "");
+
+        Div centerDiv = getVaadinComponent().myCenterDiv;
+        if (index < 0) {
+            centerDiv.add(splitter);
+        }
+        else {
+            centerDiv.addComponentAtIndex(index, splitter);
+        }
     }
 
     public WebToolWindowStripeImpl getBottomStripe() {
@@ -302,26 +334,12 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @RequiredUIAccess
     private void setComponent(consulo.ui.@Nullable Component component, ToolWindowAnchor anchor, float weight) {
-        if (ToolWindowAnchor.TOP == anchor) {
-            myVerticalSplitter.setFirstComponent(component);
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-            myHorizontalSplitter.setFirstComponent(component);
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-            myVerticalSplitter.setSecondComponent(component);
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-            myHorizontalSplitter.setSecondComponent(component);
-        }
-        else {
-            LOG.error("unknown anchor: " + anchor);
-        }
+        mySplitters.setComponent(anchor, component);
     }
 
     @RequiredUIAccess
     private void setDocumentComponent(Component component) {
-        (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
+        mySplitters.setDocumentComponent(component);
     }
 
     private @Nullable WebToolWindowStripeButtonImpl getButtonById(String id) {

@@ -434,6 +434,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             updateColors();
             updateCaretVisible();
 
+            // the text of the browser side editor is its input, and a fresh one holds none of it - every push
+            // after this is an edit against offsets, so the whole text goes first or none of them land
+            vaadin.setText(myDocument.getText());
+
             update();
 
             // the browser is a fresh one and holds none of what the last one was sent, so the annotations have to be

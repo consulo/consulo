@@ -66,18 +66,47 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
     @Override
     @RequiredUIAccess
-    public void setFirstComponent(Component component) {
+    public void setFirstComponent(@Nullable Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
+        if (vComponent == null) {
+            // no component is a side which is not there at all, not an empty one still holding its share
+            removeSide(true);
+            return;
+        }
+
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToPrimary(vComponent);
     }
 
     @Override
     @RequiredUIAccess
-    public void setSecondComponent(Component component) {
+    public void setSecondComponent(@Nullable Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
+        if (vComponent == null) {
+            removeSide(false);
+            return;
+        }
+
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
+    }
+
+    /**
+     * Takes away whichever side is asked for, leaving the other one the whole of the layout.
+     */
+    @RequiredUIAccess
+    private void removeSide(boolean primary) {
+        Vaadin vaadin = toVaadinComponent();
+
+        java.util.List<com.vaadin.flow.component.Component> children = vaadin.getChildren().toList();
+        if (children.isEmpty()) {
+            return;
+        }
+
+        com.vaadin.flow.component.Component side = primary ? children.get(0) : children.get(children.size() - 1);
+        if (primary || children.size() > 1) {
+            vaadin.remove(side);
+        }
     }
 
     @Override

@@ -25,10 +25,9 @@ public class XDebugTabLayouter {
     public Content registerConsoleContent(RunnerLayoutUi ui, ExecutionConsole console) {
         Content content = ui.createContent(
             DebuggerContentInfo.CONSOLE_CONTENT,
-            console.getComponent(),
+            console,
             XDebuggerLocalize.debuggerSessionTabConsoleContentName().get(),
-            ExecutionIconGroup.console(),
-            console.getPreferredFocusableComponent()
+            ExecutionIconGroup.console()
         );
         content.setCloseable(false);
         ui.addContent(content, 1, PlaceInGrid.bottom, false);

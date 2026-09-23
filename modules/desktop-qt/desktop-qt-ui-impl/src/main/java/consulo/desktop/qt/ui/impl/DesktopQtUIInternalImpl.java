@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.event.ModalityStateListener;
 import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier;
@@ -69,6 +70,7 @@ import java.util.ArrayList;
  * @since 2026-08-16
  */
 public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx {
+
     private final TaskBar myTaskBar = new DummyTaskBarImpl();
 
     @Override
@@ -545,5 +547,13 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
         return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.PASSWORD, PasswordBox::create);
+    }
+
+    /**
+     * Nothing of the platform is modal from the frontend's side, so a listener of the state has nothing to be
+     * told about - it is taken and dropped rather than refused, which would take the caller down with it.
+     */
+    @Override
+    public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
     }
 }

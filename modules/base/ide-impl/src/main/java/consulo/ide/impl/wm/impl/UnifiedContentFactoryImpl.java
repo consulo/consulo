@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.Label;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -65,6 +66,11 @@ public class UnifiedContentFactoryImpl implements ContentFactory {
    */
   @Override
   public Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+    Component uiComponent = TargetAWT.from(component);
+    if (uiComponent != null) {
+      return new UnifiedContentImpl(uiComponent, displayName, isLockable);
+    }
+
     LOG.warn("Content of '" + displayName + "' is a swing component, which this frontend cannot show");
 
     return new UnifiedContentImpl(Label.create(LocalizeValue.of("Unsupported UI")), displayName, isLockable);

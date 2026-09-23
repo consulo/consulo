@@ -308,15 +308,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
       // console actions should be integrated with the provided toolbar when the console is shown not on Build tw
       return AnAction.EMPTY_ARRAY;
     }
-    DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
-    AnAction stopAction = null;
-    if (myBuildDescriptor.getProcessHandler() != null) {
-      stopAction = new StopProcessAction(
-        IdeLocalize.actionDumbawareBuildviewTextStop(),
-        IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop(),
-        myBuildDescriptor.getProcessHandler()
-      );
-      ActionUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
+    AnAction stopAction = createStopAction(myBuildDescriptor);
+    if (stopAction != null) {
       stopAction.registerCustomShortcutSet(stopAction.getShortcutSet(), this);
     }
 
@@ -328,8 +321,28 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
         stopAction = ContainerUtil.find(consoleActions, StopAction.class::isInstance);
       }
     }
+    return createConsoleActions(myBuildDescriptor, stopAction);
+  }
+
+  static @Nullable AnAction createStopAction(DefaultBuildDescriptor buildDescriptor) {
+    BuildProcessHandler processHandler = buildDescriptor.getProcessHandler();
+    if (processHandler == null) {
+      return null;
+    }
+
+    AnAction stopAction = new StopProcessAction(
+      IdeLocalize.actionDumbawareBuildviewTextStop(),
+      IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop(),
+      processHandler
+    );
+    ActionUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
+    return stopAction;
+  }
+
+  static AnAction[] createConsoleActions(DefaultBuildDescriptor buildDescriptor, @Nullable AnAction stopAction) {
+    DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
     DefaultActionGroup actionGroup = new DefaultActionGroup();
-    for (AnAction anAction : myBuildDescriptor.getRestartActions()) {
+    for (AnAction anAction : buildDescriptor.getRestartActions()) {
       rerunActionGroup.add(anAction);
     }
 
@@ -339,7 +352,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     actionGroup.add(rerunActionGroup);
     DefaultActionGroup otherActionGroup = new DefaultActionGroup();
 
-    List<AnAction> otherActions = myBuildDescriptor.getActions();
+    List<AnAction> otherActions = buildDescriptor.getActions();
     if (!otherActions.isEmpty()) {
       otherActionGroup.addSeparator();
       for (AnAction anAction : otherActions) {

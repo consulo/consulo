@@ -46,11 +46,10 @@ import java.util.stream.IntStream;
  * @author Vladislav.Soroka
  */
 //@ApiStatus.Experimental
-public class MultipleBuildsView implements BuildProgressListener, Disposable {
+public class MultipleBuildsView extends BaseMultipleBuildsView implements BuildProgressListener {
     private static final Logger LOG = Logger.getInstance(MultipleBuildsView.class);
     private static final String SPLITTER_PROPERTY = "MultipleBuildsView.Splitter.Proportion";
 
-    protected final Project myProject;
     protected final BuildContentManager myBuildContentManager;
     private final AtomicBoolean isInitializeStarted;
     private final AtomicBoolean isFirstErrorShown = new AtomicBoolean();
@@ -58,17 +57,14 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
     private final ProgressWatcher myProgressWatcher;
     private final OnePixelSplitter myThreeComponentsSplitter;
     private final JBList<AbstractViewManager.BuildInfo> myBuildsList;
-    private final Map<Object, AbstractViewManager.BuildInfo> myBuildsMap;
     private final Map<AbstractViewManager.BuildInfo, BuildView> myViewMap;
-    private final AbstractViewManager myViewManager;
     private volatile Content myContent;
     private volatile DefaultActionGroup myToolbarActions;
     private volatile boolean myDisposed;
 
     public MultipleBuildsView(Project project, BuildContentManager buildContentManager, AbstractViewManager viewManager) {
-        myProject = project;
+        super(project, viewManager);
         myBuildContentManager = buildContentManager;
-        myViewManager = viewManager;
         isInitializeStarted = new AtomicBoolean();
         myPostponedRunnables = Lists.newLockFreeCopyOnWriteList();
         myThreeComponentsSplitter = new OnePixelSplitter(SPLITTER_PROPERTY, 0.25f);
@@ -98,7 +94,6 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
             return panel;
         });
         myViewMap = new ConcurrentHashMap<>();
-        myBuildsMap = new ConcurrentHashMap<>();
         myProgressWatcher = new ProgressWatcher();
     }
 
@@ -111,12 +106,9 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
         return myContent;
     }
 
+    @Override
     public Map<BuildDescriptor, BuildView> getBuildsMap() {
         return Collections.unmodifiableMap(myViewMap);
-    }
-
-    public boolean shouldConsume(Object buildId) {
-        return myBuildsMap.containsKey(buildId);
     }
 
     @Override
@@ -313,23 +305,17 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
     }
 
     private void clearOldBuilds(List<Runnable> runOnEdt, StartBuildEvent startBuildEvent) {
-        long currentTime = System.currentTimeMillis();
         DefaultListModel<AbstractViewManager.BuildInfo> listModel =
             (DefaultListModel<AbstractViewManager.BuildInfo>) myBuildsList.getModel();
-        boolean clearAll = !listModel.isEmpty();
-        List<AbstractViewManager.BuildInfo> sameBuildsToClear = new SmartList<>();
+
+        List<AbstractViewManager.BuildInfo> builds = new SmartList<>();
         for (int i = 0; i < listModel.getSize(); i++) {
-            AbstractViewManager.BuildInfo build = listModel.getElementAt(i);
-            boolean sameBuild = build.getWorkingDir().equals(startBuildEvent.getBuildDescriptor().getWorkingDir());
-            if (!build.isRunning() && sameBuild) {
-                sameBuildsToClear.add(build);
-            }
-            boolean buildFinishedRecently = currentTime - build.endTime < TimeUnit.SECONDS.toMillis(1);
-            if (build.isRunning() || !sameBuild && buildFinishedRecently) {
-                clearAll = false;
-            }
+            builds.add(listModel.getElementAt(i));
         }
-        if (clearAll) {
+
+        ClearDecision decision = decideClearOldBuilds(startBuildEvent, builds);
+
+        if (decision.clearAll()) {
             myBuildsMap.clear();
             SmartList<BuildView> viewsToDispose = new SmartList<>(myViewMap.values());
             runOnEdt.add(() -> viewsToDispose.forEach(Disposer::dispose));
@@ -345,7 +331,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
             isFirstErrorShown.set(false);
         }
         else {
-            sameBuildsToClear.forEach(info -> {
+            decision.buildsToRemove().forEach(info -> {
                 BuildView buildView = myViewMap.remove(info);
                 if (buildView != null) {
                     runOnEdt.add(() -> Disposer.dispose(buildView));

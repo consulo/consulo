@@ -16,8 +16,11 @@
 
 package consulo.execution.ui.layout;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.ComponentWithActions;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -45,11 +48,35 @@ public interface RunnerLayoutUi  {
   
   Content addContent(Content content, int defaultTabId, PlaceInGrid defaultPlace, boolean defaultIsMinimized);
 
-  
-  Content createContent(String contentId, JComponent component, String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
+  /**
+   * do not rename due it will be conflicted with deprecated method
+   */
+  default Content createUIContent(String contentId, @Nullable Component component, String displayName, @Nullable Image icon, @Nullable Component toFocus) {
+    throw new AbstractMethodError();
+  }
 
-  
-  Content createContent(String contentId, ComponentWithActions contentWithActions, String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
+  /**
+   * Content of whatever the container holds, letting it answer with the component the running frontend can
+   * draw rather than making the caller pick one.
+   */
+  default Content createContent(String contentId, ComponentContainer container, String displayName, @Nullable Image icon) {
+    return createContent(contentId, container.getComponent(), displayName, icon, container.getPreferredFocusableComponent());
+  }
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  @Deprecated
+  @DeprecationInfo("Use createUIContent")
+  default Content createContent(String contentId, JComponent component, String displayName, @Nullable Image icon, @Nullable JComponent toFocus) {
+    throw new AbstractMethodError();
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use createUIContent")
+  default Content createContent(String contentId, ComponentWithActions contentWithActions, String displayName, @Nullable Image icon, @Nullable JComponent toFocus) {
+    throw new AbstractMethodError();
+  }
+  // endregion
 
   boolean removeContent(@Nullable Content content, boolean dispose);
 
@@ -70,8 +97,18 @@ public interface RunnerLayoutUi  {
 
   void setBouncing(Content content, boolean activate);
 
-  
-  JComponent getComponent();
+  default Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  @Deprecated
+  @DeprecationInfo("Use getUIComponent")
+  default JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
+  // endregion
 
   boolean isDisposed();
 
