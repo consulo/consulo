@@ -16,7 +16,8 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
 
     @Override
     public void registerProblem(
-        String message, @Nullable String description,
+        String message,
+        @Nullable String description,
         ProjectStructureProblemType problemType,
         PlaceInProjectStructure place,
         @Nullable ConfigurationErrorQuickFix fix

@@ -13,81 +13,84 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public class UsageInArtifact extends ProjectStructureElementUsage {
-  private final Artifact myOriginalArtifact;
-  private final ArtifactsStructureConfigurableContext myContext;
-  private final ProjectStructureElement mySourceElement;
-  private final ProjectStructureElement myContainingElement;
-  private final String myParentPath;
-  private final PackagingElement<?> myPackagingElement;
+    private final Artifact myOriginalArtifact;
+    private final ArtifactsStructureConfigurableContext myContext;
+    private final ProjectStructureElement mySourceElement;
+    private final ProjectStructureElement myContainingElement;
+    private final String myParentPath;
+    private final PackagingElement<?> myPackagingElement;
 
-  public UsageInArtifact(Artifact originalArtifact,
-                         ArtifactsStructureConfigurableContext context,
-                         ProjectStructureElement sourceElement,
-                         ArtifactProjectStructureElement containingElement,
-                         String parentPath,
-                         PackagingElement<?> packagingElement) {
-    myOriginalArtifact = originalArtifact;
-    myContext = context;
-    mySourceElement = sourceElement;
-    myContainingElement = containingElement;
-    myParentPath = parentPath;
-    myPackagingElement = packagingElement;
-  }
+    public UsageInArtifact(
+        Artifact originalArtifact,
+        ArtifactsStructureConfigurableContext context,
+        ProjectStructureElement sourceElement,
+        ArtifactProjectStructureElement containingElement,
+        String parentPath,
+        PackagingElement<?> packagingElement
+    ) {
+        myOriginalArtifact = originalArtifact;
+        myContext = context;
+        mySourceElement = sourceElement;
+        myContainingElement = containingElement;
+        myParentPath = parentPath;
+        myPackagingElement = packagingElement;
+    }
 
-  @Override
-  public ProjectStructureElement getSourceElement() {
-    return mySourceElement;
-  }
+    @Override
+    public ProjectStructureElement getSourceElement() {
+        return mySourceElement;
+    }
 
-  @Override
-  public ProjectStructureElement getContainingElement() {
-    return myContainingElement;
-  }
+    @Override
+    public ProjectStructureElement getContainingElement() {
+        return myContainingElement;
+    }
 
-  public void removeElement() {
-    getOrCreateEditor().removePackagingElement(myParentPath, myPackagingElement);
-  }
+    public void removeElement() {
+        getOrCreateEditor().removePackagingElement(myParentPath, myPackagingElement);
+    }
 
-  private ArtifactEditorEx getOrCreateEditor() {
-    return (ArtifactEditorEx)myContext.getOrCreateEditor(myOriginalArtifact);
-  }
+    private ArtifactEditorEx getOrCreateEditor() {
+        return (ArtifactEditorEx) myContext.getOrCreateEditor(myOriginalArtifact);
+    }
 
-  public void replaceElement(PackagingElement<?> replacement) {
-    getOrCreateEditor().replacePackagingElement(myParentPath, myPackagingElement, replacement);
-  }
+    public void replaceElement(PackagingElement<?> replacement) {
+        getOrCreateEditor().replacePackagingElement(myParentPath, myPackagingElement, replacement);
+    }
 
-  @Override
-  public String getPresentableName() {
-    return myOriginalArtifact.getName();
-  }
+    @Override
+    public String getPresentableName() {
+        return myOriginalArtifact.getName();
+    }
 
-  @Override
-  public PlaceInProjectStructure getPlace() {
-    return new PlaceInArtifact(myOriginalArtifact, myContext, myParentPath, myPackagingElement);
-  }
+    @Override
+    public PlaceInProjectStructure getPlace() {
+        return new PlaceInArtifact(myOriginalArtifact, myContext, myParentPath, myPackagingElement);
+    }
 
-  @Override
-  public int hashCode() {
-    return myOriginalArtifact.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myOriginalArtifact.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof UsageInArtifact && ((UsageInArtifact)obj).myOriginalArtifact.equals(myOriginalArtifact);
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof UsageInArtifact that && that.myOriginalArtifact.equals(myOriginalArtifact);
+    }
 
-  @Override
-  public Image getIcon() {
-    return myOriginalArtifact.getArtifactType().getIcon();
-  }
+    @Override
+    public Image getIcon() {
+        return myOriginalArtifact.getArtifactType().getIcon();
+    }
 
-  @Override
-  public @Nullable String getPresentableLocationInElement() {
-    return "[" + myParentPath + "]";
-  }
+    @Override
+    public @Nullable String getPresentableLocationInElement() {
+        return "[" + myParentPath + "]";
+    }
 
-  @Override
-  public void removeSourceElement() {
-    removeElement();
-  }
+    @Override
+    public void removeSourceElement() {
+        removeElement();
+    }
 }

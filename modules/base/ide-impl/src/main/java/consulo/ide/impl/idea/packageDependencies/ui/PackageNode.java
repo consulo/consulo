@@ -15,38 +15,39 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPackage;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class PackageNode extends PackageDependenciesNode {
-
     private String myPackageName;
     private final String myPackageQName;
     private final PsiPackage myPackage;
 
+    @RequiredReadAction
     public PackageNode(PsiPackage aPackage, boolean showFQName) {
         super(aPackage.getProject());
         myPackage = aPackage;
         myPackageName = showFQName ? aPackage.getQualifiedName() : aPackage.getName();
-        if (myPackageName == null || myPackageName.length() == 0) {
+        if (StringUtil.isEmpty(myPackageName)) {
             myPackageName = AnalysisScopeLocalize.dependenciesTreeNodeDefaultPackageAbbreviation().get();
         }
-        String packageQName = aPackage.getQualifiedName();
-        if (packageQName.length() == 0) {
-            packageQName = null;
-        }
-        myPackageQName = packageQName;
+        myPackageQName = StringUtil.nullize(aPackage.getQualifiedName());
     }
 
+    @Override
     public void fillFiles(Set<PsiFile> set, boolean recursively) {
         super.fillFiles(set, recursively);
         int count = getChildCount();
@@ -58,6 +59,7 @@ public class PackageNode extends PackageDependenciesNode {
         }
     }
 
+    @Override
     public String toString() {
         return myPackageName;
     }
@@ -70,48 +72,41 @@ public class PackageNode extends PackageDependenciesNode {
         return myPackageQName;
     }
 
+    @Override
     public PsiElement getPsiElement() {
         return myPackage;
     }
 
+    @Override
     public int getWeight() {
         return 3;
     }
 
-    public boolean equals(Object o) {
+    @Override
+    public boolean equals(@Nullable Object o) {
         if (isEquals()) {
             return super.equals(o);
         }
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PackageNode)) {
-            return false;
-        }
-
-        PackageNode packageNode = (PackageNode) o;
-
-        if (!myPackageName.equals(packageNode.myPackageName)) {
-            return false;
-        }
-        if (myPackageQName != null ? !myPackageQName.equals(packageNode.myPackageQName) : packageNode.myPackageQName != null) {
-            return false;
-        }
-
-        return true;
+        return o instanceof PackageNode that
+            && myPackageName.equals(that.myPackageName)
+            && Objects.equals(myPackageQName, that.myPackageQName);
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = myPackageName.hashCode();
-        result = 29 * result + (myPackageQName != null ? myPackageQName.hashCode() : 0);
-        return result;
+        return 29 * myPackageName.hashCode() + Objects.hashCode(myPackageQName);
     }
 
+    @Override
     public Image getIcon() {
-        return AllIcons.Nodes.Parameter;
+        return PlatformIconGroup.nodesParameter();
     }
 
+    @Override
+    @RequiredReadAction
     public boolean isValid() {
         return myPackage != null && myPackage.isValid();
     }

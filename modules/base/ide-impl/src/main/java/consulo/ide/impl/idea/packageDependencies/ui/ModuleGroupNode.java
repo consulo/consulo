@@ -21,8 +21,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -30,56 +31,52 @@ import java.util.Set;
  * @since 2006-01-24
  */
 public class ModuleGroupNode extends PackageDependenciesNode {
-  private final ModuleGroup myModuleGroup;
+    private final ModuleGroup myModuleGroup;
 
-  public ModuleGroupNode(ModuleGroup moduleGroup, Project project) {
-    super(project);
-    myModuleGroup = moduleGroup;
-  }
-
-  @Override
-  public void fillFiles(Set<PsiFile> set, boolean recursively) {
-    super.fillFiles(set, recursively);
-    int count = getChildCount();
-    for (int i = 0; i < count; i++) {
-      PackageDependenciesNode child = (PackageDependenciesNode)getChildAt(i);
-      child.fillFiles(set, true);
+    public ModuleGroupNode(ModuleGroup moduleGroup, Project project) {
+        super(project);
+        myModuleGroup = moduleGroup;
     }
-  }
 
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.nodesModulegroup();
-  }
-
-  @Override
-  public String toString() {
-    return myModuleGroup == null ? AnalysisScopeLocalize.unknownNodeText().get() : myModuleGroup.toString();
-  }
-
-  public String getModuleGroupName() {
-    return myModuleGroup.presentableText();
-  }
-
-  public ModuleGroup getModuleGroup() {
-    return myModuleGroup;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (isEquals()){
-      return super.equals(o);
+    @Override
+    public void fillFiles(Set<PsiFile> set, boolean recursively) {
+        super.fillFiles(set, recursively);
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            PackageDependenciesNode child = (PackageDependenciesNode) getChildAt(i);
+            child.fillFiles(set, true);
+        }
     }
-    if (this == o) return true;
-    if (!(o instanceof ModuleGroupNode)) return false;
 
-    ModuleGroupNode moduleNode = (ModuleGroupNode)o;
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.nodesModulegroup();
+    }
 
-    return Comparing.equal(myModuleGroup, moduleNode.myModuleGroup);
-  }
+    @Override
+    public String toString() {
+        return myModuleGroup == null ? AnalysisScopeLocalize.unknownNodeText().get() : myModuleGroup.toString();
+    }
 
-  @Override
-  public int hashCode() {
-    return myModuleGroup == null ? 0 : myModuleGroup.hashCode();
-  }
+    public String getModuleGroupName() {
+        return myModuleGroup.presentableText();
+    }
+
+    public ModuleGroup getModuleGroup() {
+        return myModuleGroup;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (isEquals()) {
+            return super.equals(o);
+        }
+        return this == o
+            || o instanceof ModuleGroupNode that && Objects.equals(myModuleGroup, that.myModuleGroup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(myModuleGroup);
+    }
 }

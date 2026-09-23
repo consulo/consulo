@@ -25,10 +25,7 @@ import consulo.util.xml.serializer.annotation.Tag;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author traff
@@ -194,15 +191,13 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    PathMappingSettings settings = (PathMappingSettings)o;
+    PathMappingSettings that = (PathMappingSettings)o;
 
-    if (!myPathMappings.equals(settings.myPathMappings)) return false;
-
-    return true;
+    return myPathMappings.equals(that.myPathMappings);
   }
 
   @Override
@@ -258,7 +253,6 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
       myRemoteRoot = normalize(remoteRoot);
     }
 
-    
     public String mapToLocal(String path) {
       return PathMappingSettings.mapToLocal(path, myRemoteRoot, myLocalRoot);
     }
@@ -308,30 +302,26 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      PathMapping mapping = (PathMapping)o;
+      PathMapping that = (PathMapping)o;
 
-      if (myLocalRoot != null ? !myLocalRoot.equals(mapping.myLocalRoot) : mapping.myLocalRoot != null) return false;
-      if (myRemoteRoot != null ? !myRemoteRoot.equals(mapping.myRemoteRoot) : mapping.myRemoteRoot != null) return false;
-
-      return true;
+      return Objects.equals(myLocalRoot, that.myLocalRoot)
+        && Objects.equals(myRemoteRoot, that.myRemoteRoot);
     }
 
     @Override
     public int hashCode() {
-      int result = myLocalRoot != null ? myLocalRoot.hashCode() : 0;
-      result = 31 * result + (myRemoteRoot != null ? myRemoteRoot.hashCode() : 0);
-      return result;
+      return 31 * Objects.hashCode(myLocalRoot) + Objects.hashCode(myRemoteRoot);
     }
   }
 
   private static boolean canReplaceRemote(String path, String remotePrefix) {
     path = norm(path);
     remotePrefix = norm(remotePrefix);
-    return path.startsWith(remotePrefix) &&
-           (path.length() == remotePrefix.length() || remotePrefix.endsWith("/") || path.substring(remotePrefix.length()).startsWith("/"));
+    return path.startsWith(remotePrefix)
+      && (path.length() == remotePrefix.length() || remotePrefix.endsWith("/") || path.substring(remotePrefix.length()).startsWith("/"));
   }
 }

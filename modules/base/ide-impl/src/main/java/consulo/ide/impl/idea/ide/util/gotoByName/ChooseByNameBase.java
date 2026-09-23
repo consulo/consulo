@@ -487,9 +487,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                         if (myFocusPoint != null) {
                             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
                             if (pointerInfo != null && myFocusPoint.equals(pointerInfo.getLocation())) {
-                                // Ignore the loss of focus if the mouse hasn't moved between the last dropdown resize
+                                // Ignore the loss of focus if the mouse hasn't moved between the last drop-down resize
                                 // and the loss of focus event. This happens in focus follows mouse mode if the mouse is
-                                // over the drop-down and it resizes to leave the mouse outside the dropdown.
+                                // over the drop-down and it resizes to leave the mouse outside the drop-down.
                                 ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
                                 myFocusPoint = null;
                                 return;
@@ -549,8 +549,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             @Override
             @RequiredUIAccess
             protected void textChanged(DocumentEvent e) {
-                SelectionPolicy toSelect =
-                    currentChosenInfo != null && currentChosenInfo.hasSamePattern(ChooseByNameBase.this) ? PreserveSelection.INSTANCE : SelectMostRelevant.INSTANCE;
+                SelectionPolicy toSelect = currentChosenInfo != null && currentChosenInfo.hasSamePattern(ChooseByNameBase.this)
+                    ? PreserveSelection.INSTANCE
+                    : SelectMostRelevant.INSTANCE;
                 rebuildList(toSelect, myRebuildDelay, ModalityState.nonModal(), null);
             }
         });
@@ -1043,7 +1044,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             reversed();
 
         int bestPosition = 0;
-        while (bestPosition < modelElements.length - 1 && isSpecialElement(modelElements[bestPosition])) bestPosition++;
+        while (bestPosition < modelElements.length - 1 && isSpecialElement(modelElements[bestPosition])) {
+            bestPosition++;
+        }
 
         for (int i = 1; i < modelElements.length; i++) {
             Object modelElement = modelElements[i];
@@ -1181,6 +1184,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                 String pattern = getTrimmedText();
                 int oldPos = myList.getSelectedIndex();
                 myHistory.add(Pair.create(pattern, oldPos));
+                @RequiredUIAccess
                 Runnable postRunnable = () -> fillInCommonPrefix(pattern);
                 rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), postRunnable);
                 return;
@@ -1734,17 +1738,18 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
 
         @Override
-        public boolean equals(Object o) {
-            return this == o
-                || o instanceof MyUsageInfo2UsageAdapter that
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof MyUsageInfo2UsageAdapter that
                 && mySeparateGroup == that.mySeparateGroup
                 && myElement.equals(that.myElement);
         }
 
         @Override
         public int hashCode() {
-            return 31 * myElement.hashCode() +
-                (mySeparateGroup ? 1 : 0);
+            return 31 * myElement.hashCode() + Boolean.hashCode(mySeparateGroup);
         }
     }
 

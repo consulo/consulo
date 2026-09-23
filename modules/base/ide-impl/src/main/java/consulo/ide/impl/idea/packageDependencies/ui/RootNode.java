@@ -13,39 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
 public class RootNode extends PackageDependenciesNode {
-  public RootNode(Project project) {
-    super(project);
-  }
-
-  public boolean equals(Object obj) {
-    return obj instanceof RootNode;
-  }
-
-  public int hashCode() {
-    return 0;
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public String toString() {
-    return "Root";
-  }
-
-  @Override
-  public void fillFiles(Set<PsiFile> set, boolean recursively) {
-    super.fillFiles(set, recursively);
-    int count = getChildCount();
-    for (int i = 0; i < count; i++) {
-      PackageDependenciesNode child = (PackageDependenciesNode)getChildAt(i);
-      child.fillFiles(set, true);
+    public RootNode(Project project) {
+        super(project);
     }
-  }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof RootNode;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    public String toString() {
+        return "Root";
+    }
+
+    @Override
+    public void fillFiles(Set<PsiFile> set, boolean recursively) {
+        super.fillFiles(set, recursively);
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            PackageDependenciesNode child = (PackageDependenciesNode) getChildAt(i);
+            child.fillFiles(set, true);
+        }
+    }
 }

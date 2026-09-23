@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -52,14 +53,12 @@ public class GeneralGroupNode extends PackageDependenciesNode {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (isEquals()) {
             return super.equals(o);
         }
-        if (!(o instanceof GeneralGroupNode)) {
-            return false;
-        }
-        return myName.equals(((GeneralGroupNode) o).myName);
+        return o == this
+            || o instanceof GeneralGroupNode that && myName.equals(that.myName);
     }
 
     @Override

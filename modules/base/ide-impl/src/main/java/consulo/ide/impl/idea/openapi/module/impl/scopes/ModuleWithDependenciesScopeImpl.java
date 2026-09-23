@@ -32,7 +32,6 @@ import consulo.module.content.scope.ModuleWithDependenciesScope;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
-import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
@@ -185,7 +184,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     public int compare(VirtualFile file1, VirtualFile file2) {
         VirtualFile r1 = getFileRoot(file1);
         VirtualFile r2 = getFileRoot(file2);
-        if (Comparing.equal(r1, r2)) {
+        if (Objects.equals(r1, r2)) {
             return 0;
         }
 
@@ -224,7 +223,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -233,7 +232,8 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         }
 
         ModuleWithDependenciesScopeImpl that = (ModuleWithDependenciesScopeImpl) o;
-        return myOptions == that.myOptions && myModule.equals(that.myModule);
+        return myOptions == that.myOptions
+            && myModule.equals(that.myModule);
     }
 
     @Override

@@ -13,109 +13,115 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.scopeView.nodes;
 
-import consulo.util.lang.Comparing;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
-import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author anna
  * @since 2006-01-30
  */
 public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
-  private final SmartPsiElementPointer myPsiElementPointer;
-  private Image myIcon;
+    private final @Nullable SmartPsiElementPointer<T> myPsiElementPointer;
+    private Image myIcon;
 
-  public BasePsiNode(T element) {
-    super(element.getProject());
-    if (element.isValid()) {
-      myPsiElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
+    @RequiredReadAction
+    public BasePsiNode(T element) {
+        super(element.getProject());
+        if (element.isValid()) {
+            myPsiElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
+        }
+        else {
+            myPsiElementPointer = null;
+        }
     }
-    else {
-      myPsiElementPointer = null;
+
+    @Override
+    @RequiredReadAction
+    public @Nullable PsiElement getPsiElement() {
+        if (myPsiElementPointer == null) {
+            return null;
+        }
+        PsiElement element = myPsiElementPointer.getElement();
+        return element != null && element.isValid() ? element : null;
     }
-  }
 
-  @Override
-  public @Nullable PsiElement getPsiElement() {
-    if (myPsiElementPointer == null) return null;
-    PsiElement element = myPsiElementPointer.getElement();
-    return element != null && element.isValid() ? element : null;
-  }
-
-  @Override
-  public Image getIcon() {
-    PsiElement element = getPsiElement();
-    if (myIcon == null) {
-      myIcon = element != null && element.isValid() ? IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS) : null;
+    @Override
+    @RequiredReadAction
+    public Image getIcon() {
+        PsiElement element = getPsiElement();
+        if (myIcon == null) {
+            myIcon = element != null && element.isValid()
+                ? IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS)
+                : null;
+        }
+        return myIcon;
     }
-    return myIcon;
-  }
 
-  @Override
-  public @Nullable ColorValue getColor() {
-    if (myColor == null && getContainingFile() != null) {
-      myColor = FileStatusManager.getInstance(myProject).getStatus(myPsiElementPointer.getVirtualFile()).getColor();
-      if (myColor == null) {
-        myColor = NOT_CHANGED;
-      }
+    @Override
+    @RequiredReadAction
+    public @Nullable ColorValue getColor() {
+        if (myColor == null && getContainingFile() != null) {
+            myColor = FileStatusManager.getInstance(myProject).getStatus(myPsiElementPointer.getVirtualFile()).getColor();
+            if (myColor == null) {
+                myColor = NOT_CHANGED;
+            }
+        }
+        return myColor == NOT_CHANGED ? null : myColor;
     }
-    return myColor == NOT_CHANGED ? null : myColor;
-  }
 
-  @Override
-  public int getWeight() {
-    return 4;
-  }
-
-  @Override
-  public int getContainingFiles() {
-    return 0;
-  }
-
-  public boolean equals(Object o) {
-    if (isEquals()) {
-      return super.equals(o);
+    @Override
+    public int getWeight() {
+        return 4;
     }
-    if (this == o) return true;
-    if (!(o instanceof BasePsiNode)) return false;
 
-    BasePsiNode methodNode = (BasePsiNode)o;
+    @Override
+    public int getContainingFiles() {
+        return 0;
+    }
 
-    if (!Comparing.equal(getPsiElement(), methodNode.getPsiElement())) return false;
+    @Override
+    @RequiredReadAction
+    public boolean equals(@Nullable Object o) {
+        if (isEquals()) {
+            return super.equals(o);
+        }
+        return this == o
+            || o instanceof BasePsiNode<?> that && Objects.equals(getPsiElement(), that.getPsiElement());
+    }
 
-    return true;
-  }
+    @Override
+    @RequiredReadAction
+    public int hashCode() {
+        return Objects.hashCode(getPsiElement());
+    }
 
-  public int hashCode() {
-    PsiElement psiElement = getPsiElement();
-    return psiElement == null ? 0 : psiElement.hashCode();
-  }
+    @RequiredReadAction
+    public @Nullable PsiFile getContainingFile() {
+        return myPsiElementPointer == null ? null : myPsiElementPointer.getContainingFile();
+    }
 
-  public PsiFile getContainingFile() {
-    return myPsiElementPointer.getContainingFile();
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        PsiElement element = getPsiElement();
+        return element != null && element.isValid();
+    }
 
-  @Override
-  public boolean isValid() {
-    PsiElement element = getPsiElement();
-    return element != null && element.isValid();
-  }
-
-  public boolean isDeprecated() {
-    return false;
-  }
-
+    public boolean isDeprecated() {
+        return false;
+    }
 }

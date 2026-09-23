@@ -31,6 +31,7 @@ import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
 import consulo.ide.setting.module.ModulesConfigurator;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,99 +39,114 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactProjectStructureElement extends ProjectStructureElement {
-  private final ArtifactsStructureConfigurableContext myArtifactsStructureContext;
-  private final Artifact myOriginalArtifact;
+    private final ArtifactsStructureConfigurableContext myArtifactsStructureContext;
+    private final Artifact myOriginalArtifact;
 
-  ArtifactProjectStructureElement(ArtifactsStructureConfigurableContext artifactsStructureContext, Artifact artifact) {
-    myArtifactsStructureContext = artifactsStructureContext;
-    myOriginalArtifact = artifactsStructureContext.getOriginalArtifact(artifact);
-  }
+    ArtifactProjectStructureElement(ArtifactsStructureConfigurableContext artifactsStructureContext, Artifact artifact) {
+        myArtifactsStructureContext = artifactsStructureContext;
+        myOriginalArtifact = artifactsStructureContext.getOriginalArtifact(artifact);
+    }
 
-  @Override
-  public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
-    Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
-    ArtifactProblemsHolderImpl artifactProblemsHolder = new ArtifactProblemsHolderImpl(myArtifactsStructureContext, myOriginalArtifact, problemsHolder);
-    artifact.getArtifactType().checkRootElement(myArtifactsStructureContext.getRootElement(myOriginalArtifact), artifact, artifactProblemsHolder);
-  }
+    @Override
+    public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
+        Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
+        ArtifactProblemsHolderImpl artifactProblemsHolder = new ArtifactProblemsHolderImpl(
+            myArtifactsStructureContext,
+            myOriginalArtifact,
+            problemsHolder
+        );
+        artifact.getArtifactType()
+            .checkRootElement(myArtifactsStructureContext.getRootElement(myOriginalArtifact), artifact, artifactProblemsHolder);
+    }
 
-  public Artifact getOriginalArtifact() {
-    return myOriginalArtifact;
-  }
+    public Artifact getOriginalArtifact() {
+        return myOriginalArtifact;
+    }
 
-  @Override
-  public List<ProjectStructureElementUsage> getUsagesInElement() {
-    Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
-    final List<ProjectStructureElementUsage> usages = new ArrayList<ProjectStructureElementUsage>();
-    final CompositePackagingElement<?> rootElement = myArtifactsStructureContext.getRootElement(artifact);
-    ArtifactUtil.processPackagingElements(rootElement, null, new PackagingElementProcessor<>() {
-      @Override
-      public boolean process(PackagingElement<?> packagingElement, PackagingElementPath path) {
-        ProjectStructureElement element = getProjectStructureElementFor(packagingElement, ArtifactProjectStructureElement.this.myArtifactsStructureContext);
-        if (element != null) {
-          usages.add(createUsage(packagingElement, element, path.getPathStringFrom("/", rootElement)));
+    @Override
+    public List<ProjectStructureElementUsage> getUsagesInElement() {
+        Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
+        final List<ProjectStructureElementUsage> usages = new ArrayList<>();
+        final CompositePackagingElement<?> rootElement = myArtifactsStructureContext.getRootElement(artifact);
+        ArtifactUtil.processPackagingElements(
+            rootElement,
+            null,
+            new PackagingElementProcessor<>() {
+                @Override
+                public boolean process(PackagingElement<?> packagingElement, PackagingElementPath path) {
+                    ProjectStructureElement element = getProjectStructureElementFor(
+                        packagingElement,
+                        ArtifactProjectStructureElement.this.myArtifactsStructureContext
+                    );
+                    if (element != null) {
+                        usages.add(createUsage(packagingElement, element, path.getPathStringFrom("/", rootElement)));
+                    }
+                    return true;
+                }
+            },
+            myArtifactsStructureContext,
+            false,
+            artifact.getArtifactType()
+        );
+        return usages;
+    }
+
+    public static @Nullable ProjectStructureElement getProjectStructureElementFor(
+        PackagingElement<?> packagingElement,
+        ArtifactsStructureConfigurableContext artifactsStructureContext
+    ) {
+        if (packagingElement instanceof ModuleOutputPackagingElement) {
+            Module module = ((ModuleOutputPackagingElement) packagingElement).findModule(artifactsStructureContext);
+            if (module != null) {
+                return new ModuleProjectStructureElement((ModulesConfigurator) artifactsStructureContext.getModulesProvider(), module);
+            }
         }
-        return true;
-      }
-    }, myArtifactsStructureContext, false, artifact.getArtifactType());
-    return usages;
-  }
-
-  public static @Nullable ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement, ArtifactsStructureConfigurableContext artifactsStructureContext) {
-    if (packagingElement instanceof ModuleOutputPackagingElement) {
-      Module module = ((ModuleOutputPackagingElement)packagingElement).findModule(artifactsStructureContext);
-      if (module != null) {
-        return new ModuleProjectStructureElement((ModulesConfigurator)artifactsStructureContext.getModulesProvider(), module);
-      }
+        else if (packagingElement instanceof LibraryPackagingElement) {
+            Library library = ((LibraryPackagingElement) packagingElement).findLibrary(artifactsStructureContext);
+            if (library != null) {
+                return new LibraryProjectStructureElement(library);
+            }
+        }
+        else if (packagingElement instanceof ArtifactPackagingElement) {
+            Artifact usedArtifact = ((ArtifactPackagingElement) packagingElement).findArtifact(artifactsStructureContext);
+            if (usedArtifact != null) {
+                return artifactsStructureContext.getOrCreateArtifactElement(usedArtifact);
+            }
+        }
+        return null;
     }
-    else if (packagingElement instanceof LibraryPackagingElement) {
-      Library library = ((LibraryPackagingElement)packagingElement).findLibrary(artifactsStructureContext);
-      if (library != null) {
-        return new LibraryProjectStructureElement(library);
-      }
+
+    private UsageInArtifact createUsage(PackagingElement<?> packagingElement, ProjectStructureElement element, String parentPath) {
+        return new UsageInArtifact(myOriginalArtifact, myArtifactsStructureContext, element, this, parentPath, packagingElement);
     }
-    else if (packagingElement instanceof ArtifactPackagingElement) {
-      Artifact usedArtifact = ((ArtifactPackagingElement)packagingElement).findArtifact(artifactsStructureContext);
-      if (usedArtifact != null) {
-        return artifactsStructureContext.getOrCreateArtifactElement(usedArtifact);
-      }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ArtifactProjectStructureElement that && myOriginalArtifact.equals(that.myOriginalArtifact);
     }
-    return null;
-  }
 
-  private UsageInArtifact createUsage(PackagingElement<?> packagingElement, ProjectStructureElement element, String parentPath) {
-    return new UsageInArtifact(myOriginalArtifact, myArtifactsStructureContext, element, this, parentPath, packagingElement);
-  }
+    @Override
+    public int hashCode() {
+        return myOriginalArtifact.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ArtifactProjectStructureElement)) return false;
+    @Override
+    public String getPresentableName() {
+        return "Artifact '" + getActualArtifactName() + "'";
+    }
 
-    return myOriginalArtifact.equals(((ArtifactProjectStructureElement)o).myOriginalArtifact);
+    @Override
+    public String getTypeName() {
+        return "Artifact";
+    }
 
-  }
+    @Override
+    public String getId() {
+        return "artifact:" + getActualArtifactName();
+    }
 
-  @Override
-  public int hashCode() {
-    return myOriginalArtifact.hashCode();
-  }
-
-  @Override
-  public String getPresentableName() {
-    return "Artifact '" + getActualArtifactName() + "'";
-  }
-
-  @Override
-  public String getTypeName() {
-    return "Artifact";
-  }
-
-  @Override
-  public String getId() {
-    return "artifact:" + getActualArtifactName();
-  }
-
-  private String getActualArtifactName() {
-    return myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact).getName();
-  }
+    private String getActualArtifactName() {
+        return myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact).getName();
+    }
 }

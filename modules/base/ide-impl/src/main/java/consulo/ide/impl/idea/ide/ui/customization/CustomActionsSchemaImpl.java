@@ -66,13 +66,13 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     private static final String ATTRIBUTE_ICON = "icon";
     private static final String GROUP = "group";
 
-    private final HashMap<String, String> myIconCustomizations = new HashMap<>();
+    private final Map<String, String> myIconCustomizations = new HashMap<>();
 
-    private ArrayList<ActionUrl> myActions = new ArrayList<>();
+    private List<ActionUrl> myActions = new ArrayList<>();
 
-    private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
+    private final Map<String, ActionGroup> myIdToActionGroup = new HashMap<>();
 
-    private final HashMap<String, LocalizeValue> myIdToNameList = new HashMap<>();
+    private final Map<String, LocalizeValue> myIdToNameList = new HashMap<>();
 
     private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
 
@@ -110,11 +110,11 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         resortActions();
     }
 
-    public ArrayList<ActionUrl> getActions() {
+    public List<ActionUrl> getActions() {
         return myActions;
     }
 
-    public void setActions(ArrayList<ActionUrl> actions) {
+    public void setActions(List<ActionUrl> actions) {
         myActions = actions;
         resortActions();
     }
@@ -137,7 +137,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     public boolean isModified(CustomActionsSchemaImpl schema) {
-        ArrayList<ActionUrl> storedActions = schema.getActions();
+        List<ActionUrl> storedActions = schema.getActions();
         if (storedActions.size() != getActions().size()) {
             return true;
         }
@@ -291,8 +291,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     public List<ActionUrl> getChildActions(ActionUrl url) {
-        ArrayList<ActionUrl> result = new ArrayList<>();
-        ArrayList<String> groupPath = url.getGroupPath();
+        List<ActionUrl> result = new ArrayList<>();
+        List<String> groupPath = url.getGroupPath();
         for (ActionUrl actionUrl : myActions) {
             int index = 0;
             if (groupPath.size() <= actionUrl.getGroupPath().size()) {
@@ -399,8 +399,9 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof Pair pair && first.equals(pair.first);
+        public boolean equals(@Nullable Object obj) {
+            return obj == this
+                || obj instanceof Pair pair && first.equals(pair.first);
         }
     }
 
@@ -423,14 +424,11 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         }
 
         private static int getEquivalenceClass(ActionUrl url) {
-            switch (url.getActionType()) {
-                case ActionUrl.DELETED:
-                    return 1;
-                case ActionUrl.ADDED:
-                    return 2;
-                default:
-                    return 3;
-            }
+            return switch (url.getActionType()) {
+                case ActionUrl.DELETED -> 1;
+                case ActionUrl.ADDED -> 2;
+                default -> 3;
+            };
         }
     }
 }

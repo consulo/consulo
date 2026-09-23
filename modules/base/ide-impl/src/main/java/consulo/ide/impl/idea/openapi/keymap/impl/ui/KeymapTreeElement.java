@@ -53,14 +53,14 @@ public final class KeymapTreeElement {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
-        return o instanceof KeymapTreeElement element
-            && myIndex == element.myIndex
-            && Objects.equals(myValue, element.myValue)
-            && Objects.equals(myParent, element.myParent);
+        return o instanceof KeymapTreeElement that
+            && myIndex == that.myIndex
+            && Objects.equals(myValue, that.myValue)
+            && Objects.equals(myParent, that.myParent);
     }
 
     @Override
