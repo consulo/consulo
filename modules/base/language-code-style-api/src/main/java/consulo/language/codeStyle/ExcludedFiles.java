@@ -7,6 +7,7 @@ import consulo.language.psi.PsiFile;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +57,9 @@ public class ExcludedFiles {
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(Object o) {
-        return o instanceof ExcludedFiles excludedFiles && myDescriptors.equals(excludedFiles.myDescriptors);
+    public boolean equals(@Nullable Object o) {
+        return o == this
+            || o instanceof ExcludedFiles that && myDescriptors.equals(that.myDescriptors);
     }
 
     public class State {

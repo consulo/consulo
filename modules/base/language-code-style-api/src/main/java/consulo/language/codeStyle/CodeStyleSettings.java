@@ -21,13 +21,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ClassMap;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -221,7 +221,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
     private final Map<FileType, CommonCodeStyleSettings.IndentOptions> myAdditionalIndentOptions = new LinkedHashMap<>();
 
-    private static final String ourSystemLineSeparator = SystemProperties.getLineSeparator();
+    private static final String ourSystemLineSeparator = Platform.current().os().lineSeparator().getSeparatorString();
 
     /**
      * Line separator. It can be null if chosen line separator is "System-dependent"!
@@ -1038,6 +1038,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @see FileTypeIndentOptionsProvider
      * @see LanguageCodeStyleSettingsProvider
      */
+    @RequiredReadAction
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByDocument(@Nullable Project project, Document document) {
         PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(document) : null;
         if (file != null) {
@@ -1049,11 +1050,12 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         return getIndentOptions(fileType);
     }
 
+    @RequiredReadAction
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByFile(@Nullable PsiFile file) {
         return getIndentOptionsByFile(file, null);
     }
 
-   
+    @RequiredReadAction
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByFile(@Nullable PsiFile file, @Nullable TextRange formatRange) {
         return getIndentOptionsByFile(file, formatRange, false, null);
     }
@@ -1246,8 +1248,9 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         }
 
         @Override
-        public boolean equals(Object other) {
-            return other instanceof TypeToNameMap otherMap && myPatterns.equals(otherMap.myPatterns) && myNames.equals(otherMap.myNames);
+        public boolean equals(@Nullable Object obj) {
+            return obj == this
+                || obj instanceof TypeToNameMap that && myPatterns.equals(that.myPatterns) && myNames.equals(that.myNames);
         }
 
         @Override
@@ -1473,9 +1476,11 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(Object obj) {
-        return obj == this
-            || obj instanceof CodeStyleSettings that
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj instanceof CodeStyleSettings that
             && ReflectionUtil.comparePublicNonFinalFields(this, obj)
             && mySoftMargins.equals(that.mySoftMargins)
             && myExcludedFiles.equals(that.getExcludedFiles())

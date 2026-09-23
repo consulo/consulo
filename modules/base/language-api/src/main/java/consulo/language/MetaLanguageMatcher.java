@@ -1,41 +1,41 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language;
 
+import org.jspecify.annotations.Nullable;
+
 final class MetaLanguageMatcher extends LanguageMatcher {
+    private final MetaLanguage myLanguage;
 
-  private final
-  
-  MetaLanguage myLanguage;
+    MetaLanguageMatcher(MetaLanguage language) {
+        myLanguage = language;
+    }
 
-  MetaLanguageMatcher(MetaLanguage language) {
-    myLanguage = language;
-  }
+    @Override
+    public boolean matchesLanguage(Language language) {
+        return myLanguage.matchesLanguage(language);
+    }
 
-  @Override
-  public boolean matchesLanguage(Language language) {
-    return myLanguage.matchesLanguage(language);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        MetaLanguageMatcher that = (MetaLanguageMatcher) o;
 
-    MetaLanguageMatcher matcher = (MetaLanguageMatcher)o;
+        return myLanguage.equals(that.myLanguage);
+    }
 
-    if (!myLanguage.equals(matcher.myLanguage)) return false;
+    @Override
+    public int hashCode() {
+        return myLanguage.hashCode();
+    }
 
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myLanguage.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return myLanguage + " (meta)";
-  }
+    @Override
+    public String toString() {
+        return myLanguage + " (meta)";
+    }
 }

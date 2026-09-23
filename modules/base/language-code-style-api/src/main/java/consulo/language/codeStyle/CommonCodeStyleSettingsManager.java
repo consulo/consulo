@@ -254,15 +254,18 @@ class CommonCodeStyleSettingsManager {
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(Object obj) {
-        if (obj instanceof CommonCodeStyleSettingsManager other) {
-            if (getCommonSettingsMap().size() != other.getCommonSettingsMap().size()
-                || myUnknownSettingsMap.size() != other.myUnknownSettingsMap.size()) {
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof CommonCodeStyleSettingsManager that) {
+            if (getCommonSettingsMap().size() != that.getCommonSettingsMap().size()
+                || myUnknownSettingsMap.size() != that.myUnknownSettingsMap.size()) {
                 return false;
             }
             for (Language language : myCommonSettingsMap.keySet()) {
                 CommonCodeStyleSettings theseSettings = myCommonSettingsMap.get(language);
-                CommonCodeStyleSettings otherSettings = other.getCommonSettings(language);
+                CommonCodeStyleSettings otherSettings = that.getCommonSettings(language);
                 if (!theseSettings.equals(otherSettings)) {
                     return false;
                 }

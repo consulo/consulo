@@ -1,12 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle.fileSet;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -33,159 +34,159 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class PatternDescriptor implements FileSetDescriptor {
+    public static final String PATTERN_TYPE = "pattern";
+    private @Nullable String myRawPattern;
+    private @Nullable Pattern myPathPattern;
+    private @Nullable Pattern myFileNamePattern;
+    private final static String FORBIDDEN_CHARS = "<>:\"\\;";
 
-  public static final String PATTERN_TYPE = "pattern";
-  private
-  @Nullable String myRawPattern;
-  private
-  @Nullable Pattern myPathPattern;
-  private
-  @Nullable Pattern myFileNamePattern;
-  private final static String FORBIDDEN_CHARS = "<>:\"\\;";
+    public PatternDescriptor(String pattern) {
+        myRawPattern = pattern;
+        compileSpec(myRawPattern);
+    }
 
-  public PatternDescriptor(String pattern) {
-    myRawPattern = pattern;
-    compileSpec(myRawPattern);
-  }
-
-  private void compileSpec(String spec) {
-    String pathSpec = "";
-    String fileSpec;
-    int lastSlashPos = spec.lastIndexOf('/');
-    if (lastSlashPos >= 0) {
-      fileSpec = spec.substring(lastSlashPos + 1);
-      pathSpec = spec.substring(0, lastSlashPos + 1);
-      if (pathSpec.length() > 0 && pathSpec.charAt(0) != '/') {
-        pathSpec = "/**/" + pathSpec;
-      }
-    }
-    else {
-      fileSpec = spec;
-    }
-    if (!pathSpec.isEmpty()) {
-      myPathPattern = Pattern.compile(specToRegexp(pathSpec, true));
-    }
-    if (!fileSpec.isEmpty()) {
-      myFileNamePattern = Pattern.compile(specToRegexp(fileSpec, false));
-    }
-  }
-
-  private static String specToRegexp(String spec, boolean isPathSpec) {
-    StringBuilder sb = new StringBuilder();
-    char[] chars = spec.toCharArray();
-    int i = 0;
-    while (i < chars.length) {
-      char c = chars[i];
-      switch (c) {
-        case '*':
-          if (isPathSpec && i < chars.length - 1 && chars[i + 1] == '*') {
-            sb.append("([^/]*/)*");
-            i++;
-            if (i < chars.length - 1 && chars[i + 1] == '/') {
-              i++;
+    private void compileSpec(String spec) {
+        String pathSpec = "";
+        String fileSpec;
+        int lastSlashPos = spec.lastIndexOf('/');
+        if (lastSlashPos >= 0) {
+            fileSpec = spec.substring(lastSlashPos + 1);
+            pathSpec = spec.substring(0, lastSlashPos + 1);
+            if (pathSpec.length() > 0 && pathSpec.charAt(0) != '/') {
+                pathSpec = "/**/" + pathSpec;
             }
-          }
-          else {
-            sb.append("[^/]*");
-          }
-          break;
-        case '?':
-          sb.append("[^/]");
-          break;
-        default:
-          if (isRegexSpecialChar(c)) {
-            sb.append('\\').append(c);
-          }
-          else {
-            sb.append(c);
-          }
-      }
-      i++;
+        }
+        else {
+            fileSpec = spec;
+        }
+        if (!pathSpec.isEmpty()) {
+            myPathPattern = Pattern.compile(specToRegexp(pathSpec, true));
+        }
+        if (!fileSpec.isEmpty()) {
+            myFileNamePattern = Pattern.compile(specToRegexp(fileSpec, false));
+        }
     }
-    return sb.toString();
-  }
 
-  private static boolean isRegexSpecialChar(char c) {
-    return "^${}[]().*+-&".indexOf(c) >= 0;
-  }
-
-  public boolean matches(Project project, VirtualFile virtualFile) {
-    if (myFileNamePattern == null && myPathPattern == null) return false; // Empty spec matches nothing
-    String name = virtualFile.getName();
-    VirtualFile parent = virtualFile.getParent();
-    String path = getRelativePath(project, parent) + "/";
-    return patternMatches(myPathPattern, path) && patternMatches(myFileNamePattern, name);
-  }
-
-  @Override
-  public boolean matches(PsiFile psiFile) {
-    if (psiFile.isValid()) {
-      VirtualFile virtualFile = psiFile.getVirtualFile();
-      if (virtualFile != null) {
-        return matches(psiFile.getProject(), virtualFile);
-      }
+    private static String specToRegexp(String spec, boolean isPathSpec) {
+        StringBuilder sb = new StringBuilder();
+        char[] chars = spec.toCharArray();
+        int i = 0;
+        while (i < chars.length) {
+            char c = chars[i];
+            switch (c) {
+                case '*':
+                    if (isPathSpec && i < chars.length - 1 && chars[i + 1] == '*') {
+                        sb.append("([^/]*/)*");
+                        i++;
+                        if (i < chars.length - 1 && chars[i + 1] == '/') {
+                            i++;
+                        }
+                    }
+                    else {
+                        sb.append("[^/]*");
+                    }
+                    break;
+                case '?':
+                    sb.append("[^/]");
+                    break;
+                default:
+                    if (isRegexSpecialChar(c)) {
+                        sb.append('\\').append(c);
+                    }
+                    else {
+                        sb.append(c);
+                    }
+            }
+            i++;
+        }
+        return sb.toString();
     }
-    return false;
-  }
 
-  
-  private static String getRelativePath(Project project, @Nullable VirtualFile parent) {
-    VirtualFile projectDir = project.getBaseDir();
-    String projectPath = projectDir.getPath();
-    if (parent != null) {
-      String parentPath = parent.getPath();
-      if (parentPath.startsWith(projectPath)) {
-        return parentPath.substring(projectPath.length());
-      }
-      else {
-        return parentPath;
-      }
+    private static boolean isRegexSpecialChar(char c) {
+        return "^${}[]().*+-&".indexOf(c) >= 0;
     }
-    return "";
-  }
 
-  private static boolean patternMatches(@Nullable Pattern pattern, String str) {
-    return pattern == null || pattern.matcher(str).matches();
-  }
-
-  @Override
-  public String getPattern() {
-    return myRawPattern;
-  }
-
-  @Override
-  public void setPattern(@Nullable String pattern) {
-    myRawPattern = pattern;
-    if (pattern != null) {
-      compileSpec(pattern);
+    public boolean matches(Project project, VirtualFile virtualFile) {
+        if (myFileNamePattern == null && myPathPattern == null) {
+            return false; // Empty spec matches nothing
+        }
+        String name = virtualFile.getName();
+        VirtualFile parent = virtualFile.getParent();
+        String path = getRelativePath(project, parent) + "/";
+        return patternMatches(myPathPattern, path) && patternMatches(myFileNamePattern, name);
     }
-    else {
-      myPathPattern = null;
-      myFileNamePattern = null;
+
+    @Override
+    @RequiredReadAction
+    public boolean matches(PsiFile psiFile) {
+        if (psiFile.isValid()) {
+            VirtualFile virtualFile = psiFile.getVirtualFile();
+            if (virtualFile != null) {
+                return matches(psiFile.getProject(), virtualFile);
+            }
+        }
+        return false;
     }
-  }
 
-  @Override
-  @SuppressWarnings("EqualsHashCode")
-  public boolean equals(Object obj) {
-    return obj instanceof PatternDescriptor && Comparing.equal(myRawPattern, ((PatternDescriptor)obj).getPattern());
-  }
-
-  public static boolean isValidPattern(String pattern) {
-    for (int i = 0; i < pattern.length(); i++) {
-      if (FORBIDDEN_CHARS.indexOf(pattern.charAt(i)) >= 0) return false;
+    private static String getRelativePath(Project project, @Nullable VirtualFile parent) {
+        VirtualFile projectDir = project.getBaseDir();
+        String projectPath = projectDir.getPath();
+        if (parent != null) {
+            String parentPath = parent.getPath();
+            if (parentPath.startsWith(projectPath)) {
+                return parentPath.substring(projectPath.length());
+            }
+            else {
+                return parentPath;
+            }
+        }
+        return "";
     }
-    return true;
-  }
 
-  
-  @Override
-  public String getType() {
-    return PATTERN_TYPE;
-  }
+    private static boolean patternMatches(@Nullable Pattern pattern, String str) {
+        return pattern == null || pattern.matcher(str).matches();
+    }
 
-  @Override
-  public String toString() {
-    return getType() + ": " + getPattern();
-  }
+    @Override
+    public String getPattern() {
+        return myRawPattern;
+    }
+
+    @Override
+    public void setPattern(@Nullable String pattern) {
+        myRawPattern = pattern;
+        if (pattern != null) {
+            compileSpec(pattern);
+        }
+        else {
+            myPathPattern = null;
+            myFileNamePattern = null;
+        }
+    }
+
+    @Override
+    @SuppressWarnings("EqualsHashCode")
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof PatternDescriptor that && Objects.equals(myRawPattern, that.getPattern());
+    }
+
+    public static boolean isValidPattern(String pattern) {
+        for (int i = 0; i < pattern.length(); i++) {
+            if (FORBIDDEN_CHARS.indexOf(pattern.charAt(i)) >= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String getType() {
+        return PATTERN_TYPE;
+    }
+
+    @Override
+    public String toString() {
+        return getType() + ": " + getPattern();
+    }
 }

@@ -23,59 +23,60 @@ import java.util.regex.Pattern;
 
 /**
  * @author Denis Zhdanov
- * @since 3/14/13 1:02 PM
+ * @since 2013-03-14
  */
 public abstract class AbstractRegexpArrangementMatcher implements ArrangementEntryMatcher {
-  
-  
-  private final String myPattern;
+    private final String myPattern;
 
-  private final @Nullable Pattern myCompiledPattern;
+    private final @Nullable Pattern myCompiledPattern;
 
-  public AbstractRegexpArrangementMatcher(String pattern) {
-    myPattern = pattern;
-    Pattern p = null;
-    try {
-      p = Pattern.compile(pattern);
+    public AbstractRegexpArrangementMatcher(String pattern) {
+        myPattern = pattern;
+        Pattern p = null;
+        try {
+            p = Pattern.compile(pattern);
+        }
+        catch (Exception e) {
+            // ignore
+        }
+        myCompiledPattern = p;
     }
-    catch (Exception e) {
-      // ignore
+
+    @Override
+    public boolean isMatched(ArrangementEntry entry) {
+        if (myCompiledPattern == null) {
+            return false;
+        }
+        String text = getTextToMatch(entry);
+        return text != null && myCompiledPattern.matcher(text).matches();
     }
-    myCompiledPattern = p;
-  }
 
-  @Override
-  public boolean isMatched(ArrangementEntry entry) {
-    if (myCompiledPattern == null) {
-      return false;
+    protected abstract @Nullable String getTextToMatch(ArrangementEntry entry);
+
+    public String getPattern() {
+        return myPattern;
     }
-    String text = getTextToMatch(entry);
-    return text != null && myCompiledPattern.matcher(text).matches();
-  }
-  
-  protected abstract @Nullable String getTextToMatch(ArrangementEntry entry);
 
-  
-  public String getPattern() {
-    return myPattern;
-  }
+    @Override
+    public int hashCode() {
+        return myPattern.hashCode();
+    }
 
-  @Override
-  public int hashCode() {
-    return myPattern.hashCode();
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        AbstractRegexpArrangementMatcher that = (AbstractRegexpArrangementMatcher) o;
+        return myPattern.equals(that.myPattern);
+    }
 
-    AbstractRegexpArrangementMatcher that = (AbstractRegexpArrangementMatcher)o;
-    return myPattern.equals(that.myPattern);
-  }
-
-  @Override
-  public String toString() {
-    return String.format("regexp '%s'", myPattern);
-  }
+    @Override
+    public String toString() {
+        return String.format("regexp '%s'", myPattern);
+    }
 }

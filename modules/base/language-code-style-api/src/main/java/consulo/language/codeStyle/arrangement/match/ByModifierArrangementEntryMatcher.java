@@ -19,6 +19,7 @@ import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.language.codeStyle.arrangement.ModifierAwareArrangementEntry;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,61 +27,55 @@ import java.util.Set;
 
 /**
  * @author Denis Zhdanov
- * @since 8/26/12 11:21 PM
+ * @since 2012-08-26
  */
 public class ByModifierArrangementEntryMatcher implements ArrangementEntryMatcher {
-  
-  private final Set<ArrangementAtomMatchCondition> myModifiers = new HashSet<>();
+    private final Set<ArrangementAtomMatchCondition> myModifiers = new HashSet<>();
 
-  public ByModifierArrangementEntryMatcher(ArrangementAtomMatchCondition interestedModifier) {
-    myModifiers.add(interestedModifier);
-  }
+    public ByModifierArrangementEntryMatcher(ArrangementAtomMatchCondition interestedModifier) {
+        myModifiers.add(interestedModifier);
+    }
 
-  public ByModifierArrangementEntryMatcher(Collection<ArrangementAtomMatchCondition> interestedModifiers) {
-    myModifiers.addAll(interestedModifiers);
-  }
+    public ByModifierArrangementEntryMatcher(Collection<ArrangementAtomMatchCondition> interestedModifiers) {
+        myModifiers.addAll(interestedModifiers);
+    }
 
-  @Override
-  public boolean isMatched(ArrangementEntry entry) {
-    if (entry instanceof ModifierAwareArrangementEntry) {
-      Set<ArrangementSettingsToken> modifiers = ((ModifierAwareArrangementEntry)entry).getModifiers();
-      for (ArrangementAtomMatchCondition condition : myModifiers) {
-        Object value = condition.getValue();
-        boolean isInverted = value instanceof Boolean && !((Boolean)value);
-        if (isInverted == modifiers.contains(condition.getType())) {
-          return false;
+    @Override
+    public boolean isMatched(ArrangementEntry entry) {
+        if (entry instanceof ModifierAwareArrangementEntry modifierEntry) {
+            Set<ArrangementSettingsToken> modifiers = modifierEntry.getModifiers();
+            for (ArrangementAtomMatchCondition condition : myModifiers) {
+                boolean isInverted = condition.getValue() instanceof Boolean bValue && !bValue;
+                if (isInverted == modifiers.contains(condition.getType())) {
+                    return false;
+                }
+            }
+            return true;
         }
-      }
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return myModifiers.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+        return false;
     }
 
-    ByModifierArrangementEntryMatcher matcher = (ByModifierArrangementEntryMatcher)o;
-
-    if (!myModifiers.equals(matcher.myModifiers)) {
-      return false;
+    @Override
+    public int hashCode() {
+        return myModifiers.hashCode();
     }
 
-    return true;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  @Override
-  public String toString() {
-    return "with modifiers " + myModifiers;
-  }
+        ByModifierArrangementEntryMatcher that = (ByModifierArrangementEntryMatcher) o;
+
+        return myModifiers.equals(that.myModifiers);
+    }
+
+    @Override
+    public String toString() {
+        return "with modifiers " + myModifiers;
+    }
 }

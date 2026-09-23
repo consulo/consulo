@@ -20,29 +20,27 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author cdr
  */
 public class PackageEntryTable implements JDOMExternalizable, Cloneable {
-    
     private final List<PackageEntry> myEntries = new ArrayList<>();
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof PackageEntryTable that
-            && that.myEntries.equals(myEntries);
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof PackageEntryTable that && that.myEntries.equals(myEntries);
     }
 
     @Override
     public int hashCode() {
-        if (!myEntries.isEmpty() && myEntries.get(0) != null) {
-            return myEntries.get(0).hashCode();
-        }
-        return 0;
+        return !myEntries.isEmpty() ? Objects.hashCode(myEntries.get(0)) : 0;
     }
 
     @Override
@@ -100,14 +98,12 @@ public class PackageEntryTable implements JDOMExternalizable, Cloneable {
     @Override
     public void readExternal(Element element) throws InvalidDataException {
         myEntries.clear();
-        List children = element.getChildren();
-        for (Object aChildren : children) {
-            Element e = (Element)aChildren;
-            String name = e.getName();
+        for (Element child : element.getChildren()) {
+            String name = child.getName();
             if ("package".equals(name)) {
-                String packageName = e.getAttributeValue("name");
-                boolean isStatic = Boolean.parseBoolean(e.getAttributeValue("static"));
-                boolean withSubpackages = Boolean.parseBoolean(e.getAttributeValue("withSubpackages"));
+                String packageName = child.getAttributeValue("name");
+                boolean isStatic = Boolean.parseBoolean(child.getAttributeValue("static"));
+                boolean withSubpackages = Boolean.parseBoolean(child.getAttributeValue("withSubpackages"));
                 if (packageName == null) {
                     throw new InvalidDataException();
                 }
@@ -120,10 +116,8 @@ public class PackageEntryTable implements JDOMExternalizable, Cloneable {
                 }
                 myEntries.add(entry);
             }
-            else {
-                if ("emptyLine".equals(name)) {
-                    myEntries.add(PackageEntry.BLANK_LINE_ENTRY);
-                }
+            else if ("emptyLine".equals(name)) {
+                myEntries.add(PackageEntry.BLANK_LINE_ENTRY);
             }
         }
     }

@@ -974,9 +974,11 @@ public class CommonCodeStyleSettings {
         }
 
         @Override
-        public boolean equals(Object o) {
-            return this == o
-                || o instanceof IndentOptions that
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof IndentOptions that
                 && CONTINUATION_INDENT_SIZE == that.CONTINUATION_INDENT_SIZE
                 && INDENT_SIZE == that.INDENT_SIZE
                 && LABEL_INDENT_ABSOLUTE == that.LABEL_INDENT_ABSOLUTE
@@ -997,11 +999,11 @@ public class CommonCodeStyleSettings {
             int result = INDENT_SIZE;
             result = 31 * result + CONTINUATION_INDENT_SIZE;
             result = 31 * result + TAB_SIZE;
-            result = 31 * result + (USE_TAB_CHARACTER ? 1 : 0);
-            result = 31 * result + (SMART_TABS ? 1 : 0);
+            result = 31 * result + Boolean.hashCode(USE_TAB_CHARACTER);
+            result = 31 * result + Boolean.hashCode(SMART_TABS);
             result = 31 * result + LABEL_INDENT_SIZE;
-            result = 31 * result + (LABEL_INDENT_ABSOLUTE ? 1 : 0);
-            result = 31 * result + (USE_RELATIVE_INDENTS ? 1 : 0);
+            result = 31 * result + Boolean.hashCode(LABEL_INDENT_ABSOLUTE);
+            result = 31 * result + Boolean.hashCode(USE_RELATIVE_INDENTS);
             return result;
         }
 
@@ -1048,16 +1050,15 @@ public class CommonCodeStyleSettings {
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(Object obj) {
-        if (obj instanceof CommonCodeStyleSettings) {
-            if (ReflectionUtil.comparePublicNonFinalFields(this, obj) &&
-                mySoftMargins.equals(((CommonCodeStyleSettings)obj).mySoftMargins) &&
-                Comparing.equal(myIndentOptions, ((CommonCodeStyleSettings)obj).getIndentOptions()) &&
-                arrangementSettingsEqual((CommonCodeStyleSettings)obj)) {
-                return true;
-            }
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
         }
-        return false;
+        return obj instanceof CommonCodeStyleSettings that
+            && ReflectionUtil.comparePublicNonFinalFields(this, that)
+            && mySoftMargins.equals(that.mySoftMargins)
+            && Comparing.equal(myIndentOptions, that.getIndentOptions())
+            && arrangementSettingsEqual(that);
     }
 
     protected boolean arrangementSettingsEqual(CommonCodeStyleSettings obj) {
@@ -1070,7 +1071,6 @@ public class CommonCodeStyleSettings {
         return Comparing.equal(theseSettings, obj.getArrangementSettings());
     }
 
-    
     public List<Integer> getSoftMargins() {
         return mySoftMargins.getValues();
     }

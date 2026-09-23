@@ -22,68 +22,62 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 17:59/30.05.13
+ * @since 2013-05-30
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class LanguageVersion {
-  
-  public static final Key<LanguageVersion> KEY = Key.create("LANGUAGE_VERSION");
+    public static final Key<LanguageVersion> KEY = Key.create("LANGUAGE_VERSION");
 
-  private final String myId;
-  private final String myName;
-  private final Language myLanguage;
-  private final String[] myMimeTypes;
+    private final String myId;
+    private final String myName;
+    private final Language myLanguage;
+    private final String[] myMimeTypes;
 
-  public LanguageVersion(String id, String name, Language language, String... mimeTypes) {
-    myId = id;
-    myName = name;
-    myLanguage = language;
-    myMimeTypes = mimeTypes;
-  }
+    public LanguageVersion(String id, String name, Language language, String... mimeTypes) {
+        myId = id;
+        myName = name;
+        myLanguage = language;
+        myMimeTypes = mimeTypes;
+    }
 
-  
-  public String getId() {
-    return myId;
-  }
+    public String getId() {
+        return myId;
+    }
 
-  
-  public String getName() {
-    return myName;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  
-  public Language getLanguage() {
-    return myLanguage;
-  }
+    public Language getLanguage() {
+        return myLanguage;
+    }
 
-  
-  public String[] getMimeTypes() {
-    return myMimeTypes;
-  }
+    public String[] getMimeTypes() {
+        return myMimeTypes;
+    }
 
-  public @Nullable FileType getAssociatedFileType() {
-    return null;
-  }
+    public @Nullable FileType getAssociatedFileType() {
+        return null;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof LanguageVersion)) return false;
-    LanguageVersion that = (LanguageVersion)o;
-    return Objects.equals(myId, that.myId) && Objects.equals(myLanguage, that.myLanguage);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof LanguageVersion that && Objects.equals(myId, that.myId) && Objects.equals(myLanguage, that.myLanguage);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myId, myLanguage);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myId, myLanguage);
+    }
 
-  @Override
-  public String toString() {
-    return "LanguageVersion: " + getId() + " for language: " + getLanguage();
-  }
+    @Override
+    public String toString() {
+        return "LanguageVersion: " + getId() + " for language: " + getLanguage();
+    }
 }

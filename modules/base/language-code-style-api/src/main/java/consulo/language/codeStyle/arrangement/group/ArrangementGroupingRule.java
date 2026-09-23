@@ -17,6 +17,7 @@ package consulo.language.codeStyle.arrangement.group;
 
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Encapsulates information about grouping rules to use during arrangement.
@@ -24,61 +25,57 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
  * E.g. a rule might look like 'keep together class methods which implement methods from particular interface'.
  *
  * @author Denis Zhdanov
- * @since 9/18/12 8:50 AM
+ * @since 2012-09-18
  */
 public class ArrangementGroupingRule {
+    private final ArrangementSettingsToken myGroupingType;
 
-  
-  private final ArrangementSettingsToken myGroupingType;
-  
-  private final ArrangementSettingsToken myOrderType;
+    private final ArrangementSettingsToken myOrderType;
 
-  public ArrangementGroupingRule(ArrangementSettingsToken groupingType) {
-    this(groupingType, StdArrangementTokens.Order.KEEP);
-  }
+    public ArrangementGroupingRule(ArrangementSettingsToken groupingType) {
+        this(groupingType, StdArrangementTokens.Order.KEEP);
+    }
 
-  public ArrangementGroupingRule(ArrangementSettingsToken groupingType, ArrangementSettingsToken orderType) {
-    myGroupingType = groupingType;
-    myOrderType = orderType;
-  }
+    public ArrangementGroupingRule(ArrangementSettingsToken groupingType, ArrangementSettingsToken orderType) {
+        myGroupingType = groupingType;
+        myOrderType = orderType;
+    }
 
-  
-  public ArrangementSettingsToken getGroupingType() {
-    return myGroupingType;
-  }
+    public ArrangementSettingsToken getGroupingType() {
+        return myGroupingType;
+    }
 
-  
-  public ArrangementSettingsToken getOrderType() {
-    return myOrderType;
-  }
+    public ArrangementSettingsToken getOrderType() {
+        return myOrderType;
+    }
 
-  @Override
-  public ArrangementGroupingRule clone() {
-    return new ArrangementGroupingRule(myGroupingType, myOrderType);
-  }
+    @Override
+    public ArrangementGroupingRule clone() {
+        return new ArrangementGroupingRule(myGroupingType, myOrderType);
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myGroupingType.hashCode();
-    result = 31 * result + myOrderType.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myGroupingType.hashCode() + myOrderType.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    ArrangementGroupingRule rule = (ArrangementGroupingRule)o;
+        ArrangementGroupingRule that = (ArrangementGroupingRule) o;
 
-    if (myOrderType != rule.myOrderType) return false;
-    if (!myGroupingType.equals(rule.myGroupingType)) return false;
+        return myOrderType == that.myOrderType
+            && myGroupingType.equals(that.myGroupingType);
+    }
 
-    return true;
-  }
-
-  @Override
-  public String toString() {
-    return String.format("(%s, %s)", myGroupingType, myOrderType);
-  }
+    @Override
+    public String toString() {
+        return String.format("(%s, %s)", myGroupingType, myOrderType);
+    }
 }

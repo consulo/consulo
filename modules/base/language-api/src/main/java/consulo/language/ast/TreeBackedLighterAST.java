@@ -19,106 +19,106 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TreeBackedLighterAST extends LighterAST {
-  private final FileASTNode myRoot;
+    private final FileASTNode myRoot;
 
-  public TreeBackedLighterAST(FileASTNode root) {
-    super(root.getCharTable());
-    myRoot = root;
-  }
-
-  @Override
-  public LighterASTNode getRoot() {
-    return wrap(myRoot);
-  }
-
-  @Override
-  public @Nullable LighterASTNode getParent(LighterASTNode node) {
-    ASTNode parent = ((NodeWrapper)node).myNode.getTreeParent();
-    return parent == null ? null : wrap(parent);
-  }
-
-  @Override
-  public List<LighterASTNode> getChildren(LighterASTNode parent) {
-    ASTNode[] children = ((NodeWrapper)parent).myNode.getChildren(null);
-    if (children.length == 0) return List.of();
-
-    List<LighterASTNode> result = new ArrayList<>(children.length);
-    for (ASTNode child : children) {
-      result.add(wrap(child));
-    }
-    return result;
-  }
-
-  public static LighterASTNode wrap(ASTNode node) {
-    return node.getFirstChildNode() == null && node.getTextLength() > 0 ? new TokenNodeWrapper(node) : new NodeWrapper(node);
-  }
-
-  public ASTNode unwrap(LighterASTNode node) {
-    return ((NodeWrapper)node).myNode;
-  }
-
-  private static class NodeWrapper implements LighterASTNode {
-    protected final ASTNode myNode;
-
-    public NodeWrapper(ASTNode node) {
-      myNode = node;
+    public TreeBackedLighterAST(FileASTNode root) {
+        super(root.getCharTable());
+        myRoot = root;
     }
 
     @Override
-    public IElementType getTokenType() {
-      return myNode.getElementType();
+    public LighterASTNode getRoot() {
+        return wrap(myRoot);
     }
 
     @Override
-    public int getStartOffset() {
-      return myNode.getStartOffset();
+    public @Nullable LighterASTNode getParent(LighterASTNode node) {
+        ASTNode parent = ((NodeWrapper) node).myNode.getTreeParent();
+        return parent == null ? null : wrap(parent);
     }
 
     @Override
-    public int getEndOffset() {
-      return myNode.getStartOffset() + myNode.getTextLength();
+    public List<LighterASTNode> getChildren(LighterASTNode parent) {
+        ASTNode[] children = ((NodeWrapper) parent).myNode.getChildren(null);
+        if (children.length == 0) {
+            return List.of();
+        }
+
+        List<LighterASTNode> result = new ArrayList<>(children.length);
+        for (ASTNode child : children) {
+            result.add(wrap(child));
+        }
+        return result;
     }
 
-    @Override
-    public int getTextLength() {
-      return myNode.getTextLength();
+    public static LighterASTNode wrap(ASTNode node) {
+        return node.getFirstChildNode() == null && node.getTextLength() > 0 ? new TokenNodeWrapper(node) : new NodeWrapper(node);
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof NodeWrapper)) return false;
-      NodeWrapper that = (NodeWrapper)o;
-      if (myNode != null ? !myNode.equals(that.myNode) : that.myNode != null) return false;
-      return true;
+    public ASTNode unwrap(LighterASTNode node) {
+        return ((NodeWrapper) node).myNode;
     }
 
-    @Override
-    public int hashCode() {
-      return myNode.hashCode();
+    private static class NodeWrapper implements LighterASTNode {
+        protected final ASTNode myNode;
+
+        public NodeWrapper(ASTNode node) {
+            myNode = node;
+        }
+
+        @Override
+        public IElementType getTokenType() {
+            return myNode.getElementType();
+        }
+
+        @Override
+        public int getStartOffset() {
+            return myNode.getStartOffset();
+        }
+
+        @Override
+        public int getEndOffset() {
+            return myNode.getStartOffset() + myNode.getTextLength();
+        }
+
+        @Override
+        public int getTextLength() {
+            return myNode.getTextLength();
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            return this == o
+                || o instanceof NodeWrapper that && Objects.equals(myNode, that.myNode);
+        }
+
+        @Override
+        public int hashCode() {
+            return myNode.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return "node wrapper[" + myNode + "]";
+        }
     }
 
-    @Override
-    public String toString() {
-      return "node wrapper[" + myNode + "]";
-    }
-  }
+    private static class TokenNodeWrapper extends NodeWrapper implements LighterASTTokenNode {
+        public TokenNodeWrapper(ASTNode node) {
+            super(node);
+        }
 
-  private static class TokenNodeWrapper extends NodeWrapper implements LighterASTTokenNode {
-    public TokenNodeWrapper(ASTNode node) {
-      super(node);
-    }
+        @Override
+        public CharSequence getText() {
+            return myNode.getText();
+        }
 
-    @Override
-    public CharSequence getText() {
-      return myNode.getText();
+        @Override
+        public String toString() {
+            return "token wrapper[" + myNode + "]";
+        }
     }
-
-    @Override
-    public String toString() {
-      return "token wrapper[" + myNode + "]";
-    }
-  }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.codeStyle;
 
 import consulo.util.lang.CharArrayUtil;
@@ -33,7 +32,7 @@ public class IndentInside {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -49,10 +48,7 @@ public class IndentInside {
 
     @Override
     public int hashCode() {
-        int result;
-        result = whiteSpaces;
-        result = 29 * result + tabs;
-        return result;
+        return 29 * whiteSpaces + tabs;
     }
 
     public int getTabsCount(CommonCodeStyleSettings.IndentOptions options) {
@@ -64,13 +60,11 @@ public class IndentInside {
         return whiteSpaces + tabs * options.TAB_SIZE;
     }
 
-    
     public static IndentInside getLastLineIndent(CharSequence text) {
         CharSequence lastLine = getLastLine(text);
         return createIndentOn(lastLine);
     }
 
-    
     public static IndentInside createIndentOn(@Nullable CharSequence lastLine) {
         IndentInside result = new IndentInside();
         if (lastLine == null) {
@@ -87,7 +81,6 @@ public class IndentInside {
         return result;
     }
 
-    
     public static CharSequence getLastLine(CharSequence text) {
         int i = CharArrayUtil.shiftBackwardUntil(text, text.length() - 1, "\n");
         if (i < 0) {

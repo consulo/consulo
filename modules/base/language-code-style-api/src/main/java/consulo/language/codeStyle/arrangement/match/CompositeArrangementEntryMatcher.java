@@ -16,53 +16,56 @@
 package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 /**
  * @author Denis Zhdanov
- * @since 7/17/12 11:26 AM
+ * @since 2012-07-17
  */
 public class CompositeArrangementEntryMatcher implements ArrangementEntryMatcher {
+    private final Set<ArrangementEntryMatcher> myMatchers = new HashSet<>();
 
-  
-  private final Set<ArrangementEntryMatcher> myMatchers = new HashSet<ArrangementEntryMatcher>();
-
-  public CompositeArrangementEntryMatcher(ArrangementEntryMatcher... matchers) {
-    myMatchers.addAll(Arrays.asList(matchers));
-  }
-
-  @Override
-  public boolean isMatched(ArrangementEntry entry) {
-    for (ArrangementEntryMatcher matcher : myMatchers) {
-      if (!matcher.isMatched(entry)) {
-        return false;
-      }
+    public CompositeArrangementEntryMatcher(ArrangementEntryMatcher... matchers) {
+        myMatchers.addAll(Arrays.asList(matchers));
     }
-    return true;
-  }
 
-  public void addMatcher(ArrangementEntryMatcher rule) {
-    myMatchers.add(rule);
-  }
+    @Override
+    public boolean isMatched(ArrangementEntry entry) {
+        for (ArrangementEntryMatcher matcher : myMatchers) {
+            if (!matcher.isMatched(entry)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-  @Override
-  public int hashCode() {
-    return myMatchers.hashCode();
-  }
+    public void addMatcher(ArrangementEntryMatcher rule) {
+        myMatchers.add(rule);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public int hashCode() {
+        return myMatchers.hashCode();
+    }
 
-    CompositeArrangementEntryMatcher matcher = (CompositeArrangementEntryMatcher)o;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    return myMatchers.equals(matcher.myMatchers);
-  }
+        CompositeArrangementEntryMatcher that = (CompositeArrangementEntryMatcher) o;
 
-  @Override
-  public String toString() {
-    return String.format("all of those: %s", myMatchers);
-  }
+        return myMatchers.equals(that.myMatchers);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("all of those: %s", myMatchers);
+    }
 }

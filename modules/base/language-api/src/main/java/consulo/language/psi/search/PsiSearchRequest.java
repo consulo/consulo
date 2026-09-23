@@ -23,66 +23,69 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public class PsiSearchRequest {
-  public final SearchScope searchScope;
-  public final String word;
-  public final short searchContext;
-  public final boolean caseSensitive;
-  public final RequestResultProcessor processor;
-  public final @Nullable String containerName;
+    public final SearchScope searchScope;
+    public final String word;
+    public final short searchContext;
+    public final boolean caseSensitive;
+    public final RequestResultProcessor processor;
+    public final @Nullable String containerName;
 
-  public PsiSearchRequest(SearchScope searchScope,
-                          String word,
-                          short searchContext,
-                          boolean caseSensitive,
-                          RequestResultProcessor processor) {
-    this(searchScope, word, searchContext, caseSensitive, null, processor);
-  }
-  public PsiSearchRequest(SearchScope searchScope,
-                          String word,
-                          short searchContext,
-                          boolean caseSensitive,
-                          @Nullable String containerName,
-                          RequestResultProcessor processor) {
-    this.containerName = containerName;
-    if (word.isEmpty()) {
-      throw new IllegalArgumentException("Cannot search for elements with empty text");
+    public PsiSearchRequest(
+        SearchScope searchScope,
+        String word,
+        short searchContext,
+        boolean caseSensitive,
+        RequestResultProcessor processor
+    ) {
+        this(searchScope, word, searchContext, caseSensitive, null, processor);
     }
-    this.searchScope = searchScope;
-    this.word = word;
-    this.searchContext = searchContext;
-    this.caseSensitive = caseSensitive;
-    this.processor = processor;
-    if (searchScope instanceof GlobalSearchScope && ((GlobalSearchScope)searchScope).getProject() == null) {
-      throw new AssertionError("Every search scope must be associated with a project");
+
+    public PsiSearchRequest(
+        SearchScope searchScope,
+        String word,
+        short searchContext,
+        boolean caseSensitive,
+        @Nullable String containerName,
+        RequestResultProcessor processor
+    ) {
+        this.containerName = containerName;
+        if (word.isEmpty()) {
+            throw new IllegalArgumentException("Cannot search for elements with empty text");
+        }
+        this.searchScope = searchScope;
+        this.word = word;
+        this.searchContext = searchContext;
+        this.caseSensitive = caseSensitive;
+        this.processor = processor;
+        if (searchScope instanceof GlobalSearchScope && ((GlobalSearchScope) searchScope).getProject() == null) {
+            throw new AssertionError("Every search scope must be associated with a project");
+        }
     }
-  }
 
-  @Override
-  public String toString() {
-    return word + " -> " + processor;
-  }
+    @Override
+    public String toString() {
+        return word + " -> " + processor;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof PsiSearchRequest)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof PsiSearchRequest that
+            && caseSensitive == that.caseSensitive
+            && searchContext == that.searchContext
+            && processor.equals(that.processor)
+            && searchScope.equals(that.searchScope)
+            && word.equals(that.word);
+    }
 
-    PsiSearchRequest that = (PsiSearchRequest)o;
-
-    if (caseSensitive != that.caseSensitive) return false;
-    if (searchContext != that.searchContext) return false;
-    if (!processor.equals(that.processor)) return false;
-    if (!searchScope.equals(that.searchScope)) return false;
-    return word.equals(that.word);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = searchScope.hashCode();
-    result = 31 * result + word.hashCode();
-    result = 31 * result + (int)searchContext;
-    result = 31 * result + (caseSensitive ? 1 : 0);
-    result = 31 * result + processor.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = searchScope.hashCode();
+        result = 31 * result + word.hashCode();
+        result = 31 * result + (int) searchContext;
+        result = 31 * result + Boolean.hashCode(caseSensitive);
+        return 31 * result + processor.hashCode();
+    }
 }
