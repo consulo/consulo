@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.configurable.Settings;
-import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
@@ -39,16 +38,17 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -153,7 +153,6 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         return XmlStringUtil.wrapInHtml(buffer);
     }
 
-    
     private PlaceInProjectStructure createPlace() {
         return new PlaceInProjectStructureBase(this::librariesNavigator, this);
     }
@@ -172,17 +171,15 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return this == o
-            || o instanceof LibraryProjectStructureElement that
-            && getSourceOrThis() == that.getSourceOrThis();
+            || o instanceof LibraryProjectStructureElement that && getSourceOrThis() == that.getSourceOrThis();
     }
 
     public CompletableFuture<?> navigate(Project project) {
         return createPlace().navigate(project);
     }
 
-    
     private Library getSourceOrThis() {
         InvocationHandler invocationHandler = Proxy.isProxyClass(myLibrary.getClass()) ? Proxy.getInvocationHandler(myLibrary) : null;
         Library realLibrary =

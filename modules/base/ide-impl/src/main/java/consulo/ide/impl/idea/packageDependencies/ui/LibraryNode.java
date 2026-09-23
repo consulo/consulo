@@ -23,11 +23,11 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
 public class LibraryNode extends PackageDependenciesNode {
-
     private final OrderEntry myLibraryOrJdk;
 
     public LibraryNode(OrderEntry libraryOrJdk, Project project) {
@@ -56,18 +56,12 @@ public class LibraryNode extends PackageDependenciesNode {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (isEquals()) {
             return super.equals(o);
         }
-        if (this == o) return true;
-        if (!(o instanceof LibraryNode)) return false;
-
-        LibraryNode libraryNode = (LibraryNode) o;
-
-        if (!myLibraryOrJdk.equals(libraryNode.myLibraryOrJdk)) return false;
-
-        return true;
+        return this == o
+            || o instanceof LibraryNode that && myLibraryOrJdk.equals(that.myLibraryOrJdk);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class PathInterner {
   protected @Nullable SubstringWrapper[] internParts(String path, boolean forAddition) {
     int start = 0;
     boolean asBytes = forAddition && IOUtil.isAscii(path);
-    List<SubstringWrapper> key = new ArrayList<SubstringWrapper>();
+    List<SubstringWrapper> key = new ArrayList<>();
     SubstringWrapper flyweightKey = new SubstringWrapper();
     while (start < path.length()) {
       flyweightKey.findSubStringUntilNextSeparator(path, start);
@@ -119,17 +119,15 @@ public class PathInterner {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
-      if (!(o instanceof SubstringWrapper)) return false;
+      if (!(o instanceof SubstringWrapper that)) return false;
 
-      SubstringWrapper wrapper = (SubstringWrapper)o;
-
-      if (hc != wrapper.hc) return false;
-      if (len != wrapper.len) return false;
+      if (hc != that.hc) return false;
+      if (len != that.len) return false;
 
       for (int i = 0; i < len; i++) {
-        if (charAt(i) != wrapper.charAt(i)) {
+        if (charAt(i) != that.charAt(i)) {
           return false;
         }
       }
@@ -164,7 +162,7 @@ public class PathInterner {
 
   public static class PathEnumerator {
     private final ObjectIntMap<SubstringWrapper[]> mySeqToIdx = ObjectMaps.newObjectIntHashMap(PathInterner.HASHING_STRATEGY);
-    private final List<SubstringWrapper[]> myIdxToSeq = new ArrayList<SubstringWrapper[]>();
+    private final List<SubstringWrapper[]> myIdxToSeq = new ArrayList<>();
     private final PathInterner myInterner = new PathInterner();
 
     public PathEnumerator() {
@@ -172,7 +170,7 @@ public class PathInterner {
     }
 
     public List<String> getAllPaths() {
-      ArrayList<String> result = new ArrayList<String>(myIdxToSeq.size() - 1);
+      List<String> result = new ArrayList<>(myIdxToSeq.size() - 1);
       for (SubstringWrapper[] wrappers : myIdxToSeq) {
         if (wrappers != null) {
           result.add(PathInterner.restorePath(wrappers));

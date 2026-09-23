@@ -50,19 +50,16 @@ public class CustomisedActionGroup extends ActionGroup implements AnActionWithAs
         return myGroup;
     }
 
-    
+    @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (myForceUpdate) {
-            myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
+            myChildren = CustomizationUtil.getReorderableChildren(myGroup, mySchema, myDefaultGroupName, e);
             myForceUpdate = false;
-            return myChildren;
         }
-        else {
-            if (!(myGroup instanceof DefaultActionGroup) || myChildren == null) {
-                myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
-            }
-            return myChildren;
+        else if (!(myGroup instanceof DefaultActionGroup) || myChildren == null) {
+            myChildren = CustomizationUtil.getReorderableChildren(myGroup, mySchema, myDefaultGroupName, e);
         }
+        return myChildren;
     }
 
     @Override

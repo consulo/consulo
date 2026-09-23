@@ -2,7 +2,7 @@
 package consulo.ide.impl.language.psi.cache;
 
 import com.uber.nullaway.annotations.Contract;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.util.CachedValueBase;
 import consulo.application.util.CachedValue;
 import consulo.application.util.ConcurrentFactoryMap;
@@ -22,8 +22,8 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.TestOnly;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -82,8 +82,14 @@ public final class IdempotenceChecker {
     }
   }
 
-  private static <T> void reportFailure(@Nullable T existing, @Nullable T fresh, Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue, String msg) {
-    boolean shouldReport = ApplicationManager.getApplication().isUnitTestMode() || ourReportedValueClasses.add(providerClass);
+  private static <T> void reportFailure(
+    @Nullable T existing,
+    @Nullable T fresh,
+    Class<?> providerClass,
+    @Nullable Supplier<? extends T> recomputeValue,
+    String msg
+  ) {
+    boolean shouldReport = Application.get().isUnitTestMode() || ourReportedValueClasses.add(providerClass);
     if (shouldReport) {
       if (recomputeValue != null) {
         msg += recomputeWithLogging(existing, fresh, recomputeValue);
@@ -92,7 +98,6 @@ public final class IdempotenceChecker {
     }
   }
 
-  
   private static <T> String recomputeWithLogging(@Nullable T existing, @Nullable T fresh, Supplier<? extends T> recomputeValue) {
     ResultWithLog<T> rwl = computeWithLogging(recomputeValue);
     T freshest = rwl.result;
@@ -142,7 +147,9 @@ public final class IdempotenceChecker {
     if (o == null) return "null";
 
     String s = o.toString();
-    return s.contains(o.getClass().getSimpleName()) || o instanceof String || o instanceof Number || o instanceof Class ? s : s + " (class " + o.getClass().getName() + ")";
+    return s.contains(o.getClass().getSimpleName()) || o instanceof String || o instanceof Number || o instanceof Class
+      ? s
+      : s + " (class " + o.getClass().getName() + ")";
   }
 
   private static String checkValueEquivalence(@Nullable Object existing, @Nullable Object fresh) {
@@ -156,12 +163,12 @@ public final class IdempotenceChecker {
       return checkArrayEquivalence(eArray, Objects.requireNonNull(asArray(fresh)), existing);
     }
 
-    if (existing instanceof ResultWithLog) {
-      return whichIsField("result", existing, fresh, checkValueEquivalence(((ResultWithLog<?>)existing).getResult(), ((ResultWithLog<?>)fresh).getResult()));
+    if (existing instanceof ResultWithLog<?> existingLog) {
+      return whichIsField("result", existing, fresh, checkValueEquivalence(existingLog.getResult(), ((ResultWithLog<?>)fresh).getResult()));
     }
 
-    if (existing instanceof CachedValueBase.Data) {
-      return checkCachedValueData((CachedValueBase.Data<?>)existing, (CachedValueBase.Data<?>)fresh);
+    if (existing instanceof CachedValueBase.Data<?> existingData) {
+      return checkCachedValueData(existingData, (CachedValueBase.Data<?>)fresh);
     }
     if (existing instanceof List || isOrderedSet(existing)) {
       return checkCollectionElements((Collection<?>)existing, (Collection<?>)fresh);
@@ -169,20 +176,20 @@ public final class IdempotenceChecker {
     if (isOrderedMap(existing)) {
       return checkCollectionElements(((Map<?, ?>)existing).entrySet(), ((Map<?, ?>)fresh).entrySet());
     }
-    if (existing instanceof Set) {
-      return whichIsField("size", existing, fresh, checkCollectionSizes(((Set<?>)existing).size(), ((Set<?>)fresh).size()));
+    if (existing instanceof Set<?> existingSet) {
+      return whichIsField("size", existing, fresh, checkCollectionSizes(existingSet.size(), ((Set<?>)fresh).size()));
     }
-    if (existing instanceof Map) {
+    if (existing instanceof Map<?, ?> existingMap) {
       if (existing instanceof ConcurrentMap) {
         return null; // likely to be filled lazily
       }
-      return whichIsField("size", existing, fresh, checkCollectionSizes(((Map<?, ?>)existing).size(), ((Map<?, ?>)fresh).size()));
+      return whichIsField("size", existing, fresh, checkCollectionSizes(existingMap.size(), ((Map<?, ?>)fresh).size()));
     }
-    if (existing instanceof PsiNamedElement) {
-      return checkPsiEquivalence((PsiElement)existing, (PsiElement)fresh);
+    if (existing instanceof PsiNamedElement existingElem) {
+      return checkPsiEquivalence(existingElem, (PsiElement)fresh);
     }
-    if (existing instanceof ResolveResult) {
-      PsiElement existingPsi = ((ResolveResult)existing).getElement();
+    if (existing instanceof ResolveResult existingResult) {
+      PsiElement existingPsi = existingResult.getElement();
       PsiElement freshPsi = ((ResolveResult)fresh).getElement();
       if (existingPsi != freshPsi) {
         String s = checkClassEquivalence(existingPsi, freshPsi);
@@ -210,10 +217,10 @@ public final class IdempotenceChecker {
   }
 
   private static @Nullable Object[] asArray(Object o) {
-    if (o instanceof Object[]) return (Object[])o;
-    if (o instanceof Map.Entry) return new Object[]{((Map.Entry<?, ?>)o).getKey(), ((Map.Entry<?, ?>)o).getValue()};
-    if (o instanceof Pair) return new Object[]{((Pair<?, ?>)o).first, ((Pair<?, ?>)o).second};
-    if (o instanceof Trinity) return new Object[]{((Trinity<?, ?, ?>)o).first, ((Trinity<?, ?, ?>)o).second, ((Trinity<?, ?, ?>)o).third};
+    if (o instanceof Object[] objects) return objects;
+    if (o instanceof Map.Entry<?, ?> entry) return new Object[]{entry.getKey(), entry.getValue()};
+    if (o instanceof Pair<?, ?> pair) return new Object[]{pair.first, pair.second};
+    if (o instanceof Trinity<?, ?, ?> trinity) return new Object[]{trinity.first, trinity.second, trinity.third};
     return null;
   }
 
@@ -317,7 +324,7 @@ public final class IdempotenceChecker {
    * @return whether random checks are enabled and it makes sense to call a potentially expensive {@link #applyForRandomCheck} at all.
    */
   public static boolean areRandomChecksEnabled() {
-    return ApplicationManager.getApplication().isUnitTestMode();
+    return Application.get().isUnitTestMode();
   }
 
   /**
@@ -396,11 +403,9 @@ public final class IdempotenceChecker {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof ResultWithLog)) return false;
-      ResultWithLog<?> log = (ResultWithLog<?>)o;
-      return Arrays.deepEquals(new Object[]{result}, new Object[]{log.result});
+    public boolean equals(@Nullable Object o) {
+      return this == o
+        || o instanceof ResultWithLog<?> that && Arrays.deepEquals(new Object[]{result}, new Object[]{that.result});
     }
 
     @Override

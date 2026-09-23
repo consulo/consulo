@@ -26,6 +26,7 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Set;
@@ -90,18 +91,17 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (isEquals()) {
             return super.equals(o);
         }
         return this == o
-            || o instanceof ModuleNode that
-            && Objects.equals(myModule, that.myModule);
+            || o instanceof ModuleNode that && Objects.equals(myModule, that.myModule);
     }
 
     @Override
     public int hashCode() {
-        return myModule == null ? 0 : myModule.hashCode();
+        return Objects.hashCode(myModule);
     }
 
     @Override
@@ -109,7 +109,6 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
         return myModule != null && !myModule.isDisposed();
     }
 
-    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenModuleSettingsText();

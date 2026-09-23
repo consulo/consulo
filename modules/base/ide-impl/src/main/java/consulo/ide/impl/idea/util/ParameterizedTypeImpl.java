@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -8,46 +10,46 @@ import java.util.Arrays;
  * @author peter
  */
 public class ParameterizedTypeImpl implements ParameterizedType {
-  private final Type myRawType;
-  private final Type[] myArguments;
+    private final Type myRawType;
+    private final Type[] myArguments;
 
-  public ParameterizedTypeImpl(Type rawType, Type... arguments) {
-    myRawType = rawType;
-    myArguments = arguments;
-  }
+    public ParameterizedTypeImpl(Type rawType, Type... arguments) {
+        myRawType = rawType;
+        myArguments = arguments;
+    }
 
-  @Override
-  public Type[] getActualTypeArguments() {
-    return myArguments;
-  }
+    @Override
+    public Type[] getActualTypeArguments() {
+        return myArguments;
+    }
 
-  @Override
-  public Type getRawType() {
-    return myRawType;
-  }
+    @Override
+    public Type getRawType() {
+        return myRawType;
+    }
 
-  @Override
-  public Type getOwnerType() {
-    return null;
-  }
+    @Override
+    public Type getOwnerType() {
+        return null;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ParameterizedTypeImpl)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ParameterizedTypeImpl)) {
+            return false;
+        }
 
-    ParameterizedTypeImpl that = (ParameterizedTypeImpl)o;
+        ParameterizedTypeImpl that = (ParameterizedTypeImpl) o;
 
-    if (!Arrays.equals(myArguments, that.myArguments)) return false;
-    if (!myRawType.equals(that.myRawType)) return false;
+        return Arrays.equals(myArguments, that.myArguments)
+            && myRawType.equals(that.myRawType);
+    }
 
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = myRawType.hashCode();
-    result = 31 * result + Arrays.hashCode(myArguments);
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myRawType.hashCode() + Arrays.hashCode(myArguments);
+    }
 }

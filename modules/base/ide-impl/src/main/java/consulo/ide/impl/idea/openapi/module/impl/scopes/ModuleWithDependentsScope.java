@@ -33,6 +33,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.collection.Queue;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,115 +41,117 @@ import java.util.Set;
  * @author max
  */
 class ModuleWithDependentsScope extends GlobalSearchScope {
-  private final Module myModule;
+    private final Module myModule;
 
-  private final ProjectFileIndex myProjectFileIndex;
-  private final Set<Module> myModules;
-  private final ProjectAwareSearchScope myProjectScope;
+    private final ProjectFileIndex myProjectFileIndex;
+    private final Set<Module> myModules;
+    private final ProjectAwareSearchScope myProjectScope;
 
-  ModuleWithDependentsScope(Module module) {
-    super(module.getProject());
-    myModule = module;
+    ModuleWithDependentsScope(Module module) {
+        super(module.getProject());
+        myModule = module;
 
-    myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
-    myProjectScope = ProjectScopes.getProjectScope(module.getProject());
+        myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
+        myProjectScope = ProjectScopes.getProjectScope(module.getProject());
 
-    myModules = buildDependents(myModule);
-  }
-
-  private static Set<Module> buildDependents(Module module) {
-    Set<Module> result = new HashSet<Module>();
-    result.add(module);
-
-    Set<Module> processedExporting = new HashSet<Module>();
-
-    ModuleIndex index = getModuleIndex(module.getProject());
-
-    Queue<Module> walkingQueue = new Queue<Module>(10);
-    walkingQueue.addLast(module);
-
-    while (!walkingQueue.isEmpty()) {
-      Module current = walkingQueue.pullFirst();
-      processedExporting.add(current);
-      result.addAll(index.plainUsages.get(current));
-      for (Module dependent : index.exportingUsages.get(current)) {
-        result.add(dependent);
-        if (processedExporting.add(dependent)) {
-          walkingQueue.addLast(dependent);
-        }
-      }
+        myModules = buildDependents(myModule);
     }
-    return result;
-  }
 
-  private static class ModuleIndex {
-    final MultiMap<Module, Module> plainUsages = MultiMap.create();
-    final MultiMap<Module, Module> exportingUsages = MultiMap.create();
-  }
+    private static Set<Module> buildDependents(Module module) {
+        Set<Module> result = new HashSet<>();
+        result.add(module);
 
-  private static ModuleIndex getModuleIndex(final Project project) {
-    return CachedValuesManager.getManager(project).getCachedValue(project, new CachedValueProvider<ModuleIndex>() {
-      @Override
-      public @Nullable Result<ModuleIndex> compute() {
-        ModuleIndex index = new ModuleIndex();
-        for (Module module : ModuleManager.getInstance(project).getModules()) {
-          for (OrderEntry orderEntry : ModuleRootManager.getInstance(module).getOrderEntries()) {
-            if (orderEntry instanceof ModuleOrderEntry) {
-              Module referenced = ((ModuleOrderEntry)orderEntry).getModule();
-              if (referenced != null) {
-                MultiMap<Module, Module> map = ((ModuleOrderEntry)orderEntry).isExported() ? index.exportingUsages : index.plainUsages;
-                map.putValue(referenced, module);
-              }
+        Set<Module> processedExporting = new HashSet<>();
+
+        ModuleIndex index = getModuleIndex(module.getProject());
+
+        Queue<Module> walkingQueue = new Queue<>(10);
+        walkingQueue.addLast(module);
+
+        while (!walkingQueue.isEmpty()) {
+            Module current = walkingQueue.pullFirst();
+            processedExporting.add(current);
+            result.addAll(index.plainUsages.get(current));
+            for (Module dependent : index.exportingUsages.get(current)) {
+                result.add(dependent);
+                if (processedExporting.add(dependent)) {
+                    walkingQueue.addLast(dependent);
+                }
             }
-          }
         }
-        return Result.create(index, ProjectRootManager.getInstance(project));
-      }
-    });
-  }
+        return result;
+    }
 
-  @Override
-  public boolean contains(VirtualFile file) {
-    return contains(file, false);
-  }
+    private static class ModuleIndex {
+        final MultiMap<Module, Module> plainUsages = MultiMap.create();
+        final MultiMap<Module, Module> exportingUsages = MultiMap.create();
+    }
 
-  boolean contains(VirtualFile file, boolean myOnlyTests) {
-    Module moduleOfFile = myProjectFileIndex.getModuleForFile(file);
-    if (moduleOfFile == null || !myModules.contains(moduleOfFile)) return false;
-    if (myOnlyTests && !myProjectFileIndex.isInTestSourceContent(file)) return false;
-    return myProjectScope.contains(file);
-  }
+    private static ModuleIndex getModuleIndex(final Project project) {
+        return CachedValuesManager.getManager(project).getCachedValue(project, new CachedValueProvider<ModuleIndex>() {
+            @Override
+            public @Nullable Result<ModuleIndex> compute() {
+                ModuleIndex index = new ModuleIndex();
+                for (Module module : ModuleManager.getInstance(project).getModules()) {
+                    for (OrderEntry orderEntry : ModuleRootManager.getInstance(module).getOrderEntries()) {
+                        if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry) {
+                            Module referenced = moduleOrderEntry.getModule();
+                            if (referenced != null) {
+                                MultiMap<Module, Module> map = moduleOrderEntry.isExported() ? index.exportingUsages : index.plainUsages;
+                                map.putValue(referenced, module);
+                            }
+                        }
+                    }
+                }
+                return Result.create(index, ProjectRootManager.getInstance(project));
+            }
+        });
+    }
 
-  @Override
-  public int compare(VirtualFile file1, VirtualFile file2) {
-    return 0;
-  }
+    @Override
+    public boolean contains(VirtualFile file) {
+        return contains(file, false);
+    }
 
-  @Override
-  public boolean isSearchInModuleContent(Module aModule) {
-    return myModules.contains(aModule);
-  }
+    boolean contains(VirtualFile file, boolean myOnlyTests) {
+        Module moduleOfFile = myProjectFileIndex.getModuleForFile(file);
+        if (moduleOfFile == null || !myModules.contains(moduleOfFile)) {
+            return false;
+        }
+        if (myOnlyTests && !myProjectFileIndex.isInTestSourceContent(file)) {
+            return false;
+        }
+        return myProjectScope.contains(file);
+    }
 
-  @Override
-  public boolean isSearchInLibraries() {
-    return false;
-  }
+    @Override
+    public int compare(VirtualFile file1, VirtualFile file2) {
+        return 0;
+    }
 
-  
-  public String toString() {
-    return "Module with dependents:" + myModule.getName();
-  }
+    @Override
+    public boolean isSearchInModuleContent(Module aModule) {
+        return myModules.contains(aModule);
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ModuleWithDependentsScope)) return false;
+    @Override
+    public boolean isSearchInLibraries() {
+        return false;
+    }
 
-    ModuleWithDependentsScope moduleWithDependentsScope = (ModuleWithDependentsScope)o;
+    @Override
+    public String toString() {
+        return "Module with dependents:" + myModule.getName();
+    }
 
-    return myModule.equals(moduleWithDependentsScope.myModule);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ModuleWithDependentsScope that && myModule.equals(that.myModule);
+    }
 
-  public int hashCode() {
-    return myModule.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myModule.hashCode();
+    }
 }

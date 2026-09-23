@@ -13,100 +13,101 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ui.navigation;
 
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
 import consulo.util.concurrent.AsyncResult;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.SequencedMap;
 
 public class Place implements ComparableObject {
-  private SequencedMap<String, Object> myPath = new LinkedHashMap<>();
+    private SequencedMap<String, Object> myPath = new LinkedHashMap<>();
 
-  @Override
-  
-  public final Object[] getEqualityObjects() {
-    return new Object[] {myPath};
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return ComparableObjectCheck.equals(this, obj);
-  }
-
-  @Override
-  public final int hashCode() {
-    return ComparableObjectCheck.hashCode(this, super.hashCode());
-  }
-
-  
-  public Place putPath(String name, Object value) {
-    myPath.put(name, value);
-    return this;
-  }
-
-  public
-  @Nullable Object getPath(String name) {
-    return myPath.get(name);
-  }
-
-  public Place cloneForElement(String name, Object value) {
-    Place clone = new Place();
-    clone.myPath = new LinkedHashMap<>(myPath);
-    clone.myPath.put(name, value);
-    return clone;
-  }
-
-  public void copyFrom(Place from) {
-    myPath = new LinkedHashMap<>(from.myPath);
-  }
-
-  public boolean isMoreGeneralFor(Place place) {
-    if (myPath.size() >= place.myPath.size()) return false;
-
-    Iterator<String> thisIterator = myPath.keySet().iterator();
-    Iterator<String> otherIterator = place.myPath.keySet().iterator();
-
-    while (thisIterator.hasNext()) {
-      String thisKey = thisIterator.next();
-      String otherKey = otherIterator.next();
-      if (thisKey == null || !thisKey.equals(otherKey)) return false;
-
-      Object thisValue = myPath.get(thisKey);
-      Object otherValue = place.myPath.get(otherKey);
-
-      if (thisValue == null || !thisValue.equals(otherValue)) return false;
-
+    @Override
+    public final Object[] getEqualityObjects() {
+        return new Object[]{myPath};
     }
 
-    return true;
-  }
-
-  public interface Navigator {
-    default void setHistory(History history) {
+    @Override
+    public final boolean equals(@Nullable Object obj) {
+        return ComparableObjectCheck.equals(this, obj);
     }
 
-    AsyncResult<Void> navigateTo(@Nullable Place place, boolean requestFocus);
-
-    void queryPlace(Place place);
-  }
-
-  public static AsyncResult<Void> goFurther(Object object, Place place, boolean requestFocus) {
-    if (object instanceof Navigator) {
-      return ((Navigator)object).navigateTo(place, requestFocus);
+    @Override
+    public final int hashCode() {
+        return ComparableObjectCheck.hashCode(this, super.hashCode());
     }
-    return AsyncResult.resolved();
-  }
 
-  public static void queryFurther(Object object, Place place) {
-    if (object instanceof Navigator) {
-      ((Navigator)object).queryPlace(place);
+    public Place putPath(String name, Object value) {
+        myPath.put(name, value);
+        return this;
     }
-  }
+
+    public @Nullable Object getPath(String name) {
+        return myPath.get(name);
+    }
+
+    public Place cloneForElement(String name, Object value) {
+        Place clone = new Place();
+        clone.myPath = new LinkedHashMap<>(myPath);
+        clone.myPath.put(name, value);
+        return clone;
+    }
+
+    public void copyFrom(Place from) {
+        myPath = new LinkedHashMap<>(from.myPath);
+    }
+
+    public boolean isMoreGeneralFor(Place place) {
+        if (myPath.size() >= place.myPath.size()) {
+            return false;
+        }
+
+        Iterator<String> thisIterator = myPath.keySet().iterator();
+        Iterator<String> otherIterator = place.myPath.keySet().iterator();
+
+        while (thisIterator.hasNext()) {
+            String thisKey = thisIterator.next();
+            String otherKey = otherIterator.next();
+            if (thisKey == null || !thisKey.equals(otherKey)) {
+                return false;
+            }
+
+            Object thisValue = myPath.get(thisKey);
+            Object otherValue = place.myPath.get(otherKey);
+
+            if (thisValue == null || !thisValue.equals(otherValue)) {
+                return false;
+            }
+
+        }
+
+        return true;
+    }
+
+    public interface Navigator {
+        default void setHistory(History history) {
+        }
+
+        AsyncResult<Void> navigateTo(@Nullable Place place, boolean requestFocus);
+
+        void queryPlace(Place place);
+    }
+
+    public static AsyncResult<Void> goFurther(Object object, Place place, boolean requestFocus) {
+        if (object instanceof Navigator navigator) {
+            return navigator.navigateTo(place, requestFocus);
+        }
+        return AsyncResult.resolved();
+    }
+
+    public static void queryFurther(Object object, Place place) {
+        if (object instanceof Navigator navigator) {
+            navigator.queryPlace(place);
+        }
+    }
 }

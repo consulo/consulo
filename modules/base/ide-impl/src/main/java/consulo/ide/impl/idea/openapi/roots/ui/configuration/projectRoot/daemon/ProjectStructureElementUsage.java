@@ -8,25 +8,25 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public abstract class ProjectStructureElementUsage {
-  public abstract ProjectStructureElement getSourceElement();
+    public abstract ProjectStructureElement getSourceElement();
 
-  public abstract ProjectStructureElement getContainingElement();
+    public abstract ProjectStructureElement getContainingElement();
 
-  public abstract String getPresentableName();
+    public abstract String getPresentableName();
 
-  public @Nullable String getPresentableLocationInElement() {
-    return null;
-  }
+    public @Nullable String getPresentableLocationInElement() {
+        return null;
+    }
 
-  public abstract PlaceInProjectStructure getPlace();
+    public abstract PlaceInProjectStructure getPlace();
 
-  @Override
-  public abstract int hashCode();
+    @Override
+    public abstract int hashCode();
 
-  @Override
-  public abstract boolean equals(Object obj);
+    @Override
+    public abstract boolean equals(@Nullable Object obj);
 
-  public abstract Image getIcon();
+    public abstract Image getIcon();
 
-  public abstract void removeSourceElement();
+    public abstract void removeSourceElement();
 }

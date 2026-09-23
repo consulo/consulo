@@ -19,6 +19,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.xml.XmlStringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,6 @@ import java.util.List;
  * @author nik
  */
 public class ModuleProjectStructureElement extends ProjectStructureElement {
-    
     private final ModulesConfigurator myModulesConfigurator;
     
     private final Module myModule;
@@ -37,7 +37,6 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
         myModule = module;
     }
 
-    
     public Module getModule() {
         return myModule;
     }
@@ -151,10 +150,9 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return this == o
-            || o instanceof ModuleProjectStructureElement that
-            && myModule.equals(that.myModule);
+            || o instanceof ModuleProjectStructureElement that && myModule.equals(that.myModule);
     }
 
     @Override

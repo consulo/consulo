@@ -17,55 +17,64 @@ package consulo.ide.impl.idea.ui.stripe;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey.Malenkov
  */
 public final class ErrorStripe implements Comparable<ErrorStripe> {
-  private final ColorValue myColor;
-  private final int myLayer;
+    private final ColorValue myColor;
+    private final int myLayer;
 
-  private ErrorStripe(ColorValue color, int layer) {
-    myColor = color;
-    myLayer = layer;
-  }
-
-  public static ErrorStripe create(ColorValue color, int layer) {
-    return color == null ? null : new ErrorStripe(color, layer);
-  }
-
-  public ColorValue getColor() {
-    return myColor;
-  }
-
-  public int getLayer() {
-    return myLayer;
-  }
-
-  @Override
-  public int hashCode() {
-    return myLayer + myColor.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (object == this) return true;
-    if (object instanceof ErrorStripe) {
-      ErrorStripe stripe = (ErrorStripe)object;
-      return stripe.myLayer == myLayer && RGBColor.toRGBValue(stripe.myColor.toRGB()) == RGBColor.toRGBValue(myColor.toRGB());
+    private ErrorStripe(ColorValue color, int layer) {
+        myColor = color;
+        myLayer = layer;
     }
-    return false;
-  }
 
-  @Override
-  public int compareTo(ErrorStripe stripe) {
-    if (stripe == this) return 0;
-    if (stripe == null || stripe.myLayer < myLayer) return -1;
-    if (stripe.myLayer > myLayer) return 1;
+    public static @Nullable ErrorStripe create(@Nullable ColorValue color, int layer) {
+        return color == null ? null : new ErrorStripe(color, layer);
+    }
 
-    int thisRGB = RGBColor.toRGBValue(myColor.toRGB());
-    int thatRGB = RGBColor.toRGBValue(stripe.myColor.toRGB());
-    if (thatRGB == thisRGB) return 0;
-    return thatRGB < thisRGB ? -1 : 1;
-  }
+    public ColorValue getColor() {
+        return myColor;
+    }
+
+    public int getLayer() {
+        return myLayer;
+    }
+
+    @Override
+    public int hashCode() {
+        return myLayer + myColor.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object object) {
+        if (object == this) {
+            return true;
+        }
+        return object instanceof ErrorStripe that
+            && that.myLayer == myLayer
+            && RGBColor.toRGBValue(that.myColor.toRGB()) == RGBColor.toRGBValue(myColor.toRGB());
+    }
+
+    @Override
+    public int compareTo(ErrorStripe stripe) {
+        if (stripe == this) {
+            return 0;
+        }
+        if (stripe == null || stripe.myLayer < myLayer) {
+            return -1;
+        }
+        if (stripe.myLayer > myLayer) {
+            return 1;
+        }
+
+        int thisRGB = RGBColor.toRGBValue(myColor.toRGB());
+        int thatRGB = RGBColor.toRGBValue(stripe.myColor.toRGB());
+        if (thatRGB == thisRGB) {
+            return 0;
+        }
+        return thatRGB < thisRGB ? -1 : 1;
+    }
 }

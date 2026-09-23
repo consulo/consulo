@@ -24,9 +24,13 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Chunk;
+
 import java.util.concurrent.CompletableFuture;
+
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,85 +38,85 @@ import java.util.*;
  * @author nik
  */
 public class GeneralProjectSettingsElement extends ProjectStructureElement {
-  @Override
-  public String getPresentableName() {
-    return "Project";
-  }
-
-  @Override
-  public String getTypeName() {
-    return "Project";
-  }
-
-  @Override
-  public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
-    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
-
-    ModulesConfiguratorImpl modulesConfigurator = (ModulesConfiguratorImpl)util.getModulesModel(project);
-
-    Graph<Chunk<ModuleRootModel>> graph = ModuleCompilerUtil.toChunkGraph(modulesConfigurator.createGraphGenerator());
-    Collection<Chunk<ModuleRootModel>> chunks = graph.getNodes();
-    List<String> cycles = new ArrayList<>();
-    for (Chunk<ModuleRootModel> chunk : chunks) {
-      Set<ModuleRootModel> modules = chunk.getNodes();
-      List<String> names = new ArrayList<>();
-      for (ModuleRootModel model : modules) {
-        names.add(model.getModule().getName());
-      }
-      if (modules.size() > 1) {
-        cycles.add(StringUtil.join(names, ", "));
-      }
+    @Override
+    public String getPresentableName() {
+        return "Project";
     }
-    if (!cycles.isEmpty()) {
-      PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(GeneralProjectSettingsElement::navigateToModules, this);
-      LocalizeValue message;
-      LocalizeValue description;
-      if (cycles.size() > 1) {
-        message = LocalizeValue.localizeTODO("Circular dependencies");
-        String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
-        StringBuilder cyclesString = new StringBuilder();
-        for (int i = 0; i < cycles.size(); i++) {
-          cyclesString.append(br).append(i + 1).append(". ").append(cycles.get(i));
+
+    @Override
+    public String getTypeName() {
+        return "Project";
+    }
+
+    @Override
+    public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
+        ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
+
+        ModulesConfiguratorImpl modulesConfigurator = (ModulesConfiguratorImpl) util.getModulesModel(project);
+
+        Graph<Chunk<ModuleRootModel>> graph = ModuleCompilerUtil.toChunkGraph(modulesConfigurator.createGraphGenerator());
+        Collection<Chunk<ModuleRootModel>> chunks = graph.getNodes();
+        List<String> cycles = new ArrayList<>();
+        for (Chunk<ModuleRootModel> chunk : chunks) {
+            Set<ModuleRootModel> modules = chunk.getNodes();
+            List<String> names = new ArrayList<>();
+            for (ModuleRootModel model : modules) {
+                names.add(model.getModule().getName());
+            }
+            if (modules.size() > 1) {
+                cycles.add(StringUtil.join(names, ", "));
+            }
         }
-        description = ProjectLocalize.moduleCircularDependencyWarningDescription(cyclesString);
-      }
-      else {
-        message = ProjectLocalize.moduleCircularDependencyWarningShort(cycles.get(0));
-        description = null;
-      }
-      problemsHolder.registerProblem(new ProjectStructureProblemDescription(
-        message.get(),
-        description.get(),
-        place,
-        ProjectStructureProblemType.warning("module-circular-dependency"),
-        Collections.<ConfigurationErrorQuickFix>emptyList()
-      ));
+        if (!cycles.isEmpty()) {
+            PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(GeneralProjectSettingsElement::navigateToModules, this);
+            LocalizeValue message;
+            LocalizeValue description;
+            if (cycles.size() > 1) {
+                message = LocalizeValue.localizeTODO("Circular dependencies");
+                String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+                StringBuilder cyclesString = new StringBuilder();
+                for (int i = 0; i < cycles.size(); i++) {
+                    cyclesString.append(br).append(i + 1).append(". ").append(cycles.get(i));
+                }
+                description = ProjectLocalize.moduleCircularDependencyWarningDescription(cyclesString);
+            }
+            else {
+                message = ProjectLocalize.moduleCircularDependencyWarningShort(cycles.get(0));
+                description = null;
+            }
+            problemsHolder.registerProblem(new ProjectStructureProblemDescription(
+                message.get(),
+                description == null ? null : description.get(),
+                place,
+                ProjectStructureProblemType.warning("module-circular-dependency"),
+                Collections.<ConfigurationErrorQuickFix>emptyList()
+            ));
+        }
     }
-  }
 
-  private static CompletableFuture<?> navigateToModules(Project project) {
-    return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
-      projectStructureSelector.select(null, null, true);
-    });
-  }
+    @RequiredUIAccess
+    private static CompletableFuture<?> navigateToModules(Project project) {
+        return ShowSettingsUtil.getInstance()
+            .showProjectStructureDialog(project, projectStructureSelector -> projectStructureSelector.select(null, null, true));
+    }
 
-  @Override
-  public List<ProjectStructureElementUsage> getUsagesInElement() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<ProjectStructureElementUsage> getUsagesInElement() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public String getId() {
-    return "project:general";
-  }
+    @Override
+    public String getId() {
+        return "project:general";
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof GeneralProjectSettingsElement;
-  }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof GeneralProjectSettingsElement;
+    }
 
-  @Override
-  public int hashCode() {
-    return 0;
-  }
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

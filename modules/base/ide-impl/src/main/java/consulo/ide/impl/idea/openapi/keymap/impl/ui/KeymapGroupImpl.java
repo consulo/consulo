@@ -26,10 +26,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -40,7 +37,6 @@ import java.util.function.Supplier;
  */
 public class KeymapGroupImpl implements KeymapGroup {
     private static class BuilderBase {
-        
         protected final KeymapGroupFactory myKeymapGroupFactory;
         
         protected final ActionManager myActionManager;
@@ -56,19 +52,16 @@ public class KeymapGroupImpl implements KeymapGroup {
             super(keymapGroupFactory, actionManager);
         }
 
-        
         @Override
         public CreatingBuilder root(LocalizeValue name) {
             return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name));
         }
 
-        
         @Override
         public CreatingBuilder root(LocalizeValue name, Image icon) {
             return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name, icon));
         }
 
-        
         @Override
         public CreatingBuilder root(LocalizeValue name, String id, Image icon) {
             return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name, id, icon));
@@ -76,36 +69,28 @@ public class KeymapGroupImpl implements KeymapGroup {
     }
 
     public static class CreatingBuilderImpl extends BuilderBase implements CreatingBuilder {
-        
         private final KeymapGroup myKeymapGroup;
         
         private Predicate<AnAction> myFilter = action -> true;
 
         private CompletableFuture<?> myChain = CompletableFuture.completedFuture(null);
 
-        public CreatingBuilderImpl(
-            KeymapGroupFactory keymapGroupFactory,
-            ActionManager actionManager,
-            KeymapGroup keymapGroup
-        ) {
+        public CreatingBuilderImpl(KeymapGroupFactory keymapGroupFactory, ActionManager actionManager, KeymapGroup keymapGroup) {
             super(keymapGroupFactory, actionManager);
             myKeymapGroup = keymapGroup;
         }
 
-        
         @Override
         public CreatingBuilder filter(@Nullable Predicate<AnAction> filter) {
             myFilter = filter != null ? filter : action -> true;
             return this;
         }
 
-        
         @Override
         public CreatingBuilder addGroup(String groupId) {
             return addGroup(groupId, false);
         }
 
-        
         @Override
         public CreatingBuilder addGroup(String groupId, boolean forceNonPopup) {
             append(() -> getActionsAsync((ActionGroup) myActionManager.getActionOrStub(groupId))
@@ -113,14 +98,12 @@ public class KeymapGroupImpl implements KeymapGroup {
             return this;
         }
 
-        
         @Override
         public CreatingBuilder addAction(AnAction action, boolean forceNonPopup) {
             append(() -> addActionAsync(action, forceNonPopup));
             return this;
         }
 
-        
         @Override
         public CompletableFuture<KeymapGroup> build() {
             return myChain.thenApply(ignored -> {
@@ -398,20 +381,24 @@ public class KeymapGroupImpl implements KeymapGroup {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof KeymapGroupImpl group)) {
+    public boolean equals(@Nullable Object object) {
+        if (object == this) {
+            return true;
+        }
+        if (!(object instanceof KeymapGroupImpl that)) {
             return false;
         }
-        if (group.getName() != null && getName() != null) {
-            return group.getName().equals(getName());
+        if (getName() != null && that.getName() != null) {
+            return that.getName().equals(getName());
         }
-        List<Object> thisChildren = getChildren(), thatChildren = group.getChildren();
+        List<Object> thisChildren = getChildren(), thatChildren = that.getChildren();
         if (thisChildren != null && thatChildren != null) {
-            if (thisChildren.size() != thatChildren.size()) {
+            int size = thisChildren.size();
+            if (size != thatChildren.size()) {
                 return false;
             }
 
-            for (int i = 0, n = thisChildren.size(); i < n; i++) {
+            for (int i = 0; i < size; i++) {
                 if (!thisChildren.get(i).equals(thatChildren.get(i))) {
                     return false;
                 }
@@ -423,7 +410,7 @@ public class KeymapGroupImpl implements KeymapGroup {
 
     @Override
     public int hashCode() {
-        return getName() != null ? getName().hashCode() : 0;
+        return Objects.hashCode(getName());
     }
 
     @Override

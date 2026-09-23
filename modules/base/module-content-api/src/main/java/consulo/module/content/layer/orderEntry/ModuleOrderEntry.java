@@ -20,14 +20,14 @@ import consulo.module.Module;
 import org.jspecify.annotations.Nullable;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 public interface ModuleOrderEntry extends ExportableOrderEntry {
-  @Nullable Module getModule();
+    @Nullable Module getModule();
 
-  String getModuleName();
+    String getModuleName();
 
-  void setProductionOnTestDependency(boolean productionOnTestDependency);
+    void setProductionOnTestDependency(boolean productionOnTestDependency);
 
-  boolean isProductionOnTestDependency();
+    boolean isProductionOnTestDependency();
 }

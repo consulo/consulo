@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.language.editor.scope.NamedScopeManager;
@@ -70,12 +69,7 @@ class FileColorConfiguration implements Cloneable {
             return false;
         }
 
-        if (project != null) {
-            return NamedScopeManager.getScope(project, myScopeName) != null;
-        }
-        else {
-            return true;
-        }
+        return project == null || NamedScopeManager.getScope(project, myScopeName) != null;
     }
 
     public void save(Element e) {
@@ -92,7 +86,7 @@ class FileColorConfiguration implements Cloneable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -102,21 +96,13 @@ class FileColorConfiguration implements Cloneable {
 
         FileColorConfiguration that = (FileColorConfiguration) o;
 
-        if (!myColorName.equals(that.myColorName)) {
-            return false;
-        }
-        if (!myScopeName.equals(that.myScopeName)) {
-            return false;
-        }
-
-        return true;
+        return myColorName.equals(that.myColorName)
+            && myScopeName.equals(that.myScopeName);
     }
 
     @Override
     public int hashCode() {
-        int result = myScopeName.hashCode();
-        result = 31 * result + myColorName.hashCode();
-        return result;
+        return 31 * myScopeName.hashCode() + myColorName.hashCode();
     }
 
     @Override

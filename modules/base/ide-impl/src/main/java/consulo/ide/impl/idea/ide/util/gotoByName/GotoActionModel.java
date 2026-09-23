@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -22,9 +22,6 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
-import consulo.ui.ex.action.BooleanOptionDescription;
-import consulo.ui.ex.action.OptionDescription;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -42,12 +39,13 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -56,8 +54,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,6 +119,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         keymapActionGroups.forEach(myActionGroups::putIfAbsent);
     }
 
+    @RequiredReadAction
     Map<String, ApplyIntentionAction> getAvailableIntentions() {
         Map<String, ApplyIntentionAction> map = new TreeMap<>();
         if (myProject != null && !myProject.isDisposed() && !DumbService.isDumb(myProject) && myEditor != null && !myEditor.isDisposed()) {
@@ -263,15 +262,16 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            MatchedValue value1 = (MatchedValue)o;
-            return Objects.equals(value, value1.value) && Objects.equals(pattern, value1.pattern);
+            MatchedValue that = (MatchedValue)o;
+            return Objects.equals(value, that.value)
+                && Objects.equals(pattern, that.pattern);
         }
 
         @Override
@@ -379,7 +379,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             mapping.addPath(path);
         }
 
-        List<ActionGroup> newPath = consulo.ide.impl.idea.util.containers.ContainerUtil.append(path, group);
+        List<ActionGroup> newPath = ContainerUtil.concat(path, Arrays.asList(group));
         for (AnAction action : actions) {
             if (action == null || action instanceof AnSeparator) {
                 continue;
@@ -419,11 +419,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return ((MatchedValue)mv).getValueText();
     }
 
-    protected MatchMode actionMatches(
-        String pattern,
-        consulo.application.util.matcher.Matcher matcher,
-        AnAction anAction
-    ) {
+    protected MatchMode actionMatches(String pattern, consulo.application.util.matcher.Matcher matcher, AnAction anAction) {
         Presentation presentation = anAction.getTemplatePresentation();
         String text = presentation.getText();
         String description = presentation.getDescription().getNullIfEmpty();
@@ -529,7 +525,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             myShowNonPopupGroups = showNonPopupGroups;
         }
 
-        
         public static GroupMapping createFromText(String text) {
             GroupMapping mapping = new GroupMapping();
             mapping.addPath(singletonList(new DefaultActionGroup(text, false)));
@@ -572,7 +567,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             }
         }
 
-        
         public List<String> getAllGroupNames() {
             return ContainerUtil.map(myPaths, this::getPathName);
         }
@@ -624,7 +618,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     }
 
     public static class ActionWrapper {
-        
         private final AnAction myAction;
         
         private final MatchMode myMode;
@@ -647,12 +640,10 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             myModel = model;
         }
 
-        
         public AnAction getAction() {
             return myAction;
         }
 
-        
         public MatchMode getMode() {
             return myMode;
         }
@@ -697,7 +688,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return getPresentation().isEnabledAndVisible();
         }
 
-        
         public Presentation getPresentation() {
             if (myPresentation != null) {
                 return myPresentation;
@@ -738,16 +728,14 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             return obj == this
-                || obj instanceof ActionWrapper that
-                && myAction.equals(that.myAction);
+                || obj instanceof ActionWrapper that && myAction.equals(that.myAction);
         }
 
         @Override
         public int hashCode() {
-            String text = myAction.getTemplatePresentation().getText();
-            return text != null ? text.hashCode() : 0;
+            return myAction.hashCode();
         }
 
         @Override
@@ -769,7 +757,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             myUseListFont = useListFont;
         }
 
-        
         @Override
         @RequiredUIAccess
         public Component getListCellRendererComponent(
@@ -952,7 +939,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             panel.setBorder(JBUI.Borders.empty(0, 2));
         }
 
-        
         private static String getName(@Nullable String text, @Nullable String groupName, boolean toggle) {
             return toggle && StringUtil.isNotEmpty(groupName) ? StringUtil.isNotEmpty(text) ? groupName + ": " + text : groupName : StringUtil.notNullize(
                 text);

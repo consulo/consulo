@@ -15,115 +15,95 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.IconUtilEx;
-import consulo.content.OrderRootType;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.http.HttpFileSystem;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.http.HttpFileSystem;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
 class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
-  protected final String myUrl;
-  private final String myRootType;
+    protected final String myUrl;
+    private final String myRootType;
 
-  public ItemElement(OrderRootTypeElement parent, String url, String rootType, boolean isJarDirectory,
-                     boolean isValid) {
-    super(parent);
-    myUrl = url;
-    myName = getPresentablePath(url).replace('/', File.separatorChar);
-    myColor = getForegroundColor(isValid);
-    setIcon(getIconForUrl(url, isValid, isJarDirectory));
-    myRootType = rootType;
-  }
+    public ItemElement(OrderRootTypeElement parent, String url, String rootType, boolean isJarDirectory, boolean isValid) {
+        super(parent);
+        myUrl = url;
+        myName = getPresentablePath(url).replace('/', File.separatorChar);
+        myColor = getForegroundColor(isValid);
+        setIcon(getIconForUrl(url, isValid, isJarDirectory));
+        myRootType = rootType;
+    }
 
-  private static Image getIconForUrl(String url, boolean isValid, boolean isJarDirectory) {
-    Image icon;
-    if (isValid) {
-      VirtualFile presentableFile;
-      if (isArchiveFileRoot(url)) {
-        presentableFile = LocalFileSystem.getInstance().findFileByPath(getPresentablePath(url));
-      }
-      else {
-        presentableFile = VirtualFileManager.getInstance().findFileByUrl(url);
-      }
-      if (presentableFile != null && presentableFile.isValid()) {
-        if (presentableFile.getFileSystem() instanceof HttpFileSystem) {
-          icon = AllIcons.Nodes.PpWeb;
+    private static Image getIconForUrl(String url, boolean isValid, boolean isJarDirectory) {
+        if (!isValid) {
+            return PlatformIconGroup.nodesPpinvalid();
+        }
+
+        VirtualFile presentableFile = isArchiveFileRoot(url)
+            ? LocalFileSystem.getInstance().findFileByPath(getPresentablePath(url))
+            : VirtualFileManager.getInstance().findFileByUrl(url);
+
+        if (presentableFile == null || !presentableFile.isValid()) {
+            return PlatformIconGroup.nodesPpinvalid();
+        }
+        else if (presentableFile.getFileSystem() instanceof HttpFileSystem) {
+            return PlatformIconGroup.nodesPpweb();
+        }
+        else if (!presentableFile.isDirectory()) {
+            return IconUtilEx.getIcon(presentableFile, 0, null);
+        }
+        else if (isJarDirectory) {
+            return PlatformIconGroup.nodesJardirectory();
         }
         else {
-          if (presentableFile.isDirectory()) {
-            if (isJarDirectory) {
-              icon = AllIcons.Nodes.JarDirectory;
-            }
-            else {
-              icon = AllIcons.Nodes.TreeClosed;
-            }
-          }
-          else {
-            icon = IconUtilEx.getIcon(presentableFile, 0, null);
-          }
+            return PlatformIconGroup.nodesTreeclosed();
         }
-      }
-      else {
-        icon = AllIcons.Nodes.PpInvalid;
-      }
     }
-    else {
-      icon = AllIcons.Nodes.PpInvalid;
+
+    public static String getPresentablePath(String url) {
+        String presentablePath = VirtualFileManager.extractPath(url);
+        if (isArchiveFileRoot(url)) {
+            presentablePath = presentablePath.substring(0, presentablePath.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
+        }
+        return presentablePath;
     }
-    return icon;
-  }
 
-  public static String getPresentablePath(String url) {
-    String presentablePath = VirtualFileManager.extractPath(url);
-    if (isArchiveFileRoot(url)) {
-      presentablePath = presentablePath.substring(0, presentablePath.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
+    private static boolean isArchiveFileRoot(String url) {
+        return VirtualFileManager.extractPath(url).endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR);
     }
-    return presentablePath;
-  }
 
-  private static boolean isArchiveFileRoot(String url) {
-    return VirtualFileManager.extractPath(url).endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR);
-  }
+    public OrderRootTypeElement getParent() {
+        return (OrderRootTypeElement) getParentDescriptor();
+    }
 
-  public OrderRootTypeElement getParent() {
-    return (OrderRootTypeElement)getParentDescriptor();
-  }
+    public String getRootType() {
+        return myRootType;
+    }
 
-  public String getRootType() {
-    return myRootType;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof ItemElement that
+            && getParent().equals(that.getParent())
+            && myRootType.equals(that.myRootType)
+            && myUrl.equals(that.myUrl);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ItemElement)) return false;
+    public String getUrl() {
+        return myUrl;
+    }
 
-    ItemElement itemElement = (ItemElement)o;
-
-    if (!getParent().equals(itemElement.getParent())) return false;
-    if (!myRootType.equals(itemElement.myRootType)) return false;
-    if (!myUrl.equals(itemElement.myUrl)) return false;
-
-    return true;
-  }
-
-  
-  public String getUrl() {
-    return myUrl;
-  }
-
-  @Override
-  public int hashCode() {
-    int result;
-    result = getParent().hashCode();
-    result = 29 * result + myUrl.hashCode();
-    result = 29 * result + myRootType.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = 29 * getParent().hashCode() + myUrl.hashCode();
+        return 29 * result + myRootType.hashCode();
+    }
 }

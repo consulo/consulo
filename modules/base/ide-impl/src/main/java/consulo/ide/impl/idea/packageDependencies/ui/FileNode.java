@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.util.lang.StringUtil;
@@ -29,109 +29,117 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Set;
 
 public class FileNode extends PackageDependenciesNode implements Comparable<FileNode> {
-  private final VirtualFile myVFile;
-  private final boolean myMarked;
+    private final VirtualFile myVFile;
+    private final boolean myMarked;
 
-  public FileNode(VirtualFile file, Project project, boolean marked) {
-    super(project);
-    myVFile = file;
-    myMarked = marked;
-  }
-
-  @Override
-  public void fillFiles(Set<PsiFile> set, boolean recursively) {
-    super.fillFiles(set, recursively);
-    PsiFile file = getFile();
-    if (file != null && file.isValid()) {
-      set.add(file);
+    public FileNode(VirtualFile file, Project project, boolean marked) {
+        super(project);
+        myVFile = file;
+        myMarked = marked;
     }
-  }
 
-  @Override
-  public boolean hasUnmarked() {
-    return !myMarked;
-  }
-
-  @Override
-  public boolean hasMarked() {
-    return myMarked;
-  }
-
-  public String toString() {
-    return myVFile.getName();
-  }
-
-  @Override
-  public Image getIcon() {
-    return VfsIconUtil.getIcon(myVFile, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS, myProject);
-  }
-
-  @Override
-  public int getWeight() {
-    return 5;
-  }
-
-  @Override
-  public int getContainingFiles() {
-    return 1;
-  }
-
-  @Override
-  public PsiElement getPsiElement() {
-    return getFile();
-  }
-
-  @Override
-  public ColorValue getColor() {
-    if (myColor == null) {
-      myColor = FileStatusManager.getInstance(myProject).getStatus(myVFile).getColor();
-      if (myColor == null) {
-        myColor = NOT_CHANGED;
-      }
+    @Override
+    @RequiredReadAction
+    public void fillFiles(Set<PsiFile> set, boolean recursively) {
+        super.fillFiles(set, recursively);
+        PsiFile file = getFile();
+        if (file != null && file.isValid()) {
+            set.add(file);
+        }
     }
-    return myColor == NOT_CHANGED ? null : myColor;
-  }
 
-  public boolean equals(Object o) {
-    if (isEquals()) {
-      return super.equals(o);
+    @Override
+    public boolean hasUnmarked() {
+        return !myMarked;
     }
-    if (this == o) return true;
-    if (!(o instanceof FileNode)) return false;
 
-    FileNode fileNode = (FileNode)o;
+    @Override
+    public boolean hasMarked() {
+        return myMarked;
+    }
 
-    if (!myVFile.equals(fileNode.myVFile)) return false;
+    @Override
+    public String toString() {
+        return myVFile.getName();
+    }
 
-    return true;
-  }
+    @Override
+    public Image getIcon() {
+        return VfsIconUtil.getIcon(myVFile, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS, myProject);
+    }
 
-  public int hashCode() {
-    return myVFile.hashCode();
-  }
+    @Override
+    public int getWeight() {
+        return 5;
+    }
 
-  @Override
-  public boolean isValid() {
-    return myVFile != null && myVFile.isValid();
-  }
+    @Override
+    public int getContainingFiles() {
+        return 1;
+    }
 
-  @Override
-  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
-    return deps.containsKey(getFile());
-  }
+    @Override
+    @RequiredReadAction
+    public PsiElement getPsiElement() {
+        return getFile();
+    }
 
-  private @Nullable PsiFile getFile() {
-    return myVFile.isValid() && !myProject.isDisposed() ? PsiManager.getInstance(myProject).findFile(myVFile) : null;
-  }
+    @Override
+    public ColorValue getColor() {
+        if (myColor == null) {
+            myColor = FileStatusManager.getInstance(myProject).getStatus(myVFile).getColor();
+            if (myColor == null) {
+                myColor = NOT_CHANGED;
+            }
+        }
+        return myColor == NOT_CHANGED ? null : myColor;
+    }
 
-  @Override
-  public int compareTo(FileNode o) {
-    int compare = StringUtil.compare(myVFile != null ? myVFile.getFileType().getDefaultExtension() : null, o.myVFile != null ? o.myVFile.getFileType().getDefaultExtension() : null, true);
-    if (compare != 0) return compare;
-    return StringUtil.compare(toString(), o.toString(), true);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (isEquals()) {
+            return super.equals(o);
+        }
+        return this == o
+            || o instanceof FileNode that && myVFile.equals(that.myVFile);
+    }
+
+    @Override
+    public int hashCode() {
+        return myVFile.hashCode();
+    }
+
+    @Override
+    public boolean isValid() {
+        return myVFile != null && myVFile.isValid();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
+        return deps.containsKey(getFile());
+    }
+
+    @RequiredReadAction
+    private @Nullable PsiFile getFile() {
+        return myVFile.isValid() && !myProject.isDisposed() ? PsiManager.getInstance(myProject).findFile(myVFile) : null;
+    }
+
+    @Override
+    public int compareTo(FileNode o) {
+        int compare = StringUtil.compare(
+            myVFile != null ? myVFile.getFileType().getDefaultExtension() : null,
+            o.myVFile != null ? o.myVFile.getFileType().getDefaultExtension() : null,
+            true
+        );
+        if (compare != 0) {
+            return compare;
+        }
+        return StringUtil.compare(toString(), o.toString(), true);
+    }
 }

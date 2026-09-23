@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.internal.psiView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
-import consulo.language.ast.TokenType;
+import consulo.language.ast.StandardTokenTypes;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
@@ -25,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +90,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
                 if (root != null) {
                     ASTNode child = root.getFirstChildNode();
                     while (child != null) {
-                        if (myShowWhiteSpaces || child.getElementType() != TokenType.WHITE_SPACE) {
+                        if (myShowWhiteSpaces || child.getElementType() != StandardTokenTypes.WHITE_SPACE) {
                             PsiElement childElement = child.getPsi();
                             list.add(childElement == null ? child : childElement);
                         }
@@ -206,12 +208,13 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
         }
 
         @Override
+        @RequiredReadAction
         public String toString() {
             return "INJECTION " + myPsi.getLanguage();
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -219,9 +222,9 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
                 return false;
             }
 
-            Inject inject = (Inject) o;
+            Inject that = (Inject) o;
 
-            return myParent.equals(inject.myParent) && myPsi.equals(inject.myPsi);
+            return myParent.equals(that.myParent) && myPsi.equals(that.myPsi);
         }
 
         @Override

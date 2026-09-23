@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.moduleDependencies;
 
-import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
@@ -26,19 +25,19 @@ import consulo.component.util.graph.Graph;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
-import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.navigation.Navigatable;
+import consulo.navigation.NavigatableWithText;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -54,8 +53,9 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.content.Content;
-import consulo.util.dataholder.Key;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -65,8 +65,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author anna
@@ -168,7 +168,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
             @Override
             @RequiredUIAccess
             public void setSelected(AnActionEvent e, boolean state) {
-                PropertiesComponent.getInstance(myProject).setValue(DIRECTION, String.valueOf(state));
+                ProjectPropertiesComponent.getInstance(myProject).setValue(DIRECTION, String.valueOf(state));
                 initLeftTreeModel();
             }
 
@@ -189,7 +189,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     }
 
     private boolean isForwardDirection() {
-        String value = PropertiesComponent.getInstance(myProject).getValue(DIRECTION);
+        String value = ProjectPropertiesComponent.getInstance(myProject).getValue(DIRECTION);
         return value == null || Boolean.parseBoolean(value);
     }
 
@@ -485,8 +485,9 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         }
 
         @Override
-        public boolean equals(Object object) {
-            return object instanceof MyUserObject userObject && myModule.equals(userObject.getModule());
+        public boolean equals(@Nullable Object object) {
+            return object == this
+                || object instanceof MyUserObject that && myModule.equals(that.getModule());
         }
 
         @Override
@@ -506,11 +507,13 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         }
 
         @Override
+        @RequiredReadAction
         public boolean canNavigate() {
             return myModule != null && !myModule.isDisposed();
         }
 
         @Override
+        @RequiredReadAction
         public boolean canNavigateToSource() {
             return false;
         }
