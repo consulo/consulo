@@ -182,7 +182,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     actionList.add(createConsoleExecAction(myConsoleExecuteActionHandler));
 
     // Help
-    actionList.add(CommonActionsManager.getInstance().createHelpAction("interactive_console"));
+    actionList.add(new ContextHelpAction("interactive_console"));
 
     toolbarActions.addAll(actionList);
 

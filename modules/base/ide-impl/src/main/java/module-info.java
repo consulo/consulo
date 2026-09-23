@@ -520,7 +520,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.ui.app.impl.settings;
     exports consulo.ide.impl.ui.docking.impl;
     exports consulo.ide.impl.ui.impl;
-    exports consulo.ide.impl.ui.popup;
     exports consulo.ide.impl.usage;
     exports consulo.ide.impl.welcomeScreen;
     exports consulo.ide.impl.wm.impl;

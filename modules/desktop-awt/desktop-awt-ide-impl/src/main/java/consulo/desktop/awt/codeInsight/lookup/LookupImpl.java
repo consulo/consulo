@@ -10,7 +10,6 @@ import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.CompletionExtender;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionsStep;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;

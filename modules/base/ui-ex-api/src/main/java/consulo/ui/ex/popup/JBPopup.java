@@ -5,14 +5,14 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.LightweightWindow;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jspecify.annotations.Nullable;
 
@@ -30,6 +30,7 @@ import java.util.Objects;
  */
 public interface JBPopup extends Disposable, LightweightWindow {
     String KEY = "JBPopup";
+    String SHOW_HINTS = "ShowHints";
 
     /**
      * Shows the popup at the bottom left corner of the specified component.
@@ -177,7 +178,8 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * <p>
      * A {@code null} means there is no UI to get back to, and the caller has nothing to do.
      */
-    @Nullable UIAccess getUIAccess();
+    @Nullable
+    UIAccess getUIAccess();
 
     /**
      * Moves popup to the given point. Does nothing if popup is invisible.
@@ -220,7 +222,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
 
     void moveToFitScreen();
 
-    
+
     Point getLocationOnScreen();
 
     void pack(boolean width, boolean height);

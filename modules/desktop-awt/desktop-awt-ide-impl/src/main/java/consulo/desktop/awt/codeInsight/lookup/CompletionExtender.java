@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.lookup.impl;
+package consulo.desktop.awt.codeInsight.lookup;
 
-import consulo.ide.impl.idea.ui.ListExpandableItemsHandler;
+import consulo.desktop.awt.ui.impl.ListExpandableItemsHandler;
 
 import javax.swing.*;
 import java.awt.event.*;
