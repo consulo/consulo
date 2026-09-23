@@ -15,6 +15,7 @@
  */
 package consulo.execution.impl.internal.service;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.service.ServiceViewToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -25,7 +26,7 @@ import jakarta.inject.Singleton;
  * @author VISTALL
  * @since 2026-09-23
  */
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedServiceViewToolWindowManagerImpl implements ServiceViewToolWindowManager {
     @RequiredUIAccess
