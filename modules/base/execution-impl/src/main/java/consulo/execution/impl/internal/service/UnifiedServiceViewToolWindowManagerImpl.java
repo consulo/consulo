@@ -15,7 +15,6 @@
  */
 package consulo.execution.impl.internal.service;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.service.ServiceViewManager;
 import consulo.execution.service.ServiceViewToolWindowManager;
@@ -27,13 +26,10 @@ import jakarta.inject.Singleton;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The counterpart of the swing {@link ServiceViewToolWindowManagerImpl} - the views of the tool window come from the
- * {@link UnifiedServiceViewFactory}.
- *
  * @author VISTALL
  * @since 2026-09-23
  */
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 @Singleton
 public class UnifiedServiceViewToolWindowManagerImpl implements ServiceViewToolWindowManager {
     private final ServiceViewManagerImpl myServiceViewManager;
