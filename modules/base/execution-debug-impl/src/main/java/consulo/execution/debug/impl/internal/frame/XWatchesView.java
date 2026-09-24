@@ -32,4 +32,8 @@ public interface XWatchesView {
   void removeWatches(List<? extends XDebuggerTreeNode> nodes);
 
   void removeAllWatches();
+
+  void updateSessionData();
+
+  void computeWatches();
 }

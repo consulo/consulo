@@ -141,6 +141,6 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
 
     @Override
     public void setPlaceholder(LocalizeValue text) {
-
+        getVaadinComponent().setPlaceholder(text.isEmpty() ? null : text.get());
     }
 }

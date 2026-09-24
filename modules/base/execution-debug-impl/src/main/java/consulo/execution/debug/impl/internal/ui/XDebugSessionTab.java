@@ -21,11 +21,9 @@ import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerActions;
-import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.frame.*;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
-import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.execution.debug.ui.XDebugTabLayouter;
@@ -64,7 +62,7 @@ import java.util.Map;
 public class XDebugSessionTab extends DebuggerSessionTabBase {
     public static final Key<XDebugSessionTab> TAB_KEY = Key.create("XDebugSessionTab");
 
-    private XWatchesViewImpl myWatchesView;
+    private XWatchesView myWatchesView;
 
     private final Map<String, XDebugView> myViews = new LinkedHashMap<>();
 
@@ -183,37 +181,19 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
+    @RequiredUIAccess
     private Content createVariablesContent(XDebugSessionImpl session) {
-        XVariablesView variablesView;
-        variablesView = myWatchesView = new XWatchesViewImpl(session, true);
-        registerView(DebuggerContentInfo.VARIABLES_CONTENT, variablesView);
-
-        Content result = myUi.createContent(
-            DebuggerContentInfo.VARIABLES_CONTENT,
-            variablesView.getPanel(),
-            XDebuggerLocalize.debuggerSessionTabVariablesTitle().get(),
-            ExecutionDebugIconGroup.nodeValue(),
-            null
-        );
-        result.setCloseable(false);
-
-        ActionGroup group = DebuggerSessionTabBase.customizedActionGroup(XDebuggerActions.VARIABLES_TREE_TOOLBAR_GROUP);
-        result.setActions(group, ActionPlaces.DEBUGGER_TOOLBAR, variablesView.getTree());
-        return result;
+        XDebugSessionTabViewFactory.ViewContent variables = XDebugSessionTabViewFactory.getInstance().createVariablesView(session, myUi);
+        myWatchesView = (XWatchesView) variables.view();
+        registerView(DebuggerContentInfo.VARIABLES_CONTENT, variables.view());
+        return variables.content();
     }
 
+    @RequiredUIAccess
     private Content createFramesContent() {
-        XFramesView framesView = new XFramesView(myProject, mySession);
-        registerView(DebuggerContentInfo.FRAME_CONTENT, framesView);
-        Content framesContent = myUi.createContent(
-            DebuggerContentInfo.FRAME_CONTENT,
-            framesView.getMainPanel(),
-            XDebuggerLocalize.debuggerSessionTabFramesTitle().get(),
-            ExecutionDebugIconGroup.nodeFrame(),
-            null
-        );
-        framesContent.setCloseable(false);
-        return framesContent;
+        XDebugSessionTabViewFactory.ViewContent frames = XDebugSessionTabViewFactory.getInstance().createFramesView(mySession, myUi);
+        registerView(DebuggerContentInfo.FRAME_CONTENT, frames.view());
+        return frames.content();
     }
 
     public void rebuildViews() {
@@ -242,7 +222,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         Content consoleContent = layouter.registerConsoleContent(myUi, myConsole);
         attachNotificationTo(consoleContent);
 
-        layouter.registerAdditionalContent(myUi);
+        XDebugSessionTabViewFactory.getInstance().registerAdditionalContent(layouter, myUi);
         RunContentBuilder.addAdditionalConsoleEditorActions(myConsole, consoleContent);
 
         DefaultActionGroup leftToolbar = new DefaultActionGroup();

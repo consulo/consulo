@@ -77,14 +77,16 @@ public class UnifiedRunnerLayoutUiImpl implements RunnerLayoutUi, LayoutStateDef
         myLayout = RunnerLayoutSettings.getInstance().getLayout(runnerId);
         Disposer.register(parent, this);
 
-        myViewsContentManager = ContentFactory.getInstance().createContentManager(true, project);
+        UnifiedRunnerContentUI contentUI = new UnifiedRunnerContentUI(myLayout);
+        myViewsContentManager = ContentFactory.getInstance().createContentManager(contentUI, true, project);
         Disposer.register(this, myViewsContentManager);
 
         myTopToolbar = ActionToolbarFactory.getInstance()
             .createActionToolbar(ActionPlaces.RUNNER_TOOLBAR, myTopActions, ActionToolbar.Style.HORIZONTAL);
 
+        contentUI.setToolbar(myTopToolbar.getUIComponent());
+
         myRoot = DockLayout.create();
-        myRoot.top(myTopToolbar.getUIComponent());
         myRoot.center(myViewsContentManager.getUIComponent());
 
         // what the actions of a run need - its environment, its descriptor - is published by the content
