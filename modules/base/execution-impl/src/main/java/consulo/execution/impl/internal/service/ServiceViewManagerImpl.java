@@ -16,6 +16,7 @@ import consulo.execution.service.*;
 import consulo.navigation.ItemPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -65,6 +66,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     
     private final Project myProject;
     private State myState = new State();
+    private boolean myStateLoaded;
 
     private final ServiceModel myModel;
     private final ServiceModelFilter myModelFilter;
@@ -848,9 +850,28 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         for (ServiceViewState viewState : myState.viewStates) {
             viewState.treeState = TreeState.createFrom(viewState.treeStateElement);
         }
+        myStateLoaded = true;
+        loadGroups();
     }
 
-    void loadGroups() {
+    @Override
+    public void afterLoad(boolean first) {
+        if (first && !myStateLoaded) {
+            noStateLoaded();
+        }
+    }
+
+    private void noStateLoaded() {
+        if (!myProject.isDefault()) {
+            ServiceViewManagerImpl defaultManager =
+                (ServiceViewManagerImpl) ServiceViewManager.getInstance(ProjectManager.getInstance().getDefaultProject());
+            myState.excluded.addAll(defaultManager.myState.excluded);
+            myState.included.addAll(defaultManager.myState.included);
+        }
+        loadGroups();
+    }
+
+    private void loadGroups() {
         myProject.getApplication().getExtensionPoint(ServiceViewContributor.class).forEach(contributor -> {
             addToGroup(contributor);
             myNotInitializedContributors.add(contributor);

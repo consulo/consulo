@@ -23,8 +23,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * @author VISTALL
  * @since 2026-09-23
@@ -34,8 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class UnifiedServiceViewToolWindowManagerImpl implements ServiceViewToolWindowManager {
     private final ServiceViewManagerImpl myServiceViewManager;
 
-    private final AtomicBoolean myLoadedGroup = new AtomicBoolean();
-
     @Inject
     public UnifiedServiceViewToolWindowManagerImpl(ServiceViewManager serviceViewManager) {
         myServiceViewManager = (ServiceViewManagerImpl) serviceViewManager;
@@ -44,10 +40,6 @@ public class UnifiedServiceViewToolWindowManagerImpl implements ServiceViewToolW
     @RequiredUIAccess
     @Override
     public void initToolWindow(ToolWindow toolWindow) {
-        if (myLoadedGroup.compareAndSet(false, true)) {
-            myServiceViewManager.loadGroups();
-        }
-
         myServiceViewManager.initToolWindow(toolWindow);
     }
 
