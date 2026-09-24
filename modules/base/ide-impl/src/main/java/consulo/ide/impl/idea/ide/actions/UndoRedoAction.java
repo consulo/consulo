@@ -71,13 +71,12 @@ public abstract class UndoRedoAction extends DumbAwareAction implements AnAction
 
             presentation.setEnabled(isAvailable(editor, undoManager));
 
-            Couple<String> pair = getActionNameAndDescription(editor, undoManager);
+            Couple<LocalizeValue> pair = getActionNameAndDescription(editor, undoManager);
 
             presentation.setText(pair.first);
             presentation.setDescription(pair.second);
             return null;
         }));
-
     }
 
     private static UndoManager getUndoManager(FileEditor editor, DataContext dataContext) {
@@ -93,5 +92,5 @@ public abstract class UndoRedoAction extends DumbAwareAction implements AnAction
 
     protected abstract boolean isAvailable(FileEditor editor, UndoManager undoManager);
 
-    protected abstract Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
+    protected abstract Couple<LocalizeValue> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
 }

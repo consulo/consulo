@@ -62,7 +62,6 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
     private static final int COMMAND_TO_RUN_COMPACT = 20;
     private static final int FREE_QUEUES_LIMIT = 30;
 
-    
     protected final Application myApplication;
     protected final @Nullable Project myProject;
     private final CommandProcessor myCommandProcessor;
@@ -466,7 +465,6 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         return getDocumentReferences((FileEditor)editor);
     }
 
-    
     static Set<DocumentReference> getDocumentReferences(FileEditor editor) {
         Set<DocumentReference> result = new HashSet<>();
 
@@ -490,28 +488,22 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         return result;
     }
 
-    
     private UndoRedoStacksHolder getStackHolder(boolean isUndo) {
         return isUndo ? myUndoStacksHolder : myRedoStacksHolder;
     }
 
-    
     @Override
     @RequiredUIAccess
-    public Couple<String> getUndoActionNameAndDescription(Object editor) {
-        Couple<LocalizeValue> nameAndDescription = getUndoOrRedoActionNameAndDescription(editor, true);
-        return Couple.of(nameAndDescription.getFirst().get(), nameAndDescription.getSecond().get());
+    public Couple<LocalizeValue> getUndoActionNameAndDescription(Object editor) {
+        return getUndoOrRedoActionNameAndDescription(editor, true);
     }
 
-    
     @Override
     @RequiredUIAccess
-    public Couple<String> getRedoActionNameAndDescription(Object editor) {
-        Couple<LocalizeValue> nameAndDescription = getUndoOrRedoActionNameAndDescription(editor, false);
-        return Couple.of(nameAndDescription.getFirst().get(), nameAndDescription.getSecond().get());
+    public Couple<LocalizeValue> getRedoActionNameAndDescription(Object editor) {
+        return getUndoOrRedoActionNameAndDescription(editor, false);
     }
 
-    
     @RequiredUIAccess
     private Couple<LocalizeValue> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
         LocalizeValue desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : LocalizeValue.empty();
@@ -529,7 +521,6 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         );
     }
 
-    
     private LocalizeValue doFormatAvailableUndoRedoAction(Object editor, boolean isUndo) {
         Collection<DocumentReference> refs = getDocRefs(editor);
         if (refs == null) {
@@ -541,12 +532,10 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         return LocalizeValue.ofNullable(getStackHolder(isUndo).getLastAction(refs).getCommandName());
     }
 
-    
     UndoRedoStacksHolder getUndoStacksHolder() {
         return myUndoStacksHolder;
     }
 
-    
     UndoRedoStacksHolder getRedoStacksHolder() {
         return myRedoStacksHolder;
     }
@@ -555,7 +544,6 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         return ++myCommandTimestamp;
     }
 
-    
     private static Document getOriginal(Document document) {
         Document result = document.getUserData(ORIGINAL_DOCUMENT);
         return result == null ? document : result;
@@ -617,7 +605,6 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         return Math.max(myUndoStacksHolder.getLastCommandTimestamp(ref), myRedoStacksHolder.getLastCommandTimestamp(ref));
     }
 
-    
     private Collection<DocumentReference> collectReferencesWithoutMergers() {
         Set<DocumentReference> result = new HashSet<>();
         myUndoStacksHolder.collectAllAffectedDocuments(result);
