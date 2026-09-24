@@ -24,50 +24,23 @@ import consulo.dataContext.UiDataRule;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.language.psi.PsiElement;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtensionImpl
 public class BasicUiDataRule implements UiDataRule {
     @Override
     public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         // FileEditor from Editor
-        Editor editor = snapshot.get(Editor.KEY);
-        if (editor != null) {
-            Boolean supplementary = editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY);
-            if (supplementary == null || !supplementary) {
-                FileEditor fileEditor = snapshot.get(FileEditor.KEY);
-                if (fileEditor == null) {
-                    sink.set(FileEditor.KEY, TextEditorProvider.getInstance().getTextEditor(editor));
+        sink.lazyValue(
+            FileEditor.KEY,
+            dataSnapshot -> {
+                Editor editor = dataSnapshot.get(Editor.KEY);
+                if (editor == null || Boolean.TRUE.equals(editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY))) {
+                    return null;
                 }
+                return TextEditorProvider.getInstance().getTextEditor(editor);
             }
-        }
-
-        // NavigatableArray from selected items or single Navigatable
-        Object[] items = snapshot.get(PlatformDataKeys.SELECTED_ITEMS);
-        if (items != null) {
-            List<Navigatable> navigatables = new ArrayList<>();
-            for (Object item : items) {
-                if (item instanceof Navigatable nav) {
-                    navigatables.add(nav);
-                }
-            }
-            // do not provide PSI in EDT, errors are already logged
-            if (!navigatables.isEmpty() && !(navigatables.get(0) instanceof PsiElement)) {
-                sink.set(Navigatable.KEY_OF_ARRAY, navigatables.toArray(new Navigatable[0]));
-            }
-        }
-        else {
-            Navigatable navigatable = snapshot.get(Navigatable.KEY);
-            if (navigatable != null && !(navigatable instanceof PsiElement)) {
-                sink.set(Navigatable.KEY_OF_ARRAY, new Navigatable[]{navigatable});
-            }
-        }
+        );
 
         // ProjectFileDirectory
         sink.lazyValue(Project.PROJECT_FILE_DIRECTORY, ProjectFileDirectoryRule::getData);

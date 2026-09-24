@@ -90,10 +90,13 @@ public class DataSinkImpl implements DataSink {
      * through {@link #resolve}.
      */
     private final DataSnapshot myImmediateSnapshot = new DataSnapshot() {
-        @SuppressWarnings("unchecked")
         @Override
+        @SuppressWarnings("unchecked")
         public <T> @Nullable T get(Key<T> key) {
             Object data = myImmediateData.get(key);
+            if (data == null) {
+                reportLazyValueRequestedByRule(key);
+            }
             return data == EXPLICIT_NULL ? null : (T) data;
         }
     };
@@ -276,27 +279,44 @@ public class DataSinkImpl implements DataSink {
             && !Registry.is("actionSystem.update.actions.suppress.dataRules.on.edt", false);
     }
 
+    private static final Set<String> ourReportedRuleKeys = ConcurrentHashMap.newKeySet();
     private static final Set<String> ourReportedUiThreadKeys = ConcurrentHashMap.newKeySet();
+
+    private void reportLazyValueRequestedByRule(Key<?> key) {
+        reportLazyValue(
+            key,
+            DataSinkImpl.ourReportedRuleKeys,
+            "%s is provided lazily and always reads as null in a UiDataRule snapshot. "
+                + "A rule deriving from it must contribute through sink.lazyValue."
+        );
+    }
+
+    private void reportLazyValueRequestedOnUiThread(Key<?> key) {
+        reportLazyValue(
+            key,
+            DataSinkImpl.ourReportedUiThreadKeys,
+            "%s is not available on UI thread. Code that depends on data rules and slow data providers "
+                + "must be run in background. For example, an action must use ActionUpdateThread.BGT."
+        );
+    }
 
     /**
      * Reported once per key per session, the JB {@code PreCachedDataContext} shape — the skip itself
      * is the sanctioned behavior of the no-rules update section, so repeating the nudge on every
      * update pass is pure noise.
      */
-    private void reportLazyValueRequestedOnUiThread(Key<?> key) {
+    private void reportLazyValue(Key<?> key, Set<String> reportedKeys, String formatMessage) {
         if (!Registry.is("actionSystem.update.actions.warn.dataRules.on.edt", true)) {
             return;
         }
         if (!myLazyData.containsKey(key) && !myLazyValueData.containsKey(key)) {
             return;
         }
-        if (!ourReportedUiThreadKeys.add(key.toString())) {
+        if (!reportedKeys.add(key.toString())) {
             return;
         }
         Throwable throwable = new Throwable();
-        myApplication.executeOnPooledThread(() -> LOG.warn(
-            key + " is not available on UI thread. Code that depends on data rules and slow data providers "
-                + "must be run in background. For example, an action must use ActionUpdateThread.BGT.", throwable));
+        myApplication.executeOnPooledThread(() -> LOG.warn(String.format(formatMessage, key), throwable));
     }
 
     private @Nullable <T> T resolveUnderReadAction(Supplier<T> computation) {
