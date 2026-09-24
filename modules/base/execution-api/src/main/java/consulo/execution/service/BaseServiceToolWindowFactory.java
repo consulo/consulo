@@ -15,6 +15,7 @@
  */
 package consulo.execution.service;
 
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -24,7 +25,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
  * @author VISTALL
  * @since 2024-05-19
  */
-public abstract class BaseServiceToolWindowFactory implements ToolWindowFactory {
+public abstract class BaseServiceToolWindowFactory implements ToolWindowFactory, DumbAware {
     @Override
     public boolean shouldBeAvailable(Project project) {
         return false;
