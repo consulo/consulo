@@ -148,6 +148,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new HeadlessTree<>();
+    }
+
+    @Override
     public ImageBox _Components_imageBox(Image image) {
         return new HeadlessImageBox(image);
     }

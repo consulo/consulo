@@ -59,6 +59,3 @@ module consulo.it {
     provides consulo.ui.internal.UIInternal with consulo.it.internal.HeadlessUIInternal;
     provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.it.internal.HeadlessTargetAWTFacade;
 }
-
-
-
