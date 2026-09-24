@@ -26,6 +26,14 @@ public interface ServiceViewDescriptor {
     return null;
   }
 
+  /**
+   * The details of the item shown by a unified frontend, the counterpart of {@link #getContentComponent()} - a
+   * descriptor which has only a swing component shows no details there.
+   */
+  default consulo.ui.@Nullable Component getContentUIComponent() {
+    return null;
+  }
+
   default ItemPresentation getContentPresentation() {
     return getPresentation();
   }

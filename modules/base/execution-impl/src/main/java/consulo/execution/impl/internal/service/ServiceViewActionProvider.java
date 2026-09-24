@@ -120,11 +120,22 @@ public final class ServiceViewActionProvider {
     return result;
   }
 
-  public static @Nullable ServiceView getSelectedView(AnActionEvent e) {
+  /**
+   * The view publishes itself to the actions - a unified view has no awt parent to be found by, see
+   * {@link BaseServiceView#uiDataSnapshot}.
+   */
+  public static @Nullable BaseServiceView getSelectedView(AnActionEvent e) {
+    BaseServiceView serviceView = e.getData(BaseServiceView.KEY);
+    if (serviceView != null) {
+      return serviceView;
+    }
     return getSelectedView(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
   }
 
-  public static @Nullable ServiceView getSelectedView(DataProvider provider) {
+  public static @Nullable BaseServiceView getSelectedView(DataProvider provider) {
+    if (provider.getData(BaseServiceView.KEY) instanceof BaseServiceView serviceView) {
+      return serviceView;
+    }
     return getSelectedView(ObjectUtil.tryCast(provider.getData(UIExAWTDataKey.CONTEXT_COMPONENT), Component.class));
   }
 
@@ -231,7 +242,7 @@ public final class ServiceViewActionProvider {
     Project project = e.getData(Project.KEY);
     if (project == null) return AnAction.EMPTY_ARRAY;
 
-    ServiceView serviceView = getSelectedView(e);
+    BaseServiceView serviceView = getSelectedView(e);
     if (serviceView == null) return AnAction.EMPTY_ARRAY;
 
     List<ServiceViewItem> selectedItems = getSelectedItems(e);

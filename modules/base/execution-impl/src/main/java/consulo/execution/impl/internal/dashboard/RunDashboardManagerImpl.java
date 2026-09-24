@@ -43,6 +43,7 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -55,6 +56,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import jakarta.inject.Inject;
@@ -91,11 +93,12 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     private final AtomicBoolean myListenersInitialized = new AtomicBoolean();
     private RunDashboardComponentWrapper myContentWrapper;
     private JComponent myEmptyContent;
+    private consulo.ui.@Nullable Component myEmptyUIContent;
 
     @Inject
     public RunDashboardManagerImpl(Project project, ContentFactory contentFactory) {
         myProject = project;
-        myContentManager = contentFactory.createContentManager(new PanelContentUI(), false, project);
+        myContentManager = contentFactory.createContentManager(RunDashboardContentUIFactory.getInstance().createContentUI(), false, project);
         myServiceContentManagerListener = new ServiceContentManagerListener();
         myReuseCondition = this::canReuseContent;
         initExtensionPointListeners();
@@ -749,7 +752,13 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             return null;
         }
 
-        for (Component component : descriptor.getComponent().getComponents()) {
+        // a descriptor of a unified runner layout has no swing component - it keeps its toolbar in the layout
+        JComponent descriptorComponent = descriptor.getComponent();
+        if (descriptorComponent == null) {
+            return null;
+        }
+
+        for (Component component : descriptorComponent.getComponents()) {
             if (component instanceof ActionToolbar actionToolbar) {
                 return actionToolbar;
             }
@@ -785,6 +794,20 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             myEmptyContent = mainPanel;
         }
         return myEmptyContent;
+    }
+
+    /**
+     * What a configuration which does not run shows in a unified services view - the counterpart of
+     * {@link #getEmptyContent()}.
+     */
+    @RequiredUIAccess
+    consulo.ui.Component getEmptyUIContent() {
+        if (myEmptyUIContent == null) {
+            DockLayout mainPanel = DockLayout.create();
+            mainPanel.center(Label.create(ExecutionLocalize.runDashboardConfigurationsMessage()));
+            myEmptyUIContent = mainPanel;
+        }
+        return myEmptyUIContent;
     }
 
     RunDashboardComponentWrapper getContentWrapper() {

@@ -2,7 +2,7 @@
 package consulo.execution.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.execution.impl.internal.service.ServiceView;
+import consulo.execution.impl.internal.service.BaseServiceView;
 import consulo.execution.impl.internal.service.ServiceViewModel;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -21,7 +21,7 @@ public final class JumpToServicesAction extends LegacyDumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    ServiceView selectedView = getSelectedView(e);
+    BaseServiceView selectedView = getSelectedView(e);
     if (selectedView == null) return;
 
     selectedView.jumpToServices();
@@ -36,7 +36,7 @@ public final class JumpToServicesAction extends LegacyDumbAwareAction {
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setVisible(false);
-    ServiceView selectedView = getSelectedView(e);
+    BaseServiceView selectedView = getSelectedView(e);
     presentation.setEnabled(selectedView != null && !(selectedView.getModel() instanceof ServiceViewModel.SingeServiceModel));
   }
 }

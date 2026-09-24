@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.impl.internal.dashboard.action;
 
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressManager;
 import consulo.dataContext.DataContext;
@@ -133,7 +134,8 @@ public abstract class ExecutorAction extends LegacyDumbAwareAction {
 
     private static boolean isValid(RunnerAndConfigurationSettings settings) {
         try {
-            settings.checkSettings(null);
+            // the check reads the psi of the configuration, and the update of a unified toolbar holds no read lock
+            ReadAction.run(() -> settings.checkSettings(null));
             return true;
         }
         catch (RuntimeConfigurationError ex) {
