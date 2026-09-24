@@ -324,6 +324,8 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
                 WebItemPresentationImpl presentation = new WebItemPresentationImpl();
                 render.render(presentation, item);
                 row.setContent(presentation.toComponent());
+                // the fill of an item is the whole row - and a kept row must lose the fill of the item before it
+                row.setBackgroundColor(presentation.getBackgroundColor());
             }
         ));
     }

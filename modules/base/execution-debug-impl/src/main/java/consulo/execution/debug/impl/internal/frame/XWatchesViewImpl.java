@@ -312,6 +312,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         }
     }
 
+    @Override
     public void computeWatches() {
         myRootNode.computeWatches();
     }
@@ -402,6 +403,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         updateSessionData();
     }
 
+    @Override
     public void updateSessionData() {
         List<XExpression> watchExpressions = myRootNode.getWatchExpressions();
 

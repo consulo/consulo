@@ -36,7 +36,6 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.XDependentBreakpointListener;
 import consulo.execution.debug.impl.internal.breakpoint.*;
 import consulo.execution.debug.impl.internal.evaluate.XDebuggerEditorLinePainter;
-import consulo.execution.debug.impl.internal.frame.XWatchesViewImpl;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.localize.XDebuggerLocalize;
@@ -938,7 +937,7 @@ public class XDebugSessionImpl implements XDebugSession {
 
                 if (mySessionTab != null) {
                     AppUIUtil.invokeOnEdt(() -> {
-                        ((XWatchesViewImpl) mySessionTab.getWatchesView()).updateSessionData();
+                        mySessionTab.getWatchesView().updateSessionData();
                         mySessionTab.detachFromSession();
                     });
                 }

@@ -170,6 +170,10 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
             render.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
 
             com.vaadin.flow.component.Component component = presentation.toComponent();
+            String background = WebColors.toCssColor(presentation.getBackgroundColor());
+            if (background != null) {
+                component.getElement().getStyle().set("background-color", background);
+            }
             applyItemHeight(component, (E) item);
             return applyDoubleClick(component, (E) item);
         }));
