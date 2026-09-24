@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.codeInsight.hint.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.ide.impl.idea.codeInsight.hint.ShowContainerInfoHandler;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
@@ -44,7 +44,7 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction {
 
     @Override
     protected @Nullable Editor getBaseEditor(DataContext dataContext, Project project, boolean forUpdate) {
-        return dataContext.getData(PlatformDataKeys.EDITOR_EVEN_IF_INACTIVE);
+        return dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     }
 
     @Override

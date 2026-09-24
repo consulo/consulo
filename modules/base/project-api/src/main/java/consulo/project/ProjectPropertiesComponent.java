@@ -25,7 +25,7 @@ import consulo.component.PropertiesComponent;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectPropertiesComponent extends PropertiesComponent {
-  static PropertiesComponent getInstance(Project project) {
-    return project.getInstance(ProjectPropertiesComponent.class);
-  }
+    static ProjectPropertiesComponent getInstance(Project project) {
+        return project.getInstance(ProjectPropertiesComponent.class);
+    }
 }

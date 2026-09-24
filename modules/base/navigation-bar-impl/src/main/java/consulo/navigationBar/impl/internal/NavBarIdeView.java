@@ -10,6 +10,7 @@ import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
 import consulo.navigationBar.NavBarItem;
 import consulo.navigationBar.internal.NavBarInternal;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ class NavBarIdeView implements IdeView {
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public PsiDirectory[] getDirectories() {
         List<PsiDirectory> result = new ArrayList<>();
         for (Pointer<? extends NavBarItem> pointer : mySelection) {
@@ -36,17 +37,17 @@ class NavBarIdeView implements IdeView {
     }
 
     @Override
+    @RequiredUIAccess
     public @Nullable PsiDirectory getOrChooseDirectory() {
         NavBarInternal navBarInternal = Application.get().getInstance(NavBarInternal.class);
-        return (@Nullable PsiDirectory) navBarInternal.getOrChooseDirectory(this);
+        return (PsiDirectory) navBarInternal.getOrChooseDirectory(this);
     }
 
     @Override
+    @RequiredUIAccess
     public void selectElement(PsiElement element) {
-        if (element instanceof Navigatable navigatable) {
-            if (navigatable.canNavigate()) {
-                navigatable.navigate(true);
-            }
+        if (element instanceof Navigatable navigatable && navigatable.canNavigate()) {
+            navigatable.navigate(true);
         }
     }
 }

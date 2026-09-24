@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.navigationBar.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.component.util.pointer.Pointer;
@@ -15,13 +16,13 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.ui.navigationBar.NavBarModelExtension;
-import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.navigationBar.NavBarItem;
 import consulo.navigationBar.internal.NavBarInternal;
 import consulo.navigationBar.model.NavBarVmItem;
 import consulo.project.Project;
+import consulo.ui.ex.DeleteProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -56,9 +57,8 @@ public class NavBarBgtDataRule implements UiDataRule {
 
         sink.lazy(IdeView.KEY, () -> new NavBarIdeView(pointers));
         defaultSnapshot(project, sink, pointers);
-        Application.get().getExtensionPoint(NavBarModelExtension.class).forEachExtensionSafe(extension -> {
-            extension.uiDataSnapshot(sink, snapshot);
-        });
+        Application.get().getExtensionPoint(NavBarModelExtension.class)
+            .forEachExtensionSafe(extension -> extension.uiDataSnapshot(sink, snapshot));
     }
 
     private static void defaultSnapshot(Project project, DataSink sink, List<Pointer<? extends NavBarItem>> pointers) {
@@ -70,7 +70,7 @@ public class NavBarBgtDataRule implements UiDataRule {
             }
             for (NavBarItem item : dereference(pointers)) {
                 if (item instanceof PsiNavBarItem psiItem) {
-                    Module module = ModuleUtilCore.findModuleForPsiElement(psiItem.getData());
+                    Module module = psiItem.getData().getModule();
                     if (module != null) {
                         return module;
                     }
@@ -87,7 +87,7 @@ public class NavBarBgtDataRule implements UiDataRule {
                 }
             }
             if (dir != null && ProjectRootsUtil.isModuleContentRoot(dir.getVirtualFile(), project)) {
-                return ModuleUtilCore.findModuleForPsiElement(dir);
+                return dir.getModule();
             }
             else {
                 return null;
@@ -131,7 +131,7 @@ public class NavBarBgtDataRule implements UiDataRule {
             }
             return result.isEmpty() ? null : result.toArray(Navigatable.EMPTY_ARRAY);
         });
-        sink.lazy(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, () -> {
+        sink.lazy(DeleteProvider.KEY, () -> {
             boolean hasModule = false;
             for (NavBarItem item : dereference(pointers)) {
                 if (item instanceof ModuleNavBarItem) {
@@ -150,6 +150,7 @@ public class NavBarBgtDataRule implements UiDataRule {
         });
     }
 
+    @RequiredReadAction
     private static List<NavBarItem> dereference(List<Pointer<? extends NavBarItem>> pointers) {
         List<NavBarItem> result = new ArrayList<>(pointers.size());
         for (Pointer<? extends NavBarItem> pointer : pointers) {

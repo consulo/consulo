@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnAction;
@@ -81,6 +82,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getComponent() {
     return myTabbedPaneWrapper.getComponent();
   }
@@ -95,6 +97,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
   @Override
+  @RequiredUIAccess
   public void propertyChange(PropertyChangeEvent e) {
     if (Content.PROP_DISPLAY_NAME.equals(e.getPropertyName())) {
       Content content = (Content)e.getSource();
@@ -256,6 +259,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
        * Shows showPopup menu at the specified location. The <code>x</code> and <code>y</code> coordinates
        * are in JTabbedPane coordinate system.
        */
+      @RequiredUIAccess
       private void showPopup(int x, int y) {
         Content content = getContentAt(x, y);
         if (content == null) {
@@ -292,7 +296,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
 
       @Override
       public void uiDataSnapshot(DataSink sink) {
-        sink.set(PlatformDataKeys.CONTENT_MANAGER, myManager);
+        sink.set(ContentManager.KEY, myManager);
         if (myManager.getContentCount() > 1) {
           sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, myManager);
         }
@@ -309,6 +313,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     }
 
     @Override
+    @RequiredUIAccess
     public void contentRemoved(ContentManagerEvent event) {
       event.getContent().removePropertyChangeListener(TabbedPaneContentUI.this);
       myTabbedPaneWrapper.removeTabAt(event.getIndex());

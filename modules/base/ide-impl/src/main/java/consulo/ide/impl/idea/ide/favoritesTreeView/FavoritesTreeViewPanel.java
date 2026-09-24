@@ -184,6 +184,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
         EditSourceOnEnterKeyHandler.install(myTree);
         myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
             @Override
+            @RequiredUIAccess
             protected PsiElement[] getSelectedElements() {
                 return getSelectedPsiElements();
             }
@@ -230,6 +231,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
         });
     }
 
+    @RequiredReadAction
     private static boolean traverseDepth(AbstractTreeNode node, TreeUtil.Traverse traverse) {
         if (!traverse.accept(node)) {
             return false;
@@ -258,6 +260,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
         return myTree;
     }
 
+    @RequiredReadAction
     private PsiElement[] getSelectedPsiElements() {
         Object[] elements = getSelectedNodeElements();
         if (elements == null) {
@@ -268,8 +271,8 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
             if (element instanceof PsiElement) {
                 result.add((PsiElement) element);
             }
-            else if (element instanceof SmartPsiElementPointer) {
-                PsiElement psiElement = ((SmartPsiElementPointer) element).getElement();
+            else if (element instanceof SmartPsiElementPointer smartPtr) {
+                PsiElement psiElement = smartPtr.getElement();
                 if (psiElement != null) {
                     result.add(psiElement);
                 }
@@ -593,6 +596,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
 
     private final class MyIdeView implements IdeView {
         @Override
+        @RequiredUIAccess
         public void selectElement(PsiElement element) {
             if (element != null) {
                 selectPsiElement(element, false);
@@ -611,6 +615,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
             }
         }
 
+        @RequiredUIAccess
         private void selectPsiElement(PsiElement element, boolean requestFocus) {
             VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
             FavoritesTreeViewPanel.this.selectElement(element, virtualFile, requestFocus);
@@ -655,12 +660,14 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
         }
 
         @Override
+        @RequiredUIAccess
         public PsiDirectory[] getDirectories() {
             PsiDirectory[] directories = getSelectedDirectories();
             return directories == null ? PsiDirectory.EMPTY_ARRAY : directories;
         }
 
         @Override
+        @RequiredUIAccess
         public PsiDirectory getOrChooseDirectory() {
             return DirectoryChooserUtil.getOrChooseDirectory(this);
         }

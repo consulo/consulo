@@ -23,37 +23,40 @@ import consulo.language.util.proximity.ProximityWeigher;
 import consulo.module.content.ProjectFileIndex;
 import consulo.util.dataholder.NullableLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 @ExtensionImpl(id = "sameLogicalRoot", order = "after openedInEditor")
 public class SameSourceRootWeigher extends ProximityWeigher {
-  private static final NullableLazyKey<VirtualFile, ProximityLocation> SOURCE_ROOT_KEY =
-      NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
+    private static final NullableLazyKey<VirtualFile, ProximityLocation> SOURCE_ROOT_KEY =
+        NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
 
-  @Override
-  public Comparable weigh(PsiElement element, ProximityLocation location) {
-    if (location.getPosition() == null) {
-      return null;
+    @Override
+    public @Nullable Comparable weigh(PsiElement element, ProximityLocation location) {
+        if (location.getPosition() == null) {
+            return null;
+        }
+        VirtualFile sourceRoot = SOURCE_ROOT_KEY.getValue(location);
+        return sourceRoot != null && sourceRoot.equals(findSourceRoot(element));
     }
-    VirtualFile sourceRoot = SOURCE_ROOT_KEY.getValue(location);
-    if (sourceRoot == null) {
-      return false;
+
+    private static VirtualFile findSourceRoot(PsiElement element) {
+        if (element == null) {
+            return null;
+        }
+
+        PsiFile psiFile = element.getContainingFile();
+        if (psiFile == null) {
+            return null;
+        }
+
+        VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
+        if (file == null) {
+            return null;
+        }
+
+        return ProjectFileIndex.getInstance(element.getProject()).getSourceRootForFile(file);
     }
-
-    return sourceRoot.equals(findSourceRoot(element));
-  }
-
-  private static VirtualFile findSourceRoot(PsiElement element) {
-    if (element == null) return null;
-
-    PsiFile psiFile = element.getContainingFile();
-    if (psiFile == null) return null;
-
-    VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
-    if (file == null) return null;
-
-    return ProjectFileIndex.getInstance(element.getProject()).getSourceRootForFile(file);
-  }
 }

@@ -200,7 +200,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     public ScopeTreeViewPanel(Project project) {
         super(new BorderLayout());
         myApplicationFileColorManager = ApplicationFileColorManager.getInstance();
-        myUpdateQueue.setPassThrough(false);  // we don't want passthrough mode, even in unit tests
+        myUpdateQueue.setPassThrough(false);  // we don't want pass-through mode, even in unit tests
         myProject = project;
         myDependencyValidationManager = DependencyValidationManager.getInstance(myProject);
         myInjectedLanguageManager = InjectedLanguageManager.getInstance(myProject);
@@ -293,7 +293,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         new TreeSpeedSearch(myTree);
         myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
             @Override
-            
+            @RequiredUIAccess
             protected PsiElement[] getSelectedElements() {
                 return getSelectedPsiElements();
             }
@@ -819,6 +819,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
     private class MyIdeView implements IdeView {
         @Override
+        @RequiredUIAccess
         public void selectElement(PsiElement element) {
             if (element != null) {
                 PackageSet packageSet = getCurrentScope().getValue();
@@ -872,14 +873,15 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             return null;
         }
 
-        
         @Override
+        @RequiredUIAccess
         public PsiDirectory[] getDirectories() {
             PsiDirectory directory = getDirectory();
             return directory == null ? PsiDirectory.EMPTY_ARRAY : new PsiDirectory[]{directory};
         }
 
         @Override
+        @RequiredUIAccess
         public @Nullable PsiDirectory getOrChooseDirectory() {
             return DirectoryChooserUtil.getOrChooseDirectory(this);
         }
@@ -1000,7 +1002,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             if (!list.getName().equals(subId) && (oldName == null || !oldName.equals(subId))) {
                 return;
             }
-            myProject.getApplication().invokeLater(() -> myDependencyValidationManager.fireScopeListeners(), myProject.getDisposed());
+            myProject.getApplication().invokeLater(myDependencyValidationManager::fireScopeListeners, myProject.getDisposed());
         }
 
         @Override

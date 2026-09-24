@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.util;
 
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.util.concurrent.coroutine.CoroutineStep;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Common interface for IDE views where files can be selected (project view, packages view,
@@ -37,6 +33,7 @@ public interface IdeView {
      *
      * @param element the element to select.
      */
+    @RequiredUIAccess
     void selectElement(PsiElement element);
 
     /**
@@ -45,6 +42,7 @@ public interface IdeView {
      *
      * @return the list of directories, or an empty array if nothing is selected.
      */
+    @RequiredUIAccess
     PsiDirectory[] getDirectories();
 
     /**
@@ -54,5 +52,6 @@ public interface IdeView {
      * @return the selected directory, or null if there is no selection or the popup was cancelled.
      */
     @Nullable
+    @RequiredUIAccess
     PsiDirectory getOrChooseDirectory();
 }

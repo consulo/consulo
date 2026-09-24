@@ -12,7 +12,6 @@ import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -23,6 +22,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -293,7 +293,7 @@ public class ActionGroupPopup extends ListPopupImpl {
         boolean autoSelection
     ) {
         Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        consulo.ui.Component uiCompoment = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+        consulo.ui.Component uiCompoment = dataContext.getData(consulo.ui.Component.KEY);
         if (component == null && uiCompoment != null) {
             component = TargetAWT.to(uiCompoment);
         }

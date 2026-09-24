@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
@@ -117,7 +118,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
                 uiDataProvider.uiDataSnapshot(sink);
             }
 
-            sink.set(PlatformDataKeys.CONTENT_MANAGER, DesktopContentManagerImpl.this);
+            sink.set(ContentManager.KEY, DesktopContentManagerImpl.this);
 
             if (getContentCount() > 1) {
                 sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, DesktopContentManagerImpl.this);

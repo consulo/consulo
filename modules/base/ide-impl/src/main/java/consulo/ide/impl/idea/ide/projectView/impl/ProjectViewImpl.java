@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
@@ -48,7 +48,6 @@ import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.editor.util.IdeView;
@@ -83,7 +82,10 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
@@ -238,7 +240,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
 
         myDataProvider = new MyPanel();
 
-        ClientProperty.put(myDataProvider, UiDataProvider.KEY, sink -> uiDataSnapshot(sink));
+        ClientProperty.put(myDataProvider, UiDataProvider.KEY, this::uiDataSnapshot);
         ClientProperty.put(myDataProvider, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, buildNotInHierarchyIterable());
 
         myDataProvider.add(myPanel, BorderLayout.CENTER);
@@ -308,12 +310,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
             .iterator();
     }
 
+    @RequiredUIAccess
     private void uiDataSnapshot(DataSink sink) {
-        sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
-        sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());
-        sink.set(PlatformDataKeys.PASTE_PROVIDER, myCopyPasteDelegator.getPasteProvider());
+        sink.set(CutProvider.KEY, myCopyPasteDelegator.getCutProvider());
+        sink.set(CopyProvider.KEY, myCopyPasteDelegator.getCopyProvider());
+        sink.set(PasteProvider.KEY, myCopyPasteDelegator.getPasteProvider());
         sink.set(IdeView.KEY, myIdeView);
-        sink.set(PlatformDataKeys.HELP_ID, HelpID.PROJECT_VIEWS);
+        sink.set(HelpManager.HELP_ID, HelpID.PROJECT_VIEWS);
         sink.set(QuickActionProvider.KEY, ProjectViewImpl.this);
         AbstractProjectViewPane selectedPane = getCurrentProjectViewPane();
         if (selectedPane != null) {
@@ -641,7 +644,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         if (pane == null) {
             return;
         }
-        pane.updateFromRoot(false).doWhenDone(() -> pane.reRestoreExpandedPaths());
+        pane.updateFromRoot(false).doWhenDone(pane::reRestoreExpandedPaths);
     }
 
     @RequiredUIAccess
@@ -679,8 +682,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         myActionGroup.removeAll();
         myActionGroup.addAction(new PaneOptionAction(
             myFlattenPackages,
-            IdeLocalize.actionFlattenPackages().get(),
-            IdeLocalize.actionFlattenPackages().get(),
+            IdeLocalize.actionFlattenPackages(),
+            IdeLocalize.actionFlattenPackages(),
             PlatformIconGroup.objectbrowserFlattenpackages(),
             ourFlattenPackagesDefaults
         ) {
@@ -715,8 +718,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         class FlattenPackagesDependableAction extends PaneOptionAction {
             FlattenPackagesDependableAction(
                 Map<String, Boolean> optionsMap,
-                String text,
-                String description,
+                LocalizeValue text,
+                LocalizeValue description,
                 Image icon,
                 boolean optionDefaultValue
             ) {
@@ -742,8 +745,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
         myActionGroup.addAction(new FlattenPackagesDependableAction(
             myAbbreviatePackageNames,
-            IdeLocalize.actionAbbreviateQualifiedPackageNames().get(),
-            IdeLocalize.actionAbbreviateQualifiedPackageNames().get(),
+            IdeLocalize.actionAbbreviateQualifiedPackageNames(),
+            IdeLocalize.actionAbbreviateQualifiedPackageNames(),
             PlatformIconGroup.objectbrowserAbbreviatepackagenames(),
             ourAbbreviatePackagesDefaults
         ) {
@@ -772,8 +775,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         if (isShowMembersOptionSupported()) {
             myActionGroup.addAction(new PaneOptionAction(
                 myShowMembers,
-                IdeLocalize.actionShowMembers().get(),
-                IdeLocalize.actionShowHideMembers().get(),
+                IdeLocalize.actionShowMembers(),
+                IdeLocalize.actionShowHideMembers(),
                 PlatformIconGroup.objectbrowserShowmembers(),
                 ourShowMembersDefaults
             ) {
@@ -911,15 +914,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         return myContentManager;
     }
 
-
     private class PaneOptionAction extends ToggleAction implements DumbAware {
         Map<String, Boolean> myOptionsMap;
         private final boolean myOptionDefaultValue;
 
         PaneOptionAction(
             Map<String, Boolean> optionsMap,
-            String text,
-            String description,
+            LocalizeValue text,
+            LocalizeValue description,
             Image icon,
             boolean optionDefaultValue
         ) {
@@ -961,6 +963,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         if (!views.isEmpty()) {
             list.setSelectedValue(views.get(0), true);
         }
+        @RequiredUIAccess
         Runnable runnable = () -> {
             if (list.getSelectedIndex() < 0) {
                 return;
@@ -1228,6 +1231,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
 
     private final class MyIdeView implements IdeView {
         @Override
+        @RequiredUIAccess
         public void selectElement(PsiElement element) {
             selectPsiElement(element, false);
             boolean requestFocus = true;
@@ -1245,11 +1249,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         }
 
         @Override
+        @RequiredUIAccess
         public PsiDirectory[] getDirectories() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane != null) {
                 SimpleReference<PsiDirectory[]> ref = SimpleReference.create();
-                Application.get().tryRunReadAction(ref, () -> viewPane.getSelectedDirectories());
+                Application.get().tryRunReadAction(ref, viewPane::getSelectedDirectories);
                 return Objects.requireNonNullElse(ref.get(), PsiDirectory.EMPTY_ARRAY);
             }
 
@@ -1257,12 +1262,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         }
 
         @Override
+        @RequiredUIAccess
         public PsiDirectory getOrChooseDirectory() {
             return DirectoryChooserUtil.getOrChooseDirectory(this);
         }
     }
 
     @Override
+    @RequiredUIAccess
     public void selectPsiElement(PsiElement element, boolean requestFocus) {
         if (element == null) {
             return;
@@ -1270,7 +1277,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
         select(element, virtualFile, requestFocus);
     }
-
 
     private static void readOption(Element node, Map<String, Boolean> options) {
         if (node == null) {
@@ -1573,7 +1579,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
 
     private class HideEmptyMiddlePackagesAction extends PaneOptionAction {
         private HideEmptyMiddlePackagesAction() {
-            super(myHideEmptyPackages, "", "", null, ourHideEmptyPackagesDefaults);
+            super(myHideEmptyPackages, LocalizeValue.empty(), LocalizeValue.empty(), null, ourHideEmptyPackagesDefaults);
         }
 
         @Override
@@ -1946,6 +1952,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent event, boolean flag) {
             setFoldersAlwaysOnTop(flag);
         }

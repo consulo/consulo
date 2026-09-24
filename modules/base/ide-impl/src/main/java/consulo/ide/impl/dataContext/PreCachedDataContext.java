@@ -23,7 +23,6 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.UiDataRule;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.util.dataholder.Key;
@@ -56,10 +55,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
         this(snapshot, null);
     }
 
-    public PreCachedDataContext(
-        DataSinkImpl snapshot,
-        @Nullable Component component
-    ) {
+    public PreCachedDataContext(DataSinkImpl snapshot, @Nullable Component component) {
         mySnapshot = snapshot;
         myComponent = component;
     }
@@ -155,7 +151,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
 
         // the component the context was built from is the last word on what it is, so a provider which names a
         // component of its own - the tree inside the panel the provider hangs off - is answered first
-        if (myComponent != null && (Component.KEY == dataId || PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId)) {
+        if (myComponent != null && Component.KEY == dataId) {
             //noinspection unchecked
             return (T) myComponent;
         }
