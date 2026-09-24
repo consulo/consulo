@@ -90,10 +90,14 @@ public class DataSinkImpl implements DataSink {
      * through {@link #resolve}.
      */
     private final DataSnapshot myImmediateSnapshot = new DataSnapshot() {
-        @SuppressWarnings("unchecked")
         @Override
+        @SuppressWarnings("unchecked")
         public <T> @Nullable T get(Key<T> key) {
             Object data = myImmediateData.get(key);
+            if (data == null && (myLazyData.containsKey(key) || myLazyValueData.containsKey(key))) {
+                // rule must use sink.lazyValue for this key
+                reportLazyValueRequestedOnUiThread(key);
+            }
             return data == EXPLICIT_NULL ? null : (T) data;
         }
     };
