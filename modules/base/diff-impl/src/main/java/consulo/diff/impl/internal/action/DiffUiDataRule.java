@@ -26,10 +26,13 @@ import consulo.navigation.Navigatable;
 public class DiffUiDataRule implements UiDataRule {
     @Override
     public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
-        Navigatable navigatable = snapshot.get(DiffDataKeys.NAVIGATABLE);
-        if (navigatable != null) {
-            sink.set(DiffDataKeys.NAVIGATABLE_ARRAY, new Navigatable[]{navigatable});
-        }
+        sink.lazyValue(
+            DiffDataKeys.NAVIGATABLE_ARRAY,
+            dataSnapshot -> {
+                Navigatable navigatable = dataSnapshot.get(DiffDataKeys.NAVIGATABLE);
+                return navigatable == null ? null : new Navigatable[]{navigatable};
+            }
+        );
     }
 }
 
