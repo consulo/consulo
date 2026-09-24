@@ -50,6 +50,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.NotificationType;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.ConcurrencyUtil;
@@ -377,7 +378,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // This would lead to repeated calls to `runEnteredListeners`, which is not permitted by the contract of these listeners.
             // The forced `invokeLater` will ensure that published requests for exit will be executed before new requests for enter.
             // This works given that `invokeLater` is fair, which is true.
-            myProject.getUIAccess().execute(() -> publishIncrementEvents(enteredDumb));
+            executePublication(() -> publishIncrementEvents(enteredDumb));
         }
 
         LOG.assertTrue(state().isDumb(), "Should be dumb");
@@ -396,7 +397,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 // Otherwise, increment the counter under write action because this will change dumb state
                 boolean enteredDumb = doIncrementStateCounter();
                 if (enteredDumb) {
-                    myProject.getUIAccess().execute(() -> publishIncrementEvents(true));
+                    executePublication(() -> publishIncrementEvents(true));
                 }
                 else {
                     publicationDone();
@@ -421,6 +422,16 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             proceedWithPublishingOfDecrementEvents(exitDumb);
         }
         finally {
+            publicationDone();
+        }
+    }
+
+    private void executePublication(Runnable publication) {
+        UIAccess uiAccess = myProject.getUIAccess();
+        if (uiAccess.isValid()) {
+            uiAccess.execute(publication);
+        }
+        else {
             publicationDone();
         }
     }
@@ -479,7 +490,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             publicationScheduled();
             boolean exitDumb = myApplication.runWriteAction((Supplier<Boolean>) this::doDecrementDumbCounter);
             // for rationale for this `invokeLater`, see explanation in `incrementDumbCounterBlocking`
-            myProject.getUIAccess().execute(() -> publishDecrementEvents(exitDumb));
+            executePublication(() -> publishDecrementEvents(exitDumb));
         }
     }
 
@@ -498,7 +509,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 publicationScheduled();
                 boolean isNowSmart = doDecrementDumbCounter();
                 if (isNowSmart) {
-                    myProject.getUIAccess().execute(() -> publishDecrementEvents(true));
+                    executePublication(() -> publishDecrementEvents(true));
                 }
                 else {
                     publicationDone();
