@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -33,11 +34,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author Eugene Belyaev
@@ -59,22 +62,17 @@ public class DefaultKeymap {
 
     @Inject
     public DefaultKeymap(Application application) {
-        for (BundledKeymapProvider provider : application.getExtensionPoint(BundledKeymapProvider.class).getExtensionList()) {
-            for (String keymapFile : provider.getKeymapFiles()) {
-                try {
-                    InputStream inputStream = provider.getClass().getClassLoader().getResourceAsStream(keymapFile);
-                    if (inputStream == null) {
-                        LOG.warn("Keymap: " + keymapFile + " not found in " + PluginManager.getPlugin(provider.getClass()).getPluginId().getIdString());
-                        continue;
-                    }
-
-                    loadKeymapsFromElement(JDOMUtil.load(inputStream));
-                }
-                catch (JDOMException | IOException e) {
-                    LOG.error(e);
-                }
+        BiConsumer<String, InputStream> loader = (name, inputStream) -> {
+            try {
+                loadKeymapsFromElement(JDOMUtil.load(inputStream));
             }
-        }
+            catch (JDOMException | IOException e) {
+                throw new RuntimeException("Failed to load keymap: " + name, e);
+            }
+        };
+
+        application.getExtensionPoint(BundledKeymapProvider.class)
+            .forEach(provider -> provider.loadKeymaps(loader));
     }
 
     private void loadKeymapsFromElement(Element element) throws InvalidDataException {

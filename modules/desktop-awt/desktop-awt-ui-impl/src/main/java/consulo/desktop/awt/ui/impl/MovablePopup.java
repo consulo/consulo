@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.popup;
+package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.window.JWindowAsUIWindow;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +141,7 @@ public class MovablePopup {
       Window owner = UIUtil.getWindow(myOwner);
       if (owner != null) {
         if (myHeavyWeight) {
-          JWindow view = JWindowPopupFactory.getInstance().create(TargetAWT.from(owner));
+          JWindow view = new JWindowAsUIWindow(TargetAWT.from(owner));
           view.setType(Window.Type.POPUP);
           if (myAlwaysOnTop) {
             try {

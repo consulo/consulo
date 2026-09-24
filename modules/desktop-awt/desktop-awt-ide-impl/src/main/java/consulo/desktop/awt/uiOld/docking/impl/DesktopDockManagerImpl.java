@@ -23,6 +23,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.component.util.BusyObject;
 import consulo.desktop.awt.fileEditor.impl.DesktopAWTEditorTabbedContainer;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.impl.window.JWindowAsUIWindow;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
@@ -30,7 +31,6 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.internal.FileEditorDockManager;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -200,7 +200,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         private final JLabel myImageContainer;
 
         private MyDragSession(MouseEvent me, DockableContent content) {
-            myWindow = JWindowPopupFactory.getInstance().create(null);
+            myWindow = new JWindowAsUIWindow(null);
             myContent = content;
 
             Image previewImage = content.getPreviewImage();

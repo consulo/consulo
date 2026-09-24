@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HasSize;
 import consulo.ui.Size2D;
@@ -47,7 +48,6 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
 
     private boolean myVisible = true;
     private boolean myEnabled = true;
-    private @Nullable Size2D mySize;
     private @Nullable Component myParent;
 
     protected void setParentComponent(@Nullable Component parent) {
@@ -102,11 +102,6 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     }
 
     @Override
-    public void setSize(Size2D size) {
-        mySize = size;
-    }
-
-    @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(
         Class<? extends E> eventClass,
         ComponentEventListener<C, E> listener
@@ -123,5 +118,14 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     }
 
     public void setAccessibleDescription(consulo.localize.LocalizeValue description) {
+    }
+
+    @Override
+    public void setToolTipText(LocalizeValue value) {
+    }
+
+    @Override
+    public LocalizeValue getToolTipText() {
+        return LocalizeValue.empty();
     }
 }

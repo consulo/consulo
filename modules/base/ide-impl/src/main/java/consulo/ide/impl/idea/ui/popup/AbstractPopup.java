@@ -103,8 +103,6 @@ import static java.awt.event.WindowEvent.WINDOW_ACTIVATED;
 import static java.awt.event.WindowEvent.WINDOW_GAINED_FOCUS;
 
 public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
-    public static final String SHOW_HINTS = "ShowHints";
-
     // Popup size stored with DimensionService is null first time
     // In this case you can put Dimension in content client properties to adjust size
     // Zero or negative values (with/height or both) would be ignored (actual values would be obtained from preferred size)

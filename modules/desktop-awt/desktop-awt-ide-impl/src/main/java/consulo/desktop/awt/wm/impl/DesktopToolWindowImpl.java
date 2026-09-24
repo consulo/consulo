@@ -19,18 +19,20 @@ import consulo.component.util.BusyObject;
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
-import consulo.project.ui.impl.internal.wm.ToolWindowBase;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 
@@ -39,15 +41,15 @@ import java.awt.event.InputEvent;
  * @author Vladimir Kondratyev
  */
 public final class DesktopToolWindowImpl extends ToolWindowBase {
-  private DesktopToolWindowContentUi myContentUI;
-  private JComponent myComponent;
+    private DesktopToolWindowContentUi myContentUI;
+    private JComponent myComponent;
 
-  private final BusyObject.Impl myShowing = new BusyObject.Impl() {
-    @Override
-    public boolean isReady() {
-      return myComponent != null && myComponent.isShowing();
-    }
-  };
+    private final BusyObject.Impl myShowing = new BusyObject.Impl() {
+        @Override
+        public boolean isReady() {
+            return myComponent != null && myComponent.isShowing();
+        }
+    };
 
     protected DesktopToolWindowImpl(
         DesktopToolWindowManagerImpl toolWindowManager,
@@ -60,87 +62,94 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
         super(toolWindowManager, id, displayName, canCloseContent, component, available);
     }
 
-  @RequiredUIAccess
-  @Override
-  protected void init(boolean canCloseContent, @Nullable Object component) {
-    ContentFactory contentFactory = ContentFactory.getInstance();
-    myContentUI = new DesktopToolWindowContentUi(this);
-    ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
+    @RequiredUIAccess
+    @Override
+    protected void init(boolean canCloseContent, @Nullable Object component) {
+        ContentFactory contentFactory = ContentFactory.getInstance();
+        myContentUI = new DesktopToolWindowContentUi(this);
+        ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
 
-    if (component != null) {
-      Content content = contentFactory.createContent((JComponent)component, "", false);
-      contentManager.addContent(content);
-      contentManager.setSelectedContent(content, false);
+        if (component != null) {
+            Content content = contentFactory.createContent((JComponent) component, "", false);
+            contentManager.addContent(content);
+            contentManager.setSelectedContent(content, false);
+        }
+
+        myComponent = contentManager.getComponent();
+
+        DesktopInternalDecorator.installFocusTraversalPolicy(myComponent, new LayoutFocusTraversalPolicy());
+
+        UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable() {
+            @Override
+            public void showNotify() {
+                myShowing.onReady();
+            }
+        });
+        Disposer.register(contentManager, notifyConnector);
     }
 
-    myComponent = contentManager.getComponent();
+    public DesktopToolWindowContentUi getContentUI() {
+        return myContentUI;
+    }
 
-    DesktopInternalDecorator.installFocusTraversalPolicy(myComponent, new LayoutFocusTraversalPolicy());
 
-    UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable() {
-      @Override
-      public void showNotify() {
-        myShowing.onReady();
-      }
-    });
-    Disposer.register(contentManager, notifyConnector);
-  }
+    @Override
+    public AsyncResult<Void> getReady(Object requestor) {
+        AsyncResult<Void> result = AsyncResult.undefined();
+        myShowing.getReady(this).doWhenDone(() -> {
+            ProjectIdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
+                if (myContentManager.isDisposed()) {
+                    return;
+                }
+                myContentManager.getReady(requestor).notify(result);
+            });
+        });
+        return result;
+    }
 
-  public DesktopToolWindowContentUi getContentUI() {
-    return myContentUI;
-  }
+    @Override
+    public void setTabDoubleClickActions(AnAction... actions) {
+        myContentUI.setTabDoubleClickActions(actions);
+    }
 
-  
-  @Override
-  public AsyncResult<Void> getReady(Object requestor) {
-    AsyncResult<Void> result = AsyncResult.undefined();
-    myShowing.getReady(this).doWhenDone(() -> {
-      ProjectIdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
-        if (myContentManager.isDisposed()) return;
-        myContentManager.getReady(requestor).notify(result);
-      });
-    });
-    return result;
-  }
+    // to avoid ensureContentInitialized call - myContentManager can report canCloseContents without full initialization
+    public boolean canCloseContents() {
+        return myContentManager.canCloseContents();
+    }
 
-  @Override
-  public void setTabDoubleClickActions(AnAction... actions) {
-    myContentUI.setTabDoubleClickActions(actions);
-  }
+    /**
+     * @return <code>true</code> if the component passed into constructor is not instance of
+     * <code>ContentManager</code> class. Otherwise it delegates the functionality to the
+     * passed content manager.
+     */
+    @Override
+    public boolean isAvailable() {
+        return myAvailable && myComponent != null;
+    }
 
-  // to avoid ensureContentInitialized call - myContentManager can report canCloseContents without full initialization
-  public boolean canCloseContents() {
-    return myContentManager.canCloseContents();
-  }
+    @Override
+    public final @Nullable JComponent getComponent() {
+        return myComponent;
+    }
 
-  /**
-   * @return <code>true</code> if the component passed into constructor is not instance of
-   * <code>ContentManager</code> class. Otherwise it delegates the functionality to the
-   * passed content manager.
-   */
-  @Override
-  public boolean isAvailable() {
-    return myAvailable && myComponent != null;
-  }
+    @Override
+    public Component getUIComponent() {
+        return TargetAWT.wrap(myComponent);
+    }
 
-  @Override
-  public final @Nullable JComponent getComponent() {
-    return myComponent;
-  }
+    @Override
+    public void stretchWidth(int value) {
+        ((DesktopToolWindowManagerImpl) myToolWindowManager).stretchWidth(this, value);
+    }
 
-  @Override
-  public void stretchWidth(int value) {
-    ((DesktopToolWindowManagerImpl)myToolWindowManager).stretchWidth(this, value);
-  }
+    @Override
+    public void stretchHeight(int value) {
+        ((DesktopToolWindowManagerImpl) myToolWindowManager).stretchHeight(this, value);
+    }
 
-  @Override
-  public void stretchHeight(int value) {
-    ((DesktopToolWindowManagerImpl)myToolWindowManager).stretchHeight(this, value);
-  }
-
-  @Override
-  public void showContentPopup(InputEvent inputEvent) {
-    // called only when tool window is already opened, so, content should be already created
-    DesktopToolWindowContentUi.toggleContentPopup(myContentUI, myContentManager);
-  }
+    @Override
+    public void showContentPopup(InputEvent inputEvent) {
+        // called only when tool window is already opened, so, content should be already created
+        DesktopToolWindowContentUi.toggleContentPopup(myContentUI, myContentManager);
+    }
 }

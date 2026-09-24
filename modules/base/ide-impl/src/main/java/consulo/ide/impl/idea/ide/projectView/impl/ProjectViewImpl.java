@@ -90,6 +90,7 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
@@ -1674,7 +1675,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
 
     private class MyAutoScrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
         private MyAutoScrollFromSourceHandler() {
-            super(ProjectViewImpl.this.myProject, myViewContentPanel, ProjectViewImpl.this);
+            super(ProjectViewImpl.this.myProject, TargetAWT.wrap(myViewContentPanel), ProjectViewImpl.this);
         }
 
         @Override

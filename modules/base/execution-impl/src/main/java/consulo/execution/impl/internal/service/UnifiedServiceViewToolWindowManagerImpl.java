@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.popup;
+package consulo.execution.impl.internal.service;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.desktop.awt.ui.impl.window.JWindowAsUIWindow;
-import consulo.ide.impl.ui.popup.JWindowPopupFactory;
-import consulo.ui.Window;
+import consulo.execution.service.ServiceViewToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Singleton;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 2019-07-27
+ * @since 2026-09-23
  */
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
-@ServiceImpl
-public class JWindowPopupFactoryImpl implements JWindowPopupFactory {
-  @Override
-  public JWindow create(Window window) {
-    return new JWindowAsUIWindow(window);
-  }
+public class UnifiedServiceViewToolWindowManagerImpl implements ServiceViewToolWindowManager {
+    @RequiredUIAccess
+    @Override
+    public void initToolWindow(ToolWindow toolWindow) {
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(ToolWindow toolWindow) {
+    }
 }

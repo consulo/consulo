@@ -51,7 +51,10 @@ final class ServiceViewDragHelper {
                                 ToolWindowInternalDecorator decorator,
                                 ContentManager contentManager) {
     Content dropTargetContent = createDropTargetContent();
-    JComponent awtDecorator = (JComponent)decorator;
+    // integral tests until full migration to uni ui
+    if (!(decorator instanceof JComponent awtDecorator)) {
+        return;
+    }
     DnDSupport.createBuilder(awtDecorator)
               .setTargetChecker(event -> {
                 Object o = event.getAttachedObject();

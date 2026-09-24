@@ -61,6 +61,7 @@ module consulo.ui.ex.impl {
         consulo.ide.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
+        consulo.it,
         consulo.web.ui.impl;
 
     opens consulo.ui.ex.impl.internal.keymap to consulo.util.xml.serializer;

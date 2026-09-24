@@ -13,7 +13,6 @@ import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.CompletionExtender;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.lookup.LookupElement;
