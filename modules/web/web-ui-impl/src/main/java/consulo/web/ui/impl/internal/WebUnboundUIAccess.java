@@ -18,7 +18,6 @@ package consulo.web.ui.impl.internal;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.clipboard.MemoryClipboard;
@@ -116,11 +115,6 @@ public class WebUnboundUIAccess extends BaseUIAccess implements UIAccess {
     protected SingleUIAccessScheduler createScheduler() {
         ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
 
-        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-            @Override
-            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-                Application.get().invokeLater(runnable, modalityState);
-            }
-        };
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService());
     }
 }

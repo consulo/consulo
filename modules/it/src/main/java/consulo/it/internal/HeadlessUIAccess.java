@@ -18,7 +18,6 @@ package consulo.it.internal;
 import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.ui.ModalityState;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.clipboard.MemoryClipboard;
 import consulo.ui.impl.BaseUIAccess;
@@ -92,11 +91,6 @@ public final class HeadlessUIAccess extends BaseUIAccess {
     @Override
     protected SingleUIAccessScheduler createScheduler() {
         ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
-        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-            @Override
-            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-                Application.get().invokeLater(runnable, modalityState);
-            }
-        };
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService());
     }
 }

@@ -17,6 +17,7 @@ package consulo.project.internal;
 
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.internal.UIAccessInternal;
 
 public interface ProjectEx extends Project {
     int REGULAR_PROJECT = 1 << 30;
@@ -29,8 +30,19 @@ public interface ProjectEx extends Project {
      * and closes the old. The coroutine context holds a copy of its own, so both have to be written.
      */
     default void setUIAccess(UIAccess uiAccess) {
-        putUserData(UIAccess.KEY, uiAccess);
+        UIAccess original = UIAccessInternal.original(uiAccess);
 
-        coroutineContext().putCopyableUserData(UIAccess.KEY, uiAccess);
+        UIAccess previous = getUserData(UIAccess.KEY);
+        if (previous instanceof UIAccessInternal previousInternal && previousInternal.getOriginal() != original) {
+            previousInternal.releaseProtection();
+        }
+
+        UIAccess protectedAccess = original instanceof UIAccessInternal internal
+            ? internal.makeProtection(getDisposed())
+            : original;
+
+        putUserData(UIAccess.KEY, protectedAccess);
+
+        coroutineContext().putCopyableUserData(UIAccess.KEY, protectedAccess);
     }
 }

@@ -18,16 +18,18 @@ package consulo.ui.impl;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.clipboard.Clipboard;
+import consulo.ui.internal.UIAccessInternal;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
  * @since 14/09/2023
  */
-public abstract class BaseUIAccess extends UserDataHolderBase implements UIAccess {
+public abstract class BaseUIAccess extends UserDataHolderBase implements UIAccessInternal {
   protected SingleUIAccessScheduler myUIAccessScheduler;
 
   private @Nullable Clipboard myClipboard;
@@ -54,5 +56,19 @@ public abstract class BaseUIAccess extends UserDataHolderBase implements UIAcces
     }
 
     return Objects.requireNonNull(myClipboard);
+  }
+
+  @Override
+  public UIAccess makeProtection(BooleanSupplier disposed) {
+    return new ProtectedUIAccess(this, disposed);
+  }
+
+  @Override
+  public void releaseProtection() {
+  }
+
+  @Override
+  public UIAccess getOriginal() {
+    return this;
   }
 }

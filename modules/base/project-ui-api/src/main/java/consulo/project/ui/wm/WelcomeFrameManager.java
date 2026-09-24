@@ -25,6 +25,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
+import consulo.ui.internal.UIAccessInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -96,7 +97,8 @@ public abstract class WelcomeFrameManager {
     // a refresh can ask while the close of this ui's frame is still on its way - what is on screen here is the
     // project, and a welcome must not be drawn over it
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-      if (project.getUserData(UIAccess.KEY) == uiAccess) {
+      UIAccess shownIn = project.getUserData(UIAccess.KEY);
+      if (shownIn != null && UIAccessInternal.original(shownIn) == uiAccess) {
         return;
       }
     }

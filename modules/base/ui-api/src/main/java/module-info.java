@@ -50,6 +50,7 @@ module consulo.ui.api {
         consulo.ui.impl,
         consulo.web.editor.impl,
         consulo.project.api,
+        consulo.project.ui.api,
         consulo.web.ide,
         consulo.web.ui.impl;
 

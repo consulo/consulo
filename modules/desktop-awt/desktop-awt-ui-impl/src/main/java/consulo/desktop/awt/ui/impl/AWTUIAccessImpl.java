@@ -55,6 +55,11 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
     }
 
     @Override
+    public void giveLater(Runnable runnable, ModalityState modalityState) {
+        LaterInvocator.invokeLaterWithCallback(runnable, modalityState, Application.get().getDisposed(), null);
+    }
+
+    @Override
     public boolean isInModalContext() {
         return LaterInvocator.isInModalContext();
     }
@@ -117,11 +122,6 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
     protected SingleUIAccessScheduler createScheduler() {
         Application application = Application.get();
         ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
-        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-            @Override
-            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-                Application.get().invokeLater(runnable, modalityState);
-            }
-        };
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService());
     }
 }

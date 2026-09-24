@@ -160,6 +160,14 @@ public interface UIAccess extends Executor, UserDataHolder {
         }
     }
 
+    /**
+     * Runs the runnable once the ui reaches the given modality, and never on the calling thread. An ui without
+     * modality of its own runs it as soon as it can.
+     */
+    default void giveLater(@RequiredUIAccess Runnable runnable, ModalityState modalityState) {
+        give(runnable);
+    }
+
     default boolean isHeadless() {
         return false;
     }

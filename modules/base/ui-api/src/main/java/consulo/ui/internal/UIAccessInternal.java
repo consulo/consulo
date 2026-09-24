@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.impl;
+package consulo.ui.internal;
 
 import consulo.ui.UIAccess;
 
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
- * @since 14/09/2023
+ * @since 2026-09-24
  */
-public class SingleUIAccessScheduler extends BaseUIAccessScheduler {
-  private final UIAccess myUiAccess;
+public interface UIAccessInternal extends UIAccess {
+    UIAccess makeProtection(BooleanSupplier disposed);
 
-  public SingleUIAccessScheduler(UIAccess uiAccess, ScheduledExecutorService scheduledExecutorService) {
-    super(scheduledExecutorService);
-    myUiAccess = uiAccess;
-  }
+    void releaseProtection();
 
-  
-  @Override
-  protected UIAccess uiAccess() {
-    return myUiAccess;
-  }
+    UIAccess getOriginal();
+
+    static UIAccess original(UIAccess uiAccess) {
+        return uiAccess instanceof UIAccessInternal internal ? internal.getOriginal() : uiAccess;
+    }
 }

@@ -139,11 +139,20 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
      * The ui the project is shown in. Asking the application instead resolves whatever ui the calling thread
      * happens to be on, which is nothing at all on a pooled thread of a frontend serving several uis at once.
      * <p/>
-     * Falls back to the application while no ui is attached - the default project, the tests and a headless run
-     * never get one.
+     * A disposed project has no ui. One which is not shown in a live ui - the default project, the tests, a
+     * headless run, or a project whose ui was replaced before it was moved into the new one - answers with the ui
+     * of the calling thread when there is one.
      */
     default UIAccess getUIAccess() {
+        if (isDisposed()) {
+            return InvalidUIAccess.INSTANCE;
+        }
+
         UIAccess uiAccess = getUserData(UIAccess.KEY);
-        return uiAccess == null || !uiAccess.isValid() ? InvalidUIAccess.INSTANCE : uiAccess;
+        if (uiAccess != null && uiAccess.isValid()) {
+            return uiAccess;
+        }
+
+        return UIAccess.isUIThread() ? UIAccess.current() : InvalidUIAccess.INSTANCE;
     }
 }

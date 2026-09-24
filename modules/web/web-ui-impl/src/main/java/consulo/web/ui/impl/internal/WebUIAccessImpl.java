@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
@@ -30,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -38,6 +38,8 @@ import java.util.function.Supplier;
  */
 public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
+
+    private static final BooleanSupplier NOT_DISPOSED = () -> false;
 
     private final UI myUI;
 
@@ -48,6 +50,8 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
      * single, because the queue order still has to be preserved.
      */
     private volatile @Nullable ExecutorService myDispatcher;
+
+    private volatile BooleanSupplier myDisposed = NOT_DISPOSED;
 
     public WebUIAccessImpl(UI ui) {
         myUI = ui;
@@ -82,9 +86,29 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     }
 
     @Override
+    public UIAccess makeProtection(BooleanSupplier disposed) {
+        myDisposed = disposed;
+        return this;
+    }
+
+    @Override
+    public void releaseProtection() {
+        myDisposed = NOT_DISPOSED;
+    }
+
+    private Runnable protect(Runnable runnable) {
+        BooleanSupplier disposed = myDisposed;
+        return () -> {
+            if (!disposed.getAsBoolean()) {
+                runnable.run();
+            }
+        };
+    }
+
+    @Override
     public void giveIfNeed(Runnable runnable) {
         if (myUI == UI.getCurrent()) {
-            runnable.run();
+            protect(runnable).run();
         }
         else {
             execute(runnable);
@@ -95,21 +119,27 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public void giveAndWaitIfNeed(Runnable runnable) {
         ComponentStoreImpl.assertIfInsideSavingSession();
 
+        Runnable protectedRunnable = protect(runnable);
         if (myUI == UI.getCurrent()) {
-            runnable.run();
+            protectedRunnable.run();
         }
         else {
-            myUI.accessSynchronously(runnable::run);
+            myUI.accessSynchronously(protectedRunnable::run);
         }
     }
 
     @Override
     public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
         CompletableFuture<T> result = new CompletableFuture<>();
+        BooleanSupplier disposed = myDisposed;
         if (isValid()) {
             dispatcher().execute(() -> {
                 try {
                     myUI.access(() -> {
+                        if (disposed.getAsBoolean()) {
+                            result.cancel(false);
+                            return;
+                        }
                         try {
                             result.complete(supplier.get());
                         }
@@ -135,12 +165,13 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
 
     @Override
     public void give(Runnable runnable) {
+        Runnable protectedRunnable = protect(runnable);
         if (isValid()) {
             dispatcher().execute(() -> {
                 try {
                     myUI.access(() -> {
                         try {
-                            runnable.run();
+                            protectedRunnable.run();
                         }
                         catch (Throwable e) {
                             LOG.error(e);
@@ -166,7 +197,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
         ComponentStoreImpl.assertIfInsideSavingSession();
 
         if (isValid()) {
-            myUI.accessSynchronously(runnable::run);
+            myUI.accessSynchronously(protect(runnable)::run);
         }
         else {
             // dropping the work and returning as if it ran leaves whatever drives the caller - opening a
@@ -188,11 +219,6 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     protected SingleUIAccessScheduler createScheduler() {
         Application application = Application.get();
         ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
-        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-            @Override
-            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-                Application.get().invokeLater(runnable, modalityState);
-            }
-        };
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService());
     }
 }

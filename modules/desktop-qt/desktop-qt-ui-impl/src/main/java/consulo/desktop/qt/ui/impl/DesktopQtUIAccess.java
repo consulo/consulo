@@ -21,7 +21,6 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtClipboardImpl;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontRegistry;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
@@ -173,11 +172,6 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
     protected SingleUIAccessScheduler createScheduler() {
         Application application = Application.get();
         ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
-        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-            @Override
-            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-                Application.get().invokeLater(runnable, modalityState);
-            }
-        };
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService());
     }
 }

@@ -196,7 +196,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
 
                         // before anything of the project asks for a ui - its coroutine context keeps the first
                         // answer it gets, and the opening thread is the only place the right one is known
-                        p.setUIAccess(new ProjectAwareUIAccess(p, uiAccess));
+                        p.setUIAccess(uiAccess);
                         return p;
                     }));
 

@@ -34,6 +34,7 @@ import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
 import consulo.ui.UIAccess;
+import consulo.ui.internal.UIAccessInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
@@ -154,8 +155,13 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
 
   @Override
   public void releaseFrame(IdeFrameEx frame) {
-    WebIdeFrameImpl ideFrame = myProject2Frame.remove(frame.getProject());
+    Project project = frame.getProject();
+    WebIdeFrameImpl ideFrame = myProject2Frame.remove(project);
     assert ideFrame == frame;
+
+    if (project != null && project.getUserData(UIAccess.KEY) instanceof UIAccessInternal shownIn) {
+      shownIn.releaseProtection();
+    }
 
     ideFrame.close();
   }
@@ -170,7 +176,8 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
       return;
     }
 
-    UIAccess previousAccess = project.getUserData(UIAccess.KEY);
+    UIAccess storedAccess = project.getUserData(UIAccess.KEY);
+    UIAccess previousAccess = storedAccess == null ? null : UIAccessInternal.original(storedAccess);
     if (previousAccess instanceof WebUIAccessImpl previousWebAccess && previousAccess != uiAccess && previousAccess.isValid()) {
       VaadinRootLayout previousLayout = frame.getRootLayout();
 

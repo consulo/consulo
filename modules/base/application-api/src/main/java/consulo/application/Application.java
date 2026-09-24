@@ -281,7 +281,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param state    the state in which the runnable will be executed.
      */
     @Deprecated
-    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
+    @DeprecationInfo("Prefer UIAccess#giveLater() of Project#getUIAccess(), or of UIAccess.current() when called from UI")
     void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state);
 
     /**
@@ -295,7 +295,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param expired  condition to check before execution.
      */
     @Deprecated
-    @DeprecationInfo("Prefer Project#getUIAccess() or UIAccess.current() when called from UI")
+    @DeprecationInfo("Prefer UIAccess#giveLater() of Project#getUIAccess(), or of UIAccess.current() when called from UI")
     void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state, BooleanSupplier expired);
 
     /**

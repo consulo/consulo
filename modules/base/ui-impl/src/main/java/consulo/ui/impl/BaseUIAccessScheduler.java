@@ -35,11 +35,8 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
 
     @Override
     public ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit) {
-        return myScheduledExecutorService.schedule(() -> runWithModalityState(command, modalityState), delay, unit);
+        return myScheduledExecutorService.schedule(() -> uiAccess().giveLater(command, modalityState), delay, unit);
     }
-
-    public abstract void runWithModalityState(Runnable runnable, ModalityState modalityState);
-
 
     @Override
     public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
