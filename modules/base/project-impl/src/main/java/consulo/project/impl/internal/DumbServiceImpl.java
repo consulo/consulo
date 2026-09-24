@@ -147,7 +147,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                         .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
                 }
                 else {
-                    myApplication.invokeLater(() -> {
+                    myProject.getUIAccess().giveLater(() -> {
                         myDumbTaskLaunchers.remove(this);
                         decrementDumbCounterBlocking();
                     }, myModality);
@@ -377,7 +377,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // This would lead to repeated calls to `runEnteredListeners`, which is not permitted by the contract of these listeners.
             // The forced `invokeLater` will ensure that published requests for exit will be executed before new requests for enter.
             // This works given that `invokeLater` is fair, which is true.
-            myApplication.invokeLater(() -> publishIncrementEvents(enteredDumb), myProject.getDisposed());
+            myProject.getUIAccess().execute(() -> publishIncrementEvents(enteredDumb));
         }
 
         LOG.assertTrue(state().isDumb(), "Should be dumb");
@@ -396,7 +396,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 // Otherwise, increment the counter under write action because this will change dumb state
                 boolean enteredDumb = doIncrementStateCounter();
                 if (enteredDumb) {
-                    myApplication.invokeLater(() -> publishIncrementEvents(true), myProject.getDisposed());
+                    myProject.getUIAccess().execute(() -> publishIncrementEvents(true));
                 }
                 else {
                     publicationDone();
@@ -479,7 +479,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             publicationScheduled();
             boolean exitDumb = myApplication.runWriteAction((Supplier<Boolean>) this::doDecrementDumbCounter);
             // for rationale for this `invokeLater`, see explanation in `incrementDumbCounterBlocking`
-            myApplication.invokeLater(() -> publishDecrementEvents(exitDumb), myProject.getDisposed());
+            myProject.getUIAccess().execute(() -> publishDecrementEvents(exitDumb));
         }
     }
 
@@ -498,7 +498,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 publicationScheduled();
                 boolean isNowSmart = doDecrementDumbCounter();
                 if (isNowSmart) {
-                    myApplication.invokeLater(() -> publishDecrementEvents(true), myProject.getDisposed());
+                    myProject.getUIAccess().execute(() -> publishDecrementEvents(true));
                 }
                 else {
                     publicationDone();
@@ -511,7 +511,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     /**
      * Since {@link DumbModeListener} is invoked asynchronously from the changing the dumb status,
      * it is possible for someone to enter modal context and change dumb mode inside.
-     * It would mean that {@link Application#invokeLater} with {@link DumbModeListener#exitDumbMode} would be delayed until the modal dialog
+     * It would mean that {@link Project#getUIAccess()} with {@link DumbModeListener#exitDumbMode} would be delayed until the modal dialog
      * is closed,
      * so we would get repeated calls to {@link DumbModeListener#enteredDumbMode}
      * <p>
@@ -612,7 +612,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 onCancelled.run();
             }
         });
-        myApplication.invokeLater(() -> {
+        myProject.getUIAccess().giveLater(() -> {
             if (done.compareAndSet(false, true)) {
                 unregister.run();
                 block.run();
@@ -634,7 +634,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         // drain the queue synchronously under modal progress
         DumbTaskLauncher launcher = new DumbTaskLauncher(modality, accounting);
         myDumbTaskLaunchers.add(launcher);
-        invokeLaterOnEdtInScheduledTasksScope(modality, launcher::launch, () -> myApplication.invokeLater(launcher::cancel, modality));
+        invokeLaterOnEdtInScheduledTasksScope(modality, launcher::launch, () -> myProject.getUIAccess().giveLater(launcher::cancel, modality));
     }
 
     private void queueTaskOnBackground(DumbModeTask task, Throwable trace, Runnable accounting) {
@@ -758,7 +758,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     @Override
     public void smartInvokeLater(Runnable runnable, ModalityState modalityState) {
-        myApplication.invokeLater(
+        myProject.getUIAccess().giveLater(
             () -> {
                 if (canRunSmart()) {
                     runnable.run();
@@ -768,8 +768,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                     runWhenSmart(() -> smartInvokeLater(runnable, modalityState));
                 }
             },
-            modalityState,
-            myProject.getDisposed()
+            modalityState
         );
     }
 
