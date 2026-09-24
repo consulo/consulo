@@ -2562,6 +2562,8 @@ public class UIUtil {
         return result.toString();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use UIAccess or Project#getUIAccess()")
     public static void invokeLaterIfNeeded(@RequiredUIAccess Runnable runnable) {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
@@ -2580,6 +2582,8 @@ public class UIUtil {
      * @param runnable a runnable to invoke
      * @see #invokeAndWaitIfNeeded(ThrowableRunnable)
      */
+    @Deprecated
+    @DeprecationInfo("Use UIAccess or Project#getUIAccess()")
     public static void invokeAndWaitIfNeeded(@RequiredUIAccess Runnable runnable) {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
@@ -2594,6 +2598,8 @@ public class UIUtil {
         }
     }
 
+    @Deprecated
+    @DeprecationInfo("Use UIAccess or Project#getUIAccess()")
     public static <T> T invokeAndWaitIfNeeded(@RequiredUIAccess Supplier<T> computable) {
         SimpleReference<T> result = SimpleReference.create();
         invokeAndWaitIfNeeded(new Runnable() {
@@ -2605,6 +2611,8 @@ public class UIUtil {
         return result.get();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use UIAccess or Project#getUIAccess()")
     public static void invokeAndWaitIfNeeded(@RequiredUIAccess ThrowableRunnable runnable) throws Throwable {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
