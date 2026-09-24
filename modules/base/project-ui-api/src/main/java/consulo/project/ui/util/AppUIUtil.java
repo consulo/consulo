@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -27,6 +28,8 @@ import java.util.function.BooleanSupplier;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use Project$getUIAccess() methods")
 public class AppUIUtil {
   private AppUIUtil() {
   }
