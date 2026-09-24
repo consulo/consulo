@@ -217,7 +217,9 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                 public void startNotified(ProcessEvent event) {
                     myProject.getUIAccess().giveIfNeed(() -> {
                         content.setIcon(ExecutionUtil.getIconWithLiveIndicator(descriptor.getIcon()));
-                        toolWindow.setIcon(getToolWindowIcon(toolWindowId, true));
+                        if (toolWindow != null) {
+                            toolWindow.setIcon(getToolWindowIcon(toolWindowId, true));
+                        }
                     });
                 }
 
@@ -239,7 +241,9 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                             }
                         }
 
-                        toolWindow.setIcon(getToolWindowIcon(toolWindowId, alive));
+                        if (toolWindow != null) {
+                            toolWindow.setIcon(getToolWindowIcon(toolWindowId, alive));
+                        }
 
                         Image icon = descriptor.getIcon();
                         content.setIcon(icon == null ? executor.getDisabledIcon() : ImageEffects.transparent(icon));
@@ -253,7 +257,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
             }
         }
 
-        if (oldDescriptor == null) {
+        if (oldDescriptor == null && contentManager != null) {
             contentManager.addContent(content);
             new CloseListener(myProject, content, executor);
         }
@@ -263,7 +267,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
             return;
         }
 
-        Application.get().invokeLater(() -> {
+        myProject.getUIAccess().give(() -> {
             ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow(toolWindowId);
             // let's activate tool window, but don't move focus
             //
@@ -272,8 +276,10 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
             // some action like navigation up/down in stacktrace wont
             // work correctly
             descriptor.getPreferredFocusComputable();
-            window.activate(descriptor.getActivationCallback(), descriptor.isAutoFocusContent(), descriptor.isAutoFocusContent());
-        }, myProject.getDisposed());
+            if (window != null) {
+                window.activate(descriptor.getActivationCallback(), descriptor.isAutoFocusContent(), descriptor.isAutoFocusContent());
+            }
+        });
     }
 
     @RequiredUIAccess
