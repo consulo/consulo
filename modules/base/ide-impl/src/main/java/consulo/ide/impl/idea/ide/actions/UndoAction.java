@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.undoRedo.UndoManager;
@@ -43,7 +44,7 @@ public class UndoAction extends UndoRedoAction {
     }
 
     @Override
-    protected Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager) {
+    protected Couple<LocalizeValue> getActionNameAndDescription(FileEditor editor, UndoManager undoManager) {
         return undoManager.getUndoActionNameAndDescription(editor);
     }
 }

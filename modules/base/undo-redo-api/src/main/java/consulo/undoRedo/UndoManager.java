@@ -17,6 +17,7 @@ package consulo.undoRedo;
 
 import consulo.document.Document;
 import consulo.document.DocumentReference;
+import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
@@ -26,51 +27,51 @@ import org.jspecify.annotations.Nullable;
  * @see ApplicationUndoManager
  */
 public interface UndoManager {
-  Key<Document> ORIGINAL_DOCUMENT = Key.create("ORIGINAL_DOCUMENT");
+    Key<Document> ORIGINAL_DOCUMENT = Key.create("ORIGINAL_DOCUMENT");
 
-  void undoableActionPerformed(UndoableAction action);
+    void undoableActionPerformed(UndoableAction action);
 
-  void nonundoableActionPerformed(DocumentReference ref, boolean isGlobal);
+    void nonundoableActionPerformed(DocumentReference ref, boolean isGlobal);
 
-  boolean isUndoInProgress();
+    boolean isUndoInProgress();
 
-  boolean isRedoInProgress();
+    boolean isRedoInProgress();
 
-  default boolean isUndoOrRedoInProgress() {
-    return isUndoInProgress() || isRedoInProgress();
-  }
+    default boolean isUndoOrRedoInProgress() {
+        return isUndoInProgress() || isRedoInProgress();
+    }
 
-  /**
-   * @param editor instanceof FileEditor
-   */
-  void undo(@Nullable Object editor);
+    /**
+     * @param editor instanceof FileEditor
+     */
+    void undo(@Nullable Object editor);
 
-  /**
-   * @param editor instanceof FileEditor
-   */
-  void redo(@Nullable Object editor);
+    /**
+     * @param editor instanceof FileEditor
+     */
+    void redo(@Nullable Object editor);
 
-  /**
-   * @param editor instanceof FileEditor
-   */
-  boolean isUndoAvailable(@Nullable Object editor);
+    /**
+     * @param editor instanceof FileEditor
+     */
+    boolean isUndoAvailable(@Nullable Object editor);
 
-  /**
-   * @param editor instanceof FileEditor
-   */
-  boolean isRedoAvailable(@Nullable Object editor);
+    /**
+     * @param editor instanceof FileEditor
+     */
+    boolean isRedoAvailable(@Nullable Object editor);
 
-  /**
-   * @param editor instanceof FileEditor
-   */
-  Couple<String> getUndoActionNameAndDescription(Object editor);
+    /**
+     * @param editor instanceof FileEditor
+     */
+    Couple<LocalizeValue> getUndoActionNameAndDescription(Object editor);
 
-  /**
-   * @param editor instanceof FileEditor
-   */
-  Couple<String> getRedoActionNameAndDescription(Object editor);
+    /**
+     * @param editor instanceof FileEditor
+     */
+    Couple<LocalizeValue> getRedoActionNameAndDescription(Object editor);
 
-  void invalidateActionsFor(DocumentReference ref);
+    void invalidateActionsFor(DocumentReference ref);
 
-  boolean canMergeGroup(Object groupId, Object lastGroupId);
+    boolean canMergeGroup(Object groupId, Object lastGroupId);
 }
