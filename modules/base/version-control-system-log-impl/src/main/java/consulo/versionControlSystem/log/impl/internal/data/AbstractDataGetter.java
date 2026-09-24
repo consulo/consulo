@@ -1,5 +1,7 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -26,11 +28,7 @@ import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -54,7 +52,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   
   private final Map<VirtualFile, VcsLogProvider> myLogProviders;
   
-  private final VcsCommitCache<Integer, T> myCache;
+  private final Cache<Integer, T> myCache;
   
   private final SequentialLimitedLifoExecutor<TaskDescriptor> myLoader;
 
@@ -70,12 +68,11 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
 
   AbstractDataGetter(VcsLogStorage hashMap,
                      Map<VirtualFile, VcsLogProvider> logProviders,
-                     VcsCommitCache<Integer, T> cache,
                      VcsLogIndex index,
                      Disposable parentDisposable) {
     myHashMap = hashMap;
     myLogProviders = logProviders;
-    myCache = cache;
+    myCache = CacheBuilder.newBuilder().maximumSize(10_000).build();
     myIndex = index;
     Disposer.register(parentDisposable, this);
     myLoader = new SequentialLimitedLifoExecutor<>(this, MAX_LOADING_TASKS, task -> {
@@ -106,7 +103,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
 
     runLoadCommitsData(neighbourHashes);
 
-    T result = myCache.get(hash);
+    T result = myCache.getIfPresent(hash);
     assert result != null; // now it is in the cache as "Loading Details" (runLoadCommitsData puts it there)
     return result;
   }
@@ -185,12 +182,12 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   private @Nullable T getFromCache(Integer commitId) {
-    T details = myCache.get(commitId);
+    T details = myCache.getIfPresent(commitId);
     if (details != null) {
       if (details instanceof LoadingDetails) {
         if (((LoadingDetails)details).getLoadingTaskIndex() <= myCurrentTaskIndex - MAX_LOADING_TASKS) {
           // don't let old "loading" requests stay in the cache forever
-          myCache.remove(commitId);
+          myCache.invalidate(commitId);
           return null;
         }
       }
@@ -220,7 +217,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   private void cacheCommit(int commitId, long taskNumber) {
     // fill the cache with temporary "Loading" values to avoid producing queries for each commit that has not been cached yet,
     // even if it will be loaded within a previous query
-    if (!myCache.isKeyCached(commitId)) {
+    if (myCache.getIfPresent(commitId) == null) {
       myCache.put(commitId, (T)new IndexedDetails(myIndex, myHashMap, commitId, taskNumber));
     }
   }
@@ -267,10 +264,17 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   public void saveInCache(TIntObjectHashMap<T> details) {
-    UIUtil.invokeAndWaitIfNeeded((Runnable)() -> details.forEachEntry((key, value) -> {
+    details.forEachEntry((key, value) -> {
       myCache.put(key, value);
       return true;
-    }));
+    });
+  }
+
+  protected void clear() {
+    Iterator<Map.Entry<Integer, T>> iterator = myCache.asMap().entrySet().iterator();
+    while (iterator.hasNext()) {
+      if (!(iterator.next().getValue() instanceof LoadingDetails)) iterator.remove();
+    }
   }
 
   

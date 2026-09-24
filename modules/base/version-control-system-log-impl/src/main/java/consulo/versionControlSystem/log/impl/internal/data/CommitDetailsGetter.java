@@ -1,5 +1,6 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
+import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
@@ -22,7 +23,8 @@ public class CommitDetailsGetter extends AbstractDataGetter<VcsFullCommitDetails
                       Map<VirtualFile, VcsLogProvider> logProviders,
                       VcsLogIndex index,
                       Disposable parentDisposable) {
-    super(hashMap, logProviders, new VcsCommitCache<>(), index, parentDisposable);
+    super(hashMap, logProviders, index, parentDisposable);
+    LowMemoryWatcher.register(() -> clear(), this);
   }
 
   @Override

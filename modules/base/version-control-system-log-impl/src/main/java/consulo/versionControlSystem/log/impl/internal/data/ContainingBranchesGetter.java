@@ -18,6 +18,7 @@ package consulo.versionControlSystem.log.impl.internal.data;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SLRUMap;
 import consulo.util.lang.function.Predicates;
@@ -28,7 +29,6 @@ import consulo.versionControlSystem.log.impl.internal.util.SequentialLimitedLifo
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
@@ -91,17 +91,17 @@ public class ContainingBranchesGetter {
      * This task will be executed each time the calculating process completes.
      */
     public void addTaskCompletedListener(Runnable runnable) {
-        LOG.assertTrue(EventQueue.isDispatchThread());
+        LOG.assertTrue(UIAccess.isUIThread());
         myLoadingFinishedListeners.add(runnable);
     }
 
     public void removeTaskCompletedListener(Runnable runnable) {
-        LOG.assertTrue(EventQueue.isDispatchThread());
+        LOG.assertTrue(UIAccess.isUIThread());
         myLoadingFinishedListeners.remove(runnable);
     }
 
     private void notifyListeners() {
-        LOG.assertTrue(EventQueue.isDispatchThread());
+        LOG.assertTrue(UIAccess.isUIThread());
         for (Runnable listener : myLoadingFinishedListeners) {
             listener.run();
         }
@@ -112,7 +112,7 @@ public class ContainingBranchesGetter {
      * if it is not available, starts calculating in the background and returns null.
      */
     public @Nullable List<String> requestContainingBranches(VirtualFile root, Hash hash) {
-        LOG.assertTrue(EventQueue.isDispatchThread());
+        LOG.assertTrue(UIAccess.isUIThread());
         List<String> refs = myCache.get(new CommitId(hash, root));
         if (refs == null) {
             DataPack dataPack = myLogData.getDataPack();
@@ -129,7 +129,7 @@ public class ContainingBranchesGetter {
 
     
     public Predicate<CommitId> getContainedInBranchCondition(String branchName, VirtualFile root) {
-        LOG.assertTrue(EventQueue.isDispatchThread());
+        LOG.assertTrue(UIAccess.isUIThread());
 
         DataPack dataPack = myLogData.getDataPack();
         if (dataPack == DataPack.EMPTY) {
