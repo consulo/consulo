@@ -16,11 +16,44 @@
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.dataContext.DataSnapshot;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
+import org.jspecify.annotations.Nullable;
 
 public final class NavigatableArrayRule {
-  static Navigatable[] getData(DataSnapshot dataProvider) {
-    Navigatable element = dataProvider.get(Navigatable.KEY);
-    return element == null ? null : new Navigatable[]{element};
-  }
+    static Navigatable[] getData(DataSnapshot dataProvider) {
+        Navigatable[] navigatables = navigatablesFromSelectedItems(dataProvider);
+        if (navigatables == null) {
+            navigatables = nagigatablesFromKey(dataProvider);
+        }
+        return navigatables;
+    }
+
+    private static Navigatable @Nullable [] navigatablesFromSelectedItems(DataSnapshot dataProvider) {
+        Object[] selectedItems = dataProvider.get(PlatformDataKeys.SELECTED_ITEMS);
+
+        int nItems = selectedItems == null ? 0 : selectedItems.length;
+        if (nItems == 0) {
+            return null;
+        }
+
+        Navigatable[] navigatables = new Navigatable[nItems];
+        for (int i = 0; i < nItems; i++) {
+            // do not provide PSI in EDT, errors are already logged
+            if (selectedItems[i] instanceof Navigatable selectedNav && !(selectedNav instanceof PsiElement)) {
+                navigatables[i] = selectedNav;
+            }
+            else {
+                return null;
+            }
+        }
+        return navigatables;
+    }
+
+    private static Navigatable @Nullable [] nagigatablesFromKey(DataSnapshot dataProvider) {
+        Navigatable element = dataProvider.get(Navigatable.KEY);
+        return element == null ? null : new Navigatable[]{element};
+    }
+
 }
