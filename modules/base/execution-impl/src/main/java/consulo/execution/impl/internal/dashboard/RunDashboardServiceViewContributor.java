@@ -251,6 +251,22 @@ public final class RunDashboardServiceViewContributor
             return wrapper;
         }
 
+        /**
+         * The panel the run dashboard shows the content of the selected configuration in - it selects the content of
+         * this one when the node is selected.
+         */
+        @Override
+        public consulo.ui.@Nullable Component getContentUIComponent() {
+            RunDashboardManagerImpl manager = ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject()));
+            Content content = myNode.getContent();
+            if (content == null) {
+                return manager.getEmptyUIContent();
+            }
+
+            ContentManager contentManager = content.getManager();
+            return contentManager == null ? null : contentManager.getUIComponent();
+        }
+
         private Integer getContentId() {
             RunContentDescriptor descriptor = myNode.getDescriptor();
             ProcessHandler handler = descriptor == null ? null : descriptor.getProcessHandler();
@@ -495,6 +511,11 @@ public final class RunDashboardServiceViewContributor
             return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyContent();
         }
 
+        @Override
+        public consulo.ui.@Nullable Component getContentUIComponent() {
+            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyUIContent();
+        }
+
         private static String getId(GroupingNode node) {
             AbstractTreeNode<?> parent = (AbstractTreeNode<?>)node.getParent();
             if (parent instanceof GroupingNode groupingNode) {
@@ -641,6 +662,11 @@ public final class RunDashboardServiceViewContributor
                 public @Nullable JComponent getContentComponent() {
                     return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyContent();
                 }
+
+                @Override
+                public consulo.ui.@Nullable Component getContentUIComponent() {
+                    return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyUIContent();
+                }
             };
         }
     }
@@ -667,6 +693,11 @@ public final class RunDashboardServiceViewContributor
         @Override
         public @Nullable JComponent getContentComponent() {
             return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myProject)).getEmptyContent();
+        }
+
+        @Override
+        public consulo.ui.@Nullable Component getContentUIComponent() {
+            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myProject)).getEmptyUIContent();
         }
 
         @Override

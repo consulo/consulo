@@ -1,15 +1,8 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
-import consulo.application.HelpManager;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.UiDataProvider;
-import consulo.disposer.Disposable;
-import consulo.execution.service.ServiceViewActionUtils;
 import consulo.execution.service.ServiceViewDescriptor;
-import consulo.execution.service.ServiceViewOptions;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
@@ -19,9 +12,8 @@ import consulo.util.concurrent.Promise;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public abstract class ServiceView extends JPanel implements Disposable {
+public abstract class ServiceView extends JPanel implements BaseServiceView {
     private final Project myProject;
     private final ServiceViewModel myModel;
     protected final ServiceViewUi myUi;
@@ -38,10 +30,12 @@ public abstract class ServiceView extends JPanel implements Disposable {
     public void dispose() {
     }
 
-    Project getProject() {
+    @Override
+    public Project getProject() {
         return myProject;
     }
 
+    @Override
     public ServiceViewModel getModel() {
         return myModel;
     }
@@ -50,39 +44,56 @@ public abstract class ServiceView extends JPanel implements Disposable {
         return myUi;
     }
 
-    void saveState(ServiceViewState state) {
+    @Override
+    public void saveState(ServiceViewState state) {
         myModel.saveState(state);
     }
 
-    abstract List<ServiceViewItem> getSelectedItems();
+    @Override
+    public void setMasterComponentVisible(boolean visible) {
+        myUi.setMasterComponentVisible(visible);
+    }
 
-    abstract Promise<Void> select(Object service, Class<?> contributorClass);
+    @Override
+    public abstract List<ServiceViewItem> getSelectedItems();
 
-    abstract Promise<Void> expand(Object service, Class<?> contributorClass);
+    @Override
+    public abstract Promise<Void> select(Object service, Class<?> contributorClass);
 
-    abstract Promise<Void> extract(Object service, Class<?> contributorClass);
+    @Override
+    public abstract Promise<Void> expand(Object service, Class<?> contributorClass);
 
-    abstract void onViewSelected();
+    @Override
+    public abstract Promise<Void> extract(Object service, Class<?> contributorClass);
 
-    abstract void onViewUnselected();
+    @Override
+    public abstract void onViewSelected();
 
+    @Override
+    public abstract void onViewUnselected();
+
+    @Override
     public boolean isGroupByServiceGroups() {
         return myModel.isGroupByServiceGroups();
     }
 
+    @Override
     public void setGroupByServiceGroups(boolean value) {
         myModel.setGroupByServiceGroups(value);
     }
 
+    @Override
     public boolean isGroupByContributor() {
         return myModel.isGroupByContributor();
     }
 
+    @Override
     public void setGroupByContributor(boolean value) {
         myModel.setGroupByContributor(value);
     }
 
-    abstract List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass);
+    @Override
+    public abstract List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass);
 
     void setAutoScrollToSourceHandler(AutoScrollToSourceHandler autoScrollToSourceHandler) {
         myAutoScrollToSourceHandler = autoScrollToSourceHandler;
@@ -95,6 +106,7 @@ public abstract class ServiceView extends JPanel implements Disposable {
         }
     }
 
+    @Override
     public abstract void jumpToServices();
 
     static ServiceView createView(Project project, ServiceViewModel viewModel, ServiceViewState viewState) {
@@ -109,50 +121,9 @@ public abstract class ServiceView extends JPanel implements Disposable {
     }
 
     private static void setDataProvider(ServiceView serviceView) {
-        ServiceViewOptions viewOptions = new ServiceViewOptions() {
-            @Override
-            public boolean isGroupByContributor() {
-                return serviceView.isGroupByContributor();
-            }
-
-            @Override
-            public boolean isGroupByServiceGroups() {
-                return serviceView.isGroupByServiceGroups();
-            }
-        };
-
         DataManager.registerUiDataProvider(serviceView, sink -> {
-            sink.set(HelpManager.HELP_ID, ServiceViewManagerImpl.getToolWindowContextHelpId());
-
-            List<ServiceViewItem> selectedItems = serviceView.getSelectedItems();
-            sink.set(PlatformDataKeys.SELECTED_ITEMS, ContainerUtil.map2Array(selectedItems, ServiceViewItem::getValue));
-
-            ServiceViewItem item = ContainerUtil.getOnlyItem(selectedItems);
-            if (item != null) {
-                sink.set(PlatformDataKeys.SELECTED_ITEM, item);
-            }
-
-            sink.set(ServiceViewActionProvider.SERVICES_SELECTED_ITEMS, selectedItems);
+            BaseServiceView.uiDataSnapshot(serviceView, sink);
             sink.set(CopyProvider.KEY, new ServiceViewCopyProvider(serviceView));
-            sink.set(ServiceViewActionUtils.CONTRIBUTORS_KEY, serviceView.getModel()
-                .getRoots()
-                .stream()
-                .map(ServiceViewItem::getRootContributor)
-                .collect(Collectors.toSet())
-            );
-            sink.set(ServiceViewActionUtils.OPTIONS_KEY, viewOptions);
-
-            sink.lazy(Navigatable.KEY_OF_ARRAY, () -> {
-                List<Navigatable> navigatables = ContainerUtil.mapNotNull(selectedItems, it -> it.getViewDescriptor().getNavigatable());
-                return navigatables.toArray(Navigatable.EMPTY_ARRAY);
-            });
-
-
-            ServiceViewItem selectedItem = ContainerUtil.getOnlyItem(selectedItems);
-            ServiceViewDescriptor descriptor = selectedItem == null || selectedItem.isRemoved() ? null : selectedItem.getViewDescriptor();
-            if (descriptor instanceof UiDataProvider uiDataProvider) {
-                uiDataProvider.uiDataSnapshot(sink);
-            }
         });
     }
 

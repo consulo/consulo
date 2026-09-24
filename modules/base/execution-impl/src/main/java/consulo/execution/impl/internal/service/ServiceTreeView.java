@@ -100,7 +100,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  void saveState(ServiceViewState state) {
+  public void saveState(ServiceViewState state) {
     super.saveState(state);
     myUi.saveState(state);
     state.treeState = TreeState.createOn(myTree);
@@ -109,7 +109,7 @@ final class ServiceTreeView extends ServiceView {
 
   
   @Override
-  List<ServiceViewItem> getSelectedItems() {
+  public List<ServiceViewItem> getSelectedItems() {
     int[] rows = myTree.getSelectionRows();
     if (rows == null || rows.length == 0) return Collections.emptyList();
 
@@ -127,7 +127,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  Promise<Void> select(Object service, Class<?> contributorClass) {
+  public Promise<Void> select(Object service, Class<?> contributorClass) {
     return doSelect(service, contributorClass, false);
   }
 
@@ -158,7 +158,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  Promise<Void> expand(Object service, Class<?> contributorClass) {
+  public Promise<Void> expand(Object service, Class<?> contributorClass) {
     AsyncPromise<Void> result = new AsyncPromise<>();
     myTreeModel.findPath(service, contributorClass)
                .onError(result::setError)
@@ -173,7 +173,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  Promise<Void> extract(Object service, Class<?> contributorClass) {
+  public Promise<Void> extract(Object service, Class<?> contributorClass) {
     AsyncPromise<Void> result = new AsyncPromise<>();
     myTreeModel.findPath(service, contributorClass)
                .onError(result::setError)
@@ -194,7 +194,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  void onViewSelected() {
+  public void onViewSelected() {
     mySelected = true;
     if (myLastSelection != null) {
       ServiceViewDescriptor descriptor = myLastSelection.getViewDescriptor();
@@ -207,7 +207,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  void onViewUnselected() {
+  public void onViewUnselected() {
     mySelected = false;
     if (myLastSelection != null) {
       myLastSelection.getViewDescriptor().onNodeUnselected();
@@ -378,7 +378,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass) {
+  public List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass) {
     Queue<Object> values = new LinkedList<>(valueSubPath);
     Object visibleRoot = values.poll();
     if (visibleRoot == null) return Collections.emptyList();

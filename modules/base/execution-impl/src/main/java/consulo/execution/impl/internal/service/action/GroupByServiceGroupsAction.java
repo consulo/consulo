@@ -3,7 +3,7 @@ package consulo.execution.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.execution.impl.internal.service.ServiceView;
+import consulo.execution.impl.internal.service.BaseServiceView;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -29,13 +29,13 @@ public final class GroupByServiceGroupsAction extends ToggleAction implements Du
 
   @Override
   public boolean isSelected(AnActionEvent e) {
-    ServiceView selectedView = getSelectedView(e);
+    BaseServiceView selectedView = getSelectedView(e);
     return selectedView != null && selectedView.isGroupByServiceGroups();
   }
 
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
-    ServiceView selectedView = getSelectedView(e);
+    BaseServiceView selectedView = getSelectedView(e);
     if (selectedView != null) {
       selectedView.setGroupByServiceGroups(state);
     }

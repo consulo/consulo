@@ -18,6 +18,7 @@ package consulo.web.internal.wm;
 import consulo.logging.Logger;
 import com.vaadin.flow.component.breadcrumbs.Breadcrumbs;
 import com.vaadin.flow.component.breadcrumbs.BreadcrumbsItem;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
@@ -130,15 +131,17 @@ public class WebNavigationBar implements Disposable {
 
         myRowLayout.left(myComponent);
 
-        createToolbarAsync().whenComplete((toolbar, throwable) -> {
+        getToolbarGroupAsync().whenComplete((group, throwable) -> {
             if (throwable != null) {
                 LOG.error("Failed to resolve the navigation bar toolbar group", throwable);
                 return;
             }
             uiAccess.giveIfNeed(() -> {
-            if (toolbar == null) {
+            if (group == null) {
                 return;
             }
+            UnifiedActionToolbarImpl toolbar =
+                new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL);
             myToolbar = toolbar;
             // the actions have to be updated against the scope the user last worked in, the same context the bar
             // itself reads - ActionToolbar can only be pointed at a component, and the browser has no focus owner
@@ -217,10 +220,13 @@ public class WebNavigationBar implements Disposable {
         return myProject.getInstance(NavBarService.class);
     }
 
-    private static CompletableFuture<@Nullable UnifiedActionToolbarImpl> createToolbarAsync() {
-        return CustomActionsSchema.getCorrectedGroupAsync(TOOLBAR_GROUP_ID).thenApply(group -> group == null
-            ? null
-            : new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL));
+    /**
+     * The schema may not be created yet when the first frame is built, and a component which loads its state is
+     * created off the ui thread only - asking for it from the constructor broke the frame.
+     */
+    private static CompletableFuture<@Nullable ActionGroup> getToolbarGroupAsync() {
+        return CompletableFuture.supplyAsync(() -> TOOLBAR_GROUP_ID, AppExecutorUtil.getAppExecutorService())
+            .thenCompose(CustomActionsSchema::getCorrectedGroupAsync);
     }
 
     /**

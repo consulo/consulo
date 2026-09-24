@@ -30,7 +30,7 @@ final class ServiceSingleView extends ServiceView {
 
   
   @Override
-  Promise<Void> select(Object service,
+  public Promise<Void> select(Object service,
                        Class<?> contributorClass) {
     ServiceViewItem item = myRef.get();
     if (item == null || !item.getValue().equals(service)) {
@@ -42,12 +42,12 @@ final class ServiceSingleView extends ServiceView {
   }
 
   @Override
-  Promise<Void> expand(Object service, Class<?> contributorClass) {
+  public Promise<Void> expand(Object service, Class<?> contributorClass) {
     return matches(service);
   }
 
   @Override
-  Promise<Void> extract(Object service, Class<?> contributorClass) {
+  public Promise<Void> extract(Object service, Class<?> contributorClass) {
     return matches(service);
   }
 
@@ -57,12 +57,12 @@ final class ServiceSingleView extends ServiceView {
   }
 
   @Override
-  void onViewSelected() {
+  public void onViewSelected() {
     showContent();
   }
 
   @Override
-  void onViewUnselected() {
+  public void onViewUnselected() {
     mySelected = false;
     ServiceViewItem item = myRef.get();
     if (item != null) {
@@ -72,7 +72,7 @@ final class ServiceSingleView extends ServiceView {
 
   
   @Override
-  List<ServiceViewItem> getSelectedItems() {
+  public List<ServiceViewItem> getSelectedItems() {
     ServiceViewItem item = myRef.get();
     return ContainerUtil.createMaybeSingletonList(item);
   }
@@ -119,7 +119,7 @@ final class ServiceSingleView extends ServiceView {
   }
 
   @Override
-  List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass) {
+  public List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass) {
     return Collections.emptyList();
   }
 }
