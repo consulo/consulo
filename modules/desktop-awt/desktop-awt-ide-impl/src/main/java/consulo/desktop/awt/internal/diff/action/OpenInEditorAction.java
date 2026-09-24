@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.diff.action;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
@@ -25,7 +24,6 @@ import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.navigation.Navigatable;
-import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
@@ -60,12 +58,6 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
             return;
         }
 
-        if (!e.hasData(Project.KEY)) {
-            e.getPresentation().setVisible(true);
-            e.getPresentation().setEnabled(false);
-            return;
-        }
-
         Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGATABLE_ARRAY);
         if (navigatables == null || !ContainerUtil.exists(navigatables, Navigatable::canNavigate)) {
             e.getPresentation().setVisible(true);
@@ -79,22 +71,21 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
         Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGATABLE_ARRAY);
-        if (project == null || navigatables == null) {
+        if (navigatables == null) {
             return;
         }
 
-        openEditor(project, navigatables);
+        openEditor(navigatables);
     }
 
     @RequiredReadAction
-    public void openEditor(Project project, Navigatable navigatable) {
-        openEditor(project, new Navigatable[]{navigatable});
+    public void openEditor(Navigatable navigatable) {
+        openEditor(new Navigatable[]{navigatable});
     }
 
     @RequiredReadAction
-    public void openEditor(Project project, Navigatable[] navigatables) {
+    public void openEditor(Navigatable[] navigatables) {
         boolean success = false;
         for (Navigatable navigatable : navigatables) {
             if (navigatable.canNavigate()) {

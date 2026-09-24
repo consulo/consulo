@@ -18,7 +18,6 @@ package consulo.desktop.awt.internal.diff.action;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -54,7 +53,6 @@ public abstract class OpenInEditorWithMouseAction extends DumbAwareAction implem
         InputEvent inputEvent = e.getInputEvent();
         Component component = inputEvent.getComponent();
         if (!(inputEvent instanceof MouseEvent mouseEvent)
-            || !e.hasData(Project.KEY)
             || !e.hasData(OpenInEditorAction.KEY)
             || component == null) {
             e.getPresentation().setEnabledAndVisible(false);
@@ -89,7 +87,6 @@ public abstract class OpenInEditorWithMouseAction extends DumbAwareAction implem
     public void actionPerformed(AnActionEvent e) {
         MouseEvent inputEvent = (MouseEvent) e.getInputEvent();
         OpenInEditorAction openInEditorAction = e.getRequiredData(OpenInEditorAction.KEY);
-        Project project = e.getRequiredData(Project.KEY);
 
         Component component = inputEvent.getComponent();
         Point point = inputEvent.getPoint();
@@ -106,7 +103,7 @@ public abstract class OpenInEditorWithMouseAction extends DumbAwareAction implem
             return;
         }
 
-        openInEditorAction.openEditor(project, navigatable);
+        openInEditorAction.openEditor(navigatable);
     }
 
     private @Nullable Editor getEditor(Component component) {
