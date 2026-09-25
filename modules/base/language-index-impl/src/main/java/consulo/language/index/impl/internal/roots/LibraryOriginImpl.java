@@ -4,6 +4,7 @@ package consulo.language.index.impl.internal.roots;
 import consulo.content.library.Library;
 import consulo.language.index.impl.internal.roots.kind.LibraryOrigin;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,16 +36,14 @@ class LibraryOriginImpl implements LibraryOrigin {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof LibraryOriginImpl other)) {
-            return false;
-        }
-        return myLibrary.equals(other.myLibrary)
-            && myClassRoots.equals(other.myClassRoots)
-            && mySourceRoots.equals(other.mySourceRoots);
+        return o instanceof LibraryOriginImpl that
+            && myLibrary.equals(that.myLibrary)
+            && myClassRoots.equals(that.myClassRoots)
+            && mySourceRoots.equals(that.mySourceRoots);
     }
 
     @Override

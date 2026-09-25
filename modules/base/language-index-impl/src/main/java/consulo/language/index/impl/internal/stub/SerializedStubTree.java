@@ -48,8 +48,7 @@ import java.util.stream.Collectors;
  */
 public class SerializedStubTree {
   private static final Logger LOG = Logger.getInstance(SerializedStubTree.class);
-  private static final ThreadLocalCachedValue<MessageDigest> HASHER = new ThreadLocalCachedValue<MessageDigest>() {
-    
+  private static final ThreadLocalCachedValue<MessageDigest> HASHER = new ThreadLocalCachedValue<>() {
     @Override
     protected MessageDigest create() {
       return DigestUtil.sha256();
@@ -271,20 +270,20 @@ public class SerializedStubTree {
   }
 
   @Override
-  public boolean equals(Object that) {
-    if (this == that) {
+  public boolean equals(@Nullable Object obj) {
+    if (obj == this) {
       return true;
     }
-    if (!(that instanceof SerializedStubTree)) {
+    if (!(obj instanceof SerializedStubTree that)) {
       return false;
     }
-    SerializedStubTree thatTree = (SerializedStubTree)that;
-    if (!sameBytes(thatTree) || myVariants.size() != thatTree.myVariants.size() || !Objects.equals(myDescriptor, thatTree.myDescriptor)) {
+    int size = myVariants.size();
+    if (!sameBytes(that) || size != that.myVariants.size() || !Objects.equals(myDescriptor, that.myDescriptor)) {
       return false;
     }
-    for (int i = 0; i < myVariants.size(); i++) {
+    for (int i = 0; i < size; i++) {
       StubVariant mine = myVariants.get(i);
-      StubVariant theirs = thatTree.myVariants.get(i);
+      StubVariant theirs = that.myVariants.get(i);
       if (!mine.descriptor().equals(theirs.descriptor()) || !mine.tree().sameBytes(theirs.tree())) {
         return false;
       }
@@ -321,7 +320,6 @@ public class SerializedStubTree {
     return result;
   }
 
-  
   private String dumpStub() {
     String deserialized;
     try {
@@ -334,7 +332,6 @@ public class SerializedStubTree {
     return deserialized + "\n bytes: " + toHexString(myTreeBytes, myTreeByteLength);
   }
 
-  
   static Map<StubIndexKey, Map<Object, StubIdList>> indexTree(Stub root) {
     ObjectStubTree objectStubTree = root instanceof PsiFileStub ? new StubTree((PsiFileStub)root, false) : new ObjectStubTree((ObjectStubBase)root, false);
     StubIndexImpl indexImpl = (StubIndexImpl)StubIndex.getInstance();

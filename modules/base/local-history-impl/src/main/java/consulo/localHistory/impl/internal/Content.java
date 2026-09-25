@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal;
 
 import consulo.localHistory.impl.internal.tree.Entry;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataOutput;
 import java.io.IOException;
 
 public abstract class Content {
-  public void write(DataOutput out) throws IOException {
-  }
+    public void write(DataOutput out) throws IOException {
+    }
 
-  public abstract byte[] getBytes();
+    public abstract byte[] getBytes();
 
-  public byte[] getBytesIfAvailable() {
-    return isAvailable() ? getBytes() : null;
-  }
+    public byte[] getBytesIfAvailable() {
+        return isAvailable() ? getBytes() : null;
+    }
 
-  public String getString(Entry e, IdeaGateway gw) {
-    return gw.stringFromBytes(getBytes(), e.getPath());
-  }
+    public String getString(Entry e, IdeaGateway gw) {
+        return gw.stringFromBytes(getBytes(), e.getPath());
+    }
 
-  public abstract boolean isAvailable();
+    public abstract boolean isAvailable();
 
-  public abstract void release();
+    public abstract void release();
 
-  @Override
-  public String toString() {
-    return new String(getBytes());
-  }
+    @Override
+    public String toString() {
+        return new String(getBytes());
+    }
 
-  @Override
-  @SuppressWarnings("EqualsHashCode")
-  public boolean equals(Object o) {
-    return o != null && getClass().equals(o.getClass());
-  }
+    @Override
+    @SuppressWarnings("EqualsHashCode")
+    public boolean equals(@Nullable Object o) {
+        return o != null && getClass().equals(o.getClass());
+    }
 }

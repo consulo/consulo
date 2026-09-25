@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal;
 
 import consulo.localHistory.impl.internal.change.*;
@@ -49,7 +48,7 @@ public class ChangeSet {
     myTimestamp = in.readLong();
 
     int count = in.readInt();
-    List<Change> changes = new ArrayList<Change>(count);
+    List<Change> changes = new ArrayList<>(count);
     while (count-- > 0) {
       changes.add(StreamUtil.readChange(in));
     }
@@ -107,19 +106,19 @@ public class ChangeSet {
   }
 
   public void addChange(Change c) {
-    LocalHistoryLog.LOG.assertTrue(!isLocked, "Changset is already locked");
+    LocalHistoryLog.LOG.assertTrue(!isLocked, "Changeset is already locked");
     accessChanges((Runnable) () -> myChanges.add(c));
   }
 
   public List<Change> getChanges() {
     return accessChanges(() -> {
       if (isLocked) return myChanges;
-      return Collections.unmodifiableList(new ArrayList<Change>(myChanges));
+      return Collections.unmodifiableList(new ArrayList<>(myChanges));
     });
   }
 
   public boolean isEmpty() {
-    return accessChanges(() -> myChanges.isEmpty());
+    return accessChanges(myChanges::isEmpty);
   }
 
   public boolean affectsPath(String paths) {
@@ -142,7 +141,7 @@ public class ChangeSet {
 
   public List<Content> getContentsToPurge() {
     return accessChanges(() -> {
-      List<Content> result = new ArrayList<Content>();
+      List<Content> result = new ArrayList<>();
       for (Change c : myChanges) {
         result.addAll(c.getContentsToPurge());
       }
@@ -168,7 +167,7 @@ public class ChangeSet {
 
   public List<String> getAffectedPaths() {
     return accessChanges(() -> {
-      List<String> result = new SmartList<String>();
+      List<String> result = new SmartList<>();
       for (Change each : myChanges) {
         if (each instanceof StructuralChange) {
           result.add(((StructuralChange)each).getPath());
@@ -178,8 +177,9 @@ public class ChangeSet {
     });
   }
 
+  @Override
   public String toString() {
-    return accessChanges(() -> myChanges.toString());
+    return accessChanges(myChanges::toString);
   }
 
   public long getId() {
@@ -187,15 +187,13 @@ public class ChangeSet {
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public final boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    ChangeSet change = (ChangeSet)o;
+    ChangeSet that = (ChangeSet)o;
 
-    if (myId != change.myId) return false;
-
-    return true;
+    return myId == that.myId;
   }
 
   @Override

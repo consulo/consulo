@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.localHistory.LocalHistory;
@@ -64,6 +64,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
     }
 
     @Override
+    @RequiredWriteAction
     public void visit(CreateEntryChange c) throws StopVisitingException {
         if (shouldRevert(c)) {
             VirtualFile f = myGateway.findVirtualFile(c.getPath());
@@ -95,6 +96,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
     }
 
     @Override
+    @RequiredWriteAction
     public void visit(RenameChange c) throws StopVisitingException {
         if (shouldRevert(c)) {
             VirtualFile f = myGateway.findVirtualFile(c.getPath());
@@ -126,6 +128,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
     }
 
     @Override
+    @RequiredWriteAction
     public void visit(MoveChange c) throws StopVisitingException {
         if (shouldRevert(c)) {
             VirtualFile f = myGateway.findVirtualFile(c.getPath());
@@ -222,11 +225,15 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
         public abstract void apply() throws IOException;
 
         @Override
-        public boolean equals(Object o) {
-            if (!getClass().equals(o.getClass())) {
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (o == null || !getClass().equals(o.getClass())) {
                 return false;
             }
-            return myFile.equals(((DelayedApply) o).myFile);
+            DelayedApply that = (DelayedApply) o;
+            return myFile.equals(that.myFile);
         }
 
         @Override
@@ -246,6 +253,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
         }
 
         @Override
+        @RequiredWriteAction
         public void apply() throws IOException {
             if (!myContent.isAvailable()) {
                 return;
@@ -273,6 +281,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
             this.isReadOnly = isReadOnly;
         }
 
+        @Override
         public void apply() throws IOException {
             ReadOnlyAttributeUtil.setReadOnlyAttribute(myFile, isReadOnly);
         }

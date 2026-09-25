@@ -107,6 +107,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
 
     @Override
+    @RequiredReadAction
     public final int getStartOffsetInParent() {
         if (myParent == null) {
             return -1;
@@ -224,7 +225,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public final boolean equals(Object obj) {
+    public final boolean equals(@Nullable Object obj) {
         return obj == this;
     }
 
@@ -420,6 +421,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         return myType;
     }
 
+    @RequiredReadAction
     void assertReadAccessAllowed() {
         Application application = Application.get();
         if (application.isReadAccessAllowed()) {
@@ -437,4 +439,3 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         }
     }
 }
-

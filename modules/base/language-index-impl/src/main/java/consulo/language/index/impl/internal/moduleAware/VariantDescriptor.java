@@ -40,8 +40,11 @@ public record VariantDescriptor(List<ProviderOption> options, String displayName
 
     public record ProviderOption(String providerId, OptionsMeta.VariantTag tag, byte[] payload) {
         @Override
-        public boolean equals(Object other) {
-            return other instanceof ProviderOption that
+        public boolean equals(@Nullable Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            return obj instanceof ProviderOption that
                 && providerId.equals(that.providerId)
                 && tag == that.tag
                 && Arrays.equals(payload, that.payload);

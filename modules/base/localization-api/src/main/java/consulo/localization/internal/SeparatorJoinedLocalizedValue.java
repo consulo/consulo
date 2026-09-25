@@ -17,6 +17,7 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,18 +27,16 @@ import consulo.localization.LocalizedValue;
 public final class SeparatorJoinedLocalizedValue extends AbstractJoinedLocalizedValue {
     private final String mySeparator;
 
-    public SeparatorJoinedLocalizedValue(
-        LocalizationManager manager,
-        String separator,
-        LocalizedValue[] values
-    ) {
+    public SeparatorJoinedLocalizedValue(LocalizationManager manager, String separator, LocalizedValue[] values) {
         super(manager, values);
         mySeparator = separator;
     }
+
     @Override
     public String getId() {
         return super.getId() + "(\"" + mySeparator + "\")";
     }
+
     @Override
     protected String calcValue() {
         StringBuilder builder = new StringBuilder();
@@ -59,10 +58,8 @@ public final class SeparatorJoinedLocalizedValue extends AbstractJoinedLocalized
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return o == this
-            || super.equals(o)
-            && o instanceof SeparatorJoinedLocalizedValue that
-            && mySeparator.equals(that.mySeparator);
+            || super.equals(o) && o instanceof SeparatorJoinedLocalizedValue that && mySeparator.equals(that.mySeparator);
     }
 }

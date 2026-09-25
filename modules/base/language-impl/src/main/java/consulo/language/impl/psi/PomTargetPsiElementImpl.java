@@ -121,7 +121,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -156,6 +156,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean requestFocus) {
         myTarget.navigate(requestFocus);
     }

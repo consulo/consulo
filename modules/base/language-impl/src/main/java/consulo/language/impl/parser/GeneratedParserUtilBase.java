@@ -30,10 +30,7 @@ import consulo.language.psi.PsiReference;
 import consulo.logging.Logger;
 import consulo.util.collection.LimitedPool;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.Pair;
-import consulo.util.lang.StringHash;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.*;
 
 import org.jspecify.annotations.Nullable;
 import java.util.*;
@@ -71,61 +68,41 @@ public class GeneratedParserUtilBase {
     boolean parse(PsiBuilder builder, int level);
   }
 
-  public static final Parser TOKEN_ADVANCER = new Parser() {
-    @Override
-    public boolean parse(PsiBuilder builder, int level) {
-      if (builder.eof()) return false;
-      builder.advanceLexer();
-      return true;
-    }
+  public static final Parser TOKEN_ADVANCER = (builder, level) -> {
+    if (builder.eof()) return false;
+    builder.advanceLexer();
+    return true;
   };
 
-  public static final Parser TRUE_CONDITION = new Parser() {
-    @Override
-    public boolean parse(PsiBuilder builder, int level) {
-      return true;
-    }
-  };
+  public static final Parser TRUE_CONDITION = (builder, level) -> true;
 
   public interface Hook<T> {
     @Contract("_,null,_->null")
     PsiBuilder.Marker run(PsiBuilder builder, PsiBuilder.Marker marker, T param);
   }
 
-  public static final Hook<WhitespacesAndCommentsBinder> LEFT_BINDER = new Hook<WhitespacesAndCommentsBinder>() {
-    @Override
-    public PsiBuilder.Marker run(PsiBuilder builder, PsiBuilder.Marker marker, WhitespacesAndCommentsBinder param) {
-      if (marker != null) marker.setCustomEdgeTokenBinders(param, null);
-      return marker;
-    }
+  public static final Hook<WhitespacesAndCommentsBinder> LEFT_BINDER = (builder, marker, param) -> {
+    if (marker != null) marker.setCustomEdgeTokenBinders(param, null);
+    return marker;
   };
 
-  public static final Hook<WhitespacesAndCommentsBinder> RIGHT_BINDER = new Hook<WhitespacesAndCommentsBinder>() {
-    @Override
-    public PsiBuilder.Marker run(PsiBuilder builder, PsiBuilder.Marker marker, WhitespacesAndCommentsBinder param) {
-      if (marker != null) marker.setCustomEdgeTokenBinders(null, param);
-      return marker;
-    }
+  public static final Hook<WhitespacesAndCommentsBinder> RIGHT_BINDER = (builder, marker, param) -> {
+    if (marker != null) marker.setCustomEdgeTokenBinders(null, param);
+    return marker;
   };
 
-  public static final Hook<WhitespacesAndCommentsBinder[]> WS_BINDERS = new Hook<WhitespacesAndCommentsBinder[]>() {
-    @Override
-    public PsiBuilder.Marker run(PsiBuilder builder, PsiBuilder.Marker marker, WhitespacesAndCommentsBinder[] param) {
-      if (marker != null) marker.setCustomEdgeTokenBinders(param[0], param[1]);
-      return marker;
-    }
+  public static final Hook<WhitespacesAndCommentsBinder[]> WS_BINDERS = (builder, marker, param) -> {
+    if (marker != null) marker.setCustomEdgeTokenBinders(param[0], param[1]);
+    return marker;
   };
 
-  public static final Hook<String> LOG_HOOK = new Hook<String>() {
-    @Override
-    public PsiBuilder.Marker run(PsiBuilder builder, PsiBuilder.Marker marker, String param) {
-      PsiBuilderImpl.ProductionMarker m = (PsiBuilderImpl.ProductionMarker)marker;
-      int start = m == null ? builder.getCurrentOffset() : m.getStartOffset();
-      int end = m == null ? start : m.getEndOffset();
-      String prefix = "[" + start + ", " + end + "]" + (m == null ? "" : " " + m.getTokenType());
-      builder.mark().error(prefix + ": " + param);
-      return marker;
-    }
+  public static final Hook<String> LOG_HOOK = (builder, marker, param) -> {
+    PsiBuilderImpl.ProductionMarker m = (PsiBuilderImpl.ProductionMarker)marker;
+    int start = m == null ? builder.getCurrentOffset() : m.getStartOffset();
+    int end = m == null ? start : m.getEndOffset();
+    String prefix = "[" + start + ", " + end + "]" + (m == null ? "" : " " + m.getTokenType());
+    builder.mark().error(prefix + ": " + param);
+    return marker;
   };
 
   public static boolean eof(PsiBuilder builder, int level) {
@@ -871,7 +848,6 @@ public class GeneratedParserUtilBase {
     MyList<Variant> unexpected = new MyList<>(INITIAL_VARIANTS_SIZE / 10);
 
     final LimitedPool<Variant> VARIANTS = new LimitedPool<>(VARIANTS_POOL_SIZE, new LimitedPool.ObjectFactory<Variant>() {
-      
       @Override
       public Variant create() {
         return new Variant();
@@ -882,7 +858,6 @@ public class GeneratedParserUtilBase {
       }
     });
     final LimitedPool<Frame> FRAMES = new LimitedPool<>(FRAMES_POOL_SIZE, new LimitedPool.ObjectFactory<Frame>() {
-      
       @Override
       public Frame create() {
         return new Frame();
@@ -1046,23 +1021,19 @@ public class GeneratedParserUtilBase {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      Variant variant = (Variant)o;
+      Variant that = (Variant)o;
 
-      if (position != variant.position) return false;
-      if (!this.object.equals(variant.object)) return false;
-
-      return true;
+      return position == that.position
+        && this.object.equals(that.object);
     }
 
     @Override
     public int hashCode() {
-      int result = position;
-      result = 31 * result + object.hashCode();
-      return result;
+      return 31 * position + object.hashCode();
     }
   }
 
@@ -1087,8 +1058,8 @@ public class GeneratedParserUtilBase {
   private static final int MAX_CHILDREN_IN_TREE = 10;
 
   public static boolean parseAsTree(ErrorState state, PsiBuilder builder, int level, IElementType chunkType, boolean checkBraces, Parser parser, Parser eatMoreCondition) {
-    LinkedList<Pair<PsiBuilder.Marker, PsiBuilder.Marker>> parenList = new LinkedList<>();
-    LinkedList<Pair<PsiBuilder.Marker, Integer>> siblingList = new LinkedList<>();
+    Deque<Couple<PsiBuilder.Marker>> parenList = new LinkedList<>();
+    Deque<Pair<PsiBuilder.Marker, Integer>> siblingList = new LinkedList<>();
     PsiBuilder.Marker marker = null;
 
     Runnable checkSiblingsRunnable = () -> {
@@ -1121,7 +1092,7 @@ public class GeneratedParserUtilBase {
       while (builder.rawLookup(tokenIdx) == TokenType.WHITE_SPACE) tokenIdx--;
       LighterASTNode doneMarker = builder.rawLookup(tokenIdx) == state.braces[0].getLeftBraceType() ? builder.getLatestDoneMarker() : null;
       if (doneMarker != null && doneMarker.getStartOffset() == builder.rawTokenTypeStart(tokenIdx) && doneMarker.getTokenType() == TokenType.ERROR_ELEMENT) {
-        parenList.add(Pair.create(((PsiBuilder.Marker)doneMarker).precede(), null));
+        parenList.add(Couple.of(((PsiBuilder.Marker)doneMarker).precede(), null));
       }
     }
     int c = current_position_(builder);
@@ -1136,12 +1107,12 @@ public class GeneratedParserUtilBase {
         }
         if (tokenType == state.braces[0].getLeftBraceType()) {
           Pair<PsiBuilder.Marker, Integer> prev = siblingList.peek();
-          parenList.addFirst(Pair.create(builder.mark(), prev == null ? null : prev.first));
+          parenList.addFirst(Couple.of(builder.mark(), prev == null ? null : prev.first));
         }
         checkSiblingsRunnable.run();
         builder.advanceLexer();
         if (tokenType == state.braces[0].getRightBraceType()) {
-          Pair<PsiBuilder.Marker, PsiBuilder.Marker> pair = parenList.removeFirst();
+          Couple<PsiBuilder.Marker> pair = parenList.removeFirst();
           pair.first.done(chunkType);
           // drop all markers inside parens
           while (!siblingList.isEmpty() && siblingList.getFirst().first != pair.second) {
@@ -1177,7 +1148,7 @@ public class GeneratedParserUtilBase {
       c = current_position_(builder);
     }
     if (marker != null) marker.drop();
-    for (Pair<PsiBuilder.Marker, PsiBuilder.Marker> pair : parenList) {
+    for (Couple<PsiBuilder.Marker> pair : parenList) {
       pair.first.drop();
     }
     return totalCount != 0;

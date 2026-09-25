@@ -55,9 +55,11 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the parent directory, or null if the directory has no parent.
      */
+    @RequiredReadAction
     @Nullable PsiDirectory getParentDirectory();
 
     @Override
+    @RequiredReadAction
     @Nullable PsiDirectory getParent();
 
     /**
@@ -65,6 +67,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the array of subdirectories.
      */
+    @RequiredReadAction
     PsiDirectory[] getSubdirectories();
 
     /**
@@ -81,6 +84,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @param name the name of the subdirectory to find.
      * @return the subdirectory instance, or null if no subdirectory with such a name is found.
      */
+    @RequiredReadAction
     @Nullable PsiDirectory findSubdirectory(String name);
 
     /**
@@ -89,6 +93,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @param name the name of the file to find.
      * @return the file instance, or null if no file with such a name is found.
      */
+    @RequiredReadAction
     @Nullable PsiFile findFile(String name);
 
     /**
@@ -98,6 +103,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the created directory instance.
      * @throws IncorrectOperationException if the operation failed for some reason.
      */
+    @RequiredWriteAction
     PsiDirectory createSubdirectory(String name) throws IncorrectOperationException;
 
     /**
@@ -117,8 +123,10 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the created file instance.
      * @throws IncorrectOperationException if the operation failed for some reason.
      */
+    @RequiredWriteAction
     PsiFile createFile(String name) throws IncorrectOperationException;
 
+    @RequiredWriteAction
     PsiFile copyFileFrom(String newName, PsiFile originalFile) throws IncorrectOperationException;
 
     /**

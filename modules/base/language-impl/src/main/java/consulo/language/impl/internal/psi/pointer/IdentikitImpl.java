@@ -10,7 +10,6 @@ import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.logging.Logger;
 import consulo.util.interner.Interner;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -22,7 +21,6 @@ import java.util.Objects;
  * @author peter
  */
 public abstract class IdentikitImpl implements Identikit {
-    private static final Logger LOG = Logger.getInstance(IdentikitImpl.class);
     private static final Interner<ByTypeImpl> ourPlainInterner = Interner.createWeakInterner();
     private static final Interner<ByAnchor> ourAnchorInterner = Interner.createWeakInterner();
 
@@ -30,6 +28,7 @@ public abstract class IdentikitImpl implements Identikit {
         return fromTypes(element.getClass(), PsiUtilCore.getElementType(element), fileLanguage);
     }
 
+    @RequiredReadAction
     static @Nullable Pair<ByAnchor, PsiElement> withAnchor(PsiElement element, Language fileLanguage) {
         PsiUtilCore.ensureValid(element);
         if (element.isPhysical()) {
@@ -45,11 +44,7 @@ public abstract class IdentikitImpl implements Identikit {
     }
 
     
-    static ByTypeImpl fromTypes(
-        Class<? extends PsiElement> elementClass,
-        @Nullable IElementType elementType,
-        Language fileLanguage
-    ) {
+    static ByTypeImpl fromTypes(Class<? extends PsiElement> elementClass, @Nullable IElementType elementType, Language fileLanguage) {
         return ourPlainInterner.intern(new ByTypeImpl(elementClass, elementType, fileLanguage));
     }
 
@@ -58,11 +53,7 @@ public abstract class IdentikitImpl implements Identikit {
         private final short myElementTypeId;
         private final String myFileLanguageId;
 
-        private ByTypeImpl(
-            Class<? extends PsiElement> elementClass,
-            @Nullable IElementType elementType,
-            Language fileLanguage
-        ) {
+        private ByTypeImpl(Class<? extends PsiElement> elementClass, @Nullable IElementType elementType, Language fileLanguage) {
             myElementClassName = elementClass.getName();
             myElementTypeId = elementType != null ? elementType.getIndex() : -1;
             myFileLanguageId = fileLanguage.getID();
@@ -140,18 +131,17 @@ public abstract class IdentikitImpl implements Identikit {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            ByTypeImpl type = (ByTypeImpl)o;
-            return myElementTypeId == type.myElementTypeId && Objects.equals(myElementClassName, type.myElementClassName) && Objects.equals(
-                myFileLanguageId,
-                type.myFileLanguageId
-            );
+            ByTypeImpl that = (ByTypeImpl)o;
+            return myElementTypeId == that.myElementTypeId
+                && Objects.equals(myElementClassName, that.myElementClassName)
+                && Objects.equals(myFileLanguageId, that.myFileLanguageId);
         }
 
         @Override
@@ -196,12 +186,14 @@ public abstract class IdentikitImpl implements Identikit {
         }
 
         @Override
-        public boolean equals(Object o) {
-            return o == this
-                || o instanceof ByAnchor anchor
-                && myElementInfo.equals(anchor.myElementInfo)
-                && myAnchorInfo.equals(anchor.myAnchorInfo)
-                && myAnchorProvider.equals(anchor.myAnchorProvider);
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+            return o instanceof ByAnchor that
+                && myElementInfo.equals(that.myElementInfo)
+                && myAnchorInfo.equals(that.myAnchorInfo)
+                && myAnchorProvider.equals(that.myAnchorProvider);
         }
 
         @Override
@@ -227,5 +219,4 @@ public abstract class IdentikitImpl implements Identikit {
             return myAnchorInfo.isForPsiFile();
         }
     }
-
 }

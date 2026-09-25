@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
@@ -48,17 +48,15 @@ public abstract class LanguageInjectionSupport {
      */
     public static final Key<Predicate<PsiLanguageInjectionHost>> FIX_KEY = Key.create("inject fix key");
 
-    
     public abstract String getId();
 
-    
     public abstract Class[] getPatternClasses();
 
     public abstract boolean isApplicableTo(PsiLanguageInjectionHost host);
 
     public abstract boolean useDefaultInjector(PsiLanguageInjectionHost host);
 
-    public abstract @Nullable BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef);
+    public abstract @Nullable BaseInjection findCommentInjection(PsiElement host, @Nullable SimpleReference<PsiElement> commentRef);
 
     /**
      * @see #FIX_KEY

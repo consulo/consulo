@@ -17,6 +17,7 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -29,28 +30,28 @@ public final class MappedLocalizedValue extends CachingLocalizedValue {
     private final LocalizedValue myDelegate;
     private final Function<String, String> myMapper;
 
-    public MappedLocalizedValue(
-        LocalizationManager manager,
-        LocalizedValue delegate,
-        Function<String, String> mapper
-    ) {
+    public MappedLocalizedValue(LocalizationManager manager, LocalizedValue delegate, Function<String, String> mapper) {
         super(manager);
         myDelegate = delegate;
         myMapper = mapper;
     }
+
     @Override
     public String getId() {
         return myDelegate.getId() + "->" + Objects.toIdentityString(myMapper);
     }
+
     @Override
     protected String calcValue() {
         return myMapper.apply(myDelegate.getValue());
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof MappedLocalizedValue that
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof MappedLocalizedValue that
             && Objects.equals(myDelegate, that.myDelegate)
             && Objects.equals(myMapper, that.myMapper);
     }

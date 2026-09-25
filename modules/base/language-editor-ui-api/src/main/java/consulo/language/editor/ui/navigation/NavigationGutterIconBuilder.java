@@ -92,10 +92,7 @@ public class NavigationGutterIconBuilder<T> {
         return create(icon, DEFAULT_PSI_CONVERTOR, PSI_GOTO_RELATED_ITEM_PROVIDER);
     }
 
-    public static <T> NavigationGutterIconBuilder<T> create(
-        Image icon,
-        Function<T, Collection<? extends PsiElement>> converter
-    ) {
+    public static <T> NavigationGutterIconBuilder<T> create(Image icon, Function<T, Collection<? extends PsiElement>> converter) {
         return create(icon, converter, null);
     }
 
@@ -197,6 +194,7 @@ public class NavigationGutterIconBuilder<T> {
         return DEFAULT_NAMER;
     }
 
+    @RequiredReadAction
     public @Nullable Annotation install(AnnotationHolder holder, @Nullable PsiElement element) {
         if (!myLazy && myTargets.get().isEmpty() || element == null) {
             return null;
@@ -324,25 +322,22 @@ public class NavigationGutterIconBuilder<T> {
         }
 
         @Override
-        
         public Image getIcon() {
             return myIcon;
         }
 
-        
         @Override
         public LocalizeValue getTooltipValue() {
             return myTooltipText;
         }
 
-        
         @Override
         public GutterIconRenderer.Alignment getAlignment() {
             return myAlignment;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             return this == o
                 || super.equals(o)
                 && o instanceof MyNavigationGutterIconRenderer that
@@ -354,9 +349,9 @@ public class NavigationGutterIconBuilder<T> {
         @Override
         public int hashCode() {
             int result = super.hashCode();
-            result = 31 * result + (myAlignment != null ? myAlignment.hashCode() : 0);
-            result = 31 * result + (myIcon != null ? myIcon.hashCode() : 0);
-            result = 31 * result + (myTooltipText != null ? myTooltipText.hashCode() : 0);
+            result = 31 * result + Objects.hashCode(myAlignment);
+            result = 31 * result + Objects.hashCode(myIcon);
+            result = 31 * result + Objects.hashCode(myTooltipText);
             return result;
         }
     }

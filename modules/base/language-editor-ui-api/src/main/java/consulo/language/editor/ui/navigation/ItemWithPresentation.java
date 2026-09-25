@@ -45,7 +45,10 @@ public final class ItemWithPresentation<T extends PsiElement> {
      */
     @RequiredReadAction
     public ItemWithPresentation(T element, TargetPresentationProvider<? super T> provider) {
-        this(SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element), provider.getPresentation(element));
+        this(
+            SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element),
+            provider.getPresentation(element)
+        );
     }
 
     public SmartPsiElementPointer<T> getPointer() {
@@ -56,19 +59,15 @@ public final class ItemWithPresentation<T extends PsiElement> {
         return myPresentation;
     }
 
+    @RequiredReadAction
     public @Nullable T dereference() {
         return myPointer.getElement();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ItemWithPresentation<?> item)) {
-            return false;
-        }
-        return myPointer.equals(item.myPointer);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof ItemWithPresentation<?> that && myPointer.equals(that.myPointer);
     }
 
     @Override

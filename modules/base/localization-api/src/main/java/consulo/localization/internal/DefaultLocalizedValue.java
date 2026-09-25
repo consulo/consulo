@@ -18,6 +18,7 @@ package consulo.localization.internal;
 import consulo.localization.LocalizationKey;
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -68,9 +69,11 @@ public final class DefaultLocalizedValue extends CachingLocalizedValue {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof DefaultLocalizedValue that
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof DefaultLocalizedValue that
             && Objects.equals(myLocalizationKey, that.myLocalizationKey)
             && Arrays.equals(myArgs, that.myArgs);
     }

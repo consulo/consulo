@@ -15,6 +15,7 @@
  */
 package consulo.language.inject.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
@@ -27,163 +28,186 @@ import consulo.language.psi.SmartPsiFileRange;
 import org.jspecify.annotations.Nullable;
 
 class ShredImpl implements PsiLanguageInjectionHost.Shred {
-  private final SmartPsiFileRange relevantRangeInHost;
-  private final SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer;
-  private final TextRange rangeInDecodedPSI;
-  private final String prefix;
-  private final String suffix;
-  private final boolean usePsiRange;
-  private final boolean isOneLine;
+    private final SmartPsiFileRange relevantRangeInHost;
+    private final SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer;
+    private final TextRange rangeInDecodedPSI;
+    private final String prefix;
+    private final String suffix;
+    private final boolean usePsiRange;
+    private final boolean isOneLine;
 
-  ShredImpl(SmartPsiFileRange relevantRangeInHost,
-            SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer,
-            String prefix,
-            String suffix,
-            TextRange rangeInDecodedPSI,
-            boolean usePsiRange, boolean isOneLine) {
-    this.hostElementPointer = hostElementPointer;
-    this.relevantRangeInHost = relevantRangeInHost;
-    this.prefix = prefix;
-    this.suffix = suffix;
-    this.rangeInDecodedPSI = rangeInDecodedPSI;
-    this.usePsiRange = usePsiRange;
-    this.isOneLine = isOneLine;
+    @RequiredReadAction
+    ShredImpl(
+        SmartPsiFileRange relevantRangeInHost,
+        SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer,
+        String prefix,
+        String suffix,
+        TextRange rangeInDecodedPSI,
+        boolean usePsiRange,
+        boolean isOneLine
+    ) {
+        this.hostElementPointer = hostElementPointer;
+        this.relevantRangeInHost = relevantRangeInHost;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.rangeInDecodedPSI = rangeInDecodedPSI;
+        this.usePsiRange = usePsiRange;
+        this.isOneLine = isOneLine;
 
-    assertValid();
-  }
-
-  private void assertValid() {
-    Segment hostRange = relevantRangeInHost.getPsiRange();
-    assert hostRange != null : "invalid host range: " + relevantRangeInHost;
-
-    PsiLanguageInjectionHost host = hostElementPointer.getElement();
-    assert host != null && host.isValid() : "no host: " + hostElementPointer;
-  }
-
-  
-  ShredImpl withPsiRange() {
-    return new ShredImpl(relevantRangeInHost, hostElementPointer, prefix, suffix, rangeInDecodedPSI, true, isOneLine);
-  }
-
-  
-  ShredImpl withRange(TextRange rangeInDecodedPSI, TextRange rangeInHostElementPSI, PsiLanguageInjectionHost newHost) {
-    SmartPsiFileRange rangeMarker = relevantRangeInHost;
-    Segment oldRangeInHostElementPSI = calcRangeInsideHostElement(false);
-    SmartPointerManagerImpl pointerManager = (SmartPointerManagerImpl)SmartPointerManager.getInstance(rangeMarker.getProject());
-    SmartPsiElementPointer<PsiLanguageInjectionHost> newHostPointer = pointerManager.createSmartPsiElementPointer(newHost, newHost.getContainingFile(), true);
-
-    if (!rangeInHostElementPSI.equals(TextRange.create(oldRangeInHostElementPSI))) {
-      Segment hostElementRange = newHostPointer.getRange();
-      rangeMarker = pointerManager.createSmartPsiFileRangePointer(rangeMarker.getContainingFile(), rangeInHostElementPSI.shiftRight(hostElementRange.getStartOffset()), true);
+        assertValid();
     }
-    return new ShredImpl(rangeMarker, newHostPointer, prefix, suffix, rangeInDecodedPSI, usePsiRange, isOneLine);
-  }
 
-  
-  SmartPsiElementPointer<PsiLanguageInjectionHost> getSmartPointer() {
-    return hostElementPointer;
-  }
+    @RequiredReadAction
+    private void assertValid() {
+        Segment hostRange = relevantRangeInHost.getPsiRange();
+        assert hostRange != null : "invalid host range: " + relevantRangeInHost;
 
-  /**
-   * @return returns null when the host document marker is invalid
-   */
-  @Override
-  public @Nullable Segment getHostRangeMarker() {
-    return usePsiRange ? relevantRangeInHost.getPsiRange() : relevantRangeInHost.getRange();
-  }
-
-  @Override
-  
-  public TextRange getRangeInsideHost() {
-    return calcRangeInsideHostElement(true);
-  }
-
-  
-  private TextRange calcRangeInsideHostElement(boolean usePsiRange) {
-    PsiLanguageInjectionHost host = getHost();
-    Segment psiRange = usePsiRange ? relevantRangeInHost.getPsiRange() : relevantRangeInHost.getRange();
-    TextRange textRange = psiRange == null ? null : TextRange.create(psiRange);
-    if (host == null) {
-      if (textRange != null) return textRange;
-      Segment fromSP = usePsiRange ? hostElementPointer.getPsiRange() : hostElementPointer.getRange();
-      if (fromSP != null) return TextRange.create(fromSP);
-      return new TextRange(0, 0);
+        PsiLanguageInjectionHost host = hostElementPointer.getElement();
+        assert host != null && host.isValid() : "no host: " + hostElementPointer;
     }
-    TextRange hostTextRange = host.getTextRange();
-    textRange = textRange == null ? null : textRange.intersection(hostTextRange);
-    if (textRange == null) return new ProperTextRange(0, hostTextRange.getLength());
 
-    return textRange.shiftLeft(hostTextRange.getStartOffset());
-  }
+    @RequiredReadAction
+    ShredImpl withPsiRange() {
+        return new ShredImpl(relevantRangeInHost, hostElementPointer, prefix, suffix, rangeInDecodedPSI, true, isOneLine);
+    }
 
-  @Override
-  @SuppressWarnings("HardCodedStringLiteral")
-  public String toString() {
-    PsiLanguageInjectionHost host = getHost();
-    Segment hostRange = getHostRangeMarker();
-    return "Shred " + (host == null ? null : host.getTextRange()) + ": " + host +
-           " In host range: " + (hostRange != null ? "(" + hostRange.getStartOffset() + "," + hostRange.getEndOffset() + ");" : "invalid;") +
-           " PSI range: " + rangeInDecodedPSI;
-  }
+    @RequiredReadAction
+    ShredImpl withRange(TextRange rangeInDecodedPSI, TextRange rangeInHostElementPSI, PsiLanguageInjectionHost newHost) {
+        SmartPsiFileRange rangeMarker = relevantRangeInHost;
+        Segment oldRangeInHostElementPSI = calcRangeInsideHostElement(false);
+        SmartPointerManagerImpl pointerManager = (SmartPointerManagerImpl) SmartPointerManager.getInstance(rangeMarker.getProject());
+        SmartPsiElementPointer<PsiLanguageInjectionHost> newHostPointer = pointerManager.createSmartPsiElementPointer(
+            newHost,
+            newHost.getContainingFile(),
+            true
+        );
 
-  @Override
-  public boolean isValid() {
-    return getHostRangeMarker() != null && getHost() != null;
-  }
+        if (!rangeInHostElementPSI.equals(TextRange.create(oldRangeInHostElementPSI))) {
+            Segment hostElementRange = newHostPointer.getRange();
+            rangeMarker = pointerManager.createSmartPsiFileRangePointer(
+                rangeMarker.getContainingFile(),
+                rangeInHostElementPSI.shiftRight(hostElementRange.getStartOffset()),
+                true
+            );
+        }
+        return new ShredImpl(rangeMarker, newHostPointer, prefix, suffix, rangeInDecodedPSI, usePsiRange, isOneLine);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    SmartPsiElementPointer<PsiLanguageInjectionHost> getSmartPointer() {
+        return hostElementPointer;
+    }
 
-    PsiLanguageInjectionHost.Shred shred = (PsiLanguageInjectionHost.Shred)o;
+    /**
+     * @return returns null when the host document marker is invalid
+     */
+    @Override
+    public @Nullable Segment getHostRangeMarker() {
+        return usePsiRange ? relevantRangeInHost.getPsiRange() : relevantRangeInHost.getRange();
+    }
 
-    PsiLanguageInjectionHost host = getHost();
-    Segment hostRangeMarker = getHostRangeMarker();
-    Segment hostRangeMarker2 = shred.getHostRangeMarker();
-    return host != null &&
-           host.equals(shred.getHost()) &&
-           prefix.equals(shred.getPrefix()) &&
-           suffix.equals(shred.getSuffix()) &&
-           rangeInDecodedPSI.equals(shred.getRange()) &&
-           hostRangeMarker != null &&
-           hostRangeMarker2 != null &&
-           TextRange.areSegmentsEqual(hostRangeMarker, hostRangeMarker2);
-  }
+    @Override
+    @RequiredReadAction
+    public TextRange getRangeInsideHost() {
+        return calcRangeInsideHostElement(true);
+    }
 
-  @Override
-  public int hashCode() {
-    return rangeInDecodedPSI.hashCode();
-  }
+    @RequiredReadAction
+    private TextRange calcRangeInsideHostElement(boolean usePsiRange) {
+        PsiLanguageInjectionHost host = getHost();
+        Segment psiRange = usePsiRange ? relevantRangeInHost.getPsiRange() : relevantRangeInHost.getRange();
+        TextRange textRange = psiRange == null ? null : TextRange.create(psiRange);
+        if (host == null) {
+            if (textRange != null) {
+                return textRange;
+            }
+            Segment fromSP = usePsiRange ? hostElementPointer.getPsiRange() : hostElementPointer.getRange();
+            if (fromSP != null) {
+                return TextRange.create(fromSP);
+            }
+            return new TextRange(0, 0);
+        }
+        TextRange hostTextRange = host.getTextRange();
+        textRange = textRange == null ? null : textRange.intersection(hostTextRange);
+        if (textRange == null) {
+            return new ProperTextRange(0, hostTextRange.getLength());
+        }
 
-  @Override
-  public void dispose() {
-  }
+        return textRange.shiftLeft(hostTextRange.getStartOffset());
+    }
 
-  @Override
-  public @Nullable PsiLanguageInjectionHost getHost() {
-    return hostElementPointer.getElement();
-  }
+    @Override
+    @RequiredReadAction
+    @SuppressWarnings("HardCodedStringLiteral")
+    public String toString() {
+        PsiLanguageInjectionHost host = getHost();
+        Segment hostRange = getHostRangeMarker();
+        return "Shred " + (host == null ? null : host.getTextRange()) + ": " + host +
+            " In host range: " + (hostRange != null ? "(" + hostRange.getStartOffset() + "," + hostRange.getEndOffset() + ");" : "invalid;") +
+            " PSI range: " + rangeInDecodedPSI;
+    }
 
-  
-  @Override
-  public TextRange getRange() {
-    return rangeInDecodedPSI;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        return getHostRangeMarker() != null && getHost() != null;
+    }
 
-  
-  @Override
-  public String getPrefix() {
-    return prefix;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  
-  @Override
-  public String getSuffix() {
-    return suffix;
-  }
+        PsiLanguageInjectionHost.Shred that = (PsiLanguageInjectionHost.Shred) o;
 
-  boolean isOneLine() {
-    return isOneLine;
-  }
+        PsiLanguageInjectionHost host = getHost();
+        Segment hostRangeMarker = getHostRangeMarker();
+        Segment hostRangeMarker2 = that.getHostRangeMarker();
+        return host != null
+            && host.equals(that.getHost())
+            && prefix.equals(that.getPrefix())
+            && suffix.equals(that.getSuffix())
+            && rangeInDecodedPSI.equals(that.getRange())
+            && hostRangeMarker != null
+            && hostRangeMarker2 != null
+            && TextRange.areSegmentsEqual(hostRangeMarker, hostRangeMarker2);
+    }
+
+    @Override
+    public int hashCode() {
+        return rangeInDecodedPSI.hashCode();
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    @Override
+    @RequiredReadAction
+    public @Nullable PsiLanguageInjectionHost getHost() {
+        return hostElementPointer.getElement();
+    }
+
+    @Override
+    public TextRange getRange() {
+        return rangeInDecodedPSI;
+    }
+
+    @Override
+    public String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    public String getSuffix() {
+        return suffix;
+    }
+
+    boolean isOneLine() {
+        return isOneLine;
+    }
 }

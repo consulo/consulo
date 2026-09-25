@@ -105,7 +105,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return ModuleContentUtil.findModuleForFile(myFile, myManager.getProject());
     }
 
-    
     @Override
     @RequiredWriteAction
     public PsiElement setName(String name) throws IncorrectOperationException {
@@ -378,13 +377,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         //CheckUtil.checkIsIdentifier(name);
         VirtualFile existingFile = getVirtualFile().findChild(name);
         if (existingFile != null) {
-            throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(existingFile.getPresentableUrl()).get());
+            throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(existingFile.getPresentableUrl()));
         }
         CheckUtil.checkWritable(this);
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredWriteAction
     public PsiFile createFile(String name) throws IncorrectOperationException {
         checkCreateFile(name);
 
@@ -398,7 +397,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredWriteAction
     public PsiFile copyFileFrom(String newName, PsiFile originalFile) throws IncorrectOperationException {
         checkCreateFile(newName);
 
@@ -467,12 +466,11 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredWriteAction
     public PsiElement add(PsiElement element) throws IncorrectOperationException {
         checkAdd(element);
         if (element instanceof PsiDirectory) {
-            LOG.error("not implemented");
-            return null;
+            throw new IncorrectOperationException("Adding a directory via add() is not implemented");
         }
         else if (element instanceof PsiFile originalFile) {
             try {
@@ -652,7 +650,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -660,15 +658,14 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
             return false;
         }
 
-        PsiDirectoryImpl directory = (PsiDirectoryImpl)o;
+        PsiDirectoryImpl that = (PsiDirectoryImpl)o;
 
-        return myManager.equals(directory.myManager) && myFile.equals(directory.myFile);
+        return myManager.equals(that.myManager)
+            && myFile.equals(that.myFile);
     }
 
     @Override
     public int hashCode() {
-        int result = myManager.hashCode();
-        result = 31 * result + myFile.hashCode();
-        return result;
+        return 31 * myManager.hashCode() + myFile.hashCode();
     }
 }

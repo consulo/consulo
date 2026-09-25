@@ -68,7 +68,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -76,17 +76,16 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
             return false;
         }
 
-        NavigationGutterIconRenderer renderer = (NavigationGutterIconRenderer)o;
+        NavigationGutterIconRenderer that = (NavigationGutterIconRenderer)o;
 
-        return myEmptyText.equals(renderer.myEmptyText)
-            && myPointers.get().equals(renderer.myPointers.get())
-            && myPopupTitle.equals(renderer.myPopupTitle);
+        return myEmptyText.equals(that.myEmptyText)
+            && myPointers.get().equals(that.myPointers.get())
+            && myPopupTitle.equals(that.myPopupTitle);
     }
 
     @Override
     public int hashCode() {
-        int result;
-        result = myPopupTitle.hashCode();
+        int result = myPopupTitle.hashCode();
         result = 31 * result + myEmptyText.hashCode();
         result = 31 * result + myPointers.get().hashCode();
         return result;

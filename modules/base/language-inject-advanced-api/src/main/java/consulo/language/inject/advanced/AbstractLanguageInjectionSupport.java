@@ -22,6 +22,7 @@ import consulo.language.inject.advanced.ui.BaseInjectionPanel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
@@ -31,7 +32,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
@@ -53,7 +54,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     }
 
     @Override
-    public @Nullable BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef) {
+    public @Nullable BaseInjection findCommentInjection(PsiElement host, @Nullable SimpleReference<PsiElement> commentRef) {
         return InjectorUtils.findCommentInjection(host, "comment", commentRef);
     }
 
@@ -129,31 +130,29 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         };
     }
 
-    protected static @Nullable BaseInjection showDefaultInjectionUI(final Project project, BaseInjection injection) {
-        final BaseInjectionPanel panel = new BaseInjectionPanel(injection, project);
+    @RequiredUIAccess
+    protected static @Nullable BaseInjection showDefaultInjectionUI(Project project, BaseInjection injection) {
+        BaseInjectionPanel panel = new BaseInjectionPanel(injection, project);
         panel.reset();
-        final DialogBuilder builder = new DialogBuilder(project);
+        DialogBuilder builder = new DialogBuilder(project);
         LanguageInjectionSupport support = InjectorUtils.findInjectionSupport(injection.getSupportId());
-        if (support != null && support instanceof AbstractLanguageInjectionSupport) {
-            builder.setHelpId(((AbstractLanguageInjectionSupport) support).getHelpId());
+        if (support != null && support instanceof AbstractLanguageInjectionSupport injectionSupport) {
+            builder.setHelpId(injectionSupport.getHelpId());
         }
         builder.addOkAction();
         builder.addCancelAction();
         builder.setDimensionServiceKey("#consulo.ide.impl.intelliLang.inject.config.ui.BaseInjectionDialog");
         builder.setCenterPanel(panel.getComponent());
         builder.setTitle("Language Injection Settings");
-        builder.setOkOperation(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    panel.apply();
-                    builder.getDialogWrapper().close(DialogWrapper.OK_EXIT_CODE);
-                }
-                catch (Exception e) {
-                    Throwable cause = e.getCause();
-                    String message = e.getMessage() + (cause != null ? "\n  " + cause.getMessage() : "");
-                    Messages.showErrorDialog(project, message, "Unable to Save");
-                }
+        builder.setOkOperation(() -> {
+            try {
+                panel.apply();
+                builder.getDialogWrapper().close(DialogWrapper.OK_EXIT_CODE);
+            }
+            catch (Exception e) {
+                Throwable cause = e.getCause();
+                String message = e.getMessage() + (cause != null ? "\n  " + cause.getMessage() : "");
+                Messages.showErrorDialog(project, message, "Unable to Save");
             }
         });
         if (builder.show() == DialogWrapper.OK_EXIT_CODE) {
@@ -168,8 +167,9 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof LanguageInjectionSupport && getId().equals(((LanguageInjectionSupport) obj).getId());
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof LanguageInjectionSupport that && getId().equals(that.getId());
     }
 
     public @Nullable String getHelpId() {

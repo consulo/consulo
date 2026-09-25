@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.inject.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
@@ -351,6 +351,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
     }
 
     @Override
+    @RequiredWriteAction
     public void replaceString(int startOffset, int endOffset, CharSequence s) {
         if (isOneLine()) {
             s = StringUtil.replace(s.toString(), "\n", "");
@@ -369,6 +370,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
         doReplaceString(startOffset, endOffset, s);
     }
 
+    @RequiredWriteAction
     private void doReplaceString(int startOffset, int endOffset, CharSequence s) {
         assert intersectWithEditable(new TextRange(startOffset, startOffset)) != null;
         assert intersectWithEditable(new TextRange(endOffset, endOffset)) != null;
@@ -538,6 +540,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
     }
 
     @Override
+    @RequiredWriteAction
     public void setText(CharSequence text) {
         synchronized (myLock) {
             LOG.assertTrue(text.toString().startsWith(myShreds.get(0).getPrefix()));
@@ -621,6 +624,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
     }
 
     @Override
+    @RequiredWriteAction
     public void replaceText(CharSequence chars, long newModificationStamp) {
         setText(chars);
         myDelegate.setModificationStamp(newModificationStamp);
@@ -984,12 +988,9 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof DocumentWindowImpl)) {
-            return false;
-        }
-        DocumentWindowImpl window = (DocumentWindowImpl)o;
-        return myDelegate.equals(window.getDelegate()) && areRangesEqual(window);
+    public boolean equals(@Nullable Object o) {
+        return o == this
+            || o instanceof DocumentWindowImpl that && myDelegate.equals(that.getDelegate()) && areRangesEqual(that);
     }
 
     @Override

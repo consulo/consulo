@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.index.impl.internal.stub;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexVariants;
 import consulo.language.index.impl.internal.moduleAware.VariantDescriptor;
 import consulo.language.psi.stub.IndexOptionSelector;
@@ -114,16 +115,13 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         return state;
     }
 
-    
     public static <K, I> FileBasedIndexExtension<K, Void> wrapStubIndexExtension(StubIndexExtension<K, ?> extension) {
         return new FileBasedIndexExtension<>() {
-            
             @Override
             public ID<K, Void> getName() {
                 return (ID<K, Void>)extension.getKey();
             }
 
-            
             @Override
             public FileBasedIndex.InputFilter getInputFilter() {
                 return (p, f) -> {
@@ -136,7 +134,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 return true;
             }
 
-            
+
             @Override
             public DataIndexer<K, Void, FileContent> getIndexer() {
                 return i -> {
@@ -144,13 +142,11 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 };
             }
 
-            
             @Override
             public KeyDescriptor<K> getKeyDescriptor() {
                 return extension.getKeyDescriptor();
             }
 
-            
             @Override
             public DataExternalizer<Void> getValueExternalizer() {
                 return VoidDataExternalizer.INSTANCE;
@@ -250,7 +246,6 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         }
     }
 
-    
     <K> HashingStrategy<K> getKeyHashingStrategy(StubIndexKey<K, ?> stubIndexKey) {
         return (HashingStrategy<K>)getAsyncState().myKeyHashingStrategies.get(stubIndexKey);
     }
@@ -304,7 +299,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
             }
         }
 
-        
+
         @Override
         public StubIdList read(DataInput in) throws IOException {
             int size = DataInputOutputUtil.readINT(in);
@@ -323,11 +318,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         }
     }
 
-    <K> void serializeIndexValue(
-        DataOutput out,
-        StubIndexKey<K, ?> stubIndexKey,
-        Map<K, StubIdList> map
-    ) throws IOException {
+    <K> void serializeIndexValue(DataOutput out, StubIndexKey<K, ?> stubIndexKey, Map<K, StubIdList> map) throws IOException {
         UpdatableIndex<K, Void, FileContent, ?> index = getIndex(stubIndexKey);
         if (index == null) {
             return;
@@ -344,12 +335,9 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         out.write(indexOs.getInternalBuffer(), 0, indexOs.size());
     }
 
-    
-    <K> Map<K, StubIdList> deserializeIndexValue(
-        DataInput in,
-        StubIndexKey<K, ?> stubIndexKey,
-        @Nullable K requestedKey
-    ) throws IOException {
+
+    <K> Map<K, StubIdList> deserializeIndexValue(DataInput in, StubIndexKey<K, ?> stubIndexKey, @Nullable K requestedKey)
+        throws IOException {
         UpdatableIndex<K, Void, FileContent, ?> index = getIndex(stubIndexKey);
         KeyDescriptor<K> keyDescriptor = index.getExtension().getKeyDescriptor();
 
@@ -500,7 +488,6 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     }
 
     @Override
-    
     public <K> Collection<K> getAllKeys(StubIndexKey<K, ?> indexKey, Project project) {
         Set<K> allKeys = new HashSet<>();
         processAllKeys(indexKey, project, Processors.cancelableCollectProcessor(allKeys));
@@ -539,8 +526,8 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         return true;
     }
 
-    
     @Override
+    @RequiredReadAction
     public <Key> IdIterator getContainingIds(
         StubIndexKey<Key, ?> indexKey,
         Key dataKey,
@@ -550,7 +537,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         return getContainingIds(indexKey, dataKey, project, null, scope);
     }
 
-    
+    @RequiredReadAction
     private <Key> IdIterator getContainingIds(
         StubIndexKey<Key, ?> indexKey,
         Key dataKey,
@@ -579,14 +566,15 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
             myAccessValidator.validate(stubUpdatingIndexId, () -> {
                 try {
                     // disable up-to-date check to avoid locks on attempt to acquire index write lock while holding at the same time the readLock for this index
-                    return FileBasedIndexImpl.disableUpToDateCheckIn(() -> ConcurrencyUtil.withLock(stubUpdatingIndex.getReadLock(), () -> {
-                        return index.getData(dataKey).forEach((id, value) -> {
+                    return FileBasedIndexImpl.disableUpToDateCheckIn(() -> ConcurrencyUtil.withLock(
+                        stubUpdatingIndex.getReadLock(),
+                        () -> index.getData(dataKey).forEach((id, value) -> {
                             if (finalIdFilter == null || finalIdFilter.containsFileId(id)) {
                                 result.add(id);
                             }
                             return true;
-                        });
-                    }));
+                        })
+                    ));
                 }
                 finally {
                     wipeProblematicFileIdsForParticularKeyAndStubIndex(indexKey, dataKey, stubUpdatingIndex);
@@ -855,15 +843,15 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            CompositeKey<?> key1 = (CompositeKey<?>)o;
-            return fileId == key1.fileId && variant == key1.variant && Objects.equals(key, key1.key);
+            CompositeKey<?> that = (CompositeKey<?>)o;
+            return fileId == that.fileId && variant == that.variant && Objects.equals(key, that.key);
         }
 
         @Override
