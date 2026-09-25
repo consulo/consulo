@@ -37,6 +37,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
@@ -530,16 +531,22 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         RESTART_REQUESTS.incrementAndGet();
         progress.cancel();
         int delay = RESTART_DAEMON_RANDOM.nextInt(100);
-        project.getUIAccess().getScheduler().schedule(
-            () -> {
-                RESTART_REQUESTS.decrementAndGet();
-                if (!project.isDisposed()) {
-                    DaemonCodeAnalyzer.getInstance(project).restart();
-                }
-            },
-            delay,
-            TimeUnit.MILLISECONDS
-        );
+        UIAccess uiAccess = project.getUIAccess();
+        if (uiAccess.isValid()) {
+            uiAccess.getScheduler().schedule(
+                () -> {
+                    RESTART_REQUESTS.decrementAndGet();
+                    if (!project.isDisposed()) {
+                        DaemonCodeAnalyzer.getInstance(project).restart();
+                    }
+                },
+                delay,
+                TimeUnit.MILLISECONDS
+            );
+        }
+        else {
+            RESTART_REQUESTS.decrementAndGet();
+        }
         throw new ProcessCanceledException();
     }
 

@@ -679,11 +679,19 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     public synchronized boolean stopProcess(boolean toRestartAlarm, String reason) {
         boolean canceled = cancelUpdateProgress(toRestartAlarm, reason);
         // optimisation: this check is to avoid too many re-schedules in case of thousands of events spikes
-        boolean restart = toRestartAlarm && !myDisposed && myInitialized;
+        boolean restart = toRestartAlarm && !myDisposed && myInitialized && myProject.isInitialized();
 
-        if (restart && myUpdateRunnableFuture.isDone()) {
-            myUpdateRunnableFuture =
-                myProject.getUIAccess().getScheduler().schedule(myUpdateRunnable, mySettings.AUTOREPARSE_DELAY, TimeUnit.MILLISECONDS);
+        if (!restart) {
+            myUpdateRunnableFuture.cancel(false);
+            return canceled;
+        }
+
+        if (myUpdateRunnableFuture.isDone()) {
+            UIAccess uiAccess = myProject.getUIAccess();
+            if (uiAccess.isValid()) {
+                myUpdateRunnableFuture =
+                    uiAccess.getScheduler().schedule(myUpdateRunnable, mySettings.AUTOREPARSE_DELAY, TimeUnit.MILLISECONDS);
+            }
         }
 
         return canceled;

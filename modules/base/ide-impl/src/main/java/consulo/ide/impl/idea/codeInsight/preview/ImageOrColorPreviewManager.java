@@ -36,6 +36,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.ui.UIAccess;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
@@ -86,7 +87,7 @@ public class ImageOrColorPreviewManager implements Disposable {
             Point point = event.getMouseEvent().getPoint();
             if (myElements == null && event.getMouseEvent().isShiftDown()) {
                 executeFuture =
-                    project.getUIAccess().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
+                    UIAccess.current().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
             }
             else {
                 Collection<PsiElement> elements = myElements;

@@ -14,6 +14,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.*;
+import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ClickListener;
@@ -122,8 +123,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
                     }
                 }
                 else if (myDialog == null) {
-                    UIAccessScheduler scheduler = myProject.getUIAccess().getScheduler();
-                    scheduler.schedule(this, 300L, TimeUnit.MILLISECONDS);
+                    UIAccess.current().getScheduler().schedule(this, 300L, TimeUnit.MILLISECONDS);
                 }
             }
         }.run();

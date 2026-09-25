@@ -97,7 +97,6 @@ public class UsageViewImpl implements UsageViewEx {
     private final UsageNodeTreeBuilder myBuilder;
     private MyPanel myRootPanel; // accessed in EDT only
     private JTree myTree; // accessed in EDT only
-    private final ScheduledFuture<?> myFireEventsFuture;
     private Content myContent;
 
     private final UsageViewPresentation myPresentation;
@@ -183,9 +182,12 @@ public class UsageViewImpl implements UsageViewEx {
         Supplier<UsageSearcher> usageSearcherFactory
     ) {
         // fire events every 50 ms, not more often to batch requests
-        myFireEventsFuture = project.getUIAccess().getScheduler()
-            .scheduleWithFixedDelay(this::fireEvents, 50, 50, TimeUnit.MILLISECONDS);
-        Disposer.register(this, () -> myFireEventsFuture.cancel(false));
+        UIAccess uiAccess = project.getUIAccess();
+        if (uiAccess.isValid()) {
+            ScheduledFuture<?> fireEventsFuture =
+                uiAccess.getScheduler().scheduleWithFixedDelay(this::fireEvents, 50, 50, TimeUnit.MILLISECONDS);
+            Disposer.register(this, () -> fireEventsFuture.cancel(false));
+        }
 
         myPresentation = presentation;
         myTargets = targets;

@@ -471,25 +471,32 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             }
         }
 
-        myProject.getUIAccess().getScheduler().schedule(new Runnable() {
+        scheduleOnUI(new Runnable() {
             @Override
             public void run() {
                 if (ExecutorRegistry.getInstance().isStarting(environment)) {
-                    myProject.getUIAccess().getScheduler().schedule(this, 100, TimeUnit.MILLISECONDS);
+                    scheduleOnUI(this, 100);
                     return;
                 }
 
                 for (RunContentDescriptor descriptor : runningOfTheSameType) {
                     ProcessHandler processHandler = descriptor.getProcessHandler();
                     if (processHandler != null && !processHandler.isProcessTerminated()) {
-                        myProject.getUIAccess().getScheduler().schedule(this, 100, TimeUnit.MILLISECONDS);
+                        scheduleOnUI(this, 100);
                         return;
                     }
                 }
 
                 start(environment);
             }
-        }, 50, TimeUnit.MILLISECONDS);
+        }, 50);
+    }
+
+    private void scheduleOnUI(Runnable runnable, long delayInMillis) {
+        UIAccess uiAccess = myProject.getUIAccess();
+        if (uiAccess.isValid()) {
+            uiAccess.getScheduler().schedule(runnable, delayInMillis, TimeUnit.MILLISECONDS);
+        }
     }
 
     private static void start(ExecutionEnvironment environment) {

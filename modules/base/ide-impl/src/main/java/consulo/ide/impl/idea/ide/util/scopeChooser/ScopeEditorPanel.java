@@ -549,6 +549,9 @@ public class ScopeEditorPanel {
     }
 
     private void updateTreeModel(boolean requestFocus) throws ProcessCanceledException {
+        if (!myProject.getUIAccess().isValid()) {
+            throw new ProcessCanceledException();
+        }
         PanelProgressIndicator progress = createProgressIndicator(requestFocus);
         progress.setBordersVisible(false);
         myCurrentProgress = progress;

@@ -26,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.usage.UsageInfo;
 
 import java.util.HashSet;
@@ -56,7 +57,11 @@ public class DependenciesUsagesPanel extends UsagesPanel {
 
     myAlarm.cancelAllRequests();
     myAlarm.addRequest(() -> myProject.getApplication().executeOnPooledThread(() -> {
-      ProgressIndicator progress = new PanelProgressIndicator(myProject.getUIAccess().getScheduler(), this::setToComponent);
+      UIAccess uiAccess = myProject.getUIAccess();
+      if (!uiAccess.isValid()) {
+        return;
+      }
+      ProgressIndicator progress = new PanelProgressIndicator(uiAccess.getScheduler(), this::setToComponent);
       myCurrentProgress = progress;
       ProgressManager.getInstance().runProcess(() -> {
         myProject.getApplication().runReadAction(() -> {

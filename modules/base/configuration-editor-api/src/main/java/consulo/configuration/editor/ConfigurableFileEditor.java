@@ -35,6 +35,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.UIAccess;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -77,7 +78,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         JComponent component = ConfigurableUIMigrationUtil.createComponent(myConfigurable, this);
         assert component != null;
         UiNotifyConnector.doWhenFirstShown(component, () -> {
-            myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
+            myUpdateFuture = UIAccess.current().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
         });
         myPreferredFocusedComponent = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
 

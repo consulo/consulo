@@ -21,6 +21,7 @@ import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -63,7 +64,11 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     }
 
     myIdleFuture.cancel(false);
-    myIdleFuture = myProject.getUIAccess().getScheduler().schedule(() -> {
+    UIAccess uiAccess = myProject.getUIAccess();
+    if (!uiAccess.isValid()) {
+      return;
+    }
+    myIdleFuture = uiAccess.getScheduler().schedule(() -> {
       if (myTimeTrackingTimer.isRunning()) {
         myTimeTrackingTimer.stop();
       }

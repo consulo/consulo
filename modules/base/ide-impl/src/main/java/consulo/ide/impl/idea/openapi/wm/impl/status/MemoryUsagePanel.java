@@ -8,6 +8,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ImageUtil;
@@ -66,7 +67,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
 
     @Override
     public void showNotify() {
-        myFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::updateState, 1, 5, TimeUnit.SECONDS);
+        myFuture = UIAccess.current().getScheduler().scheduleWithFixedDelay(this::updateState, 1, 5, TimeUnit.SECONDS);
     }
 
     @Override
