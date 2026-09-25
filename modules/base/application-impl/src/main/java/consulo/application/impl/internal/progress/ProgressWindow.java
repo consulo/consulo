@@ -140,11 +140,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         // executed in a small amount of time. Problem: UI blinks and looks ugly if we show progress dialog that disappears shortly
         // for each of them. Solution is to postpone the tasks of showing progress dialog. Hence, it will not be shown at all
         // if the task is already finished when the time comes.
-        UIAccess uiAccess;
-        if (myProject != null) {
-            uiAccess = myProject.getUIAccess();
-        } else {
-            uiAccess = Application.get().getLastUIAccess();
+        UIAccess uiAccess = uiAccess();
+        if (uiAccess == null || !uiAccess.isValid()) {
+            return;
         }
 
         uiAccess.getScheduler().schedule(() -> {
@@ -245,28 +243,43 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
 
         super.stop();
 
-        UIAccess uiAccess;
-        if (myProject != null) {
-            uiAccess = myProject.getUIAccess();
+        UIAccess uiAccess = uiAccess();
+
+        if (uiAccess != null && uiAccess.isValid()) {
+            uiAccess.give(() -> {
+                if (myDialog != null) {
+                    myDialog.hide();
+                }
+
+                finishStop();
+            });
+
+            // we really need that?
+            uiAccess.give(EmptyRunnable.getInstance());   // Just to give blocking dispatching a chance to go out.
         }
         else {
-            uiAccess = Application.get().getLastUIAccess();
+            finishStop();
+        }
+    }
+
+    private @Nullable UIAccess uiAccess() {
+        if (myProject != null) {
+            UIAccess projectAccess = myProject.getUIAccess();
+            if (projectAccess.isValid()) {
+                return projectAccess;
+            }
         }
 
-        uiAccess.give(() -> {
-            if (myDialog != null) {
-                myDialog.hide();
-            }
+        ProgressDialog dialog = myDialog;
+        return dialog == null ? null : dialog.getUIAccess();
+    }
 
-            synchronized (this) {
-                myStoppedAlready = true;
-            }
+    private void finishStop() {
+        synchronized (this) {
+            myStoppedAlready = true;
+        }
 
-            Disposer.dispose(this);
-        });
-
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(EmptyRunnable.INSTANCE); // Just to give blocking dispatching a chance to go out.
+        Disposer.dispose(this);
     }
 
     protected @Nullable ProgressDialog getDialog() {

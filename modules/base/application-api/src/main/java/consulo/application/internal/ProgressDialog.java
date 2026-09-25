@@ -17,6 +17,8 @@ package consulo.application.internal;
 
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.UIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -27,6 +29,10 @@ import java.util.function.Predicate;
  * @since 2020-05-11
  */
 public interface ProgressDialog extends Disposable {
+    default @Nullable UIAccess getUIAccess() {
+        return null;
+    }
+
     void startBlocking(CompletableFuture<?> stopCondition, Predicate<AWTEvent> isCancellationEvent);
 
     void hide();

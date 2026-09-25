@@ -64,14 +64,28 @@ public class UnifiedProgressDialog implements ProgressDialog {
         myProgressWindow = progressWindow;
     }
 
-    private UIAccess uiAccess() {
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        Window window = myWindow;
+        return window == null ? null : window.getUIAccess();
+    }
+
+    private @Nullable UIAccess uiAccess() {
         if (myProject != null) {
-            return myProject.getUIAccess();
+            UIAccess projectAccess = myProject.getUIAccess();
+            if (projectAccess.isValid()) {
+                return projectAccess;
+            }
         }
 
-        Window window = myWindow;
-        UIAccess windowAccess = window == null ? null : window.getUIAccess();
-        return windowAccess == null ? Application.get().getLastUIAccess() : windowAccess;
+        return getUIAccess();
+    }
+
+    private void giveOnUI(Runnable runnable) {
+        UIAccess uiAccess = uiAccess();
+        if (uiAccess != null && uiAccess.isValid()) {
+            uiAccess.give(runnable);
+        }
     }
 
     @Override
@@ -83,7 +97,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
     public void hide() {
         myHideRequested = true;
 
-        uiAccess().give(() -> {
+        giveOnUI(() -> {
             if (myWindow == null) {
                 return;
             }
@@ -104,7 +118,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void update() {
-        uiAccess().give(() -> {
+        giveOnUI(() -> {
             if (myWindow == null) {
                 return;
             }
@@ -117,7 +131,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void show() {
-        uiAccess().give(() -> {
+        giveOnUI(() -> {
             if (myHideRequested || myWindow != null) {
                 return;
             }
@@ -154,7 +168,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void changeCancelButtonText(LocalizeValue text) {
-        uiAccess().give(() -> {
+        giveOnUI(() -> {
             if (myCancelButton != null) {
                 myCancelButton.setText(text);
             }
@@ -163,7 +177,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void enableCancelButtonIfNeeded(boolean value) {
-        uiAccess().give(() -> {
+        giveOnUI(() -> {
             if (myCancelButton != null) {
                 myCancelButton.setEnabled(value);
             }

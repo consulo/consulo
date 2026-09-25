@@ -27,6 +27,9 @@ import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.internal.DialogWrapperPeerFactory;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ModalityState;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
@@ -269,7 +272,22 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
     @Override
     public void hide() {
-        ApplicationManager.getApplication().invokeLater(this::hideImmediately, IdeaModalityState.any());
+        UIAccess uiAccess = getUIAccess();
+        if (uiAccess != null && uiAccess.isValid()) {
+            uiAccess.give(this::hideImmediately);
+        }
+    }
+
+    @Override
+    public UIAccess getUIAccess() {
+        if (myParentWindow != null) {
+            UIAccess windowAccess = myParentWindow.getUIAccess();
+            if (windowAccess != null) {
+                return windowAccess;
+            }
+        }
+
+        return AWTUIAccessImpl.ourInstance;
     }
 
     @Override
