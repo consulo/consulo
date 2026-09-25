@@ -83,11 +83,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         return options;
     }
 
-    protected void scheduleDetectionInBackground(
-        Project project,
-        Document document,
-        TimeStampedIndentOptions options
-    ) {
+    protected void scheduleDetectionInBackground(Project project, Document document, TimeStampedIndentOptions options) {
         new DetectAndAdjustIndentOptionsTask(project, document, options).scheduleInBackgroundForCommittedDocument();
     }
 
@@ -177,21 +173,20 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
             if (indentOptions instanceof TimeStampedIndentOptions timeStampedIndentOptions) {
                 if (timeStampedIndentOptions.isDetected()) {
                     actions.add(DumbAwareAction.create(
-                        ApplicationLocalize.codeStyleIndentDetectorReject(projectOptionsTip).get(),
+                        ApplicationLocalize.codeStyleIndentDetectorReject(projectOptionsTip),
                         e -> {
                             disableForFile(virtualFile, indentOptions);
                             notifyIndentOptionsChanged(project, file);
                         }
                     ));
                     actions.add(DumbAwareAction.create(
-                        ApplicationLocalize.codeStyleIndentDetectorReindent(projectOptionsTip).get(),
+                        ApplicationLocalize.codeStyleIndentDetectorReindent(projectOptionsTip),
                         e -> {
                             disableForFile(virtualFile, indentOptions);
                             notifyIndentOptionsChanged(project, file);
-                            CommandProcessor.getInstance()
-                                .runUndoTransparentAction(() -> Application.get()
-                                    .runWriteAction(() -> CodeStyleManager.getInstance(project)
-                                        .adjustLineIndent(file, file.getTextRange())));
+                            CommandProcessor.getInstance().runUndoTransparentAction(() -> Application.get().runWriteAction(
+                                () -> CodeStyleManager.getInstance(project).adjustLineIndent(file, file.getTextRange())
+                            ));
                             myDiscardedOptions.remove(virtualFile);
                         }
                     ));
@@ -222,11 +217,9 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         }
 
         @Override
-        public
-        
-        AnAction createDisableAction(Project project) {
+        public AnAction createDisableAction(Project project) {
             return DumbAwareAction.create(
-                ApplicationLocalize.codeStyleIndentDetectorDisable().get(),
+                ApplicationLocalize.codeStyleIndentDetectorDisable(),
                 e -> {
                     CodeStyle.getSettings(project).AUTODETECT_INDENTS = false;
                     myDiscardedOptions.clear();
@@ -237,11 +230,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         }
 
         @Override
-        public String getHint() {
-            if (areDetected(getIndentOptions())) {
-                return LanguageLocalize.indentOptionDetected().get();
-            }
-            return null;
+        public LocalizeValue getHint() {
+            return areDetected(getIndentOptions()) ? LanguageLocalize.indentOptionDetected() : LocalizeValue.empty();
         }
 
         @Override

@@ -31,6 +31,5 @@ public interface LocalizeValueWithMnemonic extends LocalizeValue {
         return TextWithMnemonic.parse(localizeValue.get());
     }
 
-    
     TextWithMnemonic mnemonic();
 }

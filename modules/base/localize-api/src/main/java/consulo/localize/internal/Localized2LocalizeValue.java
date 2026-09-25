@@ -16,46 +16,47 @@
 package consulo.localize.internal;
 
 import consulo.localize.LocalizeManager;
-import consulo.localize.LocalizeValue;
+import consulo.localize.Localized;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
 
 /**
- * @author VISTALL
- * @since 2020-07-30
+ * @author UNV
+ * @since 2026-09-25
  */
-public final class MappedLocalizeValue extends BaseLocalizeValue {
-    private final LocalizeValue myDelegate;
-    private final Function<String, String> myMapper;
+public final class Localized2LocalizeValue extends BaseLocalizeValue {
+    private final Localized myLocalized;
 
-    public MappedLocalizeValue(LocalizeValue delegate, Function<String, String> mapper) {
+    public Localized2LocalizeValue(Localized localized) {
         super(EMPTY_ARGS);
-        myDelegate = delegate;
-        myMapper = mapper;
+        myLocalized = localized;
     }
+
     @Override
-    public String getId() {
-        return myDelegate.getId() + "->" + Objects.toIdentityString(myMapper);
+    public boolean isEmpty() {
+        return myLocalized.isEmpty();
     }
+
     @Override
     protected Map.Entry<Locale, String> getUnformattedText(LocalizeManager localizeManager) {
-        String value = myDelegate.getValue();
-        return Map.entry(localizeManager.getLocale(), myMapper.apply(value));
+        return Map.entry(localizeManager.getLocale(), myLocalized.toString());
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof MappedLocalizeValue that
-            && Objects.equals(myDelegate, that.myDelegate)
-            && Objects.equals(myMapper, that.myMapper);
+    public String getId() {
+        return myLocalized.getId() + "→LocalizeValue";
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof Localized2LocalizeValue that && myLocalized.equals(that.myLocalized);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myDelegate, myMapper);
+        return myLocalized.hashCode();
     }
 }

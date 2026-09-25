@@ -65,6 +65,10 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return LocalizeManager.get().fromException(t);
     }
 
+    static LocalizeValue of(Localized localized) {
+        return localized.isEmpty() ? empty() : new Localized2LocalizeValue(localized);
+    }
+
     static LocalizeValue ofNullable(@Nullable String text) {
         return text == null ? empty() : of(text);
     }
@@ -114,6 +118,12 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return this;
     }
 
+    /**
+     * String which doesn't depend on current locale. Two equal {@link LocalizeValue} must have equal ids.
+     * Different ones should have different ids (though 100% collision-free may be not guaranteed).
+     *
+     * @return String uniquely identifying this {@link LocalizeValue}.
+     */
     String getId();
 
     String getValue();

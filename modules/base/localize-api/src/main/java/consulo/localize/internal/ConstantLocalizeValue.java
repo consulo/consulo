@@ -16,6 +16,7 @@
 package consulo.localize.internal;
 
 import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -56,7 +57,7 @@ public final class ConstantLocalizeValue implements LocalizeValue {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
