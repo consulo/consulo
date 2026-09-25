@@ -14,6 +14,7 @@ import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class PsiFragment {
   private static final Logger LOG = Logger.getInstance(PsiFragment.class);
@@ -26,10 +27,12 @@ public abstract class PsiFragment {
   private boolean myNested;
   private int myCost;
 
+  @RequiredReadAction
   public PsiFragment(PsiElement element) {
     this(element, 0);
   }
 
+  @RequiredReadAction
   public PsiFragment(PsiElement element, int cost) {
     myElementAnchors = new PsiAnchor[]{createAnchor(element)};
     myDuplicate = false;
@@ -40,6 +43,7 @@ public abstract class PsiFragment {
     myLanguage = calcLanguage(element);
   }
 
+  @RequiredReadAction
   protected Language calcLanguage(PsiElement element) {
     return doGetLanguageForElement(element);
   }
@@ -48,10 +52,12 @@ public abstract class PsiFragment {
     return ReadAction.compute(() -> PsiAnchor.create(element));
   }
 
+  @RequiredReadAction
   public PsiFragment(List<? extends PsiElement> elements) {
     this(elements, 0, elements.size() - 1);
   }
 
+  @RequiredReadAction
   public PsiFragment(List<? extends PsiElement> elements, int from, int to) {
     myElementAnchors = new PsiAnchor[to - from + 1];
 
@@ -63,12 +69,9 @@ public abstract class PsiFragment {
     myChecked = false;
     myNested = false;
     myParents = null;
-    myLanguage = to >= from && from < elements.size()
-                 ? calcLanguage(elements.get(from))
-                 : null;
+    myLanguage = to >= from && from < elements.size() ? calcLanguage(elements.get(from)) : null;
   }
 
-  
   @RequiredReadAction
   private static Language doGetLanguageForElement(PsiElement element) {
     DuplicatesProfile profile = DuplicatesProfile.findProfileForLanguage(element.getLanguage());
@@ -169,6 +172,7 @@ public abstract class PsiFragment {
 
   public abstract boolean isEqual(PsiElement[] elements, int discardCost);
 
+  @RequiredReadAction
   public @Nullable UsageInfo getUsageInfo() {
     if (myElementAnchors.length == 1) {
       PsiElement element = myElementAnchors[0].retrieve();
@@ -188,6 +192,8 @@ public abstract class PsiFragment {
   }
 
   //debug only
+  @Override
+  @RequiredReadAction
   public String toString() {
     StringBuilder buffer = new StringBuilder();
 
@@ -202,25 +208,23 @@ public abstract class PsiFragment {
     return buffer.toString();
   }
 
-  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PsiFragment)) return false;
-
-    PsiFragment other = ((PsiFragment)o);
-
-    return other.getStartOffset() == getStartOffset() &&
-           other.getEndOffset() == getEndOffset() &&
-           Comparing.equal(other.getFile(), getFile());
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (o == this) {
+      return true;
+    }
+    return o instanceof PsiFragment that
+      && that.getStartOffset() == getStartOffset()
+      && that.getEndOffset() == getEndOffset()
+      && Objects.equals(that.getFile(), getFile());
   }
 
+  @Override
+  @RequiredReadAction
   public int hashCode() {
-    int result = getStartOffset();
-    result += 31 * result + getEndOffset();
+    int result = 31 * getStartOffset() + getEndOffset();
     PsiFile file = getFile();
-    if (file != null) {
-      result += 31 * result + file.getName().hashCode();
-    }
-    return result;
+    return 31 * result + (file == null ? 0 : file.getName().hashCode());
   }
 
   public int getCost() {
@@ -245,4 +249,3 @@ public abstract class PsiFragment {
     return myLanguage;
   }
 }
-

@@ -18,6 +18,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -142,7 +143,7 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         }
 
         @Override
-        public boolean equals(Object other) {
+        public boolean equals(@Nullable Object other) {
             if (this == other) {
                 return true;
             }
@@ -151,21 +152,15 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
             }
 
             FileBuildProblem that = (FileBuildProblem) other;
-            if (!myEvent.equals(that.myEvent)) {
-                return false;
-            }
-            if (!myVirtualFile.equals(that.myVirtualFile)) {
-                return false;
-            }
-            return myProblemsProvider.equals(that.myProblemsProvider);
+            return myEvent.equals(that.myEvent)
+                && myVirtualFile.equals(that.myVirtualFile)
+                && myProblemsProvider.equals(that.myProblemsProvider);
         }
 
         @Override
         public int hashCode() {
-            int result = myEvent.hashCode();
-            result = 31 * result + myVirtualFile.hashCode();
-            result = 31 * result + myProblemsProvider.hashCode();
-            return result;
+            int result = 31 * myEvent.hashCode() + myVirtualFile.hashCode();
+            return 31 * result + myProblemsProvider.hashCode();
         }
     }
 }

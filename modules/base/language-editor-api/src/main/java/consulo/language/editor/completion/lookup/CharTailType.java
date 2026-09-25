@@ -16,49 +16,47 @@
 package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
-*/
+ */
 public class CharTailType extends TailType {
-  private final char myChar;
-  private final boolean myOverwrite;
+    private final char myChar;
+    private final boolean myOverwrite;
 
-  public CharTailType(char aChar) {
-    this(aChar, true);
-  }
+    public CharTailType(char aChar) {
+        this(aChar, true);
+    }
 
-  public CharTailType(char aChar, boolean overwrite) {
-    myChar = aChar;
-    myOverwrite = overwrite;
-  }
+    public CharTailType(char aChar, boolean overwrite) {
+        myChar = aChar;
+        myOverwrite = overwrite;
+    }
 
-  @Override
-  public boolean isApplicable(InsertionContext context) {
-    return !context.shouldAddCompletionChar() || context.getCompletionChar() != myChar;
-  }
+    @Override
+    public boolean isApplicable(InsertionContext context) {
+        return !context.shouldAddCompletionChar() || context.getCompletionChar() != myChar;
+    }
 
-  @Override
-  public int processTail(Editor editor, int tailOffset) {
-    return insertChar(editor, tailOffset, myChar, myOverwrite);
-  }
+    @Override
+    public int processTail(Editor editor, int tailOffset) {
+        return insertChar(editor, tailOffset, myChar, myOverwrite);
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof CharTailType)) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof CharTailType that && myChar == that.myChar;
+    }
 
-    CharTailType that = (CharTailType)o;
+    @Override
+    public int hashCode() {
+        return (int) myChar;
+    }
 
-    if (myChar != that.myChar) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    return (int)myChar;
-  }
-
-  public String toString() {
-    return "CharTailType:\'" + myChar + "\'";
-  }
+    @Override
+    public String toString() {
+        return "CharTailType:\'" + myChar + "\'";
+    }
 }

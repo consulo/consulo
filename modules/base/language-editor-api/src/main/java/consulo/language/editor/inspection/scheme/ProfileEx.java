@@ -23,6 +23,7 @@ import consulo.util.xml.serializer.annotation.OptionTag;
 import consulo.util.xml.serializer.annotation.Transient;
 import consulo.logging.Logger;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -37,7 +38,6 @@ public abstract class ProfileEx implements Profile {
 
   private final SmartSerializer mySerializer;
 
-  
   protected String myName;
 
   @SuppressWarnings("unused")
@@ -59,7 +59,6 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  
   // ugly name to preserve compatibility
   @OptionTag("myName")
   public String getName() {
@@ -73,10 +72,7 @@ public abstract class ProfileEx implements Profile {
       profile.writeExternal(config);
       readExternal(config);
     }
-    catch (WriteExternalException e) {
-      LOG.error(e);
-    }
-    catch (InvalidDataException e) {
+    catch (WriteExternalException | InvalidDataException e) {
       LOG.error(e);
     }
   }
@@ -137,10 +133,13 @@ public abstract class ProfileEx implements Profile {
   public void profileChanged() {
   }
 
-  public boolean equals(Object o) {
-    return this == o || o instanceof ProfileEx && myName.equals(((ProfileEx)o).myName);
+  @Override
+  public boolean equals(@Nullable Object o) {
+    return this == o
+        || o instanceof ProfileEx that && myName.equals(that.myName);
   }
 
+  @Override
   public int hashCode() {
     return myName.hashCode();
   }

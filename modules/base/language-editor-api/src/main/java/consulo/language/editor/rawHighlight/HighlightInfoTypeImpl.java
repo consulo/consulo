@@ -46,7 +46,6 @@ public class HighlightInfoTypeImpl implements HighlightInfoType, HighlightInfoTy
     }
 
     @Override
-    
     public HighlightSeverity getSeverity(@Nullable PsiElement psiElement) {
         return mySeverity;
     }
@@ -73,7 +72,7 @@ public class HighlightInfoTypeImpl implements HighlightInfoType, HighlightInfoTy
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -81,7 +80,7 @@ public class HighlightInfoTypeImpl implements HighlightInfoType, HighlightInfoTy
             return false;
         }
 
-        consulo.language.editor.rawHighlight.HighlightInfoTypeImpl that = (consulo.language.editor.rawHighlight.HighlightInfoTypeImpl) o;
+        HighlightInfoTypeImpl that = (HighlightInfoTypeImpl) o;
 
         return Objects.equals(myAttributesKey, that.myAttributesKey)
             && mySeverity.equals(that.mySeverity);
@@ -89,8 +88,7 @@ public class HighlightInfoTypeImpl implements HighlightInfoType, HighlightInfoTy
 
     @Override
     public int hashCode() {
-        int result = mySeverity.hashCode();
-        return 29 * result + myAttributesKey.hashCode();
+        return 29 * mySeverity.hashCode() + myAttributesKey.hashCode();
     }
 
     @Override

@@ -16,6 +16,8 @@
  */
 package consulo.language.editor.inlay;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a single inlay hint instance.
  */
@@ -27,12 +29,14 @@ public class InlayInfo {
     private final boolean relatesToPrecedingText;
     private final HintWidthAdjustment widthAdjustment;
 
-    public InlayInfo(String text,
-                     int offset,
-                     boolean isShowOnlyIfExistedBefore,
-                     boolean isFilterByExcludeList,
-                     boolean relatesToPrecedingText,
-                     HintWidthAdjustment widthAdjustment) {
+    public InlayInfo(
+        String text,
+        int offset,
+        boolean isShowOnlyIfExistedBefore,
+        boolean isFilterByExcludeList,
+        boolean relatesToPrecedingText,
+        HintWidthAdjustment widthAdjustment
+    ) {
         this.text = text;
         this.offset = offset;
         this.isShowOnlyIfExistedBefore = isShowOnlyIfExistedBefore;
@@ -41,11 +45,13 @@ public class InlayInfo {
         this.widthAdjustment = widthAdjustment;
     }
 
-    public InlayInfo(String text,
-                     int offset,
-                     boolean isShowOnlyIfExistedBefore,
-                     boolean isFilterByExcludeList,
-                     boolean relatesToPrecedingText) {
+    public InlayInfo(
+        String text,
+        int offset,
+        boolean isShowOnlyIfExistedBefore,
+        boolean isFilterByExcludeList,
+        boolean relatesToPrecedingText
+    ) {
         this(text, offset, isShowOnlyIfExistedBefore, isFilterByExcludeList, relatesToPrecedingText, null);
     }
 
@@ -82,24 +88,20 @@ public class InlayInfo {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        InlayInfo other = (InlayInfo) obj;
-        if (offset != other.offset) {
-            return false;
-        }
-        return text.equals(other.text);
+        InlayInfo that = (InlayInfo) obj;
+        return offset == that.offset
+            && text.equals(that.text);
     }
 
     @Override
     public int hashCode() {
-        int result = text.hashCode();
-        result = 31 * result + offset;
-        return result;
+        return 31 * text.hashCode() + offset;
     }
 }

@@ -34,17 +34,16 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.Converter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -142,7 +141,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -151,14 +150,13 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             }
 
             TemplateKey that = (TemplateKey) o;
-            return Comparing.equal(groupName, that.groupName) && Comparing.equal(key, that.key);
+            return Objects.equals(groupName, that.groupName)
+                && Objects.equals(key, that.key);
         }
 
         @Override
         public int hashCode() {
-            int result = groupName != null ? groupName.hashCode() : 0;
-            result = 31 * result + (key != null ? key.hashCode() : 0);
-            return result;
+            return 31 * Objects.hashCode(groupName) + Objects.hashCode(key);
         }
 
         public String getGroupName() {
@@ -371,7 +369,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     private void clearPreviouslyRegistered(Template template) {
-        TemplateImpl existing = getTemplate(template.getKey(), ((TemplateImpl) template).getGroupName());
+        TemplateImpl existing = getTemplate(template.getKey(), template.getGroupName());
         if (existing != null) {
             LOG.info("Template with key " + template.getKey() + " and id " + template.getId() + " already registered");
             TemplateGroup group = mySchemeManager.findSchemeByName(existing.getGroupName());
@@ -407,7 +405,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     public void removeTemplate(Template template) {
         myTemplates.remove(template.getKey(), (TemplateImpl) template);
 
-        TemplateGroup group = mySchemeManager.findSchemeByName(((TemplateImpl) template).getGroupName());
+        TemplateGroup group = mySchemeManager.findSchemeByName(template.getGroupName());
         if (group != null) {
             group.removeElement((TemplateImpl) template);
             if (group.isEmpty()) {

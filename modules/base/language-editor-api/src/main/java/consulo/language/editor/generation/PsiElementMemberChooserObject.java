@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.generation;
 
 import consulo.language.psi.PsiElement;
@@ -22,36 +21,38 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
-  private final PsiElement myPsiElement;
+    private final PsiElement myPsiElement;
 
-  public PsiElementMemberChooserObject(PsiElement psiElement, String text) {
-    super(text);
-    myPsiElement = psiElement;
-  }
+    public PsiElementMemberChooserObject(PsiElement psiElement, String text) {
+        super(text);
+        myPsiElement = psiElement;
+    }
 
-  public PsiElementMemberChooserObject(PsiElement psiElement, String text, @Nullable Image icon) {
-    super(text, icon);
-    myPsiElement = psiElement;
-  }
+    public PsiElementMemberChooserObject(PsiElement psiElement, String text, @Nullable Image icon) {
+        super(text, icon);
+        myPsiElement = psiElement;
+    }
 
-  public PsiElement getPsiElement() {
-    return myPsiElement;
-  }
+    public PsiElement getPsiElement() {
+        return myPsiElement;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    PsiElementMemberChooserObject that = (PsiElementMemberChooserObject)o;
+        PsiElementMemberChooserObject that = (PsiElementMemberChooserObject) o;
 
-    if (!myPsiElement.getManager().areElementsEquivalent(myPsiElement, that.myPsiElement)) return false;
+        return myPsiElement.getManager().areElementsEquivalent(myPsiElement, that.myPsiElement);
+    }
 
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myPsiElement.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myPsiElement.hashCode();
+    }
 }

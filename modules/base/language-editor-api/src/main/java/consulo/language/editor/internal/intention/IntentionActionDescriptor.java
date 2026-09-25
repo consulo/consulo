@@ -86,7 +86,6 @@ public class IntentionActionDescriptor {
         mySeverity = severity;
     }
 
-    
     public IntentionAction getAction() {
         return myAction;
     }
@@ -218,8 +217,9 @@ public class IntentionActionDescriptor {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof IntentionActionDescriptor descriptor && myAction.equals(descriptor.myAction);
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof IntentionActionDescriptor that && myAction.equals(that.myAction);
     }
 
     @Override

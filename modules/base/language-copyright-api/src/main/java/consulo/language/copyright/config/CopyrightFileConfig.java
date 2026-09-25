@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.copyright.config;
 
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {
   public static final CopyrightFileConfig DEFAULT_SETTINGS_HOLDER = new CopyrightFileConfig();
@@ -100,11 +100,11 @@ public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<CopyrightFileConfig>(this, DEFAULT_SETTINGS_HOLDER));
+    DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<>(this, DEFAULT_SETTINGS_HOLDER));
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -114,57 +114,33 @@ public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {
 
     CopyrightFileConfig that = (CopyrightFileConfig)o;
 
-    if (addBlankAfter != that.addBlankAfter) {
-      return false;
-    }
-    if (fileLocation != that.fileLocation) {
-      return false;
-    }
-    if (fileTypeOverride != that.fileTypeOverride) {
-      return false;
-    }
-    if (relativeBefore != that.relativeBefore) {
-      return false;
-    }
-    if (block != that.block) {
-      return false;
-    }
-    if (box != that.box) {
-      return false;
-    }
-    if (filler != that.filler) {
-      return false;
-    }
-    if (lenAfter != that.lenAfter) {
-      return false;
-    }
-    if (lenBefore != that.lenBefore) {
-      return false;
-    }
-    if (prefixLines != that.prefixLines) {
-      return false;
-    }
-    if (separateAfter != that.separateAfter) {
-      return false;
-    }
-    return separateBefore == that.separateBefore;
-
+    return addBlankAfter == that.addBlankAfter
+      && fileLocation == that.fileLocation
+      && fileTypeOverride == that.fileTypeOverride
+      && relativeBefore == that.relativeBefore
+      && block == that.block
+      && box == that.box
+      && filler == that.filler
+      && lenAfter == that.lenAfter
+      && lenBefore == that.lenBefore
+      && prefixLines == that.prefixLines
+      && separateAfter == that.separateAfter
+      && separateBefore == that.separateBefore;
   }
 
   @Override
   public int hashCode() {
-    int result;
-    result = (block ? 1 : 0);
-    result = 29 * result + (separateBefore ? 1 : 0);
-    result = 29 * result + (separateAfter ? 1 : 0);
-    result = 29 * result + (prefixLines ? 1 : 0);
+    int result = Boolean.hashCode(block);
+    result = 29 * result + Boolean.hashCode(separateBefore);
+    result = 29 * result + Boolean.hashCode(separateAfter);
+    result = 29 * result + Boolean.hashCode(prefixLines);
     result = 29 * result + lenBefore;
     result = 29 * result + lenAfter;
-    result = 29 * result + (box ? 1 : 0);
+    result = 29 * result + Boolean.hashCode(box);
     result = 29 * result + filler.hashCode();
     result = 29 * result + fileTypeOverride;
-    result = 29 * result + (relativeBefore ? 1 : 0);
-    result = 29 * result + (addBlankAfter ? 1 : 0);
+    result = 29 * result + Boolean.hashCode(relativeBefore);
+    result = 29 * result + Boolean.hashCode(addBlankAfter);
     result = 29 * result + fileLocation;
     return result;
   }

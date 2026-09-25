@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
@@ -77,13 +76,15 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    public boolean equals(Object o) {
-        return o == this
-            || o instanceof LookupItem item
-            && Comparing.equal(myObject, item.myObject)
-            && Objects.equals(myLookupString, item.myLookupString)
-            && Objects.equals(myAllLookupStrings, item.myAllLookupStrings)
-            && Objects.equals(myAttributes, item.myAttributes);
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof LookupItem that
+            && Comparing.equal(myObject, that.myObject)
+            && Objects.equals(myLookupString, that.myLookupString)
+            && Objects.equals(myAllLookupStrings, that.myAllLookupStrings)
+            && Objects.equals(myAttributes, that.myAttributes);
     }
 
     @Override

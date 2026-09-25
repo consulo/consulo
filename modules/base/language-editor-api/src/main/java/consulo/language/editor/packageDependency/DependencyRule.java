@@ -26,96 +26,110 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 public class DependencyRule {
-  private NamedScope myFromScope;
-  private NamedScope myToScope;
-  private boolean myDenyRule = true;
+    private NamedScope myFromScope;
+    private NamedScope myToScope;
+    private boolean myDenyRule = true;
 
-  public DependencyRule(NamedScope fromPackageSet, NamedScope toPackageSet, boolean isDenyRule) {
-    myFromScope = fromPackageSet;
-    myToScope = toPackageSet;
-    myDenyRule = isDenyRule;
-  }
+    public DependencyRule(NamedScope fromPackageSet, NamedScope toPackageSet, boolean isDenyRule) {
+        myFromScope = fromPackageSet;
+        myToScope = toPackageSet;
+        myDenyRule = isDenyRule;
+    }
 
-  public boolean isForbiddenToUse(PsiFile from, PsiFile to) {
-    if (myFromScope == null || myToScope == null) return false;
-    PackageSet fromSet = myFromScope.getValue();
-    PackageSet toSet = myToScope.getValue();
-    if (fromSet == null || toSet == null) return false;
-    DependencyValidationManager holder = DependencyValidationManager.getInstance(from.getProject());
-    return (myDenyRule
+    public boolean isForbiddenToUse(PsiFile from, PsiFile to) {
+        if (myFromScope == null || myToScope == null) {
+            return false;
+        }
+        PackageSet fromSet = myFromScope.getValue();
+        PackageSet toSet = myToScope.getValue();
+        if (fromSet == null || toSet == null) {
+            return false;
+        }
+        DependencyValidationManager holder = DependencyValidationManager.getInstance(from.getProject());
+        return (myDenyRule
             ? fromSet.contains(from.getVirtualFile(), from.getProject(), holder)
             : new ComplementPackageSet(fromSet).contains(from.getVirtualFile(), from.getProject(), holder))
-           && toSet.contains(to.getVirtualFile(), to.getProject(), holder);
-  }
+            && toSet.contains(to.getVirtualFile(), to.getProject(), holder);
+    }
 
-  public boolean isApplicable(PsiFile file){
-    if (myFromScope == null || myToScope == null) return false;
-    PackageSet fromSet = myFromScope.getValue();
-    if (fromSet == null) return false;
+    public boolean isApplicable(PsiFile file) {
+        if (myFromScope == null || myToScope == null) {
+            return false;
+        }
+        PackageSet fromSet = myFromScope.getValue();
+        if (fromSet == null) {
+            return false;
+        }
 
-    Project project = file.getProject();
-    VirtualFile virtualFile = file.getVirtualFile();
-    DependencyValidationManager holder = DependencyValidationManager.getInstance(project);
-    return (myDenyRule
+        Project project = file.getProject();
+        VirtualFile virtualFile = file.getVirtualFile();
+        DependencyValidationManager holder = DependencyValidationManager.getInstance(project);
+        return (myDenyRule
             ? fromSet.contains(virtualFile, project, holder)
             : new ComplementPackageSet(fromSet).contains(virtualFile, project, holder));
-  }
-
-  public String getDisplayText() {
-    String toScopeName = myToScope == null ? "" : myToScope.getName();
-    String fromScopeName = myFromScope == null ? "" : myFromScope.getName();
-
-    return myDenyRule
-        ? AnalysisScopeLocalize.scopeDisplayNameDenyScope(toScopeName, fromScopeName).get()
-        : AnalysisScopeLocalize.scopeDisplayNameAllowScope(toScopeName, fromScopeName).get();
-  }
-
-  public boolean equals(Object o) {
-    if (!(o instanceof DependencyRule)) return false;
-    DependencyRule other = (DependencyRule)o;
-    return getDisplayText().equals(other.getDisplayText()) &&
-           Comparing.strEqual(getPackageSetPresentation(myFromScope), getPackageSetPresentation(other.myFromScope)) &&
-           Comparing.strEqual(getPackageSetPresentation(myToScope), getPackageSetPresentation(other.myToScope));
-
-  }
-
-  private static @Nullable String getPackageSetPresentation(NamedScope scope) {
-    if (scope != null) {
-      PackageSet packageSet = scope.getValue();
-      if (packageSet != null) {
-        return packageSet.getText();
-      }
     }
-    return null;
-  }
 
-  public int hashCode() {
-    return getDisplayText().hashCode();
-  }
+    public String getDisplayText() {
+        String toScopeName = myToScope == null ? "" : myToScope.getName();
+        String fromScopeName = myFromScope == null ? "" : myFromScope.getName();
 
-  public DependencyRule createCopy() {
-    return new DependencyRule(myFromScope == null ? null : myFromScope.createCopy(),
-                              myToScope == null ? null : myToScope.createCopy(),
-                              myDenyRule);
-  }
+        return myDenyRule
+            ? AnalysisScopeLocalize.scopeDisplayNameDenyScope(toScopeName, fromScopeName).get()
+            : AnalysisScopeLocalize.scopeDisplayNameAllowScope(toScopeName, fromScopeName).get();
+    }
 
-  public boolean isDenyRule() {
-    return myDenyRule;
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof DependencyRule that
+            && getDisplayText().equals(that.getDisplayText())
+            && Comparing.strEqual(getPackageSetPresentation(myFromScope), getPackageSetPresentation(that.myFromScope))
+            && Comparing.strEqual(getPackageSetPresentation(myToScope), getPackageSetPresentation(that.myToScope));
 
-  public NamedScope getFromScope() {
-    return myFromScope;
-  }
+    }
 
-  public void setFromScope(NamedScope fromScope) {
-    myFromScope = fromScope;
-  }
+    private static @Nullable String getPackageSetPresentation(NamedScope scope) {
+        if (scope != null) {
+            PackageSet packageSet = scope.getValue();
+            if (packageSet != null) {
+                return packageSet.getText();
+            }
+        }
+        return null;
+    }
 
-  public NamedScope getToScope() {
-    return myToScope;
-  }
+    @Override
+    public int hashCode() {
+        return getDisplayText().hashCode();
+    }
 
-  public void setToScope(NamedScope toScope) {
-    myToScope = toScope;
-  }
+    public DependencyRule createCopy() {
+        return new DependencyRule(
+            myFromScope == null ? null : myFromScope.createCopy(),
+            myToScope == null ? null : myToScope.createCopy(),
+            myDenyRule
+        );
+    }
+
+    public boolean isDenyRule() {
+        return myDenyRule;
+    }
+
+    public NamedScope getFromScope() {
+        return myFromScope;
+    }
+
+    public void setFromScope(NamedScope fromScope) {
+        myFromScope = fromScope;
+    }
+
+    public NamedScope getToScope() {
+        return myToScope;
+    }
+
+    public void setToScope(NamedScope toScope) {
+        myToScope = toScope;
+    }
 }

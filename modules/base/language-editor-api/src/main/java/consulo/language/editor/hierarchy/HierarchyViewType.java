@@ -78,8 +78,9 @@ public final class HierarchyViewType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o || o instanceof HierarchyViewType other && myId.equals(other.myId);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof HierarchyViewType other && myId.equals(other.myId);
     }
 
     @Override
@@ -97,7 +98,7 @@ public final class HierarchyViewType {
         private LocalizeValue myPresentableName = LocalizeValue.empty();
         private LocalizeValue myDescription = LocalizeValue.empty();
         private @Nullable Image myIcon;
-        private Function<String, LocalizeValue> myContentTitle = name -> LocalizeValue.of(name);
+        private Function<String, LocalizeValue> myContentTitle = LocalizeValue::of;
 
         private Builder(String id) {
             myId = id;
