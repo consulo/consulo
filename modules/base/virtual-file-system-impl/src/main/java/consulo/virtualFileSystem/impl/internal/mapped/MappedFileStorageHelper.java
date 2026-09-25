@@ -2,8 +2,8 @@
 package consulo.virtualFileSystem.impl.internal.mapped;
 
 import consulo.container.boot.ContainerPathManager;
-import consulo.index.io.PagedFileStorage;
 import consulo.index.io.ResizeableMappedFile;
+import consulo.index.io.StorageLockContext;
 import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -53,7 +53,7 @@ public final class MappedFileStorageHelper implements Closeable, CleanableStorag
 
     private static final int CLEAR_CHUNK_SIZE = 64 * 1024;
 
-    private static final PagedFileStorage.StorageLockContext ourStorageLockContext = new PagedFileStorage.StorageLockContext(false);
+    private static final StorageLockContext ourStorageLockContext = new StorageLockContext(false);
 
     public static MappedFileStorageHelper openHelper(FSRecordsProxy vfs,
                                                      Path absoluteStoragePath,
@@ -82,7 +82,7 @@ public final class MappedFileStorageHelper implements Closeable, CleanableStorag
             }
 
             ResizeableMappedFile mappedFile = new ResizeableMappedFile(
-                absoluteStoragePath.toFile(),
+                absoluteStoragePath,
                 DEFAULT_PAGE_SIZE,
                 ourStorageLockContext,
                 DEFAULT_PAGE_SIZE,

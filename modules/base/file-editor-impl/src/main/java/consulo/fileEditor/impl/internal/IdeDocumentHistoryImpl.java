@@ -33,6 +33,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.index.io.EnumeratorLongDescriptor;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.PersistentHashMap;
+import consulo.index.io.data.IOUtil;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
@@ -180,13 +181,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         File file = ProjectUtil.getProjectCachePath(myProject, "recentFilesTimeStamps.dat").toFile();
         PersistentHashMap<String, Long> map;
         try {
-            map = new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, EnumeratorLongDescriptor.INSTANCE);
+            map = new PersistentHashMap<>(file.toPath(), EnumeratorStringDescriptor.INSTANCE, EnumeratorLongDescriptor.INSTANCE);
         }
         catch (Exception e) {
             LOG.info("Cannot create PersistentHashMap in " + file, e);
-            PersistentHashMap.deleteFilesStartingWith(file);
+            IOUtil.deleteAllFilesStartingWith(file);
             try {
-                map = new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, EnumeratorLongDescriptor.INSTANCE);
+                map = new PersistentHashMap<>(file.toPath(), EnumeratorStringDescriptor.INSTANCE, EnumeratorLongDescriptor.INSTANCE);
             }
             catch (Exception e1) {
                 LOG.error("Cannot create PersistentHashMap in " + file + " even after deleting old files", e1);

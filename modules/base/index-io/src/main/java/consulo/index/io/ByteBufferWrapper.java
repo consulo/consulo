@@ -16,17 +16,17 @@
 package consulo.index.io;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 
 public abstract class ByteBufferWrapper {
-  protected final File myFile;
+  protected final Path myFile;
   protected final long myPosition;
   protected final long myLength;
   protected volatile boolean myDirty;
 
-  protected ByteBufferWrapper(File file, long offset, long length) {
+  protected ByteBufferWrapper(Path file, long offset, long length) {
     myFile = file;
     myPosition = offset;
     myLength = length;
@@ -52,15 +52,11 @@ public abstract class ByteBufferWrapper {
     unmap();
   }
 
-  public static ByteBufferWrapper readWrite(File file, int offset, int length) {
+  public static ByteBufferWrapper readWriteDirect(Path file, long offset, int length) {
     return new ReadWriteDirectBufferWrapper(file, offset, length);
   }
 
-  public static ByteBufferWrapper readWriteDirect(File file, long offset, int length) {
-    return new ReadWriteDirectBufferWrapper(file, offset, length);
-  }
-
-  public static ByteBufferWrapper readOnly(File file, int offset) {
+  public static ByteBufferWrapper readOnly(Path file, int offset) throws IOException {
     return new ReadOnlyMappedBufferWrapper(file, offset);
   }
 

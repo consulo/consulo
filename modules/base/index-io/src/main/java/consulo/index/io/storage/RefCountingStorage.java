@@ -24,8 +24,8 @@ import consulo.util.io.UnsyncByteArrayInputStream;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.zip.DeflaterOutputStream;
@@ -49,15 +49,15 @@ public class RefCountingStorage extends AbstractStorage {
   private final boolean myDoNotZipCaches;
   private static final int MAX_PENDING_WRITE_SIZE = 20 * 1024 * 1024;
 
-  public RefCountingStorage(String path) throws IOException {
+  public RefCountingStorage(Path path) throws IOException {
     this(path, CapacityAllocationPolicy.DEFAULT);
   }
 
-  public RefCountingStorage(String path, CapacityAllocationPolicy capacityAllocationPolicy) throws IOException {
+  public RefCountingStorage(Path path, CapacityAllocationPolicy capacityAllocationPolicy) throws IOException {
     this(path, capacityAllocationPolicy, Boolean.valueOf(System.getProperty("idea.doNotZipCaches")).booleanValue());
   }
 
-  public RefCountingStorage(String path, CapacityAllocationPolicy capacityAllocationPolicy, boolean doNotZipCaches) throws IOException {
+  public RefCountingStorage(Path path, CapacityAllocationPolicy capacityAllocationPolicy, boolean doNotZipCaches) throws IOException {
     super(path, capacityAllocationPolicy);
     myDoNotZipCaches = doNotZipCaches;
   }
@@ -182,7 +182,7 @@ public class RefCountingStorage extends AbstractStorage {
   }
 
   @Override
-  protected AbstractRecordsTable createRecordsTable(PagePool pool, File recordsFile) throws IOException {
+  protected AbstractRecordsTable createRecordsTable(PagePool pool, Path recordsFile) throws IOException {
     return new RefCountingRecordsTable(recordsFile, pool);
   }
 

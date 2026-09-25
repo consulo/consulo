@@ -2,41 +2,50 @@
 package consulo.language.index.impl.internal.forward;
 
 import consulo.index.io.ByteSequenceDataExternalizer;
+import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.PersistentHashMap;
 import consulo.index.io.PersistentHashMapValueStorage;
-import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.StorageLockContext;
+import consulo.index.io.data.IOUtil;
 import consulo.index.io.forward.ForwardIndex;
 import consulo.logging.Logger;
 import consulo.util.io.ByteArraySequence;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class PersistentMapBasedForwardIndex implements ForwardIndex {
   private static final Logger LOG = Logger.getInstance(PersistentMapBasedForwardIndex.class);
   
   private volatile PersistentHashMap<Integer, ByteArraySequence> myPersistentMap;
   
-  private final File myMapFile;
+  private final Path myMapFile;
   private final boolean myUseChunks;
+  private final @Nullable StorageLockContext myStorageLockContext;
 
-  public PersistentMapBasedForwardIndex(File mapFile) throws IOException {
+  public PersistentMapBasedForwardIndex(Path mapFile) throws IOException {
     this(mapFile, true);
   }
 
-  public PersistentMapBasedForwardIndex(File mapFile, boolean useChunks) throws IOException {
-    myPersistentMap = createMap(mapFile);
-    myMapFile = mapFile;
-    myUseChunks = useChunks;
+  public PersistentMapBasedForwardIndex(Path mapFile, boolean useChunks) throws IOException {
+    this(mapFile, useChunks, null);
   }
 
-  
-  protected PersistentHashMap<Integer, ByteArraySequence> createMap(File file) throws IOException {
+  public PersistentMapBasedForwardIndex(Path mapFile, boolean useChunks, @Nullable StorageLockContext storageLockContext) throws IOException {
+    myPersistentMap = createMap(mapFile, useChunks, storageLockContext);
+    myMapFile = mapFile;
+    myUseChunks = useChunks;
+    myStorageLockContext = storageLockContext;
+  }
+
+  private static PersistentHashMap<Integer, ByteArraySequence> createMap(Path file,
+                                                                         boolean useChunks,
+                                                                         @Nullable StorageLockContext storageLockContext) throws IOException {
     Boolean oldHasNoChunksValue = PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.get();
-    PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(!myUseChunks);
+    PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(!useChunks);
     try {
-      return new PersistentHashMap<>(file, EnumeratorIntegerDescriptor.INSTANCE, ByteSequenceDataExternalizer.INSTANCE);
+      return new PersistentHashMap<>(file, EnumeratorIntegerDescriptor.INSTANCE, ByteSequenceDataExternalizer.INSTANCE, storageLockContext);
     }
     finally {
       PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(oldHasNoChunksValue);
@@ -65,15 +74,15 @@ public class PersistentMapBasedForwardIndex implements ForwardIndex {
 
   @Override
   public void clear() throws IOException {
-    File baseFile = myPersistentMap.getBaseFile();
+    Path baseFile = myPersistentMap.getBaseFile();
     try {
       myPersistentMap.close();
     }
     catch (IOException e) {
       LOG.info(e);
     }
-    PersistentHashMap.deleteFilesStartingWith(baseFile);
-    myPersistentMap = createMap(myMapFile);
+    IOUtil.deleteAllFilesStartingWith(baseFile);
+    myPersistentMap = createMap(myMapFile, myUseChunks, myStorageLockContext);
   }
 
   @Override

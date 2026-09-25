@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.index.io;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.impl.map.LinkedHashMap;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
@@ -10,13 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
@@ -73,7 +75,19 @@ public class PagedFileStorage implements Forceable {
   private static final String RW = "rw";
 
   // It is important to have ourLock after previous static constants as it depends on them
-  private static final StorageLock ourLock = new StorageLock();
+  static final StorageLock ourLock = new StorageLock();
+
+  /**
+   * TODO RC: So the more explicit (though verbose) approach is advised: pass the parameters needed through all the tree
+   *          of ctors.
+   *          This is partially implemented already, but a few legacy cases still remain to be converted later
+   */
+  @Deprecated
+  @DeprecationInfo("this is quite useful to setup deep trees of storages with the same set of configuration parameters, but " +
+                   "it has a significant downside for maintainability: it is hard to trace where specific configuration parameters come " +
+                   "from. It is also easy to miss the cases there storages (re-)initialized later, not in ctor, outside of thread-local " +
+                   "wrapping")
+  public static final ThreadLocal<StorageLockContext> THREAD_LOCAL_STORAGE_LOCK_CONTEXT = new ThreadLocal<>();
 
   private final StorageLockContext myStorageLockContext;
   private final boolean myNativeBytesOrder;
@@ -91,29 +105,25 @@ public class PagedFileStorage implements Forceable {
 
   private final byte[] myTypedIOBuffer;
   private volatile boolean isDirty;
-  private final File myFile;
+  private final Path myFile;
   protected volatile long mySize = -1;
   protected final int myPageSize;
   protected final boolean myValuesAreBufferAligned;
 
-  public PagedFileStorage(File file, StorageLock lock) throws IOException {
-    this(file, lock, BUFFER_SIZE, false);
+  public PagedFileStorage(Path file, StorageLock lock) throws IOException {
+    this(file, lock.myDefaultStorageLockContext, BUFFER_SIZE, false, false);
   }
 
-  public PagedFileStorage(File file, StorageLock lock, int pageSize, boolean valuesAreBufferAligned) throws IOException {
-    this(file, lock.myDefaultStorageLockContext, pageSize, valuesAreBufferAligned);
-  }
-
-  public PagedFileStorage(File file, @Nullable StorageLockContext storageLockContext, int pageSize, boolean valuesAreBufferAligned) throws IOException {
-    this(file, storageLockContext, pageSize, valuesAreBufferAligned, false);
-  }
-
-  public PagedFileStorage(File file, @Nullable StorageLockContext storageLockContext, int pageSize, boolean valuesAreBufferAligned, boolean nativeBytesOrder) throws IOException {
+  public PagedFileStorage(Path file,
+                          @Nullable StorageLockContext storageLockContext,
+                          int pageSize,
+                          boolean valuesAreBufferAligned,
+                          boolean nativeBytesOrder) throws IOException {
     myFile = file;
-    myStorageLockContext = storageLockContext != null ? storageLockContext : ourLock.myDefaultStorageLockContext;
+    myStorageLockContext = lookupStorageContext(storageLockContext);
     myPageSize = Math.max(pageSize > 0 ? pageSize : BUFFER_SIZE, Page.PAGE_SIZE);
     myValuesAreBufferAligned = valuesAreBufferAligned;
-    myStorageIndex = myStorageLockContext.myStorageLock.registerPagedFileStorage(this);
+    myStorageIndex = myStorageLockContext.getStorageLock().registerPagedFileStorage(this);
     myTypedIOBuffer = valuesAreBufferAligned ? null : new byte[8];
     myNativeBytesOrder = nativeBytesOrder;
   }
@@ -130,7 +140,7 @@ public class PagedFileStorage implements Forceable {
     return myStorageLockContext;
   }
 
-  public File getFile() {
+  public Path getFile() {
     return myFile;
   }
 
@@ -257,7 +267,7 @@ public class PagedFileStorage implements Forceable {
         throw new IllegalArgumentException("can't position buffer to offset " + page_offset + ", " +
                                            "buffer.limit=" + buffer.limit() + ", " +
                                            "page=" + page + ", " +
-                                           "file=" + myFile.getName() + ", " +
+                                           "file=" + myFile.getFileName() + ", " +
                                            "file.length=" + length());
       }
       buffer.get(dst, o, page_len);
@@ -299,13 +309,13 @@ public class PagedFileStorage implements Forceable {
     }
     finally {
       unmapAll();
-      myStorageLockContext.myStorageLock.myIndex2Storage.remove(myStorageIndex);
+      myStorageLockContext.getStorageLock().myIndex2Storage.remove(myStorageIndex);
       myStorageIndex = -1;
     }
   }
 
   private void unmapAll() {
-    myStorageLockContext.myStorageLock.unmapBuffersForOwner(myStorageIndex, myStorageLockContext);
+    myStorageLockContext.getStorageLock().unmapBuffersForOwner(myStorageIndex, myStorageLockContext);
 
     synchronized (myLastAccessedBufferCacheLock) {
       myLastPage = UNKNOWN_PAGE;
@@ -318,11 +328,11 @@ public class PagedFileStorage implements Forceable {
   }
 
   public void resize(long newSize) throws IOException {
-    long oldSize = myFile.length();
+    long oldSize = Files.exists(myFile) ? Files.size(myFile) : 0;
     if (oldSize == newSize && oldSize == length()) return;
 
     long started = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
-    myStorageLockContext.myStorageLock.invalidateBuffer(myStorageIndex | (int)(oldSize / myPageSize)); // TODO long page
+    myStorageLockContext.getStorageLock().invalidateBuffer(myStorageIndex | (int)(oldSize / myPageSize)); // TODO long page
     long unmapAllFinished = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
 
     resizeFile(newSize);
@@ -342,7 +352,7 @@ public class PagedFileStorage implements Forceable {
 
   private void resizeFile(long newSize) throws IOException {
     mySize = -1;
-    try (RandomAccessFile raf = new RandomAccessFile(myFile, RW)) {
+    try (RandomAccessFile raf = new RandomAccessFile(myFile.toFile(), RW)) {
       raf.setLength(newSize);
     }
     mySize = newSize;
@@ -365,7 +375,17 @@ public class PagedFileStorage implements Forceable {
   public final long length() {
     long size = mySize;
     if (size == -1) {
-      mySize = size = myFile.length();
+      if (Files.exists(myFile)) {
+        try {
+          mySize = size = Files.size(myFile);
+        }
+        catch (IOException e) {
+          LOG.error(e.getMessage(), e);
+        }
+      }
+      else {
+        mySize = size = 0;
+      }
     }
     return size;
   }
@@ -382,21 +402,21 @@ public class PagedFileStorage implements Forceable {
     synchronized (myLastAccessedBufferCacheLock) {
       if (myLastPage == page) {
         ByteBuffer buf = myLastBuffer.getCachedBuffer();
-        if (buf != null && myLastChangeCount == myStorageLockContext.myStorageLock.myMappingChangeCount) {
+        if (buf != null && myLastChangeCount == myStorageLockContext.getStorageLock().myMappingChangeCount) {
           if (modify) markDirty(myLastBuffer);
           return myLastBuffer;
         }
       }
       else if (myLastPage2 == page) {
         ByteBuffer buf = myLastBuffer2.getCachedBuffer();
-        if (buf != null && myLastChangeCount2 == myStorageLockContext.myStorageLock.myMappingChangeCount) {
+        if (buf != null && myLastChangeCount2 == myStorageLockContext.getStorageLock().myMappingChangeCount) {
           if (modify) markDirty(myLastBuffer2);
           return myLastBuffer2;
         }
       }
       else if (myLastPage3 == page) {
         ByteBuffer buf = myLastBuffer3.getCachedBuffer();
-        if (buf != null && myLastChangeCount3 == myStorageLockContext.myStorageLock.myMappingChangeCount) {
+        if (buf != null && myLastChangeCount3 == myStorageLockContext.getStorageLock().myMappingChangeCount) {
           if (modify) markDirty(myLastBuffer3);
           return myLastBuffer3;
         }
@@ -407,9 +427,9 @@ public class PagedFileStorage implements Forceable {
       assert page >= 0 && page <= MAX_PAGES_COUNT : page;
 
       if (myStorageIndex == -1) {
-        myStorageIndex = myStorageLockContext.myStorageLock.registerPagedFileStorage(this);
+        myStorageIndex = myStorageLockContext.getStorageLock().registerPagedFileStorage(this);
       }
-      ByteBufferWrapper byteBufferWrapper = myStorageLockContext.myStorageLock.get(myStorageIndex | (int)page); // TODO: long page
+      ByteBufferWrapper byteBufferWrapper = myStorageLockContext.getStorageLock().get(myStorageIndex | (int)page); // TODO: long page
       if (modify) markDirty(byteBufferWrapper);
       ByteBuffer buf = byteBufferWrapper.getBuffer();
       if (myNativeBytesOrder && buf.order() != ourNativeByteOrder) {
@@ -433,7 +453,7 @@ public class PagedFileStorage implements Forceable {
           myLastBuffer = byteBufferWrapper;
         }
 
-        myLastChangeCount = myStorageLockContext.myStorageLock.myMappingChangeCount;
+        myLastChangeCount = myStorageLockContext.getStorageLock().myMappingChangeCount;
       }
 
       return byteBufferWrapper;
@@ -452,7 +472,7 @@ public class PagedFileStorage implements Forceable {
   public void force() {
     long started = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
     if (isDirty) {
-      myStorageLockContext.myStorageLock.flushBuffersForOwner(myStorageIndex, myStorageLockContext);
+      myStorageLockContext.getStorageLock().flushBuffersForOwner(myStorageIndex, myStorageLockContext);
       isDirty = false;
     }
 
@@ -467,6 +487,23 @@ public class PagedFileStorage implements Forceable {
   @Override
   public boolean isDirty() {
     return isDirty;
+  }
+
+  public static StorageLockContext lookupStorageContext(@Nullable StorageLockContext storageLockContext) {
+    StorageLockContext threadLocalContext = THREAD_LOCAL_STORAGE_LOCK_CONTEXT.get();
+    if (threadLocalContext != null) {
+      if (storageLockContext != null && storageLockContext != threadLocalContext) {
+        throw new IllegalStateException(
+          "Context(" + storageLockContext + ") != THREAD_LOCAL_STORAGE_LOCK_CONTEXT(" + threadLocalContext + ")");
+      }
+      return threadLocalContext;
+    }
+    else if (storageLockContext != null) {
+      return storageLockContext;
+    }
+    else {
+      return ourLock.myDefaultStorageLockContext;
+    }
   }
 
   public static class StorageLock {
@@ -490,7 +527,7 @@ public class PagedFileStorage implements Forceable {
     }
 
     public StorageLock(boolean checkThreadAccess) {
-      myDefaultStorageLockContext = new StorageLockContext(this, checkThreadAccess);
+      myDefaultStorageLockContext = new StorageLockContext(this, checkThreadAccess, /*cacheChannels: */false);
 
       mySizeLimit = UPPER_LIMIT;
       mySegments = new consulo.util.collection.impl.map.LinkedHashMap<Integer, ByteBufferWrapper>(10, 0.75f, true) {
@@ -687,9 +724,7 @@ public class PagedFileStorage implements Forceable {
     }
 
     private static void checkThreadAccess(StorageLockContext storageLockContext) {
-      if (storageLockContext.myCheckThreadAccess && !storageLockContext.myLock.isHeldByCurrentThread()) {
-        throw new IllegalStateException("Must hold StorageLock lock to access PagedFileStorage");
-      }
+      storageLockContext.checkThreadAccess();
     }
 
     private @Nullable Map<Integer, ByteBufferWrapper> getBuffersOrderedForOwner(int index, StorageLockContext storageLockContext) {
@@ -776,30 +811,6 @@ public class PagedFileStorage implements Forceable {
       finally {
         mySegmentsAllocationLock.unlock();
       }
-    }
-  }
-
-  public static class StorageLockContext {
-    private final boolean myCheckThreadAccess;
-    private final ReentrantLock myLock;
-    private final StorageLock myStorageLock;
-
-    private StorageLockContext(StorageLock lock, boolean checkAccess) {
-      myLock = new ReentrantLock();
-      myStorageLock = lock;
-      myCheckThreadAccess = checkAccess;
-    }
-
-    public StorageLockContext(boolean checkAccess) {
-      this(ourLock, checkAccess);
-    }
-
-    public void lock() {
-      myLock.lock();
-    }
-
-    public void unlock() {
-      myLock.unlock();
     }
   }
 }

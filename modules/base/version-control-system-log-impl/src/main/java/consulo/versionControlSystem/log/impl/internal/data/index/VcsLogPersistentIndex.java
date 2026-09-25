@@ -440,7 +440,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
 
                 File messagesStorage = getStorageFile(INDEX, MESSAGES, logId, VcsLogStorageImpl.VERSION + MESSAGES_VERSION, true);
                 messages = new PersistentHashMap<>(
-                    messagesStorage,
+                    messagesStorage.toPath(),
                     new IntInlineKeyDescriptor(),
                     EnumeratorStringDescriptor.INSTANCE,
                     Page.PAGE_SIZE

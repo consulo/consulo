@@ -15,14 +15,16 @@
  */
 package consulo.index.io;
 
-import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
+import consulo.index.io.internal.IOCancellationCallbackHolder;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.LimitedInputStream;
 import consulo.util.io.UnsyncByteArrayInputStream;
 
 import org.jspecify.annotations.Nullable;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.ByteBuffer;
 import java.util.function.Predicate;
 
@@ -33,7 +35,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   private volatile int myBufferPosition;
   private static final int ourAppendBufferLength = 4096;
 
-  public AppendableStorageBackedByResizableMappedFile(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
+  public AppendableStorageBackedByResizableMappedFile(Path file, int initialSize, @Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
           throws IOException {
     super(file, initialSize, lockContext, pageSize, valuesAreBufferAligned);
     myReadStream = new MyDataIS(this);
@@ -82,7 +84,8 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
     if (myFileLength == 0) return true;
 
-    try (DataInputStream keysStream = new DataInputStream(new BufferedInputStream(new LimitedInputStream(new FileInputStream(getPagedFileStorage().getFile()), myFileLength) {
+    IOCancellationCallbackHolder.checkCancelled();
+    try (DataInputStream keysStream = new DataInputStream(new BufferedInputStream(new LimitedInputStream(Files.newInputStream(getPagedFileStorage().getFile()), myFileLength) {
       @Override
       public int available() {
         return remainingLimit();
@@ -226,65 +229,6 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       this.pos = 0;
       count = 0;
       ((MappedFileInputStream)in).setup(pos, limit);
-    }
-  }
-
-  private class MyCompressedAppendableFile extends CompressedAppendableFile {
-    private final File myFile;
-    private DataOutputStream myChunkLengthTableStream;
-
-    MyCompressedAppendableFile(File file) {
-      super(getPagedFileStorage().getFile());
-      myFile = file;
-    }
-
-   
-    @Override
-    protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) {
-      byte[] buf = new byte[pageSize];
-      get(offset, buf, 0, pageSize);
-
-      return new ByteArrayInputStream(buf);
-    }
-
-    @Override
-    protected void saveChunk(BufferExposingByteArrayOutputStream compressedChunk, long endOfFileOffset) throws IOException {
-      AppendableStorageBackedByResizableMappedFile.super.put(endOfFileOffset, compressedChunk.getInternalBuffer(), 0, compressedChunk.size());
-
-      if (myChunkLengthTableStream == null) {
-        myChunkLengthTableStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunkLengthFile(), true)));
-      }
-
-      DataInputOutputUtil.writeINT(myChunkLengthTableStream, compressedChunk.size());
-    }
-
-    @Override
-    public synchronized void force() {
-      super.force();
-
-      try {
-        if (myChunkLengthTableStream != null) myChunkLengthTableStream.flush();
-      }
-      catch (IOException ignore) {
-      }
-    }
-
-    @Override
-    public synchronized void dispose() {
-      super.dispose();
-      if (myChunkLengthTableStream != null) {
-        try {
-          myChunkLengthTableStream.close();
-        }
-        catch (IOException ignore) {
-        }
-      }
-    }
-
-   
-    @Override
-    protected File getChunksFile() {
-      return myFile;
     }
   }
 }

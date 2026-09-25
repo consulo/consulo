@@ -116,7 +116,7 @@ public final class ModuleAwareIndexOptionValueStorage implements Disposable {
     private static @Nullable PersistentHashMap<String, List<StoredOption>> openStorage() {
         try {
             File file = ModuleAwareIndexStorages.cacheFile(DIR_NAME, FILE_NAME);
-            return ModuleAwareIndexStorages.open(file, () -> new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, StoredOptionsExternalizer.INSTANCE));
+            return ModuleAwareIndexStorages.open(file, () -> new PersistentHashMap<>(file.toPath(), EnumeratorStringDescriptor.INSTANCE, StoredOptionsExternalizer.INSTANCE));
         }
         catch (IOException e) {
             LOG.error("Failed to open module-aware option value storage; operating without recorded values", e);

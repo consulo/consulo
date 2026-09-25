@@ -63,7 +63,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
 
   private @Nullable PersistentEnumeratorBase<VcsUser> initEnumerator(File mapFile) {
     try {
-      return IOUtil.openCleanOrResetBroken(() -> new PersistentBTreeEnumerator<>(mapFile, new MyDescriptor(), Page.PAGE_SIZE, null,
+      return IOUtil.openCleanOrResetBroken(() -> new PersistentBTreeEnumerator<>(mapFile.toPath(), new MyDescriptor(), Page.PAGE_SIZE, null,
                                                                                  STORAGE_VERSION), mapFile);
     }
     catch (IOException e) {

@@ -18,8 +18,8 @@ package consulo.localHistory.impl.internal;
 import consulo.index.io.PagePool;
 import consulo.index.io.storage.AbstractRecordsTable;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class LocalHistoryRecordsTable extends AbstractRecordsTable {
   private static final int VERSION = 4;
@@ -37,7 +37,7 @@ public class LocalHistoryRecordsTable extends AbstractRecordsTable {
 
   private static final byte[] ZEROS = new byte[RECORD_SIZE];
 
-  public LocalHistoryRecordsTable(File storageFilePath, PagePool pool) throws IOException {
+  public LocalHistoryRecordsTable(Path storageFilePath, PagePool pool) throws IOException {
     super(storageFilePath, pool);
   }
 

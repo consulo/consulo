@@ -16,6 +16,7 @@
 package consulo.index.io;
 
 import consulo.index.io.data.DataEnumeratorEx;
+import consulo.index.io.internal.IOCancellationCallbackHolder;
 import consulo.util.collection.SLRUMap;
 import consulo.util.collection.ShareableKey;
 import consulo.util.io.FileUtil;
@@ -25,9 +26,11 @@ import org.slf4j.LoggerFactory;
 
 import org.jspecify.annotations.Nullable;
 import java.io.Closeable;
-import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +52,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   private final boolean myAssumeDifferentSerializedBytesMeansObjectsInequality;
   private final AppendableStorageBackedByResizableMappedFile myKeyStorage;
   final KeyDescriptor<Data> myDataDescriptor;
-  protected final File myFile;
+  protected final Path myFile;
   private final Version myVersion;
   private final boolean myDoCaching;
 
@@ -136,23 +139,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     ourEnumerationCache.clear();
   }
 
-  public static class CorruptedException extends IOException {
-    public CorruptedException(File file) {
-      this("PersistentEnumerator storage corrupted " + file.getPath());
-    }
-
-    protected CorruptedException(String message) {
-      super(message);
-    }
-  }
-
-  public static class VersionUpdatedException extends CorruptedException {
-    VersionUpdatedException(File file) {
-      super("PersistentEnumerator storage corrupted " + file.getPath());
-    }
-  }
-
-  public PersistentEnumeratorBase(File file,
+  public PersistentEnumeratorBase(Path file,
                                   ResizeableMappedFile storage,
                                   KeyDescriptor<Data> dataDescriptor,
                                   int initialSize,
@@ -165,9 +152,10 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     myRecordHandler = (RecordBufferHandler<PersistentEnumeratorBase>)recordBufferHandler;
     myDoCaching = doCaching;
 
-    if (!file.exists()) {
-      FileUtil.delete(keyStreamFile());
-      if (!FileUtil.createIfDoesntExist(file)) {
+    if (!Files.exists(file)) {
+      assert file.getFileSystem() == FileSystems.getDefault();
+      FileUtil.delete(keyStreamFile().toFile());
+      if (!FileUtil.createIfDoesntExist(file.toFile())) {
         throw new IOException("Cannot create empty file: " + file);
       }
     }
@@ -459,8 +447,8 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     return myKeyStorage.processAll(processor, myDataDescriptor);
   }
 
-  private File keyStreamFile() {
-    return new File(myFile.getPath() + ".keystream");
+  private Path keyStreamFile() {
+    return myFile.resolveSibling(myFile.getFileName() + ".keystream");
   }
 
   public Data valueOf(int idx) throws IOException {
@@ -512,6 +500,8 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   }
 
   protected void doClose() throws IOException {
+    IOCancellationCallbackHolder.INSTANCE.interactWithUI();
+
     try {
       if (myKeyStorage != null) {
         myKeyStorage.close();

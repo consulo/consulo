@@ -15,6 +15,7 @@
  */
 package consulo.index.io;
 
+import consulo.index.io.internal.IOCancellationCallbackHolder;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import org.jspecify.annotations.Nullable;
@@ -33,6 +34,7 @@ public class InvertedIndexUtil {
 
     for (K dataKey : dataKeys) {
       if (keyChecker != null && !keyChecker.test(dataKey)) continue;
+      IOCancellationCallbackHolder.checkCancelled();
 
       IntSet copy = IntSets.newHashSet();
       ValueContainer<V> container = index.getData(dataKey);
@@ -42,6 +44,7 @@ public class InvertedIndexUtil {
         if (valueChecker != null && !valueChecker.test(value)) {
           continue;
         }
+        IOCancellationCallbackHolder.checkCancelled();
 
         ValueContainer.IntIterator iterator = valueIt.getInputIdsIterator();
 

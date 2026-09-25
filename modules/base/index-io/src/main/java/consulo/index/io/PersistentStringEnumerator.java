@@ -19,33 +19,33 @@ import consulo.index.io.data.DataEnumerator;
 
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<String> implements AbstractStringEnumerator {
   private final @Nullable CachingEnumerator<String> myCache;
 
-  public PersistentStringEnumerator(File file) throws IOException {
+  public PersistentStringEnumerator(Path file) throws IOException {
     this(file, null);
   }
 
-  public PersistentStringEnumerator(File file, PagedFileStorage.@Nullable StorageLockContext storageLockContext) throws IOException {
+  public PersistentStringEnumerator(Path file, @Nullable StorageLockContext storageLockContext) throws IOException {
     this(file, 1024 * 4, storageLockContext);
   }
 
-  public PersistentStringEnumerator(File file, boolean cacheLastMappings) throws IOException {
+  public PersistentStringEnumerator(Path file, boolean cacheLastMappings) throws IOException {
     this(file, 1024 * 4, cacheLastMappings, null);
   }
 
-  public PersistentStringEnumerator(File file, int initialSize) throws IOException {
+  public PersistentStringEnumerator(Path file, int initialSize) throws IOException {
     this(file, initialSize, null);
   }
 
-  public PersistentStringEnumerator(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext) throws IOException {
+  public PersistentStringEnumerator(Path file, int initialSize, @Nullable StorageLockContext lockContext) throws IOException {
     this(file, initialSize, false, lockContext);
   }
 
-  private PersistentStringEnumerator(File file, int initialSize, boolean cacheLastMappings, PagedFileStorage.@Nullable StorageLockContext lockContext) throws IOException {
+  private PersistentStringEnumerator(Path file, int initialSize, boolean cacheLastMappings, @Nullable StorageLockContext lockContext) throws IOException {
     super(file, EnumeratorStringDescriptor.INSTANCE, initialSize, lockContext);
     myCache = cacheLastMappings ? new CachingEnumerator<>(new DataEnumerator<String>() {
       @Override

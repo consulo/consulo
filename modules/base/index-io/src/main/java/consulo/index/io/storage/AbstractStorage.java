@@ -31,6 +31,10 @@ import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 
 /**
  * @author max
@@ -61,25 +65,40 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     return deletedRecordsFile && deletedDataFile;
   }
 
-  public static void convertFromOldExtensions(String storageFilePath) {
-    FileUtil.delete(new File(storageFilePath + ".rindex"));
-    FileUtil.delete(new File(storageFilePath + ".data"));
+  public static boolean deleteFiles(Path storageFilePath) {
+    Path recordsFile = storageFilePath.getParent().resolve(storageFilePath.getFileName() + INDEX_EXTENSION);
+    Path dataFile = storageFilePath.getParent().resolve(storageFilePath.getFileName() + DATA_EXTENSION);
+
+    // ensure both files deleted
+    boolean deletedRecordsFile = false;
+    try {
+      deletedRecordsFile = Files.deleteIfExists(recordsFile);
+    }
+    catch (IOException ignore) {
+    }
+    boolean deletedDataFile = false;
+    try {
+      deletedDataFile = Files.deleteIfExists(dataFile);
+    }
+    catch (IOException ignore) {
+    }
+    return deletedRecordsFile && deletedDataFile;
   }
 
-  protected AbstractStorage(String storageFilePath) throws IOException {
+  protected AbstractStorage(Path storageFilePath) throws IOException {
     this(storageFilePath, PagePool.SHARED);
   }
 
-  protected AbstractStorage(String storageFilePath, PagePool pool) throws IOException {
+  protected AbstractStorage(Path storageFilePath, PagePool pool) throws IOException {
     this(storageFilePath, pool, CapacityAllocationPolicy.DEFAULT);
   }
 
-  protected AbstractStorage(String storageFilePath,
+  protected AbstractStorage(Path storageFilePath,
                             CapacityAllocationPolicy capacityAllocationPolicy) throws IOException {
     this(storageFilePath, PagePool.SHARED, capacityAllocationPolicy);
   }
 
-  protected AbstractStorage(String storageFilePath,
+  protected AbstractStorage(Path storageFilePath,
                             PagePool pool,
                             CapacityAllocationPolicy capacityAllocationPolicy) throws IOException {
     myCapacityAllocationPolicy = capacityAllocationPolicy != null ? capacityAllocationPolicy
@@ -87,18 +106,29 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     tryInit(storageFilePath, pool, 0);
   }
 
-  private void tryInit(String storageFilePath, PagePool pool, int retryCount) throws IOException {
-    convertFromOldExtensions(storageFilePath);
+  private void tryInit(Path storageFilePath, PagePool pool, int retryCount) throws IOException {
+    Path parentDir = storageFilePath.getParent();
+    Path recordsFile = parentDir.resolve(storageFilePath.getFileName() + INDEX_EXTENSION);
+    Path dataFile = parentDir.resolve(storageFilePath.getFileName() + DATA_EXTENSION);
 
-    File recordsFile = new File(storageFilePath + INDEX_EXTENSION);
-    File dataFile = new File(storageFilePath + DATA_EXTENSION);
-
-    if (recordsFile.exists() != dataFile.exists()) {
-      deleteFiles(storageFilePath);
+    boolean rFExists = Files.exists(recordsFile);
+    boolean dFExists = Files.exists(dataFile);
+    if (rFExists != dFExists) {
+      // ensure both files deleted
+      rFExists = false;
+      dFExists = false;
     }
 
-    FileUtil.createIfDoesntExist(recordsFile);
-    FileUtil.createIfDoesntExist(dataFile);
+    if (!rFExists) {
+      Files.createDirectories(parentDir);
+    }
+
+    if (!rFExists) {
+      createOrTruncateFile(recordsFile);
+    }
+    if (!dFExists) {
+      createOrTruncateFile(dataFile);
+    }
 
     AbstractRecordsTable recordsTable = null;
     DataTable dataTable;
@@ -133,19 +163,20 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     }
   }
 
-  protected abstract AbstractRecordsTable createRecordsTable(PagePool pool, File recordsFile) throws IOException;
+  protected abstract AbstractRecordsTable createRecordsTable(PagePool pool, Path recordsFile) throws IOException;
 
-  private void compact(String path) {
+  private void compact(Path path) {
     synchronized (myLock) {
       LOG.info("Space waste in " + path + " is " + myDataTable.getWaste() + " bytes. Compacting now.");
       long start = System.currentTimeMillis();
 
       try {
-        File newDataFile = new File(path + ".storageData.backup");
-        FileUtil.delete(newDataFile);
-        FileUtil.createIfDoesntExist(newDataFile);
+        Path parentDir = path.getParent();
+        Path newDataFile = parentDir.resolve(path.getFileName() + ".storageData.backup");
+        Files.createDirectories(parentDir);
+        createOrTruncateFile(newDataFile);
 
-        File oldDataFile = new File(path + DATA_EXTENSION);
+        Path oldDataFile = parentDir.resolve(path.getFileName() + DATA_EXTENSION);
         DataTable newDataTable = new DataTable(newDataFile, myPool);
 
         RecordIdIterator recordIterator = myRecordsTable.createRecordIdIterator();
@@ -170,20 +201,20 @@ public abstract class AbstractStorage implements Closeable, Forceable {
         myDataTable.close();
         newDataTable.close();
 
-        if (!FileUtil.delete(oldDataFile)) {
-          throw new IOException("Can't delete file: " + oldDataFile);
-        }
-
-        newDataFile.renameTo(oldDataFile);
+        Files.move(newDataFile, oldDataFile, StandardCopyOption.REPLACE_EXISTING);
         myDataTable = new DataTable(oldDataFile, myPool);
       }
       catch (IOException e) {
-        LOG.info("Compact failed: " + e.getMessage());
+        LOG.info("Compact failed", e);
       }
 
       long timeDelta = System.currentTimeMillis() - start;
       LOG.info("Done compacting in " + timeDelta + "msec.");
     }
+  }
+
+  private static void createOrTruncateFile(Path path) throws IOException {
+    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE).close();
   }
 
   public int getVersion() {
@@ -253,8 +284,10 @@ public abstract class AbstractStorage implements Closeable, Forceable {
   protected byte[] readBytes(int record) throws IOException {
     synchronized (myLock) {
       int length = myRecordsTable.getSize(record);
-      if (length == 0) return ArrayUtil.EMPTY_BYTE_ARRAY;
-      assert length > 0;
+      if (length == 0 || AbstractRecordsTable.isSizeOfRemovedRecord(length)) {
+        return ArrayUtil.EMPTY_BYTE_ARRAY;
+      }
+      assert length > 0 : length;
 
       long address = myRecordsTable.getAddress(record);
       byte[] result = new byte[length];

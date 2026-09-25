@@ -17,8 +17,10 @@ package consulo.index.io;
 
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.internal.ValueContainerImpl;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.function.IntUnaryOperator;
 
 /**
@@ -29,12 +31,13 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
   private final DataExternalizer<Value> myValueExternalizer;
   private final boolean myKeyIsUniqueForIndexedFile;
 
-  ValueContainerMap(File file,
+  ValueContainerMap(Path file,
                     KeyDescriptor<Key> keyKeyDescriptor,
                     DataExternalizer<Value> valueExternalizer,
                     boolean keyIsUniqueForIndexedFile,
-                    IntUnaryOperator inputRemapping) throws IOException {
-    super(file, keyKeyDescriptor, new ValueContainerExternalizer<>(valueExternalizer, inputRemapping));
+                    IntUnaryOperator inputRemapping,
+                    @Nullable StorageLockContext storageLockContext) throws IOException {
+    super(file, keyKeyDescriptor, new ValueContainerExternalizer<>(valueExternalizer, inputRemapping), storageLockContext);
     myValueExternalizer = valueExternalizer;
     myKeyIsUniqueForIndexedFile = keyIsUniqueForIndexedFile;
   }

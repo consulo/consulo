@@ -59,19 +59,47 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = IntMaps.newConcurrentIntObjectHashMap();
 
     @TestOnly
-    public VfsAwareMapIndexStorage(File storageFile, KeyDescriptor<Key> keyDescriptor, DataExternalizer<Value> valueExternalizer, int cacheSize, boolean readOnly)
+    public VfsAwareMapIndexStorage(Path storageFile, KeyDescriptor<Key> keyDescriptor, DataExternalizer<Value> valueExternalizer, int cacheSize, boolean readOnly)
         throws IOException {
         super(storageFile, keyDescriptor, valueExternalizer, cacheSize, false, true, readOnly, null);
         myBuildKeyHashToVirtualFileMapping = false;
     }
 
-    public VfsAwareMapIndexStorage(File storageFile,
+    public VfsAwareMapIndexStorage(Path storageFile,
                                    KeyDescriptor<Key> keyDescriptor,
                                    DataExternalizer<Value> valueExternalizer,
                                    int cacheSize,
                                    boolean keyIsUniqueForIndexedFile,
                                    boolean buildKeyHashToVirtualFileMapping) throws IOException {
-        super(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, false, false, null);
+        this(storageFile,
+            keyDescriptor,
+            valueExternalizer,
+            cacheSize,
+            keyIsUniqueForIndexedFile,
+            buildKeyHashToVirtualFileMapping,
+            null);
+    }
+
+    /**
+     * Uses the supplied lock context for all persistent map files owned by this index storage.
+     */
+    public VfsAwareMapIndexStorage(Path storageFile,
+                                   KeyDescriptor<Key> keyDescriptor,
+                                   DataExternalizer<Value> valueExternalizer,
+                                   int cacheSize,
+                                   boolean keyIsUniqueForIndexedFile,
+                                   boolean buildKeyHashToVirtualFileMapping,
+                                   @Nullable StorageLockContext storageLockContext) throws IOException {
+        super(storageFile,
+            keyDescriptor,
+            valueExternalizer,
+            cacheSize,
+            keyIsUniqueForIndexedFile,
+            /* initialize: */ false,
+            /* readOnly: */ false,
+            /* inputRemapping: */ null,
+            storageLockContext
+        );
         myBuildKeyHashToVirtualFileMapping = buildKeyHashToVirtualFileMapping;
         initMapAndCache();
     }
@@ -79,17 +107,14 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     @Override
     protected void initMapAndCache() throws IOException {
         super.initMapAndCache();
-        myKeyHashToVirtualFileMapping = myBuildKeyHashToVirtualFileMapping ? new AppendableStorageBackedByResizableMappedFile(getProjectFile(), 4096, null, PagedFileStorage.MB, true) : null;
-    }
-
-    @Override
-    protected void checkCanceled() {
-        ProgressManager.checkCanceled();
+        myKeyHashToVirtualFileMapping = myBuildKeyHashToVirtualFileMapping
+            ? new AppendableStorageBackedByResizableMappedFile(getProjectFile(), 4096, storageLockContext(), PagedFileStorage.MB, true)
+            : null;
     }
 
     
-    private File getProjectFile() {
-        return new File(myBaseStorageFile.getPath() + ".project");
+    private Path getProjectFile() {
+        return myBaseStorageFile.resolveSibling(myBaseStorageFile.getFileName() + ".project");
     }
 
     private <T extends Throwable> void withLock(ThrowableRunnable<T> r) throws T {
@@ -293,7 +318,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         if (project == null) {
             return null;
         }
-        return new File(getSessionDir(), getProjectFile().getName() + "." + project.hashCode() + "." + id + "." + projectAwareSearchScope.isSearchInLibraries());
+        return new File(getSessionDir(), getProjectFile().getFileName() + "." + project.hashCode() + "." + id + "." + projectAwareSearchScope.isSearchInLibraries());
     }
 
     @Override

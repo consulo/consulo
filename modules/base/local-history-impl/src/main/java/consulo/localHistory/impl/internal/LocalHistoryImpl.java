@@ -42,8 +42,8 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
@@ -106,8 +106,8 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
         fm.addVirtualFileManagerListener(myEventDispatcher, this);
     }
 
-    public File getStorageDir() {
-        return new File(getSystemPath(), "LocalHistory");
+    public Path getStorageDir() {
+        return Path.of(getSystemPath(), "LocalHistory");
     }
 
     protected String getSystemPath() {

@@ -17,27 +17,27 @@ package consulo.index.io.storage;
 
 import consulo.index.io.PagePool;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author max
  */
 public class Storage extends AbstractStorage {
-  public Storage(String path) throws IOException {
+  public Storage(Path path) throws IOException {
     super(path);
   }
 
-  public Storage(String path, PagePool pool) throws IOException {
+  public Storage(Path path, PagePool pool) throws IOException {
     super(path, pool);
   }
 
-  public Storage(String path, CapacityAllocationPolicy capacityAllocationPolicy) throws IOException {
+  public Storage(Path path, CapacityAllocationPolicy capacityAllocationPolicy) throws IOException {
     super(path, capacityAllocationPolicy);
   }
 
   @Override
-  protected AbstractRecordsTable createRecordsTable(PagePool pool, File recordsFile) throws IOException {
+  protected AbstractRecordsTable createRecordsTable(PagePool pool, Path recordsFile) throws IOException {
     return new RecordsTable(recordsFile, pool);
   }
 

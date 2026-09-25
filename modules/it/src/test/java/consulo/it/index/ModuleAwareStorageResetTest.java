@@ -75,6 +75,6 @@ public class ModuleAwareStorageResetTest {
     }
 
     private static PersistentHashMap<String, String> newMap(File file) throws java.io.IOException {
-        return new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, EnumeratorStringDescriptor.INSTANCE);
+        return new PersistentHashMap<>(file.toPath(), EnumeratorStringDescriptor.INSTANCE, EnumeratorStringDescriptor.INSTANCE);
     }
 }

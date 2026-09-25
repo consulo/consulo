@@ -25,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 
 /**
@@ -53,8 +53,9 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
 
   private IntList myFreeRecordsList = null;
   private boolean myIsDirty = false;
+  protected static final int SPECIAL_NEGATIVE_SIZE_FOR_REMOVED_RECORD = -1;
 
-  public AbstractRecordsTable(File storageFilePath, PagePool pool) throws IOException {
+  public AbstractRecordsTable(Path storageFilePath, PagePool pool) throws IOException {
     myStorage = new RandomAccessDataFile(storageFilePath, pool);
     if (myStorage.length() == 0) {
       myStorage.put(0, new byte[getHeaderSize()], 0, getHeaderSize());
@@ -94,7 +95,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
     }
     else {
       int result = myFreeRecordsList.removeByIndex(myFreeRecordsList.size() - 1);
-      assert getSize(result) == -1;
+      assert isSizeOfRemovedRecord(getSize(result));
       setSize(result, 0);
       return result;
     }
@@ -128,7 +129,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
       @Override
       public boolean validId() {
         assert hasNextId();
-        return getSize(recordId) != -1;
+        return isSizeOfLiveRecord(getSize(recordId));
       }
     };
   }
@@ -148,7 +149,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
   private IntList scanForFreeRecords() throws IOException {
     IntList result = IntLists.newArrayList();
     for (int i = 1; i <= getRecordsCount(); i++) {
-      if (getSize(i) == -1) {
+      if (isSizeOfRemovedRecord(getSize(i))) {
         result.add(i);
       }
     }
@@ -195,7 +196,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
     markDirty();
     ensureFreeRecordsScanned();
     doCleanRecord(record);
-    setSize(record, -1);
+    setSize(record, SPECIAL_NEGATIVE_SIZE_FOR_REMOVED_RECORD);
     myFreeRecordsList.add(record);
   }
 
@@ -248,5 +249,13 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
       myIsDirty = false;
       myStorage.putInt(HEADER_MAGIC_OFFSET, getSafelyClosedMagic());
     }
+  }
+
+  protected static boolean isSizeOfRemovedRecord(int length) {
+    return length == SPECIAL_NEGATIVE_SIZE_FOR_REMOVED_RECORD;
+  }
+
+  protected static boolean isSizeOfLiveRecord(int length) {
+    return length != SPECIAL_NEGATIVE_SIZE_FOR_REMOVED_RECORD;
   }
 }

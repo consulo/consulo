@@ -613,12 +613,13 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         for (int attempt = 0; attempt < 2; attempt++) {
             try {
                 storage = new VfsAwareMapIndexStorage<>(
-                    IndexInfrastructure.getStorageFile(name),
+                    IndexInfrastructure.getStorageFile(name).toPath(),
                     extension.getKeyDescriptor(),
                     extension.getValueExternalizer(),
                     extension.getCacheSize(),
                     extension.keyIsUniqueForIndexedFile(),
-                    extension.traceKeyHashToVirtualFileMapping()
+                    extension.traceKeyHashToVirtualFileMapping(),
+                    new StorageLockContext(/*checkAccess:*/false, /*cacheChannels:*/true)
                 );
 
                 InputFilter inputFilter = extension.getInputFilter();

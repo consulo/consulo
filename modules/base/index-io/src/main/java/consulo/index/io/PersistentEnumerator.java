@@ -19,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author max
@@ -46,11 +47,16 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
   static final int VERSION = 6;
   private static final Version ourVersion = new Version(VERSION);
 
-  public PersistentEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
+  public PersistentEnumerator(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null, 0);
   }
 
-  public PersistentEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext storageLockContext, int version)
+  public PersistentEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable StorageLockContext storageLockContext, int version)
+          throws IOException {
+    this(file.toPath(), dataDescriptor, initialSize, storageLockContext, version);
+  }
+
+  public PersistentEnumerator(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable StorageLockContext storageLockContext, int version)
           throws IOException {
     super(file, new ResizeableMappedFile(file, initialSize, storageLockContext, -1, false), dataDescriptor, initialSize, new Version(VERSION + version), new RecordBufferHandler(), true);
   }

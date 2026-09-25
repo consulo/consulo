@@ -59,7 +59,7 @@ public final class ModuleAwareIndexMetaStorage implements Disposable {
     private static @Nullable PersistentHashMap<MetaKey, OptionsMeta> openStorage() {
         try {
             File file = ModuleAwareIndexStorages.cacheFile(DIR_NAME, FILE_NAME);
-            return ModuleAwareIndexStorages.open(file, () -> new PersistentHashMap<>(file, MetaKeyDescriptor.INSTANCE, OptionsMetaExternalizer.INSTANCE));
+            return ModuleAwareIndexStorages.open(file, () -> new PersistentHashMap<>(file.toPath(), MetaKeyDescriptor.INSTANCE, OptionsMetaExternalizer.INSTANCE));
         }
         catch (IOException e) {
             LOG.error("Failed to open module-aware-index-meta storage; operating in degraded mode", e);

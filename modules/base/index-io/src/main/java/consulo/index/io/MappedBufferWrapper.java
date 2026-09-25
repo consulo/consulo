@@ -5,10 +5,10 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
+import java.nio.file.Path;
 
 /**
  * @author max
@@ -18,7 +18,7 @@ abstract class MappedBufferWrapper extends ByteBufferWrapper {
 
   private volatile MappedByteBuffer myBuffer;
 
-  protected MappedBufferWrapper(File file, long pos, long length) {
+  protected MappedBufferWrapper(Path file, long pos, long length) {
     super(file, pos, length);
   }
 

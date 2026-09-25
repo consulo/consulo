@@ -17,8 +17,8 @@ package consulo.index.io.storage;
 
 import consulo.index.io.PagePool;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 class RefCountingRecordsTable extends AbstractRecordsTable {
   private static final int VERSION = 1;
@@ -28,7 +28,7 @@ class RefCountingRecordsTable extends AbstractRecordsTable {
 
   private static final byte[] ZEROES = new byte[RECORD_SIZE];
 
-  public RefCountingRecordsTable(File recordsFile, PagePool pool) throws IOException {
+  public RefCountingRecordsTable(Path recordsFile, PagePool pool) throws IOException {
     super(recordsFile, pool);
   }
 

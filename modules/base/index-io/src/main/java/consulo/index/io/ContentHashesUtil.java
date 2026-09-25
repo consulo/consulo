@@ -7,8 +7,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Objects;
@@ -35,11 +35,11 @@ public class ContentHashesUtil {
   private static final int SIGNATURE_LENGTH = 20;
 
   public static class HashEnumerator extends PersistentBTreeEnumerator<byte[]> {
-    public HashEnumerator(File contentsHashesFile) throws IOException {
+    public HashEnumerator(Path contentsHashesFile) throws IOException {
       this(contentsHashesFile, null);
     }
 
-    public HashEnumerator(File contentsHashesFile, PagedFileStorage.@Nullable StorageLockContext storageLockContext) throws IOException {
+    public HashEnumerator(Path contentsHashesFile, @Nullable StorageLockContext storageLockContext) throws IOException {
       super(contentsHashesFile, new ContentHashesDescriptor(), 64 * 1024, storageLockContext);
     }
 

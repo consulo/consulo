@@ -23,8 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author max
@@ -43,7 +43,7 @@ class DataTable implements Closeable, Forceable {
   private static final int HEADER_WASTE_SIZE_OFFSET = 4;
   private boolean myIsDirty = false;
 
-  public DataTable(File filePath, PagePool pool) throws IOException {
+  public DataTable(Path filePath, PagePool pool) throws IOException {
     myFile = new RandomAccessDataFile(filePath, pool);
     if (myFile.length() == 0) {
       markDirty();
@@ -57,7 +57,7 @@ class DataTable implements Closeable, Forceable {
     return ((double)myWasteSize) / myFile.length() > 0.25 && myWasteSize > 3 * FileUtil.MEGABYTE;
   }
 
-  private void readInHeader(File filePath) throws IOException {
+  private void readInHeader(Path filePath) throws IOException {
     int magic = myFile.getInt(HEADER_MAGIC_OFFSET);
     if (magic != SAFELY_CLOSED_MAGIC) {
       myFile.dispose();

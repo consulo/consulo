@@ -17,8 +17,8 @@ package consulo.index.io.storage;
 
 import consulo.index.io.PagePool;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author max
@@ -28,7 +28,7 @@ class RecordsTable extends AbstractRecordsTable {
 
   private static final byte[] ZEROES = new byte[DEFAULT_RECORD_SIZE];
 
-  RecordsTable(File storageFilePath, PagePool pool) throws IOException {
+  RecordsTable(Path storageFilePath, PagePool pool) throws IOException {
     super(storageFilePath, pool);
   }
 

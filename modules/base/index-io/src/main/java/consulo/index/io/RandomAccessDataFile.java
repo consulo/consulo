@@ -20,6 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author max
@@ -27,17 +31,17 @@ import java.nio.ByteBuffer;
 public class RandomAccessDataFile implements Forceable, Closeable {
   protected static final Logger LOG = LoggerFactory.getLogger(RandomAccessDataFile.class);
 
-  private final static OpenChannelsCache ourCache = new OpenChannelsCache(150, "rw");
+  private static final ChannelsAccessor ourChannelsAccessor =
+    new OpenChannelsCache("RandomAccessDataFile", 150, PageCacheUtils.RESILIENT_CHANNEL_OPENER).asWritable();
   private static int ourFilesCount = 0;
 
   private final int myCount = ourFilesCount++;
-  private final File myFile;
+  private final Path myFile;
   private final PagePool myPool;
-  private long lastSeek = -1l;
 
   private final byte[] myTypedIOBuffer = new byte[8];
 
-  private final FileWriter log;
+  private final OutputStreamWriter log;
 
   private volatile long mySize;
   private volatile boolean myIsDirty = false;
@@ -45,28 +49,24 @@ public class RandomAccessDataFile implements Forceable, Closeable {
 
   private static final boolean DEBUG = false;
 
-  public RandomAccessDataFile(File file) throws IOException {
+  public RandomAccessDataFile(Path file) throws IOException {
     this(file, PagePool.SHARED);
   }
 
-  public RandomAccessDataFile(File file, PagePool pool) throws IOException {
+  public RandomAccessDataFile(Path file, PagePool pool) throws IOException {
     myPool = pool;
     myFile = file;
-    if (!file.exists()) {
-      throw new FileNotFoundException(file.getPath() + " does not exist");
-    }
 
-    mySize = file.length();
+    mySize = Files.size(file);
     if (DEBUG) {
-      log = new FileWriter(file.getPath() + ".log");
+      log = new OutputStreamWriter(Files.newOutputStream(file.getParent().resolve(file.getFileName() + ".log")), StandardCharsets.UTF_8);
     }
     else {
       log = null;
     }
   }
 
-  
-  public File getFile() {
+  public Path getFile() {
     return myFile;
   }
 
@@ -97,12 +97,8 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     }
   }
 
-  private void releaseFile() {
-    ourCache.releaseChannel(myFile);
-  }
-
-  private RandomAccessFile getRandomAccessFile() throws FileNotFoundException {
-    return ourCache.getChannel(myFile);
+  private <T> T useFileChannel(FileChannelOperation<T> channelConsumer) throws IOException {
+    return ourChannelsAccessor.executeOp(myFile, channelConsumer);
   }
 
   public void putInt(long addr, int value) {
@@ -167,29 +163,23 @@ public class RandomAccessDataFile implements Forceable, Closeable {
   public long physicalLength() {
     assertNotDisposed();
 
-    long res;
-
     try {
-      RandomAccessFile file = getRandomAccessFile();
-      try {
-        synchronized (file) {
-          res = file.length();
-        }
-      }
-      finally {
-        releaseFile();
-      }
+      return useFileChannel(FileChannel::size);
     }
     catch (IOException e) {
       return 0;
     }
-    return res;
   }
 
   public void dispose() {
     if (myIsDisposed) return;
     myPool.flushPages(this);
-    ourCache.closeChannel(myFile);
+    try {
+      ourChannelsAccessor.closeChannel(myFile);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
     myIsDisposed = true;
   }
@@ -231,32 +221,21 @@ public class RandomAccessDataFile implements Forceable, Closeable {
   public static int totalReads = 0;
   public static long totalReadBytes = 0;
 
-  public static int seekcount = 0;
   public static int totalWrites = 0;
   public static long totalWriteBytes = 0;
 
   void loadPage(Page page) {
     assertNotDisposed();
     try {
-      RandomAccessFile file = getRandomAccessFile();
-      try {
-        synchronized (file) {
-          seek(file, page.getOffset());
-          ByteBuffer buf = page.getBuf();
+      ByteBuffer buf = page.getBuf();
 
-          totalReads++;
-          totalReadBytes += Page.PAGE_SIZE;
+      totalReads++;
+      totalReadBytes += Page.PAGE_SIZE;
 
-          if (DEBUG) {
-            log.write("Read at: \t" + page.getOffset() + "\t len: " + Page.PAGE_SIZE + ", size: " + mySize + "\n");
-          }
-          file.read(buf.array(), 0, Page.PAGE_SIZE);
-          lastSeek += Page.PAGE_SIZE;
-        }
+      if (DEBUG) {
+        log.write("Read at: \t" + page.getOffset() + "\t len: " + Page.PAGE_SIZE + ", size: " + mySize + "\n");
       }
-      finally {
-        releaseFile();
-      }
+      useFileChannel(file -> file.read(ByteBuffer.wrap(buf.array(), 0, Page.PAGE_SIZE), page.getOffset()));
     }
     catch (IOException e) {
       throw new RuntimeException(e);
@@ -274,41 +253,17 @@ public class RandomAccessDataFile implements Forceable, Closeable {
   }
 
   private void flush(ByteBuffer buf, long fileOffset, int bufOffset, int length) throws IOException {
-    if (fileOffset + length > mySize) {
-      length = (int)(mySize - fileOffset);
-    }
+    int lengthToWrite = fileOffset + length > mySize ? (int)(mySize - fileOffset) : length;
 
-    RandomAccessFile file = getRandomAccessFile();
-    try {
-      synchronized (file) {
-        seek(file, fileOffset);
+    useFileChannel(file -> {
+      totalWrites++;
+      totalWriteBytes += lengthToWrite;
 
-        totalWrites++;
-        totalWriteBytes += length;
-
-        if (DEBUG) {
-          log.write("Write at: \t" + fileOffset + "\t len: " + length + ", size: " + mySize + ", filesize: " + file.length() + "\n");
-        }
-        file.write(buf.array(), bufOffset, length);
-        lastSeek += length;
+      if (DEBUG) {
+        log.write("Write at: \t" + fileOffset + "\t len: " + lengthToWrite + ", size: " + mySize + ", filesize: " + file.size() + "\n");
       }
-    }
-    finally {
-      releaseFile();
-    }
-  }
-
-  private void seek(RandomAccessFile file, long fileOffset) throws IOException {
-    if (DEBUG) {
-      if (lastSeek != -1L && fileOffset != lastSeek) {
-        long delta = fileOffset - lastSeek;
-        seekcount++;
-        log.write("Seeking: " + delta + "\n");
-      }
-      lastSeek = fileOffset;
-    }
-
-    file.seek(fileOffset);
+      return file.write(ByteBuffer.wrap(buf.array(), bufOffset, lengthToWrite), fileOffset);
+    });
   }
 
   public int hashCode() {
@@ -316,7 +271,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
   }
 
   @Override
-  public synchronized String toString() {
+  public String toString() {
     return "RandomAccessFile[" + myFile + ", dirty=" + myIsDirty + "]";
   }
 }

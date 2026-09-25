@@ -16,8 +16,8 @@
 package consulo.versionControlSystem.log.impl.internal.util;
 
 import consulo.index.io.KeyDescriptor;
-import consulo.index.io.PagedFileStorage;
 import consulo.index.io.PersistentBTreeEnumerator;
+import consulo.index.io.StorageLockContext;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -28,8 +28,8 @@ public class PersistentSetImpl<T> extends PersistentBTreeEnumerator<T> implement
   public PersistentSetImpl(File file,
                            KeyDescriptor<T> dataDescriptor,
                            int initialSize,
-                           PagedFileStorage.@Nullable StorageLockContext lockContext, int version) throws IOException {
-    super(file, dataDescriptor, initialSize, lockContext, version);
+                           @Nullable StorageLockContext lockContext, int version) throws IOException {
+    super(file.toPath(), dataDescriptor, initialSize, lockContext, version);
   }
 
   @Override

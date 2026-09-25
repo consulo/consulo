@@ -43,7 +43,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
     try {
       // we need to cache last id -> String mappings due to StringRefs and stubs indexing that initially creates stubs (doing enumerate on String)
       // and then index them (valueOf), also similar string items are expected to be enumerated during stubs processing
-      myNameStorage = new PersistentStringEnumerator(myFile, true);
+      myNameStorage = new PersistentStringEnumerator(myFile.toPath(), true);
       myStubSerializationHelper = new StubSerializationHelper(myNameStorage, unmodifiable, this);
     }
     catch (IOException e) {
@@ -78,7 +78,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
         }
 
         IOUtil.deleteAllFilesStartingWith(myFile);
-        myNameStorage = new PersistentStringEnumerator(myFile, true);
+        myNameStorage = new PersistentStringEnumerator(myFile.toPath(), true);
         myStubSerializationHelper = new StubSerializationHelper(myNameStorage, myUnmodifiable, this);
         myStubSerializationHelper.copyFrom(prevHelper);
       }

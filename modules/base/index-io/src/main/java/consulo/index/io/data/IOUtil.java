@@ -8,9 +8,14 @@ import consulo.util.lang.function.ThrowableSupplier;
 
 import org.jspecify.annotations.Nullable;
 import java.io.*;
-import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -155,6 +160,54 @@ public class IOUtil {
     return StringUtil.isAscii(c);
   }
 
+  /**
+   * @return string with buffer content (full: [0..capacity)), as-if it is byte[], formatted by Arrays.toString(byte[])
+   * Method is for debug view
+   */
+  public static String toString(ByteBuffer buffer) {
+    byte[] bytes = new byte[buffer.capacity()];
+    ByteBuffer slice = buffer.duplicate();
+    slice.position(0)
+      .limit(buffer.capacity());
+    slice.get(bytes);
+    return Arrays.toString(bytes);
+  }
+
+  /**
+   * @return true if _there are no files with such prefix exist_ -- e.g. if we delete nothing,
+   * because there were no such files beforehand.
+   */
+  public static boolean deleteAllFilesStartingWith(Path file) {
+    String baseName = file.getFileName().toString();
+    Path parentFile = file.getParent();
+    if (parentFile == null) {
+      return true;
+    }
+
+    List<Path> files = new ArrayList<>();
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(parentFile)) {
+      for (Path path : directoryStream) {
+        if (path.getFileName().toString().startsWith(baseName)) {
+          files.add(path);
+        }
+      }
+    }
+    catch (NoSuchFileException ignore) {
+      return true;
+    }
+    catch (IOException ignore) {
+      return false;
+    }
+
+    boolean ok = true;
+    for (Path f : files) {
+      if (!FileUtil.delete(f)) {
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
   public static boolean deleteAllFilesStartingWith(File file) {
     String baseName = file.getName();
     File parentFile = file.getParentFile();
@@ -170,28 +223,8 @@ public class IOUtil {
     return ok;
   }
 
-  public static void syncStream(OutputStream stream) throws IOException {
-    stream.flush();
-
-    try {
-      Field outField = FilterOutputStream.class.getDeclaredField("out");
-      outField.setAccessible(true);
-      while (stream instanceof FilterOutputStream) {
-        Object o = outField.get(stream);
-        if (o instanceof OutputStream) {
-          stream = (OutputStream)o;
-        }
-        else {
-          break;
-        }
-      }
-      if (stream instanceof FileOutputStream) {
-        ((FileOutputStream)stream).getFD().sync();
-      }
-    }
-    catch (NoSuchFieldException | IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+  public static <T> T openCleanOrResetBroken(ThrowableSupplier<T, ? extends IOException> factoryComputable, Path file) throws IOException {
+    return openCleanOrResetBroken(factoryComputable, () -> deleteAllFilesStartingWith(file));
   }
 
   public static <T> T openCleanOrResetBroken(ThrowableSupplier<T, ? extends IOException> factoryComputable, File file) throws IOException {

@@ -82,7 +82,7 @@ public class PersistentUtil {
     File storageFile = getStorageFile(storageKind, logId, version);
 
     return IOUtil.openCleanOrResetBroken(() ->
-                                                 new PersistentBTreeEnumerator<>(storageFile, keyDescriptor, Page.PAGE_SIZE, null, version),
+                                                 new PersistentBTreeEnumerator<>(storageFile.toPath(), keyDescriptor, Page.PAGE_SIZE, null, version),
                                          storageFile);
   }
 

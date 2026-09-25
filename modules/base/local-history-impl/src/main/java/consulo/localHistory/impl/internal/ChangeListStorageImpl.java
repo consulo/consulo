@@ -31,8 +31,8 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.function.Consumer;
@@ -41,19 +41,19 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     private static final int VERSION = 5;
     private static final String STORAGE_FILE = "changes";
 
-    private final File myStorageDir;
+    private final Path myStorageDir;
     private LocalHistoryStorage myStorage;
     private long myLastId;
 
     private boolean isCompletelyBroken = false;
 
-    public ChangeListStorageImpl(File storageDir) throws IOException {
+    public ChangeListStorageImpl(Path storageDir) throws IOException {
         myStorageDir = storageDir;
         initStorage(myStorageDir);
     }
 
-    private synchronized void initStorage(File storageDir) throws IOException {
-        String path = storageDir.getPath() + "/" + STORAGE_FILE;
+    private synchronized void initStorage(Path storageDir) throws IOException {
+        Path path = storageDir.resolve(STORAGE_FILE);
 
         LocalHistoryStorage result = new LocalHistoryStorage(path);
 

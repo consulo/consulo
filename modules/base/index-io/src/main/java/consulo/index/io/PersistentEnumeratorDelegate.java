@@ -19,27 +19,27 @@ import consulo.index.io.data.DataEnumeratorEx;
 
 import org.jspecify.annotations.Nullable;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 
 public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data>, Closeable, Forceable {
  
   protected final PersistentEnumeratorBase<Data> myEnumerator;
 
-  public PersistentEnumeratorDelegate(File file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
+  public PersistentEnumeratorDelegate(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentEnumeratorDelegate(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext)
+  public PersistentEnumeratorDelegate(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable StorageLockContext lockContext)
           throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext) : new PersistentEnumerator<>(file, dataDescriptor, initialSize);
   }
 
-  public PersistentEnumeratorDelegate(File file,
+  public PersistentEnumeratorDelegate(Path file,
                                       KeyDescriptor<Data> dataDescriptor,
                                       int initialSize,
-                                      PagedFileStorage.@Nullable StorageLockContext lockContext,
+                                      @Nullable StorageLockContext lockContext,
                                       int version) throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext, version) : new PersistentEnumerator<>(file, dataDescriptor, initialSize, null, version);
   }

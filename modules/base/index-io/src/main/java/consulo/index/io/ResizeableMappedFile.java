@@ -23,6 +23,10 @@ import org.slf4j.LoggerFactory;
 
 import org.jspecify.annotations.Nullable;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
  * @author max
@@ -39,22 +43,22 @@ public class ResizeableMappedFile implements Forceable {
   static final int DEFAULT_ALLOCATION_ROUND_FACTOR = 4096;
   private int myRoundFactor = DEFAULT_ALLOCATION_ROUND_FACTOR;
 
-  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned) throws IOException {
+  public ResizeableMappedFile(Path file, int initialSize, @Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned) throws IOException {
     this(file, initialSize, lockContext, pageSize, valuesAreBufferAligned, false);
   }
 
-  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned, boolean nativeBytesOrder)
+  public ResizeableMappedFile(Path file, int initialSize, @Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned, boolean nativeBytesOrder)
           throws IOException {
     myStorage = new PagedFileStorage(file, lockContext, pageSize, valuesAreBufferAligned, nativeBytesOrder);
     myInitialSize = initialSize;
     myLastWrittenLogicalSize = myLogicalSize = readLength();
   }
 
-  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.StorageLock lock, int pageSize, boolean valuesAreBufferAligned) throws IOException {
+  public ResizeableMappedFile(Path file, int initialSize, PagedFileStorage.StorageLock lock, int pageSize, boolean valuesAreBufferAligned) throws IOException {
     this(file, initialSize, lock.myDefaultStorageLockContext, pageSize, valuesAreBufferAligned);
   }
 
-  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.StorageLock lock) throws IOException {
+  public ResizeableMappedFile(Path file, int initialSize, PagedFileStorage.StorageLock lock) throws IOException {
     this(file, initialSize, lock, -1, false);
   }
 
@@ -115,12 +119,13 @@ public class ResizeableMappedFile implements Forceable {
     return suggestedSize;
   }
 
-  private File getLengthFile() {
-    return new File(myStorage.getFile().getPath() + ".len");
+  private Path getLengthFile() {
+    Path file = myStorage.getFile();
+    return file.resolveSibling(file.getFileName() + ".len");
   }
 
   private void writeLength(long len) {
-    final File lengthFile = getLengthFile();
+    Path lengthFile = getLengthFile();
     DataOutputStream stream = null;
     try {
       stream = FileUtil.doIOOperation(new FileUtil.RepeatableIOOperation<DataOutputStream, IOException>() {
@@ -129,14 +134,14 @@ public class ResizeableMappedFile implements Forceable {
         @Override
         public @Nullable DataOutputStream execute(boolean lastAttempt) throws IOException {
           try {
-            return new DataOutputStream(new FileOutputStream(lengthFile));
+            return new DataOutputStream(Files.newOutputStream(lengthFile));
           }
-          catch (FileNotFoundException ex) {
-            File parentFile = lengthFile.getParentFile();
+          catch (NoSuchFileException ex) {
+            Path parentFile = lengthFile.getParent();
 
-            if (!parentFile.exists()) {
+            if (!Files.exists(parentFile)) {
               if (!parentWasCreated) {
-                parentFile.mkdirs();
+                Files.createDirectories(parentFile);
                 parentWasCreated = true;
               }
               else {
@@ -182,14 +187,12 @@ public class ResizeableMappedFile implements Forceable {
   }
 
   private long readLength() {
-    File lengthFile = getLengthFile();
+    Path lengthFile = getLengthFile();
     DataInputStream stream = null;
+    if (!Files.exists(lengthFile)) return 0;
     try {
-      stream = new DataInputStream(new FileInputStream(lengthFile));
+      stream = new DataInputStream(Files.newInputStream(lengthFile, StandardOpenOption.READ));
       return stream.readLong();
-    }
-    catch (FileNotFoundException ignore) {
-      return 0;
     }
     catch (IOException e) {
       long realSize = realSize();

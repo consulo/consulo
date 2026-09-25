@@ -65,7 +65,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   private static PersistentEnumeratorBase<String> createPathsEnumerator(String logId) throws IOException {
     File storageFile = PersistentUtil.getStorageFile(INDEX, INDEX_PATHS_IDS, logId, VcsLogPersistentIndex.getVersion(), true);
     return new PersistentBTreeEnumerator<>(
-      storageFile,
+      storageFile.toPath(),
       Platform.current().fs().isCaseSensitive() ? EnumeratorStringDescriptor.INSTANCE : new ToLowerCaseStringDescriptor(),
       Page.PAGE_SIZE,
       null,

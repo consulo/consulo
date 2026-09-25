@@ -270,7 +270,7 @@ public class JarHandler extends ZipHandler {
         saveVersion(versionFile);
       }
       else if (currentVersion != VERSION) {
-        PersistentHashMap.deleteFilesStartingWith(snapshotInfoFile);
+        IOUtil.deleteAllFilesStartingWith(snapshotInfoFile);
         saveVersion(versionFile);
       }
 
@@ -278,7 +278,7 @@ public class JarHandler extends ZipHandler {
       for (int i = 0; i < 2; ++i) {
         try {
           info = new PersistentHashMap<>(
-            snapshotInfoFile,
+            snapshotInfoFile.toPath(),
             EnumeratorStringDescriptor.INSTANCE,
             new DataExternalizer<CacheLibraryInfo>() {
 
@@ -301,7 +301,7 @@ public class JarHandler extends ZipHandler {
           break;
         }
         catch (IOException ex) {
-          PersistentHashMap.deleteFilesStartingWith(snapshotInfoFile);
+          IOUtil.deleteAllFilesStartingWith(snapshotInfoFile);
           saveVersion(versionFile);
         }
       }

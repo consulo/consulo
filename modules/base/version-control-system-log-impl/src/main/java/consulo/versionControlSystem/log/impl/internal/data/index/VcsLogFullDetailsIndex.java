@@ -164,12 +164,7 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
                                 DataExternalizer<T> valueExternalizer,
                                 int cacheSize,
                                 boolean keyIsUniqueForIndexedFile) throws IOException {
-      super(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile);
-    }
-
-    @Override
-    protected void checkCanceled() {
-      ProgressManager.checkCanceled();
+      super(storageFile.toPath(), keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile);
     }
   }
 

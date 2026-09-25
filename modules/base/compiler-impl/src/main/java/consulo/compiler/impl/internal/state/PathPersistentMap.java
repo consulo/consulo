@@ -17,6 +17,7 @@ package consulo.compiler.impl.internal.state;
 
 import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -74,11 +75,11 @@ public class PathPersistentMap<V> {
         }
         catch (IOException ignored) {
         }
-        PersistentHashMap.deleteFilesStartingWith(myBaseFile);
+        IOUtil.deleteAllFilesStartingWith(myBaseFile);
         myMap = createMap();
     }
 
     private PersistentHashMap<String, V> createMap() throws IOException {
-        return new PersistentHashMap<>(myBaseFile, PathKeyDescriptor.INSTANCE, myExternalizer);
+        return new PersistentHashMap<>(myBaseFile.toPath(), PathKeyDescriptor.INSTANCE, myExternalizer);
     }
 }

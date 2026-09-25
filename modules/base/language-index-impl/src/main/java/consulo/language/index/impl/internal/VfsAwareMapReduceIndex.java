@@ -294,7 +294,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input, FileIndexMetaData> extend
     if (indexExtension instanceof SingleEntryFileBasedIndexExtension<?>)
       return new EmptyForwardIndex(); // indexStorage and forwardIndex are same here
     File indexStorageFile = IndexInfrastructure.getInputIndexStorageFile((ID<?, ?>)indexExtension.getName());
-    return new PersistentMapBasedForwardIndex(indexStorageFile, false);
+    return new PersistentMapBasedForwardIndex(indexStorageFile.toPath(), false, new StorageLockContext(/*checkAccess:*/false, /*cacheChannels:*/true));
   }
 
   private void installMemoryModeListener() {

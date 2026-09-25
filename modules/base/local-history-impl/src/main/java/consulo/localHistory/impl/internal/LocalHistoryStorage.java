@@ -21,20 +21,20 @@ import consulo.index.io.storage.AbstractRecordsTable;
 import consulo.index.io.storage.AbstractStorage;
 import consulo.util.lang.Pair;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class LocalHistoryStorage extends AbstractStorage {
-  public LocalHistoryStorage(String storageFilePath) throws IOException {
+  public LocalHistoryStorage(Path storageFilePath) throws IOException {
     super(storageFilePath);
   }
 
-  public LocalHistoryStorage(String storageFilePath, PagePool pool) throws IOException {
+  public LocalHistoryStorage(Path storageFilePath, PagePool pool) throws IOException {
     super(storageFilePath, pool);
   }
 
   @Override
-  protected AbstractRecordsTable createRecordsTable(PagePool pool, File recordsFile) throws IOException {
+  protected AbstractRecordsTable createRecordsTable(PagePool pool, Path recordsFile) throws IOException {
     return new LocalHistoryRecordsTable(recordsFile, pool);
   }
 

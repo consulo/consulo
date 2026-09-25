@@ -16,10 +16,11 @@
 package consulo.compiler.impl.internal.generic;
 
 import consulo.compiler.generic.GenericCompiler;
+import consulo.index.io.CorruptedException;
 import consulo.index.io.KeyDescriptor;
-import consulo.index.io.PersistentEnumerator;
 import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 
@@ -46,11 +47,11 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
 
     private void createMap() throws IOException {
         try {
-            myPersistentMap = new PersistentHashMap<>(myCacheFile, new SourceItemDataDescriptor(myCompiler.getItemKeyDescriptor()),
+            myPersistentMap = new PersistentHashMap<>(myCacheFile.toPath(), new SourceItemDataDescriptor(myCompiler.getItemKeyDescriptor()),
                 new PersistentStateDataExternalizer(myCompiler)
             );
         }
-        catch (PersistentEnumerator.CorruptedException e) {
+        catch (CorruptedException e) {
             FileUtil.delete(myCacheFile);
             throw e;
         }
@@ -66,7 +67,7 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
         }
         catch (IOException ignored) {
         }
-        PersistentHashMap.deleteFilesStartingWith(myCacheFile);
+        IOUtil.deleteAllFilesStartingWith(myCacheFile);
         createMap();
     }
 

@@ -15,6 +15,8 @@ import consulo.application.progress.*;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
+import consulo.index.io.internal.IOCancellationCallback;
+import consulo.index.io.internal.IOCancellationCallbackHolder;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -37,6 +39,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     @Inject
     public ProgressManagerImpl(Application application) {
         super(application);
+        IOCancellationCallbackHolder.INSTANCE.setIoCancellationCallback(new IdeIOCancellationCallback());
     }
 
     @Override
@@ -164,5 +167,17 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     @Override
     protected void prioritizingFinished() {
         removeCheckCanceledHook(mySleepHook);
+    }
+
+    private static final class IdeIOCancellationCallback implements IOCancellationCallback {
+        @Override
+        public void checkCancelled() throws ProcessCanceledException {
+            ProgressManager.checkCanceled();
+        }
+
+        @Override
+        public void interactWithUI() {
+            PingProgress.interactWithEdtProgress();
+        }
     }
 }

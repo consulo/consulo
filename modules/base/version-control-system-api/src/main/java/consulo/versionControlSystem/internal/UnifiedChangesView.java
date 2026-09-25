@@ -17,12 +17,13 @@ package consulo.versionControlSystem.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.project.internal.ProjectEx;
 import jakarta.inject.Singleton;
 
 /**
  * @author irengrig
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED | ProjectEx.REGULAR_PROJECT)
 public class UnifiedChangesView extends StubChangesView {
 }

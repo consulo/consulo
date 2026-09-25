@@ -204,12 +204,13 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         for (int attempt = 0; attempt < 2; attempt++) {
             try {
                 VfsAwareMapIndexStorage<K, Void> storage = new VfsAwareMapIndexStorage<>(
-                    IndexInfrastructure.getStorageFile(indexKey),
+                    IndexInfrastructure.getStorageFile(indexKey).toPath(),
                     wrappedExtension.getKeyDescriptor(),
                     wrappedExtension.getValueExternalizer(),
                     wrappedExtension.getCacheSize(),
                     wrappedExtension.keyIsUniqueForIndexedFile(),
-                    wrappedExtension.traceKeyHashToVirtualFileMapping()
+                    wrappedExtension.traceKeyHashToVirtualFileMapping(),
+                    new StorageLockContext(/*checkAccess:*/false, /*cacheChannels:*/true)
                 );
                 MemoryIndexStorage<K, Void> memStorage = new MemoryIndexStorage<>(storage, indexKey);
                 UpdatableIndex<K, Void, FileContent, ?> index =

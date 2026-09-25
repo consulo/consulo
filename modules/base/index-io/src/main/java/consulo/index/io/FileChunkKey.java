@@ -1,73 +1,45 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.index.io;
 
-import consulo.util.collection.ShareableKey;
 import org.jspecify.annotations.Nullable;
 
-class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, ShareableKey {
-    private OwnerType owner;
-    private long offset;
+final class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>> {
+    private final OwnerType myOwner;
+    private final long myOffset;
 
-    public FileChunkKey(OwnerType owner, long offset) {
-        this.owner = owner;
-        this.offset = offset;
+    FileChunkKey(OwnerType owner, long offset) {
+        myOwner = owner;
+        myOffset = offset;
     }
 
     @Override
     public int hashCode() {
-        return owner.hashCode() * 31 + Long.hashCode(offset);
+        return (int) (myOwner.hashCode() * 31 + myOffset);
     }
 
     public OwnerType getOwner() {
-        return owner;
+        return myOwner;
     }
 
     public long getOffset() {
-        return offset;
+        return myOffset;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(@Nullable Object obj) {
-        if (obj == this) {
-            return true;
-        }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        FileChunkKey<OwnerType> that = (FileChunkKey<OwnerType>) obj;
-        return owner == that.owner && offset == that.offset;
-    }
-
-    public void setup(OwnerType owner, long offset) {
-        this.owner = owner;
-        this.offset = offset;
+        FileChunkKey<OwnerType> k = (FileChunkKey<OwnerType>) obj;
+        return k.myOwner == myOwner && k.myOffset == myOffset;
     }
 
     @Override
     public int compareTo(FileChunkKey<OwnerType> o) {
-        if (owner != o.owner) {
-            return owner.hashCode() - o.owner.hashCode();
+        if (myOwner != o.myOwner) {
+            return myOwner.hashCode() - o.myOwner.hashCode();
         }
-        return offset == o.offset ? 0 : offset - o.offset < 0 ? -1 : 1;
-    }
-
-    @Override
-    public ShareableKey getStableCopy() {
-        return new FileChunkKey<>(owner, offset);
+        return myOffset == o.myOffset ? 0 : myOffset - o.myOffset < 0 ? -1 : 1;
     }
 }

@@ -8,9 +8,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 public class IntToIntBtree {
@@ -50,7 +50,7 @@ public class IntToIntBtree {
   private final int myCachedMappingsSize;
   private static final int UNDEFINED_ADDRESS = -1;
 
-  public IntToIntBtree(int pageSize, File file, PagedFileStorage.StorageLockContext storageLockContext, boolean initial) throws IOException {
+  public IntToIntBtree(int pageSize, Path file, StorageLockContext storageLockContext, boolean initial) throws IOException {
     this.pageSize = pageSize;
 
     if (initial) {

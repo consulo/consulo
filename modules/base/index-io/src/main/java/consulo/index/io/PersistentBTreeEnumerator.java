@@ -6,8 +6,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.function.Predicate;
 
 // Assigns / store unique integral id for Data instances.
@@ -54,15 +54,15 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   private static final int VERSION = 8 + IntToIntBtree.version() + BTREE_PAGE_SIZE + INTERNAL_PAGE_SIZE + MAX_DATA_SEGMENT_LENGTH;
   private static final int KEY_SHIFT = 1;
 
-  public PersistentBTreeEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
+  public PersistentBTreeEnumerator(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentBTreeEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext) throws IOException {
+  public PersistentBTreeEnumerator(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable StorageLockContext lockContext) throws IOException {
     this(file, dataDescriptor, initialSize, lockContext, 0);
   }
 
-  public PersistentBTreeEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int version)
+  public PersistentBTreeEnumerator(Path file, KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable StorageLockContext lockContext, int version)
           throws IOException {
     super(file, new ResizeableMappedFile(file, initialSize, lockContext, VALUE_PAGE_SIZE, true, IOUtil.BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER), dataDescriptor, initialSize, new Version(VERSION + version),
           new RecordBufferHandler(), false);
@@ -101,8 +101,8 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
  
-  private static File indexFile(File file) {
-    return new File(file.getPath() + "_i");
+  private static Path indexFile(Path file) {
+    return file.resolveSibling(file.getFileName() + "_i");
   }
 
   private static boolean wantKeyMapping() {

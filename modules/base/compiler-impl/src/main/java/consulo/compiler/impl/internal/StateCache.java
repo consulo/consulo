@@ -18,6 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.impl.internal.state.PathKeyDescriptor;
 import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -53,7 +54,7 @@ public abstract class StateCache<T> {
         }
         catch (IOException ignored) {
         }
-        PersistentHashMap.deleteFilesStartingWith(myBaseFile);
+        IOUtil.deleteAllFilesStartingWith(myBaseFile);
         try {
             myMap = createMap(myBaseFile);
         }
@@ -89,7 +90,7 @@ public abstract class StateCache<T> {
     }
 
     private PersistentHashMap<String, T> createMap(File file) throws IOException {
-        return new PersistentHashMap<>(file, PathKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
+        return new PersistentHashMap<>(file.toPath(), PathKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
             @Override
             public void save(DataOutput out, T value) throws IOException {
                 StateCache.this.write(value, out);
