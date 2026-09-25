@@ -175,9 +175,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             sink.set(Project.KEY, myProject);
             sink.set(HelpManager.HELP_ID, HelpID.PROJECT_VIEWS);
 
+            AbstractTreeNode selectedNode = takeSelectedNode();
+
             // without the view every action that creates something - the whole New group - has nowhere to put it
             // and expands to nothing, and cut/copy/paste have no provider to run through
-            sink.set(IdeView.KEY, myIdeView);
+            sink.lazy(IdeView.KEY, () -> new MyIdeView(directoriesOf(selectedNode)));
             sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
 
             // the provider hangs off the layout around the tree, but a popup anchors to the tree - it is the one
@@ -191,7 +193,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
                 sink.set(PlatformDataKeys.PASTE_PROVIDER, myCopyPasteDelegator.getPasteProvider());
             }
 
-            AbstractTreeNode selectedNode = takeSelectedNode();
             Object selected = takeSelectedNodeElement();
 
             // set, not lazy - the selection is already in hand, and a lazy supplier does not survive into the
@@ -403,8 +404,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     private @Nullable Element myLoadedState;
 
-    private final IdeView myIdeView = new MyIdeView();
-
     private final TreeExpander myTreeExpander = new MyTreeExpander();
 
     private @Nullable CopyPasteDelegator myCopyPasteDelegator;
@@ -463,7 +462,25 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         return value != null && value.getValue() instanceof PsiElement element && element.isValid() ? element : null;
     }
 
+    @RequiredReadAction
+    private static PsiDirectory[] directoriesOf(@Nullable AbstractTreeNode node) {
+        PsiElement element = node != null && node.getValue() instanceof PsiElement value && value.isValid() ? value : null;
+        if (element instanceof PsiDirectory directory) {
+            return new PsiDirectory[]{directory};
+        }
+
+        PsiFile containingFile = element == null ? null : element.getContainingFile();
+        PsiDirectory parent = containingFile == null ? null : containingFile.getContainingDirectory();
+        return parent == null ? PsiDirectory.EMPTY_ARRAY : new PsiDirectory[]{parent};
+    }
+
     private final class MyIdeView implements IdeView {
+        private final PsiDirectory[] myDirectories;
+
+        private MyIdeView(PsiDirectory[] directories) {
+            myDirectories = directories;
+        }
+
         @Override
         public void selectElement(PsiElement element) {
             selectPsiElement(element, false);
@@ -475,15 +492,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
         @Override
         public PsiDirectory[] getDirectories() {
-            PsiElement selected = getSelectedPsiElement();
-            if (selected instanceof PsiDirectory directory) {
-                return new PsiDirectory[]{directory};
-            }
-
-            // creating something next to the selected file means creating it in the folder that holds it
-            PsiFile containingFile = selected == null ? null : selected.getContainingFile();
-            PsiDirectory parent = containingFile == null ? null : containingFile.getContainingDirectory();
-            return parent == null ? PsiDirectory.EMPTY_ARRAY : new PsiDirectory[]{parent};
+            return myDirectories;
         }
 
         @Override
