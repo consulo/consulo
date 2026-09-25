@@ -15,11 +15,11 @@
  */
 package consulo.web.ui.impl.internal;
 
-import consulo.ui.Length;
-import consulo.web.ui.impl.internal.vaadin.WebLength;
-import consulo.ui.DragAndDropTransferHandler;
-import consulo.ui.TransferHandler;
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickNotifier;
+import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
@@ -28,48 +28,52 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.selection.SelectionModel;
+import com.vaadin.flow.dom.Style;
+import com.vaadin.flow.server.VaadinSession;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.ui.Component;
-import com.vaadin.flow.dom.Style;
+import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.Length;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
-import consulo.ui.TreeStyle;
 import consulo.ui.TreeNode;
+import consulo.ui.TreeStyle;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
-import consulo.ui.event.TreeCollapseEvent;
-import consulo.ui.event.TreeDoubleClickEvent;
-import consulo.ui.event.details.InputDetails;
-import consulo.ui.event.TreeExpandEvent;
-import consulo.ui.event.TreeSelectEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.ui.ex.localize.UILocalize;
-import consulo.util.collection.ContainerUtil;
-import consulo.ui.Point2D;
-import consulo.ui.PopupOwner;
+import consulo.ui.impl.tree.TreeController;
+import consulo.ui.impl.tree.TreeNodeImpl;
+import consulo.ui.impl.tree.TreeWidget;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
-import java.util.concurrent.CancellationException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
-@SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE>, PopupOwner {
-    private static final Logger LOG = Logger.getInstance(WebTreeImpl.class);
-
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
@@ -77,10 +81,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
     private volatile @Nullable Point2D myPopupPosition;
 
-    /**
-     * Levels of rows an expand all opens, counting the top level ones.
-     */
-    private static final int EXPAND_ALL_DEPTH = 4;
+    private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
+
+    private final TreeController<NODE> myController;
 
     @Tag("vaadin-grid-tree-toggle")
     public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component
@@ -90,16 +93,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips
     // rebuilding on css only changes, and the tree look was left one build behind
     @StyleSheet("/tree/webTree.css")
-    public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
-        // written by the background fetches and read by the ui thread, and now also walked when the state of
-        // the tree is written out
-        private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new ConcurrentHashMap<>();
-        private final CompletableFuture<Void> myRootLoaded = new CompletableFuture<>();
-
-        private TreeExecutor myExecutor;
-
-        private WebTreeNodeImpl<NODE> myRootNode;
-        private TreeModel<NODE> myModel;
+    public class Vaadin extends TreeGrid<WebTreeRow<NODE>> implements FromVaadinComponentWrapper {
+        private final Map<TreeNodeImpl<NODE>, WebTreeRow<NODE>> myRows = new HashMap<>();
+        private TreeData<WebTreeRow<NODE>> myData = new TreeData<>();
 
         private List<TreeNode<NODE>> myDraggedItems = List.of();
         private DataTransfer myDragTransfer = DataTransfer.EMPTY;
@@ -116,7 +112,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             myDragAndDropBound = true;
 
             addDragStartListener(event -> {
-                myDraggedItems = new ArrayList<>(event.getDraggedItems());
+                myDraggedItems = nodesOf(event.getDraggedItems());
                 DataTransfer transfer = handler.createDragTransfer(WebTreeImpl.this, myDraggedItems, true);
                 myDragTransfer = transfer == null ? DataTransfer.EMPTY : transfer;
             });
@@ -127,13 +123,14 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             });
 
             addDropListener(event -> {
-                WebTreeNodeImpl<NODE> target = event.getDropTargetItem().orElse(null);
+                WebTreeRow<NODE> target = event.getDropTargetItem().orElse(null);
+                TreeNodeImpl<NODE> targetNode = target == null ? null : target.getNode();
                 DragAndDropTransferHandler.DropPosition position = positionOf(event.getDropLocation());
-                if (target == null || position == null) {
+                if (targetNode == null || position == null) {
                     return;
                 }
 
-                DropContextImpl context = new DropContextImpl(target, position, myDragTransfer, myDraggedItems, true);
+                DropContextImpl context = new DropContextImpl(targetNode, position, myDragTransfer, myDraggedItems, true);
                 if (!handler.drop(WebTreeImpl.this, context)) {
                     return;
                 }
@@ -149,36 +146,39 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
             ((SelectionModel.Single) getSelectionModel()).setDeselectAllowed(false);
 
-            addComponentColumn(node -> {
+            addComponentColumn(row -> {
                 // nothing is asked of the model here - the presentation was computed on the executor while the
                 // level was built, and this only turns it into the components of the row
-                WebItemPresentationImpl item = node.getPresentation();
+                TreeNodeImpl<NODE> node = row.getNode();
+                WebItemPresentationImpl item = node != null && node.getPresentation() instanceof WebItemPresentationImpl presentation
+                    ? presentation
+                    : null;
                 if (item == null) {
                     item = new WebItemPresentationImpl();
-                    if (node instanceof WebTreeNodeImpl.NotLoaded) {
+                    if (node == null) {
                         item.append(UILocalize.treenodeLoading());
                     }
                 }
 
                 VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
-                toggle.getElement().setAttribute("leaf", node.isLeaf());
-                toggle.getElement().setAttribute("level", String.valueOf(node.getLevel()));
-                if (isExpanded(node)) {
+                toggle.getElement().setAttribute("leaf", node == null || node.isLeaf());
+                toggle.getElement().setAttribute("level", String.valueOf(levelOf(row)));
+                if (isExpanded(row)) {
                     toggle.getElement().setAttribute("expanded", true);
                 }
 
                 // a click anywhere on the toggle selects - the label is inside it - while opening a node is
                 // the chevron's alone. the filter keeps the label clicks off the wire entirely, and the
                 // client half of this is treeToggle.js, which stops the element flipping itself for them
-                toggle.addClickListener(event -> select(node));
+                toggle.addClickListener(event -> selectRow(row));
 
                 toggle.getElement().addEventListener("click", event -> {
-                    if (getDataCommunicator().hasChildren(node)) {
-                        if (isExpanded(node)) {
-                            collapse(List.of(node), true);
+                    if (getDataCommunicator().hasChildren(row)) {
+                        if (isExpanded(row)) {
+                            collapse(List.of(row), true);
                         }
                         else {
-                            expand(List.of(node), true);
+                            expand(List.of(row), true);
                         }
                     }
                 }).setFilter("event.composedPath().some(node => node.getAttribute && node.getAttribute('part') === 'toggle')");
@@ -196,7 +196,35 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
 
+            addExpandListener(event -> {
+                if (!event.isFromClient()) {
+                    return;
+                }
+
+                for (WebTreeRow<NODE> row : event.getItems()) {
+                    TreeNodeImpl<NODE> node = row.getNode();
+                    if (node != null) {
+                        myController.onExpanded(node, ProgrammaticInputDetails.INSTANCE);
+                    }
+                }
+            });
+
+            addCollapseListener(event -> {
+                if (!event.isFromClient()) {
+                    return;
+                }
+
+                for (WebTreeRow<NODE> row : event.getItems()) {
+                    TreeNodeImpl<NODE> node = row.getNode();
+                    if (node != null) {
+                        myController.onCollapsed(node, ProgrammaticInputDetails.INSTANCE);
+                    }
+                }
+            });
+
             installSelectOnRightClick();
+
+            installData(myData);
         }
 
         /**
@@ -219,10 +247,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 .addEventListener("mousedown", event -> {
                     int index = event.getEventData().path(rowIndex).asInt(-1);
 
-                    WebTreeNodeImpl<NODE> item =
-                        HierarchicalDataCommunicatorAccess.getItemByFlatIndex(getDataCommunicator(), index);
+                    WebTreeRow<NODE> item = HierarchicalDataCommunicatorAccess.getItemByFlatIndex(getDataCommunicator(), index);
                     if (item != null) {
-                        select(item);
+                        selectRow(item);
                     }
 
                     int left = event.getEventData().path(rowLeft).asInt(-1);
@@ -248,476 +275,211 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 + "})()";
         }
 
-        public void init(NODE rootValue, TreeModel<NODE> model) {
-            myModel = model;
-
-            myRootNode = new WebTreeNodeImpl<>(null, rootValue, myNodeMap);
-            // every node built below gets one from fetchChildren, and without it here the root answers its own
-            // placeholder child to a search instead of building the level - which is where a path walk starts
-            myRootNode.setLoader(this::loadChildrenAsync);
-
-            initTreeData(true);
-
-            addExpandListener(event -> {
-                Collection<WebTreeNodeImpl<NODE>> items = event.getItems();
-
-                for (WebTreeNodeImpl<NODE> item : items) {
-                    item.setExpanded(true);
-
-                    if (item.isNotLoaded()) {
-                        UI ui = UI.getCurrent();
-                        // items not loaded
-                        queue(item, ui);
-                    }
-
-                    fireExpand(item);
-                }
-            });
-
-            addCollapseListener(event -> {
-                for (WebTreeNodeImpl<NODE> item : event.getItems()) {
-                    item.setExpanded(false);
-
-                    fireCollapse(item);
-                }
-            });
-        }
-
         @Override
         protected void onAttach(AttachEvent attachEvent) {
             super.onAttach(attachEvent);
 
-            // a refresh moves this grid into a freshly created ui and attaches it again. the nodes are the same
-            // objects, and building them anew would throw away what they hold - the children below them and the
-            // record of which were open - so only the data of the new grid is filled in
-            if (!myRootNode.isNotLoaded()) {
-                initTreeData(false);
+            resetData();
 
-                myRootLoaded.complete(null);
-                return;
-            }
-
-            UI ui = UI.getCurrent();
-
-            myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(myRootNode, false))
-                .whenComplete((children, error) -> {
-                    if (error != null) {
-                        logBuildError(error);
-                        // everything a walk down a stored path chains on hangs off this one
-                        myRootLoaded.complete(null);
-                        return;
-                    }
-
-                    ui.access(() -> {
-                        initTreeData(false);
-
-                        myRootLoaded.complete(null);
-                    });
-                });
+            myController.bind();
         }
 
-        private void queue(WebTreeNodeImpl<NODE> parent, UI ui) {
-            loadChildren(parent, ui);
-        }
+        private void installData(TreeData<WebTreeRow<NODE>> data) {
+            myData = data;
 
-        private CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildren(WebTreeNodeImpl<NODE> parent, @Nullable UI ui) {
-            if (ui == null) {
-                return CompletableFuture.completedFuture(List.of());
-            }
-
-            if (!parent.isNotLoaded()) {
-                // the whole chain that a walk down a path hangs on this future runs where it is completed,
-                // and touching the grid outside the ui lock is what corrupts a session
-                CompletableFuture<List<WebTreeNodeImpl<NODE>>> loaded = new CompletableFuture<>();
-                List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
-                ui.access(() -> loaded.complete(children));
-                return loaded;
-            }
-
-            WebTreeNodeImpl<NODE> unloaded = parent.getChildren().get(0);
-
-            return myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(parent, false))
-                .handle((children, error) -> {
-                    CompletableFuture<List<WebTreeNodeImpl<NODE>>> result = new CompletableFuture<>();
-
-                    if (error != null) {
-                        logBuildError(error);
-                        result.complete(List.of());
-                        return result;
-                    }
-
-                    ui.access(() -> {
-                        TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
-
-                        // the level may have been built twice - the check which sent this build off happens two
-                        // thread hops before this, so a second one starts while the first is still on the
-                        // executor. whichever gets the ui lock first owns the rows; the other has nothing left
-                        // to do, and the placeholder it was holding on to is already gone
-                        if (!data.contains(unloaded)) {
-                            result.complete(parent.getChildren());
-                            return;
-                        }
-
-                        data.removeItem(unloaded);
-
-                        data.addItems(parent, children);
-
-                        // add raw children
-                        for (WebTreeNodeImpl<NODE> child : children) {
-                            data.addItems(child, child.getChildren());
-                        }
-
-                        myNodeMap.remove(unloaded.getId());
-
-                        getDataProvider().refreshItem(parent, true);
-
-                        ui.push();
-
-                        result.complete(children);
-                    });
-
-                    return result;
-                })
-                .thenCompose(Function.identity());
-        }
-
-        /**
-         * The children of the root are fetched once the grid is attached, so a walk down a path - restoring the
-         * state of a previous session - has to wait for that rather than start a fetch of its own.
-         */
-        /**
-         * {@link UI#getCurrent()} answers only on a thread the framework is driving, and a walk which opens one
-         * level after another runs its later steps on whichever thread completed the step before. The grid knows
-         * the ui it hangs in either way.
-         */
-        private @Nullable UI currentUI() {
-            UI ui = UI.getCurrent();
-            return ui != null ? ui : getUI().orElse(null);
-        }
-
-        public CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildrenAsync(WebTreeNodeImpl<NODE> node) {
-            if (node == myRootNode) {
-                return myRootLoaded.thenApply(ignored -> myRootNode.getChildren());
-            }
-
-            return loadChildren(node, currentUI());
-        }
-
-        public void selectDeep(WebTreeNodeImpl<NODE> node) {
-            List<WebTreeNodeImpl<NODE>> path = pathTo(node);
-
-            CompletableFuture<Void> expanded = CompletableFuture.completedFuture(null);
-            for (int i = 0; i < path.size() - 1; i++) {
-                WebTreeNodeImpl<NODE> ancestor = path.get(i);
-                expanded = expanded.thenCompose(ignored -> expandNode(ancestor));
-            }
-
-            expanded.thenRun(() -> {
-                UI ui = currentUI();
-                if (ui != null) {
-                    ui.access(() -> select(node));
-                }
-            });
-        }
-
-        public CompletableFuture<Void> expandNode(WebTreeNodeImpl<NODE> node) {
-            return loadChildrenAsync(node).thenCompose(children -> {
-                if (node == myRootNode) {
-                    return CompletableFuture.completedFuture(null);
-                }
-
-                UI ui = currentUI();
-                if (ui == null) {
-                    return CompletableFuture.completedFuture(null);
-                }
-
-                CompletableFuture<Void> expanded = new CompletableFuture<>();
-
-                ui.access(() -> {
-                    // stored paths overlap - a parent is named by every path that runs through it - and asking
-                    // the grid to open a node it already holds open resets the subtree, closing what a previous
-                    // path opened below it
-                    if (!isExpanded(node)) {
-                        expand(List.of(node));
-
-                        // the toggle of a row is built once by the component column, and an expand driven from
-                        // here does not rebuild it - the row would keep the chevron of a closed node
-                        getDataProvider().refreshItem(node);
-                    }
-
-                    expanded.complete(null);
-                });
-
-                return expanded;
-            });
-        }
-
-        /**
-         * Opens the nodes and the levels below them, one level at a time. {@link #expandRecursively} walks only
-         * the levels the grid already holds, and the children of a node are fetched when it is first opened, so
-         * a level has to be waited for before the one below it can be asked for.
-         */
-        public CompletableFuture<Void> expandDeep(Collection<WebTreeNodeImpl<NODE>> nodes, int depth) {
-            if (depth <= 0 || nodes.isEmpty()) {
-                return CompletableFuture.completedFuture(null);
-            }
-
-            CompletableFuture<?>[] futures = nodes.stream()
-                // a leaf has nothing to open, and the placeholder row of a level still being fetched is not a
-                // node of the model
-                .filter(node -> !node.isLeaf() && !(node instanceof WebTreeNodeImpl.NotLoaded))
-                // the children are read after the node is open - a fetch replaces the list it held before
-                .map(node -> expandNode(node).thenCompose(ignored -> expandDeep(node.getChildren(), depth - 1)))
-                .toArray(CompletableFuture[]::new);
-
-            return CompletableFuture.allOf(futures);
-        }
-
-        /**
-         * The root is not a row of the grid, so a depth of one opens the top level rows.
-         */
-        public CompletableFuture<Void> expandAllDeep(int depth) {
-            return loadChildrenAsync(myRootNode).thenCompose(children -> expandDeep(children, depth));
-        }
-
-        public WebTreeNodeImpl<NODE> getRootNode() {
-            return myRootNode;
-        }
-
-        public List<List<WebTreeNodeImpl<NODE>>> collectExpandedPaths() {
-            List<List<WebTreeNodeImpl<NODE>>> paths = new ArrayList<>();
-            for (WebTreeNodeImpl<NODE> node : myNodeMap.values()) {
-                if (!(node instanceof WebTreeNodeImpl.NotLoaded) && node.isExpanded()) {
-                    paths.add(pathTo(node));
-                }
-            }
-            return paths;
-        }
-
-        /**
-         * The root is a part of the path, the way the awt trees write theirs - the two frontends read the same
-         * state out of the workspace.
-         */
-        public List<WebTreeNodeImpl<NODE>> pathTo(WebTreeNodeImpl<NODE> node) {
-            LinkedList<WebTreeNodeImpl<NODE>> path = new LinkedList<>();
-            for (WebTreeNodeImpl<NODE> current = node; current != null; current = current.getParent()) {
-                path.addFirst(current);
-            }
-            return path;
-        }
-
-        /**
-         * The children live in the {@link TreeData} rather than being asked from the model on every paint, so a
-         * change behind the tree only reaches it by rebuilding them here.
-         */
-        public void refreshNode(WebTreeNodeImpl<NODE> node, boolean refreshChildren) {
-            if (node == myRootNode) {
-                refreshRoot();
-                return;
-            }
-
-            TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
-            if (!data.contains(node)) {
-                return;
-            }
-
-            // a node whose children were never fetched has nothing to rebuild - it holds the placeholder, and
-            // opening it fetches them. What it says of itself is read again all the same: a node is refreshed
-            // because something behind it changed, and the row was built from what the model said before that
-            if (!refreshChildren || node.isNotLoaded()) {
-                UI presentationUi = UI.getCurrent();
-                if (presentationUi == null) {
-                    getDataProvider().refreshItem(node);
-                    return;
-                }
-
-                myExecutor.execute(WebTreeImpl.this, () -> {
-                    node.computePresentation();
-                    return null;
-                }).whenComplete((ignored, error) -> {
-                    if (error != null) {
-                        logBuildError(error);
-                        return;
-                    }
-
-                    presentationUi.access(() -> {
-                        getDataProvider().refreshItem(node);
-                        presentationUi.push();
-                    });
-                });
-                return;
-            }
-
-            UI ui = UI.getCurrent();
-            myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(node, false))
-                .whenComplete((children, error) -> {
-                    if (error != null) {
-                        logBuildError(error);
-                        return;
-                    }
-
-                    ui.access(() -> {
-                        TreeData<WebTreeNodeImpl<NODE>> treeData = getTreeData();
-
-                        for (WebTreeNodeImpl<NODE> old : List.copyOf(treeData.getChildren(node))) {
-                            myNodeMap.remove(old.getId());
-                            treeData.removeItem(old);
-                        }
-
-                        treeData.addItems(node, children);
-                        for (WebTreeNodeImpl<NODE> child : children) {
-                            treeData.addItems(child, child.getChildren());
-                        }
-
-                        getDataProvider().refreshItem(node, true);
-
-                        ui.push();
-                    });
-                });
-        }
-
-        public CompletableFuture<?> refreshRoot() {
-            UI ui = currentUI();
-            if (ui == null) {
-                return CompletableFuture.completedFuture(null);
-            }
-
-            CompletableFuture<Void> result = new CompletableFuture<>();
-
-            myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(myRootNode, false))
-                .whenComplete((children, error) -> {
-                    if (error != null) {
-                        logBuildError(error);
-                        result.complete(null);
-                        return;
-                    }
-
-                    ui.access(() -> {
-                        initTreeData(false);
-
-                        ui.push();
-
-                        result.complete(null);
-                    });
-                });
-
-            return result;
-        }
-
-        private void initTreeData(boolean init) {
-            TreeData<WebTreeNodeImpl<NODE>> data = new TreeData<>();
-            // will set not loaded node
-            if (init) {
-                data.addRootItems(List.of(new WebTreeNodeImpl.NotLoaded<>(null, null, myNodeMap)));
-            }
-            else {
-                data.addRootItems(myRootNode.getChildren());
-                for (WebTreeNodeImpl<NODE> node : myRootNode.getChildren()) {
-                    addLoadedChildren(data, node);
-                }
-            }
-
-            TreeDataProvider<WebTreeNodeImpl<NODE>> provider = new TreeDataProvider<>(data) {
+            TreeDataProvider<WebTreeRow<NODE>> provider = new TreeDataProvider<>(data) {
                 @Override
-                public Object getId(WebTreeNodeImpl<NODE> item) {
+                public Object getId(WebTreeRow<NODE> item) {
                     return item.getId();
                 }
             };
 
-            setUniqueKeyDataGenerator("key", WebTreeNodeImpl::getId);
+            setUniqueKeyDataGenerator("key", WebTreeRow::getId);
 
             setDataProvider(provider);
-            getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
+            getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeRow::getId);
+        }
 
-            if (!init) {
-                restoreExpanded(data);
+        private void resetData() {
+            myRows.clear();
+
+            TreeData<WebTreeRow<NODE>> data = new TreeData<>();
+            if (!myController.getRoot().isLoaded()) {
+                data.addRootItems(List.of(WebTreeRow.placeholder()));
+            }
+            installData(data);
+        }
+
+        private void selectRow(WebTreeRow<NODE> row) {
+            TreeNodeImpl<NODE> node = row.getNode();
+            if (node == null) {
+                return;
+            }
+
+            select(row);
+            myController.onSelected(node, ProgrammaticInputDetails.INSTANCE);
+        }
+
+        private @Nullable WebTreeRow<NODE> liveRow(TreeNodeImpl<NODE> node) {
+            WebTreeRow<NODE> row = myRows.get(node);
+            return row != null && myData.contains(row) ? row : null;
+        }
+
+        private int levelOf(WebTreeRow<NODE> row) {
+            int level = 0;
+            for (WebTreeRow<NODE> parent = myData.getParent(row); parent != null; parent = myData.getParent(parent)) {
+                level++;
+            }
+            return level;
+        }
+
+        private List<TreeNode<NODE>> nodesOf(Collection<WebTreeRow<NODE>> rows) {
+            List<TreeNode<NODE>> nodes = new ArrayList<>(rows.size());
+            for (WebTreeRow<NODE> row : rows) {
+                TreeNodeImpl<NODE> node = row.getNode();
+                if (node != null) {
+                    nodes.add(node);
+                }
+            }
+            return nodes;
+        }
+
+        private void showLoading(TreeNodeImpl<NODE> node) {
+            if (node == myController.getRoot()) {
+                if (myData.getRootItems().isEmpty()) {
+                    myData.addItem(null, WebTreeRow.placeholder());
+                    getDataProvider().refreshAll();
+                }
+                return;
+            }
+
+            WebTreeRow<NODE> row = liveRow(node);
+            if (row != null && syncPlaceholder(row)) {
+                getDataProvider().refreshItem(row, true);
             }
         }
 
-        /**
-         * A node holds the children it was given, and the placeholder while it has none - putting the whole of
-         * what is already known into the data is what lets the nodes that were open be opened again.
-         */
-        private void addLoadedChildren(TreeData<WebTreeNodeImpl<NODE>> data, WebTreeNodeImpl<NODE> node) {
-            List<WebTreeNodeImpl<NODE>> children = node.getChildren();
+        private void setChildren(TreeNodeImpl<NODE> node, List<TreeNodeImpl<NODE>> children) {
+            boolean root = node == myController.getRoot();
+            WebTreeRow<NODE> parent = root ? null : liveRow(node);
+            if (!root && parent == null) {
+                return;
+            }
+
+            List<WebTreeRow<NODE>> current = List.copyOf(myData.getChildren(parent));
+            Set<WebTreeRow<NODE>> present = new HashSet<>(current);
+
+            List<WebTreeRow<NODE>> wanted = new ArrayList<>(children.size());
+            for (TreeNodeImpl<NODE> child : children) {
+                WebTreeRow<NODE> row = myRows.get(child);
+                if (row == null || !present.contains(row)) {
+                    row = WebTreeRow.of(child);
+                    myRows.put(child, row);
+                    myData.addItem(parent, row);
+                }
+                wanted.add(row);
+            }
+
+            Set<WebTreeRow<NODE>> kept = new HashSet<>(wanted);
+            for (WebTreeRow<NODE> row : current) {
+                if (!kept.contains(row)) {
+                    removeRow(row);
+                }
+            }
+
+            if (!myData.getChildren(parent).equals(wanted)) {
+                WebTreeRow<NODE> previous = null;
+                for (WebTreeRow<NODE> row : wanted) {
+                    myData.moveAfterSibling(row, previous);
+                    previous = row;
+                }
+            }
+
+            for (WebTreeRow<NODE> row : wanted) {
+                syncPlaceholder(row);
+            }
+
+            if (root) {
+                getDataProvider().refreshAll();
+            }
+            else {
+                getDataProvider().refreshItem(parent, true);
+            }
+        }
+
+        private boolean syncPlaceholder(WebTreeRow<NODE> row) {
+            TreeNodeImpl<NODE> node = row.getNode();
+            if (node == null || node.isLoaded()) {
+                return false;
+            }
+
+            List<WebTreeRow<NODE>> children = List.copyOf(myData.getChildren(row));
+            if (node.isLeaf()) {
+                for (WebTreeRow<NODE> child : children) {
+                    removeRow(child);
+                }
+                return !children.isEmpty();
+            }
+
             if (children.isEmpty()) {
-                return;
+                myData.addItem(row, WebTreeRow.placeholder());
+                return true;
+            }
+            return false;
+        }
+
+        private void removeRow(WebTreeRow<NODE> row) {
+            forget(row);
+            myData.removeItem(row);
+        }
+
+        private void forget(WebTreeRow<NODE> row) {
+            for (WebTreeRow<NODE> child : myData.getChildren(row)) {
+                forget(child);
             }
 
-            data.addItems(node, children);
-
-            if (node.isNotLoaded()) {
-                return;
-            }
-
-            for (WebTreeNodeImpl<NODE> child : children) {
-                addLoadedChildren(data, child);
+            TreeNodeImpl<NODE> node = row.getNode();
+            if (node != null && myRows.get(node) == row) {
+                myRows.remove(node);
             }
         }
 
-        private void restoreExpanded(TreeData<WebTreeNodeImpl<NODE>> data) {
-            List<WebTreeNodeImpl<NODE>> expanded = new ArrayList<>();
-            for (WebTreeNodeImpl<NODE> node : myNodeMap.values()) {
-                if (node.isExpanded() && data.contains(node)) {
-                    expanded.add(node);
-                }
+        private void setExpanded(TreeNodeImpl<NODE> node, boolean expanded) {
+            WebTreeRow<NODE> row = liveRow(node);
+            if (row == null || isExpanded(row) == expanded) {
+                return;
             }
 
-            if (!expanded.isEmpty()) {
-                // a node can only be opened once the one above it is, and the nodes are held in no order
-                expanded.sort(Comparator.comparingInt(WebTreeNodeImpl::getLevel));
+            if (expanded) {
+                expand(List.of(row));
+            }
+            else {
+                collapse(List.of(row));
+            }
 
-                expand(expanded);
+            getDataProvider().refreshItem(row);
+        }
+
+        private void setSelected(@Nullable TreeNodeImpl<NODE> node) {
+            if (node == null) {
+                deselectAll();
+                return;
+            }
+
+            WebTreeRow<NODE> row = liveRow(node);
+            if (row != null) {
+                select(row);
             }
         }
 
-        /**
-         * Runs on the executor of the tree. A {@code ProcessCanceledException} is deliberately let through: the
-         * executor of a model over application data cancels its task when a write action arrives and restarts it
-         * by itself, and swallowing the exception here would turn the restart into an empty level.
-         */
-        private List<WebTreeNodeImpl<NODE>> fetchChildren(WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
-            List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
-            Map<String, WebTreeNodeImpl<NODE>> nodeMap = new HashMap<>();
-
-            myModel.buildChildren(
-                node -> {
-                    WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
-                    child.setLoader(this::loadChildrenAsync);
-                    list.add(child);
-                    return child;
-                },
-                parent.getValue()
-            );
-
-            myNodeMap.putAll(nodeMap);
-
-            parent.setChildren(list);
-
-            Comparator<TreeNode<NODE>> nodeComparator = myModel.getNodeComparator();
-            if (nodeComparator != null) {
-                list.sort(nodeComparator);
+        private void update(TreeNodeImpl<NODE> node) {
+            WebTreeRow<NODE> row = liveRow(node);
+            if (row == null) {
+                return;
             }
 
-            if (list.isEmpty()) {
-                parent.setLeaf(true);
-            }
-
-            // the row is built on the ui thread and the model must not be touched there, so what it would have
-            // asked for is computed here, while the level is being built
-            for (WebTreeNodeImpl<NODE> child : list) {
-                child.computePresentation();
-            }
-
-            if (fetchNext) {
-                for (WebTreeNodeImpl<NODE> child : list) {
-                    if (myModel.isNeedBuildChildrenBeforeOpen(child)) {
-                        fetchChildren(child, false);
-                    }
-                }
-            }
-
-            return list;
+            syncPlaceholder(row);
+            getDataProvider().refreshItem(row, true);
         }
 
         @Override
@@ -726,55 +488,79 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
     }
 
-    /**
-     * A cancelled build - the tree left its ui, or the executor went down with its disposable - is the quiet end
-     * of a chain nobody is waiting on. Anything else on this path would otherwise vanish without a trace, since
-     * the future of a build is rarely looked at.
-     */
-    private static void logBuildError(Throwable error) {
-        Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
-        if (!(cause instanceof CancellationException)) {
-            LOG.error(cause);
+    private class Binding implements TreeWidget<NODE> {
+        @Override
+        public @Nullable UIAccess getUIAccess() {
+            return WebTreeImpl.this.getUIAccess();
+        }
+
+        @Override
+        public boolean isUIThread() {
+            UI ui = toVaadinComponent().getUI().orElse(null);
+            VaadinSession session = ui == null ? null : ui.getSession();
+            return session != null && session.hasLock();
+        }
+
+        @Override
+        public TextItemPresentation createPresentation() {
+            return new WebItemPresentationImpl();
+        }
+
+        @Override
+        public void showLoading(TreeNodeImpl<NODE> node) {
+            toVaadinComponent().showLoading(node);
+        }
+
+        @Override
+        public void hideLoading(TreeNodeImpl<NODE> node) {
+        }
+
+        @Override
+        public void setChildren(TreeNodeImpl<NODE> node, List<TreeNodeImpl<NODE>> children) {
+            toVaadinComponent().setChildren(node, children);
+        }
+
+        @Override
+        public void setExpanded(TreeNodeImpl<NODE> node, boolean expanded) {
+            toVaadinComponent().setExpanded(node, expanded);
+        }
+
+        @Override
+        public void setSelected(@Nullable TreeNodeImpl<NODE> node) {
+            toVaadinComponent().setSelected(node);
+        }
+
+        @Override
+        public void update(TreeNodeImpl<NODE> node) {
+            toVaadinComponent().update(node);
         }
     }
-
-    private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
 
     @Override
     public Disposable destroyHook() {
         return myDestroyHook;
     }
+
     @RequiredUIAccess
     public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, TreeExecutor executor) {
+        myController = new TreeController<>(this, rootValue, model, executor, new Binding());
+        Disposer.register(myDestroyHook, myController);
+
         Vaadin vaadin = toVaadinComponent();
-        vaadin.myExecutor = executor;
+        vaadin.resetData();
 
-        vaadin.init(rootValue, model);
         vaadin.asSingleSelect().addValueChangeListener(event -> {
-            WebTreeNodeImpl<NODE> value = event.getValue();
-            if (value == null || value instanceof WebTreeNodeImpl.NotLoaded) {
-                return;
+            WebTreeRow<NODE> row = event.getValue();
+            TreeNodeImpl<NODE> node = row == null ? null : row.getNode();
+            if (event.isFromClient() && node != null) {
+                myController.onSelected(node, ProgrammaticInputDetails.INSTANCE);
             }
-
-            getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(this, value));
         });
 
         WebInputDetails.addClickListener(vaadin.getElement(), "dblclick", inputDetails -> {
-            TreeNode<NODE> selectedNode = getSelectedNode();
-            if (selectedNode == null) {
-                return;
-            }
-
-            getListenerDispatcher(TreeDoubleClickEvent.class)
-                .onEvent(new TreeDoubleClickEvent<>(this, selectedNode, inputDetails));
-
-            if (model.onDoubleClick(this, selectedNode, inputDetails) && selectedNode instanceof WebTreeNodeImpl<NODE> node) {
-                if (vaadin.isExpanded(node)) {
-                    vaadin.collapse(List.of(node));
-                }
-                else {
-                    vaadin.expand(List.of(node));
-                }
+            TreeNodeImpl<NODE> selectedNode = myController.getSelected();
+            if (selectedNode != null) {
+                myController.onDoubleClick(selectedNode, inputDetails);
             }
         });
     }
@@ -786,61 +572,42 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
     @Override
     public @Nullable TreeNode<NODE> getSelectedNode() {
-        Set selectedItems = toVaadinComponent().getSelectedItems();
-        return (TreeNode<NODE>) ContainerUtil.getFirstItem(selectedItems);
+        return myController.getSelected();
     }
 
     @Override
     public CompletableFuture<?> expand(TreeNode<NODE> node, int depth) {
-        if (!(node instanceof WebTreeNodeImpl<NODE> webNode)) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return toVaadinComponent().expandDeep(List.of(webNode), depth);
+        return myController.expand(node, depth);
     }
 
     @Override
     public TreeNode<NODE> getRootNode() {
-        return toVaadinComponent().getRootNode();
+        return myController.getRoot();
     }
 
     @Override
     public List<List<TreeNode<NODE>>> getExpandedPaths() {
-        List<List<WebTreeNodeImpl<NODE>>> collected = toVaadinComponent().collectExpandedPaths();
-
-        List<List<TreeNode<NODE>>> paths = new ArrayList<>();
-        for (List<WebTreeNodeImpl<NODE>> path : collected) {
-            paths.add(List.copyOf(path));
-        }
-        return paths;
+        return myController.getExpandedPaths();
     }
 
     @Override
     public List<TreeNode<NODE>> getSelectedPath() {
-        TreeNode<NODE> selected = getSelectedNode();
-        if (!(selected instanceof WebTreeNodeImpl<NODE> node)) {
-            return List.of();
-        }
-        return List.copyOf(toVaadinComponent().pathTo(node));
+        return myController.getSelectedPath();
     }
 
     @Override
     public void select(TreeNode<NODE> node) {
-        if (node instanceof WebTreeNodeImpl<NODE> webNode) {
-            toVaadinComponent().selectDeep(webNode);
-        }
+        myController.select(node);
     }
 
     @Override
     public void refreshItem(TreeNode<NODE> node, boolean refreshChildren) {
-        if (node instanceof WebTreeNodeImpl<NODE> webNode) {
-            toVaadinComponent().refreshNode(webNode, refreshChildren);
-        }
+        myController.refreshItem(node, refreshChildren);
     }
 
     @Override
     public CompletableFuture<?> refreshAll() {
-        return toVaadinComponent().refreshRoot();
+        return myController.refreshAll();
     }
 
     @Override
@@ -850,43 +617,17 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
     @Override
     public CompletableFuture<?> expandAll() {
-        // the children of a node are fetched when it is first opened, and every level costs a round trip, so
-        // an unbounded expand all would open a project view down to every file - the depth is capped instead
-        return expandAll(EXPAND_ALL_DEPTH);
+        return myController.expandAll();
     }
 
     @Override
     public CompletableFuture<?> expandAll(int depth) {
-        return toVaadinComponent().expandAllDeep(depth);
+        return myController.expandAll(depth);
     }
 
     @Override
     public CompletableFuture<?> collapseAll() {
-        Vaadin vaadin = toVaadinComponent();
-
-        // only the levels the grid holds can be open in the first place
-        vaadin.collapseRecursively(vaadin.getTreeData().getRootItems(), Integer.MAX_VALUE);
-        return CompletableFuture.completedFuture(null);
-    }
-
-    /**
-     * The placeholder row of a node whose children are still being fetched is a row of the grid but not a node
-     * of the model, and is left out the way the selection listener leaves it out.
-     */
-    private void fireExpand(WebTreeNodeImpl<NODE> node) {
-        if (node instanceof WebTreeNodeImpl.NotLoaded) {
-            return;
-        }
-
-        getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent(this, node));
-    }
-
-    private void fireCollapse(WebTreeNodeImpl<NODE> node) {
-        if (node instanceof WebTreeNodeImpl.NotLoaded) {
-            return;
-        }
-
-        getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
+        return myController.collapseAll();
     }
 
     /**

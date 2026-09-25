@@ -16,7 +16,6 @@
 package consulo.virtualFileSystem.status.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
@@ -24,6 +23,8 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
@@ -123,17 +124,20 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         if (myProject.isDisposed()) {
             return;
         }
-        Application application = myProject.getApplication();
-
-        if (!application.isDispatchThread()) {
-            application.invokeLater(this::fileStatusesChanged, application.getNoneModalityState());
-            return;
-        }
 
         myCachedStatuses.clear();
         myWhetherExactlyParentToChanged.clear();
 
-        myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusesChanged();
+        UIAccess uiAccess = myProject.getUIAccess();
+        if (!uiAccess.isValid()) {
+            return;
+        }
+
+        uiAccess.giveIfNeed(() -> {
+            if (!myProject.isDisposed()) {
+                myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusesChanged();
+            }
+        });
     }
 
     private void cacheChangedFileStatus(VirtualFile virtualFile, FileStatus fs) {
@@ -154,30 +158,44 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
 
     @Override
     public void fileStatusChanged(VirtualFile file) {
-        Application application = myProject.getApplication();
-        if (!application.isDispatchThread() && !application.isUnitTestMode()) {
-            application.invokeLater(() -> fileStatusChanged(file));
+        UIAccess uiAccess = myProject.getUIAccess();
+        if (!uiAccess.isValid()) {
+            updateFileStatus(file);
             return;
         }
 
-        if (file == null || !file.isValid()) {
-            return;
+        uiAccess.giveIfNeed(() -> {
+            if (updateFileStatus(file)) {
+                publishFileStatusChanged(file);
+            }
+        });
+    }
+
+    private boolean updateFileStatus(VirtualFile file) {
+        if (myProject.isDisposed() || file == null || !file.isValid()) {
+            return false;
         }
         FileStatus cachedStatus = getCachedStatus(file);
         if (cachedStatus == FileStatusNull.INSTANCE) {
-            return;
+            return false;
         }
         if (cachedStatus == null) {
             cacheChangedFileStatus(file, FileStatusNull.INSTANCE);
-            return;
+            return false;
         }
         FileStatus newStatus = calcStatus(file);
         if (cachedStatus == newStatus) {
-            return;
+            return false;
         }
         cacheChangedFileStatus(file, newStatus);
+        return true;
+    }
 
-        myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusChanged(file);
+    @RequiredUIAccess
+    private void publishFileStatusChanged(VirtualFile file) {
+        if (!myProject.isDisposed()) {
+            myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusChanged(file);
+        }
     }
 
     @Override

@@ -16,12 +16,13 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
+import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.ui.Length;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeExecutor;
@@ -29,12 +30,12 @@ import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
 import consulo.ui.UIAccess;
-import consulo.ui.event.TreeCollapseEvent;
-import consulo.ui.event.TreeDoubleClickEvent;
-import consulo.ui.event.TreeExpandEvent;
-import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.image.Image;
+import consulo.ui.impl.tree.TreeController;
+import consulo.ui.impl.tree.TreeNodeImpl;
+import consulo.ui.impl.tree.TreeWidget;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
@@ -48,77 +49,41 @@ import io.qt.widgets.QTreeWidgetItem;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> implements Tree<E>, PopupOwner, DesktopQtIconOwner {
-    private static final Logger LOG = Logger.getInstance(DesktopQtTreeImpl.class);
-
-    /**
-     * Levels of rows an expand all opens, counting the top level ones.
-     */
-    private static final int EXPAND_ALL_DEPTH = 4;
-
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
-
-    private final E myRootValue;
-    private final TreeModel<E> myModel;
-
-    /**
-     * Children are built off the ui thread, so the widget and this map are only ever touched from the qt
-     * thread while the map itself can be read from the loading chain.
-     */
-    private final Map<QTreeWidgetItem, DesktopQtTreeNode<E>> myNodes = new ConcurrentHashMap<>();
-
-    private final TreeExecutor myExecutor;
-
-    /**
-     * The node the tree was built on. It has no row of its own - the tree starts at its children - and it is
-     * where a walk down a stored path, or down to a file being revealed, begins.
-     */
-    private volatile DesktopQtTreeNode<E> myRootNode;
-
     private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
 
-    /**
-     * Which tree the levels being built belong to. Rebuilding the tree throws away every row and starts again
-     * from a fresh root, while the builds started for the previous one are still running - and a build which
-     * came back late would otherwise add its rows a second time, in whatever order the two builds finished.
-     */
-    private volatile int myGeneration;
-
-    public DesktopQtTreeImpl(E rootValue, TreeModel<E> model, TreeExecutor executor) {
-        myRootValue = rootValue;
-        myModel = model;
-        myExecutor = executor;
-
-        myRootNode = createRootNode();
-    }
-
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
+
+    private final TreeController<E> myController;
+
+    private final Map<QTreeWidgetItem, TreeNodeImpl<E>> myNodes = new HashMap<>();
+    private final Map<TreeNodeImpl<E>, QTreeWidgetItem> myItems = new HashMap<>();
+    private final Map<TreeNodeImpl<E>, QTreeWidgetItem> myLoadingItems = new HashMap<>();
+
+    private boolean mySyncing;
+
+    public DesktopQtTreeImpl(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        myController = new TreeController<>(this, rootValue, model, executor, new Binding());
+        Disposer.register(myDestroyHook, myController);
+    }
 
     @Override
     public Disposable destroyHook() {
         return myDestroyHook;
-    }
-    private DesktopQtTreeNode<E> createRootNode() {
-        DesktopQtTreeNode<E> root = new DesktopQtTreeNode<>(null, myRootValue);
-        root.setLoader(this::buildAsync);
-        return root;
     }
 
     /**
@@ -160,286 +125,191 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
     @Override
     protected void initialize(QTreeWidget tree) {
-        // hiding a tool window disposes the widget, and showing it again binds a fresh empty one - the nodes
-        // of the previous widget are gone with it, so the level below the root has to be built once more
         myNodes.clear();
-        myGeneration++;
-        myRootNode = createRootNode();
+        myItems.clear();
+        myLoadingItems.clear();
 
-        tree.itemSelectionChanged.connect(() ->
-            getListenerDispatcher(TreeSelectEvent.class)
-                .onEvent(new TreeSelectEvent(DesktopQtTreeImpl.this, getSelectedNode(), DesktopQtCurrentInput.current(tree)))
-        );
+        tree.itemSelectionChanged.connect(() -> {
+            if (!mySyncing) {
+                myController.onSelected(selectedNode(tree), DesktopQtCurrentInput.current(tree));
+            }
+        });
 
         tree.itemDoubleClicked.connect((item, column) -> {
             // the handler is queued past the dispatch of the click, so the details are taken while it still runs
             InputDetails inputDetails = DesktopQtCurrentInput.current(tree);
             UIAccess.current().give(() -> {
-                TreeNode<E> selectedNode = getSelectedNode();
-                if (selectedNode == null) {
-                    return;
-                }
-
-                getListenerDispatcher(TreeDoubleClickEvent.class)
-                    .onEvent(new TreeDoubleClickEvent<>(DesktopQtTreeImpl.this, selectedNode, inputDetails));
-
-                // the answer is the contract - a model which took the double click for itself, opening the file it
-                // stands for, says false, and true asks the tree to open or close the row the way the awt trees do
-                if (myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode, inputDetails) && !item.isDisposed()) {
-                    item.setExpanded(!item.isExpanded());
+                TreeNodeImpl<E> selectedNode = myController.getSelected();
+                if (selectedNode != null) {
+                    myController.onDoubleClick(selectedNode, inputDetails);
                 }
             });
         });
 
         tree.itemExpanded.connect(item -> {
-            DesktopQtTreeNode<E> node = myNodes.get(item);
-            if (node != null) {
-                node.setExpanded(true);
-
-                node.loadChildren();
+            TreeNodeImpl<E> node = myNodes.get(item);
+            if (!mySyncing && node != null) {
+                myController.onExpanded(node, DesktopQtCurrentInput.current(tree));
             }
-
-            fireExpand(item);
         });
 
         tree.itemCollapsed.connect(item -> {
-            DesktopQtTreeNode<E> node = myNodes.get(item);
-            if (node != null) {
-                node.setExpanded(false);
+            TreeNodeImpl<E> node = myNodes.get(item);
+            if (!mySyncing && node != null) {
+                myController.onCollapsed(node, DesktopQtCurrentInput.current(tree));
             }
-
-            fireCollapse(item);
         });
 
-        myRootNode.loadChildren();
+        myController.bind();
     }
 
-    private CompletableFuture<List<DesktopQtTreeNode<E>>> buildAsync(DesktopQtTreeNode<E> node) {
-        QTreeWidgetItem parent = node.getTreeItem();
-
-        int generation = myGeneration;
-        int epoch = node.getEpoch();
-
-        return DesktopQtUIAccess.INSTANCE.giveAsync(() -> showLoading(parent))
-            .thenCompose(loading -> myExecutor.execute(this, () -> fetchChildren(node))
-                .handle((children, error) -> DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
-                    hideLoading(loading);
-
-                    if (error != null) {
-                        logBuildError(error);
-                        return List.<DesktopQtTreeNode<E>>of();
-                    }
-
-                    if (generation != myGeneration || epoch != node.getEpoch()) {
-                        return List.<DesktopQtTreeNode<E>>of();
-                    }
-
-                    attach(node, parent, children);
-                    return children;
-                }))
-                .thenCompose(Function.identity()));
+    private @Nullable TreeNodeImpl<E> selectedNode(QTreeWidget tree) {
+        List<QTreeWidgetItem> selection = tree.selectedItems();
+        return selection.size() == 1 ? myNodes.get(selection.get(0)) : null;
     }
 
-    /**
-     * A cancelled build - the tree left its UI, or the executor went down with its disposable - is the quiet
-     * end of a chain nobody is waiting on. Anything else on this path would otherwise vanish without a trace,
-     * since the future of a build is rarely looked at.
-     */
-    private static void logBuildError(Throwable error) {
-        Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
-        if (!(cause instanceof CancellationException)) {
-            LOG.error(cause);
-        }
-    }
-
-    /**
-     * The row standing in for the level while it is being fetched, so a level that takes a while to build does
-     * not read as an empty one - what the web tree shows as its placeholder node.
-     */
-    private @Nullable QTreeWidgetItem showLoading(@Nullable QTreeWidgetItem parent) {
-        if (myComponent == null || myComponent.isDisposed() || parent != null && parent.isDisposed()) {
-            return null;
+    private class Binding implements TreeWidget<E> {
+        @Override
+        public UIAccess getUIAccess() {
+            return DesktopQtUIAccess.INSTANCE;
         }
 
-        QTreeWidgetItem loading = parent == null ? new QTreeWidgetItem(myComponent) : new QTreeWidgetItem(parent);
-        loading.setText(0, UILocalize.treenodeLoading().get());
-        loading.setFlags(Qt.ItemFlag.ItemIsEnabled);
-        loading.setChildIndicatorPolicy(QTreeWidgetItem.ChildIndicatorPolicy.DontShowIndicator);
-        return loading;
-    }
-
-    private void hideLoading(@Nullable QTreeWidgetItem loading) {
-        if (loading == null || loading.isDisposed()) {
-            return;
+        @Override
+        public TextItemPresentation createPresentation() {
+            return new DesktopQtTextItemPresentation();
         }
 
-        QTreeWidgetItem parent = loading.parent();
-        if (parent != null) {
-            int index = parent.indexOfChild(loading);
-            if (index < 0) {
+        @Override
+        public void showLoading(TreeNodeImpl<E> node) {
+            QTreeWidgetItem parent = rowsOf(node);
+            if (parent == null || myLoadingItems.containsKey(node)) {
                 return;
             }
 
-            parent.takeChild(index);
+            QTreeWidgetItem loading = new QTreeWidgetItem();
+            loading.setText(0, UILocalize.treenodeLoading().get());
+            loading.setFlags(Qt.ItemFlag.ItemIsEnabled);
+            loading.setChildIndicatorPolicy(QTreeWidgetItem.ChildIndicatorPolicy.DontShowIndicator);
+
+            sync(() -> parent.addChild(loading));
+            myLoadingItems.put(node, loading);
         }
-        else if (myComponent != null && !myComponent.isDisposed()) {
-            int index = myComponent.indexOfTopLevelItem(loading);
-            if (index < 0) {
+
+        @Override
+        public void hideLoading(TreeNodeImpl<E> node) {
+            QTreeWidgetItem loading = myLoadingItems.remove(node);
+            if (loading == null || loading.isDisposed()) {
                 return;
             }
 
-            myComponent.takeTopLevelItem(index);
-        }
-        else {
-            return;
-        }
+            QTreeWidgetItem parent = rowsOf(node);
+            int index = parent == null ? -1 : parent.indexOfChild(loading);
+            if (index >= 0) {
+                sync(() -> parent.takeChild(index));
+            }
 
-        loading.dispose();
-    }
-
-    /**
-     * Runs on the executor of the tree. A {@code ProcessCanceledException} is deliberately let through: the
-     * executor of a model over application data cancels its task when a write action arrives and restarts it
-     * by itself, and swallowing the exception here would turn the restart into an empty level.
-     */
-    private List<DesktopQtTreeNode<E>> fetchChildren(DesktopQtTreeNode<E> parent) {
-        List<DesktopQtTreeNode<E>> list = new ArrayList<>();
-
-        myModel.buildChildren(e -> {
-            DesktopQtTreeNode<E> node = new DesktopQtTreeNode<>(parent, e);
-            node.setLoader(this::buildAsync);
-            list.add(node);
-            return node;
-        }, parent.getValue());
-
-        Comparator<TreeNode<E>> comparator = myModel.getNodeComparator();
-        if (comparator != null) {
-            list.sort(comparator);
+            loading.dispose();
         }
 
-        for (DesktopQtTreeNode<E> node : list) {
-            node.computePresentation();
-        }
+        @Override
+        public void setChildren(TreeNodeImpl<E> node, List<TreeNodeImpl<E>> children) {
+            QTreeWidgetItem parent = rowsOf(node);
+            if (parent == null) {
+                return;
+            }
 
-        return list;
-    }
-
-    private void attach(DesktopQtTreeNode<E> parentNode, @Nullable QTreeWidgetItem parent, List<DesktopQtTreeNode<E>> children) {
-        if (myComponent == null || myComponent.isDisposed() || parent != null && parent.isDisposed()) {
-            return;
-        }
-
-        for (DesktopQtTreeNode<E> node : children) {
-            QTreeWidgetItem item = parent == null ? new QTreeWidgetItem(myComponent) : new QTreeWidgetItem(parent);
-
-            myNodes.put(item, node);
-
-            node.setTreeItem(item);
-            node.render();
-
-            applyItemHeight(item, node);
-
-            item.setChildIndicatorPolicy(node.isLeaf()
-                ? QTreeWidgetItem.ChildIndicatorPolicy.DontShowIndicator
-                : QTreeWidgetItem.ChildIndicatorPolicy.ShowIndicator);
-        }
-
-        parentNode.setChildren(children);
-
-        if (children.isEmpty()) {
-            // nothing came back, so the node has nothing below it - a walk which reaches it stops here rather
-            // than asking the model over and over
-            parentNode.setLeaf(true);
-        }
-
-        if (parent != null) {
-            parent.setChildIndicatorPolicy(QTreeWidgetItem.ChildIndicatorPolicy.DontShowIndicatorWhenChildless);
-        }
-    }
-
-    /**
-     * Opens the row of the node, which is a no-op for the root - it has none.
-     */
-    private CompletableFuture<?> expandSelfAsync(DesktopQtTreeNode<E> node) {
-        QTreeWidgetItem item = node.getTreeItem();
-        if (item == null) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
-            if (!item.isDisposed() && item.childCount() != 0) {
-                if (!item.isExpanded()) {
-                    item.setExpanded(true);
+            sync(() -> {
+                Set<QTreeWidgetItem> wanted = new HashSet<>();
+                for (TreeNodeImpl<E> child : children) {
+                    QTreeWidgetItem item = liveItem(child);
+                    if (item != null) {
+                        wanted.add(item);
+                    }
                 }
 
-                // the signal only reports a row which changed, so a row that was already open says nothing
-                node.setExpanded(true);
+                QTreeWidgetItem loading = myLoadingItems.get(node);
+                for (int i = parent.childCount() - 1; i >= 0; i--) {
+                    QTreeWidgetItem item = parent.child(i);
+                    if (item != loading && !wanted.contains(item)) {
+                        parent.takeChild(i);
+                        forget(item);
+                        item.dispose();
+                    }
+                }
+
+                for (int index = 0; index < children.size(); index++) {
+                    TreeNodeImpl<E> child = children.get(index);
+                    QTreeWidgetItem item = liveItem(child);
+                    int current = item == null ? -1 : parent.indexOfChild(item);
+                    if (item == null || current < 0) {
+                        item = new QTreeWidgetItem();
+                        myItems.put(child, item);
+                        myNodes.put(item, child);
+                        parent.insertChild(index, item);
+                    }
+                    else if (current != index) {
+                        parent.takeChild(current);
+                        parent.insertChild(index, item);
+                        restoreExpanded(child, item);
+                    }
+
+                    render(child, item);
+                }
+
+                restoreSelection();
+            });
+        }
+
+        @Override
+        public void setExpanded(TreeNodeImpl<E> node, boolean expanded) {
+            QTreeWidgetItem item = liveItem(node);
+            if (item != null && item.isExpanded() != expanded) {
+                sync(() -> item.setExpanded(expanded));
+            }
+        }
+
+        @Override
+        public void setSelected(@Nullable TreeNodeImpl<E> node) {
+            QTreeWidget tree = myComponent;
+            if (tree == null || tree.isDisposed()) {
+                return;
             }
 
+            if (node == null) {
+                sync(tree::clearSelection);
+                return;
+            }
+
+            QTreeWidgetItem item = liveItem(node);
+            if (item != null) {
+                sync(() -> {
+                    tree.setCurrentItem(item);
+                    tree.scrollToItem(item);
+                });
+            }
+        }
+
+        @Override
+        public void update(TreeNodeImpl<E> node) {
+            QTreeWidgetItem item = liveItem(node);
+            if (item != null) {
+                render(node, item);
+            }
+        }
+    }
+
+    private @Nullable QTreeWidgetItem rowsOf(TreeNodeImpl<E> node) {
+        QTreeWidget tree = myComponent;
+        if (tree == null || tree.isDisposed()) {
             return null;
-        });
+        }
+
+        return node == myController.getRoot() ? tree.invisibleRootItem() : liveItem(node);
     }
 
-    /**
-     * Opens the node and the levels below it, building each level before it is opened - a level which is not
-     * built yet has no rows to open, so it has to be waited for rather than walked over.
-     */
-    private CompletableFuture<?> expandDeepAsync(DesktopQtTreeNode<E> node, int depth) {
-        if (depth <= 0 || node.isLeaf()) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return node.loadChildren()
-            .thenCompose(children -> expandSelfAsync(node).thenCompose(v -> CompletableFuture.allOf(
-                children.stream().map(child -> expandDeepAsync(child, depth - 1)).toArray(CompletableFuture[]::new)
-            )));
-    }
-
-    /**
-     * Opens everything above the node, so that its row exists and is on screen. The levels are opened one after
-     * another - a node is only built once the one above it is.
-     */
-    private CompletableFuture<?> revealAsync(DesktopQtTreeNode<E> node) {
-        List<DesktopQtTreeNode<E>> path = pathTo(node);
-
-        CompletableFuture<?> reveal = CompletableFuture.completedFuture(null);
-        for (int i = 0; i < path.size() - 1; i++) {
-            DesktopQtTreeNode<E> ancestor = path.get(i);
-            reveal = reveal.thenCompose(ignored -> ancestor.loadChildren().thenCompose(children -> expandSelfAsync(ancestor)));
-        }
-        return reveal;
-    }
-
-    private List<DesktopQtTreeNode<E>> pathTo(DesktopQtTreeNode<E> node) {
-        LinkedList<DesktopQtTreeNode<E>> path = new LinkedList<>();
-        for (DesktopQtTreeNode<E> current = node; current != null; current = current.getParent()) {
-            path.addFirst(current);
-        }
-        return path;
-    }
-
-    private void collapseItem(QTreeWidgetItem item) {
-        for (int i = 0; i < item.childCount(); i++) {
-            collapseItem(item.child(i));
-        }
-
-        if (item.isExpanded()) {
-            item.setExpanded(false);
-        }
-    }
-
-    private void fireExpand(QTreeWidgetItem item) {
-        DesktopQtTreeNode<E> node = myNodes.get(item);
-        if (node != null) {
-            getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent(this, node, DesktopQtCurrentInput.current(myComponent)));
-        }
-    }
-
-    private void fireCollapse(QTreeWidgetItem item) {
-        DesktopQtTreeNode<E> node = myNodes.get(item);
-        if (node != null) {
-            getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node, DesktopQtCurrentInput.current(myComponent)));
-        }
+    private @Nullable QTreeWidgetItem liveItem(TreeNodeImpl<E> node) {
+        QTreeWidgetItem item = myItems.get(node);
+        return item == null || item.isDisposed() ? null : item;
     }
 
     private void forget(QTreeWidgetItem item) {
@@ -447,29 +317,77 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
             forget(item.child(i));
         }
 
-        myNodes.remove(item);
+        TreeNodeImpl<E> node = myNodes.remove(item);
+        if (node != null) {
+            myItems.remove(node);
+            myLoadingItems.remove(node);
+        }
+    }
+
+    private void restoreExpanded(TreeNodeImpl<E> node, QTreeWidgetItem item) {
+        if (node.isExpanded()) {
+            item.setExpanded(true);
+        }
+
+        for (TreeNodeImpl<E> child : node.getChildren()) {
+            QTreeWidgetItem childItem = liveItem(child);
+            if (childItem != null) {
+                restoreExpanded(child, childItem);
+            }
+        }
+    }
+
+    private void restoreSelection() {
+        QTreeWidget tree = myComponent;
+        TreeNodeImpl<E> selected = myController.getSelected();
+        QTreeWidgetItem item = selected == null ? null : liveItem(selected);
+        if (tree != null && item != null && !item.isSelected()) {
+            tree.setCurrentItem(item);
+        }
+    }
+
+    private void render(TreeNodeImpl<E> node, QTreeWidgetItem item) {
+        if (node.getPresentation() instanceof DesktopQtTextItemPresentation presentation) {
+            item.setText(0, presentation.toString());
+
+            Image image = presentation.getImage();
+            if (image != null) {
+                item.setIcon(0, DesktopQtImage.toQIcon(image));
+            }
+        }
+
+        applyItemHeight(item, node);
+
+        if (node.isLeaf()) {
+            item.setChildIndicatorPolicy(QTreeWidgetItem.ChildIndicatorPolicy.DontShowIndicator);
+        }
+        else if (node.isLoaded()) {
+            item.setChildIndicatorPolicy(QTreeWidgetItem.ChildIndicatorPolicy.DontShowIndicatorWhenChildless);
+        }
+        else {
+            item.setChildIndicatorPolicy(QTreeWidgetItem.ChildIndicatorPolicy.ShowIndicator);
+        }
+    }
+
+    private void sync(Runnable action) {
+        boolean syncing = mySyncing;
+        mySyncing = true;
+        try {
+            action.run();
+        }
+        finally {
+            mySyncing = syncing;
+        }
     }
 
     @Override
     public @Nullable TreeNode<E> getSelectedNode() {
-        if (myComponent == null || myComponent.isDisposed()) {
-            return null;
-        }
-
-        List<QTreeWidgetItem> selection = myComponent.selectedItems();
-        if (selection.size() != 1) {
-            return null;
-        }
-        return myNodes.get(selection.get(0));
+        return myController.getSelected();
     }
 
     @Override
     public CompletableFuture<?> expand(TreeNode<E> node, int depth) {
-        if (!(node instanceof DesktopQtTreeNode<E> qtNode)) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return revealAsync(qtNode).thenCompose(v -> expandDeepAsync(qtNode, depth));
+        return myController.expand(node, depth);
     }
 
     @Override
@@ -479,105 +397,47 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
     @Override
     public CompletableFuture<?> expandAll() {
-        // the children of a node are fetched when it is first opened, so an unbounded expand all would build a
-        // project view down to every file - the depth is capped the way the web tree caps it
-        return expandAll(EXPAND_ALL_DEPTH);
+        return myController.expandAll();
     }
 
-    /**
-     * The root carries no row of its own, so a depth of one has to reach the level below it.
-     */
     @Override
     public CompletableFuture<?> expandAll(int depth) {
-        return expandDeepAsync(myRootNode, depth == Integer.MAX_VALUE ? depth : depth + 1);
+        return myController.expandAll(depth);
     }
 
     @Override
     public CompletableFuture<?> collapseAll() {
-        return DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
-            if (myComponent == null || myComponent.isDisposed()) {
-                return null;
-            }
-
-            for (int i = 0; i < myComponent.topLevelItemCount(); i++) {
-                collapseItem(myComponent.topLevelItem(i));
-            }
-            return null;
-        });
+        return myController.collapseAll();
     }
 
     @Override
     public TreeNode<E> getRootNode() {
-        return myRootNode;
+        return myController.getRoot();
     }
 
     @Override
     public List<List<TreeNode<E>>> getExpandedPaths() {
-        List<List<TreeNode<E>>> paths = new ArrayList<>();
-        collectExpandedPaths(myRootNode, paths);
-        return paths;
-    }
-
-    private void collectExpandedPaths(DesktopQtTreeNode<E> node, List<List<TreeNode<E>>> paths) {
-        for (DesktopQtTreeNode<E> child : node.getChildren()) {
-            if (child.isExpanded()) {
-                paths.add(List.copyOf(pathTo(child)));
-
-                collectExpandedPaths(child, paths);
-            }
-        }
+        return myController.getExpandedPaths();
     }
 
     @Override
     public List<TreeNode<E>> getSelectedPath() {
-        return getSelectedNode() instanceof DesktopQtTreeNode<E> node ? List.copyOf(pathTo(node)) : List.of();
+        return myController.getSelectedPath();
     }
 
     @Override
     public void select(TreeNode<E> node) {
-        if (!(node instanceof DesktopQtTreeNode<E> qtNode)) {
-            return;
-        }
-
-        revealAsync(qtNode).thenCompose(v -> DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
-            QTreeWidgetItem item = qtNode.getTreeItem();
-            if (item == null || item.isDisposed() || myComponent == null || myComponent.isDisposed()) {
-                return null;
-            }
-
-            myComponent.setCurrentItem(item);
-            myComponent.scrollToItem(item);
-            return null;
-        }));
+        myController.select(node);
     }
 
     @Override
     public void refreshItem(TreeNode<E> node, boolean refreshChildren) {
-        if (!(node instanceof DesktopQtTreeNode<E> qtNode)) {
-            return;
-        }
+        myController.refreshItem(node, refreshChildren);
+    }
 
-        QTreeWidgetItem item = qtNode.getTreeItem();
-        if (item == null || item.isDisposed()) {
-            return;
-        }
-
-        myExecutor.execute(this, () -> {
-            qtNode.computePresentation();
-            return null;
-        }).thenCompose(v -> DesktopQtUIAccess.INSTANCE.giveAsync(qtNode::render));
-
-        if (refreshChildren) {
-            for (QTreeWidgetItem child : item.takeChildren()) {
-                forget(child);
-
-                child.dispose();
-            }
-
-            qtNode.resetChildren();
-
-            qtNode.loadChildren();
-        }
+    @Override
+    public CompletableFuture<?> refreshAll() {
+        return myController.refreshAll();
     }
 
     /**
@@ -609,23 +469,12 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
     @Override
     public void refreshIcons() {
-        for (DesktopQtTreeNode<E> node : myNodes.values()) {
-            node.render();
-        }
-    }
-
-    @Override
-    public CompletableFuture<?> refreshAll() {
-        return DesktopQtUIAccess.INSTANCE.<Void>giveAsync(() -> {
-            if (myComponent != null && !myComponent.isDisposed()) {
-                myComponent.clear();
+        for (Map.Entry<TreeNodeImpl<E>, QTreeWidgetItem> entry : List.copyOf(myItems.entrySet())) {
+            QTreeWidgetItem item = entry.getValue();
+            if (!item.isDisposed()) {
+                render(entry.getKey(), item);
             }
-
-            myNodes.clear();
-            myGeneration++;
-            myRootNode = createRootNode();
-            return null;
-        }).thenCompose(v -> myRootNode.loadChildren());
+        }
     }
 
     @Override
@@ -633,7 +482,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         myItemHeightGetter = getter;
     }
 
-    private void applyItemHeight(QTreeWidgetItem item, DesktopQtTreeNode<E> node) {
+    private void applyItemHeight(QTreeWidgetItem item, TreeNode<E> node) {
         Function<TreeNode<E>, Length> getter = myItemHeightGetter;
         if (getter == null) {
             return;

@@ -16,12 +16,14 @@
 package consulo.it.internal.ui;
 
 import consulo.disposer.Disposable;
+import consulo.it.internal.HeadlessUIAccess;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HasSize;
 import consulo.ui.Size2D;
 import consulo.ui.BorderBuilder;
 import consulo.ui.PaddingBuilder;
+import consulo.ui.UIAccess;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
@@ -52,6 +54,11 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
 
     protected void setParentComponent(@Nullable Component parent) {
         myParent = parent;
+    }
+
+    @Override
+    public UIAccess getUIAccess() {
+        return HeadlessUIAccess.INSTANCE;
     }
 
     @Override
