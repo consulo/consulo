@@ -15,23 +15,24 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
-import consulo.ide.impl.idea.ui.content.impl.DesktopContentManagerImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.layout.DockLayout;
 import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.*;
+
 /**
  * @author VISTALL
- * @since 18-Oct-17
+ * @since 2017-10-18
  */
 public class UnifiedContentManager extends ContentManagerBase {
     private Component myComponent;
@@ -70,7 +71,7 @@ public class UnifiedContentManager extends ContentManagerBase {
                     uiDataProvider.uiDataSnapshot(sink);
                 }
 
-                sink.set(PlatformDataKeys.CONTENT_MANAGER, UnifiedContentManager.this);
+                sink.set(ContentManager.KEY, UnifiedContentManager.this);
 
                 if (getContentCount() > 1) {
                     sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, UnifiedContentManager.this);
@@ -85,9 +86,9 @@ public class UnifiedContentManager extends ContentManagerBase {
         return myComponent;
     }
 
-    @RequiredUIAccess
     @Override
-    public javax.swing.JComponent getComponent() {
-        return (javax.swing.JComponent) TargetAWT.to(getUIComponent());
+    @RequiredUIAccess
+    public JComponent getComponent() {
+        return (JComponent) TargetAWT.to(getUIComponent());
     }
 }

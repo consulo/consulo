@@ -18,44 +18,38 @@ package consulo.ide.impl.projectView;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.HelpManager;
+import consulo.application.dumb.DumbAware;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import consulo.application.HelpManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
-import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
+import consulo.ide.impl.idea.ide.projectView.actions.ProjectViewToolbarGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.GroupByTypeComparator;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
-import consulo.ide.impl.idea.ide.projectView.actions.ProjectViewToolbarGroup;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.editor.util.IdeView;
-import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
-import consulo.language.psi.PsiModificationTracker;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
@@ -64,6 +58,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
@@ -74,42 +69,39 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
-import consulo.fileEditor.FileEditorManager;
+import consulo.ui.Component;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.application.dumb.DumbAware;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.TreeStructureWrappenModel;
-import consulo.logging.Logger;
 import consulo.ui.ex.tree.UITreeState;
-import consulo.util.xml.serializer.XmlSerializer;
 import consulo.ui.layout.WrappedLayout;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -171,6 +163,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         }
 
         @Override
+        @RequiredUIAccess
         public void uiDataSnapshot(DataSink sink) {
             sink.set(Project.KEY, myProject);
             sink.set(HelpManager.HELP_ID, HelpID.PROJECT_VIEWS);
@@ -183,12 +176,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             // the provider hangs off the layout around the tree, but a popup anchors to the tree - it is the one
             // which knows where its selected row ended up
             if (myTree != null) {
-                sink.set(consulo.ui.Component.KEY, myTree);
+                sink.set(Component.KEY, myTree);
             }
             if (myCopyPasteDelegator != null) {
-                sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
-                sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());
-                sink.set(PlatformDataKeys.PASTE_PROVIDER, myCopyPasteDelegator.getPasteProvider());
+                sink.set(CutProvider.KEY, myCopyPasteDelegator.getCutProvider());
+                sink.set(CopyProvider.KEY, myCopyPasteDelegator.getCopyProvider());
+                sink.set(PasteProvider.KEY, myCopyPasteDelegator.getPasteProvider());
             }
 
             AbstractTreeNode selectedNode = takeSelectedNode();
@@ -238,7 +231,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
             sink.set(PlatformDataKeys.PROJECT_CONTEXT, selected instanceof Project project ? project : null);
             sink.set(LangDataKeys.MODULE_CONTEXT, moduleContext(selected));
-            sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> getSelectedModules());
+            sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, this::getSelectedModules);
             sink.lazy(ModuleGroup.ARRAY_DATA_KEY, () -> {
                 List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new ModuleGroup[selectedElements.size()]);
@@ -266,7 +259,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             if (node == null) {
                 return null;
             }
-            DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
             if (parent == null) {
                 return null;
             }
@@ -278,9 +271,9 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
                     OrderEntry orderEntry = element.getOrderEntry();
                     return orderEntry instanceof LibraryOrderEntry libraryOrderEntry ? libraryOrderEntry : null;
                 }
-                PsiDirectory directory = ((PsiDirectoryNode)userObject).getValue();
+                PsiDirectory directory = ((PsiDirectoryNode) userObject).getValue();
                 VirtualFile virtualFile = directory.getVirtualFile();
-                Module module = (Module)((AbstractTreeNode)((DefaultMutableTreeNode)parent.getParent()).getUserObject()).getValue();
+                Module module = (Module) ((AbstractTreeNode) ((DefaultMutableTreeNode) parent.getParent()).getUserObject()).getValue();
 
                 if (module == null) {
                     return null;
@@ -453,6 +446,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
      * The selection of this view lives in the consulo.ui tree, so everything that needs it reads it from there
      * and not from the swing pane, which never has one.
      */
+    @RequiredReadAction
     private @Nullable PsiElement getSelectedPsiElement() {
         TreeNode<AbstractTreeNode> selectedNode = myTree == null ? null : myTree.getSelectedNode();
         if (selectedNode == null) {
@@ -465,6 +459,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     private final class MyIdeView implements IdeView {
         @Override
+        @RequiredUIAccess
         public void selectElement(PsiElement element) {
             selectPsiElement(element, false);
 
@@ -474,6 +469,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         }
 
         @Override
+        @RequiredUIAccess
         public PsiDirectory[] getDirectories() {
             PsiElement selected = getSelectedPsiElement();
             if (selected instanceof PsiDirectory directory) {
@@ -487,6 +483,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         }
 
         @Override
+        @RequiredUIAccess
         public PsiDirectory getOrChooseDirectory() {
             return DirectoryChooserUtil.getOrChooseDirectory(this);
         }
@@ -551,9 +548,10 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
         TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<>(structure) {
             @Override
+            @RequiredUIAccess
             public boolean onDoubleClick(Tree tree, TreeNode node) {
                 if (node.isLeaf()) {
-                    AbstractTreeNode value = (AbstractTreeNode)node.getValue();
+                    AbstractTreeNode value = (AbstractTreeNode) node.getValue();
 
                     value.navigate(true);
 
@@ -570,7 +568,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         };
 
         myTree = Tree.create(
-            (AbstractTreeNode)structure.getRootElement(),
+            (AbstractTreeNode) structure.getRootElement(),
             model,
             myTreeExecutorFactory.forBackgroundThreadWithReadAction(this)
         );
@@ -591,7 +589,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
             // the popup reads the same context as the actions do, so it is installed on the component that holds
             // the provider rather than on the tree itself
-            CustomizationUtil.installPopupHandler(popupTarget, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
+            PopupHandler.installPopupHandlerFromCustomActions(
+                popupTarget,
+                IdeActions.GROUP_PROJECT_VIEW_POPUP,
+                ActionPlaces.PROJECT_VIEW_POPUP
+            );
         }
 
         Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
@@ -930,7 +932,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         for (Object element : elements) {
             //element still valid
             if (element != null && klass.isAssignableFrom(element.getClass())) {
-                result.add((T)element);
+                result.add((T) element);
             }
         }
         return result;
@@ -992,6 +994,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     @Override
+    @RequiredUIAccess
     public void setShowLibraryContents(boolean showLibraryContents, String paneId) {
         setPaneOption(myShowLibraryContents, paneId, showLibraryContents);
     }
@@ -1029,6 +1032,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     @Override
+    @RequiredUIAccess
     public void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId) {
         setPaneOption(myAbbreviatePackageNames, paneId, abbreviatePackageNames);
     }
@@ -1044,6 +1048,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     @Override
+    @RequiredUIAccess
     public void setManualOrder(String paneId, boolean enabled) {
         setPaneOption(myManualOrder, paneId, enabled);
     }
@@ -1053,6 +1058,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         return myFoldersAlwaysOnTop;
     }
 
+    @RequiredUIAccess
     public void setFoldersAlwaysOnTop(boolean foldersAlwaysOnTop) {
         if (myFoldersAlwaysOnTop != foldersAlwaysOnTop) {
             myFoldersAlwaysOnTop = foldersAlwaysOnTop;
@@ -1064,6 +1070,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         return Boolean.TRUE.equals(options.get(paneId));
     }
 
+    @RequiredUIAccess
     private void setPaneOption(Map<String, Boolean> options, String paneId, boolean value) {
         if (getPaneOption(options, paneId) != value) {
             options.put(paneId, value);
@@ -1184,6 +1191,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     @Override
+    @RequiredUIAccess
     public void selectPsiElement(PsiElement element, boolean requestFocus) {
     }
 
@@ -1221,13 +1229,17 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         VirtualFile file = selectedFiles[0];
 
         rootNode.findChildDeep(node -> node != null && file.equals(virtualFileOf(node)))
-            .whenCompleteAsync((treeNode, throwable) -> {
-                if (treeNode != null) {
-                    tree.select(treeNode);
-                }
-            }, UIAccess.current());
+            .whenCompleteAsync(
+                (treeNode, throwable) -> {
+                    if (treeNode != null) {
+                        tree.select(treeNode);
+                    }
+                },
+                UIAccess.current()
+            );
     }
 
+    @RequiredReadAction
     private static @Nullable VirtualFile virtualFileOf(AbstractTreeNode node) {
         return node.getValue() instanceof PsiElement element && element.isValid()
             ? PsiUtilCore.getVirtualFile(element)
@@ -1240,6 +1252,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     @Override
+    @RequiredUIAccess
     public void setSortByType(String paneId, boolean sortByType) {
         setPaneOption(mySortByType, paneId, sortByType);
     }

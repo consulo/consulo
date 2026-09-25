@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.project.ui.view;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,104 +24,105 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectView {
-  
-  static ProjectView getInstance(Project project) {
-    return project.getInstance(ProjectView.class);
-  }
-
-  default void select(Object element, VirtualFile file, boolean requestFocus) {
-    ProjectViewPane viewPane = getCurrentProjectViewPane();
-    if (viewPane != null) {
-      viewPane.select(element, file, requestFocus);
+    static ProjectView getInstance(Project project) {
+        return project.getInstance(ProjectView.class);
     }
-  }
 
-  
-  default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
-    ProjectViewPane viewPane = getCurrentProjectViewPane();
-    if (viewPane != null) {
-      return viewPane.selectCB(element, file, requestFocus);
+    @RequiredUIAccess
+    default void select(Object element, VirtualFile file, boolean requestFocus) {
+        ProjectViewPane viewPane = getCurrentProjectViewPane();
+        if (viewPane != null) {
+            viewPane.select(element, file, requestFocus);
+        }
     }
-    select(element, file, requestFocus);
-    return AsyncResult.resolved();
-  }
 
-  
-  AsyncResult<Void> changeViewCB(String viewId, String subId);
+    default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
+        ProjectViewPane viewPane = getCurrentProjectViewPane();
+        if (viewPane != null) {
+            return viewPane.selectCB(element, file, requestFocus);
+        }
+        select(element, file, requestFocus);
+        return AsyncResult.resolved();
+    }
 
-  @Nullable PsiElement getParentOfCurrentSelection();
 
-  // show pane identified by id using default(or currently selected) subId
-  void changeView(String viewId);
+    AsyncResult<Void> changeViewCB(String viewId, String subId);
 
-  void changeView(String viewId, String subId);
+    @Nullable
+    PsiElement getParentOfCurrentSelection();
 
-  void changeView();
+    // show pane identified by id using default(or currently selected) subId
+    void changeView(String viewId);
 
-  void refresh();
+    void changeView(String viewId, String subId);
 
-  boolean isAutoscrollToSource(String paneId);
+    void changeView();
 
-  boolean isFlattenPackages(String paneId);
+    void refresh();
 
-  boolean isShowMembers(String paneId);
+    boolean isAutoscrollToSource(String paneId);
 
-  boolean isHideEmptyMiddlePackages(String paneId);
+    boolean isFlattenPackages(String paneId);
 
-  void setHideEmptyPackages(boolean hideEmptyPackages, String paneId);
+    boolean isShowMembers(String paneId);
 
-  boolean isShowLibraryContents(String paneId);
+    boolean isHideEmptyMiddlePackages(String paneId);
 
-  void setShowLibraryContents(boolean showLibraryContents, String paneId);
+    void setHideEmptyPackages(boolean hideEmptyPackages, String paneId);
 
-  boolean isShowModules(String paneId);
+    boolean isShowLibraryContents(String paneId);
 
-  void setShowModules(boolean showModules, String paneId);
+    void setShowLibraryContents(boolean showLibraryContents, String paneId);
 
-  void addProjectPane(ProjectViewPane pane);
+    boolean isShowModules(String paneId);
 
-  void removeProjectPane(ProjectViewPane instance);
+    void setShowModules(boolean showModules, String paneId);
 
-  ProjectViewPane getProjectViewPaneById(String id);
+    void addProjectPane(ProjectViewPane pane);
 
-  boolean isAutoscrollFromSource(String paneId);
+    void removeProjectPane(ProjectViewPane instance);
 
-  @RequiredUIAccess
-  void scrollFromSource();
+    ProjectViewPane getProjectViewPaneById(String id);
 
-  boolean isAbbreviatePackageNames(String paneId);
+    boolean isAutoscrollFromSource(String paneId);
 
-  void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId);
+    @RequiredUIAccess
+    void scrollFromSource();
 
-  /**
-   * e.g. {@link ProjectViewPaneImpl#ID}
-   *
-   * @see consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane#getId()
-   */
-  String getCurrentViewId();
+    boolean isAbbreviatePackageNames(String paneId);
 
-  boolean isManualOrder(String paneId);
+    void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId);
 
-  void setManualOrder(String paneId, boolean enabled);
+    /**
+     * e.g. {@link ProjectViewPaneImpl#ID}
+     *
+     * @see consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane#getId()
+     */
+    String getCurrentViewId();
 
-  void selectPsiElement(PsiElement element, boolean requestFocus);
+    boolean isManualOrder(String paneId);
 
-  boolean isSortByType(String paneId);
+    void setManualOrder(String paneId, boolean enabled);
 
-  void setSortByType(String paneId, boolean sortByType);
+    @RequiredUIAccess
+    void selectPsiElement(PsiElement element, boolean requestFocus);
 
-  ProjectViewPane getCurrentProjectViewPane();
+    boolean isSortByType(String paneId);
 
-  Collection<String> getPaneIds();
+    void setSortByType(String paneId, boolean sortByType);
 
-  
-  Collection<SelectInTarget> getSelectInTargets();
+    ProjectViewPane getCurrentProjectViewPane();
 
-  default boolean isFoldersAlwaysOnTop() {
-    return false;
-  }
+    Collection<String> getPaneIds();
+
+    Collection<SelectInTarget> getSelectInTargets();
+
+    default boolean isFoldersAlwaysOnTop() {
+        return false;
+    }
 }

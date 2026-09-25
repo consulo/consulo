@@ -1,13 +1,12 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.QuickList;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.*;
@@ -21,8 +20,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 
 abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
@@ -42,7 +39,7 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
     ShortcutDialog(Component parent, LocalizeValue titleKey, ShortcutPanel<T> panel) {
         super(parent, true);
         myShortcutPanel = panel;
-        myProject = DataManager.getInstance().getDataContext(parent).getData(CommonDataKeys.PROJECT);
+        myProject = DataManager.getInstance().getDataContext(parent).getData(Project.KEY);
         setTitle(titleKey);
     }
 
@@ -83,10 +80,12 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
         myConflictsPanel.setVisible(0 < myConflictsContainer.getComponentCount());
     }
 
+    @RequiredUIAccess
     T showAndGet(String id, Keymap keymap, KeymapGroup mainGroup) {
         return showAndGet(id, keymap, mainGroup, null);
     }
 
+    @RequiredUIAccess
     T showAndGet(String id, Keymap keymap, KeymapGroup mainGroup, @Nullable T selectedShortcut) {
         myActionId = id;
         myKeymap = keymap;
@@ -112,6 +111,7 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected @Nullable JComponent createSouthPanel() {
         JComponent panel = super.createSouthPanel();
         if (panel != null) {
@@ -123,12 +123,7 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
     @Override
     protected @Nullable JComponent createNorthPanel() {
         myAction.setIpad(JBUI.insets(10, 10, 5, 10));
-        myShortcutPanel.addPropertyChangeListener("shortcut", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent event) {
-                setShortcut(toShortcut(event.getNewValue()));
-            }
-        });
+        myShortcutPanel.addPropertyChangeListener("shortcut", event -> setShortcut(toShortcut(event.getNewValue())));
         JBPanel result = new JBPanel(new BorderLayout()).withPreferredWidth(300).withMinimumWidth(200);
         result.add(BorderLayout.NORTH, myAction);
         result.add(BorderLayout.SOUTH, myShortcutPanel);
@@ -137,7 +132,7 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
 
     @Override
     protected JComponent createCenterPanel() {
-        JLabel icon = new JLabel(TargetAWT.to(AllIcons.General.BalloonWarning));
+        JLabel icon = new JLabel(TargetAWT.to(PlatformIconGroup.generalBalloonwarning()));
         icon.setVerticalAlignment(SwingConstants.TOP);
 
         JLabel label = new JLabel(KeyMapLocalize.dialogConflictsText().get());

@@ -42,7 +42,6 @@ import consulo.diff.util.LineRange;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
@@ -671,7 +670,7 @@ public abstract class DiffRequestProcessor implements Disposable {
             }
 
             Component data = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            consulo.ui.Component data1 = e.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+            consulo.ui.Component data1 = e.getData(consulo.ui.Component.KEY);
 
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoNext()) {

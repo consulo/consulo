@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.localize.IdeLocalize;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
@@ -37,7 +36,6 @@ import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.Navigatable;
@@ -398,15 +396,15 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     @Override
     public void uiDataSnapshot(DataSink sink) {
         TreePath[] paths = getSelectionPaths();
-        Object[] selectedUserObjects =
-            paths == null ? ArrayUtil.EMPTY_OBJECT_ARRAY :
-                ArrayUtil.toObjectArray(ContainerUtil.mapNotNull(paths, TreeUtil::getLastUserObject));
-        Object[] singleSelectedPathUserObjects =
-            paths == null || paths.length != 1 ? null :
-                ArrayUtil.toObjectArray(ContainerUtil.map(paths[0].getPath(), TreeUtil::getUserObject));
+        Object[] selectedUserObjects = paths == null
+            ? ArrayUtil.EMPTY_OBJECT_ARRAY
+            : ArrayUtil.toObjectArray(ContainerUtil.mapNotNull(paths, TreeUtil::getLastUserObject));
+        Object[] singleSelectedPathUserObjects = paths == null || paths.length != 1
+            ? null
+            : ArrayUtil.toObjectArray(ContainerUtil.map(paths[0].getPath(), TreeUtil::getUserObject));
 
         if (paths != null) {
-            ArrayList<Navigatable> navigatables = new ArrayList<>();
+            List<Navigatable> navigatables = new ArrayList<>();
             for (TreePath path : paths) {
                 Object node = path.getLastPathComponent();
                 Object userObject = TreeUtil.getUserObject(node);
@@ -418,9 +416,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
                 }
             }
             Navigatable[] cachedNavigatables = getCachedNavigatablesFromSelectedPaths(paths);
-            navigatables.addAll(Arrays.asList(cachedNavigatables));
-            sink.set(CommonDataKeys.NAVIGATABLE_ARRAY,
-                navigatables.isEmpty() ? null : navigatables.toArray(Navigatable.EMPTY_ARRAY));
+            ContainerUtil.addAll(navigatables, cachedNavigatables);
+            sink.set(Navigatable.KEY_OF_ARRAY, navigatables.isEmpty() ? null : navigatables.toArray(Navigatable.EMPTY_ARRAY));
         }
         uiDataSnapshotForSelection(sink, selectedUserObjects, singleSelectedPathUserObjects);
 
@@ -428,25 +425,24 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             List<TreeStructureProvider> providers = treeStructure.getProviders();
             if (providers != null && !providers.isEmpty()) {
                 //noinspection unchecked
-                List<AbstractTreeNode<?>> selection = (List) ContainerUtil.filterIsInstance(
-                    selectedUserObjects, AbstractTreeNode.class);
+                List<AbstractTreeNode<?>> selection = (List) ContainerUtil.filterIsInstance(selectedUserObjects, AbstractTreeNode.class);
                 for (TreeStructureProvider provider : ContainerUtil.reverse(providers)) {
                     provider.uiDataSnapshot(sink, selection);
                 }
             }
         }
-        sink.set(CommonDataKeys.PROJECT, myProject);
+        sink.set(Project.KEY, myProject);
         sink.set(PlatformDataKeys.SELECTED_ITEMS, selectedUserObjects);
         sink.set(PlatformDataKeys.TREE_EXPANDER, getTreeExpander());
     }
 
     protected void uiDataSnapshotForSelection(DataSink sink, Object[] selectedUserObjects,
                                               @Nullable Object[] singleSelectedPathUserObjects) {
-        sink.lazy(CommonDataKeys.PSI_ELEMENT, () -> {
+        sink.lazy(PsiElement.KEY, () -> {
             PsiElement[] elements = getPsiElements(selectedUserObjects);
             return elements.length == 1 ? elements[0] : null;
         });
-        sink.lazy(CommonDataKeys.PSI_ELEMENT_ARRAY, () -> {
+        sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
             PsiElement[] elements = getPsiElements(selectedUserObjects);
             return elements.length > 0 ? elements : null;
         });
@@ -464,7 +460,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 //        sink.lazy(ProjectView.UNLOADED_MODULES_CONTEXT_KEY, () -> {
 //            return Collections.unmodifiableList(getSelectedUnloadedModules(selectedUserObjects));
 //        });
-        sink.lazy(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, () -> {
+        sink.lazy(DeleteProvider.KEY, () -> {
             Module[] modules = getSelectedModules(selectedUserObjects);
             if (modules != null || !getSelectedUnloadedModules(selectedUserObjects).isEmpty()) {
                 return ModuleDeleteProvider.getInstance();
