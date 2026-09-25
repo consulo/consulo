@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.inlay;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Payload which will be available while handling click on the inlay.
  */
@@ -36,19 +38,14 @@ public class InlayActionData {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof InlayActionData)) return false;
-        InlayActionData that = (InlayActionData) other;
-        if (!payload.equals(that.payload)) return false;
-        return handlerId.equals(that.handlerId);
+    public boolean equals(@Nullable Object other) {
+        return this == other
+            || other instanceof InlayActionData that && payload.equals(that.payload) && handlerId.equals(that.handlerId);
     }
 
     @Override
     public int hashCode() {
-        int result = payload.hashCode();
-        result = 31 * result + handlerId.hashCode();
-        return result;
+        return 31 * payload.hashCode() + handlerId.hashCode();
     }
 
     @Override

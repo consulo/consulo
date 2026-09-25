@@ -22,44 +22,50 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  * @since 2005-05-11
  */
 public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements SyntheticIntentionAction, LowPriorityAction, Iconable {
-  private final LocalizeValue myName;
+    private final LocalizeValue myName;
 
-  public EmptyIntentionAction(LocalizeValue name) {
-    myName = name;
-  }
+    public EmptyIntentionAction(LocalizeValue name) {
+        myName = name;
+    }
 
-  
-  @Override
-  public LocalizeValue getText() {
-    return InspectionLocalize.inspectionOptionsActionText(myName);
-  }
+    @Override
+    public LocalizeValue getText() {
+        return InspectionLocalize.inspectionOptionsActionText(myName);
+    }
 
-  @Override
-  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
-    return true; //edit inspection settings is always enabled
-  }
+    @Override
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
+        return true; //edit inspection settings is always enabled
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    EmptyIntentionAction that = (EmptyIntentionAction)o;
+        EmptyIntentionAction that = (EmptyIntentionAction) o;
 
-    return myName.equals(that.myName);
-  }
+        return myName.equals(that.myName);
+    }
 
-  public int hashCode() {
-    return myName.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myName.hashCode();
+    }
 
-  @Override
-  public Image getIcon(@IconFlags int flags) {
-    return Image.empty(Image.DEFAULT_ICON_SIZE);
-  }
+    @Override
+    public Image getIcon(@IconFlags int flags) {
+        return Image.empty(Image.DEFAULT_ICON_SIZE);
+    }
 }

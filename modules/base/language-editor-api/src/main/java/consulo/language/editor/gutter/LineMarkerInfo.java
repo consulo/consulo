@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.gutter;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -34,19 +33,15 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public class LineMarkerInfo<T extends PsiElement> {
-    
     @RequiredReadAction
-    public static LineMarkerInfo<PsiElement> createMethodSeparatorLineMarker(
-        PsiElement startFrom,
-        EditorColorsManager colorsManager
-    ) {
+    public static LineMarkerInfo<PsiElement> createMethodSeparatorLineMarker(PsiElement startFrom, EditorColorsManager colorsManager) {
         LineMarkerInfo<PsiElement> info = new LineMarkerInfo<>(
             startFrom,
             startFrom.getTextRange(),
@@ -142,7 +137,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return new LineMarkerGutterIconRenderer<>(this);
     }
 
-    
+    @RequiredReadAction
     public LocalizeValue getLineMarkerTooltipValue() {
         if (myTooltipProvider == null) {
             return LocalizeValue.empty();
@@ -151,6 +146,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return element == null || !element.isValid() ? LocalizeValue.empty() : LocalizeValue.ofNullable(myTooltipProvider.apply(element));
     }
 
+    @RequiredReadAction
     public @Nullable String getLineMarkerTooltip() {
         if (myTooltipProvider == null) {
             return null;
@@ -159,6 +155,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return element == null || !element.isValid() ? null : myTooltipProvider.apply(element);
     }
 
+    @RequiredReadAction
     public @Nullable T getElement() {
         return elementRef.getElement();
     }
@@ -171,7 +168,6 @@ public class LineMarkerInfo<T extends PsiElement> {
         return myNavigationHandler;
     }
 
-    
     public MarkupEditorFilter getEditorFilter() {
         return MarkupEditorFilter.EMPTY;
     }
@@ -188,7 +184,6 @@ public class LineMarkerInfo<T extends PsiElement> {
         }
 
         @Override
-        
         public Image getIcon() {
             return myInfo.myIcon;
         }
@@ -203,8 +198,8 @@ public class LineMarkerInfo<T extends PsiElement> {
             return myInfo.myNavigationHandler != null;
         }
 
-        
         @Override
+        @RequiredReadAction
         public LocalizeValue getTooltipValue() {
             try {
                 return myInfo.getLineMarkerTooltipValue();
@@ -214,29 +209,28 @@ public class LineMarkerInfo<T extends PsiElement> {
             }
         }
 
-        
         @Override
         public Alignment getAlignment() {
             return myInfo.myIconAlignment;
         }
 
         protected boolean looksTheSameAs(LineMarkerGutterIconRenderer renderer) {
-            return myInfo.getElement() != null &&
-                renderer.myInfo.getElement() != null &&
-                myInfo.getElement() == renderer.myInfo.getElement() &&
-                Comparing.equal(myInfo.myTooltipProvider, renderer.myInfo.myTooltipProvider) &&
-                Comparing.equal(myInfo.myIcon, renderer.myInfo.myIcon);
+            return myInfo.getElement() != null
+                && renderer.myInfo.getElement() != null
+                && myInfo.getElement() == renderer.myInfo.getElement()
+                && Objects.equals(myInfo.myTooltipProvider, renderer.myInfo.myTooltipProvider)
+                && Objects.equals(myInfo.myIcon, renderer.myInfo.myIcon);
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof LineMarkerGutterIconRenderer && looksTheSameAs((LineMarkerGutterIconRenderer)obj);
+        public boolean equals(@Nullable Object obj) {
+            return obj == this
+                || obj instanceof LineMarkerGutterIconRenderer that && looksTheSameAs(that);
         }
 
         @Override
         public int hashCode() {
-            T element = myInfo.getElement();
-            return element == null ? 0 : element.hashCode();
+            return Objects.hashCode(myInfo.getElement());
         }
     }
 

@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -52,11 +54,13 @@ public final class PassWrapper {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     PassWrapper that = (PassWrapper)o;
-    return Double.compare(that.myProgress, myProgress) == 0 && myFinished == that.myFinished && Objects.equals(myPresentableName, that.myPresentableName);
+    return Double.compare(that.myProgress, myProgress) == 0
+      && myFinished == that.myFinished
+      && Objects.equals(myPresentableName, that.myPresentableName);
   }
 
   @Override

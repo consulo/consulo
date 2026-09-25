@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.structureView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.icon.IconDescriptorUpdaters;
@@ -16,140 +17,163 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public abstract class PsiTreeElementBase<T extends PsiElement> implements StructureViewTreeElement, ItemPresentation, NodeDescriptorProvidingKey {
-  private final TreeAnchorizerValue<?> myValue;
+    private final TreeAnchorizerValue<?> myValue;
 
-  protected PsiTreeElementBase(T psiElement) {
-    myValue = psiElement == null ? null : TreeAnchorizer.getService().createAnchorValue(psiElement);
-  }
-
-  @Override
-  
-  public ItemPresentation getPresentation() {
-    return this;
-  }
-
-  @Override
-  
-  public Object getKey() {
-    return String.valueOf(getElement());
-  }
-
-  @SuppressWarnings("unchecked")
-  public final @Nullable T getElement() {
-     if (myValue != null) {
-         return (T) myValue.extractValue();
-     }
-    return null;
-  }
-
-  @Override
-  public Image getIcon() {
-    PsiElement element = getElement();
-    if (element != null) {
-      int flags = Iconable.ICON_FLAG_READ_STATUS;
-      if (!(element instanceof PsiFile) || !element.isWritable()) flags |= Iconable.ICON_FLAG_VISIBILITY;
-      return IconDescriptorUpdaters.getIcon(element, flags);
+    protected PsiTreeElementBase(T psiElement) {
+        myValue = psiElement == null ? null : TreeAnchorizer.getService().createAnchorValue(psiElement);
     }
-    else {
-      return null;
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return this;
     }
-  }
 
-  @Override
-  public T getValue() {
-    return getElement();
-  }
-
-  @Override
-  public String getLocationString() {
-    return null;
-  }
-
-  public boolean isSearchInLocationString() {
-    return false;
-  }
-
-  public String toString() {
-    T element = getElement();
-    return element != null ? element.toString() : "";
-  }
-
-  @Override
-  
-  public final StructureViewTreeElement[] getChildren() {
-    List<StructureViewTreeElement> list = TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(true));
-    return list.isEmpty() ? EMPTY_ARRAY : list.toArray(EMPTY_ARRAY);
-  }
-
-  
-  public final List<StructureViewTreeElement> getChildrenWithoutCustomRegions() {
-    return TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(false));
-  }
-
-  
-  private List<StructureViewTreeElement> doGetChildren(boolean withCustomRegions) {
-    T element = getElement();
-    return element == null ? Collections.emptyList() : mergeWithExtensions(element, getChildrenBase(), withCustomRegions);
-  }
-
-  @Override
-  public void navigate(boolean requestFocus) {
-    T element = getElement();
-    if (element != null) {
-      ((Navigatable)element).navigate(requestFocus);
+    @Override
+    @RequiredReadAction
+    public Object getKey() {
+        return String.valueOf(getElement());
     }
-  }
 
-  @Override
-  public boolean canNavigate() {
-    T element = getElement();
-    return element instanceof Navigatable && ((Navigatable)element).canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
-  }
-
-  
-  public abstract Collection<StructureViewTreeElement> getChildrenBase();
-
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    PsiTreeElementBase that = (PsiTreeElementBase)o;
-
-    T value = getValue();
-    return value == null ? that.getValue() == null : value.equals(that.getValue());
-  }
-
-  public int hashCode() {
-    T value = getValue();
-    return value == null ? 0 : value.hashCode();
-  }
-
-  public boolean isValid() {
-    return getElement() != null;
-  }
-
-  /**
-   * @return element base children merged with children provided by extensions
-   */
-  public static List<StructureViewTreeElement> mergeWithExtensions(PsiElement element, Collection<StructureViewTreeElement> baseChildren, boolean withCustomRegions) {
-    List<StructureViewTreeElement> result = new ArrayList<>(withCustomRegions ? CustomRegionStructureUtil.groupByCustomRegions(element, baseChildren) : baseChildren);
-    StructureViewFactoryEx structureViewFactory = StructureViewFactoryEx.getInstanceEx(element.getProject());
-    Class<? extends PsiElement> aClass = element.getClass();
-    for (StructureViewExtension extension : structureViewFactory.getAllExtensions(aClass)) {
-      StructureViewTreeElement[] children = extension.getChildren(element);
-      if (children != null) {
-        ContainerUtil.addAll(result, children);
-      }
-      extension.filterChildren(result, children == null || children.length == 0 ? Collections.emptyList() : Arrays.asList(children));
+    @RequiredReadAction
+    @SuppressWarnings("unchecked")
+    public final @Nullable T getElement() {
+        if (myValue != null) {
+            return (T) myValue.extractValue();
+        }
+        return null;
     }
-    return result;
-  }
+
+    @Override
+    @RequiredReadAction
+    public Image getIcon() {
+        PsiElement element = getElement();
+        if (element != null) {
+            int flags = Iconable.ICON_FLAG_READ_STATUS;
+            if (!(element instanceof PsiFile) || !element.isWritable()) {
+                flags |= Iconable.ICON_FLAG_VISIBILITY;
+            }
+            return IconDescriptorUpdaters.getIcon(element, flags);
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    @RequiredReadAction
+    public @Nullable T getValue() {
+        return getElement();
+    }
+
+    @Override
+    public String getLocationString() {
+        return null;
+    }
+
+    public boolean isSearchInLocationString() {
+        return false;
+    }
+
+    @Override
+    @RequiredReadAction
+    public String toString() {
+        T element = getElement();
+        return element != null ? element.toString() : "";
+    }
+
+    @Override
+    public final StructureViewTreeElement[] getChildren() {
+        List<StructureViewTreeElement> list = TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(true));
+        return list.isEmpty() ? EMPTY_ARRAY : list.toArray(EMPTY_ARRAY);
+    }
+
+    public final List<StructureViewTreeElement> getChildrenWithoutCustomRegions() {
+        return TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(false));
+    }
+
+    @RequiredReadAction
+    private List<StructureViewTreeElement> doGetChildren(boolean withCustomRegions) {
+        T element = getElement();
+        return element == null ? Collections.emptyList() : mergeWithExtensions(element, getChildrenBase(), withCustomRegions);
+    }
+
+    @Override
+    @RequiredReadAction
+    public void navigate(boolean requestFocus) {
+        T element = getElement();
+        if (element != null) {
+            ((Navigatable) element).navigate(requestFocus);
+        }
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        T element = getElement();
+        return element instanceof Navigatable navigatable && navigatable.canNavigate();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return canNavigate();
+    }
+
+    public abstract Collection<StructureViewTreeElement> getChildrenBase();
+
+    @Override
+    @RequiredReadAction
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PsiTreeElementBase that = (PsiTreeElementBase) o;
+
+        T value = getValue();
+        return value == null ? that.getValue() == null : value.equals(that.getValue());
+    }
+
+    @Override
+    @RequiredReadAction
+    public int hashCode() {
+        T value = getValue();
+        return value == null ? 0 : value.hashCode();
+    }
+
+    @RequiredReadAction
+    public boolean isValid() {
+        return getElement() != null;
+    }
+
+    /**
+     * @return element base children merged with children provided by extensions
+     */
+    @RequiredReadAction
+    public static List<StructureViewTreeElement> mergeWithExtensions(
+        PsiElement element,
+        Collection<StructureViewTreeElement> baseChildren,
+        boolean withCustomRegions
+    ) {
+        List<StructureViewTreeElement> result = new ArrayList<>(
+            withCustomRegions ? CustomRegionStructureUtil.groupByCustomRegions(element, baseChildren) : baseChildren
+        );
+        StructureViewFactoryEx structureViewFactory = StructureViewFactoryEx.getInstanceEx(element.getProject());
+        Class<? extends PsiElement> aClass = element.getClass();
+        for (StructureViewExtension extension : structureViewFactory.getAllExtensions(aClass)) {
+            StructureViewTreeElement[] children = extension.getChildren(element);
+            if (children != null) {
+                ContainerUtil.addAll(result, children);
+            }
+            extension.filterChildren(result, children == null || children.length == 0 ? Collections.emptyList() : Arrays.asList(children));
+        }
+        return result;
+    }
 }

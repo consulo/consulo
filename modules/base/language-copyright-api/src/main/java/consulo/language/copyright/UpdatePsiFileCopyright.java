@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.copyright;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -31,15 +30,15 @@ import consulo.language.copyright.util.FileTypeUtil;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
-import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,11 +47,11 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   public static final Logger LOGGER = Logger.getInstance(UpdatePsiFileCopyright.class);
 
   private final T myFileConfig;
-  
+
   private final PsiFile myPsiFile;
-  
+
   private final CopyrightProfile myCopyrightProfile;
-  private final Set<CommentAction> myActions = new TreeSet<CommentAction>();
+  private final Set<CommentAction> myActions = new TreeSet<>();
 
   private String myCommentText;
 
@@ -69,6 +68,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     myFileConfig = (T)CopyrightManager.getInstance(psiFile.getProject()).getCopyrightFileConfigManager().getMergedOptions(myFileType);
   }
 
+  @RequiredReadAction
   private static CommentRange getLineCopyrightComments(List<PsiComment> comments, Document doc, int i, PsiComment comment) {
     PsiElement firstComment = comment;
     PsiElement lastComment = comment;
@@ -101,6 +101,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     return new CommentRange(firstComment, lastComment);
   }
 
+  @RequiredReadAction
   private static boolean isLineComment(Commenter commenter, PsiComment comment, Document doc) {
     String lineCommentPrefix = commenter.getLineCommentPrefix();
     if (lineCommentPrefix != null) {
@@ -110,6 +111,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     return doc.getLineNumber(textRange.getStartOffset()) == doc.getLineNumber(textRange.getEndOffset());
   }
 
+  @RequiredUIAccess
   public void process() throws Exception {
     if (accept()) {
       scanFile();
@@ -124,8 +126,9 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
 
   protected abstract void scanFile();
 
+  @RequiredReadAction
   protected void checkComments(PsiElement first, PsiElement last, boolean commentHere) {
-    List<PsiComment> comments = new ArrayList<PsiComment>();
+    List<PsiComment> comments = new ArrayList<>();
     collectComments(first, last, comments);
     checkComments(last, commentHere, comments);
   }
@@ -146,10 +149,11 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     }
   }
 
+  @RequiredReadAction
   protected void checkComments(PsiElement last, boolean commentHere, List<PsiComment> comments) {
     try {
       String keyword = myCopyrightProfile.getKeyword();
-      LinkedHashSet<CommentRange> found = new LinkedHashSet<CommentRange>();
+      Set<CommentRange> found = new LinkedHashSet<>();
       Document doc = null;
       if (!StringUtil.isEmpty(keyword)) {
         Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);
@@ -179,9 +183,10 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
           // Check to see if current copyright comment matches new one.
           String newComment = getCommentText("", "");
           myCommentText = null;
-          String oldComment =
-                  doc.getCharsSequence().subSequence(range.getFirst().getTextRange().getStartOffset(), range.getLast().getTextRange().getEndOffset()).toString()
-                          .trim();
+          String oldComment = doc.getCharsSequence()
+            .subSequence(range.getFirst().getTextRange().getStartOffset(), range.getLast().getTextRange().getEndOffset())
+            .toString()
+            .trim();
           if (!StringUtil.isEmptyOrSpaces(myCopyrightProfile.getAllowReplaceKeyword()) && !oldComment.contains(myCopyrightProfile.getAllowReplaceKeyword())) {
             return;
           }
@@ -287,26 +292,23 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     }
   }
 
-  
   public PsiFile getFile() {
     return myPsiFile;
   }
 
-  
   public CopyrightFileConfig getFileConfig() {
     return myFileConfig;
   }
 
-  
   public FileType getFileType() {
     return myFileType;
   }
 
+  @RequiredReadAction
   public @Nullable Module getModule() {
-    return ModuleUtilCore.findModuleForPsiElement(myPsiFile);
+    return myPsiFile.getModule();
   }
 
-  
   public Project getProject() {
     return myPsiFile.getProject();
   }
@@ -319,39 +321,39 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     myActions.add(action);
   }
 
+  @RequiredReadAction
   protected PsiElement getPreviousSibling(PsiElement element) {
     return element == null ? null : element.getPrevSibling();
   }
 
+  @RequiredReadAction
   protected PsiElement getNextSibling(PsiElement element) {
     return element == null ? null : element.getNextSibling();
   }
 
+  @RequiredUIAccess
   protected void processActions() throws IncorrectOperationException {
-    Application app = ApplicationManager.getApplication();
-    app.runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        Document doc = FileDocumentManager.getInstance().getDocument(myPsiFile.getVirtualFile());
-        PsiDocumentManager.getInstance(myPsiFile.getProject()).doPostponedOperationsAndUnblockDocument(doc);
-        for (CommentAction action : myActions) {
-          int start = action.getStart();
-          int end = action.getEnd();
+    Application app = Application.get();
+    app.runWriteAction(() -> {
+      Document doc = FileDocumentManager.getInstance().getDocument(myPsiFile.getVirtualFile());
+      PsiDocumentManager.getInstance(myPsiFile.getProject()).doPostponedOperationsAndUnblockDocument(doc);
+      for (CommentAction action : myActions) {
+        int start = action.getStart();
+        int end = action.getEnd();
 
-          switch (action.getType()) {
-            case CommentAction.ACTION_INSERT:
-              String comment = getCommentText(action.getPrefix(), action.getSuffix());
-              if (!comment.isEmpty()) {
-                doc.insertString(start, comment);
-              }
-              break;
-            case CommentAction.ACTION_REPLACE:
-              doc.replaceString(start, end, getCommentText("", ""));
-              break;
-            case CommentAction.ACTION_DELETE:
-              doc.deleteString(start, end);
-              break;
-          }
+        switch (action.getType()) {
+          case CommentAction.ACTION_INSERT:
+            String comment = getCommentText(action.getPrefix(), action.getSuffix());
+            if (!comment.isEmpty()) {
+              doc.insertString(start, comment);
+            }
+            break;
+          case CommentAction.ACTION_REPLACE:
+            doc.replaceString(start, end, getCommentText("", ""));
+            break;
+          case CommentAction.ACTION_DELETE:
+            doc.deleteString(start, end);
+            break;
         }
       }
     });
@@ -397,23 +399,19 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
       CommentRange that = (CommentRange)o;
 
-      if (first != null ? !first.equals(that.first) : that.first != null) return false;
-      if (last != null ? !last.equals(that.last) : that.last != null) return false;
-
-      return true;
+      return Objects.equals(first, that.first)
+        && Objects.equals(last, that.last);
     }
 
     @Override
     public int hashCode() {
-      int result = first != null ? first.hashCode() : 0;
-      result = 31 * result + (last != null ? last.hashCode() : 0);
-      return result;
+      return 31 * Objects.hashCode(first) + Objects.hashCode(last);
     }
   }
 
@@ -472,5 +470,4 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
       return diff;
     }
   }
-
 }

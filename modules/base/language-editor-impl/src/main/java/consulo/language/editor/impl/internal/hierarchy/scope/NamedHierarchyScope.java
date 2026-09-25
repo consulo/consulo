@@ -27,26 +27,24 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
  * @since 2025-04-24
  */
 public class NamedHierarchyScope implements HierarchyScope {
-    
     private final NamedScope myNamedScope;
 
     public NamedHierarchyScope(NamedScope namedScope) {
         myNamedScope = namedScope;
     }
 
-    
     @Override
     public String getId() {
         return myNamedScope.getScopeId();
     }
 
-    
     @Override
     public LocalizeValue getPresentableName() {
         return myNamedScope.getPresentableName();
@@ -67,17 +65,15 @@ public class NamedHierarchyScope implements HierarchyScope {
         );
     }
 
-    
     @Override
     public SearchScope getSearchScope(PsiElement thisClass) {
         return GlobalSearchScopesCore.filterScope(thisClass.getProject(), myNamedScope);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return obj == this
-            || obj instanceof NamedHierarchyScope that
-            && myNamedScope.getScopeId().equals(that.myNamedScope.getScopeId());
+            || obj instanceof NamedHierarchyScope that && myNamedScope.getScopeId().equals(that.myNamedScope.getScopeId());
     }
 
     @Override

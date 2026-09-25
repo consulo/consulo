@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -44,7 +46,7 @@ public final class LanguageHighlightLevel {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     LanguageHighlightLevel that = (LanguageHighlightLevel)o;

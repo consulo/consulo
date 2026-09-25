@@ -39,140 +39,136 @@ import java.util.List;
  * Not thread-safe.
  *
  * @author Denis Zhdanov
- * @since 8/31/12 12:06 PM
+ * @since 2012-08-31
  */
 public class ArrangementEntryWrapper<E extends ArrangementEntry> {
+    private final List<ArrangementEntryWrapper<E>> myChildren = new ArrayList<>();
 
-  
-  private final List<ArrangementEntryWrapper<E>> myChildren = new ArrayList<ArrangementEntryWrapper<E>>();
-  
-  private final E myEntry;
+    private final E myEntry;
 
-  private @Nullable ArrangementEntryWrapper<E> myParent;
-  private @Nullable ArrangementEntryWrapper<E> myPrevious;
-  private @Nullable ArrangementEntryWrapper<E> myNext;
+    private @Nullable ArrangementEntryWrapper<E> myParent;
+    private @Nullable ArrangementEntryWrapper<E> myPrevious;
+    private @Nullable ArrangementEntryWrapper<E> myNext;
 
-  private int myStartOffset;
-  private int myEndOffset;
-  private int myBlankLinesBefore;
+    private int myStartOffset;
+    private int myEndOffset;
+    private int myBlankLinesBefore;
 
-  @SuppressWarnings("unchecked")
-  public ArrangementEntryWrapper(E entry) {
-    myEntry = entry;
-    myStartOffset = entry.getStartOffset();
-    myEndOffset = entry.getEndOffset();
-    ArrangementEntryWrapper<E> previous = null;
-    for (ArrangementEntry child : entry.getChildren()) {
-      ArrangementEntryWrapper<E> childWrapper = new ArrangementEntryWrapper<E>((E)child);
-      childWrapper.setParent(this);
-      if (previous != null) {
-        previous.setNext(childWrapper);
-        childWrapper.setPrevious(previous);
-      }
-      previous = childWrapper;
-      myChildren.add(childWrapper);
-    }
-  }
-
-  
-  public E getEntry() {
-    return myEntry;
-  }
-
-  public int getStartOffset() {
-    return myStartOffset;
-  }
-
-  public int getEndOffset() {
-    return myEndOffset;
-  }
-
-  public void setEndOffset(int endOffset) {
-    myEndOffset = endOffset;
-  }
-
-  public @Nullable ArrangementEntryWrapper<E> getParent() {
-    return myParent;
-  }
-
-  public void setParent(@Nullable ArrangementEntryWrapper<E> parent) {
-    myParent = parent;
-  }
-
-  public @Nullable ArrangementEntryWrapper<E> getPrevious() {
-    return myPrevious;
-  }
-
-  public void setPrevious(@Nullable ArrangementEntryWrapper<E> previous) {
-    myPrevious = previous;
-  }
-
-  public @Nullable ArrangementEntryWrapper<E> getNext() {
-    return myNext;
-  }
-
-  public int getBlankLinesBefore() {
-    return myBlankLinesBefore;
-  }
-
-  @SuppressWarnings("AssignmentToForLoopParameter")
-  public void updateBlankLines(Document document) {
-    int startLine = document.getLineNumber(getStartOffset());
-    myBlankLinesBefore = 0;
-    if (startLine <= 0) {
-      return;
-    }
-    
-    CharSequence text = document.getCharsSequence();
-    int lastLineFeed = document.getLineStartOffset(startLine) - 1;
-    for (int i = lastLineFeed - 1; i >= 0; i--) {
-      i = CharArrayUtil.shiftBackward(text, i, " \t");
-      if (text.charAt(i) == '\n') {
-        ++myBlankLinesBefore;
-      }
-      else {
-        break;
-      }
-    }
-  }
-  
-  public void setNext(@Nullable ArrangementEntryWrapper<E> next) {
-    myNext = next;
-  }
-
-  
-  public List<ArrangementEntryWrapper<E>> getChildren() {
-    return myChildren;
-  }
-
-  public void applyShift(int shift) {
-    myStartOffset += shift;
-    myEndOffset += shift;
-    for (ArrangementEntryWrapper<E> child : myChildren) {
-      child.applyShift(shift);
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return myEntry.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    @SuppressWarnings("unchecked")
+    public ArrangementEntryWrapper(E entry) {
+        myEntry = entry;
+        myStartOffset = entry.getStartOffset();
+        myEndOffset = entry.getEndOffset();
+        ArrangementEntryWrapper<E> previous = null;
+        for (ArrangementEntry child : entry.getChildren()) {
+            ArrangementEntryWrapper<E> childWrapper = new ArrangementEntryWrapper<>((E) child);
+            childWrapper.setParent(this);
+            if (previous != null) {
+                previous.setNext(childWrapper);
+                childWrapper.setPrevious(previous);
+            }
+            previous = childWrapper;
+            myChildren.add(childWrapper);
+        }
     }
 
-    ArrangementEntryWrapper wrapper = (ArrangementEntryWrapper)o;
-    return myEntry.equals(wrapper.myEntry);
-  }
+    public E getEntry() {
+        return myEntry;
+    }
 
-  @Override
-  public String toString() {
-    return String.format("range: [%d; %d), entry: %s", myStartOffset, myEndOffset, myEntry.toString());
-  }
+    public int getStartOffset() {
+        return myStartOffset;
+    }
+
+    public int getEndOffset() {
+        return myEndOffset;
+    }
+
+    public void setEndOffset(int endOffset) {
+        myEndOffset = endOffset;
+    }
+
+    public @Nullable ArrangementEntryWrapper<E> getParent() {
+        return myParent;
+    }
+
+    public void setParent(@Nullable ArrangementEntryWrapper<E> parent) {
+        myParent = parent;
+    }
+
+    public @Nullable ArrangementEntryWrapper<E> getPrevious() {
+        return myPrevious;
+    }
+
+    public void setPrevious(@Nullable ArrangementEntryWrapper<E> previous) {
+        myPrevious = previous;
+    }
+
+    public @Nullable ArrangementEntryWrapper<E> getNext() {
+        return myNext;
+    }
+
+    public int getBlankLinesBefore() {
+        return myBlankLinesBefore;
+    }
+
+    @SuppressWarnings("AssignmentToForLoopParameter")
+    public void updateBlankLines(Document document) {
+        int startLine = document.getLineNumber(getStartOffset());
+        myBlankLinesBefore = 0;
+        if (startLine <= 0) {
+            return;
+        }
+
+        CharSequence text = document.getCharsSequence();
+        int lastLineFeed = document.getLineStartOffset(startLine) - 1;
+        for (int i = lastLineFeed - 1; i >= 0; i--) {
+            i = CharArrayUtil.shiftBackward(text, i, " \t");
+            if (text.charAt(i) == '\n') {
+                ++myBlankLinesBefore;
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+    public void setNext(@Nullable ArrangementEntryWrapper<E> next) {
+        myNext = next;
+    }
+
+    public List<ArrangementEntryWrapper<E>> getChildren() {
+        return myChildren;
+    }
+
+    public void applyShift(int shift) {
+        myStartOffset += shift;
+        myEndOffset += shift;
+        for (ArrangementEntryWrapper<E> child : myChildren) {
+            child.applyShift(shift);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return myEntry.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ArrangementEntryWrapper<?> that = (ArrangementEntryWrapper) o;
+        return myEntry.equals(that.myEntry);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("range: [%d; %d), entry: %s", myStartOffset, myEndOffset, myEntry.toString());
+    }
 }

@@ -57,8 +57,9 @@ public final class HierarchyOption {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o || o instanceof HierarchyOption other && myId.equals(other.myId);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof HierarchyOption other && myId.equals(other.myId);
     }
 
     @Override

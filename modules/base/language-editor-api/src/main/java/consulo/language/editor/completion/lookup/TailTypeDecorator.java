@@ -17,40 +17,42 @@ package consulo.language.editor.completion.lookup;
 
 import consulo.language.psi.PsiDocumentManager;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Consider using {@link InsertHandler} instead
+ *
  * @author peter
  */
 public abstract class TailTypeDecorator<T extends LookupElement> extends LookupElementDecorator<T> {
-  public TailTypeDecorator(T delegate) {
-    super(delegate);
-  }
-
-  public static <T extends LookupElement> TailTypeDecorator<T> withTail(T element, final TailType type) {
-    return new TailTypeDecorator<T>(element) {
-      @Override
-      protected TailType computeTailType(InsertionContext context) {
-        return type;
-      }
-    };
-  }
-
-  protected abstract @Nullable TailType computeTailType(InsertionContext context);
-
-  @Override
-  public void handleInsert(InsertionContext context) {
-    TailType tailType = computeTailType(context);
-
-    getDelegate().handleInsert(context);
-    if (tailType != null && tailType.isApplicable(context)) {
-      PsiDocumentManager.getInstance(context.getProject()).doPostponedOperationsAndUnblockDocument(context.getDocument());
-      int tailOffset = context.getTailOffset();
-      if (tailOffset < 0) {
-        throw new AssertionError("tailOffset < 0: delegate=" + getDelegate() + "; this=" + this + "; tail=" + tailType);
-      }
-      tailType.processTail(context.getEditor(), tailOffset);
+    public TailTypeDecorator(T delegate) {
+        super(delegate);
     }
-  }
+
+    public static <T extends LookupElement> TailTypeDecorator<T> withTail(T element, final TailType type) {
+        return new TailTypeDecorator<>(element) {
+            @Override
+            protected TailType computeTailType(InsertionContext context) {
+                return type;
+            }
+        };
+    }
+
+    protected abstract @Nullable TailType computeTailType(InsertionContext context);
+
+    @Override
+    public void handleInsert(InsertionContext context) {
+        TailType tailType = computeTailType(context);
+
+        getDelegate().handleInsert(context);
+        if (tailType != null && tailType.isApplicable(context)) {
+            PsiDocumentManager.getInstance(context.getProject()).doPostponedOperationsAndUnblockDocument(context.getDocument());
+            int tailOffset = context.getTailOffset();
+            if (tailOffset < 0) {
+                throw new AssertionError("tailOffset < 0: delegate=" + getDelegate() + "; this=" + this + "; tail=" + tailType);
+            }
+            tailType.processTail(context.getEditor(), tailOffset);
+        }
+    }
 }

@@ -35,15 +35,9 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
 
     private final static int MAX_COMPUTATION_THREADS = 10;
 
-    private final
-    
-    WeakReference<PsiFile> myFileRef;
-    private final
-    
-    AsyncComputation myComputation;
-    private final
-    
-    Lock myComputationLock = new ReentrantLock();
+    private final WeakReference<PsiFile> myFileRef;
+    private final AsyncComputation myComputation;
+    private final Lock myComputationLock = new ReentrantLock();
 
     private final static ExecutorService ourExecutorService =
         AppExecutorUtil.createBoundedApplicationPoolExecutor("CodeStyleCachedValueProvider", MAX_COMPUTATION_THREADS);
@@ -97,7 +91,6 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         myComputation.cancel();
     }
 
-    
     Object[] getDependencies(CodeStyleSettings settings, AsyncComputation computation) {
         List<Object> dependencies = new ArrayList<>();
         if (settings instanceof TransientCodeStyleSettings codeStyleSettings) {
@@ -129,9 +122,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     private final class AsyncComputation {
         private final AtomicBoolean myIsActive = new AtomicBoolean();
         private volatile CodeStyleSettings myCurrResult;
-        private final
-        
-        CodeStyleSettingsManager mySettingsManager;
+        private final CodeStyleSettingsManager mySettingsManager;
         private final SimpleModificationTracker myTracker = new SimpleModificationTracker();
         private final Project myProject;
         private CancellablePromise<Void> myPromise;
@@ -260,7 +251,6 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         }
     }
 
-    
     private PsiFile getReferencedPsi() {
         PsiFile file = myFileRef.get();
         if (file == null) {
@@ -275,9 +265,9 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     //
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(Object obj) {
-        return obj instanceof CodeStyleCachedValueProvider valueProvider
-            && Objects.equals(this.myFileRef.get(), valueProvider.myFileRef.get());
+    public boolean equals(@Nullable Object obj) {
+        return obj == this
+            || obj instanceof CodeStyleCachedValueProvider that && Objects.equals(this.myFileRef.get(), that.myFileRef.get());
     }
 
     static class OutdatedFileReferenceException extends RuntimeException {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.completion.lookup;
 
 import consulo.component.util.Iconable;
@@ -27,60 +26,63 @@ import org.jspecify.annotations.Nullable;
  */
 @Deprecated(forRemoval = true)
 public class LookupValueFactory {
-  
-  private LookupValueFactory() {
-  }
-
-  
-  public static Object createLookupValue(String name, @Nullable Image icon) {
-    return icon == null ? name : new LookupValueWithIcon(name, icon);
-  }
-
-  
-  public static Object createLookupValueWithHint(String name, @Nullable Image icon, String hint) {
-    return new LookupValueWithIconAndHint(name, icon, hint);
-  }
-
-  public static class LookupValueWithIcon implements PresentableLookupValue, Iconable {
-    private final String myName;
-    private final Image myIcon;
-
-    protected LookupValueWithIcon(String name, @Nullable Image icon) {
-      myName = name;
-      myIcon = icon;
-    }
-    @Override
-    public String getPresentation() {
-      return myName;
+    private LookupValueFactory() {
     }
 
-    @Override
-    public Image getIcon(int flags) {
-      return myIcon;
+    public static Object createLookupValue(String name, @Nullable Image icon) {
+        return icon == null ? name : new LookupValueWithIcon(name, icon);
     }
 
-    @Override
-    public int hashCode() {
-      return getPresentation().hashCode();
+    public static Object createLookupValueWithHint(String name, @Nullable Image icon, String hint) {
+        return new LookupValueWithIconAndHint(name, icon, hint);
     }
 
-    public boolean equals(Object a) {
-      return a.getClass() == getClass() && a instanceof PresentableLookupValue && ((PresentableLookupValue)a).getPresentation().equals(getPresentation());
+    public static class LookupValueWithIcon implements PresentableLookupValue, Iconable {
+        private final String myName;
+        private final Image myIcon;
+
+        protected LookupValueWithIcon(String name, @Nullable Image icon) {
+            myName = name;
+            myIcon = icon;
+        }
+
+        @Override
+        public String getPresentation() {
+            return myName;
+        }
+
+        @Override
+        public Image getIcon(int flags) {
+            return myIcon;
+        }
+
+        @Override
+        public int hashCode() {
+            return getPresentation().hashCode();
+        }
+
+        @Override
+        public boolean equals(@Nullable Object a) {
+            if (a == this) {
+                return true;
+            }
+            return a instanceof PresentableLookupValue that
+                && a.getClass() == getClass()
+                && that.getPresentation().equals(getPresentation());
+        }
     }
-  }
 
-  public static class LookupValueWithIconAndHint extends LookupValueWithIcon implements LookupValueWithUIHint {
+    public static class LookupValueWithIconAndHint extends LookupValueWithIcon implements LookupValueWithUIHint {
+        private final String myHint;
 
-    private final String myHint;
+        protected LookupValueWithIconAndHint(String name, Image icon, String hint) {
+            super(name, icon);
+            myHint = hint;
+        }
 
-    protected LookupValueWithIconAndHint(String name, Image icon, String hint) {
-      super(name, icon);
-      myHint = hint;
+        @Override
+        public String getTypeHint() {
+            return myHint;
+        }
     }
-
-    @Override
-    public String getTypeHint() {
-      return myHint;
-    }
-  }
 }

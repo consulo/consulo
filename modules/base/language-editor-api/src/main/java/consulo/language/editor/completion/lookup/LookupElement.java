@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.completion.lookup;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.matcher.CompositeStringHolder;
 import consulo.language.editor.completion.AutoCompletionPolicy;
 import consulo.language.editor.completion.ClassConditionKey;
@@ -8,9 +9,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementNavigationItem;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -23,120 +26,116 @@ import java.util.Set;
  * @see PrioritizedLookupElement
  */
 public abstract class LookupElement extends UserDataHolderBase implements CompositeStringHolder {
-  public static final LookupElement[] EMPTY_ARRAY = new LookupElement[0];
+    public static final LookupElement[] EMPTY_ARRAY = new LookupElement[0];
 
-  
-  public abstract String getLookupString();
+    public abstract String getLookupString();
 
-  public Set<String> getAllLookupStrings() {
-    return Collections.singleton(getLookupString());
-  }
-
-  
-  @Override
-  public final Set<String> getAllStrings() {
-    return getAllLookupStrings();
-  }
-
-  
-  public Object getObject() {
-    return this;
-  }
-
-  /**
-   * @return a PSI element associated with this lookup element. It's used for navigation, showing quick documentation and sorting by proximity to the current location.
-   * The default implementation tries to extract PSI element from {@link #getObject()} result.
-   */
-  public @Nullable PsiElement getPsiElement() {
-    Object o = getObject();
-    if (o instanceof PsiElement) {
-      return (PsiElement)o;
+    public Set<String> getAllLookupStrings() {
+        return Collections.singleton(getLookupString());
     }
-    if (o instanceof ResolveResult) {
-      return ((ResolveResult)o).getElement();
+
+    @Override
+    public final Set<String> getAllStrings() {
+        return getAllLookupStrings();
     }
-    if (o instanceof PsiElementNavigationItem) {
-      return ((PsiElementNavigationItem)o).getTargetElement();
+
+    public Object getObject() {
+        return this;
     }
-    if (o instanceof SmartPsiElementPointer) {
-      return ((SmartPsiElementPointer)o).getElement();
+
+    /**
+     * @return a PSI element associated with this lookup element. It's used for navigation, showing quick documentation and sorting by proximity to the current location.
+     * The default implementation tries to extract PSI element from {@link #getObject()} result.
+     */
+    @RequiredReadAction
+    public @Nullable PsiElement getPsiElement() {
+        Object o = getObject();
+        if (o instanceof PsiElement elem) {
+            return elem;
+        }
+        if (o instanceof ResolveResult result) {
+            return result.getElement();
+        }
+        if (o instanceof PsiElementNavigationItem navItem) {
+            return navItem.getTargetElement();
+        }
+        if (o instanceof SmartPsiElementPointer elemPtr) {
+            return elemPtr.getElement();
+        }
+        return null;
     }
-    return null;
-  }
 
-  public boolean isValid() {
-    Object object = getObject();
-    if (object instanceof PsiElement) {
-      return ((PsiElement)object).isValid();
+    @RequiredReadAction
+    public boolean isValid() {
+        return !(getObject() instanceof PsiElement elem) || elem.isValid();
     }
-    return true;
-  }
 
-  public void handleInsert(InsertionContext context) {
-  }
+    public void handleInsert(InsertionContext context) {
+    }
 
-  /**
-   * @return whether {@link #handleInsert} expects all documents to be committed at the moment of its invocation.
-   * The default is {@code true}, overriders can change that, for example if automatic commit is too slow.
-   */
-  public boolean requiresCommittedDocuments() {
-    return true;
-  }
+    /**
+     * @return whether {@link #handleInsert} expects all documents to be committed at the moment of its invocation.
+     * The default is {@code true}, overriders can change that, for example if automatic commit is too slow.
+     */
+    public boolean requiresCommittedDocuments() {
+        return true;
+    }
 
-  public AutoCompletionPolicy getAutoCompletionPolicy() {
-    return AutoCompletionPolicy.SETTINGS_DEPENDENT;
-  }
+    public AutoCompletionPolicy getAutoCompletionPolicy() {
+        return AutoCompletionPolicy.SETTINGS_DEPENDENT;
+    }
 
-  @Override
-  public String toString() {
-    return getLookupString();
-  }
+    @Override
+    public String toString() {
+        return getLookupString();
+    }
 
-  public void renderElement(LookupElementPresentation presentation) {
-    presentation.setItemText(getLookupString());
-  }
+    public void renderElement(LookupElementPresentation presentation) {
+        presentation.setItemText(getLookupString());
+    }
 
-  /**
-   * Prefer to use {@link #as(Class)}
-   */
-  public @Nullable <T> T as(ClassConditionKey<T> conditionKey) {
-    //noinspection unchecked
-    return conditionKey.isInstance(this) ? (T)this : null;
-  }
+    /**
+     * Prefer to use {@link #as(Class)}
+     */
+    public @Nullable <T> T as(ClassConditionKey<T> conditionKey) {
+        //noinspection unchecked
+        return conditionKey.isInstance(this) ? (T) this : null;
+    }
 
-  /**
-   * @return a renderer (if any) that performs potentially expensive computations on this lookup element.
-   * It's called on a background thread, not blocking this element from being shown to the user.
-   * It may return this lookup element's presentation appended with more details than {@link #renderElement} has given.
-   * If the {@link Lookup} is already shown, it will be repainted/resized to accommodate the changes.
-   */
-  public @Nullable LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
-    return null;
-  }
+    /**
+     * @return a renderer (if any) that performs potentially expensive computations on this lookup element.
+     * It's called on a background thread, not blocking this element from being shown to the user.
+     * It may return this lookup element's presentation appended with more details than {@link #renderElement} has given.
+     * If the {@link Lookup} is already shown, it will be repainted/resized to accommodate the changes.
+     */
+    public @Nullable LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+        return null;
+    }
 
-  /**
-   * Return the first element of the given class in a {@link LookupElementDecorator} wrapper chain.
-   * If this object is not a decorator, return it if it's instance of the given class, otherwise null.
-   */
-  public @Nullable <T> T as(Class<T> clazz) {
-    //noinspection unchecked
-    return clazz.isInstance(this) ? (T)this : null;
-  }
+    /**
+     * Return the first element of the given class in a {@link LookupElementDecorator} wrapper chain.
+     * If this object is not a decorator, return it if it's instance of the given class, otherwise null.
+     */
+    public @Nullable <T> T as(Class<T> clazz) {
+        //noinspection unchecked
+        return clazz.isInstance(this) ? (T) this : null;
+    }
 
-  public boolean isCaseSensitive() {
-    return true;
-  }
+    @Override
+    public boolean isCaseSensitive() {
+        return true;
+    }
 
-  /**
-   * Invoked when the completion autopopup contains only the items that exactly match the user-entered prefix to determine
-   * whether the popup should be closed to not get in the way when navigating through the code.
-   * Should return true if there's some meaningful information in this item's presentation that the user will miss
-   * if the autopopup is suddenly closed automatically. Java method parameters are a good example. For simple variables,
-   * there's nothing else interesting besides the variable name which is already entered in the editor, so the autopopup may be closed.
-   */
-  public boolean isWorthShowingInAutoPopup() {
-    LookupElementPresentation presentation = new LookupElementPresentation();
-    renderElement(presentation);
-    return !presentation.getTailFragments().isEmpty();
-  }
+    /**
+     * Invoked when the completion auto-popup contains only the items that exactly match the user-entered prefix to determine
+     * whether the popup should be closed to not get in the way when navigating through the code.
+     * Should return true if there's some meaningful information in this item's presentation that the user will miss
+     * if the auto-popup is suddenly closed automatically. Java method parameters are a good example. For simple variables,
+     * there's nothing else interesting besides the variable name which is already entered in the editor, so the auto-popup may be closed.
+     */
+    public boolean isWorthShowingInAutoPopup() {
+        LookupElementPresentation presentation = new LookupElementPresentation();
+        renderElement(presentation);
+        return !presentation.getTailFragments().isEmpty();
+    }
 }

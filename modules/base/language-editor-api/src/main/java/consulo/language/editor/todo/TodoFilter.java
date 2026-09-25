@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.todo;
 
 import consulo.language.psi.PsiFile;
@@ -21,177 +20,180 @@ import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoPattern;
 import consulo.logging.Logger;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Vladimir Kondratyev
  */
-public class TodoFilter implements Cloneable{
-  private static final Logger LOG=Logger.getInstance(TodoFilter.class);
+public class TodoFilter implements Cloneable {
+    private static final Logger LOG = Logger.getInstance(TodoFilter.class);
 
-  private String myName;
-  // TODO[vova] use array for storing TodoPatterns. Perhaps it's better...
-  private HashSet<TodoPattern> myTodoPatterns;
-  private static final String ATTRIBUTE_NAME = "name";
-  private static final String ELEMENT_PATTERN = "pattern";
-  private static final String ATTRIBUTE_INDEX = "index";
+    private String myName;
+    // TODO[vova] use array for storing TodoPatterns. Perhaps it's better...
+    private Set<TodoPattern> myTodoPatterns;
+    private static final String ATTRIBUTE_NAME = "name";
+    private static final String ELEMENT_PATTERN = "pattern";
+    private static final String ATTRIBUTE_INDEX = "index";
 
-  /**
-   * Creates filter with empty name and empty set of patterns.
-   */
-  public TodoFilter(){
-    setName("");
-    myTodoPatterns=new HashSet<TodoPattern>(1);
-  }
-
-  /**
-   * @return <code>true</code> if and only if specified <code>psiFile</code> has
-   * <code>TodoItem</code>s accepted by the filter.
-   */
-  public boolean accept(PsiTodoSearchHelper searchHelper,PsiFile psiFile){
-    for(Iterator<TodoPattern> i=iterator();i.hasNext();){
-      TodoPattern todoPattern= i.next();
-      if(searchHelper.getTodoItemsCount(psiFile,todoPattern)>0){
-        return true;
-      }
+    /**
+     * Creates filter with empty name and empty set of patterns.
+     */
+    public TodoFilter() {
+        setName("");
+        myTodoPatterns = new HashSet<>(1);
     }
-    return false;
-  }
 
-  /**
-   * @return filter's name. That is not <code>null</code> string.
-   */
-  public String getName(){
-    return myName;
-  }
-
-  public void setName(String name){
-    myName=name;
-  }
-
-  /**
-   * @return <code>true</code> if and only if filters contains specified <code>pattern</code>.
-   */
-  public boolean contains(TodoPattern pattern){
-    return myTodoPatterns.contains(pattern);
-  }
-
-  /**
-   * Adds specified <code>pattern</code> to the set of containing patterns.
-   */
-  public void addTodoPattern(TodoPattern pattern){
-    LOG.assertTrue(!myTodoPatterns.contains(pattern));
-    myTodoPatterns.add(pattern);
-  }
-
-  /**
-   * Adds specified <code>pattern</code> from the set of containing patterns.
-   */
-  public void removeTodoPattern(TodoPattern pattern){
-    LOG.assertTrue(myTodoPatterns.contains(pattern));
-    myTodoPatterns.remove(pattern);
-  }
-
-  /**
-   * @return iterator of containing patterns.
-   */
-  public Iterator<TodoPattern> iterator(){
-    return myTodoPatterns.iterator();
-  }
-
-  /**
-   * @return <code>true</code> if and only if filter contains no <code>TodoPattern</code>s.
-   */
-  public boolean isEmpty(){
-    return myTodoPatterns.isEmpty();
-  }
-
-  /**
-   * @param element with filter's data.
-   * @param patterns all available patterns
-   */
-  public void readExternal(Element element,TodoPattern[] patterns) {
-    myName=element.getAttributeValue(ATTRIBUTE_NAME);
-    if(myName==null){
-      throw new IllegalArgumentException();
-    }
-    myTodoPatterns.clear();
-    for (Object o : element.getChildren()) {
-      Element child = (Element)o;
-      if (!ELEMENT_PATTERN.equals(child.getName())) {
-        continue;
-      }
-      try {
-        int index = Integer.parseInt(child.getAttributeValue(ATTRIBUTE_INDEX));
-        if (index < 0 || index > patterns.length - 1) {
-          continue;
+    /**
+     * @return <code>true</code> if and only if specified <code>psiFile</code> has
+     * <code>TodoItem</code>s accepted by the filter.
+     */
+    public boolean accept(PsiTodoSearchHelper searchHelper, PsiFile psiFile) {
+        for (Iterator<TodoPattern> i = iterator(); i.hasNext(); ) {
+            TodoPattern todoPattern = i.next();
+            if (searchHelper.getTodoItemsCount(psiFile, todoPattern) > 0) {
+                return true;
+            }
         }
-        TodoPattern pattern = patterns[index];
-        if (myTodoPatterns.contains(pattern)) {
-          continue;
-        }
-        myTodoPatterns.add(pattern);
-      }
-      catch (NumberFormatException ignored) {
-      }
-    }
-  }
-
-  /**
-   * @param element in which all data will be stored
-   * @param patterns all available patterns
-   */
-  public void writeExternal(Element element,TodoPattern[] patterns){
-    element.setAttribute(ATTRIBUTE_NAME,myName);
-    for (int i = 0; i < patterns.length; i++) {
-      Element child = new Element(ELEMENT_PATTERN);
-      child.setAttribute(ATTRIBUTE_INDEX, Integer.toString(i));
-      element.addContent(child);
-    }
-  }
-
-  public int hashCode(){
-    int hashCode=myName.hashCode();
-    for (TodoPattern myTodoPattern : myTodoPatterns) {
-      hashCode += myTodoPattern.hashCode();
-    }
-    return hashCode;
-  }
-
-  public boolean equals(Object obj){
-    if(!(obj instanceof TodoFilter)){
-      return false;
-    }
-    TodoFilter filter=(TodoFilter)obj;
-
-    if(!myName.equals(filter.myName)){
-      return false;
-    }
-
-    if(myTodoPatterns.size()!=filter.myTodoPatterns.size()){
-      return false;
-    }
-
-    for (TodoPattern pattern : myTodoPatterns) {
-      if (!filter.contains(pattern)) {
         return false;
-      }
     }
 
-    return true;
-  }
-
-  @Override
-  public TodoFilter clone(){
-    try{
-      TodoFilter filter = (TodoFilter)super.clone();
-      filter.myTodoPatterns=new HashSet<TodoPattern>(myTodoPatterns);
-      return filter;
-    }catch(CloneNotSupportedException e){
-      LOG.error(e);
-      return null;
+    /**
+     * @return filter's name. That is not <code>null</code> string.
+     */
+    public String getName() {
+        return myName;
     }
-  }
+
+    public void setName(String name) {
+        myName = name;
+    }
+
+    /**
+     * @return <code>true</code> if and only if filters contains specified <code>pattern</code>.
+     */
+    public boolean contains(TodoPattern pattern) {
+        return myTodoPatterns.contains(pattern);
+    }
+
+    /**
+     * Adds specified <code>pattern</code> to the set of containing patterns.
+     */
+    public void addTodoPattern(TodoPattern pattern) {
+        LOG.assertTrue(!myTodoPatterns.contains(pattern));
+        myTodoPatterns.add(pattern);
+    }
+
+    /**
+     * Adds specified <code>pattern</code> from the set of containing patterns.
+     */
+    public void removeTodoPattern(TodoPattern pattern) {
+        LOG.assertTrue(myTodoPatterns.contains(pattern));
+        myTodoPatterns.remove(pattern);
+    }
+
+    /**
+     * @return iterator of containing patterns.
+     */
+    public Iterator<TodoPattern> iterator() {
+        return myTodoPatterns.iterator();
+    }
+
+    /**
+     * @return <code>true</code> if and only if filter contains no <code>TodoPattern</code>s.
+     */
+    public boolean isEmpty() {
+        return myTodoPatterns.isEmpty();
+    }
+
+    /**
+     * @param element  with filter's data.
+     * @param patterns all available patterns
+     */
+    public void readExternal(Element element, TodoPattern[] patterns) {
+        myName = element.getAttributeValue(ATTRIBUTE_NAME);
+        if (myName == null) {
+            throw new IllegalArgumentException();
+        }
+        myTodoPatterns.clear();
+        for (Object o : element.getChildren()) {
+            Element child = (Element) o;
+            if (!ELEMENT_PATTERN.equals(child.getName())) {
+                continue;
+            }
+            try {
+                int index = Integer.parseInt(child.getAttributeValue(ATTRIBUTE_INDEX));
+                if (index < 0 || index > patterns.length - 1) {
+                    continue;
+                }
+                TodoPattern pattern = patterns[index];
+                if (myTodoPatterns.contains(pattern)) {
+                    continue;
+                }
+                myTodoPatterns.add(pattern);
+            }
+            catch (NumberFormatException ignored) {
+            }
+        }
+    }
+
+    /**
+     * @param element  in which all data will be stored
+     * @param patterns all available patterns
+     */
+    public void writeExternal(Element element, TodoPattern[] patterns) {
+        element.setAttribute(ATTRIBUTE_NAME, myName);
+        for (int i = 0; i < patterns.length; i++) {
+            Element child = new Element(ELEMENT_PATTERN);
+            child.setAttribute(ATTRIBUTE_INDEX, Integer.toString(i));
+            element.addContent(child);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = myName.hashCode();
+        for (TodoPattern myTodoPattern : myTodoPatterns) {
+            hashCode += myTodoPattern.hashCode();
+        }
+        return hashCode;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof TodoFilter filter)) {
+            return false;
+        }
+        if (!myName.equals(filter.myName)) {
+            return false;
+        }
+
+        if (myTodoPatterns.size() != filter.myTodoPatterns.size()) {
+            return false;
+        }
+
+        for (TodoPattern pattern : myTodoPatterns) {
+            if (!filter.contains(pattern)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public TodoFilter clone() {
+        try {
+            TodoFilter filter = (TodoFilter) super.clone();
+            filter.myTodoPatterns = new HashSet<>(myTodoPatterns);
+            return filter;
+        }
+        catch (CloneNotSupportedException e) {
+            LOG.error(e);
+            return null;
+        }
+    }
 }

@@ -16,6 +16,7 @@
 package consulo.language.editor.inlay;
 
 import consulo.language.psi.SmartPsiElementPointer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,15 +35,9 @@ public sealed interface InlayActionPayload {
         }
 
         @Override
-        public boolean equals(Object other) {
-            if (this == other) {
-                return true;
-            }
-            if (!(other instanceof PsiPointerInlayActionPayload)) {
-                return false;
-            }
-            PsiPointerInlayActionPayload that = (PsiPointerInlayActionPayload) other;
-            return pointer.equals(that.pointer);
+        public boolean equals(@Nullable Object other) {
+            return this == other
+                || other instanceof PsiPointerInlayActionPayload that && pointer.equals(that.pointer);
         }
 
         @Override
@@ -63,15 +58,9 @@ public sealed interface InlayActionPayload {
         }
 
         @Override
-        public boolean equals(Object other) {
-            if (this == other) {
-                return true;
-            }
-            if (!(other instanceof StringInlayActionPayload)) {
-                return false;
-            }
-            StringInlayActionPayload that = (StringInlayActionPayload) other;
-            return text.equals(that.text);
+        public boolean equals(@Nullable Object other) {
+            return this == other
+                || other instanceof StringInlayActionPayload that && text.equals(that.text);
         }
 
         @Override

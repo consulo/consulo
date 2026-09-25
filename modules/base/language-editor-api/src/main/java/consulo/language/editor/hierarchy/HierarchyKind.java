@@ -93,8 +93,9 @@ public final class HierarchyKind {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return this == o || o instanceof HierarchyKind other && myId.equals(other.myId);
+    public boolean equals(@Nullable Object o) {
+        return this == o
+            || o instanceof HierarchyKind other && myId.equals(other.myId);
     }
 
     @Override
