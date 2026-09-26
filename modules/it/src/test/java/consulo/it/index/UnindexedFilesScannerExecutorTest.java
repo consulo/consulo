@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.BlockingIterator;
@@ -168,11 +167,6 @@ public class UnindexedFilesScannerExecutorTest {
      * See {@code ProjectStateReloadTest} for the VFS categories; the sand plugin registers actions into UI groups which
      * do not exist in the headless application.
      */
-    @AllowLogError({
-        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-        "consulo.application.impl.internal.BaseApplication",
-        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-    })
     @Test
     public void cancelledScanStillFlushesCollectedFilesToIndexer(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-scanner-executor-flush");

@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -61,12 +60,6 @@ public class SandStubIndexTest {
      * where the pointer manager and the indexing listeners break their own threading assertions in a headless
      * application. Unrelated to the behavior under test; any other logged error still fails it.
      */
-    @AllowLogError({
-        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-        "consulo.application.impl.internal.BaseApplication",
-        // the sand plugin registers actions into UI groups (MainMenu etc.) which do not exist in the headless application
-        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-    })
     @Test
     public void stubIndexSurvivesExternalChangesAndRescan(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-stub-index");

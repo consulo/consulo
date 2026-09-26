@@ -16,7 +16,6 @@
 package consulo.it.index;
 
 import consulo.application.WriteAction;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -65,7 +64,6 @@ public class ExternalChangesReindexTest {
      * where the pointer manager and the indexing listeners break their own threading assertions in a headless
      * application. Unrelated to the behavior under test; any other logged error still fails it.
      */
-    @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
     public void externalMassChangeCausesBoundedReindex(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-external-reindex");

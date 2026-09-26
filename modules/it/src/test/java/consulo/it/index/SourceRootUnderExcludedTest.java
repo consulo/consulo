@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.content.ProductionContentFolderTypeProvider;
@@ -61,11 +60,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 @ExtendWith(HeadlessProjectExtension.class)
-@AllowLogError({
-    "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-    "consulo.application.impl.internal.BaseApplication",
-    "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-})
 public class SourceRootUnderExcludedTest {
     @Test
     public void sourceRootUnderExcludedFolderIsIndexed(HeadlessProjects projects) throws Exception {

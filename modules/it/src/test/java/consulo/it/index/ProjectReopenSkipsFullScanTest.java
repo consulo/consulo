@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.it.AllowLogError;
 import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
@@ -71,11 +70,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ExtendWith(HeadlessProjectExtension.class)
 @AllowWriteLockUnderUIThread
-@AllowLogError({
-    "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-    "consulo.application.impl.internal.BaseApplication",
-    "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-})
 public class ProjectReopenSkipsFullScanTest {
     private static final int FILES = 25;
 

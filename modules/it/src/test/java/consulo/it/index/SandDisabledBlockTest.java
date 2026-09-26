@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.psi.PsiElement;
@@ -72,11 +71,6 @@ public class SandDisabledBlockTest {
      * See {@code SandStubIndexTest} — headless UI-thread VFS listeners and sand's action
      * registrations produce known unrelated errors; anything else still fails the test.
      */
-    @AllowLogError({
-        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-        "consulo.application.impl.internal.BaseApplication",
-        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-    })
     @Test
     public void disabledBlockIsNotParsed(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-disabled");
@@ -96,7 +90,7 @@ public class SandDisabledBlockTest {
         // index entry, and its garbage must produce no error elements
         waitFor(() -> onlyClassIs(project, "Visible", "Hidden"), () -> describeOnlyClassIs(project, "Visible", "Hidden"));
 
-        Module module = ModuleManager.getInstance(project).findModuleByName("main");
+        Module module = ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName("main"));
         assertThat(module).isNotNull();
         WriteAction.run(() -> {
             ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
@@ -116,11 +110,6 @@ public class SandDisabledBlockTest {
      * See {@code SandStubIndexTest} — headless UI-thread VFS listeners and sand's action
      * registrations produce known unrelated errors; anything else still fails the test.
      */
-    @AllowLogError({
-        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-        "consulo.application.impl.internal.BaseApplication",
-        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-    })
     @Test
     public void includerSeedsEnabledBranch(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-disabled-inc");

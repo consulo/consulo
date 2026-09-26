@@ -20,7 +20,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.impl.internal.store.IProjectStore;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.project.Project;
@@ -62,7 +61,6 @@ public class ProjectStateReloadTest {
      * headless application. Both are unrelated to the state reload this test is about, so they are tolerated -
      * any other logged error still fails the test.
      */
-    @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
     public void externalChangeReloadsComponentInPlace(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-state-reload");

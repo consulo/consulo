@@ -18,7 +18,6 @@ package consulo.it.project.dumb;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.it.index.ScanningTestSupport.BlockingIterator;
@@ -61,11 +60,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 @ExtendWith(HeadlessProjectExtension.class)
-@AllowLogError({
-    "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-    "consulo.application.impl.internal.BaseApplication",
-    "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-})
 public class SmartModeSchedulerTest {
     private static final int FILES = 5;
 

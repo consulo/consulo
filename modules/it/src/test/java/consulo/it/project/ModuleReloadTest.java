@@ -17,7 +17,6 @@ package consulo.it.project;
 
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.module.ModifiableModuleModel;
@@ -67,7 +66,6 @@ public class ModuleReloadTest {
      * where the pointer manager and the indexing listeners break their own threading assertions in a headless
      * application. Unrelated to the reload under test; any other logged error still fails it.
      */
-    @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
     public void modulesFollowExternalChangesOfModulesXml(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-module-reload");
@@ -115,7 +113,6 @@ public class ModuleReloadTest {
      * reload settles. The reload must still run: a refresh in progress only defers it, never drops it. Reproduces the
      * CI-only timeout where a registered change was cancelled by every following refresh and never reloaded.
      */
-    @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
     @Test
     public void modulesFollowChangesUnderARefreshStorm(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-module-reload-storm");

@@ -23,7 +23,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.application.internal.TransferredWriteActionService;
 import consulo.undoRedo.CommandProcessor;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.psi.PsiDocumentManager;
@@ -66,11 +65,6 @@ public class SandEditorPsiTest {
      * See {@code SandStubIndexTest} — headless UI-thread VFS listeners and sand's action
      * registrations produce known unrelated errors; anything else still fails the test.
      */
-    @AllowLogError({
-        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-        "consulo.application.impl.internal.BaseApplication",
-        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-    })
     @Test
     public void documentBackedPsiBindsVariantsCorrectly(Application application, HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-editor");

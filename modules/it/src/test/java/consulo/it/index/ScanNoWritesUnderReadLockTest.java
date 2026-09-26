@@ -17,7 +17,6 @@ package consulo.it.index;
 
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.it.internal.HeadlessCountedFileType;
@@ -53,11 +52,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 @ExtendWith(HeadlessProjectExtension.class)
-@AllowLogError({
-    "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-    "consulo.application.impl.internal.BaseApplication",
-    "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-})
 public class ScanNoWritesUnderReadLockTest {
     private static final int FILES = 12;
 

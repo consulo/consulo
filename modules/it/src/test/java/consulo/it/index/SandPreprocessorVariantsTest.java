@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.it.AllowLogError;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.module.ModifiableModuleModel;
@@ -61,11 +60,6 @@ public class SandPreprocessorVariantsTest {
      * See {@code SandStubIndexTest} — headless UI-thread VFS listeners and sand's action
      * registrations produce known unrelated errors; anything else still fails the test.
      */
-    @AllowLogError({
-        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
-        "consulo.application.impl.internal.BaseApplication",
-        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
-    })
     @Test
     public void directiveVariantsFollowEnvironment(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-sand-preproc");
@@ -140,7 +134,7 @@ public class SandPreprocessorVariantsTest {
             }
         }));
 
-        Module module = moduleManager.findModuleByName("main");
+        Module module = ReadAction.compute(() -> moduleManager.findModuleByName("main"));
         assertThat(module).isNotNull();
         WriteAction.run(() -> {
             ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
