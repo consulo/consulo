@@ -127,7 +127,12 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
             action = anAction;
         }
 
-        ((DefaultActionGroup) myActionManager.getAction(groupId)).add(action, Constraints.LAST, myActionManager);
+        DefaultActionGroup group = (DefaultActionGroup) myActionManager.getAction(groupId);
+        if (group == null) {
+            LOG.warn("Failed to register action " + actionId + " to group " + groupId);
+        } else {
+            group.add(action, Constraints.LAST, myActionManager);
+        }
     }
 
     synchronized void deinitExecutor(Executor executor) {
