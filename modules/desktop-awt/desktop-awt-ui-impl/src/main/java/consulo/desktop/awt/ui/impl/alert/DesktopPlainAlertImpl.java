@@ -53,13 +53,13 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
     DialogImpl() {
       super(false);
-      setTitle(resolvedTitle().getValue());
+      setTitle(resolvedTitle());
       init();
     }
 
     DialogImpl(java.awt.Component parentComponent) {
       super(parentComponent, false);
-      setTitle(resolvedTitle().getValue());
+      setTitle(resolvedTitle());
       init();
     }
 
@@ -68,7 +68,6 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return doCreateCenterPanel();
     }
 
-   
     @Override
     protected Action[] createActions() {
       Action[] actions = new Action[myButtons.size()];
@@ -124,8 +123,8 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       container.add(iconLabel, BorderLayout.NORTH);
       panel.add(container, BorderLayout.WEST);
 
-      String textValue = myText.getValue();
-      if (!textValue.isEmpty()) {
+      if (myText.isNotEmpty()) {
+        String textValue = myText.get();
         JTextPane messageComponent = createMessageComponent(textValue);
 
         Dimension screenSize = messageComponent.getToolkit().getScreenSize();
@@ -152,7 +151,6 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return configureMessagePaneUi(messageComponent, message);
     }
 
-   
     public JTextPane configureMessagePaneUi(JTextPane messageComponent, String message) {
       JTextPane pane = configureMessagePaneUi(messageComponent, message, null);
       if (UIUtil.HTML_MIME.equals(pane.getContentType())) {
@@ -189,7 +187,6 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     }
   }
 
- 
   public static Image getIcon(NotificationType type) {
     switch (type) {
       case INFO:
@@ -211,9 +208,8 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     return showAsync(TargetAWT.to(component));
   }
 
-  @RequiredUIAccess
-
   @Override
+  @RequiredUIAccess
   public CompletableFuture<V> showAsync(@Nullable Window component) {
     return showAsync(TargetAWT.to(component));
   }

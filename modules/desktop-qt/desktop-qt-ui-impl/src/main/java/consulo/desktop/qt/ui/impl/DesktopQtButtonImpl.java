@@ -210,7 +210,7 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
     }
 
     private void updateStyleSheet() {
-        boolean iconOnly = myIcon != null && myText.get().isEmpty();
+        boolean iconOnly = myIcon != null && myText.isEmpty();
 
         if (myFlat) {
             setOwnStyleSheet(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : TEXT_PADDING));

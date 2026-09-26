@@ -111,7 +111,7 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
 
     @Override
     protected HideableTitledPanel createComponent() {
-        return new HideableTitledPanel(myTitleValue.getValue(), (JComponent) TargetAWT.to(myComponent), this);
+        return new HideableTitledPanel(myTitleValue.get(), (JComponent) TargetAWT.to(myComponent), this);
     }
 
     @Override

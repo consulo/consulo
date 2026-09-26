@@ -25,25 +25,25 @@ import org.jspecify.annotations.Nullable;
  * @since 2020-06-02
  */
 public class NewModuleContextItem extends NewModuleContextNode implements Comparable<NewModuleContextItem> {
-  private final NewModuleBuilderProcessor<?> myProcessor;
+    private final NewModuleBuilderProcessor<?> myProcessor;
 
-  private int myWeight;
+    private int myWeight;
 
-  public NewModuleContextItem(LocalizeValue name, @Nullable Image image, int weight, NewModuleBuilderProcessor<?> processor) {
-    super(name, image);
-    myProcessor = processor;
-    myWeight = weight;
-  }
-
-  public NewModuleBuilderProcessor<?> getProcessor() {
-    return myProcessor;
-  }
-
-  @Override
-  public int compareTo(NewModuleContextItem o) {
-    if (myWeight == o.myWeight) {
-      return getName().getValue().compareToIgnoreCase(o.getName().getValue());
+    public NewModuleContextItem(LocalizeValue name, @Nullable Image image, int weight, NewModuleBuilderProcessor<?> processor) {
+        super(name, image);
+        myProcessor = processor;
+        myWeight = weight;
     }
-    return Integer.compare(myWeight, o.myWeight);
-  }
+
+    public NewModuleBuilderProcessor<?> getProcessor() {
+        return myProcessor;
+    }
+
+    @Override
+    public int compareTo(NewModuleContextItem o) {
+        if (myWeight == o.myWeight) {
+            return getName().compareTo(o.getName());
+        }
+        return Integer.compare(myWeight, o.myWeight);
+    }
 }

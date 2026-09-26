@@ -82,11 +82,11 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
             }
             else {
                 message = ProjectLocalize.moduleCircularDependencyWarningShort(cycles.get(0));
-                description = null;
+                description = LocalizeValue.empty();
             }
             problemsHolder.registerProblem(new ProjectStructureProblemDescription(
                 message.get(),
-                description == null ? null : description.get(),
+                description.getNullIfEmpty(),
                 place,
                 ProjectStructureProblemType.warning("module-circular-dependency"),
                 Collections.<ConfigurationErrorQuickFix>emptyList()

@@ -527,7 +527,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     private TemplateImpl registerTemplate(LiveTemplateContributorBuilder builder, String groupId, LocalizeValue groupName) {
-        String groupNameText = groupName.getValue();   // TODO [VISTALL] support localize key
+        String groupNameText = groupName.get();   // TODO [VISTALL] support localize key
         TemplateImpl template = new TemplateImpl(builder.getAbbreviation(), builder.getValue(), groupNameText);
         template.setId(builder.getId());
         template.setDescription(builder.getDescription().get());  // TODO [VISTALL] support localize key

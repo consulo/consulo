@@ -67,7 +67,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
         myTitlelessDecorator = titlelessDecorator;
 
         myProviders = new ArrayList<>(application.getExtensionPoint(CheckoutProvider.class).getExtensionList());
-        myProviders.sort(Comparator.comparing(provider -> provider.getName().map(Presentation.NO_MNEMONIC).get()));
+        myProviders.sort(Comparator.comparing(provider -> provider.getName().map(Presentation.NO_MNEMONIC)));
     }
 
     @Override

@@ -34,7 +34,7 @@ public class UnifiedXValueGroupNodeImpl extends UnifiedXValueContainerNode<XValu
         setIcon(group.getIcon());
 
         UnifiedColoredTextContainer text = new UnifiedColoredTextContainer();
-        text.append(group.getName().get(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        text.append(group.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         String comment = group.getComment();
         if (comment != null) {
             text.append(" " + comment, SimpleTextAttributes.GRAY_ATTRIBUTES);

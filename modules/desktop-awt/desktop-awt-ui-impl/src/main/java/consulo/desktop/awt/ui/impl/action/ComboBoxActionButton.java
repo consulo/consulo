@@ -192,7 +192,7 @@ public final class ComboBoxActionButton extends JComboBox<Object> {
     }
 
     private void updateTooltipText(LocalizeValue description) {
-        String tooltip = KeymapUtil.createTooltipText(description.getValue(), myAction);
+        String tooltip = KeymapUtil.createTooltipText(description.get(), myAction);
         setToolTipText(!tooltip.isEmpty() ? tooltip : null);
     }
 
