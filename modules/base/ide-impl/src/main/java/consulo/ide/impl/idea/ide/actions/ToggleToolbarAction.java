@@ -17,9 +17,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
@@ -42,31 +41,31 @@ import java.util.List;
  * @author gregsh
  */
 public class ToggleToolbarAction extends ToggleAction implements DumbAware {
-    
     public static ActionGroup createToggleToolbarGroup(Project project, ToolWindow toolWindow) {
         return new DefaultActionGroup(
             new OptionsGroup(toolWindow),
-            new ToggleToolbarAction(toolWindow, PropertiesComponent.getInstance(project)),
+            new ToggleToolbarAction(toolWindow, ProjectPropertiesComponent.getInstance(project)),
             AnSeparator.getInstance()
         );
     }
 
-    private final PropertiesComponent myPropertiesComponent;
+    private final ProjectPropertiesComponent myPropertiesComponent;
     private final ToolWindow myToolWindow;
 
-    private ToggleToolbarAction(ToolWindow toolWindow, PropertiesComponent propertiesComponent) {
+    private ToggleToolbarAction(ToolWindow toolWindow, ProjectPropertiesComponent propertiesComponent) {
         super("Show Toolbar");
         myPropertiesComponent = propertiesComponent;
         myToolWindow = toolWindow;
         myToolWindow.getContentManager().addContentManagerListener(new ContentManagerAdapter() {
             @Override
+            @RequiredUIAccess
             public void contentAdded(ContentManagerEvent event) {
                 JComponent component = event.getContent().getComponent();
                 setContentToolbarVisible(component, getVisibilityValue());
 
                 // support nested content managers, e.g. RunnerLayoutUi as content component
                 ContentManager contentManager =
-                    component instanceof DataProvider dataProvider ? dataProvider.getDataUnchecked(PlatformDataKeys.CONTENT_MANAGER) : null;
+                    component instanceof DataProvider dataProvider ? dataProvider.getDataUnchecked(ContentManager.KEY) : null;
                 if (contentManager != null) {
                     contentManager.addContentManagerListener(this);
                 }
@@ -101,12 +100,12 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         }
     }
 
-    
     @RequiredUIAccess
     private String getProperty() {
         return getShowToolbarProperty(myToolWindow);
     }
 
+    @RequiredUIAccess
     private boolean getVisibilityValue() {
         return myPropertiesComponent.getBoolean(getProperty(), true);
     }
@@ -117,13 +116,11 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         }
     }
 
-    
     @RequiredUIAccess
     public static String getShowToolbarProperty(ToolWindow window) {
         return "ToolWindow" + window.getStripeTitle() + ".ShowToolbar";
     }
 
-    
     private static Iterable<ActionToolbar> iterateToolbars(JComponent root) {
         return UIUtil.uiTraverser().withRoot(root).preOrderDfsTraversal().filter(ActionToolbar.class);
     }
@@ -142,7 +139,6 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
                 .then(CodeExecution.consume(empty -> e.getPresentation().setVisible(!Boolean.TRUE.equals(empty))));
         }
 
-        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             ContentManager contentManager = myToolWindow.getContentManagerIfCreated();

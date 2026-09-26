@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
 
 public final class PsiElementFromSelectionsRule {
-  static PsiElement @Nullable [] getData(DataSnapshot dataProvider) {
-    Object[] objects = dataProvider.get(PlatformDataKeys.SELECTED_ITEMS);
+    @RequiredReadAction
+    static PsiElement @Nullable [] getData(DataSnapshot dataProvider) {
+        Object[] selectedItems = dataProvider.get(PlatformDataKeys.SELECTED_ITEMS);
 
-    if (objects != null) {
-      PsiElement[] elements = new PsiElement[objects.length];
-      for (int i = 0, objectsLength = objects.length; i < objectsLength; i++) {
-        Object object = objects[i];
-        if (object instanceof PsiElement element && element.isValid()) {
-          elements[i] = element;
+        if (selectedItems == null) {
+            return null;
         }
-        else {
-          return null;
-        }
-      }
 
-      return elements;
+        PsiElement[] elements = new PsiElement[selectedItems.length];
+        for (int i = 0, nItems = selectedItems.length; i < nItems; i++) {
+            if (selectedItems[i] instanceof PsiElement selectedElem && selectedElem.isValid()) {
+                elements[i] = selectedElem;
+            }
+            else {
+                return null;
+            }
+        }
+
+        return elements;
     }
-    return null;
-  }
 }

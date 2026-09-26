@@ -22,6 +22,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.proximity.ProximityLocation;
 import consulo.language.util.proximity.ProximityWeigher;
 import consulo.util.dataholder.NullableLazyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -32,15 +33,11 @@ public class SameDirectoryWeigher extends ProximityWeigher {
         NullableLazyKey.create("placeDirectory", location -> PsiTreeUtil.getParentOfType(location.getPosition(), PsiDirectory.class, false));
 
     @Override
-    public Comparable weigh(PsiElement element, ProximityLocation location) {
+    public @Nullable Comparable weigh(PsiElement element, ProximityLocation location) {
         if (location.getPosition() == null) {
             return null;
         }
         PsiDirectory placeDirectory = PLACE_DIRECTORY.getValue(location);
-        if (placeDirectory == null) {
-            return false;
-        }
-
-        return placeDirectory.equals(PsiTreeUtil.getParentOfType(element, PsiDirectory.class, false));
+        return placeDirectory != null && placeDirectory.equals(PsiTreeUtil.getParentOfType(element, PsiDirectory.class, false));
     }
 }

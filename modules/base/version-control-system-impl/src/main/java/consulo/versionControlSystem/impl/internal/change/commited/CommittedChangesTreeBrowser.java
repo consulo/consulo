@@ -327,15 +327,14 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
     Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
     sink.set(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
     int count = myChangesTree.getSelectionCount();
-    sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, count > 0 ? Boolean.TRUE : Boolean.FALSE);
+    sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, count > 0);
     Collection<Change> changesWithMoved = collectChanges(getSelectedChangeLists(), true);
     sink.set(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN, changesWithMoved.toArray(new Change[changesWithMoved.size()]));
     List<CommittedChangeList> lists = getSelectedChangeLists();
     if (!lists.isEmpty()) {
       sink.set(VcsDataKeys.CHANGE_LISTS, lists.toArray(new CommittedChangeList[lists.size()]));
     }
-    Navigatable[] navigatables = ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changes));
-    sink.set(Navigatable.KEY_OF_ARRAY, navigatables);
+    sink.set(Navigatable.KEY_OF_ARRAY, ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changes)));
     sink.set(HelpManager.HELP_ID, myHelpId);
     List<Change> selectedChanges = myDetailsView.getSelectedChanges();
     sink.set(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.dataContext.DataSnapshot;
@@ -27,27 +26,26 @@ import consulo.virtualFileSystem.fileType.FileType;
  * @author mike
  */
 public final class FileTextRule {
-  static String getData(DataSnapshot dataProvider) {
-    VirtualFile virtualFile = dataProvider.get(VirtualFile.KEY);
-    if (virtualFile == null) {
-      return null;
-    }
+    static String getData(DataSnapshot dataProvider) {
+        VirtualFile virtualFile = dataProvider.get(VirtualFile.KEY);
+        if (virtualFile == null) {
+            return null;
+        }
 
-    FileType fileType = virtualFile.getFileType();
-    if (fileType.isBinary() || fileType.isReadOnly()) {
-      return null;
-    }
+        FileType fileType = virtualFile.getFileType();
+        if (fileType.isBinary() || fileType.isReadOnly()) {
+            return null;
+        }
 
-    Project project = dataProvider.get(Project.KEY);
-    if (project == null) {
-      return null;
-    }
+        if (dataProvider.get(Project.KEY) == null) {
+            return null;
+        }
 
-    Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
-    if (document == null) {
-      return null;
-    }
+        Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+        if (document == null) {
+            return null;
+        }
 
-    return document.getText();
-  }
+        return document.getText();
+    }
 }

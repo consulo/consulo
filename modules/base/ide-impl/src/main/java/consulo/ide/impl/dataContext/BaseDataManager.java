@@ -18,13 +18,15 @@ package consulo.ide.impl.dataContext;
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.*;
+import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.internal.DataManagerEx;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Maps;
@@ -36,15 +38,15 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.*;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -135,7 +137,7 @@ public abstract class BaseDataManager implements DataManagerEx {
             if (Application.KEY == dataId) {
                 return (T) Application.get();
             }
-            if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId || consulo.ui.Component.KEY == dataId) {
+            if (consulo.ui.Component.KEY == dataId) {
                 return (T) component;
             }
             if (ModalityState.KEY == dataId) {
@@ -151,7 +153,7 @@ public abstract class BaseDataManager implements DataManagerEx {
         Editor.KEY,
         PlatformDataKeys.IS_MODAL_CONTEXT,
         UIExAWTDataKey.CONTEXT_COMPONENT,
-        PlatformDataKeys.CONTEXT_UI_COMPONENT,
+        consulo.ui.Component.KEY,
         ModalityState.KEY,
         CoroutineContext.KEY
     );
@@ -248,7 +250,7 @@ public abstract class BaseDataManager implements DataManagerEx {
 
     @Override
     public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
-        consulo.ui.Component component = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+        consulo.ui.Component component = dataContext.getData(consulo.ui.Component.KEY);
         return captureHierarchy(component, true).build(this, component);
     }
 

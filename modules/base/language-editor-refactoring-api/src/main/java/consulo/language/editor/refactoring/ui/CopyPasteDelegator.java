@@ -16,6 +16,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
@@ -44,13 +45,13 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         myEditable = new MyEditable();
     }
 
-    
+    @RequiredUIAccess
     protected PsiElement[] getSelectedElements() {
         DataContext dataContext = DataManager.getInstance().getDataContext(myKeyReceiver);
         return ObjectUtil.notNull(dataContext.getData(PsiElement.KEY_OF_ARRAY), PsiElement.EMPTY_ARRAY);
     }
 
-    
+    @RequiredUIAccess
     private PsiElement[] getValidSelectedElements() {
         PsiElement[] selectedElements = getSelectedElements();
         for (PsiElement element : selectedElements) {
@@ -82,6 +83,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
 
     private class MyEditable implements CutProvider, CopyProvider, PasteProvider {
         @Override
+        @RequiredUIAccess
         public void performCopy(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             PsiCopyPasteManager.getInstance().setElements(elements, true);
@@ -89,6 +91,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         }
 
         @Override
+        @RequiredUIAccess
         public boolean isCopyEnabled(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             return CopyHandler.canCopy(elements)
@@ -101,6 +104,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         }
 
         @Override
+        @RequiredUIAccess
         public void performCut(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             if (MoveHandler.adjustForMove(myProject, elements, null) == null) {
@@ -113,6 +117,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         }
 
         @Override
+        @RequiredUIAccess
         public boolean isCutEnabled(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             return elements.length != 0 && MoveHandler.canMove(elements, null);

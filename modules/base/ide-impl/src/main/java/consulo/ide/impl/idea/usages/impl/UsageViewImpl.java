@@ -1954,6 +1954,7 @@ public class UsageViewImpl implements UsageViewEx {
         }
 
         @Override
+        @RequiredUIAccess
         public void uiDataSnapshot(DataSink sink) {
             sink.set(Project.KEY, myProject);
             sink.set(USAGE_VIEW_KEY, UsageViewImpl.this);

@@ -302,26 +302,23 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
             }
             sink.set(DeleteProvider.KEY, myDeleteProvider);
             List<ShelvedChangeImpl> allShelvedChanges = new ArrayList<>(TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class));
-            ArrayDeque<Navigatable> navigatables = new ArrayDeque<>();
             List<ShelvedChangeListImpl> allChangeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeListImpl.class);
             for (ShelvedChangeListImpl changeList : allChangeLists) {
                 allShelvedChanges.addAll(changeList.getChanges(myProject));
             }
+            Deque<Navigatable> navigatables = new ArrayDeque<>(allShelvedChanges.size());
             for (ShelvedChangeImpl shelvedChange : allShelvedChanges) {
-                if (shelvedChange.getBeforePath() != null && !FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
-                    Navigatable navigatable = new Navigatable() {
-                        @Override
-                        public void navigate(boolean requestFocus) {
-                            VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
-                            if (vf != null) {
-                                OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
-                            }
-                        }
-                    };
-                    navigatables.add(navigatable);
+                if (shelvedChange.getBeforePath() == null || FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
+                    continue;
                 }
+                navigatables.add(requestFocus -> {
+                    VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
+                    if (vf != null) {
+                        OpenFileDescriptorFactory.getInstance(myProject).newBuilder(vf).build().navigate(requestFocus);
+                    }
+                });
             }
-            sink.set(Navigatable.KEY_OF_ARRAY, navigatables.toArray(new Navigatable[navigatables.size()]));
+            sink.set(Navigatable.KEY_OF_ARRAY, navigatables.toArray(Navigatable[]::new));
         }
 
         private Set<ShelvedChangeListImpl> getSelectedLists(boolean recycled) {

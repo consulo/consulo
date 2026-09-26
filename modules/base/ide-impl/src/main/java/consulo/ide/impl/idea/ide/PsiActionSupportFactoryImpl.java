@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ServiceImpl;
@@ -22,6 +21,7 @@ import consulo.language.editor.PsiActionSupportFactory;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.DeleteProvider;
 import jakarta.inject.Singleton;
@@ -34,21 +34,20 @@ import javax.swing.*;
 @Singleton
 @ServiceImpl
 public class PsiActionSupportFactoryImpl extends PsiActionSupportFactory {
-  @Override
-  public CopyPasteSupport createPsiBasedCopyPasteSupport(final Project project, final JComponent keyReceiver,
-                                                         final PsiElementSelector dataSelector) {
-    return new CopyPasteDelegator(project, keyReceiver) {
-      @Override
-      
-      protected PsiElement[] getSelectedElements() {
-        PsiElement[] elements = dataSelector.getSelectedElements();
-        return elements == null ? PsiElement.EMPTY_ARRAY : elements;
-      }
-    };
-  }
+    @Override
+    public CopyPasteSupport createPsiBasedCopyPasteSupport(Project project, JComponent keyReceiver, PsiElementSelector dataSelector) {
+        return new CopyPasteDelegator(project, keyReceiver) {
+            @Override
+            @RequiredUIAccess
+            protected PsiElement[] getSelectedElements() {
+                PsiElement[] elements = dataSelector.getSelectedElements();
+                return elements == null ? PsiElement.EMPTY_ARRAY : elements;
+            }
+        };
+    }
 
-  @Override
-  public DeleteProvider createPsiBasedDeleteProvider() {
-    return new DeleteHandler.DefaultDeleteProvider();
-  }
+    @Override
+    public DeleteProvider createPsiBasedDeleteProvider() {
+        return new DeleteHandler.DefaultDeleteProvider();
+    }
 }

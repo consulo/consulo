@@ -25,14 +25,14 @@ import org.jspecify.annotations.Nullable;
  * @since 2004-02-10
  */
 public final class ProjectFileDirectoryRule {
-  static @Nullable VirtualFile getData(DataSnapshot dataProvider) {
-    VirtualFile dir = dataProvider.get(Project.PROJECT_FILE_DIRECTORY);
-    if (dir == null) {
-      Project project = dataProvider.get(Project.KEY);
-      if (project != null) {
-        dir = project.getBaseDir();
-      }
+    static @Nullable VirtualFile getData(DataSnapshot dataProvider) {
+        VirtualFile dir = dataProvider.get(Project.PROJECT_FILE_DIRECTORY);
+        if (dir == null) {
+            Project project = dataProvider.get(Project.KEY);
+            if (project != null) {
+                dir = project.getBaseDir();
+            }
+        }
+        return dir;
     }
-    return dir;
-  }
 }

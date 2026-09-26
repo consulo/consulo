@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal.text;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.*;
@@ -31,6 +32,7 @@ import consulo.language.editor.util.IdeView;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -100,6 +102,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
             if (psiDirectory != null && psiDirectory.isPhysical()) {
                 return new IdeView() {
                     @Override
+                    @RequiredUIAccess
                     public void selectElement(PsiElement element) {
                         Editor ed = EditorHelper.openInEditor(element);
                         if (ed != null) {
@@ -108,11 +111,13 @@ public class TextEditorPsiDataRule implements UiDataRule {
                     }
 
                     @Override
+                    @RequiredUIAccess
                     public PsiDirectory[] getDirectories() {
                         return new PsiDirectory[]{psiDirectory};
                     }
 
                     @Override
+                    @RequiredUIAccess
                     public PsiDirectory getOrChooseDirectory() {
                         return psiDirectory;
                     }
@@ -208,6 +213,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         throw new IllegalArgumentException("Cannot find injected caret corresponding to " + hostCaret);
     }
 
+    @RequiredReadAction
     private static @Nullable PsiFile getPsiFile(Editor editor, VirtualFile file) {
         if (!file.isValid()) {
             return null;
@@ -220,6 +226,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return psiFile != null && psiFile.isValid() ? psiFile : null;
     }
 
+    @RequiredReadAction
     private static @Nullable PsiElement getPsiElementIn(Editor editor, Caret caret, VirtualFile file) {
         PsiFile psiFile = getPsiFile(editor, file);
         if (psiFile == null) {
@@ -234,6 +241,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         }
     }
 
+    @RequiredReadAction
     private static Language getLanguageAtCurrentPositionInEditor(Caret caret, PsiFile psiFile) {
         int caretOffset = caret.getOffset();
         int mostProbablyCorrectLanguageOffset =
@@ -246,6 +254,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return PsiUtilCore.getLanguageAtOffset(psiFile, mostProbablyCorrectLanguageOffset);
     }
 
+    @RequiredReadAction
     private static Language getLanguageAtOffset(PsiFile psiFile, int mostProbablyCorrectLanguageOffset, int end) {
         PsiElement elt = psiFile.findElementAt(mostProbablyCorrectLanguageOffset);
         if (elt == null) {
@@ -260,6 +269,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return PsiUtilCore.findLanguageFromElement(elt);
     }
 
+    @RequiredReadAction
     private static @Nullable Language[] computeLanguages(Editor editor, Caret caret, VirtualFile file) {
         LinkedHashSet<Language> set = new LinkedHashSet<>(4);
 
