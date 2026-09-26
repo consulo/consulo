@@ -20,6 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
+import io.qt.core.QTimer;
 import io.qt.widgets.QWidget;
 
 /**
@@ -50,7 +51,7 @@ public final class DesktopQtShowNotifier {
                         target.removeEventFilter(this);
                         disposeLater();
 
-                        action.run();
+                        QTimer.singleShot(0, action::run);
                     }
 
                     return false;
