@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -31,9 +33,9 @@ public interface CodeStyleStatusBarUIContributor {
     }
 
     /**
-     * @return A status bar tooltip or null for default tooltip.
+     * @return A status bar tooltip, or {@link LocalizeValue#empty()} to show no tooltip.
      */
-    @Nullable String getTooltip();
+    LocalizeValue getTooltip();
 
     /**
      * Returns a text shown in a popup to drag user's attention to a UI element associated with the current indent options and related actions.
@@ -79,7 +81,8 @@ public interface CodeStyleStatusBarUIContributor {
      * @param psiFile The currently open {@code PsiFile}.
      * @return A status text to be shown in code style widget for the given {@code PsiFile}
      */
-    default String getStatusText(PsiFile psiFile) {
-        return "*";
+    @RequiredReadAction
+    default LocalizeValue getStatusText(PsiFile psiFile) {
+        return LocalizeValue.of('*');
     }
 }

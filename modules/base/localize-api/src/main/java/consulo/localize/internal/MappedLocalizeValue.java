@@ -32,7 +32,7 @@ public final class MappedLocalizeValue extends BaseLocalizeValue {
     private final Function<String, String> myMapper;
 
     public MappedLocalizeValue(LocalizeValue delegate, Function<String, String> mapper) {
-        super(ourEmptyArgs);
+        super(EMPTY_ARGS);
         myDelegate = delegate;
         myMapper = mapper;
     }

@@ -3,12 +3,13 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
+import consulo.localize.Localized;
 import consulo.util.collection.UnmodifiableHashMap;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collector;
 
 /**
@@ -16,7 +17,7 @@ import java.util.stream.Collector;
  *
  * @see HtmlBuilder
  */
-public interface HtmlChunk {
+public interface HtmlChunk extends Localized {
     static final Collector<HtmlChunk, ?, HtmlChunk> FRAGMENT_COLLECTOR =
         Collector.of(HtmlBuilder::new, HtmlBuilder::append, HtmlBuilder::append, HtmlBuilder::toFragment);
 
@@ -39,6 +40,11 @@ public interface HtmlChunk {
     }
 
     static final record LocalizedRaw(LocalizeValue content) implements HtmlChunk {
+        @Override
+        public String getId() {
+            return content.getId();
+        }
+
         @Override
         public void appendTo(StringBuilder builder) {
             builder.append(content.get());
@@ -64,29 +70,43 @@ public interface HtmlChunk {
 
     static final record Fragment(List<? extends HtmlChunk> content) implements HtmlChunk {
         @Override
+        public String getId() {
+            StringBuilder builder = new StringBuilder();
+            appendTo(builder, (chunk, sb) -> sb.append(chunk.getId()));
+            return builder.toString();
+        }
+
+        @Override
         public void appendTo(StringBuilder builder) {
+            appendTo(builder, HtmlChunk::appendTo);
+        }
+
+        private void appendTo(StringBuilder builder, BiConsumer<HtmlChunk, StringBuilder> childAppender) {
             for (HtmlChunk chunk : content) {
-                chunk.appendTo(builder);
+                childAppender.accept(chunk, builder);
             }
         }
 
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
-            appendTo(builder);
-            return builder.toString();
+            return stringFromAppendTo(this);
         }
     }
 
     static final record Nbsp(int count) implements HtmlChunk {
+        private static final String NBSP_ENTITY = "&nbsp;";
+
         @Override
         public void appendTo(StringBuilder builder) {
-            builder.append(toString());
+            builder.ensureCapacity(builder.length() + NBSP_ENTITY.length() * count);
+            for (int i = count; --i >= 0; ) {
+                builder.append(NBSP_ENTITY);
+            }
         }
 
         @Override
         public String toString() {
-            return StringUtil.repeat("&nbsp;", count);
+            return count == 1 ? NBSP_ENTITY : stringFromAppendTo(this);
         }
     }
 
@@ -113,8 +133,33 @@ public interface HtmlChunk {
         }
 
         @Override
+        public String getId() {
+            StringBuilder builder = new StringBuilder();
+            appendTo(builder, (child, sb) -> sb.append(child.getId()));
+            return builder.toString();
+        }
+
+        @Override
         public void appendTo(StringBuilder builder) {
+            appendTo(builder, HtmlChunk::appendTo);
+        }
+
+        private void appendTo(StringBuilder builder, BiConsumer<HtmlChunk, StringBuilder> childAppender) {
             builder.append('<').append(myTagName);
+            appendAttributesTo(builder);
+            if (myChildren.isEmpty()) {
+                builder.append("/>");
+            }
+            else {
+                builder.append('>');
+                for (HtmlChunk child : myChildren) {
+                    childAppender.accept(child, builder);
+                }
+                builder.append("</").append(myTagName).append('>');
+            }
+        }
+
+        private void appendAttributesTo(StringBuilder builder) {
             myAttributes.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(
                 entry -> {
                     builder.append(' ').append(entry.getKey());
@@ -125,16 +170,6 @@ public interface HtmlChunk {
                     }
                 }
             );
-            if (myChildren.isEmpty()) {
-                builder.append("/>");
-            }
-            else {
-                builder.append(">");
-                for (HtmlChunk child : myChildren) {
-                    child.appendTo(builder);
-                }
-                builder.append("</").append(myTagName).append(">");
-            }
         }
 
         /**
@@ -274,16 +309,13 @@ public interface HtmlChunk {
 
         @Override
         public int hashCode() {
-            int result = Objects.hashCode(myTagName);
-            result = 31 * result + Objects.hashCode(myAttributes);
+            int result = 31 * Objects.hashCode(myTagName) + Objects.hashCode(myAttributes);
             return 31 * result + Objects.hashCode(myChildren);
         }
 
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
-            appendTo(builder);
-            return builder.toString();
+            return stringFromAppendTo(this);
         }
     }
 
@@ -454,7 +486,7 @@ public interface HtmlChunk {
      */
     static HtmlChunk nbsp(int count) {
         if (count <= 0) {
-            throw new IllegalArgumentException(count + " is less than 0");
+            throw new IllegalArgumentException(count + " is not positive");
         }
         return new Nbsp(count);
     }
@@ -563,8 +595,14 @@ public interface HtmlChunk {
     /**
      * @return true if this chunk is empty (doesn't produce any text)
      */
+    @Override
     default boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    default String getId() {
+        return toString();
     }
 
     /**
@@ -616,5 +654,11 @@ public interface HtmlChunk {
 
     private static String textToRaw(String text) {
         return XmlStringUtil.escapeText(text).replaceAll("\n", "<br/>");
+    }
+
+    private static String stringFromAppendTo(HtmlChunk chunk) {
+        StringBuilder builder = new StringBuilder();
+        chunk.appendTo(builder);
+        return builder.toString();
     }
 }
