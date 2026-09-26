@@ -35,12 +35,10 @@ public interface InspectionProjectProfileManager extends SeverityProvider, Proje
         return project.getInstance(InspectionProjectProfileManager.class);
     }
 
-    
     default InspectionProfile getCurrentProfile() {
         return getInspectionProfile();
     }
 
-    
     InspectionProfile getInspectionProfile();
 
     public static boolean isInformationLevel(String shortName, PsiElement element) {

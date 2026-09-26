@@ -56,8 +56,6 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   
   public abstract Collection<InspectionProfile> getProfiles();
 
-  public abstract Profile loadProfile(String path) throws IOException, JDOMException;
-
   @Override
   public void addProfileChangeListener(ProfileChangeAdapter listener) {
     myProfileChangeAdapters.add(listener);

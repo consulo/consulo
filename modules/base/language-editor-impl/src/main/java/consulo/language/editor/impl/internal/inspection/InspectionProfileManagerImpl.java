@@ -75,7 +75,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     protected static final Logger LOG = Logger.getInstance(InspectionProfileManagerImpl.class);
 
     public static InspectionProfileManagerImpl getInstanceImpl() {
-        return (InspectionProfileManagerImpl)Application.get().getService(InspectionProfileManager.class);
+        return (InspectionProfileManagerImpl)Application.get().getInstance(InspectionProfileManager.class);
     }
 
     @Inject
@@ -198,29 +198,6 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    public Profile loadProfile(String path) throws IOException, JDOMException {
-        File file = new File(path);
-        if (file.exists()) {
-            try {
-                return InspectionProfileLoadUtil.load(file, InspectionToolRegistrar.fromService(myCacheService), this);
-            }
-            catch (IOException | JDOMException e) {
-                throw e;
-            }
-            catch (Exception ignored) {
-                Application.get().invokeLater(
-                    () -> Messages.showErrorDialog(
-                        InspectionsBundle.message("inspection.error.loading.message", 0, file),
-                        InspectionLocalize.inspectionErrorsOccurredDialogTitle().get()
-                    ),
-                    IdeaModalityState.nonModal()
-                );
-            }
-        }
-        return getProfile(path, false);
-    }
-
-    @Override
     public void updateProfile(Profile profile) {
         mySchemeManager.addNewScheme((InspectionProfile)profile, true);
         updateProfileImpl(profile);
@@ -325,7 +302,6 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    
     public String[] getAvailableProfileNames() {
         return ArrayUtil.toStringArray(mySchemeManager.getAllSchemeNames());
     }
