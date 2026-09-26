@@ -127,7 +127,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         };
 
         myTree.setRootVisible(false);
-        myTree.getEmptyText().setText(ExternalToolLocalize.toolsNotConfigured().get());
+        myTree.getEmptyText().setText(ExternalToolLocalize.toolsNotConfigured());
         myTree.setSelectionModel(new DefaultTreeSelectionModel());
         myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
@@ -174,7 +174,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
                 moveNode(Direction.DOWN);
                 myIsModified = true;
             }
-        }).addExtraAction(myCopyButton = new AnActionButton(ExternalToolLocalize.toolsCopyButton().get(), PlatformIconGroup.actionsCopy()) {
+        }).addExtraAction(myCopyButton = new AnActionButton(ExternalToolLocalize.toolsCopyButton(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 Tool originalTool = getSelectedTool();

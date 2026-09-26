@@ -36,6 +36,7 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
@@ -104,12 +105,12 @@ public class DiffRequestFactoryImpl implements DiffRequestFactoryEx {
     DiffContent content1 = myContentFactory.createClipboardContent();
     DiffContent content2 = myContentFactory.create(value);
 
-    String title1 = DiffLocalize.diffContentClipboardContentTitle().get();
-    String title2 = DiffLocalize.diffContentSelectedValue().get();
+    LocalizeValue title1 = DiffLocalize.diffContentClipboardContentTitle();
+    LocalizeValue title2 = DiffLocalize.diffContentSelectedValue();
 
-    String title = DiffLocalize.diffClipboardVsValueDialogTitle().get();
+    LocalizeValue title = DiffLocalize.diffClipboardVsValueDialogTitle();
 
-    return new SimpleDiffRequest(title, content1, content2, title1, title2);
+    return new SimpleDiffRequest(title.get(), content1, content2, title1.get(), title2.get());
   }
 
   //

@@ -29,30 +29,25 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @SuppressWarnings("deprecation")
     private static final AnSeparator ourInstance = new AnSeparator();
 
-    
     public static AnSeparator getInstance() {
         return ourInstance;
     }
 
-    
     public static AnSeparator create() {
         return ourInstance;
     }
 
-    
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
     public static AnSeparator create(@Nullable String text) {
         return create(StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
     }
 
-    
     @SuppressWarnings("deprecation")
     public static AnSeparator create(LocalizeValue textValue) {
         return textValue.isEmpty() ? ourInstance : new AnSeparator(textValue);
     }
 
-    
     private final LocalizeValue myTextValue;
 
     @Deprecated
@@ -76,10 +71,9 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Deprecated
     @DeprecationInfo("Use #getTextValue()")
     public @Nullable String getText() {
-        return StringUtil.nullize(myTextValue.getValue());
+        return myTextValue.getNullIfEmpty();
     }
 
-    
     public LocalizeValue getTextValue() {
         return myTextValue;
     }

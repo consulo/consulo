@@ -57,7 +57,7 @@ public class DesktopInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
         DialogImpl(java.awt.@Nullable Component parent, C editor) {
             super(parent != null ? parent : null, false);
             myEditor = editor;
-            setTitle(MessagePresentation.title(myTitle).get());
+            setTitle(MessagePresentation.title(myTitle));
 
             if (myConfirmText.isNotEmpty()) {
                 setOKButtonText(myConfirmText);

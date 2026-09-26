@@ -39,7 +39,7 @@ public class OutputFiltersDialog extends DialogWrapper {
     super(parent, true);
     myFilters = filters;
 
-    setTitle(ExternalToolLocalize.toolsFiltersTitle().get());
+    setTitle(ExternalToolLocalize.toolsFiltersTitle());
     init();
     initGui();
   }

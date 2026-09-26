@@ -265,7 +265,7 @@ public class ActionMenuItemEngine {
         }
 
         if (disableMnemonics) {
-            myButton.setText(myTextValue.getValue());
+            myButton.setText(myTextValue.get());
             myButton.setDisplayedMnemonicIndex(-1);
             myButton.setMnemonic(0);
         }

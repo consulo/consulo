@@ -109,7 +109,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     public void checkCanApply() throws ConfigurationException {
         super.checkCanApply();
         for (LibraryConfigurable configurable : getLibraryConfigurables()) {
-            if (configurable.getDisplayName().get().isEmpty()) {
+            if (configurable.getDisplayName().isEmpty()) {
                 ((LibraryProjectStructureElement) configurable.getProjectStructureElement()).navigate(myProject);
                 throw new ConfigurationException("Library name is not specified");
             }

@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.ColumnInfo;
  */
 public abstract class BaseColumn extends ColumnInfo<SMTestProxy, String> {
     public BaseColumn(LocalizeValue name) {
-        super(name.get());
+        super(name);
     }
 
     @Deprecated

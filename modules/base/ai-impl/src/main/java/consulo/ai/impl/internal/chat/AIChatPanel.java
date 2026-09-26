@@ -160,7 +160,7 @@ public class AIChatPanel {
         }
 
         // a non-streaming provider never fed the label, so fill it in from the finished answer
-        if (response != null && streaming.getText().get().isEmpty()) {
+        if (response != null && streaming.getText().isEmpty()) {
             streaming.setText(LocalizeValue.of(response.getText()));
         }
 

@@ -232,7 +232,7 @@ public class BuildViewServiceImpl {
                     textStack.pop();
                     return;
                 }
-                if (StringUtil.isEmptyOrSpaces(msg.getValue()) || msg.equals(lastMessage)) {
+                if (msg.isEmpty() || msg.equals(lastMessage)) {
                     return;
                 }
                 lastMessage = msg;

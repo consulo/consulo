@@ -15,7 +15,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -105,7 +104,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
 
     protected void setConnectionStatusText(boolean error, LocalizeValue text) {
         myConnectionStatusLabel.setText(UIUtil.toHtml(text.get()));
-        myConnectionStatusLabel.setVisible(StringUtil.isNotEmpty(text.get()));
+        myConnectionStatusLabel.setVisible(text.isNotEmpty());
     }
 
     @Override

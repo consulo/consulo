@@ -50,7 +50,7 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCo
         public void updateBorder() {
             // first component create
             if (myLabelValue != null) {
-                setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.getValue(), myIndent));
+                setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.get(), myIndent));
             }
         }
     }
