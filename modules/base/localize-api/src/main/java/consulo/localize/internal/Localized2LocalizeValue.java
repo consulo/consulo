@@ -32,11 +32,9 @@ public final class Localized2LocalizeValue extends BaseLocalizeValue {
     public Localized2LocalizeValue(Localized localized) {
         super(EMPTY_ARGS);
         myLocalized = localized;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return myLocalized.isEmpty();
+        if (localized.isEmpty()) {
+            throw new IllegalArgumentException("Expecting non-empty argument");
+        }
     }
 
     @Override

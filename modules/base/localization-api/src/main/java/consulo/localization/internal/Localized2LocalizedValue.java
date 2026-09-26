@@ -29,11 +29,9 @@ public final class Localized2LocalizedValue extends CachingLocalizedValue {
     public Localized2LocalizedValue(LocalizationManager manager, Localized localized) {
         super(manager);
         myLocalized = localized;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return myLocalized.isEmpty();
+        if (localized.isEmpty()) {
+            throw new IllegalArgumentException("Expecting non-empty argument");
+        }
     }
 
     @Override
