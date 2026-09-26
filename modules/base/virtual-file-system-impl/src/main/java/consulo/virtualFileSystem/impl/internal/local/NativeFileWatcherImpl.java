@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.local;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.component.util.NativeFileLoader;
@@ -16,6 +18,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.ManagingFS;
+import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
@@ -34,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author dslomov
  */
+@ExtensionImpl(profiles = ComponentProfiles.PRODUCTION)
 public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private static final Logger LOG = Logger.getInstance(NativeFileWatcherImpl.class);
 
@@ -59,6 +63,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private int myLastChangedPathIndex;
   private final Application myApplication;
 
+  @Inject
   public NativeFileWatcherImpl(Application application) {
     myApplication = application;
   }

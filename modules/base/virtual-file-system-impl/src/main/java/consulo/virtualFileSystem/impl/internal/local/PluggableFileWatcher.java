@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem.impl.internal.local;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.ManagingFS;
 import org.jetbrains.annotations.TestOnly;
 
@@ -24,6 +26,7 @@ import java.util.List;
 /**
  * @author dslomov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PluggableFileWatcher {
   public abstract void initialize(ManagingFS managingFS, FileWatcherNotificationSink notificationSink);
 

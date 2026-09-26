@@ -3,6 +3,7 @@ package consulo.virtualFileSystem.impl.internal.local;
 
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.extension.ExtensionPoint;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.Lists;
@@ -53,7 +54,7 @@ public class FileWatcher {
 
     private final ManagingFS myManagingFS;
     private final MyFileWatcherNotificationSink myNotificationSink;
-    private final PluggableFileWatcher[] myWatchers;
+    private final ExtensionPoint<PluggableFileWatcher> myWatchers;
     private final AtomicBoolean myFailureShown = new AtomicBoolean(false);
     private final ExecutorService myFileWatcherExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("File Watcher", 1);
     private final AtomicReference<Future<?>> myLastTask = new AtomicReference<>(null);
@@ -64,18 +65,14 @@ public class FileWatcher {
     FileWatcher(Application application, ManagingFS managingFS) {
         myManagingFS = managingFS;
         myNotificationSink = new MyFileWatcherNotificationSink();
-        myWatchers =
-            new PluggableFileWatcher[]{new NativeFileWatcherImpl(application)};
+        myWatchers = application.getExtensionPoint(PluggableFileWatcher.class);
 
         myFileWatcherExecutor.execute(() -> {
-            try {
+            myWatchers.forEach(pluggableFileWatcher -> {
                 for (PluggableFileWatcher watcher : myWatchers) {
                     watcher.initialize(myManagingFS, myNotificationSink);
                 }
-            }
-            catch (RuntimeException | Error e) {
-                LOG.error(e);
-            }
+            });
         });
     }
 
@@ -94,9 +91,7 @@ public class FileWatcher {
             LOG.error(e);
         }
 
-        for (PluggableFileWatcher watcher : myWatchers) {
-            watcher.dispose();
-        }
+        myWatchers.forEach(PluggableFileWatcher::dispose);
     }
 
     public boolean isOperational() {
@@ -190,9 +185,7 @@ public class FileWatcher {
                 }
             }
 
-            for (PluggableFileWatcher watcher : myWatchers) {
-                watcher.resetChangedPaths();
-            }
+            myWatchers.forEach(PluggableFileWatcher::resetChangedPaths);
 
             return dirtyPaths;
         }
