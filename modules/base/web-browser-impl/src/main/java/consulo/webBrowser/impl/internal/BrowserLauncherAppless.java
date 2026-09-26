@@ -114,6 +114,12 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     public void browse(URI uri) {
         LOG.debug("Launch browser: [" + uri + "]");
 
+        Platform platform = Platform.current();
+        if (platform.isInBrowser()) {
+            platform.openInBrowser(uri.toString());
+            return;
+        }
+
         WebBrowserManager settings = getGeneralSettingsInstance();
         if (settings.isUseDefaultBrowser()) {
             if (isDesktopActionSupported(Desktop.Action.BROWSE)) {
@@ -368,6 +374,11 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     @Override
     @RequiredUIAccess
     public void browse(String url, @Nullable WebBrowser browser, @Nullable Project project) {
+        if (Platform.current().isInBrowser()) {
+            openOrBrowse(url, true);
+            return;
+        }
+
         WebBrowser effectiveBrowser = getEffectiveBrowser(browser);
 
         if (effectiveBrowser == null) {

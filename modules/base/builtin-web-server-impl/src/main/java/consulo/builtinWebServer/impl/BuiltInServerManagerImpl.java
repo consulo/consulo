@@ -7,6 +7,7 @@ import consulo.application.impl.internal.start.ImportantFolderLocker;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.builtinWebServer.custom.CustomPortServerManager;
+import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.impl.http.BuiltInServer;
 import consulo.builtinWebServer.impl.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtinWebServer.impl.http.SubServer;
@@ -147,13 +148,22 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
             url.getScheme(),
             url.getAuthority(),
             url.getPath(),
-            "?" + BuiltInWebServerKt.TOKEN_PARAM_NAME + "=" + BuiltInWebServerKt.acquireToken()
+            "?" + BuiltInWebServerKt.TOKEN_PARAM_NAME + "=" + acquireToken()
         );
     }
 
     @Override
     public void configureRequestToWebServer(URLConnection connection) {
-        connection.setRequestProperty(BuiltInWebServerKt.TOKEN_HEADER_NAME, BuiltInWebServerKt.acquireToken());
+        connection.setRequestProperty(BuiltInWebServerKt.TOKEN_HEADER_NAME, acquireToken());
+    }
+
+    @Override
+    public boolean isRequestSigned(HttpRequest request) {
+        return myApplication.getInstance(BuiltInWebServerAuth.class).isRequestSigned(request);
+    }
+
+    private String acquireToken() {
+        return myApplication.getInstance(BuiltInWebServerAuth.class).acquireToken();
     }
 
     @Override

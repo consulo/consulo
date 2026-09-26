@@ -94,6 +94,10 @@ public class DesktopEditorLayeredPanel {
         myLayeredPane.add(panel, Integer.valueOf(myLayerPosition++));
     }
 
+    public void removeLayerPanel(JComponent panel) {
+        myLayeredPane.remove(panel);
+    }
+
     public void setMainPanel(JComponent rootPanel) {
         myLayeredPane.add(rootPanel, JBLayeredPane.DEFAULT_LAYER);
     }

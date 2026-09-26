@@ -35,7 +35,6 @@ open module consulo.desktop.awt.ui.impl {
     requires consulo.language.editor.ui.api;
     requires consulo.virtual.file.status.api;
     requires imgscalr.lib;
-    requires com.sun.jna;
     requires consulo.base.icon.library;
     requires consulo.base.localize.library;
     requires kava.beans;

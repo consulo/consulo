@@ -753,4 +753,7 @@
   <action id="EditorScrollToCenter">
     <keyboard-shortcut first-keystroke="control L"/>
   </action>
+  <action id="ExternalSystem.ProjectRefreshAction">
+    <keyboard-shortcut first-keystroke="meta shift I"/>
+  </action>
 </keymap>

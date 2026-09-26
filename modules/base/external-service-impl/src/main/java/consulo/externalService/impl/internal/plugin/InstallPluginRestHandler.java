@@ -16,10 +16,10 @@
 package consulo.externalService.impl.internal.plugin;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.progress.Task;
 import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.OriginCheckResult;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -29,12 +29,16 @@ import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -44,16 +48,23 @@ import java.util.Optional;
 public class InstallPluginRestHandler extends JsonGetRequestHandler {
     private static final Logger LOG = Logger.getInstance(InstallPluginRestHandler.class);
 
+    private static final Set<String> TRUSTED_PREDEFINED_HOSTS = Set.of("hub.consulo.io", "consulo.io", "www.consulo.io");
+
     public InstallPluginRestHandler() {
         super("plugins/install");
     }
 
     @Override
-    public boolean isAccessible(HttpRequest request) {
-        return true;
+    protected OriginCheckResult isOriginAllowed(HttpRequest request) {
+        return OriginCheckResult.ASK_CONFIRMATION;
     }
 
-    
+    @Override
+    protected boolean isHostTrusted(HttpRequest request) {
+        return isHostInPredefinedHosts(request, TRUSTED_PREDEFINED_HOSTS, "consulo.api.install.hosts.trusted")
+            || super.isHostTrusted(request);
+    }
+
     @Override
     public JsonResponse handle(HttpRequest request) {
         String pluginIdStr = request == null ? null : request.getParameterValue("pluginId");
@@ -61,10 +72,13 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
             throw new IllegalArgumentException("PluginId expected");
         }
 
-        UIAccess uiAccess = Application.get().getLastUIAccess();
+        Project project = findProject();
+        if (project == null) {
+            return JsonResponse.asError("No open project to install plugin: " + pluginIdStr);
+        }
 
         Task.Backgroundable.queue(
-            null,
+            project,
             LocalizeValue.localizeTODO("Loading Plugins..."),
             progressIndicator -> {
                 UpdateChannel channel = UpdateSettings.getInstance().getChannel();
@@ -85,11 +99,17 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
                         return;
                     }
 
+                    UIAccess uiAccess = project.getUIAccess();
+                    if (!uiAccess.isValid()) {
+                        LOG.warn("Plugin can't be installed, project is closed: " + pluginIdStr);
+                        return;
+                    }
+
                     uiAccess.give(() -> InstallPluginAction.install(
                         uiAccess,
                         null,
                         null,
-                        null,
+                        project,
                         target.get(),
                         pluginDescriptors,
                         true,
@@ -102,5 +122,14 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
             }
         );
         return JsonResponse.asSuccess(Map.of("pluginId", pluginIdStr));
+    }
+
+    private static @Nullable Project findProject() {
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            if (!project.isDisposed() && project.getUIAccess().isValid()) {
+                return project;
+            }
+        }
+        return null;
     }
 }

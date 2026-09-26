@@ -17,6 +17,7 @@ package consulo.ui.ex.impl.internal.action;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -143,5 +144,9 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     @Override
     public List<AnAction> getActions() {
         return myRow.getActions();
+    }
+
+    public void addActionsUpdatedListener(Disposable parentDisposable, Runnable listener) {
+        myRow.addActionsUpdatedListener(parentDisposable, listener);
     }
 }

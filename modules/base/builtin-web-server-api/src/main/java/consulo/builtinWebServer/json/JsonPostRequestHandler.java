@@ -23,6 +23,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -30,45 +31,45 @@ import java.nio.charset.StandardCharsets;
  * @since 27.10.2015
  */
 public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHandler {
-  private static final Logger LOG = Logger.getInstance(JsonPostRequestHandler.class);
+    private static final Logger LOG = Logger.getInstance(JsonPostRequestHandler.class);
 
-  private Class<Request> myRequestClass;
+    private final Class<Request> myRequestClass;
 
-  protected JsonPostRequestHandler(String apiUrl, Class<Request> requestClass) {
-    super(apiUrl);
-    myRequestClass = requestClass;
-  }
-
-  
-  @Override
-  protected HttpMethod getMethod() {
-    return HttpMethod.POST;
-  }
-
-  
-  public abstract JsonResponse handle(Request request);
-
-  
-  public Class<Request> getRequestClass() {
-    return myRequestClass;
-  }
-
-  
-  @Override
-  public HttpResponse process(HttpRequest request) throws IOException {
-    Object handle = null;
-    try {
-      String json = request.getContentAsString(StandardCharsets.UTF_8);
-
-      Request body = JsonService.getInstance().fromJson(json, myRequestClass);
-
-      handle = handle(body);
+    protected JsonPostRequestHandler(String apiUrl, Class<Request> requestClass) {
+        super(apiUrl);
+        myRequestClass = requestClass;
     }
-    catch (Exception e) {
-      LOG.error(e);
-      
-      handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
+
+    @Override
+    protected HttpMethod getMethod() {
+        return HttpMethod.POST;
     }
-    return writeResponse(handle, request);
-  }
+
+    public abstract JsonResponse handle(Request request);
+
+    public Class<Request> getRequestClass() {
+        return myRequestClass;
+    }
+
+    @Override
+    public HttpResponse process(HttpRequest request) throws IOException {
+        if (!isHostTrusted(request)) {
+            return HttpResponse.create(HttpURLConnection.HTTP_FORBIDDEN, null, null);
+        }
+
+        Object handle;
+        try {
+            String json = request.getContentAsString(StandardCharsets.UTF_8);
+
+            Request body = JsonService.getInstance().fromJson(json, myRequestClass);
+
+            handle = handle(body);
+        }
+        catch (Exception e) {
+            LOG.error(e);
+
+            handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
+        }
+        return writeResponse(handle, request);
+    }
 }

@@ -203,12 +203,6 @@ public class ExternalSystemUtil {
             manager.getLocalSettingsProvider().apply(spec.getProject()).getExternalConfigModificationStamps();
         Set<String> toRefresh = new HashSet<>();
         for (ExternalProjectSettings setting : projectsSettings) {
-
-            // don't refresh project when auto-import is disabled if such behavior needed (e.g. on project opening when auto-import is disabled)
-            if (!setting.isUseAutoImport() && spec.isWhenAutoImportEnabled()) {
-                continue;
-            }
-
             if (spec.isForceWhenUptodate()) {
                 toRefresh.add(setting.getExternalProjectPath());
             }
@@ -330,6 +324,23 @@ public class ExternalSystemUtil {
             return externalSystemException.getOriginalReason();
         }
         return null;
+    }
+
+    public static void refreshProject(String externalProjectPath, ImportSpecBuilder importSpecBuilder) {
+        refreshProject(externalProjectPath, importSpecBuilder.build());
+    }
+
+    public static void refreshProject(String externalProjectPath, ImportSpec importSpec) {
+        Project project = importSpec.getProject();
+        refreshProject(
+            project,
+            importSpec.getExternalSystemId(),
+            externalProjectPath,
+            new ImportProjectDataRefreshCallback(project),
+            false,
+            importSpec.getProgressExecutionMode(),
+            importSpec.isReportRefreshError()
+        );
     }
 
     /**
@@ -706,6 +717,39 @@ public class ExternalSystemUtil {
             app.invokeAndWait(action, app.getDefaultModalityState());
         }
         return file[0];
+    }
+
+    private static class ImportProjectDataRefreshCallback implements ExternalProjectRefreshCallback {
+        private final Project myProject;
+
+        private ImportProjectDataRefreshCallback(Project project) {
+            myProject = project;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
+            if (externalProject == null) {
+                return;
+            }
+            ProjectDataManager projectDataManager = myProject.getApplication().getInstance(ProjectDataManager.class);
+            ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(myProject) {
+                @RequiredUIAccess
+                @Override
+                public void execute() {
+                    ProjectRootManagerEx.getInstanceEx(myProject).mergeRootsChangesDuring(() -> projectDataManager.importData(
+                        externalProject.getKey(),
+                        Collections.singleton(externalProject),
+                        myProject,
+                        true
+                    ));
+                }
+            });
+        }
+
+        @Override
+        public void onFailure(String errorMessage, @Nullable String errorDetails) {
+        }
     }
 
     private static class MyMultiExternalProjectRefreshCallback implements ExternalProjectRefreshCallback {

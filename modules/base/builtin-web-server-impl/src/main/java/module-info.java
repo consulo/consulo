@@ -11,6 +11,11 @@ module consulo.builtin.web.server.impl {
     requires consulo.util.netty;
     requires com.google.common;
     requires consulo.execution.debug.api;
+    requires consulo.language.api;
+    requires consulo.web.browser.api;
+    requires consulo.virtual.file.system.http.api;
+    requires consulo.code.editor.api;
+    requires consulo.document.api;
 
     requires xmlrpc.client;
     requires xmlrpc.common;
@@ -26,6 +31,8 @@ module consulo.builtin.web.server.impl {
 
     exports consulo.builtinWebServer.impl to consulo.ide.impl;
     exports consulo.builtinWebServer.impl.http to consulo.desktop.ide.impl;
+    exports consulo.builtinWebServer.impl.webServer to consulo.web.ide;
+    exports consulo.builtinWebServer.impl.webServer.liveReload to consulo.web.ide;
 
     opens consulo.builtinWebServer.impl.json to com.google.gson;
     opens consulo.builtinWebServer.impl to consulo.util.xml.serializer;

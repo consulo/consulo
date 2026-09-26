@@ -49,9 +49,14 @@ public abstract class HttpRequestHandler {
         String host = HttpRequestUtil.getHost(request);
         // If attacker.com DNS rebound to 127.0.0.1 and user open site directly — no Origin or Referrer headers.
         // So we should check Host header.
-        return host != null && HttpRequestUtil.isLocalOrigin(request) && HttpRequestUtil.parseAndCheckIsLocalHost("http://" + host);
+        return host != null
+            && isOriginAllowed(request) != OriginCheckResult.FORBID
+            && HttpRequestUtil.parseAndCheckIsLocalHost("http://" + host);
     }
 
-    
+    protected OriginCheckResult isOriginAllowed(HttpRequest request) {
+        return HttpRequestUtil.isLocalOrigin(request) ? OriginCheckResult.ALLOW : OriginCheckResult.FORBID;
+    }
+
     public abstract HttpResponse process(HttpRequest request) throws IOException;
 }

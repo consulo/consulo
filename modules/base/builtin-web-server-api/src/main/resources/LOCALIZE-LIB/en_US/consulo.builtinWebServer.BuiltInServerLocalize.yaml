@@ -20,3 +20,11 @@ setting.value.builtin.server.port.label:
     text: '&Port:'
 setting.value.can.accept.external.connections:
     text: Can accept &external connections
+title.use.rest.api:
+    text: Using REST API
+warning.use.rest.api.0.and.trust.host.1:
+    text: '''''{0}'''' API is requested. Do you trust ''''{1}''''?'
+warning.use.rest.api.0.and.trust.host.unknown:
+    text: '''''{0}'''' API is requested. Do you trust unknown host?'
+warning.use.rest.api.block.unknown.hosts:
+    text: Do you want to block requests from unknown hosts?

@@ -155,7 +155,7 @@ public final class Responses {
         }
     }
 
-    private static boolean addKeepAliveIfNeed(HttpResponse response, HttpRequest request) {
+    static boolean addKeepAliveIfNeed(HttpResponse response, HttpRequest request) {
         if (HttpUtil.isKeepAlive(request)) {
             HttpUtil.setKeepAlive(response, true);
             return true;
@@ -191,7 +191,7 @@ public final class Responses {
         return response;
     }
 
-    private static void addCommonHeaders(HttpResponse response) {
+    static void addCommonHeaders(HttpResponse response) {
         addServer(response);
         setDate(response);
         if (!response.headers().contains(HttpHeaderNames.X_FRAME_OPTIONS)) {

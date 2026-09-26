@@ -15,6 +15,8 @@ module consulo.code.editor.impl {
     requires transitive consulo.language.api;
     requires transitive consulo.language.code.style.api;
 
+    requires consulo.ui.ex.impl;
+
     exports consulo.codeEditor.impl to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
@@ -43,6 +45,11 @@ module consulo.code.editor.impl {
     exports consulo.codeEditor.impl.internal.action to
         consulo.language.editor.impl,
         consulo.ide.impl;
+
+    exports consulo.codeEditor.impl.internal.floating to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.web.editor.impl;
 
     exports consulo.codeEditor.impl.softwrap to
         consulo.desktop.awt.ide.impl,

@@ -20,43 +20,44 @@ import consulo.builtinWebServer.http.HttpResponse;
 import consulo.http.HttpMethod;
 import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * @author VISTALL
  * @since 27.10.2015
  */
 public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
-  private static final Logger LOG = Logger.getInstance(JsonGetRequestHandler.class);
+    private static final Logger LOG = Logger.getInstance(JsonGetRequestHandler.class);
 
-  protected JsonGetRequestHandler(String apiUrl) {
-    super(apiUrl);
-  }
-
-  
-  public abstract JsonResponse handle(@Nullable HttpRequest request);
-
-  
-  @Override
-  protected HttpMethod getMethod() {
-    return HttpMethod.GET;
-  }
-
-  
-  @Override
-  public HttpResponse process(@Nullable HttpRequest request) throws IOException {
-    Object handle;
-    try {
-      handle = handle(request);
+    protected JsonGetRequestHandler(String apiUrl) {
+        super(apiUrl);
     }
-    catch (Exception e) {
-      LOG.error(e);
-      
-      handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
+
+    public abstract JsonResponse handle(@Nullable HttpRequest request);
+
+    @Override
+    protected HttpMethod getMethod() {
+        return HttpMethod.GET;
     }
-    return writeResponse(handle, request);
-  }
+
+    @Override
+    public HttpResponse process(HttpRequest request) throws IOException {
+        if (!isHostTrusted(request)) {
+            return HttpResponse.create(HttpURLConnection.HTTP_FORBIDDEN, null, null);
+        }
+
+        Object handle;
+        try {
+            handle = handle(request);
+        }
+        catch (Exception e) {
+            LOG.error(e);
+
+            handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
+        }
+        return writeResponse(handle, request);
+    }
 }

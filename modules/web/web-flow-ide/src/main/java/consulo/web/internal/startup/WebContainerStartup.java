@@ -40,6 +40,7 @@ import consulo.web.main.WebApplicationStarter;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.websocket.server.ServerEndpointConfig;
 import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.eclipse.jetty.ee11.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
@@ -103,6 +104,18 @@ public class WebContainerStartup implements ContainerStartup {
         JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, serverContainer) -> {
             serverContainer.setDefaultMaxTextMessageBufferSize(50 * 1024 * 1024);
             serverContainer.setDefaultMaxSessionIdleTimeout(5 * 60 * 1000L);
+
+            ServerEndpointConfig.Configurator webServerPageConfigurator = new ServerEndpointConfig.Configurator() {
+                @Override
+                public <T> T getEndpointInstance(Class<T> endpointClass) {
+                    return endpointClass.cast(new WebServerPageEndpoint(servletContext));
+                }
+            };
+            serverContainer.addEndpoint(
+                ServerEndpointConfig.Builder.create(WebServerPageEndpoint.class, WebServerPageEndpoint.PATH)
+                    .configurator(webServerPageConfigurator)
+                    .build()
+            );
         });
         Set<Class<?>> classes = new HashSet<>();
         classes.addAll(LookupInitializer.getDefaultImplementations());
@@ -177,7 +190,8 @@ public class WebContainerStartup implements ContainerStartup {
     }
 
     private void registerServlets(ServletContextHandler handler) {
-        List<Class<? extends Servlet>> classes = List.of(RootUIServlet.class, UIIconServlet.class, WebFontServlet.class);
+        List<Class<? extends Servlet>> classes =
+            List.of(RootUIServlet.class, UIIconServlet.class, WebFontServlet.class, BuiltInWebServerServlet.class);
 
         for (Class<? extends Servlet> servletClass : classes) {
             WebServlet declaredAnnotation = servletClass.getDeclaredAnnotation(WebServlet.class);

@@ -17,6 +17,7 @@ package consulo.webBrowser.action;
 
 import consulo.component.util.ModificationTracker;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.webBrowser.WebBrowser;
@@ -47,15 +48,18 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
     
     @Override
     protected AnAction[] computeChildren(ActionManager manager) {
-        List<WebBrowser> browsers = WebBrowserManager.getInstance().getBrowsers();
-        boolean addDefaultBrowser = isPopup();
+        boolean inBrowser = Platform.current().isInBrowser();
+        List<WebBrowser> browsers = inBrowser ? List.of() : WebBrowserManager.getInstance().getBrowsers();
+        boolean addDefaultBrowser = inBrowser || isPopup();
         int offset = addDefaultBrowser ? 1 : 0;
         AnAction[] actions = new AnAction[browsers.size() + offset];
 
         if (addDefaultBrowser) {
             if (myDefaultBrowserAction == null) {
                 myDefaultBrowserAction = new OpenFileInDefaultBrowserAction();
-                myDefaultBrowserAction.getTemplatePresentation().setText(LocalizeValue.localizeTODO("Default"));
+                myDefaultBrowserAction.getTemplatePresentation().setText(
+                    isPopup() ? LocalizeValue.localizeTODO("Default") : WebBrowserLocalize.actionOpenInBrowserActionGroupText()
+                );
                 myDefaultBrowserAction.getTemplatePresentation().setIcon(PlatformIconGroup.nodesPpweb());
             }
             actions[0] = myDefaultBrowserAction;
@@ -65,34 +69,5 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
             actions[i + offset] = new BaseWebBrowserAction(browsers.get(i));
         }
         return actions;
-    }
-
-    public static final class OpenInBrowserGroupAction extends OpenInBrowserBaseGroupAction implements AnActionWithSyncUpdate {
-        public OpenInBrowserGroupAction() {
-            super(true);
-        }
-
-        @Override
-        public void update(AnActionEvent e) {
-            String place = e.getPlace();
-
-            if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
-                e.getPresentation().setText(WebBrowserLocalize.actionOpenInBrowserActionGroupShortText());
-            }
-            else {
-                e.getPresentation().setText(WebBrowserLocalize.actionOpenInBrowserActionGroupText());
-            }
-        }
-    }
-
-    public static final class OpenInBrowserEditorContextBarGroupAction extends OpenInBrowserBaseGroupAction implements AnActionWithSyncUpdate {
-        public OpenInBrowserEditorContextBarGroupAction() {
-            super(false);
-        }
-
-        @Override
-        public void update(AnActionEvent e) {
-            e.getPresentation().setVisible(!WebBrowserManager.getInstance().getBrowsers().isEmpty());
-        }
     }
 }

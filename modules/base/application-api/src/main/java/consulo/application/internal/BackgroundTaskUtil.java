@@ -194,12 +194,20 @@ public class BackgroundTaskUtil {
    * and avoid Already Disposed exceptions (in particular, because checkCanceled() is called in {@link ServiceManager#getService(Class)}.
    */
   public static ProgressIndicator executeOnPooledThread(Disposable parent, Runnable runnable) {
+    return execute(AppExecutorUtil.getAppExecutorService(), parent, runnable);
+  }
+
+  /**
+   * Does tha same as {@link BackgroundTaskUtil#executeOnPooledThread(Disposable, Runnable)} method but allows to use
+   * custom {@link Executor} instance.
+   */
+  public static ProgressIndicator execute(Executor executor, Disposable parent, Runnable runnable) {
     ProgressIndicator indicator = new EmptyProgressIndicator();
     indicator.start();
 
     CompletableFuture<?> future = CompletableFuture.runAsync(
       () -> ProgressManager.getInstance().runProcess(runnable, indicator),
-      AppExecutorUtil.getAppExecutorService()
+      executor
     );
 
     Disposable disposable = () -> {

@@ -38,9 +38,21 @@ label.text.path.to.profiles.ini:
     text: 'Path to "profiles.ini":'
 label.text.profile:
     text: 'Profile:'
+setting.value.reload.mode.preview:
+    text: 'Reload page in built-in preview:'
+setting.value.reload.mode.server:
+    text: 'Reload page in browser:'
+settings.browsers.reload.behavior:
+    text: Reload behavior
 title.browser.not.found:
     text: Browser Not Found
 title.browser.path.not.found:
     text: Browser Path Not Found
 title.select.path.to.browser:
     text: Select Path to Browser
+web.preview.reload.mode.disabled:
+    text: Disabled
+web.preview.reload.mode.on.change:
+    text: On Change
+web.preview.reload.mode.on.save:
+    text: On Save

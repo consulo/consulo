@@ -13,6 +13,7 @@ module consulo.ui.ex.impl {
     requires consulo.ui.impl;
     requires consulo.util.nodep;
     requires gnu.trove;
+    requires com.sun.jna;
 
     exports consulo.ui.ex.impl.internal to
         consulo.desktop.awt.editor.impl,
@@ -64,5 +65,10 @@ module consulo.ui.ex.impl {
         consulo.it,
         consulo.web.ui.impl;
 
+    exports consulo.ui.ex.impl.internal.animation to
+        consulo.code.editor.impl,
+        consulo.desktop.awt.ui.impl;
+
     opens consulo.ui.ex.impl.internal.keymap to consulo.util.xml.serializer;
+    opens consulo.ui.ex.impl.internal.animation to com.sun.jna;
 }

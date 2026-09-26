@@ -572,3 +572,42 @@
 {
   cursor: pointer;
 }
+
+.arquill-floating-toolbar-layer
+{
+  position: absolute;
+  top: 40px;
+  right: calc(var(--arquill-overview-ruler-width) + 24px);
+  z-index: 3;
+
+  display: flex;
+  gap: 20px;
+}
+
+.arquill-floating-toolbar
+{
+  border-radius: 6px;
+  background-color: var(--consulo-panel-background, #ededed);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1000ms, visibility 0s linear 1000ms;
+}
+
+.arquill-floating-toolbar.arquill-floating-toolbar-shown,
+.arquill-editor[data-floating-active] .arquill-floating-toolbar.arquill-floating-toolbar-auto
+{
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 500ms, visibility 0s;
+}
+
+.arquill-floating-toolbar.arquill-floating-toolbar-instant,
+.arquill-editor[data-floating-escaped] .arquill-floating-toolbar
+{
+  transition: none;
+}
+
+.arquill-floating-toolbar:has(> :empty)
+{
+  display: none;
+}

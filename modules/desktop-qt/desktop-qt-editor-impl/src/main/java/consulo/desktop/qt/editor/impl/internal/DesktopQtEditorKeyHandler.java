@@ -98,12 +98,13 @@ public class DesktopQtEditorKeyHandler {
 
         // whether an action is enabled is only answerable asynchronously, but the key has to be claimed or dropped
         // now - so a stroke the keymap knows is claimed, and the search for a live action for it continues after
-        performFirstEnabled(actions, 0, myEditor.getDataContext(), UIAccess.current());
+        performFirstEnabled(actions, 0, keyCode, myEditor.getDataContext(), UIAccess.current());
         return true;
     }
 
-    private void performFirstEnabled(List<AnAction> actions, int index, DataContext context, UIAccess uiAccess) {
+    private void performFirstEnabled(List<AnAction> actions, int index, KeyCode keyCode, DataContext context, UIAccess uiAccess) {
         if (index >= actions.size()) {
+            myEditor.fireKeyNotConsumed(keyCode);
             return;
         }
 
@@ -114,7 +115,7 @@ public class DesktopQtEditorKeyHandler {
 
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
             if (throwable != null || !Boolean.TRUE.equals(enabled)) {
-                performFirstEnabled(actions, index + 1, context, uiAccess);
+                performFirstEnabled(actions, index + 1, keyCode, context, uiAccess);
                 return;
             }
 

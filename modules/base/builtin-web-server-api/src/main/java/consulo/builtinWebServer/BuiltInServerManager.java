@@ -18,30 +18,32 @@ package consulo.builtinWebServer;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.builtinWebServer.http.HttpRequest;
 import consulo.disposer.Disposable;
 import consulo.util.io.Url;
-
 import org.jspecify.annotations.Nullable;
+
 import java.net.URLConnection;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class BuiltInServerManager {
-  
-  public static BuiltInServerManager getInstance() {
-    return Application.get().getInstance(BuiltInServerManager.class);
-  }
+    public static BuiltInServerManager getInstance() {
+        return Application.get().getInstance(BuiltInServerManager.class);
+    }
 
-  public abstract int getPort();
+    public abstract int getPort();
 
-  public abstract BuiltInServerManager waitForStart();
+    public abstract BuiltInServerManager waitForStart();
 
-  public abstract @Nullable Disposable getServerDisposable();
+    public abstract @Nullable Disposable getServerDisposable();
 
-  public abstract boolean isOnBuiltInWebServer(@Nullable Url url);
+    public abstract boolean isOnBuiltInWebServer(@Nullable Url url);
 
-  public abstract void configureRequestToWebServer(URLConnection connection);
+    public abstract void configureRequestToWebServer(URLConnection connection);
 
-  public abstract Url addAuthToken(Url url);
+    public abstract Url addAuthToken(Url url);
 
-  public abstract boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly);
+    public abstract boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly);
+
+    public abstract boolean isRequestSigned(HttpRequest request);
 }

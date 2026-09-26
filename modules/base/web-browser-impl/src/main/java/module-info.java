@@ -4,6 +4,7 @@
  */
 module consulo.web.browser.impl {
     requires consulo.web.browser.api;
+    requires consulo.code.editor.api;
     requires consulo.process.api;
     requires consulo.configurable.api;
     requires consulo.language.api;

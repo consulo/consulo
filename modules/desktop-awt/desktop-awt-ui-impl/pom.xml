@@ -101,10 +101,6 @@
         </dependency>
 
         <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-jpms</artifactId>
-        </dependency>
-        <dependency>
             <groupId>consulo</groupId>
             <artifactId>kava.beans</artifactId>
         </dependency>

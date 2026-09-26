@@ -36,32 +36,41 @@ import java.util.Map;
  * from kotlin platform\platform-impl\src\org\jetbrains\io\DelegatingHttpRequestHandlerBase.kt
  */
 public abstract class DelegatingHttpRequestHandlerBase extends SimpleChannelInboundHandlerAdapter<FullHttpRequest> {
-  @Override
-  public void messageReceived(ChannelHandlerContext context, FullHttpRequest request) throws Exception {
-    HttpResponse httpResponse = process(context, request, new QueryStringDecoder(request.uri()));
-    if (httpResponse == null) {
-      Responses.send(HttpResponseStatus.NOT_FOUND, context.channel(), request);
-    }
-    else if (httpResponse.getStreamingBody() != null) {
-      StreamingResponses.send(context.channel(), httpResponse);
-    }
-    else {
-      byte[] content = httpResponse.getContent();
+    @Override
+    public void messageReceived(ChannelHandlerContext context, FullHttpRequest request) throws Exception {
+        HttpResponse httpResponse = process(context, request, new QueryStringDecoder(request.uri()));
+        if (httpResponse == null) {
+            Responses.send(HttpResponseStatus.NOT_FOUND, context.channel(), request);
+        }
+        else if (httpResponse.getStreamingBody() != null) {
+            StreamingResponses.send(context.channel(), httpResponse);
+        }
+        else if (httpResponse.getFileRegion() != null) {
+            FileRegionResponses.send(context.channel(), request, httpResponse);
+        }
+        else {
+            byte[] content = httpResponse.getContent();
 
-      FullHttpResponse response = Responses.response(HttpResponseStatus.valueOf(httpResponse.getCode()),
-                                                     httpResponse.getContentType(),
-                                                     content == null ? null : Unpooled.copiedBuffer(content));
-      for (Map.Entry<String, String> header : httpResponse.getHeaders().entrySet()) {
-        response.headers().set(header.getKey(), header.getValue());
-      }
-      Responses.send(response, context.channel(), request);
+            FullHttpResponse response = Responses.response(
+                HttpResponseStatus.valueOf(httpResponse.getCode()),
+                httpResponse.getContentType(),
+                content == null ? null : Unpooled.copiedBuffer(content)
+            );
+            for (Map.Entry<String, String> header : httpResponse.getHeaders().entrySet()) {
+                response.headers().set(header.getKey(), header.getValue());
+            }
+            Responses.send(response, context.channel(), request);
+        }
     }
-  }
 
-  protected abstract @Nullable HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception;
+    protected abstract @Nullable HttpResponse process(
+        ChannelHandlerContext context,
+        FullHttpRequest request,
+        QueryStringDecoder urlDecoder
+    ) throws Exception;
 
-  @Override
-  public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
-    NettyUtil.logAndClose(cause, Logger.getInstance(BuiltInServer.class), context.channel());
-  }
+    @Override
+    public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
+        NettyUtil.logAndClose(cause, Logger.getInstance(BuiltInServer.class), context.channel());
+    }
 }

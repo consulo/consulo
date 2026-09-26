@@ -21,6 +21,7 @@ module consulo.external.system.api {
     requires consulo.util.nodep;
 
     exports consulo.externalSystem;
+    exports consulo.externalSystem.autoimport;
     exports consulo.externalSystem.importing;
     exports consulo.externalSystem.execution;
     exports consulo.externalSystem.model;

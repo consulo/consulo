@@ -53,6 +53,20 @@ error.resolve.with.reason:
         {0}
 
         Consult IDE log for more details (Help | Show Log)
+external.system.ids.join.more:
+    text: '{0}, and {1}'
+external.system.ids.join.two:
+    text: '{0} and {1}'
+external.system.reload.notification.action.hide.text:
+    text: Hide This Notification
+external.system.reload.notification.action.reload.description:
+    text: '{0} project structure has been changed. Sync changes with {1} to make it work correctly.'
+external.system.reload.notification.action.reload.description.empty:
+    text: 'Sync build system changes with {0}.'
+external.system.reload.notification.action.reload.text:
+    text: 'Sync {0} Changes'
+external.system.reload.notification.action.reload.text.empty:
+    text: Sync Changes
 import.title:
     text: Import {0} Projects
 module.type.description:
@@ -101,14 +115,22 @@ run.text.starting.multiple.task:
 run.text.starting.single.task:
     text: |
         {0}: Executing external task ''{1}''...
+settings.build.tools.auto.reload.radio.button.all.label:
+    text: Any changes
+settings.build.tools.auto.reload.radio.button.group.title:
+    text: 'Sync project after changes in the build scripts:'
+settings.build.tools.auto.reload.radio.button.selective.comment:
+    text: Changes outside the IDE or from version control.
+settings.build.tools.auto.reload.radio.button.selective.label:
+    text: External changes
+settings.build.tools.display.name:
+    text: Build Tools
 settings.label.create.empty.content.root.directories:
     text: Create directories for empty content roots automatically
 settings.label.project.format:
     text: 'Project format:'
 settings.label.select.project:
     text: '{0} project:'
-settings.label.use.auto.import:
-    text: Use auto-import
 settings.title.linked.projects:
     text: Linked {0} projects
 settings.title.project.settings:

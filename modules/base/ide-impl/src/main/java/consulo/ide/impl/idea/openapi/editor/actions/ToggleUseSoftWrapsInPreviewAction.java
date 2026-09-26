@@ -15,22 +15,50 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.action.AbstractToggleUseSoftWrapsAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.codeEditor.util.SoftWrapUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 
-public class ToggleUseSoftWrapsInPreviewAction extends AbstractToggleUseSoftWrapsAction {
-  public ToggleUseSoftWrapsInPreviewAction() {
-    super(SoftWrapAppliancePlaces.PREVIEW, true);
-  }
+@ActionImpl(id = "EditorToggleUseSoftWrapsInPreview")
+public final class ToggleUseSoftWrapsInPreviewAction extends ToggleAction implements DumbAware {
+    public ToggleUseSoftWrapsInPreviewAction() {
+        super(
+            CodeEditorLocalize.actionToggleUseSoftWrapsInPreviewText(),
+            CodeEditorLocalize.actionToggleUseSoftWrapsInPreviewDescription(),
+            PlatformIconGroup.actionsTogglesoftwrap()
+        );
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    Editor editor = getEditor(e);
-    return editor == null
-      ? EditorSettingsExternalizable.getInstance().isUseSoftWraps(SoftWrapAppliancePlaces.PREVIEW)
-      : editor.getSettings().isUseSoftWraps();
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        Editor editor = e.getData(Editor.KEY);
+        if (editor == null || editor.getEditorKind() != EditorKind.PREVIEW) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        super.update(e);
+    }
+
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        Editor editor = e.getData(Editor.KEY);
+        return editor != null && editor.getSettings().isUseSoftWraps();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSelected(AnActionEvent e, boolean state) {
+        Editor editor = e.getData(Editor.KEY);
+        if (editor != null) {
+            SoftWrapUtil.toggleSoftWraps(editor, SoftWrapAppliancePlaces.PREVIEW, state);
+        }
+    }
 }

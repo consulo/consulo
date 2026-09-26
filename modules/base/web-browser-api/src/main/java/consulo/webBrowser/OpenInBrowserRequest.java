@@ -5,6 +5,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.io.Url;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.light.LightVirtualFileBase;
 
 import org.jspecify.annotations.Nullable;
 
@@ -13,6 +14,8 @@ import java.util.Collection;
 public abstract class OpenInBrowserRequest {
     private Collection<Url> result;
     protected PsiFile file;
+    private boolean myAppendAccessToken = true;
+    private @Nullable ReloadMode myReloadMode;
 
     public OpenInBrowserRequest(PsiFile file) {
         this.file = file;
@@ -60,5 +63,25 @@ public abstract class OpenInBrowserRequest {
 
     public @Nullable Collection<Url> getResult() {
         return result;
+    }
+
+    public boolean isAppendAccessToken() {
+        return myAppendAccessToken;
+    }
+
+    public void setAppendAccessToken(boolean appendAccessToken) {
+        myAppendAccessToken = appendAccessToken;
+    }
+
+    public @Nullable ReloadMode getReloadMode() {
+        return myReloadMode;
+    }
+
+    public void setReloadMode(@Nullable ReloadMode reloadMode) {
+        myReloadMode = reloadMode;
+    }
+
+    public boolean isPhysicalFile() {
+        return file.getViewProvider().isPhysical() && !(getVirtualFile() instanceof LightVirtualFileBase);
     }
 }

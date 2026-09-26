@@ -13,6 +13,8 @@ module consulo.web.ide {
     requires consulo.application.ui.impl;
     requires consulo.base.icon.library;
     requires consulo.base.localize.library;
+    requires consulo.builtin.web.server.api;
+    requires consulo.builtin.web.server.impl;
     requires consulo.code.editor.api;
     requires consulo.code.editor.impl;
     requires consulo.color.scheme.api;
@@ -110,7 +112,11 @@ module consulo.web.ide {
     exports consulo.web.internal.startup to flow.server;
 
     opens consulo.web.internal.wm to consulo.util.xml.serializer;
-    opens consulo.web.internal.servlet to org.eclipse.jetty.ee11.servlet, flow.server;
+    opens consulo.web.internal.servlet to
+        org.eclipse.jetty.ee11.servlet,
+        org.eclipse.jetty.ee11.websocket.jakarta.common,
+        org.eclipse.jetty.ee11.websocket.jakarta.server,
+        flow.server;
     opens consulo.web.internal.startup to org.eclipse.jetty.ee11.servlet, flow.server;
 
     provides consulo.container.boot.ContainerStartup with consulo.web.internal.startup.WebContainerStartup;

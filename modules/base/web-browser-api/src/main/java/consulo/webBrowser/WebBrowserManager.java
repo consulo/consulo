@@ -32,6 +32,9 @@ import java.util.function.Predicate;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface WebBrowserManager extends ModificationTracker {
+    ReloadMode BROWSER_RELOAD_MODE_DEFAULT = ReloadMode.RELOAD_ON_SAVE;
+    ReloadMode PREVIEW_RELOAD_MODE_DEFAULT = ReloadMode.RELOAD_ON_SAVE;
+
     public static WebBrowserManager getInstance() {
         return Application.get().getInstance(WebBrowserManager.class);
     }
@@ -53,6 +56,14 @@ public interface WebBrowserManager extends ModificationTracker {
 
     
     DefaultBrowserPolicy getDefaultBrowserPolicy();
+
+    ReloadMode getWebServerReloadMode();
+
+    void setWebServerReloadMode(ReloadMode reloadMode);
+
+    ReloadMode getWebPreviewReloadMode();
+
+    void setWebPreviewReloadMode(ReloadMode reloadMode);
 
     @Nullable WebBrowser getFirstActiveBrowser();
 

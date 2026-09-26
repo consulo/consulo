@@ -127,6 +127,8 @@ public class UIServlet extends VaadinServlet {
         service.addSessionDestroyListener(event -> {
             VaadinSession session = event.getSession();
 
+            BuiltInWebServerSessionTokens.get(getServletContext()).revoke(session);
+
             Collection<UI> children = session.getUIs();
             for (UI child : children) {
                 Disposable disposable = getDisposable(child);

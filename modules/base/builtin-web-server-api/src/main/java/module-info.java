@@ -5,6 +5,7 @@
 module consulo.builtin.web.server.api {
     requires transitive consulo.application.api;
     requires transitive consulo.http.api;
+    requires transitive consulo.project.api;
 
     exports consulo.builtinWebServer;
     exports consulo.builtinWebServer.custom;
@@ -12,6 +13,7 @@ module consulo.builtin.web.server.api {
     exports consulo.builtinWebServer.http.util;
     exports consulo.builtinWebServer.json;
     exports consulo.builtinWebServer.localize;
+    exports consulo.builtinWebServer.webServer;
     exports consulo.builtinWebServer.webSocket;
     exports consulo.builtinWebServer.xml;
 }

@@ -20,6 +20,9 @@ import consulo.project.Project;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
+import java.util.List;
+
 /**
  * External system integration provides 'auto-import' feature, i.e. it listens for external system config files changes
  * and automatically runs external project refresh and sync.
@@ -50,4 +53,8 @@ public interface ExternalSystemAutoImportAware {
    *                              path to config file of an external project which should be refreshed
    */
   @Nullable String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project);
+
+  default List<Path> getAffectedExternalProjectFilePaths(String projectPath, Project project) {
+    return List.of();
+  }
 }

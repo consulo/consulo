@@ -76,5 +76,9 @@
             <groupId>consulo.internal</groupId>
             <artifactId>trove4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-jpms</artifactId>
+        </dependency>
     </dependencies>
 </project>

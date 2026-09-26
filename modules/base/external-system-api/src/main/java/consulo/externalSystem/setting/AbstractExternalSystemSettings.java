@@ -15,11 +15,14 @@
  */
 package consulo.externalSystem.setting;
 
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.project.Project;
-
+import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -38,6 +41,8 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
   private final Class<L> myChangesTopic;
 
   private Project myProject;
+
+  private final LazyValue<@Nullable ExternalSystemManager<?, ?, ?, ?, ?>> myManager = LazyValue.nullable(this::deduceManager);
 
   
   private final Map<String/* project path */, PS> myLinkedProjectsSettings = new HashMap<String, PS>();
@@ -59,6 +64,15 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
   
   public Project getProject() {
     return myProject;
+  }
+
+  private @Nullable ExternalSystemManager<?, ?, ?, ?, ?> deduceManager() {
+    Project project = myProject;
+    if (project == null) {
+      return null;
+    }
+    return Application.get().getExtensionPoint(ExternalSystemManager.class)
+      .findFirstSafe(it -> equals(it.getSettingsProvider().apply(project)));
   }
 
   /**
@@ -110,7 +124,7 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
       throw new IllegalArgumentException(String.format("Can't link external project '%s'. Reason: it's already registered at the current ide project", settings.getExternalProjectPath()));
     }
     myLinkedProjectsSettings.put(settings.getExternalProjectPath(), settings);
-    getPublisher().onProjectsLinked(Collections.singleton(settings));
+    onProjectsLinked(Collections.singleton(settings));
   }
 
   /**
@@ -127,35 +141,53 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
       return false;
     }
 
-    getPublisher().onProjectsUnlinked(Collections.singleton(linkedProjectPath));
+    onProjectsUnlinked(Collections.singleton(linkedProjectPath));
     return true;
   }
 
-  public void setLinkedProjectsSettings(Collection<PS> settings) {
-    List<PS> added = new ArrayList<PS>();
-    Map<String, PS> removed = new HashMap<String, PS>(myLinkedProjectsSettings);
+  public void setLinkedProjectsSettings(Collection<? extends PS> settings) {
+    setLinkedProjectsSettings(settings, new ExternalSystemSettingsListener<>() {
+      @Override
+      public void onProjectsLinked(Collection<PS> settings) {
+        AbstractExternalSystemSettings.this.onProjectsLinked(settings);
+      }
+
+      @Override
+      public void onProjectsUnlinked(Set<String> linkedProjectPaths) {
+        AbstractExternalSystemSettings.this.onProjectsUnlinked(linkedProjectPaths);
+      }
+    });
+  }
+
+  private void setLinkedProjectsSettings(Collection<? extends PS> settings, ExternalSystemSettingsListener<PS> listener) {
+    List<PS> validSettings = new ArrayList<>();
+    for (PS ps : settings) {
+      if (ps.getExternalProjectPath() != null) {
+        validSettings.add(ps);
+      }
+    }
+
+    List<PS> added = new ArrayList<>();
+    Map<String, PS> removed = new HashMap<>(myLinkedProjectsSettings);
     myLinkedProjectsSettings.clear();
-    for (PS current : settings) {
+    for (PS current : validSettings) {
       myLinkedProjectsSettings.put(current.getExternalProjectPath(), current);
     }
 
-    for (PS current : settings) {
+    for (PS current : validSettings) {
       PS old = removed.remove(current.getExternalProjectPath());
       if (old == null) {
         added.add(current);
       }
       else {
-        if (current.isUseAutoImport() != old.isUseAutoImport()) {
-          getPublisher().onUseAutoImportChange(current.isUseAutoImport(), current.getExternalProjectPath());
-        }
         checkSettings(old, current);
       }
     }
     if (!added.isEmpty()) {
-      getPublisher().onProjectsLinked(added);
+      listener.onProjectsLinked(added);
     }
     if (!removed.isEmpty()) {
-      getPublisher().onProjectsUnlinked(removed.keySet());
+      listener.onProjectsUnlinked(removed.keySet());
     }
   }
 
@@ -182,14 +214,60 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
     state.setLinkedExternalProjectsSettings(new TreeSet<PS>(myLinkedProjectsSettings.values()));
   }
 
-  @SuppressWarnings("unchecked")
   protected void loadState(State<PS> state) {
     Set<PS> settings = state.getLinkedExternalProjectsSettings();
     if (settings != null) {
-      myLinkedProjectsSettings.clear();
-      for (PS projectSettings : settings) {
-        myLinkedProjectsSettings.put(projectSettings.getExternalProjectPath(), projectSettings);
-      }
+      Project project = myProject;
+      setLinkedProjectsSettings(settings, new ExternalSystemSettingsListener<>() {
+        @Override
+        public void onProjectsLinked(Collection<PS> settings) {
+          project.getUIAccess().give(() -> {
+            if (project.isDisposed()) {
+              return;
+            }
+            fireProjectsLinkedExtensions(settings);
+            AbstractExternalSystemSettings.this.onProjectsLoaded(settings);
+          });
+        }
+
+        @Override
+        public void onProjectsUnlinked(Set<String> linkedProjectPaths) {
+          project.getUIAccess().give(() -> {
+            if (project.isDisposed()) {
+              return;
+            }
+            AbstractExternalSystemSettings.this.onProjectsUnlinked(linkedProjectPaths);
+          });
+        }
+      });
+    }
+  }
+
+  private void onProjectsLoaded(Collection<PS> settings) {
+    getPublisher().onProjectsLoaded(settings);
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = myManager.get();
+    if (manager != null) {
+      myProject.getExtensionPoint(ExternalSystemSettingsListenerEx.class).forEach(it -> it.onProjectsLoaded(manager, settings));
+    }
+  }
+
+  private void onProjectsLinked(Collection<PS> settings) {
+    getPublisher().onProjectsLinked(settings);
+    fireProjectsLinkedExtensions(settings);
+  }
+
+  private void fireProjectsLinkedExtensions(Collection<PS> settings) {
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = myManager.get();
+    if (manager != null) {
+      myProject.getExtensionPoint(ExternalSystemSettingsListenerEx.class).forEach(it -> it.onProjectsLinked(manager, settings));
+    }
+  }
+
+  private void onProjectsUnlinked(Set<String> linkedProjectPaths) {
+    getPublisher().onProjectsUnlinked(linkedProjectPaths);
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = myManager.get();
+    if (manager != null) {
+      myProject.getExtensionPoint(ExternalSystemSettingsListenerEx.class).forEach(it -> it.onProjectsUnlinked(manager, linkedProjectPaths));
     }
   }
 

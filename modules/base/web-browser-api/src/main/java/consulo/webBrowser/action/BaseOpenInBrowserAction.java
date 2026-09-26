@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -161,7 +162,9 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction implements
         boolean applicable = false;
         WebBrowserUrlProvider provider = null;
         if (request != null) {
-            applicable = WebFileFilter.isFileAllowed(request.getFile()) && !(request.getVirtualFile() instanceof LightVirtualFileBase);
+            applicable = !Platform.current().isInBrowser()
+                && WebFileFilter.isFileAllowed(request.getFile())
+                && !(request.getVirtualFile() instanceof LightVirtualFileBase);
             if (!applicable) {
                 provider = WebBrowserService.getInstance().getProvider(request);
                 applicable = provider != null;

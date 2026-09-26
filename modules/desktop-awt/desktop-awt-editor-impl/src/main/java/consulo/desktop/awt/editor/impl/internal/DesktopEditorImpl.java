@@ -15,6 +15,7 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
+import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.EditorActionPlan;
@@ -32,6 +33,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.editor.impl.internal.floating.EditorFloatingToolbar;
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLineShadowPainter;
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLinesManager;
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLinesPanel;
@@ -158,6 +160,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     private final DesktopEditorUIComponent myUIComponent;
     private final JPanel myPanel;
+
+    private @Nullable DesktopEditorLayeredPanel myLayeredPanel;
+
+    private @Nullable EditorFloatingToolbar myEditorFloatingToolbar;
 
     private final JScrollPane myScrollPane;
 
@@ -886,13 +892,13 @@ public final class DesktopEditorImpl extends CodeEditorBase
             layeredPanel.addLayerPanel(panel);
         }
 
-        if (mayShowToolbar()) {
-            layeredPanel.addLayerPanel(new ContextMenuImpl(myScrollPane, this));
-        }
-
         layeredPanel.addLayerPanel(myStatusComponentContainer.getPanel());
 
         myPanel.add(layeredPanel.getPanel(), BorderLayout.CENTER);
+
+        myLayeredPanel = layeredPanel;
+
+        recreateEditorFloatingToolbar();
 
         myEditorComponent.addKeyListener(new KeyListener() {
             @Override
@@ -999,8 +1005,30 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return layeredPanel;
     }
 
-    private boolean mayShowToolbar() {
-        return !isEmbeddedIntoDialogWrapper() && !isOneLineMode() && ContextMenuImpl.mayShowToolbar(myDocument);
+    @RequiredUIAccess
+    public void recreateEditorFloatingToolbar() {
+        if (isReleased) {
+            return;
+        }
+        UiNotifyConnector.doWhenFirstShown(myPanel, () -> {
+            DesktopEditorLayeredPanel layeredPanel = myLayeredPanel;
+            if (isReleased || layeredPanel == null) {
+                return;
+            }
+            EditorFloatingToolbar oldToolbar = myEditorFloatingToolbar;
+            if (oldToolbar != null) {
+                Disposer.dispose(oldToolbar);
+                layeredPanel.removeLayerPanel(oldToolbar);
+                myEditorFloatingToolbar = null;
+            }
+            Project project = myProject;
+            if (EditorFloatingToolbarInstaller.mayShowToolbar(this) && project != null) {
+                EditorFloatingToolbar editorFloatingToolbar = new EditorFloatingToolbar(this, project);
+                Disposer.register(myDisposable, editorFloatingToolbar);
+                layeredPanel.addLayerPanel(editorFloatingToolbar);
+                myEditorFloatingToolbar = editorFloatingToolbar;
+            }
+        });
     }
 
     @Override

@@ -28,38 +28,48 @@ import java.util.Set;
  * @since 4/3/13 4:13 PM
  */
 public interface ExternalSystemSettingsListener<S extends ExternalProjectSettings> {
+    /**
+     * This method is present here only because an IJ platform doesn't have corresponding messaging set up for "project rename" event.
+     *
+     * @param oldName old project name
+     * @param newName new project name
+     */
+    default void onProjectRenamed(String oldName, String newName) {
+    }
 
-  /**
-   * This method is present here only because IJ platform doesn't has corresponding messaging set up for 'project rename' event.
-   *
-   * @param oldName old project name
-   * @param newName new project name
-   */
-  void onProjectRenamed(String oldName, String newName);
+    /**
+     * Happens after loading of project settings
+     *
+     * @see AbstractExternalSystemSettings#loadState
+     */
+    default void onProjectsLoaded(Collection<S> settings) {
+    }
 
-  void onProjectsLinked(Collection<S> settings);
+    default void onProjectsLinked(Collection<S> settings) {
+    }
 
-  void onProjectsUnlinked(Set<String> linkedProjectPaths);
+    default void onProjectsUnlinked(Set<String> linkedProjectPaths) {
+    }
 
-  void onUseAutoImportChange(boolean currentValue, String linkedProjectPath);
+    /**
+     * External system settings changes might affect project structure, e.g., switching from one external system version to another
+     * one can trigger new binaries usage (different external system versions might use different file system directories
+     * for holding dependencies).
+     * <p/>
+     * So, we might want to refresh the project structure on external system setting change. However, there is a possible case that more
+     * than one significant setting is changed during a single editing session (e.g., a user opens external system settings, changes a linked
+     * project path and "use auto-import" and then presses "Ok"). We don't want to trigger two refreshes then. That's why
+     * it's possible to indicate that settings are changed in bulk now.
+     * <p/>
+     * {@link #onBulkChangeEnd()} is expected to be called at the "finally" section which starts just after the call to
+     * current method.
+     */
+    default void onBulkChangeStart() {
+    }
 
-  /**
-   * External system settings changes might affect project structure, e.g. switching from one external system version to another
-   * one can trigger new binaries usage (different external system versions might use different file system directories
-   * for holding dependencies).
-   * <p/>
-   * So, we might want to refresh project structure on external system setting change. However, there is a possible case that more
-   * than one significant setting is changed during single editing session (e.g. a user opens external system settings, changes linked
-   * project path and 'use auto-import' and then presses 'Ok'.). We don't want to trigger two refreshes then. That's why
-   * it's possible to indicate that settings are changed in bulk now.
-   * <p/>
-   * {@link #onBulkChangeEnd()} is expected to be called at the 'finally' section which starts just after the call to
-   * current method.
-   */
-  void onBulkChangeStart();
-
-  /**
-   * @see #onBulkChangeStart()
-   */
-  void onBulkChangeEnd();
+    /**
+     * @see #onBulkChangeStart()
+     */
+    default void onBulkChangeEnd() {
+    }
 }

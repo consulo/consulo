@@ -15,6 +15,7 @@ module consulo.sand.language.plugin {
     requires consulo.compiler.api;
     requires consulo.compiler.artifact.api;
     requires consulo.execution.coverage.api;
+    requires consulo.external.system.api;
     requires consulo.file.template.api;
     requires consulo.ide.api;
     requires consulo.language.api;

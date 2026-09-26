@@ -403,4 +403,5 @@
   </action>
   <action id="Vcs.MoveChangedLinesToChangelist"/>
   <action id="ChangesView.Move"/>
+  <action id="ExternalSystem.ProjectRefreshAction"/>
 </keymap>

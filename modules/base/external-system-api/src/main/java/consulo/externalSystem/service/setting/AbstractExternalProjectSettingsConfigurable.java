@@ -39,7 +39,6 @@ public abstract class AbstractExternalProjectSettingsConfigurable<S extends Exte
 
     private final ExternalSystemSettingsPlace myPlace;
 
-    private @Nullable CheckBox myUseAutoImportBox;
     private @Nullable CheckBox myCreateEmptyContentRootDirectoriesBox;
 
     protected AbstractExternalProjectSettingsConfigurable(S settings, ExternalSystemSettingsPlace place) {
@@ -57,10 +56,6 @@ public abstract class AbstractExternalProjectSettingsConfigurable<S extends Exte
         S settings = getSettings();
 
         VerticalLayout layout = VerticalLayout.create();
-
-        myUseAutoImportBox = CheckBox.create(ExternalSystemLocalize.settingsLabelUseAutoImport(), settings.isUseAutoImport());
-        myUseAutoImportBox.setVisible(myPlace == ExternalSystemSettingsPlace.SETTINGS);
-        layout.add(myUseAutoImportBox);
 
         myCreateEmptyContentRootDirectoriesBox = CheckBox.create(
             ExternalSystemLocalize.settingsLabelCreateEmptyContentRootDirectories(),
@@ -91,9 +86,6 @@ public abstract class AbstractExternalProjectSettingsConfigurable<S extends Exte
     @RequiredUIAccess
     public boolean isModified() {
         S settings = getSettings();
-        if (myUseAutoImportBox != null && myUseAutoImportBox.getValue() != settings.isUseAutoImport()) {
-            return true;
-        }
         if (myCreateEmptyContentRootDirectoriesBox != null
             && myCreateEmptyContentRootDirectoriesBox.getValue() != settings.isCreateEmptyContentRootDirectories()) {
             return true;
@@ -108,9 +100,6 @@ public abstract class AbstractExternalProjectSettingsConfigurable<S extends Exte
     @RequiredUIAccess
     public void apply() throws ConfigurationException {
         S settings = getSettings();
-        if (myUseAutoImportBox != null) {
-            settings.setUseAutoImport(myUseAutoImportBox.getValue());
-        }
         if (myCreateEmptyContentRootDirectoriesBox != null) {
             settings.setCreateEmptyContentRootDirectories(myCreateEmptyContentRootDirectoriesBox.getValue());
         }

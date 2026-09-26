@@ -19,18 +19,13 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.project.ProjectRenameAware;
-import consulo.externalSystem.impl.internal.service.project.autoimport.ExternalSystemAutoImporter;
 import consulo.externalSystem.impl.internal.service.project.manage.ExternalProjectsManagerImpl;
 import consulo.externalSystem.impl.internal.service.ui.ExternalToolWindowManager;
 import consulo.externalSystem.impl.internal.service.vcs.ExternalSystemVcsRegistrar;
-import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
-import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
-
-import java.util.Objects;
 
 /**
  * @author Denis Zhdanov
@@ -51,11 +46,6 @@ public class ExternalSystemStartupActivity implements BackgroundStartupActivity 
                         startupActivity.runActivity(project, uiAccess);
                     }
                 });
-                if (!Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
-                    app.getExtensionList(ExternalSystemManager.class)
-                        .forEach(manager -> ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false));
-                }
-                ExternalSystemAutoImporter.letTheMagicBegin(project);
                 ExternalToolWindowManager.handle(project);
                 ExternalSystemVcsRegistrar.handle(project);
                 ProjectRenameAware.beAware(project);

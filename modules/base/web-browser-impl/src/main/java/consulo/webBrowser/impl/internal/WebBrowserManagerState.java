@@ -18,6 +18,8 @@ package consulo.webBrowser.impl.internal;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.webBrowser.BrowserFamily;
 import consulo.webBrowser.DefaultBrowserPolicy;
+import consulo.webBrowser.ReloadMode;
+import consulo.webBrowser.WebBrowserManager;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -45,6 +47,10 @@ public class WebBrowserManagerState {
     }
 
     public DefaultBrowserPolicy defaultBrowserPolicy = DefaultBrowserPolicy.SYSTEM;
+
+    public ReloadMode webServerReloadMode = WebBrowserManager.BROWSER_RELOAD_MODE_DEFAULT;
+
+    public ReloadMode webPreviewReloadMode = WebBrowserManager.PREVIEW_RELOAD_MODE_DEFAULT;
 
     public boolean showBrowserHover = true;
 

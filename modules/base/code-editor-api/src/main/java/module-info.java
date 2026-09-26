@@ -26,6 +26,7 @@ module consulo.code.editor.api {
     exports consulo.codeEditor.markup;
     exports consulo.codeEditor.util;
     exports consulo.codeEditor.util.popup;
+    exports consulo.codeEditor.toolbar.floating;
 
     exports consulo.codeEditor.internal.stickyLine to
         consulo.code.editor.impl,

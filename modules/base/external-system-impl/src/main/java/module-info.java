@@ -19,4 +19,6 @@ module consulo.external.system.impl {
     requires it.unimi.dsi.fastutil;
 
     exports consulo.externalSystem.impl.internal.service.action to consulo.component.impl;
+
+    opens consulo.externalSystem.impl.internal.autoimport to consulo.component.impl, consulo.util.xml.serializer;
 }

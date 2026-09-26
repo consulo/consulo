@@ -33,6 +33,8 @@
 
     const ANNOTATION_GAP = 5;
 
+    const FLOATING_TOOLBAR_RETENTION_MS = 1500;
+
     const install = (element, contents, readonly, rulers) => {
         if (element.$arquillEditor) {
             return;
@@ -2229,6 +2231,47 @@
 
         renderErrorStripe();
 
+        let floatingToolbarTimer = 0;
+
+        let floatingToolbarIgnoreRect = null;
+
+        const expireFloatingToolbars = () => {
+            if (element.querySelector('.arquill-floating-toolbar-auto:hover, .arquill-floating-toolbar-auto:focus-within')) {
+                floatingToolbarTimer = setTimeout(expireFloatingToolbars, FLOATING_TOOLBAR_RETENTION_MS);
+            }
+            else {
+                element.removeAttribute('data-floating-active');
+            }
+        };
+
+        element.addEventListener('mousemove', domEvent => {
+            const ignoreRect = floatingToolbarIgnoreRect;
+            if (ignoreRect === null
+                || domEvent.clientX < ignoreRect.left || domEvent.clientX > ignoreRect.right
+                || domEvent.clientY < ignoreRect.top || domEvent.clientY > ignoreRect.bottom) {
+                floatingToolbarIgnoreRect = null;
+                element.removeAttribute('data-floating-escaped');
+            }
+            if (floatingToolbarIgnoreRect === null) {
+                element.setAttribute('data-floating-active', '');
+                clearTimeout(floatingToolbarTimer);
+                floatingToolbarTimer = setTimeout(expireFloatingToolbars, FLOATING_TOOLBAR_RETENTION_MS);
+            }
+        });
+
+        element.addEventListener('keydown', domEvent => {
+            if (domEvent.key === 'Escape') {
+                const layer = element.querySelector('.arquill-floating-toolbar-layer');
+                if (layer && element.hasAttribute('data-floating-active')) {
+                    floatingToolbarIgnoreRect = layer.getBoundingClientRect();
+                }
+                clearTimeout(floatingToolbarTimer);
+                element.setAttribute('data-floating-escaped', '');
+                element.removeAttribute('data-floating-active');
+                element.dispatchEvent(new CustomEvent('arquill-floating-escape'));
+            }
+        }, true);
+
         element.$arquillApi = {
             setText: text => {
                 if (element.$arquillEditor) {
@@ -2457,6 +2500,10 @@
                 renderAnalyzeStatus();
             },
 
+            setFloatingToolbarLayer: layer => {
+                element.appendChild(layer);
+            },
+
             // parsed once here, the lookup runs on every pointer move
             setTooltipRanges: rangesJson => {
                 element.$arquillTooltipRanges = JSON.parse(rangesJson);
@@ -2521,6 +2568,8 @@
                 tooltip.remove();
 
                 document.removeEventListener('keyup', onKeyUp);
+
+                clearTimeout(floatingToolbarTimer);
 
                 if (element.$arquillEditor) {
                     element.$arquillEditor.uninstall();

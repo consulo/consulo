@@ -1299,4 +1299,7 @@
   <action id="tasks.switch">
     <keyboard-shortcut first-keystroke="alt shift T"/>
   </action>
+  <action id="ExternalSystem.ProjectRefreshAction">
+    <keyboard-shortcut first-keystroke="control shift O"/>
+  </action>
 </keymap>

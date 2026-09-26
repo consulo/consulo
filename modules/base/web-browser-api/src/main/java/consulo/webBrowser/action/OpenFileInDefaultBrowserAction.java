@@ -16,6 +16,7 @@
 package consulo.webBrowser.action;
 
 import consulo.application.ReadAction;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -52,7 +53,7 @@ public class OpenFileInDefaultBrowserAction extends LegacyDumbAwareAction {
         presentation.setText(text);
         presentation.setDescription(description);
 
-        WebBrowser browser = findUsingBrowser();
+        WebBrowser browser = Platform.current().isInBrowser() ? null : findUsingBrowser();
         if (browser != null) {
             presentation.setIcon(browser.getIcon());
         }

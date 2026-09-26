@@ -16,6 +16,7 @@
 package consulo.webBrowser.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.project.DumbService;
 import consulo.util.collection.ContainerUtil;
@@ -28,8 +29,9 @@ import consulo.webBrowser.OpenInBrowserRequest;
 import consulo.webBrowser.WebBrowserService;
 import consulo.webBrowser.WebBrowserUrlProvider;
 import consulo.webBrowser.WebFileFilter;
-import org.jspecify.annotations.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +39,13 @@ import java.util.Collections;
 @Singleton
 @ServiceImpl
 public class WebBrowserServiceImpl implements WebBrowserService {
-    
+    private final Application myApplication;
+
+    @Inject
+    public WebBrowserServiceImpl(Application application) {
+        myApplication = application;
+    }
+
     @Override
     public Collection<Url> getUrlsToOpen(
         OpenInBrowserRequest request,
@@ -76,12 +84,9 @@ public class WebBrowserServiceImpl implements WebBrowserService {
     @Override
     public @Nullable WebBrowserUrlProvider getProvider(OpenInBrowserRequest request) {
         DumbService dumbService = DumbService.getInstance(request.getProject());
-        for (WebBrowserUrlProvider urlProvider : WebBrowserUrlProvider.EP_NAME.getExtensionList()) {
-            if ((!dumbService.isDumb() || DumbService.isDumbAware(urlProvider)) && urlProvider.canHandleElement(request)) {
-                return urlProvider;
-            }
-        }
-        return null;
+        return myApplication.getExtensionPoint(WebBrowserUrlProvider.class).findFirstSafe(
+            urlProvider -> (!dumbService.isDumb() || DumbService.isDumbAware(urlProvider)) && urlProvider.canHandleElement(request)
+        );
     }
 
     @Override

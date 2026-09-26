@@ -5,6 +5,7 @@ import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.http.util.HttpRequestUtil;
 import consulo.builtinWebServer.impl.webSocket.WebSocketHandler;
+import consulo.builtinWebServer.impl.webSocket.WebSocketHandshakeHandler;
 import consulo.logging.Logger;
 import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.ChannelHandler;
@@ -22,12 +23,41 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
     private static final AttributeKey<HttpRequestHandler> PREV_HANDLER = AttributeKey.valueOf("DelegatingHttpRequestHandler.handler");
 
     @Override
+    public void messageReceived(ChannelHandlerContext context, FullHttpRequest request) throws Exception {
+        HttpHeaders headers = request.headers();
+        if (HttpMethod.GET.equals(request.method()) && "WebSocket".equalsIgnoreCase(headers.getAsString(HttpHeaderNames.UPGRADE))) {
+            QueryStringDecoder urlDecoder = new QueryStringDecoder(request.uri());
+            consulo.builtinWebServer.http.HttpRequest httpRequest = new HttpRequestImpl(request, urlDecoder, context);
+            WebSocketHandshakeHandler handshakeHandler = Application.get().getExtensionPoint(HttpRequestHandler.class).computeSafeIfAny(
+                handler -> handler instanceof WebSocketHandshakeHandler webSocketHandler && webSocketHandler.isSupported(httpRequest)
+                    ? webSocketHandler
+                    : null
+            );
+            if (handshakeHandler != null) {
+                if (isApplicable(handshakeHandler, httpRequest)) {
+                    handshakeHandler.handshake(context, request, urlDecoder);
+                }
+                else {
+                    Responses.send(HttpResponseStatus.NOT_FOUND, context.channel(), request);
+                }
+                return;
+            }
+
+            if ("Upgrade".equalsIgnoreCase(headers.get(HttpHeaderNames.CONNECTION))) {
+                context.pipeline().replace(this, "websocketHandler", new WebSocketHandler());
+                handleHandshake(context, request);
+                return;
+            }
+        }
+
+        super.messageReceived(context, request);
+    }
+
+    @Override
     protected HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception {
         consulo.builtinWebServer.http.HttpRequest httpRequest = new HttpRequestImpl(request, urlDecoder, context);
         ThrowableFunction<HttpRequestHandler, HttpResponse, IOException> checkAndProcess = httpRequestHandler -> {
-            if (httpRequestHandler.isSupported(httpRequest)
-                && !HttpRequestUtil.isWriteFromBrowserWithoutOrigin(httpRequest)
-                && httpRequestHandler.isAccessible(httpRequest)) {
+            if (isApplicable(httpRequestHandler, httpRequest)) {
                 return httpRequestHandler.process(httpRequest);
             }
             return null;
@@ -42,17 +72,6 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
             }
             // prev cached connectedHandler is not suitable for this request, so, let's find it again
             prevHandlerAttribute.set(null);
-        }
-
-        HttpHeaders headers = request.headers();
-        if ("Upgrade".equalsIgnoreCase(headers.get(HttpHeaderNames.CONNECTION))
-            && "WebSocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
-
-            // adding new handler to the existing pipeline to handle WebSocket Messages
-            context.pipeline().replace(this, "websocketHandler", new WebSocketHandler());
-            // do the Handshake to upgrade connection from HTTP to WebSocket protocol
-            handleHandshake(context, request);
-            return HttpResponse.ok();
         }
 
         return Application.get().getExtensionPoint(HttpRequestHandler.class).computeSafeIfAny(handler -> {
@@ -70,8 +89,15 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
         });
     }
 
+    private static boolean isApplicable(HttpRequestHandler handler, consulo.builtinWebServer.http.HttpRequest request) {
+        return handler.isSupported(request)
+            && !HttpRequestUtil.isWriteFromBrowserWithoutOrigin(request)
+            && handler.isAccessible(request);
+    }
+
     private void handleHandshake(ChannelHandlerContext ctx, HttpRequest req) {
-        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketURL(req), null, true, Integer.MAX_VALUE);
+        WebSocketServerHandshakerFactory wsFactory =
+            new WebSocketServerHandshakerFactory(getWebSocketURL(req), null, true, Integer.MAX_VALUE);
         WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());

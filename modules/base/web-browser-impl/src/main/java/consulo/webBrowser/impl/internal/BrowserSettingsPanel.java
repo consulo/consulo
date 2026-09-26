@@ -18,6 +18,7 @@ import consulo.ui.ex.awt.table.LocalPathCellEditor;
 import consulo.ui.ex.awt.table.TableModelEditor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.io.PathUtil;
@@ -132,6 +133,7 @@ final class BrowserSettingsPanel {
     private ComboBox<DefaultBrowserPolicy> myDefaultBrowserPolicyComboBox;
     private CheckBox myShowBrowserPopupCheckBox;
     private ComboBox<WebSearchEngine> myWebSearchEngineComboBox;
+    private ComboBox<ReloadMode> myServerReloadModeComboBox;
 
     private TableModelEditor<ConfigurableWebBrowser> browsersEditor;
 
@@ -263,6 +265,14 @@ final class BrowserSettingsPanel {
 
         bottomPanel.add(myShowBrowserPopupCheckBox);
 
+        myServerReloadModeComboBox = ComboBox.<ReloadMode>builder()
+            .fillByEnumLocalized(ReloadMode.class, ReloadMode::getTitle)
+            .build();
+        bottomPanel.add(LabeledLayout.create(
+            WebBrowserLocalize.settingsBrowsersReloadBehavior(),
+            LabeledBuilder.sided(WebBrowserLocalize.settingValueReloadModeServer(), myServerReloadModeComboBox)
+        ));
+
         browsersEditor = new TableModelEditor<>(COLUMNS, itemEditor, "No web browsers configured", ConfigurableWebBrowser::new)
             .modelListener(new TableModelEditor.DataChangedListener<>() {
                 @Override
@@ -325,7 +335,8 @@ final class BrowserSettingsPanel {
 
         DefaultBrowserPolicy defaultBrowserPolicy = getDefaultBrowser();
         if (getDefaultBrowserPolicy(browserManager) != defaultBrowserPolicy
-            || browserManager.isShowBrowserHover() != myShowBrowserPopupCheckBox.getValueOrError()) {
+            || browserManager.isShowBrowserHover() != myShowBrowserPopupCheckBox.getValueOrError()
+            || browserManager.getWebServerReloadMode() != myServerReloadModeComboBox.getValue()) {
             return true;
         }
 
@@ -351,6 +362,7 @@ final class BrowserSettingsPanel {
 
         browserManager.setShowBrowserHover(myShowBrowserPopupCheckBox.getValueOrError());
         browserManager.setDefaultBrowserPolicy(getDefaultBrowser());
+        browserManager.setWebServerReloadMode(myServerReloadModeComboBox.getValueOrError());
         browserManager.setList(browsersEditor.apply());
 
         WebSearchOptions webSearchOptions = myWebSearchOptionsProvider.get();
@@ -366,6 +378,7 @@ final class BrowserSettingsPanel {
         WebBrowserManagerImpl browserManager = WebBrowserManagerImpl.getInstance();
         DefaultBrowserPolicy effectiveDefaultBrowserPolicy = getDefaultBrowserPolicy(browserManager);
         myDefaultBrowserPolicyComboBox.setValue(effectiveDefaultBrowserPolicy);
+        myServerReloadModeComboBox.setValue(browserManager.getWebServerReloadMode());
 
         myShowBrowserPopupCheckBox.setValue(browserManager.isShowBrowserHover());
         browsersEditor.reset(browserManager.getList());

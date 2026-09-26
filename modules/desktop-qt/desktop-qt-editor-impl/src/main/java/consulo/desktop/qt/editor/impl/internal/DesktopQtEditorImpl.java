@@ -19,17 +19,25 @@ import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.qt.editor.impl.internal.floating.DesktopQtEditorFloatingToolbar;
 import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
 import consulo.desktop.qt.ui.impl.base.DesktopQtAwtBridgeComponent;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.util.collection.Lists;
 import io.qt.core.Qt;
 import io.qt.gui.QCursor;
 import consulo.ui.cursor.Cursor;
@@ -47,16 +55,23 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
 public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, CaretPixelLocationProvider {
+    private static final Logger LOG = Logger.getInstance(DesktopQtEditorImpl.class);
+
     private final java.util.Map<Object, Cursor> myCustomCursors = new java.util.LinkedHashMap<>();
     private final DesktopQtEditorComponent myComponent;
 
+    private final List<Consumer<KeyCode>> myKeyNotConsumedListeners = Lists.newLockFreeCopyOnWriteList();
+
     private @Nullable JComponent myHeaderComponent;
+
+    private @Nullable DesktopQtEditorFloatingToolbar myEditorFloatingToolbar;
 
     private boolean myContextMenuInstalled;
 
@@ -82,6 +97,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         super(document, viewer, project, kind);
 
         myComponent = new DesktopQtEditorComponent(this);
+        myComponent.whenBound(widget -> recreateEditorFloatingToolbar());
         myGutterComponent = new DesktopQtEditorGutterComponentImpl(this);
 
         // the caret and the selection are painted, so moving either is a visual change the surface has to hear
@@ -148,6 +164,33 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         }
 
         return CustomActionsSchema.getCorrectedGroupAsync(groupId);
+    }
+
+    @RequiredUIAccess
+    private void recreateEditorFloatingToolbar() {
+        if (isReleased) {
+            return;
+        }
+
+        DesktopQtEditorFloatingToolbar oldToolbar = myEditorFloatingToolbar;
+        if (oldToolbar != null) {
+            myEditorFloatingToolbar = null;
+            Disposer.dispose(oldToolbar);
+        }
+
+        Project project = getProject();
+        if (project == null || !EditorFloatingToolbarInstaller.mayShowToolbar(this)) {
+            return;
+        }
+
+        DesktopQtEditorWidget surface = getSurface();
+        if (surface == null) {
+            return;
+        }
+
+        DesktopQtEditorFloatingToolbar editorFloatingToolbar = new DesktopQtEditorFloatingToolbar(this, project, surface.viewport());
+        Disposer.register(getDisposable(), editorFloatingToolbar);
+        myEditorFloatingToolbar = editorFloatingToolbar;
     }
 
     private void repaintRange(@Nullable TextRange range) {
@@ -257,6 +300,23 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     public void fireMouseMoved(EditorMouseEvent event) {
         for (EditorMouseMotionListener listener : myMouseMotionListeners) {
             listener.mouseMoved(event);
+        }
+    }
+
+    public void addKeyNotConsumedListener(Disposable parentDisposable, Consumer<KeyCode> listener) {
+        Disposer.register(parentDisposable, () -> myKeyNotConsumedListeners.remove(listener));
+        myKeyNotConsumedListeners.add(listener);
+    }
+
+    @RequiredUIAccess
+    public void fireKeyNotConsumed(KeyCode keyCode) {
+        for (Consumer<KeyCode> listener : myKeyNotConsumedListeners) {
+            try {
+                listener.accept(keyCode);
+            }
+            catch (Throwable e) {
+                LOG.error("Key not consumed listener failed for " + keyCode.name(), e);
+            }
         }
     }
 

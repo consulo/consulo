@@ -95,6 +95,8 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     private List<ConfigurableWebBrowser> browsers;
     private boolean myShowBrowserHover = true;
     private DefaultBrowserPolicy myDefaultBrowserPolicy = DefaultBrowserPolicy.SYSTEM;
+    private ReloadMode myWebServerReloadMode = BROWSER_RELOAD_MODE_DEFAULT;
+    private ReloadMode myWebPreviewReloadMode = PREVIEW_RELOAD_MODE_DEFAULT;
 
     private String myBrowserPath;
     private boolean myUseDefaultBrowser = true;
@@ -150,9 +152,37 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
+    public ReloadMode getWebServerReloadMode() {
+        return myWebServerReloadMode;
+    }
+
+    @Override
+    public void setWebServerReloadMode(ReloadMode reloadMode) {
+        if (myWebServerReloadMode != reloadMode) {
+            myWebServerReloadMode = reloadMode;
+            incModificationCount();
+        }
+    }
+
+    @Override
+    public ReloadMode getWebPreviewReloadMode() {
+        return myWebPreviewReloadMode;
+    }
+
+    @Override
+    public void setWebPreviewReloadMode(ReloadMode reloadMode) {
+        if (myWebPreviewReloadMode != reloadMode) {
+            myWebPreviewReloadMode = reloadMode;
+            incModificationCount();
+        }
+    }
+
+    @Override
     public WebBrowserManagerState getState() {
         WebBrowserManagerState state = new WebBrowserManagerState();
         state.defaultBrowserPolicy = myDefaultBrowserPolicy;
+        state.webServerReloadMode = myWebServerReloadMode;
+        state.webPreviewReloadMode = myWebPreviewReloadMode;
         state.showBrowserHover = myShowBrowserHover;
         state.browserPath = myBrowserPath;
         state.useDefaultBrowser = myUseDefaultBrowser;
@@ -191,6 +221,8 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     @Override
     public void loadState(WebBrowserManagerState state) {
         myDefaultBrowserPolicy = state.defaultBrowserPolicy;
+        myWebServerReloadMode = state.webServerReloadMode == null ? BROWSER_RELOAD_MODE_DEFAULT : state.webServerReloadMode;
+        myWebPreviewReloadMode = state.webPreviewReloadMode == null ? PREVIEW_RELOAD_MODE_DEFAULT : state.webPreviewReloadMode;
         myShowBrowserHover = state.showBrowserHover;
         myBrowserPath = state.browserPath;
         myUseDefaultBrowser = state.useDefaultBrowser;

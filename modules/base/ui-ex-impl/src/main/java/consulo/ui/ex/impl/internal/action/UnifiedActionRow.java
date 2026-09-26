@@ -53,6 +53,7 @@ import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.util.collection.Lists;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -87,6 +88,8 @@ public class UnifiedActionRow {
     private final Layout<?> myLayout;
 
     private final Map<AnAction, ToggleButton> myToggleButtons = new HashMap<>();
+
+    private final List<Runnable> myActionsUpdatedListeners = Lists.newLockFreeCopyOnWriteList();
 
     private String mySignature = "";
     private List<AnAction> myActions = List.of();
@@ -203,6 +206,23 @@ public class UnifiedActionRow {
         return myActions;
     }
 
+    public void addActionsUpdatedListener(Disposable parentDisposable, Runnable listener) {
+        Disposer.register(parentDisposable, () -> myActionsUpdatedListeners.remove(listener));
+        myActionsUpdatedListeners.add(listener);
+    }
+
+    @RequiredUIAccess
+    private void fireActionsUpdated() {
+        for (Runnable listener : myActionsUpdatedListeners) {
+            try {
+                listener.run();
+            }
+            catch (Throwable e) {
+                LOG.error("Actions updated listener of " + myPlace + " failed", e);
+            }
+        }
+    }
+
     @RequiredUIAccess
     public CompletableFuture<List<? extends AnAction>> updateAsync() {
         UIAccess uiAccess = UIAccess.current();
@@ -238,6 +258,7 @@ public class UnifiedActionRow {
                     LOG.warn("Failed to expand actions of " + myPlace, throwable);
                 }
 
+                fireActionsUpdated();
                 result.complete(myActions);
                 drainPendingUpdate();
                 return;
@@ -252,6 +273,7 @@ public class UnifiedActionRow {
                 LOG.error("Failed to build the actions of " + myPlace, e);
             }
 
+            fireActionsUpdated();
             result.complete(myActions);
             drainPendingUpdate();
         }, uiAccess);

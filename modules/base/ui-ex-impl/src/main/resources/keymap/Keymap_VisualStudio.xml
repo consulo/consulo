@@ -560,4 +560,5 @@
   <!--Ctrl-Shift-Enter	Inserts a blank line below the cursor. CONFLICT with complete statement-->
 
 
+  <action id="ExternalSystem.ProjectRefreshAction"/>
 </keymap>

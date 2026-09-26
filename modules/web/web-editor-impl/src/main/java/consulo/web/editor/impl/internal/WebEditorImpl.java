@@ -23,6 +23,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
@@ -71,6 +72,7 @@ import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.web.editor.impl.internal.floating.WebEditorFloatingToolbar;
 import consulo.web.editor.impl.internal.gutter.GutterBand;
 import consulo.web.editor.impl.internal.gutter.WebLineMarkerPresentationContext;
 import consulo.web.editor.impl.internal.gutter.WebLineMarkerPresentationPainter;
@@ -143,6 +145,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private final WebEditorView myView;
 
     private final WebEditorGutterComponentImpl myGutterComponent;
+
+    private boolean myFloatingToolbarInstalled;
 
     private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
 
@@ -327,6 +331,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.addCtrlHoverListener(event -> fireCtrlHover(event.getOffset()));
 
         vaadin.addCtrlClickListener(event -> navigateTo(event.getOffset()));
+
+        vaadin.addAttachListener(event -> installFloatingToolbar());
 
         vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
 
@@ -2530,6 +2536,16 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         return myEditorComponent;
     }
 
+    @RequiredUIAccess
+    private void installFloatingToolbar() {
+        Project project = myProject;
+        if (myFloatingToolbarInstalled || isReleased || project == null || !EditorFloatingToolbarInstaller.mayShowToolbar(this)) {
+            return;
+        }
+        myFloatingToolbarInstalled = true;
+        WebEditorFloatingToolbar.install(this, project, myEditorComponent.toVaadinComponent(), myDisposable);
+    }
+
 
     @Override
     public Component getContentUIComponent() {
@@ -2573,7 +2589,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     protected DataContext getComponentContext() {
-        return DataManager.getInstance().getDataContext(getUIComponent());
+        return SimpleDataContext.builder()
+            .setParent(DataManager.getInstance().getDataContext(getUIComponent()))
+            .add(Editor.KEY, this)
+            .build();
     }
 
     @Override

@@ -2226,6 +2226,20 @@ public class UIUtil {
         return SwingUtilities.isDescendingFrom(owner, component);
     }
 
+    public static boolean isComponentUnderMouse(Component component) {
+        if (component.getMousePosition() != null) {
+            return true;
+        }
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        if (pointerInfo == null) {
+            return false;
+        }
+        Point location = pointerInfo.getLocation();
+        SwingUtilities.convertPointFromScreen(location, component);
+        Rectangle bounds = new Rectangle(0, 0, component.getWidth(), component.getHeight());
+        return bounds.contains(location);
+    }
+
     /**
      * @param component to check whether it can be focused or not
      * @return {@code true} if component is not {@code null} and can be focused

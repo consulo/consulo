@@ -35,7 +35,8 @@ module consulo.diff.api {
         consulo.diff.impl,
         consulo.ide.impl,
         consulo.version.control.system.api,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.web.editor.impl;
 
     opens consulo.diff.internal to consulo.util.xml.serializer;
 }

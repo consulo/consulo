@@ -26,6 +26,7 @@ import consulo.document.Document;
 import consulo.document.DocCommandGroupId;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.event.details.KeyCode;
 import consulo.undoRedo.CommandProcessor;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
@@ -424,6 +425,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
             event.accept();
             restartCaretBlink();
             return;
+        }
+
+        KeyCode keyCode = DesktopQtInputDetails.keyCode(event, DesktopQtInputDetails.modifiers(event.modifiers()));
+        if (keyCode != null) {
+            myEditor.fireKeyNotConsumed(keyCode);
         }
 
         super.keyPressEvent(event);

@@ -363,4 +363,5 @@
   <action id="ShowIntentionActions">
     <keyboard-shortcut first-keystroke="meta 1"/>
   </action>
+  <action id="ExternalSystem.ProjectRefreshAction"/>
 </keymap>

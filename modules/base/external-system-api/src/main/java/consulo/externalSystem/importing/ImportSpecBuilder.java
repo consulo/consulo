@@ -32,19 +32,13 @@ public class ImportSpecBuilder {
   
   private ProgressExecutionMode myProgressExecutionMode;
   private boolean myForceWhenUptodate;
-  private boolean myWhenAutoImportEnabled;
   //private boolean isPreviewMode;
-  //private boolean isReportRefreshError;
+  private boolean isReportRefreshError = true;
 
   public ImportSpecBuilder(Project project, ProjectSystemId id) {
     myProject = project;
     myExternalSystemId = id;
     myProgressExecutionMode = ProgressExecutionMode.IN_BACKGROUND_ASYNC;
-  }
-
-  public ImportSpecBuilder whenAutoImportEnabled() {
-    myWhenAutoImportEnabled = true;
-    return this;
   }
 
   public ImportSpecBuilder use(ProgressExecutionMode executionMode) {
@@ -61,6 +55,11 @@ public class ImportSpecBuilder {
     return this;
   }
 
+  public ImportSpecBuilder dontReportRefreshErrors() {
+    isReportRefreshError = false;
+    return this;
+  }
+
   //public ImportSpecBuilder usePreviewMode() {
   //  isPreviewMode = true;
   //  return this;
@@ -68,11 +67,10 @@ public class ImportSpecBuilder {
 
   public ImportSpec build() {
     ImportSpec mySpec = new ImportSpec(myProject, myExternalSystemId);
-    mySpec.setWhenAutoImportEnabled(myWhenAutoImportEnabled);
     mySpec.setProgressExecutionMode(myProgressExecutionMode);
     mySpec.setForceWhenUptodate(myForceWhenUptodate);
     //mySpec.setPreviewMode(isPreviewMode);
-    //mySpec.setReportRefreshError(isReportRefreshError);
+    mySpec.setReportRefreshError(isReportRefreshError);
     return mySpec;
   }
 }

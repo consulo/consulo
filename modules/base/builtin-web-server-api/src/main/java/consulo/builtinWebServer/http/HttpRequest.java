@@ -16,8 +16,8 @@
 package consulo.builtinWebServer.http;
 
 import consulo.http.HttpMethod;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -26,31 +26,37 @@ import java.nio.charset.Charset;
  * @since 13-Sep-22
  */
 public interface HttpRequest {
-  
-  HttpMethod method();
+    HttpMethod method();
 
-  
-  String getContentAsString(Charset charset) throws IOException;
+    String getContentAsString(Charset charset) throws IOException;
 
-  byte[] getContent() throws IOException;
+    byte[] getContent() throws IOException;
 
-  
-  String uri();
+    String uri();
 
-  /**
-   * Returns the decoded path string of the URI.
-   */
-  String path();
+    /**
+     * Returns the decoded path string of the URI.
+     */
+    String path();
 
-  @Nullable String getHeaderValue(String headerName);
+    @Nullable String getHeaderValue(String headerName);
 
-  @Nullable String getParameterValue(String parameter);
+    @Nullable String getParameterValue(String parameter);
 
-  /**
-   * Port this request arrived on. The built-in server can be bound to several ports at once, so a
-   * handler that must serve only one of them has to check this.
-   */
-  int localPort();
+    /**
+     * Port this request arrived on. The built-in server can be bound to several ports at once, so a
+     * handler that must serve only one of them has to check this.
+     */
+    int localPort();
 
-  void terminate();
+    /**
+     * Path prefix under which the client sees the server root. It is empty when the server root is the
+     * root of the client's address. Links which the client resolves itself, for example from a script,
+     * must start with this prefix.
+     */
+    default String contextPath() {
+        return "";
+    }
+
+    void terminate();
 }

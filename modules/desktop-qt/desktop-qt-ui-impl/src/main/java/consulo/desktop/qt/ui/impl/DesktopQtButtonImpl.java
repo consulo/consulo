@@ -25,6 +25,7 @@ import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import io.qt.core.QSize;
+import io.qt.core.Qt;
 import io.qt.gui.QIcon;
 import io.qt.widgets.QPushButton;
 import io.qt.widgets.QWidget;
@@ -189,16 +190,23 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
                 myComponent.setDefault(true);
                 myComponent.setAutoDefault(true);
             }
-            // qt keeps painting the frame of a flat button on some styles, so the border is also cleared by sheet
-            case BORDERLESS, INPLACE, TOOLBAR -> {
-                myComponent.setAutoDefault(false);
-                myComponent.setFlat(true);
+            case BORDERLESS, INPLACE -> applyFlat();
+            case TOOLBAR -> {
+                myComponent.setFocusPolicy(Qt.FocusPolicy.NoFocus);
 
-                myFlat = true;
-
-                updateStyleSheet();
+                applyFlat();
             }
         }
+    }
+
+    private void applyFlat() {
+        myComponent.setAutoDefault(false);
+        // qt keeps painting the frame of a flat button on some styles, so the border is also cleared by sheet
+        myComponent.setFlat(true);
+
+        myFlat = true;
+
+        updateStyleSheet();
     }
 
     private void updateStyleSheet() {

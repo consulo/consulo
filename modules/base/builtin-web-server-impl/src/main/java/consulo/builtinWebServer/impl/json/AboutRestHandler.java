@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.OriginCheckResult;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -52,8 +53,8 @@ public class AboutRestHandler extends JsonGetRequestHandler {
     }
 
     @Override
-    public boolean isAccessible(HttpRequest request) {
-        return true; // trust in any cases
+    protected OriginCheckResult isOriginAllowed(HttpRequest request) {
+        return OriginCheckResult.ALLOW;
     }
 
     

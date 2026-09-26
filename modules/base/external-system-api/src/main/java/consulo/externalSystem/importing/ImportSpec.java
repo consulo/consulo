@@ -31,9 +31,8 @@ public class ImportSpec {
   
   private ProgressExecutionMode myProgressExecutionMode;
   private boolean forceWhenUptodate;
-  private boolean whenAutoImportEnabled;
   //private boolean isPreviewMode;
-  //private boolean isReportRefreshError;
+  private boolean isReportRefreshError = true;
 
   public ImportSpec(Project project, ProjectSystemId id) {
     myProject = project;
@@ -68,14 +67,6 @@ public class ImportSpec {
     this.forceWhenUptodate = forceWhenUptodate;
   }
 
-  public boolean isWhenAutoImportEnabled() {
-    return whenAutoImportEnabled;
-  }
-
-  public void setWhenAutoImportEnabled(boolean whenAutoImportEnabled) {
-    this.whenAutoImportEnabled = whenAutoImportEnabled;
-  }
-
   //public boolean isPreviewMode() {
   //  return isPreviewMode;
   //}
@@ -84,11 +75,11 @@ public class ImportSpec {
   //  this.isPreviewMode = isPreviewMode;
   //}
   //
-  //public boolean isReportRefreshError() {
-  //  return isReportRefreshError;
-  //}
-  //
-  //public void setReportRefreshError(boolean isReportRefreshError) {
-  //  this.isReportRefreshError = isReportRefreshError;
-  //}
+  public boolean isReportRefreshError() {
+    return isReportRefreshError;
+  }
+
+  public void setReportRefreshError(boolean isReportRefreshError) {
+    this.isReportRefreshError = isReportRefreshError;
+  }
 }

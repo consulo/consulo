@@ -27,91 +27,97 @@ import java.util.Map;
  * @since 13-Sep-22
  */
 public final class HttpResponse {
-  
-  public static HttpResponse ok() {
-    return create(HttpURLConnection.HTTP_OK, null, null);
-  }
+    public static HttpResponse ok() {
+        return create(HttpURLConnection.HTTP_OK, null, null);
+    }
 
-  
-  public static HttpResponse ok(String contentType, byte[] content) {
-    return create(HttpURLConnection.HTTP_OK, contentType, content);
-  }
+    public static HttpResponse ok(String contentType, byte[] content) {
+        return create(HttpURLConnection.HTTP_OK, contentType, content);
+    }
 
-  
-  public static HttpResponse notFound() {
-    return create(HttpURLConnection.HTTP_NOT_FOUND, null, null);
-  }
+    public static HttpResponse notFound() {
+        return create(HttpURLConnection.HTTP_NOT_FOUND, null, null);
+    }
 
-  
-  public static HttpResponse badRequest() {
-    return create(HttpURLConnection.HTTP_BAD_REQUEST, null, null);
-  }
+    public static HttpResponse badRequest() {
+        return create(HttpURLConnection.HTTP_BAD_REQUEST, null, null);
+    }
 
-  
-  public static HttpResponse create(int code, @Nullable String contentType, @Nullable byte[] content) {
-    return new HttpResponse(code, contentType, content, null, Map.of());
-  }
+    public static HttpResponse create(int code, @Nullable String contentType, byte @Nullable [] content) {
+        return new HttpResponse(code, contentType, content, null, null, Map.of());
+    }
 
-  /**
-   * Response whose body is produced incrementally, using chunked transfer encoding.
-   */
-  public static HttpResponse streaming(String contentType, HttpStreamingBody body) {
-    return streaming(HttpURLConnection.HTTP_OK, contentType, body);
-  }
+    /**
+     * Response whose body is produced incrementally, using chunked transfer encoding.
+     */
+    public static HttpResponse streaming(String contentType, HttpStreamingBody body) {
+        return streaming(HttpURLConnection.HTTP_OK, contentType, body);
+    }
 
-  public static HttpResponse streaming(int code, String contentType, HttpStreamingBody body) {
-    return new HttpResponse(code, contentType, null, body, Map.of());
-  }
+    public static HttpResponse streaming(int code, String contentType, HttpStreamingBody body) {
+        return new HttpResponse(code, contentType, null, body, null, Map.of());
+    }
 
-  private final int myCode;
-  private final String myContentType;
-  private final byte[] myContent;
-  private final HttpStreamingBody myStreamingBody;
-  private final Map<String, String> myHeaders;
+    public static HttpResponse file(int code, @Nullable String contentType, HttpFileRegion region) {
+        return new HttpResponse(code, contentType, null, null, region, Map.of());
+    }
 
-  private HttpResponse(int code,
-                       @Nullable String contentType,
-                       @Nullable byte[] content,
-                       @Nullable HttpStreamingBody streamingBody,
-                       Map<String, String> headers) {
-    myCode = code;
-    myContentType = contentType;
-    myContent = content;
-    myStreamingBody = streamingBody;
-    myHeaders = headers;
-  }
+    private final int myCode;
+    private final @Nullable String myContentType;
+    private final byte @Nullable [] myContent;
+    private final @Nullable HttpStreamingBody myStreamingBody;
+    private final @Nullable HttpFileRegion myFileRegion;
+    private final Map<String, String> myHeaders;
 
-  public HttpResponse withHeader(String name, String value) {
-    Map<String, String> headers = new LinkedHashMap<>(myHeaders);
-    headers.put(name, value);
-    return new HttpResponse(myCode, myContentType, myContent, myStreamingBody, Map.copyOf(headers));
-  }
+    private HttpResponse(int code,
+                         @Nullable String contentType,
+                         byte @Nullable [] content,
+                         @Nullable HttpStreamingBody streamingBody,
+                         @Nullable HttpFileRegion fileRegion,
+                         Map<String, String> headers) {
+        myCode = code;
+        myContentType = contentType;
+        myContent = content;
+        myStreamingBody = streamingBody;
+        myFileRegion = fileRegion;
+        myHeaders = headers;
+    }
 
-  public int getCode() {
-    return myCode;
-  }
+    public HttpResponse withHeader(String name, String value) {
+        Map<String, String> headers = new LinkedHashMap<>(myHeaders);
+        headers.put(name, value);
+        return new HttpResponse(myCode, myContentType, myContent, myStreamingBody, myFileRegion, Map.copyOf(headers));
+    }
 
-  public @Nullable String getContentType() {
-    return myContentType;
-  }
+    public int getCode() {
+        return myCode;
+    }
 
-  public @Nullable byte[] getContent() {
-    return myContent;
-  }
+    public @Nullable String getContentType() {
+        return myContentType;
+    }
 
-  public @Nullable HttpStreamingBody getStreamingBody() {
-    return myStreamingBody;
-  }
+    public byte @Nullable [] getContent() {
+        return myContent;
+    }
 
-  public Map<String, String> getHeaders() {
-    return myHeaders;
-  }
+    public @Nullable HttpStreamingBody getStreamingBody() {
+        return myStreamingBody;
+    }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("HttpResponse{");
-    sb.append("myCode=").append(myCode);
-    sb.append('}');
-    return sb.toString();
-  }
+    public @Nullable HttpFileRegion getFileRegion() {
+        return myFileRegion;
+    }
+
+    public Map<String, String> getHeaders() {
+        return myHeaders;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("HttpResponse{");
+        sb.append("myCode=").append(myCode);
+        sb.append('}');
+        return sb.toString();
+    }
 }

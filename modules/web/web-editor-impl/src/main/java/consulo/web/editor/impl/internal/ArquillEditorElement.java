@@ -25,6 +25,7 @@ import com.vaadin.flow.component.EventData;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.DebouncePhase;
 import com.vaadin.flow.shared.Registration;
 
@@ -239,6 +240,13 @@ public class ArquillEditorElement extends Component implements HasSize {
      * Fired while the pointer moves over the text with ctrl/cmd held, and with offset -1 once the modifier is
      * released, so the server can drop the link highlight.
      */
+    @DomEvent("arquill-floating-escape")
+    public static class ArquillFloatingEscapeEvent extends ComponentEvent<ArquillEditorElement> {
+        public ArquillFloatingEscapeEvent(ArquillEditorElement source, boolean fromClient) {
+            super(source, fromClient);
+        }
+    }
+
     @DomEvent("arquill-ctrl-hover")
     public static class ArquillCtrlHoverEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myOffset;
@@ -594,6 +602,8 @@ public class ArquillEditorElement extends Component implements HasSize {
      */
     private final Map<String, Object> myLastPushed = new HashMap<>();
 
+    private final Div myFloatingToolbarLayer = new Div();
+
     private boolean isUnchanged(String channel, Object value) {
         if (Objects.equals(myLastPushed.get(channel), value)) {
             return true;
@@ -609,6 +619,9 @@ public class ArquillEditorElement extends Component implements HasSize {
         // containing block
         getElement().getClassList().add("arquill-editor");
         getElement().getStyle().set("margin", "0").set("padding", "0");
+
+        myFloatingToolbarLayer.addClassName("arquill-floating-toolbar-layer");
+        getElement().appendVirtualChild(myFloatingToolbarLayer.getElement());
 
         // registering here also installs the dom listener - flow only forwards the event while the server listens
         addListener(ArquillTextChangeEvent.class, event -> applyToCache(event.getStart(), event.getStart() + event.getRemovedCharCount(), event.getText()));
@@ -793,6 +806,14 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addCtrlHoverListener(ComponentEventListener<ArquillCtrlHoverEvent> listener) {
         return addListener(ArquillCtrlHoverEvent.class, listener);
+    }
+
+    public Registration addFloatingEscapeListener(ComponentEventListener<ArquillFloatingEscapeEvent> listener) {
+        return addListener(ArquillFloatingEscapeEvent.class, listener);
+    }
+
+    public Div getFloatingToolbarLayer() {
+        return myFloatingToolbarLayer;
     }
 
     public Registration addCtrlClickListener(ComponentEventListener<ArquillCtrlClickEvent> listener) {
@@ -1020,6 +1041,8 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         // ahead of the loader below, so that a push arriving while the scripts are on their way is collected
         installApiStub();
+
+        getElement().executeJs("this.$arquillApi.setFloatingToolbarLayer($0);", myFloatingToolbarLayer.getElement());
 
         Rulers rulers = myRulers.get();
 

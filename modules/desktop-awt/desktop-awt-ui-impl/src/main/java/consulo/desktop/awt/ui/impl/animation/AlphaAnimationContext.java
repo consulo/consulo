@@ -15,7 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl.animation;
 
+import consulo.ui.ex.impl.internal.animation.ShowHideAnimator;
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.util.function.Consumer;
 
