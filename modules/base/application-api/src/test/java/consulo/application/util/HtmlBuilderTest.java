@@ -82,9 +82,12 @@ public class HtmlBuilderTest {
     void nbsp() {
         assertThat(new HtmlBuilder().nbsp()).hasToString("&nbsp;");
         assertThat(new HtmlBuilder().nbsp(3)).hasToString("&nbsp;&nbsp;&nbsp;");
+        assertThatThrownBy(() -> new HtmlBuilder().nbsp(0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("0 is not positive");
         assertThatThrownBy(() -> new HtmlBuilder().nbsp(-1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("-1 is less than 0");
+            .hasMessage("-1 is not positive");
     }
 
     @Test

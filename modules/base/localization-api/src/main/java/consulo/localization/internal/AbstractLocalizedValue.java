@@ -16,6 +16,7 @@
 package consulo.localization.internal;
 
 import consulo.localization.LocalizedValue;
+import consulo.util.lang.StringUtil;
 
 import java.util.Comparator;
 
@@ -24,11 +25,8 @@ import java.util.Comparator;
  * @since 2025-11-18
  */
 public abstract class AbstractLocalizedValue implements LocalizedValue {
-    public static final Comparator<LocalizedValue> CASE_INSENSITIVE_ORDER = (lv1, lv2) -> {
-        String v1 = lv1.get(), v2 = lv2.get();
-        int insensitive = v1.compareToIgnoreCase(v2);
-        return insensitive != 0 ? insensitive : v1.compareTo(v2);
-    };
+    public static final Comparator<LocalizedValue> CASE_INSENSITIVE_NATURAL_ORDER =
+        (lv1, lv2) -> StringUtil.naturalCompare(lv1.get(), lv2.get());
 
     @Override
     public String toString() {

@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 2025-11-19
  */
 public class ConstantLocalizedValueTest {
-    LocalizedValue value = new ConstantLocalizedValue("Foo");
+    LocalizedValue value = c("Foo");
 
     @Test
     void testId() {
@@ -53,9 +53,9 @@ public class ConstantLocalizedValueTest {
     @Test
     @SuppressWarnings("RedundantStringConstructorCall")
     void testEqualsAndHashCode() {
-        LocalizedValue value0 = new ConstantLocalizedValue("Foo");
-        LocalizedValue value1 = new ConstantLocalizedValue("Bar");
-        LocalizedValue value2 = new ConstantLocalizedValue(new String("Bar"));
+        LocalizedValue value0 = c("Foo");
+        LocalizedValue value1 = c("Bar");
+        LocalizedValue value2 = c(new String("Bar"));
 
         assertThat(value1)
             .isEqualTo(value2)
@@ -68,15 +68,26 @@ public class ConstantLocalizedValueTest {
 
     @Test
     void testCompareTo() {
-        LocalizedValue value1 = new ConstantLocalizedValue("Foo");
-        LocalizedValue value2 = new ConstantLocalizedValue("Foo");
-        LocalizedValue value3 = new ConstantLocalizedValue("foo");
-        LocalizedValue value4 = new ConstantLocalizedValue("fo");
-        LocalizedValue value5 = new ConstantLocalizedValue("Bar");
+        assertThat(c("Foo")).isEqualByComparingTo(c("Foo"));
+        assertLessThan(c("Foo"), c("foo"));
+        assertLessThan(c("fo"), c("Foo"));
+        assertLessThan(c("Bar"), c("Foo"));
+    }
 
-        assertThat(value1.compareTo(value2)).isEqualTo(0);
-        assertThat(value1.compareTo(value3)).isLessThan(0);
-        assertThat(value1.compareTo(value4)).isGreaterThan(0);
-        assertThat(value1.compareTo(value5)).isGreaterThan(0);
+    @Test
+    void testNaturalCompareTo() {
+        assertLessThan(c("Foo3"), c("Foo4"));
+        assertLessThan(c("Foo3"), c("Foo20"));
+        assertLessThan(c("Foo20"), c("Foo100"));
+        assertLessThan(c("Foo20"), c("foo100"));
+    }
+
+    private static <T extends Comparable<T>> void assertLessThan(T a, T b) {
+        assertThat(a).isLessThan(b);
+        assertThat(b).isGreaterThan(a);
+    }
+
+    private static ConstantLocalizedValue c(String value) {
+        return new ConstantLocalizedValue(value);
     }
 }
