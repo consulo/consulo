@@ -16,18 +16,20 @@
 package consulo.it.codeInsight;
 
 import consulo.application.ReadAction;
-import consulo.application.WriteAction;
 import consulo.component.util.Iconable;
 import consulo.it.CodeInsightTestFixture;
 import consulo.it.HeadlessProjectExtension;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.lang.SandIconDescriptorUpdater;
+import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -49,13 +51,18 @@ public class SandIconTest {
     }
 
     @Test
-    public void aReadOnlyClassGetsTheLockLayer(CodeInsightTestFixture fixture) throws Exception {
-        fixture.configureByText("some.sand", "class <caret>Item { \"body\" }\n");
-        VirtualFile file = fixture.getFile().getVirtualFile();
-        WriteAction.run(() -> file.setWritable(false));
+    public void aReadOnlyClassGetsTheLockLayer(CodeInsightTestFixture fixture) {
+        PsiFile file = ReadAction.compute(() -> PsiFileFactory.getInstance(fixture.getProject())
+            .createFileFromText("some.sand", SandLanguage.INSTANCE, "class Item { \"body\" }\n"));
+        ((LightVirtualFileBase) file.getViewProvider().getVirtualFile()).setWritable(false);
 
-        assertThat(iconAtCaret(fixture, Iconable.ICON_FLAG_READ_STATUS))
-            .isEqualTo(ImageEffects.layered(PlatformIconGroup.nodesClass(), PlatformIconGroup.nodesLocked()));
+        Image icon = ReadAction.compute(() -> {
+            SandClass sandClass = PsiTreeUtil.findChildOfType(file, SandClass.class);
+            assertThat(sandClass).as("the file declares a class").isNotNull();
+            return IconDescriptorUpdaters.getIconWithoutCache(sandClass, Iconable.ICON_FLAG_READ_STATUS);
+        });
+
+        assertThat(icon).isEqualTo(ImageEffects.layered(PlatformIconGroup.nodesClass(), PlatformIconGroup.nodesLocked()));
     }
 
     @Test
