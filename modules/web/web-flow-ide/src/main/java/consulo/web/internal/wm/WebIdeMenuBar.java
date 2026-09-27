@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.wm;
 
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.dom.DebouncePhase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -59,6 +60,30 @@ public class WebIdeMenuBar {
 
     private static final int MAX_DEPTH = 10;
     private static final String PERFORM_ONLY = "actionGroup.perform.only";
+
+    private static final String RESYNC_OPEN_SUB_MENU = """
+        const bar = this;
+        requestAnimationFrame(() => bar.updateComplete.then(() => {
+            const subMenu = bar._subMenu;
+            if (!subMenu || !subMenu.opened) {
+                return;
+            }
+
+            const button = subMenu._positionTarget;
+            const children = button && button.isConnected && button.item ? button.item.children : null;
+            if (!children || children.length === 0) {
+                bar.close();
+                return;
+            }
+
+            if (subMenu._subMenu && subMenu._subMenu.opened) {
+                subMenu._subMenu.close();
+            }
+
+            subMenu.items = children;
+            subMenu._overlayElement.requestContentUpdate();
+        }));
+        """;
 
     private record MenuNode(
         @Nullable AnAction action,
@@ -282,11 +307,6 @@ public class WebIdeMenuBar {
 
         myStructuralSignature = structuralSignature;
 
-        // the client may hold a submenu of the previous structure open - the rebuild replaces its items with
-        // ones the overlay does not know, and every click into it is dropped as inert. closed here, the next
-        // open shows the rebuilt, live items
-        myMenuBar.toVaadinComponent().close();
-
         myMenuBar.clear();
 
         List<BuiltItem> builtItems = new ArrayList<>();
@@ -296,6 +316,17 @@ public class WebIdeMenuBar {
             myMenuBar.add(builtItem.item());
         }
         myBuiltItems = builtItems;
+
+        resyncOpenSubMenu();
+    }
+
+    @RequiredUIAccess
+    private void resyncOpenSubMenu() {
+        MenuBar menuBar = myMenuBar.toVaadinComponent();
+
+        menuBar.getElement().getNode().runWhenAttached(
+            ui -> ui.beforeClientResponse(menuBar, context -> menuBar.getElement().executeJs(RESYNC_OPEN_SUB_MENU))
+        );
     }
 
     @RequiredUIAccess
