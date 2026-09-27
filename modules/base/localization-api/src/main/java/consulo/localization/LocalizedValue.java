@@ -54,6 +54,10 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
         return of(text);
     }
 
+    static LocalizedValue of(Localized localized) {
+        return localized.isEmpty() ? empty() : new Localized2LocalizedValue(LocalizationManager.get(), localized);
+    }
+
     static LocalizedValue of(String text) {
         return text.isEmpty() ? empty() : new ConstantLocalizedValue(text);
     }
@@ -90,6 +94,12 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
         return !isEmpty();
     }
 
+    /**
+     * String which doesn't depend on current locale. Two equal {@link LocalizedValue} must have equal ids.
+     * Different ones should have different ids (though 100% collision-free may be not guaranteed).
+     *
+     * @return String uniquely identifying this {@link LocalizedValue}.
+     */
     String getId();
 
     String getValue();

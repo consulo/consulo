@@ -32,7 +32,7 @@ public final class MappedLocalizeValue2 extends BaseLocalizeValue {
     private final BiFunction<LocalizeManager, String, String> myMapper;
 
     public MappedLocalizeValue2(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
-        super(ourEmptyArgs);
+        super(EMPTY_ARGS);
         myDelegate = delegate;
         myMapper = mapper;
     }

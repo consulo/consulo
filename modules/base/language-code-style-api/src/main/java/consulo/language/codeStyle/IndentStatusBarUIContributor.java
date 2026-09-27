@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.HtmlBuilder;
 import consulo.application.util.HtmlChunk;
 import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
@@ -9,8 +10,6 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
-
-import org.jspecify.annotations.Nullable;
 
 public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBarUIContributor {
     private final IndentOptions myIndentOptions;
@@ -26,16 +25,15 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
     /**
      * Returns a short, usually one-word, string to indicate the source of the given indent options.
      *
-     * @return The indent options source hint or {@code null} if not available.
+     * @return The indent options source hint or {@link LocalizeValue#empty()} if not available.
      */
-    public abstract @Nullable String getHint();
+    public abstract LocalizeValue getHint();
 
     @Override
-    public @Nullable String getTooltip() {
-        return createTooltip(getIndentInfo(myIndentOptions).get(), getHint());
+    public LocalizeValue getTooltip() {
+        return createTooltip(getIndentInfo(myIndentOptions), getHint());
     }
 
-    
     public static LocalizeValue getIndentInfo(IndentOptions indentOptions) {
         return indentOptions.USE_TAB_CHARACTER
             ? CodeStyleLocalize.indentStatusBarTab()
@@ -50,23 +48,22 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
         return true;
     }
 
-    
-    public static String createTooltip(String indentInfo, String hint) {
+    public static LocalizeValue createTooltip(LocalizeValue indentInfo, LocalizeValue hint) {
         HtmlBuilder builder = new HtmlBuilder();
-        builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip().get()).append(HtmlChunk.nbsp()).append(indentInfo);
-        if (hint != null) {
+        builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip()).append(HtmlChunk.nbsp()).append(indentInfo);
+        if (hint.isNotEmpty()) {
             builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toHtmlColor(StandardColors.GRAY)).addText(hint));
         }
-        return builder.wrapWithHtmlBody().toString();
+        return LocalizeValue.of(builder.wrapWithHtmlBody());
     }
 
-    
     @Override
-    public String getStatusText(PsiFile psiFile) {
-        String widgetText = getIndentInfo(myIndentOptions).get();
+    @RequiredReadAction
+    public LocalizeValue getStatusText(PsiFile psiFile) {
+        LocalizeValue widgetText = getIndentInfo(myIndentOptions);
         IndentOptions projectIndentOptions = CodeStyle.getSettings(psiFile.getProject()).getLanguageIndentOptions(psiFile.getLanguage());
         if (!projectIndentOptions.equals(myIndentOptions)) {
-            widgetText += "*";
+            widgetText = LocalizeValue.join(widgetText, LocalizeValue.of('*'));
         }
         return widgetText;
     }
