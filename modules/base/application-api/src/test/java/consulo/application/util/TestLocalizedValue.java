@@ -34,7 +34,7 @@ class TestLocalizedValue implements LocalizeValue {
 
     @Override
     public String getId() {
-        return "";
+        return "TestLocalizedValue{" + myValue + "}";
     }
 
     @Override
@@ -61,6 +61,11 @@ class TestLocalizedValue implements LocalizeValue {
     public boolean equals(@Nullable Object obj) {
         return obj == this
             || obj instanceof TestLocalizedValue that && Objects.equals(myValue, that.myValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return myValue.hashCode();
     }
 
     @Override

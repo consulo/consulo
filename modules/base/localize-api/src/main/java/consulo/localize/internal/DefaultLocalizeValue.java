@@ -35,7 +35,7 @@ public final class DefaultLocalizeValue extends BaseLocalizeValue {
     private final LocalizeKey myLocalizeKey;
 
     public DefaultLocalizeValue(LocalizeKey localizeKey) {
-        this(localizeKey, ourEmptyArgs);
+        this(localizeKey, EMPTY_ARGS);
     }
 
     public DefaultLocalizeValue(LocalizeKey localizeKey, Object... args) {

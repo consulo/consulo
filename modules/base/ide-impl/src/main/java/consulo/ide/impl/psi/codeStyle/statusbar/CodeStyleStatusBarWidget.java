@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
@@ -40,8 +41,8 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         super(project, factory, true);
     }
 
-    
     @Override
+    @RequiredReadAction
     protected WidgetState getWidgetState(@Nullable VirtualFile file) {
         if (file == null) {
             return WidgetState.HIDDEN;
@@ -75,15 +76,13 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         if (optionsProvider != null) {
             return optionsProvider;
         }
-        for (FileIndentOptionsProvider provider : FileIndentOptionsProvider.EP_NAME.getExtensionList()) {
+        return Application.get().getExtensionPoint(FileIndentOptionsProvider.class).findFirstSafe(provider -> {
             IndentStatusBarUIContributor uiContributor = provider.getIndentStatusBarUiContributor(indentOptions);
-            if (uiContributor != null && uiContributor.areActionsAvailable(file)) {
-                return provider;
-            }
-        }
-        return null;
+            return uiContributor != null && uiContributor.areActionsAvailable(file);
+        });
     }
 
+    @RequiredReadAction
     private static WidgetState createWidgetState(
         PsiFile psiFile,
         IndentOptions indentOptions,
@@ -100,11 +99,12 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         }
         else {
             LocalizeValue indentInfo = IndentStatusBarUIContributor.getIndentInfo(indentOptions);
-            String tooltip = IndentStatusBarUIContributor.createTooltip(indentInfo.get(), null);
-            return new MyWidgetState(tooltip, indentInfo.get(), psiFile, indentOptions, null);
+            LocalizeValue tooltip = IndentStatusBarUIContributor.createTooltip(indentInfo, LocalizeValue.empty());
+            return new MyWidgetState(tooltip, indentInfo, psiFile, indentOptions, null);
         }
     }
 
+    @RequiredReadAction
     private @Nullable PsiFile getPsiFile() {
         Editor editor = getEditor();
         Project project = getProject();
@@ -115,6 +115,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     }
 
     @Override
+    @RequiredReadAction
     protected @Nullable ListPopup createPopup(DataContext context) {
         WidgetState state = getWidgetState(context.getData(VirtualFile.KEY));
         Editor editor = getEditor();
@@ -124,7 +125,6 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             AnAction[] actions = getActions(uiContributor, psiFile);
             ActionGroup actionGroup = new ActionGroup() {
                 @Override
-                
                 public AnAction[] getChildren(@Nullable AnActionEvent e) {
                     return actions;
                 }
@@ -140,7 +140,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         return null;
     }
 
-    
+    @RequiredReadAction
     private static AnAction[] getActions(@Nullable CodeStyleStatusBarUIContributor uiContributor, PsiFile psiFile) {
         List<AnAction> allActions = new ArrayList<>();
         if (uiContributor != null) {
@@ -180,22 +180,20 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         update();
     }
 
-    
     @Override
     protected StatusBarWidget createInstance(Project project) {
         return new CodeStyleStatusBarWidget(project, myFactory);
     }
 
     private static class MyWidgetState extends WidgetState {
-        
         private final IndentOptions myIndentOptions;
         private final @Nullable CodeStyleStatusBarUIContributor myContributor;
-        
+
         private final PsiFile myPsiFile;
 
         protected MyWidgetState(
-            String toolTip,
-            String text,
+            LocalizeValue toolTip,
+            LocalizeValue text,
             PsiFile psiFile,
             IndentOptions indentOptions,
             @Nullable CodeStyleStatusBarUIContributor uiContributor
@@ -213,12 +211,10 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             return myContributor;
         }
 
-        
         public IndentOptions getIndentOptions() {
             return myIndentOptions;
         }
 
-        
         public PsiFile getPsiFile() {
             return myPsiFile;
         }

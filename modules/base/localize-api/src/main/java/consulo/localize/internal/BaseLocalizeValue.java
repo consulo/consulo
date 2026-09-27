@@ -21,14 +21,13 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author VISTALL
  * @since 2020-07-30
  */
 public abstract class BaseLocalizeValue implements LocalizeValue {
-    protected static final Object[] ourEmptyArgs = new Object[0];
+    protected static final Object[] EMPTY_ARGS = new Object[0];
 
     protected final Object[] myArgs;
 
