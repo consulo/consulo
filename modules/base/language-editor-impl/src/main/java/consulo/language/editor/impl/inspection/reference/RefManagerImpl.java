@@ -363,6 +363,16 @@ public class RefManagerImpl implements RefManagerInternal {
         myCachedSortedRefs = null;
     }
 
+    public void runInsideInspectionReadAction(Runnable runnable) {
+        inspectionReadActionStarted();
+        try {
+            runnable.run();
+        }
+        finally {
+            inspectionReadActionFinished();
+        }
+    }
+
     public void startOfflineView() {
         myOfflineView = true;
     }
