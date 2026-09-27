@@ -25,6 +25,7 @@ module consulo.language.editor.ui.api {
 
     exports consulo.language.editor.ui.internal to
         consulo.desktop.awt.editor.impl,
+        consulo.language.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.desktop.qt.editor.impl,

@@ -61,7 +61,8 @@ module consulo.code.editor.impl {
         consulo.ide.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.it;
 
     exports consulo.codeEditor.impl.softwrap.mapping to
         consulo.desktop.awt.editor.impl,
@@ -73,7 +74,8 @@ module consulo.code.editor.impl {
         consulo.ide.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.it;
 
     exports consulo.codeEditor.impl.util to
         consulo.desktop.awt.editor.impl,

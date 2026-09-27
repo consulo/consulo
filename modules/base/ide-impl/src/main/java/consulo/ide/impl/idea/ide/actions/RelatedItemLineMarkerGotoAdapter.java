@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
+import consulo.language.editor.impl.internal.daemon.LineMarkersPass;
 import consulo.language.Language;
 import consulo.language.editor.gutter.LineMarkerProvider;
 import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;

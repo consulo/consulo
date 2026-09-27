@@ -24,7 +24,7 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.actions.SuppressActionWrapper;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManagerImpl;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.localize.InspectionLocalize;

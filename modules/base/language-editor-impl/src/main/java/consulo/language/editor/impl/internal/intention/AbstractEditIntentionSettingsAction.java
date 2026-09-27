@@ -1,0 +1,36 @@
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package consulo.language.editor.impl.internal.intention;
+
+import consulo.codeEditor.Editor;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
+public abstract class AbstractEditIntentionSettingsAction implements SyntheticIntentionAction {
+  private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);
+
+  
+  protected final LocalizeValue myText;
+  private final boolean myEnabled;
+
+  protected AbstractEditIntentionSettingsAction(IntentionAction action) {
+    myText = action.getText();
+    // needed for checking errors in user written actions
+    //noinspection ConstantConditions
+    LOG.assertTrue(myText.isNotEmpty(), "action " + action.getClass() + " text returned empty");
+    myEnabled = true;
+  }
+
+  @Override
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
+    return myEnabled;
+  }
+
+  @Override
+  public boolean startInWriteAction() {
+    return false;
+  }
+}

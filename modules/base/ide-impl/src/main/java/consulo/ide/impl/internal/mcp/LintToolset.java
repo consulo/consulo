@@ -19,7 +19,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.codeInspection.InspectionEngine;
+import consulo.language.editor.impl.inspection.InspectionEngine;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;

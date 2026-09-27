@@ -6,6 +6,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
+import consulo.language.editor.impl.internal.daemon.HighlightInfoComposite;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;

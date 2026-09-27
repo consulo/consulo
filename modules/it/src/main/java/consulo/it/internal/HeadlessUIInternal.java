@@ -169,27 +169,27 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
 
     @Override
     public Image _Image_lazy(Supplier<Image> imageSupplier) {
-        return new HeadlessImage();
+        return new HeadlessLazyImage(imageSupplier);
     }
 
     @Override
     public Image _ImageEffects_layered(Image[] images) {
-        return new HeadlessImage();
+        return new HeadlessLayeredImage(images);
     }
 
     @Override
     public Image _ImageEffects_transparent(Image original, float alpha) {
-        return new HeadlessImage(original.getWidth(), original.getHeight());
+        return new HeadlessEffectImage(original, "transparent(" + alpha + ")", original.getWidth(), original.getHeight());
     }
 
     @Override
     public Image _ImageEffects_grayed(Image original) {
-        return new HeadlessImage(original.getWidth(), original.getHeight());
+        return new HeadlessEffectImage(original, "grayed", original.getWidth(), original.getHeight());
     }
 
     @Override
     public Image _ImageEffects_appendRight(Image i0, Image i1) {
-        return new HeadlessImage(i0.getWidth() + i1.getWidth(), Math.max(i0.getHeight(), i1.getHeight()));
+        return new HeadlessAppendRightImage(i0, i1);
     }
 
     @Override
@@ -204,12 +204,17 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
 
     @Override
     public Image _ImageEffects_withText(Image baseImage, String text) {
-        return new HeadlessImage(baseImage.getWidth(), baseImage.getHeight());
+        return new HeadlessEffectImage(baseImage, "withText(" + text + ")", baseImage.getWidth(), baseImage.getHeight());
+    }
+
+    @Override
+    public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+        return new HeadlessEffectImage(baseImage, "colorize(" + colorValue + ")", baseImage.getWidth(), baseImage.getHeight());
     }
 
     @Override
     public Image _ImageEffects_resize(Image original, int width, int height) {
-        return new HeadlessImage(width, height);
+        return new HeadlessEffectImage(original, "resize", width, height);
     }
 
     @Override

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.intention.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
+import consulo.language.editor.impl.internal.intention.ShowIntentionActionsHandler;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;

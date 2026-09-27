@@ -22,6 +22,7 @@ import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.RealEditor;
 import consulo.document.Document;
 import consulo.document.internal.DocumentFactory;
+import consulo.it.internal.editor.HeadlessEditor;
 import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.project.Project;
 import jakarta.inject.Inject;
@@ -30,7 +31,8 @@ import jakarta.inject.Singleton;
 /**
  * Headless {@code EditorFactory}: reuses the real {@link EditorFactoryImpl} (documents, editor event
  * multicaster — which {@code DaemonListeners}/{@code IdeDocumentHistoryImpl} subscribe to at project
- * startup); only actual editor creation is unsupported for now.
+ * startup); editor creation answers a {@link HeadlessEditor}, so a test reaches one through this service
+ * rather than constructing the implementation itself.
  *
  * @author VISTALL
  */
@@ -44,6 +46,6 @@ public class HeadlessEditorFactory extends EditorFactoryImpl {
 
     @Override
     protected RealEditor createEditorImpl(Document document, boolean isViewer, Project project, EditorKind kind) {
-        throw new UnsupportedOperationException("headless: editors are not implemented yet");
+        return new HeadlessEditor(document, isViewer, project, kind);
     }
 }

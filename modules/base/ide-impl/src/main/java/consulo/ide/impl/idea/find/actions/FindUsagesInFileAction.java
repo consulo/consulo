@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -23,7 +22,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.find.localize.FindLocalize;
 import consulo.language.Language;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.EmptyFindUsagesProvider;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiDocumentManager;
@@ -83,7 +81,6 @@ public class FindUsagesInFileAction extends LegacyAnAction {
         updateFindUsagesAction(event);
     }
 
-    @RequiredReadAction
     private static boolean isEnabled(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {
@@ -96,12 +93,12 @@ public class FindUsagesInFileAction extends LegacyAnAction {
             return target != null && target.length > 0;
         }
         else {
-            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+            PsiFile file = dataContext.getData(PsiFile.KEY);
             if (file == null) {
                 return false;
             }
 
-            Language language = PsiUtilBase.getLanguageInEditor(editor, project);
+            Language language = dataContext.getData(Language.KEY);
             if (language == null) {
                 language = file.getLanguage();
             }
@@ -109,7 +106,6 @@ public class FindUsagesInFileAction extends LegacyAnAction {
         }
     }
 
-    @RequiredReadAction
     public static void updateFindUsagesAction(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         boolean enabled = isEnabled(e.getDataContext());

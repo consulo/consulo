@@ -21,6 +21,7 @@ import consulo.content.scope.NamedScope;
 import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
 import consulo.ide.impl.psi.search.scope.ProjectFilesScope;
 import consulo.language.editor.scope.NonProjectFilesScope;
+import consulo.module.content.impl.internal.scope.AllScopeHolderImpl;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;

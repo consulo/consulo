@@ -843,6 +843,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         boolean fontStyleChanged,
         boolean foregroundColorChanged
     ) {
+        if (myDocument.isInBulkUpdate() || myDocumentChangeInProgress) {
+            return;
+        }
+
         scheduleUpdate();
     }
 

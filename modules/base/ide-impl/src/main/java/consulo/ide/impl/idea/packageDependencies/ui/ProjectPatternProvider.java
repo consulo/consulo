@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
-import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
+import consulo.module.content.impl.internal.scope.FilePatternPackageSet;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPackageSupportProviders;

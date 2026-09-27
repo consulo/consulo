@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.image.EmptyImage;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Dummy-but-creatable headless {@link EmptyImage}.
@@ -39,5 +40,20 @@ public class HeadlessEmptyImage implements EmptyImage {
     @Override
     public int getHeight() {
         return myHeight;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return HeadlessImages.unwrap(o) instanceof HeadlessEmptyImage that && myWidth == that.myWidth && myHeight == that.myHeight;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * myWidth + myHeight;
+    }
+
+    @Override
+    public String toString() {
+        return "empty(" + myWidth + "x" + myHeight + ")";
     }
 }

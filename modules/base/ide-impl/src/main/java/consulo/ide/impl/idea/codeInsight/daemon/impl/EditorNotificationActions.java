@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -10,15 +11,20 @@ import consulo.language.editor.intention.IntentionActionWithOptions;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionActionProvider;
 import consulo.language.editor.internal.intention.IntentionsInfo;
+import consulo.language.editor.internal.intention.SyncIntentionMenuContributor;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.List;
 
-class EditorNotificationActions {
-  public static void collectActions(Editor hostEditor, PsiFile hostFile, IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+@ExtensionImpl
+public class EditorNotificationActions implements SyncIntentionMenuContributor {
+  @Override
+  @RequiredUIAccess
+  public void collectActions(Editor hostEditor, PsiFile hostFile, IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
     Project project = hostEditor.getProject();
     if (project == null) return;
     FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);

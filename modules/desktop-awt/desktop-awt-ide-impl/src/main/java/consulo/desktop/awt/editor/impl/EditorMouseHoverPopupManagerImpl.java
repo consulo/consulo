@@ -20,7 +20,7 @@ import consulo.desktop.awt.language.editor.documentation.DocumentationComponent;
 import consulo.desktop.awt.language.editor.documentation.DocumentationManagerImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;

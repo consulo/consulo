@@ -15,6 +15,7 @@
  */
 package consulo.module.content.util;
 
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
@@ -30,6 +31,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author nik
@@ -48,22 +51,20 @@ public class ModuleRootModificationUtil {
     List<String> sourceRoots,
     DependencyScope scope
   ) {
-    ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    Library library = model.getModuleLibraryTable().createLibrary(libName);
-    Library.ModifiableModel libraryModel = library.getModifiableModel();
-    for (String root : classesRoots) {
-      libraryModel.addRoot(root, BinariesOrderRootType.ID);
-    }
-    for (String root : sourceRoots) {
-      libraryModel.addRoot(root, SourcesOrderRootType.ID);
-    }
-    LibraryOrderEntry libraryOrderEntry = model.findLibraryOrderEntry(library);
-    if (libraryOrderEntry != null) {
-      libraryOrderEntry.setScope(scope);
-    }
-    WriteAction.run(() -> {
-      libraryModel.commit();
-      model.commit();
+    updateModel(module, model -> {
+      Library library = model.getModuleLibraryTable().createLibrary(libName);
+      Library.ModifiableModel libraryModel = library.getModifiableModel();
+      for (String root : classesRoots) {
+        libraryModel.addRoot(root, BinariesOrderRootType.ID);
+      }
+      for (String root : sourceRoots) {
+        libraryModel.addRoot(root, SourcesOrderRootType.ID);
+      }
+      LibraryOrderEntry libraryOrderEntry = model.findLibraryOrderEntry(library);
+      if (libraryOrderEntry != null) {
+        libraryOrderEntry.setScope(scope);
+      }
+      WriteAction.run(libraryModel::commit);
     });
   }
 
@@ -79,11 +80,11 @@ public class ModuleRootModificationUtil {
 
   @RequiredUIAccess
   public static void addDependency(Module module, Library library, DependencyScope scope, boolean exported) {
-    ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    LibraryOrderEntry entry = model.addLibraryEntry(library);
-    entry.setExported(exported);
-    entry.setScope(scope);
-    doCommit(model);
+    updateModel(module, model -> {
+      LibraryOrderEntry entry = model.addLibraryEntry(library);
+      entry.setExported(exported);
+      entry.setScope(scope);
+    });
   }
 
   @RequiredUIAccess
@@ -93,15 +94,33 @@ public class ModuleRootModificationUtil {
 
   @RequiredUIAccess
   public static void addDependency(Module from, Module to, DependencyScope scope, boolean exported) {
-    ModifiableRootModel model = ModuleRootManager.getInstance(from).getModifiableModel();
-    ModuleOrderEntry entry = model.addModuleOrderEntry(to);
-    entry.setScope(scope);
-    entry.setExported(exported);
-    doCommit(model);
+    updateModel(from, model -> {
+      ModuleOrderEntry entry = model.addModuleOrderEntry(to);
+      entry.setScope(scope);
+      entry.setExported(exported);
+    });
   }
 
   @RequiredUIAccess
-  private static void doCommit(ModifiableRootModel model) {
-    WriteAction.run(model::commit);
+  public static void updateModel(Module module, Consumer<? super ModifiableRootModel> task) {
+    modifyModel(module, model -> {
+      task.accept(model);
+      return Boolean.TRUE;
+    });
+  }
+
+  @RequiredUIAccess
+  public static void modifyModel(Module module, Function<? super ModifiableRootModel, Boolean> modifier) {
+    ModifiableRootModel model = ReadAction.compute(() -> ModuleRootManager.getInstance(module).getModifiableModel());
+    try {
+      if (modifier.apply(model) && !module.isDisposed()) {
+        WriteAction.run(model::commit);
+      }
+    }
+    finally {
+      if (!model.isDisposed()) {
+        model.dispose();
+      }
+    }
   }
 }

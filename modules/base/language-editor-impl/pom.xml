@@ -51,6 +51,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>trove4j</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-mcp-server-api</artifactId>
             <version>${project.version}</version>

@@ -28,6 +28,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.HighlightLevelUtil;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.internal.daemon.ConfigureInspectionsAction;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
 import consulo.language.editor.impl.internal.daemon.DaemonEditorPopup;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.markup.*;

@@ -131,6 +131,7 @@ module consulo.application.impl {
         consulo.ide.impl;
 
     opens consulo.application.impl.internal.start to args4j;
+    opens consulo.application.impl.internal.concurent to consulo.util.concurrent;
 
     provides consulo.index.io.internal.LowMemoryWatcherInternal with consulo.application.impl.internal.util.RealLowMemoryWatcherInternal;
     provides consulo.disposer.internal.DiposerRegisterChecker with consulo.application.impl.internal.DisposerPluginChecker;

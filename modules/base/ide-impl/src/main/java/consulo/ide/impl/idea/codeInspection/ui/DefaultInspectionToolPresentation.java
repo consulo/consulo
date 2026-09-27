@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.component.macro.PathMacroManager;
 import consulo.ide.impl.idea.codeInspection.ex.*;
+import consulo.language.editor.impl.inspection.ProblemDescriptorImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;

@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.HTMLComposerBase;
-import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
+import consulo.language.editor.inspection.InspectionProblemSink;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefModule;
@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public interface InspectionToolPresentation extends ProblemDescriptionsProcessor {
+public interface InspectionToolPresentation extends InspectionProblemSink {
   
   InspectionNode createToolNode(GlobalInspectionContextImpl globalInspectionContext,
                                 InspectionNode node,
@@ -96,7 +96,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   void ignoreCurrentElementProblem(RefEntity refEntity, CommonProblemDescriptor descriptor);
 
-  void addProblemElement(RefEntity refElement, boolean filterSuppressed, CommonProblemDescriptor... descriptions);
+
 
   void ignoreProblem(CommonProblemDescriptor descriptor, QuickFix fix);
 

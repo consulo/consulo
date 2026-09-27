@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
-import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
+import consulo.language.editor.impl.internal.daemon.ShowIntentionsPass;
+import consulo.language.editor.impl.internal.intention.ShowIntentionActionsHandler;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionsInfo;

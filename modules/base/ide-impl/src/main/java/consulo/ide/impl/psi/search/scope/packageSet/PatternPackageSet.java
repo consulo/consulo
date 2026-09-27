@@ -21,6 +21,7 @@ import consulo.content.scope.PatternBasedPackageSet;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.impl.internal.scope.FilePatternPackageSet;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;

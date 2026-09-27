@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeEditor.printing;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.document.Document;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
+import consulo.language.editor.impl.internal.daemon.LineMarkersPass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiFile;
 

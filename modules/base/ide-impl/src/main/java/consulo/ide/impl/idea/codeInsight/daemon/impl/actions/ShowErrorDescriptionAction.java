@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.action.CodeInsightActionHandler;

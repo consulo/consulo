@@ -22,6 +22,7 @@ import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.lexer.Lexer;
 import consulo.localize.LocalizeValue;
+import consulo.module.content.impl.internal.scope.FilePatternPackageSet;
 import org.jspecify.annotations.Nullable;
 
 /**

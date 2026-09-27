@@ -44,4 +44,9 @@ public class HeadlessImage implements Image {
     public int getHeight() {
         return myHeight;
     }
+
+    @Override
+    public String toString() {
+        return "image(" + myWidth + "x" + myHeight + ")";
+    }
 }

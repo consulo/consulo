@@ -124,7 +124,8 @@ module consulo.language.editor.api {
         consulo.language.editor.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.it;
     
     exports consulo.language.editor.internal.postfixTemplate to
         consulo.ide.impl,

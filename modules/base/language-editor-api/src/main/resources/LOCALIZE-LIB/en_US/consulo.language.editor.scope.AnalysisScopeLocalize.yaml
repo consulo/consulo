@@ -184,6 +184,8 @@ scope.selected.files:
     text: Selected files
 scope.virtual.files:
     text: selection
+shared.scopes.node.text:
+    text: Shared Scopes
 skip.import.statements.checkbox.title:
     text: Skip import statements
 specify.analysis.scope:

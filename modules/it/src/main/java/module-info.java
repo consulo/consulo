@@ -3,6 +3,7 @@
  * @since 2026-07-19
  */
 module consulo.it {
+    requires java.desktop;
     requires consulo.annotation;
     requires jakarta.inject;
     requires consulo.container.api;
@@ -32,6 +33,7 @@ module consulo.it {
     requires consulo.language.impl;
     requires consulo.language.index.impl;
     requires consulo.language.editor.api;
+    requires consulo.language.editor.impl;
     requires consulo.platform.api;
     requires consulo.platform.impl;
     requires consulo.localization.api;
@@ -52,6 +54,7 @@ module consulo.it {
     requires transitive org.junit.jupiter.api;
 
     exports consulo.it;
+    exports consulo.it.daemon;
 
     provides consulo.container.internal.PluginManagerInternal with consulo.it.internal.HeadlessPluginManager;
     provides consulo.logging.attachment.AttachmentFactory with consulo.it.internal.HeadlessAttachmentFactory;

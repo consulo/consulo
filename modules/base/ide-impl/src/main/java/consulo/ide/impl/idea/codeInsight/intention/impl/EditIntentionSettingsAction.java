@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionSettingsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.impl.internal.intention.AbstractEditIntentionSettingsAction;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;

@@ -73,23 +73,20 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
         showMessageWhenNoHighlights(project, file, editor);
     }
 
-    private HighlightInfoImpl findInfo(Project project, Editor editor, final int caretOffset, HighlightSeverity minSeverity) {
-        final Document document = editor.getDocument();
-        final HighlightInfoImpl[][] infoToGo = new HighlightInfoImpl[2][2]; //HighlightInfo[luck-noluck][skip-noskip]
-        final int caretOffsetIfNoLuck = myGoForward ? -1 : document.getTextLength();
+    private HighlightInfoImpl findInfo(Project project, Editor editor, int caretOffset, HighlightSeverity minSeverity) {
+        Document document = editor.getDocument();
+        HighlightInfoImpl[][] infoToGo = new HighlightInfoImpl[2][2]; //HighlightInfo[luck-noluck][skip-noskip]
+        int caretOffsetIfNoLuck = myGoForward ? -1 : document.getTextLength();
 
-        DaemonCodeAnalyzerInternal.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfo>() {
-            @Override
-            public boolean process(HighlightInfo info) {
-                int startOffset = getNavigationPositionFor(info, document);
-                if (SeverityRegistrarImpl.isGotoBySeverityEnabled(info.getSeverity())) {
-                    infoToGo[0][0] = getBetterInfoThan(infoToGo[0][0], caretOffset, startOffset, info);
-                    infoToGo[1][0] = getBetterInfoThan(infoToGo[1][0], caretOffsetIfNoLuck, startOffset, info);
-                }
-                infoToGo[0][1] = getBetterInfoThan(infoToGo[0][1], caretOffset, startOffset, info);
-                infoToGo[1][1] = getBetterInfoThan(infoToGo[1][1], caretOffsetIfNoLuck, startOffset, info);
-                return true;
+        DaemonCodeAnalyzerInternal.processHighlights(document, project, minSeverity, 0, document.getTextLength(), info -> {
+            int startOffset = getNavigationPositionFor(info, document);
+            if (SeverityRegistrarImpl.isGotoBySeverityEnabled(info.getSeverity())) {
+                infoToGo[0][0] = getBetterInfoThan(infoToGo[0][0], caretOffset, startOffset, info);
+                infoToGo[1][0] = getBetterInfoThan(infoToGo[1][0], caretOffsetIfNoLuck, startOffset, info);
             }
+            infoToGo[0][1] = getBetterInfoThan(infoToGo[0][1], caretOffset, startOffset, info);
+            infoToGo[1][1] = getBetterInfoThan(infoToGo[1][1], caretOffsetIfNoLuck, startOffset, info);
+            return true;
         });
         if (infoToGo[0][0] == null) {
             infoToGo[0][0] = infoToGo[1][0];
@@ -170,7 +167,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
             return document.getTextLength();
         }
         char c = document.getCharsSequence().charAt(start);
-        int shift = ((HighlightInfoImpl) info).isAfterEndOfLine() && c != '\n' ? 1 : ((HighlightInfoImpl) info).getNavigationShift();
+        int shift = info.isAfterEndOfLine() && c != '\n' ? 1 : ((HighlightInfoImpl) info).getNavigationShift();
 
         int offset = info.getActualStartOffset() + shift;
         return Math.min(offset, document.getTextLength());

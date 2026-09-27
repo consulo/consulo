@@ -22,6 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
+import consulo.language.editor.impl.internal.daemon.ShowIntentionsPass;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.AbstractEmptyIntentionAction;

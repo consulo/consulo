@@ -17,12 +17,12 @@ package consulo.it.index;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
+import consulo.it.HeadlessModules;
 import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.ScanningIterators;
 import consulo.language.index.impl.internal.ScanningType;
@@ -35,11 +35,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.IndexedFile;
 import consulo.language.psi.stub.StubIndex;
 import consulo.localize.LocalizeValue;
-import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListenerBackgroundable;
@@ -124,34 +120,19 @@ public final class ScanningTestSupport {
     }
 
     public static Module addContentRoot(Project project, String moduleName, Path directory) throws Exception {
-        VirtualFile directoryFile = findFile(directory);
-        return WriteAction.compute(() -> {
-            Module module = createModule(project, moduleName, directory);
-            addContentRoot(module, directoryFile);
-            return module;
-        });
+        return HeadlessModules.createModule(project, moduleName, findFile(directory));
     }
 
     public static Module createModule(Project project, String name, Path directory) {
-        ModuleManager moduleManager = ModuleManager.getInstance(project);
-        ModifiableModuleModel moduleModel = moduleManager.getModifiableModel();
-        Module module = moduleModel.newModule(name, directory.toString());
-        moduleModel.commit();
-        return module;
+        return HeadlessModules.createModule(project, name, directory);
     }
 
     public static void addContentRoot(Module module, VirtualFile directoryFile) {
-        ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
-        rootModel.addContentEntry(directoryFile);
-        rootModel.commit();
+        HeadlessModules.addContentRoot(module, directoryFile);
     }
 
     public static void removeModule(Project project, Module module) {
-        WriteAction.run(() -> {
-            ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
-            moduleModel.disposeModule(module);
-            moduleModel.commit();
-        });
+        HeadlessModules.removeModule(project, module);
     }
 
     public static boolean isDumb(DumbService dumbService) {

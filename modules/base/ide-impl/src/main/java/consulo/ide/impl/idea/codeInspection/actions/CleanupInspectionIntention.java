@@ -19,7 +19,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.SequentialModalProgressTask;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInspection.InspectionEngine;
+import consulo.language.editor.impl.inspection.InspectionEngine;
 import consulo.ide.impl.idea.codeInspection.ex.PerformFixesModalTask;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.hint.HintManager;

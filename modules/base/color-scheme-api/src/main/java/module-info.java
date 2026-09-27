@@ -28,5 +28,6 @@ module consulo.color.scheme.api {
         consulo.language.editor.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.it;
 }

@@ -72,7 +72,11 @@ public class HeadlessProjectExtension extends HeadlessApplicationExtension {
 
     @Override
     protected boolean isInjectable(Class<?> type) {
-        return super.isInjectable(type) || type == HeadlessProjects.class || type == Project.class || isProjectService(type);
+        return super.isInjectable(type)
+            || type == HeadlessProjects.class
+            || type == Project.class
+            || type == CodeInsightTestFixture.class
+            || isProjectService(type);
     }
 
     @Override
@@ -82,6 +86,9 @@ public class HeadlessProjectExtension extends HeadlessApplicationExtension {
         try {
             if (type == HeadlessProjects.class) {
                 return projects(extensionContext);
+            }
+            if (type == CodeInsightTestFixture.class) {
+                return fixture(extensionContext);
             }
             if (type == Project.class) {
                 return projects(extensionContext).defaultProject();
@@ -94,6 +101,26 @@ public class HeadlessProjectExtension extends HeadlessApplicationExtension {
             throw new ParameterResolutionException("cannot open the project of the test", e);
         }
         return super.resolveParameter(parameterContext, extensionContext);
+    }
+
+    /**
+     * One fixture per test, over its own project, with the inspections the test declares through {@link UseInspection}.
+     */
+    private static CodeInsightTestFixture fixture(ExtensionContext context) throws Exception {
+        CodeInsightTestFixture existing = context.getStore(NAMESPACE).get(CodeInsightTestFixture.class, CodeInsightTestFixture.class);
+        if (existing != null) {
+            return existing;
+        }
+
+        CodeInsightTestFixture fixture = CodeInsightTestFixture.create(ensureBooted(), projects(context));
+
+        UseInspection inspections = context.getRequiredTestMethod().getAnnotation(UseInspection.class);
+        if (inspections != null) {
+            fixture.enableInspections(inspections.value());
+        }
+
+        context.getStore(NAMESPACE).put(CodeInsightTestFixture.class, fixture);
+        return fixture;
     }
 
     private static HeadlessProjects projects(ExtensionContext context) {

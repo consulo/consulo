@@ -237,6 +237,11 @@ public interface HighlightInfo extends Segment {
 
     int getActualEndOffset();
 
+    /**
+     * @return true when this highlight is shown past the last character of its line rather than over text
+     */
+    boolean isAfterEndOfLine();
+
     
     LocalizeValue getDescription();
 

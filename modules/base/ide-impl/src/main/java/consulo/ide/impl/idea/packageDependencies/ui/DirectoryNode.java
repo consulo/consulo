@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
+import consulo.module.content.impl.internal.scope.FilePatternPackageSet;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiDirectory;

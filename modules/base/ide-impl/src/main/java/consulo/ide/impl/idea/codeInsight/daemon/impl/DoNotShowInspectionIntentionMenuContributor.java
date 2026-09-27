@@ -8,7 +8,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.concurrent.JobLauncher;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInspection.InspectionEngine;
+import consulo.language.editor.impl.inspection.InspectionEngine;
 import consulo.language.editor.intention.QuickFixWrapper;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.annotation.HighlightSeverity;

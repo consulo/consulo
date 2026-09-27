@@ -30,6 +30,7 @@ module consulo.application.content.api {
         consulo.ide.impl,
         consulo.language.copyright.impl,
         consulo.language.editor.impl,
+        consulo.module.content.impl,
         consulo.version.control.system.impl;
 
     exports consulo.content.internal to

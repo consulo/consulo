@@ -44,7 +44,7 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
+import consulo.language.editor.impl.internal.packageDependency.DependencyValidationManagerImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;

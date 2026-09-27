@@ -32,11 +32,12 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
+import consulo.language.editor.impl.inspection.LocalDescriptorsUtil;
+import consulo.language.editor.impl.internal.daemon.LocalInspectionsPass;
 import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
-import consulo.ide.impl.idea.concurrency.JobLauncherImpl;
+import consulo.application.impl.internal.concurent.JobLauncherImpl;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
@@ -517,7 +518,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         );
         try {
             List<LocalInspectionToolWrapper> lTools = getWrappersFromTools(localTools, file);
-            pass.doInspectInBatch(this, inspectionManager, lTools);
+            pass.doInspectInBatch(this, inspectionManager, lTools, this::getPresentation);
 
             List<GlobalInspectionToolWrapper> tools = getWrappersFromTools(globalSimpleTools, file);
             JobLauncher.getInstance().invokeConcurrentlyUnderProgress(
@@ -988,7 +989,12 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                         HighlightInfoProcessor.getEmpty()
                     );
                     ReadAction.run(
-                        () -> pass.doInspectInBatch(GlobalInspectionContextImpl.this, InspectionManager.getInstance(project), lTools)
+                        () -> pass.doInspectInBatch(
+                            GlobalInspectionContextImpl.this,
+                            InspectionManager.getInstance(project),
+                            lTools,
+                            GlobalInspectionContextImpl.this::getPresentation
+                        )
                     );
                     List<HighlightInfo> infos = pass.getInfos();
                     if (searchScope instanceof LocalSearchScope localSearchScope) {

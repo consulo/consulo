@@ -7,6 +7,7 @@ import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.disposer.Disposable;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
@@ -39,7 +40,6 @@ import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -103,7 +103,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     private volatile byte myFlags;  // see `@FlagConstant`
 
     private final int myNavigationShift;
-    public JComponent myFileLevelComponent;
+    public @Nullable Disposable myFileLevelComponent;
 
     /**
      * null means it the same as highlighter
@@ -205,6 +205,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         }
     }
 
+    @Override
     public boolean isAfterEndOfLine() {
         return isFlagSet(AFTER_END_OF_LINE_MASK);
     }

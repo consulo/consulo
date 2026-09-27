@@ -64,7 +64,7 @@ public class HeadlessImageKey implements ImageKey {
         if (this == o) {
             return true;
         }
-        return o instanceof HeadlessImageKey that
+        return HeadlessImages.unwrap(o) instanceof HeadlessImageKey that
             && myWidth == that.myWidth
             && myHeight == that.myHeight
             && myGroupId.equals(that.myGroupId)
