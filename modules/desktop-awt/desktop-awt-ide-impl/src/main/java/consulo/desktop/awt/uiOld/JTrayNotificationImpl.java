@@ -3,6 +3,7 @@ package consulo.desktop.awt.uiOld;
 
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.util.AppIconUtil;
@@ -27,8 +28,8 @@ final class JTrayNotificationImpl implements SystemNotificationsImpl.Notifier {
   private final TrayIcon myTrayIcon;
 
   private JTrayNotificationImpl() throws AWTException {
-    String tooltip = Application.get().getName().getValue();
-    myTrayIcon = new TrayIcon(AppIconUtil.loadWindowIcon(), tooltip);
+    LocalizeValue tooltip = Application.get().getName();
+    myTrayIcon = new TrayIcon(AppIconUtil.loadWindowIcon(), tooltip.get());
     myTrayIcon.setImageAutoSize(true);
     myTrayIcon.addActionListener(e -> {
       IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();

@@ -90,7 +90,7 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     }
 
     protected static void updateTextForButton(AbstractButton button, LocalizeValue textValue) {
-        String text = textValue.getValue();
+        String text = textValue.get();
 
         TextWithMnemonic mnemonicInfo = TextWithMnemonic.parse(text);
         if (!mnemonicInfo.hasMnemonic()) {

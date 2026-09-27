@@ -67,7 +67,7 @@ public class DesktopQtColorBoxImpl extends QtComponentDelegate<QPushButton> impl
         component.setAutoDefault(false);
         component.setDefault(false);
 
-        if (getToolTipText().get().isEmpty()) {
+        if (getToolTipText().isEmpty()) {
             component.setToolTip(UILocalize.colorPanelSelectColorDialogDescription().get());
         }
 

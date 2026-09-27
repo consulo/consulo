@@ -87,9 +87,9 @@ public class ExcludeListDialog extends DialogWrapper {
         JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
         layoutPanel.addToBottom(bottomPanel);
 
-        String comment = baseLanguageComment(provider);
-        if (comment != null) {
-            layoutPanel.add(new JLabel(comment));
+        LocalizeValue comment = baseLanguageComment(provider);
+        if (comment.isNotEmpty()) {
+            layoutPanel.add(new JLabel(comment.get()));
         }
 
         LocalizeValue explanationHTML = getExcludeListExplanationHTML(language);
@@ -100,12 +100,12 @@ public class ExcludeListDialog extends DialogWrapper {
         return layoutPanel;
     }
 
-    private String baseLanguageComment(InlayParameterHintsProvider provider) {
+    private LocalizeValue baseLanguageComment(InlayParameterHintsProvider provider) {
         Language dep = provider.getBlackListDependencyLanguage();
         if (dep == null) {
-            return null;
+            return LocalizeValue.empty();
         }
-        return CodeInsightLocalize.inlayHintsBaseExcludeListDescription(dep.getDisplayName()).get();
+        return CodeInsightLocalize.inlayHintsBaseExcludeListDescription(dep.getDisplayName());
     }
 
     private void setLanguageExcludeListToDefault(Language language) {

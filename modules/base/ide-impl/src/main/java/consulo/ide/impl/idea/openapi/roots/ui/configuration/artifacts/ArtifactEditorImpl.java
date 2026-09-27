@@ -337,7 +337,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     private ActionGroup createAddGroup() {
-        DefaultActionGroup group = new DefaultActionGroup(ProjectLocalize.artifactsAddCopyAction().get(), true);
+        DefaultActionGroup group = new DefaultActionGroup(ProjectLocalize.artifactsAddCopyAction(), true);
         group.getTemplatePresentation().setIcon(PlatformIconGroup.generalAdd());
         for (PackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getAllElementTypes()) {
             if (type.isAvailableForAdd(getContext(), getArtifact())) {

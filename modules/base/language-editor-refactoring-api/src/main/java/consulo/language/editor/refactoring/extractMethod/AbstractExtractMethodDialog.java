@@ -66,7 +66,7 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
         myOutputVariables = new ArrayList<>(fragment.getOutputVariables());
         Collections.sort(myOutputVariables);
         setModal(true);
-        setTitle(RefactoringLocalize.extractMethodTitle().get());
+        setTitle(RefactoringLocalize.extractMethodTitle());
         init();
     }
 

@@ -44,7 +44,7 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
 
     if (Messages.showYesNoDialog(
       project,
-      ExecutionLocalize.serviceViewDeleteConfirmation(ExecutionLocalize.serviceViewItems(items.size()).get()).get(),
+      ExecutionLocalize.serviceViewDeleteConfirmation(ExecutionLocalize.serviceViewItems(items.size())).get(),
       CommonLocalize.buttonDelete().get(),
       UIUtil.getWarningIcon())
       != Messages.YES

@@ -381,12 +381,12 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     }
 
     private void updateEmptyText() {
-        myComponent.updateEmptyText(this::getEmptyText);
+        myComponent.updateEmptyText(() -> getEmptyText().get());
     }
 
-    private String getEmptyText() {
+    private LocalizeValue getEmptyText() {
         if (myFindModel.isGlobal() || !myFindModel.getStringToFind().isEmpty()) {
-            return "";
+            return LocalizeValue.empty();
         }
         String text = getEditor().getSelectionModel().getSelectedText();
         if (text != null && text.contains("\n")) {
@@ -395,10 +395,10 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
                 .getAction(replaceState ? IdeActions.ACTION_REPLACE : IdeActions.ACTION_TOGGLE_FIND_IN_SELECTION_ONLY);
             Shortcut shortcut = ArrayUtil.getFirstElement(action.getShortcutSet().getShortcuts());
             if (shortcut != null) {
-                return ApplicationLocalize.editorsearchInSelectionWithHint(KeymapUtil.getShortcutText(shortcut)).get();
+                return ApplicationLocalize.editorsearchInSelectionWithHint(KeymapUtil.getShortcutText(shortcut));
             }
         }
-        return ApplicationLocalize.editorsearchInSelection().get();
+        return ApplicationLocalize.editorsearchInSelection();
     }
 
     private static boolean wholeWordsApplicable(String stringToFind) {

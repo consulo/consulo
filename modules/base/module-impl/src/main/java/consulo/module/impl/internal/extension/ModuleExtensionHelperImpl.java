@@ -15,7 +15,6 @@
  */
 package consulo.module.impl.internal.extension;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
@@ -69,7 +68,6 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
     }
 
     @Override
-    
     @SuppressWarnings("unchecked")
     public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(Class<T> clazz) {
         checkInit();
@@ -90,12 +88,11 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
         return (Collection) moduleExtensions;
     }
 
-    
     @Override
     public String getModuleExtensionName(ModuleExtension<?> moduleExtension) {
         ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(moduleExtension.getId());
         assert provider != null;
-        return provider.getName().getValue();
+        return provider.getName().get();
     }
 
     @Override

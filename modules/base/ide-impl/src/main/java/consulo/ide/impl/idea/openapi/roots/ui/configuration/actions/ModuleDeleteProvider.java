@@ -63,7 +63,7 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
         assert modules != null;
         Project project = dataContext.getData(Project.KEY);
         String names = StringUtil.join(Arrays.asList(modules), module -> "\'" + module.getName() + "\'", ", ");
-        int ret = Messages.showOkCancelDialog(getConfirmationText(modules, names), getActionTitleValue().get(), UIUtil.getQuestionIcon());
+        int ret = Messages.showOkCancelDialog(getConfirmationText(modules, names).get(), getActionTitleValue().get(), UIUtil.getQuestionIcon());
         if (ret != 0) {
             return;
         }
@@ -94,11 +94,10 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
             });
     }
 
-    private static String getConfirmationText(Module[] modules, String names) {
-        return ProjectLocalize.moduleRemoveConfirmationPrompt(names, modules.length).get();
+    private static LocalizeValue getConfirmationText(Module[] modules, String names) {
+        return ProjectLocalize.moduleRemoveConfirmationPrompt(names, modules.length);
     }
 
-    
     @Override
     public LocalizeValue getActionTitleValue() {
         return LocalizeValue.localizeTODO("Remove Module");

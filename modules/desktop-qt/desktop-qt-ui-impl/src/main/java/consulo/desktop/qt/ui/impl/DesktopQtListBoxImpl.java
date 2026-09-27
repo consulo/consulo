@@ -78,15 +78,14 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
         protected void paintEvent(QPaintEvent event) {
             super.paintEvent(event);
 
-            String placeholder = myPlaceholder.get();
-            if (count() != 0 || placeholder.isEmpty()) {
+            if (count() != 0 || myPlaceholder.isEmpty()) {
                 return;
             }
 
             QPainter painter = new QPainter(viewport());
             try {
                 painter.setPen(palette().color(QPalette.ColorRole.PlaceholderText));
-                painter.drawText(viewport().rect(), Qt.AlignmentFlag.AlignCenter.value(), placeholder);
+                painter.drawText(viewport().rect(), Qt.AlignmentFlag.AlignCenter.value(), myPlaceholder.get());
             }
             finally {
                 painter.end();

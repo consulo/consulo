@@ -16,74 +16,74 @@
 package consulo.externalTool.impl.internal;
 
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.popup.Balloon;
-
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import java.awt.*;
 import java.io.IOException;
 
 class ToolSelectDialog extends DialogWrapper {
-  private final BaseToolsPanel myToolsPanel;
+    private final BaseToolsPanel myToolsPanel;
 
-  protected ToolSelectDialog(@Nullable Project project, @Nullable String actionIdToSelect, BaseToolsPanel toolsPanel) {
-    super(project);
-    myToolsPanel = toolsPanel;
-    myToolsPanel.reset();
-    setOKActionEnabled(myToolsPanel.getSingleSelectedTool() != null);
-    myToolsPanel.addSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
+    protected ToolSelectDialog(@Nullable Project project, @Nullable String actionIdToSelect, BaseToolsPanel toolsPanel) {
+        super(project);
+        myToolsPanel = toolsPanel;
+        myToolsPanel.reset();
         setOKActionEnabled(myToolsPanel.getSingleSelectedTool() != null);
-      }
-    });
-    init();
-    pack();
-    if (actionIdToSelect != null) {
-      myToolsPanel.selectTool(actionIdToSelect);
+        myToolsPanel.addSelectionListener(e -> setOKActionEnabled(myToolsPanel.getSingleSelectedTool() != null));
+        init();
+        pack();
+        if (actionIdToSelect != null) {
+            myToolsPanel.selectTool(actionIdToSelect);
+        }
+        setTitle(ExternalToolLocalize.toolsDialogTitle());
     }
-    setTitle(ExternalToolLocalize.toolsDialogTitle());
-  }
 
-  @Override
-  protected void doOKAction() {
-    try {
-      myToolsPanel.apply();
+    @Override
+    protected void doOKAction() {
+        try {
+            myToolsPanel.apply();
+        }
+        catch (IOException e) {
+            LocalizeValue message = ExternalToolLocalize.toolsFailedToSaveChanges0(StringUtil.decapitalize(e.getMessage()));
+            JLayeredPane pane = myToolsPanel.getRootPane().getLayeredPane();
+            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message.get(), NotificationType.ERROR, null)
+                .setShowCallout(false)
+                .setFadeoutTime(3000)
+                .setHideOnAction(true)
+                .setHideOnClickOutside(true)
+                .setHideOnKeyOutside(true)
+                .createBalloon()
+                .show(new RelativePoint(pane, new Point(pane.getWidth(), 0)), Balloon.Position.above);
+            return;
+        }
+        super.doOKAction();
     }
-    catch (IOException e) {
-      String message = ExternalToolLocalize.toolsFailedToSaveChanges0(StringUtil.decapitalize(e.getMessage())).get();
-      JLayeredPane pane = myToolsPanel.getRootPane().getLayeredPane();
-      JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, NotificationType.ERROR, null)
-        .setShowCallout(false).setFadeoutTime(3000).setHideOnAction(true).setHideOnClickOutside(true).setHideOnKeyOutside(true).
-        createBalloon().show(new RelativePoint(pane, new Point(pane.getWidth(), 0)), Balloon.Position.above);
-      return;
+
+    @Override
+    protected JComponent createCenterPanel() {
+        return myToolsPanel;
     }
-    super.doOKAction();
-  }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    return myToolsPanel;
-  }
+    @Nullable
+    Tool getSelectedTool() {
+        return myToolsPanel.getSingleSelectedTool();
+    }
 
-  @Nullable Tool getSelectedTool() {
-    return myToolsPanel.getSingleSelectedTool();
-  }
+    boolean isModified() {
+        return myToolsPanel.isModified();
+    }
 
-  boolean isModified() {
-    return myToolsPanel.isModified();
-  }
-
-  @Override
-  protected String getDimensionServiceKey() {
-    return "consulo.externalTool.impl.internal.ToolSelectDialog.dimensionServiceKey";
-  }
+    @Override
+    protected String getDimensionServiceKey() {
+        return "consulo.externalTool.impl.internal.ToolSelectDialog.dimensionServiceKey";
+    }
 }

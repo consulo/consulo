@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.project.ui.view.impl.internal.nesting;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.CheckBox;
@@ -87,8 +88,8 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
     }
 
     private static TableView<CombinedNestingRule> createTable() {
-        String childColumn = ProjectUIViewLocalize.childFileSuffixColumnName().get();
-        String parentColumn = ProjectUIViewLocalize.parentFileSuffixColumnName().get();
+        LocalizeValue childColumn = ProjectUIViewLocalize.childFileSuffixColumnName();
+        LocalizeValue parentColumn = ProjectUIViewLocalize.parentFileSuffixColumnName();
         ListTableModel<CombinedNestingRule> model = new ListTableModel<>(
             new ColumnInfo<CombinedNestingRule, String>(parentColumn) {
                 @Override
@@ -134,7 +135,6 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         return table;
     }
 
-    
     @Override
     protected Action[] createActions() {
         DialogWrapperAction resetToDefaultAction = new DialogWrapperAction(ProjectUIViewLocalize.fileNestingResetToDefaultButton()) {
@@ -153,8 +153,8 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         return myOkAction;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected @Nullable ValidationInfo doValidate() {
         if (!myUseNestingRulesCheckBox.getValue()) {
             return null;
@@ -221,7 +221,6 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
     }
 
     private static final class CombinedNestingRule {
-        
         String parentSuffix;
         
         String childSuffixes; // semicolon-separated, space symbols around each suffix are ignored

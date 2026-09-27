@@ -149,8 +149,8 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         if (optionCase == null) {
             return getPreviewText();
         }
-        String preview = providerDescription.getPreviewFileText().get();
-        return InlayDumpUtil.removeInlays(preview);
+        LocalizeValue preview = providerDescription.getPreviewFileText();
+        return InlayDumpUtil.removeInlays(preview.get());
     }
 
     @Override
@@ -163,7 +163,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         return providerDescription.getOptions().stream()
             .filter(o -> o.id().equals(optionCase.id()))
             .findFirst()
-            .map(o -> o.description().get())
+            .map(o -> o.description().getNullIfEmpty())
             .orElse(null);
     }
 

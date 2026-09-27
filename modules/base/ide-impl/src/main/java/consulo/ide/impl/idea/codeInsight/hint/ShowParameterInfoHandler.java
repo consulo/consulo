@@ -75,7 +75,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
       false,
       CodeInsightLocalize.parameterInfoProgressTitle().get(),
       e -> DumbService.getInstance(project)
-        .showDumbModeNotification(CodeInsightLocalize.parameterInfoIndexingModeNotSupported().get())
+        .showDumbModeNotification(CodeInsightLocalize.parameterInfoIndexingModeNotSupported())
     );
   }
 

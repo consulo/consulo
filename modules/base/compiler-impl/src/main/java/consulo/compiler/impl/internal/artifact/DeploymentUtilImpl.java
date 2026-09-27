@@ -114,10 +114,10 @@ public class DeploymentUtilImpl {
         }
     }
 
-    private static String createCopyErrorMessage(File fromFile, File toFile) {
+    private static LocalizeValue createCopyErrorMessage(File fromFile, File toFile) {
         return CompilerLocalize.messageTextErrorCopyingFileToFile(
             FileUtil.toSystemDependentName(fromFile.getPath()),
             FileUtil.toSystemDependentName(toFile.getPath())
-        ).get();
+        );
     }
 }

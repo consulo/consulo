@@ -61,7 +61,7 @@ public class UnifiedXValueNodeImpl extends UnifiedXValueContainerNode<XValue>
         if (!isComputed()) {
             UnifiedColoredTextContainer text = new UnifiedColoredTextContainer();
             if (myName.isNotEmpty()) {
-                text.append(myName.get(), XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES);
+                text.append(myName, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES);
                 text.append(XDebuggerUIConstants.EQ_TEXT, SimpleTextAttributes.REGULAR_ATTRIBUTES);
             }
             text.append(XDebuggerUIConstants.COLLECTING_DATA_MESSAGE, XDebuggerUIConstants.COLLECTING_DATA_HIGHLIGHT_ATTRIBUTES);

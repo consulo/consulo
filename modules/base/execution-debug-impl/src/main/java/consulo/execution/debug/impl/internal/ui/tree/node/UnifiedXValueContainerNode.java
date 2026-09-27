@@ -133,7 +133,7 @@ public abstract class UnifiedXValueContainerNode<ValueContainer extends XValueCo
             myValueChildren.add(new UnifiedXValueNodeImpl(myTree, this, LocalizeValue.of(children.getName(i)), children.getValue(i)));
         }
         if (!myAlreadySorted && XDebuggerSettingsManager.getInstance().getDataViewSettings().isSortValues()) {
-            myValueChildren.sort(Comparator.comparing(node -> node.getName().get()));
+            myValueChildren.sort(Comparator.comparing(UnifiedXValueNodeImpl::getName));
         }
 
         myTopGroups = createGroupNodes(children.getTopGroups(), myTopGroups);

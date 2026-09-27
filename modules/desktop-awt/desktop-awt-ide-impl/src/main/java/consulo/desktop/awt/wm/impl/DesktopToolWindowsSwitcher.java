@@ -5,7 +5,6 @@ import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
 import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -14,12 +13,12 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -165,7 +164,7 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
                         toolWindows.add(tw);
                     }
                 }
-                toolWindows.sort((o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName().getValue(), o2.getDisplayName().getValue()));
+                toolWindows.sort((o1, o2) -> o1.getDisplayName().compareTo(o2.getDisplayName()));
 
                 ActionManager actionManager = ActionManager.getInstance();
 

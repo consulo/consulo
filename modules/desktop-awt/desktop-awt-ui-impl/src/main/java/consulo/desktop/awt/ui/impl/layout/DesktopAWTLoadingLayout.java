@@ -77,7 +77,7 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
     @RequiredUIAccess
     public void startLoading(LocalizeValue loadingText) {
         myInnerLayout.removeAll();
-        toAWTComponent().setLoadingText(loadingText.getValue());
+        toAWTComponent().setLoadingText(loadingText.get());
         forceUpdate();
     }
 
@@ -97,6 +97,6 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
     @Override
     @RequiredUIAccess
     public void setLoadingText(LocalizeValue loadingText) {
-        toAWTComponent().setLoadingText(loadingText.getValue());
+        toAWTComponent().setLoadingText(loadingText.get());
     }
 }

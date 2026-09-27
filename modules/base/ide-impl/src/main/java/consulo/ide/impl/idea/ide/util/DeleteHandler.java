@@ -22,6 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -244,9 +245,9 @@ public class DeleteHandler {
                             CommonRefactoringUtil.collectReadOnlyFiles(virtualFile, readOnlyFiles);
 
                             if (!readOnlyFiles.isEmpty()) {
-                                String message = IdeLocalize.promptDirectoryContainsReadOnlyFiles(virtualFile.getPresentableUrl()).get();
+                                LocalizeValue message = IdeLocalize.promptDirectoryContainsReadOnlyFiles(virtualFile.getPresentableUrl());
                                 int _result =
-                                    Messages.showYesNoDialog(project, message, IdeLocalize.titleDelete().get(), UIUtil.getQuestionIcon());
+                                    Messages.showYesNoDialog(project, message.get(), IdeLocalize.titleDelete().get(), UIUtil.getQuestionIcon());
                                 if (_result != Messages.YES) {
                                     continue;
                                 }

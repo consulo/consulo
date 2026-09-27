@@ -139,7 +139,7 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
 
     public static void notifyUnsatisfiedLinkError(UnsatisfiedLinkError e) {
         LOG.error(e);
-        LocalizeValue message = CredentialStorageLocalize.notificationContentNativeKeychainUnavailable(Application.get().getName().get());
+        LocalizeValue message = CredentialStorageLocalize.notificationContentNativeKeychainUnavailable(Application.get().getName());
         if (Platform.current().os().isLinux()) {
             message = LocalizeValue.join(message, LocalizeValue.of("\n"), CredentialStorageLocalize.notificationContentNativeKeychainUnavailableLinuxAddition());
         }

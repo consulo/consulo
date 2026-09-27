@@ -31,7 +31,7 @@ public class AttachmentsTabForm {
     private final EventDispatcher<ChangeListener> myInclusionEventDispatcher = EventDispatcher.create(ChangeListener.class);
 
     private final ColumnInfo<Attachment, Boolean> ENABLED_COLUMN =
-        new ColumnInfo<Attachment, Boolean>(ExternalServiceLocalize.errorDialogAttachmentIncludeColumnTitle().get()) {
+        new ColumnInfo<Attachment, Boolean>(ExternalServiceLocalize.errorDialogAttachmentIncludeColumnTitle()) {
             @Override
             public Boolean valueOf(Attachment attachment) {
                 return attachment.isIncluded();
@@ -60,7 +60,7 @@ public class AttachmentsTabForm {
         };
 
     private static final ColumnInfo<Attachment, String> PATH_COLUMN =
-        new ColumnInfo<Attachment, String>(ExternalServiceLocalize.errorDialogAttachmentPathColumnTitle().get()) {
+        new ColumnInfo<Attachment, String>(ExternalServiceLocalize.errorDialogAttachmentPathColumnTitle()) {
             @Override
             public String valueOf(Attachment attachment) {
                 return attachment.getPath();

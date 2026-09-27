@@ -63,13 +63,13 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
 
         DialogImpl() {
             super(false);
-            setTitle(MessagePresentation.title(myTitle).get());
+            setTitle(MessagePresentation.title(myTitle));
             init();
         }
 
         DialogImpl(java.awt.Component parent) {
             super(parent, false);
-            setTitle(MessagePresentation.title(myTitle).get());
+            setTitle(MessagePresentation.title(myTitle));
             init();
         }
 

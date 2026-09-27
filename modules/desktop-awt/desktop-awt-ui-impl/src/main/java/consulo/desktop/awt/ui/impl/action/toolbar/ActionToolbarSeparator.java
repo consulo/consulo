@@ -94,7 +94,7 @@ final class ActionToolbarSeparator extends JComponent {
                 int top = (getHeight() - fontMetrics.getHeight()) / 2;
                 UISettingsUtil.setupAntialiasing(g);
                 g.setColor(JBColor.foreground());
-                g.drawString(myTextValue.getValue(), gap * 2 + center + gap, top + fontMetrics.getAscent());
+                g.drawString(myTextValue.get(), gap * 2 + center + gap, top + fontMetrics.getAscent());
             }
         }
         else {

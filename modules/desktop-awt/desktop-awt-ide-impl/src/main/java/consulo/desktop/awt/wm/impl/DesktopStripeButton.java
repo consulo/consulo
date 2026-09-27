@@ -402,7 +402,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
             return;
         }
 
-        String text = myDecorator.getToolWindow().getDisplayName().getValue();
+        String text = myDecorator.getToolWindow().getDisplayName().get();
         String toolWindowId = myDecorator.getToolWindow().getId();
         int mnemonic = mySettings.isShowMnemonic() ? ActivateToolWindowAction.getMnemonicForToolWindow(toolWindowId) : -1;
         if (mnemonic != -1) {
