@@ -82,8 +82,14 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
         return values.length == 0 ? empty() : new SeparatorJoinedLocalizedValue2(LocalizationManager.get(), separator, values);
     }
 
+    /**
+     * Natural ("sorting for humans") order: runs of digits are compared as numbers,
+     * so {@code "foo2"} precedes {@code "foo10"} (unlike in lexicographical sort).
+     * Comparison is case-insensitive, but if two values are equal ignoring case,
+     * case would be taken into account, so {@code "Foo"} still precedes {@code "foo"}.
+     */
     static Comparator<LocalizedValue> comparator() {
-        return AbstractLocalizedValue.CASE_INSENSITIVE_ORDER;
+        return AbstractLocalizedValue.CASE_INSENSITIVE_NATURAL_ORDER;
     }
 
     default boolean isEmpty() {

@@ -23,6 +23,7 @@ import org.jspecify.annotations.NullMarked;
 module consulo.localization.api {
     requires transitive consulo.annotation;
     requires transitive consulo.disposer.api;
+    requires consulo.util.lang;
 
     exports consulo.localization;
 

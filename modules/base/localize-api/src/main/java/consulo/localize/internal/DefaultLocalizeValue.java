@@ -18,6 +18,7 @@ package consulo.localize.internal;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
 
 import java.util.*;
 
@@ -26,11 +27,8 @@ import java.util.*;
  * @since 2020-05-20
  */
 public final class DefaultLocalizeValue extends BaseLocalizeValue {
-    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = (lv1, lv2) -> {
-        String v1 = lv1.get(), v2 = lv2.get();
-        int insensitive = v1.compareToIgnoreCase(v2);
-        return insensitive != 0 ? insensitive : v1.compareTo(v2);
-    };
+    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_NATURAL_ORDER =
+        (lv1, lv2) -> StringUtil.naturalCompare(lv1.get(), lv2.get());
 
     private final LocalizeKey myLocalizeKey;
 
