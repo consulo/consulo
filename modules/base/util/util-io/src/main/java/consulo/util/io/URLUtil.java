@@ -143,7 +143,10 @@ public class URLUtil {
         }
 
         @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") final ZipFile zipFile = new ZipFile(paths.first);
-        ZipEntry zipEntry = zipFile.getEntry(paths.second);
+        ZipEntry zipEntry = zipFile.getEntry(unescapePercentSequences(paths.second));
+        if (zipEntry == null) {
+            zipEntry = zipFile.getEntry(paths.second);
+        }
         if (zipEntry == null) {
             zipFile.close();
             throw new FileNotFoundException("Entry " + paths.second + " not found in " + paths.first);
