@@ -15,13 +15,14 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.diff.localize.DiffLocalize;
 import consulo.language.editor.FileColorManager;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.view.tree.ApplicationFileColorManager;
@@ -43,28 +44,27 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.*;
+import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author max
@@ -186,14 +186,13 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
 
         setShowFlatten(ProjectPropertiesComponent.getInstance(myProject).isTrueValue(FLATTEN_OPTION_KEY));
 
-        String emptyText = StringUtil.capitalize(DiffLocalize.diffCountDifferencesStatusText(0).get());
-        setEmptyText(emptyText);
+        setEmptyText(DiffLocalize.diffCountDifferencesStatusText(0).capitalize());
 
         myTreeCopyProvider = new ChangesBrowserNodeCopyProvider(this);
     }
 
     @Override
-    public void setEmptyText(String emptyText) {
+    public void setEmptyText(LocalizeValue emptyText) {
         getEmptyText().setText(emptyText);
     }
 
@@ -334,7 +333,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
     }
 
     private int findRowContainingFile(TreeNode root, VirtualFile toSelect) {
-        Ref<Integer> row = Ref.create(-1);
+        SimpleReference<Integer> row = SimpleReference.create(-1);
         TreeUtil.traverse(root, node -> {
             if (node instanceof DefaultMutableTreeNode mutableTreeNode) {
                 Object userObject = mutableTreeNode.getUserObject();
@@ -380,19 +379,37 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
         return ((ChangesBrowserNode) getRoot()).getAllChangesUnder();
     }
 
+    /**
+     * Returns changes of the explicitly selected rows: when both a node and some of its descendants are selected,
+     * the node itself contributes nothing, so a partially selected folder does not extend the selection to the
+     * children the user did not select.
+     *
+     * @return List of selected changes respecting partial selection of parent node's range.
+     */
     public List<T> getSelectedChanges() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
             return Collections.emptyList();
         }
-        else {
-            LinkedHashSet<T> changes = new LinkedHashSet<>();
-            for (TreePath path : paths) {
-                //noinspection unchecked
-                changes.addAll(getSelectedObjects((ChangesBrowserNode) path.getLastPathComponent()));
+
+        List<TreePath> pathList = Arrays.asList(paths);
+        Set<TreePath> selectedPaths = new HashSet<>(pathList);
+        SequencedSet<TreePath> filteredPaths = new LinkedHashSet<>(pathList);
+        for (TreePath path : paths) {
+            for (TreePath ancestor = path.getParentPath(); ancestor != null; ancestor = ancestor.getParentPath()) {
+                if (selectedPaths.contains(ancestor) && !filteredPaths.remove(ancestor)) {
+                    // ancestors of an already filtered path have been collected on its own walk up
+                    break;
+                }
             }
-            return ContainerUtil.newArrayList(changes);
         }
+
+        SequencedSet<T> changes = new LinkedHashSet<>();
+        for (TreePath path : filteredPaths) {
+            //noinspection unchecked
+            changes.addAll(getSelectedObjects((ChangesBrowserNode<T>) path.getLastPathComponent()));
+        }
+        return new ArrayList<>(changes);
     }
 
     private List<T> getSelectedChangesOrAllIfNone() {
@@ -509,12 +526,10 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
         };
         AnAction[] actions = new AnAction[]{directoriesAction, expandAllAction, collapseAllAction};
         directoriesAction.registerCustomShortcutSet(
-            new CustomShortcutSet(
-                KeyStroke.getKeyStroke(
-                    KeyEvent.VK_P,
-                    Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK
-                )
-            ),
+            new CustomShortcutSet(KeyStroke.getKeyStroke(
+                KeyEvent.VK_P,
+                Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK
+            )),
             this
         );
         expandAllAction.registerCustomShortcutSet(
@@ -633,7 +648,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
             super(
                 VcsLocalize.changesActionShowDirectoriesText(),
                 VcsLocalize.changesActionShowDirectoriesDescription(),
-                AllIcons.Actions.GroupByPackage
+                PlatformIconGroup.actionsGroupbypackage()
             );
         }
 
@@ -643,6 +658,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             ProjectPropertiesComponent.getInstance(myProject).setValue(FLATTEN_OPTION_KEY, String.valueOf(!state));
             setShowFlatten(!state);
@@ -706,21 +722,52 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
 
     @Override
     protected void processMouseEvent(MouseEvent e) {
-        if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-            if (!isEnabled()) {
+        if (e.getID() == MouseEvent.MOUSE_PRESSED && isEnabled() && myShowCheckboxes && SwingUtilities.isLeftMouseButton(e)) {
+            if (processCheckboxClick(e)) {
                 return;
-            }
-            int row = getRowForLocation(e.getX(), e.getY());
-            if (row >= 0) {
-                Rectangle baseRect = getRowBounds(row);
-                baseRect.setSize(myCheckboxWidth, baseRect.height);
-                if (baseRect.contains(e.getPoint())) {
-                    setSelectionRow(row);
-                    toggleSelection();
-                }
             }
         }
         super.processMouseEvent(e);
+    }
+
+    private boolean processCheckboxClick(MouseEvent e) {
+        int row = getRowForLocation(e.getX(), e.getY());
+        if (row < 0) {
+            return false;
+        }
+        Rectangle checkboxRect = getRowBounds(row);
+        checkboxRect.setSize(myCheckboxWidth, checkboxRect.height);
+        if (!checkboxRect.contains(e.getPoint())) {
+            return false;
+        }
+        requestFocusInWindow();
+        if (!isRowSelected(row)) {
+            if (e.isShiftDown() && !isSelectionEmpty()) {
+                // Shift+Click on check-box outside of the selection:
+                // toggle all the lines between previously selected line and current line, then select the current line only.
+                int minSelectionRow = getMinSelectionRow();
+                int maxSelectionRow = getMaxSelectionRow();
+                clearSelection();
+                if (minSelectionRow < row) {
+                    addSelectionInterval(minSelectionRow, row);
+                }
+                else {
+                    addSelectionInterval(row, maxSelectionRow);
+                }
+                toggleSelection();
+                setSelectionRow(row);
+            }
+            else {
+                // Click on check-box outside of the selection: select current line and toggle it.
+                setSelectionRow(row);
+                toggleSelection();
+            }
+        }
+        else {
+            // Click on check-box inside the selection: toggle all selected rows and leave selection as is.
+            toggleSelection();
+        }
+        return true;
     }
 
     @Override

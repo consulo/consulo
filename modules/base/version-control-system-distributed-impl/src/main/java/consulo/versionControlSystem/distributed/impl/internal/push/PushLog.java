@@ -18,6 +18,7 @@ package consulo.versionControlSystem.distributed.impl.internal.push;
 import consulo.application.Application;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -152,7 +153,7 @@ public class PushLog extends JPanel implements UiDataProvider {
             @Override
             public void editingStopped(ChangeEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node != null && node instanceof EditableTreeNode treeNode) {
+                if (node instanceof EditableTreeNode treeNode) {
                     JComponent editedComponent = (JComponent)node.getUserObject();
                     InputVerifier verifier = editedComponent.getInputVerifier();
                     if (verifier != null && !verifier.verify(editedComponent)) {
@@ -179,7 +180,7 @@ public class PushLog extends JPanel implements UiDataProvider {
             @Override
             public void editingCanceled(ChangeEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node != null && node instanceof EditableTreeNode editableTreeNode) {
+                if (node instanceof EditableTreeNode editableTreeNode) {
                     editableTreeNode.fireOnCancel();
                 }
                 resetEditSync();
@@ -386,7 +387,7 @@ public class PushLog extends JPanel implements UiDataProvider {
     private void updateChangesView() {
         List<CommitNode> commitNodes = getSelectedCommitNodes();
         if (!commitNodes.isEmpty()) {
-            myChangesBrowser.getViewer().setEmptyText("No differences");
+            myChangesBrowser.getViewer().setEmptyText(LocalizeValue.localizeTODO("No differences"));
         }
         else {
             setDefaultEmptyText();
@@ -395,7 +396,7 @@ public class PushLog extends JPanel implements UiDataProvider {
     }
 
     private void setDefaultEmptyText() {
-        myChangesBrowser.getViewer().setEmptyText("No commits selected");
+        myChangesBrowser.getViewer().setEmptyText(LocalizeValue.localizeTODO("No commits selected"));
     }
 
     // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
@@ -496,10 +497,7 @@ public class PushLog extends JPanel implements UiDataProvider {
         }
     }
 
-    public void setChildren(
-        DefaultMutableTreeNode parentNode,
-        Collection<? extends DefaultMutableTreeNode> childrenNodes
-    ) {
+    public void setChildren(DefaultMutableTreeNode parentNode, Collection<? extends DefaultMutableTreeNode> childrenNodes) {
         parentNode.removeAllChildren();
         for (DefaultMutableTreeNode child : childrenNodes) {
             parentNode.add(child);
@@ -536,12 +534,11 @@ public class PushLog extends JPanel implements UiDataProvider {
         for (DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)node.getFirstChild();
              childNode != null;
              childNode = (DefaultMutableTreeNode)node.getChildAfter(childNode)) {
-            if (!(childNode instanceof RepositoryNode)) {
+            if (!(childNode instanceof RepositoryNode repositoryNode)) {
                 return;
             }
-            TreePath path = TreeUtil.getPathFromRoot(childNode);
-            if (((RepositoryNode)childNode).isChecked()) {
-                myTree.expandPath(path);
+            if (repositoryNode.isChecked()) {
+                myTree.expandPath(TreeUtil.getPathFromRoot(childNode));
             }
         }
     }
@@ -583,13 +580,13 @@ public class PushLog extends JPanel implements UiDataProvider {
             int row,
             boolean hasFocus
         ) {
-            if (!(value instanceof DefaultMutableTreeNode)) {
+            if (!(value instanceof DefaultMutableTreeNode node)) {
                 return;
             }
             myCheckbox.setBorder(null); //checkBox may have no border by default, but insets are not null,
             // it depends on LaF, OS and isItRenderedPane, see consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaCheckBoxBorder.
             // null border works as expected always.
-            if (value instanceof RepositoryNode valueNode) {
+            if (node instanceof RepositoryNode valueNode) {
                 //todo simplify, remove instance of
                 myCheckbox.setVisible(valueNode.isCheckboxVisible());
                 if (valueNode.isChecked() && valueNode.isLoading()) {
@@ -599,10 +596,10 @@ public class PushLog extends JPanel implements UiDataProvider {
                     myCheckbox.setSelected(valueNode.isChecked());
                 }
             }
-            Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+            Object userObject = node.getUserObject();
             ColoredTreeCellRenderer renderer = getTextRenderer();
-            if (value instanceof CustomRenderedTreeNode customRenderedTreeNode) {
-                if (tree.isEditing() && mySyncStrategy && value instanceof RepositoryNode repositoryNode) {
+            if (node instanceof CustomRenderedTreeNode customRenderedTreeNode) {
+                if (tree.isEditing() && mySyncStrategy && node instanceof RepositoryNode repositoryNode) {
                     //sync rendering all editable fields
                     repositoryNode.render(renderer, mySyncRenderedText);
                 }
@@ -681,7 +678,6 @@ public class PushLog extends JPanel implements UiDataProvider {
             tree.addComponentListener(myTreeSizeListener);
             tree.addAncestorListener(myTreeAncestorListener);
         }
-
 
         @Override
         protected void uninstallListeners() {

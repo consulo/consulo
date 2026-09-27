@@ -61,7 +61,6 @@ import java.util.*;
 import static java.util.stream.Collectors.toList;
 
 public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBase<Object> {
-    
     private final ChangeListChooser myChangeListChooser;
     
     final ChangeListListener myChangeListListener = new MyChangeListListener();
@@ -98,7 +97,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
             Object.class
         );
         myRebuildListListener = rebuildListListener;
-        myVcsConfiguration = ObjectUtil.assertNotNull(VcsConfiguration.getInstance(myProject));
+        myVcsConfiguration = Objects.requireNonNull(VcsConfiguration.getInstance(myProject));
         myUnversionedFilesEnabled = unversionedFilesEnabled;
 
         init();
@@ -139,6 +138,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     }
 
     @Override
+    @RequiredUIAccess
     protected void showDiff() {
         Object rawSelection = myViewer.getLeadSelection();
 
@@ -221,7 +221,6 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         }
     }
 
-    
     private Collection<Change> getLocalChanges() {
         Collection<Change> result = new ArrayList<>();
         ChangeListManager manager = ChangeListManager.getInstance(myProject);
@@ -236,14 +235,12 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     }
 
     @Override
-    
     public List<Change> getCurrentIncludedChanges() {
         Collection<Object> includedObjects = myViewer.getIncludedChanges();
 
         return mySelectedChangeList.getChanges().stream().filter(includedObjects::contains).collect(toList());
     }
 
-    
     @Override
     protected DefaultTreeModel buildTreeModel(
         List<Object> objects,
@@ -261,7 +258,6 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return builder.build();
     }
 
-    
     @Override
     protected List<Object> getSelectedObjects(ChangesBrowserNode<Object> node) {
         List<Object> result = new ArrayList<>();
@@ -286,14 +282,12 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return result;
     }
 
-    
     @Override
     public List<Object> getCurrentDisplayedObjects() {
         //noinspection unchecked
         return (List) getCurrentDisplayedChanges();
     }
 
-    
     @Override
     public List<VirtualFile> getIncludedUnversionedFiles() {
         return isShowUnversioned()
@@ -326,10 +320,9 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         );
     }
 
-    
     @Override
     public List<Change> getSelectedChanges() {
-        Set<Change> changes = new LinkedHashSet<>();
+        SequencedSet<Change> changes = new LinkedHashSet<>();
         TreePath[] paths = myViewer.getSelectionPaths();
 
         if (paths != null) {
@@ -339,17 +332,15 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
             }
         }
 
-        return ContainerUtil.newArrayList(changes);
+        return new ArrayList<>(changes);
     }
 
-    
     @Override
     public List<Change> getAllChanges() {
         return myViewer.getRoot().getAllChangesUnder();
     }
 
     @Override
-    
     public Set<AbstractVcs> getAffectedVcses() {
         return ChangesUtil.getAffectedVcses(myAllChanges, myProject);
     }
@@ -425,12 +416,12 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     private class ChangeListChooser extends JPanel {
         private final static int MAX_LEN = 35;
         
-        private final ComboBox myChooser;
+        private final ComboBox<LocalChangeList> myChooser;
 
         public ChangeListChooser() {
             super(new BorderLayout(4, 2));
-            myChooser = new ComboBox();
-            myChooser.setRenderer(new ColoredListCellRenderer<LocalChangeList>() {
+            myChooser = new ComboBox<>();
+            myChooser.setRenderer(new ColoredListCellRenderer<>() {
                 @Override
                 protected void customizeCellRenderer(
                     JList<? extends LocalChangeList> list,
@@ -490,7 +481,6 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     }
 
     private class ShowHideUnversionedFilesAction extends ToggleAction {
-
         private ShowHideUnversionedFilesAction() {
             super(LocalizeValue.localizeTODO("Show Unversioned Files"), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
         }
