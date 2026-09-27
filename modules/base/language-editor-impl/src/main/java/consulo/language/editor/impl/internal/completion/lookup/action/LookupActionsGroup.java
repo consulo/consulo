@@ -1,0 +1,46 @@
+/*
+ * Copyright 2013-2025 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.language.editor.impl.internal.completion.lookup.action;
+
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
+import consulo.language.editor.internal.action.LanguageEditorActions;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.DefaultActionGroup;
+
+/**
+ * @author UNV
+ * @since 2025-09-23
+ */
+@ActionImpl(
+    id = LanguageEditorActions.GROUP_LOOKUP_ACTIONS,
+    children = {
+        @ActionRef(type = FocusedOnlyChooseItemAction.class),
+        @ActionRef(type = ChooseItemReplaceAction.class),
+        @ActionRef(type = ChooseItemCompleteStatementAction.class),
+        @ActionRef(type = ChooseItemWithDotAction.class),
+        @ActionRef(id = LanguageEditorActions.EXPAND_LIVE_TEMPLATE_BY_TAB),
+        @ActionRef(id = LanguageEditorActions.PREVIOUS_LIVE_TEMPLATE_VARIABLE),
+        @ActionRef(id = LanguageEditorActions.NEXT_PARAMETER),
+        @ActionRef(id = LanguageEditorActions.PREVIOUS_PARAMETER)
+    }
+)
+public class LookupActionsGroup extends DefaultActionGroup implements DumbAware {
+    public LookupActionsGroup() {
+        super(LocalizeValue.empty(), false);
+    }
+}

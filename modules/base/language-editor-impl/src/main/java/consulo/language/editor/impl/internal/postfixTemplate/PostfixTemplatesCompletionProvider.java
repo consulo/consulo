@@ -24,7 +24,7 @@ class PostfixTemplatesCompletionProvider implements CompletionProvider {
         Editor editor = parameters.getEditor();
         if (!isCompletionEnabled(parameters) || LiveTemplateCompletionContributor.shouldShowAllTemplates() || editor.getCaretModel().getCaretCount() != 1) {
       /*
-        disabled or covered with {@link consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor}
+        disabled or covered with {@link consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor}
        */
             return;
         }
