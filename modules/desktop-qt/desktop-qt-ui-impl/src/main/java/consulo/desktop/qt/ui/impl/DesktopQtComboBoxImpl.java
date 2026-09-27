@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
+import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QComboBox;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -90,8 +91,8 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
                 myRenderer.render(presentation, RenderItem.of(element, i == mySelectedIndex));
 
                 Image image = presentation.getImage();
-                if (image instanceof DesktopQtImage qtImage) {
-                    component.addItem(qtImage.toQIcon(), presentation.toString());
+                if (image instanceof DesktopQtImage) {
+                    component.addItem(toHostQIcon(image), presentation.toString());
                 }
                 else {
                     component.addItem(presentation.toString());
@@ -121,6 +122,27 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
     @RequiredUIAccess
     public void refreshIcons() {
         rebuildIfBound();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void repaintAnimatedImage() {
+        super.repaintAnimatedImage();
+
+        QComboBox component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return;
+        }
+
+        QAbstractItemView view = component.view();
+        if (view == null || view.isDisposed() || !view.isVisible()) {
+            return;
+        }
+
+        QWidget viewport = view.viewport();
+        if (viewport != null && !viewport.isDisposed()) {
+            viewport.update();
+        }
     }
 
     @Override

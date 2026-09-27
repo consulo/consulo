@@ -37,6 +37,15 @@ public interface DelayedAction {
         return UIInternal.get()._DelayedAction_start(anchor);
     }
 
+    /**
+     * The same indicator at a point of the target, measured the way {@link PopupMenu#show(int, int)} measures it -
+     * for work that ends in a popup menu shown at that very point.
+     */
+    @RequiredUIAccess
+    static DelayedAction start(Component target, int relativeX, int relativeY) {
+        return UIInternal.get()._DelayedAction_start(target, relativeX, relativeY);
+    }
+
     @RequiredUIAccess
     void stop();
 }

@@ -15,81 +15,39 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.base.DesktopQtImageWidget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.ImageBox;
-import consulo.ui.Space;
 import consulo.ui.image.Image;
-import consulo.ui.internal.BorderPosition;
-import io.qt.core.QSize;
-import io.qt.core.Qt;
-import io.qt.gui.QPixmap;
-import io.qt.widgets.QLabel;
-import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QWidget;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtImageBoxImpl extends QtComponentDelegate<QLabel> implements ImageBox, DesktopQtIconOwner {
+public class DesktopQtImageBoxImpl extends QtComponentDelegate<DesktopQtImageWidget> implements ImageBox, DesktopQtIconOwner {
     private final Image myImage;
 
     public DesktopQtImageBoxImpl(Image image) {
         myImage = image;
     }
 
-    private class ImageLabel extends QLabel {
-        private ImageLabel(QWidget parent) {
-            super(parent);
-        }
-
-        @Override
-        public QSize sizeHint() {
-            return new QSize(
-                myImage.getWidth() + borderSpace(BorderPosition.LEFT) + borderSpace(BorderPosition.RIGHT),
-                myImage.getHeight() + borderSpace(BorderPosition.TOP) + borderSpace(BorderPosition.BOTTOM)
-            );
-        }
-    }
-
-    private int borderSpace(BorderPosition position) {
-        int size = myDataObject.getBorders().containsKey(position) ? 1 : 0;
-
-        Space space = myDataObject.getPaddings().get(position);
-        if (space != null) {
-            size += DesktopQtSpace.toPixels(space);
-        }
-
-        return size;
+    @Override
+    protected DesktopQtImageWidget createQt(QWidget parent) {
+        return new DesktopQtImageWidget(parent);
     }
 
     @Override
-    protected QLabel createQt(QWidget parent) {
-        return new ImageLabel(parent);
-    }
-
-    @Override
-    protected void initialize(QLabel component) {
-        applyImage(component);
+    protected void initialize(DesktopQtImageWidget component) {
+        component.setImage(myImage);
     }
 
     @Override
     public void refreshIcons() {
-        if (myComponent != null) {
-            applyImage(myComponent);
+        DesktopQtImageWidget component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            component.setImage(myImage);
         }
-    }
-
-    private void applyImage(QLabel component) {
-        QPixmap pixmap = myImage instanceof DesktopQtImage qtImage ? qtImage.toQPixmap() : null;
-
-        if (pixmap != null && !pixmap.isNull()) {
-            component.setPixmap(pixmap);
-        }
-
-        component.setAlignment(Qt.AlignmentFlag.AlignCenter);
-        component.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
     }
 
     @Override

@@ -28,17 +28,18 @@ import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
 import io.qt.core.QEvent;
+import io.qt.core.QRect;
 import io.qt.core.QRectF;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QEnterEvent;
 import io.qt.gui.QFontMetrics;
+import io.qt.gui.QIcon;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
-import io.qt.gui.QPixmap;
 import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -72,7 +73,6 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
 
     private String myText = "";
     private @Nullable Image myIcon;
-    private @Nullable QPixmap myIconPixmap;
 
     @RequiredUIAccess
     public DesktopQtToolWindowStripeButtonImpl(
@@ -144,7 +144,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         setEnabled(toShow && !window.isPlaceholderMode());
 
         myText = window.getDisplayName().get();
-        setIcon(window.getIcon());
+        myIcon = window.getIcon();
 
         if (isAlive()) {
             myComponent.updateGeometry();
@@ -152,26 +152,8 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         }
     }
 
-    private void setIcon(@Nullable Image icon) {
-        if (myIcon == icon) {
-            return;
-        }
-
-        myIcon = icon;
-
-        updateIconPixmap();
-    }
-
-    private void updateIconPixmap() {
-        myIconPixmap = myIcon instanceof DesktopQtImage qtImage
-            ? qtImage.toQPixmap()
-            : null;
-    }
-
     @Override
     public void refreshIcons() {
-        updateIconPixmap();
-
         if (isAlive()) {
             myComponent.update();
         }
@@ -357,20 +339,24 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
                     text = fm.elidedText(myText, Qt.TextElideMode.ElideRight, textRoom);
                 }
 
-                if (myIconPixmap != null) {
+                Image icon = myIcon;
+                if (icon != null) {
                     int iconAcrossOffset = (acrossSize - iconAcross) / 2;
                     int iconAlongOffset = MARGIN + PAD_ALONG;
 
                     // the icon itself is never rotated, only the text is
+                    QRect iconRect;
                     if (anchor == ToolWindowAnchor.LEFT) {
-                        painter.drawPixmap(iconAcrossOffset, h - iconAlongOffset - iconAlong, iconAcross, iconAlong, myIconPixmap);
+                        iconRect = new QRect(iconAcrossOffset, h - iconAlongOffset - iconAlong, iconAcross, iconAlong);
                     }
                     else if (anchor == ToolWindowAnchor.RIGHT) {
-                        painter.drawPixmap(iconAcrossOffset, iconAlongOffset, iconAcross, iconAlong, myIconPixmap);
+                        iconRect = new QRect(iconAcrossOffset, iconAlongOffset, iconAcross, iconAlong);
                     }
                     else {
-                        painter.drawPixmap(iconAlongOffset, iconAcrossOffset, iconAlong, iconAcross, myIconPixmap);
+                        iconRect = new QRect(iconAlongOffset, iconAcrossOffset, iconAlong, iconAcross);
                     }
+
+                    DesktopQtImage.paint(painter, iconRect, isEnabled() ? QIcon.Mode.Normal : QIcon.Mode.Disabled, icon, null);
                 }
 
                 if (!text.isEmpty()) {

@@ -32,7 +32,6 @@ import consulo.ui.TreeStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.localize.UILocalize;
-import consulo.ui.image.Image;
 import consulo.ui.impl.tree.TreeController;
 import consulo.ui.impl.tree.TreeNodeImpl;
 import consulo.ui.impl.tree.TreeWidget;
@@ -350,10 +349,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         if (node.getPresentation() instanceof DesktopQtTextItemPresentation presentation) {
             item.setText(0, presentation.toString());
 
-            Image image = presentation.getImage();
-            if (image != null) {
-                item.setIcon(0, DesktopQtImage.toQIcon(image));
-            }
+            item.setIcon(0, DesktopQtImage.toQIcon(presentation.getImage()));
         }
 
         applyItemHeight(item, node);

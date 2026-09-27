@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.image;
 
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ import java.util.Objects;
  * @author VISTALL
  * @since 2018-05-06
  */
-public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
+public class DesktopTransparentImageImpl implements RetrievableIcon, Image, DesktopAWTImage {
     private final consulo.ui.image.Image myImage;
     private final float myAlpha;
 
@@ -71,6 +72,21 @@ public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
     @Override
     public int getWidth() {
         return getIconWidth();
+    }
+
+    @Override
+    public DesktopAWTImage copyWithNewSize(int width, int height) {
+        return new DesktopTransparentImageImpl(ImageEffects.resize(myImage, width, height), myAlpha);
+    }
+
+    @Override
+    public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+        return new DesktopTransparentImageImpl(DesktopAWTImage.copyWithForceLibraryId(myImage, libraryId), myAlpha);
+    }
+
+    @Override
+    public DesktopAWTImage copyGrayed() {
+        return new DesktopTransparentImageImpl(DesktopAWTImage.copyGrayed(myImage), myAlpha);
     }
 
     @Override

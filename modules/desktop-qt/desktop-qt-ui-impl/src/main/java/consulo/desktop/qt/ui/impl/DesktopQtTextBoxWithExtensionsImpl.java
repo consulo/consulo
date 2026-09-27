@@ -15,12 +15,12 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.image.DesktopQtAnimationHost;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEventListener;
-import consulo.ui.image.Image;
 import io.qt.gui.QAction;
 import io.qt.gui.QIcon;
 import io.qt.widgets.QLineEdit;
@@ -72,7 +72,7 @@ public class DesktopQtTextBoxWithExtensionsImpl extends DesktopQtTextBoxImpl imp
 
         for (Extension extension : myExtensions) {
             QAction action = component.addAction(
-                toQIcon(extension),
+                toQIcon(extension, this),
                 extension.isLeft() ? QLineEdit.ActionPosition.LeadingPosition : QLineEdit.ActionPosition.TrailingPosition
             );
 
@@ -93,20 +93,8 @@ public class DesktopQtTextBoxWithExtensionsImpl extends DesktopQtTextBoxImpl imp
      * The hovered icon of the api is the {@code Active} mode of a qt icon, which is what a line edit asks for while
      * the pointer is over the action - so qt swaps the two on its own instead of a filter watching for the hover.
      */
-    private static QIcon toQIcon(Extension extension) {
-        Image icon = extension.getIcon();
-        if (!(icon instanceof DesktopQtImage qtIcon)) {
-            return new QIcon();
-        }
-
-        QIcon result = new QIcon(qtIcon.toQPixmap());
-
-        Image hoveredIcon = extension.getHoveredIcon();
-        if (hoveredIcon != icon && hoveredIcon instanceof DesktopQtImage qtHoveredIcon) {
-            result.addPixmap(qtHoveredIcon.toQPixmap(), QIcon.Mode.Active);
-        }
-
-        return result;
+    private static QIcon toQIcon(Extension extension, DesktopQtAnimationHost host) {
+        return DesktopQtLiveIconEngine.toQIcon(extension.getIcon(), extension.getHoveredIcon(), host);
     }
 
     @Override

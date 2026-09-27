@@ -141,12 +141,11 @@ public class DesktopQtIntentionBulbWidget extends QWidget {
             painter.drawRoundedRect(new QRect(0, 0, width() - 1, height() - 1), ARC, ARC);
         }
 
-        if (myIcon instanceof DesktopQtImage qtImage) {
-            qtImage.toQIcon().paint(
-                painter,
-                new QRect(PADDING, PADDING, Math.max(1, myIcon.getWidth()), Math.max(1, myIcon.getHeight()))
-            );
-        }
+        DesktopQtImage.paint(
+            painter,
+            new QRect(PADDING, PADDING, Math.max(1, myIcon.getWidth()), Math.max(1, myIcon.getHeight())),
+            myIcon
+        );
     }
 
     private static @Nullable ColorValue color(StyleColorValue key) {

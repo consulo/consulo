@@ -79,6 +79,26 @@ public interface Image {
         return UIInternal.get()._Image_stated(state, funcCall);
     }
 
+    /**
+     * Work is going on where this is shown, and its end is not known.
+     * <p>
+     * Square, {@code widthAndHeight} on each side. {@link ImageEffects#resize} gives a busy image of the new size, drawn
+     * again at that size and never stretched; when width and height differ it is drawn in the centred square of the
+     * smaller side. How it moves and its colour are decided by whoever draws it; where it cannot move it is shown still.
+     * A component showing it, alone or inside another image other than a colorized one, keeps it moving by itself while
+     * it is shown. It never stops by itself: show another image when the work is done.
+     */
+    static Image busy(int widthAndHeight) {
+        return UIInternal.get()._Image_busy(widthAndHeight);
+    }
+
+    /**
+     * {@link #busy(int)} of the icon size.
+     */
+    static Image busy() {
+        return busy(DEFAULT_ICON_SIZE);
+    }
+
     static EmptyImage empty() {
         return empty(0);
     }

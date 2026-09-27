@@ -54,6 +54,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ref.SimpleReference;
 import io.qt.core.QEvent;
 import io.qt.core.QPoint;
@@ -507,9 +508,18 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     }
 
     private void paintIcon(QPainter painter, @Nullable Image image, QRect bounds) {
-        if (image instanceof DesktopQtImage qtImage) {
-            qtImage.toQIcon().paint(painter, bounds);
+        if (image != null) {
+            DesktopQtImage.paint(painter, bounds, scaledImage(image));
         }
+    }
+
+    private Image scaledImage(Image image) {
+        double scale = iconScale();
+        if (scale == 1) {
+            return image;
+        }
+
+        return ImageEffects.resize(image, scaledIconSize(image), Math.max(1, (int) Math.round(image.getHeight() * scale)));
     }
 
     /**
@@ -691,7 +701,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         int lineHeight,
         double opacity
     ) {
-        if (!(image instanceof DesktopQtImage qtImage)) {
+        if (!(image instanceof DesktopQtImage)) {
             return false;
         }
 
@@ -700,7 +710,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         painter.save();
         painter.setOpacity(opacity);
-        qtImage.toQIcon().paint(painter, new QRect(Math.max(0, lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING - size), y, size, size));
+        paintIcon(painter, image, new QRect(Math.max(0, lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING - size), y, size, size));
         painter.restore();
 
         return true;
@@ -721,7 +731,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             }
 
             Image image = region.isExpanded() ? PlatformIconGroup.gutterFold() : PlatformIconGroup.gutterUnfold();
-            if (!(image instanceof DesktopQtImage qtImage)) {
+            if (!(image instanceof DesktopQtImage)) {
                 continue;
             }
 
@@ -731,7 +741,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             int x = areaOffset + (areaWidth - iconWidth) / 2;
             int y = line * lineHeight - scrollY + (lineHeight - iconHeight) / 2;
 
-            qtImage.toQIcon().paint(painter, new QRect(x, y, iconWidth, iconHeight));
+            paintIcon(painter, image, new QRect(x, y, iconWidth, iconHeight));
         }
     }
 

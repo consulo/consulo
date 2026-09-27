@@ -92,7 +92,6 @@ import java.util.function.Supplier;
 
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
-import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
 import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
 import static consulo.util.collection.ContainerUtil.addIfNotNull;
@@ -407,7 +406,6 @@ public class BuildTreeConsoleView extends BaseBuildTreeConsoleView implements Ui
     private static Tree initTree(AsyncTreeModel model) {
         Tree tree = new Tree(model);
         tree.setLargeModel(true);
-        ComponentUtil.putClientProperty(tree, ANIMATION_IN_RENDERER_ALLOWED, true);
         ComponentUtil.putClientProperty(tree, TreeOptions.AUTO_EXPAND_ALLOWED, false);
         tree.setRootVisible(false);
         EditSourceOnDoubleClickHandler.install(tree);

@@ -28,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import io.qt.core.QPointF;
+import io.qt.core.QRect;
 import io.qt.core.Qt;
 import io.qt.core.QRectF;
 import io.qt.gui.QBrush;
@@ -235,10 +236,10 @@ public class DesktopQtEditorInlays {
             TextAttributes attributes = attributesOf(scheme, segment);
 
             Image image = segment.image();
-            if (image instanceof DesktopQtImage qtImage) {
+            if (image instanceof DesktopQtImage) {
                 int size = (int) Math.round(imageWidth(image));
 
-                qtImage.toQIcon().paint(painter, (int) Math.round(cursor), y + (lineHeight - size) / 2, size, size);
+                DesktopQtImage.paint(painter, new QRect((int) Math.round(cursor), y + (lineHeight - size) / 2, size, size), image);
 
                 cursor += size;
             }

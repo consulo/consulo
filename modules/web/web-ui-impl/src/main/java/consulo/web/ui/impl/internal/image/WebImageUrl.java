@@ -119,7 +119,7 @@ public class WebImageUrl {
                     return null;
                 }
                 RGBColor color = colorize.getColorValue().toRGB();
-                return new WebImageSpec.Colorize(child, color.getRed() << 16 | color.getGreen() << 8 | color.getBlue());
+                return new WebImageSpec.Colorize(WebImageSpec.still(child), color.getRed() << 16 | color.getGreen() << 8 | color.getBlue());
             }
             case WebTransparentImageImpl transparent: {
                 WebImageSpec child = toSpec(transparent.getOriginal());
@@ -127,7 +127,7 @@ public class WebImageUrl {
             }
             case WebResizeImageImpl resize: {
                 WebImageSpec child = toSpec(resize.getOriginal());
-                return child == null ? null : new WebImageSpec.Resize(child, resize.getWidth(), resize.getHeight());
+                return child == null ? null : WebImageSpec.resize(child, resize.getWidth(), resize.getHeight());
             }
             case WebLayeredImageImpl layered: {
                 List<WebImageSpec> children = new ArrayList<>();
@@ -141,7 +141,7 @@ public class WebImageUrl {
             }
             case WebGrayedImageImpl grayed: {
                 WebImageSpec child = toSpec(grayed.getOriginal());
-                return child == null ? null : new WebImageSpec.Gray(child, grayed.getPercent());
+                return child == null ? null : new WebImageSpec.Gray(WebImageSpec.withoutBlinking(child), grayed.getPercent());
             }
             case WebAppendImageImpl appended: {
                 WebImageSpec left = toSpec(appended.getLeft());
@@ -154,6 +154,13 @@ public class WebImageUrl {
             case WebTextImageImpl text: {
                 WebImageSpec child = toSpec(text.getBaseImage());
                 return child == null ? null : new WebImageSpec.Text(child, text.getText());
+            }
+            case WebBusyImageImpl busy: {
+                return new WebImageSpec.Busy(busy.getWidth(), busy.getHeight());
+            }
+            case WebBlinkingImageImpl blinking: {
+                WebImageSpec child = toSpec(blinking.getOriginal());
+                return child == null ? null : WebImageSpec.blinking(child);
             }
             default: {
                 return null;
@@ -176,6 +183,10 @@ public class WebImageUrl {
         // without this a resized image of bytes falls through to the spec, which has no way to name one
         if (image instanceof WebResizeImageImpl resize) {
             return toInlineURL(resize.getOriginal());
+        }
+
+        if (image instanceof WebBlinkingImageImpl blinking) {
+            return toInlineURL(blinking.getOriginal());
         }
 
         if (image instanceof WebCanvasImageImpl canvas) {

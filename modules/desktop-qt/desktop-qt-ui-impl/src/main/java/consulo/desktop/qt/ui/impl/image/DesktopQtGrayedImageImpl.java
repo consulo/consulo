@@ -17,7 +17,10 @@ package consulo.desktop.qt.ui.impl.image;
 
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
+import io.qt.core.QRect;
+import io.qt.gui.QIcon;
 import io.qt.gui.QImage;
+import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
 
 /**
@@ -53,15 +56,33 @@ public class DesktopQtGrayedImageImpl implements Image, DesktopQtImage {
     }
 
     @Override
+    public boolean isLive() {
+        return DesktopQtImage.isLive(myOriginal);
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        return DesktopQtImage.paintFrame(myOriginal, painter, rect, QIcon.Mode.Disabled);
+    }
+
+    @Override
     public QPixmap toQPixmap() {
         QPixmap source = DesktopQtImage.toQPixmap(myOriginal);
         if (source.isNull()) {
             return DesktopQtEmptyImageImpl.createPixmap(getWidth(), getHeight());
         }
 
+        return toGrayPixmap(source);
+    }
+
+    static boolean isDarkStyle() {
+        return StyleManager.get().getCurrentStyle().isDark();
+    }
+
+    static QPixmap toGrayPixmap(QPixmap source) {
         double ratio = source.devicePixelRatio();
 
-        int percent = StyleManager.get().getCurrentStyle().isDark() ? DARK_PERCENT : LIGHT_PERCENT;
+        int percent = isDarkStyle() ? DARK_PERCENT : LIGHT_PERCENT;
 
         float rest = (100 - percent) / 100f;
         float scale = rest / 3f;

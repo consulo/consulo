@@ -18,11 +18,13 @@ package consulo.desktop.qt.ui.impl.action;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
+import consulo.desktop.qt.ui.impl.DesktopQtDelayedAction;
 import consulo.desktop.qt.ui.impl.DesktopQtMenuImpl;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.Component;
+import consulo.ui.DelayedAction;
 import consulo.ui.MenuItem;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -63,6 +65,7 @@ public final class DesktopQtActionContextMenu extends QObject {
 
     private @Nullable DesktopQtMenuImpl myMenu;
     private @Nullable ProgressIndicator myUpdateIndicator;
+    private @Nullable DelayedAction myDelayedAction;
 
     public static void install(
         Component component,
@@ -108,6 +111,7 @@ public final class DesktopQtActionContextMenu extends QObject {
 
         widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
         widget.customContextMenuRequested.connect(this::showMenu);
+        widget.destroyed.connect(this::cancelPending);
     }
 
     /**
@@ -124,37 +128,51 @@ public final class DesktopQtActionContextMenu extends QObject {
 
     @RequiredUIAccess
     private void showMenu(QPoint position) {
-        UIAccess menuAccess = UIAccess.current();
-        myGroupSupplier.apply(position).whenComplete((group, throwable) -> {
-            if (throwable != null) {
-                LOG.error("Failed to resolve the context menu group", throwable);
-                return;
-            }
-            menuAccess.giveIfNeed(() -> showMenu(position, group));
-        });
-    }
-
-    @RequiredUIAccess
-    private void showMenu(QPoint position, @Nullable ActionGroup group) {
-        if (group == null) {
-            // a right click that produces nothing is indistinguishable from one that never arrived, and the two
-            // are fixed in different places - so say which it was
-            LOG.warn("No action group registered for " + myPlace);
-            return;
-        }
+        cancelPending();
 
         // the expansion runs off the ui thread and the widget may have moved by the time it comes back
         QPoint globalPosition = coordinateWidget().mapToGlobal(position);
 
         UIAccess uiAccess = UIAccess.current();
 
-        ProgressIndicator previousIndicator = myUpdateIndicator;
-        if (previousIndicator != null) {
-            previousIndicator.cancel();
-        }
-
         ProgressIndicator indicator = new EmptyProgressIndicator();
         myUpdateIndicator = indicator;
+        myDelayedAction = DesktopQtDelayedAction.start(globalPosition);
+
+        myGroupSupplier.apply(position).whenComplete((group, throwable) -> uiAccess.giveIfNeed(() -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve the context menu group", throwable);
+            }
+
+            if (myUpdateIndicator != indicator) {
+                return;
+            }
+
+            if (throwable != null || myWidget.isDisposed()) {
+                stopPending();
+                return;
+            }
+
+            expandMenu(position, globalPosition, group, indicator, uiAccess);
+        }));
+    }
+
+    @RequiredUIAccess
+    private void expandMenu(
+        QPoint position,
+        QPoint globalPosition,
+        @Nullable ActionGroup group,
+        ProgressIndicator indicator,
+        UIAccess uiAccess
+    ) {
+        if (group == null) {
+            stopPending();
+
+            // a right click that produces nothing is indistinguishable from one that never arrived, and the two
+            // are fixed in different places - so say which it was
+            LOG.warn("No action group registered for " + myPlace);
+            return;
+        }
 
         UnifiedActionMenuExpander
             .expandAsync(group, myContextSupplier.apply(position), myPlace, myPresentationFactory, uiAccess, indicator, false)
@@ -163,7 +181,7 @@ public final class DesktopQtActionContextMenu extends QObject {
                     return;
                 }
 
-                myUpdateIndicator = null;
+                stopPending();
 
                 if (throwable != null) {
                     if (!UnifiedActionMenuExpander.isProcessCanceled(throwable)) {
@@ -174,6 +192,28 @@ public final class DesktopQtActionContextMenu extends QObject {
 
                 popupMenu(nodes, globalPosition, () -> myContextSupplier.apply(position));
             }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void cancelPending() {
+        ProgressIndicator indicator = myUpdateIndicator;
+        if (indicator != null) {
+            indicator.cancel();
+        }
+
+        stopPending();
+    }
+
+    @RequiredUIAccess
+    private void stopPending() {
+        myUpdateIndicator = null;
+
+        DelayedAction delayedAction = myDelayedAction;
+        myDelayedAction = null;
+
+        if (delayedAction != null) {
+            delayedAction.stop();
+        }
     }
 
     @RequiredUIAccess

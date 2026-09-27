@@ -17,33 +17,30 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class AsyncProcessIcon extends AnimatedIconComponent {
-  private static final Image[] SMALL_ICONS = AnimatedIcon.Default.ICONS.toArray(new Image[0]);
-
-  public static final int COUNT = SMALL_ICONS.length;
-  public static final int CYCLE_LENGTH = AnimatedIcon.Default.DELAY * SMALL_ICONS.length;
+  private static final int CYCLE_DURATION = 1000;
 
   public AsyncProcessIcon(String name) {
-    this(name, SMALL_ICONS, AllIcons.Process.Step_passive);
+    this(name, new Icon[]{TargetAWT.to(Image.busy())}, TargetAWT.to(AllIcons.Process.Step_passive));
+  }
+
+  public AsyncProcessIcon(String name, Icon[] icons, Icon passive) {
+    super(name, icons, passive, CYCLE_DURATION);
   }
 
   public AsyncProcessIcon(String name, Image[] icons, Image passive) {
-    super(name, icons, passive, CYCLE_LENGTH);
+    super(name, icons, passive, CYCLE_DURATION);
   }
 
   @Override
   protected Dimension calcPreferredSize() {
-    return new Dimension(myPassiveIcon.getWidth(), myPassiveIcon.getHeight());
-  }
-
-  @Override
-  protected void paintIcon(Graphics g, Image icon, int x, int y) {
-    super.paintIcon(g, icon, x, y);
+    return new Dimension(myPassiveIcon.getIconWidth(), myPassiveIcon.getIconHeight());
   }
 
   public void updateLocation(JComponent container) {
@@ -64,10 +61,8 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
   }
 
   public static class Big extends AsyncProcessIcon {
-    private static final Image[] BIG_ICONS = AnimatedIcon.Big.ICONS.toArray(new Image[0]);
-
     public Big(String name) {
-      super(name, BIG_ICONS, AllIcons.Process.Big.Step_passive);
+      super(name, new Icon[]{TargetAWT.to(Image.busy(32))}, TargetAWT.to(AllIcons.Process.Big.Step_passive));
     }
   }
 

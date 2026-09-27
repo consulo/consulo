@@ -17,8 +17,12 @@ package consulo.desktop.qt.ui.impl.image;
 
 import consulo.ui.image.Image;
 import io.qt.core.QRect;
+import io.qt.gui.QIcon;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Arrays;
 
 /**
  * @author VISTALL
@@ -39,6 +43,25 @@ public class DesktopQtLayeredImageImpl implements Image, DesktopQtImage {
     @Override
     public int getWidth() {
         return myImages[0].getWidth();
+    }
+
+    @Override
+    public boolean isLive() {
+        for (Image image : myImages) {
+            if (DesktopQtImage.isLive(image)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        long next = 0;
+        for (Image image : myImages) {
+            next = DesktopQtImage.nextFrame(next, DesktopQtImage.paintFrame(image, painter, rect, mode));
+        }
+        return next;
     }
 
     @Override
@@ -67,5 +90,15 @@ public class DesktopQtLayeredImageImpl implements Image, DesktopQtImage {
         }
 
         return target;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return o instanceof DesktopQtLayeredImageImpl other && Arrays.equals(myImages, other.myImages);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(myImages);
     }
 }

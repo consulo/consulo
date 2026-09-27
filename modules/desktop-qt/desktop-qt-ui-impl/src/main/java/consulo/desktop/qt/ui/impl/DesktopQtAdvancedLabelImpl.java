@@ -15,7 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl;
 
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.desktop.qt.ui.impl.base.DesktopQtImageWidget;
+import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.ui.AdvancedLabel;
 import consulo.ui.TextAttribute;
@@ -26,7 +27,6 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
-import io.qt.gui.QPixmap;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QLabel;
 import io.qt.widgets.QWidget;
@@ -41,10 +41,10 @@ import java.util.function.Consumer;
  * @since 2026-08-23
  */
 public class DesktopQtAdvancedLabelImpl extends QtComponentDelegate<DesktopQtAdvancedLabelImpl.QtAdvancedLabel>
-    implements AdvancedLabel {
+    implements AdvancedLabel, DesktopQtIconOwner {
 
     public static class QtAdvancedLabel extends QWidget {
-        private final QLabel myIcon = new QLabel();
+        private final DesktopQtImageWidget myIcon = new DesktopQtImageWidget(null);
         private final QLabel myText = new QLabel();
 
         public QtAdvancedLabel(QWidget parent) {
@@ -125,10 +125,16 @@ public class DesktopQtAdvancedLabelImpl extends QtComponentDelegate<DesktopQtAdv
     private void apply(QtAdvancedLabel component) {
         component.myText.setText(myHtml);
 
-        QPixmap pixmap = myIcon instanceof DesktopQtImage qtImage ? qtImage.toQPixmap() : null;
+        component.myIcon.setImage(myIcon);
+        component.myIcon.setVisible(myIcon != null);
+    }
 
-        component.myIcon.setPixmap(pixmap);
-        component.myIcon.setVisible(pixmap != null);
+    @Override
+    public void refreshIcons() {
+        QtAdvancedLabel component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            component.myIcon.setImage(myIcon);
+        }
     }
 
     private static void appendFragment(StringBuilder html, Fragment fragment) {

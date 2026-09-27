@@ -17,7 +17,6 @@ package consulo.execution.test.sm.ui;
 
 import consulo.execution.test.PoolOfTestIcons;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
@@ -33,8 +32,8 @@ public class SMPoolOfTestIcons implements PoolOfTestIcons {
     public static final Image TERMINATED_E_ICON = addErrorMarkTo(TERMINATED_ICON);
     public static final Image IGNORED_E_ICON = addErrorMarkTo(IGNORED_ICON);
 
-    public static final Image RUNNING_ICON = new AnimatedIcon.Default();
-    public static final Image RUNNING_E_ICON = addErrorMarkTo(new AnimatedIcon.Default());
+    public static final Image RUNNING_ICON = Image.busy();
+    public static final Image RUNNING_E_ICON = addErrorMarkTo(Image.busy());
 
     // Test Progress
     public static final Image PAUSED_E_ICON = addErrorMarkTo(PlatformIconGroup.runconfigurationsTestpaused());

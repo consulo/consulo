@@ -146,4 +146,9 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, Desk
         }
         return this;
     }
+
+    @Override
+    public DesktopAWTImage copyGrayed() {
+        return this;
+    }
 }

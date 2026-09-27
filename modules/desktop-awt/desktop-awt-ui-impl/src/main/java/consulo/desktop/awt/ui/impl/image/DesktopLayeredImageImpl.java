@@ -120,6 +120,15 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
     }
 
     @Override
+    public DesktopAWTImage copyGrayed() {
+        Image[] converted = new Image[myImages.length];
+        for (int i = 0; i < myImages.length; i++) {
+            converted[i] = DesktopAWTImage.copyGrayed(myImages[i]);
+        }
+        return new DesktopLayeredImageImpl(converted);
+    }
+
+    @Override
     public DesktopAWTImage copyWithNewScale(float scale) {
         Image[] converted = new Image[myImages.length];
         for (int i = 0; i < myImages.length; i++) {

@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl.image;
 
 import consulo.ui.image.Image;
 import io.qt.core.QRect;
+import io.qt.gui.QIcon;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
 
@@ -41,6 +42,28 @@ public class DesktopQtTransparentImageImpl implements Image, DesktopQtImage {
     @Override
     public int getWidth() {
         return myOriginal.getWidth();
+    }
+
+    @Override
+    public boolean isLive() {
+        return DesktopQtImage.isLive(myOriginal);
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        if (!isLive()) {
+            return DesktopQtImage.super.paintFrame(painter, rect, mode);
+        }
+
+        painter.save();
+        try {
+            painter.setOpacity(painter.opacity() * myAlpha);
+
+            return DesktopQtImage.paintFrame(myOriginal, painter, rect, mode);
+        }
+        finally {
+            painter.restore();
+        }
     }
 
     @Override

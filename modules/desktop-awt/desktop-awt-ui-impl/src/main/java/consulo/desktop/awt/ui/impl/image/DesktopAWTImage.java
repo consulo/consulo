@@ -34,10 +34,21 @@ public interface DesktopAWTImage extends Image {
     
     DesktopAWTImage copyWithForceLibraryId(String libraryId);
 
+    default DesktopAWTImage copyGrayed() {
+        return DesktopDisabledImageImpl.of(this);
+    }
+
     static Image copyWithForceLibraryId(Image image, String forceLibraryId) {
         if (image instanceof DesktopAWTImage awt) {
             return awt.copyWithForceLibraryId(forceLibraryId);
         }
         return image;
+    }
+
+    static DesktopAWTImage copyGrayed(Image image) {
+        if (image instanceof DesktopAWTImage awt) {
+            return awt.copyGrayed();
+        }
+        return DesktopDisabledImageImpl.of(image);
     }
 }

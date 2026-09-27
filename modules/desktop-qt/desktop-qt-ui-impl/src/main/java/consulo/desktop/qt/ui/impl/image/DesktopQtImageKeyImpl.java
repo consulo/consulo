@@ -19,6 +19,9 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
+import io.qt.core.QRect;
+import io.qt.gui.QIcon;
+import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
 import org.jspecify.annotations.Nullable;
 
@@ -72,5 +75,25 @@ public class DesktopQtImageKeyImpl implements ImageKey, DesktopQtImage {
             return DesktopQtEmptyImageImpl.createPixmap(getWidth(), getHeight());
         }
         return qtRef.toQPixmap(getWidth(), getHeight());
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        if (rect.isEmpty() || rect.width() == myWidth && rect.height() == myHeight) {
+            return DesktopQtImage.super.paintFrame(painter, rect, mode);
+        }
+
+        if (resolveImage() instanceof DesktopQtImageReference qtRef) {
+            int width = rect.width();
+            int height = rect.height();
+
+            QPixmap pixmap = mode == QIcon.Mode.Disabled
+                ? DesktopQtDisabledPixmapCache.get(this, width, height, () -> qtRef.toQPixmap(width, height))
+                : qtRef.toQPixmap(width, height);
+            if (!pixmap.isNull()) {
+                painter.drawPixmap(rect, pixmap);
+            }
+        }
+        return 0;
     }
 }

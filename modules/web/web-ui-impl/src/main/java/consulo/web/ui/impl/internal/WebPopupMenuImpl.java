@@ -48,21 +48,51 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
 
     private @Nullable Image myIcon;
     private boolean myEnabled = true;
+    private boolean myAttachedByShow;
 
     public WebPopupMenuImpl(Component target) {
         myTarget = TargetVaadin.to(target);
 
-        getVaadinComponent().setTarget(myTarget);
+        getVaadinComponent().addOpenedChangeListener(event -> {
+            if (!event.isOpened()) {
+                detachAttachedByShow();
+            }
+        });
     }
 
     @Override
     public void setOpenOnClick(boolean openOnClick) {
-        getVaadinComponent().setOpenOnClick(openOnClick);
+        Vaadin menu = getVaadinComponent();
+
+        if (openOnClick) {
+            menu.setOpenOnClick(true);
+
+            if (menu.getTarget() == null) {
+                menu.setTarget(myTarget);
+            }
+        }
+        else {
+            if (menu.getTarget() != null) {
+                menu.setTarget(null);
+            }
+
+            menu.setOpenOnClick(false);
+        }
     }
 
     @Override
     public void hide() {
         getVaadinComponent().close();
+
+        detachAttachedByShow();
+    }
+
+    private void detachAttachedByShow() {
+        if (myAttachedByShow) {
+            myAttachedByShow = false;
+
+            getVaadinComponent().removeFromParent();
+        }
     }
 
     @Override
@@ -124,6 +154,8 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
             else {
                 ui.get().add(menu);
             }
+
+            myAttachedByShow = true;
         }
 
         // the overlay is opened by the client and the flow api exposes no way to open it at a point - the

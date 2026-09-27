@@ -18,8 +18,10 @@ package consulo.ui.ex.impl.internal.action;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
+import consulo.ui.DelayedAction;
 import consulo.ui.PopupMenu;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.BasePresentationFactory;
@@ -44,6 +46,7 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
     private @Nullable Supplier<DataContext> myDataContextProvider;
     private @Nullable PopupMenu myPopupMenu;
+    private @Nullable DelayedAction myDelayedAction;
 
     public UnifiedActionPopupMenuImpl(String place,
                                       ActionGroup group,
@@ -73,6 +76,7 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
     }
 
     @Override
+    @RequiredUIAccess
     public void show(Component component, int x, int y) {
         DataContext context = myDataContextProvider == null ? DataManager.getInstance().getDataContext(component) : myDataContextProvider.get();
 
@@ -82,21 +86,40 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
         PopupMenu popupMenu = PopupMenu.create(component);
         myPopupMenu = popupMenu;
+        myDelayedAction = DelayedAction.start(component, x, y);
 
         UIAccess uiAccess = UIAccess.current();
         UnifiedActionUtil.expandActionGroup(myGroup, context, myPlace, myManager, presentationFactory, popupMenu::add)
             .whenCompleteAsync((r, throwable) -> {
+                if (myPopupMenu != popupMenu) {
+                    return;
+                }
+
+                stopDelayedAction();
                 popupMenu.show(x, y);
             }, uiAccess);
     }
 
     @Override
+    @RequiredUIAccess
     public void hide() {
+        stopDelayedAction();
+
         PopupMenu popupMenu = myPopupMenu;
         myPopupMenu = null;
 
         if (popupMenu != null) {
             popupMenu.hide();
+        }
+    }
+
+    @RequiredUIAccess
+    private void stopDelayedAction() {
+        DelayedAction delayedAction = myDelayedAction;
+        myDelayedAction = null;
+
+        if (delayedAction != null) {
+            delayedAction.stop();
         }
     }
 }

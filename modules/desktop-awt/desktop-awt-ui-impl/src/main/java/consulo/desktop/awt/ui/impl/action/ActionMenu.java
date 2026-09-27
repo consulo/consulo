@@ -32,7 +32,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.PresentationFactory;
-import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
@@ -244,7 +243,7 @@ public final class ActionMenu extends JMenu {
             removeAll();
 
             // Add animated loading indicator while actions are expanding
-            JMenuItem loadingItem = new JMenuItem(AnimatedIcon.Default.INSTANCE);
+            JMenuItem loadingItem = new JMenuItem(TargetAWT.to(Image.busy()));
             loadingItem.setEnabled(false);
             add(loadingItem);
 

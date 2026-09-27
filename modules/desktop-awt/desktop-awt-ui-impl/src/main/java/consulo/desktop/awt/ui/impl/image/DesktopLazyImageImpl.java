@@ -18,31 +18,57 @@ package consulo.desktop.awt.ui.impl.image;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2019-01-26
  */
-public class DesktopLazyImageImpl extends DesktopBaseLazyImageImpl {
-  private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
+public class DesktopLazyImageImpl extends DesktopBaseLazyImageImpl implements DesktopAWTImage {
+    private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
-  private final Supplier<Image> myImageSupplier;
+    private final Supplier<Image> myImageSupplier;
 
-  public DesktopLazyImageImpl(Supplier<Image> imageSupplier) {
-    myImageSupplier = imageSupplier;
-  }
+    private @Nullable Image myImage;
 
-  @Override
-  protected long getModificationCount() {
-    return ourTracker.getModificationCount();
-  }
+    public DesktopLazyImageImpl(Supplier<Image> imageSupplier) {
+        myImageSupplier = imageSupplier;
+    }
 
-  
-  @Override
-  protected Icon calcIcon() {
-    return TargetAWT.to(myImageSupplier.get());
-  }
+    @Override
+    protected long getModificationCount() {
+        return ourTracker.getModificationCount() + DesktopIconLibraryManagerImpl.ourInstance.getModificationCount();
+    }
+
+    @Override
+    protected Icon calcIcon() {
+        Image image = myImageSupplier.get();
+        myImage = image;
+        return TargetAWT.to(image);
+    }
+
+    public synchronized Image getOrComputeImage() {
+        getOrComputeIcon();
+        return Objects.requireNonNull(myImage);
+    }
+
+    @Override
+    public DesktopAWTImage copyWithNewSize(int width, int height) {
+        return new DesktopLazyImageImpl(() -> ImageEffects.resize(getOrComputeImage(), width, height));
+    }
+
+    @Override
+    public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+        return new DesktopLazyImageImpl(() -> DesktopAWTImage.copyWithForceLibraryId(getOrComputeImage(), libraryId));
+    }
+
+    @Override
+    public DesktopAWTImage copyGrayed() {
+        return new DesktopLazyImageImpl(() -> DesktopAWTImage.copyGrayed(getOrComputeImage()));
+    }
 }

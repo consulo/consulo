@@ -16,29 +16,42 @@
 package consulo.web.ui.impl.internal.image;
 
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Arrays;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
 public class WebLayeredImageImpl implements Image {
-  private final Image[] myImages;
+    private final Image[] myImages;
 
-  public WebLayeredImageImpl(Image[] images) {
-    myImages = images;
-  }
+    public WebLayeredImageImpl(Image[] images) {
+        myImages = images;
+    }
 
-  public Image[] getImages() {
-    return myImages;
-  }
+    public Image[] getImages() {
+        return myImages;
+    }
 
-  @Override
-  public int getHeight() {
-    return myImages[0].getHeight();
-  }
+    @Override
+    public int getHeight() {
+        return myImages[0].getHeight();
+    }
 
-  @Override
-  public int getWidth() {
-    return myImages[0].getWidth();
-  }
+    @Override
+    public int getWidth() {
+        return myImages[0].getWidth();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return this == o || o instanceof WebLayeredImageImpl that && Arrays.equals(myImages, that.myImages);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(myImages);
+    }
 }

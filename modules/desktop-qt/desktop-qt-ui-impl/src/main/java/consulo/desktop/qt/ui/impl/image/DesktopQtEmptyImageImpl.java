@@ -16,8 +16,11 @@
 package consulo.desktop.qt.ui.impl.image;
 
 import consulo.ui.image.EmptyImage;
+import io.qt.core.QRect;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
+import io.qt.gui.QIcon;
+import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
 
 /**
@@ -46,6 +49,11 @@ public class DesktopQtEmptyImageImpl implements EmptyImage, DesktopQtImage {
     @Override
     public QPixmap toQPixmap() {
         return createPixmap(getWidth(), getHeight());
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        return 0;
     }
 
     public static QPixmap createPixmap(int width, int height) {

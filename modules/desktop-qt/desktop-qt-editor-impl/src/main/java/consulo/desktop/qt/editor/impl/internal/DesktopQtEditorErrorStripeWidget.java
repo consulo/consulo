@@ -231,13 +231,14 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
      * The analyser's verdict for the whole file, at the top of the strip where awt paints it.
      */
     private void paintStatusIcon(QPainter painter) {
-        if (!(myStatusIcon instanceof DesktopQtImage qtImage)) {
+        Image statusIcon = myStatusIcon;
+        if (!(statusIcon instanceof DesktopQtImage)) {
             return;
         }
 
         int x = Math.max(0, (width() - ICON_SIZE) / 2);
 
-        qtImage.toQIcon().paint(painter, new QRect(x, ICON_PADDING, ICON_SIZE, ICON_SIZE));
+        DesktopQtImage.paint(painter, new QRect(x, ICON_PADDING, ICON_SIZE, ICON_SIZE), statusIcon);
     }
 
     /**

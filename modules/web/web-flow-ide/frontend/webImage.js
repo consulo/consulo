@@ -33,7 +33,7 @@
     const style = document.createElement('style');
     style.textContent = `
         web-image, web-image-empty, web-image-layered, web-image-colorize, web-image-transparent,
-        web-image-grayed, web-image-append, web-image-text {
+        web-image-grayed, web-image-append, web-image-text, web-image-busy, web-image-blinking {
             display: inline-block;
             position: relative;
             line-height: 0;
@@ -91,6 +91,33 @@
                 -1px 0 var(--lumo-base-color, #fff),
                 0 1px var(--lumo-base-color, #fff),
                 0 -1px var(--lumo-base-color, #fff);
+        }
+
+        @property --web-image-busy-angle {
+            syntax: '<angle>';
+            inherits: true;
+            initial-value: 0turn;
+        }
+
+        web-image-busy {
+            container-type: size;
+            overflow: clip;
+        }
+
+        web-image-busy::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 100cqmin;
+            height: 100cqmin;
+            box-sizing: border-box;
+            border-radius: 50%;
+            border-style: solid;
+            border-width: min(50cqmin, max(1px, 12.5cqmin));
+            border-color: var(--consulo-spinner-track);
+            border-top-color: var(--consulo-spinner-arc);
+            rotate: var(--web-image-busy-angle);
         }
     `;
     document.head.appendChild(style);
@@ -330,6 +357,100 @@
     class WebImageAppend extends WebImageBase {
     }
 
+    const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    class WebImageAnimated extends WebImageBase {
+        connectedCallback() {
+            super.connectedCallback();
+            this.startAnimation();
+        }
+
+        disconnectedCallback() {
+            this.stopAnimation();
+            super.disconnectedCallback();
+        }
+
+        startAnimation() {
+            this.stopAnimation();
+
+            if (REDUCED_MOTION.matches) {
+                return;
+            }
+
+            const animation = this.createAnimation();
+            if (animation) {
+                animation.startTime = 0;
+                this.myAnimation = animation;
+            }
+        }
+
+        stopAnimation() {
+            if (this.myAnimation) {
+                this.myAnimation.cancel();
+                this.myAnimation = null;
+            }
+        }
+
+        createAnimation() {
+            return null;
+        }
+    }
+
+    function toMilliseconds(value) {
+        const time = value.trim();
+        const number = parseFloat(time);
+        if (!(number > 0)) {
+            return 0;
+        }
+        return time.endsWith('ms') ? number : time.endsWith('s') ? number * 1000 : 0;
+    }
+
+    class WebImageBusy extends WebImageAnimated {
+        createAnimation() {
+            const period = toMilliseconds(getComputedStyle(this).getPropertyValue('--consulo-spinner-period'));
+            if (!period) {
+                return null;
+            }
+
+            return this.animate({ '--web-image-busy-angle': ['0turn', '1turn'] }, {
+                duration: period,
+                iterations: Infinity
+            });
+        }
+    }
+
+    const BLINKING_PERIOD = 2000;
+
+    class WebImageBlinking extends WebImageAnimated {
+        static get observedAttributes() {
+            return [...SIZE_ATTRIBUTES, 'percent'];
+        }
+
+        attributeChangedCallback(name) {
+            super.attributeChangedCallback();
+            if (name === 'percent' && this.isConnected) {
+                this.startAnimation();
+            }
+        }
+
+        createAnimation() {
+            const percent = this.getAttribute('percent');
+            if (!percent) {
+                return null;
+            }
+
+            const grayed = 'url(#' + grayFilterId(percent) + ')';
+            return this.animate([
+                { filter: 'none', easing: 'steps(1)' },
+                { filter: grayed, offset: 0.5 },
+                { filter: grayed }
+            ], {
+                duration: BLINKING_PERIOD,
+                iterations: Infinity
+            });
+        }
+    }
+
     class WebImageText extends WebImageBase {
         static get observedAttributes() {
             return [...SIZE_ATTRIBUTES, 'text'];
@@ -354,7 +475,9 @@
         'web-image-transparent': WebImageTransparent,
         'web-image-grayed': WebImageGrayed,
         'web-image-append': WebImageAppend,
-        'web-image-text': WebImageText
+        'web-image-text': WebImageText,
+        'web-image-busy': WebImageBusy,
+        'web-image-blinking': WebImageBlinking
     };
 
     for (const [tag, type] of Object.entries(TAGS)) {

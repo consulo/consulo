@@ -151,9 +151,10 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
             return;
         }
 
-        if (myIcon instanceof DesktopQtImage qtImage) {
-            myComponent.setIcon(qtImage.toQIcon());
-            myComponent.setIconSize(new QSize(myIcon.getWidth(), myIcon.getHeight()));
+        Image icon = myIcon;
+        if (icon instanceof DesktopQtImage) {
+            myComponent.setIcon(toHostQIcon(icon));
+            myComponent.setIconSize(new QSize(icon.getWidth(), icon.getHeight()));
         }
         else {
             myComponent.setIcon(new QIcon());

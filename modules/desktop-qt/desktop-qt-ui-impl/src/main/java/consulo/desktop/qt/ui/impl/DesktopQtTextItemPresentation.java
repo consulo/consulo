@@ -31,9 +31,9 @@ import java.util.List;
  */
 public class DesktopQtTextItemPresentation implements TextItemPresentation {
     private List<LocalizeValue> myValues = new ArrayList<>();
-    private Image myImage;
+    private @Nullable Image myImage;
 
-    public Image getImage() {
+    public @Nullable Image getImage() {
         return myImage;
     }
 

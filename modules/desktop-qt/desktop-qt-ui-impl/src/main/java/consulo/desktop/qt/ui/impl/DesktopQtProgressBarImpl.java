@@ -15,8 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.image.DesktopQtSpinnerPainter;
 import consulo.ui.ProgressBarStyle;
-import io.qt.core.QRectF;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
@@ -24,7 +24,6 @@ import io.qt.gui.QHideEvent;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
-import io.qt.gui.QPen;
 import io.qt.gui.QShowEvent;
 import io.qt.widgets.QProgressBar;
 import io.qt.widgets.QWidget;
@@ -38,15 +37,6 @@ import java.util.Set;
  */
 public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> implements consulo.ui.ProgressBar {
     private static final int ourSpinnerSize = 16;
-    private static final int ourSpinnerThickness = 2;
-    private static final int ourSpinnerFrameDelay = 40;
-    private static final int ourSpinnerStep = 12;
-    private static final int ourSpinnerArc = 100;
-    private static final int ourTrackAlpha = 51;
-
-    /** the angle of a qt arc is a sixteenth of a degree, and the zero of it points at three o'clock */
-    private static final int ourDegree = 16;
-    private static final int ourTopAngle = 90 * ourDegree;
 
     /**
      * The ring the awt frontend draws for {@link ProgressBarStyle#SPINNER} and the web frontend turns its bar
@@ -56,25 +46,21 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
     private class SpinnerWidget extends QWidget {
         private final QTimer myTimer;
 
-        private int myAngle;
-
         private SpinnerWidget(QWidget parent) {
             super(parent);
 
             setFixedSize(ourSpinnerSize, ourSpinnerSize);
 
             myTimer = new QTimer(this);
-            myTimer.setInterval(ourSpinnerFrameDelay);
-            myTimer.timeout.connect(() -> {
-                myAngle = (myAngle + ourSpinnerStep) % 360;
-                update();
-            });
+            myTimer.setSingleShot(true);
+            myTimer.setTimerType(Qt.TimerType.PreciseTimer);
+            myTimer.timeout.connect(this::syncTimer);
         }
 
         private void syncTimer() {
             if (myIndeterminate && isVisible()) {
                 if (!myTimer.isActive()) {
-                    myTimer.start();
+                    myTimer.start((int) DesktopQtSpinnerPainter.millisToNextStep());
                 }
             }
             else if (myTimer.isActive()) {
@@ -103,28 +89,13 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
             QPalette.ColorGroup group = isEnabled() ? QPalette.ColorGroup.Active : QPalette.ColorGroup.Disabled;
             QColor color = palette().color(group, QPalette.ColorRole.WindowText);
 
-            double inset = ourSpinnerThickness / 2.0;
-            QRectF ring = new QRectF(inset, inset, width() - ourSpinnerThickness, height() - ourSpinnerThickness);
-
             QPainter painter = new QPainter(this);
             try {
-                painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
-
-                QPen pen = new QPen(new QColor(color.red(), color.green(), color.blue(), ourTrackAlpha));
-                pen.setWidth(ourSpinnerThickness);
-                pen.setCapStyle(Qt.PenCapStyle.RoundCap);
-
-                painter.setPen(pen);
-                painter.drawArc(ring, 0, 360 * ourDegree);
-
-                pen.setColor(color);
-                painter.setPen(pen);
-
                 if (myIndeterminate) {
-                    painter.drawArc(ring, ourTopAngle - myAngle * ourDegree, -ourSpinnerArc * ourDegree);
+                    DesktopQtSpinnerPainter.paintBusy(painter, rect(), color);
                 }
                 else {
-                    painter.drawArc(ring, ourTopAngle, -(int) (fraction() * 360 * ourDegree));
+                    DesktopQtSpinnerPainter.paintProgress(painter, rect(), color, fraction());
                 }
             }
             finally {

@@ -17,7 +17,7 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -37,7 +37,6 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
 import io.qt.gui.QAction;
-import io.qt.gui.QIcon;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -51,6 +50,8 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
     protected final UIDataObject myDataObject = new UIDataObject();
 
     protected @Nullable QAction myAction;
+
+    private @Nullable DesktopQtActionAnimationHost myAnimationHost;
 
     private LocalizeValue myText;
     private @Nullable Image myIcon;
@@ -82,6 +83,7 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
         QAction action = createAction(parent);
 
         myAction = action;
+        myAnimationHost = new DesktopQtActionAnimationHost(action);
 
         DesktopQtIconRefresher.register(this);
 
@@ -111,7 +113,8 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
 
     protected void applyState() {
         QAction action = myAction;
-        if (action == null) {
+        DesktopQtActionAnimationHost animationHost = myAnimationHost;
+        if (action == null || animationHost == null) {
             return;
         }
 
@@ -119,7 +122,7 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
         action.setEnabled(myEnabled);
         action.setVisible(myVisible);
 
-        action.setIcon(myIcon instanceof DesktopQtImage qtImage ? qtImage.toQIcon() : new QIcon());
+        action.setIcon(DesktopQtLiveIconEngine.toQIcon(myIcon, animationHost));
 
         action.setCheckable(myChecked != null);
         if (myChecked != null) {
@@ -191,6 +194,7 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
 
     public void disposeQt() {
         myAction = null;
+        myAnimationHost = null;
     }
 
     public void setParent(@Nullable Component parent) {

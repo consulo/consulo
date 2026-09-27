@@ -15,6 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
+import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.ui.ComponentItemRender;
@@ -50,7 +52,7 @@ import java.util.function.Function;
  * @since 2026-08-23
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> implements Table<Item> {
+public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> implements Table<Item>, DesktopQtIconOwner {
     private final FlatDataModel<Item> myModel;
     private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
 
@@ -250,10 +252,10 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         // a cell keeps whatever widget was put in it, so one left from an earlier render would sit on top of the text
         component.removeCellWidget(row, index);
 
-        DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-        column.getRender().render(presentation, RenderItem.of(value, isSelected(row)), item);
+        DesktopQtTextItemPresentation presentation = renderCell(row, item, column, value);
 
         QTableWidgetItem cell = new QTableWidgetItem(presentation.toString());
+        cell.setIcon(DesktopQtImage.toQIcon(presentation.getImage()));
         cell.setFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable);
         cell.setTextAlignment(toAlignment(column.getAlignment()));
 
@@ -267,6 +269,36 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         }
 
         component.setItem(row, index, cell);
+    }
+
+    private <Value> DesktopQtTextItemPresentation renderCell(int row, Item item, DesktopQtTableColumnImpl<Item, Value> column, Value value) {
+        DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
+        column.getRender().render(presentation, RenderItem.of(value, isSelected(row)), item);
+        return presentation;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void refreshIcons() {
+        QTableWidget component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return;
+        }
+
+        for (int row = 0; row < myRows.size() && row < component.rowCount(); row++) {
+            for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
+                refreshIcon(component, row, myRows.get(row), column);
+            }
+        }
+    }
+
+    private <Value> void refreshIcon(QTableWidget component, int row, Item item, DesktopQtTableColumnImpl<Item, Value> column) {
+        QTableWidgetItem cell = component.item(row, column.getIndex());
+        if (cell == null || component.cellWidget(row, column.getIndex()) != null) {
+            return;
+        }
+
+        cell.setIcon(DesktopQtImage.toQIcon(renderCell(row, item, column, column.getValueProvider().apply(item)).getImage()));
     }
 
     /**

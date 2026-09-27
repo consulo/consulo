@@ -60,6 +60,8 @@ public class WebImageRenderer {
             case WebImageSpec.Gray gray -> gray(render(gray.child(), libraryId), gray.percent());
             case WebImageSpec.Append append -> append(append, libraryId);
             case WebImageSpec.Text text -> withText(text, libraryId);
+            case WebImageSpec.Busy busy -> render(busy.still(), libraryId);
+            case WebImageSpec.Blinking blinking -> render(blinking.child(), libraryId);
         };
     }
 

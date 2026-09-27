@@ -38,8 +38,11 @@ import java.util.function.Consumer;
  * @since 2026-08-02
  */
 public class WebInputDetails {
-    private static final String OFFSET_X = "event.offsetX";
-    private static final String OFFSET_Y = "event.offsetY";
+    private static final String TYPE = "event.type";
+    private static final String CLIENT_X = "event.clientX";
+    private static final String CLIENT_Y = "event.clientY";
+    private static final String ELEMENT_LEFT = "element.getBoundingClientRect().left";
+    private static final String ELEMENT_TOP = "element.getBoundingClientRect().top";
     private static final String SCREEN_X = "event.screenX";
     private static final String SCREEN_Y = "event.screenY";
     private static final String BUTTON = "event.button";
@@ -51,8 +54,8 @@ public class WebInputDetails {
     private static final String META = "event.metaKey";
 
     /**
-     * Click count of the ui event - a pointer sets it, a click the browser synthesises for enter or space on a
-     * focused control leaves it at zero, which is what tells the two apart.
+     * Click count of a click or a double click - a pointer sets it, a click the browser synthesises for enter or
+     * space on a focused control leaves it at zero, which is what tells the two apart.
      */
     private static final String DETAIL = "event.detail";
 
@@ -60,8 +63,6 @@ public class WebInputDetails {
      * A keyboard activation carries no coordinates at all - the box of the element stands in for them, so a
      * caller placing a popup at the event still puts it against the control the user acted on.
      */
-    private static final String ELEMENT_LEFT = "element.getBoundingClientRect().left";
-    private static final String ELEMENT_TOP = "element.getBoundingClientRect().top";
     private static final String ELEMENT_SCREEN_X = "window.screenX + element.getBoundingClientRect().left";
     private static final String ELEMENT_SCREEN_Y = "window.screenY + element.getBoundingClientRect().top";
 
@@ -72,8 +73,9 @@ public class WebInputDetails {
     public static DomListenerRegistration addClickListener(Element element, String eventType, Consumer<InputDetails> consumer) {
         DomListenerRegistration registration = element.addEventListener(eventType, event -> consumer.accept(convert(event)));
 
-        registration.addEventData(OFFSET_X);
-        registration.addEventData(OFFSET_Y);
+        registration.addEventData(TYPE);
+        registration.addEventData(CLIENT_X);
+        registration.addEventData(CLIENT_Y);
         registration.addEventData(SCREEN_X);
         registration.addEventData(SCREEN_Y);
         registration.addEventData(BUTTON);
@@ -219,7 +221,7 @@ public class WebInputDetails {
             modifiers.add(ModifiedInputDetails.Modifier.META);
         }
 
-        if (data.path(DETAIL).asInt(0) == 0) {
+        if (isKeyboardActivation(data)) {
             Point2D position = new Point2D(0, 0);
             Point2D positionOnScreen = new Point2D(
                 (int) data.path(ELEMENT_SCREEN_X).asDouble(0),
@@ -231,13 +233,23 @@ public class WebInputDetails {
         }
 
         return mouse(
-            (int) data.path(OFFSET_X).asDouble(0),
-            (int) data.path(OFFSET_Y).asDouble(0),
+            (int) Math.round(data.path(CLIENT_X).asDouble(0) - data.path(ELEMENT_LEFT).asDouble(0)),
+            (int) Math.round(data.path(CLIENT_Y).asDouble(0) - data.path(ELEMENT_TOP).asDouble(0)),
             (int) data.path(SCREEN_X).asDouble(0),
             (int) data.path(SCREEN_Y).asDouble(0),
             data.path(BUTTON).asInt(0),
             modifiers
         );
+    }
+
+    private static boolean isKeyboardActivation(JsonNode data) {
+        return switch (data.path(TYPE).asString("")) {
+            case "click", "dblclick" -> data.path(DETAIL).asInt(0) == 0;
+            default -> data.path(CLIENT_X).asDouble(0) == 0
+                && data.path(CLIENT_Y).asDouble(0) == 0
+                && data.path(SCREEN_X).asDouble(0) == 0
+                && data.path(SCREEN_Y).asDouble(0) == 0;
+        };
     }
 
     public static MouseInputDetails mouse(

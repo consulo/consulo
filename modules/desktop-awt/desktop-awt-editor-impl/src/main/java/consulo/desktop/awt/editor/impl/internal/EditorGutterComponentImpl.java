@@ -1259,7 +1259,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 myLastActionableClick.myProgressGutterMark == renderer;
             Icon icon = scaleIcon(renderer.getIcon());
             if (isLoading) {
-                Icon loadingIcon = scaleIcon(AnimatedIcon.Default.INSTANCE);
+                Icon loadingIcon = scaleIcon(consulo.ui.image.Image.busy());
                 x -= (loadingIcon.getIconWidth() - icon.getIconWidth()) / 2;
                 y -= (loadingIcon.getIconHeight() - icon.getIconHeight()) / 2;
                 icon = loadingIcon;

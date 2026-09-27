@@ -47,7 +47,7 @@ import consulo.ui.style.StyleManager;
 import consulo.ui.ex.impl.internal.UnifiedAlertImpl;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
-import io.qt.core.Qt;
+import io.qt.core.QPoint;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -243,23 +243,18 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
         InputDetails details = anchor.getInputDetails();
 
-        QWidget host = new QWidget(null, Qt.WindowType.ToolTip, Qt.WindowType.FramelessWindowHint, Qt.WindowType.WindowStaysOnTopHint);
-        host.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, true);
-        host.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, true);
+        return DesktopQtDelayedAction.start(new QPoint(details.getXOnScreen(), details.getYOnScreen()));
+    }
 
-        DesktopQtProgressBarImpl progressBar = new DesktopQtProgressBarImpl();
-        progressBar.setIndeterminate(true);
-        progressBar.addStyle(ProgressBarStyle.SPINNER);
-        progressBar.bind(host, null);
+    @Override
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(Component target, int relativeX, int relativeY) {
+        QWidget widget = target instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+        if (widget == null || widget.isDisposed()) {
+            return super._DelayedAction_start(target, relativeX, relativeY);
+        }
 
-        host.adjustSize();
-        host.move(details.getXOnScreen() - host.width() / 2, details.getYOnScreen() - host.height() / 2);
-        host.show();
-
-        return () -> {
-            host.close();
-            host.disposeLater();
-        };
+        return DesktopQtDelayedAction.start(widget.mapToGlobal(new QPoint(relativeX, relativeY)));
     }
 
     @Override
@@ -332,6 +327,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public Image _Image_busy(int widthAndHeight) {
+        return DesktopQtBusyImageImpl.of(widthAndHeight, widthAndHeight);
+    }
+
+    @Override
     public Image _ImageEffects_layered(Image[] images) {
         return new DesktopQtLayeredImageImpl(images);
     }
@@ -346,7 +346,18 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
         if (original instanceof DesktopQtGrayedImageImpl) {
             return original;
         }
+        if (original instanceof DesktopQtBlinkingImageImpl blinking) {
+            return _ImageEffects_grayed(blinking.getOriginal());
+        }
         return new DesktopQtGrayedImageImpl(original);
+    }
+
+    @Override
+    public Image _ImageEffects_blinking(Image original) {
+        if (original instanceof DesktopQtBusyImageImpl || original instanceof DesktopQtBlinkingImageImpl) {
+            return original;
+        }
+        return new DesktopQtBlinkingImageImpl(original);
     }
 
     @Override
@@ -376,6 +387,12 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
 
     @Override
     public Image _ImageEffects_resize(Image original, int width, int height) {
+        if (original instanceof DesktopQtBusyImageImpl) {
+            return DesktopQtBusyImageImpl.of(width, height);
+        }
+        if (original instanceof DesktopQtBlinkingImageImpl blinking) {
+            return _ImageEffects_blinking(_ImageEffects_resize(blinking.getOriginal(), width, height));
+        }
         return new DesktopQtResizeImageImpl(original, width, height);
     }
 

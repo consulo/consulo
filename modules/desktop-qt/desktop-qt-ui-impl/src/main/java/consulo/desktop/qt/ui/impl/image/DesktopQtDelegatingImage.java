@@ -16,6 +16,9 @@
 package consulo.desktop.qt.ui.impl.image;
 
 import consulo.ui.image.Image;
+import io.qt.core.QRect;
+import io.qt.gui.QIcon;
+import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
 
 /**
@@ -45,5 +48,15 @@ public interface DesktopQtDelegatingImage extends Image, DesktopQtImage {
             return qtImage.toQPixmap();
         }
         return DesktopQtEmptyImageImpl.createPixmap(delegate.getWidth(), delegate.getHeight());
+    }
+
+    @Override
+    default boolean isLive() {
+        return DesktopQtImage.isLive(getDelegate());
+    }
+
+    @Override
+    default long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        return DesktopQtImage.paintFrame(getDelegate(), painter, rect, mode);
     }
 }

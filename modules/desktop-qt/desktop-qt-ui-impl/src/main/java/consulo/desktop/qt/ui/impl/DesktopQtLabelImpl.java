@@ -15,16 +15,14 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.base.DesktopQtIconLabel;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import io.qt.gui.QPixmap;
-import io.qt.widgets.QLabel;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -35,7 +33,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtLabelImpl extends QtComponentDelegate<QLabel> implements Label, DesktopQtIconOwner {
+public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> implements Label, DesktopQtIconOwner {
     private LocalizeValue myText = LocalizeValue.empty();
     private @Nullable Component myLabeledComponent;
     private @Nullable Image myImage;
@@ -47,12 +45,12 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<QLabel> implements L
     }
 
     @Override
-    protected QLabel createQt(QWidget parent) {
-        return new QLabel(parent);
+    protected DesktopQtIconLabel createQt(QWidget parent) {
+        return new DesktopQtIconLabel(parent);
     }
 
     @Override
-    protected void initialize(QLabel component) {
+    protected void initialize(DesktopQtIconLabel component) {
         component.setText(currentText());
 
         updateImage();
@@ -94,18 +92,9 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<QLabel> implements L
         updateImage();
     }
 
-    /** a qt label owns either a pixmap or a text, so dropping the image has to bring the text back */
     private void updateImage() {
-        if (myComponent == null) {
-            return;
-        }
-
-        if (myImage instanceof DesktopQtImage qtImage) {
-            myComponent.setPixmap(qtImage.toQPixmap());
-        }
-        else {
-            myComponent.setPixmap(new QPixmap());
-            myComponent.setText(currentText());
+        if (myComponent != null) {
+            myComponent.setImage(myImage);
         }
     }
 

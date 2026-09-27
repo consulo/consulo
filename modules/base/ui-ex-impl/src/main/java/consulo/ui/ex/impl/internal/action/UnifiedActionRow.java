@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -88,11 +89,13 @@ public class UnifiedActionRow {
     private final Layout<?> myLayout;
 
     private final Map<AnAction, ToggleButton> myToggleButtons = new HashMap<>();
+    private final List<@Nullable Button> myButtons = new ArrayList<>();
 
     private final List<Runnable> myActionsUpdatedListeners = Lists.newLockFreeCopyOnWriteList();
 
     private String mySignature = "";
     private List<AnAction> myActions = List.of();
+    private List<UnifiedActionMenuExpander.MenuNode> myNodes = List.of();
     private @Nullable ProgressIndicator myIndicator;
     private @Nullable Disposable myTickerRegistration;
     private @Nullable MessageBusConnection myActionConnection;
@@ -308,11 +311,16 @@ public class UnifiedActionRow {
             // a toggle button flips itself on click, but the state belongs to the action - if performing it left
             // the action where it was, the optimistic flip has to be taken back
             syncToggleStates(nodes);
-            return;
+            if (syncIcons(nodes)) {
+                myNodes = nodes;
+                return;
+            }
         }
 
         myLayout.removeAll();
         myToggleButtons.clear();
+        myButtons.clear();
+        myNodes = List.of();
 
         // the signature stands for what is on screen, so it is taken only once the row is there - one which was
         // never drawn would answer every later update with the early return above and stay empty for good
@@ -321,18 +329,52 @@ public class UnifiedActionRow {
         for (UnifiedActionMenuExpander.MenuNode node : nodes) {
             if (node.isSeparator()) {
                 add(Separator.create(myLayout instanceof HorizontalLayout ? SeparatorStyle.VERTICAL : SeparatorStyle.HORIZONTAL));
+                myButtons.add(null);
                 continue;
             }
 
             if (node.action() instanceof ComboBoxAction comboBoxAction) {
-                add(createComboBox(node, comboBoxAction));
+                Component comboBox = createComboBox(node, comboBoxAction);
+                add(comboBox);
+                myButtons.add(comboBox instanceof Button fallbackButton ? fallbackButton : null);
                 continue;
             }
 
-            add(node.children() == null ? createActionButton(node) : createActionMenu(node));
+            Button button = node.children() == null ? createActionButton(node) : createActionMenu(node);
+            add(button);
+            myButtons.add(button);
         }
 
+        myNodes = nodes;
         mySignature = signature;
+    }
+
+    @RequiredUIAccess
+    private boolean syncIcons(List<UnifiedActionMenuExpander.MenuNode> nodes) {
+        if (myButtons.size() != nodes.size() || myNodes.size() != nodes.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < nodes.size(); i++) {
+            Button button = myButtons.get(i);
+            if (button == null) {
+                continue;
+            }
+
+            UnifiedActionMenuExpander.MenuNode previous = myNodes.get(i);
+            UnifiedActionMenuExpander.MenuNode node = nodes.get(i);
+            if ((previous.icon() == null) != (node.icon() == null)) {
+                return false;
+            }
+
+            if (Objects.equals(previous.icon(), node.icon()) && Objects.equals(previous.disabledIcon(), node.disabledIcon())) {
+                continue;
+            }
+
+            button.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
+        }
+
+        return true;
     }
 
     @RequiredUIAccess
@@ -477,12 +519,12 @@ public class UnifiedActionRow {
     }
 
     @RequiredUIAccess
-    private Component createActionButton(UnifiedActionMenuExpander.MenuNode node) {
+    private Button createActionButton(UnifiedActionMenuExpander.MenuNode node) {
         return createActionButton(node, myStyle == ActionToolbar.Style.BUTTON || node.icon() == null);
     }
 
     @RequiredUIAccess
-    private Component createActionButton(UnifiedActionMenuExpander.MenuNode node, boolean showText) {
+    private Button createActionButton(UnifiedActionMenuExpander.MenuNode node, boolean showText) {
         Button button = createButton(node, showText);
 
         AnAction action = node.action();
@@ -503,7 +545,7 @@ public class UnifiedActionRow {
     }
 
     @RequiredUIAccess
-    private Component createActionMenu(UnifiedActionMenuExpander.MenuNode node) {
+    private Button createActionMenu(UnifiedActionMenuExpander.MenuNode node) {
         // awt gives a ComboBoxAction a labeled combo instead of an icon button, and the selector of the run
         // configuration is unusable without its text - it is the only thing which says what would be run
         boolean showText = myStyle == ActionToolbar.Style.BUTTON

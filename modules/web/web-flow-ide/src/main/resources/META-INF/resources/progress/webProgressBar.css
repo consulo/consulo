@@ -3,6 +3,13 @@
  * theme - the theme goes through the vite bundle, which skips rebuilding it on css only changes.
  */
 
+:root
+{
+  --consulo-spinner-arc: currentColor;
+  --consulo-spinner-track: color-mix(in srgb, currentColor 20%, transparent);
+  --consulo-spinner-period: 900ms;
+}
+
 /* a layout which stretches its content, like the center of a dock, gives the bar the height of the whole cell,
    and the track of the bar is drawn over the full height of it - the element takes the size it is given and the
    line keeps the height of a line, centered in the space */
@@ -40,9 +47,17 @@ vaadin-progress-bar.consulo-progress-spinner.consulo-progress-spinner::part(bar)
   border-style: solid;
   /* the lumo palette is not defined under this theme, and a ring of one colour turns without looking like it
      turns - the arc is taken from the text colour and the rest of the ring from a faded copy of it */
-  border-color: color-mix(in srgb, currentColor 20%, transparent);
-  border-top-color: currentColor;
-  animation: consulo-progress-spin 900ms linear infinite;
+  border-color: var(--consulo-spinner-track);
+  border-top-color: var(--consulo-spinner-arc);
+  animation: consulo-progress-spin var(--consulo-spinner-period) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+  vaadin-progress-bar.consulo-progress-spinner.consulo-progress-spinner::part(bar)
+  {
+    animation: none;
+  }
 }
 
 /* the value of an indeterminate bar slides along the track - a ring has nowhere to slide to */

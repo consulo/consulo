@@ -2,9 +2,7 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.Application;
 import consulo.application.util.NullableLazyValue;
-import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.build.ui.ExecutionNode;
 import consulo.build.ui.event.*;
 import consulo.build.ui.localize.BuildLocalize;
@@ -41,12 +39,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     private static final Image NODE_ICON_STATISTICS = Image.empty(16);
     private static final Image NODE_ICON_SIMPLE = Image.empty(16);
     private static final Image NODE_ICON_DEFAULT = Image.empty(16);
-    /**
-     * A node which is running is marked by an icon which turns, and only a frontend built on swing has one.
-     */
-    private static final Image NODE_ICON_RUNNING = Application.get().isUnifiedApplication()
-        ? PlatformIconGroup.actionsExecute()
-        : new AnimatedIcon.Default();
+    private static final Image NODE_ICON_RUNNING = Image.busy();
 
     private final List<ExecutionNodeImpl> myChildrenList = new ArrayList<>(); // Accessed from the async model thread only.
     private List<ExecutionNodeImpl> myVisibleChildrenList = null;  // Accessed from the async model thread only.

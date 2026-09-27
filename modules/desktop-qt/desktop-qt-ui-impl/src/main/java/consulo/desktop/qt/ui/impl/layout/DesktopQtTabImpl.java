@@ -18,14 +18,16 @@ package consulo.desktop.qt.ui.impl.layout;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.qt.ui.impl.DesktopQtTextItemPresentation;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.desktop.qt.ui.impl.image.DesktopQtAnimationHost;
+import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
+import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
+import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
-import io.qt.gui.QIcon;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
@@ -37,7 +39,7 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtTabImpl implements Tab {
+public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtIconOwner {
     private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(toString());
 
     private @Nullable QtComponentDelegate<?> myComponent;
@@ -45,6 +47,8 @@ public class DesktopQtTabImpl implements Tab {
     private @Nullable QTabWidget myTabWidget;
 
     private @Nullable QWidget myContent;
+
+    private @Nullable Image myImage;
 
     private @Nullable String myPopupGroupId;
 
@@ -143,8 +147,37 @@ public class DesktopQtTabImpl implements Tab {
 
         // the renderer names an icon for the file the tab stands for - the other frontends draw it beside the
         // label, and a tab bar which asks the renderer only for its text drops it
-        Image image = item.getImage();
-        myTabWidget.setTabIcon(index, image == null ? new QIcon() : DesktopQtImage.toQIcon(image));
+        myImage = item.getImage();
+
+        applyIcon(myTabWidget, index);
+    }
+
+    private void applyIcon(QTabWidget tabWidget, int index) {
+        tabWidget.setTabIcon(index, DesktopQtLiveIconEngine.toQIcon(myImage, this));
+    }
+
+    @Override
+    public void refreshIcons() {
+        QTabWidget tabWidget = myTabWidget;
+        int index = getIndex();
+        if (tabWidget != null && index != -1) {
+            applyIcon(tabWidget, index);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void repaintAnimatedImage() {
+        QTabWidget tabWidget = myTabWidget;
+        int index = getIndex();
+        if (tabWidget == null || index < 0) {
+            return;
+        }
+
+        QTabBar tabBar = tabWidget.tabBar();
+        if (tabBar != null && !tabBar.isDisposed()) {
+            tabBar.update(tabBar.tabRect(index));
+        }
     }
 
     public void setComponent(Component component) {
@@ -190,6 +223,8 @@ public class DesktopQtTabImpl implements Tab {
 
         myTabWidget = tabWidget;
         myContent = content;
+
+        DesktopQtIconRefresher.register(this);
 
         tabWidget.addTab(content, "");
 

@@ -40,8 +40,12 @@ public class WebGrayedImageImpl implements Image {
         return myOriginal;
     }
 
-    public int getPercent() {
+    public static int currentPercent() {
         return StyleManager.get().getCurrentStyle().isDark() ? DARK_PERCENT : LIGHT_PERCENT;
+    }
+
+    public int getPercent() {
+        return currentPercent();
     }
 
     @Override

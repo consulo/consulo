@@ -14,7 +14,6 @@ import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUIHelper;
-import consulo.ui.ex.awt.util.ComponentUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -22,8 +21,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.event.MouseEvent;
 import java.util.function.Function;
-
-import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 
 final class ServiceViewTree extends Tree {
   private static final Function<TreePath, String> DISPLAY_NAME_CONVERTER = path -> {
@@ -48,7 +45,6 @@ final class ServiceViewTree extends Tree {
     setRootVisible(false);
     setShowsRootHandles(true);
     setCellRenderer(new ServiceViewTreeCellRenderer());
-    ComponentUtil.putClientProperty(this, ANIMATION_IN_RENDERER_ALLOWED, true);
 
     // listeners
     TreeUIHelper.getInstance().installTreeSpeedSearch(this, DISPLAY_NAME_CONVERTER, true);

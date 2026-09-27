@@ -15,8 +15,10 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.image.DesktopQtAnimationHost;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
+import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.BorderBuilder;
@@ -43,6 +45,7 @@ import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
+import consulo.ui.image.Image;
 import consulo.ui.internal.BorderPosition;
 import consulo.util.dataholder.Key;
 import io.qt.core.QEvent;
@@ -51,6 +54,7 @@ import io.qt.core.QObject;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
+import io.qt.gui.QIcon;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPalette;
@@ -68,7 +72,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-08-16
  */
-public abstract class QtComponentDelegate<T extends QWidget> implements Component, HasSize, HasFocus {
+public abstract class QtComponentDelegate<T extends QWidget> implements Component, HasSize, HasFocus, DesktopQtAnimationHost {
     private static final int ourUnsetSize = -1;
 
     private int myWidth = ourUnsetSize;
@@ -203,6 +207,19 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         if (component == null) {
             disposeQt();
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void repaintAnimatedImage() {
+        T component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            component.update();
+        }
+    }
+
+    protected final QIcon toHostQIcon(@Nullable Image image) {
+        return DesktopQtLiveIconEngine.toQIcon(image, this);
     }
 
     public void disposeQt() {

@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl.image;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import io.qt.core.QRect;
+import io.qt.gui.QIcon;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPixmap;
 
@@ -44,6 +45,16 @@ public class DesktopQtResizeImageImpl implements Image, DesktopQtImage {
     @Override
     public int getWidth() {
         return myWidth;
+    }
+
+    @Override
+    public boolean isLive() {
+        return DesktopQtImage.isLive(myOriginal);
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        return DesktopQtImage.paintFrame(myOriginal, painter, rect, mode);
     }
 
     @Override

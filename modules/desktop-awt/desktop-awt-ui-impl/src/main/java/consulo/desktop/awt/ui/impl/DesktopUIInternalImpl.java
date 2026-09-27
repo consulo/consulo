@@ -32,7 +32,6 @@ import consulo.desktop.awt.ui.impl.style.DesktopAWTStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
 import consulo.desktop.awt.ui.impl.image.DesktopDeferredIconImpl;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -50,8 +49,6 @@ import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ProgrammaticInputDetails;
-import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -158,6 +155,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Image _Image_busy(int widthAndHeight) {
+        return DesktopBusyImageImpl.of(widthAndHeight, widthAndHeight);
+    }
+
+    @Override
     public Image _ImageEffects_layered(Image[] images) {
         return new DesktopLayeredImageImpl(images);
     }
@@ -169,10 +171,12 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
 
     @Override
     public Image _ImageEffects_grayed(Image original) {
-        if (original instanceof DesktopDisabledImageImpl desktopDisabledImage) {
-            return desktopDisabledImage;
-        }
-        return DesktopDisabledImageImpl.of(original);
+        return DesktopAWTImage.copyGrayed(original);
+    }
+
+    @Override
+    public Image _ImageEffects_blinking(Image original) {
+        return DesktopBlinkingImageImpl.of(original);
     }
 
     @Override
@@ -194,8 +198,8 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     public Image _ImageEffects_withText(Image baseImage, String text) {
         DesktopImageWithTextImpl withText = new DesktopImageWithTextImpl(text, new JLabel(), JBUIScale.scaleFontSize(6f));
         DesktopHeavyLayeredImageImpl image = new DesktopHeavyLayeredImageImpl(2);
-        image.setIcon(TargetAWT.to(baseImage), 0);
-        image.setIcon(TargetAWT.to(withText), 1, SwingConstants.SOUTH_EAST);
+        image.setImage(baseImage, 0);
+        image.setImage(withText, 1, SwingConstants.SOUTH_EAST);
         return image;
     }
 
@@ -442,44 +446,17 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @RequiredUIAccess
     public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
         java.awt.Component component = TargetAWT.to(anchor.getComponent());
-        JRootPane rootPane = component == null ? null : UIUtil.getRootPane(component);
-        if (rootPane == null || !(rootPane.getGlassPane() instanceof JComponent glassPane)) {
-            return () -> {
-            };
-        }
-
-        AsyncProcessIcon icon = new AsyncProcessIcon("DelayedAction");
-        Dimension size = icon.getPreferredSize();
-        icon.setSize(size);
-
-        // the anchor of an event and the component its details were measured against are not always the same one -
-        // a gutter click travels with the editor component - so only the screen position places the icon reliably
         InputDetails details = anchor.getInputDetails();
-        Point point;
         if (details instanceof ProgrammaticInputDetails) {
-            point = SwingUtilities.convertPoint(component, 0, 0, glassPane);
+            return DesktopDelayedActionImpl.start(component, 0, 0);
         }
-        else {
-            point = new Point(details.getXOnScreen(), details.getYOnScreen());
-            SwingUtilities.convertPointFromScreen(point, glassPane);
-        }
-        icon.setLocation(point.x - size.width / 2, point.y - size.height / 2);
+        return DesktopDelayedActionImpl.startOnScreen(component, details.getXOnScreen(), details.getYOnScreen());
+    }
 
-        // the default glass pane sits invisible until something needs it, and goes back once the
-        // indicator is gone - an invisible glass pane is what lets the mouse through
-        boolean glassPaneWasVisible = glassPane.isVisible();
-        glassPane.add(icon);
-        glassPane.setVisible(true);
-        icon.resume();
-        glassPane.repaint();
-
-        return () -> {
-            icon.suspend();
-            glassPane.remove(icon);
-            Disposer.dispose(icon);
-            glassPane.setVisible(glassPaneWasVisible);
-            glassPane.repaint();
-        };
+    @Override
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(Component target, int relativeX, int relativeY) {
+        return DesktopDelayedActionImpl.start(TargetAWT.to(target), relativeX, relativeY);
     }
 
     @Override

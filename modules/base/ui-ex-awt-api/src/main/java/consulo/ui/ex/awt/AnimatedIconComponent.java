@@ -18,26 +18,27 @@ package consulo.ui.ex.awt;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
  */
 public class AnimatedIconComponent extends JComponent implements Disposable {
-  private final consulo.ui.image.Image[] myIcons;
+  private final Icon[] myIcons;
   private final Dimension myPrefSize;
 
   private int myCurrentIconIndex;
 
-  protected final consulo.ui.image.Image myPassiveIcon;
-  private final Image myEmptyPassiveIcon;
+  protected final Icon myPassiveIcon;
+  private final Icon myEmptyPassiveIcon;
 
   private boolean myPaintPassive = true;
   private boolean myRunning = true;
@@ -46,9 +47,13 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
 
   private final String myName;
 
-  public AnimatedIconComponent(String name, consulo.ui.image.Image[] icons, consulo.ui.image.Image passiveIcon, int cycleLength) {
+  public AnimatedIconComponent(String name, Image[] icons, Image passiveIcon, int cycleLength) {
+    this(name, Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new), TargetAWT.to(passiveIcon), cycleLength);
+  }
+
+  public AnimatedIconComponent(String name, Icon[] icons, Icon passiveIcon, int cycleLength) {
     myName = name;
-    myIcons = icons.length == 0 ? new consulo.ui.image.Image[]{passiveIcon} : icons;
+    myIcons = icons.length == 0 ? new Icon[]{passiveIcon} : icons;
     myPassiveIcon = passiveIcon;
     myPrefSize = calcPreferredSize();
 
@@ -61,12 +66,7 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
       }
     };
 
-    if (icons.length > 0) {
-      myEmptyPassiveIcon = Image.empty(icons[0].getWidth(), icons[0].getHeight());
-    }
-    else {
-      myEmptyPassiveIcon = Image.empty();
-    }
+    myEmptyPassiveIcon = icons.length > 0 ? EmptyIcon.create(icons[0]) : EmptyIcon.ICON_0;
 
     setOpaque(false);
 
@@ -88,12 +88,12 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
   protected Dimension calcPreferredSize() {
     Dimension dimension = new Dimension();
 
-    for (consulo.ui.image.Image each : myIcons) {
-      dimension.width = Math.max(each.getWidth(), dimension.width);
-      dimension.height = Math.max(each.getHeight(), dimension.height);
+    for (Icon each : myIcons) {
+      dimension.width = Math.max(each.getIconWidth(), dimension.width);
+      dimension.height = Math.max(each.getIconHeight(), dimension.height);
     }
 
-    return new Dimension(Math.max(myPassiveIcon.getWidth(), dimension.width), Math.max(myPassiveIcon.getHeight(), dimension.height));
+    return new Dimension(Math.max(myPassiveIcon.getIconWidth(), dimension.width), Math.max(myPassiveIcon.getIconHeight(), dimension.height));
   }
 
   public void setPaintPassiveIcon(boolean paintPassive) {
@@ -161,7 +161,7 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
       g.fillRect(0, 0, getWidth(), getHeight());
     }
 
-    Image icon;
+    Icon icon;
 
     if (myAnimator.isRunning()) {
       icon = myIcons[myCurrentIconIndex];
@@ -171,17 +171,17 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
     }
 
     Dimension size = getSize();
-    int x = (size.width - icon.getWidth()) / 2;
-    int y = (size.height - icon.getHeight()) / 2;
+    int x = (size.width - icon.getIconWidth()) / 2;
+    int y = (size.height - icon.getIconHeight()) / 2;
 
     paintIcon(g, icon, x, y);
   }
 
-  protected void paintIcon(Graphics g, Image icon, int x, int y) {
-    TargetAWT.to(icon).paintIcon(this, g, x, y);
+  protected void paintIcon(Graphics g, Icon icon, int x, int y) {
+    icon.paintIcon(this, g, x, y);
   }
 
-  protected Image getPassiveIcon() {
+  protected Icon getPassiveIcon() {
     return myPaintPassive ? myPassiveIcon : myEmptyPassiveIcon;
   }
 

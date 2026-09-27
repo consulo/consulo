@@ -60,4 +60,9 @@ public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopAWT
             DesktopAWTImage.copyWithForceLibraryId(myImg2, libraryId)
         );
     }
+
+    @Override
+    public DesktopAWTImage copyGrayed() {
+        return new DesktopAppendImageImpl(DesktopAWTImage.copyGrayed(myImg1), DesktopAWTImage.copyGrayed(myImg2));
+    }
 }

@@ -19,6 +19,7 @@ package consulo.ui.ex.awt;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
 
 import javax.swing.*;
@@ -125,8 +126,18 @@ public abstract class Animator implements Disposable {
   }
 
   public void resume() {
+    if (isDisposed()) {
+      stopTicker();
+      return;
+    }
+
     if (skipAnimation()) {
       animationDone();
+      return;
+    }
+
+    if (!EventQueue.isDispatchThread()) {
+      SwingUtilities.invokeLater(this::resume);
       return;
     }
 
@@ -136,7 +147,7 @@ public abstract class Animator implements Disposable {
       animationDone();
     }
     else if (myTicker == null) {
-      UIAccessScheduler scheduler = Application.get().getLastUIAccess().getScheduler();
+      UIAccessScheduler scheduler = UIAccess.current().getScheduler();
       myTicker = scheduler.scheduleWithFixedDelay(new Runnable() {
         @Override
         public void run() {

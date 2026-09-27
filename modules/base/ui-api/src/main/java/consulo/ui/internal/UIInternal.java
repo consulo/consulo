@@ -250,6 +250,12 @@ public abstract class UIInternal {
     }
 
     @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(Component target, int relativeX, int relativeY) {
+        return () -> {
+        };
+    }
+
+    @RequiredUIAccess
     public abstract UIAccess _UIAccess_get();
 
     public abstract boolean _UIAccess_isUIThread();
@@ -283,6 +289,14 @@ public abstract class UIInternal {
 
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         throw new UnsupportedOperationException();
+    }
+
+    public Image _Image_busy(int widthAndHeight) {
+        return _ImageEffects_empty(widthAndHeight, widthAndHeight);
+    }
+
+    public Image _ImageEffects_blinking(Image original) {
+        return original;
     }
 
     public IconLibraryManager _IconLibraryManager_get() {

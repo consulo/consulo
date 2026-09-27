@@ -37,4 +37,9 @@ public class DesktopQtStatedImageImpl<S> implements DesktopQtDelegatingImage {
     public Image getDelegate() {
         return myImageFunction.apply(myState.getState());
     }
+
+    @Override
+    public boolean isLive() {
+        return true;
+    }
 }

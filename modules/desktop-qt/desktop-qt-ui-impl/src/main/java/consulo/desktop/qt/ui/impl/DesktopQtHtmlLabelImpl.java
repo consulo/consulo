@@ -15,10 +15,10 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.base.DesktopQtIconLabel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.HtmlLabel;
 import io.qt.core.Qt;
-import io.qt.widgets.QLabel;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ public class DesktopQtHtmlLabelImpl extends DesktopQtLabelImpl implements HtmlLa
     }
 
     @Override
-    protected void initialize(QLabel component) {
+    protected void initialize(DesktopQtIconLabel component) {
         // a qt label guesses between plain and rich text, and markup which does not look like html - a bare
         // ampersand of a build string - is then drawn as it stands
         component.setTextFormat(Qt.TextFormat.RichText);

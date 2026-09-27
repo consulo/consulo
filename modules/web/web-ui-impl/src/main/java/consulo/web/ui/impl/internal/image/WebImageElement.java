@@ -41,6 +41,8 @@ public class WebImageElement {
     private static final String GRAYED = "web-image-grayed";
     private static final String APPEND = "web-image-append";
     private static final String TEXT = "web-image-text";
+    private static final String BUSY = "web-image-busy";
+    private static final String BLINKING = "web-image-blinking";
 
     public static @Nullable Element toElement(Image image) {
         WebImageSpec spec = WebImageUrl.toSpec(image);
@@ -101,6 +103,12 @@ public class WebImageElement {
             case WebImageSpec.Text text -> {
                 element.setAttribute("text", text.text());
                 element.appendChild(toElement(text.child()));
+            }
+            case WebImageSpec.Busy ignored -> {
+            }
+            case WebImageSpec.Blinking blinking -> {
+                element.setAttribute("percent", String.valueOf(WebGrayedImageImpl.currentPercent()));
+                element.appendChild(toElement(blinking.child()));
             }
         }
 
@@ -169,6 +177,12 @@ public class WebImageElement {
                 html.append(" text=\"").append(escape(text.text())).append('"');
                 children = List.of(text.child());
             }
+            case WebImageSpec.Busy ignored -> {
+            }
+            case WebImageSpec.Blinking blinking -> {
+                html.append(" percent=\"").append(WebGrayedImageImpl.currentPercent()).append('"');
+                children = List.of(blinking.child());
+            }
         }
 
         html.append('>');
@@ -191,6 +205,8 @@ public class WebImageElement {
             case WebImageSpec.Gray ignored -> GRAYED;
             case WebImageSpec.Append ignored -> APPEND;
             case WebImageSpec.Text ignored -> TEXT;
+            case WebImageSpec.Busy ignored -> BUSY;
+            case WebImageSpec.Blinking ignored -> BLINKING;
         };
     }
 

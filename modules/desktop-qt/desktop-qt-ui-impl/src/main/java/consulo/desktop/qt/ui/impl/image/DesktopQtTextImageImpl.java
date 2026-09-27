@@ -22,6 +22,7 @@ import io.qt.gui.QBrush;
 import io.qt.gui.QColor;
 import io.qt.gui.QFont;
 import io.qt.gui.QFontMetrics;
+import io.qt.gui.QIcon;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPainterPath;
 import io.qt.gui.QPen;
@@ -61,6 +62,42 @@ public class DesktopQtTextImageImpl implements Image, DesktopQtImage {
     }
 
     @Override
+    public boolean isLive() {
+        return DesktopQtImage.isLive(myBaseImage);
+    }
+
+    @Override
+    public long paintFrame(QPainter painter, QRect rect, QIcon.Mode mode) {
+        if (!isLive()) {
+            return DesktopQtImage.super.paintFrame(painter, rect, mode);
+        }
+
+        long next = DesktopQtImage.paintFrame(myBaseImage, painter, rect, mode);
+
+        int width = getWidth();
+        int height = getHeight();
+        if (width <= 0 || height <= 0 || rect.isEmpty()) {
+            return next;
+        }
+
+        painter.save();
+        try {
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+            painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, true);
+
+            painter.translate(rect.x(), rect.y());
+            painter.scale(rect.width() / (double) width, rect.height() / (double) height);
+
+            paintText(painter, width, height);
+        }
+        finally {
+            painter.restore();
+        }
+
+        return next;
+    }
+
+    @Override
     public QPixmap toQPixmap() {
         int width = getWidth();
         int height = getHeight();
@@ -78,28 +115,32 @@ public class DesktopQtTextImageImpl implements Image, DesktopQtImage {
                 painter.drawPixmap(new QRect(0, 0, width, height), base);
             }
 
-            QFont font = new QFont();
-            font.setPixelSize(TEXT_FONT_SIZE);
-
-            QFontMetrics metrics = new QFontMetrics(font);
-
-            QPainterPath path = new QPainterPath();
-            path.addText(width - metrics.horizontalAdvance(myText), height - metrics.descent(), font, myText);
-
-            // the awt effect draws the badge over a halo of the background colour, so the stroke goes down first
-            QPen pen = new QPen(new QColor(Qt.GlobalColor.white));
-            pen.setWidthF(1);
-            pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin);
-
-            painter.setPen(pen);
-            painter.setBrush(new QBrush(new QColor(Qt.GlobalColor.black)));
-
-            painter.drawPath(path);
+            paintText(painter, width, height);
         }
         finally {
             painter.end();
         }
 
         return target;
+    }
+
+    private void paintText(QPainter painter, int width, int height) {
+        QFont font = new QFont();
+        font.setPixelSize(TEXT_FONT_SIZE);
+
+        QFontMetrics metrics = new QFontMetrics(font);
+
+        QPainterPath path = new QPainterPath();
+        path.addText(width - metrics.horizontalAdvance(myText), height - metrics.descent(), font, myText);
+
+        // the awt effect draws the badge over a halo of the background colour, so the stroke goes down first
+        QPen pen = new QPen(new QColor(Qt.GlobalColor.white));
+        pen.setWidthF(1);
+        pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin);
+
+        painter.setPen(pen);
+        painter.setBrush(new QBrush(new QColor(Qt.GlobalColor.black)));
+
+        painter.drawPath(path);
     }
 }

@@ -69,6 +69,14 @@ public final class ImageEffects {
     }
 
     /**
+     * The original image, blinking to ask for the user's attention while it is shown. Same size as the original.
+     * How it blinks, and whether it moves at all, is decided by whoever draws it.
+     */
+    public static Image blinking(Image original) {
+        return UIInternal.get()._ImageEffects_blinking(Objects.requireNonNull(original));
+    }
+
+    /**
      * Return composite image, where height is max of i0&i1, and width is sum of both.
      * It will be displayed like [i0][i1].
      */

@@ -30,6 +30,7 @@ import consulo.ui.image.Image;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.image.WebImageElement;
+import consulo.web.ui.impl.internal.image.WebImageSpec;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
 import org.jspecify.annotations.Nullable;
 
@@ -169,6 +170,13 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
      * becomes a url, and an {@code img} of that url is the whole of what the browser needs.
      */
     private static String toImageHtml(Image image) {
+        WebImageSpec spec = WebImageUrl.toSpec(image);
+        if (spec != null && WebImageSpec.animated(spec)) {
+            return "<img src=\"" + StringUtil.escapeXmlEntities(WebImageUrl.toURL(spec)) + "\""
+                + " width=\"" + WebImageSpec.widthOrDefault(spec) + "\""
+                + " height=\"" + WebImageSpec.heightOrDefault(spec) + "\">";
+        }
+
         String elements = WebImageElement.toHtml(image);
         if (elements != null) {
             return elements;

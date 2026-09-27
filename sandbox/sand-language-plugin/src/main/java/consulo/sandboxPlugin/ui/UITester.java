@@ -27,10 +27,12 @@ import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StandardColors;
+import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.TimeoutUtil;
 import org.jspecify.annotations.Nullable;
@@ -95,6 +97,7 @@ public class UITester {
             tabbedLayout.addTab("Message Boxes", alerts());
             tabbedLayout.addTab("Inputs", inputs());
             tabbedLayout.addTab("DelayedAction", delayedAction());
+            tabbedLayout.addTab("Animated Images", animatedImages(uiDisposable));
 
             return tabbedLayout;
         }
@@ -108,6 +111,99 @@ public class UITester {
                 UIAccess.current().getScheduler().schedule(action::stop, 2, TimeUnit.SECONDS);
             }));
             return layout;
+        }
+
+        @RequiredUIAccess
+        private Component animatedImages(Disposable uiDisposable) {
+            VerticalLayout rows = VerticalLayout.create();
+
+            rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("ImageBox, busy()"), ImageBox.create(Image.busy())));
+            rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("ImageBox, busy(32)"), ImageBox.create(Image.busy(32))));
+            rows.add(LabeledBuilder.sided(
+                LocalizeValue.localizeTODO("ImageBox, resize(busy(), 32, 16)"),
+                ImageBox.create(ImageEffects.resize(Image.busy(), 32, 16))
+            ));
+
+            Label busyLabel = Label.create(LocalizeValue.localizeTODO("Indexing..."));
+            busyLabel.setImage(Image.busy());
+            rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Label, busy() with text"), busyLabel));
+
+            Image blinking = ImageEffects.blinking(PlatformIconGroup.ideFatalerror());
+            rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("ImageBox, blinking(ideFatalerror)"), ImageBox.create(blinking)));
+
+            Label blinkingLabel = Label.create(LocalizeValue.localizeTODO("Fatal errors"));
+            blinkingLabel.setImage(blinking);
+            rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Label, blinking(ideFatalerror) with text"), blinkingLabel));
+
+            Image busyWithErrorMark = ImageEffects.layered(Image.busy(), PlatformIconGroup.nodesErrormark());
+            rows.add(LabeledBuilder.sided(
+                LocalizeValue.localizeTODO("ImageBox, layered(busy(), nodesErrormark)"),
+                ImageBox.create(busyWithErrorMark)
+            ));
+            rows.add(LabeledBuilder.sided(
+                LocalizeValue.localizeTODO("ImageBox, grayed(layered(busy(), nodesErrormark))"),
+                ImageBox.create(ImageEffects.grayed(busyWithErrorMark))
+            ));
+
+            Button busyButton = Button.create(LocalizeValue.localizeTODO("Running"));
+            busyButton.setIcon(Image.busy());
+            rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Button, busy() icon"), busyButton));
+
+            Button disabledButton = Button.create(LocalizeValue.localizeTODO("Running"));
+            disabledButton.setIcon(busyWithErrorMark);
+            disabledButton.setEnabled(false);
+            rows.add(LabeledBuilder.sided(
+                LocalizeValue.localizeTODO("Disabled Button, layered(busy(), nodesErrormark) icon"),
+                disabledButton
+            ));
+
+            Label swappedLabel = Label.create(LocalizeValue.localizeTODO("Working"));
+            swappedLabel.setImage(Image.busy());
+
+            CheckBox busyCheckBox = CheckBox.create(LocalizeValue.localizeTODO("Busy"), true);
+            busyCheckBox.addValueListener(event -> {
+                boolean busy = Boolean.TRUE.equals(event.getValue());
+                swappedLabel.setImage(busy ? Image.busy() : PlatformIconGroup.actionsCommit());
+                swappedLabel.setText(busy ? LocalizeValue.localizeTODO("Working") : LocalizeValue.localizeTODO("Done"));
+            });
+            rows.add(DockLayout.create().left(busyCheckBox).right(swappedLabel));
+
+            Tree<String> tree = Tree.create(
+                (TreeModel<String>) (nodeFactory, parentValue) -> {
+                    if (parentValue != null) {
+                        return;
+                    }
+
+                    for (int i = 0; i < 30; i++) {
+                        TreeNode<String> node = nodeFactory.apply("Running test " + i);
+                        node.setLeaf(true);
+
+                        Image icon = i % 5 == 4 ? busyWithErrorMark : Image.busy();
+                        node.setRenderer((value, presentation) -> {
+                            presentation.append(value);
+                            presentation.withIcon(icon);
+                        });
+                    }
+                }
+            );
+            Disposer.register(uiDisposable, tree.destroyHook());
+
+            List<String> listItems = new ArrayList<>();
+            for (int i = 0; i < 30; i++) {
+                listItems.add("Running task " + i);
+            }
+
+            ListBox<String> listBox = ListBox.create(listItems);
+            listBox.setRender((presentation, item) -> {
+                presentation.append(item.getValue());
+                presentation.withIcon(Image.busy());
+            });
+
+            TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+            splitLayout.setFirstComponent(ScrollableLayout.create(tree));
+            splitLayout.setSecondComponent(ScrollableLayout.create(listBox));
+
+            return DockLayout.create().top(rows).center(splitLayout);
         }
 
         @RequiredUIAccess

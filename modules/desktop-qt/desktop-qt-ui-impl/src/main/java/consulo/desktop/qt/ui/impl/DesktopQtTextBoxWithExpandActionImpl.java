@@ -84,8 +84,8 @@ public class DesktopQtTextBoxWithExpandActionImpl extends DesktopQtTextBoxImpl
     }
 
     private QIcon expandIcon() {
-        if (myEditButtonImage instanceof DesktopQtImage qtImage) {
-            return qtImage.toQIcon();
+        if (myEditButtonImage instanceof DesktopQtImage) {
+            return toHostQIcon(myEditButtonImage);
         }
 
         // the api lets the caller leave the icon out, and the awt frontend then takes one from the look and feel

@@ -15,18 +15,21 @@
  */
 package consulo.web.ui.impl.internal.action;
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.logging.Logger;
+import consulo.ui.DelayedAction;
 import consulo.ui.MenuItem;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.web.ui.impl.internal.WebDelayedActionImpl;
 import consulo.web.ui.impl.internal.WebMenuItemImpl;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.node.ObjectNode;
@@ -44,6 +47,9 @@ import java.util.Optional;
 public final class WebActionContextMenu {
     private static final Logger LOG = Logger.getInstance(WebActionContextMenu.class);
 
+    private static final String PENDING_REQUEST = "consulo.context.menu.pending.request";
+    private static final String OPENED_MENU = "consulo.context.menu.opened";
+
     private final ContextMenu myContextMenu;
     private final com.vaadin.flow.component.Component myTarget;
     private final @Nullable String myGroupId;
@@ -56,6 +62,8 @@ public final class WebActionContextMenu {
      * on them is silently dropped.
      */
     private boolean myOpenRequested;
+
+    private @Nullable DelayedAction myDelayedAction;
 
     /**
      * Set when the group the next open belongs to is decided by what was under the pointer rather than by the
@@ -116,6 +124,17 @@ public final class WebActionContextMenu {
         myContextMenu.getElement().getThemeList().add("small");
 
         myContextMenu.setTarget(target);
+
+        myContextMenu.addOpenedChangeListener(event -> {
+            if (!event.isOpened()) {
+                myTarget.getUI().ifPresent(this::releaseOpenedMenu);
+            }
+        });
+
+        target.addDetachListener(event -> {
+            finishOpenRequest();
+            releaseOpenedMenu(event.getUI());
+        });
     }
 
     /**
@@ -125,7 +144,12 @@ public final class WebActionContextMenu {
      */
     @RequiredUIAccess
     private void beforeOpenMenu() {
+        myTarget.getUI().ifPresent(this::takePendingRequest);
+
         myOpenRequested = true;
+
+        stopDelayedAction();
+        myDelayedAction = WebDelayedActionImpl.startAtContextMenuEvent(myTarget);
 
         if (myUpdateIndicator == null) {
             refresh();
@@ -146,7 +170,7 @@ public final class WebActionContextMenu {
             return;
         }
 
-        myOpenRequested = false;
+        finishOpenRequest();
 
         Optional<UI> maybeUI = myTarget.getUI();
         if (maybeUI.isEmpty()) {
@@ -154,9 +178,16 @@ public final class WebActionContextMenu {
         }
         UI ui = maybeUI.get();
 
+        takeOpenedMenu(ui);
+
         if (!myContextMenu.isAttached()) {
             // vetoing onBeforeOpenMenu also skipped the overlay auto attach that vaadin does before its own open
-            ui.add(myContextMenu);
+            if (ui.hasModalComponent()) {
+                ui.addToModalComponent(myContextMenu);
+            }
+            else {
+                ui.add(myContextMenu);
+            }
         }
 
         ui.beforeClientResponse(
@@ -185,16 +216,74 @@ public final class WebActionContextMenu {
         CustomActionsSchema.getCorrectedGroupAsync(myGroupId).whenComplete((corrected, throwable) -> {
             if (throwable != null) {
                 LOG.error("Failed to resolve the context menu group", throwable);
-                return;
             }
             schemaAccess.giveIfNeed(() -> {
-            if (corrected == null) {
-                myOpenRequested = false;
-                return;
-            }
-            doRefresh(corrected);
+                if (throwable != null || corrected == null) {
+                    finishOpenRequest();
+                    return;
+                }
+                doRefresh(corrected);
+            });
         });
-        });
+    }
+
+    @RequiredUIAccess
+    private void finishOpenRequest() {
+        myOpenRequested = false;
+        stopDelayedAction();
+
+        myTarget.getUI().ifPresent(this::releasePendingRequest);
+    }
+
+    @RequiredUIAccess
+    private void takePendingRequest(UI ui) {
+        if (ComponentUtil.getData(ui, PENDING_REQUEST) instanceof WebActionContextMenu previous && previous != this) {
+            previous.cancelOpenRequest();
+        }
+
+        ComponentUtil.setData(ui, PENDING_REQUEST, this);
+    }
+
+    private void releasePendingRequest(UI ui) {
+        if (ComponentUtil.getData(ui, PENDING_REQUEST) == this) {
+            ComponentUtil.setData(ui, PENDING_REQUEST, null);
+        }
+    }
+
+    @RequiredUIAccess
+    private void cancelOpenRequest() {
+        myOpenRequested = false;
+        stopDelayedAction();
+
+        ProgressIndicator indicator = myUpdateIndicator;
+        if (indicator != null) {
+            myUpdateIndicator = null;
+            indicator.cancel();
+        }
+    }
+
+    @RequiredUIAccess
+    private void takeOpenedMenu(UI ui) {
+        if (ComponentUtil.getData(ui, OPENED_MENU) instanceof WebActionContextMenu previous && previous != this) {
+            previous.myContextMenu.close();
+        }
+
+        ComponentUtil.setData(ui, OPENED_MENU, this);
+    }
+
+    private void releaseOpenedMenu(UI ui) {
+        if (ComponentUtil.getData(ui, OPENED_MENU) == this) {
+            ComponentUtil.setData(ui, OPENED_MENU, null);
+        }
+    }
+
+    @RequiredUIAccess
+    private void stopDelayedAction() {
+        DelayedAction delayedAction = myDelayedAction;
+        if (delayedAction != null) {
+            myDelayedAction = null;
+            delayedAction.stop();
+        }
     }
 
     @RequiredUIAccess
@@ -221,7 +310,7 @@ public final class WebActionContextMenu {
                     if (!WebActionMenuExpander.isProcessCanceled(throwable)) {
                         LOG.warn("Failed to expand action group " + myGroupId, throwable);
                     }
-                    myOpenRequested = false;
+                    finishOpenRequest();
                     return;
                 }
 

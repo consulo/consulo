@@ -15,6 +15,8 @@
  */
 package consulo.web.ui.impl.internal.image;
 
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.ImageKey;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
@@ -62,6 +64,80 @@ public sealed interface WebImageSpec {
     record Text(WebImageSpec child, String text) implements WebImageSpec {
     }
 
+    record Busy(int width, int height) implements WebImageSpec {
+        public WebImageSpec still() {
+            if (width <= 0 || height <= 0) {
+                return new Empty(Math.max(width, 0), Math.max(height, 0));
+            }
+
+            ImageKey key = PlatformIconGroup.processStep_passive();
+            return new Key(key.getGroupId(), key.getImageId(), width, height);
+        }
+    }
+
+    record Blinking(WebImageSpec child) implements WebImageSpec {
+    }
+
+    static WebImageSpec resize(WebImageSpec child, int width, int height) {
+        return switch (child) {
+            case Busy ignored -> new Busy(width, height);
+            case Blinking inner -> blinking(resize(inner.child(), width, height));
+            default -> new Resize(child, width, height);
+        };
+    }
+
+    static WebImageSpec blinking(WebImageSpec child) {
+        return switch (child) {
+            case Busy busy -> busy;
+            case Blinking blinking -> blinking;
+            default -> new Blinking(child);
+        };
+    }
+
+    static boolean animated(WebImageSpec spec) {
+        return switch (spec) {
+            case Key ignored -> false;
+            case Empty ignored -> false;
+            case Colorize colorize -> animated(colorize.child());
+            case Alpha alpha -> animated(alpha.child());
+            case Resize resize -> animated(resize.child());
+            case Layered layered -> layered.children().stream().anyMatch(WebImageSpec::animated);
+            case Gray gray -> animated(gray.child());
+            case Append append -> animated(append.left()) || animated(append.right());
+            case Text text -> animated(text.child());
+            case Busy ignored -> true;
+            case Blinking ignored -> true;
+        };
+    }
+
+    static WebImageSpec still(WebImageSpec spec) {
+        return freeze(spec, true);
+    }
+
+    static WebImageSpec withoutBlinking(WebImageSpec spec) {
+        return freeze(spec, false);
+    }
+
+    private static WebImageSpec freeze(WebImageSpec spec, boolean busyToo) {
+        if (!animated(spec)) {
+            return spec;
+        }
+
+        return switch (spec) {
+            case Key key -> key;
+            case Empty empty -> empty;
+            case Colorize colorize -> new Colorize(freeze(colorize.child(), busyToo), colorize.rgb());
+            case Alpha alpha -> new Alpha(freeze(alpha.child(), busyToo), alpha.alpha());
+            case Resize resize -> new Resize(freeze(resize.child(), busyToo), resize.width(), resize.height());
+            case Layered layered -> new Layered(layered.children().stream().map(child -> freeze(child, busyToo)).toList());
+            case Gray gray -> new Gray(freeze(gray.child(), busyToo), gray.percent());
+            case Append append -> new Append(freeze(append.left(), busyToo), freeze(append.right(), busyToo));
+            case Text text -> new Text(freeze(text.child(), busyToo), text.text());
+            case Busy busy -> busyToo ? busy.still() : busy;
+            case Blinking blinking -> freeze(blinking.child(), busyToo);
+        };
+    }
+
     static int width(WebImageSpec spec) {
         return switch (spec) {
             case Key key -> key.width();
@@ -74,6 +150,8 @@ public sealed interface WebImageSpec {
             // a side of unknown width still takes a box of its own, so the sum is over what is actually drawn
             case Append append -> widthOrDefault(append.left()) + widthOrDefault(append.right());
             case Text text -> width(text.child());
+            case Busy busy -> busy.width();
+            case Blinking blinking -> width(blinking.child());
         };
     }
 
@@ -88,17 +166,19 @@ public sealed interface WebImageSpec {
             case Gray gray -> height(gray.child());
             case Append append -> Math.max(height(append.left()), height(append.right()));
             case Text text -> height(text.child());
+            case Busy busy -> busy.height();
+            case Blinking blinking -> height(blinking.child());
         };
     }
 
     static int widthOrDefault(WebImageSpec spec) {
         int width = width(spec);
-        return width > 0 ? width : DEFAULT_SIZE;
+        return width > 0 || spec instanceof Busy ? width : DEFAULT_SIZE;
     }
 
     static int heightOrDefault(WebImageSpec spec) {
         int height = height(spec);
-        return height > 0 ? height : DEFAULT_SIZE;
+        return height > 0 || spec instanceof Busy ? height : DEFAULT_SIZE;
     }
 
     static String encode(WebImageSpec spec) {
@@ -157,6 +237,12 @@ public sealed interface WebImageSpec {
                 builder.append("t(");
                 append(builder, text.child());
                 builder.append(',').append(encodeText(text.text())).append(')');
+            }
+            case Busy busy -> builder.append("b(").append(busy.width()).append(',').append(busy.height()).append(')');
+            case Blinking blinking -> {
+                builder.append("bl(");
+                append(builder, blinking.child());
+                builder.append(')');
             }
         }
     }
@@ -240,6 +326,14 @@ public sealed interface WebImageSpec {
                     WebImageSpec child = readSpec();
                     expect(',');
                     return new Text(child, decodeText(readUntil(')')));
+                }
+                case "b": {
+                    return new Busy(readInt(','), readInt(')'));
+                }
+                case "bl": {
+                    WebImageSpec child = readSpec();
+                    expect(')');
+                    return new Blinking(child);
                 }
                 default: {
                     throw new IllegalArgumentException(type);

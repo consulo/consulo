@@ -15,8 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.base.DesktopQtImageWidget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,7 +37,7 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     private LocalizeValue myText = LocalizeValue.empty();
     private @Nullable Image myIcon;
 
-    private @Nullable QLabel myIconLabel;
+    private @Nullable DesktopQtImageWidget myIconLabel;
     private @Nullable QLabel myTextLabel;
 
     public DesktopQtHyperlinkImpl(LocalizeValue text) {
@@ -58,7 +58,7 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
         layout.setContentsMargins(0, 0, 0, 0);
         layout.setSpacing(4);
 
-        myIconLabel = new QLabel(component);
+        myIconLabel = new DesktopQtImageWidget(component);
         myIconLabel.setVisible(false);
         layout.addWidget(myIconLabel);
 
@@ -106,17 +106,13 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     }
 
     private void updateIcon() {
-        if (myIconLabel == null) {
+        DesktopQtImageWidget iconLabel = myIconLabel;
+        if (iconLabel == null || iconLabel.isDisposed()) {
             return;
         }
 
-        if (myIcon instanceof DesktopQtImage qtImage) {
-            myIconLabel.setPixmap(qtImage.toQPixmap());
-            myIconLabel.setVisible(true);
-        }
-        else {
-            myIconLabel.setVisible(false);
-        }
+        iconLabel.setImage(myIcon);
+        iconLabel.setVisible(myIcon != null);
     }
 
     @Override
