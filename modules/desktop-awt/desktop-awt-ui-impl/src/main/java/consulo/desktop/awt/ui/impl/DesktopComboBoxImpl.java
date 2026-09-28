@@ -71,7 +71,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
             ? new DesktopComponentItemRenderAdapter<>(myComponentRender, () -> -1)
             : new DesktopListRender<>(() -> myTextRender);
 
-        component.setRenderer(DesktopLengthRender.wrap(render, () -> myItemHeightGetter));
+        component.setRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
     }
 
     private void applySpeedSearch(MyComboBox<E> component) {

@@ -237,7 +237,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
         ListCellRenderer<E> render = myRenderAdapter != null ? myRenderAdapter : new DesktopListRender<>(() -> myTextRender);
 
-        ListCellRenderer<E> withHeight = DesktopLengthRender.wrap(render, () -> myItemHeightGetter);
+        ListCellRenderer<E> withHeight = DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter);
 
         // the swing popups do the same - the renderer answers a separator with a component of its own rather than
         // with a row, see GroupedItemsListRenderer
