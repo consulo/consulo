@@ -17,26 +17,17 @@ package consulo.http.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.http.*;
-import consulo.http.localize.HttpLocalize;
-import consulo.logging.Logger;
-import consulo.util.lang.StringUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.http.HttpMethod;
+import consulo.http.HttpRequestBuilder;
+import consulo.http.HttpRequestBuilderFactory;
+import consulo.http.impl.internal.local.LocalHttpClientExecutor;
+import consulo.http.impl.internal.local.LocalUrlConnectionExecutor;
+import consulo.platform.Platform;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,167 +36,46 @@ import java.util.regex.Pattern;
 @ServiceImpl
 @Singleton
 public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory {
-    private static final Logger LOG = Logger.getInstance(HttpRequestBuilderFactoryImpl.class);
-
-    static final int BLOCK_SIZE = 16 * 1024;
-
-    private static final Pattern CHARSET_PATTERN = Pattern.compile("charset=([^;]+)");
-
-    static <T> T process(HttpRequestBuilderImpl builder, HttpRequestProcessor<T> processor) throws IOException {
-        LOG.assertTrue(ApplicationManager.getApplication() == null || !ApplicationManager.getApplication().isReadAccessAllowed(), "Network shouldn't be accessed in EDT or inside read action");
-
-        return doProcess(builder, processor);
-    }
-
-    private static <T> T doProcess(HttpRequestBuilderImpl builder, HttpRequestProcessor<T> processor) throws IOException {
-        try (HttpRequestImpl request = new HttpRequestImpl(builder)) {
-            return processor.process(request);
-        }
-    }
-
-    static Charset getCharset(HttpRequestImpl request) throws IOException {
-        String contentType = request.getConnection().getContentType();
-        if (!StringUtil.isEmptyOrSpaces(contentType)) {
-            Matcher m = CHARSET_PATTERN.matcher(contentType);
-            if (m.find()) {
-                try {
-                    return Charset.forName(StringUtil.unquoteString(m.group(1)));
-                }
-                catch (IllegalArgumentException e) {
-                    throw new IOException("unknown charset (" + contentType + ")", e);
-                }
-            }
-        }
-
-        return StandardCharsets.UTF_8;
-    }
-
-    static URLConnection openConnection(HttpRequestBuilderImpl builder) throws IOException {
-        String url = builder.myUrl;
-
-        for (int i = 0; i < builder.myRedirectLimit; i++) {
-            if (builder.myForceHttps && StringUtil.startsWith(url, "http:")) {
-                url = "https:" + url.substring(5);
-            }
-
-            URLConnection connection;
-            if (!builder.myUseProxy) {
-                connection = new URL(url).openConnection(Proxy.NO_PROXY);
-            }
-            else {
-                connection = HttpProxyManager.getInstance().openConnection(url);
-            }
-
-            if (connection instanceof HttpURLConnection httpURLConnection) {
-                // we will control redirection by code lower
-                httpURLConnection.setInstanceFollowRedirects(false);
-
-                // set method from builder
-                httpURLConnection.setRequestMethod(builder.myHttpMethod.name());
-            }
-
-            for (Map.Entry<String, String> entry : builder.myHeaders.entrySet()) {
-                connection.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-
-            if (connection instanceof HttpsURLConnection httpsURLConnection) {
-                httpsURLConnection.setSSLSocketFactory(HttpCertificateManager.getInstance().getSslContext().getSocketFactory());
-            }
-
-            connection.setConnectTimeout(builder.myConnectTimeout);
-            connection.setReadTimeout(builder.myTimeout);
-
-            if (builder.myHostnameVerifier != null && connection instanceof HttpsURLConnection httpsURLConnection) {
-                httpsURLConnection.setHostnameVerifier(builder.myHostnameVerifier);
-            }
-
-            if (builder.myGzip) {
-                connection.setRequestProperty("Accept-Encoding", "gzip");
-            }
-
-            connection.setUseCaches(false);
-
-            if (builder.myBody != null) {
-                connection.setDoOutput(true);
-
-                if (connection instanceof HttpURLConnection httpURLConnection) {
-                    httpURLConnection.setFixedLengthStreamingMode(builder.myBody.length);
-                }
-
-                try (OutputStream os = connection.getOutputStream()) {
-                    os.write(builder.myBody);
-                    os.flush();
-                }
-            }
-
-            if (connection instanceof HttpURLConnection httpURLConnection) {
-                int responseCode = httpURLConnection.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-                    httpURLConnection.disconnect();
-
-                    url = connection.getHeaderField("Location");
-                    if (url != null) {
-                        continue;
-                    }
-                }
-
-                if (responseCode == HttpURLConnection.HTTP_NOT_MODIFIED) {
-                    httpURLConnection.disconnect();
-                    return connection;
-                }
-
-                if (!builder.myAllowErrorCodes) {
-                    if (responseCode < 200 || responseCode >= 300) {
-                        httpURLConnection.disconnect();
-
-                        String message = HttpLocalize.errorConnectionFailedWithHttpCodeN(responseCode).get();
-
-                        throw new HttpStatusException(message, responseCode, StringUtil.notNullize(url, "Empty URL"));
-                    }
-                }
-            }
-
-            return connection;
-        }
-
-        throw new IOException(HttpLocalize.errorConnectionFailedRedirects().get());
-    }
-
-    
-    public static String createErrorMessage(IOException e, HttpRequest request, boolean includeHeaders) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("Cannot download '").append(request.getURL()).append("': ").append(e.getMessage());
-
-        try {
-            URLConnection connection = ((HttpRequestImpl) request).getConnection();
-
-            if (includeHeaders) {
-                builder.append("\n, headers: ").append(connection.getHeaderFields());
-            }
-
-            if (connection instanceof HttpURLConnection) {
-                HttpURLConnection httpConnection = (HttpURLConnection) connection;
-                builder.append("\n, response: ").append(httpConnection.getResponseCode()).append(' ').append(httpConnection.getResponseMessage());
-            }
-        }
-        catch (Throwable ignored) {
-        }
-
-        return builder.toString();
-    }
+    /**
+     * Sends the requests of the local platform with {@link java.net.http.HttpClient} instead of
+     * {@link java.net.URLConnection}.
+     */
+    public static final String USE_HTTP_CLIENT_PROPERTY = "consulo.http.use.http.client";
 
     private final Application myApplication;
+    private final HttpRequestExecutor myLocalExecutor;
 
     @Inject
     public HttpRequestBuilderFactoryImpl(Application application) {
-        myApplication = application;
+        this(application, Boolean.getBoolean(USE_HTTP_CLIENT_PROPERTY));
     }
 
-    
+    HttpRequestBuilderFactoryImpl(Application application, boolean useHttpClient) {
+        myApplication = application;
+        myLocalExecutor = useHttpClient
+            ? new LocalHttpClientExecutor(() -> getProgressIndicator(application))
+            : LocalUrlConnectionExecutor.INSTANCE;
+    }
+
+    private static @Nullable ProgressIndicator getProgressIndicator(Application application) {
+        ProgressIndicatorProvider provider = application.getProgressManager();
+        return provider == null ? null : provider.getProgressIndicator();
+    }
+
+    @Override
+    public HttpRequestBuilder newBuilder(Platform platform, String url, HttpMethod httpMethod) {
+        if (!Platform.LOCAL.equals(platform.getId())) {
+            // TODO send from a remote platform
+            throw new UnsupportedOperationException("Requests can not be sent from the platform " + platform.getId());
+        }
+        return newBuilder(url, httpMethod);
+    }
+
+    /**
+     * The current platform is the local one - it is not asked for.
+     */
     @Override
     public HttpRequestBuilder newBuilder(String url, HttpMethod httpMethod) {
-        return new HttpRequestBuilderImpl(myApplication, url, httpMethod);
+        return new HttpRequestBuilderImpl(myApplication, myLocalExecutor, url, httpMethod);
     }
 }

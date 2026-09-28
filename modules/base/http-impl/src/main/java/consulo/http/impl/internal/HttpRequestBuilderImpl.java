@@ -16,13 +16,13 @@
 package consulo.http.impl.internal;
 
 import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.http.*;
+import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,25 +31,28 @@ import java.util.Map;
  * @since 2026-02-18
  */
 class HttpRequestBuilderImpl implements HttpRequestBuilder {
-    
+    private static final Logger LOG = Logger.getInstance(HttpRequestBuilderImpl.class);
+
     private final Application myApplication;
+    private final HttpRequestExecutor myExecutor;
 
-    final String myUrl;
-    final HttpMethod myHttpMethod;
-    int myConnectTimeout = HttpProxyManager.CONNECTION_TIMEOUT;
-    int myTimeout = HttpProxyManager.READ_TIMEOUT;
-    int myRedirectLimit = HttpProxyManager.REDIRECT_LIMIT;
-    boolean myGzip = true;
-    boolean myForceHttps;
-    boolean myUseProxy = true;
-    HostnameVerifier myHostnameVerifier;
-    Map<String, String> myHeaders = new LinkedHashMap<>();
-    HttpVersion myHttpVersion;
-    byte[] myBody;
-    boolean myAllowErrorCodes;
+    private final String myUrl;
+    private final HttpMethod myHttpMethod;
+    private int myConnectTimeout = HttpProxyManager.CONNECTION_TIMEOUT;
+    private int myTimeout = HttpProxyManager.READ_TIMEOUT;
+    private int myRedirectLimit = HttpProxyManager.REDIRECT_LIMIT;
+    private boolean myGzip = true;
+    private boolean myForceHttps;
+    private boolean myUseProxy = true;
+    private @Nullable HostnameVerifier myHostnameVerifier;
+    private final Map<String, String> myHeaders = new LinkedHashMap<>();
+    private @Nullable HttpVersion myHttpVersion;
+    private byte @Nullable [] myBody;
+    private boolean myAllowErrorCodes;
 
-    HttpRequestBuilderImpl(Application application, String url, HttpMethod httpMethod) {
+    HttpRequestBuilderImpl(Application application, HttpRequestExecutor executor, String url, HttpMethod httpMethod) {
         myApplication = application;
+        myExecutor = executor;
         myUrl = url;
         myHttpMethod = httpMethod;
     }
@@ -132,14 +135,31 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     @Override
     public int tryConnect() throws IOException {
         return connect((request) -> {
-            URLConnection connection = ((HttpRequestImpl) request).getConnection();
-            
-            return connection instanceof HttpURLConnection ? ((HttpURLConnection) connection).getResponseCode() : -1;
+            int statusCode = request.statusCode();
+            // zero is not a http connection
+            return statusCode == 0 ? -1 : statusCode;
         });
     }
 
     @Override
     public <T> T connect(HttpRequestProcessor<T> processor) throws IOException {
-        return HttpRequestBuilderFactoryImpl.process(this, processor);
+        LOG.assertTrue(ApplicationManager.getApplication() == null || !ApplicationManager.getApplication().isReadAccessAllowed(), "Network shouldn't be accessed in EDT or inside read action");
+
+        HttpRequestOptions options = new HttpRequestOptions(
+            myUrl,
+            myHttpMethod,
+            new LinkedHashMap<>(myHeaders),
+            myBody,
+            myHttpVersion,
+            myConnectTimeout,
+            myTimeout,
+            myRedirectLimit,
+            myGzip,
+            myForceHttps,
+            myUseProxy,
+            myHostnameVerifier,
+            myAllowErrorCodes
+        );
+        return myExecutor.execute(options, processor);
     }
 }

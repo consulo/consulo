@@ -15,11 +15,8 @@
  */
 package consulo.http.impl.internal;
 
-import consulo.application.Application;
 import consulo.http.HttpMethod;
-import consulo.http.HttpRequestBuilder;
 import consulo.http.HttpStatusException;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -28,23 +25,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.mock;
 
 /**
- * When a request is sent again today. The builder has no retry of its own - the only retry is the one
- * {@link java.net.HttpURLConnection} does by itself: a request without a body is sent once more when the server closes
- * the connection without an answer. A request with a body is streamed and never sent again.
+ * When a request is sent again. The builder has no retry of its own - the only retry is the one
+ * {@link java.net.HttpURLConnection} does by itself, and the {@link java.net.http.HttpClient} executor does the same: a
+ * request without a body is sent once more when the server closes the connection without an answer. A request with a
+ * body is never sent again.
  *
  * @author VISTALL
  * @since 2026-09-28
  */
-public class HttpRequestRetryTest {
-    private static final HttpRequestBuilderFactoryImpl FACTORY = new HttpRequestBuilderFactoryImpl(mock(Application.class));
-
-    private static HttpRequestBuilder request(String url, HttpMethod method) {
-        return FACTORY.newBuilder(url, method).useProxy(false);
-    }
-
+public class HttpRequestRetryTest extends HttpRequestTestCase {
     /**
      * Closes the connection without an answer for the first {@code drops} requests, then answers.
      */
@@ -53,7 +44,7 @@ public class HttpRequestRetryTest {
         return new StubHttpServer(request -> count.incrementAndGet() <= drops ? null : StubHttpServer.Response.text("answered"));
     }
 
-    @Test
+    @EachExecutorTest
     public void getIsSentOnceMoreAfterADroppedConnection() throws Exception {
         try (StubHttpServer server = dropping(1)) {
             String result = request(server.url("/"), HttpMethod.GET).readString(null);
@@ -63,7 +54,7 @@ public class HttpRequestRetryTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void getFailsWhenTheSecondConnectionIsDroppedToo() throws Exception {
         try (StubHttpServer server = dropping(2)) {
             assertThatExceptionOfType(IOException.class)
@@ -73,7 +64,7 @@ public class HttpRequestRetryTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void postWithoutBodyIsSentOnceMore() throws Exception {
         try (StubHttpServer server = dropping(1)) {
             String result = request(server.url("/"), HttpMethod.POST).readString(null);
@@ -83,7 +74,7 @@ public class HttpRequestRetryTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void requestWithBodyIsNotSentAgain() throws Exception {
         try (StubHttpServer server = dropping(1)) {
             assertThatExceptionOfType(IOException.class)
@@ -95,7 +86,7 @@ public class HttpRequestRetryTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void errorStatusIsNotSentAgain() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> new StubHttpServer.Response(503, new byte[0]))) {
             assertThatExceptionOfType(HttpStatusException.class)
@@ -106,7 +97,7 @@ public class HttpRequestRetryTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void readTimeoutIsNotSentAgain() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> {
             Thread.sleep(1500);

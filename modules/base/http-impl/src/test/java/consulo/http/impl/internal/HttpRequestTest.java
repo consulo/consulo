@@ -17,9 +17,7 @@ package consulo.http.impl.internal;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import consulo.application.Application;
 import consulo.http.HttpMethod;
-import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,16 +28,12 @@ import java.nio.file.Path;
 import java.util.zip.GZIPOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
-public class HttpRequestTest {
-    private static final HttpRequestBuilderFactoryImpl FACTORY = new HttpRequestBuilderFactoryImpl(mock(Application.class));
-
-    @Test
+public class HttpRequestTest extends HttpRequestTestCase {
+    @EachExecutorTest
     public void getReadsBodyAndStatus() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> StubHttpServer.Response.text("hello world"))) {
-            String result = FACTORY.newBuilder(server.url("/data"), HttpMethod.GET)
-                .useProxy(false)
+            String result = request(server.url("/data"), HttpMethod.GET)
                 .connect(request -> {
                     assertThat(request.statusCode()).isEqualTo(200);
                     return request.readString(null);
@@ -51,26 +45,24 @@ public class HttpRequestTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void responseHeadersAreReadableCaseInsensitively() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> {
             StubHttpServer.Response response = StubHttpServer.Response.text("x");
             response.headers.put("X-Test", "yes");
             return response;
         })) {
-            String value = FACTORY.newBuilder(server.url("/"), HttpMethod.GET)
-                .useProxy(false)
+            String value = request(server.url("/"), HttpMethod.GET)
                 .connect(request -> request.headerValue("x-test"));
 
             assertThat(value).isEqualTo("yes");
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void requestHeadersAreSentUnchanged() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> StubHttpServer.Response.text("ok"))) {
-            FACTORY.newBuilder(server.url("/"), HttpMethod.GET)
-                .useProxy(false)
+            request(server.url("/"), HttpMethod.GET)
                 .header("X-Client", "consulo")
                 .accept("application/json")
                 .userAgent("consulo-agent/1.0")
@@ -82,11 +74,10 @@ public class HttpRequestTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void removedHeaderIsNotSent() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> StubHttpServer.Response.text("ok"))) {
-            FACTORY.newBuilder(server.url("/"), HttpMethod.GET)
-                .useProxy(false)
+            request(server.url("/"), HttpMethod.GET)
                 .header("X-Client", "consulo")
                 .header("X-Client", null)
                 .readString(null);
@@ -95,11 +86,10 @@ public class HttpRequestTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void postSendsBody() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> StubHttpServer.Response.text("received"))) {
-            String result = FACTORY.newBuilder(server.url("/submit"), HttpMethod.POST)
-                .useProxy(false)
+            String result = request(server.url("/submit"), HttpMethod.POST)
                 .body("payload".getBytes(StandardCharsets.UTF_8))
                 .readString(null);
 
@@ -109,7 +99,7 @@ public class HttpRequestTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void gzipResponseIsDecoded() throws Exception {
         String payload = "compressed body value";
         try (StubHttpServer server = new StubHttpServer(request -> {
@@ -118,8 +108,7 @@ public class HttpRequestTest {
             response.headers.put("Content-Encoding", "gzip");
             return response;
         })) {
-            String result = FACTORY.newBuilder(server.url("/"), HttpMethod.GET)
-                .useProxy(false)
+            String result = request(server.url("/"), HttpMethod.GET)
                 .gzip(true)
                 .readString(null);
 
@@ -127,11 +116,10 @@ public class HttpRequestTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void errorCodeIsAvailableWhenAllowed() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> new StubHttpServer.Response(404, "missing".getBytes(StandardCharsets.UTF_8)))) {
-            int status = FACTORY.newBuilder(server.url("/missing"), HttpMethod.GET)
-                .useProxy(false)
+            int status = request(server.url("/missing"), HttpMethod.GET)
                 .allowErrorCodes(true)
                 .connect(request -> request.statusCode());
 
@@ -139,14 +127,13 @@ public class HttpRequestTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void saveToFileWritesToInMemoryFileSystem() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix());
              StubHttpServer server = new StubHttpServer(request -> StubHttpServer.Response.text("downloaded content"))) {
             Path target = fs.getPath("/downloads/data.txt");
 
-            Path saved = FACTORY.newBuilder(server.url("/file"), HttpMethod.GET)
-                .useProxy(false)
+            Path saved = request(server.url("/file"), HttpMethod.GET)
                 .connect(request -> request.saveToFile(target, null));
 
             assertThat(saved).isEqualTo(target);

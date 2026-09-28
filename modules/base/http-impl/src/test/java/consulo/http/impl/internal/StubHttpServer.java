@@ -48,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A minimal in-process HTTP server backed by Netty for exercising {@link HttpRequestImpl}
+ * A minimal in-process HTTP server backed by Netty for exercising the request executors
  * against a real socket without touching the network.
  *
  * @author VISTALL

@@ -15,12 +15,9 @@
  */
 package consulo.http.impl.internal;
 
-import consulo.application.Application;
 import consulo.http.HttpMethod;
-import consulo.http.HttpRequestBuilder;
 import consulo.http.HttpStatusException;
 import consulo.http.HttpVersion;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
@@ -31,29 +28,32 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.mock;
 
 /**
- * What goes on the wire and what comes back today, by the {@link java.net.URLConnection} implementation - the methods,
- * bodies, headers, statuses and urls it can and can not handle.
+ * What goes on the wire and what comes back - the methods, bodies, headers, statuses and urls each executor can and
+ * can not handle.
  *
  * @author VISTALL
  * @since 2026-09-28
  */
-public class HttpRequestExchangeTest {
-    private static final HttpRequestBuilderFactoryImpl FACTORY = new HttpRequestBuilderFactoryImpl(mock(Application.class));
-
-    private static HttpRequestBuilder request(String url, HttpMethod method) {
-        return FACTORY.newBuilder(url, method).useProxy(false);
-    }
-
+public class HttpRequestExchangeTest extends HttpRequestTestCase {
     private static StubHttpServer answering(int status, String body) throws InterruptedException {
         return new StubHttpServer(request -> new StubHttpServer.Response(status, body.getBytes(StandardCharsets.UTF_8)));
     }
 
-    @Test
-    public void patchIsRejectedBeforeSending() throws Exception {
+    @EachExecutorTest
+    public void patch() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
+            if (isHttpClient()) {
+                String result = request(server.url("/"), HttpMethod.PATCH).body("{}".getBytes(StandardCharsets.UTF_8)).readString(null);
+
+                assertThat(result).isEqualTo("ok");
+                assertThat(server.lastRequest().method).isEqualTo("PATCH");
+                assertThat(new String(server.lastRequest().body, StandardCharsets.UTF_8)).isEqualTo("{}");
+                return;
+            }
+
+            // HttpURLConnection knows no PATCH
             assertThatExceptionOfType(ProtocolException.class)
                 .isThrownBy(() -> request(server.url("/"), HttpMethod.PATCH).readString(null));
 
@@ -61,7 +61,7 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void putDeleteHeadOptionsAreSent() throws Exception {
         try (StubHttpServer server = answering(200, "")) {
             for (HttpMethod method : new HttpMethod[]{HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.HEAD, HttpMethod.OPTIONS}) {
@@ -72,19 +72,20 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
-    public void getWithBodyIsSentAsPost() throws Exception {
+    @EachExecutorTest
+    public void getWithBody() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             request(server.url("/"), HttpMethod.GET)
                 .body("payload".getBytes(StandardCharsets.UTF_8))
                 .readString(null);
 
-            assertThat(server.lastRequest().method).isEqualTo("POST");
+            // HttpURLConnection turns a GET with a body into a POST
+            assertThat(server.lastRequest().method).isEqualTo(isHttpClient() ? "GET" : "POST");
             assertThat(new String(server.lastRequest().body, StandardCharsets.UTF_8)).isEqualTo("payload");
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void errorStatusThrowsWithStatusAndUrl() throws Exception {
         try (StubHttpServer server = answering(404, "missing")) {
             assertThatExceptionOfType(HttpStatusException.class)
@@ -96,9 +97,23 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
-    public void errorBodyCanNotBeReadEvenWhenErrorCodesAreAllowed() throws Exception {
+    @EachExecutorTest
+    public void errorBodyWhenErrorCodesAreAllowed() throws Exception {
         try (StubHttpServer server = answering(404, "missing")) {
+            if (isHttpClient()) {
+                String body = request(server.url("/missing"), HttpMethod.GET)
+                    .allowErrorCodes(true)
+                    .connect(request -> {
+                        assertThat(request.statusCode()).isEqualTo(404);
+                        assertThat(request.statusMessage()).isEqualTo("Not Found");
+                        return request.readString(null);
+                    });
+
+                assertThat(body).isEqualTo("missing");
+                return;
+            }
+
+            // HttpURLConnection gives the body of an error status by getErrorStream() only
             assertThatExceptionOfType(IOException.class)
                 .isThrownBy(() -> request(server.url("/missing"), HttpMethod.GET)
                     .allowErrorCodes(true)
@@ -110,7 +125,7 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void notModifiedIsNotAnError() throws Exception {
         try (StubHttpServer server = answering(304, "")) {
             int status = request(server.url("/"), HttpMethod.GET).connect(request -> request.statusCode());
@@ -119,7 +134,7 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void statusMessageIsTheReasonPhrase() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             String message = request(server.url("/"), HttpMethod.GET).connect(request -> request.statusMessage());
@@ -128,24 +143,41 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
-    public void versionIsAlwaysHttp11() throws Exception {
+    @EachExecutorTest
+    public void version() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             HttpVersion version = request(server.url("/"), HttpMethod.GET)
                 .version(HttpVersion.HTTP_2)
                 .connect(request -> {
-                    // version() is a constant - it does not even connect
-                    assertThat(request.version()).isEqualTo(HttpVersion.HTTP_1_1);
+                    // not sent yet - the asked version, a constant for URLConnection
+                    assertThat(request.version()).isEqualTo(isHttpClient() ? HttpVersion.HTTP_2 : HttpVersion.HTTP_1_1);
                     request.statusCode();
                     return request.version();
                 });
 
+            // the server can not upgrade to HTTP/2 - the answer is HTTP/1.1
             assertThat(version).isEqualTo(HttpVersion.HTTP_1_1);
             assertThat(server.lastRequest().protocol).isEqualTo("HTTP/1.1");
+            if (isHttpClient()) {
+                assertThat(server.lastRequest().headers).containsEntry("upgrade", "h2c");
+            }
+            else {
+                assertThat(server.lastRequest().headers).doesNotContainKey("upgrade");
+            }
         }
     }
 
-    @Test
+    @EachExecutorTest
+    public void noVersionIsHttp11() throws Exception {
+        try (StubHttpServer server = answering(200, "ok")) {
+            request(server.url("/"), HttpMethod.GET).readString(null);
+
+            assertThat(server.lastRequest().protocol).isEqualTo("HTTP/1.1");
+            assertThat(server.lastRequest().headers).doesNotContainKey("upgrade");
+        }
+    }
+
+    @EachExecutorTest
     public void repeatedHeaderKeepsTheLastValue() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             request(server.url("/"), HttpMethod.GET)
@@ -157,7 +189,7 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void restrictedHeadersAreDropped() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             request(server.url("/"), HttpMethod.GET)
@@ -170,7 +202,7 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void gzipIsAcceptedByDefault() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             request(server.url("/"), HttpMethod.GET).readString(null);
@@ -181,7 +213,7 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void tryConnectReturnsTheStatus() throws Exception {
         try (StubHttpServer server = answering(200, "ok")) {
             assertThat(request(server.url("/"), HttpMethod.GET).tryConnect()).isEqualTo(200);
@@ -195,7 +227,10 @@ public class HttpRequestExchangeTest {
         }
     }
 
-    @Test
+    /**
+     * {@link java.net.http.HttpClient} sends http only - a file is read by URLConnection for both.
+     */
+    @EachExecutorTest
     public void fileUrlIsReadWithoutStatus(@TempDir Path dir) throws Exception {
         Path file = dir.resolve("page.html");
         Files.writeString(file, "local content");

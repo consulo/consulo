@@ -17,6 +17,7 @@ package consulo.http;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.platform.Platform;
 
 /**
  * @author VISTALL
@@ -24,6 +25,17 @@ import consulo.annotation.component.ServiceAPI;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface HttpRequestBuilderFactory {
-    
-    HttpRequestBuilder newBuilder(String url, HttpMethod httpMethod);
+    /**
+     * A request which is sent from the given platform - through its network, so {@code localhost} is the platform.
+     *
+     * @throws UnsupportedOperationException if requests can not be sent from the platform
+     */
+    HttpRequestBuilder newBuilder(Platform platform, String url, HttpMethod httpMethod);
+
+    /**
+     * A request which is sent from the {@link Platform#current() current} platform.
+     */
+    default HttpRequestBuilder newBuilder(String url, HttpMethod httpMethod) {
+        return newBuilder(Platform.current(), url, httpMethod);
+    }
 }

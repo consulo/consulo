@@ -15,11 +15,8 @@
  */
 package consulo.http.impl.internal;
 
-import consulo.application.Application;
 import consulo.http.HttpMethod;
-import consulo.http.HttpRequestBuilder;
 import consulo.http.HttpStatusException;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,23 +25,21 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * How redirects are followed today, by the {@link java.net.URLConnection} implementation: the loop in
- * {@link HttpRequestBuilderFactoryImpl#openConnection} follows 301 and 302 only, sends every hop with the same method,
- * body and headers, and counts the requests it sends against the redirect limit.
+ * How redirects are followed.
+ * <p>
+ * {@link consulo.http.impl.internal.local.LocalUrlConnectionExecutor} follows 301 and 302 only, sends every hop with
+ * the same method, body and headers, and needs an absolute {@code Location}.
+ * {@link consulo.http.impl.internal.local.LocalHttpClientExecutor} follows 303, 307, 308 and a relative
+ * {@code Location} too, goes on with GET after a POST was moved, and does not send the credentials to another origin.
+ * Both count the requests sent against the redirect limit.
  *
  * @author VISTALL
  * @since 2026-09-28
  */
-public class HttpRequestRedirectTest {
-    private static final HttpRequestBuilderFactoryImpl FACTORY = new HttpRequestBuilderFactoryImpl(mock(Application.class));
-
-    private static HttpRequestBuilder request(String url, HttpMethod method) {
-        return FACTORY.newBuilder(url, method).useProxy(false);
-    }
-
+public class HttpRequestRedirectTest extends HttpRequestTestCase {
     /**
      * An absolute url of the server the request came to.
      */
@@ -80,7 +75,7 @@ public class HttpRequestRedirectTest {
         });
     }
 
-    @Test
+    @EachExecutorTest
     public void movedPermanentlyIsFollowed() throws Exception {
         try (StubHttpServer server = redirectToTarget(301)) {
             String result = request(server.url("/start"), HttpMethod.GET).connect(request -> {
@@ -93,7 +88,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void foundIsFollowed() throws Exception {
         try (StubHttpServer server = redirectToTarget(302)) {
             String result = request(server.url("/start"), HttpMethod.GET).readString(null);
@@ -103,7 +98,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void urlIsTheRequestedOneUntilConnected() throws Exception {
         try (StubHttpServer server = redirectToTarget(302)) {
             List<String> urls = request(server.url("/start"), HttpMethod.GET).connect(request -> {
@@ -116,23 +111,31 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
-    public void seeOtherIsNotFollowed() throws Exception {
-        assertNotFollowed(303);
+    @EachExecutorTest
+    public void seeOther() throws Exception {
+        assertFollowedByHttpClientOnly(303);
     }
 
-    @Test
-    public void temporaryRedirectIsNotFollowed() throws Exception {
-        assertNotFollowed(307);
+    @EachExecutorTest
+    public void temporaryRedirect() throws Exception {
+        assertFollowedByHttpClientOnly(307);
     }
 
-    @Test
-    public void permanentRedirectIsNotFollowed() throws Exception {
-        assertNotFollowed(308);
+    @EachExecutorTest
+    public void permanentRedirect() throws Exception {
+        assertFollowedByHttpClientOnly(308);
     }
 
-    private static void assertNotFollowed(int status) throws Exception {
+    private void assertFollowedByHttpClientOnly(int status) throws Exception {
         try (StubHttpServer server = redirectToTarget(status)) {
+            if (isHttpClient()) {
+                String result = request(server.url("/start"), HttpMethod.GET).readString(null);
+
+                assertThat(result).isEqualTo("arrived");
+                assertThat(server.requests()).extracting(r -> r.path).containsExactly("/start", "/target");
+                return;
+            }
+
             assertThatExceptionOfType(HttpStatusException.class)
                 .isThrownBy(() -> request(server.url("/start"), HttpMethod.GET).readString(null))
                 .satisfies(e -> {
@@ -152,24 +155,56 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
-    public void redirectSendsTheSameMethodAndBodyAgain() throws Exception {
+    @EachExecutorTest
+    public void postAfterFound() throws Exception {
         try (StubHttpServer server = redirectToTarget(302)) {
             request(server.url("/start"), HttpMethod.POST)
+                .header("Content-Type", "text/plain")
                 .body("payload".getBytes(StandardCharsets.UTF_8))
                 .readString(null);
 
-            // a browser sends GET without the body after 302 - URLConnection repeats the POST
             assertThat(server.requests()).hasSize(2);
             StubHttpServer.RecordedRequest redirected = server.requests().get(1);
             assertThat(redirected.path).isEqualTo("/target");
-            assertThat(redirected.method).isEqualTo("POST");
-            assertThat(new String(redirected.body, StandardCharsets.UTF_8)).isEqualTo("payload");
+            if (isHttpClient()) {
+                // as a browser does
+                assertThat(redirected.method).isEqualTo("GET");
+                assertThat(redirected.body).isEmpty();
+                assertThat(redirected.headers).doesNotContainKey("content-type");
+            }
+            else {
+                assertThat(redirected.method).isEqualTo("POST");
+                assertThat(new String(redirected.body, StandardCharsets.UTF_8)).isEqualTo("payload");
+            }
         }
     }
 
-    @Test
-    public void redirectToAnotherOriginSendsTheHeadersAgain() throws Exception {
+    @EachExecutorTest
+    public void postAfterSeeOtherGoesOnAsGet() throws Exception {
+        assumeTrue(isHttpClient(), "URLConnection does not follow 303");
+
+        try (StubHttpServer server = redirectToTarget(303)) {
+            request(server.url("/start"), HttpMethod.POST).body("payload".getBytes(StandardCharsets.UTF_8)).readString(null);
+
+            assertThat(server.requests()).extracting(r -> r.method).containsExactly("POST", "GET");
+            assertThat(server.requests().get(1).body).isEmpty();
+        }
+    }
+
+    @EachExecutorTest
+    public void temporaryRedirectKeepsMethodAndBody() throws Exception {
+        assumeTrue(isHttpClient(), "URLConnection does not follow 307");
+
+        try (StubHttpServer server = redirectToTarget(307)) {
+            request(server.url("/start"), HttpMethod.PUT).body("payload".getBytes(StandardCharsets.UTF_8)).readString(null);
+
+            assertThat(server.requests()).extracting(r -> r.method).containsExactly("PUT", "PUT");
+            assertThat(new String(server.requests().get(1).body, StandardCharsets.UTF_8)).isEqualTo("payload");
+        }
+    }
+
+    @EachExecutorTest
+    public void redirectToAnotherOrigin() throws Exception {
         try (StubHttpServer target = new StubHttpServer(request -> StubHttpServer.Response.text("arrived"));
              StubHttpServer origin = startAnswers(StubHttpServer.Response.redirect(302, target.url("/target")))) {
             request(origin.url("/start"), HttpMethod.GET)
@@ -178,15 +213,39 @@ public class HttpRequestRedirectTest {
                 .readString(null);
 
             assertThat(target.requests()).hasSize(1);
-            assertThat(target.lastRequest().headers)
-                .containsEntry("authorization", "Bearer secret")
-                .containsEntry("x-client", "consulo");
+            assertThat(target.lastRequest().headers).containsEntry("x-client", "consulo");
+            if (isHttpClient()) {
+                assertThat(target.lastRequest().headers).doesNotContainKey("authorization");
+            }
+            else {
+                assertThat(target.lastRequest().headers).containsEntry("authorization", "Bearer secret");
+            }
         }
     }
 
-    @Test
-    public void relativeLocationFails() throws Exception {
+    @EachExecutorTest
+    public void redirectToTheSameOriginKeepsTheCredentials() throws Exception {
+        try (StubHttpServer server = redirectToTarget(302)) {
+            request(server.url("/start"), HttpMethod.GET)
+                .header("Authorization", "Bearer secret")
+                .readString(null);
+
+            assertThat(server.lastRequest().path).isEqualTo("/target");
+            assertThat(server.lastRequest().headers).containsEntry("authorization", "Bearer secret");
+        }
+    }
+
+    @EachExecutorTest
+    public void relativeLocation() throws Exception {
         try (StubHttpServer server = startAnswers(StubHttpServer.Response.redirect(302, "/target"))) {
+            if (isHttpClient()) {
+                String result = request(server.url("/start"), HttpMethod.GET).readString(null);
+
+                assertThat(result).isEqualTo("arrived");
+                assertThat(server.requests()).extracting(r -> r.path).containsExactly("/start", "/target");
+                return;
+            }
+
             assertThatExceptionOfType(MalformedURLException.class)
                 .isThrownBy(() -> request(server.url("/start"), HttpMethod.GET).readString(null));
 
@@ -194,14 +253,14 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void redirectWithoutLocationIsAnErrorStatus() throws Exception {
         try (StubHttpServer server = startAnswers(new StubHttpServer.Response(302, new byte[0]))) {
             assertThatExceptionOfType(HttpStatusException.class)
                 .isThrownBy(() -> request(server.url("/start"), HttpMethod.GET).readString(null))
                 .satisfies(e -> {
                     assertThat(e.getStatusCode()).isEqualTo(302);
-                    assertThat(e.getUrl()).isEqualTo("Empty URL");
+                    assertThat(e.getUrl()).isEqualTo(isHttpClient() ? server.url("/start") : "Empty URL");
                 });
 
             int status = request(server.url("/start"), HttpMethod.GET)
@@ -212,7 +271,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void defaultLimitAllowsNineRedirects() throws Exception {
         try (StubHttpServer server = hops(302)) {
             String result = request(server.url("/hop/9"), HttpMethod.GET).readString(null);
@@ -222,7 +281,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void tenthRedirectExceedsTheDefaultLimit() throws Exception {
         try (StubHttpServer server = hops(301)) {
             assertThatExceptionOfType(IOException.class)
@@ -233,7 +292,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void limitCountsTheRequestsSent() throws Exception {
         try (StubHttpServer server = hops(302)) {
             String result = request(server.url("/hop/1"), HttpMethod.GET).redirectLimit(2).readString(null);
@@ -248,7 +307,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void limitOfOneReturnsNoRedirectEvenWhenErrorCodesAreAllowed() throws Exception {
         try (StubHttpServer server = hops(302)) {
             assertThatExceptionOfType(IOException.class)
@@ -262,7 +321,7 @@ public class HttpRequestRedirectTest {
         }
     }
 
-    @Test
+    @EachExecutorTest
     public void limitOfZeroSendsNothing() throws Exception {
         try (StubHttpServer server = new StubHttpServer(request -> StubHttpServer.Response.text("ok"))) {
             assertThatExceptionOfType(IOException.class)
