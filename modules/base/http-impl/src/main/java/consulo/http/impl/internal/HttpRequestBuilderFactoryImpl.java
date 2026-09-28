@@ -19,7 +19,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.http.HttpCertificateManager;
 import consulo.http.HttpMethod;
+import consulo.http.HttpProxyManager;
 import consulo.http.HttpRequestBuilder;
 import consulo.http.HttpRequestBuilderFactory;
 import consulo.http.impl.internal.local.LocalHttpClientExecutor;
@@ -46,15 +48,22 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
     private final HttpRequestExecutor myLocalExecutor;
 
     @Inject
-    public HttpRequestBuilderFactoryImpl(Application application) {
-        this(application, Boolean.getBoolean(USE_HTTP_CLIENT_PROPERTY));
+    public HttpRequestBuilderFactoryImpl(Application application,
+                                         HttpProxyManager proxyManager,
+                                         HttpCertificateManager certificateManager) {
+        this(application, proxyManager, certificateManager, Boolean.getBoolean(USE_HTTP_CLIENT_PROPERTY));
     }
 
-    HttpRequestBuilderFactoryImpl(Application application, boolean useHttpClient) {
+    HttpRequestBuilderFactoryImpl(Application application,
+                                  HttpProxyManager proxyManager,
+                                  HttpCertificateManager certificateManager,
+                                  boolean useHttpClient) {
         myApplication = application;
+
+        LocalUrlConnectionExecutor urlConnectionExecutor = new LocalUrlConnectionExecutor(proxyManager, certificateManager);
         myLocalExecutor = useHttpClient
-            ? new LocalHttpClientExecutor(() -> getProgressIndicator(application))
-            : LocalUrlConnectionExecutor.INSTANCE;
+            ? new LocalHttpClientExecutor(proxyManager, certificateManager, urlConnectionExecutor, () -> getProgressIndicator(application))
+            : urlConnectionExecutor;
     }
 
     private static @Nullable ProgressIndicator getProgressIndicator(Application application) {

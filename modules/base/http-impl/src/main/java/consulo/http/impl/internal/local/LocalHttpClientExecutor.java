@@ -18,12 +18,12 @@ package consulo.http.impl.internal.local;
 import consulo.application.progress.ProgressIndicator;
 import consulo.http.HttpCertificateManager;
 import consulo.http.HttpMethod;
+import consulo.http.HttpProxyManager;
 import consulo.http.HttpRequestProcessor;
 import consulo.http.HttpStatusException;
 import consulo.http.HttpVersion;
 import consulo.http.impl.internal.HttpRequestExecutor;
 import consulo.http.impl.internal.HttpRequestOptions;
-import consulo.http.impl.internal.proxy.CommonProxy;
 import consulo.http.localize.HttpLocalize;
 import consulo.logging.Logger;
 import consulo.util.io.StreamUtil;
@@ -64,6 +64,9 @@ import java.util.function.Supplier;
  * POST goes on as GET after 301, 302 and 303, and the credentials are not sent to another origin. PATCH is sent, a GET
  * keeps its body, the body of an error status can be read and the version is the one of the answer.
  * <p>
+ * The proxy is the one {@link HttpProxyManager#getProxySelector()} selects, logged in by
+ * {@link HttpProxyManager#getProxyAuthenticator()}.
+ * <p>
  * What {@link HttpClient} can not do is left to the {@link LocalUrlConnectionExecutor}: a url which is not http, a
  * host name verifier, and a SOCKS proxy - {@link HttpClient} would connect around it.
  *
@@ -94,21 +97,31 @@ public final class LocalHttpClientExecutor implements HttpRequestExecutor {
     private record ClientKey(boolean https, boolean useProxy, int connectTimeout) {
     }
 
+    private final HttpProxyManager myProxyManager;
+    private final HttpCertificateManager myCertificateManager;
+    private final LocalUrlConnectionExecutor myUrlConnectionExecutor;
     private final Supplier<@Nullable ProgressIndicator> myIndicator;
 
     private final Map<ClientKey, HttpClient> myClients = new ConcurrentHashMap<>();
 
     /**
-     * @param indicator the progress of the current thread - a request stops when it is canceled
+     * @param urlConnectionExecutor sends what {@link HttpClient} can not
+     * @param indicator             the progress of the current thread - a request stops when it is canceled
      */
-    public LocalHttpClientExecutor(Supplier<@Nullable ProgressIndicator> indicator) {
+    public LocalHttpClientExecutor(HttpProxyManager proxyManager,
+                                   HttpCertificateManager certificateManager,
+                                   LocalUrlConnectionExecutor urlConnectionExecutor,
+                                   Supplier<@Nullable ProgressIndicator> indicator) {
+        myProxyManager = proxyManager;
+        myCertificateManager = certificateManager;
+        myUrlConnectionExecutor = urlConnectionExecutor;
         myIndicator = indicator;
     }
 
     @Override
     public <T> T execute(HttpRequestOptions options, HttpRequestProcessor<T> processor) throws IOException {
         if (!canSend(options)) {
-            return LocalUrlConnectionExecutor.INSTANCE.execute(options, processor);
+            return myUrlConnectionExecutor.execute(options, processor);
         }
 
         try (LocalHttpClientRequest request = new LocalHttpClientRequest(this, options)) {
@@ -116,7 +129,7 @@ public final class LocalHttpClientExecutor implements HttpRequestExecutor {
         }
     }
 
-    private static boolean canSend(HttpRequestOptions options) {
+    private boolean canSend(HttpRequestOptions options) {
         String url = options.url();
         if (!StringUtil.startsWithIgnoreCase(url, "http:") && !StringUtil.startsWithIgnoreCase(url, "https:")) {
             return false;
@@ -136,7 +149,7 @@ public final class LocalHttpClientExecutor implements HttpRequestExecutor {
         }
 
         if (options.useProxy()) {
-            for (Proxy proxy : CommonProxy.getInstance().select(uri)) {
+            for (Proxy proxy : myProxyManager.getProxySelector().select(uri)) {
                 if (proxy.type() == Proxy.Type.SOCKS) {
                     return false;
                 }
@@ -322,10 +335,10 @@ public final class LocalHttpClientExecutor implements HttpRequestExecutor {
 
     private HttpClient getClient(HttpRequestOptions options, URI uri) {
         ClientKey key = new ClientKey("https".equalsIgnoreCase(uri.getScheme()), options.useProxy(), options.connectTimeout());
-        return myClients.computeIfAbsent(key, LocalHttpClientExecutor::createClient);
+        return myClients.computeIfAbsent(key, this::createClient);
     }
 
-    private static HttpClient createClient(ClientKey key) {
+    private HttpClient createClient(ClientKey key) {
         HttpClient.Builder builder = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NEVER);
 
         if (key.connectTimeout() > 0) {
@@ -333,20 +346,17 @@ public final class LocalHttpClientExecutor implements HttpRequestExecutor {
         }
 
         if (key.useProxy()) {
-            builder.proxy(CommonProxy.getInstance());
-
-            Authenticator authenticator = Authenticator.getDefault();
-            if (authenticator != null) {
-                builder.authenticator(authenticator);
-            }
+            // asked on each request - a change of the proxy settings applies to the clients made already
+            builder.proxy(myProxyManager.getProxySelector());
+            builder.authenticator(myProxyManager.getProxyAuthenticator());
         }
         else {
             builder.proxy(HttpClient.Builder.NO_PROXY);
         }
 
-        // only a https client asks for the certificates - a plain one does not need the service
+        // only a https client asks for the certificates
         if (key.https()) {
-            builder.sslContext(HttpCertificateManager.getInstance().getSslContext());
+            builder.sslContext(myCertificateManager.getSslContext());
         }
 
         return builder.build();

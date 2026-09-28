@@ -19,7 +19,9 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ProcessCanceledException;
+import consulo.http.HttpCertificateManager;
 import consulo.http.HttpMethod;
+import consulo.http.HttpProxyManager;
 import consulo.platform.Platform;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +53,8 @@ public class HttpRequestCancelTest {
         Application application = mock(Application.class);
         when(application.getProgressManager()).thenReturn(provider);
 
-        HttpRequestBuilderFactoryImpl factory = new HttpRequestBuilderFactoryImpl(application, true);
+        HttpRequestBuilderFactoryImpl factory =
+            new HttpRequestBuilderFactoryImpl(application, mock(HttpProxyManager.class), mock(HttpCertificateManager.class), true);
 
         try (StubHttpServer server = new StubHttpServer(request -> {
             Thread.sleep(3000);
@@ -71,7 +74,8 @@ public class HttpRequestCancelTest {
         Platform remote = mock(Platform.class);
         when(remote.getId()).thenReturn("remote");
 
-        HttpRequestBuilderFactoryImpl factory = new HttpRequestBuilderFactoryImpl(mock(Application.class), false);
+        HttpRequestBuilderFactoryImpl factory =
+            new HttpRequestBuilderFactoryImpl(mock(Application.class), mock(HttpProxyManager.class), mock(HttpCertificateManager.class), false);
 
         assertThatExceptionOfType(UnsupportedOperationException.class)
             .isThrownBy(() -> factory.newBuilder(remote, "http://127.0.0.1/", HttpMethod.GET));

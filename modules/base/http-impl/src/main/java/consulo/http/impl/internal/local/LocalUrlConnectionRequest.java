@@ -37,10 +37,13 @@ import java.util.Map;
  * @since 2026-02-18
  */
 class LocalUrlConnectionRequest extends BaseHttpRequestImpl {
+    private final LocalUrlConnectionExecutor myExecutor;
+
     private @Nullable URLConnection myConnection;
 
-    LocalUrlConnectionRequest(HttpRequestOptions options) {
+    LocalUrlConnectionRequest(LocalUrlConnectionExecutor executor, HttpRequestOptions options) {
         super(options);
+        myExecutor = executor;
     }
 
     @Override
@@ -94,7 +97,7 @@ class LocalUrlConnectionRequest extends BaseHttpRequestImpl {
 
     private URLConnection getConnection() throws IOException {
         if (myConnection == null) {
-            myConnection = LocalUrlConnectionExecutor.openConnection(myOptions);
+            myConnection = myExecutor.openConnection(myOptions);
         }
         return myConnection;
     }

@@ -151,6 +151,16 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
+    public ProxySelector getProxySelector() {
+        return CommonProxy.getInstance();
+    }
+
+    @Override
+    public Authenticator getProxyAuthenticator() {
+        return CommonProxy.getInstance().getAuthenticator();
+    }
+
+    @Override
     public void dispose() {
         String name = getClass().getName();
         CommonProxy.getInstance().removeCustom(name);

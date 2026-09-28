@@ -39,24 +39,29 @@ import java.util.Map;
  * Redirects are followed by hand: 301 and 302 only, each hop with the same method, body and headers, to an absolute
  * {@code Location} only. The redirect limit counts the requests sent. {@link HttpURLConnection} itself sends a request
  * without a body once more when the connection is closed without an answer.
+ * <p>
+ * A request through the proxy is opened by {@link HttpProxyManager#openConnection(String)}.
  *
  * @author VISTALL
  * @since 2026-02-13
  */
 public final class LocalUrlConnectionExecutor implements HttpRequestExecutor {
-    public static final LocalUrlConnectionExecutor INSTANCE = new LocalUrlConnectionExecutor();
+    private final HttpProxyManager myProxyManager;
+    private final HttpCertificateManager myCertificateManager;
 
-    private LocalUrlConnectionExecutor() {
+    public LocalUrlConnectionExecutor(HttpProxyManager proxyManager, HttpCertificateManager certificateManager) {
+        myProxyManager = proxyManager;
+        myCertificateManager = certificateManager;
     }
 
     @Override
     public <T> T execute(HttpRequestOptions options, HttpRequestProcessor<T> processor) throws IOException {
-        try (LocalUrlConnectionRequest request = new LocalUrlConnectionRequest(options)) {
+        try (LocalUrlConnectionRequest request = new LocalUrlConnectionRequest(this, options)) {
             return processor.process(request);
         }
     }
 
-    static URLConnection openConnection(HttpRequestOptions options) throws IOException {
+    URLConnection openConnection(HttpRequestOptions options) throws IOException {
         String url = options.url();
 
         for (int i = 0; i < options.redirectLimit(); i++) {
@@ -69,7 +74,11 @@ public final class LocalUrlConnectionExecutor implements HttpRequestExecutor {
                 connection = new URL(url).openConnection(Proxy.NO_PROXY);
             }
             else {
-                connection = HttpProxyManager.getInstance().openConnection(url);
+                connection = myProxyManager.openConnection(url);
+
+                if (connection instanceof HttpURLConnection httpURLConnection) {
+                    httpURLConnection.setAuthenticator(myProxyManager.getProxyAuthenticator());
+                }
             }
 
             if (connection instanceof HttpURLConnection httpURLConnection) {
@@ -85,7 +94,7 @@ public final class LocalUrlConnectionExecutor implements HttpRequestExecutor {
             }
 
             if (connection instanceof HttpsURLConnection httpsURLConnection) {
-                httpsURLConnection.setSSLSocketFactory(HttpCertificateManager.getInstance().getSslContext().getSocketFactory());
+                httpsURLConnection.setSSLSocketFactory(myCertificateManager.getSslContext().getSocketFactory());
             }
 
             connection.setConnectTimeout(options.connectTimeout());

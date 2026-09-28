@@ -16,7 +16,9 @@
 package consulo.http.impl.internal;
 
 import consulo.application.Application;
+import consulo.http.HttpCertificateManager;
 import consulo.http.HttpMethod;
+import consulo.http.HttpProxyManager;
 import consulo.http.HttpRequestBuilder;
 
 import static org.mockito.Mockito.mock;
@@ -34,7 +36,7 @@ public abstract class HttpRequestTestCase {
 
     void setHttpClient(boolean httpClient) {
         myHttpClient = httpClient;
-        myFactory = new HttpRequestBuilderFactoryImpl(mock(Application.class), httpClient);
+        myFactory = factory(mock(HttpProxyManager.class));
     }
 
     /**
@@ -44,7 +46,17 @@ public abstract class HttpRequestTestCase {
         return myHttpClient;
     }
 
+    /**
+     * A request which does not go through a proxy.
+     */
     protected HttpRequestBuilder request(String url, HttpMethod method) {
         return myFactory.newBuilder(url, method).useProxy(false);
+    }
+
+    /**
+     * The requests of the executor of the test, which go through the proxy of the given settings.
+     */
+    protected HttpRequestBuilderFactoryImpl factory(HttpProxyManager proxyManager) {
+        return new HttpRequestBuilderFactoryImpl(mock(Application.class), proxyManager, mock(HttpCertificateManager.class), myHttpClient);
     }
 }

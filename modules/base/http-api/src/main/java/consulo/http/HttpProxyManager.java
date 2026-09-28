@@ -100,8 +100,19 @@ public interface HttpProxyManager {
 
     boolean isRealProxy(Proxy proxy);
 
-    
+
     ProxySelector getOnlyBySettingsSelector();
+
+    /**
+     * Selects the proxy a request goes through - by the proxy settings and the proxies other code registered, the one
+     * {@link #openConnection(String)} connects through.
+     */
+    ProxySelector getProxySelector();
+
+    /**
+     * Answers the login a proxy asks for - from the proxy settings, or from the user.
+     */
+    Authenticator getProxyAuthenticator();
 
     @Nullable PasswordAuthentication getGenericPassword(String host, int port);
 }
