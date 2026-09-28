@@ -2,7 +2,6 @@
 package consulo.externalSystem.impl.internal.autoimport;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.concurrent.coroutine.DisposableCoroutineScope;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.toolbar.floating.AbstractFloatingToolbarProvider;
@@ -10,15 +9,17 @@ import consulo.codeEditor.toolbar.floating.FloatingToolbarComponent;
 import consulo.codeEditor.toolbar.floating.FloatingToolbarUtil;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.externalSystem.autoimport.ExternalSystemProjectNotificationAware;
 import consulo.externalSystem.autoimport.ExternalSystemProjectNotificationAwareListener;
 import consulo.project.Project;
 import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import jakarta.inject.Inject;
 
-@ExtensionImpl(id = "ExternalSystem.ProjectRefreshFloatingProvider")
+@ExtensionImpl(id = "ExternalSystem.ProjectRefreshFloatingProvider", order = "after DefaultFloatingToolbarProvider")
 public class ProjectRefreshFloatingProvider extends AbstractFloatingToolbarProvider {
     private final Project myProject;
 
@@ -44,8 +45,11 @@ public class ProjectRefreshFloatingProvider extends AbstractFloatingToolbarProvi
     }
 
     private void updateToolbarComponent(FloatingToolbarComponent component, Disposable parentDisposable) {
-        DisposableCoroutineScope.launchAsync(myProject.coroutineContext(), parentDisposable,
+        CoroutineScope.launchAsync(myProject.coroutineContext(),
             () -> Coroutine.first(UIAction.<Object, Void>apply(ignored -> {
+                if (Disposer.isDisposed(parentDisposable)) {
+                    return null;
+                }
                 ExternalSystemProjectNotificationAware notificationAware = ExternalSystemProjectNotificationAware.getInstance(myProject);
                 if (notificationAware.isNotificationVisible()) {
                     component.scheduleShow();

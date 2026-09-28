@@ -8,6 +8,7 @@ import consulo.externalSystem.autoimport.ExternalSystemProjectTracker;
 import consulo.externalSystem.impl.internal.util.ExternalSystemTrustUtil;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.ui.ExternalSystemIconProvider;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -15,6 +16,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.image.Image;
 
 import java.util.Set;
 
@@ -51,6 +53,7 @@ public class ProjectRefreshAction extends DumbAwareAction implements AnActionWit
         if (!systemIds.isEmpty()) {
             e.getPresentation().setText(getNotificationText(systemIds));
             e.getPresentation().setDescription(getNotificationDescription(project, systemIds));
+            e.getPresentation().setIcon(getNotificationIcon(systemIds));
         }
         e.getPresentation().setEnabled(notificationAware.isNotificationVisible());
     }
@@ -64,6 +67,15 @@ public class ProjectRefreshAction extends DumbAwareAction implements AnActionWit
         LocalizeValue systemsPresentation = ExternalSystemTrustUtil.naturalJoinSystemIds(systemIds);
         LocalizeValue productName = project.getApplication().getName();
         return ExternalSystemLocalize.externalSystemReloadNotificationActionReloadDescription(systemsPresentation, productName);
+    }
+
+    private Image getNotificationIcon(Set<ProjectSystemId> systemIds) {
+        if (systemIds.size() != 1) {
+            return PlatformIconGroup.actionsBuildloadchanges();
+        }
+        ProjectSystemId systemId = systemIds.iterator().next();
+        ExternalSystemIconProvider iconProvider = ExternalSystemIconProvider.getExtension(systemId);
+        return iconProvider.getReloadIcon();
     }
 
     public static void refreshProject(Project project) {
