@@ -384,6 +384,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
             ActionToolbar toolbar = ActionManager.getInstance()
                 .createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
+            toolbar.setTargetComponent(myConsole.getComponent());
             panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
             content = ContentFactory.getInstance().createContent(panel, displayName, true);

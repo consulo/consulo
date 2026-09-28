@@ -118,7 +118,9 @@ public class ChooseActionsDialog extends DialogWrapper {
     private JPanel createToolbarPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         DefaultActionGroup group = new DefaultActionGroup();
-        JComponent toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        actionToolbar.setTargetComponent(myActionsTree.getTree());
+        JComponent toolbar = actionToolbar.getComponent();
         CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
         TreeExpander treeExpander = new TreeExpander() {
             @Override
@@ -146,7 +148,9 @@ public class ChooseActionsDialog extends DialogWrapper {
 
         panel.add(toolbar, BorderLayout.WEST);
         group = new DefaultActionGroup();
-        final JComponent searchToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+        ActionToolbar searchActionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        searchActionToolbar.setTargetComponent(myActionsTree.getTree());
+        final JComponent searchToolbar = searchActionToolbar.getComponent();
         final Alarm alarm = new Alarm();
         myFilterComponent = new FilterComponent("KEYMAP_IN_QUICK_LISTS", 5) {
             @Override

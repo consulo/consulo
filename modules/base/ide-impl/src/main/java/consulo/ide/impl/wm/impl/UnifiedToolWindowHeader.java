@@ -16,7 +16,6 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -62,6 +61,8 @@ public class UnifiedToolWindowHeader implements Disposable {
     private final ToolWindowBase myToolWindow;
     private final ToolWindowInternalDecorator myDecorator;
     private final Supplier<ActionGroup> myGearProducer;
+    private final Supplier<DataContext> myTabDataContextProvider;
+    private final Supplier<DataContext> myTitleDataContextProvider;
 
     private final DockLayout myLayout = DockLayout.create(Space.NONE);
     private final HorizontalLayout myWestLayout = HorizontalLayout.create(Space.SMALL);
@@ -82,9 +83,10 @@ public class UnifiedToolWindowHeader implements Disposable {
         }
     };
 
-    private final UnifiedActionRow myTabActionRow = createActionRow(() -> myTabActions);
+    private final UnifiedActionRow myTabActionRow = createActionRow(() -> myTabActions, this::createTabDataContext);
     private final UnifiedActionRow myTitleActionRow = createActionRow(
-        () -> ActionGroup.newImmutableBuilder().addAll(myTitleActions, new GearActionGroup(), new HideAction()).build()
+        () -> ActionGroup.newImmutableBuilder().addAll(myTitleActions, new GearActionGroup(), new HideAction()).build(),
+        this::createTitleDataContext
     );
 
     @RequiredUIAccess
@@ -97,6 +99,13 @@ public class UnifiedToolWindowHeader implements Disposable {
         myDecorator = decorator;
         myGearProducer = gearProducer;
 
+        ContentManager contentManager = toolWindow.getContentManagerIfCreated();
+
+        myTabDataContextProvider = ActionToolbarContexts.forTargetComponent(toolWindow.getUIComponent());
+        myTitleDataContextProvider = contentManager == null
+            ? myTabDataContextProvider
+            : ActionToolbarContexts.forSelectedContent(contentManager, toolWindow.getUIComponent());
+
         myLayout.setSize(new Size2D(-1, HEIGHT));
 
         myWestLayout.add(Label.create(toolWindow.getDisplayName()));
@@ -106,7 +115,6 @@ public class UnifiedToolWindowHeader implements Disposable {
         myLayout.left(myWestLayout);
         myLayout.right(myTitleActionRow.getComponent());
 
-        ContentManager contentManager = toolWindow.getContentManagerIfCreated();
         if (contentManager != null) {
             contentManager.addContentManagerListener(new ContentManagerListener() {
                 @Override
@@ -250,10 +258,10 @@ public class UnifiedToolWindowHeader implements Disposable {
         return tabLayout;
     }
 
-    private UnifiedActionRow createActionRow(Supplier<ActionGroup> groupProducer) {
+    private UnifiedActionRow createActionRow(Supplier<ActionGroup> groupProducer, Supplier<DataContext> contextProducer) {
         return new UnifiedActionRow(
             groupProducer,
-            this::createDataContext,
+            contextProducer,
             ActionPlaces.TOOLWINDOW_TITLE,
             ToolWindowContentUI.POPUP_PLACE,
             myPresentationFactory,
@@ -261,11 +269,12 @@ public class UnifiedToolWindowHeader implements Disposable {
         );
     }
 
-    private DataContext createDataContext() {
-        DataManager dataManager = DataManager.getInstance();
+    private DataContext createTabDataContext() {
+        return myTabDataContextProvider.get();
+    }
 
-        // the groups are expanded off the ui thread, the providers have to be snapshotted before that
-        return dataManager.createAsyncDataContext(dataManager.getDataContext(myToolWindow.getUIComponent()));
+    private DataContext createTitleDataContext() {
+        return myTitleDataContextProvider.get();
     }
 
     @Override

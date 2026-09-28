@@ -16,6 +16,7 @@
 package consulo.dataContext.internal;
 
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataSink;
 import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
@@ -38,6 +39,15 @@ public class BuilderDataContext implements DataContext {
   @SuppressWarnings("unchecked")
   public <T> @Nullable T getData(Key<T> dataId) {
     return (T) getDataFromSelfOrParent(dataId);
+  }
+
+  public @Nullable DataContext getParent() {
+    return myParent;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void uiDataSnapshot(DataSink sink) {
+    myDataId2Data.forEach(sink::set);
   }
 
   private @Nullable Object getDataFromSelfOrParent(Key dataId) {

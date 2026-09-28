@@ -16,7 +16,6 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.Space;
@@ -25,8 +24,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.PresentationFactory;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -48,11 +45,12 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
     private int myLayoutPolicy = NOWRAP_LAYOUT_POLICY;
 
-    private @Nullable Supplier<DataContext> myDataContextSupplier;
+    private final ActionToolbarContextHolder myContextHolder;
 
     @RequiredUIAccess
     public UnifiedActionToolbarImpl(String place, ActionGroup group, Style style) {
         myGroup = group;
+        myContextHolder = new ActionToolbarContextHolder(place);
 
         myRow = new UnifiedActionRow(
             () -> myGroup,
@@ -70,29 +68,9 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
         }
     }
 
-    /**
-     * Points the toolbar at the context it has to update against. Needed by the frontends where the data context
-     * cannot be derived from a component - the browser has no focus owner to walk up from, so the toolbar is given
-     * the same supplier its owner reads its own state from.
-     * <p/>
-     * The group is expanded off the ui thread, the supplier has to hand over a context whose providers are already
-     * snapshotted - see {@link consulo.dataContext.DataManager#createAsyncDataContext(DataContext)}.
-     */
-    public void setDataContextSupplier(Supplier<DataContext> dataContextSupplier) {
-        myDataContextSupplier = dataContextSupplier;
-    }
-
     @Override
-    public void setTargetComponent(javax.swing.JComponent component) {
-    }
-
-    @Override
-    public void setTargetUIComponent(Component component) {
-        myDataContextSupplier = () -> {
-            DataManager dataManager = DataManager.getInstance();
-
-            return dataManager.createAsyncDataContext(dataManager.getDataContext(component));
-        };
+    public void setDataContextProvider(Supplier<DataContext> dataContextProvider) {
+        myContextHolder.setProvider(dataContextProvider);
     }
 
     @Override
@@ -130,15 +108,7 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
     @Override
     public DataContext getToolbarDataContext() {
-        Supplier<DataContext> supplier = myDataContextSupplier;
-        if (supplier != null) {
-            return supplier.get();
-        }
-
-        DataManager dataManager = DataManager.getInstance();
-
-        // the group is expanded off the ui thread, the providers have to be snapshotted before that
-        return dataManager.createAsyncDataContext(dataManager.getDataContext());
+        return myContextHolder.getDataContext();
     }
 
     @Override

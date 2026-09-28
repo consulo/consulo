@@ -123,6 +123,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
             group.addAll(actionProvider.createToolbarActions(project, myVirtualFile));
         }
         ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        actionToolbar.setTargetComponent(myMainPanel);
         myToolbarPanel.add(actionToolbar.getComponent(), BorderLayout.CENTER);
     }
 

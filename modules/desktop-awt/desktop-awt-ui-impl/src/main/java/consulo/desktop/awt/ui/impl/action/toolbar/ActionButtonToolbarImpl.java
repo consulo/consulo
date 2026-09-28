@@ -19,38 +19,32 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.impl.action.ComboBoxActionButton;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionToolbarContextHolder;
 import consulo.ui.ex.keymap.KeymapManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2024-12-31
  */
 public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionToolbar {
-    private static final Logger LOG = Logger.getInstance(ActionButtonToolbarImpl.class);
-
     private final ActionToolbarEngine myEngine;
-    
-    private final DataManager myDataManager;
 
-    private JComponent myTargetComponent;
-
-    private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
+    private final ActionToolbarContextHolder myContextHolder;
 
     public ActionButtonToolbarImpl(String place,
                                    ActionGroup actionGroup,
@@ -59,7 +53,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
                                    ActionManager actionManager,
                                    DataManager dataManager) {
         super(new HorizontalLayout(4));
-        myDataManager = dataManager;
+        myContextHolder = new ActionToolbarContextHolder(place);
         myEngine = new ActionToolbarEngine(place, actionGroup, this, application, keymapManager, actionManager, this) {
             @Override
             protected DataContext getDataContext() {
@@ -267,29 +261,15 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     }
 
     @Override
-    public void setTargetComponent(JComponent component) {
-        if (myTargetComponent == null) {
-            putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
-        }
-
-        if (myTargetComponent != component) {
-            myTargetComponent = component;
-            if (isShowing()) {
-                updateActionsAsync();
-            }
+    public void setDataContextProvider(Supplier<DataContext> dataContextProvider) {
+        if (myContextHolder.setProvider(dataContextProvider) && isShowing()) {
+            updateActionsAsync();
         }
     }
 
     
     protected DataContext getDataContext() {
-        if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null) {
-            putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
-            LOG.warn("'" + myEngine.getPlace() + "' toolbar by default uses any focused component to update its actions. " +
-                "Toolbar actions that need local UI context would be incorrectly disabled. " +
-                "Please call toolbar.setTargetComponent() explicitly.", myCreationTrace);
-        }
-        Component target = myTargetComponent != null ? myTargetComponent : IJSwingUtilities.getFocusedComponentInWindowOrSelf(this);
-        return myDataManager.getDataContext(target);
+        return myContextHolder.getDataContext();
     }
 
     

@@ -548,6 +548,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             }
 
             ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("APPLY_PATCH", group, true);
+            toolbar.setTargetComponent(myCenterPanel);
             ++gb.gridy;
             gb.fill = GridBagConstraints.HORIZONTAL;
             myCenterPanel.add(toolbar.getComponent(), gb);

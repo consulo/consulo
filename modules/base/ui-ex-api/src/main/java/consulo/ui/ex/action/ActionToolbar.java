@@ -22,9 +22,11 @@ import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * Represents a toolbar with a visual presentation.
@@ -137,15 +139,17 @@ public interface ActionToolbar {
     @RequiredUIAccess
     CompletableFuture<List<? extends AnAction>> updateActionsAsync();
 
+    void setDataContextProvider(Supplier<DataContext> dataContextProvider);
+
     /**
      * @param component will be used for data context computations
      */
-    default void setTargetComponent(javax.swing.JComponent component) {
-        throw new AbstractMethodError();
+    default void setTargetComponent(javax.swing.@Nullable JComponent component) {
+        setDataContextProvider(component == null ? ActionToolbarContexts.focused() : ActionToolbarContexts.forTargetComponent(component));
     }
 
     default void setTargetUIComponent(Component component) {
-        setTargetComponent((javax.swing.JComponent) TargetAWT.to(component));
+        setDataContextProvider(ActionToolbarContexts.forTargetComponent(component));
     }
 
     DataContext getToolbarDataContext();

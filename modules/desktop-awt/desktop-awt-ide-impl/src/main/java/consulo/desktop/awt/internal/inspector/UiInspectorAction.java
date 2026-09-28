@@ -269,6 +269,7 @@ public class UiInspectorAction extends UiMouseAction {
             });
 
             ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, actions, true);
+            toolbar.setTargetComponent(getRootPane());
             add(toolbar.getComponent(), BorderLayout.NORTH);
 
             myWrapperPanel = new JPanel(new BorderLayout());

@@ -76,7 +76,9 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         toolbarActions.add(new CopyToClipboardAction(threadDump, project));
         toolbarActions.add(new SortThreadsAction());
         //toolbarActions.add(new ShowRecentlyChanged());
-        add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false).getComponent(), BorderLayout.WEST);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false);
+        toolbar.setTargetComponent(this);
+        add(toolbar.getComponent(), BorderLayout.WEST);
 
         Splitter splitter = new Splitter(false, 0.3f);
         splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myThreadList, SideBorder.LEFT | SideBorder.RIGHT));

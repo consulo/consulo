@@ -10,18 +10,17 @@ import consulo.desktop.awt.ui.impl.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.impl.animation.AlphaAnimationContext;
 import consulo.desktop.awt.ui.impl.plaf2.flat.InplaceComponent;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.impl.action.ComboBoxActionButton;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionToolbarContextHolder;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.layout.DockLayout;
 import org.jspecify.annotations.Nullable;
@@ -31,24 +30,19 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActionToolbar, QuickActionProvider, AlphaAnimated, UiDataProvider {
-    private static final Logger LOG = Logger.getInstance(SimpleActionToolbarImpl.class);
-
     protected static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
 
     
     private final Style myStyle;
 
-    private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
-
-    private JComponent myTargetComponent;
+    private final ActionToolbarContextHolder myContextHolder;
 
     private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(this);
 
     protected final ActionToolbarEngine myEngine;
-
-    private final DataManager myDataManager;
 
     public SimpleActionToolbarImpl(String place,
                                    ActionGroup actionGroup,
@@ -60,7 +54,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         super(null);
         myStyle = style;
         myAlphaContext.getAnimator().setVisibleImmediately(true);
-        myDataManager = dataManager;
+        myContextHolder = new ActionToolbarContextHolder(place);
         myEngine = new ActionToolbarEngine(place, actionGroup, this, application, keymapManager, actionManager, this) {
             @Override
             protected DataContext getDataContext() {
@@ -351,35 +345,21 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @Override
-    public void setTargetComponent(JComponent component) {
-        if (myTargetComponent == null) {
-            putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
-        }
-
-        if (myTargetComponent != component) {
-            myTargetComponent = component;
-            if (isShowing()) {
-                updateActionsAsync();
-            }
+    public void setDataContextProvider(Supplier<DataContext> dataContextProvider) {
+        if (myContextHolder.setProvider(dataContextProvider) && isShowing()) {
+            updateActionsAsync();
         }
     }
 
-    
+
     @Override
     public DataContext getToolbarDataContext() {
         return getDataContext();
     }
 
-    
+
     protected DataContext getDataContext() {
-        if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null) {
-            putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
-            LOG.warn("'" + getPlace() + "' toolbar by default uses any focused component to update its actions. " +
-                "Toolbar actions that need local UI context would be incorrectly disabled. " +
-                "Please call toolbar.setTargetComponent() explicitly.", myCreationTrace);
-        }
-        Component target = myTargetComponent != null ? myTargetComponent : IJSwingUtilities.getFocusedComponentInWindowOrSelf(this);
-        return myDataManager.getDataContext(target);
+        return myContextHolder.getDataContext();
     }
 
     

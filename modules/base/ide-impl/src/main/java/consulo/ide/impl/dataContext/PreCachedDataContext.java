@@ -19,10 +19,12 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.internal.SlowOperations;
 import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.UiDataRule;
+import consulo.dataContext.internal.BuilderDataContext;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.util.dataholder.Key;
@@ -114,6 +116,20 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
                 ourIsCapturingSnapshot = false;
             }
             return this;
+        }
+
+        public DataContext collectCustomized(DataContext context) {
+            DataContext current = context;
+            while (current instanceof BuilderDataContext builder) {
+                collect(new UiDataProviderAdapter(myApplication, builder::uiDataSnapshot));
+
+                DataContext parent = builder.getParent();
+                if (parent == null) {
+                    break;
+                }
+                current = parent;
+            }
+            return current;
         }
 
         /**

@@ -88,6 +88,7 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
         tb.setMiniMode(true);
 
         NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
+        tb.setTargetComponent(top);
         top.add(tb.getComponent(), BorderLayout.WEST);
         myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
         Dimension preferredSize = myText.getPreferredSize();

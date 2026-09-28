@@ -26,8 +26,6 @@ import java.util.function.Consumer;
  * @since 2024-12-31
  */
 public interface DesktopAWTActionToolbar extends ActionToolbarEx {
-    String SUPPRESS_TARGET_COMPONENT_WARNING = "ActionToolbarImpl.suppressTargetComponentWarning";
-
     Style getStyle();
 
     int getHeight();

@@ -181,6 +181,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         group.add(new ContextHelpAction(ourHelpID));
 
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        toolbar.setTargetComponent(this);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(toolbar.getComponent(), BorderLayout.NORTH);
         panel.add(myPathField, BorderLayout.SOUTH);

@@ -782,7 +782,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         });
         actions.add(statusAction);
         actions.add(navigateGroup);
-        statusToolbar = new EditorInspectionsActionToolbar(actions, myEditor);
+        statusToolbar = new EditorInspectionsActionToolbar(actions);
 
         MessageBusConnection connection = Application.get().getMessageBus().connect(this);
         connection.subscribe(AnActionListener.class, new AnActionListener() {

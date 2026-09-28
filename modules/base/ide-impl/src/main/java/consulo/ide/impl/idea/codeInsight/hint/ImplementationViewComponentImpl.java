@@ -536,7 +536,9 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         edit.registerCustomShortcutSet(new CompositeShortcutSet(CommonShortcuts.getViewSource(), CommonShortcuts.CTRL_ENTER), this);
         group.add(edit);
 
-        return ActionManager.getInstance().createActionToolbar("ImplementationViewToolbar", group, true);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("ImplementationViewToolbar", group, true);
+        toolbar.setTargetComponent(this);
+        return toolbar;
     }
 
     @RequiredUIAccess

@@ -104,6 +104,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
 
         DefaultActionGroup group = new DefaultActionGroup();
         ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("SPECIFIC_FILES_DIALOG", group, true);
+        actionToolbar.setTargetComponent(myView);
 
         addCustomActions(group, actionToolbar);
 

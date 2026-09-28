@@ -64,10 +64,9 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new HistoryNavigationAction(false, IdeActions.ACTION_PREVIOUS_OCCURENCE, parentDisposable));
         group.add(new HistoryNavigationAction(true, IdeActions.ACTION_NEXT_OCCURENCE, parentDisposable));
-        editorPanel.add(
-            ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, false).getComponent(),
-            BorderLayout.EAST
-        );
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, false);
+        toolbar.setTargetComponent(myMultilineEditor.getComponent());
+        editorPanel.add(toolbar.getComponent(), BorderLayout.EAST);
         //myMainPanel.add(new JLabel(XDebuggerBundle.message("xdebugger.label.text.code.fragment")), BorderLayout.NORTH);
         myMainPanel.add(editorPanel, BorderLayout.CENTER);
         if (statements != null) {

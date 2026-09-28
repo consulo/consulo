@@ -125,6 +125,10 @@ public class NewElementAction extends LegacyDumbAwareAction implements PopupActi
             return Coroutine.empty();
         }
 
+        if (ActionPlaces.TOOLWINDOW_TITLE.equals(e.getPlace())) {
+            return Coroutine.empty();
+        }
+
         return ActionGroupUtil.isGroupEmptyAsync(getGroup(e.getDataContext()), e)
             .then(CodeExecution.consume(empty -> presentation.setEnabled(!Boolean.TRUE.equals(empty))));
     }

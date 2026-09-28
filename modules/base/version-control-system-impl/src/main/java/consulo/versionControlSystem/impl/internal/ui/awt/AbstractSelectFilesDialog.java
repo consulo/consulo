@@ -101,6 +101,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   private JComponent createToolbar() {
     DefaultActionGroup group = createToolbarActions();
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    toolbar.setTargetComponent(getFileList());
     return toolbar.getComponent();
   }
 

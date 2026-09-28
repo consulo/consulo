@@ -60,10 +60,9 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
             myComponent = new JPanel(new BorderLayout());
             DefaultActionGroup group = new DefaultActionGroup();
             group.add(clear);
-            myComponent.add(
-                ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(),
-                BorderLayout.NORTH
-            );
+            ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+            toolbar.setTargetComponent(myComponent);
+            myComponent.add(toolbar.getComponent(), BorderLayout.NORTH);
             myComponent.add(log);
 
             myListenerDisposable = Disposable.newDisposable();

@@ -173,12 +173,8 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             protected void onOtherActionPerformed() {
                 hidePopup();
             }
-
-            @Override
-            protected DataContext getDataContext() {
-                return AdvancedActionToolbarImpl.this.getDataContext();
-            }
         };
+        popupToolbar.setDataContextProvider(this::getToolbarDataContext);
         popupToolbar.setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
         popupToolbar.updateActionsAsync().whenComplete((actions, throwable) -> {
             if (actions != null) {

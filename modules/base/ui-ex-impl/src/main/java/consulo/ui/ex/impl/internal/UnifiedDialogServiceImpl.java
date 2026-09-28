@@ -133,10 +133,7 @@ public class UnifiedDialogServiceImpl implements DialogService {
             ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
 
             UnifiedActionToolbarImpl toolbar = new UnifiedActionToolbarImpl(PLACE, group, ActionToolbar.Style.BUTTON);
-            // the ok and cancel actions read the dialog they belong to out of the context, and there is no component
-            // to hang a provider off - the row is expanded off the ui thread, and a built context is already a
-            // snapshot, so it needs no wrapping
-            toolbar.setDataContextSupplier(() -> DataContext.builder().add(Dialog.KEY, this).build());
+            toolbar.setDataContextProvider(() -> DataContext.builder().add(Dialog.KEY, this).build());
 
             myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
 

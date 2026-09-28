@@ -227,6 +227,10 @@ public abstract class BaseDataManager implements DataManagerEx {
     protected PreCachedDataContext.Capture captureHierarchy(consulo.ui.@Nullable Component focusedComponent, boolean forAsync) {
         PreCachedDataContext.Capture capture =
             forAsync ? PreCachedDataContext.captureForAsync(myApplication) : PreCachedDataContext.capture(myApplication);
+        return captureHierarchy(capture, focusedComponent);
+    }
+
+    protected PreCachedDataContext.Capture captureHierarchy(PreCachedDataContext.Capture capture, consulo.ui.@Nullable Component focusedComponent) {
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
             capture.collect(getDataProviderForComponent(c));
         }
@@ -250,8 +254,15 @@ public abstract class BaseDataManager implements DataManagerEx {
 
     @Override
     public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
+        if (dataContext instanceof AsyncDataContext asyncDataContext) {
+            return asyncDataContext;
+        }
+
+        PreCachedDataContext.Capture capture = PreCachedDataContext.captureForAsync(myApplication);
+        DataContext context = capture.collectCustomized(dataContext);
         consulo.ui.Component component = dataContext.getData(consulo.ui.Component.KEY);
-        return captureHierarchy(component, true).build(this, component);
+
+        return captureHierarchy(capture, context.getData(consulo.ui.Component.KEY)).build(this, component);
     }
 
     @Override

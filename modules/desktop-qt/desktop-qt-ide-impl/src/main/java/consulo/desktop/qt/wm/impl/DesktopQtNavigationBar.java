@@ -134,9 +134,7 @@ public class DesktopQtNavigationBar implements Disposable {
                 return;
             }
             myToolbar = new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL);
-            // the actions have to be updated against the scope the user last worked in, the same context the bar
-            // itself reads - ActionToolbar can only be pointed at a component, and the bar is never focused
-            myToolbar.setDataContextSupplier(this::createDataContext);
+            myToolbar.setDataContextProvider(this::createDataContext);
 
             myRowLayout.right(myToolbar.getUIComponent());
         });

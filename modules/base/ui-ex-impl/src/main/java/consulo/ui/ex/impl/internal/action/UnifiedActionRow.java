@@ -20,6 +20,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -123,7 +124,7 @@ public class UnifiedActionRow {
         ActionToolbar.Style style
     ) {
         myGroupSupplier = groupSupplier;
-        myContextSupplier = contextSupplier;
+        myContextSupplier = () -> DataManager.getInstance().createAsyncDataContext(contextSupplier.get());
         myPlace = place;
         myPopupPlace = popupPlace;
         myPresentationFactory = presentationFactory;

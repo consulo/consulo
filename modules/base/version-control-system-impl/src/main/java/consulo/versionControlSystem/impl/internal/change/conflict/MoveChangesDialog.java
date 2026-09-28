@@ -19,6 +19,7 @@ package consulo.versionControlSystem.impl.internal.change.conflict;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -114,7 +115,9 @@ public class MoveChangesDialog extends DialogWrapper {
     panel.add(ScrollPaneFactory.createScrollPane(myTreeList), BorderLayout.CENTER);
 
     DefaultActionGroup actionGroup = new DefaultActionGroup(myTreeList.getTreeActions());
-    panel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true).getComponent(), BorderLayout.NORTH);
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+    toolbar.setTargetComponent(myTreeList);
+    panel.add(toolbar.getComponent(), BorderLayout.NORTH);
     myTreeList.expandAll();
     myTreeList.repaint();
     return panel;

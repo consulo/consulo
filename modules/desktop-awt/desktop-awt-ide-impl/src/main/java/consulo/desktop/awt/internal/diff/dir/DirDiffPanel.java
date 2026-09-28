@@ -213,6 +213,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         DirDiffToolbarActions actions = new DirDiffToolbarActions(myModel, myDiffPanel);
         final ActionManager actionManager = ActionManager.getInstance();
         ActionToolbar toolbar = actionManager.createActionToolbar("DirDiff", actions, true);
+        toolbar.setTargetComponent(myTable);
         registerCustomShortcuts(actions, myTable);
         myToolBarPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
         JBLabel label = new JBLabel("Use Space button or mouse click to change operation for the selected elements." +

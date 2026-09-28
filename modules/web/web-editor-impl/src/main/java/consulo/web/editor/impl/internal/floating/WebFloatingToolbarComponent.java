@@ -19,7 +19,6 @@ import com.vaadin.flow.component.html.Div;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.toolbar.floating.FloatingToolbarComponent;
 import consulo.codeEditor.toolbar.floating.FloatingToolbarProvider;
-import consulo.dataContext.DataManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
@@ -45,7 +44,7 @@ public class WebFloatingToolbarComponent implements FloatingToolbarComponent {
     public WebFloatingToolbarComponent(FloatingToolbarProvider provider, Editor editor) {
         myToolbar =
             new UnifiedActionToolbarImpl(ActionPlaces.CONTEXT_TOOLBAR, provider.getActionGroup(), ActionToolbar.Style.HORIZONTAL);
-        myToolbar.setDataContextSupplier(() -> DataManager.getInstance().createAsyncDataContext(editor.getDataContext()));
+        myToolbar.setDataContextProvider(editor::getDataContext);
 
         myHolder.addClassName("arquill-floating-toolbar");
         myHolder.add(TargetVaadin.to(myToolbar.getUIComponent()));

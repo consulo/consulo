@@ -143,9 +143,7 @@ public class WebNavigationBar implements Disposable {
             UnifiedActionToolbarImpl toolbar =
                 new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL);
             myToolbar = toolbar;
-            // the actions have to be updated against the scope the user last worked in, the same context the bar
-            // itself reads - ActionToolbar can only be pointed at a component, and the browser has no focus owner
-            toolbar.setDataContextSupplier(this::createDataContext);
+            toolbar.setDataContextProvider(this::createDataContext);
 
             myRowLayout.right(toolbar.getUIComponent());
         });

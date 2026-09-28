@@ -113,10 +113,9 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         controlGroup.add(new StopAction());
 
         JPanel north = new JPanel(new BorderLayout());
-        north.add(
-            ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, controlGroup, true).getComponent(),
-            BorderLayout.WEST
-        );
+        ActionToolbar controlToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, controlGroup, true);
+        controlToolbar.setTargetComponent(myComponent);
+        north.add(controlToolbar.getComponent(), BorderLayout.WEST);
 
         JPanel right = new JPanel(new BorderLayout());
         right.add(myCurrentScript, BorderLayout.CENTER);
@@ -135,6 +134,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         fsGroup.add(newScriptAction);
 
         ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, fsGroup, true);
+        tb.setTargetComponent(myComponent);
         tb.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
         right.add(tb.getComponent(), BorderLayout.EAST);
         north.add(right, BorderLayout.CENTER);

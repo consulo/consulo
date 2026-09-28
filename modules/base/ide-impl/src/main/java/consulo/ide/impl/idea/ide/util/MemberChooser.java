@@ -379,7 +379,9 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         );
         group.add(collapseAllAction);
 
-        panel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(), BorderLayout.NORTH);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        toolbar.setTargetComponent(myTree);
+        panel.add(toolbar.getComponent(), BorderLayout.NORTH);
 
         // Tree
         expandFirst();

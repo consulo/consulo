@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewElementAction;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -26,6 +27,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.ImageEffects;
+import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
 
 /**
@@ -46,7 +48,7 @@ public class ProjectNewElementAction extends NewElementAction {
 
     @Override
     protected void showPopup(AnActionEvent event) {
-        createPopup(event.getDataContext()).showUnderneathOf(event.getInputEvent().getComponent());
+        createPopup(event.getDataContext()).showUnderneathOf(event);
     }
 
     @Override
@@ -55,9 +57,9 @@ public class ProjectNewElementAction extends NewElementAction {
         if (toolWindow == null) {
             return false;
         }
-        
+
         if (ToolWindowId.PROJECT_VIEW.equals(toolWindow.getId())) {
-            if (ideView.getDirectories().length == 0) {
+            if (ArrayUtil.isEmpty(e.getData(PlatformDataKeys.SELECTED_ITEMS))) {
                 return false;
             }
         }

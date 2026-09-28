@@ -183,8 +183,9 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         };
 
         if (myBuildInActions) {
-            JComponent tbComp =
-                ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, getOrCreateActions(), true).getComponent();
+            ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, getOrCreateActions(), true);
+            toolbar.setTargetComponent(myTopComponent);
+            JComponent tbComp = toolbar.getComponent();
             myTopComponent.add(tbComp, BorderLayout.CENTER);
             myTopComponent.add(getSearchComponent(), BorderLayout.EAST);
         }

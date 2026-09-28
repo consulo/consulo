@@ -123,12 +123,21 @@ public class DesktopDataManagerImpl extends BaseDataManager {
         return captureAwtHierarchy(TargetAWT.to(focusedComponent), forAsync);
     }
 
+    @Override
+    protected PreCachedDataContext.Capture captureHierarchy(PreCachedDataContext.Capture capture, consulo.ui.@Nullable Component focusedComponent) {
+        return captureAwtHierarchy(capture, TargetAWT.to(focusedComponent));
+    }
+
     /**
      * Captures the awt hierarchy above the component, the focused one first.
      */
     public PreCachedDataContext.Capture captureAwtHierarchy(@Nullable Component focusedComponent, boolean forAsync) {
         PreCachedDataContext.Capture capture =
             forAsync ? PreCachedDataContext.captureForAsync(myApplication) : PreCachedDataContext.capture(myApplication);
+        return captureAwtHierarchy(capture, focusedComponent);
+    }
+
+    public PreCachedDataContext.Capture captureAwtHierarchy(PreCachedDataContext.Capture capture, @Nullable Component focusedComponent) {
         for (Component c = focusedComponent; c != null; c = c.getParent()) {
             hideParentEditorIfNeeded(capture, c);
             capture.collect(getDataProviderEx(c));
@@ -196,6 +205,9 @@ public class DesktopDataManagerImpl extends BaseDataManager {
 
     @Override
     public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
+        if (dataContext instanceof AsyncDataContext asyncDataContext) {
+            return asyncDataContext;
+        }
         return new DesktopAsyncDataContext(this, dataContext, myApplication);
     }
 

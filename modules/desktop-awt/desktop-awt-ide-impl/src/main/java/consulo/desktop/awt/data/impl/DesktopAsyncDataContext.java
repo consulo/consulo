@@ -8,6 +8,7 @@ import consulo.ide.impl.dataContext.PreCachedDataContext;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -23,9 +24,16 @@ class DesktopAsyncDataContext implements AsyncDataContext {
     @RequiredUIAccess
     DesktopAsyncDataContext(DesktopDataManagerImpl dataManager, DataContext syncContext, Application application) {
         UIAccess.assertIsUIThread();
-        Component component = syncContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
-        myDelegate = dataManager.captureAwtHierarchy(component, true).build(dataManager);
+        PreCachedDataContext.Capture capture = PreCachedDataContext.captureForAsync(application);
+        DataContext context = capture.collectCustomized(syncContext);
+        Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (component == null) {
+            consulo.ui.Component uiComponent = context.getData(consulo.ui.Component.KEY);
+            component = uiComponent == null ? null : TargetAWT.to(uiComponent);
+        }
+
+        myDelegate = dataManager.captureAwtHierarchy(capture, component).build(dataManager);
     }
 
     @Override

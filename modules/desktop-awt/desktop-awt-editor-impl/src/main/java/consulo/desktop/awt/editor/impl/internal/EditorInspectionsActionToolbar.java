@@ -13,9 +13,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import java.awt.LayoutManager;
 
 public class EditorInspectionsActionToolbar extends AdvancedActionToolbarImpl {
-    private final DesktopEditorImpl editor;
-
-    public EditorInspectionsActionToolbar(ActionGroup actions, DesktopEditorImpl editor) {
+    public EditorInspectionsActionToolbar(ActionGroup actions) {
         super(ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR,
             actions,
             ActionToolbar.Style.HORIZONTAL,
@@ -23,14 +21,7 @@ public class EditorInspectionsActionToolbar extends AdvancedActionToolbarImpl {
             DataManager.getInstance(),
             Application.get(),
             KeymapManager.getInstance());
-        this.editor = editor;
         setLayout(new DesktopEditorAnalyzeStatusPanel.StatusComponentLayout());
-    }
-
-    @Override
-    public void addNotify() {
-        setTargetComponent(editor.getContentComponent());
-        super.addNotify();
     }
 
     @Override

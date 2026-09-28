@@ -138,8 +138,9 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
 
         DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(new FilterExistentAction());
-        JComponent toolbarComponent =
-            ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true).getComponent();
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+        toolbar.setTargetComponent(myView.getComponent());
+        JComponent toolbarComponent = toolbar.getComponent();
         toolbarComponent.setBorder(null);
         panel.add(toolbarComponent, BorderLayout.NORTH);
 

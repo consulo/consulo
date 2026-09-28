@@ -73,6 +73,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
         JPanel p = new JPanel(new BorderLayout());
 
         myToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, createChangesTreeActions(root), true);
+        myToolBar.setTargetComponent(root);
         JPanel toolBarPanel = new JPanel(new BorderLayout());
         toolBarPanel.add(myToolBar.getComponent(), BorderLayout.CENTER);
 

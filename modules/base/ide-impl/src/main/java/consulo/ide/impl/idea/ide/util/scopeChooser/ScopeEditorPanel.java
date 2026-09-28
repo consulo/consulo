@@ -436,6 +436,7 @@ public class ScopeEditorPanel {
         }
 
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        toolbar.setTargetComponent(myPackageTree);
         return toolbar.getComponent();
     }
 

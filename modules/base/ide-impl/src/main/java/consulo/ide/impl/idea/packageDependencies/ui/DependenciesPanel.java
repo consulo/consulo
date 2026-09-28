@@ -140,7 +140,9 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         splitter.setFirstComponent(treeSplitter);
         splitter.setSecondComponent(myUsagesPanel);
         add(splitter, BorderLayout.CENTER);
-        add(createToolbar(), BorderLayout.NORTH);
+        ActionToolbar toolbar = createToolbar();
+        toolbar.setTargetComponent(treeSplitter);
+        add(toolbar.getComponent(), BorderLayout.NORTH);
 
         myRightTreeExpansionMonitor = PackageTreeExpansionMonitor.install(myRightTree, myProject);
         myLeftTreeExpansionMonitor = PackageTreeExpansionMonitor.install(myLeftTree, myProject);
@@ -260,7 +262,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
     }
 
     @RequiredUIAccess
-    private JComponent createToolbar() {
+    private ActionToolbar createToolbar() {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new CloseAction());
         group.add(new RerunAction(this));
@@ -279,8 +281,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         group.add(CommonActionsManager.getInstance().createExportToTextFileAction(new DependenciesExporterToTextFile()));
         group.add(new ContextHelpAction("dependency.viewer.tool.window"));
 
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-        return toolbar.getComponent();
+        return ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
     }
 
     private void rebuild() {

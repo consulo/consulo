@@ -243,6 +243,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         group.add(new HideCoverageInfoAction());
 
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group.build(), true);
+        toolbar.setTargetComponent(editor.getComponent());
         JComponent toolbarComponent = toolbar.getComponent();
 
         ColorValue background = ((EditorEx) editor).getBackgroundColor();

@@ -17,6 +17,8 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.awt.TabsUtil;
 import consulo.localize.LocalizeValue;
@@ -89,6 +91,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     }
 
     private final ToolWindow myToolWindow;
+    private final DesktopToolWindowContentUi myContentUi;
 
     private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
     private final DefaultActionGroup myActionGroupWest = new DefaultActionGroup();
@@ -102,6 +105,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         super(new BorderLayout());
 
         myToolWindow = toolWindow;
+        myContentUi = toolWindow.getContentUI();
 
         myWestPanel = new NonOpaquePanel(new HorizontalLayout(0, SwingConstants.CENTER));
 
@@ -119,7 +123,16 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
                     .build(),
                 true
             );
+        myToolbar.setDataContextProvider(ActionToolbarContexts.forSelectedContent(myContentUi.getContentManager(), myToolbar.getComponent()));
         myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+
+        myContentUi.getContentManager().addContentManagerListener(new ContentManagerListener() {
+            @Override
+            @RequiredUIAccess
+            public void selectionChanged(ContentManagerEvent event) {
+                myToolbar.updateActionsAsync();
+            }
+        }, this);
 
         JComponent component = myToolbar.getComponent();
         component.setBorder(JBUI.Borders.empty());
@@ -180,7 +193,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     }
 
     public void setToolbarComponent(JComponent component) {
-        myToolbar.setTargetComponent(component);
+        myToolbar.setDataContextProvider(ActionToolbarContexts.forSelectedContent(myContentUi.getContentManager(), component));
 
         if (myToolbarWest != null) {
             myToolbarWest.setTargetComponent(component);

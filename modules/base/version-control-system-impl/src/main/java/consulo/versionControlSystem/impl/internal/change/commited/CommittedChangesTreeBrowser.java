@@ -319,7 +319,9 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
     for (AnAction anAction : extra) {
       toolbarGroup.add(anAction);
     }
-    return ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarGroup, true);
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarGroup, true);
+    toolbar.setTargetComponent(this);
+    return toolbar;
   }
 
   @Override
