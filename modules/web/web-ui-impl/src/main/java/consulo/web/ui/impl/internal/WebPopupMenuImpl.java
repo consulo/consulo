@@ -55,7 +55,7 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
 
         getVaadinComponent().addOpenedChangeListener(event -> {
             if (!event.isOpened()) {
-                detachAttachedByShow();
+                detachAttachedByShowAfterEvents();
             }
         });
     }
@@ -85,6 +85,16 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
         getVaadinComponent().close();
 
         detachAttachedByShow();
+    }
+
+    private void detachAttachedByShowAfterEvents() {
+        Optional<UI> ui = getVaadinComponent().getUI();
+        if (ui.isEmpty()) {
+            detachAttachedByShow();
+            return;
+        }
+
+        ui.get().beforeClientResponse(ui.get(), context -> detachAttachedByShow());
     }
 
     private void detachAttachedByShow() {
