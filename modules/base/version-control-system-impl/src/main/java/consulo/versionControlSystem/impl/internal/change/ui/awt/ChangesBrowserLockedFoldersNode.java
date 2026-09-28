@@ -55,9 +55,9 @@ public class ChangesBrowserLockedFoldersNode extends ChangesBrowserNode implemen
 
     @Override
     public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-        renderer.append(userObject.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        renderer.append(getCountText(), SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
-        renderer.append("   ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.append(userObject.toString());
+        appendCount(renderer, SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
+        renderer.append("   ");
         CleanupStarter starter = new CleanupStarter(myProject, this);
         renderer.append("do cleanup...", new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, Color.red), starter);
     }

@@ -242,15 +242,14 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     }
 
     @Override
-    protected DefaultTreeModel buildTreeModel(
-        List<Object> objects,
-        @Nullable ChangeNodeDecorator changeNodeDecorator,
-        boolean showFlatten
-    ) {
+    protected DefaultTreeModel buildTreeModel(List<Object> objects, @Nullable ChangeNodeDecorator decorator, boolean showFlatten) {
         ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
         TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
 
-        builder.setChanges(findChanges(objects), changeNodeDecorator);
+        List<Change> changes = findChanges(objects);
+        if (!changes.isEmpty()) {
+            builder.setChanges(changes, decorator, builder.createChangesNode());
+        }
         if (isShowUnversioned()) {
             builder.setUnversioned(manager.getUnversionedFiles());
         }
@@ -272,14 +271,13 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     @Override
     protected @Nullable Object getLeadSelectedObject(ChangesBrowserNode node) {
-        Object result = null;
         Object userObject = node.getUserObject();
 
         if (userObject instanceof Change || isShowUnversioned() && isUnderUnversioned(node) && userObject instanceof VirtualFile) {
-            result = userObject;
+            return userObject;
         }
 
-        return result;
+        return null;
     }
 
     @Override
@@ -297,27 +295,22 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     @Override
     public int getUnversionedFilesCount() {
-        int result = 0;
-
         if (isShowUnversioned()) {
             ChangesBrowserUnversionedFilesNode node = findUnversionedFilesNode();
 
             if (node != null) {
-                result = node.getFileCount();
+                return node.getFileCount();
             }
         }
 
-        return result;
+        return 0;
     }
 
     private @Nullable ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
         //noinspection unchecked
         Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
 
-        return ContainerUtil.findInstance(
-            nodes.asIterator(),
-            ChangesBrowserUnversionedFilesNode.class
-        );
+        return ContainerUtil.findInstance(nodes.asIterator(), ChangesBrowserUnversionedFilesNode.class);
     }
 
     @Override

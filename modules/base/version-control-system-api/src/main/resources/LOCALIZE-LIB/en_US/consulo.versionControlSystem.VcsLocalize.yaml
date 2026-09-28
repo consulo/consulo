@@ -367,6 +367,8 @@ changes.newchangelist.warning.already.exists.title:
     text: Wrong Changelist Name
 changes.node.title.change.count:
     text: ({0,choice, 0#No files|1#1 file|2#{0} files})
+changes.node.title.changes:
+    text: Changes
 changes.node.title.directory.change.count:
     text: ({0,choice, 0#No directories|1#1 directory|2#{0} directories})
 changes.node.title.directory.file.change.count:
