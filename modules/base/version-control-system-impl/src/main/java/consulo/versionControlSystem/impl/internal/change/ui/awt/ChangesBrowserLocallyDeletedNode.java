@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.TreeLinkMouseListener;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -28,53 +28,54 @@ import org.jspecify.annotations.Nullable;
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<LocallyDeletedChange>
-        implements TreeLinkMouseListener.HaveTooltip {
-  public ChangesBrowserLocallyDeletedNode(LocallyDeletedChange userObject) {
-    super(userObject);
-  }
+    implements TreeLinkMouseListener.HaveTooltip {
 
-  @Override
-  protected boolean isFile() {
-    return !isDirectory();
-  }
-
-  @Override
-  protected boolean isDirectory() {
-    return getUserObject().getPath().isDirectory();
-  }
-
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    // todo would be good to have render code in one place
-    FilePath filePath = getUserObject().getPath();
-    renderer.appendFileName(filePath.getVirtualFile(), filePath.getName(), TargetAWT.to(FileStatus.NOT_CHANGED.getColor()));
-
-    if (renderer.isShowFlatten()) {
-      FilePath parentPath = filePath.getParentPath();
-      if (parentPath != null) {
-        renderer.append(spaceAndThinSpace() + parentPath.getPresentableUrl(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
-      }
-    }
-    else if (getFileCount() != 1 || getDirectoryCount() != 0) {
-      appendCount(renderer);
+    public ChangesBrowserLocallyDeletedNode(LocallyDeletedChange userObject) {
+        super(userObject);
     }
 
-    renderer.setIcon(getIcon());
-  }
-
-  @Override
-  public @Nullable String getTooltip() {
-    return getUserObject().getDescription();
-  }
-
-  private @Nullable Image getIcon() {
-    Image result = getUserObject().getAddIcon();
-
-    if (result == null) {
-      FilePath filePath = getUserObject().getPath();
-      result = filePath.isDirectory() || !isLeaf() ? AllIcons.Nodes.TreeClosed : filePath.getFileType().getIcon();
+    @Override
+    protected boolean isFile() {
+        return !isDirectory();
     }
 
-    return result;
-  }
+    @Override
+    protected boolean isDirectory() {
+        return getUserObject().getPath().isDirectory();
+    }
+
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        // todo would be good to have render code in one place
+        FilePath filePath = getUserObject().getPath();
+        renderer.appendFileName(filePath.getVirtualFile(), filePath.getName(), TargetAWT.to(FileStatus.NOT_CHANGED.getColor()));
+
+        if (renderer.isShowFlatten()) {
+            FilePath parentPath = filePath.getParentPath();
+            if (parentPath != null) {
+                renderer.append(spaceAndThinSpace() + parentPath.getPresentableUrl(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+            }
+        }
+        else if (getFileCount() != 1 || getDirectoryCount() != 0) {
+            appendCount(renderer);
+        }
+
+        renderer.setIcon(getIcon());
+    }
+
+    @Override
+    public @Nullable String getTooltip() {
+        return getUserObject().getDescription();
+    }
+
+    private @Nullable Image getIcon() {
+        Image result = getUserObject().getAddIcon();
+
+        if (result == null) {
+            FilePath filePath = getUserObject().getPath();
+            result = filePath.isDirectory() || !isLeaf() ? PlatformIconGroup.nodesTreeclosed() : filePath.getFileType().getIcon();
+        }
+
+        return result;
+    }
 }

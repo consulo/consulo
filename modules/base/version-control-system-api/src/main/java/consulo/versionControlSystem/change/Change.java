@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsPathPresenter;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -30,240 +28,262 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author max
  */
 public class Change {
-  private int myHash;
+    private int myHash;
 
-  public enum Type {
-    MODIFICATION,
-    NEW,
-    DELETED,
-    MOVED
-  }
-
-  private final ContentRevision myBeforeRevision;
-  private final ContentRevision myAfterRevision;
-  private final FileStatus myFileStatus;
-  protected String myMoveRelativePath;
-  protected boolean myRenamed;
-  protected boolean myMoved;
-  protected boolean myRenameOrMoveCached = false;
-  private boolean myIsReplaced;
-  private Type myType;
-  private final Map<String, Change> myOtherLayers;
-  // if null, vcs's is used. intended: for property conflict case
-  private Supplier<MergeTexts> myMergeProvider;
-
-  public Change(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision) {
-    this(beforeRevision, afterRevision, convertStatus(beforeRevision, afterRevision));
-  }
-
-  public Change(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision, @Nullable FileStatus fileStatus) {
-    assert beforeRevision != null || afterRevision != null;
-    myBeforeRevision = beforeRevision;
-    myAfterRevision = afterRevision;
-    myFileStatus = fileStatus == null ? convertStatus(beforeRevision, afterRevision) : fileStatus;
-    myHash = -1;
-    myOtherLayers = new HashMap<String, Change>(0);
-  }
-
-  private static FileStatus convertStatus(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision) {
-    if (beforeRevision == null) return FileStatus.ADDED;
-    if (afterRevision == null) return FileStatus.DELETED;
-    return FileStatus.MODIFIED;
-  }
-
-  public Supplier<MergeTexts> getMergeProvider() {
-    return myMergeProvider;
-  }
-
-  public void setMergeProvider(Supplier<MergeTexts> mergeProvider) {
-    myMergeProvider = mergeProvider;
-  }
-
-  public void addAdditionalLayerElement(String name, Change change) {
-    myOtherLayers.put(name, change);
-  }
-
-  public Map<String, Change> getOtherLayers() {
-    return myOtherLayers;
-  }
-
-  public boolean isTreeConflict() {
-    return false;
-  }
-
-  public boolean isPhantom() {
-    return false;
-  }
-
-  public boolean hasOtherLayers() {
-    return ! myOtherLayers.isEmpty();
-  }
-
-  public Type getType() {
-    if (myType == null) {
-      if (myBeforeRevision == null) return Type.NEW;
-      if (myAfterRevision == null) return Type.DELETED;
-
-      FilePath bFile = myBeforeRevision.getFile();
-      FilePath aFile = myAfterRevision.getFile();
-      if (!Comparing.equal(bFile, aFile)) return Type.MOVED;
-
-      // enforce case-sensitive check
-      if (!Platform.current().fs().isCaseSensitive()) {
-        String bPath = bFile.getPath();
-        String aPath = aFile.getPath();
-        if (!bPath.equals(aPath) && bPath.equalsIgnoreCase(aPath)) return Type.MOVED;
-      }
-
-      return Type.MODIFICATION;
+    public enum Type {
+        MODIFICATION,
+        NEW,
+        DELETED,
+        MOVED
     }
-    return myType;
-  }
 
-  public @Nullable ContentRevision getBeforeRevision() {
-    return myBeforeRevision;
-  }
+    private final ContentRevision myBeforeRevision;
+    private final ContentRevision myAfterRevision;
+    private final FileStatus myFileStatus;
+    protected String myMoveRelativePath;
+    protected boolean myRenamed;
+    protected boolean myMoved;
+    protected boolean myRenameOrMoveCached = false;
+    private boolean myIsReplaced;
+    private Type myType;
+    private final Map<String, Change> myOtherLayers;
+    // if null, VCS's is used. intended: for property conflict case
+    private Supplier<MergeTexts> myMergeProvider;
 
-  public @Nullable ContentRevision getAfterRevision() {
-    return myAfterRevision;
-  }
-
-  public FileStatus getFileStatus() {
-    return myFileStatus;
-  }
-
-  public @Nullable VirtualFile getVirtualFile() {
-    return myAfterRevision == null ? null : myAfterRevision.getFile().getVirtualFile();
-  }
-
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || (! (o instanceof Change))) return false;
-    Change otherChange = ((Change)o);
-
-    ContentRevision br1 = getBeforeRevision();
-    ContentRevision br2 = otherChange.getBeforeRevision();
-    ContentRevision ar1 = getAfterRevision();
-    ContentRevision ar2 = otherChange.getAfterRevision();
-
-    FilePath fbr1 = br1 != null ? br1.getFile() : null;
-    FilePath fbr2 = br2 != null ? br2.getFile() : null;
-
-    FilePath far1 = ar1 != null ? ar1.getFile() : null;
-    FilePath far2 = ar2 != null ? ar2.getFile() : null;
-
-    return Comparing.equal(fbr1, fbr2) && Comparing.equal(far1, far2);
-  }
-
-  public int hashCode() {
-    if (myHash == -1) {
-      myHash = calculateHash();
+    public Change(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision) {
+        this(beforeRevision, afterRevision, convertStatus(beforeRevision, afterRevision));
     }
-    return myHash;
-  }
 
-  private int calculateHash() {
-    return revisionHashCode(getBeforeRevision()) * 27 + revisionHashCode(getAfterRevision());
-  }
+    public Change(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision, @Nullable FileStatus fileStatus) {
+        assert beforeRevision != null || afterRevision != null;
+        myBeforeRevision = beforeRevision;
+        myAfterRevision = afterRevision;
+        myFileStatus = fileStatus == null ? convertStatus(beforeRevision, afterRevision) : fileStatus;
+        myHash = -1;
+        myOtherLayers = new HashMap<>(0);
+    }
 
-  private static int revisionHashCode(ContentRevision rev) {
-    if (rev == null) return 0;
-    return rev.getFile().getIOFile().getPath().hashCode();
-  }
-
-  public boolean affectsFile(File ioFile) {
-    if (myBeforeRevision != null && myBeforeRevision.getFile().getIOFile().equals(ioFile)) return true;
-    if (myAfterRevision != null && myAfterRevision.getFile().getIOFile().equals(ioFile)) return true;
-    return false;
-  }
-
-  public boolean isRenamed() {
-    cacheRenameOrMove(null);
-    return myRenamed;
-  }
-
-  public boolean isMoved() {
-    cacheRenameOrMove(null);
-    return myMoved;
-  }
-
-  public String getMoveRelativePath(Project project) {
-    cacheRenameOrMove(project);
-    return myMoveRelativePath;
-  }
-
-  private void cacheRenameOrMove(Project project) {
-    if (myBeforeRevision != null && myAfterRevision != null && (! revisionPathsSame())) {
-      if (!myRenameOrMoveCached) {
-        myRenameOrMoveCached = true;
-        if (Comparing.equal(myBeforeRevision.getFile().getParentPath(), myAfterRevision.getFile().getParentPath())) {
-          myRenamed = true;
+    private static FileStatus convertStatus(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision) {
+        if (beforeRevision == null) {
+            return FileStatus.ADDED;
         }
-        else {
-          myMoved = true;
+        if (afterRevision == null) {
+            return FileStatus.DELETED;
         }
-      }
-      if (myMoved && myMoveRelativePath == null && project != null) {
-        myMoveRelativePath = VcsPathPresenter.getInstance(project).getPresentableRelativePath(myBeforeRevision, myAfterRevision);
-      }
+        return FileStatus.MODIFIED;
     }
-  }
 
-  private boolean revisionPathsSame() {
-    String path1 = myBeforeRevision.getFile().getIOFile().getAbsolutePath();
-    String path2 = myAfterRevision.getFile().getIOFile().getAbsolutePath();
-    return path1.equals(path2);
-  }
-
-  
-  public String toString() {
-    Type type = getType();
-    //noinspection EnumSwitchStatementWhichMissesCases
-    switch (type) {
-      case NEW: return "A: " + myAfterRevision;
-      case DELETED: return "D: " + myBeforeRevision;
-      case MOVED: return "M: " + myBeforeRevision + " -> " + myAfterRevision;
-      default: return "M: " + myAfterRevision;
+    public Supplier<MergeTexts> getMergeProvider() {
+        return myMergeProvider;
     }
-  }
 
-  public @Nullable String getOriginText(Project project) {
-    cacheRenameOrMove(project);
-    if (isMoved()) {
-      return getMovedText(project);
-    } else if (isRenamed()) {
-      return getRenamedText();
+    public void setMergeProvider(Supplier<MergeTexts> mergeProvider) {
+        myMergeProvider = mergeProvider;
     }
-    return myIsReplaced ? VcsLocalize.changeFileReplacedText().get() : null;
-  }
 
-  protected @Nullable String getRenamedText() {
-    return VcsLocalize.changeFileRenamedFromText(myBeforeRevision.getFile().getName()).get();
-  }
+    public void addAdditionalLayerElement(String name, Change change) {
+        myOtherLayers.put(name, change);
+    }
 
-  protected @Nullable String getMovedText(Project project) {
-    return VcsLocalize.changeFileMovedFromText(getMoveRelativePath(project)).get();
-  }
+    public Map<String, Change> getOtherLayers() {
+        return myOtherLayers;
+    }
 
-  public boolean isIsReplaced() {
-    return myIsReplaced;
-  }
+    public boolean isTreeConflict() {
+        return false;
+    }
 
-  public void setIsReplaced(boolean isReplaced) {
-    myIsReplaced = isReplaced;
-  }
+    public boolean isPhantom() {
+        return false;
+    }
 
-  public @Nullable Image getAdditionalIcon() {
-    return null;
-  }
+    public boolean hasOtherLayers() {
+        return !myOtherLayers.isEmpty();
+    }
 
-  public @Nullable String getDescription() {
-    return null;
-  }
+    public Type getType() {
+        if (myType == null) {
+            if (myBeforeRevision == null) {
+                return Type.NEW;
+            }
+            if (myAfterRevision == null) {
+                return Type.DELETED;
+            }
+
+            FilePath bFile = myBeforeRevision.getFile();
+            FilePath aFile = myAfterRevision.getFile();
+            if (!Objects.equals(bFile, aFile)) {
+                return Type.MOVED;
+            }
+
+            // enforce case-sensitive check
+            if (!Platform.current().fs().isCaseSensitive()) {
+                String bPath = bFile.getPath();
+                String aPath = aFile.getPath();
+                if (!bPath.equals(aPath) && bPath.equalsIgnoreCase(aPath)) {
+                    return Type.MOVED;
+                }
+            }
+
+            return Type.MODIFICATION;
+        }
+        return myType;
+    }
+
+    public @Nullable ContentRevision getBeforeRevision() {
+        return myBeforeRevision;
+    }
+
+    public @Nullable ContentRevision getAfterRevision() {
+        return myAfterRevision;
+    }
+
+    public FileStatus getFileStatus() {
+        return myFileStatus;
+    }
+
+    public @Nullable VirtualFile getVirtualFile() {
+        return myAfterRevision == null ? null : myAfterRevision.getFile().getVirtualFile();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Change that)) {
+            return false;
+        }
+
+        ContentRevision br1 = getBeforeRevision();
+        ContentRevision br2 = that.getBeforeRevision();
+        ContentRevision ar1 = getAfterRevision();
+        ContentRevision ar2 = that.getAfterRevision();
+
+        FilePath fbr1 = br1 != null ? br1.getFile() : null;
+        FilePath fbr2 = br2 != null ? br2.getFile() : null;
+
+        FilePath far1 = ar1 != null ? ar1.getFile() : null;
+        FilePath far2 = ar2 != null ? ar2.getFile() : null;
+
+        return Objects.equals(fbr1, fbr2)
+            && Objects.equals(far1, far2);
+    }
+
+    @Override
+    public int hashCode() {
+        if (myHash == -1) {
+            int hash = calculateHash();
+            myHash = hash == -1 ? 0 : hash;
+        }
+        return myHash;
+    }
+
+    private int calculateHash() {
+        return revisionHashCode(getBeforeRevision()) * 27 + revisionHashCode(getAfterRevision());
+    }
+
+    private static int revisionHashCode(ContentRevision rev) {
+        return rev == null ? 0 : rev.getFile().hashCode();
+    }
+
+    public boolean affectsFile(File ioFile) {
+        if (myBeforeRevision != null && myBeforeRevision.getFile().getIOFile().equals(ioFile)) {
+            return true;
+        }
+        if (myAfterRevision != null && myAfterRevision.getFile().getIOFile().equals(ioFile)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isRenamed() {
+        cacheRenameOrMove(null);
+        return myRenamed;
+    }
+
+    public boolean isMoved() {
+        cacheRenameOrMove(null);
+        return myMoved;
+    }
+
+    public String getMoveRelativePath(Project project) {
+        cacheRenameOrMove(project);
+        return myMoveRelativePath;
+    }
+
+    private void cacheRenameOrMove(Project project) {
+        if (myBeforeRevision != null && myAfterRevision != null && (!revisionPathsSame())) {
+            if (!myRenameOrMoveCached) {
+                myRenameOrMoveCached = true;
+                if (Objects.equals(myBeforeRevision.getFile().getParentPath(), myAfterRevision.getFile().getParentPath())) {
+                    myRenamed = true;
+                }
+                else {
+                    myMoved = true;
+                }
+            }
+            if (myMoved && myMoveRelativePath == null && project != null) {
+                myMoveRelativePath = VcsPathPresenter.getInstance(project).getPresentableRelativePath(myBeforeRevision, myAfterRevision);
+            }
+        }
+    }
+
+    private boolean revisionPathsSame() {
+        String path1 = myBeforeRevision.getFile().getIOFile().getAbsolutePath();
+        String path2 = myAfterRevision.getFile().getIOFile().getAbsolutePath();
+        return path1.equals(path2);
+    }
+
+    @Override
+    public String toString() {
+        return switch (getType()) {
+            case NEW -> "A: " + myAfterRevision;
+            case DELETED -> "D: " + myBeforeRevision;
+            case MOVED -> "M: " + myBeforeRevision + " -> " + myAfterRevision;
+            case MODIFICATION -> "M: " + myAfterRevision;
+        };
+    }
+
+    public @Nullable String getOriginText(Project project) {
+        cacheRenameOrMove(project);
+        if (isMoved()) {
+            return getMovedText(project);
+        }
+        else if (isRenamed()) {
+            return getRenamedText();
+        }
+        return myIsReplaced ? VcsLocalize.changeFileReplacedText().get() : null;
+    }
+
+    protected @Nullable String getRenamedText() {
+        return VcsLocalize.changeFileRenamedFromText(myBeforeRevision.getFile().getName()).get();
+    }
+
+    protected @Nullable String getMovedText(Project project) {
+        return VcsLocalize.changeFileMovedFromText(getMoveRelativePath(project)).get();
+    }
+
+    public boolean isIsReplaced() {
+        return myIsReplaced;
+    }
+
+    public void setIsReplaced(boolean isReplaced) {
+        myIsReplaced = isReplaced;
+    }
+
+    public @Nullable Image getAdditionalIcon() {
+        return null;
+    }
+
+    public @Nullable String getDescription() {
+        return null;
+    }
 }

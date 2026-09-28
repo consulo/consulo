@@ -81,10 +81,10 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
 
     private JComponent myDiffBottomComponent;
 
-    public static Key<ChangesBrowser> DATA_KEY = ChangesBrowser.DATA_KEY;
+    public static final Key<ChangesBrowser> DATA_KEY = ChangesBrowser.DATA_KEY;
     private AnAction myDiffAction;
     private final VirtualFile myToSelect;
-    
+
     private final DeleteProvider myDeleteProvider = new VirtualFileDeleteProvider();
 
     @Override
@@ -97,14 +97,16 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         myViewer.setChangeDecorator(decorator);
     }
 
-    protected InternalChangesBrowserBase(Project project,
-                                 List<T> changes,
-                                 final boolean capableOfExcludingChanges,
-                                 final boolean highlightProblems,
-                                 final @Nullable Runnable inclusionListener,
-                                 InternalChangesBrowser.MyUseCase useCase,
-                                 @Nullable VirtualFile toSelect,
-                                 Class<T> clazz) {
+    protected InternalChangesBrowserBase(
+        Project project,
+        List<T> changes,
+        boolean capableOfExcludingChanges,
+        boolean highlightProblems,
+        @Nullable Runnable inclusionListener,
+        MyUseCase useCase,
+        @Nullable VirtualFile toSelect,
+        Class<T> clazz
+    ) {
         super(new BorderLayout());
         setFocusable(false);
 
@@ -114,10 +116,18 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         myCapableOfExcludingChanges = capableOfExcludingChanges;
         myToSelect = toSelect;
 
-        ChangeNodeDecorator decorator =
-            InternalChangesBrowser.MyUseCase.LOCAL_CHANGES.equals(useCase) ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
+        ChangeNodeDecorator decorator = useCase == MyUseCase.LOCAL_CHANGES
+            ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator()
+            : null;
 
-        myViewer = new ChangesTreeListImpl<>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
+        myViewer = new ChangesTreeListImpl<>(
+            myProject,
+            changes,
+            capableOfExcludingChanges,
+            highlightProblems,
+            inclusionListener,
+            decorator
+        ) {
             @Override
             protected DefaultTreeModel buildTreeModel(List<T> changes, ChangeNodeDecorator changeNodeDecorator) {
                 return InternalChangesBrowserBase.this.buildTreeModel(changes, changeNodeDecorator, isShowFlatten());
@@ -401,6 +411,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         return 0;
     }
 
+    @Override
     public ChangeList getSelectedChangeList() {
         return mySelectedChangeList;
     }
@@ -418,9 +429,8 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     }
 
     private File[] getSelectedIoFiles() {
-        List<Change> changes = getSelectedChanges();
         List<File> files = new ArrayList<>();
-        for (Change change : changes) {
+        for (Change change : getSelectedChanges()) {
             ContentRevision afterRevision = change.getAfterRevision();
             if (afterRevision != null) {
                 FilePath file = afterRevision.getFile();

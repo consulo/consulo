@@ -17,47 +17,50 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import org.jspecify.annotations.Nullable;
 
-public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
-  protected final boolean myIsMany;
-  
-  protected final Runnable myDialogShower;
-  private final int myManyFileCount;
-  private final int myManyDirectoryCount;
+public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode<Object> {
+    protected final boolean myIsMany;
 
-  protected ChangesBrowserSpecificFilesNode(Object userObject,
-                                            int filesSize,
-                                            int dirsSize,
-                                            boolean many,
-                                            @RequiredUIAccess Runnable shower) {
-    super(userObject);
-    // if files presented in the same view recalculate number of dirs and files -> provide -1; otherwise use from model
-    myManyFileCount = filesSize;
-    myManyDirectoryCount = dirsSize;
-    myIsMany = many;
-    myDialogShower = shower;
-  }
+    protected final @Nullable @RequiredUIAccess Runnable myDialogShower;
+    private final int myManyFileCount;
+    private final int myManyDirectoryCount;
 
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    super.render(renderer, selected, expanded, hasFocus);
-    if (isManyFiles() && myDialogShower != null) {
-      renderer.append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      renderer.append("browse", SimpleTextAttributes.LINK_ATTRIBUTES, myDialogShower);
+    protected ChangesBrowserSpecificFilesNode(
+        Object userObject,
+        int filesSize,
+        int dirsSize,
+        boolean many,
+        @Nullable @RequiredUIAccess Runnable shower
+    ) {
+        super(userObject);
+        // if files presented in the same view recalculate number of dirs and files -> provide -1; otherwise use from model
+        myManyFileCount = filesSize;
+        myManyDirectoryCount = dirsSize;
+        myIsMany = many;
+        myDialogShower = shower;
     }
-  }
 
-  @Override
-  public int getFileCount() {
-    return myIsMany ? myManyFileCount : super.getFileCount();
-  }
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        super.render(renderer, selected, expanded, hasFocus);
+        if (isManyFiles() && myDialogShower != null) {
+            renderer.append(" ");
+            renderer.append("browse", SimpleTextAttributes.LINK_ATTRIBUTES, myDialogShower);
+        }
+    }
 
-  @Override
-  public int getDirectoryCount() {
-    return myIsMany ? myManyDirectoryCount : super.getDirectoryCount();
-  }
+    @Override
+    public int getFileCount() {
+        return myIsMany ? myManyFileCount : super.getFileCount();
+    }
 
-  public boolean isManyFiles() {
-    return myIsMany;
-  }
+    @Override
+    public int getDirectoryCount() {
+        return myIsMany ? myManyDirectoryCount : super.getDirectoryCount();
+    }
+
+    public boolean isManyFiles() {
+        return myIsMany;
+    }
 }

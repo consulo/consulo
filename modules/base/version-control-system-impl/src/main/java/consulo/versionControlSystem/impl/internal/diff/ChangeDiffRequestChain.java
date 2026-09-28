@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    
     private final List<ChangeDiffRequestProducer> myRequests;
     private int myIndex;
 
@@ -21,7 +20,6 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
         myRequests = requests;
     }
 
-    
     @Override
     public List<? extends ChangeDiffRequestProducer> getRequests() {
         return myRequests;
@@ -34,11 +32,10 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
 
     @Override
     public void setIndex(int index) {
-        assert index >= 0 && index < myRequests.size();
+        assert 0 <= index && index < myRequests.size();
         myIndex = index;
     }
 
-    
     @Override
     public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {
         return new ChangeGoToChangePopupAction<>(this, onSelected) {
@@ -56,13 +53,11 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
                 return -1;
             }
 
-            
             @Override
             protected List<Change> getChanges() {
-                return ContainerUtil.mapNotNull(myChain.getRequests(),  ChangeDiffRequestProducer::getChange);
+                return ContainerUtil.mapNotNull(myChain.getRequests(), ChangeDiffRequestProducer::getChange);
             }
 
-            
             @Override
             protected Change getCurrentSelection() {
                 return myChain.getRequests().get(myChain.getIndex()).getChange();

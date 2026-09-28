@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
-import consulo.application.AllIcons;
 import consulo.module.Module;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNodeRenderer;
 
@@ -26,31 +24,33 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNo
  * @author yole
  */
 public class ChangesBrowserModuleNode extends ChangesBrowserNode<Module> {
-  protected ChangesBrowserModuleNode(Module userObject) {
-    super(userObject);
-  }
+    protected ChangesBrowserModuleNode(Module userObject) {
+        super(userObject);
+    }
 
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    Module module = (Module)userObject;
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        Module module = getUserObject();
 
-    renderer.append(module.isDisposed() ? "" : module.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    appendCount(renderer);
-    renderer.setIcon(AllIcons.Nodes.Module);
-  }
+        if (!module.isDisposed()) {
+            renderer.append(module.getName());
+        }
+        appendCount(renderer);
+        renderer.setIcon(PlatformIconGroup.nodesModule());
+    }
 
-  @Override
-  public String getTextPresentation() {
-    return getUserObject().getName();
-  }
+    @Override
+    public String getTextPresentation() {
+        return getUserObject().getName();
+    }
 
-  @Override
-  public int getSortWeight() {
-    return 3;
-  }
+    @Override
+    public int getSortWeight() {
+        return MODULE_SORT_WEIGHT;
+    }
 
-  @Override
-  public int compareUserObjects(Object o2) {
-    return o2 instanceof Module module ? getUserObject().getName().compareToIgnoreCase(module.getName()) : 0;
-  }
+    @Override
+    public int compareUserObjects(Object o2) {
+        return o2 instanceof Module module ? getUserObject().getName().compareToIgnoreCase(module.getName()) : 0;
+    }
 }

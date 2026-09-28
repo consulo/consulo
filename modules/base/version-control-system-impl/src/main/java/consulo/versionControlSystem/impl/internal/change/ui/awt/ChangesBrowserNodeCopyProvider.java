@@ -16,47 +16,55 @@
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 class ChangesBrowserNodeCopyProvider implements CopyProvider {
-  
-  private final JTree myTree;
+    private final JTree myTree;
 
-  ChangesBrowserNodeCopyProvider(JTree tree) {
-    myTree = tree;
-  }
+    ChangesBrowserNodeCopyProvider(JTree tree) {
+        myTree = tree;
+    }
 
-  @Override
-  public boolean isCopyEnabled(DataContext dataContext) {
-    return myTree.getSelectionPaths() != null;
-  }
+    @Override
+    public boolean isCopyEnabled(DataContext dataContext) {
+        return myTree.getSelectionPaths() != null;
+    }
 
-  @Override
-  public boolean isCopyVisible(DataContext dataContext) {
-    return true;
-  }
+    @Override
+    public boolean isCopyVisible(DataContext dataContext) {
+        return true;
+    }
 
-  @Override
-  public void performCopy(DataContext dataContext) {
-    List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtil.assertNotNull(myTree.getSelectionPaths())), TreeUtil.getDisplayOrderComparator(myTree));
-    CopyPasteManager.getInstance().setText(StringUtil.join(paths, path -> {
-      Object node = path.getLastPathComponent();
-      if (node instanceof ChangesBrowserNode) {
-        return ((ChangesBrowserNode)node).getTextPresentation();
-      }
-      else {
-        return node.toString();
-      }
-    }, "\n"));
-  }
+    @Override
+    @RequiredUIAccess
+    public void performCopy(DataContext dataContext) {
+        List<TreePath> paths = ContainerUtil.sorted(
+            Arrays.asList(Objects.requireNonNull(myTree.getSelectionPaths())),
+            TreeUtil.getDisplayOrderComparator(myTree)
+        );
+        CopyPasteManager.getInstance().setText(StringUtil.join(
+            paths,
+            path -> {
+                Object node = path.getLastPathComponent();
+                if (node instanceof ChangesBrowserNode changesBrowserNode) {
+                    return changesBrowserNode.getTextPresentation();
+                }
+                else {
+                    return node.toString();
+                }
+            },
+            "\n"
+        ));
+    }
 }
