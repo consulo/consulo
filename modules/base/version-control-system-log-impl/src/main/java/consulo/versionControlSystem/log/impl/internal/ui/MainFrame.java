@@ -7,6 +7,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -15,7 +16,6 @@ import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.table.ComponentsListFocusTraversalPolicy;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesBrowserFactory;
@@ -36,7 +36,6 @@ import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeListForRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -65,12 +64,15 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
     private Runnable myContainingBranchesListener;
     private Runnable myMiniDetailsLoadedListener;
 
-    public MainFrame(VcsLogDataImpl logData,
-                     VcsLogUiImpl ui,
-                     Project project,
-                     MainVcsLogUiProperties uiProperties,
-                     VcsLog log,
-                     VisiblePack initialDataPack) {
+    @RequiredUIAccess
+    public MainFrame(
+        VcsLogDataImpl logData,
+        VcsLogUiImpl ui,
+        Project project,
+        MainVcsLogUiProperties uiProperties,
+        VcsLog log,
+        VisiblePack initialDataPack
+    ) {
         // collect info
         myLogData = logData;
         myUi = ui;
@@ -84,13 +86,17 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
         myDetailsPanel = new DetailsPanel(logData, ui.getColorManager(), this);
 
         ChangesBrowserFactory factory = Application.get().getInstance(ChangesBrowserFactory.class);
-        myChangesBrowser = factory.createRepositoryChangeBrowser(project, toolBarGroup -> {
-            toolBarGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_SHOW_DETAILS_ACTION));
-        }, null, List.of(), null);
+        myChangesBrowser = factory.createRepositoryChangeBrowser(
+            project,
+            toolBarGroup -> toolBarGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_SHOW_DETAILS_ACTION)),
+            null,
+            List.of(),
+            null
+        );
         myChangesBrowser.getViewerScrollPane().setBorder(IdeBorderFactory.createBorder(SideBorder.TOP));
         myChangesBrowser.getDiffAction().registerCustomShortcutSet(myChangesBrowser.getDiffAction().getShortcutSet(), getGraphTable());
         myChangesBrowser.getEditSourceAction().registerCustomShortcutSet(CommonShortcuts.getEditSource(), getGraphTable());
-        myChangesBrowser.getViewer().setEmptyText("");
+        myChangesBrowser.getViewer().setEmptyText(LocalizeValue.empty());
         myChangesLoadingPane = new JBLoadingPanel(new BorderLayout(), this, 300);
         myChangesLoadingPane.add(myChangesBrowser.getComponent());
 
@@ -105,7 +111,8 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
         myTextFilter = myFilterUi.createTextFilter();
         myToolbar = createActionsToolbar();
 
-        ActionGroup textFieldSettingGroup = (ActionGroup) ActionManager.getInstance().getAction(VcsLogActionPlaces.TEXT_FILTER_SETTINGS_ACTION_GROUP);
+        ActionGroup textFieldSettingGroup = (ActionGroup) ActionManager.getInstance()
+            .getAction(VcsLogActionPlaces.TEXT_FILTER_SETTINGS_ACTION_GROUP);
         ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
             VcsLogActionPlaces.TEXT_FILTER_SETTINGS_ACTION_GROUP,
             textFieldSettingGroup,
@@ -115,28 +122,29 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
         toolbar.updateActionsAsync();
         AWTHasSuffixComponent.setSuffixComponent(myTextFilter.getTextEditor(), toolbar.getComponent());
 
-        ProgressStripe progressStripe =
-            new ProgressStripe(setupScrolledGraph(), this, 300) {
-                @Override
-                public void updateUI() {
-                    super.updateUI();
-                    if (myDecorator != null && myLogData.getProgress().isRunning()) {
-                        startLoadingImmediately();
-                    }
+        ProgressStripe progressStripe = new ProgressStripe(setupScrolledGraph(), this, 300) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                if (myDecorator != null && myLogData.getProgress().isRunning()) {
+                    startLoadingImmediately();
                 }
-            };
-        myLogData.getProgress().addProgressIndicatorListener(new VcsLogProgress.ProgressListener() {
-            @Override
-            public void progressStarted() {
-                progressStripe.startLoading();
             }
+        };
+        myLogData.getProgress().addProgressIndicatorListener(
+            new VcsLogProgress.ProgressListener() {
+                @Override
+                public void progressStarted() {
+                    progressStripe.startLoading();
+                }
 
-            @Override
-            public void progressStopped() {
-                progressStripe.stopLoading();
-            }
-        }, this);
-
+                @Override
+                public void progressStopped() {
+                    progressStripe.stopLoading();
+                }
+            },
+            this
+        );
 
         JComponent toolbars = new JPanel(new BorderLayout());
         toolbars.add(myToolbar, BorderLayout.NORTH);
@@ -221,8 +229,9 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
         textFilter.setVerticalSizeReferent(toolbar.getComponent());
         textFilter.setBorder(JBUI.Borders.emptyLeft(5));
 
-        ActionToolbar settings =
-            createActionsToolbar(new DefaultActionGroup(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_QUICK_SETTINGS_ACTION)));
+        ActionToolbar settings = createActionsToolbar(
+            new DefaultActionGroup(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_QUICK_SETTINGS_ACTION))
+        );
         settings.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
 
         JPanel panel = new JPanel(new MigLayout("ins 0, fill", "[left]0[left, fill]push[right]", "center"));
@@ -274,27 +283,35 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
             if (hashes.size() > VcsLogUtil.MAX_SELECTED_COMMITS) {
                 return null;
             }
-            return ArrayUtil
-                .toObjectArray(ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())), VcsRevisionNumber.class);
+            return ArrayUtil.toObjectArray(
+                ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())),
+                VcsRevisionNumber.class
+            );
         });
-        sink.lazy(VcsDataKeys.VCS, () -> {
-            int[] selectedRows = myGraphTable.getSelectedRows();
-            if (selectedRows.length == 0 || selectedRows.length > VcsLogUtil.MAX_SELECTED_COMMITS) {
+        sink.lazy(
+            VcsDataKeys.VCS,
+            () -> {
+                int[] selectedRows = myGraphTable.getSelectedRows();
+                if (selectedRows.length == 0 || selectedRows.length > VcsLogUtil.MAX_SELECTED_COMMITS) {
+                    return null;
+                }
+                Set<VirtualFile> roots = ContainerUtil.map2Set(Ints.asList(selectedRows), row -> myGraphTable.getModel().getRoot(row));
+                if (roots.size() == 1) {
+                    return myLogData.getLogProvider(Objects.requireNonNull(ContainerUtil.getFirstItem(roots))).getSupportedVcs();
+                }
                 return null;
             }
-            Set<VirtualFile> roots = ContainerUtil.map2Set(Ints.asList(selectedRows), row -> myGraphTable.getModel().getRoot(row));
-            if (roots.size() == 1) {
-                return myLogData.getLogProvider(ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(roots))).getSupportedVcs();
+        );
+        sink.lazy(
+            VcsLogDataKeys.VCS_LOG_BRANCHES,
+            () -> {
+                int[] selectedRows = myGraphTable.getSelectedRows();
+                if (selectedRows.length != 1) {
+                    return null;
+                }
+                return myGraphTable.getModel().getBranchesAtRow(selectedRows[0]);
             }
-            return null;
-        });
-        sink.lazy(VcsLogDataKeys.VCS_LOG_BRANCHES, () -> {
-            int[] selectedRows = myGraphTable.getSelectedRows();
-            if (selectedRows.length != 1) {
-                return null;
-            }
-            return myGraphTable.getModel().getBranchesAtRow(selectedRows[0]);
-        });
+        );
     }
 
     public JComponent getToolbar() {
@@ -348,13 +365,13 @@ public class MainFrame extends JPanel implements UiDataProvider, Disposable {
         protected void onSelection(int[] selection) {
             // just reset and wait for details to be loaded
             myChangesBrowser.setChangesToDisplay(Collections.emptyList());
-            myChangesBrowser.getViewer().setEmptyText("");
+            myChangesBrowser.getViewer().setEmptyText(LocalizeValue.empty());
         }
 
         @RequiredUIAccess
         @Override
         protected void onEmptySelection() {
-            myChangesBrowser.getViewer().setEmptyText("No commits selected");
+            myChangesBrowser.getViewer().setEmptyText(LocalizeValue.localizeTODO("No commits selected"));
             myChangesBrowser.setChangesToDisplay(Collections.emptyList());
         }
     }

@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.ui.awt;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -29,7 +30,7 @@ import java.util.List;
  * @since 2025-08-30
  */
 public interface ChangesBrowserTree<T> {
-    void setEmptyText(String emptyText);
+    void setEmptyText(LocalizeValue emptyText);
 
     void setScrollPaneBorder(Border border);
 
@@ -47,10 +48,8 @@ public interface ChangesBrowserTree<T> {
 
     void setChangesToDisplay(List<T> changes, @Nullable VirtualFile toSelect);
 
-    
     AnAction[] getTreeActions();
 
-    
     default JComponent getComponent() {
         return (JComponent) this;
     }
