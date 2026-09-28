@@ -107,7 +107,7 @@ public abstract class ActionToolbarEngine {
         myLastUpdateIndicator = indicator;
 
         myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false, indicator);
-        myLastUpdate.whenComplete((result, throwable) -> {
+        myLastUpdate = myLastUpdate.whenComplete((result, throwable) -> {
             if (result != null) {
                 actionsUpdated(result);
             }
