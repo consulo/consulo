@@ -41,8 +41,10 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,18 +55,23 @@ import java.util.concurrent.TimeUnit;
  */
 public final class StubHttpServer implements AutoCloseable {
     public interface Responder {
+        /**
+         * @return the response to send, or {@code null} to close the connection without answering
+         */
         Response respond(RecordedRequest request) throws Exception;
     }
 
     public static final class RecordedRequest {
         public final String method;
         public final String path;
+        public final String protocol;
         public final Map<String, String> headers;
         public final byte[] body;
 
-        RecordedRequest(String method, String path, Map<String, String> headers, byte[] body) {
+        RecordedRequest(String method, String path, String protocol, Map<String, String> headers, byte[] body) {
             this.method = method;
             this.path = path;
+            this.protocol = protocol;
             this.headers = headers;
             this.body = body;
         }
@@ -85,12 +92,19 @@ public final class StubHttpServer implements AutoCloseable {
             response.headers.put("Content-Type", "text/plain; charset=UTF-8");
             return response;
         }
+
+        public static Response redirect(int status, String location) {
+            Response response = new Response(status, new byte[0]);
+            response.headers.put("Location", location);
+            return response;
+        }
     }
 
     private final EventLoopGroup myBossGroup;
     private final EventLoopGroup myWorkerGroup;
     private final Channel myChannel;
     private volatile RecordedRequest myLastRequest;
+    private final List<RecordedRequest> myRequests = new CopyOnWriteArrayList<>();
 
     public StubHttpServer(Responder responder) throws InterruptedException {
         myBossGroup = new NioEventLoopGroup(1);
@@ -123,6 +137,13 @@ public final class StubHttpServer implements AutoCloseable {
         return myLastRequest;
     }
 
+    /**
+     * Every request the server received, in order - a request whose connection was closed without an answer included.
+     */
+    public List<RecordedRequest> requests() {
+        return myRequests;
+    }
+
     @Override
     public void close() {
         myChannel.close().awaitUninterruptibly();
@@ -147,10 +168,16 @@ public final class StubHttpServer implements AutoCloseable {
                 headers.put(entry.getKey().toLowerCase(Locale.ROOT), entry.getValue());
             }
 
-            RecordedRequest recorded = new RecordedRequest(request.method().name(), request.uri(), headers, body);
+            RecordedRequest recorded =
+                new RecordedRequest(request.method().name(), request.uri(), request.protocolVersion().text(), headers, body);
             myLastRequest = recorded;
+            myRequests.add(recorded);
 
             Response response = myResponder.respond(recorded);
+            if (response == null) {
+                ctx.close();
+                return;
+            }
 
             ByteBuf content = Unpooled.wrappedBuffer(response.body);
             FullHttpResponse httpResponse =
