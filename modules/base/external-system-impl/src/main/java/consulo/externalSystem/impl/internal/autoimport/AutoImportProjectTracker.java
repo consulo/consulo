@@ -22,7 +22,7 @@ import consulo.externalSystem.autoimport.ExternalSystemProjectTrackerSettings;
 import consulo.externalSystem.autoimport.ExternalSystemProjectTrackerSettings.AutoReloadType;
 import consulo.externalSystem.autoimport.ExternalSystemRefreshStatus;
 import consulo.externalSystem.autoimport.ExternalSystemSettingsFilesReloadContext;
-import consulo.externalSystem.impl.internal.autoimport.AutoImportProjectStatus.Stamp;
+import consulo.externalSystem.autoimport.Stamp;
 import consulo.externalSystem.impl.internal.autoimport.update.PriorityEatUpdate;
 import consulo.externalSystem.impl.internal.observable.AtomicOperationTrace;
 import consulo.language.editor.completion.lookup.LookupManager;

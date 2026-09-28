@@ -22,6 +22,8 @@ module consulo.external.system.api {
 
     exports consulo.externalSystem;
     exports consulo.externalSystem.autoimport;
+    exports consulo.externalSystem.autoimport.changes;
+    exports consulo.externalSystem.autoimport.settings;
     exports consulo.externalSystem.importing;
     exports consulo.externalSystem.execution;
     exports consulo.externalSystem.model;

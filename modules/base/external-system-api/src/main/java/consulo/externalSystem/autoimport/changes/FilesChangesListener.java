@@ -1,8 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.externalSystem.impl.internal.autoimport.changes;
+package consulo.externalSystem.autoimport.changes;
 
 import consulo.externalSystem.autoimport.ExternalSystemModificationType;
-import consulo.externalSystem.impl.internal.autoimport.AutoImportProjectStatus.Stamp;
+import consulo.externalSystem.autoimport.Stamp;
 
 /**
  * Describes interface for listening modifications in files or documents.

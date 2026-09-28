@@ -17,6 +17,8 @@ package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
@@ -28,6 +30,8 @@ import org.jdom.Element;
  * @since 21-May-22
  */
 public class CustomOrderEntryTypeWrapper<M extends CustomOrderEntryModel> implements OrderEntryType<CustomOrderEntryImpl<M>> {
+  private static final String EXPORTED_ATTR = "exported";
+
   private CustomOrderEntryTypeProvider<M> myCustomOrderEntryTypeProvider;
 
   public CustomOrderEntryTypeWrapper(CustomOrderEntryTypeProvider<M> customOrderEntryTypeProvider) {
@@ -49,7 +53,15 @@ public class CustomOrderEntryTypeWrapper<M extends CustomOrderEntryModel> implem
   public CustomOrderEntryImpl<M> loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     M data = myCustomOrderEntryTypeProvider.loadOrderEntry(element, moduleRootLayer);
     data.bind(moduleRootLayer);
-    return new CustomOrderEntryImpl<>(this, (ModuleRootLayerImpl) moduleRootLayer, data, false);
+    if (!myCustomOrderEntryTypeProvider.isExportable()) {
+      return new CustomOrderEntryImpl<>(this, (ModuleRootLayerImpl) moduleRootLayer, data, false);
+    }
+    ExportableCustomOrderEntryImpl<M> entry =
+      new ExportableCustomOrderEntryImpl<>(this, (ModuleRootLayerImpl) moduleRootLayer, data, false);
+    // read the same way a module or library entry reads them
+    entry.setExportedRaw(element.getAttributeValue(EXPORTED_ATTR) != null);
+    entry.setScopeRaw(DependencyScope.readExternal(element));
+    return entry;
   }
 
   @Override
@@ -57,5 +69,12 @@ public class CustomOrderEntryTypeWrapper<M extends CustomOrderEntryModel> implem
     M data = orderEntry.getModel();
 
     myCustomOrderEntryTypeProvider.storeOrderEntry(element, data);
+
+    if (orderEntry instanceof ExportableOrderEntry exportable) {
+      if (exportable.isExported()) {
+        element.setAttribute(EXPORTED_ATTR, "");
+      }
+      exportable.getScope().writeExternal(element);
+    }
   }
 }

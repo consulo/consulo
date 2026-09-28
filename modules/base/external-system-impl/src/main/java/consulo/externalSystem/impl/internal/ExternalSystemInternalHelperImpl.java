@@ -16,6 +16,11 @@
 package consulo.externalSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
+import consulo.externalSystem.autoimport.changes.FilesChangesListener;
+import consulo.externalSystem.autoimport.settings.AsyncSupplier;
+import consulo.externalSystem.impl.internal.autoimport.AutoImportProjectTracker;
+import consulo.externalSystem.impl.internal.autoimport.changes.AsyncFileChangesListener;
 import consulo.externalSystem.impl.internal.service.ExternalSystemExecuteTaskTask;
 import consulo.externalSystem.impl.internal.service.ExternalSystemResolveProjectTaskImpl;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
@@ -30,6 +35,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -52,5 +58,45 @@ public class ExternalSystemInternalHelperImpl implements ExternalSystemInternalH
     @Override
     public void ensureToolWindowInitialized(Project project, ProjectSystemId externalSystemId) {
         ExternalSystemUtil.ensureToolWindowInitialized(project, externalSystemId);
+    }
+
+    @Override
+    public void subscribeOnVirtualFilesChanges(
+        boolean isIgnoreInternalChanges,
+        AsyncSupplier<Set<String>> filesProvider,
+        FilesChangesListener listener,
+        Disposable parentDisposable
+    ) {
+        AsyncFileChangesListener.subscribeOnVirtualFilesChanges(isIgnoreInternalChanges, filesProvider, listener, parentDisposable);
+    }
+
+    @Override
+    public void subscribeOnDocumentsChanges(
+        boolean isIgnoreExternalChanges,
+        AsyncSupplier<Set<String>> filesProvider,
+        FilesChangesListener listener,
+        Disposable parentDisposable
+    ) {
+        AsyncFileChangesListener.subscribeOnDocumentsChanges(isIgnoreExternalChanges, filesProvider, listener, parentDisposable);
+    }
+
+    @Override
+    public boolean isAsyncChangesProcessing() {
+        return AutoImportProjectTracker.isAsyncChangesProcessing();
+    }
+
+    @Override
+    public void enableReloadInTests(Disposable parentDisposable) {
+        AutoImportProjectTracker.enableReloadInTests(parentDisposable);
+    }
+
+    @Override
+    public void enableAutoReloadInTests(Disposable parentDisposable) {
+        AutoImportProjectTracker.enableAutoReloadInTests(parentDisposable);
+    }
+
+    @Override
+    public void enableAsyncAutoReloadInTests(Disposable parentDisposable) {
+        AutoImportProjectTracker.enableAsyncAutoReloadInTests(parentDisposable);
     }
 }

@@ -3,9 +3,12 @@ package consulo.externalSystem.autoimport;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalSystem.internal.ExternalSystemInternalHelper;
 import consulo.project.Project;
+import org.jetbrains.annotations.TestOnly;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ExternalSystemProjectTracker {
@@ -69,4 +72,23 @@ public interface ExternalSystemProjectTracker {
      * @see #scheduleProjectRefresh
      */
     void scheduleChangeProcessing();
+
+    static boolean isAsyncChangesProcessing() {
+        return Application.get().getInstance(ExternalSystemInternalHelper.class).isAsyncChangesProcessing();
+    }
+
+    @TestOnly
+    static void enableReloadInTests(Disposable parentDisposable) {
+        Application.get().getInstance(ExternalSystemInternalHelper.class).enableReloadInTests(parentDisposable);
+    }
+
+    @TestOnly
+    static void enableAutoReloadInTests(Disposable parentDisposable) {
+        Application.get().getInstance(ExternalSystemInternalHelper.class).enableAutoReloadInTests(parentDisposable);
+    }
+
+    @TestOnly
+    static void enableAsyncAutoReloadInTests(Disposable parentDisposable) {
+        Application.get().getInstance(ExternalSystemInternalHelper.class).enableAsyncAutoReloadInTests(parentDisposable);
+    }
 }

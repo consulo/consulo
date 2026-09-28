@@ -60,6 +60,7 @@ module consulo.application.api {
 
     exports consulo.application.internal to
         consulo.ui.ex.impl,
+        consulo.external.system.api,
         consulo.ide.impl,
         consulo.desktop.ide.impl,
         consulo.desktop.awt.editor.impl,

@@ -18,6 +18,7 @@ package consulo.module.content.layer.orderEntry;
 import consulo.content.RootProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.Synthetic;
+import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
@@ -40,10 +41,17 @@ public interface CustomOrderEntryModel extends Synthetic {
 
   boolean isValid();
 
-  
   RootProvider getRootProvider();
 
-  
+  /// Directories below the [#getRootProvider()] roots of this model that are taken out of the index,
+  /// together with everything below them.
+  ///
+  /// Honoured per model, the way a library's exclusions are honoured per library: a root stays in the
+  /// index while some other order entry that does not exclude it still owns it.
+  default VirtualFile[] getExcludedRoots() {
+    return VirtualFile.EMPTY_ARRAY;
+  }
+
   CustomOrderEntryModel clone();
 
   default @Nullable Object getEqualObject() {

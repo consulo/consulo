@@ -850,7 +850,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             throw new IllegalArgumentException("Type is not registered: " + type.getId());
         }
         model.bind(this);
-        CustomOrderEntryImpl<M> entry = new CustomOrderEntryImpl<>(entryType, this, model, true);
+        CustomOrderEntryImpl<M> entry = type.isExportable()
+            ? new ExportableCustomOrderEntryImpl<>(entryType, this, model, true)
+            : new CustomOrderEntryImpl<>(entryType, this, model, true);
         myOrderEntries.add(entry);
         return entry;
     }

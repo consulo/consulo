@@ -30,12 +30,19 @@ import org.jdom.Element;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomOrderEntryTypeProvider<M extends CustomOrderEntryModel> {
   ExtensionList<CustomOrderEntryTypeProvider, Application> EP = ExtensionList.of(CustomOrderEntryTypeProvider.class);
-
   
   String getId();
 
-  
   M loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) throws InvalidDataException;
 
   void storeOrderEntry(Element element, M data);
+
+  /// Whether entries of this type can be exported, so that a module depending on the owner of an
+  /// entry sees its roots.
+  ///
+  /// Opt-in: a type that leaves this `false` gets entries with no export or scope, and its module
+  /// files keep the shape they had before the exportable variant existed.
+  default boolean isExportable() {
+    return false;
+  }
 }

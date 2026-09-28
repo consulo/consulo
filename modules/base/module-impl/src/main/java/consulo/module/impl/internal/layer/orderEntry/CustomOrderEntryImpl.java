@@ -27,8 +27,9 @@ import java.util.Objects;
  * @author VISTALL
  * @since 21-May-22
  */
-public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends LibraryOrderEntryBaseImpl implements CustomOrderEntry<M>, ClonableOrderEntry {
-  private final M myModel;
+public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends LibraryOrderEntryBaseImpl
+  implements CustomOrderEntry<M>, ClonableOrderEntry {
+  protected final M myModel;
 
   public CustomOrderEntryImpl(OrderEntryType<?> provider, ModuleRootLayerImpl rootLayer, M data, boolean init) {
     super(provider, rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
@@ -107,6 +108,6 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     M cloneModel = (M)myModel.clone();
     cloneModel.bind(layer);
 
-    return new CustomOrderEntryImpl<M>(getType(), layer, cloneModel, true);
+    return new CustomOrderEntryImpl<>(getType(), layer, cloneModel, true);
   }
 }

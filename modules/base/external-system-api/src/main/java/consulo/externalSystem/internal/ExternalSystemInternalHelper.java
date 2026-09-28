@@ -17,6 +17,9 @@ package consulo.externalSystem.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.disposer.Disposable;
+import consulo.externalSystem.autoimport.changes.FilesChangesListener;
+import consulo.externalSystem.autoimport.settings.AsyncSupplier;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.task.ExternalSystemTask;
@@ -25,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -41,4 +45,26 @@ public interface ExternalSystemInternalHelper {
 
     @RequiredUIAccess
     void ensureToolWindowInitialized(Project project, ProjectSystemId externalSystemId);
+
+    void subscribeOnVirtualFilesChanges(
+        boolean isIgnoreInternalChanges,
+        AsyncSupplier<Set<String>> filesProvider,
+        FilesChangesListener listener,
+        Disposable parentDisposable
+    );
+
+    void subscribeOnDocumentsChanges(
+        boolean isIgnoreExternalChanges,
+        AsyncSupplier<Set<String>> filesProvider,
+        FilesChangesListener listener,
+        Disposable parentDisposable
+    );
+
+    boolean isAsyncChangesProcessing();
+
+    void enableReloadInTests(Disposable parentDisposable);
+
+    void enableAutoReloadInTests(Disposable parentDisposable);
+
+    void enableAsyncAutoReloadInTests(Disposable parentDisposable);
 }

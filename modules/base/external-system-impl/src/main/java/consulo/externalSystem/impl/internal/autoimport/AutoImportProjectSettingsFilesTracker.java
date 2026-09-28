@@ -15,12 +15,12 @@ import consulo.externalSystem.autoimport.ExternalSystemSettingsFilesModification
 import consulo.externalSystem.autoimport.ExternalSystemSettingsFilesModificationContext.ReloadStatus;
 import consulo.externalSystem.autoimport.ExternalSystemSettingsFilesReloadContext;
 import consulo.externalSystem.impl.internal.autoimport.AutoImportProjectStatus.ProjectEvent;
-import consulo.externalSystem.impl.internal.autoimport.AutoImportProjectStatus.Stamp;
+import consulo.externalSystem.autoimport.Stamp;
 import consulo.externalSystem.impl.internal.autoimport.changes.AsyncFileChangesListener;
-import consulo.externalSystem.impl.internal.autoimport.changes.FilesChangesListener;
+import consulo.externalSystem.autoimport.changes.FilesChangesListener;
 import consulo.externalSystem.impl.internal.autoimport.changes.NewFilesListener;
-import consulo.externalSystem.impl.internal.autoimport.settings.AsyncSupplier;
-import consulo.externalSystem.impl.internal.autoimport.settings.BackgroundAsyncSupplier;
+import consulo.externalSystem.autoimport.settings.AsyncSupplier;
+import consulo.externalSystem.autoimport.settings.BackgroundAsyncSupplier;
 import consulo.externalSystem.impl.internal.observable.AtomicOperationTrace;
 import consulo.externalSystem.impl.internal.util.CrcUtils;
 import consulo.externalSystem.impl.internal.util.cache.AsyncLocalCache;

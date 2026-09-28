@@ -161,6 +161,20 @@ public class RootIndexImpl implements RootIndex {
                             }
                         }
                     }
+                    else if (orderEntry instanceof CustomOrderEntry<?> customOrderEntry) {
+                        // the model owns its roots the way a library owns its own, so that an exclusion it declares is
+                        // weighed against it and not against every entry that happens to share the root
+                        CustomOrderEntryModel model = customOrderEntry.getModel();
+                        for (VirtualFile root : model.getExcludedRoots()) {
+                            info.excludedFromLibraries.putValue(root, model);
+                        }
+                        for (VirtualFile root : sourceRoots) {
+                            info.sourceOfLibraries.putValue(root, model);
+                        }
+                        for (VirtualFile root : classRoots) {
+                            info.classOfLibraries.putValue(root, model);
+                        }
+                    }
                 }
             }
         }
@@ -471,11 +485,11 @@ public class RootIndexImpl implements RootIndex {
         
         final Map<VirtualFile, ContentFolder> contentFolders = new HashMap<>();
         
-        final MultiMap<VirtualFile, Library> excludedFromLibraries = MultiMap.createSmart();
+        final MultiMap<VirtualFile, Object> excludedFromLibraries = MultiMap.createSmart();
         
-        final MultiMap<VirtualFile, Library> classOfLibraries = MultiMap.createSmart();
+        final MultiMap<VirtualFile, Object> classOfLibraries = MultiMap.createSmart();
         
-        final MultiMap<VirtualFile, Library> sourceOfLibraries = MultiMap.createSmart();
+        final MultiMap<VirtualFile, Object> sourceOfLibraries = MultiMap.createSmart();
         
         final Set<VirtualFile> excludedFromProject = new HashSet<>();
 
@@ -547,7 +561,7 @@ public class RootIndexImpl implements RootIndex {
         }
 
         private @Nullable VirtualFile findLibraryRootInfo(List<VirtualFile> hierarchy, boolean source) {
-            Set<Library> librariesToIgnore = new HashSet<>();
+            Set<Object> librariesToIgnore = new HashSet<>();
             for (VirtualFile root : hierarchy) {
                 librariesToIgnore.addAll(excludedFromLibraries.get(root));
                 if (source && libraryOrSdkSources.contains(root) && (!sourceOfLibraries.containsKey(root)
