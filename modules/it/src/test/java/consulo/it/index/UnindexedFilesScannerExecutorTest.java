@@ -100,14 +100,20 @@ public class UnindexedFilesScannerExecutorTest {
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
 
-        AtomicInteger startedOrStopped = new AtomicInteger();
-        Runnable unsubscribe = executor.startedOrStoppedEvent().addListener(value -> startedOrStopped.incrementAndGet());
+        Disposable disposable = Disposable.newDisposable();
         try {
+            TestScans scans = allowOnlyTestScans(project, disposable);
+            awaitIdle(project);
+
+            AtomicInteger startedOrStopped = new AtomicInteger();
+            Runnable unsubscribe = executor.startedOrStoppedEvent().addListener(value -> startedOrStopped.incrementAndGet());
+            Disposer.register(disposable, unsubscribe::run);
+
             BlockingIterator blocker = new BlockingIterator();
-            Future<?> running = partialScan(project, "running", blocker).queue();
+            Future<?> running = scans.queue(partialScan(project, "running", blocker));
             blocker.awaitStarted();
 
-            Future<?> full = fullScan(project, "full").queue();
+            Future<?> full = scans.queue(fullScan(project, "full"));
 
             assertThatThrownBy(() -> running.get(TIMEOUT_SECONDS, TimeUnit.SECONDS))
                 .as("a full scan must cancel the running scan")
@@ -118,11 +124,12 @@ public class UnindexedFilesScannerExecutorTest {
 
             waitFor(
                 "exactly two task executions: the cancelled scan and the full scan, each reporting start and stop",
-                () -> startedOrStopped.get() == 4
+                () -> startedOrStopped.get() == 4,
+                () -> "start and stop events: " + startedOrStopped.get()
             );
         }
         finally {
-            unsubscribe.run();
+            Disposer.dispose(disposable);
         }
     }
 
@@ -131,17 +138,23 @@ public class UnindexedFilesScannerExecutorTest {
         awaitIdle(project);
         UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
 
-        AtomicInteger startedOrStopped = new AtomicInteger();
-        Runnable unsubscribe = executor.startedOrStoppedEvent().addListener(value -> startedOrStopped.incrementAndGet());
+        Disposable disposable = Disposable.newDisposable();
         try {
+            TestScans scans = allowOnlyTestScans(project, disposable);
+            awaitIdle(project);
+
+            AtomicInteger startedOrStopped = new AtomicInteger();
+            Runnable unsubscribe = executor.startedOrStoppedEvent().addListener(value -> startedOrStopped.incrementAndGet());
+            Disposer.register(disposable, unsubscribe::run);
+
             BlockingIterator blocker = new BlockingIterator();
-            Future<?> running = partialScan(project, "running", blocker).queue();
+            Future<?> running = scans.queue(partialScan(project, "running", blocker));
             blocker.awaitStarted();
 
             RecordingIterator first = new RecordingIterator();
             RecordingIterator second = new RecordingIterator();
-            Future<?> firstFuture = partialScan(project, "first", first).queue();
-            Future<?> secondFuture = partialScan(project, "second", second).queue();
+            Future<?> firstFuture = scans.queue(partialScan(project, "first", first));
+            Future<?> secondFuture = scans.queue(partialScan(project, "second", second));
 
             assertThat(secondFuture).as("a partial scan queued behind another one must merge into it").isSameAs(firstFuture);
             assertThat(executor.hasQueuedTasks()).isTrue();
@@ -155,11 +168,12 @@ public class UnindexedFilesScannerExecutorTest {
             assertThat(second.getIterations()).isEqualTo(1);
             waitFor(
                 "exactly two task executions: the blocked scan and the merged scan, each reporting start and stop",
-                () -> startedOrStopped.get() == 4
+                () -> startedOrStopped.get() == 4,
+                () -> "start and stop events: " + startedOrStopped.get()
             );
         }
         finally {
-            unsubscribe.run();
+            Disposer.dispose(disposable);
         }
     }
 
