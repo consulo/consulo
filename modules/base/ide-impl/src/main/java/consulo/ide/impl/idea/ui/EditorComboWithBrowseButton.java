@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * @author ven
  */
+@Deprecated(forRemoval = true)
 public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<EditorComboBox> implements TextAccessor {
     public EditorComboWithBrowseButton(
         ActionListener browseActionListener,

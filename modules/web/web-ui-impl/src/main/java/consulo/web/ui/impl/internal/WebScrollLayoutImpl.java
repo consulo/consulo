@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -50,6 +51,12 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
         vaadin.getStyle()
             .set("overflow-x", toCssOverflow(options.getHorizontalScrollPolicy()))
             .set("overflow-y", toCssOverflow(options.getVerticalScrollPolicy()));
+
+        if (content instanceof Grid<?>) {
+            vaadin.getStyle()
+                .set("display", "flex")
+                .set("flex-direction", "column");
+        }
 
         vaadin.add((com.vaadin.flow.component.Component) content);
     }

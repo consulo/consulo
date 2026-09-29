@@ -29,7 +29,6 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.configuration.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.impl.internal.configuration.UnknownConfigurationType;
-import consulo.execution.impl.internal.ui.EditConfigurationsDialog;
 import consulo.execution.internal.PreferredProducerFind;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ProgramRunner;
@@ -938,25 +937,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
                 @Override
                 @RequiredUIAccess
                 public void perform(final Project project, final Executor executor, DataContext context) {
-                    if (new EditConfigurationsDialog(project) {
-                        @Override
-                        protected void init() {
-                            setOKButtonText(executor.getStartActionText());
-                            setOKButtonIcon(TargetAWT.to(executor.getIcon()));
-                            myExecutor = executor;
-                            super.init();
-                        }
-                    }.showAndGet()) {
-                        project.getApplication().invokeLater(
-                            () -> {
-                                RunnerAndConfigurationSettings configuration = RunManager.getInstance(project).getSelectedConfiguration();
-                                if (configuration != null) {
-                                    ExecutionUtil.runConfiguration(configuration, executor);
-                                }
-                            },
-                            project.getDisposed()
-                        );
-                    }
+                    RunConfigurationEditor.getInstance(project).editAll();
                 }
 
                 @Override

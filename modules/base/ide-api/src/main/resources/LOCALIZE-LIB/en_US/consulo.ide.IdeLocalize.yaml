@@ -530,6 +530,8 @@ checkbox.confirm.application.exit:
     text: Confirm application exit
 checkbox.copy.javadoc:
     text: Copy &JavaDoc
+checkbox.customfiletype.comment.only.at.line.start:
+    text: '&Only at line start'
 checkbox.customfiletype.ignore.case:
     text: '&Ignore case'
 checkbox.customfiletype.support.paired.braces:

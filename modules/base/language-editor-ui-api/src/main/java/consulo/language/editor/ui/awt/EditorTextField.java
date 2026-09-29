@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
@@ -28,13 +29,10 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.ui.EditorSettingsProvider;
+import consulo.language.editor.ui.internal.EditorBoxSupport;
 import consulo.language.editor.ui.internal.BasicEditorTextFieldUI;
 import consulo.language.plain.PlainTextFileType;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -47,7 +45,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -65,6 +62,8 @@ import java.util.Objects;
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("Use EditorBox")
 public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, UiDataProvider, DocumentBasedComponent, AWTHasSuffixComponent {
     private static final String uiClassID = "EditorTextFieldUI";
 
@@ -314,19 +313,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     @RequiredUIAccess
     public void setText(@Nullable String text) {
-        CommandProcessor.getInstance().newCommand()
-            .project(getProject())
-            .document(getDocument())
-            .inWriteAction()
-            .run(() -> {
-                myDocument.replaceString(0, myDocument.getTextLength(), text == null ? "" : text);
-                if (myEditor != null) {
-                    CaretModel caretModel = myEditor.getCaretModel();
-                    if (caretModel.getOffset() >= myDocument.getTextLength()) {
-                        caretModel.moveToOffset(myDocument.getTextLength());
-                    }
-                }
-            });
+        EditorBoxSupport.replaceText(getProject(), getDocument(), myEditor, text);
     }
 
     /**
@@ -353,8 +340,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     private static void doSelectAll(Editor editor) {
-        editor.getCaretModel().removeSecondaryCarets();
-        editor.getCaretModel().getPrimaryCaret().setSelection(0, editor.getDocument().getTextLength(), false);
+        EditorBoxSupport.selectAll(editor);
     }
 
     public void removeSelection() {
@@ -458,11 +444,8 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
 
         // todo IMHO this should be removed completely
-        if (myProject != null && !myProject.isDisposed() && myIsViewer) {
-            PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
-            if (psiFile != null) {
-                DaemonCodeAnalyzer.getInstance(myProject).setHighlightingEnabled(psiFile, true);
-            }
+        if (myIsViewer) {
+            EditorBoxSupport.restoreHighlighting(myProject, editor);
         }
 
         remove(editor.getComponent());
@@ -537,44 +520,13 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             (EditorEx)(myIsViewer ? factory.createViewer(myDocument, myProject) : factory.createEditor(myDocument, myProject));
         editor.putUserData(MANAGED_BY_FIELD, Boolean.TRUE);
 
-        EditorSettings settings = editor.getSettings();
-        settings.setAdditionalLinesCount(0);
-        settings.setAdditionalColumnsCount(1);
-        settings.setRightMarginShown(false);
-        settings.setRightMargin(-1);
-        settings.setFoldingOutlineShown(false);
-        settings.setLineNumbersShown(false);
-        settings.setLineMarkerAreaShown(false);
-        settings.setIndentGuidesShown(false);
-        settings.setVirtualSpace(false);
-        settings.setWheelFontChangeEnabled(false);
-        settings.setAdditionalPageAtBottom(false);
-        editor.setHorizontalScrollbarVisible(false);
-        editor.setVerticalScrollbarVisible(false);
-        editor.setCaretEnabled(!myIsViewer);
-        settings.setLineCursorWidth(1);
+        EditorBoxSupport.configureEditor(editor, myProject, myFileType, myIsViewer, myOneLineMode);
 
         JScrollPane scrollPane = editor.getScrollPane();
         scrollPane.setBorder(JBUI.Borders.empty());
         scrollPane.setViewportBorder(JBUI.Borders.empty());
 
         editor.getContentComponent().setBorder(JBUI.Borders.empty());
-
-        if (myProject != null) {
-            PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
-            if (psiFile != null) {
-                DaemonCodeAnalyzer.getInstance(myProject).setHighlightingEnabled(psiFile, !myIsViewer);
-            }
-        }
-
-        if (myProject != null && myFileType != null) {
-            editor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(myProject, myFileType));
-        }
-
-        editor.getSettings().setCaretRowShown(false);
-
-        editor.setOneLineMode(myOneLineMode);
-        editor.getCaretModel().moveToOffset(myDocument.getTextLength());
 
         if (myIsViewer) {
             editor.getSelectionModel().removeSelection();

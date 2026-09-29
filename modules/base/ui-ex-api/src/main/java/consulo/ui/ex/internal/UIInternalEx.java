@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.ui.ListBox;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.FlatDataModel;
@@ -30,5 +31,9 @@ public interface UIInternalEx {
 
     default <E> ComboBoxWithCustomPopup<E> _Components_comboBoxWithCustomPopup(FlatDataModel<E> model) {
         throw new UnsupportedOperationException();
+    }
+
+    default <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
+        return ListBox.create(model);
     }
 }

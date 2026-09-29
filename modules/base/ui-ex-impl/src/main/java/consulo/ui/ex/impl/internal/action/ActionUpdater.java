@@ -15,6 +15,7 @@ import consulo.project.Project;
 import consulo.project.internal.DumbInternalUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.concurrent.coroutine.*;
@@ -171,8 +172,30 @@ public class ActionUpdater {
             }
 
             return getGroupChildrenAsync(group).thenCompose(children -> expandChildren(children, hideDisabled)
-                .thenApply(group::postProcessVisibleChildren));
+                .thenApply(group::postProcessVisibleChildren)
+                .thenCompose(this::updateInlineActions));
         });
+    }
+
+    private CompletableFuture<List<AnAction>> updateInlineActions(List<AnAction> actions) {
+        List<CompletableFuture<Presentation>> updates = new ArrayList<>();
+        for (AnAction action : actions) {
+            Presentation presentation = cachedPresentation(action);
+            List<AnAction> inlineActions = presentation == null ? null : presentation.getClientProperty(ActionUtil.INLINE_ACTIONS);
+            if (inlineActions == null) {
+                continue;
+            }
+
+            for (AnAction inlineAction : inlineActions) {
+                updates.add(updateAsync(inlineAction));
+            }
+        }
+
+        if (updates.isEmpty()) {
+            return CompletableFuture.completedFuture(actions);
+        }
+
+        return CompletableFuture.allOf(updates.toArray(CompletableFuture[]::new)).thenApply(__ -> actions);
     }
 
     private CompletableFuture<List<AnAction>> expandChildren(List<AnAction> children, boolean hideDisabled) {

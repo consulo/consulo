@@ -35,6 +35,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
+@Deprecated(forRemoval = true)
 public class PsiElementModuleRenderer extends DefaultListCellRenderer {
   private String myText;
 

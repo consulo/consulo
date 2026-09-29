@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.impl.internal.ui;
+package consulo.ui.ex.internal;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.localize.LocalizeValue;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.image.Image;
+
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 19/12/2021
+ * @since 2026-09-29
  */
-@ExtensionImpl
-public class RunConfigurationFileEditorEarlyAccessDescriptor extends EarlyAccessProgramDescriptor {
-  
-  @Override
-  public LocalizeValue getName() {
-    return LocalizeValue.localizeTODO("Run Configuration editor");
-  }
-
-  
-  @Override
-  public LocalizeValue getDescription() {
-    return LocalizeValue.localizeTODO("Replace run configuration dialog with run configuration editor");
-  }
+public record InlineButton(Image icon, LocalizeValue toolTip, boolean alwaysVisible, Consumer<InputDetails> action) {
 }

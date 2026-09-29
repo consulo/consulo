@@ -133,6 +133,7 @@ body
 
 .web-tool-window-content
 {
+  min-width: 0;
 }
 
 /* the desktop ide draws a one pixel divider, vaadin ships a fat draggable one by default.

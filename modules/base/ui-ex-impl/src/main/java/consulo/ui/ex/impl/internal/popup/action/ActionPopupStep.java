@@ -364,7 +364,12 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
             }
 
             if (Boolean.TRUE.equals(enabled)) {
-                ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
+                try {
+                    ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
+                }
+                catch (Throwable e) {
+                    LOG.error("Failed to perform the action chosen in a popup: " + action, e);
+                }
             }
         }, uiAccess);
     }
@@ -374,7 +379,11 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         AnActionEvent event = createAnActionEvent(item, inputEvent);
         event.setInjectedContext(action.isInInjectedContext());
 
-        ActionImplUtil.performActionDumbAware(action, event);
+        if (!event.getPresentation().isEnabled()) {
+            return;
+        }
+
+        ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, event.getDataContext());
     }
 
     public AnActionEvent createAnActionEvent(ActionPopupItem item, @Nullable InputEvent inputEvent) {
@@ -391,6 +400,11 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
 
     @RequiredUIAccess
     public void updateStepItems(JComponent component) {
+        updateStepItems().whenComplete((ignored, throwable) -> component.repaint());
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> updateStepItems() {
         DataContext dataContext = myContext.get();
         List<ActionPopupItem> values = getValues();
 
@@ -406,12 +420,10 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
 
         ActionGroup group = ActionGroup.newImmutableBuilder().addAll(ContainerUtil.map(values, ActionPopupItem::getAction)).build();
 
-        actionUpdater.expandActionGroupAsync(group, true).whenComplete((actions, throwable) -> {
+        return actionUpdater.expandActionGroupAsync(group, true).whenComplete((actions, throwable) -> {
             for (ActionPopupItem actionItem : values) {
                 actionItem.updateFromPresentation(myPresentationFactory, myActionPlace);
             }
-
-            component.repaint();
         });
     }
 

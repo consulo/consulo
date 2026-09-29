@@ -15,142 +15,176 @@
  */
 package consulo.execution.impl.internal.ui;
 
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.StorageAccessors;
 import consulo.configurable.BaseConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
-import consulo.execution.BeforeRunTask;
+import consulo.disposer.Disposer;
 import consulo.execution.ProgramRunnerUtil;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditorConfigurable;
-import consulo.execution.executor.Executor;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunConfigurationsSettings;
+import consulo.execution.event.RunManagerListener;
+import consulo.execution.event.RunManagerListenerEvent;
 import consulo.execution.impl.internal.RunConfigurationSelector;
-import consulo.execution.impl.internal.configuration.*;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.impl.internal.configuration.UnknownConfigurationType;
+import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
 import consulo.execution.internal.RunManagerConfig;
-import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.DragAndDropTransferHandler.DropPosition;
 import consulo.ui.Hyperlink;
+import consulo.ui.IntBox;
+import consulo.ui.Label;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Space;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextBox;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.Tree;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.TitlelessDecorator;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.dnd.RowsDnDSupport;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.*;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.Pair;
-import consulo.util.lang.Trinity;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-import static consulo.execution.impl.internal.ui.RunConfigurable.NodeKind.*;
-import static consulo.ui.ex.awt.dnd.RowsDnDSupport.RefinedDropSupport.Position.*;
+import static consulo.execution.impl.internal.ui.RunConfigurableNodeKind.*;
 
 public class RunConfigurable extends BaseConfigurable {
-    private static ConfigurationType HIDDEN_ITEMS_STUB = new ConfigurationType() {
+    static final Object ROOT = new Object() {
         @Override
-        public LocalizeValue getDisplayName() {
-            return LocalizeValue.empty();
-        }
-
-        @Override
-        public Image getIcon() {
-            return Image.empty(Image.DEFAULT_ICON_SIZE);
-        }
-
-        @Override
-        public String getId() {
-            return "";
-        }
-
-        @Override
-        public ConfigurationFactory[] getConfigurationFactories() {
-            return new ConfigurationFactory[0];
+        public String toString() {
+            return "Root";
         }
     };
 
-    public static final String DIVIDER_PROPORTION = "dividerProportion";
-    private static final Object DEFAULTS = new Object() {
+    static final Object DEFAULTS = new Object() {
         @Override
         public String toString() {
             return "Defaults";
         }
     };
 
-    private volatile boolean isDisposed = false;
+    record TemplateType(ConfigurationType type) {
+    }
+
+    static final class Folder {
+        private final ConfigurationType myType;
+        private String myName;
+
+        private Folder(ConfigurationType type, String name) {
+            myType = type;
+            myName = name;
+        }
+
+        ConfigurationType getType() {
+            return myType;
+        }
+
+        String getName() {
+            return myName;
+        }
+
+        @Override
+        public String toString() {
+            return myName;
+        }
+    }
+
+    private record DropTarget(int oldIndex, int newIndex, DropPosition position) {
+    }
+
+    private record ActionState(
+        boolean remove,
+        boolean copy,
+        boolean save,
+        boolean editDefaults,
+        boolean moveUp,
+        boolean moveDown,
+        boolean createFolder,
+        boolean createFolderMoves
+    ) {
+        private static final ActionState NONE = new ActionState(false, false, false, false, false, false, false, false);
+    }
 
     private final Project myProject;
-    private RunDialogBase myRunDialog;
-    private final TitlelessDecorator myTitlelessDecorator;
-    private final @Nullable RunConfiguration myPreselectedConfiguration;
-    final DefaultMutableTreeNode myRoot = new DefaultMutableTreeNode("Root");
-    final MyTreeModel myTreeModel = new MyTreeModel(myRoot);
-    final Tree myTree = new Tree(myTreeModel);
-    private final JPanel myRightPanel = new JPanel(new BorderLayout());
-    private final Splitter mySplitter = new OnePixelSplitter(false);
-    private JPanel myWholePanel;
-    private final StorageAccessors myProperties = StorageAccessors.createGlobal("RunConfigurable");
-    private Configurable mySelectedConfigurable = null;
-    private static final Logger LOG = Logger.getInstance(RunConfigurable.class);
-    private final JTextField myRecentsLimit = new JTextField("5", 2);
-    private final JCheckBox myConfirmation = new JCheckBox(ExecutionLocalize.rerunConfirmationCheckbox().get(), true);
-    private final List<Pair<UnnamedConfigurable, JComponent>> myAdditionalSettings = new ArrayList<>();
-    private Map<ConfigurationFactory, Configurable> myStoredComponents = new HashMap<>();
-    private boolean isFolderCreating;
-    private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
-    private RunManagerImpl myRunManager;
+    private final RunManagerImpl myRunManager;
+
+    private final Map<Object, List<Object>> myChildren = new IdentityHashMap<>();
+    private final Map<Object, Object> myParents = new IdentityHashMap<>();
+    private final Map<RunnerAndConfigurationSettings, SingleConfigurationConfigurable<RunConfiguration>> myConfigurables = new IdentityHashMap<>();
+    private final Map<ConfigurationFactory, Configurable> myTemplateConfigurables = new HashMap<>();
+    private final Map<Object, TreeNode<Object>> myTreeNodes = new IdentityHashMap<>();
+    private final Set<Object> myExpandedValues = ConcurrentHashMap.newKeySet();
+
+    private final List<UnnamedConfigurable> myAdditionalSettings = new ArrayList<>();
+
+    private @Nullable Tree<Object> myTree;
+    private @Nullable ActionToolbar myToolbar;
+    private @Nullable Disposable myUIDisposable;
+    private @Nullable DockLayout myRightPanel;
+    private @Nullable Component myDefaultsPanel;
+    private @Nullable CheckBox myConfirmationBox;
+    private @Nullable IntBox myRecentsLimitBox;
+
+    private volatile @Nullable Object mySelectedValue;
+    private volatile ActionState myActionState = ActionState.NONE;
+    private @Nullable Configurable mySelectedConfigurable;
+    private @Nullable Folder myCreatedFolder;
+
+    private boolean myApplying;
+    private boolean myDisposed;
 
     public RunConfigurable(Project project) {
-        this(project, null, TitlelessDecorator.NOTHING, null);
-    }
-
-    public RunConfigurable(Project project, @Nullable RunConfiguration preselectedConfiguration) {
-        this(project, null, TitlelessDecorator.NOTHING, preselectedConfiguration);
-    }
-
-    public RunConfigurable(
-        Project project,
-        @Nullable RunDialogBase runDialog,
-        TitlelessDecorator titlelessDecorator,
-        @Nullable RunConfiguration preselectedConfiguration
-    ) {
         myProject = project;
-        myRunDialog = runDialog;
-        myTitlelessDecorator = titlelessDecorator;
-        myPreselectedConfiguration = preselectedConfiguration;
-        myRunManager = (RunManagerImpl) RunManager.getInstance(myProject);
+        myRunManager = RunManagerImpl.getInstanceImpl(project);
     }
 
     @Override
@@ -158,687 +192,1457 @@ public class RunConfigurable extends BaseConfigurable {
         return ExecutionLocalize.runConfigurableDisplayName();
     }
 
-    private void initTree() {
-        myTree.setRootVisible(false);
-        myTree.setShowsRootHandles(true);
-        UIUtil.setLineStyleAngled(myTree);
-        TreeUtil.installActions(myTree);
-        new TreeSpeedSearch(myTree, o -> {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) o.getLastPathComponent();
-            Object userObject = node.getUserObject();
-            if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-                return runnerAndConfigurationSettings.getName();
-            }
-            else if (userObject instanceof SingleConfigurationConfigurable singleConfigurationConfigurable) {
-                return singleConfigurationConfigurable.getNameText();
-            }
-            else if (userObject instanceof ConfigurationType configurationType) {
-                return configurationType.getDisplayName().get();
-            }
-            else if (userObject instanceof String s) {
-                return s;
-            }
-            return o.toString();
-        });
+    @RequiredUIAccess
+    @Override
+    public Component createUIComponent(Disposable parentDisposable) {
+        myUIDisposable = parentDisposable;
 
-        myTree.setCellRenderer(new ColoredTreeCellRenderer() {
-            @Override
-            @RequiredUIAccess
-            public void customizeCellRenderer(
-                JTree tree,
-                Object value,
-                boolean selected,
-                boolean expanded,
-                boolean leaf,
-                int row,
-                boolean hasFocus
-            ) {
-                setBorder(JBCurrentTheme.listCellBorderFull());
+        Component treePanel = createTreePanel(parentDisposable);
 
-                if (value instanceof DefaultMutableTreeNode node) {
-                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
-                    Object userObject = node.getUserObject();
-                    Boolean shared = null;
-                    if (userObject instanceof ConfigurationType configurationType) {
-                        append(
-                            configurationType.getDisplayName().get(),
-                            parent.isRoot() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES
-                        );
-                        setIcon(configurationType.getIcon());
-                    }
-                    else if (userObject == DEFAULTS) {
-                        append("Templates", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-                        setIcon(PlatformIconGroup.generalSettings());
-                    }
-                    else if (userObject instanceof String s) {//Folders
-                        append(s, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                        setIcon(PlatformIconGroup.nodesFolder());
-                    }
-                    else if (userObject instanceof ConfigurationFactory configFactory) {
-                        append(configFactory.getDisplayName().get());
-                        setIcon(configFactory.getIcon());
-                    }
-                    else {
-                        RunManagerImpl runManager = myRunManager;
-                        RunnerAndConfigurationSettings configuration = null;
-                        String name = null;
-                        if (userObject instanceof SingleConfigurationConfigurable) {
-                            SingleConfigurationConfigurable<?> settings = (SingleConfigurationConfigurable) userObject;
-                            RunnerAndConfigurationSettings configurationSettings;
-                            configurationSettings = settings.getSettings();
-                            configuration = configurationSettings;
-                            name = settings.getNameText();
-                            shared = settings.isStoreProjectConfiguration();
-                            setIcon(ProgramRunnerUtil.getConfigurationIcon(configurationSettings, !settings.isValid()));
-                        }
-                        else if (userObject instanceof RunnerAndConfigurationSettingsImpl settings) {
-                            shared = runManager.isConfigurationShared(settings);
-                            setIcon(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(settings));
-                            configuration = settings;
-                            name = configuration.getName();
-                        }
-                        if (configuration != null) {
-                            append(
-                                name,
-                                configuration.isTemporary()
-                                    ? SimpleTextAttributes.GRAY_ATTRIBUTES
-                                    : SimpleTextAttributes.REGULAR_ATTRIBUTES
-                            );
-                        }
-                    }
-                    if (shared != null) {
-                        consulo.ui.image.Image icon = getIcon();
+        DockLayout rightPanel = DockLayout.create();
+        rightPanel.paddingBuilder().allSet(Space.LARGE).apply();
+        myRightPanel = rightPanel;
 
-                        if (shared) {
-                            setIcon(ImageEffects.layered(icon, PlatformIconGroup.nodesShared()));
-                        }
-                        else {
-                            setIcon(icon);
-                        }
-                    }
-                    setIconTextGap(2);
-                }
-            }
-        });
-        RunManagerEx manager = myRunManager;
-        List<ConfigurationType> factories = manager.getConfigurationFactories();
-        for (ConfigurationType type : factories) {
-            List<RunnerAndConfigurationSettings> configurations = manager.getConfigurationSettingsList(type);
-            if (!configurations.isEmpty()) {
-                DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(type);
-                myRoot.add(typeNode);
-                Map<String, DefaultMutableTreeNode> folderMapping = new HashMap<>();
-                int folderCounter = 0;
-                for (RunnerAndConfigurationSettings configuration : configurations) {
-                    String folder = configuration.getFolderName();
-                    if (folder != null) {
-                        DefaultMutableTreeNode node = folderMapping.get(folder);
-                        if (node == null) {
-                            node = new DefaultMutableTreeNode(folder);
-                            typeNode.insert(node, folderCounter);
-                            folderCounter++;
-                            folderMapping.put(folder, node);
-                        }
-                        node.add(new DefaultMutableTreeNode(configuration));
-                    }
-                    else {
-                        typeNode.add(new DefaultMutableTreeNode(configuration));
-                    }
-                }
-            }
-        }
+        TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        splitLayout.setFirstComponent(treePanel);
+        splitLayout.setSecondComponent(rightPanel);
+        splitLayout.setProportion(30);
+        splitLayout.putUserData(UiDataProvider.KEY, sink -> sink.set(RunConfigurationSelector.KEY, this::selectConfiguration));
 
-        // add defaults
-        DefaultMutableTreeNode defaults = new DefaultMutableTreeNode(DEFAULTS);
-        List<ConfigurationType> configurationTypes = RunManagerImpl.getInstanceImpl(myProject).getConfigurationFactories();
-        for (ConfigurationType type : configurationTypes) {
-            if (!(type instanceof UnknownConfigurationType)) {
-                ConfigurationFactory[] configurationFactories = type.getConfigurationFactories();
-                DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(type);
-                defaults.add(typeNode);
-                if (configurationFactories.length != 1) {
-                    for (ConfigurationFactory factory : configurationFactories) {
-                        typeNode.add(new DefaultMutableTreeNode(factory));
-                    }
-                }
-            }
-        }
-        if (defaults.getChildCount() > 0) {
-            myRoot.add(defaults);
-        }
+        Future<?> validationFuture = myProject.getUIAccess()
+            .getScheduler()
+            .scheduleWithFixedDelay(this::revalidateSelected, 500, 500, TimeUnit.MILLISECONDS);
+        Disposer.register(parentDisposable, () -> validationFuture.cancel(false));
 
-        myTree.addTreeSelectionListener(e -> {
-            TreePath selectionPath = myTree.getSelectionPath();
-            if (selectionPath != null) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-                Object userObject = getSafeUserObject(node);
-                if (userObject instanceof SingleConfigurationConfigurable) {
-                    updateRightPanel((SingleConfigurationConfigurable<RunConfiguration>) userObject);
-                }
-                else if (userObject instanceof String folderName) {
-                    showFolderField(getSelectedConfigurationType(), node, folderName);
-                }
-                else if (userObject instanceof ConfigurationType configurationType || userObject == DEFAULTS) {
-                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
-                    if (parent.isRoot()) {
-                        drawPressAddButtonMessage(userObject == DEFAULTS ? null : (ConfigurationType) userObject);
-                    }
-                    else {
-                        ConfigurationType type = (ConfigurationType) userObject;
-                        ConfigurationFactory[] factories1 = type.getConfigurationFactories();
-                        if (factories1.length == 1) {
-                            ConfigurationFactory factory = factories1[0];
-                            showTemplateConfigurable(factory);
-                        }
-                        else {
-                            drawPressAddButtonMessage((ConfigurationType) userObject);
-                        }
-                    }
-                }
-                else if (userObject instanceof ConfigurationFactory configFactory) {
-                    showTemplateConfigurable(configFactory);
-                }
-            }
-            updateDialog();
-        });
-        myTree.registerKeyboardAction(
-            e -> clickDefaultButton(),
-            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-            JComponent.WHEN_FOCUSED
-        );
-        SwingUtilities.invokeLater(() -> {
-            if (isDisposed) {
-                return;
-            }
+        myDefaultsPanel = createDefaultsPanel(parentDisposable);
 
-            drawPressAddButtonMessage(null);
+        showPressAddMessage(null);
 
-            selectFromManager(null);
-        });
-        sortTopLevelBranches();
-        ((DefaultTreeModel) myTree.getModel()).reload();
+        selectFromManager(null);
+
+        return splitLayout;
     }
 
     @RequiredUIAccess
-    public void selectFromManager(@Nullable RunConfiguration selected) {
-        myTree.requestFocusInWindow();
+    @Override
+    public @Nullable Component getPreferredFocusedUIComponent() {
+        return myTree;
+    }
 
-        if (myPreselectedConfiguration != null) {
-            selectConfiguration(myPreselectedConfiguration);
-        }
-        else if (selected != null) {
-            selectConfiguration(selected);
-        }
-        else {
-            RunnerAndConfigurationSettings settings = myRunManager.getSelectedConfiguration();
-            if (settings != null) {
-                selectConfiguration(settings.getConfiguration());
+    @RequiredUIAccess
+    private Component createTreePanel(Disposable parentDisposable) {
+        buildModel();
+
+        Tree<Object> tree = Tree.create(ROOT, new ConfigurationTreeModel());
+        tree.setSpeedSearchConverter(node -> getSpeedSearchText(node.getValue()));
+        tree.addSelectListener(event -> onNodeSelected(event.getValue()));
+        tree.addExpandListener(event -> onExpansionChanged(event.getValue().getValue(), true));
+        tree.addCollapseListener(event -> onExpansionChanged(event.getValue().getValue(), false));
+        tree.setTransferHandler(new ConfigurationDragAndDropHandler());
+        Disposer.register(parentDisposable, tree.destroyHook());
+        myTree = tree;
+
+        ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+        group.add(new AddAction());
+        group.add(new RemoveAction());
+        group.add(new CopyAction());
+        group.add(new SaveAction());
+        group.add(new EditDefaultsAction());
+        group.add(new MoveAction(ExecutionLocalize.moveUpActionName(), PlatformIconGroup.actionsMoveup(), -1));
+        group.add(new MoveAction(ExecutionLocalize.moveDownActionName(), PlatformIconGroup.actionsMovedown(), 1));
+        group.add(new CreateFolderAction());
+
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar("RunConfigurableToolbar", group.build(), ActionToolbar.Style.HORIZONTAL);
+        toolbar.setTargetUIComponent(tree);
+        myToolbar = toolbar;
+
+        myProject.getMessageBus().connect(parentDisposable).subscribe(RunManagerListener.class, new RunManagerListener() {
+            @Override
+            public void runConfigurationAdded(RunManagerListenerEvent event) {
+                onExternalChange(() -> addExternalConfiguration(event.getSettings()));
             }
-            else {
-                mySelectedConfigurable = null;
+
+            @Override
+            public void runConfigurationRemoved(RunManagerListenerEvent event) {
+                onExternalChange(() -> removeExternalConfiguration(event.getSettings()));
             }
+        });
+
+        DockLayout panel = DockLayout.create();
+        panel.top(toolbar.getUIComponent());
+        panel.center(ScrollableLayout.create(tree));
+        return panel;
+    }
+
+    @RequiredUIAccess
+    private void showConfigurable(Configurable configurable) {
+        Disposable uiDisposable = myUIDisposable;
+        Component component = uiDisposable == null ? null : configurable.createUIComponent(uiDisposable);
+        if (component != null) {
+            setRightComponent(component);
         }
     }
 
-    private boolean selectConfiguration(RunConfiguration configuration) {
-        DefaultMutableTreeNode child = TreeUtil.findNode(myRoot, node -> {
-            Object userObject = node.getUserObject();
-            if (userObject instanceof SettingsEditorConfigurable settingsEditorConfigurable) {
-                userObject = settingsEditorConfigurable.getSettings();
+    @RequiredUIAccess
+    private void showFolderField(Folder folder, boolean creating) {
+        TextBox textBox = TextBox.create(folder.getName());
+        textBox.addValueListener(event -> renameFolder(folder, StringUtil.notNullize(event.getValue())));
+
+        VerticalLayout panel = VerticalLayout.create();
+        panel.add(LabeledBuilder.filled(ExecutionLocalize.runConfigurationFolderNameLabel(), textBox));
+        panel.add(Label.create(ExecutionLocalize.runConfigurationRenameFolderDisclaimer()));
+        setRightComponent(panel);
+
+        if (creating) {
+            textBox.selectAll();
+            textBox.focus();
+        }
+    }
+
+    @RequiredUIAccess
+    private void showPressAddMessage(@Nullable ConfigurationType configurationType) {
+        Component defaultsPanel = myDefaultsPanel;
+        if (configurationType == null && defaultsPanel != null) {
+            setRightComponent(defaultsPanel);
+        }
+        else {
+            setRightComponent(createPressAddMessage(configurationType));
+        }
+    }
+
+    @RequiredUIAccess
+    private void setRightComponent(Component component) {
+        DockLayout rightPanel = myRightPanel;
+        if (rightPanel != null) {
+            rightPanel.center(component);
+        }
+    }
+
+    @RequiredUIAccess
+    private DockLayout createPressAddMessage(@Nullable ConfigurationType configurationType) {
+        Hyperlink addLink = Hyperlink.create(LocalizeValue.empty(), event -> showAddPopup(true, popup -> popup.showBy(event)));
+        addLink.setIcon(PlatformIconGroup.generalAdd());
+
+        LocalizeValue typeDescription = configurationType != null
+            ? configurationType.getConfigurationTypeDescription()
+            : ExecutionLocalize.runConfigurationDefaultTypeDescription();
+
+        HorizontalLayout message = HorizontalLayout.create(Space.SMALL);
+        message.add(Label.create(ExecutionLocalize.emptyRunConfigurationPanelTextLabel1()));
+        message.add(addLink);
+        message.add(Label.create(ExecutionLocalize.emptyRunConfigurationPanelTextLabel3(typeDescription)));
+
+        DockLayout panel = DockLayout.create();
+        panel.top(message);
+        return panel;
+    }
+
+    @RequiredUIAccess
+    private Component createDefaultsPanel(Disposable parentDisposable) {
+        VerticalLayout settings = VerticalLayout.create();
+
+        myProject.getApplication().getExtensionPoint(RunConfigurationsSettings.class).forEach(each -> {
+            UnnamedConfigurable configurable = each.createConfigurable();
+            Component component = configurable.createUIComponent(parentDisposable);
+            if (component != null) {
+                myAdditionalSettings.add(configurable);
+                settings.add(component);
             }
-            if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-                ConfigurationType configurationType = configuration.getType();
-                if (Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
-                    Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), configuration.getName())) {
-                    return true;
-                }
-            }
-            return false;
         });
 
-        if (child != null) {
-            TreeUtil.selectInTree(child, true, myTree);
+        RunManagerConfig config = myRunManager.getConfig();
+
+        CheckBox confirmationBox = CheckBox.create(ExecutionLocalize.rerunConfirmationCheckbox());
+        confirmationBox.setValue(config.isRestartRequiresConfirmation(), false);
+        settings.add(confirmationBox);
+        myConfirmationBox = confirmationBox;
+
+        IntBox recentsLimitBox = IntBox.create(config.getRecentsLimit());
+        recentsLimitBox.setRange(RunManagerConfig.MIN_RECENT_LIMIT, Integer.MAX_VALUE);
+        settings.add(LabeledBuilder.sided(ExecutionLocalize.runConfigurationTemporaryLimitLabel(), recentsLimitBox));
+        myRecentsLimitBox = recentsLimitBox;
+
+        DockLayout panel = createPressAddMessage(null);
+        panel.bottom(settings);
+        return panel;
+    }
+
+    @RequiredUIAccess
+    private void revalidateSelected() {
+        SingleConfigurationConfigurable<RunConfiguration> configurable = getSelectedConfiguration();
+        if (configurable != null && !myDisposed) {
+            configurable.revalidateIfEdited();
+        }
+    }
+
+    @RequiredUIAccess
+    private void resetGeneralSettings() {
+        RunManagerConfig config = myRunManager.getConfig();
+
+        CheckBox confirmationBox = myConfirmationBox;
+        if (confirmationBox != null) {
+            confirmationBox.setValue(config.isRestartRequiresConfirmation(), false);
+        }
+
+        IntBox recentsLimitBox = myRecentsLimitBox;
+        if (recentsLimitBox != null) {
+            recentsLimitBox.setValue(config.getRecentsLimit(), false);
+        }
+
+        for (UnnamedConfigurable each : myAdditionalSettings) {
+            each.reset();
+        }
+    }
+
+    @RequiredUIAccess
+    private boolean isGeneralSettingsModified() {
+        RunManagerConfig config = myRunManager.getConfig();
+
+        CheckBox confirmationBox = myConfirmationBox;
+        if (confirmationBox != null && Boolean.TRUE.equals(confirmationBox.getValue()) != config.isRestartRequiresConfirmation()) {
             return true;
+        }
+
+        IntBox recentsLimitBox = myRecentsLimitBox;
+        Integer recentsLimit = recentsLimitBox == null ? null : recentsLimitBox.getValue();
+        if (recentsLimit != null && recentsLimit != config.getRecentsLimit()) {
+            return true;
+        }
+
+        for (UnnamedConfigurable each : myAdditionalSettings) {
+            if (each.isModified()) {
+                return true;
+            }
         }
         return false;
     }
 
     @RequiredUIAccess
-    private void showTemplateConfigurable(ConfigurationFactory factory) {
-        Configurable configurable = myStoredComponents.get(factory);
-        if (configurable == null) {
-            configurable = new TemplateConfigurable(RunManagerImpl.getInstanceImpl(myProject).getConfigurationTemplate(factory));
-            myStoredComponents.put(factory, configurable);
-            configurable.reset();
+    private void applyGeneralSettings(RunManagerImpl manager) throws ConfigurationException {
+        IntBox recentsLimitBox = myRecentsLimitBox;
+        Integer recentsLimit = recentsLimitBox == null ? null : recentsLimitBox.getValue();
+        if (recentsLimit != null) {
+            applyRecentsLimit(manager, recentsLimit);
         }
-        updateRightPanel(configurable);
+
+        CheckBox confirmationBox = myConfirmationBox;
+        if (confirmationBox != null) {
+            manager.getConfig().setRestartRequiresConfirmation(Boolean.TRUE.equals(confirmationBox.getValue()));
+        }
+
+        for (UnnamedConfigurable each : myAdditionalSettings) {
+            each.apply();
+        }
     }
 
-    private void showFolderField(ConfigurationType type, final DefaultMutableTreeNode node, String folderName) {
-        myRightPanel.removeAll();
-        JPanel panel = new JPanel(new VerticalFlowLayout(0, 0));
-        final JTextField textField = new JTextField(folderName);
-        textField.getDocument().addDocumentListener(new DocumentAdapter() {
-            @Override
-            protected void textChanged(DocumentEvent e) {
-                node.setUserObject(textField.getText());
-                myTreeModel.reload(node);
+    private class ConfigurationTreeModel implements TreeModel<Object> {
+        @Override
+        public void buildChildren(Function<Object, TreeNode<Object>> nodeFactory, @Nullable Object parentValue) {
+            for (Object child : new ArrayList<>(getChildren(parentValue == null ? ROOT : parentValue))) {
+                TreeNode<Object> node = nodeFactory.apply(child);
+                node.setLeaf(getChildren(child).isEmpty());
+                node.setRenderer(RunConfigurable.this::renderValue);
+                myTreeNodes.put(child, node);
             }
-        });
-        panel.add(LabeledComponent.left(textField, "Folder name"));
-        panel.add(new JLabel(ExecutionLocalize.runConfigurationRenameFolderDisclaimer().get()));
-
-        myRightPanel.add(panel);
-        myRightPanel.revalidate();
-        myRightPanel.repaint();
-        if (isFolderCreating) {
-            textField.selectAll();
-            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(textField);
         }
     }
 
-    private Object getSafeUserObject(DefaultMutableTreeNode node) {
-        Object userObject = node.getUserObject();
-        if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-            SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable =
-                SingleConfigurationConfigurable.editSettings(runnerAndConfigurationSettings, null);
-            installUpdateListeners(configurationConfigurable);
-            node.setUserObject(configurationConfigurable);
-            return configurationConfigurable;
-        }
-        return userObject;
-    }
+    private void buildModel() {
+        myChildren.clear();
+        myParents.clear();
 
-    public void setRunDialog(RunDialogBase runDialog) {
-        myRunDialog = runDialog;
-    }
-
-    @RequiredUIAccess
-    private void updateRightPanel(Configurable configurable) {
-        myRightPanel.removeAll();
-        mySelectedConfigurable = configurable;
-
-        myRightPanel.add(configurable.createComponent(), BorderLayout.CENTER);
-        if (configurable instanceof SingleConfigurationConfigurable singleConfigurationConfigurable) {
-            myRightPanel.add(singleConfigurationConfigurable.getValidationComponent(), BorderLayout.SOUTH);
-        }
-
-        setupDialogBounds();
-    }
-
-    private void sortTopLevelBranches() {
-        List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myTree);
-        TreeUtil.sort(
-            myRoot,
-            (o1, o2) -> {
-                Object userObject1 = ((DefaultMutableTreeNode) o1).getUserObject();
-                Object userObject2 = ((DefaultMutableTreeNode) o2).getUserObject();
-                if (userObject1 instanceof ConfigurationType configType1 && userObject2 instanceof ConfigurationType configType2) {
-                    return configType1.getDisplayName().compareTo(configType2.getDisplayName());
-                }
-                else if (userObject1 == DEFAULTS && userObject2 instanceof ConfigurationType) {
-                    return 1;
-                }
-                else if (userObject2 == DEFAULTS && userObject1 instanceof ConfigurationType) {
-                    return -1;
-                }
-
-                return 0;
+        List<ConfigurationType> types = myRunManager.getConfigurationFactories();
+        for (ConfigurationType type : types) {
+            List<RunnerAndConfigurationSettings> configurations = myRunManager.getConfigurationSettingsList(type);
+            if (configurations.isEmpty()) {
+                continue;
             }
-        );
-        TreeUtil.restoreExpandedPaths(myTree, expandedPaths);
-    }
 
-    private void update() {
-        updateDialog();
-        TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath != null) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-            myTreeModel.reload(node);
+            add(ROOT, type);
+            Map<String, Folder> folders = new HashMap<>();
+            int folderCounter = 0;
+            for (RunnerAndConfigurationSettings configuration : configurations) {
+                String folderName = configuration.getFolderName();
+                if (folderName != null) {
+                    Folder folder = folders.get(folderName);
+                    if (folder == null) {
+                        folder = new Folder(type, folderName);
+                        insert(type, folder, folderCounter++);
+                        folders.put(folderName, folder);
+                    }
+                    add(folder, configuration);
+                }
+                else {
+                    add(type, configuration);
+                }
+            }
         }
-    }
 
-    private void installUpdateListeners(SingleConfigurationConfigurable<RunConfiguration> info) {
-        final boolean[] changed = new boolean[]{false};
-        info.getEditor().addSettingsEditorListener(editor -> {
-            update();
-            if (info.getConfiguration() instanceof LocatableConfiguration runtimeConfiguration
-                && runtimeConfiguration.isGeneratedName()
-                && !changed[0]) {
-                try {
-                    LocatableConfiguration snapshot = (LocatableConfiguration) editor.getSnapshot().getConfiguration();
-                    String generatedName = snapshot.suggestedName();
-                    if (generatedName != null && generatedName.length() > 0) {
-                        info.setNameText(generatedName);
-                        changed[0] = false;
+        for (ConfigurationType type : types) {
+            if (!(type instanceof UnknownConfigurationType)) {
+                TemplateType templateType = new TemplateType(type);
+                add(DEFAULTS, templateType);
+                ConfigurationFactory[] factories = type.getConfigurationFactories();
+                if (factories.length != 1) {
+                    for (ConfigurationFactory factory : factories) {
+                        add(templateType, factory);
                     }
                 }
-                catch (ConfigurationException ignore) {
-                }
             }
-            setupDialogBounds();
-        });
+        }
+        if (!getChildren(DEFAULTS).isEmpty()) {
+            add(ROOT, DEFAULTS);
+        }
 
-        info.addNameListener(new DocumentAdapter() {
-            @Override
-            protected void textChanged(DocumentEvent e) {
-                changed[0] = true;
-                update();
+        sortTypeNodes();
+    }
+
+    private void sortTypeNodes() {
+        for (Object parent : new Object[]{ROOT, DEFAULTS}) {
+            List<Object> children = myChildren.get(parent);
+            if (children != null) {
+                children.sort(RunConfigurable::compareTypeValues);
             }
-        });
+        }
+    }
 
-        info.addSharedListener(e -> {
-            changed[0] = true;
-            update();
-        });
+    private static int compareTypeValues(Object o1, Object o2) {
+        ConfigurationType type1 = asType(o1);
+        ConfigurationType type2 = asType(o2);
+        if (type1 != null && type2 != null) {
+            return type1.getDisplayName().compareTo(type2.getDisplayName());
+        }
+        else if (o1 == DEFAULTS && type2 != null) {
+            return 1;
+        }
+        else if (o2 == DEFAULTS && type1 != null) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private static @Nullable ConfigurationType asType(@Nullable Object value) {
+        if (value instanceof ConfigurationType type) {
+            return type;
+        }
+        if (value instanceof TemplateType templateType) {
+            return templateType.type();
+        }
+        return null;
+    }
+
+    private static void applyRecentsLimit(RunManagerImpl manager, int recentsLimit) {
+        int limit = Math.max(RunManagerConfig.MIN_RECENT_LIMIT, recentsLimit);
+        if (manager.getConfig().getRecentsLimit() != limit) {
+            manager.getConfig().setRecentsLimit(limit);
+            manager.checkRecentsLimit();
+        }
+    }
+
+    private @Nullable Object getParent(Object value) {
+        return myParents.get(value);
+    }
+
+    private List<Object> getChildren(Object parent) {
+        List<Object> children = myChildren.get(parent);
+        return children == null ? List.of() : children;
+    }
+
+    private int getIndex(Object parent, Object child) {
+        return indexOf(getChildren(parent), child);
+    }
+
+    private static int indexOf(List<Object> values, Object value) {
+        for (int i = 0; i < values.size(); i++) {
+            if (values.get(i) == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void insert(Object parent, Object child, int index) {
+        detach(child);
+        myChildren.computeIfAbsent(parent, it -> new ArrayList<>()).add(index, child);
+        myParents.put(child, parent);
+    }
+
+    private void add(Object parent, Object child) {
+        insert(parent, child, getParent(child) == parent ? getChildren(parent).size() - 1 : getChildren(parent).size());
+    }
+
+    private void detach(Object child) {
+        Object parent = myParents.remove(child);
+        List<Object> siblings = parent == null ? null : myChildren.get(parent);
+        if (siblings != null) {
+            int index = indexOf(siblings, child);
+            if (index >= 0) {
+                siblings.remove(index);
+            }
+        }
+    }
+
+    private void removeValue(Object value) {
+        detach(value);
+        myChildren.remove(value);
+        myExpandedValues.remove(value);
+    }
+
+    private @Nullable Object getSibling(Object value, int offset) {
+        Object parent = getParent(value);
+        if (parent == null) {
+            return null;
+        }
+        List<Object> siblings = getChildren(parent);
+        int index = indexOf(siblings, value) + offset;
+        return index >= 0 && index < siblings.size() ? siblings.get(index) : null;
+    }
+
+    private boolean isAncestor(Object ancestor, @Nullable Object value) {
+        for (Object current = value; current != null; current = getParent(current)) {
+            if (current == ancestor) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAttached(Object value) {
+        return isAncestor(ROOT, value);
+    }
+
+    private boolean isRootType(ConfigurationType type) {
+        return getParent(type) == ROOT;
+    }
+
+    private List<Object> collect(Object parent, RunConfigurableNodeKind... allowed) {
+        List<Object> result = new ArrayList<>();
+        collect(parent, result, allowed);
+        return result;
+    }
+
+    private void collect(Object parent, List<Object> result, RunConfigurableNodeKind... allowed) {
+        for (Object child : getChildren(parent)) {
+            if (ArrayUtil.find(allowed, getKind(child)) != -1) {
+                result.add(child);
+            }
+            collect(child, result, allowed);
+        }
+    }
+
+    private RunConfigurableNodeKind getKind(@Nullable Object value) {
+        if (value instanceof RunnerAndConfigurationSettings settings) {
+            return settings.isTemporary() ? TEMPORARY_CONFIGURATION : CONFIGURATION;
+        }
+        if (value instanceof Folder) {
+            return FOLDER;
+        }
+        if (value instanceof ConfigurationType || value instanceof TemplateType) {
+            return CONFIGURATION_TYPE;
+        }
+        return UNKNOWN;
+    }
+
+    private @Nullable ConfigurationType getType(@Nullable Object value) {
+        for (Object current = value; current != null; current = getParent(current)) {
+            ConfigurationType type = asType(current);
+            if (type != null) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    private String createUniqueName(Object parent, @Nullable String baseName, RunConfigurableNodeKind... kinds) {
+        String name = baseName == null ? ExecutionLocalize.runConfigurationUnnamedNamePrefix().get() : baseName;
+        List<String> currentNames = new ArrayList<>();
+        for (Object value : collect(parent, kinds)) {
+            if (value instanceof RunnerAndConfigurationSettings settings) {
+                SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.get(settings);
+                currentNames.add(configurable != null ? configurable.getNameText() : settings.getName());
+            }
+            else if (value instanceof Folder folder) {
+                currentNames.add(folder.getName());
+            }
+        }
+        return RunManager.suggestUniqueName(name, currentNames);
     }
 
     @RequiredUIAccess
-    private void drawPressAddButtonMessage(ConfigurationType configurationType) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panel.setBorder(new EmptyBorder(7, 10, 0, 0));
-        panel.add(new JLabel("Press the"));
-
-        Hyperlink hyperlink = Hyperlink.create(LocalizeValue.empty(), event -> {
-            myAddAction.showAddPopup(true, false,TargetAWT.to(event.getComponent()));
-        });
-        hyperlink.setIcon(PlatformIconGroup.generalAdd());
-        hyperlink.paddingBuilder().horizontalSet(Space.MEDIUM).apply();
-
-        panel.add(TargetAWT.to(hyperlink));
-
-        LocalizeValue configurationTypeDescription = configurationType != null
-            ? configurationType.getConfigurationTypeDescription()
-            : ExecutionLocalize.runConfigurationDefaultTypeDescription();
-        panel.add(new JLabel(ExecutionLocalize.emptyRunConfigurationPanelTextLabel3(configurationTypeDescription).get()));
-        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(panel, true);
-
-        myRightPanel.removeAll();
-        myRightPanel.add(scrollPane, BorderLayout.CENTER);
-        if (configurationType == null) {
-            JPanel settingsPanel = new JPanel(new GridBagLayout());
-            settingsPanel.setBorder(new EmptyBorder(7, 10, 0, 0));
-            GridBag grid = new GridBag().setDefaultAnchor(GridBagConstraints.NORTHWEST);
-
-            for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
-                settingsPanel.add(each.second, grid.nextLine().next());
-            }
-            settingsPanel.add(createSettingsPanel(), grid.nextLine().next());
-
-            JPanel wrapper = new JPanel(new BorderLayout());
-            wrapper.add(settingsPanel, BorderLayout.WEST);
-            wrapper.add(Box.createGlue(), BorderLayout.CENTER);
-
-            myRightPanel.add(wrapper, BorderLayout.SOUTH);
+    private SingleConfigurationConfigurable<RunConfiguration> getConfigurable(RunnerAndConfigurationSettings settings) {
+        SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.get(settings);
+        if (configurable == null) {
+            configurable = SingleConfigurationConfigurable.editSettings(settings, null);
+            myConfigurables.put(settings, configurable);
+            configurable.addPresentationListener(() -> refreshPresentation(settings));
         }
-        myRightPanel.revalidate();
-        myRightPanel.repaint();
+        return configurable;
     }
 
-    private JPanel createLeftPanel() {
-        initTree();
-
-        MyRemoveAction removeAction = new MyRemoveAction();
-        MyMoveAction moveUpAction = new MyMoveAction(ExecutionLocalize.moveUpActionName(), PlatformIconGroup.actionsMoveup(), -1);
-        MyMoveAction moveDownAction = new MyMoveAction(ExecutionLocalize.moveDownActionName(), PlatformIconGroup.actionsMovedown(), 1);
-
-        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-        builder.add(myAddAction);
-        builder.add(removeAction);
-        builder.add(new MyCopyAction());
-        builder.add(new MySaveAction());
-        builder.add(new MyEditDefaultsAction());
-        builder.add(moveUpAction);
-        builder.add(moveDownAction);
-        builder.add(new MyCreateFolderAction());
-
-        ActionToolbar toolbar =
-            ActionToolbarFactory.getInstance().createActionToolbar("RunConfigurableToolbar", builder.build(), ActionToolbar.Style.HORIZONTAL);
-
-        toolbar.setTargetComponent(myTree);
-
-        BorderLayoutPanel panel = new BorderLayoutPanel();
-        panel.addToTop(toolbar.getComponent());
-
-        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
-        panel.addToCenter(scrollPane);
-
-        myAddAction.registerCustomShortcutSet(CommonShortcuts.getInsert(), myTree);
-
-        return panel;
+    @RequiredUIAccess
+    private void insertInto(Object child, Object parent, int index) {
+        insert(parent, child, index);
+        if (child instanceof RunnerAndConfigurationSettings settings) {
+            getConfigurable(settings).setFolderName(parent instanceof Folder folder ? folder.getName() : null);
+        }
     }
 
-    private JPanel createSettingsPanel() {
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
-        GridBag g = new GridBag();
-
-        bottomPanel.add(myConfirmation, g.nextLine().coverLine());
-        bottomPanel.add(new JLabel("Temporary configurations limit:"), g.nextLine().next());
-        bottomPanel.add(myRecentsLimit, g.next().anchor(GridBagConstraints.WEST));
-
-        myRecentsLimit.getDocument().addDocumentListener(new DocumentAdapter() {
-            @Override
-            protected void textChanged(DocumentEvent e) {
-                setModified(true);
+    @RequiredUIAccess
+    private void renameFolder(Folder folder, String name) {
+        folder.myName = name;
+        for (Object child : new ArrayList<>(getChildren(folder))) {
+            if (child instanceof RunnerAndConfigurationSettings settings) {
+                getConfigurable(settings).setFolderName(name);
             }
-        });
-        myConfirmation.addChangeListener(e -> setModified(true));
-        return bottomPanel;
+        }
+        refreshPresentation(folder);
+    }
+
+    private void renderValue(Object value, TextItemPresentation presentation) {
+        if (value == DEFAULTS) {
+            presentation.withIcon(PlatformIconGroup.generalSettings());
+            presentation.append(ExecutionLocalize.runConfigurationTemplatesNodeName(), TextAttribute.REGULAR_BOLD);
+            return;
+        }
+
+        if (value instanceof ConfigurationType type) {
+            presentation.withIcon(type.getIcon());
+            presentation.append(type.getDisplayName(), TextAttribute.REGULAR_BOLD);
+            return;
+        }
+
+        if (value instanceof TemplateType templateType) {
+            presentation.withIcon(templateType.type().getIcon());
+            presentation.append(templateType.type().getDisplayName());
+            return;
+        }
+
+        if (value instanceof ConfigurationFactory factory) {
+            presentation.withIcon(factory.getIcon());
+            presentation.append(factory.getDisplayName());
+            return;
+        }
+
+        if (value instanceof Folder folder) {
+            presentation.withIcon(PlatformIconGroup.nodesFolder());
+            presentation.append(LocalizeValue.of(folder.getName()));
+            return;
+        }
+
+        if (value instanceof RunnerAndConfigurationSettings settings) {
+            SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.get(settings);
+            String name;
+            boolean shared;
+            Image icon;
+            if (configurable != null) {
+                name = configurable.getNameText();
+                shared = configurable.isStoreProjectConfiguration();
+                icon = ProgramRunnerUtil.getConfigurationIcon(settings, configurable.hasValidationError());
+            }
+            else {
+                name = settings.getName();
+                shared = myRunManager.isConfigurationShared(settings);
+                icon = myRunManager.getConfigurationIcon(settings);
+            }
+
+            presentation.withIcon(shared ? ImageEffects.layered(icon, PlatformIconGroup.nodesShared()) : icon);
+            presentation.append(LocalizeValue.of(name), settings.isTemporary() ? TextAttribute.GRAYED : TextAttribute.REGULAR);
+        }
+    }
+
+    private String getSpeedSearchText(@Nullable Object value) {
+        if (value instanceof RunnerAndConfigurationSettings settings) {
+            SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.get(settings);
+            return configurable != null ? configurable.getNameText() : settings.getName();
+        }
+        if (value == DEFAULTS) {
+            return ExecutionLocalize.runConfigurationTemplatesNodeName().get();
+        }
+        ConfigurationType type = asType(value);
+        if (type != null) {
+            return type.getDisplayName().get();
+        }
+        if (value instanceof ConfigurationFactory factory) {
+            return factory.getDisplayName().get();
+        }
+        return String.valueOf(value);
+    }
+
+    @RequiredUIAccess
+    private void onNodeSelected(@Nullable TreeNode<Object> treeNode) {
+        Object value = treeNode == null ? null : treeNode.getValue();
+        mySelectedValue = value;
+        mySelectedConfigurable = null;
+
+        if (value instanceof RunnerAndConfigurationSettings settings) {
+            SingleConfigurationConfigurable<RunConfiguration> configurable = getConfigurable(settings);
+            mySelectedConfigurable = configurable;
+            showConfigurable(configurable);
+        }
+        else if (value instanceof Folder folder) {
+            boolean creating = myCreatedFolder == folder;
+            myCreatedFolder = null;
+            showFolderField(folder, creating);
+        }
+        else if (value == DEFAULTS) {
+            showPressAddMessage(null);
+        }
+        else if (value instanceof ConfigurationType type) {
+            showPressAddMessage(type);
+        }
+        else if (value instanceof TemplateType templateType) {
+            ConfigurationFactory[] factories = templateType.type().getConfigurationFactories();
+            if (factories.length == 1) {
+                showTemplateConfigurable(factories[0]);
+            }
+            else {
+                showPressAddMessage(templateType.type());
+            }
+        }
+        else if (value instanceof ConfigurationFactory factory) {
+            showTemplateConfigurable(factory);
+        }
+
+        updateActions();
+    }
+
+    @RequiredUIAccess
+    private void showTemplateConfigurable(ConfigurationFactory factory) {
+        Configurable configurable = myTemplateConfigurables.get(factory);
+        if (configurable == null) {
+            configurable = new TemplateConfigurable(myRunManager.getConfigurationTemplate(factory));
+            myTemplateConfigurables.put(factory, configurable);
+            configurable.reset();
+        }
+        mySelectedConfigurable = configurable;
+        showConfigurable(configurable);
+    }
+
+    @RequiredUIAccess
+    private void onExpansionChanged(@Nullable Object value, boolean expanded) {
+        if (value == null) {
+            return;
+        }
+
+        if (expanded) {
+            myExpandedValues.add(value);
+        }
+        else {
+            myExpandedValues.remove(value);
+        }
+        updateActions();
+    }
+
+    @RequiredUIAccess
+    private void updateActions() {
+        if (myDisposed) {
+            return;
+        }
+
+        myActionState = computeActionState();
+
+        ActionToolbar toolbar = myToolbar;
+        if (toolbar != null) {
+            toolbar.updateActionsAsync();
+        }
+    }
+
+    @RequiredUIAccess
+    private ActionState computeActionState() {
+        Object selected = mySelectedValue;
+        RunConfigurableNodeKind kind = getKind(selected);
+
+        Set<Object> expanded = new HashSet<>(myExpandedValues);
+        List<Object> rows = collectVisibleRows(expanded);
+
+        return new ActionState(
+            kind.isConfiguration() || kind == FOLDER,
+            selected instanceof RunnerAndConfigurationSettings settings && !(settings.getConfiguration() instanceof UnknownRunConfiguration),
+            selected instanceof RunnerAndConfigurationSettings settings && settings.isTemporary(),
+            canEditTemplate(selected),
+            getAvailableDropPosition(rows, expanded, selected, -1) != null,
+            getAvailableDropPosition(rows, expanded, selected, 1) != null,
+            kind.isConfiguration() || kind == FOLDER || kind == CONFIGURATION_TYPE && selected != null && getParent(selected) == ROOT,
+            kind.isConfiguration()
+        );
+    }
+
+    @RequiredUIAccess
+    private void refreshPresentation(Object value) {
+        Tree<Object> tree = myTree;
+        TreeNode<Object> treeNode = myTreeNodes.get(value);
+        if (tree != null && treeNode != null && !myDisposed) {
+            tree.refreshItem(treeNode);
+        }
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> refreshTree(@Nullable Object valueToSelect) {
+        Tree<Object> tree = myTree;
+        if (tree == null || myDisposed) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        List<Object> expanded = new ArrayList<>();
+        for (Object value : myExpandedValues) {
+            if (isAttached(value)) {
+                expanded.add(value);
+            }
+            else {
+                myExpandedValues.remove(value);
+            }
+        }
+
+        myTreeNodes.clear();
+        updateActions();
+
+        UIAccess uiAccess = myProject.getUIAccess();
+        CompletableFuture<Object> result = new CompletableFuture<>();
+        tree.refreshAll().whenComplete((ignored, error) -> uiAccess.give(() -> {
+            List<CompletableFuture<?>> reveals = new ArrayList<>();
+            for (Object value : expanded) {
+                reveals.add(revealValue(value, false));
+            }
+            if (valueToSelect != null && isAttached(valueToSelect)) {
+                reveals.add(revealValue(valueToSelect, true));
+            }
+            CompletableFuture.allOf(reveals.toArray(new CompletableFuture<?>[0])).whenComplete((done, revealError) -> result.complete(null));
+        }));
+        return result;
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> revealValue(Object value, boolean select) {
+        Tree<Object> tree = myTree;
+        TreeNode<Object> rootNode = tree == null ? null : tree.getRootNode();
+        if (rootNode == null || myDisposed) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        List<Object> path = new ArrayList<>();
+        for (Object current = value; current != null && current != ROOT; current = getParent(current)) {
+            path.add(0, current);
+        }
+
+        CompletableFuture<Object> result = new CompletableFuture<>();
+        if (path.isEmpty()) {
+            result.complete(null);
+        }
+        else {
+            revealPath(rootNode, path, 0, select, result);
+        }
+        return result;
+    }
+
+    private void revealPath(TreeNode<Object> parent, List<Object> path, int index, boolean select, CompletableFuture<Object> result) {
+        Object expected = path.get(index);
+        UIAccess uiAccess = myProject.getUIAccess();
+
+        parent.findChild(value -> value == expected).whenComplete((child, error) -> uiAccess.give(() -> {
+            Tree<Object> tree = myTree;
+            if (child == null || tree == null || myDisposed) {
+                result.complete(null);
+                return;
+            }
+
+            if (index == path.size() - 1) {
+                if (select) {
+                    tree.select(child);
+                    result.complete(null);
+                }
+                else {
+                    tree.expand(child).whenComplete((ignored, expandError) -> result.complete(null));
+                }
+                return;
+            }
+
+            tree.expand(child).whenComplete((ignored, expandError) -> uiAccess.give(() -> revealPath(child, path, index + 1, select, result)));
+        }));
+    }
+
+    @RequiredUIAccess
+    public void selectFromManager(@Nullable RunConfiguration selected) {
+        RunConfiguration configuration = selected;
+        if (configuration == null) {
+            RunnerAndConfigurationSettings settings = myRunManager.getSelectedConfiguration();
+            configuration = settings == null ? null : settings.getConfiguration();
+        }
+
+        if (configuration == null) {
+            mySelectedConfigurable = null;
+            return;
+        }
+
+        selectConfiguration(configuration);
+    }
+
+    @RequiredUIAccess
+    private void selectConfiguration(RunConfiguration configuration) {
+        for (Object value : collect(ROOT, CONFIGURATION, TEMPORARY_CONFIGURATION)) {
+            RunConfiguration nodeConfiguration = ((RunnerAndConfigurationSettings) value).getConfiguration();
+            if (nodeConfiguration == configuration
+                || Comparing.strEqual(nodeConfiguration.getType().getId(), configuration.getType().getId())
+                && Comparing.strEqual(nodeConfiguration.getName(), configuration.getName())) {
+                revealValue(value, true);
+                return;
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    private void showAddPopup(boolean showApplicableTypesOnly, Consumer<ListPopup> show) {
+        ListPopup popup = JBPopupFactory.getInstance().createListPopup(RunConfigurationTypePopupStep.create(
+            myProject,
+            myRunManager,
+            showApplicableTypesOnly,
+            getSelectedConfigurationType(),
+            this::createNewConfiguration,
+            () -> showAddPopup(false, show)
+        ));
+        show.accept(popup);
     }
 
     private @Nullable ConfigurationType getSelectedConfigurationType() {
-        DefaultMutableTreeNode configurationTypeNode = getSelectedConfigurationTypeNode();
-        return configurationTypeNode != null ? (ConfigurationType) configurationTypeNode.getUserObject() : null;
+        return getType(mySelectedValue);
     }
 
-    @Override
-    @RequiredUIAccess
-    public JComponent createComponent(Disposable uiDisposable) {
-        myProject.getApplication().getExtensionPoint(RunConfigurationsSettings.class).forEach(each -> {
-            UnnamedConfigurable configurable = each.createConfigurable();
-            myAdditionalSettings.add(Pair.create(configurable, configurable.createComponent(uiDisposable)));
-        });
-
-        myWholePanel = new JPanel(new BorderLayout());
-        DataManager.registerUiDataProvider(myWholePanel, new UiDataProvider() {
-            @Override
-            public void uiDataSnapshot(DataSink sink) {
-                sink.set(RunConfigurationSelector.KEY, configuration -> selectConfiguration(configuration));
-            }
-        });
-
-        JPanel leftPanel = createLeftPanel();
-        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
-            awtTitlelessDecorator.makeLeftComponentLower(leftPanel);
-        }
-
-        mySplitter.setFirstComponent(leftPanel);
-
-        myRightPanel.setBorder(JBUI.Borders.empty(8));
-
-        if (mySplitter instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
-            mySplitter.setSecondComponent(awtTitlelessDecorator.modifyRightComponent(myWholePanel, myRightPanel));
-        } else {
-            mySplitter.setSecondComponent(myRightPanel);
-        }
-
-        myWholePanel.add(mySplitter, BorderLayout.CENTER);
-
-        updateDialog();
-
-        Dimension d = myWholePanel.getPreferredSize();
-        d.width = Math.max(d.width, 800);
-        d.height = Math.max(d.height, 600);
-        myWholePanel.setPreferredSize(d);
-
-        mySplitter.setProportion(myProperties.getFloat(DIVIDER_PROPORTION, 0.3f));
-
-        return myWholePanel;
+    private @Nullable SingleConfigurationConfigurable<RunConfiguration> getSelectedConfiguration() {
+        return mySelectedValue instanceof RunnerAndConfigurationSettings settings ? myConfigurables.get(settings) : null;
     }
 
-    public Splitter getSplitter() {
-        return mySplitter;
+    private @Nullable RunnerAndConfigurationSettings getSelectedSettings() {
+        return mySelectedValue instanceof RunnerAndConfigurationSettings settings ? settings : null;
     }
 
-    @RequiredUIAccess
-    @Override
-    public void reset() {
-        RunManagerConfig config = myRunManager.getConfig();
-        myRecentsLimit.setText(Integer.toString(config.getRecentsLimit()));
-        myConfirmation.setSelected(config.isRestartRequiresConfirmation());
-
-        for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
-            each.first.reset();
-        }
-
-        setModified(false);
-    }
-
-    public Configurable getSelectedConfigurable() {
+    public @Nullable Configurable getSelectedConfigurable() {
         return mySelectedConfigurable;
     }
 
-    @RequiredUIAccess
-    @Override
-    public void apply() throws ConfigurationException {
-        updateActiveConfigurationFromSelected();
-
-        RunManagerImpl manager = myRunManager;
-        try {
-            manager.fireBeginUpdate();
-
-            List<ConfigurationType> types = manager.getConfigurationFactories();
-            List<ConfigurationType> configurationTypes = new ArrayList<>();
-            for (int i = 0; i < myRoot.getChildCount(); i++) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) myRoot.getChildAt(i);
-                Object userObject = node.getUserObject();
-                if (userObject instanceof ConfigurationType configType) {
-                    configurationTypes.add(configType);
-                }
-            }
-            for (ConfigurationType type : types) {
-                if (!configurationTypes.contains(type)) {
-                    configurationTypes.add(type);
-                }
-            }
-
-            for (ConfigurationType configurationType : configurationTypes) {
-                applyByType(configurationType);
-            }
-
-            try {
-                int i = Math.max(RunManagerConfig.MIN_RECENT_LIMIT, Integer.parseInt(myRecentsLimit.getText()));
-                int oldLimit = manager.getConfig().getRecentsLimit();
-                if (oldLimit != i) {
-                    manager.getConfig().setRecentsLimit(i);
-                    manager.checkRecentsLimit();
-                }
-            }
-            catch (NumberFormatException e) {
-                // ignore
-            }
-            manager.getConfig().setRestartRequiresConfirmation(myConfirmation.isSelected());
-
-            for (Configurable configurable : myStoredComponents.values()) {
-                if (configurable.isModified()) {
-                    configurable.apply();
-                }
-            }
-
-            for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
-                each.first.apply();
-            }
-
-            manager.saveOrder();
-            setModified(false);
-        }
-        finally {
-            manager.fireEndUpdate();
-        }
-        myTree.repaint();
-    }
-
     public void updateActiveConfigurationFromSelected() {
-        if (mySelectedConfigurable != null && mySelectedConfigurable instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-            RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings) singleConfigConfigurable.getSettings();
-
-            myRunManager.setSelectedConfiguration(settings);
+        if (mySelectedConfigurable instanceof SingleConfigurationConfigurable<?> configurable) {
+            myRunManager.setSelectedConfiguration(configurable.getSettings());
         }
     }
 
-    private void applyByType(ConfigurationType type) throws ConfigurationException {
+    @RequiredUIAccess
+    private void createNewConfiguration(ConfigurationFactory factory) {
+        Object selected = mySelectedValue;
+        ConfigurationType type = factory.getType();
+        if (!isRootType(type)) {
+            add(ROOT, type);
+            sortTypeNodes();
+        }
+
+        Object parent = type;
+        if (selected != null && isAncestor(type, selected)) {
+            parent = selected;
+            if (getKind(parent).isConfiguration()) {
+                Object selectedParent = getParent(parent);
+                parent = selectedParent == null ? type : selectedParent;
+            }
+        }
+
+        RunnerAndConfigurationSettings settings =
+            myRunManager.createConfiguration(createUniqueName(type, null, CONFIGURATION, TEMPORARY_CONFIGURATION), factory);
+        factory.onNewConfigurationCreated(settings.getConfiguration());
+
+        addConfiguration(settings, parent);
+        refreshTree(settings);
+    }
+
+    @RequiredUIAccess
+    private SingleConfigurationConfigurable<RunConfiguration> addConfiguration(RunnerAndConfigurationSettings settings, Object parent) {
+        SingleConfigurationConfigurable<RunConfiguration> configurable = getConfigurable(settings);
+        insertInto(settings, parent, getChildren(parent).size());
+        return configurable;
+    }
+
+    @RequiredUIAccess
+    private void removeSelected() {
+        Object value = mySelectedValue;
+        Object parent = value == null ? null : getParent(value);
+        RunConfigurableNodeKind kind = getKind(value);
+        if (value == null || parent == null || !kind.isConfiguration() && kind != FOLDER) {
+            return;
+        }
+
+        if (value instanceof RunnerAndConfigurationSettings settings) {
+            SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.remove(settings);
+            if (configurable != null) {
+                configurable.disposeUIResources();
+            }
+        }
+
+        int indexToSelect = getIndex(parent, value);
+        Object parentToSelect = parent;
+        List<Object> children = new ArrayList<>(getChildren(value));
+        removeValue(value);
+
+        if (kind == FOLDER) {
+            List<Object> reversed = new ArrayList<>();
+            for (Object child : children) {
+                if (child instanceof RunnerAndConfigurationSettings settings) {
+                    getConfigurable(settings).setFolderName(null);
+                }
+                reversed.add(0, child);
+            }
+
+            int configurationIndex = 0;
+            for (int i = 0; i < getChildren(parent).size(); i++) {
+                if (getKind(getChildren(parent).get(i)).isConfiguration()) {
+                    configurationIndex = i;
+                    break;
+                }
+            }
+            for (Object child : reversed) {
+                if (getKind(child) == CONFIGURATION) {
+                    insertInto(child, parent, configurationIndex);
+                }
+            }
+
+            configurationIndex = getChildren(parent).size();
+            for (int i = 0; i < getChildren(parent).size(); i++) {
+                if (getKind(getChildren(parent).get(i)) == TEMPORARY_CONFIGURATION) {
+                    configurationIndex = i;
+                    break;
+                }
+            }
+            for (Object child : reversed) {
+                if (getKind(child) == TEMPORARY_CONFIGURATION) {
+                    insertInto(child, parent, configurationIndex);
+                }
+            }
+        }
+
+        if (getChildren(parent).isEmpty() && parent instanceof ConfigurationType) {
+            indexToSelect = Math.max(0, getIndex(ROOT, parent) - 1);
+            parentToSelect = ROOT;
+            removeValue(parent);
+        }
+
+        mySelectedValue = null;
+        mySelectedConfigurable = null;
+
+        List<Object> candidates = getChildren(parentToSelect);
+        Object valueToSelect = null;
+        if (!candidates.isEmpty()) {
+            valueToSelect = indexToSelect < candidates.size() ? candidates.get(indexToSelect) : candidates.get(indexToSelect - 1);
+        }
+
+        if (valueToSelect == null) {
+            showPressAddMessage(null);
+        }
+
+        refreshTree(valueToSelect);
+    }
+
+    @RequiredUIAccess
+    private void copySelected() {
         RunnerAndConfigurationSettings selectedSettings = getSelectedSettings();
+        ConfigurationType type = getType(selectedSettings);
+        if (selectedSettings == null || type == null) {
+            return;
+        }
+
+        SingleConfigurationConfigurable<RunConfiguration> configurable = getConfigurable(selectedSettings);
+        try {
+            RunnerAndConfigurationSettings settings = configurable.getSnapshot();
+            if (settings == null) {
+                return;
+            }
+
+            String copyName = createUniqueName(type, configurable.getNameText(), CONFIGURATION, TEMPORARY_CONFIGURATION);
+            settings.setName(copyName);
+            ConfigurationFactory factory = settings.getFactory();
+            factory.onConfigurationCopied(settings.getConfiguration());
+
+            SingleConfigurationConfigurable<RunConfiguration> copy = addConfiguration(settings, type);
+
+            UIAccess uiAccess = myProject.getUIAccess();
+            refreshTree(settings).whenComplete((ignored, error) -> uiAccess.give(() -> {
+                if (!myDisposed) {
+                    copy.selectNameText();
+                }
+            }));
+        }
+        catch (ConfigurationException e) {
+            MessageBoxes.okError(LocalizeValue.of(StringUtil.notNullize(e.getMessage())))
+                .title(e.getTitle())
+                .showAsync(myTree);
+        }
+    }
+
+    @RequiredUIAccess
+    private void saveSelected() {
+        RunnerAndConfigurationSettings settings = getSelectedSettings();
+        if (settings == null) {
+            return;
+        }
+
+        SingleConfigurationConfigurable<RunConfiguration> configurable = getConfigurable(settings);
+        try {
+            configurable.apply();
+        }
+        catch (ConfigurationException ignored) {
+        }
+
+        if (settings.isTemporary()) {
+            myApplying = true;
+            try {
+                myRunManager.makeStable(settings);
+            }
+            finally {
+                myApplying = false;
+            }
+            adjustOrder();
+        }
+
+        refreshTree(settings);
+    }
+
+    private int adjustOrder() {
+        RunnerAndConfigurationSettings settings = getSelectedSettings();
+        Object parent = settings == null ? null : getParent(settings);
+        if (settings == null || parent == null || settings.isTemporary()) {
+            return 0;
+        }
+
+        int initialPosition = getIndex(parent, settings);
+        int position = initialPosition;
+        Object previous = getSibling(settings, -1);
+        while (previous instanceof RunnerAndConfigurationSettings previousSettings && previousSettings.isTemporary()) {
+            position--;
+            previous = getSibling(previous, -1);
+        }
+
+        if (position != initialPosition) {
+            insert(parent, settings, position);
+        }
+        return initialPosition - position;
+    }
+
+    private @Nullable Object findTemplateNode(@Nullable ConfigurationType type) {
+        if (getParent(DEFAULTS) != ROOT) {
+            return null;
+        }
+        if (type == null) {
+            return DEFAULTS;
+        }
+        for (Object child : getChildren(DEFAULTS)) {
+            if (child instanceof TemplateType templateType && templateType.type() == type) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    private boolean canEditTemplate(@Nullable Object selected) {
+        if (getParent(DEFAULTS) != ROOT) {
+            return false;
+        }
+        if (selected == null) {
+            return true;
+        }
+        return selected != DEFAULTS && getParent(selected) != DEFAULTS;
+    }
+
+    private List<Object> collectVisibleRows(Set<Object> expanded) {
+        List<Object> rows = new ArrayList<>();
+        collectVisibleRows(ROOT, expanded, rows);
+        return rows;
+    }
+
+    private void collectVisibleRows(Object parent, Set<Object> expanded, List<Object> rows) {
+        for (Object child : getChildren(parent)) {
+            rows.add(child);
+            if (expanded.contains(child)) {
+                collectVisibleRows(child, expanded, rows);
+            }
+        }
+    }
+
+    private boolean isDropInto(Object oldValue, Object newValue) {
+        return getKind(oldValue).isConfiguration() && getKind(newValue) == FOLDER;
+    }
+
+    private boolean canDrop(List<Object> rows, Set<Object> expanded, int oldIndex, int newIndex, DropPosition position) {
+        if (rows.size() <= oldIndex || rows.size() <= newIndex || oldIndex < 0 || newIndex < 0) {
+            return false;
+        }
+        Object oldValue = rows.get(oldIndex);
+        Object newValue = rows.get(newIndex);
+        Object oldParent = getParent(oldValue);
+        Object newParent = getParent(newValue);
+        RunConfigurableNodeKind oldKind = getKind(oldValue);
+        RunConfigurableNodeKind newKind = getKind(newValue);
+        ConfigurationType oldType = getType(oldValue);
+        ConfigurationType newType = getType(newValue);
+        if (oldParent == newParent) {
+            if (getSibling(oldValue, -1) == newValue && position == DropPosition.BELOW) {
+                return false;
+            }
+            if (getSibling(oldValue, 1) == newValue && position == DropPosition.ABOVE) {
+                return false;
+            }
+        }
+        if (oldType == null || oldParent == null) {
+            return false;
+        }
+        if (oldType != newType) {
+            Object typeNode = isRootType(oldType) ? oldType : null;
+            if (getKind(oldParent) == FOLDER && typeNode != null && getSibling(typeNode, 1) == newValue && position == DropPosition.ABOVE) {
+                return true;
+            }
+            List<Object> oldSiblings = getChildren(oldParent);
+            Object oldLast = oldSiblings.isEmpty() ? null : oldSiblings.get(oldSiblings.size() - 1);
+            return getKind(oldParent) == CONFIGURATION_TYPE
+                && oldKind == FOLDER
+                && typeNode != null
+                && getSibling(typeNode, 1) == newValue
+                && position == DropPosition.ABOVE
+                && oldLast != oldValue
+                && getKind(oldLast) == FOLDER;
+        }
+        if (newParent == oldValue || oldParent == newValue) {
+            return false;
+        }
+        if (oldKind == FOLDER && newKind != FOLDER) {
+            return newKind.isConfiguration()
+                && position == DropPosition.ABOVE
+                && getKind(newParent) == CONFIGURATION_TYPE
+                && newIndex > 1
+                && getKind(getParent(rows.get(newIndex - 1))) == FOLDER;
+        }
+        if (!oldKind.supportsDnD() || !newKind.supportsDnD()) {
+            return false;
+        }
+        if (oldKind.isConfiguration() && newKind == FOLDER && position == DropPosition.ABOVE) {
+            return false;
+        }
+        if (oldKind == TEMPORARY_CONFIGURATION && newKind == CONFIGURATION && position == DropPosition.ABOVE) {
+            return false;
+        }
+        if (oldKind == CONFIGURATION && newKind == TEMPORARY_CONFIGURATION && position == DropPosition.BELOW) {
+            return false;
+        }
+        if (oldKind == CONFIGURATION && newKind == TEMPORARY_CONFIGURATION && position == DropPosition.ABOVE) {
+            Object previous = getSibling(newValue, -1);
+            return previous == null || getKind(previous) == CONFIGURATION || getKind(previous) == FOLDER;
+        }
+        if (oldKind == TEMPORARY_CONFIGURATION && newKind == CONFIGURATION && position == DropPosition.BELOW) {
+            Object next = getSibling(newValue, 1);
+            return next == null || getKind(next) == TEMPORARY_CONFIGURATION;
+        }
+        if (oldParent == newParent) {
+            if (oldKind.isConfiguration() && newKind.isConfiguration()) {
+                return oldKind == newKind;
+            }
+            else if (oldKind == FOLDER) {
+                return !expanded.contains(newValue) || position == DropPosition.ABOVE;
+            }
+        }
+        return true;
+    }
+
+    private @Nullable DropTarget getAvailableDropPosition(List<Object> rows, Set<Object> expanded, @Nullable Object selected, int direction) {
+        int oldIndex = selected == null ? -1 : indexOf(rows, selected);
+        if (oldIndex < 0 || !getKind(selected).supportsDnD()) {
+            return null;
+        }
+
+        int newIndex = oldIndex + direction;
+        while (newIndex > 0 && newIndex < rows.size()) {
+            Object oldValue = rows.get(oldIndex);
+            Object newValue = rows.get(newIndex);
+            boolean allowInto = getKind(newValue) == FOLDER && !expanded.contains(newValue);
+            DropPosition position = allowInto && isDropInto(oldValue, newValue)
+                ? DropPosition.INTO
+                : direction > 0 ? DropPosition.BELOW : DropPosition.ABOVE;
+            if (getParent(oldValue) != getParent(newValue) && getKind(newValue) != FOLDER) {
+                DropPosition copy = position;
+                if (position == DropPosition.BELOW) {
+                    copy = DropPosition.ABOVE;
+                }
+                else if (position == DropPosition.ABOVE) {
+                    copy = DropPosition.BELOW;
+                }
+                if (canDrop(rows, expanded, oldIndex, newIndex, copy)) {
+                    return new DropTarget(oldIndex, newIndex, copy);
+                }
+            }
+            if (canDrop(rows, expanded, oldIndex, newIndex, position)) {
+                return new DropTarget(oldIndex, newIndex, position);
+            }
+
+            if (position == DropPosition.BELOW && newIndex < rows.size() - 1 && canDrop(rows, expanded, oldIndex, newIndex + 1, DropPosition.ABOVE)) {
+                return new DropTarget(oldIndex, newIndex + 1, DropPosition.ABOVE);
+            }
+            if (position == DropPosition.ABOVE && newIndex > 1 && canDrop(rows, expanded, oldIndex, newIndex - 1, DropPosition.BELOW)) {
+                return new DropTarget(oldIndex, newIndex - 1, DropPosition.BELOW);
+            }
+            if (position == DropPosition.BELOW && canDrop(rows, expanded, oldIndex, newIndex, DropPosition.ABOVE)) {
+                return new DropTarget(oldIndex, newIndex, DropPosition.ABOVE);
+            }
+            if (position == DropPosition.ABOVE && canDrop(rows, expanded, oldIndex, newIndex, DropPosition.BELOW)) {
+                return new DropTarget(oldIndex, newIndex, DropPosition.BELOW);
+            }
+            newIndex += direction;
+        }
+        return null;
+    }
+
+    @RequiredUIAccess
+    private void moveSelected(int direction) {
+        Set<Object> expanded = new HashSet<>(myExpandedValues);
+        List<Object> rows = collectVisibleRows(expanded);
+        DropTarget target = getAvailableDropPosition(rows, expanded, mySelectedValue, direction);
+        if (target != null) {
+            refreshTree(move(rows, expanded, target));
+        }
+    }
+
+    @RequiredUIAccess
+    private Object move(List<Object> rows, Set<Object> expanded, DropTarget target) {
+        Object oldValue = rows.get(target.oldIndex());
+        Object newValue = rows.get(target.newIndex());
+        RunConfigurableNodeKind oldKind = getKind(oldValue);
+        boolean wasExpanded = expanded.contains(oldValue);
+        if (isDropInto(oldValue, newValue)) {
+            detach(oldValue);
+            List<Object> folderChildren = getChildren(newValue);
+            int index = folderChildren.size();
+            if (oldKind.isConfiguration()) {
+                int middleIndex = folderChildren.size();
+                for (int i = 0; i < folderChildren.size(); i++) {
+                    if (getKind(folderChildren.get(i)) == TEMPORARY_CONFIGURATION) {
+                        middleIndex = i;
+                        break;
+                    }
+                }
+                if (target.position() != DropPosition.INTO) {
+                    if (target.oldIndex() < target.newIndex()) {
+                        index = oldKind == CONFIGURATION ? 0 : middleIndex;
+                    }
+                    else {
+                        index = oldKind == CONFIGURATION ? middleIndex : folderChildren.size();
+                    }
+                }
+                else {
+                    index = oldKind == TEMPORARY_CONFIGURATION ? folderChildren.size() : middleIndex;
+                }
+            }
+            insertInto(oldValue, newValue, index);
+            myExpandedValues.add(newValue);
+        }
+        else {
+            ConfigurationType type = getType(oldValue);
+            Object newParent = getParent(newValue);
+            boolean otherType = type != getType(newValue);
+            if (type == null || newParent == null || otherType && !isRootType(type)) {
+                return oldValue;
+            }
+
+            detach(oldValue);
+            int index;
+            if (otherType) {
+                newParent = type;
+                index = getChildren(type).size();
+            }
+            else {
+                index = getIndex(newParent, newValue);
+                if (target.position() == DropPosition.BELOW) {
+                    index++;
+                }
+            }
+            insertInto(oldValue, newParent, index);
+        }
+
+        if (wasExpanded) {
+            myExpandedValues.add(oldValue);
+        }
+        return oldValue;
+    }
+
+    @RequiredUIAccess
+    private void createFolder() {
+        ConfigurationType type = getSelectedConfigurationType();
+        if (type == null || !isRootType(type)) {
+            return;
+        }
+
+        Object selected = mySelectedValue;
+        String folderName = createUniqueName(type, ExecutionLocalize.runConfigurationNewFolderName().get(), FOLDER);
+        Folder folder = new Folder(type, folderName);
+        insertInto(folder, type, collect(type, FOLDER).size());
+
+        if (selected != null && getKind(selected).isConfiguration()) {
+            Set<Object> expanded = new HashSet<>(myExpandedValues);
+            expanded.add(type);
+            List<Object> rows = collectVisibleRows(expanded);
+            int selectedRow = indexOf(rows, selected);
+            int folderRow = indexOf(rows, folder);
+            if (selectedRow >= 0 && folderRow >= 0 && canDrop(rows, expanded, selectedRow, folderRow, DropPosition.INTO)) {
+                move(rows, expanded, new DropTarget(selectedRow, folderRow, DropPosition.INTO));
+            }
+        }
+
+        myCreatedFolder = folder;
+        myExpandedValues.add(type);
+        refreshTree(folder);
+    }
+
+    private void onExternalChange(@RequiredUIAccess Runnable action) {
+        if (myApplying || myDisposed) {
+            return;
+        }
+
+        myProject.getUIAccess().give(() -> {
+            if (!myApplying && !myDisposed && myTree != null) {
+                action.run();
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private void addExternalConfiguration(RunnerAndConfigurationSettings settings) {
+        if (getParent(settings) != null) {
+            return;
+        }
+
+        ConfigurationType type = settings.getType();
+        if (!isRootType(type)) {
+            add(ROOT, type);
+            sortTypeNodes();
+        }
+
+        Object parent = type;
+        String folderName = settings.getFolderName();
+        if (folderName != null) {
+            Folder folder = null;
+            for (Object child : getChildren(type)) {
+                if (child instanceof Folder candidate && folderName.equals(candidate.getName())) {
+                    folder = candidate;
+                    break;
+                }
+            }
+
+            if (folder == null) {
+                folder = new Folder(type, folderName);
+                insert(type, folder, firstChildIndex(type, CONFIGURATION));
+            }
+            parent = folder;
+        }
+
+        if (settings.isTemporary()) {
+            add(parent, settings);
+        }
+        else {
+            insert(parent, settings, firstChildIndex(parent, TEMPORARY_CONFIGURATION));
+        }
+
+        refreshTree(null);
+    }
+
+    private int firstChildIndex(Object parent, RunConfigurableNodeKind kind) {
+        List<Object> children = getChildren(parent);
+        for (int i = 0; i < children.size(); i++) {
+            if (getKind(children.get(i)) == kind) {
+                return i;
+            }
+        }
+        return children.size();
+    }
+
+    @RequiredUIAccess
+    private void removeExternalConfiguration(RunnerAndConfigurationSettings settings) {
+        Object parent = getParent(settings);
+        if (parent == null) {
+            return;
+        }
+
+        SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.remove(settings);
+        if (configurable != null) {
+            configurable.disposeUIResources();
+        }
+
+        removeValue(settings);
+        if (parent instanceof ConfigurationType && getChildren(parent).isEmpty()) {
+            removeValue(parent);
+        }
+
+        if (mySelectedValue == settings) {
+            mySelectedValue = null;
+            mySelectedConfigurable = null;
+            showPressAddMessage(null);
+        }
+
+        refreshTree(null);
+    }
+
+    @RequiredUIAccess
+    private void applyByType(RunManagerImpl manager, ConfigurationType type, @Nullable RunnerAndConfigurationSettings selectedSettings)
+        throws ConfigurationException {
         int indexToMove = -1;
 
-        DefaultMutableTreeNode typeNode = getConfigurationTypeNode(type);
-        RunManagerImpl manager = myRunManager;
         List<RunConfigurationBean> stableConfigurations = new ArrayList<>();
-        if (typeNode != null) {
+        if (isRootType(type)) {
             Set<String> names = new HashSet<>();
-            List<DefaultMutableTreeNode> configurationNodes = new ArrayList<>();
-            collectNodesRecursively(typeNode, configurationNodes, CONFIGURATION, TEMPORARY_CONFIGURATION);
-            for (DefaultMutableTreeNode node : configurationNodes) {
-                Object userObject = node.getUserObject();
-                RunConfigurationBean configurationBean = null;
-                RunnerAndConfigurationSettings settings = null;
-                if (userObject instanceof SingleConfigurationConfigurable configurable) {
-                    settings = (RunnerAndConfigurationSettings) configurable.getSettings();
+            for (Object value : collect(type, CONFIGURATION, TEMPORARY_CONFIGURATION)) {
+                RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings) value;
+                SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.get(settings);
+                RunConfigurationBean configurationBean;
+                if (configurable != null) {
                     if (settings.isTemporary()) {
-                        applyConfiguration(typeNode, configurable);
+                        applyConfiguration(manager, configurable);
                     }
                     configurationBean = new RunConfigurationBean(configurable);
                 }
-                else if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-                    settings = runnerAndConfigurationSettings;
+                else {
                     configurationBean = new RunConfigurationBean(
                         settings,
                         manager.isConfigurationShared(settings),
                         manager.getBeforeRunTasks(settings.getConfiguration())
                     );
                 }
-                if (configurationBean != null) {
-                    SingleConfigurationConfigurable configurable = configurationBean.getConfigurable();
-                    String nameText = configurable != null ? configurable.getNameText() : configurationBean.getSettings().getName();
-                    if (!names.add(nameText)) {
-                        TreeUtil.selectNode(myTree, node);
-                        throw new ConfigurationException(type.getDisplayName() + " with name \'" + nameText + "\' already exists");
-                    }
-                    stableConfigurations.add(configurationBean);
-                    if (settings == selectedSettings) {
-                        indexToMove = stableConfigurations.size() - 1;
-                    }
+
+                String nameText = configurable != null ? configurable.getNameText() : settings.getName();
+                if (!names.add(nameText)) {
+                    revealValue(value, true);
+                    throw new ConfigurationException(type.getDisplayName() + " with name \'" + nameText + "\' already exists");
+                }
+                stableConfigurations.add(configurationBean);
+                if (settings == selectedSettings) {
+                    indexToMove = stableConfigurations.size() - 1;
                 }
             }
-            List<DefaultMutableTreeNode> folderNodes = new ArrayList<>();
-            collectNodesRecursively(typeNode, folderNodes, FOLDER);
+
             names.clear();
-            for (DefaultMutableTreeNode node : folderNodes) {
-                String folderName = (String) node.getUserObject();
+            for (Object value : collect(type, FOLDER)) {
+                String folderName = ((Folder) value).getName();
                 if (folderName.isEmpty()) {
-                    TreeUtil.selectNode(myTree, node);
+                    revealValue(value, true);
                     throw new ConfigurationException(LocalizeValue.localizeTODO("Folder name shouldn't be empty"));
                 }
                 if (!names.add(folderName)) {
-                    TreeUtil.selectNode(myTree, node);
+                    revealValue(value, true);
                     throw new ConfigurationException(LocalizeValue.localizeTODO("Folders name \'" + folderName + "\' is duplicated"));
                 }
             }
         }
-        // try to apply all
+
         for (RunConfigurationBean bean : stableConfigurations) {
-            SingleConfigurationConfigurable configurable = bean.getConfigurable();
+            SingleConfigurationConfigurable<?> configurable = bean.getConfigurable();
             if (configurable != null) {
-                applyConfiguration(typeNode, configurable);
+                applyConfiguration(manager, configurable);
             }
         }
 
-        // if apply succeeded, update the list of configurations in RunManager
         Set<RunnerAndConfigurationSettings> toDeleteSettings = new HashSet<>();
         for (RunConfiguration each : manager.getConfigurationsList(type)) {
             ContainerUtil.addIfNotNull(toDeleteSettings, manager.getSettings(each));
         }
 
-        //Just saved as 'stable' configuration shouldn't stay between temporary ones (here we order model to save)
         int shift = 0;
         if (selectedSettings != null && selectedSettings.getType() == type) {
             shift = adjustOrder();
@@ -856,70 +1660,33 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    static void collectNodesRecursively(DefaultMutableTreeNode parentNode, List<DefaultMutableTreeNode> nodes, NodeKind... allowed) {
-        for (int i = 0; i < parentNode.getChildCount(); i++) {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode) parentNode.getChildAt(i);
-            if (ArrayUtil.find(allowed, getKind(child)) != -1) {
-                nodes.add(child);
-            }
-            collectNodesRecursively(child, nodes, allowed);
-        }
-    }
-
-    private @Nullable DefaultMutableTreeNode getConfigurationTypeNode(ConfigurationType type) {
-        for (int i = 0; i < myRoot.getChildCount(); i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) myRoot.getChildAt(i);
-            if (node.getUserObject() == type) {
-                return node;
-            }
-        }
-        return null;
-    }
-
     @RequiredUIAccess
-    private void applyConfiguration(DefaultMutableTreeNode typeNode, SingleConfigurationConfigurable<?> configurable)
-        throws ConfigurationException {
+    private void applyConfiguration(RunManagerImpl manager, SingleConfigurationConfigurable<?> configurable) throws ConfigurationException {
         try {
-            if (configurable != null) {
-                configurable.apply();
-                RunManagerImpl.getInstanceImpl(myProject).fireRunConfigurationChanged(configurable.getSettings());
-            }
+            configurable.apply();
+            manager.fireRunConfigurationChanged(configurable.getSettings());
         }
         catch (ConfigurationException e) {
-            for (int i = 0; i < typeNode.getChildCount(); i++) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) typeNode.getChildAt(i);
-                if (Comparing.equal(configurable, node.getUserObject())) {
-                    TreeUtil.selectNode(myTree, node);
-                    break;
-                }
-            }
+            revealValue(configurable.getSettings(), true);
             throw e;
         }
     }
 
-    @Override
     @RequiredUIAccess
-    public boolean isModified() {
-        if (super.isModified()) {
-            return true;
-        }
-        RunManagerImpl runManager = myRunManager;
-        List<RunConfiguration> allConfigurations = runManager.getAllConfigurationsList();
+    private boolean isTreeModified() {
+        List<RunConfiguration> allConfigurations = myRunManager.getAllConfigurationsList();
         List<RunConfiguration> currentConfigurations = new ArrayList<>();
-        for (int i = 0; i < myRoot.getChildCount(); i++) {
-            DefaultMutableTreeNode typeNode = (DefaultMutableTreeNode) myRoot.getChildAt(i);
-            Object object = typeNode.getUserObject();
-            if (object instanceof ConfigurationType configType) {
-                List<RunnerAndConfigurationSettings> configurationSettings = runManager.getConfigurationSettingsList(configType);
-                List<DefaultMutableTreeNode> configurationNodes = new ArrayList<>();
-                collectNodesRecursively(typeNode, configurationNodes, CONFIGURATION, TEMPORARY_CONFIGURATION);
-                if (configurationSettings.size() != configurationNodes.size()) {
+        for (Object value : getChildren(ROOT)) {
+            if (value instanceof ConfigurationType type) {
+                List<RunnerAndConfigurationSettings> configurationSettings = myRunManager.getConfigurationSettingsList(type);
+                List<Object> configurationValues = collect(type, CONFIGURATION, TEMPORARY_CONFIGURATION);
+                if (configurationSettings.size() != configurationValues.size()) {
                     return true;
                 }
-                for (int j = 0; j < configurationNodes.size(); j++) {
-                    DefaultMutableTreeNode configurationNode = configurationNodes.get(j);
-                    Object userObject = configurationNode.getUserObject();
-                    if (userObject instanceof SingleConfigurationConfigurable configurable) {
+                for (int j = 0; j < configurationValues.size(); j++) {
+                    RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings) configurationValues.get(j);
+                    SingleConfigurationConfigurable<RunConfiguration> configurable = myConfigurables.get(settings);
+                    if (configurable != null) {
                         if (!Comparing.strEqual(
                             configurationSettings.get(j).getConfiguration().getName(),
                             configurable.getConfiguration().getName()
@@ -929,109 +1696,87 @@ public class RunConfigurable extends BaseConfigurable {
                         if (configurable.isModified()) {
                             return true;
                         }
-                        currentConfigurations.add(configurable.getConfiguration());
                     }
-                    else if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-                        currentConfigurations.add(runnerAndConfigurationSettings.getConfiguration());
-                    }
+                    currentConfigurations.add(settings.getConfiguration());
                 }
             }
         }
-        if (allConfigurations.size() != currentConfigurations.size() || !allConfigurations.containsAll(currentConfigurations)) {
+        return allConfigurations.size() != currentConfigurations.size() || !allConfigurations.containsAll(currentConfigurations);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        resetGeneralSettings();
+        setModified(false);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        if (myTree == null) {
+            return false;
+        }
+
+        if (super.isModified() || isTreeModified() || isGeneralSettingsModified()) {
             return true;
         }
 
-        for (Configurable configurable : myStoredComponents.values()) {
+        for (Configurable configurable : myTemplateConfigurables.values()) {
             if (configurable.isModified()) {
                 return true;
             }
         }
-
-        for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
-            if (each.first.isModified()) {
-                return true;
-            }
-        }
-
         return false;
     }
 
     @RequiredUIAccess
     @Override
-    public void disposeUIResources() {
-        isDisposed = true;
-        for (Configurable configurable : myStoredComponents.values()) {
-            configurable.disposeUIResources();
-        }
-        myStoredComponents.clear();
-
-        for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
-            each.first.disposeUIResources();
-        }
-
-        TreeUtil.traverseDepth(
-            myRoot,
-            node -> {
-                if (node instanceof DefaultMutableTreeNode treeNode) {
-                    Object userObject = treeNode.getUserObject();
-                    if (userObject instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-                        singleConfigConfigurable.disposeUIResources();
-                    }
-                }
-                return true;
-            }
-        );
-        myRightPanel.removeAll();
-        myProperties.setFloat(DIVIDER_PROPORTION, mySplitter.getProportion());
-        mySplitter.dispose();
-    }
-
-    private void updateDialog() {
-        Executor executor = myRunDialog != null ? myRunDialog.getExecutor() : null;
-        if (executor == null) {
+    public void apply() throws ConfigurationException {
+        if (myTree == null) {
             return;
         }
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(executor.getId());
-        SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
-        if (configuration != null) {
-            buffer.append(" - ");
-            buffer.append(configuration.getNameText());
-        }
-        myRunDialog.setOKActionEnabled(canRunConfiguration(configuration, executor));
-        myRunDialog.setTitle(buffer.toString());
-    }
 
-    public void setWholePanel(JPanel wholePanel) {
-        myWholePanel = wholePanel;
-    }
+        updateActiveConfigurationFromSelected();
 
-    private void setupDialogBounds() {
-        SwingUtilities.invokeLater(() -> UIUtil.setupEnclosingDialogBounds(myWholePanel));
-    }
-
-    private @Nullable SingleConfigurationConfigurable<RunConfiguration> getSelectedConfiguration() {
-        TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath != null) {
-            DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-            Object userObject = treeNode.getUserObject();
-            if (userObject instanceof SingleConfigurationConfigurable) {
-                return (SingleConfigurationConfigurable<RunConfiguration>) userObject;
-            }
-        }
-        return null;
-    }
-
-    private static boolean canRunConfiguration(
-        @Nullable SingleConfigurationConfigurable<RunConfiguration> configuration,
-        Executor executor
-    ) {
+        RunManagerImpl manager = myRunManager;
+        myApplying = true;
         try {
-            return configuration != null && RunManagerImpl.canRunConfiguration(configuration.getSnapshot(), executor);
+            manager.fireBeginUpdate();
+
+            List<ConfigurationType> configurationTypes = new ArrayList<>();
+            for (Object value : getChildren(ROOT)) {
+                if (value instanceof ConfigurationType type) {
+                    configurationTypes.add(type);
+                }
+            }
+            for (ConfigurationType type : manager.getConfigurationFactories()) {
+                if (!configurationTypes.contains(type)) {
+                    configurationTypes.add(type);
+                }
+            }
+
+            for (ConfigurationType type : configurationTypes) {
+                applyByType(manager, type, getSelectedSettings());
+            }
+
+            applyGeneralSettings(manager);
+
+            for (Configurable configurable : myTemplateConfigurables.values()) {
+                if (configurable.isModified()) {
+                    configurable.apply();
+                }
+            }
+
+            manager.saveOrder();
+            setModified(false);
         }
-        catch (ConfigurationException e) {
-            return false;
+        finally {
+            manager.fireEndUpdate();
+            myApplying = false;
         }
+
+        refreshTree(mySelectedValue);
     }
 
     @Override
@@ -1043,146 +1788,93 @@ public class RunConfigurable extends BaseConfigurable {
         return "reference.dialogs.rundebug";
     }
 
-    private void clickDefaultButton() {
-        if (myRunDialog != null) {
-            myRunDialog.clickDefaultButton();
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        myDisposed = true;
+
+        for (Configurable configurable : myTemplateConfigurables.values()) {
+            configurable.disposeUIResources();
         }
-    }
+        myTemplateConfigurables.clear();
 
-    private @Nullable DefaultMutableTreeNode getSelectedConfigurationTypeNode() {
-        TreePath selectionPath = myTree.getSelectionPath();
-        DefaultMutableTreeNode node = selectionPath != null ? (DefaultMutableTreeNode) selectionPath.getLastPathComponent() : null;
-        while (node != null) {
-            Object userObject = node.getUserObject();
-            if (userObject instanceof ConfigurationType) {
-                return node;
-            }
-            node = (DefaultMutableTreeNode) node.getParent();
+        for (SingleConfigurationConfigurable<RunConfiguration> configurable : myConfigurables.values()) {
+            configurable.disposeUIResources();
         }
-        return null;
+        myConfigurables.clear();
+
+        for (UnnamedConfigurable each : myAdditionalSettings) {
+            each.disposeUIResources();
+        }
+        myAdditionalSettings.clear();
+
+        myChildren.clear();
+        myParents.clear();
+        myTreeNodes.clear();
+        myExpandedValues.clear();
+        myTree = null;
+        myToolbar = null;
+        myUIDisposable = null;
+        myRightPanel = null;
+        myDefaultsPanel = null;
+        myConfirmationBox = null;
+        myRecentsLimitBox = null;
+        mySelectedValue = null;
+        mySelectedConfigurable = null;
+        myActionState = ActionState.NONE;
     }
 
-    private DefaultMutableTreeNode getNode(int row) {
-        return (DefaultMutableTreeNode) myTree.getPathForRow(row).getLastPathComponent();
-    }
-
-    @Nullable Trinity<Integer, Integer, RowsDnDSupport.RefinedDropSupport.Position> getAvailableDropPosition(int direction) {
-        int[] rows = myTree.getSelectionRows();
-        if (rows == null || rows.length != 1) {
+    private class ConfigurationDragAndDropHandler implements DragAndDropTransferHandler<TreeNode<Object>> {
+        @Override
+        public @Nullable DataTransfer createTransfer(Component component) {
             return null;
         }
-        int oldIndex = rows[0];
-        int newIndex = oldIndex + direction;
 
-        if (!getKind((DefaultMutableTreeNode) myTree.getPathForRow(oldIndex).getLastPathComponent()).supportsDnD()) {
-            return null;
+        @Override
+        public @Nullable DataTransfer createDragTransfer(Component component, List<TreeNode<Object>> items, boolean move) {
+            if (!move || items.size() != 1) {
+                return null;
+            }
+
+            Object value = items.get(0).getValue();
+            if (!getKind(value).supportsDnD()) {
+                return null;
+            }
+            return DataTransfer.of(getSpeedSearchText(value));
         }
 
-        while (newIndex > 0 && newIndex < myTree.getRowCount()) {
-            TreePath targetPath = myTree.getPathForRow(newIndex);
-            boolean allowInto =
-                getKind((DefaultMutableTreeNode) targetPath.getLastPathComponent()) == FOLDER && !myTree.isExpanded(targetPath);
-            RowsDnDSupport.RefinedDropSupport.Position position = allowInto && myTreeModel.isDropInto(myTree, oldIndex, newIndex)
-                ? INTO
-                : direction > 0 ? BELOW : ABOVE;
-            DefaultMutableTreeNode oldNode = getNode(oldIndex);
-            DefaultMutableTreeNode newNode = getNode(newIndex);
-            if (oldNode.getParent() != newNode.getParent() && getKind(newNode) != FOLDER) {
-                RowsDnDSupport.RefinedDropSupport.Position copy = position;
-                if (position == BELOW) {
-                    copy = ABOVE;
-                }
-                else if (position == ABOVE) {
-                    copy = BELOW;
-                }
-                if (myTreeModel.canDrop(oldIndex, newIndex, copy)) {
-                    return Trinity.create(oldIndex, newIndex, copy);
-                }
-            }
-            if (myTreeModel.canDrop(oldIndex, newIndex, position)) {
-                return Trinity.create(oldIndex, newIndex, position);
+        @RequiredUIAccess
+        @Override
+        public boolean drop(Component component, DropContext<TreeNode<Object>> context) {
+            List<TreeNode<Object>> items = context.getItems();
+            if (items.size() != 1) {
+                return false;
             }
 
-            if (position == BELOW && newIndex < myTree.getRowCount() - 1 && myTreeModel.canDrop(oldIndex, newIndex + 1, ABOVE)) {
-                return Trinity.create(oldIndex, newIndex + 1, ABOVE);
+            Object dragged = items.get(0).getValue();
+            Object target = context.getTarget().getValue();
+            if (dragged == null || target == null || dragged == target) {
+                return false;
             }
-            if (position == ABOVE && newIndex > 1 && myTreeModel.canDrop(oldIndex, newIndex - 1, BELOW)) {
-                return Trinity.create(oldIndex, newIndex - 1, BELOW);
+
+            Set<Object> expanded = new HashSet<>(myExpandedValues);
+            List<Object> rows = collectVisibleRows(expanded);
+            int oldIndex = indexOf(rows, dragged);
+            int newIndex = indexOf(rows, target);
+            DropPosition position = context.getPosition();
+            if (oldIndex < 0 || newIndex < 0 || !canDrop(rows, expanded, oldIndex, newIndex, position)) {
+                return false;
             }
-            if (position == BELOW && myTreeModel.canDrop(oldIndex, newIndex, ABOVE)) {
-                return Trinity.create(oldIndex, newIndex, ABOVE);
+
+            if (!context.isCheckOnly()) {
+                refreshTree(move(rows, expanded, new DropTarget(oldIndex, newIndex, position)));
             }
-            if (position == ABOVE && myTreeModel.canDrop(oldIndex, newIndex, BELOW)) {
-                return Trinity.create(oldIndex, newIndex, BELOW);
-            }
-            newIndex += direction;
+            return true;
         }
-        return null;
     }
 
-
-    private static String createUniqueName(DefaultMutableTreeNode typeNode, @Nullable String baseName, NodeKind... kinds) {
-        String str = (baseName == null) ? ExecutionLocalize.runConfigurationUnnamedNamePrefix().get() : baseName;
-        List<DefaultMutableTreeNode> configurationNodes = new ArrayList<>();
-        collectNodesRecursively(typeNode, configurationNodes, kinds);
-        List<String> currentNames = new ArrayList<>();
-        for (DefaultMutableTreeNode node : configurationNodes) {
-            Object userObject = node.getUserObject();
-            if (userObject instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-                currentNames.add(singleConfigConfigurable.getNameText());
-            }
-            else if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigSettings) {
-                currentNames.add(runnerAndConfigSettings.getName());
-            }
-            else if (userObject instanceof String s) {
-                currentNames.add(s);
-            }
-        }
-        return RunManager.suggestUniqueName(str, currentNames);
-    }
-
-    private SingleConfigurationConfigurable<RunConfiguration> createNewConfiguration(
-        RunnerAndConfigurationSettings settings,
-        DefaultMutableTreeNode node
-    ) {
-        SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable =
-            SingleConfigurationConfigurable.editSettings(settings, null);
-        installUpdateListeners(configurationConfigurable);
-        DefaultMutableTreeNode nodeToAdd = new DefaultMutableTreeNode(configurationConfigurable);
-        myTreeModel.insertNodeInto(nodeToAdd, node, node.getChildCount());
-        TreeUtil.selectNode(myTree, nodeToAdd);
-        return configurationConfigurable;
-    }
-
-    private void createNewConfiguration(ConfigurationFactory factory) {
-        DefaultMutableTreeNode node;
-        DefaultMutableTreeNode selectedNode = null;
-        TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath != null) {
-            selectedNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-        }
-        DefaultMutableTreeNode typeNode = getConfigurationTypeNode(factory.getType());
-        if (typeNode == null) {
-            typeNode = new DefaultMutableTreeNode(factory.getType());
-            myRoot.add(typeNode);
-            sortTopLevelBranches();
-            ((DefaultTreeModel) myTree.getModel()).reload();
-        }
-        node = typeNode;
-        if (selectedNode != null && typeNode.isNodeDescendant(selectedNode)) {
-            node = selectedNode;
-            if (getKind(node).isConfiguration()) {
-                node = (DefaultMutableTreeNode) node.getParent();
-            }
-        }
-        RunnerAndConfigurationSettings settings =
-            myRunManager.createConfiguration(createUniqueName(typeNode, null, CONFIGURATION, TEMPORARY_CONFIGURATION), factory);
-        factory.onNewConfigurationCreated(settings.getConfiguration());
-        createNewConfiguration(settings, node);
-    }
-
-    private class MyToolbarAddAction extends DumbAwareAction {
-        public MyToolbarAddAction() {
+    private class AddAction extends DumbAwareAction {
+        private AddAction() {
             super(
                 ExecutionLocalize.addNewRunConfigurationAction2Name(),
                 ExecutionLocalize.addNewRunConfigurationAction2Name(),
@@ -1193,394 +1885,71 @@ public class RunConfigurable extends BaseConfigurable {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            Component targetComponent = e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            boolean center = targetComponent instanceof JTree; // shortcut
-            showAddPopup(true, center, targetComponent);
-        }
-
-        private void showAddPopup(boolean showApplicableTypesOnly, boolean center, Component targetComponent) {
-            List<ConfigurationType> allTypes = myRunManager.getConfigurationFactories(false);
-            final List<ConfigurationType> configurationTypes =
-                ConfigurationTypeSelector.getTypesToShow(myProject, showApplicableTypesOnly, allTypes);
-            Collections.sort(configurationTypes, ConfigurationType.DISPLAY_NAME_COMPARATOR);
-            final int hiddenCount = allTypes.size() - configurationTypes.size();
-            if (hiddenCount > 0) {
-                configurationTypes.add(HIDDEN_ITEMS_STUB);
-            }
-
-            ListPopup popup = JBPopupFactory.getInstance().createListPopup(
-                new BaseListPopupStep<ConfigurationType>(ExecutionLocalize.addNewRunConfigurationAction2Name().get(), configurationTypes) {
-                    @Override
-                    public String getTextFor(ConfigurationType type) {
-                        if (type == HIDDEN_ITEMS_STUB) {
-                            return hiddenCount + " items more (irrelevant)...";
-                        }
-                        return type.getDisplayName().get();
-                    }
-
-                    @Override
-                    public boolean isSpeedSearchEnabled() {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean canBeHidden(ConfigurationType value) {
-                        return true;
-                    }
-
-                    @Override
-                    public Image getIconFor(ConfigurationType type) {
-                        return type.getIcon();
-                    }
-
-                    @Override
-                    public PopupStep onChosen(ConfigurationType type, boolean finalChoice) {
-                        if (hasSubstep(type)) {
-                            return getSupStep(type);
-                        }
-                        if (type == HIDDEN_ITEMS_STUB) {
-                            return doFinalStep(() -> showAddPopup(false, center, targetComponent));
-                        }
-
-                        ConfigurationFactory[] factories = type.getConfigurationFactories();
-                        if (factories.length > 0) {
-                            createNewConfiguration(factories[0]);
-                        }
-                        return FINAL_CHOICE;
-                    }
-
-                    @Override
-                    public int getDefaultOptionIndex() {
-                        ConfigurationType type = getSelectedConfigurationType();
-                        return type != null ? configurationTypes.indexOf(type) : super.getDefaultOptionIndex();
-                    }
-
-                    private ListPopupStep getSupStep(final ConfigurationType type) {
-                        final ConfigurationFactory[] factories = type.getConfigurationFactories();
-                        Arrays.sort(factories, ConfigurationFactory.DISPLAY_NAME_COMPARATOR);
-                        return new BaseListPopupStep<ConfigurationFactory>(
-                            ExecutionLocalize.addNewRunConfigurationActionName(type.getDisplayName()).get(),
-                            factories
-                        ) {
-                            @Override
-                            public String getTextFor(ConfigurationFactory value) {
-                                return value.getDisplayName().get();
-                            }
-
-                            @Override
-                            public Image getIconFor(ConfigurationFactory factory) {
-                                return factory.getIcon();
-                            }
-
-                            @Override
-                            public PopupStep onChosen(ConfigurationFactory factory, boolean finalChoice) {
-                                createNewConfiguration(factory);
-                                return FINAL_CHOICE;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public boolean hasSubstep(ConfigurationType type) {
-                        return type.getConfigurationFactories().length > 1;
-                    }
-                });
-
-            if (center) {
-                popup.showInCenterOf(myWholePanel);
-            } else {
-                popup.showUnderneathOf(targetComponent);
-            }
+            showAddPopup(true, popup -> popup.showUnderneathOf(e));
         }
     }
 
-    private class MyRemoveAction extends LegacyDumbAwareAction {
-        public MyRemoveAction() {
+    private class RemoveAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private RemoveAction() {
             super(
                 ExecutionLocalize.removeRunConfigurationActionName(),
                 ExecutionLocalize.removeRunConfigurationActionName(),
                 PlatformIconGroup.generalRemove()
             );
-            registerCustomShortcutSet(CommonShortcuts.getDelete(), myTree);
         }
 
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            doRemove();
-        }
-
-        @RequiredUIAccess
-        private void doRemove() {
-            TreePath[] selections = myTree.getSelectionPaths();
-            myTree.clearSelection();
-
-            int nodeIndexToSelect = -1;
-            DefaultMutableTreeNode parentToSelect = null;
-
-            Set<DefaultMutableTreeNode> changedParents = new HashSet<>();
-            boolean wasRootChanged = false;
-
-            for (TreePath each : selections) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) each.getLastPathComponent();
-                DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
-                NodeKind kind = getKind(node);
-                if (!kind.isConfiguration() && kind != FOLDER) {
-                    continue;
-                }
-
-                if (node.getUserObject() instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-                    singleConfigConfigurable.disposeUIResources();
-                }
-
-                nodeIndexToSelect = parent.getIndex(node);
-                parentToSelect = parent;
-                myTreeModel.removeNodeFromParent(node);
-                changedParents.add(parent);
-
-                if (kind == FOLDER) {
-                    List<DefaultMutableTreeNode> children = new ArrayList<>();
-                    for (int i = 0; i < node.getChildCount(); i++) {
-                        DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
-                        Object userObject = getSafeUserObject(child);
-                        if (userObject instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-                            singleConfigConfigurable.setFolderName(null);
-                        }
-                        children.add(0, child);
-                    }
-                    int confIndex = 0;
-                    for (int i = 0; i < parent.getChildCount(); i++) {
-                        if (getKind((DefaultMutableTreeNode) parent.getChildAt(i)).isConfiguration()) {
-                            confIndex = i;
-                            break;
-                        }
-                    }
-                    for (DefaultMutableTreeNode child : children) {
-                        if (getKind(child) == CONFIGURATION) {
-                            myTreeModel.insertNodeInto(child, parent, confIndex);
-                        }
-                    }
-                    confIndex = parent.getChildCount();
-                    for (int i = 0; i < parent.getChildCount(); i++) {
-                        if (getKind((DefaultMutableTreeNode) parent.getChildAt(i)) == TEMPORARY_CONFIGURATION) {
-                            confIndex = i;
-                            break;
-                        }
-                    }
-                    for (DefaultMutableTreeNode child : children) {
-                        if (getKind(child) == TEMPORARY_CONFIGURATION) {
-                            myTreeModel.insertNodeInto(child, parent, confIndex);
-                        }
-                    }
-                }
-
-                if (parent.getChildCount() == 0 && parent.getUserObject() instanceof ConfigurationType) {
-                    changedParents.remove(parent);
-                    wasRootChanged = true;
-
-                    nodeIndexToSelect = myRoot.getIndex(parent);
-                    nodeIndexToSelect = Math.max(0, nodeIndexToSelect - 1);
-                    parentToSelect = myRoot;
-                    parent.removeFromParent();
-                }
-            }
-
-            if (wasRootChanged) {
-                ((DefaultTreeModel) myTree.getModel()).reload();
-            }
-            else {
-                for (DefaultMutableTreeNode each : changedParents) {
-                    myTreeModel.reload(each);
-                    myTree.expandPath(new TreePath(each));
-                }
-            }
-
-            mySelectedConfigurable = null;
-            if (myRoot.getChildCount() == 0) {
-                drawPressAddButtonMessage(null);
-            }
-            else if (parentToSelect.getChildCount() > 0) {
-                TreeNode nodeToSelect = nodeIndexToSelect < parentToSelect.getChildCount()
-                    ? parentToSelect.getChildAt(nodeIndexToSelect)
-                    : parentToSelect.getChildAt(nodeIndexToSelect - 1);
-                TreeUtil.selectInTree((DefaultMutableTreeNode) nodeToSelect, true, myTree);
-            }
+            removeSelected();
         }
 
         @Override
         public void update(AnActionEvent e) {
-            boolean enabled = isEnabled(e);
-            e.getPresentation().setEnabled(enabled);
-        }
-
-        private boolean isEnabled(AnActionEvent e) {
-            boolean enabled = false;
-            TreePath[] selections = myTree.getSelectionPaths();
-            if (selections != null) {
-                for (TreePath each : selections) {
-                    NodeKind kind = getKind((DefaultMutableTreeNode) each.getLastPathComponent());
-                    if (kind.isConfiguration() || kind == FOLDER) {
-                        enabled = true;
-                        break;
-                    }
-                }
-            }
-            return enabled;
+            e.getPresentation().setEnabled(myActionState.remove());
         }
     }
 
-    private class MyCopyAction extends LegacyAnAction {
-        public MyCopyAction() {
+    private class CopyAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private CopyAction() {
             super(
                 ExecutionLocalize.copyConfigurationActionName(),
                 ExecutionLocalize.copyConfigurationActionName(),
                 PlatformIconGroup.actionsCopy()
             );
-
-            AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_DUPLICATE);
-            registerCustomShortcutSet(action.getShortcutSet(), myTree);
         }
 
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
-            LOG.assertTrue(configuration != null);
-            try {
-                DefaultMutableTreeNode typeNode = getSelectedConfigurationTypeNode();
-                RunnerAndConfigurationSettings settings = configuration.getSnapshot();
-                String copyName = createUniqueName(typeNode, configuration.getNameText(), CONFIGURATION, TEMPORARY_CONFIGURATION);
-                settings.setName(copyName);
-                ConfigurationFactory factory = settings.getFactory();
-                factory.onConfigurationCopied(settings.getConfiguration());
-                SingleConfigurationConfigurable<RunConfiguration> configurable = createNewConfiguration(settings, typeNode);
-                ProjectIdeFocusManager.getInstance(myProject).requestFocus(configurable.getNameTextField(), true);
-                configurable.getNameTextField().setSelectionStart(0);
-                configurable.getNameTextField().setSelectionEnd(copyName.length());
-            }
-            catch (ConfigurationException e1) {
-                Messages.showErrorDialog(myTree, e1.getMessage(), e1.getTitle().get());
-            }
+            copySelected();
         }
 
         @Override
         public void update(AnActionEvent e) {
-            SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
-            e.getPresentation().setEnabled(configuration != null && !(configuration.getConfiguration() instanceof UnknownRunConfiguration));
+            e.getPresentation().setEnabled(myActionState.copy());
         }
     }
 
-    private class MySaveAction extends LegacyDumbAwareAction {
-        public MySaveAction() {
-            super(
-                ExecutionLocalize.actionNameSaveConfiguration(),
-                LocalizeValue.empty(),
-                PlatformIconGroup.actionsMenu_saveall()
-            );
+    private class SaveAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private SaveAction() {
+            super(ExecutionLocalize.actionNameSaveConfiguration(), LocalizeValue.empty(), PlatformIconGroup.actionsMenu_saveall());
         }
 
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable = getSelectedConfiguration();
-            LOG.assertTrue(configurationConfigurable != null);
-            try {
-                configurationConfigurable.apply();
-            }
-            catch (ConfigurationException e1) {
-                //do nothing
-            }
-            RunnerAndConfigurationSettings originalConfiguration = configurationConfigurable.getSettings();
-            if (originalConfiguration.isTemporary()) {
-                myRunManager.makeStable(originalConfiguration);
-                adjustOrder();
-            }
-            myTree.repaint();
+            saveSelected();
         }
 
         @Override
         public void update(AnActionEvent e) {
-            SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
-            boolean enabled;
-            if (configuration == null) {
-                enabled = false;
-            }
-            else {
-                RunnerAndConfigurationSettings settings = configuration.getSettings();
-                enabled = settings != null && settings.isTemporary();
-            }
-            e.getPresentation().setEnabled(enabled);
+            e.getPresentation().setEnabled(myActionState.save());
         }
     }
 
-    /**
-     * Just saved as 'stable' configuration shouldn't stay between temporary ones (here we order nodes in JTree only)
-     *
-     * @return shift (positive) for move configuration "up" to other stable configurations. Zero means "there is nothing to change"
-     */
-    private int adjustOrder() {
-        TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath == null) {
-            return 0;
-        }
-        DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-        RunnerAndConfigurationSettings selectedSettings = getSettings(treeNode);
-        if (selectedSettings == null || selectedSettings.isTemporary()) {
-            return 0;
-        }
-        MutableTreeNode parent = (MutableTreeNode) treeNode.getParent();
-        int initialPosition = parent.getIndex(treeNode);
-        int position = initialPosition;
-        DefaultMutableTreeNode node = treeNode.getPreviousSibling();
-        while (node != null) {
-            RunnerAndConfigurationSettings settings = getSettings(node);
-            if (settings != null && settings.isTemporary()) {
-                position--;
-            }
-            else {
-                break;
-            }
-            node = node.getPreviousSibling();
-        }
-        for (int i = 0; i < initialPosition - position; i++) {
-            TreeUtil.moveSelectedRow(myTree, -1);
-        }
-        return initialPosition - position;
-    }
-
-    private class MyMoveAction extends LegacyDumbAwareAction {
-        private final int myDirection;
-
-        protected MyMoveAction(LocalizeValue text, Image icon, int direction) {
-            super(text, LocalizeValue.empty(), icon);
-            myDirection = direction;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
-            doMove();
-        }
-
-        private void doMove() {
-            Trinity<Integer, Integer, RowsDnDSupport.RefinedDropSupport.Position> dropPosition = getAvailableDropPosition(myDirection);
-            if (dropPosition != null) {
-                myTreeModel.drop(dropPosition.first, dropPosition.second, dropPosition.third);
-            }
-        }
-
-        @Override
-        public void update(AnActionEvent e) {
-            e.getPresentation().setEnabled(isEnabled(e));
-        }
-
-        private boolean isEnabled(AnActionEvent e) {
-            return getAvailableDropPosition(myDirection) != null;
-        }
-    }
-
-    private class MyEditDefaultsAction extends LegacyDumbAwareAction {
-        public MyEditDefaultsAction() {
+    private class EditDefaultsAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private EditDefaultsAction() {
             super(
                 ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText(),
                 ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsDescription(),
@@ -1591,43 +1960,41 @@ public class RunConfigurable extends BaseConfigurable {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            TreeNode defaults = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot);
-            if (defaults != null) {
-                ConfigurationType configurationType = getSelectedConfigurationType();
-                if (configurationType != null) {
-                    defaults = TreeUtil.findNodeWithObject(configurationType, myTree.getModel(), defaults);
-                }
-                DefaultMutableTreeNode defaultsNode = (DefaultMutableTreeNode) defaults;
-                if (defaultsNode == null) {
-                    return;
-                }
-                TreePath path = TreeUtil.getPath(myRoot, defaultsNode);
-                myTree.expandPath(path);
-                TreeUtil.selectInTree(defaultsNode, true, myTree);
-                myTree.scrollPathToVisible(path);
+            Object templateNode = findTemplateNode(getSelectedConfigurationType());
+            if (templateNode != null) {
+                revealValue(templateNode, true);
             }
         }
 
         @Override
         public void update(AnActionEvent e) {
-            boolean isEnabled = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot) != null;
-            TreePath path = myTree.getSelectionPath();
-            if (path != null) {
-                Object o = path.getLastPathComponent();
-                if (o instanceof DefaultMutableTreeNode treeNode && treeNode.getUserObject().equals(DEFAULTS)) {
-                    isEnabled = false;
-                }
-                o = path.getParentPath().getLastPathComponent();
-                if (o instanceof DefaultMutableTreeNode treeNode && treeNode.getUserObject().equals(DEFAULTS)) {
-                    isEnabled = false;
-                }
-            }
-            e.getPresentation().setEnabled(isEnabled);
+            e.getPresentation().setEnabled(myActionState.editDefaults());
         }
     }
 
-    private class MyCreateFolderAction extends LegacyDumbAwareAction {
-        private MyCreateFolderAction() {
+    private class MoveAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private final int myDirection;
+
+        private MoveAction(LocalizeValue text, Image icon, int direction) {
+            super(text, LocalizeValue.empty(), icon);
+            myDirection = direction;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            moveSelected(myDirection);
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            ActionState state = myActionState;
+            e.getPresentation().setEnabled(myDirection < 0 ? state.moveUp() : state.moveDown());
+        }
+    }
+
+    private class CreateFolderAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private CreateFolderAction() {
             super(
                 ExecutionLocalize.runConfigurationCreateFolderText(),
                 ExecutionLocalize.runConfigurationCreateFolderDescription(),
@@ -1638,437 +2005,18 @@ public class RunConfigurable extends BaseConfigurable {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            ConfigurationType type = getSelectedConfigurationType();
-            if (type == null) {
-                return;
-            }
-            DefaultMutableTreeNode[] selectedNodes = getSelectedNodes();
-            DefaultMutableTreeNode typeNode = getConfigurationTypeNode(type);
-            if (typeNode == null) {
-                return;
-            }
-            String folderName = createUniqueName(typeNode, "New Folder", FOLDER);
-            List<DefaultMutableTreeNode> folders = new ArrayList<>();
-            collectNodesRecursively(getConfigurationTypeNode(type), folders, FOLDER);
-            DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(folderName);
-            myTreeModel.insertNodeInto(folderNode, typeNode, folders.size());
-            isFolderCreating = true;
-            try {
-                for (DefaultMutableTreeNode node : selectedNodes) {
-                    int folderRow = myTree.getRowForPath(new TreePath(folderNode.getPath()));
-                    int rowForPath = myTree.getRowForPath(new TreePath(node.getPath()));
-                    if (getKind(node).isConfiguration() && myTreeModel.canDrop(rowForPath, folderRow, INTO)) {
-                        myTreeModel.drop(rowForPath, folderRow, INTO);
-                    }
-                }
-                myTree.setSelectionPath(new TreePath(folderNode.getPath()));
-            }
-            finally {
-                isFolderCreating = false;
-            }
+            createFolder();
         }
 
         @Override
         public void update(AnActionEvent e) {
-            boolean isEnabled = false;
-            boolean toMove = false;
-            DefaultMutableTreeNode[] selectedNodes = getSelectedNodes();
-            ConfigurationType selectedType = null;
-            for (DefaultMutableTreeNode node : selectedNodes) {
-                ConfigurationType type = getType(node);
-                if (selectedType == null) {
-                    selectedType = type;
-                }
-                else if (!Comparing.equal(type, selectedType)) {
-                    isEnabled = false;
-                    break;
-                }
-                NodeKind kind = getKind(node);
-                if (kind.isConfiguration() || (kind == CONFIGURATION_TYPE && node.getParent() == myRoot) || kind == FOLDER) {
-                    isEnabled = true;
-                }
-                if (kind.isConfiguration()) {
-                    toMove = true;
-                }
-            }
+            ActionState state = myActionState;
             e.getPresentation().setText(
-                toMove
+                state.createFolderMoves()
                     ? ExecutionLocalize.runConfigurationCreateFolderDescriptionMove()
                     : ExecutionLocalize.runConfigurationCreateFolderDescription()
             );
-            e.getPresentation().setEnabled(isEnabled);
-        }
-    }
-
-    private static @Nullable ConfigurationType getType(DefaultMutableTreeNode node) {
-        while (node != null) {
-            if (node.getUserObject() instanceof ConfigurationType configType) {
-                return configType;
-            }
-            node = (DefaultMutableTreeNode) node.getParent();
-        }
-        return null;
-    }
-
-    private DefaultMutableTreeNode[] getSelectedNodes() {
-        return myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
-    }
-
-    private @Nullable DefaultMutableTreeNode getSelectedNode() {
-        DefaultMutableTreeNode[] nodes = myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
-        return nodes.length > 1 ? nodes[0] : null;
-    }
-
-    private @Nullable RunnerAndConfigurationSettings getSelectedSettings() {
-        TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath == null) {
-            return null;
-        }
-        return getSettings((DefaultMutableTreeNode) selectionPath.getLastPathComponent());
-    }
-
-    private static @Nullable RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
-        if (treeNode == null) {
-            return null;
-        }
-        RunnerAndConfigurationSettings settings = null;
-        if (treeNode.getUserObject() instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-            settings = (RunnerAndConfigurationSettings) singleConfigConfigurable.getSettings();
-        }
-        if (treeNode.getUserObject() instanceof RunnerAndConfigurationSettings configSettings) {
-            settings = configSettings;
-        }
-        return settings;
-    }
-
-    private static class RunConfigurationBean {
-        private final RunnerAndConfigurationSettings mySettings;
-        private final boolean myShared;
-        private final List<BeforeRunTask> myStepsBeforeLaunch;
-        private final SingleConfigurationConfigurable myConfigurable;
-
-        public RunConfigurationBean(
-            RunnerAndConfigurationSettings settings,
-            boolean shared,
-            List<BeforeRunTask> stepsBeforeLaunch
-        ) {
-            mySettings = settings;
-            myShared = shared;
-            myStepsBeforeLaunch = Collections.unmodifiableList(stepsBeforeLaunch);
-            myConfigurable = null;
-        }
-
-        public RunConfigurationBean(SingleConfigurationConfigurable configurable) {
-            myConfigurable = configurable;
-            mySettings = (RunnerAndConfigurationSettings) myConfigurable.getSettings();
-            ConfigurationSettingsEditorWrapperImpl editorWrapper = (ConfigurationSettingsEditorWrapperImpl) myConfigurable.getEditor();
-            myShared = configurable.isStoreProjectConfiguration();
-            myStepsBeforeLaunch = editorWrapper.getStepsBeforeLaunch();
-        }
-
-        public RunnerAndConfigurationSettings getSettings() {
-            return mySettings;
-        }
-
-        public boolean isShared() {
-            return myShared;
-        }
-
-        public List<BeforeRunTask> getStepsBeforeLaunch() {
-            return myStepsBeforeLaunch;
-        }
-
-        public SingleConfigurationConfigurable getConfigurable() {
-            return myConfigurable;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(mySettings);
-        }
-    }
-
-    public interface RunDialogBase {
-        void setOKActionEnabled(boolean isEnabled);
-
-        @Nullable Executor getExecutor();
-
-        void setTitle(String title);
-
-        void clickDefaultButton();
-    }
-
-    enum NodeKind {
-        CONFIGURATION_TYPE,
-        FOLDER,
-        CONFIGURATION,
-        TEMPORARY_CONFIGURATION,
-        UNKNOWN;
-
-        boolean supportsDnD() {
-            return this == FOLDER || this == CONFIGURATION || this == TEMPORARY_CONFIGURATION;
-        }
-
-        boolean isConfiguration() {
-            return this == CONFIGURATION | this == TEMPORARY_CONFIGURATION;
-        }
-    }
-
-    static NodeKind getKind(@Nullable DefaultMutableTreeNode node) {
-        if (node == null) {
-            return UNKNOWN;
-        }
-        Object userObject = node.getUserObject();
-        if (userObject instanceof SingleConfigurationConfigurable || userObject instanceof RunnerAndConfigurationSettings) {
-            RunnerAndConfigurationSettings settings = getSettings(node);
-            if (settings == null) {
-                return UNKNOWN;
-            }
-            return settings.isTemporary() ? TEMPORARY_CONFIGURATION : CONFIGURATION;
-        }
-        if (userObject instanceof String) {
-            return FOLDER;
-        }
-        if (userObject instanceof ConfigurationType) {
-            return CONFIGURATION_TYPE;
-        }
-        return UNKNOWN;
-    }
-
-    class MyTreeModel extends DefaultTreeModel implements EditableModel, RowsDnDSupport.RefinedDropSupport {
-        private MyTreeModel(TreeNode root) {
-            super(root);
-        }
-
-        @Override
-        public void addRow() {
-        }
-
-        @Override
-        public void removeRow(int index) {
-        }
-
-        @Override
-        public void exchangeRows(int oldIndex, int newIndex) {
-            //Do nothing, use drop() instead
-        }
-
-        @Override
-        public boolean canExchangeRows(int oldIndex, int newIndex) {
-            return false;//Legacy, use canDrop() instead
-        }
-
-        @Override
-        public boolean canDrop(int oldIndex, int newIndex, Position position) {
-            if (myTree.getRowCount() <= oldIndex || myTree.getRowCount() <= newIndex || oldIndex < 0 || newIndex < 0) {
-                return false;
-            }
-            DefaultMutableTreeNode oldNode = (DefaultMutableTreeNode) myTree.getPathForRow(oldIndex).getLastPathComponent();
-            DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) myTree.getPathForRow(newIndex).getLastPathComponent();
-            DefaultMutableTreeNode oldParent = (DefaultMutableTreeNode) oldNode.getParent();
-            DefaultMutableTreeNode newParent = (DefaultMutableTreeNode) newNode.getParent();
-            NodeKind oldKind = getKind(oldNode);
-            NodeKind newKind = getKind(newNode);
-            ConfigurationType oldType = getType(oldNode);
-            ConfigurationType newType = getType(newNode);
-            if (oldParent == newParent) {
-                if (oldNode.getPreviousSibling() == newNode && position == BELOW) {
-                    return false;
-                }
-                if (oldNode.getNextSibling() == newNode && position == ABOVE) {
-                    return false;
-                }
-            }
-            if (oldType == null) {
-                return false;
-            }
-            if (oldType != newType) {
-                DefaultMutableTreeNode typeNode = getConfigurationTypeNode(oldType);
-                //noinspection SimplifiableIfStatement
-                if (getKind(oldParent) == FOLDER && typeNode != null && typeNode.getNextSibling() == newNode && position == ABOVE) {
-                    return true;
-                }
-                return getKind(oldParent) == CONFIGURATION_TYPE
-                    && oldKind == FOLDER
-                    && typeNode != null
-                    && typeNode.getNextSibling() == newNode
-                    && position == ABOVE
-                    && oldParent.getLastChild() != oldNode
-                    && getKind((DefaultMutableTreeNode) oldParent.getLastChild()) == FOLDER;
-            }
-            if (newParent == oldNode || oldParent == newNode) {
-                return false;
-            }
-            if (oldKind == FOLDER && newKind != FOLDER) {
-                return newKind.isConfiguration()
-                    && position == ABOVE
-                    && getKind(newParent) == CONFIGURATION_TYPE
-                    && newIndex > 1
-                    && getKind((DefaultMutableTreeNode) myTree.getPathForRow(newIndex - 1)
-                    .getParentPath()
-                    .getLastPathComponent()) == FOLDER;
-            }
-            if (!oldKind.supportsDnD() || !newKind.supportsDnD()) {
-                return false;
-            }
-            if (oldKind.isConfiguration() && newKind == FOLDER && position == ABOVE) {
-                return false;
-            }
-            if (oldKind == TEMPORARY_CONFIGURATION && newKind == CONFIGURATION && position == ABOVE) {
-                return false;
-            }
-            if (oldKind == CONFIGURATION && newKind == TEMPORARY_CONFIGURATION && position == BELOW) {
-                return false;
-            }
-            if (oldKind == CONFIGURATION && newKind == TEMPORARY_CONFIGURATION && position == ABOVE) {
-                return newNode.getPreviousSibling() == null ||
-                    getKind(newNode.getPreviousSibling()) == CONFIGURATION ||
-                    getKind(newNode.getPreviousSibling()) == FOLDER;
-            }
-            if (oldKind == TEMPORARY_CONFIGURATION && newKind == CONFIGURATION && position == BELOW) {
-                return newNode.getNextSibling() == null || getKind(newNode.getNextSibling()) == TEMPORARY_CONFIGURATION;
-            }
-            if (oldParent == newParent) { //Same parent
-                if (oldKind.isConfiguration() && newKind.isConfiguration()) {
-                    return oldKind == newKind;//both are temporary or saved
-                }
-                else if (oldKind == FOLDER) {
-                    return !myTree.isExpanded(newIndex) || position == ABOVE;
-                }
-            }
-            return true;
-        }
-
-        @Override
-        public boolean isDropInto(JComponent component, int oldIndex, int newIndex) {
-            TreePath oldPath = myTree.getPathForRow(oldIndex);
-            TreePath newPath = myTree.getPathForRow(newIndex);
-            if (oldPath == null || newPath == null) {
-                return false;
-            }
-            DefaultMutableTreeNode oldNode = (DefaultMutableTreeNode) oldPath.getLastPathComponent();
-            DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) newPath.getLastPathComponent();
-            return getKind(oldNode).isConfiguration() && getKind(newNode) == FOLDER;
-        }
-
-        @Override
-        public void drop(int oldIndex, int newIndex, Position position) {
-            DefaultMutableTreeNode oldNode = (DefaultMutableTreeNode) myTree.getPathForRow(oldIndex).getLastPathComponent();
-            DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) myTree.getPathForRow(newIndex).getLastPathComponent();
-            DefaultMutableTreeNode newParent = (DefaultMutableTreeNode) newNode.getParent();
-            NodeKind oldKind = getKind(oldNode);
-            boolean wasExpanded = myTree.isExpanded(new TreePath(oldNode.getPath()));
-            if (isDropInto(myTree, oldIndex, newIndex)) { //Drop in folder
-                removeNodeFromParent(oldNode);
-                int index = newNode.getChildCount();
-                if (oldKind.isConfiguration()) {
-                    int middleIndex = newNode.getChildCount();
-                    for (int i = 0; i < newNode.getChildCount(); i++) {
-                        if (getKind((DefaultMutableTreeNode) newNode.getChildAt(i)) == TEMPORARY_CONFIGURATION) {
-                            middleIndex = i;//index of first temporary configuration in target folder
-                            break;
-                        }
-                    }
-                    if (position != INTO) {
-                        if (oldIndex < newIndex) {
-                            index = oldKind == CONFIGURATION ? 0 : middleIndex;
-                        }
-                        else {
-                            index = oldKind == CONFIGURATION ? middleIndex : newNode.getChildCount();
-                        }
-                    }
-                    else {
-                        index = oldKind == TEMPORARY_CONFIGURATION ? newNode.getChildCount() : middleIndex;
-                    }
-                }
-                insertNodeInto(oldNode, newNode, index);
-                myTree.expandPath(new TreePath(newNode.getPath()));
-            }
-            else {
-                ConfigurationType type = getType(oldNode);
-                assert type != null;
-                removeNodeFromParent(oldNode);
-                int index;
-                if (type != getType(newNode)) {
-                    DefaultMutableTreeNode typeNode = getConfigurationTypeNode(type);
-                    assert typeNode != null;
-                    newParent = typeNode;
-                    index = newParent.getChildCount();
-                }
-                else {
-                    index = newParent.getIndex(newNode);
-                    if (position == BELOW) {
-                        index++;
-                    }
-                }
-                insertNodeInto(oldNode, newParent, index);
-            }
-            TreePath treePath = new TreePath(oldNode.getPath());
-            myTree.setSelectionPath(treePath);
-            if (wasExpanded) {
-                myTree.expandPath(treePath);
-            }
-        }
-
-        @Override
-        public void insertNodeInto(MutableTreeNode newChild, MutableTreeNode parent, int index) {
-            super.insertNodeInto(newChild, parent, index);
-            if (!getKind((DefaultMutableTreeNode) newChild).isConfiguration()) {
-                return;
-            }
-            Object userObject = getSafeUserObject((DefaultMutableTreeNode) newChild);
-            String newFolderName = getKind((DefaultMutableTreeNode) parent) == FOLDER
-                ? (String) ((DefaultMutableTreeNode) parent).getUserObject()
-                : null;
-            if (userObject instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-                singleConfigConfigurable.setFolderName(newFolderName);
-            }
-        }
-
-        @Override
-        public void reload(TreeNode node) {
-            super.reload(node);
-            Object userObject = ((DefaultMutableTreeNode) node).getUserObject();
-            if (userObject instanceof String folderName) {
-                for (int i = 0; i < node.getChildCount(); i++) {
-                    DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
-                    Object safeUserObject = getSafeUserObject(child);
-                    if (safeUserObject instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
-                        singleConfigConfigurable.setFolderName(folderName);
-                    }
-                }
-            }
-        }
-
-        private @Nullable RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
-            Object userObject = treeNode.getUserObject();
-            if (userObject instanceof SingleConfigurationConfigurable configurable) {
-                return (RunnerAndConfigurationSettings) configurable.getSettings();
-            }
-            else if (userObject instanceof RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
-                return runnerAndConfigurationSettings;
-            }
-            return null;
-        }
-
-        private @Nullable ConfigurationType getType(@Nullable DefaultMutableTreeNode treeNode) {
-            if (treeNode == null) {
-                return null;
-            }
-            Object userObject = treeNode.getUserObject();
-            if (userObject instanceof SingleConfigurationConfigurable configurable) {
-                return configurable.getConfiguration().getType();
-            }
-            else if (userObject instanceof RunnerAndConfigurationSettings runnerAndConfigSettings) {
-                return runnerAndConfigSettings.getType();
-            }
-            else if (userObject instanceof ConfigurationType configType) {
-                return configType;
-            }
-            if (treeNode.getParent() instanceof DefaultMutableTreeNode mutableTreeNode) {
-                return getType(mutableTreeNode);
-            }
-            return null;
+            e.getPresentation().setEnabled(state.createFolder());
         }
     }
 }

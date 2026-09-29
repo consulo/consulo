@@ -17,29 +17,26 @@ package consulo.configuration.editor;
 
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.UIAccess;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -53,9 +50,11 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
     protected U myConfigurable;
 
-    private JComponent myPreferredFocusedComponent;
+    private @Nullable Component myPreferredFocusedComponent;
 
-    private JPanel myContentPanel;
+    private @Nullable DockLayout myContentPanel;
+
+    private @Nullable Component myApplyPanel;
 
     private boolean myDisposed;
 
@@ -65,7 +64,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         super(project, virtualFile);
     }
 
-    
+
     protected abstract U createConfigurable();
 
     @RequiredUIAccess
@@ -75,19 +74,31 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         }
 
         myConfigurable = createConfigurable();
-        JComponent component = ConfigurableUIMigrationUtil.createComponent(myConfigurable, this);
-        assert component != null;
-        UiNotifyConnector.doWhenFirstShown(component, () -> {
-            myUpdateFuture = UIAccess.current().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
-        });
-        myPreferredFocusedComponent = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
 
-        myContentPanel = new JPanel(new BorderLayout());
-        myContentPanel.add(component, BorderLayout.CENTER);
+        Component component = createComponent(myConfigurable);
 
-        DumbAwareAction.create(anActionEvent -> {
-            doSave();
-        }).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), myContentPanel, this);
+        myConfigurable.reset();
+
+        myPreferredFocusedComponent = myConfigurable.getPreferredFocusedUIComponent();
+
+        myContentPanel = DockLayout.create();
+        myContentPanel.center(component);
+
+        myApplyPanel = createApplyPanel();
+        myApplyPanel.setVisible(false);
+        myContentPanel.bottom(myApplyPanel);
+
+        if (TargetAWT.to(myContentPanel) instanceof JComponent contentComponent) {
+            DumbAwareAction.create(anActionEvent -> doSave()).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), contentComponent, this);
+        }
+
+        myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
+    }
+
+    @RequiredUIAccess
+    private Component createComponent(U configurable) {
+        Component uiComponent = configurable.createUIComponent(this);
+        return uiComponent == null ? DockLayout.create() : uiComponent;
     }
 
     protected void onApply(U configurable) {
@@ -103,55 +114,47 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
             }
             catch (ConfigurationException e) {
                 if (e.getMessage() != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
+                    MessageBoxes.okError(LocalizeValue.of(e.getMessage()))
+                        .title(e.getTitle())
+                        .showAsync(myContentPanel);
                 }
             }
         }
     }
 
     @RequiredUIAccess
+    private Component createApplyPanel() {
+        DockLayout panel = DockLayout.create();
+        panel.borderBuilder().topSet().apply();
+
+        HorizontalLayout buttonsPanel = HorizontalLayout.create();
+        buttonsPanel.paddingBuilder().allSet(Space.MEDIUM).apply();
+
+        Button applyButton = Button.create(CommonLocalize.buttonApply(), event -> doSave());
+        applyButton.addStyle(ButtonStyle.PRIMARY);
+        buttonsPanel.add(applyButton);
+
+        panel.right(buttonsPanel);
+        return panel;
+    }
+
+    @RequiredUIAccess
     private void checkModified() {
-        BorderLayout layout = (BorderLayout) myContentPanel.getLayout();
-        Component layoutComponent = layout.getLayoutComponent(BorderLayout.SOUTH);
-
-        if (myConfigurable != null && myConfigurable.isModified()) {
-            myModified = true;
-
-            if (layoutComponent != null) {
-                return;
-            }
-
-            // bottom panel
-            DockLayout panel = DockLayout.create();
-            panel.borderBuilder().topSet().apply();
-
-            HorizontalLayout buttonsPanel = HorizontalLayout.create();
-            buttonsPanel.paddingBuilder().allSet(Space.MEDIUM).apply();
-
-            Button applyButton = Button.create(CommonLocalize.buttonApply(), event -> doSave());
-            applyButton.addStyle(ButtonStyle.PRIMARY);
-            buttonsPanel.add(applyButton);
-
-            panel.right(buttonsPanel);
-
-            myContentPanel.add(TargetAWT.to(panel), BorderLayout.SOUTH);
-
-            panel.forceRepaint();
-
-            myContentPanel.validate();
-            myContentPanel.repaint();
-
-            FileEditorManager.getInstance(myProject).refreshIconsAsync();
+        Component applyPanel = myApplyPanel;
+        if (applyPanel == null || myDisposed) {
+            return;
         }
-        else {
-            myModified = false;
 
-            if (layoutComponent != null) {
-                myContentPanel.remove(layoutComponent);
-
-                FileEditorManager.getInstance(myProject).refreshIconsAsync();
-            }
+        boolean modified = myConfigurable != null && myConfigurable.isModified();
+        if (modified == myModified) {
+            return;
         }
+
+        myModified = modified;
+
+        applyPanel.setVisible(modified);
+
+        FileEditorManager.getInstance(myProject).refreshIconsAsync();
     }
 
     @Override
@@ -159,28 +162,20 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         return myModified;
     }
 
-    
     @Override
     @RequiredUIAccess
-    public JComponent getComponent() {
+    public Component getUIComponent() {
         init();
         return myContentPanel;
     }
 
     @Override
     @RequiredUIAccess
-    public consulo.ui.Component getUIComponent() {
-        init();
-        return TargetAWT.wrap(myContentPanel);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public @Nullable JComponent getPreferredFocusedComponent() {
+    public @Nullable Component getPreferredFocusedUIComponent() {
         if (myDisposed) {
             return null;
         }
-        
+
         init();
         return myPreferredFocusedComponent;
     }

@@ -16,61 +16,69 @@
 package consulo.execution.impl.internal.ui;
 
 import consulo.disposer.Disposable;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.execution.configuration.ui.CompositeSettingsBuilder;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.Tab;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.TabbedLayout;
+import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
-  private final SettingsEditorGroup<T> myGroup;
-  private JComponent myComponent;
+    private final SettingsEditorGroup<T> myGroup;
+    private @Nullable Component myComponent;
 
-  public GroupSettingsBuilder(SettingsEditorGroup<T> group) {
-    myGroup = group;
-  }
-
-  
-  @Override
-  public Collection<SettingsEditor<T>> getEditors() {
-    List<SettingsEditor<T>> result = new ArrayList<>();
-    List<Pair<LocalizeValue,SettingsEditor<T>>> editors = myGroup.getEditors();
-    for (Pair<LocalizeValue, SettingsEditor<T>> editor : editors) {
-      result.add(editor.getSecond());
+    public GroupSettingsBuilder(SettingsEditorGroup<T> group) {
+        myGroup = group;
     }
-    return result;
-  }
 
-  
-  @Override
-  public JComponent createCompoundEditor(Disposable disposable) {
-    if (myComponent == null) {
-      myComponent = doCreateComponent(disposable);
+    @Override
+    public Collection<SettingsEditor<T>> getEditors() {
+        List<SettingsEditor<T>> result = new ArrayList<>();
+        for (Pair<LocalizeValue, SettingsEditor<T>> editor : myGroup.getEditors()) {
+            result.add(editor.getSecond());
+        }
+        return result;
     }
-    return myComponent;
-  }
 
-  
-  @RequiredUIAccess
-  private JComponent doCreateComponent(Disposable disposable) {
-    List<Pair<LocalizeValue,SettingsEditor<T>>> editors = myGroup.getEditors();
-    if (editors.size() == 0) return new JPanel();
-    if (editors.size() == 1) return editors.get(0).getSecond().getComponent();
-
-    TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(disposable);
-    for (Pair<LocalizeValue, SettingsEditor<T>> pair : editors) {
-      JPanel panel = new JPanel(new BorderLayout());
-      panel.add(pair.getSecond().getComponent(), BorderLayout.CENTER);
-      tabbedPaneWrapper.addTab(pair.getFirst().get(), panel);
+    @RequiredUIAccess
+    @Override
+    public Component createCompoundEditor(Disposable disposable) {
+        Component component = myComponent;
+        if (component == null) {
+            component = doCreateComponent();
+            myComponent = component;
+        }
+        return component;
     }
-    return tabbedPaneWrapper.getComponent();
-  }
+
+    @RequiredUIAccess
+    private Component doCreateComponent() {
+        List<Pair<LocalizeValue, SettingsEditor<T>>> editors = myGroup.getEditors();
+        if (editors.isEmpty()) {
+            return DockLayout.create();
+        }
+        if (editors.size() == 1) {
+            return editors.get(0).getSecond().getUIComponent();
+        }
+
+        TabbedLayout tabbedLayout = TabbedLayout.create();
+        for (Pair<LocalizeValue, SettingsEditor<T>> pair : editors) {
+            LocalizeValue title = pair.getFirst();
+
+            Tab tab = tabbedLayout.createTab();
+            tab.setRenderer((it, presentation) -> presentation.append(title));
+
+            tabbedLayout.addTab(tab, pair.getSecond().getUIComponent());
+        }
+        return tabbedLayout;
+    }
 }

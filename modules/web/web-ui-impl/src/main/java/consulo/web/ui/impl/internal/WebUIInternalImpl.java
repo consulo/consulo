@@ -180,6 +180,15 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
+        if (model instanceof LazyFlatDataModel) {
+            return new WebPooledListBoxImpl<>(model);
+        }
+
+        return new WebPopupListBoxImpl<>(model);
+    }
+
+    @Override
     @RequiredUIAccess
     public TextBox _Components_textBox(String text) {
         return new WebTextBoxImpl(text);

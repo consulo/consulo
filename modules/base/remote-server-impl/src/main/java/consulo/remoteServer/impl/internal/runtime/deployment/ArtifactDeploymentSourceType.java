@@ -26,7 +26,7 @@ import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import org.jdom.Element;
 
-import javax.swing.*;
+import consulo.ui.Component;
 
 /**
  * @author nik
@@ -60,7 +60,7 @@ public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactD
   }
 
   @Override
-  public void updateBuildBeforeRunOption(JComponent component, Project project, ArtifactDeploymentSource source, boolean select) {
+  public void updateBuildBeforeRunOption(Component component, Project project, ArtifactDeploymentSource source, boolean select) {
     Artifact artifact = source.getArtifact();
     if (artifact != null) {
       BuildArtifactsBeforeRunTaskHelper helper = project.getInstance(BuildArtifactsBeforeRunTaskHelper.class);

@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.EditorEx;
@@ -29,6 +30,8 @@ import java.util.function.Consumer;
  * @author Denis Zhdanov
  * @since 2010-08-18
  */
+@Deprecated
+@DeprecationInfo("Use EditorBox")
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface EditorTextFieldProvider {
 

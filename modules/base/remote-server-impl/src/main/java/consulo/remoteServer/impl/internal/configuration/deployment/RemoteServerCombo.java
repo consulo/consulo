@@ -1,84 +1,86 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
-import consulo.application.util.RecursionManager;
+import consulo.disposer.Disposable;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.impl.internal.configuration.RemoteServerListConfigurable;
 import consulo.remoteServer.localize.RemoteServerLocalize;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.UserActivityProviderComponent;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
-public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWithBrowseButton implements UserActivityProviderComponent {
+public class RemoteServerCombo<S extends ServerConfiguration> implements PseudoComponent, Disposable {
     private static final Comparator<RemoteServer<?>> SERVERS_COMPARATOR =
         Comparator.comparing(RemoteServer::getName, String.CASE_INSENSITIVE_ORDER);
 
     private final ServerType<S> myServerType;
-    private final List<ChangeListener> myChangeListeners = Lists.newLockFreeCopyOnWriteList();
-    private final CollectionComboBoxModel<ServerItem> myServerListModel;
-    private String myServerNameReminder;
+    private final List<Runnable> myChangeListeners = Lists.newLockFreeCopyOnWriteList();
+    private final MutableFlatDataModel<ServerItem> myServerListModel = FlatDataModel.of(List.of());
+    private final ComboBox<ServerItem> myComboBox;
+    private @Nullable ServerItem myLastSelectedItem;
+    private @Nullable String myServerNameReminder;
+    private boolean myItemChosenInProgress;
+    private boolean myDisposed;
 
+    @RequiredUIAccess
     public RemoteServerCombo(ServerType<S> serverType) {
-        this(serverType, new CollectionComboBoxModel<>());
-    }
-
-    private RemoteServerCombo(ServerType<S> serverType, CollectionComboBoxModel<ServerItem> model) {
-        super(new ComboBox<>(model));
         myServerType = serverType;
-        myServerListModel = model;
 
-        refillModel(null);
-
-        addActionListener(this::onBrowseServer);
-        getComboBox().addActionListener(this::onItemChosen);
-        getComboBox().addItemListener(this::onItemUnselected);
-
-        //noinspection unchecked
-        getComboBox().setRenderer(new ColoredListCellRenderer<ServerItem>() {
-            @Override
-            protected void customizeCellRenderer(JList<? extends ServerItem> list, ServerItem value,
-                                                 int index, boolean selected, boolean focused) {
-                if (value == null) {
-                    return;
-                }
-                value.render(this);
+        myComboBox = ComboBox.create(myServerListModel);
+        myComboBox.setRender((presentation, item) -> {
+            ServerItem value = item.getValue();
+            if (value != null) {
+                value.render(presentation);
             }
         });
+        myComboBox.addValueListener(event -> onItemChosen(event.getValue()));
+
+        refillModel(null);
     }
 
-    public ServerItem getSelectedItem() {
-        return (ServerItem) myServerListModel.getSelectedItem();
+    @Override
+    public Component getComponent() {
+        return myComboBox;
     }
 
+    public @Nullable ServerItem getSelectedItem() {
+        return myComboBox.getValue();
+    }
+
+    @SuppressWarnings("unchecked")
     public @Nullable RemoteServer<S> getSelectedServer() {
         ServerItem selected = getSelectedItem();
-        //noinspection unchecked
         return selected == null ? null : (RemoteServer<S>) selected.findRemoteServer();
     }
 
+    @RequiredUIAccess
     public void selectServerInCombo(@Nullable String serverName) {
         ServerItem item = findNonTransientItemForName(serverName);
         if (serverName != null && item == null) {
             item = getMissingServerItem(serverName);
             if (item != null) {
-                myServerListModel.add(0, item);
+                myServerListModel.add(item, 0);
             }
         }
-        getComboBox().setSelectedItem(item);
+        myComboBox.setValue(item);
     }
 
     protected ServerType<S> getServerType() {
@@ -100,68 +102,63 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         return new NoServersItem();
     }
 
-    private ServerItem findNonTransientItemForName(@Nullable String serverName) {
-        return myServerListModel.getItems().stream()
-            .filter(Objects::nonNull)
-            .filter(item -> !(item instanceof TransientItem))
-            .filter(item -> Objects.equals(item.getServerName(), serverName))
-            .findAny().orElse(null);
+    private @Nullable ServerItem findNonTransientItemForName(@Nullable String serverName) {
+        for (int i = 0; i < myServerListModel.getSize(); i++) {
+            ServerItem item = myServerListModel.get(i);
+            if (item != null && !(item instanceof TransientItem) && Objects.equals(item.getServerName(), serverName)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     @Override
     public void dispose() {
-        super.dispose();
+        myDisposed = true;
         myChangeListeners.clear();
     }
 
+    protected final boolean isDisposed() {
+        return myDisposed;
+    }
+
     protected final void fireStateChanged() {
-        ChangeEvent event = new ChangeEvent(this);
-        for (ChangeListener changeListener : myChangeListeners) {
-            changeListener.stateChanged(event);
+        for (Runnable changeListener : myChangeListeners) {
+            changeListener.run();
         }
     }
 
-    private void onBrowseServer(ActionEvent e) {
-        ServerItem item = getSelectedItem();
-        if (item != null) {
-            item.onBrowseAction();
+    @RequiredUIAccess
+    private void onItemChosen(@Nullable ServerItem selectedItem) {
+        ServerItem lastSelectedItem = myLastSelectedItem;
+        if (lastSelectedItem != selectedItem) {
+            myServerNameReminder = lastSelectedItem == null ? null : lastSelectedItem.getServerName();
         }
-        else {
-            editServer(RemoteServerListConfigurable.createConfigurable(myServerType, null));
-        }
-    }
+        myLastSelectedItem = selectedItem;
 
-    private void onItemChosen(ActionEvent e) {
-        RecursionManager.doPreventingRecursion(this, false, () -> {
-            ServerItem selectedItem = getSelectedItem();
+        if (myItemChosenInProgress) {
+            return;
+        }
+
+        myItemChosenInProgress = true;
+        try {
             if (selectedItem != null) {
                 selectedItem.onItemChosen();
             }
             if (!(selectedItem instanceof TransientItem)) {
                 fireStateChanged();
             }
-            return null;
-        });
-    }
-
-    private void onItemUnselected(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.DESELECTED) {
-            ServerItem item = (ServerItem) e.getItem();
-            myServerNameReminder = item == null ? null : item.getServerName();
+        }
+        finally {
+            myItemChosenInProgress = false;
         }
     }
 
     protected final boolean editServer(RemoteServerListConfigurable configurable) {
-        boolean isOk = false;
-//        boolean isOk = ShowSettingsUtil.getInstance().editConfigurable(this, configurable);
-//        if (isOk) {
-//            RemoteServer<?> lastSelectedServer = configurable.getLastSelectedServer();
-//            refillModel(lastSelectedServer);
-//        }
-        // TODO not supported !
-        return isOk;
+        return false;
     }
 
+    @RequiredUIAccess
     protected final void createAndEditNewServer() {
         String selectedBefore = myServerNameReminder;
         RemoteServersManager manager = RemoteServersManager.getInstance();
@@ -173,10 +170,11 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
     }
 
+    @RequiredUIAccess
     protected final void refillModel(@Nullable RemoteServer<?> newSelection) {
         String nameToSelect = newSelection != null ? newSelection.getName() : null;
 
-        myServerListModel.removeAll();
+        List<ServerItem> items = new ArrayList<>();
         ServerItem itemToSelect = null;
 
         List<RemoteServer<S>> servers = getSortedServers();
@@ -185,26 +183,27 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
             if (nameToSelect == null) {
                 itemToSelect = noServersItem;
             }
-            myServerListModel.add(noServersItem);
+            items.add(noServersItem);
         }
 
-        for (RemoteServer<S> nextServer : getSortedServers()) {
+        for (RemoteServer<S> nextServer : servers) {
             ServerItem nextServerItem = new ServerItemImpl(nextServer.getName());
             if (itemToSelect == null && nextServer.getName().equals(nameToSelect)) {
                 itemToSelect = nextServerItem;
             }
-            myServerListModel.add(nextServerItem);
+            items.add(nextServerItem);
         }
 
-        for (TransientItem nextAction : getActionItems()) {
-            myServerListModel.add(nextAction);
-        }
+        items.addAll(getActionItems());
+
+        myServerListModel.replaceAll(items);
 
         setSelectedServerItem(newSelection, itemToSelect);
     }
 
+    @RequiredUIAccess
     protected void setSelectedServerItem(@Nullable RemoteServer<?> newSelection, @Nullable ServerItem itemToSelect) {
-        getComboBox().setSelectedItem(itemToSelect);
+        myComboBox.setValue(itemToSelect);
     }
 
     protected List<RemoteServer<S>> getSortedServers() {
@@ -213,23 +212,23 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         return result;
     }
 
-    @Override
-    public void addChangeListener(ChangeListener changeListener) {
+    public void addChangeListener(Runnable changeListener) {
         myChangeListeners.add(changeListener);
     }
 
-    @Override
-    public void removeChangeListener(ChangeListener changeListener) {
+    public void removeChangeListener(Runnable changeListener) {
         myChangeListeners.remove(changeListener);
     }
 
     public interface ServerItem {
         @Nullable String getServerName();
 
-        void render(SimpleColoredComponent ui);
+        void render(TextItemPresentation presentation);
 
+        @RequiredUIAccess
         void onItemChosen();
 
+        @RequiredUIAccess
         void onBrowseAction();
 
         @Nullable RemoteServer<?> findRemoteServer();
@@ -239,27 +238,27 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
      * marker for action items which always temporary and switch selection themselves after being chosen by user
      */
     public interface TransientItem extends ServerItem {
-        //
     }
 
     private class CreateNewServerItem implements TransientItem {
         @Override
-        public void render(SimpleColoredComponent ui) {
-            ui.setIcon(Image.empty(myServerType.getIcon().getWidth(), myServerType.getIcon().getHeight()));
-            ui.append(RemoteServerLocalize.remoteServerComboCreateNewServer(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        public void render(TextItemPresentation presentation) {
+            presentation.withIcon(Image.empty(myServerType.getIcon().getWidth(), myServerType.getIcon().getHeight()));
+            presentation.append(RemoteServerLocalize.remoteServerComboCreateNewServer());
         }
 
         @Override
-        public String getServerName() {
+        public @Nullable String getServerName() {
             return null;
         }
 
+        @RequiredUIAccess
         @Override
         public void onItemChosen() {
-            getChildComponent().hidePopup();
             createAndEditNewServer();
         }
 
+        @RequiredUIAccess
         @Override
         public void onBrowseAction() {
             createAndEditNewServer();
@@ -272,22 +271,23 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
     }
 
     public class ServerItemImpl implements ServerItem {
-        private final String myServerName;
+        private final @Nullable String myServerName;
 
-        public ServerItemImpl(String serverName) {
+        public ServerItemImpl(@Nullable String serverName) {
             myServerName = serverName;
         }
 
         @Override
-        public String getServerName() {
+        public @Nullable String getServerName() {
             return myServerName;
         }
 
+        @RequiredUIAccess
         @Override
         public void onItemChosen() {
-            //
         }
 
+        @RequiredUIAccess
         @Override
         public void onBrowseAction() {
             editServer(RemoteServerListConfigurable.createConfigurable(myServerType, myServerName));
@@ -299,23 +299,19 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
 
         @Override
-        public void render(SimpleColoredComponent ui) {
+        public void render(TextItemPresentation presentation) {
             RemoteServer<?> server = findRemoteServer();
-            SimpleTextAttributes attributes =
-                server == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
-            ui.setIcon(server == null ? null : myServerType.getIcon());
-            ui.append(StringUtil.notNullize(myServerName), attributes);
+            presentation.withIcon(server == null ? null : myServerType.getIcon());
+            presentation.append(StringUtil.notNullize(myServerName), server == null ? TextAttribute.ERROR : TextAttribute.REGULAR);
         }
     }
 
     protected class MissingServerItem extends ServerItemImpl {
-
         public MissingServerItem(String serverName) {
             super(serverName);
         }
 
         @Override
-        
         public String getServerName() {
             String result = super.getServerName();
             assert result != null;
@@ -323,9 +319,9 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
 
         @Override
-        public void render(SimpleColoredComponent ui) {
-            ui.setIcon(myServerType.getIcon());
-            ui.append(getServerName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+        public void render(TextItemPresentation presentation) {
+            presentation.withIcon(myServerType.getIcon());
+            presentation.append(getServerName(), TextAttribute.ERROR);
         }
     }
 
@@ -335,9 +331,8 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
 
         @Override
-        public void render(SimpleColoredComponent ui) {
-            ui.setIcon(null);
-            ui.append(RemoteServerLocalize.remoteServerComboNoServers(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+        public void render(TextItemPresentation presentation) {
+            presentation.append(RemoteServerLocalize.remoteServerComboNoServers(), TextAttribute.ERROR);
         }
     }
 }

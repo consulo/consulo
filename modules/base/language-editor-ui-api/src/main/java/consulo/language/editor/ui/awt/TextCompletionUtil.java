@@ -24,6 +24,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiFile;
+import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
 import consulo.project.DumbService;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
@@ -40,6 +41,15 @@ public class TextCompletionUtil {
   public static void installProvider(PsiFile psiFile, TextCompletionProvider provider, boolean autoPopup) {
     psiFile.putUserData(COMPLETING_TEXT_FIELD_KEY, provider);
     psiFile.putUserData(AUTO_POPUP_KEY, autoPopup);
+  }
+
+  public static void customizeEditor(EditorEx editor, boolean forceAutoPopup, boolean showHint) {
+    SpellcheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(false).ifPresent(it -> it.accept(editor));
+    editor.putUserData(AutoPopupController.ALWAYS_AUTO_POPUP, forceAutoPopup);
+
+    if (showHint) {
+      installCompletionHint(editor);
+    }
   }
 
   public static @Nullable TextCompletionProvider getProvider(PsiFile file) {

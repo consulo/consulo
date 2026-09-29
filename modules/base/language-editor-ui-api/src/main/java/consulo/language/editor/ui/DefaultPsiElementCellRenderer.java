@@ -20,6 +20,7 @@ import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
 
+@Deprecated(forRemoval = true)
 public class DefaultPsiElementCellRenderer extends PsiElementListCellRenderer<PsiElement> {
   @Override
   protected int getIconFlags() {

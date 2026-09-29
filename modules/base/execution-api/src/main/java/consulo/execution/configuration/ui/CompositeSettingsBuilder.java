@@ -16,14 +16,14 @@
 package consulo.execution.configuration.ui;
 
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.swing.*;
 import java.util.Collection;
 
 public interface CompositeSettingsBuilder<Settings> {
-  
-  Collection<SettingsEditor<Settings>> getEditors();
+    Collection<SettingsEditor<Settings>> getEditors();
 
-  
-  JComponent createCompoundEditor(Disposable disposable);
+    @RequiredUIAccess
+    Component createCompoundEditor(Disposable disposable);
 }

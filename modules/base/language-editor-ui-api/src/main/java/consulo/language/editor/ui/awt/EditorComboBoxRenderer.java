@@ -22,6 +22,7 @@ import java.awt.*;
 /**
  * @author max
  */
+@Deprecated(forRemoval = true)
 public class EditorComboBoxRenderer extends BasicComboBoxRenderer {
   private final ComboBoxEditor myEditor;
           

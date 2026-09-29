@@ -15,53 +15,44 @@
  */
 package consulo.execution.configuration.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UserActivityWatcher;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.function.Supplier;
 
 /**
  * This class presents an abstraction of user interface transactional editor provider of some abstract data type.
- * {@link #getComponent()} should be called before {@link #resetFrom(Object)}
+ * {@link #getUIComponent()} should be called before {@link #resetFrom(Object)}
  */
 public abstract class SettingsEditor<Settings> implements Disposable {
     private final List<SettingsEditorListener<Settings>> myListeners = Lists.newLockFreeCopyOnWriteList();
-    private UserActivityWatcher myWatcher;
     private boolean myIsInUpdate = false;
     private final Supplier<Settings> mySettingsFactory;
     private CompositeSettingsEditor<Settings> myOwner;
-    private JComponent myEditorComponent;
+    private @Nullable Component myUIComponent;
 
     protected abstract void resetEditorFrom(Settings s);
 
     protected abstract void applyEditorTo(Settings s) throws ConfigurationException;
 
-    
-    @Deprecated
-    @DeprecationInfo(value = "Implement interface via overriding 'createUIComponent()' method")
-    protected JComponent createEditor() {
-        Component uiComponent = createUIComponent();
-        if (uiComponent != null) {
-            return (JComponent) TargetAWT.to(uiComponent);
-        }
-
-        throw new AbstractMethodError("please implement 'createEditor()' or 'createUIComponent()'");
-    }
+    @RequiredUIAccess
+    protected abstract Component createUIComponent();
 
     @RequiredUIAccess
-    protected @Nullable Component createUIComponent() {
-        return null;
+    public final Component getUIComponent() {
+        Component component = myUIComponent;
+        if (component == null) {
+            component = createUIComponent();
+            myUIComponent = component;
+        }
+        return component;
     }
 
     protected void disposeEditor() {
@@ -73,10 +64,7 @@ public abstract class SettingsEditor<Settings> implements Disposable {
 
     public SettingsEditor(Supplier<Settings> settingsFactory) {
         mySettingsFactory = settingsFactory;
-        Disposer.register(this, () -> {
-            disposeEditor();
-            uninstallWatcher();
-        });
+        Disposer.register(this, this::disposeEditor);
     }
 
     public Settings getSnapshot() throws ConfigurationException {
@@ -127,27 +115,8 @@ public abstract class SettingsEditor<Settings> implements Disposable {
         applyEditorTo(s);
     }
 
-    public final JComponent getComponent() {
-        if (myEditorComponent == null) {
-            myEditorComponent = createEditor();
-            installWatcher(myEditorComponent);
-        }
-        return myEditorComponent;
-    }
-
     @Override
     public final void dispose() {
-    }
-
-    protected void uninstallWatcher() {
-        myWatcher = null;
-    }
-
-    protected void installWatcher(JComponent c) {
-        myWatcher = new UserActivityWatcher();
-        myWatcher.register(c);
-
-        myWatcher.addUserActivityListener(this::fireEditorStateChanged, this);
     }
 
     public final void addSettingsEditorListener(SettingsEditorListener<Settings> listener) {

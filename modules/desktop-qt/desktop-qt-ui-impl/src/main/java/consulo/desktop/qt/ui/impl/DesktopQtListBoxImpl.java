@@ -140,7 +140,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             int key = event.key();
 
             if (key == Qt.Key.Key_Return.value() || key == Qt.Key.Key_Enter.value()) {
-                fireClicked(currentRow());
+                fireClicked(currentRow(), event);
                 return;
             }
 
@@ -214,7 +214,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
         rebuild(myComponent);
     }
 
-    private void rebuild(QListWidget component) {
+    protected void rebuild(QListWidget component) {
         myRebuilding = true;
         try {
             rebuildItems(component);
@@ -361,6 +361,10 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     }
 
     private void fireClicked(int row) {
+        fireClicked(row, null);
+    }
+
+    private void fireClicked(int row, @Nullable QKeyEvent keyEvent) {
         E value = valueAt(row);
         if (value == null) {
             return;
@@ -370,9 +374,16 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
         QMouseEvent clickEvent = myClickEvent;
 
-        InputDetails inputDetails = clickEvent != null
-            ? DesktopQtInputDetails.mouse(myComponent, clickEvent)
-            : DesktopQtInputDetails.mouseAtCursor(myComponent);
+        InputDetails inputDetails;
+        if (keyEvent != null) {
+            inputDetails = DesktopQtInputDetails.keyboard(myComponent, keyEvent);
+        }
+        else if (clickEvent != null) {
+            inputDetails = DesktopQtInputDetails.mouse(myComponent, clickEvent);
+        }
+        else {
+            inputDetails = DesktopQtInputDetails.mouseAtCursor(myComponent);
+        }
 
         getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, inputDetails));
     }

@@ -16,7 +16,7 @@
 package consulo.execution.debug.impl.internal.ui;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
@@ -24,17 +24,18 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.ui.XDebuggerExpressionEditor;
 import consulo.language.Language;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
-import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.EditorBox;
+import consulo.language.editor.ui.EditorBoxBuilder;
+import consulo.language.editor.ui.EditorBoxBuilderFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
-import consulo.dataContext.DataSink;
-import consulo.util.dataholder.Key;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -43,7 +44,7 @@ import javax.swing.*;
  * @author nik
  */
 public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implements XDebuggerExpressionEditor {
-    private final EditorTextField myEditorTextField;
+    private final EditorBox myEditorBox;
     private XExpression myExpression;
 
     @RequiredUIAccess
@@ -53,86 +54,95 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
         @Nullable String historyId,
         @Nullable XSourcePosition sourcePosition,
         XExpression text,
-        final boolean multiline,
+        boolean multiline,
         boolean editorFont
     ) {
         super(project, debuggerEditorsProvider, multiline ? EvaluationMode.CODE_FRAGMENT : EvaluationMode.EXPRESSION, historyId, sourcePosition);
         myExpression = XExpression.changeMode(text, getMode());
-        myEditorTextField = new EditorTextField(createDocument(myExpression), project, debuggerEditorsProvider.getFileType(), false, !multiline) {
-            @Override
-            protected EditorEx createEditor() {
-                EditorEx editor = super.createEditor();
-                editor.setVerticalScrollbarVisible(multiline);
-                editor.getColorsScheme().setEditorFontName(getFont().getFontName());
-                editor.getColorsScheme().setEditorFontSize(getFont().getSize());
-                return editor;
-            }
 
-            @Override
-            public void uiDataSnapshot(DataSink sink) {
-                super.uiDataSnapshot(sink);
-                sink.set(LangDataKeys.CONTEXT_LANGUAGES, new Language[]{myExpression.getLanguage()});
-                sink.lazy(PsiFile.KEY, () -> PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument()));
-            }
-        };
-
-        if (editorFont) {
-            myEditorTextField.setFontInheritedFromLAF(false);
-            myEditorTextField.setFont(AWTLanguageEditorUtil.getEditorFont());
+        EditorBoxBuilder builder = project.getApplication().getInstance(EditorBoxBuilderFactory.class).create(project)
+            .document(createDocument(myExpression))
+            .fileType(debuggerEditorsProvider.getFileType())
+            .customize(this::prepareEditor);
+        if (multiline) {
+            builder.multiline();
         }
+        if (editorFont) {
+            builder.editorFont();
+        }
+        myEditorBox = builder.build();
 
-        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-        addActions(builder, multiline);
+        myEditorBox.putUserData(UiDataProvider.KEY, sink -> {
+            sink.set(LangDataKeys.CONTEXT_LANGUAGES, new Language[]{myExpression.getLanguage()});
+            sink.lazy(PsiFile.KEY, () -> PsiDocumentManager.getInstance(getProject()).getPsiFile(myEditorBox.getDocument()));
+        });
 
-        if (!builder.isEmpty()) {
+        ActionGroup.Builder actions = ActionGroup.newImmutableBuilder();
+        addActions(actions, multiline);
+
+        if (!actions.isEmpty()) {
             ActionToolbar toolbar = ActionToolbarFactory.getInstance()
-                .createActionToolbar("XDebuggerExpressionEditor", builder.build(), ActionToolbar.Style.INPLACE);
-            toolbar.setTargetComponent(myEditorTextField);
+                .createActionToolbar("XDebuggerExpressionEditor", actions.build(), ActionToolbar.Style.INPLACE);
+            toolbar.setTargetUIComponent(myEditorBox);
             toolbar.updateActionsAsync();
 
-            myEditorTextField.setSuffixComponent(toolbar.getComponent());
+            myEditorBox.setSuffixComponent(toolbar.getUIComponent());
         }
+    }
+
+    @Override
+    public Component getUIComponent() {
+        return myEditorBox;
     }
 
     @Override
     public JComponent getComponent() {
-        return myEditorTextField;
+        return (JComponent) TargetAWT.to(myEditorBox);
     }
 
     @Override
     public JComponent getEditorComponent() {
-        return myEditorTextField;
+        return getComponent();
     }
 
+    @RequiredUIAccess
     @Override
     protected void doSetText(XExpression text) {
         myExpression = text;
-        myEditorTextField.setNewDocumentAndFileType(getFileType(text), createDocument(text));
+        myEditorBox.setDocument(createDocument(text), getFileType(text));
     }
 
     @Override
     public XExpression getExpression() {
-        return getEditorsProvider().createExpression(getProject(), myEditorTextField.getDocument(), myExpression.getLanguage(), myExpression.getMode());
+        return getEditorsProvider().createExpression(getProject(), myEditorBox.getDocument(), myExpression.getLanguage(), myExpression.getMode());
     }
 
     @Override
     public @Nullable JComponent getPreferredFocusedComponent() {
-        Editor editor = myEditorTextField.getEditor();
+        Editor editor = myEditorBox.getEditor();
         return editor != null ? editor.getContentComponent() : null;
     }
 
+    @RequiredUIAccess
+    @Override
+    public void requestFocusInEditor() {
+        myEditorBox.focus();
+    }
+
+    @RequiredUIAccess
     @Override
     public void setEnabled(boolean enable) {
-        myEditorTextField.setEnabled(enable);
+        myEditorBox.setEnabled(enable);
     }
 
     @Override
     public @Nullable Editor getEditor() {
-        return myEditorTextField.getEditor();
+        return myEditorBox.getEditor();
     }
 
+    @RequiredUIAccess
     @Override
     public void selectAll() {
-        myEditorTextField.selectAll();
+        myEditorBox.selectAll();
     }
 }

@@ -18,6 +18,7 @@ package consulo.execution.impl.internal.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configuration.editor.ConfigurationFileEditor;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -47,7 +48,7 @@ public class RunConfigurationEditorProvider implements ConfigurationFileEditorPr
     
     @Override
     public LocalizeValue getName() {
-        return LocalizeValue.localizeTODO("Run Configurations");
+        return ExecutionLocalize.runDebugDialogTitle();
     }
 
     

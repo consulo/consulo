@@ -36,6 +36,8 @@ import io.qt.gui.QColor;
 import io.qt.gui.QPainterPath;
 import io.qt.gui.QPen;
 import io.qt.gui.QPainter;
+import io.qt.gui.QPalette;
+import io.qt.widgets.QApplication;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Point;
@@ -96,9 +98,24 @@ public class DesktopQtEditorPainter {
             }
         }
 
+        paintPlaceholder(painter, scrollX, scrollY);
+
         if (paintCarets) {
             paintCarets(painter, scrollX, scrollY);
         }
+    }
+
+    private void paintPlaceholder(QPainter painter, int scrollX, int scrollY) {
+        CharSequence placeholder = myEditor.getPlaceholder();
+        if (placeholder == null || placeholder.isEmpty() || myEditor.getDocument().getTextLength() != 0) {
+            return;
+        }
+
+        DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
+
+        painter.setFont(metrics.getFont());
+        painter.setPen(QApplication.palette().color(QPalette.ColorRole.PlaceholderText));
+        painter.drawText(new QPointF(-scrollX, metrics.getAscent() - scrollY), placeholder.toString());
     }
 
     private void paintLine(QPainter painter, int line, int y, double startX, CaretData caretData) {

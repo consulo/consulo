@@ -315,6 +315,10 @@ public class UITester {
             intSlider.addValueListener(event -> MessageBoxes.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
 
+            IntBox intBox = IntBox.create(5).withRange(0, 100).withStep(5);
+            intBox.addValueListener(event -> MessageBoxes.okInfo(LocalizeValue.of("intBox " + event.getValue())).showAsync());
+            layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntBox"))).add(intBox));
+
             DatePicker datePicker = DatePicker.create();
             datePicker.setValue(new Date());
             datePicker.addValueListener(event -> MessageBoxes.okInfo(LocalizeValue.of("datePicker " + event.getValue())).showAsync());

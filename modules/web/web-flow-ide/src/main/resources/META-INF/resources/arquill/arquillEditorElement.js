@@ -60,6 +60,10 @@
         const textView = element.$arquillEditor.getTextView();
 
         const onWheel = domEvent => {
+            if (element.classList.contains('arquill-editor-one-line')) {
+                return;
+            }
+
             const lineHeight = textView._getLineHeight();
             const delta = domEvent.deltaY !== undefined ? domEvent.deltaY : -domEvent.wheelDeltaY;
 
@@ -2260,6 +2264,13 @@
         });
 
         element.addEventListener('keydown', domEvent => {
+            if (domEvent.key === 'Enter' && !domEvent.isComposing && element.classList.contains('arquill-editor-one-line')) {
+                domEvent.preventDefault();
+                domEvent.stopImmediatePropagation();
+            }
+        }, { capture: true });
+
+        element.addEventListener('keydown', domEvent => {
             if (domEvent.key === 'Escape') {
                 const layer = element.querySelector('.arquill-floating-toolbar-layer');
                 if (layer && element.hasAttribute('data-floating-active')) {
@@ -2327,6 +2338,8 @@
                     element.$arquillEditor.getTextView().setOptions({ readonly: readOnly });
                 }
             },
+
+            focus: () => textView.focus(),
 
             setCaretOffset: offset => element.$arquillApi.setSelection(offset, offset),
 

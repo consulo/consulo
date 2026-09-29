@@ -1,29 +1,32 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
-import consulo.disposer.Disposer;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.RuntimeConfigurationWarning;
 import consulo.execution.configuration.RuntimeConfigurationError;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.impl.internal.configuration.RemoteServerConnectionTester;
 import consulo.remoteServer.localize.RemoteServerLocalize;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> extends RemoteServerCombo<S> {
+    private final Project myProject;
     private AutoDetectedItem myAutoDetectedItem;
 
-    public RemoteServerComboWithAutoDetect(ServerType<S> serverType) {
+    @RequiredUIAccess
+    public RemoteServerComboWithAutoDetect(ServerType<S> serverType, Project project) {
         super(serverType);
+        myProject = project;
     }
 
     @Override
@@ -85,13 +88,13 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
         }
 
         @Override
-        public void render(SimpleColoredComponent ui) {
-            ui.setIcon(getServerType().getIcon());
+        public void render(TextItemPresentation presentation) {
+            presentation.withIcon(getServerType().getIcon());
 
             boolean failed = myTestConnectionStateA.get() == TestConnectionState.FAILED;
-            ui.append(
+            presentation.append(
                 RemoteServerLocalize.remoteServerComboAutoDetectedServer(getServerType().getPresentableName()),
-                failed ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES
+                failed ? TextAttribute.ERROR : TextAttribute.REGULAR_ITALIC
             );
         }
 
@@ -99,11 +102,13 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
             myTestConnectionStateA.get().validateConnection();
         }
 
+        @RequiredUIAccess
         @Override
         public void onBrowseAction() {
             createAndEditNewServer();
         }
 
+        @RequiredUIAccess
         @Override
         public void onItemChosen() {
             if (myServerInstance == null) {
@@ -128,7 +133,7 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
         private void setTestConnectionState(TestConnectionState state) {
             boolean changed = myTestConnectionStateA.getAndSet(state) != state;
             if (changed) {
-                UIUtil.invokeLaterIfNeeded(RemoteServerComboWithAutoDetect.this::fireStateChanged);
+                myProject.getUIAccess().give(RemoteServerComboWithAutoDetect.this::fireStateChanged);
             }
         }
 
@@ -138,8 +143,8 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
 
             if (wasConnected) {
                 setTestConnectionState(TestConnectionState.SUCCESSFUL);
-                UIUtil.invokeLaterIfNeeded(() -> {
-                    if (!Disposer.isDisposed(RemoteServerComboWithAutoDetect.this)) {
+                myProject.getUIAccess().give(() -> {
+                    if (!isDisposed()) {
                         assert myServerInstance != null;
                         RemoteServersManager.getInstance().addServer(myServerInstance);
                         refillModel(myServerInstance);

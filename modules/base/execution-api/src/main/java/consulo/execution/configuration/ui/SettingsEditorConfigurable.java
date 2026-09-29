@@ -17,61 +17,70 @@ package consulo.execution.configuration.ui;
 
 import consulo.configurable.BaseConfigurable;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.swing.*;
+import org.jspecify.annotations.Nullable;
 
 public abstract class SettingsEditorConfigurable<Settings> extends BaseConfigurable {
-  private SettingsEditor<Settings> myEditor;
-  private final Settings mySettings;
-  private final SettingsEditorListener<Settings> myListener;
-  private final JComponent myComponent;
+    private @Nullable SettingsEditor<Settings> myEditor;
+    private final Settings mySettings;
+    private final SettingsEditorListener<Settings> myListener;
 
-  public SettingsEditorConfigurable(SettingsEditor<Settings> editor, Settings settings) {
-    myEditor = editor;
-    mySettings = settings;
-    myListener = settingsEditor -> setModified(true);
-    myEditor.addSettingsEditorListener(myListener);
-    myComponent = myEditor.getComponent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createComponent() {
-    return myComponent;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    myEditor.applyTo(mySettings);
-    setModified(false);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    myEditor.resetFrom(mySettings);
-    setModified(false);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    if (myEditor != null) {
-      myEditor.removeSettingsEditorListener(myListener);
-      Disposer.dispose(myEditor);
+    @RequiredUIAccess
+    public SettingsEditorConfigurable(SettingsEditor<Settings> editor, Settings settings) {
+        myEditor = editor;
+        mySettings = settings;
+        myListener = settingsEditor -> setModified(true);
+        myEditor.addSettingsEditorListener(myListener);
+        myEditor.getUIComponent();
     }
-    myEditor = null;
-  }
 
-  public SettingsEditor<Settings> getEditor() {
-    return myEditor;
-  }
+    @RequiredUIAccess
+    @Override
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
+        SettingsEditor<Settings> editor = myEditor;
+        return editor == null ? null : editor.getUIComponent();
+    }
 
-  public Settings getSettings() {
-    return mySettings;
-  }
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        SettingsEditor<Settings> editor = myEditor;
+        if (editor != null) {
+            editor.applyTo(mySettings);
+        }
+        setModified(false);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        SettingsEditor<Settings> editor = myEditor;
+        if (editor != null) {
+            editor.resetFrom(mySettings);
+        }
+        setModified(false);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        SettingsEditor<Settings> editor = myEditor;
+        if (editor != null) {
+            editor.removeSettingsEditorListener(myListener);
+            Disposer.dispose(editor);
+        }
+        myEditor = null;
+    }
+
+    public @Nullable SettingsEditor<Settings> getEditor() {
+        return myEditor;
+    }
+
+    public Settings getSettings() {
+        return mySettings;
+    }
 }

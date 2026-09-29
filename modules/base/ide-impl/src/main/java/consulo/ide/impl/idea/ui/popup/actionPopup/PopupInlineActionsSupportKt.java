@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
-import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
@@ -113,7 +112,6 @@ public class PopupInlineActionsSupportKt {
     }
 
     public static PopupInlineActionsSupport createSupport(ListPopupImpl popup) {
-        if (popup.getListStep() instanceof ActionPopupStep) return new PopupInlineActionsSupportImpl(popup);
-        return new NonActionsPopupInlineSupport(popup);
+        return new PopupInlineActionsSupportImpl(popup);
     }
 }

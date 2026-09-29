@@ -18,16 +18,15 @@ package consulo.execution.debug.ui;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.language.psi.PsiElement;
+import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2024-12-09
  */
 public interface XDebuggerExpressionEditor {
-    JComponent getComponent();
+    Component getUIComponent();
 
     XExpression getExpression();
 

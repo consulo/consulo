@@ -44,6 +44,7 @@ import java.util.List;
 /**
  * @author max
  */
+@Deprecated(forRemoval = true)
 public class EditorComboBox extends ComboBox implements DocumentListener {
     public static TextComponentAccessor<EditorComboBox> COMPONENT_ACCESSOR = new TextComponentAccessor<>() {
         @Override

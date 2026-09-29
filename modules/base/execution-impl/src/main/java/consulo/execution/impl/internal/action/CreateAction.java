@@ -17,6 +17,7 @@
 package consulo.execution.impl.internal.action;
 
 import consulo.execution.RunManager;
+import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
@@ -24,8 +25,8 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.execution.localize.ExecutionLocalize;
-import consulo.execution.impl.internal.ui.RunDialog;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 
 import java.util.List;
@@ -166,22 +167,18 @@ public class CreateAction extends BaseRunConfigurationAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void perform(ConfigurationContext context) {
             RunnerAndConfigurationSettings configuration = context.getConfiguration();
-            if (RunDialog.editConfiguration(
-                context.getProject(),
+            RunManagerImpl runManager = (RunManagerImpl) context.getRunManager();
+            runManager.addConfiguration(
                 configuration,
-                ExecutionLocalize.createRunConfigurationForItemDialogTitle(configuration.getName()).get()
-            )) {
-                RunManagerImpl runManager = (RunManagerImpl) context.getRunManager();
-                runManager.addConfiguration(
-                    configuration,
-                    runManager.isConfigurationShared(configuration),
-                    runManager.getBeforeRunTasks(configuration.getConfiguration()),
-                    false
-                );
-                runManager.setSelectedConfiguration(configuration);
-            }
+                runManager.isConfigurationShared(configuration),
+                runManager.getBeforeRunTasks(configuration.getConfiguration()),
+                false
+            );
+            runManager.setSelectedConfiguration(configuration);
+            RunConfigurationEditor.getInstance(context.getProject()).editOne(configuration);
         }
     }
 

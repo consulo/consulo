@@ -60,6 +60,8 @@ public class DesktopQtEditorComponent extends QtComponentDelegate<QWidget> {
         layout.addWidget(mySurface, 1);
         layout.addWidget(myErrorStripe);
 
+        container.setFocusProxy(mySurface);
+
         return container;
     }
 

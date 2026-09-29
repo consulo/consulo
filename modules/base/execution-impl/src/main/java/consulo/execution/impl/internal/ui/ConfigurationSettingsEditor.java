@@ -20,171 +20,183 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunnerSettings;
-import consulo.execution.configuration.ui.*;
+import consulo.execution.configuration.ui.CheckableRunConfigurationEditor;
+import consulo.execution.configuration.ui.CompositeSettingsBuilder;
+import consulo.execution.configuration.ui.CompositeSettingsEditor;
+import consulo.execution.configuration.ui.RunConfigurationSettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.execution.configuration.ui.SettingsEditorWrapper;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.logging.Logger;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.ListBox;
+import consulo.ui.Space;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Map;
 
 /**
  * @author dyoma
  */
 class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfigurationSettings> {
-    private final ArrayList<SettingsEditor<RunnerAndConfigurationSettings>> myRunnerEditors =
-        new ArrayList<SettingsEditor<RunnerAndConfigurationSettings>>();
-    private RunnersEditorComponent myRunnersComponent;
+    private static final Logger LOG = Logger.getInstance(ConfigurationSettingsEditor.class);
+
+    private final List<SettingsEditor<RunnerAndConfigurationSettings>> myRunnerEditors = new ArrayList<>();
     private final RunConfiguration myConfiguration;
     private final SettingsEditor<RunConfiguration> myConfigurationEditor;
-    private SettingsEditorGroup<RunnerAndConfigurationSettings> myCompound;
-
-    @Override
-    public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
-        init();
-        return new GroupSettingsBuilder<RunnerAndConfigurationSettings>(myCompound);
-    }
-
-    private void init() {
-        if (myCompound == null) {
-            myCompound = new SettingsEditorGroup<>();
-            Disposer.register(this, myCompound);
-            if (myConfigurationEditor instanceof SettingsEditorGroup) {
-                SettingsEditorGroup<RunConfiguration> group = (SettingsEditorGroup<RunConfiguration>) myConfigurationEditor;
-                List<Pair<LocalizeValue, SettingsEditor<RunConfiguration>>> editors = group.getEditors();
-                for (Pair<LocalizeValue, SettingsEditor<RunConfiguration>> pair : editors) {
-                    myCompound.addEditor(pair.getFirst(), new ConfigToSettingsWrapper(pair.getSecond()));
-                }
-            }
-            else {
-                myCompound.addEditor(
-                    ExecutionLocalize.runConfigurationConfigurationTabTitle(),
-                    new ConfigToSettingsWrapper(myConfigurationEditor)
-                );
-            }
-
-            myRunnersComponent = new RunnersEditorComponent();
-            ProgramRunner[] runners = RunnerRegistry.getInstance().getRegisteredRunners();
-
-            Executor[] executors = ExecutorRegistry.getInstance().getRegisteredExecutors();
-            for (Executor executor : executors) {
-                for (ProgramRunner runner : runners) {
-                    if (runner.canRun(executor.getId(), myConfiguration)) {
-                        JComponent perRunnerSettings = createCompositePerRunnerSettings(executor, runner);
-                        if (perRunnerSettings != null) {
-                            myRunnersComponent.addExecutorComponent(executor, perRunnerSettings);
-                        }
-                    }
-                }
-            }
-
-            if (myRunnerEditors.size() > 0) {
-                myCompound.addEditor(
-                    ExecutionLocalize.runConfigurationStartupConnectionRabTitle(),
-                    new CompositeSettingsEditor<>(getFactory()) {
-                        @Override
-                        public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
-                            return new CompositeSettingsBuilder<>() {
-                                
-                                @Override
-                                public Collection<SettingsEditor<RunnerAndConfigurationSettings>> getEditors() {
-                                    return myRunnerEditors;
-                                }
-
-                                
-                                @Override
-                                public JComponent createCompoundEditor(Disposable disposable) {
-                                    return myRunnersComponent.getComponent();
-                                }
-                            };
-                        }
-                    }
-                );
-            }
-        }
-    }
-
-    private JComponent createCompositePerRunnerSettings(Executor executor, ProgramRunner runner) {
-        SettingsEditor<ConfigurationPerRunnerSettings> configEditor = myConfiguration.getRunnerSettingsEditor(runner);
-        SettingsEditor<RunnerSettings> runnerEditor;
-
-        try {
-            runnerEditor = runner.getSettingsEditor(executor, myConfiguration);
-        }
-        catch (AbstractMethodError error) {
-            // this is stub code for plugin compatibility!
-            runnerEditor = null;
-        }
-
-        if (configEditor == null && runnerEditor == null) {
-            return null;
-        }
-        SettingsEditor<RunnerAndConfigurationSettings> wrappedConfigEditor = null;
-        SettingsEditor<RunnerAndConfigurationSettings> wrappedRunEditor = null;
-        if (configEditor != null) {
-            wrappedConfigEditor = new SettingsEditorWrapper<>(
-                configEditor,
-                (Function<RunnerAndConfigurationSettings, ConfigurationPerRunnerSettings>) configurationSettings ->
-                    configurationSettings.getConfigurationSettings(runner)
-            );
-            myRunnerEditors.add(wrappedConfigEditor);
-            Disposer.register(this, wrappedConfigEditor);
-        }
-
-        if (runnerEditor != null) {
-            wrappedRunEditor = new SettingsEditorWrapper<>(
-                runnerEditor,
-                (Function<RunnerAndConfigurationSettings, RunnerSettings>) configurationSettings -> configurationSettings.getRunnerSettings(runner)
-            );
-            myRunnerEditors.add(wrappedRunEditor);
-            Disposer.register(this, wrappedRunEditor);
-        }
-
-        if (wrappedRunEditor != null && wrappedConfigEditor != null) {
-            JPanel panel = new JPanel(new BorderLayout());
-            panel.add(wrappedConfigEditor.getComponent(), BorderLayout.CENTER);
-            JComponent wrappedRunEditorComponent = wrappedRunEditor.getComponent();
-            wrappedRunEditorComponent.setBorder(IdeBorderFactory.createEmptyBorder(3, 0, 0, 0));
-            panel.add(wrappedRunEditorComponent, BorderLayout.SOUTH);
-            return panel;
-        }
-
-        if (wrappedRunEditor != null) {
-            return wrappedRunEditor.getComponent();
-        }
-        return wrappedConfigEditor.getComponent();
-    }
+    private @Nullable SettingsEditorGroup<RunnerAndConfigurationSettings> myCompound;
 
     public ConfigurationSettingsEditor(RunnerAndConfigurationSettings settings) {
         super(settings.createFactory());
-        myConfigurationEditor = (SettingsEditor<RunConfiguration>) settings.getConfiguration().getConfigurationEditor();
-        Disposer.register(this, myConfigurationEditor);
         myConfiguration = settings.getConfiguration();
+        myConfigurationEditor = createConfigurationEditor(myConfiguration);
+        Disposer.register(this, myConfigurationEditor);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static SettingsEditor<RunConfiguration> createConfigurationEditor(RunConfiguration configuration) {
+        try {
+            return (SettingsEditor<RunConfiguration>) configuration.getConfigurationEditor();
+        }
+        catch (Throwable e) {
+            LOG.error("Run configuration editor can not be created: " + configuration.getClass().getName(), e);
+            return new NotSupportedEditor();
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
+        return new GroupSettingsBuilder<>(init());
+    }
+
+    @RequiredUIAccess
+    private SettingsEditorGroup<RunnerAndConfigurationSettings> init() {
+        SettingsEditorGroup<RunnerAndConfigurationSettings> compound = myCompound;
+        if (compound != null) {
+            return compound;
+        }
+
+        compound = new SettingsEditorGroup<>();
+        Disposer.register(this, compound);
+        myCompound = compound;
+
+        if (myConfigurationEditor instanceof SettingsEditorGroup<RunConfiguration> group) {
+            for (Pair<LocalizeValue, SettingsEditor<RunConfiguration>> pair : group.getEditors()) {
+                compound.addEditor(pair.getFirst(), new ConfigToSettingsWrapper(pair.getSecond()));
+            }
+        }
+        else {
+            compound.addEditor(ExecutionLocalize.runConfigurationConfigurationTabTitle(), new ConfigToSettingsWrapper(myConfigurationEditor));
+        }
+
+        RunnersEditorComponent runnersComponent = new RunnersEditorComponent();
+
+        ProgramRunner[] runners = RunnerRegistry.getInstance().getRegisteredRunners();
+        for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
+            for (ProgramRunner runner : runners) {
+                if (runner.canRun(executor.getId(), myConfiguration)) {
+                    Component perRunnerSettings = createCompositePerRunnerSettings(executor, runner);
+                    if (perRunnerSettings != null) {
+                        runnersComponent.addExecutorComponent(executor, perRunnerSettings);
+                    }
+                }
+            }
+        }
+
+        if (!myRunnerEditors.isEmpty()) {
+            compound.addEditor(
+                ExecutionLocalize.runConfigurationStartupConnectionRabTitle(),
+                new CompositeSettingsEditor<>(getFactory()) {
+                    @Override
+                    public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
+                        return new CompositeSettingsBuilder<>() {
+                            @Override
+                            public Collection<SettingsEditor<RunnerAndConfigurationSettings>> getEditors() {
+                                return myRunnerEditors;
+                            }
+
+                            @RequiredUIAccess
+                            @Override
+                            public Component createCompoundEditor(Disposable disposable) {
+                                return runnersComponent.getComponent();
+                            }
+                        };
+                    }
+                }
+            );
+        }
+        return compound;
+    }
+
+    @RequiredUIAccess
+    private @Nullable Component createCompositePerRunnerSettings(Executor executor, ProgramRunner runner) {
+        SettingsEditor<ConfigurationPerRunnerSettings> configEditor = myConfiguration.getRunnerSettingsEditor(runner);
+        SettingsEditor<RunnerSettings> runnerEditor = runner.getSettingsEditor(executor, myConfiguration);
+        if (configEditor == null && runnerEditor == null) {
+            return null;
+        }
+
+        Component configComponent = null;
+        if (configEditor != null) {
+            SettingsEditor<RunnerAndConfigurationSettings> wrappedConfigEditor = new SettingsEditorWrapper<>(
+                configEditor,
+                configurationSettings -> configurationSettings.getConfigurationSettings(runner)
+            );
+            myRunnerEditors.add(wrappedConfigEditor);
+            Disposer.register(this, wrappedConfigEditor);
+            configComponent = wrappedConfigEditor.getUIComponent();
+        }
+
+        Component runComponent = null;
+        if (runnerEditor != null) {
+            SettingsEditor<RunnerAndConfigurationSettings> wrappedRunEditor = new SettingsEditorWrapper<>(
+                runnerEditor,
+                configurationSettings -> configurationSettings.getRunnerSettings(runner)
+            );
+            myRunnerEditors.add(wrappedRunEditor);
+            Disposer.register(this, wrappedRunEditor);
+            runComponent = wrappedRunEditor.getUIComponent();
+        }
+
+        if (configComponent != null && runComponent != null) {
+            DockLayout panel = DockLayout.create(Space.SMALL);
+            panel.center(configComponent);
+            panel.bottom(runComponent);
+            return panel;
+        }
+        return runComponent != null ? runComponent : configComponent;
     }
 
     @Override
     public RunnerAndConfigurationSettings getSnapshot() throws ConfigurationException {
         RunnerAndConfigurationSettings settings = getFactory().get();
         settings.setName(myConfiguration.getName());
-        if (myConfigurationEditor instanceof CheckableRunConfigurationEditor) {
-            ((CheckableRunConfigurationEditor) myConfigurationEditor).checkEditorData(settings.getConfiguration());
+        if (myConfigurationEditor instanceof CheckableRunConfigurationEditor checkableEditor) {
+            @SuppressWarnings("unchecked")
+            CheckableRunConfigurationEditor<RunConfiguration> editor = checkableEditor;
+            editor.checkEditorData(settings.getConfiguration());
         }
         else {
             applyTo(settings);
@@ -193,51 +205,55 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
     }
 
     private static class RunnersEditorComponent {
-        
-        private static final String NO_RUNNER_COMPONENT = "<NO RUNNER LABEL>";
+        private final MutableFlatDataModel<Executor> myModel = FlatDataModel.of(List.of());
+        private final Map<Executor, Component> myComponents = new HashMap<>();
+        private final ListBox<Executor> myRunnersList;
+        private final DockLayout myRunnerPanel;
+        private final Label myNoRunner;
+        private final DockLayout myComponent;
 
-        private JList myRunnersList;
-        private JPanel myRunnerPanel;
-        private final CardLayout myLayout = new CardLayout();
-        private final DefaultListModel myListModel = new DefaultListModel();
-        private final JLabel myNoRunner = new JLabel(ExecutionLocalize.runConfigurationNorunnerSelectedLabel().get());
-        private JPanel myRunnersPanel;
-
-        public RunnersEditorComponent() {
-            myRunnerPanel.setLayout(myLayout);
-            myRunnerPanel.add(myNoRunner, NO_RUNNER_COMPONENT);
-            myRunnersList.setModel(myListModel);
-            myRunnersList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    updateRunnerComponent();
+        @RequiredUIAccess
+        RunnersEditorComponent() {
+            ListBox<Executor> runnersList = ListBox.create(myModel);
+            myRunnersList = runnersList;
+            runnersList.setRender((presentation, item) -> {
+                Executor executor = item.getValue();
+                if (executor != null) {
+                    presentation.withIcon(executor.getIcon());
+                    presentation.append(executor.getId());
                 }
             });
-            updateRunnerComponent();
-            myRunnersList.setCellRenderer(new ColoredListCellRenderer() {
-                @Override
-                protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                    Executor executor = (Executor) value;
-                    setIcon(executor.getIcon());
-                    append(executor.getId(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                }
-            });
+            runnersList.addValueListener(event -> showRunnerComponent(event.getValue()));
+
+            myNoRunner = Label.create(ExecutionLocalize.runConfigurationNorunnerSelectedLabel());
+            myNoRunner.setForegroundColor(ComponentColors.DISABLED_TEXT);
+
+            myRunnerPanel = DockLayout.create();
+            myRunnerPanel.paddingBuilder().leftSet(Space.MEDIUM).apply();
+            myRunnerPanel.center(myNoRunner);
+
+            myComponent = DockLayout.create();
+            myComponent.left(ScrollableLayout.create(runnersList));
+            myComponent.center(myRunnerPanel);
         }
 
-        private void updateRunnerComponent() {
-            Executor executor = (Executor) myRunnersList.getSelectedValue();
-            myLayout.show(myRunnerPanel, executor != null ? executor.getId() : NO_RUNNER_COMPONENT);
-            myRunnersPanel.revalidate();
+        @RequiredUIAccess
+        private void showRunnerComponent(@Nullable Executor executor) {
+            Component component = executor == null ? null : myComponents.get(executor);
+            myRunnerPanel.center(component == null ? myNoRunner : component);
         }
 
-        public void addExecutorComponent(Executor executor, JComponent component) {
-            myRunnerPanel.add(component, executor.getId());
-            myListModel.addElement(executor);
-            ScrollingUtil.ensureSelectionExists(myRunnersList);
+        @RequiredUIAccess
+        void addExecutorComponent(Executor executor, Component component) {
+            myComponents.put(executor, component);
+            myModel.add(executor);
+            if (myRunnersList.getValue() == null) {
+                myRunnersList.setValueByIndex(0);
+            }
         }
 
-        public JComponent getComponent() {
-            return myRunnersPanel;
+        Component getComponent() {
+            return myComponent;
         }
     }
 
@@ -246,9 +262,10 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
 
         public ConfigToSettingsWrapper(SettingsEditor<RunConfiguration> configEditor) {
             myConfigEditor = configEditor;
-            if (configEditor instanceof RunConfigurationSettingsEditor) {
-                ((RunConfigurationSettingsEditor) configEditor).setOwner(ConfigurationSettingsEditor.this);
+            if (configEditor instanceof RunConfigurationSettingsEditor runConfigurationSettingsEditor) {
+                runConfigurationSettingsEditor.setOwner(ConfigurationSettingsEditor.this);
             }
+            configEditor.addSettingsEditorListener(editor -> fireEditorStateChanged());
         }
 
         @Override
@@ -261,15 +278,33 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
             myConfigEditor.applyTo(configurationSettings.getConfiguration());
         }
 
+        @RequiredUIAccess
         @Override
-        
-        public JComponent createEditor() {
-            return myConfigEditor.getComponent();
+        protected Component createUIComponent() {
+            return myConfigEditor.getUIComponent();
         }
 
         @Override
         public void disposeEditor() {
             Disposer.dispose(myConfigEditor);
+        }
+    }
+
+    private static class NotSupportedEditor extends SettingsEditor<RunConfiguration> {
+        @Override
+        protected void resetEditorFrom(RunConfiguration configuration) {
+        }
+
+        @Override
+        protected void applyEditorTo(RunConfiguration configuration) {
+        }
+
+        @RequiredUIAccess
+        @Override
+        protected Component createUIComponent() {
+            Label label = Label.create(ExecutionLocalize.runConfigurationEditorNotSupported());
+            label.setForegroundColor(ComponentColors.DISABLED_TEXT);
+            return label;
         }
     }
 }

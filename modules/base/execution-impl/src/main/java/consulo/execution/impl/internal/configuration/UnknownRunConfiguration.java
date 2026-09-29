@@ -25,15 +25,19 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -165,15 +169,6 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   private static class UnknownSettingsEditor extends SettingsEditor<UnknownRunConfiguration> {
-    private final JPanel myPanel;
-
-    private UnknownSettingsEditor() {
-      myPanel = new JPanel();
-      myPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
-
-      myPanel.add(new JLabel("This configuration cannot be edited", JLabel.CENTER));
-    }
-
     @Override
     protected void resetEditorFrom(UnknownRunConfiguration s) {
     }
@@ -182,10 +177,12 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     protected void applyEditorTo(UnknownRunConfiguration s) throws ConfigurationException {
     }
 
+    @RequiredUIAccess
     @Override
-    
-    protected JComponent createEditor() {
-      return myPanel;
+    protected Component createUIComponent() {
+      Label label = Label.create(ExecutionLocalize.runConfigurationEditorNotSupported());
+      label.setForegroundColor(ComponentColors.DISABLED_TEXT);
+      return label;
     }
   }
 }

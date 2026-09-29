@@ -54,6 +54,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
     private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
+    private static final String CONTENT_ATTRIBUTE = "consulo-popup-content";
 
     @StyleSheet("/popup/webLightPopup.css")
     public class Vaadin extends Popover implements FromVaadinComponentWrapper {
@@ -70,6 +71,10 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     private @Nullable Div myAnchor;
 
     private final Div myTitle = new Div();
+
+    private @Nullable Component myContent;
+
+    private @Nullable WebLightPopupImpl myOwner;
 
     /**
      * Every popup currently open, innermost first, kept on the ui because a browser session has one of its own.
@@ -105,8 +110,27 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         // the popup reports on what the user is doing somewhere else - the lookup is driven from the editor, and the
         // caret has to stay there while it is up
         popover.setAutofocus(options.isRequestFocus());
+        popover.getElement().setAttribute("consulo-keymap-passthrough", !options.isRequestFocus());
         popover.setFocusDelay(0);
         popover.setHoverDelay(0);
+
+        if (options.isRequestFocus()) {
+            popover.getElement().executeJs(
+                """
+                this.addEventListener('focus', event => {
+                    if (event.target !== this) {
+                        return;
+                    }
+
+                    const content = this.querySelector(':scope > [' + $0 + ']');
+                    if (content && typeof content.focus === 'function') {
+                        content.focus();
+                    }
+                });
+                """,
+                CONTENT_ATTRIBUTE
+            );
+        }
 
         // a popover has no grip of its own, so the browser's is used. the box it draws is in the shadow root of the
         // popover and is only reachable as a part of it, which is why the class goes on the popover itself
@@ -147,15 +171,26 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     public void setContent(Component content) {
         Vaadin popover = getVaadinComponent();
 
+        com.vaadin.flow.component.Component contentComponent = TargetVaadin.to(content);
+        contentComponent.getElement().setAttribute(CONTENT_ATTRIBUTE, true);
+
         popover.removeAll();
         popover.add(myTitle);
-        popover.add(TargetVaadin.to(content));
+        popover.add(contentComponent);
+
+        myContent = content;
     }
 
     @Override
     @RequiredUIAccess
     public void showBy(Component target) {
         checkNotDisposed();
+
+        if (target instanceof WebLightPopupImpl owner && owner.myContent != null) {
+            myOwner = owner;
+            showBesideSelection(owner.myContent);
+            return;
+        }
 
         Vaadin popover = getVaadinComponent();
 
@@ -276,17 +311,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         // around when there is no room below - stays the popover's own rather than being computed here.
         // it cannot live inside the target: a component which owns its light dom - a grid does - drops whatever it
         // does not recognise, so it is placed on the page and moved to where the target is instead
-        Div anchor = myAnchor;
-        if (anchor == null) {
-            anchor = new Div();
-            anchor.getStyle()
-                .set("position", "fixed")
-                .set("width", "1px")
-                .set("pointer-events", "none");
-
-            UI.getCurrent().add(anchor);
-            myAnchor = anchor;
-        }
+        Div anchor = anchor();
 
         anchor.getStyle().set("height", Math.max(anchorHeight, 1) + "px");
 
@@ -326,6 +351,51 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
             popover.setOpened(true);
             registerOpen();
         }, error -> LOG.error("Failed to position popup: " + error));
+    }
+
+    @RequiredUIAccess
+    private void showBesideSelection(Component ownerContent) {
+        Div anchor = anchor();
+
+        Vaadin popover = getVaadinComponent();
+
+        attachToUI();
+
+        TargetVaadin.to(ownerContent).getElement().executeJs(
+            """
+            const row = this.querySelector('[selected]') || this;
+            const rect = row.getBoundingClientRect();
+            $0.style.left = (rect.right - 1) + 'px';
+            $0.style.top = rect.top + 'px';
+            $0.style.height = Math.max(rect.height, 1) + 'px';
+            return true;
+            """,
+            anchor.getElement()
+        ).then(Boolean.class, positioned -> {
+            if (myDisposed) {
+                return;
+            }
+
+            popover.setTarget(anchor);
+            popover.setOpened(true);
+            registerOpen();
+        }, error -> LOG.error("Failed to position popup: " + error));
+    }
+
+    @RequiredUIAccess
+    private Div anchor() {
+        Div anchor = myAnchor;
+        if (anchor == null) {
+            anchor = new Div();
+            anchor.getStyle()
+                .set("position", "fixed")
+                .set("width", "1px")
+                .set("pointer-events", "none");
+
+            UI.getCurrent().add(anchor);
+            myAnchor = anchor;
+        }
+        return anchor;
     }
 
     @RequiredUIAccess
@@ -374,6 +444,11 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         }
 
         getVaadinComponent().getElement().removeFromParent();
+
+        WebLightPopupImpl owner = myOwner;
+        if (owner != null && owner.myContent != null && !owner.myDisposed && myOptions.isRequestFocus()) {
+            TargetVaadin.to(owner.myContent).getElement().executeJs("if (typeof this.focus === 'function') { this.focus(); }");
+        }
 
         getListenerDispatcher(PopupCloseEvent.class).onEvent(new PopupCloseEvent(this));
 

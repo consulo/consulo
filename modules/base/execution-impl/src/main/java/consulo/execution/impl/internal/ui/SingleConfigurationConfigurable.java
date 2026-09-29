@@ -16,371 +16,558 @@
 
 package consulo.execution.impl.internal.ui;
 
-import consulo.application.AllIcons;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.configurable.BaseConfigurable;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.BeforeRunTask;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorConfigurable;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationPerRunnerSettings;
+import consulo.execution.configuration.LocatableConfiguration;
+import consulo.execution.configuration.LocatableConfigurationBase;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.Label;
+import consulo.ui.Space;
+import consulo.ui.TextBox;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.util.LabeledBuilder;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
-import java.awt.*;
-import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class SingleConfigurationConfigurable<Config extends RunConfiguration>
-  extends SettingsEditorConfigurable<RunnerAndConfigurationSettings> {
-  private static final Logger LOG = Logger.getInstance(SingleConfigurationConfigurable.class);
-  private final PlainDocument myNameDocument = new PlainDocument();
-  private @Nullable Executor myExecutor;
+public final class SingleConfigurationConfigurable<Config extends RunConfiguration> extends BaseConfigurable {
+    private final RunnerAndConfigurationSettings mySettings;
+    private @Nullable ConfigurationSettingsEditorWrapperImpl myEditor;
+    private final @Nullable Executor myExecutor;
 
-  private ValidationResult myLastValidationResult = null;
-  private boolean myValidationResultValid = false;
-  private MyValidatableComponent myComponent;
-  private final String myDisplayName;
-  private final String myHelpTopic;
-  private final boolean myBrokenConfiguration;
-  private boolean myStoreProjectConfiguration;
-  private boolean mySingleton;
-  private String myFolderName;
-  private boolean myChangingNameFromCode;
+    private final String myDisplayName;
+    private final String myHelpTopic;
+    private final boolean myBrokenConfiguration;
 
-  private SingleConfigurationConfigurable(RunnerAndConfigurationSettings settings, @Nullable Executor executor) {
-    super(new ConfigurationSettingsEditorWrapperImpl(settings), settings);
-    myExecutor = executor;
+    private boolean myStoreProjectConfiguration;
+    private boolean mySingleton;
+    private @Nullable String myFolderName;
 
-    Config configuration = getConfiguration();
-    myDisplayName = getSettings().getName();
-    myHelpTopic = "reference.dialogs.rundebug." + configuration.getType().getId();
+    private final List<Runnable> myPresentationListeners = new CopyOnWriteArrayList<>();
 
-    myBrokenConfiguration = configuration instanceof UnknownRunConfiguration;
-    setFolderName(getSettings().getFolderName());
+    private String myNameText = "";
+    private boolean myChangingNameFromCode;
+    private boolean myNameChangedByUser;
 
-    setNameText(configuration.getName());
-    myNameDocument.addDocumentListener(new DocumentAdapter() {
-      @Override
-      public void textChanged(DocumentEvent event) {
-        setModified(true);
-        if (!myChangingNameFromCode) {
-          RunConfiguration runConfiguration = getSettings().getConfiguration();
-          if (runConfiguration instanceof LocatableConfigurationBase) {
-            ((LocatableConfigurationBase) runConfiguration).setNameChangedByUser(true);
-          }
-        }
-      }
-    });
+    private @Nullable Component myComponent;
+    private @Nullable TextBox myNameBox;
+    private @Nullable CheckBox myShareBox;
+    private @Nullable CheckBox mySingletonBox;
+    private @Nullable Label myValidationLabel;
+    private @Nullable Hyperlink myFixLink;
+    private @Nullable HorizontalLayout myValidationPanel;
 
-    getEditor().addSettingsEditorListener(settingsEditor -> myValidationResultValid = false);
-  }
+    private @Nullable ValidationResult myLastValidationResult;
+    private @Nullable Runnable myQuickFix;
+    private @Nullable String myValidatedState;
+    private int myValidationStamp;
+    private boolean myDisposed;
 
-  public static <Config extends RunConfiguration> SingleConfigurationConfigurable<Config> editSettings(RunnerAndConfigurationSettings settings,
-                                                                                                       @Nullable Executor executor) {
-    SingleConfigurationConfigurable<Config> configurable = new SingleConfigurationConfigurable<Config>(settings, executor);
-    configurable.reset();
-    return configurable;
-  }
+    @RequiredUIAccess
+    private SingleConfigurationConfigurable(RunnerAndConfigurationSettings settings, @Nullable Executor executor) {
+        mySettings = settings;
+        myExecutor = executor;
 
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    RunnerAndConfigurationSettings settings = getSettings();
-    RunConfiguration runConfiguration = settings.getConfiguration();
-    RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
-    runManager.shareConfiguration(settings, myStoreProjectConfiguration);
-    settings.setName(getNameText());
-    settings.setSingleton(mySingleton);
-    settings.setFolderName(myFolderName);
-    super.apply();
-    RunManagerImpl.getInstanceImpl(getConfiguration().getProject()).fireRunConfigurationChanged(settings);
-  }
+        ConfigurationSettingsEditorWrapperImpl editor = new ConfigurationSettingsEditorWrapperImpl(settings);
+        myEditor = editor;
+        editor.addSettingsEditorListener(settingsEditor -> onEditorStateChanged());
+        editor.getUIComponent();
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    RunnerAndConfigurationSettings configuration = getSettings();
-    setNameText(configuration.getName());
-    super.reset();
-    if (myComponent == null) {
-      myComponent = new MyValidatableComponent();
+        Config configuration = getConfiguration();
+        myDisplayName = settings.getName();
+        myHelpTopic = "reference.dialogs.rundebug." + configuration.getType().getId();
+        myBrokenConfiguration = configuration instanceof UnknownRunConfiguration;
+        myFolderName = settings.getFolderName();
+
+        setNameText(configuration.getName());
     }
-    myComponent.doReset(configuration);
-  }
 
-  @RequiredUIAccess
-  @Override
-  public final JComponent createComponent() {
-    myComponent.myNameText.setEnabled(!myBrokenConfiguration);
-    return myComponent.getWholePanel();
-  }
+    @RequiredUIAccess
+    public static <Config extends RunConfiguration> SingleConfigurationConfigurable<Config> editSettings(
+        RunnerAndConfigurationSettings settings,
+        @Nullable Executor executor
+    ) {
+        SingleConfigurationConfigurable<Config> configurable = new SingleConfigurationConfigurable<>(settings, executor);
+        configurable.reset();
+        return configurable;
+    }
 
-  final JComponent getValidationComponent() {
-    return myComponent.myValidationPanel;
-  }
+    public void addPresentationListener(Runnable listener) {
+        myPresentationListeners.add(listener);
+    }
 
-  public boolean isStoreProjectConfiguration() {
-    return myStoreProjectConfiguration;
-  }
+    private void firePresentationChanged() {
+        for (Runnable listener : myPresentationListeners) {
+            listener.run();
+        }
+    }
 
-  public boolean isSingleton() {
-    return mySingleton;
-  }
+    public String getNameText() {
+        return myNameText;
+    }
 
-  private @Nullable ValidationResult getValidationResult() {
-    if (!myValidationResultValid) {
-      myLastValidationResult = null;
-      try {
+    public void setNameText(String name) {
+        myChangingNameFromCode = true;
+        try {
+            myNameText = name;
+
+            TextBox nameBox = myNameBox;
+            if (nameBox != null && !name.equals(nameBox.getValue())) {
+                nameBox.setValue(name, false);
+            }
+        }
+        finally {
+            myChangingNameFromCode = false;
+        }
+    }
+
+    @RequiredUIAccess
+    public void selectNameText() {
+        TextBox nameBox = myNameBox;
+        if (nameBox != null) {
+            nameBox.selectAll();
+            nameBox.focus();
+        }
+    }
+
+    public List<BeforeRunTask> getStepsBeforeLaunch() {
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        if (editor != null) {
+            return editor.getStepsBeforeLaunch();
+        }
+        RunConfiguration configuration = getConfiguration();
+        return RunManagerImpl.getInstanceImpl(configuration.getProject()).getBeforeRunTasks(configuration);
+    }
+
+    public boolean hasValidationError() {
+        return myLastValidationResult != null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        RunnerAndConfigurationSettings settings = getSettings();
+        RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(settings.getConfiguration().getProject());
+        runManager.shareConfiguration(settings, myStoreProjectConfiguration);
+        settings.setName(getNameText());
+        settings.setSingleton(mySingleton);
+        settings.setFolderName(myFolderName);
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        if (editor != null) {
+            editor.applyTo(settings);
+        }
+        setModified(false);
+        runManager.fireRunConfigurationChanged(settings);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        RunnerAndConfigurationSettings settings = getSettings();
+        setNameText(settings.getName());
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        if (editor != null) {
+            editor.resetFrom(settings);
+        }
+        setModified(false);
+
+        RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(settings.getConfiguration().getProject());
+        myStoreProjectConfiguration = runManager.isConfigurationShared(settings);
+        mySingleton = settings.isSingleton();
+
+        CheckBox shareBox = myShareBox;
+        if (shareBox != null) {
+            shareBox.setValue(myStoreProjectConfiguration, false);
+        }
+
+        CheckBox singletonBox = mySingletonBox;
+        if (singletonBox != null) {
+            singletonBox.setValue(mySingleton, false);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Component createUIComponent(Disposable parentDisposable) {
+        Component component = myComponent;
+        if (component != null) {
+            return component;
+        }
+
+        RunnerAndConfigurationSettings settings = getSettings();
+
+        TextBox nameBox = TextBox.create(myNameText);
+        nameBox.setEnabled(!isBrokenConfiguration());
+        nameBox.addValueListener(event -> {
+            if (myChangingNameFromCode) {
+                return;
+            }
+
+            String value = event.getValue();
+            myNameText = value == null ? "" : value;
+            myNameChangedByUser = true;
+            setModified(true);
+
+            if (getSettings().getConfiguration() instanceof LocatableConfigurationBase locatableConfiguration) {
+                locatableConfiguration.setNameChangedByUser(true);
+            }
+
+            scheduleValidation();
+            firePresentationChanged();
+        });
+        myNameBox = nameBox;
+
+        CheckBox shareBox = CheckBox.create(ExecutionLocalize.runConfigurationStorePlaceOption());
+        shareBox.setValue(myStoreProjectConfiguration, false);
+        shareBox.setEnabled(!isBrokenConfiguration());
+        shareBox.setVisible(!settings.isTemplate());
+        shareBox.addValueListener(event -> {
+            myStoreProjectConfiguration = Boolean.TRUE.equals(event.getValue());
+            myNameChangedByUser = true;
+            setModified(true);
+            firePresentationChanged();
+        });
+        myShareBox = shareBox;
+
+        CheckBox singletonBox = CheckBox.create(ExecutionLocalize.runConfigurationSingleton());
+        singletonBox.setValue(mySingleton, false);
+        singletonBox.setEnabled(!isBrokenConfiguration());
+        ConfigurationFactory factory = settings.getFactory();
+        singletonBox.setVisible(factory != null && factory.canConfigurationBeSingleton());
+        singletonBox.addValueListener(event -> {
+            mySingleton = Boolean.TRUE.equals(event.getValue());
+            setModified(true);
+        });
+        mySingletonBox = singletonBox;
+
+        HorizontalLayout options = HorizontalLayout.create();
+        options.add(shareBox);
+        options.add(singletonBox);
+
+        DockLayout header = DockLayout.create();
+        header.center(LabeledBuilder.filled(ExecutionLocalize.editRunConfigurationRunConfigurationNameLabel(), nameBox));
+        header.right(options);
+        header.paddingBuilder().bottomSet(Space.MEDIUM).apply();
+
+        Label validationLabel = Label.create();
+        validationLabel.setImage(PlatformIconGroup.generalError());
+        myValidationLabel = validationLabel;
+
+        Hyperlink fixLink = Hyperlink.create(ExecutionLocalize.fixRunConfigurationProblemButton(), event -> {
+            Runnable quickFix = myQuickFix;
+            if (quickFix == null) {
+                return;
+            }
+
+            quickFix.run();
+            scheduleValidation();
+        });
+        fixLink.setIcon(PlatformIconGroup.actionsQuickfixbulb());
+        myFixLink = fixLink;
+
+        HorizontalLayout validationPanel = HorizontalLayout.create();
+        validationPanel.add(validationLabel);
+        validationPanel.add(fixLink);
+        validationPanel.paddingBuilder().topSet(Space.MEDIUM).apply();
+        validationPanel.setVisible(false);
+        myValidationPanel = validationPanel;
+
+        DockLayout layout = DockLayout.create();
+        layout.top(header);
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        if (editor != null) {
+            layout.center(ScrollableLayout.create(editor.getUIComponent()));
+        }
+        layout.bottom(validationPanel);
+
+        myComponent = layout;
+
+        scheduleValidation();
+
+        return layout;
+    }
+
+    @RequiredUIAccess
+    private void scheduleValidation() {
+        if (myDisposed || myValidationPanel == null) {
+            return;
+        }
+
+        int stamp = ++myValidationStamp;
+
+        RunnerAndConfigurationSettings snapshot;
+        try {
+            snapshot = createValidationSnapshot();
+        }
+        catch (ConfigurationException e) {
+            myValidatedState = e.getLocalizedMessage();
+            showValidationResult(toValidationResult(e));
+            return;
+        }
+
+        if (snapshot == null) {
+            myValidatedState = null;
+            showValidationResult(null);
+            return;
+        }
+
+        myValidatedState = writeState(snapshot.getConfiguration());
+
+        Executor executor = myExecutor;
+        Project project = getConfiguration().getProject();
+
+        CoroutineScope.launchAsync(
+            project.coroutineContext(),
+            () -> Coroutine
+                .first(ReadLock.<Void, @Nullable ValidationResult>apply(ignored -> {
+                    try {
+                        checkSnapshot(snapshot, executor);
+                        return null;
+                    }
+                    catch (ConfigurationException e) {
+                        return toValidationResult(e);
+                    }
+                }))
+                .then(UIAction.<@Nullable ValidationResult, Void>apply(result -> {
+                    if (stamp == myValidationStamp && !myDisposed) {
+                        showValidationResult(result);
+                    }
+                    return null;
+                }))
+        );
+    }
+
+    @RequiredUIAccess
+    public void revalidateIfEdited() {
+        if (myDisposed || myValidationPanel == null) {
+            return;
+        }
+
+        String state;
+        try {
+            RunnerAndConfigurationSettings snapshot = createValidationSnapshot();
+            state = snapshot == null ? null : writeState(snapshot.getConfiguration());
+        }
+        catch (ConfigurationException e) {
+            state = e.getLocalizedMessage();
+        }
+
+        if (!Objects.equals(state, myValidatedState)) {
+            updateGeneratedName();
+            scheduleValidation();
+        }
+    }
+
+    @RequiredUIAccess
+    private void onEditorStateChanged() {
+        setModified(true);
+        updateGeneratedName();
+        scheduleValidation();
+    }
+
+    @RequiredUIAccess
+    private void updateGeneratedName() {
+        if (myNameChangedByUser || !(getConfiguration() instanceof LocatableConfiguration configuration) || !configuration.isGeneratedName()) {
+            return;
+        }
+
+        try {
+            RunnerAndConfigurationSettings snapshot = getSnapshot();
+            if (snapshot != null && snapshot.getConfiguration() instanceof LocatableConfiguration snapshotConfiguration) {
+                String generatedName = snapshotConfiguration.suggestedName();
+                if (!StringUtil.isEmpty(generatedName) && !generatedName.equals(myNameText)) {
+                    setNameText(generatedName);
+                    setModified(true);
+                    firePresentationChanged();
+                }
+            }
+        }
+        catch (ConfigurationException ignored) {
+        }
+    }
+
+    private static @Nullable String writeState(RunConfiguration configuration) {
+        Element element = ConfigurationSettingsEditorWrapperImpl.writeElement(configuration);
+        return element == null ? null : JDOMUtil.writeElement(element);
+    }
+
+    @RequiredUIAccess
+    private void showValidationResult(@Nullable ValidationResult result) {
+        boolean hadError = myLastValidationResult != null;
+
+        myLastValidationResult = result;
+        myQuickFix = result == null ? null : result.getQuickFix();
+
+        Label validationLabel = myValidationLabel;
+        if (validationLabel != null && result != null) {
+            validationLabel.setText(LocalizeValue.of(result.getTitle() + ": " + result.getMessage()));
+        }
+
+        Hyperlink fixLink = myFixLink;
+        if (fixLink != null) {
+            fixLink.setVisible(myQuickFix != null);
+        }
+
+        HorizontalLayout validationPanel = myValidationPanel;
+        if (validationPanel != null) {
+            validationPanel.setVisible(result != null);
+        }
+
+        if (hadError != (result != null)) {
+            firePresentationChanged();
+        }
+    }
+
+    private @Nullable RunnerAndConfigurationSettings createValidationSnapshot() throws ConfigurationException {
         RunnerAndConfigurationSettings snapshot = getSnapshot();
         if (snapshot != null) {
-          snapshot.setName(getNameText());
-          snapshot.checkSettings(myExecutor);
-          for (ProgramRunner runner : RunnerRegistry.getInstance().getRegisteredRunners()) {
-            for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
-              if (runner.canRun(executor.getId(), snapshot.getConfiguration())) {
-                checkConfiguration(runner, snapshot);
-                break;
-              }
+            snapshot.setName(getNameText());
+        }
+        return snapshot;
+    }
+
+    private static void checkSnapshot(RunnerAndConfigurationSettings snapshot, @Nullable Executor executor)
+        throws RuntimeConfigurationException {
+        snapshot.checkSettings(executor);
+        for (ProgramRunner runner : RunnerRegistry.getInstance().getRegisteredRunners()) {
+            for (Executor registeredExecutor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
+                if (runner.canRun(registeredExecutor.getId(), snapshot.getConfiguration())) {
+                    checkConfiguration(runner, snapshot);
+                    break;
+                }
             }
-          }
         }
-      }
-      catch (RuntimeConfigurationException exception) {
-        myLastValidationResult = exception != null
-            ? new ValidationResult(exception.getLocalizedMessage(), exception.getTitle().get(), exception.getQuickFix())
-            : null;
-      }
-      catch (ConfigurationException e) {
-        myLastValidationResult = new ValidationResult(
-          e.getLocalizedMessage(),
-          ExecutionLocalize.invalidDataDialogTitle().get(),
-          null
-        );
-      }
-
-      myValidationResultValid = true;
     }
-    return myLastValidationResult;
-  }
 
-  private static void checkConfiguration(ProgramRunner runner, RunnerAndConfigurationSettings snapshot)
-    throws RuntimeConfigurationException {
-    RunnerSettings runnerSettings = snapshot.getRunnerSettings(runner);
-    ConfigurationPerRunnerSettings configurationSettings = snapshot.getConfigurationSettings(runner);
-    try {
-      runner.checkConfiguration(runnerSettings, configurationSettings);
+    private static void checkConfiguration(ProgramRunner runner, RunnerAndConfigurationSettings snapshot)
+        throws RuntimeConfigurationException {
+        RunnerSettings runnerSettings = snapshot.getRunnerSettings(runner);
+        ConfigurationPerRunnerSettings configurationSettings = snapshot.getConfigurationSettings(runner);
+        runner.checkConfiguration(runnerSettings, configurationSettings);
     }
-    catch (AbstractMethodError e) {
-      //backward compatibility
-    }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public final void disposeUIResources() {
-    super.disposeUIResources();
-    myComponent = null;
-  }
-
-  public final String getNameText() {
-    try {
-      return myNameDocument.getText(0, myNameDocument.getLength());
-    }
-    catch (BadLocationException e) {
-      LOG.error(e);
-      return "";
-    }
-  }
-
-  public final void addNameListener(DocumentListener listener) {
-    myNameDocument.addDocumentListener(listener);
-  }
-
-  public final void addSharedListener(ChangeListener changeListener) {
-    myComponent.myCbStoreProjectConfiguration.addChangeListener(changeListener);
-  }
-
-  public final void setNameText(String name) {
-    myChangingNameFromCode = true;
-    try {
-      try {
-        if (!myNameDocument.getText(0, myNameDocument.getLength()).equals(name)) {
-          myNameDocument.replace(0, myNameDocument.getLength(), name, null);
+    private static ValidationResult toValidationResult(ConfigurationException exception) {
+        if (exception instanceof RuntimeConfigurationException runtimeException) {
+            return new ValidationResult(
+                runtimeException.getLocalizedMessage(),
+                runtimeException.getTitle().get(),
+                runtimeException.getQuickFix()
+            );
         }
-      }
-      catch (BadLocationException e) {
-        LOG.error(e);
-      }
+        return new ValidationResult(exception.getLocalizedMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), null);
     }
-    finally {
-      myChangingNameFromCode = false;
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        return super.isModified() || editor != null && editor.isModified(getSettings());
     }
-  }
 
-  public final boolean isValid() {
-    return getValidationResult() == null;
-  }
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        myDisposed = true;
+        myPresentationListeners.clear();
 
-  public final JTextField getNameTextField() {
-    return myComponent.myNameText;
-  }
-
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.ofNullable(myDisplayName);
-  }
-
-  @Override
-  public String getHelpTopic() {
-    return myHelpTopic;
-  }
-
-  public Config getConfiguration() {
-    return (Config)getSettings().getConfiguration();
-  }
-
-  public RunnerAndConfigurationSettings getSnapshot() throws ConfigurationException {
-    SettingsEditor<RunnerAndConfigurationSettings> editor = getEditor();
-    return editor == null ? null : editor.getSnapshot();
-  }
-
-  @Override
-  public String toString() {
-    return myDisplayName;
-  }
-
-  public void setFolderName(@Nullable String folderName) {
-    if (!Comparing.equal(myFolderName, folderName)) {
-      myFolderName = folderName;
-      setModified(true);
-    }
-  }
-
-  public @Nullable String getFolderName() {
-    return myFolderName;
-  }
-
-  private class MyValidatableComponent {
-    private JLabel myNameLabel;
-    private JTextField myNameText;
-    private JComponent myWholePanel;
-    private JPanel myComponentPlace;
-    private JLabel myWarningLabel;
-    private JButton myFixButton;
-    private JSeparator mySeparator;
-    private JCheckBox myCbStoreProjectConfiguration;
-    private JBCheckBox myCbSingleton;
-    private JPanel myValidationPanel;
-
-    private Runnable myQuickFix = null;
-
-    public MyValidatableComponent() {
-      myNameLabel.setLabelFor(myNameText);
-      myNameText.setDocument(myNameDocument);
-
-      getEditor().addSettingsEditorListener(settingsEditor -> updateWarning());
-
-      myWarningLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
-
-      myComponentPlace.add(getEditorComponent(), BorderLayout.CENTER);
-      
-      myFixButton.setIcon(TargetAWT.to(AllIcons.Actions.QuickfixBulb));
-      updateWarning();
-      myFixButton.addActionListener(e -> {
-        if (myQuickFix == null) {
-          return;
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        if (editor != null) {
+            Disposer.dispose(editor);
         }
-        myQuickFix.run();
-        myValidationResultValid = false;
-        updateWarning();
-      });
-      ActionListener actionListener = e -> {
-        setModified(true);
-        myStoreProjectConfiguration = myCbStoreProjectConfiguration.isSelected();
-        mySingleton = myCbSingleton.isSelected();
-      };
-      myCbStoreProjectConfiguration.addActionListener(actionListener);
-      myCbSingleton.addActionListener(actionListener);
-      settingAnchor();
+        myEditor = null;
+
+        myComponent = null;
+        myNameBox = null;
+        myShareBox = null;
+        mySingletonBox = null;
+        myValidationLabel = null;
+        myFixLink = null;
+        myValidationPanel = null;
     }
 
-    private void doReset(RunnerAndConfigurationSettings settings) {
-      RunConfiguration runConfiguration = settings.getConfiguration();
-      RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
-      myStoreProjectConfiguration = runManager.isConfigurationShared(settings);
-      myCbStoreProjectConfiguration.setEnabled(!(runConfiguration instanceof UnknownRunConfiguration));
-      myCbStoreProjectConfiguration.setSelected(myStoreProjectConfiguration);
-      myCbStoreProjectConfiguration.setVisible(!settings.isTemplate());
-
-      mySingleton = settings.isSingleton();
-      myCbSingleton.setEnabled(!(runConfiguration instanceof UnknownRunConfiguration));
-      myCbSingleton.setSelected(mySingleton);
-      ConfigurationFactory factory = settings.getFactory();
-      myCbSingleton.setVisible(factory != null && factory.canConfigurationBeSingleton());
+    public boolean isBrokenConfiguration() {
+        return myBrokenConfiguration;
     }
 
-    private void settingAnchor() {
+    public boolean isStoreProjectConfiguration() {
+        return myStoreProjectConfiguration;
     }
 
-    public final JComponent getWholePanel() {
-      return myWholePanel;
+    public boolean isSingleton() {
+        return mySingleton;
     }
 
-    public JComponent getEditorComponent() {
-      return getEditor().getComponent();
-    }
-
-    public @Nullable ValidationResult getValidationResult() {
-      return SingleConfigurationConfigurable.this.getValidationResult();
-    }
-
-    private void updateWarning() {
-      ValidationResult configurationException = getValidationResult();
-
-      if (configurationException != null) {
-        mySeparator.setVisible(true);
-        myWarningLabel.setVisible(true);
-        myWarningLabel.setText(generateWarningLabelText(configurationException));
-        Runnable quickFix = configurationException.getQuickFix();
-        if (quickFix == null) {
-          myFixButton.setVisible(false);
+    public void setFolderName(@Nullable String folderName) {
+        if (!Comparing.equal(myFolderName, folderName)) {
+            myFolderName = folderName;
+            setModified(true);
         }
-        else {
-          myFixButton.setVisible(true);
-          myQuickFix = quickFix;
-        }
-
-      }
-      else {
-        mySeparator.setVisible(false);
-        myWarningLabel.setVisible(false);
-        myFixButton.setVisible(false);
-        myValidationPanel.setVisible(false);
-      }
     }
 
-    
-    private String generateWarningLabelText(ValidationResult configurationException) {
-      return "<html><body><b>" + configurationException.getTitle() + ": </b>" + configurationException.getMessage() + "</body></html>";
+    public @Nullable String getFolderName() {
+        return myFolderName;
     }
-  }
+
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.ofNullable(myDisplayName);
+    }
+
+    @Override
+    public String getHelpTopic() {
+        return myHelpTopic;
+    }
+
+    public RunnerAndConfigurationSettings getSettings() {
+        return mySettings;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Config getConfiguration() {
+        return (Config) mySettings.getConfiguration();
+    }
+
+    public @Nullable RunnerAndConfigurationSettings getSnapshot() throws ConfigurationException {
+        ConfigurationSettingsEditorWrapperImpl editor = myEditor;
+        return editor == null ? null : editor.getSnapshot();
+    }
+
+    @Override
+    public String toString() {
+        return myDisplayName;
+    }
 }

@@ -17,8 +17,10 @@ package consulo.execution.configuration.ui;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class  RunConfigurationConfigurableAdapter<T extends RunConfiguration> extends SettingsEditorConfigurable<T>{
+  @RequiredUIAccess
   public RunConfigurationConfigurableAdapter(SettingsEditor<T> settingsEditor, T configuration) {
     super(settingsEditor, configuration);
  }

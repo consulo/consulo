@@ -4,13 +4,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.document.Document;
 import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.ui.internal.TextFieldDocuments;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import org.jspecify.annotations.Nullable;
@@ -44,18 +42,15 @@ public abstract class TextFieldCompletionProvider {
     apply(field, "");
   }
 
-  private Document createDocument(Project project, String text) {
+  public Document createDocument(Project project, String text) {
     FileType fileType = PlainTextLanguage.INSTANCE.getAssociatedFileType();
     assert fileType != null;
 
-    long stamp = LocalTimeCounter.currentTime();
-    PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, text, stamp, true, false);
+    return TextFieldDocuments.create(project, fileType, text, this::installTo);
+  }
 
+  public void installTo(PsiFile psiFile) {
     psiFile.putUserData(COMPLETING_TEXT_FIELD_KEY, this);
-
-    Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
-    assert document != null;
-    return document;
   }
 
   public boolean isCaseInsensitivity() {

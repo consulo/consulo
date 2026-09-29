@@ -13,103 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.ui;
 
-import consulo.application.ApplicationPropertiesComponent;
 import consulo.configurable.ConfigurationException;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
-import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
 import consulo.execution.internal.ConfigurationSettingsEditorWrapper;
-import consulo.ui.ex.awt.HideableDecorator;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.VerticalLayout;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.xml.serializer.WriteExternalException;
+import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author anna
  * @since 2006-03-27
  */
-public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSettingsEditorWrapper implements BeforeRunStepsPanel.StepsBeforeRunListener {
-
-    private static final String EXPAND_PROPERTY_KEY = "ExpandBeforeRunStepsPanel";
-
-    private final JPanel myBeforeLaunchContainer;
-    private BeforeRunStepsPanel myBeforeRunStepsPanel;
-
+public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSettingsEditorWrapper {
     private final ConfigurationSettingsEditor myEditor;
-    private final HideableDecorator myDecorator;
+    private final BeforeRunStepsPanel myBeforeRunStepsPanel;
 
+    @RequiredUIAccess
     public ConfigurationSettingsEditorWrapperImpl(RunnerAndConfigurationSettings settings) {
         myEditor = new ConfigurationSettingsEditor(settings);
         Disposer.register(this, myEditor);
-        myBeforeRunStepsPanel = new BeforeRunStepsPanel(this);
-
-        myBeforeLaunchContainer = new JPanel(new BorderLayout());
-        myDecorator = new HideableDecorator(myBeforeLaunchContainer, "", false) {
-            @Override
-            protected void on() {
-                super.on();
-                storeState();
-            }
-
-            @Override
-            protected void off() {
-                super.off();
-                storeState();
-            }
-
-            private void storeState() {
-                ApplicationPropertiesComponent.getInstance().setValue(EXPAND_PROPERTY_KEY, String.valueOf(isExpanded()));
-            }
-        };
-        myDecorator.setOn(ApplicationPropertiesComponent.getInstance().getBoolean(EXPAND_PROPERTY_KEY, true));
-        myDecorator.setContentComponent(myBeforeRunStepsPanel.getPanel());
-        doReset(settings);
+        myEditor.addSettingsEditorListener(editor -> fireEditorStateChanged());
+        myBeforeRunStepsPanel = new BeforeRunStepsPanel(settings, this::fireEditorStateChanged);
     }
 
-    private void doReset(RunnerAndConfigurationSettings settings) {
-        RunConfiguration runConfiguration = settings.getConfiguration();
-        myBeforeRunStepsPanel.doReset(settings);
-        myBeforeLaunchContainer.setVisible(!(runConfiguration instanceof UnknownRunConfiguration));
-    }
-
+    @RequiredUIAccess
     @Override
-    protected JComponent createEditor() {
-        JPanel wholePanel = new JPanel(new VerticalLayout(JBUI.scale(5)));
-
-        wholePanel.add(myEditor.getComponent());
-        wholePanel.add(myBeforeLaunchContainer);
-
-        DataManager.registerUiDataProvider(wholePanel, new MyDataProvider());
-        return ScrollPaneFactory.createScrollPane(wholePanel, true);
+    protected Component createUIComponent() {
+        DockLayout layout = DockLayout.create();
+        layout.top(myEditor.getUIComponent());
+        layout.center(myBeforeRunStepsPanel.createComponent());
+        layout.putUserData(UiDataProvider.KEY, sink -> sink.set(CONFIGURATION_EDITOR_KEY, this));
+        return layout;
     }
 
-    @Override
-    protected void disposeEditor() {
-    }
-
+    @RequiredUIAccess
     @Override
     public void resetEditorFrom(RunnerAndConfigurationSettings settings) {
-        myEditor.resetEditorFrom(settings);
-        doReset(settings);
+        myEditor.resetFrom(settings);
+        myBeforeRunStepsPanel.reset(settings);
     }
 
     @Override
     public void applyEditorTo(RunnerAndConfigurationSettings settings) throws ConfigurationException {
-        myEditor.applyEditorTo(settings);
+        myEditor.applyTo(settings);
         doApply(settings);
     }
 
@@ -133,6 +92,31 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
         }
     }
 
+    @RequiredUIAccess
+    boolean isModified(RunnerAndConfigurationSettings settings) {
+        try {
+            RunnerAndConfigurationSettings snapshot = myEditor.getSnapshot();
+            Element originalElement = writeElement(settings.getConfiguration());
+            Element snapshotElement = writeElement(snapshot.getConfiguration());
+            return originalElement == null || snapshotElement == null || !JDOMUtil.areElementsEqual(originalElement, snapshotElement);
+        }
+        catch (ConfigurationException e) {
+            return true;
+        }
+    }
+
+    static @Nullable Element writeElement(RunConfiguration configuration) {
+        try {
+            Element element = new Element("configuration");
+            configuration.writeExternal(element);
+            return element;
+        }
+        catch (WriteExternalException e) {
+            return null;
+        }
+    }
+
+    @RequiredUIAccess
     @Override
     public void addBeforeLaunchStep(BeforeRunTask<?> task) {
         myBeforeRunStepsPanel.addTask(task);
@@ -140,23 +124,6 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
 
     @Override
     public List<BeforeRunTask> getStepsBeforeLaunch() {
-        return Collections.unmodifiableList(myBeforeRunStepsPanel.getTasks(true));
-    }
-
-    @Override
-    public void fireStepsBeforeRunChanged() {
-        fireEditorStateChanged();
-    }
-
-    @Override
-    public void titleChanged(String title) {
-        myDecorator.setTitle(title);
-    }
-
-    private class MyDataProvider implements UiDataProvider {
-        @Override
-        public void uiDataSnapshot(DataSink sink) {
-            sink.set(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapperImpl.this);
-        }
+        return myBeforeRunStepsPanel.getTasks(true);
     }
 }

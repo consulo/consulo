@@ -51,10 +51,14 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
   public static <T> void installCompletion(Document document, Project project, @Nullable TextFieldWithAutoCompletionListProvider<T> consumer, boolean autoPopup) {
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (psiFile != null) {
-      //noinspection unchecked
-      psiFile.putUserData(KEY, consumer == null ? TextFieldWithAutoCompletion.EMPTY_COMPLETION : consumer);
-      psiFile.putUserData(AUTO_POPUP_KEY, autoPopup);
+      installCompletion(psiFile, consumer, autoPopup);
     }
+  }
+
+  public static <T> void installCompletion(PsiFile psiFile, @Nullable TextFieldWithAutoCompletionListProvider<T> consumer, boolean autoPopup) {
+    //noinspection unchecked
+    psiFile.putUserData(KEY, consumer == null ? TextFieldWithAutoCompletion.EMPTY_COMPLETION : consumer);
+    psiFile.putUserData(AUTO_POPUP_KEY, autoPopup);
   }
 
   @RequiredReadAction

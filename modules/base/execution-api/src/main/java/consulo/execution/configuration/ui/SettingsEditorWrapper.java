@@ -21,9 +21,7 @@ import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.function.Function;
 
 public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
@@ -52,15 +50,9 @@ public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
   }
 
   @Override
-  
-  public JComponent createEditor() {
-    return myWrapped.createEditor();
-  }
-
-  @Override
   @RequiredUIAccess
-  protected @Nullable Component createUIComponent() {
-    return myWrapped.createUIComponent();
+  protected Component createUIComponent() {
+    return myWrapped.getUIComponent();
   }
 
   @Override

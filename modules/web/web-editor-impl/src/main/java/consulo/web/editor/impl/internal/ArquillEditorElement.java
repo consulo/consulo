@@ -656,6 +656,27 @@ public class ArquillEditorElement extends Component implements HasSize {
         getElement().getClassList().set("arquill-editor-fit-content", fit);
     }
 
+    public void focusText() {
+        getElement().executeJs("this.$arquillApi.focus();");
+    }
+
+    public void setOneLine(boolean oneLine) {
+        getElement().getClassList().set("arquill-editor-one-line", oneLine);
+    }
+
+    public void setPlaceholder(@Nullable String placeholder) {
+        if (placeholder == null || placeholder.isEmpty()) {
+            getElement().removeAttribute("data-placeholder");
+        }
+        else {
+            getElement().setAttribute("data-placeholder", placeholder);
+        }
+    }
+
+    public void setEmpty(boolean empty) {
+        getElement().setAttribute("data-empty", empty);
+    }
+
     public void setText(String text) {
         myText = text;
 

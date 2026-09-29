@@ -15,20 +15,21 @@
  */
 package consulo.language.editor.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.Language;
+import consulo.language.editor.ui.internal.TextFieldDocuments;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileFactory;
-import consulo.util.lang.LocalTimeCounter;
 import org.jspecify.annotations.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use EditorBox")
 public class LanguageTextField extends EditorTextField {
   private final Language myLanguage;
   private final Project myProject;
@@ -80,16 +81,10 @@ public class LanguageTextField extends EditorTextField {
   private static Document createDocument(String value, @Nullable Language language, Project project,
                                          SimpleDocumentCreator documentCreator) {
     if (language != null) {
-      PsiFileFactory factory = PsiFileFactory.getInstance(project);
       FileType fileType = language.getAssociatedFileType();
       assert fileType != null;
 
-      long stamp = LocalTimeCounter.currentTime();
-      PsiFile psiFile = factory.createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, value, stamp, true, false);
-      documentCreator.customizePsiFile(psiFile);
-      Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
-      assert document != null;
-      return document;
+      return TextFieldDocuments.create(project, fileType, value, documentCreator::customizePsiFile);
     }
     else {
       return EditorFactory.getInstance().createDocument(value);

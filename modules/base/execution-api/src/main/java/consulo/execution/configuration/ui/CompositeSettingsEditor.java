@@ -18,120 +18,137 @@ package consulo.execution.configuration.ui;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<Settings> {
-  private Collection<SettingsEditor<Settings>> myEditors;
-  private SettingsEditorListener<Settings> myChildSettingsListener;
-  private SynchronizationController mySyncController;
-  private boolean myIsDisposed = false;
+    private Collection<SettingsEditor<Settings>> myEditors = List.of();
+    private @Nullable SettingsEditorListener<Settings> myChildSettingsListener;
+    private @Nullable SynchronizationController mySyncController;
+    private boolean myIsDisposed = false;
 
-  public CompositeSettingsEditor() {}
-
-  public CompositeSettingsEditor(Supplier<Settings> factory) {
-    super(factory);
-    if (factory != null) {
-      mySyncController = new SynchronizationController();
+    public CompositeSettingsEditor() {
     }
-  }
 
-  public abstract CompositeSettingsBuilder<Settings> getBuilder();
-
-  @Override
-  public void resetEditorFrom(Settings settings) {
-    for (SettingsEditor<Settings> myEditor : myEditors) {
-      myEditor.resetEditorFrom(settings);
-    }
-  }
-
-  @Override
-  public void applyEditorTo(Settings settings) throws ConfigurationException {
-    for (SettingsEditor<Settings> myEditor : myEditors) {
-      myEditor.applyTo(settings);
-    }
-  }
-
-  @Override
-  public void uninstallWatcher() {
-    for (SettingsEditor<Settings> editor : myEditors) {
-      editor.removeSettingsEditorListener(myChildSettingsListener);
-    }
-  }
-
-  @Override
-  public void installWatcher(JComponent c) {
-    myChildSettingsListener = new SettingsEditorListener<Settings>() {
-      @Override
-      public void stateChanged(SettingsEditor<Settings> editor) {
-        fireEditorStateChanged();
-        if (mySyncController != null) mySyncController.handleStateChange(editor);
-      }
-    };
-
-    for (SettingsEditor<Settings> editor : myEditors) {
-      editor.addSettingsEditorListener(myChildSettingsListener);
-    }
-  }
-
-  @Override
-  
-  protected final JComponent createEditor() {
-    CompositeSettingsBuilder<Settings> builder = getBuilder();
-    myEditors = builder.getEditors();
-    for (SettingsEditor<Settings> editor : myEditors) {
-      Disposer.register(this, editor);
-      editor.setOwner(this);
-    }
-    return builder.createCompoundEditor(this);
-  }
-
-  @Override
-  public void disposeEditor() {
-    Disposer.dispose(this);
-    myIsDisposed = true;
-  }
-
-  private class SynchronizationController {
-    private final Set<SettingsEditor> myChangedEditors = new HashSet<SettingsEditor>();
-    private final Alarm mySyncAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-    private boolean myIsInSync = false;
-
-    public void handleStateChange(SettingsEditor editor) {
-      if (myIsInSync || myIsDisposed) return;
-      myChangedEditors.add(editor);
-      mySyncAlarm.cancelAllRequests();
-      mySyncAlarm.addRequest(new Runnable() {
-        @Override
-        public void run() {
-          if (!myIsDisposed) {
-            sync();
-          }
+    public CompositeSettingsEditor(Supplier<Settings> factory) {
+        super(factory);
+        if (factory != null) {
+            mySyncController = new SynchronizationController();
         }
-      }, 300);
     }
 
-    public void sync() {
-      myIsInSync = true;
-      try {
-        Settings snapshot = getSnapshot();
+    public abstract CompositeSettingsBuilder<Settings> getBuilder();
+
+    @Override
+    public void resetEditorFrom(Settings settings) {
+        for (SettingsEditor<Settings> myEditor : myEditors) {
+            myEditor.resetEditorFrom(settings);
+        }
+    }
+
+    @Override
+    public void applyEditorTo(Settings settings) throws ConfigurationException {
+        for (SettingsEditor<Settings> myEditor : myEditors) {
+            myEditor.applyTo(settings);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected final Component createUIComponent() {
+        CompositeSettingsBuilder<Settings> builder = getBuilder();
+        myEditors = builder.getEditors();
         for (SettingsEditor<Settings> editor : myEditors) {
-          if (!myChangedEditors.contains(editor)) {
-            editor.resetFrom(snapshot);
-          }
+            Disposer.register(this, editor);
+            editor.setOwner(this);
         }
-      }
-      catch (ConfigurationException e) {
-      }
-      finally{
-        myChangedEditors.clear();
-        myIsInSync = false;
-      }
+
+        SettingsEditorListener<Settings> childSettingsListener = editor -> {
+            fireEditorStateChanged();
+            SynchronizationController syncController = mySyncController;
+            if (syncController != null) {
+                syncController.handleStateChange(editor);
+            }
+        };
+        myChildSettingsListener = childSettingsListener;
+        for (SettingsEditor<Settings> editor : myEditors) {
+            editor.addSettingsEditorListener(childSettingsListener);
+        }
+
+        return builder.createCompoundEditor(this);
     }
-  }
+
+    @Override
+    public void disposeEditor() {
+        SettingsEditorListener<Settings> childSettingsListener = myChildSettingsListener;
+        if (childSettingsListener != null) {
+            for (SettingsEditor<Settings> editor : myEditors) {
+                editor.removeSettingsEditorListener(childSettingsListener);
+            }
+        }
+
+        SynchronizationController syncController = mySyncController;
+        if (syncController != null) {
+            syncController.cancel();
+        }
+
+        Disposer.dispose(this);
+        myIsDisposed = true;
+    }
+
+    private class SynchronizationController {
+        private final Set<SettingsEditor<Settings>> myChangedEditors = new HashSet<>();
+        private @Nullable Future<?> mySyncFuture;
+        private boolean myIsInSync = false;
+
+        @RequiredUIAccess
+        public void handleStateChange(SettingsEditor<Settings> editor) {
+            if (myIsInSync || myIsDisposed) {
+                return;
+            }
+            myChangedEditors.add(editor);
+            cancel();
+            mySyncFuture = UIAccess.current().getScheduler().schedule(() -> {
+                if (!myIsDisposed) {
+                    sync();
+                }
+            }, 300, TimeUnit.MILLISECONDS);
+        }
+
+        public void cancel() {
+            Future<?> syncFuture = mySyncFuture;
+            if (syncFuture != null) {
+                syncFuture.cancel(false);
+            }
+            mySyncFuture = null;
+        }
+
+        public void sync() {
+            myIsInSync = true;
+            try {
+                Settings snapshot = getSnapshot();
+                for (SettingsEditor<Settings> editor : myEditors) {
+                    if (!myChangedEditors.contains(editor)) {
+                        editor.resetFrom(snapshot);
+                    }
+                }
+            }
+            catch (ConfigurationException ignored) {
+            }
+            finally {
+                myChangedEditors.clear();
+                myIsInSync = false;
+            }
+        }
+    }
 }

@@ -18,281 +18,295 @@ package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.language.internal.custom.SyntaxTable;
-import consulo.platform.base.localize.CommonLocalize;
 import consulo.ide.localize.IdeLocalize;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.util.ListUtil;
+import consulo.language.internal.custom.SyntaxTable;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.Label;
+import consulo.ui.ListBox;
+import consulo.ui.StaticPosition;
+import consulo.ui.Tab;
+import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.EditAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.ex.toolbar.UpMoveAction;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TableLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.ui.util.FormBuilder;
 import consulo.util.lang.StringUtil;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Consumer;
 
-/**
- * @author Yura Cangea, dsl
- */
 public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
-  private final JTextField myFileTypeName = new JTextField();
-  private final JTextField myFileTypeDescr = new JTextField();
-  private final JCheckBox myIgnoreCase = new JCheckBox(IdeLocalize.checkboxCustomfiletypeIgnoreCase().get());
-  private final JCheckBox mySupportBraces = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportPairedBraces().get());
-  private final JCheckBox mySupportBrackets = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportPairedBrackets().get());
-  private final JCheckBox mySupportParens = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportPairedParens().get());
-  private final JCheckBox mySupportEscapes = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportStringEscapes().get());
+    private final TextBox myFileTypeName = TextBox.create();
+    private final TextBox myFileTypeDescr = TextBox.create();
+    private final CheckBox myIgnoreCase = CheckBox.create(IdeLocalize.checkboxCustomfiletypeIgnoreCase());
+    private final CheckBox mySupportBraces = CheckBox.create(IdeLocalize.checkboxCustomfiletypeSupportPairedBraces());
+    private final CheckBox mySupportBrackets = CheckBox.create(IdeLocalize.checkboxCustomfiletypeSupportPairedBrackets());
+    private final CheckBox mySupportParens = CheckBox.create(IdeLocalize.checkboxCustomfiletypeSupportPairedParens());
+    private final CheckBox mySupportEscapes = CheckBox.create(IdeLocalize.checkboxCustomfiletypeSupportStringEscapes());
 
-  private final JTextField myLineComment = new JTextField(5);
-  private final JCheckBox myCommentAtLineStart =
-    new JCheckBox(UIUtil.replaceMnemonicAmpersand("&Only at line start"));
-  private final JTextField myBlockCommentStart = new JTextField(5);
-  private final JTextField myBlockCommentEnd = new JTextField(5);
-  private final JTextField myHexPrefix = new JTextField(5);
+    private final TextBox myLineComment = TextBox.create();
+    private final CheckBox myCommentAtLineStart = CheckBox.create(IdeLocalize.checkboxCustomfiletypeCommentOnlyAtLineStart());
+    private final TextBox myBlockCommentStart = TextBox.create();
+    private final TextBox myBlockCommentEnd = TextBox.create();
+    private final TextBox myHexPrefix = TextBox.create();
 
-  private final JTextField myNumPostfixes = new JTextField(5);
-  private final JBList[] myKeywordsLists = new JBList[]{new JBList(), new JBList(), new JBList(), new JBList()};
-  private final DefaultListModel[] myKeywordModels = new DefaultListModel[]{
-    new DefaultListModel(),
-    new DefaultListModel(),
-    new DefaultListModel(),
-    new DefaultListModel()
-  };
+    private final TextBox myNumPostfixes = TextBox.create();
+    private final List<MutableFlatDataModel<String>> myKeywordModels = List.of(
+        FlatDataModel.of(List.of()),
+        FlatDataModel.of(List.of()),
+        FlatDataModel.of(List.of()),
+        FlatDataModel.of(List.of())
+    );
 
-  public CustomFileTypeEditor() {
-    myLineComment.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        boolean enabled = StringUtil.isNotEmpty(myLineComment.getText());
+    @RequiredUIAccess
+    public CustomFileTypeEditor() {
+        myLineComment.addValueListener(event -> updateCommentAtLineStart());
+        myCommentAtLineStart.setEnabled(false);
+    }
+
+    @RequiredUIAccess
+    private void updateCommentAtLineStart() {
+        boolean enabled = StringUtil.isNotEmpty(myLineComment.getValue());
         myCommentAtLineStart.setEnabled(enabled);
         if (!enabled) {
-          myCommentAtLineStart.setSelected(false);
+            myCommentAtLineStart.setValue(false);
         }
-      }
-    });
-    myCommentAtLineStart.setEnabled(false);
-  }
-
-  public void resetEditorFrom(AbstractFileType fileType) {
-    myFileTypeName.setText(fileType.getId());
-    myFileTypeDescr.setText(fileType.getDescription().get());
-
-    SyntaxTable table = fileType.getSyntaxTable();
-
-    if (table != null) {
-      myLineComment.setText(table.getLineComment());
-      myBlockCommentEnd.setText(table.getEndComment());
-      myBlockCommentStart.setText(table.getStartComment());
-      myHexPrefix.setText(table.getHexPrefix());
-      myNumPostfixes.setText(table.getNumPostfixChars());
-      myIgnoreCase.setSelected(table.isIgnoreCase());
-      myCommentAtLineStart.setSelected(table.lineCommentOnlyAtStart);
-
-      mySupportBraces.setSelected(table.isHasBraces());
-      mySupportBrackets.setSelected(table.isHasBrackets());
-      mySupportParens.setSelected(table.isHasParens());
-      mySupportEscapes.setSelected(table.isHasStringEscapes());
-
-      for (String s : table.getKeywords1()) {
-        myKeywordModels[0].addElement(s);
-      }
-      for (String s : table.getKeywords2()) {
-        myKeywordModels[1].addElement(s);
-      }
-      for (String s : table.getKeywords3()) {
-        myKeywordModels[2].addElement(s);
-      }
-      for (String s : table.getKeywords4()) {
-        myKeywordModels[3].addElement(s);
-      }
     }
-  }
 
-  public void applyEditorTo(AbstractFileType type) throws ConfigurationException {
-    if (myFileTypeName.getText().trim().length() == 0) {
-      throw new ConfigurationException(IdeLocalize.errorNameCannotBeEmpty().get(), CommonLocalize.titleError().get());
-    }
-    else if (myFileTypeDescr.getText().trim().length() == 0) {
-      myFileTypeDescr.setText(myFileTypeName.getText());
-    }
-    type.setName(myFileTypeName.getText());
-    type.setDescription(myFileTypeDescr.getText());
-    type.setSyntaxTable(getSyntaxTable());
-  }
+    @RequiredUIAccess
+    @Override
+    public void resetEditorFrom(AbstractFileType fileType) {
+        myFileTypeName.setValue(fileType.getId());
+        myFileTypeDescr.setValue(fileType.getDescription().get());
 
-  
-  public JComponent createEditor() {
-    JComponent panel = createCenterPanel();
-    for (int i = 0; i < myKeywordsLists.length; i++) {
-      myKeywordsLists[i].setModel(myKeywordModels[i]);
-    }
-    return panel;
-  }
+        SyntaxTable table = fileType.getSyntaxTable();
 
-  public void disposeEditor() {
-  }
+        if (table != null) {
+            myLineComment.setValue(StringUtil.notNullize(table.getLineComment()));
+            myBlockCommentEnd.setValue(StringUtil.notNullize(table.getEndComment()));
+            myBlockCommentStart.setValue(StringUtil.notNullize(table.getStartComment()));
+            myHexPrefix.setValue(StringUtil.notNullize(table.getHexPrefix()));
+            myNumPostfixes.setValue(StringUtil.notNullize(table.getNumPostfixChars()));
+            myIgnoreCase.setValue(table.isIgnoreCase());
+            myCommentAtLineStart.setValue(table.lineCommentOnlyAtStart);
 
-  protected JComponent createCenterPanel() {
-    JPanel panel = new JPanel(new BorderLayout());
+            mySupportBraces.setValue(table.isHasBraces());
+            mySupportBrackets.setValue(table.isHasBrackets());
+            mySupportParens.setValue(table.isHasParens());
+            mySupportEscapes.setValue(table.isHasStringEscapes());
 
-    JPanel fileTypePanel = new JPanel(new BorderLayout());
-    JPanel info = FormBuilder.createFormBuilder()
-      .addLabeledComponent(IdeLocalize.editboxCustomfiletypeName().get(), myFileTypeName)
-      .addLabeledComponent(IdeLocalize.editboxCustomfiletypeDescription().get(), myFileTypeDescr).getPanel();
-    info.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-    fileTypePanel.add(info, BorderLayout.NORTH);
-
-    JPanel highlighterPanel = new JPanel();
-    highlighterPanel.setBorder(IdeBorderFactory.createTitledBorder(
-      IdeLocalize.groupCustomfiletypeSyntaxHighlighting().get(),
-      false
-    ));
-    highlighterPanel.setLayout(new BorderLayout());
-    JPanel commentsAndNumbersPanel = new JPanel();
-    commentsAndNumbersPanel.setLayout(new GridBagLayout());
-
-    JPanel _panel1 = new JPanel(new BorderLayout());
-    GridBag gb = new GridBag()
-      .setDefaultFill(GridBagConstraints.HORIZONTAL)
-      .setDefaultAnchor(GridBagConstraints.WEST)
-      .setDefaultInsets(1, 5, 1, 5);
-
-    commentsAndNumbersPanel.add(
-      new JLabel(IdeLocalize.editboxCustomfiletypeLineComment().get()),
-      gb.nextLine().next()
-    );
-    commentsAndNumbersPanel.add(myLineComment, gb.next());
-    commentsAndNumbersPanel.add(myCommentAtLineStart, gb.next().coverLine(2));
-
-    commentsAndNumbersPanel.add(
-      new JLabel(IdeLocalize.editboxCustomfiletypeBlockCommentStart().get()),
-      gb.nextLine().next()
-    );
-    commentsAndNumbersPanel.add(myBlockCommentStart, gb.next());
-    commentsAndNumbersPanel.add(new JLabel(IdeLocalize.editboxCustomfiletypeBlockCommentEnd().get()), gb.next());
-    commentsAndNumbersPanel.add(myBlockCommentEnd, gb.next());
-
-    commentsAndNumbersPanel.add(new JLabel(IdeLocalize.editboxCustomfiletypeHexPrefix().get()), gb.nextLine().next());
-    commentsAndNumbersPanel.add(myHexPrefix, gb.next());
-    commentsAndNumbersPanel.add(new JLabel(IdeLocalize.editboxCustomfiletypeNumberPostfixes().get()), gb.next());
-    commentsAndNumbersPanel.add(myNumPostfixes, gb.next());
-
-    commentsAndNumbersPanel.add(mySupportBraces, gb.nextLine().next().coverLine(2));
-    commentsAndNumbersPanel.add(mySupportBrackets, gb.next().next().coverLine(2));
-    commentsAndNumbersPanel.add(mySupportParens, gb.nextLine().next().coverLine(2));
-    commentsAndNumbersPanel.add(mySupportEscapes, gb.next().next().coverLine(2));
-
-    _panel1.add(commentsAndNumbersPanel, BorderLayout.WEST);
-
-    highlighterPanel.add(_panel1, BorderLayout.NORTH);
-
-    TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(this);
-    tabbedPaneWrapper.getComponent().setBorder(
-      IdeBorderFactory.createTitledBorder(IdeLocalize.listboxCustomfiletypeKeywords().get(), false)
-    );
-    tabbedPaneWrapper.addTab(" 1 ", createKeywordsPanel(0));
-    tabbedPaneWrapper.addTab(" 2 ", createKeywordsPanel(1));
-    tabbedPaneWrapper.addTab(" 3 ", createKeywordsPanel(2));
-    tabbedPaneWrapper.addTab(" 4 ", createKeywordsPanel(3));
-
-    highlighterPanel.add(tabbedPaneWrapper.getComponent(), BorderLayout.CENTER);
-    highlighterPanel.add(myIgnoreCase, BorderLayout.SOUTH);
-
-    fileTypePanel.add(highlighterPanel, BorderLayout.CENTER);
-
-    panel.add(fileTypePanel);
-
-    for (int i = 0; i < myKeywordsLists.length; i++) {
-      final int idx = i;
-      new DoubleClickListener() {
-        @Override
-        protected boolean onDoubleClick(MouseEvent e) {
-          edit(idx);
-          return true;
+            myKeywordModels.get(0).replaceAll(new ArrayList<>(table.getKeywords1()));
+            myKeywordModels.get(1).replaceAll(new ArrayList<>(table.getKeywords2()));
+            myKeywordModels.get(2).replaceAll(new ArrayList<>(table.getKeywords3()));
+            myKeywordModels.get(3).replaceAll(new ArrayList<>(table.getKeywords4()));
         }
-      }.installOn(myKeywordsLists[i]);
+        updateCommentAtLineStart();
     }
 
-    return panel;
-  }
-
-  private JPanel createKeywordsPanel(int index) {
-    JPanel panel = ToolbarDecorator.createDecorator(myKeywordsLists[index])
-      .setAddAction(button -> {
-        ModifyKeywordDialog dialog = new ModifyKeywordDialog(myKeywordsLists[index], "");
-        dialog.show();
-        if (dialog.isOK()) {
-          String keywordName = dialog.getKeywordName();
-          if (!myKeywordModels[index].contains(keywordName)) myKeywordModels[index].addElement(keywordName);
+    @RequiredUIAccess
+    @Override
+    public void applyEditorTo(AbstractFileType type) throws ConfigurationException {
+        String name = StringUtil.notNullize(myFileTypeName.getValue());
+        if (name.trim().isEmpty()) {
+            throw new ConfigurationException(IdeLocalize.errorNameCannotBeEmpty(), CommonLocalize.titleError());
         }
-      })
-      .setRemoveAction(button -> ListUtil.removeSelectedItems(myKeywordsLists[index]))
-      .disableUpDownActions()
-      .createPanel();
-    panel.setBorder(null);
-    return panel;
-  }
-
-  private void edit(int index) {
-    if (myKeywordsLists[index].getSelectedIndex() == -1) return;
-    ModifyKeywordDialog dialog =
-      new ModifyKeywordDialog(myKeywordsLists[index], (String)myKeywordsLists[index].getSelectedValue());
-    dialog.show();
-    if (dialog.isOK()) {
-      myKeywordModels[index].setElementAt(dialog.getKeywordName(), myKeywordsLists[index].getSelectedIndex());
+        else if (StringUtil.notNullize(myFileTypeDescr.getValue()).trim().isEmpty()) {
+            myFileTypeDescr.setValue(name);
+        }
+        type.setName(name);
+        type.setDescription(myFileTypeDescr.getValue());
+        type.setSyntaxTable(getSyntaxTable());
     }
-  }
 
-  public SyntaxTable getSyntaxTable() {
-    SyntaxTable syntaxTable = new SyntaxTable();
-    syntaxTable.setLineComment(myLineComment.getText());
-    syntaxTable.setStartComment(myBlockCommentStart.getText());
-    syntaxTable.setEndComment(myBlockCommentEnd.getText());
-    syntaxTable.setHexPrefix(myHexPrefix.getText());
-    syntaxTable.setNumPostfixChars(myNumPostfixes.getText());
-    syntaxTable.lineCommentOnlyAtStart = myCommentAtLineStart.isSelected();
+    @RequiredUIAccess
+    @Override
+    protected Component createUIComponent() {
+        FormBuilder info = FormBuilder.create();
+        info.addLabeled(IdeLocalize.editboxCustomfiletypeName(), myFileTypeName);
+        info.addLabeled(IdeLocalize.editboxCustomfiletypeDescription(), myFileTypeDescr);
 
-    boolean ignoreCase = myIgnoreCase.isSelected();
-    syntaxTable.setIgnoreCase(ignoreCase);
+        TableLayout commentsAndNumbersPanel = TableLayout.create(StaticPosition.TOP);
+        commentsAndNumbersPanel.add(Label.create(IdeLocalize.editboxCustomfiletypeLineComment()), TableLayout.cell(0, 0));
+        commentsAndNumbersPanel.add(myLineComment, TableLayout.cell(0, 1).fill());
+        commentsAndNumbersPanel.add(myCommentAtLineStart, TableLayout.cell(0, 2));
 
-    syntaxTable.setHasBraces(mySupportBraces.isSelected());
-    syntaxTable.setHasBrackets(mySupportBrackets.isSelected());
-    syntaxTable.setHasParens(mySupportParens.isSelected());
-    syntaxTable.setHasStringEscapes(mySupportEscapes.isSelected());
+        commentsAndNumbersPanel.add(Label.create(IdeLocalize.editboxCustomfiletypeBlockCommentStart()), TableLayout.cell(1, 0));
+        commentsAndNumbersPanel.add(myBlockCommentStart, TableLayout.cell(1, 1).fill());
+        commentsAndNumbersPanel.add(Label.create(IdeLocalize.editboxCustomfiletypeBlockCommentEnd()), TableLayout.cell(1, 2));
+        commentsAndNumbersPanel.add(myBlockCommentEnd, TableLayout.cell(1, 3).fill());
 
-    for (int i = 0; i < myKeywordModels[0].size(); i++) {
-      if (ignoreCase) {
-        syntaxTable.addKeyword1(((String)myKeywordModels[0].getElementAt(i)).toLowerCase());
-      }
-      else {
-        syntaxTable.addKeyword1((String)myKeywordModels[0].getElementAt(i));
-      }
+        commentsAndNumbersPanel.add(Label.create(IdeLocalize.editboxCustomfiletypeHexPrefix()), TableLayout.cell(2, 0));
+        commentsAndNumbersPanel.add(myHexPrefix, TableLayout.cell(2, 1).fill());
+        commentsAndNumbersPanel.add(Label.create(IdeLocalize.editboxCustomfiletypeNumberPostfixes()), TableLayout.cell(2, 2));
+        commentsAndNumbersPanel.add(myNumPostfixes, TableLayout.cell(2, 3).fill());
+
+        HorizontalLayout pairsPanel = HorizontalLayout.create();
+        pairsPanel.add(mySupportBraces);
+        pairsPanel.add(mySupportBrackets);
+        pairsPanel.add(mySupportParens);
+        pairsPanel.add(mySupportEscapes);
+
+        DockLayout highlighterTop = DockLayout.create();
+        highlighterTop.top(commentsAndNumbersPanel);
+        highlighterTop.bottom(pairsPanel);
+
+        TabbedLayout keywordsTabs = TabbedLayout.create();
+        for (int i = 0; i < myKeywordModels.size(); i++) {
+            LocalizeValue title = LocalizeValue.of(String.valueOf(i + 1));
+
+            Tab tab = keywordsTabs.createTab();
+            tab.setRenderer((it, presentation) -> presentation.append(title));
+
+            keywordsTabs.addTab(tab, createKeywordsPanel(myKeywordModels.get(i)));
+        }
+
+        DockLayout highlighterPanel = DockLayout.create();
+        highlighterPanel.top(highlighterTop);
+        highlighterPanel.center(LabeledLayout.create(IdeLocalize.listboxCustomfiletypeKeywords(), keywordsTabs));
+        highlighterPanel.bottom(myIgnoreCase);
+
+        DockLayout panel = DockLayout.create();
+        panel.top(info.build());
+        panel.center(LabeledLayout.create(IdeLocalize.groupCustomfiletypeSyntaxHighlighting(), highlighterPanel));
+        return panel;
     }
-    for (int i = 0; i < myKeywordModels[1].size(); i++) {
-      if (ignoreCase) {
-        syntaxTable.addKeyword2(((String)myKeywordModels[1].getElementAt(i)).toLowerCase());
-      }
-      else {
-        syntaxTable.addKeyword2((String)myKeywordModels[1].getElementAt(i));
-      }
+
+    @RequiredUIAccess
+    private Component createKeywordsPanel(MutableFlatDataModel<String> model) {
+        ListBox<String> list = ListBox.create(model);
+        list.addDoubleClickListener(event -> {
+            String value = list.getValue();
+            if (value != null) {
+                editKeyword(list, model, value);
+            }
+        });
+
+        return ToolbarDecoratorBuilderFactory.getInstance()
+            .create(list)
+            .addOrReplaceAction(new AddAction<>() {
+                @Override
+                @RequiredUIAccess
+                protected void doAdd(AnActionEvent e) {
+                    showKeywordBox(list, IdeLocalize.titleAddNewKeyword(), "", keyword -> {
+                        if (model.indexOf(keyword) < 0) {
+                            model.add(keyword);
+                        }
+                    });
+                }
+            })
+            .addOrReplaceAction(new EditAction<>() {
+                @Override
+                @RequiredUIAccess
+                protected void doEdit(String value, AnActionEvent e) {
+                    editKeyword(list, model, value);
+                }
+            })
+            .disableAction(UpMoveAction.class)
+            .disableAction(DownMoveAction.class)
+            .build();
     }
-    for (int i = 0; i < myKeywordModels[2].size(); i++) {
-      if (ignoreCase) {
-        syntaxTable.addKeyword3(((String)myKeywordModels[2].getElementAt(i)).toLowerCase());
-      }
-      else {
-        syntaxTable.addKeyword3((String)myKeywordModels[2].getElementAt(i));
-      }
+
+    @RequiredUIAccess
+    private void editKeyword(ListBox<String> list, MutableFlatDataModel<String> model, String value) {
+        showKeywordBox(list, IdeLocalize.titleEditKeyword(), value, keyword -> {
+            int index = model.indexOf(value);
+            if (index >= 0) {
+                model.remove(value);
+                model.add(keyword, index);
+                list.setValue(keyword);
+            }
+        });
     }
-    for (int i = 0; i < myKeywordModels[3].size(); i++) {
-      if (ignoreCase) {
-        syntaxTable.addKeyword4(((String)myKeywordModels[3].getElementAt(i)).toLowerCase());
-      }
-      else {
-        syntaxTable.addKeyword4((String)myKeywordModels[3].getElementAt(i));
-      }
+
+    @RequiredUIAccess
+    private static void showKeywordBox(
+        Component parent,
+        LocalizeValue title,
+        String initialValue,
+        @RequiredUIAccess Consumer<String> onKeyword
+    ) {
+        UIAccess uiAccess = UIAccess.current();
+        InputBoxBuilder.text()
+            .title(title)
+            .text(IdeLocalize.editboxKeyword())
+            .value(initialValue)
+            .validator(value -> {
+                String keyword = StringUtil.notNullize(value).trim();
+                if (keyword.isEmpty()) {
+                    return InputProblem.error(IdeLocalize.errorKeywordCannotBeEmpty());
+                }
+                if (keyword.indexOf(' ') >= 0) {
+                    return InputProblem.error(IdeLocalize.errorKeywordMayNotContainSpaces());
+                }
+                return null;
+            })
+            .showAsync(parent)
+            .whenComplete((value, error) -> {
+                if (error != null || value == null) {
+                    return;
+                }
+                uiAccess.give(() -> onKeyword.accept(value.trim()));
+            });
     }
-    return syntaxTable;
-  }
+
+    public SyntaxTable getSyntaxTable() {
+        SyntaxTable syntaxTable = new SyntaxTable();
+        syntaxTable.setLineComment(myLineComment.getValue());
+        syntaxTable.setStartComment(myBlockCommentStart.getValue());
+        syntaxTable.setEndComment(myBlockCommentEnd.getValue());
+        syntaxTable.setHexPrefix(myHexPrefix.getValue());
+        syntaxTable.setNumPostfixChars(myNumPostfixes.getValue());
+        syntaxTable.lineCommentOnlyAtStart = Boolean.TRUE.equals(myCommentAtLineStart.getValue());
+
+        boolean ignoreCase = Boolean.TRUE.equals(myIgnoreCase.getValue());
+        syntaxTable.setIgnoreCase(ignoreCase);
+
+        syntaxTable.setHasBraces(Boolean.TRUE.equals(mySupportBraces.getValue()));
+        syntaxTable.setHasBrackets(Boolean.TRUE.equals(mySupportBrackets.getValue()));
+        syntaxTable.setHasParens(Boolean.TRUE.equals(mySupportParens.getValue()));
+        syntaxTable.setHasStringEscapes(Boolean.TRUE.equals(mySupportEscapes.getValue()));
+
+        for (String keyword : getKeywords(0, ignoreCase)) {
+            syntaxTable.addKeyword1(keyword);
+        }
+        for (String keyword : getKeywords(1, ignoreCase)) {
+            syntaxTable.addKeyword2(keyword);
+        }
+        for (String keyword : getKeywords(2, ignoreCase)) {
+            syntaxTable.addKeyword3(keyword);
+        }
+        for (String keyword : getKeywords(3, ignoreCase)) {
+            syntaxTable.addKeyword4(keyword);
+        }
+        return syntaxTable;
+    }
+
+    private List<String> getKeywords(int index, boolean ignoreCase) {
+        MutableFlatDataModel<String> model = myKeywordModels.get(index);
+        List<String> keywords = new ArrayList<>(model.getSize());
+        for (int i = 0; i < model.getSize(); i++) {
+            String keyword = model.get(i);
+            keywords.add(ignoreCase ? keyword.toLowerCase(Locale.ROOT) : keyword);
+        }
+        return keywords;
+    }
 }

@@ -43,6 +43,7 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
     private final RunnerAndConfigurationSettings myConfiguration;
     private final Project myProject;
     private final String myTag;
+    private final List<AnAction> myInlineActions;
 
     public SelectConfigAction(RunnerAndConfigurationSettings configuration,
                               Project project,
@@ -50,6 +51,7 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
         myConfiguration = configuration;
         myProject = project;
         myTag = tag;
+        myInlineActions = createInlineActions();
         String name = StringUtil.notNullize(configuration.getName());
 
         Presentation presentation = getTemplatePresentation();
@@ -81,6 +83,10 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
 
         presentation.putClientProperty(ActionFilterUtil.SEARCH_TAG, myTag);
 
+        presentation.putClientProperty(ActionUtil.INLINE_ACTIONS, myInlineActions);
+    }
+
+    private List<AnAction> createInlineActions() {
         Application application = Application.get();
 
         List<Executor> executors = RunCurrentFileExecutor.getExecutors(application);
@@ -90,12 +96,12 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
         RunCurrentFileService fileService = application.getInstance(RunCurrentFileService.class);
 
         for (Executor executor : executors) {
-            actionList.add(new ExecutorAction(ExecutorRegistry.getInstance(), executor, fileService) {
+            ExecutorAction action = new ExecutorAction(ExecutorRegistry.getInstance(), executor, fileService) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(AnActionEvent e) {
                     RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
-                    
+
                     super.actionPerformed(e);
                 }
 
@@ -103,10 +109,12 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
                 protected @Nullable RunnerAndConfigurationSettings getConfiguration(Project project) {
                     return myConfiguration;
                 }
-            });
-        }
+            };
+            action.getTemplatePresentation().setKeepPopupOnPerform(KeepPopupOnPerform.IF_REQUESTED);
 
-        presentation.putClientProperty(ActionUtil.INLINE_ACTIONS, actionList);
+            actionList.add(action);
+        }
+        return List.copyOf(actionList);
     }
 
     

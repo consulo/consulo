@@ -16,9 +16,7 @@
 package consulo.language.editor.ui.awt;
 
 import consulo.codeEditor.EditorEx;
-import consulo.language.editor.AutoPopupController;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
@@ -56,13 +54,7 @@ public class TextFieldWithCompletion extends LanguageTextField {
     @Override
     protected EditorEx createEditor() {
         EditorEx editor = super.createEditor();
-        SpellcheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(false).ifPresent(it -> it.accept(editor));
-        editor.putUserData(AutoPopupController.ALWAYS_AUTO_POPUP, myForceAutoPopup);
-
-        if (myShowHint) {
-            TextCompletionUtil.installCompletionHint(editor);
-        }
-
+        TextCompletionUtil.customizeEditor(editor, myForceAutoPopup, myShowHint);
         return editor;
     }
 }

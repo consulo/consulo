@@ -13,13 +13,17 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.localize.RemoteServerLocalize;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.util.FormBuilder;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration, D extends DeploymentConfiguration>
@@ -28,28 +32,30 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
     private final DeploymentConfigurator<D, S> myDeploymentConfigurator;
     private final Project myProject;
     private final RemoteServerComboWithAutoDetect<S> myServerCombo;
-    private final JPanel myDeploymentSettingsComponent;
-    private SettingsEditor<D> myDeploymentSettingsEditor;
-    private DeploymentSource myLastSelectedSource;
-    private RemoteServer<S> myLastSelectedServer;
-    private D myDeploymentConfiguration;
+    private final DockLayout myDeploymentSettingsComponent;
+    private @Nullable SettingsEditor<D> myDeploymentSettingsEditor;
+    private @Nullable DeploymentSource myLastSelectedSource;
+    private @Nullable RemoteServer<S> myLastSelectedServer;
+    private @Nullable D myDeploymentConfiguration;
 
+    @RequiredUIAccess
     public DeployToServerSettingsEditor(ServerType<S> type, DeploymentConfigurator<D, S> deploymentConfigurator, Project project) {
-
         myDeploymentConfigurator = deploymentConfigurator;
         myProject = project;
 
-        myServerCombo = new RemoteServerComboWithAutoDetect<>(type);
+        myServerCombo = new RemoteServerComboWithAutoDetect<>(type, project);
         Disposer.register(this, myServerCombo);
-        myServerCombo.addChangeListener(e -> updateDeploymentSettingsEditor());
+        myServerCombo.addChangeListener(this::updateDeploymentSettingsEditor);
 
-        myDeploymentSettingsComponent = new JPanel(new BorderLayout());
+        myDeploymentSettingsComponent = DockLayout.create();
     }
 
-    protected abstract DeploymentSource getSelectedSource();
+    protected abstract @Nullable DeploymentSource getSelectedSource();
 
+    @RequiredUIAccess
     protected abstract void resetSelectedSourceFrom(DeployToServerRunConfiguration<S, D> configuration);
 
+    @RequiredUIAccess
     protected final void updateDeploymentSettingsEditor() {
         RemoteServer<S> selectedServer = myServerCombo.getSelectedServer();
 
@@ -62,36 +68,35 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
             updateBeforeRunOptions(myLastSelectedSource, false);
             updateBeforeRunOptions(selectedSource, true);
         }
-        if (selectedSource != null) {
-            UIUtil.invokeLaterIfNeeded(() -> {
-                if (!Disposer.isDisposed(this)) {
-                    myDeploymentSettingsEditor = myDeploymentConfigurator.createEditor(selectedSource, selectedServer);
+        if (selectedSource != null && !Disposer.isDisposed(this)) {
+            SettingsEditor<D> deploymentSettingsEditor = myDeploymentConfigurator.createEditor(selectedSource, selectedServer);
+            myDeploymentSettingsEditor = deploymentSettingsEditor;
 
-                    if (myDeploymentSettingsEditor != null) {
-                        if (myDeploymentConfiguration != null) {
-                            myDeploymentSettingsEditor.resetFrom(myDeploymentConfiguration);
-                        }
-
-                        myDeploymentSettingsEditor.addSettingsEditorListener(e -> fireEditorStateChanged());
-                        Disposer.register(this, myDeploymentSettingsEditor);
-
-                        myDeploymentSettingsComponent.removeAll();
-                        myDeploymentSettingsComponent.add(BorderLayout.CENTER, myDeploymentSettingsEditor.getComponent());
-                    }
+            if (deploymentSettingsEditor != null) {
+                Component component = deploymentSettingsEditor.getUIComponent();
+                if (myDeploymentConfiguration != null) {
+                    deploymentSettingsEditor.resetFrom(myDeploymentConfiguration);
                 }
-            });
+
+                deploymentSettingsEditor.addSettingsEditorListener(e -> fireEditorStateChanged());
+                Disposer.register(this, deploymentSettingsEditor);
+
+                myDeploymentSettingsComponent.center(component);
+            }
         }
         myLastSelectedSource = selectedSource;
         myLastSelectedServer = selectedServer;
     }
 
+    @SuppressWarnings("unchecked")
     private void updateBeforeRunOptions(@Nullable DeploymentSource source, boolean selected) {
         if (source != null) {
             DeploymentSourceType type = source.getType();
-            type.updateBuildBeforeRunOption(myServerCombo, myProject, source, selected);
+            type.updateBuildBeforeRunOption(myServerCombo.getComponent(), myProject, source, selected);
         }
     }
 
+    @RequiredUIAccess
     @Override
     protected void resetEditorFrom(DeployToServerRunConfiguration<S, D> configuration) {
         myServerCombo.selectServerInCombo(configuration.getServerName());
@@ -105,6 +110,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
         }
     }
 
+    @RequiredUIAccess
     @Override
     protected void applyEditorTo(DeployToServerRunConfiguration<S, D> configuration) throws ConfigurationException {
         updateDeploymentSettingsEditor();
@@ -131,57 +137,62 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
         }
     }
 
+    @RequiredUIAccess
     @Override
-    protected JComponent createEditor() {
-        FormBuilder builder =
-            FormBuilder.createFormBuilder().addLabeledComponent(RemoteServerLocalize.labelTextServer().get(), myServerCombo);
+    protected Component createUIComponent() {
+        FormBuilder builder = FormBuilder.create();
+        builder.addLabeled(RemoteServerLocalize.labelTextServer(), myServerCombo.getComponent());
 
         addDeploymentSourceUi(builder);
 
-        return builder
-            .addComponentFillVertically(myDeploymentSettingsComponent, UIUtil.DEFAULT_VGAP)
-            .getPanel();
+        DockLayout panel = DockLayout.create();
+        panel.top(builder.build());
+        panel.center(myDeploymentSettingsComponent);
+        return panel;
     }
 
+    @RequiredUIAccess
     protected abstract void addDeploymentSourceUi(FormBuilder formBuilder);
 
     public static class AnySource<S extends ServerConfiguration, D extends DeploymentConfiguration>
         extends DeployToServerSettingsEditor<S, D> {
 
         private final ComboBox<DeploymentSource> mySourceComboBox;
-        private final SortedComboBoxModel<DeploymentSource> mySourceListModel;
 
+        @RequiredUIAccess
         public AnySource(ServerType<S> type, DeploymentConfigurator<D, S> deploymentConfigurator, Project project) {
             super(type, deploymentConfigurator, project);
 
-            mySourceListModel = new SortedComboBoxModel<>(
-                Comparator.comparing(deploymentSource -> deploymentSource.getPresentableName().get(), String.CASE_INSENSITIVE_ORDER));
+            List<DeploymentSource> sources = new ArrayList<>(deploymentConfigurator.getAvailableDeploymentSources());
+            sources.sort(Comparator.comparing(deploymentSource -> deploymentSource.getPresentableName().get(), String.CASE_INSENSITIVE_ORDER));
 
-            mySourceListModel.addAll(deploymentConfigurator.getAvailableDeploymentSources());
-            mySourceComboBox = new ComboBox<>(mySourceListModel);
-            mySourceComboBox.setRenderer(SimpleListCellRenderer.create((label, value, index) -> {
+            mySourceComboBox = ComboBox.create(sources);
+            mySourceComboBox.setRender((presentation, item) -> {
+                DeploymentSource value = item.getValue();
                 if (value == null) {
                     return;
                 }
-                label.setIcon(value.getIcon());
-                label.setText(value.getPresentableName().get());
-            }));
-            mySourceComboBox.addActionListener(e -> updateDeploymentSettingsEditor());
+                presentation.withIcon(value.getIcon());
+                presentation.append(value.getPresentableName());
+            });
+            mySourceComboBox.addValueListener(e -> updateDeploymentSettingsEditor());
         }
 
         @Override
-        protected DeploymentSource getSelectedSource() {
-            return mySourceListModel.getSelectedItem();
+        protected @Nullable DeploymentSource getSelectedSource() {
+            return mySourceComboBox.getValue();
         }
 
+        @RequiredUIAccess
         @Override
         protected void resetSelectedSourceFrom(DeployToServerRunConfiguration<S, D> configuration) {
-            mySourceComboBox.setSelectedItem(configuration.getDeploymentSource());
+            mySourceComboBox.setValue(configuration.getDeploymentSource(), false);
         }
 
+        @RequiredUIAccess
         @Override
         protected void addDeploymentSourceUi(FormBuilder formBuilder) {
-            formBuilder.addLabeledComponent(RemoteServerLocalize.labelTextDeployment().get(), mySourceComboBox);
+            formBuilder.addLabeled(RemoteServerLocalize.labelTextDeployment(), mySourceComboBox);
         }
     }
 
@@ -190,6 +201,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
 
         private final DeploymentSource myLockedSource;
 
+        @RequiredUIAccess
         public LockedSource(
             ServerType<S> type,
             DeploymentConfigurator<D, S> deploymentConfigurator,
@@ -200,11 +212,12 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
             myLockedSource = lockedSource;
         }
 
+        @RequiredUIAccess
         @Override
         protected void addDeploymentSourceUi(FormBuilder formBuilder) {
-            //
         }
 
+        @RequiredUIAccess
         @Override
         protected void resetSelectedSourceFrom(DeployToServerRunConfiguration<S, D> configuration) {
             assert configuration.getDeploymentSource() == myLockedSource;

@@ -170,7 +170,7 @@
             if (document.querySelector(
                 'vaadin-context-menu[opened], vaadin-menu-bar-submenu[opened], vaadin-context-menu-overlay[opened],'
                 + ' vaadin-menu-bar-overlay[opened], vaadin-select-overlay[opened], vaadin-combo-box-overlay[opened],'
-                + ' vaadin-popover[opened]')) {
+                + ' vaadin-popover[opened]:not([consulo-keymap-passthrough])')) {
                 return;
             }
 

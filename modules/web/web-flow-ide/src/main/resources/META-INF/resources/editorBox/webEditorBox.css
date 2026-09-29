@@ -1,0 +1,27 @@
+vaadin-input-container.consulo-editor-box:not(.consulo-editor-box-multiline) {
+    padding-block: 4px;
+}
+
+vaadin-input-container.consulo-editor-box > .arquill-editor {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: center;
+    --arquill-editor-background: transparent !important;
+}
+
+vaadin-input-container.consulo-editor-box-multiline {
+    align-items: stretch;
+    min-height: 6em;
+}
+
+vaadin-input-container.consulo-editor-box-multiline > .arquill-editor {
+    align-self: stretch;
+}
+
+vaadin-input-container.consulo-editor-box > [slot="suffix"] {
+    width: auto;
+}
+
+vaadin-input-container.consulo-editor-box .arquill-editor:not(:focus-within) .arquill-caret {
+    visibility: hidden;
+}

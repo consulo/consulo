@@ -219,6 +219,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
+        return new DesktopQtPopupListBoxImpl<>(model);
+    }
+
+    @Override
     public TextBox _Components_textBox(String text) {
         return new DesktopQtTextBoxImpl(text);
     }

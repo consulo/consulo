@@ -42,6 +42,7 @@ import java.util.function.Predicate;
 @SuppressWarnings("unchecked")
 public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin> implements ListBox<E> {
     private static final String SEPARATOR_CLASS = "web-list-box-separator";
+    private static final String HOVER_SELECT_CLASS = "web-list-box-hover-select";
 
     private @Nullable TransferHandler<E> myTransferHandler;
     private Predicate<E> mySeparatorPredicate = item -> false;
@@ -72,6 +73,8 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
      */
     @Override
     public void setSelectOnHover(boolean selectOnHover) {
+        toVaadinComponent().getClassNames().set(HOVER_SELECT_CLASS, selectOnHover);
+
         toVaadinComponent().getElement().executeJs(
             """
             const list = this;
@@ -111,6 +114,27 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
                     list.selected = index;
                     list.dispatchEvent(new CustomEvent('selected-changed', { detail: { value: index } }));
                 }
+
+                if (list.contains(document.activeElement) && document.activeElement !== item) {
+                    item.focus({ preventScroll: true });
+                }
+            });
+
+            list.addEventListener('focusin', event => {
+                if (!list.$consuloHoverSelect) {
+                    return;
+                }
+
+                const item = event.target.closest && event.target.closest('vaadin-list-box > *');
+                if (!item || item.hasAttribute('disabled')) {
+                    return;
+                }
+
+                const index = Array.prototype.indexOf.call(list.children, item);
+                if (index >= 0 && index !== list.selected) {
+                    list.selected = index;
+                    list.dispatchEvent(new CustomEvent('selected-changed', { detail: { value: index } }));
+                }
             });
             """,
             selectOnHover
@@ -128,7 +152,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         applyRender();
     }
 
-    private void applyRender() {
+    protected void applyRender() {
         if (myComponentRender != null) {
             setRender(myComponentRender);
         }
@@ -169,7 +193,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
             render.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
 
-            com.vaadin.flow.component.Component component = presentation.toComponent();
+            com.vaadin.flow.component.Component component = decorateRow(presentation.toComponent(), (E) item);
             String background = WebColors.toCssColor(presentation.getBackgroundColor());
             if (background != null) {
                 component.getElement().getStyle().set("background-color", background);
@@ -191,10 +215,14 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
             consulo.ui.Component rendered = render.render(RenderItem.of((E) item, isSelected((E) item)));
 
-            com.vaadin.flow.component.Component component = ((ToVaadinComponentWrapper) rendered).toVaadinComponent();
+            com.vaadin.flow.component.Component component = decorateRow(((ToVaadinComponentWrapper) rendered).toVaadinComponent(), (E) item);
             applyItemHeight(component, (E) item);
             return applyDoubleClick(component, (E) item);
         }));
+    }
+
+    protected com.vaadin.flow.component.Component decorateRow(com.vaadin.flow.component.Component row, @Nullable E item) {
+        return row;
     }
 
     private com.vaadin.flow.component.Component applyDoubleClick(com.vaadin.flow.component.Component component, @Nullable E item) {

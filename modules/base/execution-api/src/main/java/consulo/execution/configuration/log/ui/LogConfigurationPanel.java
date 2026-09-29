@@ -16,7 +16,7 @@
 
 package consulo.execution.configuration.log.ui;
 
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.log.LogFileOptions;
@@ -24,145 +24,188 @@ import consulo.execution.configuration.log.PredefinedLogFile;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.ComponentItemRender;
+import consulo.ui.Table;
+import consulo.ui.TableItemEditor;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.util.collection.ArrayUtil;
+import consulo.ui.ex.action.ActionToolbarPosition;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.EditAction;
+import consulo.ui.ex.toolbar.RemoveAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.ex.toolbar.UpMoveAction;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author anna
- * @since 2005-04-22
- */
 public class LogConfigurationPanel<T extends RunConfigurationBase> extends SettingsEditor<T> {
-    private final TableView<LogFileOptions> myFilesTable;
-    private final ListTableModel<LogFileOptions> myModel;
-    private JPanel myWholePanel;
-    private JPanel myScrollPanel;
-    private JBCheckBox myRedirectOutputCb;
-    private TextFieldWithBrowseButton myOutputFile;
-    private JCheckBox myShowConsoleOnStdOutCb;
-    private JCheckBox myShowConsoleOnStdErrCb;
+    private final MutableFlatDataModel<LogFileOptions> myModel = FlatDataModel.of(List.of());
     private final Map<LogFileOptions, PredefinedLogFile> myLog2Predefined = new HashMap<>();
     private final List<PredefinedLogFile> myUnresolvedPredefined = new ArrayList<>();
 
-    private final ColumnInfo<LogFileOptions, Boolean> IS_SHOW = new MyIsActiveColumnInfo();
-    private final ColumnInfo<LogFileOptions, LogFileOptions> FILE = new MyLogFileColumnInfo();
-    private final ColumnInfo<LogFileOptions, Boolean> IS_SKIP_CONTENT = new MyIsSkipColumnInfo();
+    private boolean myRedirectOutput;
+    private String myOutputFilePath = "";
+    private boolean myShowConsoleOnStdOut;
+    private boolean myShowConsoleOnStdErr;
 
-    public LogConfigurationPanel() {
-        myModel = new ListTableModel<>(IS_SHOW, FILE, IS_SKIP_CONTENT);
-        myFilesTable = new TableView<>(myModel);
-        myFilesTable.getEmptyText().setText(ExecutionLocalize.logMonitorNoFiles());
+    private @Nullable Table<LogFileOptions> myFilesTable;
+    private @Nullable CheckBox myRedirectOutputCb;
+    private FileChooserTextBoxBuilder.@Nullable Controller myOutputFile;
+    private @Nullable CheckBox myShowConsoleOnStdOutCb;
+    private @Nullable CheckBox myShowConsoleOnStdErrCb;
 
-        JTableHeader tableHeader = myFilesTable.getTableHeader();
-        FontMetrics fontMetrics = tableHeader.getFontMetrics(tableHeader.getFont());
+    @RequiredUIAccess
+    @Override
+    protected Component createUIComponent() {
+        Table<LogFileOptions> table = Table.create(myModel);
+        table.addColumn(ExecutionLocalize.logMonitorIsActiveColumn(), LogFileOptions::isEnabled)
+            .setWidth(90)
+            .setRender(ComponentItemRender.reusable(
+                () -> CheckBox.create(LocalizeValue.empty()),
+                (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))
+            ))
+            .setEditor(new TableItemEditor<>() {
+                @RequiredUIAccess
+                @Override
+                public ValueComponent<Boolean> createComponent(LogFileOptions options) {
+                    return CheckBox.create(LocalizeValue.empty(), options.isEnabled());
+                }
 
-        int preferredWidth = fontMetrics.stringWidth(IS_SHOW.getName().get()) + 20;
-        setUpColumnWidth(tableHeader, preferredWidth, 0);
-
-        preferredWidth = fontMetrics.stringWidth(IS_SKIP_CONTENT.getName().get()) + 20;
-        setUpColumnWidth(tableHeader, preferredWidth, 2);
-
-        myFilesTable.setColumnSelectionAllowed(false);
-        myFilesTable.setShowGrid(false);
-        myFilesTable.setDragEnabled(false);
-        myFilesTable.setShowHorizontalLines(false);
-        myFilesTable.setShowVerticalLines(false);
-        myFilesTable.setIntercellSpacing(new Dimension(0, 0));
-
-        myScrollPanel.add(
-            ToolbarDecorator.createDecorator(myFilesTable)
-                .setAddAction(button -> {
-                    List<LogFileOptions> newList = new ArrayList<>(myModel.getItems());
-                    LogFileOptions newOptions = new LogFileOptions("", "", true, true, false);
-                    if (showEditorDialog(newOptions)) {
-                        newList.add(newOptions);
-                        myModel.setItems(newList);
-                        int index = myModel.getRowCount() - 1;
-                        myModel.fireTableRowsInserted(index, index);
-                        myFilesTable.setRowSelectionInterval(index, index);
+                @RequiredUIAccess
+                @Override
+                public void commit(LogFileOptions options, @Nullable Boolean value) {
+                    boolean checked = Boolean.TRUE.equals(value);
+                    PredefinedLogFile predefinedLogFile = myLog2Predefined.get(options);
+                    if (predefinedLogFile != null) {
+                        predefinedLogFile.setEnabled(checked);
                     }
-                })
-                .setRemoveAction(button -> {
-                    TableUtil.stopEditing(myFilesTable);
-                    int[] selected = myFilesTable.getSelectedRows();
-                    if (ArrayUtil.isEmpty(selected)) {
-                        return;
-                    }
-                    for (int i = selected.length - 1; i >= 0; i--) {
-                        myModel.removeRow(selected[i]);
-                    }
-                    for (int i = selected.length - 1; i >= 0; i--) {
-                        int idx = selected[i];
-                        myModel.fireTableRowsDeleted(idx, idx);
-                    }
-                    int selection = selected[0];
-                    if (selection >= myModel.getRowCount()) {
-                        selection = myModel.getRowCount() - 1;
-                    }
-                    if (selection >= 0) {
-                        myFilesTable.setRowSelectionInterval(selection, selection);
-                    }
-                    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFilesTable);
-                })
-                .setEditAction(button -> {
-                    int selectedRow = myFilesTable.getSelectedRow();
-                    LogFileOptions selectedOptions = myFilesTable.getSelectedObject();
-                    showEditorDialog(selectedOptions);
-                    myModel.fireTableDataChanged();
-                    myFilesTable.setRowSelectionInterval(selectedRow, selectedRow);
-                })
-                .setRemoveActionUpdater(
-                    e -> myFilesTable.getSelectedRowCount() >= 1 && !myLog2Predefined.containsKey(myFilesTable.getSelectedObject())
-                )
-                .setEditActionUpdater(
-                    e -> myFilesTable.getSelectedRowCount() >= 1 && !myLog2Predefined.containsKey(myFilesTable.getSelectedObject())
-                        && myFilesTable.getSelectedObject() != null
-                )
-                .disableUpDownActions()
-                .createPanel(),
-            BorderLayout.CENTER
-        );
+                    options.setEnable(checked);
+                    fireEditorStateChanged();
+                }
+            });
+        table.addColumn(ExecutionLocalize.logMonitorLogFileColumn(), LogFileOptions::getName);
+        table.addColumn(ExecutionLocalize.logMonitorIsSkippedColumn(), LogFileOptions::isSkipContent)
+            .setWidth(90)
+            .setRender(ComponentItemRender.reusable(
+                () -> CheckBox.create(LocalizeValue.empty()),
+                (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))
+            ))
+            .setEditor(new TableItemEditor<>() {
+                @RequiredUIAccess
+                @Override
+                public ValueComponent<Boolean> createComponent(LogFileOptions options) {
+                    return CheckBox.create(LocalizeValue.empty(), options.isSkipContent());
+                }
 
-        myWholePanel.setPreferredSize(new Dimension(-1, 150));
-        myOutputFile.addBrowseFolderListener(
-            LocalizeValue.localizeTODO("Choose File to Save Console Output"),
-            LocalizeValue.localizeTODO("Console output would be saved to the specified file"),
-            null,
-            FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor(),
-            TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT
-        );
-        myRedirectOutputCb.addActionListener(e -> myOutputFile.setEnabled(myRedirectOutputCb.isSelected()));
+                @RequiredUIAccess
+                @Override
+                public void commit(LogFileOptions options, @Nullable Boolean value) {
+                    options.setSkipContent(Boolean.TRUE.equals(value));
+                    fireEditorStateChanged();
+                }
+
+                @Override
+                public boolean isEditable(LogFileOptions options) {
+                    return !myLog2Predefined.containsKey(options);
+                }
+            });
+        table.addDoubleClickListener(event -> {
+            LogFileOptions options = table.getSelectedItem();
+            if (options != null) {
+                editOptions(options);
+            }
+        });
+        myFilesTable = table;
+
+        Component filesPanel = ToolbarDecoratorBuilderFactory.getInstance()
+            .create(table)
+            .addOrReplaceAction(new AddLogFileAction())
+            .addOrReplaceAction(new RemoveLogFileAction())
+            .addOrReplaceAction(new EditLogFileAction())
+            .disableAction(UpMoveAction.class)
+            .disableAction(DownMoveAction.class)
+            .withToolbarPosition(ActionToolbarPosition.RIGHT)
+            .build();
+
+        CheckBox redirectOutputCb = CheckBox.create(ExecutionLocalize.logsSaveConsoleOutputToFile());
+        redirectOutputCb.setValue(myRedirectOutput, false);
+        redirectOutputCb.addValueListener(event -> {
+            myRedirectOutput = Boolean.TRUE.equals(event.getValue());
+            updateOutputFileState();
+        });
+        myRedirectOutputCb = redirectOutputCb;
+
+        FileChooserTextBoxBuilder outputFileBuilder = FileChooserTextBoxBuilder.create(null);
+        outputFileBuilder.dialogTitle(ExecutionLocalize.logsSaveConsoleOutputChooserTitle());
+        outputFileBuilder.dialogDescription(ExecutionLocalize.logsSaveConsoleOutputChooserDescription());
+        outputFileBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor());
+        FileChooserTextBoxBuilder.Controller outputFile = outputFileBuilder.build();
+        outputFile.setValue(myOutputFilePath, false);
+        outputFile.getComponent().addValueListener(event -> myOutputFilePath = StringUtil.notNullize(event.getValue()));
+        myOutputFile = outputFile;
+
+        DockLayout outputPanel = DockLayout.create();
+        outputPanel.left(redirectOutputCb);
+        outputPanel.center(outputFile.getComponent());
+
+        CheckBox showConsoleOnStdOutCb = CheckBox.create(ExecutionLocalize.logsShowConsoleOnStdout());
+        showConsoleOnStdOutCb.setValue(myShowConsoleOnStdOut, false);
+        showConsoleOnStdOutCb.addValueListener(event -> myShowConsoleOnStdOut = Boolean.TRUE.equals(event.getValue()));
+        myShowConsoleOnStdOutCb = showConsoleOnStdOutCb;
+
+        CheckBox showConsoleOnStdErrCb = CheckBox.create(ExecutionLocalize.logsShowConsoleOnStderr());
+        showConsoleOnStdErrCb.setValue(myShowConsoleOnStdErr, false);
+        showConsoleOnStdErrCb.addValueListener(event -> myShowConsoleOnStdErr = Boolean.TRUE.equals(event.getValue()));
+        myShowConsoleOnStdErrCb = showConsoleOnStdErrCb;
+
+        VerticalLayout consolePanel = VerticalLayout.create();
+        consolePanel.add(showConsoleOnStdOutCb);
+        consolePanel.add(showConsoleOnStdErrCb);
+
+        DockLayout bottomPanel = DockLayout.create();
+        bottomPanel.top(outputPanel);
+        bottomPanel.center(consolePanel);
+
+        DockLayout panel = DockLayout.create();
+        panel.center(LabeledLayout.create(ExecutionLocalize.logMonitorGroup(), filesPanel));
+        panel.bottom(bottomPanel);
+
+        updateOutputFileState();
+        return panel;
     }
 
-    private void setUpColumnWidth(JTableHeader tableHeader, int preferredWidth, int columnIdx) {
-        myFilesTable.getColumnModel().getColumn(columnIdx).setCellRenderer(new BooleanTableCellRenderer());
-        TableColumn tableColumn = tableHeader.getColumnModel().getColumn(columnIdx);
-        tableColumn.setWidth(preferredWidth);
-        tableColumn.setPreferredWidth(preferredWidth);
-        tableColumn.setMinWidth(preferredWidth);
-        tableColumn.setMaxWidth(preferredWidth);
+    @RequiredUIAccess
+    private void updateOutputFileState() {
+        FileChooserTextBoxBuilder.Controller outputFile = myOutputFile;
+        if (outputFile != null) {
+            outputFile.getComponent().setEnabled(myRedirectOutput);
+        }
     }
 
     public void refreshPredefinedLogFiles(RunConfigurationBase configurationBase) {
-        List<LogFileOptions> items = myModel.getItems();
         List<LogFileOptions> newItems = new ArrayList<>();
         boolean changed = false;
-        for (LogFileOptions item : items) {
+        for (LogFileOptions item : getItems()) {
             PredefinedLogFile predefined = myLog2Predefined.get(item);
             if (predefined != null) {
                 LogFileOptions options = configurationBase.getOptionsForPredefinedLogFile(predefined);
@@ -186,8 +229,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
             }
         }
 
-        PredefinedLogFile[] unresolved = myUnresolvedPredefined.toArray(new PredefinedLogFile[myUnresolvedPredefined.size()]);
-        for (PredefinedLogFile logFile : unresolved) {
+        for (PredefinedLogFile logFile : new ArrayList<>(myUnresolvedPredefined)) {
             LogFileOptions options = configurationBase.getOptionsForPredefinedLogFile(logFile);
             if (options != null) {
                 changed = true;
@@ -198,15 +240,14 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
         }
 
         if (changed) {
-            myModel.setItems(newItems);
+            myModel.replaceAll(newItems);
         }
     }
 
     @Override
     protected void resetEditorFrom(RunConfigurationBase configuration) {
-        ArrayList<LogFileOptions> list = new ArrayList<>();
-        ArrayList<LogFileOptions> logFiles = configuration.getLogFiles();
-        for (LogFileOptions setting : logFiles) {
+        List<LogFileOptions> list = new ArrayList<>();
+        for (LogFileOptions setting : configuration.getLogFiles()) {
             list.add(new LogFileOptions(
                 setting.getName(),
                 setting.getPathPattern(),
@@ -217,8 +258,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
         }
         myLog2Predefined.clear();
         myUnresolvedPredefined.clear();
-        ArrayList<PredefinedLogFile> predefinedLogFiles = configuration.getPredefinedLogFiles();
-        for (PredefinedLogFile predefinedLogFile : predefinedLogFiles) {
+        for (PredefinedLogFile predefinedLogFile : configuration.getPredefinedLogFiles()) {
             PredefinedLogFile logFile = new PredefinedLogFile(predefinedLogFile);
             LogFileOptions options = configuration.getOptionsForPredefinedLogFile(logFile);
             if (options != null) {
@@ -229,212 +269,141 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
                 myUnresolvedPredefined.add(logFile);
             }
         }
-        myModel.setItems(list);
-        boolean redirectOutputToFile = configuration.isSaveOutputToFile();
-        myRedirectOutputCb.setSelected(redirectOutputToFile);
+        myModel.replaceAll(list);
+
+        myRedirectOutput = configuration.isSaveOutputToFile();
         String fileOutputPath = configuration.getOutputFilePath();
-        myOutputFile.setText(fileOutputPath != null ? FileUtil.toSystemDependentName(fileOutputPath) : "");
-        myOutputFile.setEnabled(redirectOutputToFile);
-        myShowConsoleOnStdOutCb.setSelected(configuration.isShowConsoleOnStdOut());
-        myShowConsoleOnStdErrCb.setSelected(configuration.isShowConsoleOnStdErr());
+        myOutputFilePath = fileOutputPath != null ? FileUtil.toSystemDependentName(fileOutputPath) : "";
+        myShowConsoleOnStdOut = configuration.isShowConsoleOnStdOut();
+        myShowConsoleOnStdErr = configuration.isShowConsoleOnStdErr();
+
+        CheckBox redirectOutputCb = myRedirectOutputCb;
+        if (redirectOutputCb != null) {
+            redirectOutputCb.setValue(myRedirectOutput, false);
+        }
+        FileChooserTextBoxBuilder.Controller outputFile = myOutputFile;
+        if (outputFile != null) {
+            outputFile.setValue(myOutputFilePath, false);
+        }
+        CheckBox showConsoleOnStdOutCb = myShowConsoleOnStdOutCb;
+        if (showConsoleOnStdOutCb != null) {
+            showConsoleOnStdOutCb.setValue(myShowConsoleOnStdOut, false);
+        }
+        CheckBox showConsoleOnStdErrCb = myShowConsoleOnStdErrCb;
+        if (showConsoleOnStdErrCb != null) {
+            showConsoleOnStdErrCb.setValue(myShowConsoleOnStdErr, false);
+        }
+        if (myFilesTable != null) {
+            updateOutputFileState();
+        }
     }
 
     @Override
     protected void applyEditorTo(RunConfigurationBase configuration) throws ConfigurationException {
-        myFilesTable.stopEditing();
         configuration.removeAllLogFiles();
         configuration.removeAllPredefinedLogFiles();
 
-        for (int i = 0; i < myModel.getRowCount(); i++) {
-            LogFileOptions options = (LogFileOptions) myModel.getValueAt(i, 1);
+        for (LogFileOptions options : getItems()) {
             if (Comparing.equal(options.getPathPattern(), "")) {
                 continue;
             }
-            Boolean checked = (Boolean) myModel.getValueAt(i, 0);
-            Boolean skipped = (Boolean) myModel.getValueAt(i, 2);
             PredefinedLogFile predefined = myLog2Predefined.get(options);
             if (predefined != null) {
                 configuration.addPredefinedLogFile(new PredefinedLogFile(predefined.getId(), options.isEnabled()));
             }
             else {
-                configuration.addLogFile(options.getPathPattern(), options.getName(), checked, skipped, options.isShowAll());
+                configuration.addLogFile(
+                    options.getPathPattern(),
+                    options.getName(),
+                    options.isEnabled(),
+                    options.isSkipContent(),
+                    options.isShowAll()
+                );
             }
         }
         for (PredefinedLogFile logFile : myUnresolvedPredefined) {
             configuration.addPredefinedLogFile(logFile);
         }
-        String text = myOutputFile.getText();
-        configuration.setFileOutputPath(StringUtil.isEmpty(text) ? null : FileUtil.toSystemIndependentName(text));
-        configuration.setSaveOutputToFile(myRedirectOutputCb.isSelected());
-        configuration.setShowConsoleOnStdOut(myShowConsoleOnStdOutCb.isSelected());
-        configuration.setShowConsoleOnStdErr(myShowConsoleOnStdErrCb.isSelected());
+        configuration.setFileOutputPath(StringUtil.isEmpty(myOutputFilePath) ? null : FileUtil.toSystemIndependentName(myOutputFilePath));
+        configuration.setSaveOutputToFile(myRedirectOutput);
+        configuration.setShowConsoleOnStdOut(myShowConsoleOnStdOut);
+        configuration.setShowConsoleOnStdErr(myShowConsoleOnStdErr);
     }
 
-    @Override
-    protected JComponent createEditor() {
-        return myWholePanel;
-    }
-
-    @Override
-    protected void disposeEditor() {
+    private List<LogFileOptions> getItems() {
+        List<LogFileOptions> items = new ArrayList<>(myModel.getSize());
+        for (int i = 0; i < myModel.getSize(); i++) {
+            items.add(myModel.get(i));
+        }
+        return items;
     }
 
     @RequiredUIAccess
-    private static boolean showEditorDialog(LogFileOptions options) {
-        EditLogPatternDialog dialog = new EditLogPatternDialog();
-        dialog.init(options.getName(), options.getPathPattern(), options.isShowAll());
-        dialog.show();
-        if (dialog.isOK()) {
-            options.setName(dialog.getName());
-            options.setPathPattern(dialog.getLogPattern());
-            options.setShowAll(dialog.isShowAllFiles());
-            return true;
+    private void editOptions(LogFileOptions options) {
+        if (myLog2Predefined.containsKey(options)) {
+            return;
         }
-        return false;
+
+        showEditorDialog(options, () -> {
+            myModel.update(options);
+            fireEditorStateChanged();
+        });
     }
 
-    private class MyLogFileColumnInfo extends ColumnInfo<LogFileOptions, LogFileOptions> {
-        public MyLogFileColumnInfo() {
-            super(ExecutionLocalize.logMonitorLogFileColumn());
-        }
+    @RequiredUIAccess
+    private void showEditorDialog(LogFileOptions options, @RequiredUIAccess Runnable onOk) {
+        EditLogPatternDialogDescriptor descriptor =
+            new EditLogPatternDialogDescriptor(options.getName(), options.getPathPattern(), options.isShowAll());
 
-        @Override
-        public TableCellRenderer getRenderer(LogFileOptions p0) {
-            return new DefaultTableCellRenderer() {
-                @Override
-                public Component getTableCellRendererComponent(
-                    JTable table,
-                    Object value,
-                    boolean isSelected,
-                    boolean hasFocus,
-                    int row,
-                    int column
-                ) {
-                    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                    setText(((LogFileOptions) value).getName());
-                    setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-                    setBorder(null);
-                    return renderer;
-                }
-            };
-        }
-
-        @Override
-        public LogFileOptions valueOf(LogFileOptions object) {
-            return object;
-        }
-
-        @Override
-        public TableCellEditor getEditor(LogFileOptions item) {
-            return new LogFileCellEditor(item);
-        }
-
-        @Override
-        public void setValue(LogFileOptions o, LogFileOptions aValue) {
-            if (aValue != null) {
-                if (!o.getName().equals(aValue.getName()) || !o.getPathPattern()
-                    .equals(aValue.getPathPattern()) || o.isShowAll() != aValue.isShowAll()) {
-                    myLog2Predefined.remove(o);
-                }
-                o.setName(aValue.getName());
-                o.setShowAll(aValue.isShowAll());
-                o.setPathPattern(aValue.getPathPattern());
+        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        Table<LogFileOptions> table = myFilesTable;
+        Dialog dialog = table == null ? dialogService.build(descriptor) : dialogService.build(table, descriptor);
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error != null || value == null) {
+                return;
             }
-        }
 
-        @Override
-        public boolean isCellEditable(LogFileOptions o) {
-            return !myLog2Predefined.containsKey(o);
-        }
+            options.setName(descriptor.getName());
+            options.setPathPattern(descriptor.getLogPattern());
+            options.setShowAll(descriptor.isShowAllFiles());
+            onOk.run();
+        });
     }
 
-    private class MyIsActiveColumnInfo extends ColumnInfo<LogFileOptions, Boolean> {
-        protected MyIsActiveColumnInfo() {
-            super(ExecutionLocalize.logMonitorIsActiveColumn());
-        }
-
+    private class AddLogFileAction extends AddAction<LogFileOptions> {
         @Override
-        public Class getColumnClass() {
-            return Boolean.class;
-        }
-
-        @Override
-        public Boolean valueOf(LogFileOptions object) {
-            return object.isEnabled();
-        }
-
-        @Override
-        public boolean isCellEditable(LogFileOptions element) {
-            return true;
-        }
-
-        @Override
-        public void setValue(LogFileOptions element, Boolean checked) {
-            PredefinedLogFile predefinedLogFile = myLog2Predefined.get(element);
-            if (predefinedLogFile != null) {
-                predefinedLogFile.setEnabled(checked);
-            }
-            element.setEnable(checked);
-        }
-    }
-
-    private class MyIsSkipColumnInfo extends ColumnInfo<LogFileOptions, Boolean> {
-        protected MyIsSkipColumnInfo() {
-            super(ExecutionLocalize.logMonitorIsSkippedColumn());
-        }
-
-        @Override
-        public Class getColumnClass() {
-            return Boolean.class;
-        }
-
-        @Override
-        public Boolean valueOf(LogFileOptions element) {
-            return element.isSkipContent();
-        }
-
-        @Override
-        public boolean isCellEditable(LogFileOptions element) {
-            return !myLog2Predefined.containsKey(element);
-        }
-
-        @Override
-        public void setValue(LogFileOptions element, Boolean skipped) {
-            element.setSkipContent(skipped);
-        }
-    }
-
-    private class LogFileCellEditor extends AbstractTableCellEditor {
-        private final CellEditorComponentWithBrowseButton<JTextField> myComponent;
-        private LogFileOptions myLogFileOptions;
-
-        public LogFileCellEditor(LogFileOptions options) {
-            myLogFileOptions = options;
-            myComponent = new CellEditorComponentWithBrowseButton<>(new TextFieldWithBrowseButton(), this);
-            getChildComponent().setEditable(false);
-            getChildComponent().setBorder(null);
-            myComponent.getComponentWithButton().getButton().addActionListener(e -> {
-                showEditorDialog(myLogFileOptions);
-                JTextField textField = getChildComponent();
-                textField.setText(myLogFileOptions.getName());
-                IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(textField);
-                myModel.fireTableDataChanged();
+        @RequiredUIAccess
+        protected void doAdd(AnActionEvent e) {
+            LogFileOptions options = new LogFileOptions("", "", true, true, false);
+            showEditorDialog(options, () -> {
+                myModel.add(options);
+                Table<LogFileOptions> table = myFilesTable;
+                if (table != null) {
+                    table.select(options);
+                }
+                fireEditorStateChanged();
             });
         }
+    }
 
+    private class RemoveLogFileAction extends RemoveAction<LogFileOptions> {
         @Override
-        public Object getCellEditorValue() {
-            return myLogFileOptions;
-        }
+        @RequiredUIAccess
+        protected void doRemove(LogFileOptions options, AnActionEvent e) {
+            if (myLog2Predefined.containsKey(options)) {
+                return;
+            }
 
-        private JTextField getChildComponent() {
-            return myComponent.getChildComponent();
+            myModel.remove(options);
+            fireEditorStateChanged();
         }
+    }
 
+    private class EditLogFileAction extends EditAction<LogFileOptions> {
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            getChildComponent().setText(((LogFileOptions) value).getName());
-            return myComponent;
+        @RequiredUIAccess
+        protected void doEdit(LogFileOptions options, AnActionEvent e) {
+            editOptions(options);
         }
     }
 }

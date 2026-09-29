@@ -22,9 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,15 +60,9 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
     public void applyEditorTo(T t) throws ConfigurationException {
     }
 
-    @Override
-    
-    public JComponent createEditor() {
-        throw new UnsupportedOperationException("This method should never be called!");
-    }
-
     @RequiredUIAccess
     @Override
-    protected @Nullable Component createUIComponent() {
+    protected Component createUIComponent() {
         throw new UnsupportedOperationException("This method should never be called!");
     }
 

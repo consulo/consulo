@@ -36,17 +36,24 @@
   min-height: 0;
 }
 
-.arquill-editor-fit-content .textview
+.arquill-editor-fit-content .textview,
+.arquill-editor-one-line .textview
 {
   height: auto !important;
 }
 
-.arquill-editor-fit-content .textviewScroll
+.arquill-editor-fit-content .textviewScroll,
+.arquill-editor-one-line .textviewScroll
 {
   position: relative !important;
   inset: auto !important;
   height: auto !important;
   overflow: hidden !important;
+}
+
+.arquill-editor-one-line .textviewScroll
+{
+  padding: 0 !important;
 }
 
 /* An inlay is projected into the view as text, so its box is drawn by the run itself rather than painted under
@@ -610,4 +617,19 @@
 .arquill-floating-toolbar:has(> :empty)
 {
   display: none;
+}
+
+.arquill-editor[data-placeholder][data-empty]::after
+{
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  white-space: pre;
+  color: var(--vaadin-input-field-placeholder-color, var(--vaadin-text-color-secondary));
+  font-family: var(--arquill-editor-font-family);
+  font-size: var(--arquill-editor-font-size);
+  line-height: var(--arquill-editor-line-height);
 }

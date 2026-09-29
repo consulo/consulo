@@ -136,6 +136,11 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
             toVaadinComponent().setFitContentHeight(size.height() == -1);
         }
+
+        @Override
+        public void focus() {
+            toVaadinComponent().focusText();
+        }
     }
 
     private static final Key<Integer> ANNOTATION_ID = Key.create("annotation.id");
@@ -269,6 +274,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         Vaadin vaadin = myEditorComponent.toVaadinComponent();
         vaadin.setSizeFull();
         vaadin.setText(myDocument.getText());
+        vaadin.setEmpty(myDocument.getTextLength() == 0);
         vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
         vaadin.setRulers(() -> new ArquillEditorElement.Rulers(
             getSettings().isLineNumbersShown(),
@@ -412,6 +418,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                 }
 
                 scheduleUpdate();
+
+                giveUI(() -> vaadin.setEmpty(myDocument.getTextLength() == 0));
 
                 if (getGutterComponentEx().isAnnotationsShown()) {
                     scheduleTextAnnotationsUpdate();
@@ -1080,7 +1088,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         String foreground = WebColors.toCssColor(scheme.getDefaultForeground());
         String selectionBackground = WebColors.toCssColor(scheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR));
         String selectionForeground = WebColors.toCssColor(scheme.getColor(EditorColors.SELECTION_FOREGROUND_COLOR));
-        String caretRowBackground = WebColors.toCssColor(scheme.getColor(EditorColors.CARET_ROW_COLOR));
+        String caretRowBackground = getSettings().isCaretRowShown()
+            ? WebColors.toCssColor(scheme.getColor(EditorColors.CARET_ROW_COLOR))
+            : "transparent";
 
         // EditorGutterComponentImpl#getBackgroundColorValue, and the seam it draws over the gutter in paintComponent
         ColorValue gutterColor = scheme.getColor(EditorColors.EDITOR_GUTTER_BACKGROUND);
@@ -2538,6 +2548,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     @Override
     public consulo.ui.Component getUIComponent() {
         return myEditorComponent;
+    }
+
+    @Override
+    public void setPlaceholder(@Nullable CharSequence text) {
+        super.setPlaceholder(text);
+
+        myEditorComponent.toVaadinComponent().setPlaceholder(text == null ? null : text.toString());
     }
 
     @RequiredUIAccess

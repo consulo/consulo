@@ -34,7 +34,6 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProviderBase;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
-import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
@@ -334,12 +333,16 @@ public abstract class XDebuggerEditorBase {
             @Override
             protected void addActions(ActionGroup.Builder builder, boolean showMultiline) {
             }
+
+            @Override
+            protected void prepareEditor(EditorEx editor) {
+                XDebuggerEditorBase.this.prepareEditor(editor);
+            }
         };
 
-        EditorTextField editorTextField = (EditorTextField) expressionEditor.getEditorComponent();
-        editorTextField.addSettingsProvider(this::prepareEditor);
-        editorTextField.setBorder(JBUI.Borders.empty());
-        editorTextField.setFont(editorTextField.getFont().deriveFont((float) getEditor().getColorsScheme().getEditorFontSize()));
+        JComponent editorComponent = expressionEditor.getEditorComponent();
+        editorComponent.setBorder(JBUI.Borders.empty());
+        editorComponent.setFont(editorComponent.getFont().deriveFont((float) getEditor().getColorsScheme().getEditorFontSize()));
 
         JComponent component = expressionEditor.getComponent();
         component.setPreferredSize(new Dimension(getComponent().getWidth(), 100));

@@ -1038,7 +1038,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     @Override
     public void setOneLineMode(boolean isOneLineMode) {
         myIsOneLineMode = isOneLineMode;
-        getScrollPane().setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
         reinitSettings();
     }
 

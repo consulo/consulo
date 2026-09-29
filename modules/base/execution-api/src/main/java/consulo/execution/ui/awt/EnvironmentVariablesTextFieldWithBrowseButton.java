@@ -24,19 +24,35 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ex.UserActivityProviderComponent;
-import consulo.ui.ex.awt.DialogBuilder;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.collection.ContainerUtil;
+import consulo.application.Application;
+import consulo.disposer.Disposable;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.Table;
+import consulo.ui.TableItemEditor;
+import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
+import consulo.ui.ValueComponent;
+import consulo.ui.WidthAndHeight;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.ex.toolbar.UpMoveAction;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +71,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     myTextBox.setPlaceholder(LocalizeValue.localizeTODO("Separate variables with semicolon: VAR=value; VAR1=value1"));
 
     myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(),
-                                                                   event -> new MyEnvironmentVariablesDialog().showAsync()));
+                                                                   event -> showEnvironmentVariablesDialog()));
 
     myTextBox.addValueListener(event -> {
       if (!StringUtil.equals(stringifyEnvs(myData), event.getValue())) {
@@ -67,7 +83,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
   }
 
   
-  public consulo.ui.Component getComponent() {
+  public Component getComponent() {
     return myTextBox;
   }
 
@@ -152,68 +168,150 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     myListeners.getMulticaster().stateChanged(new ChangeEvent(this));
   }
 
-  public static void showParentEnvironmentDialog(Component parent) {
-    EnvVariablesTable table = new EnvVariablesTable();
-    table.setValues(convertToVariables(new TreeMap<>(new GeneralCommandLine().getParentEnvironment()), true));
-    table.getActionsPanel().setVisible(false);
-    DialogBuilder builder = new DialogBuilder(parent);
-    builder.setTitle(ExecutionLocalize.environmentVariablesSystemDialogTitle().get());
-    builder.centerPanel(table.getComponent());
-    builder.addCloseButton();
-    builder.show();
-  }
-
-  private static List<EnvironmentVariable> convertToVariables(Map<String, String> map, final boolean readOnly) {
-    return ContainerUtil.map(map.entrySet(), entry -> new EnvironmentVariable(entry.getKey(), entry.getValue(), readOnly) {
-      @Override
-      public boolean getNameIsWriteable() {
-        return !readOnly;
+  @RequiredUIAccess
+  private void showEnvironmentVariablesDialog() {
+    EnvironmentVariablesDialogDescriptor descriptor = new EnvironmentVariablesDialogDescriptor(myData);
+    UIAccess uiAccess = UIAccess.current();
+    Application.get().getInstance(DialogService.class).build(myTextBox, descriptor).showAsync().whenComplete((value, error) -> {
+      if (error != null || value == null) {
+        return;
       }
+      uiAccess.give(() -> setData(descriptor.getData()));
     });
   }
 
-  private class MyEnvironmentVariablesDialog extends DialogWrapper {
-    private final EnvVariablesTable myEnvVariablesTable;
-    private final JCheckBox myUseDefaultCb = new JCheckBox(ExecutionLocalize.envVarsCheckboxTitle().get());
-    private final JPanel myWholePanel = new JPanel(new BorderLayout());
+  @RequiredUIAccess
+  private static void showParentEnvironmentDialog(Component parent) {
+    Map<String, String> parentEnvironment = new TreeMap<>(new GeneralCommandLine().getParentEnvironment());
+    Application.get().getInstance(DialogService.class).build(parent, new SystemEnvironmentDialogDescriptor(parentEnvironment)).showAsync();
+  }
 
-    protected MyEnvironmentVariablesDialog() {
-      super(TargetAWT.to(getComponent()), true);
-      myEnvVariablesTable = new EnvVariablesTable();
-      myEnvVariablesTable.setValues(convertToVariables(myData.getEnvs(), false));
-
-      myUseDefaultCb.setSelected(isPassParentEnvs());
-      myWholePanel.add(myEnvVariablesTable.getComponent(), BorderLayout.CENTER);
-      JPanel useDefaultPanel = new JPanel(new BorderLayout());
-      useDefaultPanel.add(myUseDefaultCb, BorderLayout.CENTER);
-      HyperlinkLabel showLink = new HyperlinkLabel(ExecutionLocalize.envVarsShowSystem().get());
-      useDefaultPanel.add(showLink, BorderLayout.EAST);
-      showLink.addHyperlinkListener(e -> {
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          showParentEnvironmentDialog(MyEnvironmentVariablesDialog.this.getWindow());
+  @RequiredUIAccess
+  private static Table<EnvironmentVariable> createVariablesTable(MutableFlatDataModel<EnvironmentVariable> model, boolean editable) {
+    Table<EnvironmentVariable> table = Table.create(model);
+    table.addColumn(ExecutionLocalize.environmentVariablesNameColumn(), EnvironmentVariable::getName)
+      .setEditor(editable ? new TableItemEditor<>() {
+        @RequiredUIAccess
+        @Override
+        public ValueComponent<String> createComponent(EnvironmentVariable variable) {
+          return TextBox.create(variable.getName());
         }
-      });
 
-      myWholePanel.add(useDefaultPanel, BorderLayout.SOUTH);
-      setTitle(ExecutionLocalize.environmentVariablesDialogTitle());
-      init();
+        @RequiredUIAccess
+        @Override
+        public void commit(EnvironmentVariable variable, @Nullable String value) {
+          variable.setName(StringUtil.notNullize(value));
+        }
+      } : null);
+    table.addColumn(ExecutionLocalize.environmentVariablesValueColumn(), EnvironmentVariable::getValue)
+      .setEditor(editable ? new TableItemEditor<>() {
+        @RequiredUIAccess
+        @Override
+        public ValueComponent<String> createComponent(EnvironmentVariable variable) {
+          return TextBox.create(variable.getValue());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void commit(EnvironmentVariable variable, @Nullable String value) {
+          variable.setValue(StringUtil.notNullize(value));
+        }
+      } : null);
+    return table;
+  }
+
+  private static List<EnvironmentVariable> convertToVariables(Map<String, String> map, boolean readOnly) {
+    List<EnvironmentVariable> variables = new ArrayList<>(map.size());
+    for (Map.Entry<String, String> entry : map.entrySet()) {
+      variables.add(new EnvironmentVariable(entry.getKey(), entry.getValue(), readOnly));
+    }
+    return variables;
+  }
+
+  private static class EnvironmentVariablesDialogDescriptor extends DialogDescriptor {
+    private final MutableFlatDataModel<EnvironmentVariable> myModel;
+    private boolean myPassParentEnvs;
+
+    private EnvironmentVariablesDialogDescriptor(EnvironmentVariablesData data) {
+      super(ExecutionLocalize.environmentVariablesDialogTitle());
+      myModel = FlatDataModel.of(convertToVariables(data.getEnvs(), false));
+      myPassParentEnvs = data.isPassParentEnvs();
     }
 
     @Override
-    protected @Nullable JComponent createCenterPanel() {
-      return myWholePanel;
+    public WidthAndHeight getInitialSize() {
+      return WidthAndHeight.ofFont(50, 25);
     }
 
+    @RequiredUIAccess
     @Override
-    protected void doOKAction() {
-      myEnvVariablesTable.stopEditing();
+    public Component createCenterComponent(Disposable uiDisposable) {
+      Table<EnvironmentVariable> table = createVariablesTable(myModel, true);
+
+      Component tablePanel = ToolbarDecoratorBuilderFactory.getInstance()
+        .create(table)
+        .addOrReplaceAction(new AddAction<>() {
+          @Override
+          @RequiredUIAccess
+          protected void doAdd(AnActionEvent e) {
+            EnvironmentVariable variable = new EnvironmentVariable("", "", false);
+            myModel.add(variable);
+            table.select(variable);
+          }
+        })
+        .disableAction(UpMoveAction.class)
+        .disableAction(DownMoveAction.class)
+        .build();
+
+      CheckBox passParentEnvsBox = CheckBox.create(ExecutionLocalize.envVarsCheckboxTitle(), myPassParentEnvs);
+      passParentEnvsBox.addValueListener(event -> myPassParentEnvs = Boolean.TRUE.equals(event.getValue()));
+
+      Hyperlink showSystemLink = Hyperlink.create(ExecutionLocalize.envVarsShowSystem(), event -> showParentEnvironmentDialog(tablePanel));
+
+      DockLayout bottomPanel = DockLayout.create();
+      bottomPanel.center(passParentEnvsBox);
+      bottomPanel.right(showSystemLink);
+
+      DockLayout panel = DockLayout.create();
+      panel.center(tablePanel);
+      panel.bottom(bottomPanel);
+      return panel;
+    }
+
+    private EnvironmentVariablesData getData() {
       Map<String, String> envs = new LinkedHashMap<>();
-      for (EnvironmentVariable variable : myEnvVariablesTable.getEnvironmentVariables()) {
-        envs.put(variable.getName(), variable.getValue());
+      for (int i = 0; i < myModel.getSize(); i++) {
+        EnvironmentVariable variable = myModel.get(i);
+        if (!StringUtil.isEmpty(variable.getName())) {
+          envs.put(variable.getName(), variable.getValue());
+        }
       }
-      setEnvs(envs);
-      setPassParentEnvs(myUseDefaultCb.isSelected());
-      super.doOKAction();
+      return EnvironmentVariablesData.create(envs, myPassParentEnvs);
+    }
+  }
+
+  private static class SystemEnvironmentDialogDescriptor extends DialogDescriptor {
+    private final Map<String, String> myEnvironment;
+
+    private SystemEnvironmentDialogDescriptor(Map<String, String> environment) {
+      super(ExecutionLocalize.environmentVariablesSystemDialogTitle());
+      myEnvironment = environment;
+    }
+
+    @Override
+    public WidthAndHeight getInitialSize() {
+      return WidthAndHeight.ofFont(70, 35);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Component createCenterComponent(Disposable uiDisposable) {
+      return createVariablesTable(FlatDataModel.of(convertToVariables(myEnvironment, true)), false);
+    }
+
+    @Override
+    public AnAction[] createActions(boolean inverseOrder) {
+      return new AnAction[]{createOkAction()};
     }
   }
 }

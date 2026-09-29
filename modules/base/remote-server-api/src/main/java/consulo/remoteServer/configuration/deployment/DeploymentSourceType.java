@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import javax.swing.*;
+import consulo.ui.Component;
 
 /**
  * Implement this class to provide a custom type of deployment source which can be used in 'Deploy to Server' run configurations.
@@ -57,7 +57,7 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
     public void setBuildBeforeRunTask(RunConfiguration configuration, S source) {
     }
 
-    public void updateBuildBeforeRunOption(JComponent runConfigurationEditorComponent, Project project, S source, boolean select) {
+    public void updateBuildBeforeRunOption(Component runConfigurationEditorComponent, Project project, S source, boolean select) {
     }
 
     public boolean isEditableInDumbMode() {

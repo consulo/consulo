@@ -35,6 +35,7 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.action.ActionToolbarPosition;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
@@ -317,8 +318,9 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         }
 
         @Override
+        @RequiredUIAccess
         protected JComponent createCenterPanel() {
-            return myEditor.getComponent();
+            return (JComponent) TargetAWT.to(myEditor.getUIComponent());
         }
 
         @Override

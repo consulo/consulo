@@ -16,17 +16,16 @@
 package consulo.execution.impl.internal.ui;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -47,32 +46,13 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
     @RequiredUIAccess
     @Override
     public void editAll() {
-        if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
-            UIAccess.current().give(
-                () -> myProject.getApplication().getInstance(ConfigurationFileEditorManager.class)
-                    .open(myProject, RunConfigurationEditorProvider.class, Map.of())
-            );
-        }
-        else {
-            new EditConfigurationsDialog(myProject).showAsync();
-        }
+        open(Map.of());
     }
 
     @RequiredUIAccess
     @Override
     public void editOne(RunnerAndConfigurationSettings configuration) {
-        if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
-            UIAccess.current().give(() -> {
-                    Map<String, String> map = Map.of(RunConfigurationEditorProvider.RUN_CONFIGURATION_ID, configuration.getUniqueID());
-
-                    myProject.getApplication().getInstance(ConfigurationFileEditorManager.class)
-                        .open(myProject, RunConfigurationEditorProvider.class, map);
-                }
-            );
-        }
-        else {
-            new EditConfigurationsDialog(myProject, configuration.getConfiguration()).showAsync();
-        }
+        open(Map.of(RunConfigurationEditorProvider.RUN_CONFIGURATION_ID, configuration.getUniqueID()));
     }
 
     @Override
@@ -82,6 +62,20 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
         String title,
         @Nullable Executor executor
     ) {
-        return RunDialog.editConfiguration(project, configuration, title, executor);
+        project.getUIAccess().give(() -> {
+            RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
+            if (runManager.getSettings(configuration.getConfiguration()) == null) {
+                runManager.addConfiguration(configuration);
+            }
+            editOne(configuration);
+        });
+        return false;
+    }
+
+    @RequiredUIAccess
+    private void open(Map<String, String> params) {
+        myProject.getApplication()
+            .getInstance(ConfigurationFileEditorManager.class)
+            .open(myProject, RunConfigurationEditorProvider.class, params);
     }
 }

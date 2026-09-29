@@ -394,7 +394,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     private Promise<Void> doSelect(Object service, Class<?> contributorClass, boolean activate, boolean focus) {
         AsyncPromise<Void> result = new AsyncPromise<>();
         // Ensure model is updated, then iterate over service views on EDT in order to find view with service and select it.
-        myModel.getInvoker().invoke(() -> AppUIUtil.invokeLaterIfProjectAlive(myProject, () -> {
+        myModel.getInvoker().invoke(() -> myProject.getUIAccess().execute(() -> {
             String toolWindowId = getToolWindowId(contributorClass);
             if (toolWindowId == null) {
                 result.setError("Contributor group not found");

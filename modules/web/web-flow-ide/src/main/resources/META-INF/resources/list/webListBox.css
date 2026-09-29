@@ -140,3 +140,60 @@ vaadin-list-box.web-list-box[placeholder]:not(:has(vaadin-item))::after
   text-align: center;
   color: var(--vaadin-text-color-secondary, #6b7280);
 }
+
+.web-list-box-inline-row
+{
+  display: flex;
+  align-items: center;
+}
+
+.web-list-box-inline-content
+{
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.web-list-box-inline-buttons
+{
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: -2px 0 -2px 8px;
+  padding-left: 6px;
+  border-left: 1px solid var(--consulo-component-border-color, lightgray);
+}
+
+.web-list-box-inline-button
+{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.web-list-box-inline-button:hover,
+.web-list-box-inline-button[active]
+{
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+vaadin-item:not([selected]) .web-list-box-inline-button:not([always])
+{
+  visibility: hidden;
+}
+
+vaadin-item:not([selected]) .web-list-box-inline-buttons:not(:has(> [always]))
+{
+  border-left-color: transparent;
+}
+
+vaadin-list-box.web-list-box-hover-select vaadin-item[focus-ring]
+{
+  outline: none;
+}

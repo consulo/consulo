@@ -35,13 +35,7 @@ public class AppUIUtil {
   }
 
   public static void invokeLaterIfProjectAlive(Project project, Runnable runnable) {
-    Application application = Application.get();
-    if (application.isDispatchThread()) {
-      runnable.run();
-    }
-    else {
-      application.invokeLater(runnable, () -> !project.isOpen() || project.isDisposed());
-    }
+    project.getUIAccess().giveIfNeed(runnable);
   }
 
   public static void invokeOnEdt(@RequiredUIAccess Runnable runnable) {

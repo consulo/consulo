@@ -21,10 +21,21 @@ import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
-import consulo.externalSystem.ui.awt.ExternalProjectPathField;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
@@ -32,12 +43,16 @@ import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;
 
@@ -55,7 +70,7 @@ public class ExternalSystemTaskSettingsControl {
     private final Project myProject;
 
     private @Nullable Component myComponent;
-    private @Nullable ExternalProjectPathField myProjectPathField;
+    private FileChooserTextBoxBuilder.@Nullable Controller myProjectPathField;
     private @Nullable TextBox myTasksBox;
     private @Nullable TextBoxWithExpandAction myVmOptionsBox;
     private @Nullable TextBoxWithExpandAction myScriptParametersBox;
@@ -88,7 +103,11 @@ public class ExternalSystemTaskSettingsControl {
         }
         String title = ExternalSystemLocalize.settingsLabelSelectProject(myExternalSystemId.getDisplayName().get()).get();
 
-        myProjectPathField = new ExternalProjectPathField(myProject, myExternalSystemId, projectPathChooserDescriptor, title);
+        FileChooserTextBoxBuilder projectPathBuilder = FileChooserTextBoxBuilder.create(myProject);
+        projectPathBuilder.fileChooserDescriptor(projectPathChooserDescriptor);
+        projectPathBuilder.dialogTitle(title);
+        projectPathBuilder.firstActions(new ChooseRegisteredProjectAction());
+        myProjectPathField = projectPathBuilder.build();
         myTasksBox = TextBox.create();
         myVmOptionsBox = TextBoxWithExpandAction.create(
             PlatformIconGroup.actionsShow(),
@@ -106,7 +125,7 @@ public class ExternalSystemTaskSettingsControl {
         VerticalLayout layout = VerticalLayout.create();
         layout.add(LabeledBuilder.filled(
             ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()),
-            TargetAWT.wrap(myProjectPathField)
+            myProjectPathField.getComponent()
         ));
         layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelTasks(), myTasksBox));
         layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions(), myVmOptionsBox));
@@ -125,7 +144,7 @@ public class ExternalSystemTaskSettingsControl {
             return;
         }
 
-        myProjectPathField.setText("");
+        myProjectPathField.setValue("");
         myTasksBox.setValue("");
         myVmOptionsBox.setValue("");
         myScriptParametersBox.setValue("");
@@ -134,7 +153,7 @@ public class ExternalSystemTaskSettingsControl {
             return;
         }
 
-        myProjectPathField.setText(StringUtil.notNullize(myOriginalSettings.getExternalProjectPath()));
+        myProjectPathField.setValue(StringUtil.notNullize(myOriginalSettings.getExternalProjectPath()));
         myTasksBox.setValue(StringUtil.join(myOriginalSettings.getTaskNames(), " "));
         myVmOptionsBox.setValue(StringUtil.notNullize(myOriginalSettings.getVmOptions()));
         myScriptParametersBox.setValue(StringUtil.notNullize(myOriginalSettings.getScriptParameters()));
@@ -151,7 +170,7 @@ public class ExternalSystemTaskSettingsControl {
         }
 
         return !Comparing.equal(
-            normalizePath(myProjectPathField.getText()),
+            normalizePath(myProjectPathField.getValue()),
             normalizePath(myOriginalSettings.getExternalProjectPath())
         )
             || !Comparing.equal(
@@ -171,7 +190,7 @@ public class ExternalSystemTaskSettingsControl {
             return;
         }
 
-        String projectPath = myProjectPathField.getText();
+        String projectPath = myProjectPathField.getValue();
         if (myOriginalSettings == null) {
             throw new ConfigurationException(String.format(
                 "Can't store external task settings into run configuration. Reason: target run configuration is undefined. Tasks: '%s', "
@@ -192,5 +211,69 @@ public class ExternalSystemTaskSettingsControl {
         myTasksBox = null;
         myVmOptionsBox = null;
         myScriptParametersBox = null;
+    }
+
+    private class ChooseRegisteredProjectAction extends DumbAwareAction {
+        private ChooseRegisteredProjectAction() {
+            super(
+                ExternalSystemLocalize.runConfigurationTooltipChooseRegisteredProject(myExternalSystemId.getDisplayName()),
+                LocalizeValue.empty(),
+                myExternalSystemId.getIcon()
+            );
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
+            if (manager == null) {
+                return;
+            }
+
+            AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(myProject);
+            Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects = settings.getAvailableProjects();
+            List<ExternalProjectPojo> rootProjects = new ArrayList<>(projects.keySet());
+            ContainerUtil.sort(rootProjects);
+
+            List<ExternalProjectPojo> items = new ArrayList<>();
+            for (ExternalProjectPojo rootProject : rootProjects) {
+                items.add(rootProject);
+
+                Collection<ExternalProjectPojo> subProjects = projects.get(rootProject);
+                if (subProjects != null) {
+                    List<ExternalProjectPojo> sortedSubProjects = new ArrayList<>(subProjects);
+                    ContainerUtil.sort(sortedSubProjects);
+                    for (ExternalProjectPojo subProject : sortedSubProjects) {
+                        if (!subProject.equals(rootProject)) {
+                            items.add(subProject);
+                        }
+                    }
+                }
+            }
+
+            String title = ExternalSystemLocalize.runConfigurationTitleChooseRegisteredProject(myExternalSystemId.getDisplayName()).get();
+            ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<>(title, items) {
+                @Override
+                public String getTextFor(ExternalProjectPojo value) {
+                    return value.getName();
+                }
+
+                @Override
+                public Image getIconFor(ExternalProjectPojo value) {
+                    return myExternalSystemId.getIcon();
+                }
+
+                @Override
+                @RequiredUIAccess
+                public PopupStep<?> onChosen(ExternalProjectPojo selectedValue, boolean finalChoice) {
+                    FileChooserTextBoxBuilder.Controller projectPathField = myProjectPathField;
+                    if (projectPathField != null) {
+                        projectPathField.setValue(selectedValue.getPath());
+                    }
+                    return FINAL_CHOICE;
+                }
+            });
+            popup.showUnderneathOf(e);
+        }
     }
 }

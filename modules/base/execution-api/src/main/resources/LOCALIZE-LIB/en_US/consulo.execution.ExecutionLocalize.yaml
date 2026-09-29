@@ -214,8 +214,12 @@ environment.variables.helper.use.arguments.jdk14.label:
     text: <html><body>For JDK 1.4.x</body></html>
 environment.variables.helper.use.arguments.label:
     text: <html><body>Use the following command line arguments for running remote JVM</body></html>
+environment.variables.name.column:
+    text: Name
 environment.variables.system.dialog.title:
     text: System Environment
+environment.variables.value.column:
+    text: Value
 error.common.title:
     text: Error
 error.running.configuration.message:
@@ -456,6 +460,12 @@ log.monitor.no.files:
     text: No log files attached
 log.monitor.remove.button:
     text: '&Remove'
+logs.save.console.output.chooser.description:
+    text: Console output would be saved to the specified file
+logs.save.console.output.chooser.title:
+    text: Choose File to Save Console Output
+logs.save.console.output.to.file:
+    text: '&Save console output to file:'
 logs.show.console.on.stderr:
     text: Show console when standard error changes
 logs.show.console.on.stdout:
@@ -616,14 +626,20 @@ run.configuration.edit.default.configuration.settings.description:
     text: Edit defaults settings
 run.configuration.edit.default.configuration.settings.text:
     text: Edit Defaults
+run.configuration.editor.not.supported:
+    text: This configuration cannot be edited here
 run.configuration.error.dialog.title:
     text: Run Configuration Error
 run.configuration.error.no.jdk.specified:
     text: No JDK specified
 run.configuration.exit.action.name:
     text: Exit
+run.configuration.folder.name.label:
+    text: 'Folder &name:'
 run.configuration.java.vm.parameters.label:
     text: '&VM options:'
+run.configuration.new.folder.name:
+    text: New Folder
 run.configuration.no.name:
     text: <No Name>
 run.configuration.norunner.selected.label:
@@ -650,6 +666,10 @@ run.configuration.stop.action.name:
     text: Stop
 run.configuration.store.place.option:
     text: '&Share'
+run.configuration.templates.node.name:
+    text: Templates
+run.configuration.temporary.limit.label:
+    text: 'Temporary configurations limit:'
 run.configuration.unnamed.name.prefix:
     text: Unnamed
 run.configuration.use.alternate.jre.checkbox:

@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
  *
  * @author max
  */
+@Deprecated(forRemoval = true)
 public class EditorComboBoxEditor implements ComboBoxEditor {
   private final EditorTextField myTextField;
   protected static final String NAME = "ComboBox.textField";

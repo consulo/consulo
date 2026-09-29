@@ -123,6 +123,11 @@ public class BorderLayoutEx extends VerticalLayout {
     }
   }
 
+  private static void fillWidth(HorizontalLayout row, Component component) {
+    row.setFlexGrow(1, component);
+    component.getElement().getStyle().set("min-width", "0");
+  }
+
   private static void centerContent(Div holder) {
     holder.getStyle().set("display", "flex").set("align-items", "center");
   }
@@ -163,6 +168,7 @@ public class BorderLayoutEx extends VerticalLayout {
 
         if (component != null) {
           myTopLayout.add(component);
+          fillWidth(myTopLayout, component);
         }
         break;
       case WEST:
@@ -197,6 +203,7 @@ public class BorderLayoutEx extends VerticalLayout {
 
         if (component != null) {
           myBottomLayout.add(component);
+          fillWidth(myBottomLayout, component);
         }
         break;
     }

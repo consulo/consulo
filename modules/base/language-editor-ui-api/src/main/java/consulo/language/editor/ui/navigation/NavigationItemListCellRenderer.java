@@ -35,6 +35,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public class NavigationItemListCellRenderer extends OpaquePanel implements ListCellRenderer<Object> {
     public NavigationItemListCellRenderer() {
         super(new BorderLayout());

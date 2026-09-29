@@ -15,13 +15,34 @@
  */
 package consulo.language.editor.ui;
 
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.ui.HasFocus;
+import consulo.ui.HasPlaceholder;
+import consulo.ui.HasSuffixComponent;
 import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
 /**
+ * A text box whose text is a {@link Document} shown by a platform editor - highlighted by its file type and completed
+ * by its psi file. Built by {@link EditorBoxBuilder}.
+ * <p/>
+ * The editor lives only while the box is attached, so {@link #getEditor()} is {@code null} before the box is shown and
+ * after it is removed.
+ *
  * @author VISTALL
  * @since 15-Mar-22
- *
- * Stub for future re-implement {@link consulo.language.editor.ui.awt.EditorTextField}
  */
-public interface EditorBox extends ValueComponent<String> {
+public interface EditorBox extends ValueComponent<String>, HasFocus, HasSuffixComponent, HasPlaceholder {
+    Document getDocument();
+
+    @RequiredUIAccess
+    void setDocument(Document document, FileType fileType);
+
+    @Nullable Editor getEditor();
+
+    @RequiredUIAccess
+    void selectAll();
 }
