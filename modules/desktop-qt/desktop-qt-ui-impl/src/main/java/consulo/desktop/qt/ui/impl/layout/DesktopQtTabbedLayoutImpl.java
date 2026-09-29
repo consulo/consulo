@@ -20,6 +20,9 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
+import consulo.ui.Space;
+import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.dataContext.DataManager;
 import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
 import consulo.ui.ex.action.ActionGroup;
@@ -27,6 +30,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CustomActionsSchema;
 import io.qt.core.QPoint;
 import io.qt.core.Qt;
+import io.qt.widgets.QStackedWidget;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
@@ -46,6 +50,8 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
+
+    private boolean myNoPadding;
 
     @Override
     @RequiredUIAccess
@@ -98,7 +104,33 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         applyCornerComponent(myPrefixComponent, Qt.Corner.TopLeftCorner);
         applyCornerComponent(mySuffixComponent, Qt.Corner.TopRightCorner);
 
+        applyPagePadding();
+
         installTabPopupMenu(component);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void addStyle(TabbedLayoutStyle style) {
+        switch (style) {
+            case NO_PADDING -> {
+                myNoPadding = true;
+                applyPagePadding();
+            }
+        }
+    }
+
+    private void applyPagePadding() {
+        QTabWidget tabWidget = myComponent;
+        if (tabWidget == null || tabWidget.isDisposed()) {
+            return;
+        }
+
+        QStackedWidget pages = tabWidget.findChild(QStackedWidget.class, "qt_tabwidget_stackedwidget");
+        if (pages != null) {
+            int padding = myNoPadding ? 0 : DesktopQtSpace.toPixels(Space.MEDIUM);
+            pages.setContentsMargins(padding, padding, padding, padding);
+        }
     }
 
     @RequiredUIAccess

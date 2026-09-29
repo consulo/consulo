@@ -552,7 +552,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         // two backgrounds meet at the rule rather than the gutter running under the first pixels of the line
         ColorValue background = scheme.getColor(EditorColors.EDITOR_GUTTER_BACKGROUND);
         painter.fillRect(0, 0, separatorX, height(), TargetQt.to(background == null ? scheme.getDefaultBackground() : background));
-        painter.fillRect(separatorX, 0, width() - separatorX, height(), TargetQt.to(scheme.getDefaultBackground()));
+        painter.fillRect(separatorX, 0, width() - separatorX, height(), TargetQt.to(myEditor.getBackgroundColor()));
 
         ColorValue separatorColor = scheme.getColor(EditorColors.INDENT_GUIDE_COLOR);
         if (separatorColor != null) {

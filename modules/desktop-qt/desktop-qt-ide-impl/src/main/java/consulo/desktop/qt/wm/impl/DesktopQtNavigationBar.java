@@ -230,7 +230,7 @@ public class DesktopQtNavigationBar implements Disposable {
         // the context is walked upwards from the component it is asked for, so the frame root - which is what the
         // bar itself hangs under - only ever reaches the project, and the model then stops at the project root.
         // the scope the user is working in is the one which carries the open file
-        Component component = DesktopQtFocusManagerImpl.INSTANCE.getFocusedComponent();
+        Component component = DesktopQtFocusManagerImpl.INSTANCE.getFocusedComponentInWindow(myContextComponent);
 
         return dataManager.createAsyncDataContext(
             dataManager.getDataContext(component == null ? myContextComponent : component)

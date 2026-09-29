@@ -107,6 +107,14 @@ public class DesktopQtEditorFontMetrics {
         return myFontMetrics[fontType & 3].horizontalAdvance(text.toString());
     }
 
+    private double getVerticalScalingFactor(EditorColorsScheme scheme) {
+        if (myEditor.isOneLineMode()) {
+            return 1;
+        }
+        float lineSpacing = scheme.getLineSpacing();
+        return lineSpacing > 0 ? lineSpacing : 1;
+    }
+
     private void initIfNeeded() {
         if (myFont != null) {
             return;
@@ -130,7 +138,7 @@ public class DesktopQtEditorFontMetrics {
         QFontMetricsF metrics = new QFontMetricsF(font);
 
         double fontHeight = metrics.height();
-        myLineHeight = Math.max(1, (int) Math.ceil(fontHeight * scheme.getLineSpacing()));
+        myLineHeight = Math.max(1, (int) Math.ceil(fontHeight * getVerticalScalingFactor(scheme)));
 
         // the extra room the line spacing added is split above and below the glyphs, so the text stays centred
         // in its line instead of clinging to the top of it

@@ -142,6 +142,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         myColumns.add(column);
 
         updateHeaders();
+        updateColumnLayout();
         updateRows();
         return column;
     }
@@ -174,17 +175,22 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         }
 
         QHeaderView header = component.horizontalHeader();
+        header.setTextElideMode(Qt.TextElideMode.ElideRight);
+
         for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
             int index = column.getIndex();
 
             if (column.getWidth() > 0) {
-                component.setColumnWidth(index, column.getWidth());
-            }
+                component.setColumnWidth(index, Math.max(column.getWidth(), header.sectionSizeHint(index)));
 
-            header.setSectionResizeMode(
-                index,
-                column.isResizable() ? QHeaderView.ResizeMode.Interactive : QHeaderView.ResizeMode.Fixed
-            );
+                header.setSectionResizeMode(
+                    index,
+                    column.isResizable() ? QHeaderView.ResizeMode.Interactive : QHeaderView.ResizeMode.Fixed
+                );
+            }
+            else {
+                header.setSectionResizeMode(index, QHeaderView.ResizeMode.Stretch);
+            }
         }
     }
 

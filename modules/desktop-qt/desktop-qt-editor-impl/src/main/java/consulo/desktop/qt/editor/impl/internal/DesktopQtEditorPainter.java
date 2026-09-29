@@ -69,11 +69,10 @@ public class DesktopQtEditorPainter {
     }
 
     public void paint(QPainter painter, QRect clip, int scrollX, int scrollY, boolean paintCarets) {
-        EditorColorsScheme scheme = myEditor.getColorsScheme();
         Document document = myEditor.getDocument();
         DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
 
-        painter.fillRect(clip, TargetQt.to(scheme.getDefaultBackground()));
+        painter.fillRect(clip, TargetQt.to(myEditor.getBackgroundColor()));
 
         int lineHeight = metrics.getLineHeight();
         int firstLine = Math.max(0, (clip.top() + scrollY) / lineHeight);
@@ -375,7 +374,7 @@ public class DesktopQtEditorPainter {
             TextAttributes attributes = state.getMergedAttributes();
 
             ColorValue foreground = attributes.getForegroundColor();
-            ColorValue background = attributes.getBackgroundColor();
+            ColorValue background = myEditor.getBackgroundColor(attributes);
             int fontType = attributes.getFontType();
             ColorValue effectColor = attributes.getEffectColor();
             EffectType effectType = effectColor == null ? null : attributes.getEffectType();

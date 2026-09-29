@@ -1204,6 +1204,15 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         return myScheme;
     }
 
+    protected void updateGlobalScheme() {
+        for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme delegateScheme; scheme = delegateScheme.getDelegate()) {
+            if (scheme instanceof MyColorSchemeDelegate colorSchemeDelegate) {
+                colorSchemeDelegate.updateGlobalScheme();
+                break;
+            }
+        }
+    }
+
     @Override
     public int getFontSize() {
         return myScheme.getEditorFontSize();

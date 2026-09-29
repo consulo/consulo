@@ -172,9 +172,7 @@ public class HeadlessEditor extends CodeEditorBase {
 
     @Override
     public void reinitSettings() {
-        if (myScheme instanceof MyColorSchemeDelegate schemeDelegate) {
-            schemeDelegate.updateGlobalScheme();
-        }
+        updateGlobalScheme();
 
         mySettings.reinitSettings();
 

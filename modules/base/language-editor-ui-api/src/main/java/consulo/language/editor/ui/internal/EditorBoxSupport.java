@@ -49,6 +49,7 @@ public final class EditorBoxSupport {
     private final @Nullable Project myProject;
     private final boolean myOneLine;
     private final boolean myViewer;
+    private final boolean myEditorFont;
     private final List<Consumer<EditorEx>> myCustomizations;
     private final Runnable myValueChanged;
     private final Consumer<EditorEx> myEditorReleasing;
@@ -66,6 +67,9 @@ public final class EditorBoxSupport {
     private boolean myEnabled = true;
     private boolean myWholeTextSelected;
 
+    private @Nullable String myInheritedFontName;
+    private int myInheritedFontSize;
+
     private @Nullable EditorEx myEditor;
     private @Nullable Disposable myEditorDisposable;
 
@@ -81,6 +85,7 @@ public final class EditorBoxSupport {
         myProject = options.project();
         myOneLine = options.oneLine();
         myViewer = options.viewer();
+        myEditorFont = options.editorFont();
         myCustomizations = options.customizations();
         myValueChanged = valueChanged;
         myEditorReleasing = editorReleasing;
@@ -102,6 +107,11 @@ public final class EditorBoxSupport {
 
     public boolean isOneLine() {
         return myOneLine;
+    }
+
+    public void setInheritedFont(String fontName, int fontSize) {
+        myInheritedFontName = fontName;
+        myInheritedFontSize = fontSize;
     }
 
     public boolean isEnabled() {
@@ -158,6 +168,11 @@ public final class EditorBoxSupport {
         EditorEx editor = (EditorEx) (viewer
             ? myEditorFactory.createViewer(myDocument, myProject)
             : myEditorFactory.createEditor(myDocument, myProject));
+
+        String inheritedFontName = myInheritedFontName;
+        if (!myEditorFont && inheritedFontName != null) {
+            inheritFont(editor, inheritedFontName, myInheritedFontSize);
+        }
 
         configureEditor(editor, myProject, myFileType, viewer, myOneLine);
 
@@ -220,6 +235,12 @@ public final class EditorBoxSupport {
         if (!editor.isDisposed()) {
             myEditorFactory.releaseEditor(editor);
         }
+    }
+
+    public static void inheritFont(EditorEx editor, String fontName, int fontSize) {
+        editor.setUseEditorAntialiasing(false);
+        editor.getColorsScheme().setEditorFontName(fontName);
+        editor.getColorsScheme().setEditorFontSize(fontSize);
     }
 
     public static void configureEditor(EditorEx editor, @Nullable Project project, @Nullable FileType fileType, boolean viewer, boolean oneLine) {

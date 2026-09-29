@@ -23,6 +23,7 @@ import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -38,9 +39,8 @@ import java.util.Map;
 public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
     public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
         public Vaadin() {
-            // the default border is drawn inside the sheet, so the content no longer fits and scrolls,
-            // and the default padding keeps the editor from filling the panel
-            addThemeVariants(TabSheetVariant.AURA_NO_BORDER, TabSheetVariant.AURA_NO_PADDING);
+            // the default border is drawn inside the sheet, so the content no longer fits and scrolls
+            addThemeVariants(TabSheetVariant.AURA_NO_BORDER);
         }
 
         @Override
@@ -56,11 +56,38 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
     public WebTabbedLayoutImpl() {
         toVaadinComponent().addSelectedChangeListener(event -> {
-            WebTabImpl tab = myTabs.get(event.getSelectedTab());
+            com.vaadin.flow.component.tabs.Tab selectedTab = event.getSelectedTab();
+            if (selectedTab == null) {
+                restoreSelection(event.getPreviousTab());
+                return;
+            }
+
+            WebTabImpl tab = myTabs.get(selectedTab);
             if (tab != null) {
                 getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, tab));
             }
         });
+    }
+
+    private void restoreSelection(com.vaadin.flow.component.tabs.@Nullable Tab previousTab) {
+        Vaadin sheet = toVaadinComponent();
+        if (sheet.getTabCount() == 0) {
+            return;
+        }
+
+        sheet.getUI().ifPresentOrElse(
+            ui -> ui.beforeClientResponse(sheet, context -> reselect(previousTab)),
+            () -> reselect(previousTab)
+        );
+    }
+
+    private void reselect(com.vaadin.flow.component.tabs.@Nullable Tab previousTab) {
+        Vaadin sheet = toVaadinComponent();
+        if (sheet.getSelectedTab() != null || sheet.getTabCount() == 0) {
+            return;
+        }
+
+        sheet.setSelectedTab(previousTab != null && myTabs.containsKey(previousTab) ? previousTab : sheet.getTabAt(0));
     }
 
     @Override
@@ -71,6 +98,13 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     @Override
     public Tab createTab() {
         return new WebTabImpl(this);
+    }
+
+    @Override
+    public void addStyle(TabbedLayoutStyle style) {
+        switch (style) {
+            case NO_PADDING -> toVaadinComponent().addThemeVariants(TabSheetVariant.NO_PADDING);
+        }
     }
 
     @Override

@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.desktop.qt.ui.impl.TargetQt;
 import consulo.document.Document;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.internal.EditorBoxOptions;
@@ -30,12 +31,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import io.qt.core.Qt;
-import io.qt.widgets.QFrame;
+import io.qt.gui.QFontInfo;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
-class DesktopQtEditorBoxImpl extends QtComponentDelegate<QFrame> implements EditorBox {
+class DesktopQtEditorBoxImpl extends QtComponentDelegate<DesktopQtEditorBoxFrame> implements EditorBox {
     private final EditorBoxSupport mySupport;
 
     private @Nullable Component mySuffixComponent;
@@ -47,20 +48,19 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<QFrame> implements Edit
     }
 
     @Override
-    protected QFrame createQt(QWidget parent) {
-        QFrame frame = new QFrame(parent);
-        frame.setFrameShape(QFrame.Shape.StyledPanel);
-        frame.setFrameShadow(QFrame.Shadow.Sunken);
+    protected DesktopQtEditorBoxFrame createQt(QWidget parent) {
+        DesktopQtEditorBoxFrame frame = new DesktopQtEditorBoxFrame(parent);
+        frame.setOneLine(mySupport.isOneLine());
+        frame.setPaletteListener(() -> updateEditorBackground(frame));
 
-        QHBoxLayout layout = new QHBoxLayout(frame);
-        layout.setContentsMargins(frame.frameWidth(), frame.frameWidth(), frame.frameWidth(), frame.frameWidth());
-        layout.setSpacing(0);
+        QFontInfo fontInfo = new QFontInfo(frame.font());
+        mySupport.setInheritedFont(fontInfo.family(), fontInfo.pixelSize());
         return frame;
     }
 
     @RequiredUIAccess
     @Override
-    protected void initialize(QFrame component) {
+    protected void initialize(DesktopQtEditorBoxFrame component) {
         super.initialize(component);
 
         attachEditor(component);
@@ -74,7 +74,7 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<QFrame> implements Edit
     }
 
     @RequiredUIAccess
-    private void attachEditor(QFrame frame) {
+    private void attachEditor(DesktopQtEditorBoxFrame frame) {
         EditorEx editor = mySupport.createEditor();
 
         QtComponentDelegate<?> editorComponent = (QtComponentDelegate<?>) editor.getUIComponent();
@@ -82,25 +82,40 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<QFrame> implements Edit
         editorComponent.bind(frame, null);
 
         QWidget editorWidget = editorComponent.toQtComponent();
-        ((QHBoxLayout) frame.layout()).insertWidget(0, editorWidget, 1);
+        QHBoxLayout layout = frame.getBoxLayout();
+        layout.insertWidget(0, editorWidget, 1);
         frame.setFocusProxy(editorWidget);
 
-        if (mySupport.isOneLine() && editor instanceof DesktopQtEditorImpl qtEditor) {
+        updateEditorBackground(frame);
+
+        if (editor instanceof DesktopQtEditorImpl qtEditor) {
             DesktopQtEditorWidget surface = qtEditor.getSurface();
             if (surface != null) {
-                surface.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
-                surface.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
-                surface.setFixedHeight(qtEditor.getLineHeight() + surface.frameWidth() * 2);
+                frame.watchFocus(surface);
+
+                if (mySupport.isOneLine()) {
+                    surface.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
+                    surface.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
+                    surface.setFixedHeight(qtEditor.getLineHeight() + surface.frameWidth() * 2);
+                    layout.setAlignment(editorWidget, Qt.AlignmentFlag.AlignVCenter);
+                }
             }
         }
     }
 
-    private void attachSuffix(QFrame frame, Component suffixComponent) {
+    private void updateEditorBackground(DesktopQtEditorBoxFrame frame) {
+        EditorEx editor = mySupport.getEditor();
+        if (editor != null) {
+            editor.setBackgroundColor(TargetQt.from(frame.getBaseColor()));
+        }
+    }
+
+    private void attachSuffix(DesktopQtEditorBoxFrame frame, Component suffixComponent) {
         QtComponentDelegate<?> suffix = (QtComponentDelegate<?>) suffixComponent;
         suffix.setParent(this);
         suffix.bind(frame, null);
 
-        frame.layout().addWidget(suffix.toQtComponent());
+        frame.getBoxLayout().addWidget(suffix.toQtComponent());
     }
 
     private void editorReleasing(EditorEx editor) {
@@ -111,7 +126,7 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<QFrame> implements Edit
 
     @RequiredUIAccess
     private void recreateEditor() {
-        QFrame frame = myComponent;
+        DesktopQtEditorBoxFrame frame = myComponent;
         if (frame != null && !frame.isDisposed() && mySupport.getEditor() != null) {
             attachEditor(frame);
         }
@@ -188,7 +203,7 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<QFrame> implements Edit
 
         mySuffixComponent = suffixComponent;
 
-        QFrame frame = myComponent;
+        DesktopQtEditorBoxFrame frame = myComponent;
         if (suffixComponent != null && frame != null && !frame.isDisposed()) {
             attachSuffix(frame, suffixComponent);
         }

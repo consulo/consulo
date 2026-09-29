@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -53,6 +54,10 @@ public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> i
     @Override
     public @Nullable Component getSuffixComponent() {
         return mySuffixComponent;
+    }
+
+    @Override
+    public void addStyle(TabbedLayoutStyle style) {
     }
 
     @Override

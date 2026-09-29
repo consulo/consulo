@@ -45,22 +45,22 @@ public final class DesktopQtFontRegistry {
      */
     public static void registerBundledFonts() {
         for (BundledFont font : BundledFontRegistry.getBundledFonts()) {
-            registerFont(BundledFontRegistry.FONT_PATH + font.fileName());
+            registerFont(font);
         }
     }
 
-    private static void registerFont(String path) {
-        try (InputStream stream = BundledFontRegistry.class.getResourceAsStream(path)) {
+    private static void registerFont(BundledFont font) {
+        try (InputStream stream = BundledFontRegistry.openFont(font)) {
             if (stream == null) {
-                throw new IOException("Resource missing: " + path);
+                throw new IOException("Resource missing: " + font.fileName());
             }
 
             if (QFontDatabase.addApplicationFontFromData(stream.readAllBytes()) < 0) {
-                throw new IOException("Rejected by qt: " + path);
+                throw new IOException("Rejected by qt: " + font.fileName());
             }
         }
         catch (Exception e) {
-            LOG.error("Cannot register font: " + path, e);
+            LOG.error("Cannot register font: " + font.fileName(), e);
         }
     }
 }

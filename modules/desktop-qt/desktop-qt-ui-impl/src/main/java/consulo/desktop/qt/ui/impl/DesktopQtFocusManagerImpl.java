@@ -69,6 +69,29 @@ public class DesktopQtFocusManagerImpl implements FocusManager {
         return myFocusedComponent;
     }
 
+    public @Nullable Component getFocusedComponentInWindow(Component component) {
+        Component focused = getFocusedComponent();
+
+        QWidget widget = toWidget(component);
+        if (widget == null) {
+            return focused;
+        }
+
+        QWidget window = widget.window();
+
+        QWidget focusedWidget = focused == null ? null : toWidget(focused);
+        if (focusedWidget != null && focusedWidget.window() == window) {
+            return focused;
+        }
+
+        return toComponent(window.focusWidget());
+    }
+
+    private static @Nullable QWidget toWidget(Component component) {
+        QWidget widget = component instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+        return widget == null || widget.isDisposed() ? null : widget;
+    }
+
     private void connect() {
         if (myConnected) {
             return;

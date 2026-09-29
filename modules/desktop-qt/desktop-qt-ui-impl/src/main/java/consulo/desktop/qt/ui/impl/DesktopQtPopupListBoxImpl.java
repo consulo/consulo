@@ -69,13 +69,44 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
     }
 
     private class InlineButtonsDelegate extends QStyledItemDelegate {
+        private boolean myEliding;
+
         InlineButtonsDelegate(QObject parent) {
             super(parent);
         }
 
         @Override
+        protected void initStyleOption(QStyleOptionViewItem option, QModelIndex index) {
+            super.initStyleOption(option, index);
+
+            if (!myEliding) {
+                return;
+            }
+
+            List<InlineButton> buttons = buttonsAt(index.row());
+            if (!isStripVisible(option, buttons)) {
+                return;
+            }
+
+            QWidget widget = option.widget();
+            QStyle style = widget != null ? widget.style() : QApplication.style();
+
+            QRect textRect = style.subElementRect(QStyle.SubElement.SE_ItemViewItemText, option, widget);
+            int separatorX = buttonRect(option.rect(), buttons.size(), 0).left() - ourSeparatorInset;
+            int available = Math.max(0, separatorX - ourContentGap - textRect.left());
+
+            option.setText(option.fontMetrics().elidedText(option.text(), Qt.TextElideMode.ElideRight, available));
+        }
+
+        @Override
         public void paint(QPainter painter, QStyleOptionViewItem option, QModelIndex index) {
-            super.paint(painter, option, index);
+            myEliding = true;
+            try {
+                super.paint(painter, option, index);
+            }
+            finally {
+                myEliding = false;
+            }
 
             paintButtons(painter, option, index);
         }
@@ -96,14 +127,11 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
             int row = index.row();
 
             List<InlineButton> buttons = buttonsAt(row);
-            if (buttons.isEmpty()) {
+            if (!isStripVisible(option, buttons)) {
                 return;
             }
 
             boolean selected = option.state().testFlag(QStyle.StateFlag.State_Selected);
-            if (!selected && buttons.stream().noneMatch(InlineButton::alwaysVisible)) {
-                return;
-            }
 
             QRect rowRect = option.rect();
             int count = buttons.size();
@@ -111,21 +139,6 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
 
             painter.save();
             try {
-                QStyleOptionViewItem background = new QStyleOptionViewItem(option);
-                initStyleOption(background, index);
-
-                QWidget widget = option.widget();
-                QStyle style = widget != null ? widget.style() : QApplication.style();
-
-                painter.setClipRect(new QRect(separatorX, rowRect.top(), rowRect.right() - separatorX + 1, rowRect.height()));
-                if (selected) {
-                    style.drawPrimitive(QStyle.PrimitiveElement.PE_PanelItemViewItem, background, painter, widget);
-                }
-                else {
-                    painter.fillRect(rowRect, option.palette().brush(QPalette.ColorRole.Base));
-                }
-                painter.setClipping(false);
-
                 painter.setPen(option.palette().color(QPalette.ColorRole.Mid));
                 painter.drawLine(separatorX, rowRect.top() + ourSeparatorMargin, separatorX, rowRect.bottom() - ourSeparatorMargin);
 
@@ -329,6 +342,14 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
             }
         }
         return null;
+    }
+
+    private static boolean isStripVisible(QStyleOptionViewItem option, List<InlineButton> buttons) {
+        if (buttons.isEmpty()) {
+            return false;
+        }
+
+        return option.state().testFlag(QStyle.StateFlag.State_Selected) || buttons.stream().anyMatch(InlineButton::alwaysVisible);
     }
 
     private boolean isHighlighted(int row, int index, boolean selected) {

@@ -22,6 +22,7 @@ import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -36,6 +37,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.KeyCode;
 import consulo.util.collection.Lists;
 import io.qt.core.Qt;
@@ -54,6 +56,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -86,6 +89,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     private final DesktopQtEditorCoordinateMapper myCoordinateMapper = new DesktopQtEditorCoordinateMapper(this, myVisualLines);
 
     private boolean myCaretVisible = true;
+
+    private @Nullable ColorValue myForcedBackground;
 
     /**
      * Negative means "remeasure". Measuring the whole document is linear in its length, so it must not happen once
@@ -548,6 +553,17 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     public void reinitSettings() {
+        updateGlobalScheme();
+
+        mySettings.reinitSettings();
+        myCaretModel.reinitSettings();
+        mySelectionModel.reinitSettings();
+
+        EditorHighlighter highlighter = myHighlighter;
+        if (highlighter != null) {
+            highlighter.setColorScheme(myScheme);
+        }
+
         myFontMetrics.reset();
         myDocumentWidth = -1;
 
@@ -557,6 +573,46 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
             widget.updateScrollRanges();
             widget.viewport().update();
         }
+    }
+
+    @Override
+    public void setBackgroundColor(ColorValue color) {
+        if (getBackgroundIgnoreForced().equals(color)) {
+            myForcedBackground = null;
+        }
+        else {
+            myForcedBackground = color;
+        }
+
+        DesktopQtEditorWidget widget = getSurface();
+        if (widget != null) {
+            widget.updateSideAreas();
+            widget.viewport().update();
+        }
+    }
+
+    @Override
+    public ColorValue getBackgroundColor() {
+        ColorValue forcedBackground = myForcedBackground;
+        if (forcedBackground != null) {
+            return forcedBackground;
+        }
+
+        return getBackgroundIgnoreForced();
+    }
+
+    @Nullable ColorValue getBackgroundColor(TextAttributes attributes) {
+        ColorValue attrColor = attributes.getBackgroundColor();
+        return Objects.equals(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
+    }
+
+    private ColorValue getBackgroundIgnoreForced() {
+        ColorValue color = myScheme.getDefaultBackground();
+        if (myDocument.isWritable()) {
+            return color;
+        }
+        ColorValue readOnlyColor = myScheme.getColor(EditorColors.READONLY_BACKGROUND_COLOR);
+        return readOnlyColor != null ? readOnlyColor : color;
     }
 
     @Override

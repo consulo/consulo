@@ -28,7 +28,12 @@ import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
 import io.qt.widgets.QAbstractItemView;
+import io.qt.core.QRect;
+import io.qt.core.QSize;
+import io.qt.core.Qt;
 import io.qt.widgets.QComboBox;
+import io.qt.widgets.QStyle;
+import io.qt.widgets.QStyleOptionComboBox;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -39,6 +44,9 @@ import java.util.function.Function;
  * @since 2026-08-16
  */
 public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> implements ComboBox<E>, DesktopQtIconOwner {
+    private static final int MINIMUM_VISIBLE_CHARS = 8;
+    private static final int ICON_TEXT_GAP = 4;
+
     private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
 
     private final FlatDataModel<E> myModel;
@@ -56,7 +64,30 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
 
     @Override
     protected QComboBox createQt(QWidget parent) {
-        return new QComboBox(parent);
+        return new QComboBox(parent) {
+            @Override
+            public QSize minimumSizeHint() {
+                QSize hint = super.minimumSizeHint();
+
+                QStyleOptionComboBox option = new QStyleOptionComboBox();
+                initStyleOption(option);
+
+                int contentWidth = fontMetrics().horizontalAdvance("x".repeat(MINIMUM_VISIBLE_CHARS)) + iconSize().width();
+                QSize minimum = style().sizeFromContents(QStyle.ContentsType.CT_ComboBox, option, new QSize(contentWidth, hint.height()), this);
+                return new QSize(Math.min(hint.width(), minimum.width()), hint.height());
+            }
+
+            @Override
+            protected void initStyleOption(QStyleOptionComboBox option) {
+                super.initStyleOption(option);
+
+                QRect textRect = style().subControlRect(QStyle.ComplexControl.CC_ComboBox, option, QStyle.SubControl.SC_ComboBoxEditField, this);
+                int available = textRect.width() - (option.currentIcon().isNull() ? 0 : iconSize().width() + ICON_TEXT_GAP);
+                if (available > 0) {
+                    option.setCurrentText(fontMetrics().elidedText(option.currentText(), Qt.TextElideMode.ElideRight, available));
+                }
+            }
+        };
     }
 
     @Override
@@ -167,10 +198,14 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
     }
 
     private void setValueByIndex(int index, boolean fireListeners) {
+        int oldIndex = mySelectedIndex;
         mySelectedIndex = index;
 
         QComboBox component = myComponent;
         if (component == null) {
+            if (fireListeners && oldIndex != index) {
+                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
+            }
             return;
         }
 

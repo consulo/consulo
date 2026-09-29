@@ -46,6 +46,7 @@ import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
@@ -121,6 +122,8 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         myProject = project;
         myManager = manager;
         myOwner = owner;
+
+        myTabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
 
         // the tab actions and the tab popup group work on the window the tab belongs to, and the tab has no data of
         // its own - the layout above the editors is the only place the window can be published from

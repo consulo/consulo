@@ -83,6 +83,7 @@ public class DesktopQtIconLabel extends QFrame {
 
     public void setWordWrap(boolean wordWrap) {
         myTextLabel.setWordWrap(wordWrap);
+        myTextLabel.setMinimumWidth(wordWrap ? 1 : 0);
     }
 
     public void setTextInteractionFlags(Qt.TextInteractionFlag... flags) {

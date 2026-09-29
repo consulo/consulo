@@ -17,6 +17,7 @@
 package consulo.execution.impl.internal.ui;
 
 import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.util.HtmlBuilder;
 import consulo.configurable.BaseConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
@@ -42,6 +43,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
+import consulo.ui.HtmlLabel;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.Space;
@@ -283,7 +285,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         header.right(options);
         header.paddingBuilder().bottomSet(Space.MEDIUM).apply();
 
-        Label validationLabel = Label.create();
+        HtmlLabel validationLabel = HtmlLabel.create(LocalizeValue.empty());
         validationLabel.setImage(PlatformIconGroup.generalError());
         myValidationLabel = validationLabel;
 
@@ -425,6 +427,14 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         return element == null ? null : JDOMUtil.writeElement(element);
     }
 
+    private static String generateWarningLabelText(ValidationResult result) {
+        return new HtmlBuilder()
+            .append(new HtmlBuilder().append(StringUtil.notNullize(result.getTitle())).append(": ").wrapWith("b"))
+            .appendRaw(StringUtil.notNullize(result.getMessage()))
+            .wrapWithHtmlBody()
+            .toString();
+    }
+
     @RequiredUIAccess
     private void showValidationResult(@Nullable ValidationResult result) {
         boolean hadError = myLastValidationResult != null;
@@ -434,7 +444,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
 
         Label validationLabel = myValidationLabel;
         if (validationLabel != null && result != null) {
-            validationLabel.setText(LocalizeValue.of(result.getTitle() + ": " + result.getMessage()));
+            validationLabel.setText(LocalizeValue.of(generateWarningLabelText(result)));
         }
 
         Hyperlink fixLink = myFixLink;

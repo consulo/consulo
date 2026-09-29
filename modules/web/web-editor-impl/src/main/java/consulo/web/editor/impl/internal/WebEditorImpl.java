@@ -2711,9 +2711,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     public void reinitSettings() {
         // the delegate keeps the global scheme it was created against, a scheme switch reaches the editor only
         // through this
-        if (myScheme instanceof MyColorSchemeDelegate schemeDelegate) {
-            schemeDelegate.updateGlobalScheme();
-        }
+        updateGlobalScheme();
 
         // the lexer highlighter caches the attributes of every token type against the scheme it was handed
         EditorHighlighter highlighter = getHighlighter();

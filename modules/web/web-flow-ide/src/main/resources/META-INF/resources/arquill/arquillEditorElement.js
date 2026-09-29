@@ -474,12 +474,6 @@
                 return;
             }
 
-            const selection = textView.getSelection();
-            // replacing a selection is not typing, and the platform has no single character for it
-            if (!selection || selection.start !== selection.end) {
-                return;
-            }
-
             domEvent.preventDefault();
             domEvent.stopImmediatePropagation();
 

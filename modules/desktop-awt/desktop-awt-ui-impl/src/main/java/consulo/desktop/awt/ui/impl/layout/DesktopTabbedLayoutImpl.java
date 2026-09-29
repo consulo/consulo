@@ -25,6 +25,7 @@ import consulo.ui.event.TabSelectEvent;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -64,6 +65,13 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
     @Override
     public Tab createTab() {
         return new DesktopTabImpl(this);
+    }
+
+    @Override
+    public void addStyle(TabbedLayoutStyle style) {
+        switch (style) {
+            case NO_PADDING -> ((JBTabbedPane) toAWTComponent()).setTabComponentInsets(null);
+        }
     }
 
     @Override

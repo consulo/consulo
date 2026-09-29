@@ -17,6 +17,7 @@ package consulo.ui.impl.font;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -139,6 +140,10 @@ public class BundledFontRegistry {
 
     public static List<BundledFont> getBundledFonts() {
         return ourFonts;
+    }
+
+    public static @Nullable InputStream openFont(BundledFont font) {
+        return BundledFontRegistry.class.getResourceAsStream(FONT_PATH + font.fileName());
     }
 
     /**

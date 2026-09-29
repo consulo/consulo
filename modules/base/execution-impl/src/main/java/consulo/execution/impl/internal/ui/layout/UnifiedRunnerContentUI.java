@@ -29,6 +29,7 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import org.jspecify.annotations.Nullable;
 
@@ -75,6 +76,8 @@ public class UnifiedRunnerContentUI implements ContentUI, ContentManagerListener
 
     public UnifiedRunnerContentUI(RunnerLayoutImpl layout) {
         myLayout = layout;
+
+        myTabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
 
         myTabbedLayout.addSelectListener(event -> {
             ContentManager manager = myManager;

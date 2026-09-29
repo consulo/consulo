@@ -26,7 +26,6 @@ import consulo.codeEditor.markup.*;
 import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.codeEditor.util.EditorUtil;
-import consulo.colorScheme.DelegateColorScheme;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
@@ -766,13 +765,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private void reinitSettings(boolean updateGutterSize) {
         assertIsDispatchThread();
 
-        for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme;
-             scheme = ((DelegateColorScheme) scheme).getDelegate()) {
-            if (scheme instanceof MyColorSchemeDelegate colorSchemeDelegate) {
-                colorSchemeDelegate.updateGlobalScheme();
-                break;
-            }
-        }
+        updateGlobalScheme();
 
         boolean softWrapsUsedBefore = mySoftWrapModel.isSoftWrappingEnabled();
 

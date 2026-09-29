@@ -41,6 +41,8 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     private final ConfigurationSettingsEditor myEditor;
     private final BeforeRunStepsPanel myBeforeRunStepsPanel;
 
+    private @Nullable Element myBaselineElement;
+
     @RequiredUIAccess
     public ConfigurationSettingsEditorWrapperImpl(RunnerAndConfigurationSettings settings) {
         myEditor = new ConfigurationSettingsEditor(settings);
@@ -64,12 +66,14 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     public void resetEditorFrom(RunnerAndConfigurationSettings settings) {
         myEditor.resetFrom(settings);
         myBeforeRunStepsPanel.reset(settings);
+        myBaselineElement = writeSnapshotElement();
     }
 
     @Override
     public void applyEditorTo(RunnerAndConfigurationSettings settings) throws ConfigurationException {
         myEditor.applyTo(settings);
         doApply(settings);
+        myBaselineElement = writeElement(settings.getConfiguration());
     }
 
     @Override
@@ -96,12 +100,21 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     boolean isModified(RunnerAndConfigurationSettings settings) {
         try {
             RunnerAndConfigurationSettings snapshot = myEditor.getSnapshot();
-            Element originalElement = writeElement(settings.getConfiguration());
+            Element baselineElement = myBaselineElement != null ? myBaselineElement : writeElement(settings.getConfiguration());
             Element snapshotElement = writeElement(snapshot.getConfiguration());
-            return originalElement == null || snapshotElement == null || !JDOMUtil.areElementsEqual(originalElement, snapshotElement);
+            return baselineElement == null || snapshotElement == null || !JDOMUtil.areElementsEqual(baselineElement, snapshotElement);
         }
         catch (ConfigurationException e) {
             return true;
+        }
+    }
+
+    private @Nullable Element writeSnapshotElement() {
+        try {
+            return writeElement(myEditor.getSnapshot().getConfiguration());
+        }
+        catch (ConfigurationException e) {
+            return null;
         }
     }
 

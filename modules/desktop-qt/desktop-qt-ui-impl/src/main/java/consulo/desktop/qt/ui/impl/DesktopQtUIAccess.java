@@ -82,12 +82,12 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
                 // the family resolved to the first time it was asked for
                 DesktopQtFontRegistry.registerBundledFonts();
 
-                // load style state
-                Application.get().getInstance(StyleManagerService.class);
-
                 DesktopQtCurrentInput.install();
 
                 countDownLatch.countDown();
+
+                // load style state
+                Application.get().getInstance(StyleManagerService.class);
 
                 try {
                     QApplication.exec();
