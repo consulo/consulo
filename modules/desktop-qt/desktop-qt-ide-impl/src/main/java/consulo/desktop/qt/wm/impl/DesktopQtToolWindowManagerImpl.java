@@ -92,7 +92,7 @@ public class DesktopQtToolWindowManagerImpl extends ToolWindowManagerBase {
 
         myFrame = windowManager.getIdeFrame(myProject);
 
-        DesktopQtToolWindowPanelImpl toolWindowPanel = new DesktopQtToolWindowPanelImpl();
+        DesktopQtToolWindowPanelImpl toolWindowPanel = new DesktopQtToolWindowPanelImpl(myProject);
 
         myToolWindowPanel = toolWindowPanel;
 

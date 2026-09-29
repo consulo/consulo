@@ -52,7 +52,6 @@ public final class DesktopQtStyleApplier {
     private static final int ourTabHorizontalPadding = 8;
     /** what separates one tab from the next, so a rounded tab is not drawn against its neighbour */
     private static final int ourTabGap = 2;
-    private static final int ourTabCloseGap = 4;
 
     private static final int ourMenuBarItemVerticalPadding = 3;
     private static final int ourMenuBarItemHorizontalPadding = 8;
@@ -126,12 +125,20 @@ public final class DesktopQtStyleApplier {
     }
 
     /**
-     * Only the widgets consulo draws itself are named here. A rule naming a widget of qt takes over the drawing of
-     * that widget from the style of the desktop, which decides how everything of it looks - whether it is rounded
-     * among the rest - and the theme reaches it through the palette instead.
+     * Only the widgets consulo draws itself are named here, and the item views for their background alone. A rule
+     * naming a widget of qt takes over the drawing of that widget from the style of the desktop, which decides how
+     * everything of it looks - whether it is rounded among the rest - and the theme reaches it through the palette
+     * instead.
      */
     private static String buildStyleSheet(Style style) {
-        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style);
+        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style) + buildItemViewStyleSheet(style);
+    }
+
+    private static String buildItemViewStyleSheet(Style style) {
+        return """
+
+            QAbstractItemView { background: %s; }
+            """.formatted(css(style, ComponentColors.LAYOUT));
     }
 
     /**
@@ -162,7 +169,7 @@ public final class DesktopQtStyleApplier {
             QTabBar::tab {
                 background: transparent;
                 color: %s;
-                padding: %dpx %dpx;
+                padding: %dpx 0px %dpx %dpx;
                 margin: 0px %dpx;
 
                 /* the border is on every tab and only coloured on the selected one - giving it to the selected
@@ -173,14 +180,11 @@ public final class DesktopQtStyleApplier {
             QTabBar::tab:hover { background: %s; }
             QTabBar::tab:selected { background: %s; border-color: %s; }
             QTabBar::tab:selected:!active { background: %s; border-color: %s; }
-
-            /* the cross carries the room it needs on its own side, so the padding of the tab is what is left
-               of the label on either side of it */
-            QTabBar::close-button { margin-left: %dpx; }
             """.formatted(
             layout,
             background,
             foreground,
+            ourTabVerticalPadding,
             ourTabVerticalPadding,
             ourTabHorizontalPadding,
             ourTabGap,
@@ -189,8 +193,7 @@ public final class DesktopQtStyleApplier {
             selected,
             selectedBorder,
             inactiveSelected,
-            inactiveSelectedBorder,
-            ourTabCloseGap
+            inactiveSelectedBorder
         );
     }
 

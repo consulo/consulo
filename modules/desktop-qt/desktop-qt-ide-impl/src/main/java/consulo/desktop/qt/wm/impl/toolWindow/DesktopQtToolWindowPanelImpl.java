@@ -16,7 +16,9 @@
 package consulo.desktop.qt.wm.impl.toolWindow;
 
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
@@ -151,24 +153,13 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Primary = new HashMap<>();
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Secondary = new HashMap<>();
 
-    private final ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-    private final ThreeComponentSplitLayout myVerticalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
-
     private final DockLayout myRoot = DockLayout.create(Space.NONE);
 
-    private boolean myWidescreen;
+    private final UnifiedToolWindowSplitters mySplitters;
 
     @RequiredUIAccess
-    public DesktopQtToolWindowPanelImpl() {
-        // same nesting as the awt panel - the outer splitter holds the stripes of its own orientation,
-        // the inner one is placed in its center and ends up holding the editor
-        ThreeComponentSplitLayout rootSplitter = myWidescreen ? myHorizontalSplitter : myVerticalSplitter;
-        if (myWidescreen) {
-            myHorizontalSplitter.setCenterComponent(myVerticalSplitter);
-        }
-        else {
-            myVerticalSplitter.setCenterComponent(myHorizontalSplitter);
-        }
+    public DesktopQtToolWindowPanelImpl(Project project) {
+        mySplitters = new UnifiedToolWindowSplitters(project, project, this::setRootSplitter);
 
         // tttttttttttttttttttttttttttttttt
         // l                              r
@@ -181,8 +172,13 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         // where it shares one row with the widgets, like the awt frame does
         myRoot.top(myTopStripe);
         myRoot.left(myLeftStripe);
-        myRoot.center(rootSplitter);
+        myRoot.center(mySplitters.getRootSplitter());
         myRoot.right(myRightStripe);
+    }
+
+    @RequiredUIAccess
+    private void setRootSplitter(ThreeComponentSplitLayout rootSplitter) {
+        myRoot.center(rootSplitter);
     }
 
     @Override
@@ -227,31 +223,12 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
             component = null;
         }
 
-        setComponent(component, anchor, weight);
-    }
-
-    @RequiredUIAccess
-    private void setComponent(@Nullable Component component, ToolWindowAnchor anchor, float weight) {
-        if (ToolWindowAnchor.TOP == anchor) {
-            myVerticalSplitter.setFirstComponent(component);
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-            myHorizontalSplitter.setFirstComponent(component);
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-            myVerticalSplitter.setSecondComponent(component);
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-            myHorizontalSplitter.setSecondComponent(component);
-        }
-        else {
-            LOG.error("unknown anchor: " + anchor);
-        }
+        mySplitters.setComponent(anchor, component);
     }
 
     @RequiredUIAccess
     private void setDocumentComponent(Component component) {
-        (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
+        mySplitters.setDocumentComponent(component);
     }
 
     private @Nullable DesktopQtToolWindowStripeButtonImpl getButtonById(String id) {

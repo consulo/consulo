@@ -15,17 +15,22 @@
  */
 package consulo.desktop.qt.wm.impl.toolWindow;
 
+import consulo.desktop.qt.ui.impl.layout.DesktopQtTabbedLayoutImpl;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowInternalDecorator;
 import consulo.project.Project;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
 public class DesktopQtToolWindowInternalDecorator extends UnifiedToolWindowInternalDecorator {
+    private final int myHeaderHeight;
+
     @RequiredUIAccess
     public DesktopQtToolWindowInternalDecorator(
         Project project,
@@ -34,5 +39,16 @@ public class DesktopQtToolWindowInternalDecorator extends UnifiedToolWindowInter
         boolean canWorkInDumbMode
     ) {
         super(project, windowInfo, toolWindow);
+
+        myHeaderHeight = DesktopQtTabbedLayoutImpl.tabRowHeight();
+
+        DockLayout header = getHeader().getComponent();
+        header.setHeight(myHeaderHeight);
+        header.paddingBuilder().leftSet(Space.MEDIUM).rightSet(Space.SMALL).apply();
+    }
+
+    @Override
+    public int getHeaderHeight() {
+        return myHeaderHeight;
     }
 }

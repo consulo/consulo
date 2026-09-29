@@ -188,6 +188,13 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     }
 
     @Override
+    public void afterLoad(boolean first) {
+        if (first && getModificationCount() == 0) {
+            incModificationCount();
+        }
+    }
+
+    @Override
     public UISettings getState() {
         return this;
     }

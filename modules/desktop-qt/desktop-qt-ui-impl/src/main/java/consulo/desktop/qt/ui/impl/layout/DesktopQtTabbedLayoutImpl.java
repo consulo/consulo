@@ -19,6 +19,7 @@ import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.TabbedLayout;
 import consulo.ui.layout.TabbedLayoutStyle;
 import consulo.ui.Space;
@@ -29,7 +30,11 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CustomActionsSchema;
 import io.qt.core.QPoint;
+import io.qt.core.QSize;
 import io.qt.core.Qt;
+import io.qt.gui.QColor;
+import io.qt.gui.QIcon;
+import io.qt.gui.QPixmap;
 import io.qt.widgets.QStackedWidget;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
@@ -52,6 +57,31 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     private @Nullable Component mySuffixComponent;
 
     private boolean myNoPadding;
+
+    private @Nullable DesktopQtTabImpl mySelectedTab;
+
+    private boolean myRestoringTabs;
+
+    @RequiredUIAccess
+    public static int tabRowHeight() {
+        QTabBar tabBar = new QTabBar();
+        try {
+            tabBar.setDocumentMode(true);
+
+            QSize iconSize = tabBar.iconSize();
+            QPixmap pixmap = new QPixmap(iconSize);
+            pixmap.fill(new QColor(Qt.GlobalColor.transparent));
+
+            int index = tabBar.addTab(new QIcon(pixmap), "W");
+            tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, new DesktopQtTabCloseButton(tabBar));
+            tabBar.ensurePolished();
+
+            return tabBar.sizeHint().height();
+        }
+        finally {
+            tabBar.dispose();
+        }
+    }
 
     @Override
     @RequiredUIAccess
@@ -81,7 +111,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
     @Override
     protected QTabWidget createQt(QWidget parent) {
-        QTabWidget tabWidget = new QTabWidget(parent);
+        QTabWidget tabWidget = new DesktopQtTabWidget(parent);
         tabWidget.setDocumentMode(true);
         tabWidget.setTabPosition(QTabWidget.TabPosition.North);
         return tabWidget;
@@ -91,15 +121,21 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     protected void initialize(QTabWidget component) {
         super.initialize(component);
 
-        // the bar draws a cross for every tab, and a tab which was given no close handler takes its own back off
-        component.setTabsClosable(true);
-        component.tabCloseRequested.connect(this::closeTab);
+        myRestoringTabs = true;
+        try {
+            for (DesktopQtTabImpl tab : myTabs) {
+                tab.initialize(component, this);
+            }
 
-        for (DesktopQtTabImpl tab : myTabs) {
-            tab.initialize(component, this);
+            DesktopQtTabImpl selectedTab = mySelectedTab;
+            int selectedIndex = selectedTab == null ? -1 : selectedTab.getIndex();
+            component.setCurrentIndex(selectedIndex == -1 ? myTabs.size() - 1 : selectedIndex);
+        }
+        finally {
+            myRestoringTabs = false;
         }
 
-        component.setCurrentIndex(myTabs.size() - 1);
+        component.currentChanged.connect(this::onCurrentChanged);
 
         applyCornerComponent(myPrefixComponent, Qt.Corner.TopLeftCorner);
         applyCornerComponent(mySuffixComponent, Qt.Corner.TopRightCorner);
@@ -130,16 +166,6 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         if (pages != null) {
             int padding = myNoPadding ? 0 : DesktopQtSpace.toPixels(Space.MEDIUM);
             pages.setContentsMargins(padding, padding, padding, padding);
-        }
-    }
-
-    @RequiredUIAccess
-    private void closeTab(int index) {
-        for (DesktopQtTabImpl tab : myTabs) {
-            if (tab.getIndex() == index) {
-                tab.close();
-                return;
-            }
         }
     }
 
@@ -188,6 +214,33 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
                 return tab == null ? DataManager.getInstance().getDataContext() : tab.createDataContext();
             }
         );
+    }
+
+    private void onCurrentChanged(int index) {
+        if (myRestoringTabs) {
+            return;
+        }
+
+        DesktopQtTabImpl tab = tabAtIndex(index);
+        mySelectedTab = tab;
+
+        if (tab != null) {
+            getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, tab));
+        }
+    }
+
+    private @Nullable DesktopQtTabImpl tabAtIndex(int index) {
+        if (index == -1) {
+            return null;
+        }
+
+        for (DesktopQtTabImpl tab : myTabs) {
+            if (tab.getIndex() == index) {
+                return tab;
+            }
+        }
+
+        return null;
     }
 
     private @Nullable DesktopQtTabImpl tabAt(QTabBar tabBar, QPoint position) {

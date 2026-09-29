@@ -18,6 +18,7 @@ package consulo.desktop.qt.wm.impl;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import org.jspecify.annotations.Nullable;
@@ -27,7 +28,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-16
  */
 public class DesktopQtRootPaneImpl {
-    private final DockLayout myDockLayout = DockLayout.create();
+    private final DockLayout myDockLayout = DockLayout.create(Space.NONE);
 
     @RequiredUIAccess
     public void setCenterComponent(@Nullable Component centerComponent) {

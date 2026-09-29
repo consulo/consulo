@@ -28,6 +28,7 @@ import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
+import io.qt.core.Qt;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
@@ -40,6 +41,8 @@ import java.util.function.BiConsumer;
  * @since 2026-08-16
  */
 public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtIconOwner {
+    private static final int TRAILING_SPACER_WIDTH = 4;
+
     private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(toString());
 
     private @Nullable QtComponentDelegate<?> myComponent;
@@ -70,23 +73,39 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         return myCloseHandler;
     }
 
-    /**
-     * Takes the cross off a tab nobody asked to be closable: a tab bar is closable as a whole or not at all, so the
-     * button of every tab which has no handler is dropped one by one.
-     */
     public void applyClosable(QTabWidget tabWidget) {
-        if (myCloseHandler != null) {
-            return;
-        }
-
         int index = getIndex();
         if (index == -1) {
             return;
         }
 
         QTabBar tabBar = tabWidget.tabBar();
-        tabBar.setTabButton(index, QTabBar.ButtonPosition.LeftSide, null);
-        tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, null);
+
+        boolean closable = myCloseHandler != null;
+
+        QWidget oldButton = tabBar.tabButton(index, QTabBar.ButtonPosition.RightSide);
+        if (oldButton != null && closable == oldButton instanceof DesktopQtTabCloseButton) {
+            return;
+        }
+
+        tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, closable ? createCloseButton(tabBar) : createTrailingSpacer(tabBar));
+
+        if (oldButton != null) {
+            oldButton.disposeLater();
+        }
+    }
+
+    private QWidget createCloseButton(QTabBar tabBar) {
+        DesktopQtTabCloseButton button = new DesktopQtTabCloseButton(tabBar);
+        button.clicked.connect(checked -> close());
+        return button;
+    }
+
+    private static QWidget createTrailingSpacer(QTabBar tabBar) {
+        QWidget spacer = new QWidget(tabBar);
+        spacer.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents);
+        spacer.resize(TRAILING_SPACER_WIDTH, 1);
+        return spacer;
     }
 
     @RequiredUIAccess

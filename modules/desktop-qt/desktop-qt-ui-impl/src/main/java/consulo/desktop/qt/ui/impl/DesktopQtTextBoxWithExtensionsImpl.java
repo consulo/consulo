@@ -66,7 +66,9 @@ public class DesktopQtTextBoxWithExtensionsImpl extends DesktopQtTextBoxImpl imp
         }
 
         for (QAction action : myActions) {
-            component.removeAction(action);
+            if (!action.isDisposed()) {
+                component.removeAction(action);
+            }
         }
         myActions.clear();
 

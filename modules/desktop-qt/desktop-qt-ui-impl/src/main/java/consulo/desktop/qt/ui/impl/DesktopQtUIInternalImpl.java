@@ -180,7 +180,7 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
 
     @Override
     public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
-        return new DesktopQtScrollableLayoutImpl(component);
+        return new DesktopQtScrollableLayoutImpl(component, options);
     }
 
     @Override

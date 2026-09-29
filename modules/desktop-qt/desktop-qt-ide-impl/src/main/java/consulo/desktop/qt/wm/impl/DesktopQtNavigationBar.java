@@ -60,8 +60,15 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.virtualFileSystem.VirtualFile;
+import io.qt.core.QCoreApplication;
+import io.qt.core.QEvent;
 import io.qt.widgets.QLayout;
+import io.qt.widgets.QScrollArea;
+import io.qt.widgets.QScrollBar;
+import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -98,7 +105,15 @@ public class DesktopQtNavigationBar implements Disposable {
 
     private final HorizontalLayout myCrumbsLayout = HorizontalLayout.create(Space.NONE);
 
-    // the row is a dock so that the empty center takes the free width and keeps the toolbar flush right
+    private final ScrollableLayout myCrumbsScroll = ScrollableLayout.create(
+        DockLayout.create(Space.NONE).left(myCrumbsLayout),
+        ScrollableLayoutOptions.builder()
+            .horizontalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER)
+            .verticalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER)
+            .build()
+    );
+
+    // the row is a dock so that the center takes the free width and keeps the toolbar flush right
     private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
 
     private volatile @Nullable UnifiedActionToolbarImpl myToolbar;
@@ -121,8 +136,9 @@ public class DesktopQtNavigationBar implements Disposable {
         UIAccess uiAccess = UIAccess.current();
 
         applyRowMargin();
+        keepCrumbsTailVisible();
 
-        myRowLayout.left(myCrumbsLayout);
+        myRowLayout.center(myCrumbsScroll);
 
         CustomActionsSchema.getCorrectedGroupAsync(TOOLBAR_GROUP_ID).whenComplete((group, throwable) -> {
             if (throwable != null) {
@@ -313,6 +329,13 @@ public class DesktopQtNavigationBar implements Disposable {
             myCrumbs.add(crumb);
             myCrumbsLayout.add(crumb);
         }
+
+        if (myCrumbsScroll instanceof QtComponentDelegate<?> delegate) {
+            QWidget widget = delegate.toQtComponent();
+            if (widget != null && !widget.isDisposed()) {
+                widget.updateGeometry();
+            }
+        }
     }
 
     /**
@@ -387,7 +410,15 @@ public class DesktopQtNavigationBar implements Disposable {
 
         myPopup = popup;
 
-        popup.showBy(crumb);
+        myProject.getUIAccess().give(() -> {
+            if (isObsolete() || myPopup != popup) {
+                return;
+            }
+
+            QCoreApplication.sendPostedEvents(null, QEvent.Type.LayoutRequest);
+
+            popup.showBy(crumb);
+        });
     }
 
     @RequiredUIAccess
@@ -418,6 +449,18 @@ public class DesktopQtNavigationBar implements Disposable {
             if (layout != null) {
                 layout.setContentsMargins(ROW_MARGIN_X, ROW_MARGIN_Y, ROW_MARGIN_X, ROW_MARGIN_Y);
             }
+        });
+    }
+
+    @RequiredUIAccess
+    private void keepCrumbsTailVisible() {
+        if (!(myCrumbsScroll instanceof QtComponentDelegate<?> delegate)) {
+            return;
+        }
+
+        delegate.whenBound(widget -> {
+            QScrollBar scrollBar = ((QScrollArea) widget).horizontalScrollBar();
+            scrollBar.rangeChanged.connect((minimum, maximum) -> scrollBar.setValue(maximum));
         });
     }
 

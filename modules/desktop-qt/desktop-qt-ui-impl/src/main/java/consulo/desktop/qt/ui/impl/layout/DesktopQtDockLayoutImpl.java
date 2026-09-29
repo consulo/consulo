@@ -29,17 +29,8 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosition, DesktopQtDockLayoutImpl.GridCell>
+public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosition, StaticPosition>
     implements DockLayout {
-    public record GridCell(int row, int column, int rowSpan, int columnSpan) {
-    }
-
-    private static final GridCell TOP_CELL = new GridCell(0, 0, 1, 3);
-    private static final GridCell LEFT_CELL = new GridCell(1, 0, 1, 1);
-    private static final GridCell CENTER_CELL = new GridCell(1, 1, 1, 1);
-    private static final GridCell RIGHT_CELL = new GridCell(1, 2, 1, 1);
-    private static final GridCell BOTTOM_CELL = new GridCell(2, 0, 1, 3);
-
     private final Space myGap;
 
     public DesktopQtDockLayoutImpl(Space gap) {
@@ -48,11 +39,19 @@ public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosi
 
     @Override
     protected @Nullable QLayout createLayout() {
-        QGridLayout layout = new QGridLayout();
-        layout.setSpacing(DesktopQtSpace.toPixels(myGap));
-        layout.setRowStretch(1, 1);
-        layout.setColumnStretch(1, 1);
-        return layout;
+        int gap = DesktopQtSpace.toPixels(myGap);
+
+        QGridLayout middleRow = new QGridLayout();
+        middleRow.setContentsMargins(0, 0, 0, 0);
+        middleRow.setSpacing(gap);
+        middleRow.setRowStretch(0, 1);
+        middleRow.setColumnStretch(1, 1);
+
+        QGridLayout rows = new QGridLayout();
+        rows.setSpacing(gap);
+        rows.setRowStretch(1, 1);
+        rows.addLayout(middleRow, 1, 0);
+        return rows;
     }
 
     @Override
@@ -61,23 +60,38 @@ public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosi
             return;
         }
 
-        QGridLayout layout = (QGridLayout) myComponent.layout();
+        QGridLayout rows = (QGridLayout) myComponent.layout();
 
         QWidget widget = child.toQtComponent();
 
-        GridCell cell = layoutData instanceof GridCell gridCell ? gridCell : CENTER_CELL;
-
-        layout.addWidget(widget, cell.row(), cell.column(), cell.rowSpan(), cell.columnSpan());
+        StaticPosition position = layoutData instanceof StaticPosition staticPosition ? staticPosition : StaticPosition.CENTER;
+        switch (position) {
+            case TOP -> rows.addWidget(widget, 0, 0);
+            case BOTTOM -> rows.addWidget(widget, 2, 0);
+            case LEFT -> middleRowOf(rows).addWidget(widget, 0, 0);
+            case CENTER -> middleRowOf(rows).addWidget(widget, 0, 1);
+            case RIGHT -> middleRowOf(rows).addWidget(widget, 0, 2);
+        }
     }
 
     @Override
-    public GridCell convertConstraintsToLayoutData(StaticPosition constraint) {
-        return switch (constraint) {
-            case TOP -> TOP_CELL;
-            case BOTTOM -> BOTTOM_CELL;
-            case LEFT -> LEFT_CELL;
-            case RIGHT -> RIGHT_CELL;
-            case CENTER -> CENTER_CELL;
-        };
+    protected void detach(QtComponentDelegate<?> child) {
+        super.detach(child);
+
+        QWidget widget = child.toQtComponent();
+        if (!isAlive(widget) || !isAlive(myComponent)) {
+            return;
+        }
+
+        middleRowOf((QGridLayout) myComponent.layout()).removeWidget(widget);
+    }
+
+    private static QGridLayout middleRowOf(QGridLayout rows) {
+        return (QGridLayout) rows.itemAtPosition(1, 0).layout();
+    }
+
+    @Override
+    public StaticPosition convertConstraintsToLayoutData(StaticPosition constraint) {
+        return constraint;
     }
 }

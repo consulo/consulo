@@ -158,7 +158,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         updateActionsAsync();
     }
 
-    public Component getComponent() {
+    public DockLayout getComponent() {
         return myLayout;
     }
 

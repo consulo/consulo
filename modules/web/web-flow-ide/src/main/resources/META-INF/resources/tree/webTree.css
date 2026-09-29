@@ -4,9 +4,14 @@
  * straight from the jar and follows every build.
  */
 
-/* a tree sits inside a tool window and has to show whatever is behind it - aura fills the rows and cells of a
-   grid with the surface colour, which reads as a white block against the panel it lives in. the selection and
+/* a tree sits inside a tool window and has to show whatever is behind it - aura fills a grid, its rows and its
+   cells with the surface colour, which reads as a lighter block against the panel it lives in. the selection and
    the hover keep their own backgrounds, those are set on the same parts with a higher specificity */
+vaadin-grid.web-tree
+{
+  background: transparent;
+}
+
 vaadin-grid.web-tree::part(row),
 vaadin-grid.web-tree::part(cell)
 {
