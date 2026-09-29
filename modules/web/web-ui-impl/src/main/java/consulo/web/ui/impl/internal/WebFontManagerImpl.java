@@ -16,16 +16,19 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.UI;
+import consulo.application.Application;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.font.BundledFont;
+import consulo.ui.ex.internal.BundledFontRegistry;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.font.Typeface;
-import consulo.ui.impl.font.BundledFontRegistry;
 import consulo.ui.impl.font.TypefaceImpl;
 import tools.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -171,11 +174,20 @@ public class WebFontManagerImpl implements FontManager {
      * The faces the page ships, which need no permission because it is the page that carries them.
      */
     public static List<Typeface> getBundledTypefaces() {
-        List<Typeface> typefaces = new ArrayList<>();
+        Map<String, Boolean> families = new LinkedHashMap<>();
+        for (List<BundledFont> fonts : Application.get().getInstance(BundledFontRegistry.class).getFonts().values()) {
+            for (BundledFont font : fonts) {
+                families.putIfAbsent(font.family(), font.monospaced());
 
-        for (String family : BundledFontRegistry.getFamilyNames()) {
-            typefaces.add(new TypefaceImpl(family, BundledFontRegistry.isMonospaced(family)));
+                String legacyFamily = font.legacyFamily();
+                if (legacyFamily != null) {
+                    families.putIfAbsent(legacyFamily, font.monospaced());
+                }
+            }
         }
+
+        List<Typeface> typefaces = new ArrayList<>();
+        families.forEach((family, monospaced) -> typefaces.add(new TypefaceImpl(family, monospaced)));
 
         typefaces.sort(Comparator.comparing(Typeface::getName));
         return typefaces;

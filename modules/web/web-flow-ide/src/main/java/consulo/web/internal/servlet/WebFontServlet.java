@@ -15,7 +15,8 @@
  */
 package consulo.web.internal.servlet;
 
-import consulo.ui.impl.font.BundledFontRegistry;
+import consulo.ui.ex.font.BundledFont;
+import consulo.web.ui.impl.internal.WebFontRegistry;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,14 +26,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Streams the bundled faces of consulo-ide-impl. They are plain classpath resources rather than
- * {@code META-INF/resources} ones, which is the only reason the container cannot serve them the way it serves
- * the arquill bundle - and moving them there would break the awt registry, which loads them from {@code /fonts}.
- *
  * @author VISTALL
  * @since 2026-08-01
  */
-@WebServlet(urlPatterns = "/fonts/*")
+@WebServlet(urlPatterns = WebFontRegistry.FONT_PATH + "*")
 public class WebFontServlet extends HttpServlet {
     private static final String CONTENT_TYPE = "font/ttf";
 
@@ -47,18 +44,13 @@ public class WebFontServlet extends HttpServlet {
             return;
         }
 
-        String resourcePath = BundledFontRegistry.findResourcePath(pathInfo.substring(1));
-        if (resourcePath == null) {
+        BundledFont font = WebFontRegistry.findFont(pathInfo.substring(1));
+        if (font == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        try (InputStream stream = WebFontServlet.class.getResourceAsStream(resourcePath)) {
-            if (stream == null) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-
+        try (InputStream stream = font.url().openStream()) {
             resp.setContentType(CONTENT_TYPE);
             resp.setHeader("Cache-Control", CACHE_CONTROL);
 

@@ -147,6 +147,7 @@
     <module>modules/base/ide-api</module>
     <module>modules/base/component-impl</module>
     <module>modules/base/ui-ex-impl</module>
+    <module>modules/base/ui-bundled-fonts</module>
     <module>modules/base/ui-ex-awt-api</module>
     <module>modules/base/virtual-file-system-impl</module>
     <module>modules/base/virtual-file-system-http-impl</module>

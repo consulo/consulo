@@ -82,6 +82,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -90,6 +91,8 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class DesktopApplicationStarter extends ApplicationStarter {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationStarter.class);
+
+    private @Nullable CompletableFuture<?> myFontRegistration;
 
     public DesktopApplicationStarter(CommandLineArgs args, StatCollector stat) {
         super(args, stat);
@@ -152,9 +155,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         ForkJoinPool pool = ForkJoinPool.commonPool();
 
-        // execute it in parallel
-        pool.execute(DesktopAWTFontRegistry::registerBundledFonts);
-
         // region FlatLaf
         // disable safe triangle hacks, due we use own event queue
         System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
@@ -190,6 +190,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         super.initializeEnviroment(isHeadlessMode, args, stat);
 
+        myFontRegistration = CompletableFuture.runAsync(() -> DesktopAWTFontRegistry.registerBundledFonts(Application.get()), pool);
+
         // wait until icon library loaded
         stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame()));
     }
@@ -213,6 +215,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                 mySplashRef.set(null);
             }
         });
+
+        CompletableFuture<?> fontRegistration = myFontRegistration;
+        if (fontRegistration != null) {
+            fontRegistration.join();
+        }
 
         // load style state
         app.getInstance(StyleManagerService.class);

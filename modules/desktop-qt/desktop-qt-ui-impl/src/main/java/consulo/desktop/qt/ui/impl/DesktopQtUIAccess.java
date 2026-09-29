@@ -23,6 +23,7 @@ import consulo.desktop.qt.ui.impl.font.DesktopQtFontRegistry;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.clipboard.Clipboard;
+import consulo.ui.ex.font.BundledFont;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.ui.impl.style.StyleManagerService;
@@ -33,6 +34,7 @@ import io.qt.core.Qt;
 import io.qt.gui.QGuiApplication;
 import io.qt.widgets.QApplication;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Supplier;
@@ -60,6 +62,7 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
         // the initializing thread waits on the latch below, and neither would ever move again
         String applicationId = ApplicationProperties.isInSandbox() ? ourSandboxApplicationId : ourApplicationId;
         Logger logger = Logger.getInstance(DesktopQtUIAccess.class);
+        List<BundledFont> bundledFonts = DesktopQtFontRegistry.collectBundledFonts();
 
         Thread thread = new Thread("Qt Event Queue") {
             @Override
@@ -80,7 +83,7 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
 
                 // before anything measures a font, since the metrics of an editor are cached against whatever
                 // the family resolved to the first time it was asked for
-                DesktopQtFontRegistry.registerBundledFonts();
+                DesktopQtFontRegistry.registerFonts(bundledFonts);
 
                 DesktopQtCurrentInput.install();
 

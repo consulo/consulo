@@ -15,13 +15,17 @@
  */
 package consulo.desktop.qt.ui.impl.font;
 
-import consulo.ui.impl.font.BundledFontRegistry;
-import consulo.ui.impl.font.BundledFontRegistry.BundledFont;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
+import consulo.ui.ex.font.BundledFont;
+import consulo.ui.ex.internal.BundledFontRegistry;
 import io.qt.gui.QFontDatabase;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Hands the faces of {@link BundledFontRegistry} to qt, the counterpart of the stylesheet the web frontend
@@ -40,27 +44,29 @@ public final class DesktopQtFontRegistry {
     private DesktopQtFontRegistry() {
     }
 
+    public static List<BundledFont> collectBundledFonts() {
+        Application application = ApplicationManager.getApplication();
+        if (application == null) {
+            LOG.error("Bundled fonts are collected before the application exists");
+            return List.of();
+        }
+
+        return application.getInstance(BundledFontRegistry.class).getFonts().values().stream().flatMap(Collection::stream).toList();
+    }
+
     /**
      * Must run on the qt thread and after the application exists - the font database is part of it.
      */
-    public static void registerBundledFonts() {
-        for (BundledFont font : BundledFontRegistry.getBundledFonts()) {
-            registerFont(font);
-        }
-    }
-
-    private static void registerFont(BundledFont font) {
-        try (InputStream stream = BundledFontRegistry.openFont(font)) {
-            if (stream == null) {
-                throw new IOException("Resource missing: " + font.fileName());
+    public static void registerFonts(List<BundledFont> fonts) {
+        for (BundledFont font : fonts) {
+            try (InputStream stream = font.url().openStream()) {
+                if (QFontDatabase.addApplicationFontFromData(stream.readAllBytes()) < 0) {
+                    throw new IOException("Rejected by qt");
+                }
             }
-
-            if (QFontDatabase.addApplicationFontFromData(stream.readAllBytes()) < 0) {
-                throw new IOException("Rejected by qt: " + font.fileName());
+            catch (Exception e) {
+                LOG.error("Cannot register font: " + font.url(), e);
             }
-        }
-        catch (Exception e) {
-            LOG.error("Cannot register font: " + font.fileName(), e);
         }
     }
 }

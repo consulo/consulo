@@ -15,8 +15,14 @@
  */
 package consulo.web.ui.impl.internal;
 
-import consulo.ui.impl.font.BundledFontRegistry;
-import consulo.ui.impl.font.BundledFontRegistry.BundledFont;
+import consulo.application.Application;
+import consulo.container.plugin.PluginId;
+import consulo.ui.ex.font.BundledFont;
+import consulo.ui.ex.internal.BundledFontRegistry;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Makes the faces of {@link BundledFontRegistry} resolvable by family name in the browser. The list itself is
@@ -27,6 +33,8 @@ import consulo.ui.impl.font.BundledFontRegistry.BundledFont;
  * @since 2026-08-01
  */
 public class WebFontRegistry {
+    public static final String FONT_PATH = "/fonts/";
+
     private static final int NORMAL_WEIGHT = 400;
 
     private WebFontRegistry() {
@@ -35,21 +43,54 @@ public class WebFontRegistry {
     public static String buildFontFaceCss() {
         StringBuilder css = new StringBuilder();
 
-        for (BundledFont font : BundledFontRegistry.getBundledFonts()) {
-            appendFontFace(css, font, font.family(), font.weight());
+        for (Map.Entry<PluginId, List<BundledFont>> entry : getRegistry().getFonts().entrySet()) {
+            for (BundledFont font : entry.getValue()) {
+                String url = FONT_PATH + entry.getKey().getIdString() + "/" + font.fileName();
 
-            String awtFamily = font.awtFamily();
-            if (awtFamily != null) {
-                // the jdk hands this face out as the plain one of a family of its own, so a scheme naming it
-                // has to reach the same file without asking for a weight
-                appendFontFace(css, font, awtFamily, NORMAL_WEIGHT);
+                appendFontFace(css, font, url, font.family(), font.weight());
+
+                String legacyFamily = font.legacyFamily();
+                if (legacyFamily != null) {
+                    // the jdk hands this face out as the plain one of a family of its own, so a scheme naming it
+                    // has to reach the same file without asking for a weight
+                    appendFontFace(css, font, url, legacyFamily, NORMAL_WEIGHT);
+                }
             }
         }
 
         return css.toString();
     }
 
-    private static void appendFontFace(StringBuilder css, BundledFont font, String family, int weight) {
+    public static @Nullable BundledFont findFont(String path) {
+        int separator = path.lastIndexOf('/');
+        if (separator <= 0) {
+            return null;
+        }
+
+        PluginId pluginId = PluginId.findId(path.substring(0, separator));
+        if (pluginId == null) {
+            return null;
+        }
+
+        List<BundledFont> fonts = getRegistry().getFonts().get(pluginId);
+        if (fonts == null) {
+            return null;
+        }
+
+        String fileName = path.substring(separator + 1);
+        for (BundledFont font : fonts) {
+            if (font.fileName().equals(fileName)) {
+                return font;
+            }
+        }
+        return null;
+    }
+
+    private static BundledFontRegistry getRegistry() {
+        return Application.get().getInstance(BundledFontRegistry.class);
+    }
+
+    private static void appendFontFace(StringBuilder css, BundledFont font, String url, String family, int weight) {
         css.append("@font-face{")
             .append("font-family:\"").append(family).append("\";")
             .append("font-weight:").append(weight).append(';')
@@ -57,7 +98,7 @@ public class WebFontRegistry {
             // the editor measures its line metrics once and caches them, a face swapped in after that would
             // leave the whole view laid out against the metrics of the fallback
             .append("font-display:block;")
-            .append("src:url(\"").append(BundledFontRegistry.FONT_PATH).append(font.fileName()).append("\") format(\"truetype\");")
+            .append("src:url(\"").append(url).append("\") format(\"truetype\");")
             .append('}');
     }
 }

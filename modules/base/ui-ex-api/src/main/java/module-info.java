@@ -37,6 +37,7 @@ module consulo.ui.ex.api {
     opens consulo.ui.ex.tree to consulo.util.xml.serializer;
     exports consulo.ui.ex.util;
     exports consulo.ui.ex.event;
+    exports consulo.ui.ex.font;
     exports consulo.ui.ex.awtUnsafe;
     exports consulo.ui.ex.keymap;
     exports consulo.ui.ex.keymap.localize;
