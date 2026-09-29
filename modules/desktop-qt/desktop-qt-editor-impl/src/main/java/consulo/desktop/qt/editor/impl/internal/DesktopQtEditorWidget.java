@@ -28,6 +28,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.event.details.KeyCode;
 import consulo.undoRedo.CommandProcessor;
+import io.qt.core.QCoreApplication;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.QTimer;
@@ -57,6 +58,8 @@ import java.awt.Point;
  * @since 2026-08-16
  */
 public class DesktopQtEditorWidget extends QAbstractScrollArea {
+    private static int ourKeyPressDepth;
+
     private final DesktopQtEditorImpl myEditor;
     private final DesktopQtEditorPainter myPainter;
     private final DesktopQtEditorKeyHandler myKeyHandler;
@@ -421,18 +424,30 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
 
     @Override
     protected void keyPressEvent(QKeyEvent event) {
-        if (myKeyHandler.handle(event)) {
+        if (ourKeyPressDepth > 0) {
+            QCoreApplication.postEvent(this, event.clone());
             event.accept();
-            restartCaretBlink();
             return;
         }
 
-        KeyCode keyCode = DesktopQtInputDetails.keyCode(event, DesktopQtInputDetails.modifiers(event.modifiers()));
-        if (keyCode != null) {
-            myEditor.fireKeyNotConsumed(keyCode);
-        }
+        ourKeyPressDepth++;
+        try {
+            if (myKeyHandler.handle(event)) {
+                event.accept();
+                restartCaretBlink();
+                return;
+            }
 
-        super.keyPressEvent(event);
+            KeyCode keyCode = DesktopQtInputDetails.keyCode(event, DesktopQtInputDetails.modifiers(event.modifiers()));
+            if (keyCode != null) {
+                myEditor.fireKeyNotConsumed(keyCode);
+            }
+
+            super.keyPressEvent(event);
+        }
+        finally {
+            ourKeyPressDepth--;
+        }
     }
 
     @Override
