@@ -26,7 +26,7 @@ import consulo.ui.UIAccess;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -192,13 +192,13 @@ public class ActionToolbarButtonEngine {
 
     @RequiredUIAccess
     private void performAction(MouseEvent e) {
-        InputDetails inputDetails = DesktopAWTInputDetails.convert(myButton, e);
+        ComponentEvent<?> uiEvent = new ComponentEvent<>(TargetAWT.wrap(myButton), DesktopAWTInputDetails.convert(myButton, e));
         DataContext context = DataContext.builder()
             .parent(myGetDataContext.get())
             .add(UIExAWTDataKey.CONTEXT_COMPONENT, myButton)
             .build();
         
-        AnActionEvent event = AnActionEvent.createFromInputEvent(e, myPlace, myPresentation, context, false, true, inputDetails);
+        AnActionEvent event = AnActionEvent.createFromInputEvent(e, myPlace, myPresentation, context, false, true, uiEvent);
 
         UIAccess uiAccess = UIAccess.current();
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(myIdeAction, event, false).whenCompleteAsync((enabled, throwable) -> {

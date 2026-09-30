@@ -25,6 +25,10 @@ vaadin-button.consulo-toolbar-button::part(label) {
     line-height: 1;
 }
 
+vaadin-button:is(.consulo-toolbar-button, .consulo-inplace-button)[disabled] > :not(web-image-grayed, vaadin-tooltip, [slot='tooltip']) {
+    filter: var(--web-image-disabled-filter);
+}
+
 .consulo-inplace-button::part(label) {
     display: flex;
     align-items: center;

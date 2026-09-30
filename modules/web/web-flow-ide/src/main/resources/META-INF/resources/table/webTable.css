@@ -7,7 +7,11 @@
 
 .web-table::part(row),
 .web-table::part(cell) {
-    background: transparent;
+    background-color: transparent;
+}
+
+.web-table::part(selected-row-cell) {
+    background-color: var(--vaadin-grid-row-selected-background-color, color-mix(in srgb, currentColor 8%, transparent));
 }
 
 /* vaadin has no api for hiding the header row, so WebTableImpl#setShowHeader toggles this class */

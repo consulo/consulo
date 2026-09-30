@@ -22,10 +22,12 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.LightPopup;
+import consulo.ui.MenuItem;
 import consulo.ui.Point2D;
 import consulo.ui.RelativePoint2D;
 import consulo.ui.PopupOwner;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -225,13 +227,13 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
     @Override
     @RequiredUIAccess
     public void showUnderneathOf(AnActionEvent e) {
-        consulo.ui.Component component = e.getData(consulo.ui.Component.KEY);
+        ComponentEvent<?> uiEvent = e.getUIEvent();
 
-        if (component != null) {
-            showBy(component, e.getInputDetails());
+        if (uiEvent != null && !(uiEvent.getComponent() instanceof MenuItem)) {
+            showBy(uiEvent.getComponent(), null);
         }
         else {
-            showCenteredInCurrentWindow(null);
+            showInBestPositionFor(e.getDataContext());
         }
     }
 

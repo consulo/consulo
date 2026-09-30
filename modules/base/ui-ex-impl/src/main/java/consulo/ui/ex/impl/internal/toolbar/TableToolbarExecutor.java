@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.impl.internal.toolbar;
 
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.Table;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.internal.ToolbarExecutor;
@@ -23,6 +25,7 @@ import consulo.ui.model.MutableFlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Add and edit stay closed here, the same way they are for a list - a row of a table is made of as many
@@ -36,6 +39,34 @@ public class TableToolbarExecutor<E> implements ToolbarExecutor<E> {
 
     public TableToolbarExecutor(Table<E> table) {
         myTable = table;
+    }
+
+    @Override
+    public Component getComponent() {
+        return myTable;
+    }
+
+    @Override
+    public Disposable addSelectionListener(Runnable listener) {
+        return myTable.addSelectListener(event -> listener.run());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public int getSize() {
+        return myTable.getDataModel().getSize();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public int getMinSelectionIndex() {
+        return selectionIndices().min().orElse(-1);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public int getMaxSelectionIndex() {
+        return selectionIndices().max().orElse(-1);
     }
 
     @Override
@@ -143,6 +174,12 @@ public class TableToolbarExecutor<E> implements ToolbarExecutor<E> {
         MutableFlatDataModel<E> model = model();
         E value = myTable.getSelectedItem();
         return model == null || value == null ? -1 : model.indexOf(value);
+    }
+
+    @RequiredUIAccess
+    private IntStream selectionIndices() {
+        FlatDataModel<E> model = myTable.getDataModel();
+        return myTable.getSelectedItems().stream().mapToInt(model::indexOf).filter(index -> index >= 0);
     }
 
     private @Nullable MutableFlatDataModel<E> model() {

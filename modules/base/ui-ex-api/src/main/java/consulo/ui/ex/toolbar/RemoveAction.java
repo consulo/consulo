@@ -30,6 +30,11 @@ public abstract non-sealed class RemoveAction<E> extends ToolbarAction<E> {
     }
 
     @Override
+    boolean isEnabled(int size, int min, int max) {
+        return size > 0 && min >= 0;
+    }
+
+    @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         E value = getSelectedValue(e);

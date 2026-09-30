@@ -18,6 +18,7 @@ package consulo.ui.ex.action;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.dataContext.DataManager;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.event.AnActionEventVisitor;
@@ -95,7 +96,7 @@ public class AnActionEvent implements PlaceProvider<String> {
     private final boolean myIsContextMenuAction;
     private final boolean myIsActionToolbar;
 
-    private final InputDetails myInputDetails;
+    private final @Nullable ComponentEvent<?> myUIEvent;
 
     private ActionUpdateSession myUpdateSession = ActionUpdateSession.EMPTY;
 
@@ -146,7 +147,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         int modifiers,
         boolean isContextMenuAction,
         boolean isActionToolbar,
-        InputDetails inputDetails
+        @Nullable ComponentEvent<?> uiEvent
     ) {
         // TODO[vova,anton] make this constructor package-private. No one is allowed to create AnActionEvents
         myInputEvent = inputEvent;
@@ -157,7 +158,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         myModifiers = modifiers;
         myIsContextMenuAction = isContextMenuAction;
         myIsActionToolbar = isActionToolbar;
-        myInputDetails = inputDetails;
+        myUIEvent = uiEvent;
     }
 
     @Deprecated
@@ -184,7 +185,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         @Nullable InputEvent event,
         String place,
         DataContext dataContext,
-        @Nullable InputDetails inputDetails
+        @Nullable ComponentEvent<?> uiEvent
     ) {
         int modifiers = event == null ? 0 : event.getModifiers();
         Presentation presentation = action.getTemplatePresentation().clone();
@@ -197,7 +198,7 @@ public class AnActionEvent implements PlaceProvider<String> {
             modifiers,
             false,
             false,
-            inputDetails
+            uiEvent
         );
         anActionEvent.setInjectedContext(action.isInInjectedContext());
         return anActionEvent;
@@ -244,7 +245,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         DataContext dataContext,
         boolean isContextMenuAction,
         boolean isToolbarAction,
-        @Nullable InputDetails inputDetails
+        @Nullable ComponentEvent<?> uiEvent
     ) {
         return new AnActionEvent(
             event,
@@ -255,7 +256,7 @@ public class AnActionEvent implements PlaceProvider<String> {
             event == null ? 0 : event.getModifiers(),
             isContextMenuAction,
             isToolbarAction,
-            inputDetails
+            uiEvent
         );
     }
 
@@ -368,7 +369,11 @@ public class AnActionEvent implements PlaceProvider<String> {
     }
 
     public final @Nullable InputDetails getInputDetails() {
-        return myInputDetails;
+        return myUIEvent == null ? null : myUIEvent.getInputDetails();
+    }
+
+    public final @Nullable ComponentEvent<?> getUIEvent() {
+        return myUIEvent;
     }
 
     /**

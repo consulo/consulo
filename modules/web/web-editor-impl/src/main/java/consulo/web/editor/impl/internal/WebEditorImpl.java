@@ -58,6 +58,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
@@ -738,7 +739,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         DataContext context = getDataContext();
 
-        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.EDITOR_GUTTER, context, details);
+        AnActionEvent event = AnActionEvent.createFromAnAction(
+            action,
+            null,
+            ActionPlaces.EDITOR_GUTTER,
+            context,
+            new ComponentEvent<>(getUIComponent(), details)
+        );
 
         UIAccess uiAccess = UIAccess.current();
 

@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.impl.internal.toolbar;
 
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.internal.ToolbarExecutor;
@@ -31,6 +33,35 @@ public class ListBoxToolbarExecutor<E> implements ToolbarExecutor<E> {
 
     public ListBoxToolbarExecutor(ListBox<E> listBox) {
         myListBox = listBox;
+    }
+
+    @Override
+    public Component getComponent() {
+        return myListBox;
+    }
+
+    @Override
+    public Disposable addSelectionListener(Runnable listener) {
+        return myListBox.addValueListener(event -> listener.run());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public int getSize() {
+        return myListBox.getDataModel().getSize();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public int getMinSelectionIndex() {
+        E value = myListBox.getValue();
+        return value == null ? -1 : myListBox.getDataModel().indexOf(value);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public int getMaxSelectionIndex() {
+        return getMinSelectionIndex();
     }
 
     @Override
@@ -124,9 +155,7 @@ public class ListBoxToolbarExecutor<E> implements ToolbarExecutor<E> {
 
     @RequiredUIAccess
     private int selectedIndex() {
-        MutableFlatDataModel<E> model = model();
-        E value = myListBox.getValue();
-        return model == null || value == null ? -1 : model.indexOf(value);
+        return model() == null ? -1 : getMinSelectionIndex();
     }
 
     private @Nullable MutableFlatDataModel<E> model() {

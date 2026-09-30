@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 
@@ -27,6 +29,19 @@ import org.jspecify.annotations.Nullable;
  */
 public interface ToolbarExecutor<E> {
     Key<ToolbarExecutor> KEY = Key.create(ToolbarExecutor.class);
+
+    Component getComponent();
+
+    Disposable addSelectionListener(Runnable listener);
+
+    @RequiredUIAccess
+    int getSize();
+
+    @RequiredUIAccess
+    int getMinSelectionIndex();
+
+    @RequiredUIAccess
+    int getMaxSelectionIndex();
 
     @RequiredUIAccess
     @Nullable

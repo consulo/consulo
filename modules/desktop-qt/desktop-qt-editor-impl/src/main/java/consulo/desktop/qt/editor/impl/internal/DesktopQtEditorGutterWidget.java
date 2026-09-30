@@ -43,12 +43,15 @@ import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
+import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
@@ -472,12 +475,15 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     private void performClickAction(AnAction action, QMouseEvent event) {
         DataContext context = myEditor.getDataContext();
 
+        Component editorComponent = myEditor.getUIComponent();
+        QWidget editorWidget = editorComponent instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+
         AnActionEvent actionEvent = AnActionEvent.createFromAnAction(
             action,
             null,
             ActionPlaces.EDITOR_GUTTER,
             context,
-            DesktopQtInputDetails.mouse(this, event)
+            new ComponentEvent<>(editorComponent, DesktopQtInputDetails.mouse(editorWidget, event))
         );
 
         UIAccess uiAccess = UIAccess.current();

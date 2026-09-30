@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal.image;
 
 import consulo.ui.image.Image;
+import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 
 /**
@@ -41,7 +42,11 @@ public class WebGrayedImageImpl implements Image {
     }
 
     public static int currentPercent() {
-        return StyleManager.get().getCurrentStyle().isDark() ? DARK_PERCENT : LIGHT_PERCENT;
+        return percentOf(StyleManager.get().getCurrentStyle());
+    }
+
+    public static int percentOf(Style style) {
+        return style.isDark() ? DARK_PERCENT : LIGHT_PERCENT;
     }
 
     public int getPercent() {

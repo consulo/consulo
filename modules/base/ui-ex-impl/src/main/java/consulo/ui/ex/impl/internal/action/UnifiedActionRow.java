@@ -536,7 +536,7 @@ public class UnifiedActionRow {
                     myContextSupplier.get(),
                     myPlace,
                     myPresentationFactory,
-                    event.getInputDetails(),
+                    event,
                     true
                 ).whenComplete((result, throwable) -> requestUpdate());
             });

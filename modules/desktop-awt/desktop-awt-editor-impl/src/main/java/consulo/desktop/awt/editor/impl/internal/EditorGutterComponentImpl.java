@@ -2285,10 +2285,13 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
         // the action ends in ComponentEvent-driven navigation, and the place it anchors to is the
         // input details - without them the click degrades to a programmatic event at screen 0x0
-        InputDetails details = e instanceof MouseEvent mouseEvent
-            ? DesktopAWTInputDetails.convert(mouseEvent.getComponent(), mouseEvent)
-            : null;
-        AnActionEvent actionEvent = AnActionEvent.createFromAnAction(action, e, place, context, details);
+        AnActionEvent actionEvent = AnActionEvent.createFromAnAction(
+            action,
+            e,
+            place,
+            context,
+            e instanceof MouseEvent mouseEvent ? TargetAWT.from(mouseEvent) : null
+        );
         UIAccess uiAccess = UIAccess.current();
         // both callers consume the input event unconditionally, so nothing depends on a synchronous result
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, true).whenCompleteAsync((enabled, throwable) -> {

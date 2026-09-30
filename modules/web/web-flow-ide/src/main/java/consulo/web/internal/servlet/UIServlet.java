@@ -26,6 +26,7 @@ import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.web.ui.impl.internal.WebStyleCssRegistry;
 import consulo.web.ui.impl.internal.WebStyleImpl;
+import consulo.web.ui.impl.internal.image.WebGrayedImageImpl;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -180,6 +181,11 @@ public class UIServlet extends VaadinServlet {
             ui.getPage().executeJs(
                 "document.documentElement.setAttribute('consulo-icon-version', $0)",
                 WebImageUrl.currentVersion()
+            );
+
+            ui.getPage().executeJs(
+                "document.documentElement.setAttribute('consulo-gray-percent', $0)",
+                String.valueOf(WebGrayedImageImpl.percentOf(style))
             );
         });
     }

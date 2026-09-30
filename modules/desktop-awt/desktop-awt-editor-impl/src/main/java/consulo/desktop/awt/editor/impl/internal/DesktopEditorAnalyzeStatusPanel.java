@@ -31,7 +31,6 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -141,7 +140,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                         context,
                         false,
                         true,
-                        DesktopAWTInputDetails.convert(StatusButton.this, me)
+                        TargetAWT.from(me)
                     );
                     UIAccess uiAccess = UIAccess.current();
                     ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {

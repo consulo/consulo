@@ -26,6 +26,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.Tree;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.ex.action.ActionPopupMenu;
@@ -395,7 +396,9 @@ public class ExternalProjectsViewImpl implements ExternalProjectsView, UiDataPro
                     .add(ExternalSystemDataKeys.SELECTED_NODES, selectedNodes)
                     .add(Project.KEY, myProject)
                     .build();
-                action.actionPerformed(AnActionEvent.createFromAnAction(action, null, VIEW_PLACE, dataContext, inputDetails));
+                Tree<SimpleNode> tree = myTree;
+                ComponentEvent<?> uiEvent = tree == null || inputDetails == null ? null : new ComponentEvent<>(tree, inputDetails);
+                action.actionPerformed(AnActionEvent.createFromAnAction(action, null, VIEW_PLACE, dataContext, uiEvent));
             }
         }
         for (Listener listener : myListeners) listener.onDoubleClickOrEnter(node, inputDetails);

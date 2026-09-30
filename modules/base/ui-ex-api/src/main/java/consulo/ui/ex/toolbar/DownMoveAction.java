@@ -30,6 +30,11 @@ public abstract non-sealed class DownMoveAction<E> extends ToolbarAction<E> {
     }
 
     @Override
+    boolean isEnabled(int size, int min, int max) {
+        return size > 0 && min >= 0 && max < size - 1;
+    }
+
+    @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         E value = getSelectedValue(e);

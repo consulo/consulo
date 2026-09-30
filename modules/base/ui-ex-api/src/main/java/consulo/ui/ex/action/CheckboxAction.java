@@ -72,7 +72,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
                 0,
                 false,
                 toolbar != null,
-                e.getInputDetails()
+                e
             ));
         });
 

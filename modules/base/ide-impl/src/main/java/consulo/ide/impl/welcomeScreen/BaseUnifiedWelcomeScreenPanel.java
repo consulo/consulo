@@ -229,7 +229,7 @@ public abstract class BaseUnifiedWelcomeScreenPanel implements UnifiedWelcomeScr
                             0,
                             false,
                             false,
-                            event.getInputDetails()
+                            event
                         );
                         clickEvent.setInjectedContext(action.isInInjectedContext());
 

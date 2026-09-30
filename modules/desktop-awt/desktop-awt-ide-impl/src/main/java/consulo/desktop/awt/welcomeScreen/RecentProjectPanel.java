@@ -33,7 +33,6 @@ import consulo.ui.ComponentItemRender;
 import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
-import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ClientProperty;
 import consulo.ui.ex.awt.JBList;
@@ -194,7 +193,7 @@ public class RecentProjectPanel {
     }
 
     @RequiredUIAccess
-    private void performSelectedAction(@Nullable InputDetails inputDetails, AnAction selection) {
+    private void performSelectedAction(@Nullable ComponentEvent<?> uiEvent, AnAction selection) {
         String actionPlace =
             UIUtil.uiParents(myList, true).filter(FlatWelcomeFrame.class).isEmpty() ? ActionPlaces.POPUP : ActionPlaces.WELCOME_SCREEN;
 
@@ -203,7 +202,7 @@ public class RecentProjectPanel {
             null,
             actionPlace,
             DataManager.getInstance().getDataContext(myList),
-            inputDetails
+            uiEvent
         );
 
         ActionImplUtil.performActionDumbAwareWithCallbacks(selection, actionEvent, actionEvent.getDataContext());
@@ -238,7 +237,7 @@ public class RecentProjectPanel {
 
     @RequiredUIAccess
     protected void onActivate(AnAction action, ComponentEvent<consulo.ui.Component> event) {
-        performSelectedAction(event.getInputDetails(), action);
+        performSelectedAction(event, action);
 
         if (action instanceof ReopenProjectAction reopenProjectAction && reopenProjectAction.isRemoved()) {
             myModel.remove(action);

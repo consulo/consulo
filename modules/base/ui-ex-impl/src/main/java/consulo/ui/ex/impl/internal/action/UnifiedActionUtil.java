@@ -84,7 +84,7 @@ public class UnifiedActionUtil {
                             0,
                             true,
                             false,
-                            event.getInputDetails()
+                            event
                         );
                         clickEvent.setInjectedContext(action.isInInjectedContext());
 

@@ -18,6 +18,7 @@ package consulo.web.ui.impl.internal.vaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.ThemableLayout;
@@ -112,9 +113,9 @@ public class BorderLayoutEx extends VerticalLayout {
    * line which separates it from the centre - is only a separator while it runs the whole height.
    */
   private void fillHeight(Component component) {
-    // a label stretched over the row draws its glyph at the top of that height, and the holder centring it then has
-    // nothing left to centre - everything else keeps the full height a side of an awt border layout has
-    if (component instanceof VaadinLabelComponentBase) {
+    // a label or a check box stretched over the row draws its glyph at the top of that height, and the holder centring
+    // it then has nothing left to centre - everything else keeps the full height a side of an awt border layout has
+    if (component instanceof VaadinLabelComponentBase || component instanceof Checkbox) {
       return;
     }
 

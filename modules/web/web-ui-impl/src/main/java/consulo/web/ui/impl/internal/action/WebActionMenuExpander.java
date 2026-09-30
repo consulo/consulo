@@ -22,7 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.MenuSeparator;
 import consulo.ui.UIAccess;
-import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
@@ -235,8 +235,7 @@ public final class WebActionMenuExpander {
 
         AnAction action = node.action();
         if (action != null) {
-            item.addClickListener(event ->
-                performAction(action, contextSupplier.get(), place, presentationFactory, event.getInputDetails()));
+            item.addClickListener(event -> performAction(action, contextSupplier.get(), place, presentationFactory, event));
         }
 
         return item;
@@ -248,9 +247,9 @@ public final class WebActionMenuExpander {
         DataContext context,
         String place,
         MenuItemPresentationFactory presentationFactory,
-        @Nullable InputDetails inputDetails
+        @Nullable ComponentEvent<?> uiEvent
     ) {
-        performActionAsync(action, context, place, presentationFactory, inputDetails);
+        performActionAsync(action, context, place, presentationFactory, uiEvent);
     }
 
     /**
@@ -264,7 +263,7 @@ public final class WebActionMenuExpander {
         DataContext context,
         String place,
         MenuItemPresentationFactory presentationFactory,
-        @Nullable InputDetails inputDetails
+        @Nullable ComponentEvent<?> uiEvent
     ) {
         UIAccess uiAccess = UIAccess.current();
 
@@ -273,7 +272,7 @@ public final class WebActionMenuExpander {
         Presentation presentation = presentationFactory.getPresentation(action);
 
         AnActionEvent event =
-            new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false, inputDetails);
+            new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false, uiEvent);
         event.setInjectedContext(action.isInInjectedContext());
 
         return ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).handleAsync((enabled, throwable) -> {

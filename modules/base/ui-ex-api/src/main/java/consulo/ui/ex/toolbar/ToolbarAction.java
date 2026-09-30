@@ -17,9 +17,11 @@ package consulo.ui.ex.toolbar;
 
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.ex.internal.ToolbarExecutor;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -30,10 +32,34 @@ import java.util.List;
  * @author VISTALL
  * @since 2026-08-07
  */
-public abstract sealed class ToolbarAction<E> extends AnAction implements DumbAware
+public abstract sealed class ToolbarAction<E> extends AnAction implements DumbAware, AnActionWithUIUpdate
     permits AddAction, RemoveAction, EditAction, UpMoveAction, DownMoveAction {
     protected ToolbarAction(LocalizeValue text, Image icon) {
         super(text, LocalizeValue.empty(), icon);
+    }
+
+    @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void updateAtUI(AnActionEvent e) {
+        ToolbarExecutor<E> executor = e.getData(ToolbarExecutor.KEY);
+        if (executor == null) {
+            return;
+        }
+
+        e.getPresentation().setEnabled(isContextComponentShowingAndEnabled(executor) && isContextComponentStateAllowingAction(executor));
+    }
+
+    abstract boolean isEnabled(int size, int min, int max);
+
+    private static boolean isContextComponentShowingAndEnabled(ToolbarExecutor<?> executor) {
+        Component component = executor.getComponent();
+        return component.isVisible() && component.isEnabled();
+    }
+
+    @RequiredUIAccess
+    private boolean isContextComponentStateAllowingAction(ToolbarExecutor<E> executor) {
+        return isEnabled(executor.getSize(), executor.getMinSelectionIndex(), executor.getMaxSelectionIndex());
     }
 
     @RequiredUIAccess

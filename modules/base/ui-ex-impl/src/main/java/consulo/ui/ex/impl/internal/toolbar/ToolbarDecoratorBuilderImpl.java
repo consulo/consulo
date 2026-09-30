@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -38,6 +39,13 @@ import java.util.function.Function;
  */
 public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBuilderInternal<E> {
     private static final class DefaultAddAction<E> extends AddAction<E> {
+        @Override
+        @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            disableUnless(e, ToolbarExecutor::canAdd);
+        }
+
         @Override
         @RequiredUIAccess
         protected void doAdd(AnActionEvent e) {
@@ -51,6 +59,13 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
     private static final class DefaultRemoveAction<E> extends RemoveAction<E> {
         @Override
         @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            disableUnless(e, ToolbarExecutor::canRemove);
+        }
+
+        @Override
+        @RequiredUIAccess
         protected void doRemove(E value, AnActionEvent e) {
             ToolbarExecutor executor = e.getData(ToolbarExecutor.KEY);
             if (executor != null && executor.canRemove()) {
@@ -60,6 +75,13 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
     }
 
     private static final class DefaultEditAction<E> extends EditAction<E> {
+        @Override
+        @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            disableUnless(e, ToolbarExecutor::canEdit);
+        }
+
         @Override
         @RequiredUIAccess
         protected void doEdit(E value, AnActionEvent e) {
@@ -73,6 +95,13 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
     private static final class DefaultUpMoveAction<E> extends UpMoveAction<E> {
         @Override
         @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            disableUnless(e, ToolbarExecutor::canMoveUp);
+        }
+
+        @Override
+        @RequiredUIAccess
         protected void doUp(E value, AnActionEvent e) {
             ToolbarExecutor executor = e.getData(ToolbarExecutor.KEY);
             if (executor != null && executor.canMoveUp()) {
@@ -82,6 +111,13 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
     }
 
     private static final class DefaultDownMoveAction<E> extends DownMoveAction<E> {
+        @Override
+        @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            disableUnless(e, ToolbarExecutor::canMoveDown);
+        }
+
         @Override
         @RequiredUIAccess
         protected void doDown(E value, AnActionEvent e) {
@@ -218,6 +254,7 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
         layout.center(ScrollableLayout.create(myComponent));
         if (myExecutor != null) {
             layout.putUserData(UiDataProvider.KEY, sink -> sink.set(ToolbarExecutor.KEY, myExecutor));
+            myExecutor.addSelectionListener(toolbar::updateActionsAsync);
         }
 
         Component toolbarComponent = toolbar.getUIComponent();
@@ -239,5 +276,13 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
 
     private boolean isDisabled(ToolbarAction<E> action) {
         return myDisabledActions.stream().anyMatch(disabled -> disabled.isInstance(action));
+    }
+
+    @RequiredUIAccess
+    private static void disableUnless(AnActionEvent e, Predicate<ToolbarExecutor<?>> condition) {
+        ToolbarExecutor<?> executor = e.getData(ToolbarExecutor.KEY);
+        if (executor != null && !condition.test(executor)) {
+            e.getPresentation().setEnabled(false);
+        }
     }
 }

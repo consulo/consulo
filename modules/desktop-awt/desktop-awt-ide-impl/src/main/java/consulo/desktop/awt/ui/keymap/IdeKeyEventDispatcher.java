@@ -48,6 +48,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.KeyboardLayoutUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -578,6 +579,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
             Presentation presentation,
             ActionManager manager
         ) {
+            Component component = inputEvent.getComponent();
             return new AnActionEvent(
                 inputEvent,
                 context,
@@ -587,7 +589,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 0,
                 false,
                 false,
-                DesktopAWTInputDetails.convert(inputEvent.getComponent(), inputEvent)
+                new ComponentEvent<>(TargetAWT.wrap(component), DesktopAWTInputDetails.convert(component, inputEvent))
             );
         }
 

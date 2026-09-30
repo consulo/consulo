@@ -197,7 +197,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
                     null,
                     ActionPlaces.WELCOME_SCREEN,
                     myDataManager.getDataContext(welcomeFrame),
-                    event.getInputDetails()
+                    event
                 );
 
                 action.actionPerformed(e);

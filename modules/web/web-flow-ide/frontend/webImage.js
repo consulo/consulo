@@ -351,6 +351,20 @@
         }
     }
 
+    const GRAY_PERCENT_ATTRIBUTE = 'consulo-gray-percent';
+
+    function applyDisabledFilter() {
+        const percent = document.documentElement.getAttribute(GRAY_PERCENT_ATTRIBUTE);
+        if (percent && document.body) {
+            document.documentElement.style.setProperty('--web-image-disabled-filter', 'url(#' + grayFilterId(percent) + ')');
+        }
+    }
+
+    new MutationObserver(applyDisabledFilter)
+        .observe(document.documentElement, { attributes: true, attributeFilter: [GRAY_PERCENT_ATTRIBUTE] });
+
+    applyDisabledFilter();
+
     /**
      * The two sides are laid out by the stylesheet, so nothing has to run once the children arrive.
      */

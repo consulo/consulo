@@ -133,7 +133,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
                         null,
                         ActionPlaces.WELCOME_SCREEN,
                         manager.getDataContext(event.getComponent()),
-                        event.getInputDetails()
+                        event
                     );
 
                     action.actionPerformed(in);

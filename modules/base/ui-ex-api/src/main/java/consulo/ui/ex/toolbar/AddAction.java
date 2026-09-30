@@ -30,6 +30,11 @@ public abstract non-sealed class AddAction<E> extends ToolbarAction<E> {
     }
 
     @Override
+    boolean isEnabled(int size, int min, int max) {
+        return true;
+    }
+
+    @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         doAdd(e);
