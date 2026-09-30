@@ -48,7 +48,8 @@ public final class DesktopQtStyleApplier {
      * What an item of the menu bar in the header of a titleless window is padded by, which is what decides how
      * tall the menu bar asks to be.
      */
-    private static final int ourTabVerticalPadding = 4;
+    private static final int ourTabVerticalPadding = 2;
+    private static final int ourTabVerticalMargin = 2;
     private static final int ourTabHorizontalPadding = 8;
     /** what separates one tab from the next, so a rounded tab is not drawn against its neighbour */
     private static final int ourTabGap = 2;
@@ -170,7 +171,7 @@ public final class DesktopQtStyleApplier {
                 background: transparent;
                 color: %s;
                 padding: %dpx 0px %dpx %dpx;
-                margin: 0px %dpx;
+                margin: %dpx %dpx;
 
                 /* the border is on every tab and only coloured on the selected one - giving it to the selected
                    tab alone would widen that tab by two pixels and shove the row along as the selection moves */
@@ -187,6 +188,7 @@ public final class DesktopQtStyleApplier {
             ourTabVerticalPadding,
             ourTabVerticalPadding,
             ourTabHorizontalPadding,
+            ourTabVerticalMargin,
             ourTabGap,
             ourButtonArc,
             hover,

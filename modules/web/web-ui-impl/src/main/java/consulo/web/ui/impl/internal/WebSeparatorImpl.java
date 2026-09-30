@@ -37,10 +37,10 @@ public class WebSeparatorImpl extends VaadinComponentDelegate<WebSeparatorImpl.V
         }
     }
 
-    private static final int LINE_LENGTH = 16;
     // the row a toolbar separator stands in already spaces its children out, so the margin only adds what the
     // divider needs on top of that gap
     private static final int LINE_MARGIN = 2;
+    private static final int LINE_INSET = 4;
 
     private final SeparatorStyle myStyle;
 
@@ -51,19 +51,20 @@ public class WebSeparatorImpl extends VaadinComponentDelegate<WebSeparatorImpl.V
 
         Style vaadinStyle = toVaadinComponent().getStyle();
         vaadinStyle.set("flex", "0 0 auto");
-        // a rule which stretched over the cross axis of the row would be as tall as the whole button box, while a
-        // toolbar divider is only as long as the icons standing beside it
-        vaadinStyle.set("align-self", "center");
+        vaadinStyle.set("align-self", "stretch");
+        vaadinStyle.set("box-sizing", "border-box");
+        vaadinStyle.set("background-clip", "content-box");
 
         if (style == SeparatorStyle.VERTICAL) {
             vaadinStyle.set("width", "1px");
-            vaadinStyle.set("height", LINE_LENGTH + "px");
             vaadinStyle.set("margin", "0 " + LINE_MARGIN + "px");
+            vaadinStyle.set("padding", LINE_INSET + "px 0");
         }
         else {
             vaadinStyle.set("height", "1px");
-            vaadinStyle.set("width", LINE_LENGTH + "px");
+            vaadinStyle.set("width", "100%");
             vaadinStyle.set("margin", LINE_MARGIN + "px 0");
+            vaadinStyle.set("padding", "0 " + LINE_INSET + "px");
         }
     }
 

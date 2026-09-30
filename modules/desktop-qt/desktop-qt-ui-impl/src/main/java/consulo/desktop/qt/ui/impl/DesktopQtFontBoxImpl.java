@@ -18,9 +18,12 @@ package consulo.desktop.qt.ui.impl;
 import consulo.ui.FontBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.widgets.QFontComboBox;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Qt has this widget natively, including the per-row preview and the monospaced filter.
@@ -76,10 +79,15 @@ public class DesktopQtFontBoxImpl extends QtComponentDelegate<QFontComboBox> imp
     @RequiredUIAccess
     @Override
     public void setValue(@Nullable String value, boolean fireListeners) {
+        boolean changed = !Objects.equals(myValue, value);
         myValue = value;
 
         QFontComboBox component = toQtComponent();
         if (component == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, value, ProgrammaticInputDetails.INSTANCE));
+            }
             return;
         }
 

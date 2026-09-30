@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl;
 import consulo.ui.DatePicker;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.core.QDate;
 import io.qt.widgets.QDateEdit;
 import io.qt.widgets.QWidget;
@@ -27,6 +28,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -81,9 +83,18 @@ public class DesktopQtDatePickerImpl extends QtComponentDelegate<QDateEdit> impl
     @RequiredUIAccess
     @Override
     public void setValue(@Nullable Date value, boolean fireListeners) {
+        boolean changed = !Objects.equals(myValue, value);
         myValue = value;
 
-        if (myComponent != null && value != null) {
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, value, ProgrammaticInputDetails.INSTANCE));
+            }
+            return;
+        }
+
+        if (value != null) {
             myFireListeners = fireListeners;
             try {
                 myComponent.setDate(toQDate(value));

@@ -287,7 +287,7 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
 
     @Override
     public JBPopup createMessage(String text) {
-        throw new UnsupportedOperationException();
+        return createListPopup(new BaseListPopupStep<>(null, text));
     }
 
     @Override

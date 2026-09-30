@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.widgets.QRadioButton;
 import io.qt.widgets.QWidget;
 
@@ -68,16 +69,24 @@ public class DesktopQtRadioButtonImpl extends QtComponentDelegate<QRadioButton> 
     @RequiredUIAccess
     @Override
     public void setValue(Boolean value, boolean fireListeners) {
-        mySelected = value != null && value;
+        boolean newValue = value != null && value;
+        boolean changed = mySelected != newValue;
+        mySelected = newValue;
 
-        if (myComponent != null) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setChecked(mySelected);
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, mySelected, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setChecked(mySelected);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 

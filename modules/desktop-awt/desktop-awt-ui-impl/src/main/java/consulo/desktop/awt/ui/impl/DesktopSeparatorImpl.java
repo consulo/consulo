@@ -29,14 +29,15 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
 class DesktopSeparatorImpl extends SwingComponentDelegate<DesktopSeparatorImpl.MySeparator> implements Separator {
-    private static final int LINE_LENGTH = 16;
     private static final int LINE_MARGIN = 4;
+    private static final int LINE_INSET = 4;
     private static final int THICKNESS = LINE_MARGIN * 2 + 1;
 
     class MySeparator extends JSeparator implements FromSwingComponentWrapper {
@@ -49,29 +50,27 @@ class DesktopSeparatorImpl extends SwingComponentDelegate<DesktopSeparatorImpl.M
 
         @Override
         protected void paintComponent(Graphics g) {
-            // a layout stretches the separator to the cross size of the row it sits in, so the line is kept short
-            // by the painting rather than by the size of the component
+            Insets insets = getInsets();
+            int inset = JBUIScale.scale(LINE_INSET);
+            boolean vertical = getOrientation() == SwingConstants.VERTICAL;
+
+            int left = insets.left + (vertical ? 0 : inset);
+            int top = insets.top + (vertical ? inset : 0);
+            int right = getWidth() - insets.right - 1 - (vertical ? 0 : inset);
+            int bottom = getHeight() - insets.bottom - 1 - (vertical ? inset : 0);
+            if (right < left || bottom < top) {
+                return;
+            }
+
             g.setColor(JBColor.border());
 
-            if (getOrientation() == SwingConstants.VERTICAL) {
-                int length = Math.min(JBUIScale.scale(LINE_LENGTH), getHeight() - JBUIScale.scale(LINE_MARGIN) * 2);
-                if (length <= 0) {
-                    return;
-                }
-
-                int x = getWidth() / 2;
-                int y = (getHeight() - length) / 2;
-                LinePainter2D.paint((Graphics2D) g, x, y, x, y + length);
+            if (vertical) {
+                int x = (left + right) / 2;
+                LinePainter2D.paint((Graphics2D) g, x, top, x, bottom);
             }
             else {
-                int length = Math.min(JBUIScale.scale(LINE_LENGTH), getWidth() - JBUIScale.scale(LINE_MARGIN) * 2);
-                if (length <= 0) {
-                    return;
-                }
-
-                int x = (getWidth() - length) / 2;
-                int y = getHeight() / 2;
-                LinePainter2D.paint((Graphics2D) g, x, y, x + length, y);
+                int y = (top + bottom) / 2;
+                LinePainter2D.paint((Graphics2D) g, left, y, right, y);
             }
         }
 
@@ -92,7 +91,7 @@ class DesktopSeparatorImpl extends SwingComponentDelegate<DesktopSeparatorImpl.M
         boolean vertical = myStyle == SeparatorStyle.VERTICAL;
 
         MySeparator separator = new MySeparator(vertical ? SwingConstants.VERTICAL : SwingConstants.HORIZONTAL);
-        separator.setPreferredSize(vertical ? new JBDimension(THICKNESS, LINE_LENGTH) : new JBDimension(LINE_LENGTH, THICKNESS));
+        separator.setPreferredSize(vertical ? new JBDimension(THICKNESS, 0) : new JBDimension(0, THICKNESS));
         return separator;
     }
 

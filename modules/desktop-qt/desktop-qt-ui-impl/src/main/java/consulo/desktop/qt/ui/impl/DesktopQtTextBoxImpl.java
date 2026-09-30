@@ -21,6 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.util.lang.StringUtil;
 import io.qt.core.QEvent;
 import io.qt.core.QMargins;
@@ -195,16 +196,24 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
     @RequiredUIAccess
     @Override
     public void setValue(String value, boolean fireListeners) {
-        myText = StringUtil.notNullize(value);
+        String newText = StringUtil.notNullize(value);
+        boolean changed = !newText.equals(myText);
+        myText = newText;
 
-        if (myComponent != null) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setText(myText);
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myText, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setText(myText);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 

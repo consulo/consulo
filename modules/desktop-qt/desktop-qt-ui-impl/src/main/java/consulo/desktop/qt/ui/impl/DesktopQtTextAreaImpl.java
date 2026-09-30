@@ -20,6 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.TextArea;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.ui.font.Font;
 import consulo.util.lang.StringUtil;
 import io.qt.gui.QFont;
@@ -85,15 +86,24 @@ public class DesktopQtTextAreaImpl extends QtComponentDelegate<QPlainTextEdit> i
     @Override
     @RequiredUIAccess
     public void setValue(@Nullable String value, boolean fireListeners) {
-        myText = StringUtil.notNullize(value);
-        if (isAlive()) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setPlainText(myText);
+        String newText = StringUtil.notNullize(value);
+        boolean changed = !newText.equals(myText);
+        myText = newText;
+
+        if (!isAlive()) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myText, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setPlainText(myText);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 

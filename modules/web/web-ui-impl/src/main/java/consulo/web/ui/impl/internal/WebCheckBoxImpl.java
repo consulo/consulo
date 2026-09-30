@@ -22,7 +22,7 @@ import consulo.ui.CheckBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.util.TextWithMnemonic;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.vaadin.WebBooleanValueComponentBase;
 import org.jspecify.annotations.Nullable;
@@ -49,9 +49,7 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
         }
 
         private void updateLabelText() {
-            TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(myLabelText.get());
-
-            setLabel(textWithMnemonic.getText());
+            setLabel(LocalizeValueWithMnemonic.get(myLabelText).getText());
         }
 
         @Override

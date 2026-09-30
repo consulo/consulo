@@ -19,6 +19,7 @@ import com.vaadin.flow.component.details.Details;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.layout.FoldoutLayout;
 import consulo.ui.layout.event.FoldoutLayoutOpenedEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -49,7 +50,7 @@ public class WebFoldoutLayoutImpl extends VaadinComponentDelegate<WebFoldoutLayo
         myComponent = component;
 
         Vaadin vaadin = getVaadinComponent();
-        vaadin.setSummaryText(titleValue.get());
+        vaadin.setSummaryText(LocalizeValueWithMnemonic.get(titleValue).getText());
         vaadin.add(TargetVaadin.to(component));
         vaadin.setOpened(state);
 
@@ -73,7 +74,7 @@ public class WebFoldoutLayoutImpl extends VaadinComponentDelegate<WebFoldoutLayo
     @Override
     public FoldoutLayout setTitle(LocalizeValue title) {
         myTitleValue = title;
-        getVaadinComponent().setSummaryText(title.get());
+        getVaadinComponent().setSummaryText(LocalizeValueWithMnemonic.get(title).getText());
         return this;
     }
 

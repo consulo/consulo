@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl;
 import consulo.ui.ToggleSwitch;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.core.QEasingCurve;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
@@ -143,16 +144,24 @@ public class DesktopQtToggleSwitchImpl extends QtComponentDelegate<DesktopQtTogg
     @RequiredUIAccess
     @Override
     public void setValue(@Nullable Boolean value, boolean fireListeners) {
-        myValue = value != null && value;
+        boolean newValue = value != null && value;
+        boolean changed = myValue != newValue;
+        myValue = newValue;
 
-        if (myComponent != null) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setChecked(myValue);
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myValue, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setChecked(myValue);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 }

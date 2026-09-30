@@ -395,3 +395,8 @@ vaadin-button[theme~="pressed"]
 {
   max-width: 240px;
 }
+
+table.web-table-layout > tr:has(> td > *):not(:has(> td > :not([hidden])))
+{
+  display: none;
+}

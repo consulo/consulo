@@ -63,7 +63,7 @@ import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -736,8 +736,6 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         WebLightPopupImpl.closeAll(UI.getCurrent());
 
-        ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
-
         DataContext context = getDataContext();
 
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.EDITOR_GUTTER, context, details);
@@ -754,9 +752,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                 return;
             }
 
-            actionManager.fireBeforeActionPerformed(action, context, event);
-            actionManager.performActionDumbAware(action, event);
-            actionManager.queueActionPerformedEvent(action, context, event);
+            UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);
         }, uiAccess);
     }
 

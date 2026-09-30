@@ -312,13 +312,29 @@ public final class UnifiedActionMenuExpander {
             }
 
             if (Boolean.TRUE.equals(enabled)) {
-                actionManager.fireBeforeActionPerformed(action, context, event);
-                actionManager.performActionDumbAware(action, event);
-                actionManager.queueActionPerformedEvent(action, context, event);
+                performActionWithCallbacks(action, context, event);
             }
 
             return null;
         }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    public static void performActionWithCallbacks(AnAction action, DataContext context, AnActionEvent event) {
+        ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
+
+        actionManager.fireBeforeActionPerformed(action, context, event);
+        try {
+            actionManager.performActionDumbAware(action, event);
+        }
+        catch (Throwable e) {
+            if (!isProcessCanceled(e)) {
+                LOG.error("Failed to perform action: " + action, e);
+            }
+        }
+        finally {
+            actionManager.queueActionPerformedEvent(action, context, event);
+        }
     }
 
     public static boolean isProcessCanceled(Throwable throwable) {

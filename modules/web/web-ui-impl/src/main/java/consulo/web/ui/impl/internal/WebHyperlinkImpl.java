@@ -24,6 +24,7 @@ import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -79,7 +80,7 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     @RequiredUIAccess
     public void setText(LocalizeValue text) {
         myText = text;
-        myTextLabel.setText(text.get());
+        myTextLabel.setText(LocalizeValueWithMnemonic.get(text).getText());
     }
 
     @Override

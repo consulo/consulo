@@ -26,6 +26,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
+import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -108,8 +109,6 @@ public class DesktopQtEditorKeyHandler {
             return;
         }
 
-        ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
-
         AnAction action = actions.get(index);
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.KEYBOARD_SHORTCUT, context);
 
@@ -119,9 +118,7 @@ public class DesktopQtEditorKeyHandler {
                 return;
             }
 
-            actionManager.fireBeforeActionPerformed(action, context, event);
-            actionManager.performActionDumbAware(action, event);
-            actionManager.queueActionPerformedEvent(action, context, event);
+            UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);
         }, uiAccess);
     }
 

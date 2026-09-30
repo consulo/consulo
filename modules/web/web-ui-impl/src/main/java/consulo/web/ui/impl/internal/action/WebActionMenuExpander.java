@@ -285,9 +285,7 @@ public final class WebActionMenuExpander {
             }
 
             if (Boolean.TRUE.equals(enabled)) {
-                actionManager.fireBeforeActionPerformed(action, context, event);
-                actionManager.performActionDumbAware(action, event);
-                actionManager.queueActionPerformedEvent(action, context, event);
+                UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);
                 return Boolean.TRUE;
             }
 

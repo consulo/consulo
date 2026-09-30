@@ -17,8 +17,13 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.ui.Separator;
 import consulo.ui.SeparatorStyle;
+import io.qt.core.QRect;
+import io.qt.gui.QPaintEvent;
+import io.qt.gui.QPainter;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QSizePolicy;
+import io.qt.widgets.QStyle;
+import io.qt.widgets.QStyleOptionFrame;
 import io.qt.widgets.QWidget;
 
 /**
@@ -26,8 +31,32 @@ import io.qt.widgets.QWidget;
  * @since 2026-08-17
  */
 public class DesktopQtSeparatorImpl extends QtComponentDelegate<QFrame> implements Separator {
-    /** as in the web frontend, a toolbar divider is only as long as the icons standing beside it */
-    private static final int LINE_LENGTH = 16;
+    private static final int LINE_INSET = 4;
+
+    private static final class Line extends QFrame {
+        private Line(QWidget parent) {
+            super(parent);
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            QStyleOptionFrame option = new QStyleOptionFrame();
+            initStyleOption(option);
+
+            QRect rect = option.rect();
+            option.setRect(frameShape() == QFrame.Shape.VLine
+                ? rect.adjusted(0, LINE_INSET, 0, -LINE_INSET)
+                : rect.adjusted(LINE_INSET, 0, -LINE_INSET, 0));
+
+            QPainter painter = new QPainter(this);
+            try {
+                style().drawControl(QStyle.ControlElement.CE_ShapedFrame, option, painter, this);
+            }
+            finally {
+                painter.end();
+            }
+        }
+    }
 
     private final SeparatorStyle myStyle;
 
@@ -37,7 +66,7 @@ public class DesktopQtSeparatorImpl extends QtComponentDelegate<QFrame> implemen
 
     @Override
     protected QFrame createQt(QWidget parent) {
-        return new QFrame(parent);
+        return new Line(parent);
     }
 
     @Override
@@ -47,16 +76,13 @@ public class DesktopQtSeparatorImpl extends QtComponentDelegate<QFrame> implemen
         if (myStyle == SeparatorStyle.VERTICAL) {
             component.setFrameShape(QFrame.Shape.VLine);
             component.setFixedWidth(1);
-            component.setFixedHeight(LINE_LENGTH);
+            component.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred);
         }
         else {
             component.setFrameShape(QFrame.Shape.HLine);
             component.setFixedHeight(1);
-            component.setFixedWidth(LINE_LENGTH);
+            component.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed);
         }
-
-        // a rule stretched over the cross axis of the row would be as tall as the whole button box
-        component.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
     }
 
     @Override

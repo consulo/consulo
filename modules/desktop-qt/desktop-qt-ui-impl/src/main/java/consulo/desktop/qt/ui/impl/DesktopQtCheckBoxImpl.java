@@ -20,6 +20,7 @@ import consulo.ui.CheckBox;
 import consulo.ui.CheckBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.widgets.QCheckBox;
 import io.qt.widgets.QWidget;
 
@@ -74,16 +75,24 @@ public class DesktopQtCheckBoxImpl extends QtComponentDelegate<QCheckBox> implem
     @RequiredUIAccess
     @Override
     public void setValue(Boolean value, boolean fireListeners) {
-        myValue = value != null && value;
+        boolean newValue = value != null && value;
+        boolean changed = myValue != newValue;
+        myValue = newValue;
 
-        if (myComponent != null) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setChecked(myValue);
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myValue, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setChecked(myValue);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 

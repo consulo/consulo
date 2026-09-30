@@ -67,7 +67,7 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
         WebInputDetails.addClickListener(component.getElement(), this::invoke);
 
         myTextValue = text;
-        component.setText(text.get());
+        component.setText(WebButtonImpl.plainText(text));
 
         updateSelectedState();
     }
@@ -148,7 +148,7 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
     @Override
     public void setText(LocalizeValue text) {
         myTextValue = text;
-        toVaadinComponent().setText(text.get());
+        toVaadinComponent().setText(WebButtonImpl.plainText(text));
     }
 
     @Override

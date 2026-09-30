@@ -113,6 +113,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     protected QTabWidget createQt(QWidget parent) {
         QTabWidget tabWidget = new DesktopQtTabWidget(parent);
         tabWidget.setDocumentMode(true);
+        tabWidget.tabBar().setDrawBase(false);
         tabWidget.setTabPosition(QTabWidget.TabPosition.North);
         return tabWidget;
     }

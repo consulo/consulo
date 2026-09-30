@@ -23,6 +23,7 @@ import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.layout.LabeledLayout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -54,7 +55,7 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
         public void setLabelValue(LocalizeValue labelValue) {
             myLabelValue = labelValue;
 
-            myCaption.setText(myLabelValue.getValue());
+            myCaption.setText(LocalizeValueWithMnemonic.get(myLabelValue).getText());
         }
 
         public void setContent(com.vaadin.flow.component.Component content) {

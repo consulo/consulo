@@ -23,7 +23,7 @@ import consulo.ui.TriStateCheckBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.util.TextWithMnemonic;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.util.lang.ThreeState;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -51,9 +51,7 @@ public class WebTriStateCheckBoxImpl extends VaadinComponentDelegate<WebTriState
         }
 
         private void updateLabelText() {
-            TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(myLabelText.get());
-
-            setLabel(textWithMnemonic.getText());
+            setLabel(LocalizeValueWithMnemonic.get(myLabelText).getText());
         }
 
         @Override

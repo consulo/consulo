@@ -24,6 +24,7 @@ import consulo.ui.RadioButton;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -57,7 +58,7 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         }
 
         public void setText(LocalizeValue text) {
-            myLabel.setText(text.getValue());
+            myLabel.setText(LocalizeValueWithMnemonic.get(text).getText());
         }
 
         public Input getInput() {

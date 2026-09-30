@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl;
 import consulo.ui.IntSlider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.core.Qt;
 import io.qt.widgets.QSlider;
 import io.qt.widgets.QWidget;
@@ -71,16 +72,24 @@ public class DesktopQtIntSliderImpl extends QtComponentDelegate<QSlider> impleme
     @RequiredUIAccess
     @Override
     public void setValue(@Nullable Integer value, boolean fireListeners) {
-        myValue = value == null ? myMin : value;
+        int newValue = value == null ? myMin : value;
+        boolean changed = myValue != newValue;
+        myValue = newValue;
 
-        if (myComponent != null) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setValue(myValue);
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myValue, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setValue(myValue);
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 

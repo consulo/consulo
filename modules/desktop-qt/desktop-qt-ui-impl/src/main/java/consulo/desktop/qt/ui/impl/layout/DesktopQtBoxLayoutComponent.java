@@ -36,7 +36,7 @@ public abstract class DesktopQtBoxLayoutComponent<C extends LayoutConstraint> ex
     @Override
     protected final QLayout createLayout() {
         QBoxLayout layout = createBoxLayout();
-        layout.addStretch();
+        layout.addStretch(1);
         return layout;
     }
 

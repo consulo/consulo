@@ -19,13 +19,13 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
-import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -70,8 +70,8 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
      * The browser draws no mnemonic, so a text which carries one has to be stripped of the marker rather than
      * show it - a close button of a dialog reads "&Close" otherwise.
      */
-    private static String plainText(LocalizeValue text) {
-        return TextWithMnemonic.parse(text.get()).getText();
+    static String plainText(LocalizeValue text) {
+        return LocalizeValueWithMnemonic.get(text).getText();
     }
 
     @Override

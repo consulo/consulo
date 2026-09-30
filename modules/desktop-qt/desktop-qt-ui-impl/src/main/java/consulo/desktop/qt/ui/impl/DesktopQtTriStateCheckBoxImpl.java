@@ -20,6 +20,7 @@ import consulo.ui.CheckBoxStyle;
 import consulo.ui.TriStateCheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.util.lang.ThreeState;
 import io.qt.core.Qt;
 import io.qt.widgets.QCheckBox;
@@ -80,16 +81,24 @@ public class DesktopQtTriStateCheckBoxImpl extends QtComponentDelegate<QCheckBox
     @RequiredUIAccess
     @Override
     public void setValue(@Nullable ThreeState value, boolean fireListeners) {
-        myValue = value == null ? ThreeState.UNSURE : value;
+        ThreeState newValue = value == null ? ThreeState.UNSURE : value;
+        boolean changed = myValue != newValue;
+        myValue = newValue;
 
-        if (myComponent != null) {
-            myFireListeners = fireListeners;
-            try {
-                myComponent.setCheckState(toCheckState(myValue));
+        if (myComponent == null) {
+            if (fireListeners && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myValue, ProgrammaticInputDetails.INSTANCE));
             }
-            finally {
-                myFireListeners = true;
-            }
+            return;
+        }
+
+        myFireListeners = fireListeners;
+        try {
+            myComponent.setCheckState(toCheckState(myValue));
+        }
+        finally {
+            myFireListeners = true;
         }
     }
 
