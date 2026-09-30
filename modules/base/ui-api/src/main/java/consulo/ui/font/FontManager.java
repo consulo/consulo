@@ -15,9 +15,11 @@
  */
 package consulo.ui.font;
 
+import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.internal.UIInternal;
 
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -48,4 +50,6 @@ public interface FontManager {
     CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess);
 
     Font createFont(String fontName, int fontSize, int fontStyles);
+
+    CompletableFuture<Font> registerFontAsync(URL url, UIAccess uiAccess, Disposable parent);
 }

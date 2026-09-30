@@ -25,11 +25,17 @@ import java.util.Objects;
  * @since 2020-06-04
  */
 public class WebFontImpl implements Font {
+    private final String myFamily;
     private final String myFontName;
     private final int myFontSize;
     private final int myFontStyle;
 
     public WebFontImpl(String fontName, int fontSize, int fontStyle) {
+        this(fontName, fontName, fontSize, fontStyle);
+    }
+
+    public WebFontImpl(String family, String fontName, int fontSize, int fontStyle) {
+        myFamily = family;
         myFontName = fontName;
         myFontSize = fontSize;
         myFontStyle = fontStyle;
@@ -47,7 +53,7 @@ public class WebFontImpl implements Font {
 
     @Override
     public String getFamily() {
-        return "";
+        return myFamily;
     }
 
     @Override
@@ -62,7 +68,7 @@ public class WebFontImpl implements Font {
 
     @Override
     public Font buildNewFont(int newSize) {
-        return new WebFontImpl(myFontName, newSize, myFontStyle);
+        return new WebFontImpl(myFamily, myFontName, newSize, myFontStyle);
     }
 
     @Override
@@ -74,18 +80,20 @@ public class WebFontImpl implements Font {
             return false;
         }
         WebFontImpl webFont = (WebFontImpl) o;
-        return myFontSize == webFont.myFontSize && myFontStyle == webFont.myFontStyle && Objects.equals(myFontName, webFont.myFontName);
+        return myFontSize == webFont.myFontSize && myFontStyle == webFont.myFontStyle && Objects.equals(myFamily, webFont.myFamily)
+            && Objects.equals(myFontName, webFont.myFontName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myFontName, myFontSize, myFontStyle);
+        return Objects.hash(myFamily, myFontName, myFontSize, myFontStyle);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("WebFontImpl{");
-        sb.append("myFontName='").append(myFontName).append('\'');
+        sb.append("myFamily='").append(myFamily).append('\'');
+        sb.append(", myFontName='").append(myFontName).append('\'');
         sb.append(", myFontSize=").append(myFontSize);
         sb.append(", myFontStyle=").append(myFontStyle);
         sb.append('}');

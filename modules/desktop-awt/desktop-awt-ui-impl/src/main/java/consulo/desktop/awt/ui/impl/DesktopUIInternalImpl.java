@@ -43,6 +43,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.desktop.awt.ui.impl.color.DesktopAWTColorPickerBuilder;
 import consulo.ui.*;
+import consulo.ui.TextArea;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
@@ -374,6 +375,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public TextBox _Components_textBox(String text) {
         return new DesktopTextBoxImpl(text);
+    }
+
+    @Override
+    public TextArea _Components_textArea(String text) {
+        return new DesktopTextAreaImpl(text);
     }
 
     @Override

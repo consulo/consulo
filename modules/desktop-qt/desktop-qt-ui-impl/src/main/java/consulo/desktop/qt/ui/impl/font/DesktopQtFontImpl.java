@@ -16,49 +16,66 @@
 package consulo.desktop.qt.ui.impl.font;
 
 import consulo.ui.font.Font;
+import io.qt.gui.QFont;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
 public class DesktopQtFontImpl implements Font {
+    private final String myFamily;
     private final String myFontName;
     private final int myFontSize;
     private final int myFontStyle;
 
     public DesktopQtFontImpl(String fontName, int fontSize, int fontStyle) {
+        this(fontName, fontName, fontSize, fontStyle);
+    }
+
+    public DesktopQtFontImpl(String family, String fontName, int fontSize, int fontStyle) {
+        myFamily = family;
         myFontName = fontName;
         myFontSize = fontSize;
         myFontStyle = fontStyle;
     }
 
+    public QFont toQFont() {
+        QFont font = new QFont(myFamily);
+        if (myFontSize > 0) {
+            font.setPointSize(myFontSize);
+        }
+        font.setBold((myFontStyle & BOLD) != 0);
+        font.setItalic((myFontStyle & ITALIC) != 0);
+        return font;
+    }
+
     @Override
     public String getName() {
-        return null;
+        return myFontName;
     }
 
     @Override
     public String getFontName() {
-        return null;
+        return myFontName;
     }
 
     @Override
     public String getFamily() {
-        return null;
+        return myFamily;
     }
 
     @Override
     public int getFontStyle() {
-        return 0;
+        return myFontStyle;
     }
 
     @Override
     public int getFontSize() {
-        return 0;
+        return myFontSize;
     }
 
     @Override
     public Font buildNewFont(int newSize) {
-        return new DesktopQtFontImpl(myFontName, newSize, myFontStyle);
+        return new DesktopQtFontImpl(myFamily, myFontName, newSize, myFontStyle);
     }
 }

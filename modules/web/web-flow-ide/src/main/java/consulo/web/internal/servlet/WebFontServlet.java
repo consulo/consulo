@@ -44,7 +44,17 @@ public class WebFontServlet extends HttpServlet {
             return;
         }
 
-        BundledFont font = WebFontRegistry.findFont(pathInfo.substring(1));
+        String path = pathInfo.substring(1);
+
+        WebFontRegistry.TransientFont transientFont = WebFontRegistry.findTransientFont(path);
+        if (transientFont != null) {
+            resp.setContentType(transientFont.contentType());
+            resp.setHeader("Cache-Control", "private, no-store");
+            resp.getOutputStream().write(transientFont.data());
+            return;
+        }
+
+        BundledFont font = WebFontRegistry.findFont(path);
         if (font == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;

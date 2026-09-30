@@ -15,13 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.FontInfo;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.font.Typeface;
 import consulo.ui.impl.font.TypefaceImpl;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -69,5 +73,20 @@ public class DesktopFontManagerImpl implements FontManager {
     @Override
     public Font createFont(String fontName, int fontSize, int fontStyles) {
         return new DesktopFontImpl(fontName, fontSize, fontStyles);
+    }
+
+    @Override
+    public CompletableFuture<Font> registerFontAsync(URL url, UIAccess uiAccess, Disposable parent) {
+        CompletableFuture<Font> result = new CompletableFuture<>();
+        Thread.ofVirtual().start(() -> {
+            try (InputStream stream = url.openStream()) {
+                java.awt.Font font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, stream);
+                result.complete(new DesktopFontImpl(font.deriveFont(UIUtil.getLabelFont().getSize2D())));
+            }
+            catch (Throwable e) {
+                result.completeExceptionally(e);
+            }
+        });
+        return result;
     }
 }

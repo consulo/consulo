@@ -17,6 +17,8 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.UI;
 import consulo.application.Application;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.font.BundledFont;
 import consulo.ui.ex.internal.BundledFontRegistry;
@@ -26,10 +28,14 @@ import consulo.ui.font.Typeface;
 import consulo.ui.impl.font.TypefaceImpl;
 import tools.jackson.databind.JsonNode;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
@@ -59,6 +65,30 @@ public class WebFontManagerImpl implements FontManager {
          */
         CAN_ASK
     }
+
+    private static final String REGISTER_FONT = """
+        const face = new FontFace($0, 'url("' + $1 + '")');
+        document.fonts.add(face);
+        return face.load().then(() => true);
+        """;
+
+    private static final String UNREGISTER_FONT = """
+        for (const face of [...document.fonts]) {
+          if (face.family === $0 || face.family === '"' + $0 + '"') {
+            document.fonts.delete(face);
+          }
+        }
+        """;
+
+    private static final int DEFAULT_FONT_SIZE = 14;
+
+    private static final Map<String, String> ourFontContentTypes = Map.of(
+        "ttf", "font/ttf",
+        "otf", "font/otf",
+        "ttc", "font/collection",
+        "woff", "font/woff",
+        "woff2", "font/woff2"
+    );
 
     private static final String QUERY_STATE = """
         return (async () => {
@@ -230,5 +260,67 @@ public class WebFontManagerImpl implements FontManager {
     @Override
     public Font createFont(String fontName, int fontSize, int fontStyle) {
         return new WebFontImpl(fontName, fontSize, fontStyle);
+    }
+
+    @Override
+    public CompletableFuture<Font> registerFontAsync(URL url, UIAccess uiAccess, Disposable parent) {
+        CompletableFuture<Font> result = new CompletableFuture<>();
+        Thread.ofVirtual().start(() -> {
+            byte[] data;
+            try (InputStream stream = url.openStream()) {
+                data = stream.readAllBytes();
+            }
+            catch (Throwable e) {
+                result.completeExceptionally(e);
+                return;
+            }
+
+            if (Disposer.isDisposed(parent)) {
+                result.cancel(false);
+                return;
+            }
+
+            String fileName = getFileName(url);
+            String token = WebFontRegistry.registerTransientFont(data, getContentType(fileName));
+            String family = "consulo-font-" + token;
+            String fontName = readFontName(data, fileName);
+            UI ui = ((WebUIAccessImpl) uiAccess).getUI();
+
+            Disposer.register(parent, () -> {
+                WebFontRegistry.unregisterTransientFont(token);
+                uiAccess.give(() -> ui.getPage().executeJs(UNREGISTER_FONT, family));
+            });
+
+            uiAccess.giveAsync(() -> ui.getPage()
+                .executeJs(REGISTER_FONT, family, WebFontRegistry.getTransientFontUrl(token))
+                .then(
+                    ignored -> result.complete(new WebFontImpl(family, fontName, DEFAULT_FONT_SIZE, Font.PLAIN)),
+                    error -> result.completeExceptionally(new IllegalArgumentException("Cannot load font " + fileName + ": " + error))
+                )).whenComplete((ignored, e) -> {
+                if (e != null) {
+                    result.completeExceptionally(e);
+                }
+            });
+        });
+        return result;
+    }
+
+    private static String getFileName(URL url) {
+        String path = url.getPath();
+        return path.substring(path.lastIndexOf('/') + 1);
+    }
+
+    private static String getContentType(String fileName) {
+        String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+        return ourFontContentTypes.getOrDefault(extension, "application/octet-stream");
+    }
+
+    private static String readFontName(byte[] data, String fileName) {
+        try {
+            return java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new ByteArrayInputStream(data)).getFontName();
+        }
+        catch (Exception e) {
+            return fileName;
+        }
     }
 }

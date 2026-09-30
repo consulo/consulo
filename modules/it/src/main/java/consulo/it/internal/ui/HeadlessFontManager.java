@@ -15,11 +15,13 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.font.Typeface;
 
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,5 +44,11 @@ public class HeadlessFontManager implements FontManager {
     @Override
     public Font createFont(String fontName, int fontSize, int fontStyle) {
         return new HeadlessFont(fontName, fontSize, fontStyle);
+    }
+
+    @Override
+    public CompletableFuture<Font> registerFontAsync(URL url, UIAccess uiAccess, Disposable parent) {
+        String path = url.getPath();
+        return CompletableFuture.completedFuture(new HeadlessFont(path.substring(path.lastIndexOf('/') + 1), 12, Font.PLAIN));
     }
 }

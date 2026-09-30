@@ -107,6 +107,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public TextArea _Components_textArea(String text) {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract ProgressBar _Components_progressBar();
 
     public abstract IntBox _Components_intBox(int value);

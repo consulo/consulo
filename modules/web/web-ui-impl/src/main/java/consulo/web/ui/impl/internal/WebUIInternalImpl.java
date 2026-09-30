@@ -196,6 +196,12 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
 
     @Override
     @RequiredUIAccess
+    public TextArea _Components_textArea(String text) {
+        return new WebTextAreaImpl(text);
+    }
+
+    @Override
+    @RequiredUIAccess
     public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
         return new WebTextBoxWithHistoryImpl(text);
     }

@@ -46,6 +46,7 @@ import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.internal.BorderPosition;
+import consulo.ui.layout.Layout;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -53,10 +54,13 @@ import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -69,6 +73,8 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     private boolean myClickBridgeInstalled;
     private boolean myContextMenuInstalled;
+
+    private @Nullable Set<java.awt.Component> myCascadeDisabledChildren;
 
     /** the desktop frontend draws into a single ui, so every component of it answers the same access */
     @Override
@@ -202,7 +208,38 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     @RequiredUIAccess
     @Override
     public void setEnabled(boolean value) {
-        toAWTComponent().setEnabled(value);
+        T component = toAWTComponent();
+        component.setEnabled(value);
+
+        if (!(this instanceof Layout<?>) || !(component instanceof Container container)) {
+            return;
+        }
+
+        if (!value) {
+            if (myCascadeDisabledChildren == null) {
+                myCascadeDisabledChildren = new HashSet<>();
+                disableChildren(container, myCascadeDisabledChildren);
+            }
+        }
+        else if (myCascadeDisabledChildren != null) {
+            for (java.awt.Component child : myCascadeDisabledChildren) {
+                child.setEnabled(true);
+            }
+            myCascadeDisabledChildren = null;
+        }
+    }
+
+    private static void disableChildren(Container container, Set<java.awt.Component> disabledChildren) {
+        for (java.awt.Component child : container.getComponents()) {
+            if (child.isEnabled()) {
+                disabledChildren.add(child);
+                child.setEnabled(false);
+            }
+
+            if (child instanceof Container nested) {
+                disableChildren(nested, disabledChildren);
+            }
+        }
     }
 
     @Override

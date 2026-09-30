@@ -229,6 +229,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public TextArea _Components_textArea(String text) {
+        return new DesktopQtTextAreaImpl(text);
+    }
+
+    @Override
     public PasswordBox _Components_passwordBox(String password) {
         return new DesktopQtPasswordBoxImpl(password);
     }

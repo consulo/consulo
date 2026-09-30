@@ -23,6 +23,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Makes the faces of {@link BundledFontRegistry} resolvable by family name in the browser. The list itself is
@@ -35,7 +37,14 @@ import java.util.Map;
 public class WebFontRegistry {
     public static final String FONT_PATH = "/fonts/";
 
+    private static final String TRANSIENT_PATH = "transient/";
+
     private static final int NORMAL_WEIGHT = 400;
+
+    public record TransientFont(byte[] data, String contentType) {
+    }
+
+    private static final Map<String, TransientFont> ourTransientFonts = new ConcurrentHashMap<>();
 
     private WebFontRegistry() {
     }
@@ -84,6 +93,27 @@ public class WebFontRegistry {
             }
         }
         return null;
+    }
+
+    public static String registerTransientFont(byte[] data, String contentType) {
+        String token = UUID.randomUUID().toString();
+        ourTransientFonts.put(token, new TransientFont(data, contentType));
+        return token;
+    }
+
+    public static void unregisterTransientFont(String token) {
+        ourTransientFonts.remove(token);
+    }
+
+    public static String getTransientFontUrl(String token) {
+        return FONT_PATH + TRANSIENT_PATH + token;
+    }
+
+    public static @Nullable TransientFont findTransientFont(String path) {
+        if (!path.startsWith(TRANSIENT_PATH)) {
+            return null;
+        }
+        return ourTransientFonts.get(path.substring(TRANSIENT_PATH.length()));
     }
 
     private static BundledFontRegistry getRegistry() {
