@@ -16,19 +16,18 @@
 package consulo.diagram.impl.internal.virtualFileSystem;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.component.extension.ExtensionPoint;
-import consulo.diagram.GraphProvider;
+import consulo.diagram.DiagramElementManager;
+import consulo.diagram.DiagramProvider;
 import consulo.project.Project;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import org.jspecify.annotations.Nullable;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -46,9 +45,8 @@ public class DiagramVirtualFile extends LightVirtualFileBase {
 
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public <V> Map.@Nullable Entry<GraphProvider<V>, V> resolve(Project project) {
+    public <T> @Nullable DiagramTarget<T> resolve(Project project) {
         String path = getPath();
-
         int i = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
         if (i == -1) {
             return null;
@@ -56,34 +54,36 @@ public class DiagramVirtualFile extends LightVirtualFileBase {
 
         String providerId = path.substring(0, i);
         if (providerId.charAt(0) == '/') {
-            providerId = providerId.substring(1, providerId.length());
+            providerId = providerId.substring(1);
         }
 
-        String elsePart = path.substring(i + URLUtil.ARCHIVE_SEPARATOR.length(), path.length());
-
+        String elsePart = path.substring(i + URLUtil.ARCHIVE_SEPARATOR.length());
         int j = elsePart.indexOf(URLUtil.ARCHIVE_SEPARATOR);
         if (j == -1) {
             return null;
         }
 
-        String providerPath = elsePart.substring(j + URLUtil.ARCHIVE_SEPARATOR.length(), elsePart.length());
+        String fqn = elsePart.substring(j + URLUtil.ARCHIVE_SEPARATOR.length());
 
-        ExtensionPoint<GraphProvider> point = project.getApplication().getExtensionPoint(GraphProvider.class);
-
-        final String finalProviderId = providerId;
-        GraphProvider provider = point.findFirstSafe(graphProvider -> Objects.equals(finalProviderId, graphProvider.getId()));
+        DiagramProvider<T> provider = (DiagramProvider<T>) DiagramProvider.findByID(providerId);
         if (provider == null) {
             return null;
         }
 
-        Object restored = provider.restoreFromURL(project, providerPath);
-        if (restored == null) {
+        T element = provider.getVfsResolver().resolveElementByFQN(fqn, project);
+        if (element == null) {
             return null;
         }
-        return Map.entry(provider, (V) restored);
+        return new DiagramTarget<>(provider, element);
     }
 
-    
+    public static <T> String buildPath(DiagramProvider<T> provider, T element) {
+        DiagramElementManager<T> elementManager = provider.getElementManager();
+        String title = elementManager.getElementTitle(element);
+        return provider.getID() + URLUtil.ARCHIVE_SEPARATOR + (title == null ? provider.getID() : title) + URLUtil.ARCHIVE_SEPARATOR
+            + provider.getVfsResolver().getQualifiedName(element);
+    }
+
     @Override
     public String getPath() {
         return myPath;
@@ -109,6 +109,6 @@ public class DiagramVirtualFile extends LightVirtualFileBase {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        return null;
+        return new ByteArrayInputStream(new byte[0]);
     }
 }

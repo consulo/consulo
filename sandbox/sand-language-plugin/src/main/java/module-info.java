@@ -20,7 +20,7 @@ module consulo.sand.language.plugin {
     requires consulo.ide.api;
     requires consulo.language.api;
     requires consulo.language.copyright.api;
-    requires consulo.language.diagram.api;
+    requires consulo.diagram.api;
     requires consulo.language.editor.refactoring.api;
     requires consulo.language.impl;
     requires consulo.module.creation.api;

@@ -16,27 +16,26 @@
 package consulo.diagram.impl.internal.editor;
 
 import consulo.application.ReadAction;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.diagram.GraphBuilder;
-import consulo.diagram.GraphProvider;
+import consulo.diagram.DiagramDataModel;
+import consulo.diagram.impl.internal.virtualFileSystem.DiagramTarget;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFile;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.ex.awt.JBLoadingPanel;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.Label;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.graph.Graph;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LoadingLayout;
 import consulo.util.dataholder.UserDataHolderBase;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -46,77 +45,83 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
     private final Project myProject;
     private final DiagramVirtualFile myVirtualFile;
 
-    private JBLoadingPanel myLoadingPanel;
-
-    private Future<?> myLoadingFuture = CompletableFuture.completedFuture(null);
-
-    private JPanel myPanel;
-
-    private @Nullable Component myUIComponent;
+    private @Nullable LoadingLayout<DockLayout> myLoadingLayout;
 
     public DiagramFileEditor(Project project, DiagramVirtualFile virtualFile) {
         myProject = project;
         myVirtualFile = virtualFile;
     }
 
+    @RequiredUIAccess
     @Override
     public Component getUIComponent() {
-        if (myUIComponent == null) {
-            myUIComponent = TargetAWT.wrap(getComponent());
-        }
-        return myUIComponent;
-    }
+        if (myLoadingLayout == null) {
+            LoadingLayout<DockLayout> loadingLayout = LoadingLayout.create(DockLayout.create(), this);
+            myLoadingLayout = loadingLayout;
 
-    @Override
-    public JComponent getComponent() {
-        if (myLoadingPanel == null) {
-            myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
+            loadingLayout.setLoadingText(LocalizeValue.localizeTODO("Building Diagram..."));
+            loadingLayout.startLoading(this::buildSnapshot, (layout, snapshot) -> {
+                if (snapshot == null) {
+                    layout.center(Label.create(LocalizeValue.localizeTODO("Error. Invalid Diagram")));
+                }
+                else {
+                    Graph<DiagramGraphNode> graph = Graph.create(snapshot);
+                    graph.setNodeRender((presentation, item) -> {
+                        DiagramGraphNode node = item.getValue();
+                        if (node == null) {
+                            return;
+                        }
 
-            myPanel = new JPanel(new BorderLayout());
+                        presentation.header().withIcon(node.getIcon());
+                        presentation.header().append(node.getName(), TextAttribute.REGULAR_BOLD);
 
-            myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myPanel, true), BorderLayout.CENTER);
+                        for (List<DiagramGraphRow> section : node.getSections()) {
+                            presentation.addSeparator();
+                            for (DiagramGraphRow row : section) {
+                                TextItemPresentation rowPresentation = presentation.addRow();
+                                rowPresentation.withIcon(row.icon());
+                                for (DiagramGraphFragment fragment : row.fragments()) {
+                                    rowPresentation.append(fragment.text(), fragment.attribute());
+                                }
+                            }
+                        }
+                    });
+                    graph.setEdgeRender((presentation, source, target) -> {
+                        DiagramGraphEdgeStyle style = snapshot.getEdgeStyle(source, target);
+                        if (style == null) {
+                            return;
+                        }
 
-            UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-                myLoadingPanel.setLoadingText(LocalizeValue.localizeTODO("Building Diagram..."));
-                myLoadingPanel.startLoading();
-                buildData();
+                        presentation.withLineStyle(style.lineStyle())
+                            .withSourceArrow(style.sourceArrow())
+                            .withTargetArrow(style.targetArrow())
+                            .withLabel(LocalizeValue.of(style.label()))
+                            .withColor(style.color());
+                    });
+                    layout.center(graph);
+                }
             });
         }
-
-        return myLoadingPanel;
+        return myLoadingLayout;
     }
 
-    private void buildData() {
-        myLoadingFuture = AppExecutorUtil.getAppExecutorService().submit(() -> {
-
-            Map.Entry<GraphProvider<Object>, Object> entry = ReadAction.compute(() -> myVirtualFile.resolve(myProject));
-            if (entry == null) {
-                onReady(new JLabel("Error. Invalid Diagram"));
+    private @Nullable DiagramGraphSnapshot buildSnapshot() {
+        return ReadAction.compute(() -> {
+            DiagramTarget<Object> target = myVirtualFile.resolve(myProject);
+            if (target == null) {
+                return null;
             }
-            else {
-                GraphProvider<Object> key = entry.getKey();
-                Object value = entry.getValue();
 
-                GraphBuilder builder = ReadAction.compute(() -> key.createBuilder(value));
-
-                Component component = builder.getComponent();
-
-                onReady(TargetAWT.to(component));
+            DiagramDataModel<Object> model = target.provider().createDataModel(myProject, target.element(), myVirtualFile);
+            try {
+                return DiagramGraphSnapshot.of(target.provider(), model);
+            }
+            finally {
+                Disposer.dispose(model);
             }
         });
     }
 
-    private void onReady(java.awt.Component component) {
-        SwingUtilities.invokeLater(() -> {
-            myPanel.add(component);
-
-            myLoadingPanel.invalidate();
-
-            myLoadingPanel.stopLoading();
-        });
-    }
-
-    
     @Override
     public String getName() {
         return myVirtualFile.getName();
@@ -128,27 +133,14 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
     }
 
     @Override
-    public void selectNotify() {
-
-    }
-
-    @Override
-    public void deselectNotify() {
-
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-
     }
 
     @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-
     }
 
     @Override
     public void dispose() {
-        myLoadingFuture.cancel(false);
     }
 }

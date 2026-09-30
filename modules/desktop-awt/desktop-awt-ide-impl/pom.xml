@@ -143,11 +143,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-diagram-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>consulo.internal</groupId>
             <artifactId>flatlaf</artifactId>
         </dependency>

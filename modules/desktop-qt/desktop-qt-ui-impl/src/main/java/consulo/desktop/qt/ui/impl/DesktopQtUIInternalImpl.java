@@ -15,9 +15,12 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.graph.Graph;
+import consulo.ui.graph.GraphModel;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
+import consulo.desktop.qt.ui.impl.graph.DesktopQtGraphImpl;
 import consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
 import consulo.desktop.qt.ui.impl.htmlView.DesktopQtHtmlViewImpl;
@@ -201,6 +204,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions options) {
         return new DesktopQtHtmlLabelImpl(html);
+    }
+
+    @Override
+    public <E> Graph<E> _Components_graph(GraphModel<E> model) {
+        return new DesktopQtGraphImpl<>(model);
     }
 
     @Override

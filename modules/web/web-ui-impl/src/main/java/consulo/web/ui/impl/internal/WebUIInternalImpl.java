@@ -31,6 +31,8 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
+import consulo.ui.graph.Graph;
+import consulo.ui.graph.GraphModel;
 import consulo.ui.image.EmptyImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -50,6 +52,7 @@ import consulo.ui.model.LazyFlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
+import consulo.web.ui.impl.internal.graph.WebGraphImpl;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebShowNotifier;
@@ -157,6 +160,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public AdvancedLabel _Components_advancedLabel() {
         return new WebAdvancedLabelImpl();
+    }
+
+    @Override
+    public <E> Graph<E> _Components_graph(GraphModel<E> model) {
+        return new WebGraphImpl<>(model);
     }
 
     @Override

@@ -23,6 +23,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.font.FontManager;
+import consulo.ui.graph.Graph;
+import consulo.ui.graph.GraphModel;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
@@ -150,6 +152,10 @@ public abstract class UIInternal {
     }
 
     public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         throw new UnsupportedOperationException();
     }
 

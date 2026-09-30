@@ -19,9 +19,12 @@ import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.ui.RadioGroup;
+import consulo.ui.graph.Graph;
+import consulo.ui.graph.GraphModel;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
+import consulo.desktop.awt.ui.impl.graph.DesktopAWTGraphImpl;
 import consulo.desktop.awt.ui.impl.htmlView.DesktopAWTHtmlViewImpl;
 import consulo.desktop.awt.ui.impl.image.*;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageKey;
@@ -555,6 +558,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public AdvancedLabel _Components_advancedLabel() {
         return new DesktopAdvancedLabelImpl();
+    }
+
+    @Override
+    public <E> Graph<E> _Components_graph(GraphModel<E> model) {
+        return new DesktopAWTGraphImpl<>(model);
     }
 
     @Override

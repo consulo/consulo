@@ -8,13 +8,12 @@ import org.jspecify.annotations.NullMarked;
 @SuppressWarnings("module")
 module consulo.diagram.api {
     requires transitive consulo.application.api;
-
     requires transitive consulo.datacontext.api;
+    requires transitive consulo.language.api;
+    requires transitive consulo.ui.ex.api;
 
     exports consulo.diagram;
-
-    exports consulo.diagram.internal to
-        consulo.desktop.awt.editor.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl;
+    exports consulo.diagram.presentation;
+    exports consulo.diagram.providers;
+    exports consulo.diagram.settings;
 }

@@ -15,12 +15,13 @@
  */
 package consulo.diagram.impl.internal.action;
 
-import consulo.application.Application;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.progress.ProgressBuilderFactory;
-import consulo.diagram.GraphProvider;
+import consulo.dataContext.DataContext;
+import consulo.diagram.DiagramProvider;
 import consulo.diagram.impl.internal.DiagramSupportEapDescriptor;
+import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFile;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFileSystem;
 import consulo.fileEditor.FileEditorManager;
 import consulo.localize.LocalizeValue;
@@ -32,10 +33,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -43,50 +42,48 @@ import java.util.concurrent.CompletableFuture;
  * @since 2013-10-15
  */
 public class ShowDiagramAction extends LegacyAnAction {
-    private final Application myApplication;
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
-    public ShowDiagramAction(Application application, ProgressBuilderFactory progressBuilderFactory) {
+    public ShowDiagramAction(ProgressBuilderFactory progressBuilderFactory) {
         super(ActionLocalize.actionShowdiagramText(), ActionLocalize.actionShowdiagramText(), PlatformIconGroup.filetypesDiagram());
-        myApplication = application;
         myProgressBuilderFactory = progressBuilderFactory;
     }
 
     @Override
     @RequiredUIAccess
-    @SuppressWarnings("unchecked")
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        Map.Entry<GraphProvider, Object> entry = myApplication.getExtensionPoint(GraphProvider.class)
-            .computeSafeIfAny(p -> {
-                Object element = p.findSupportedElement(e.getDataContext());
-                if (element == null) {
-                    return null;
-                }
-                return Map.entry(p, element);
-            });
-
-        if (entry == null) {
+        DiagramProvider<?> provider = DiagramProvider.findProvider(e.getDataContext());
+        if (provider == null) {
             return;
         }
 
-        GraphProvider p = entry.getKey();
-        Object graphValue = entry.getValue();
+        openDiagram(project, provider, e.getDataContext());
+    }
+
+    @RequiredUIAccess
+    private <T> void openDiagram(Project project, DiagramProvider<T> provider, DataContext dataContext) {
+        T element = provider.getElementManager().findInDataContext(dataContext);
+        if (element == null) {
+            return;
+        }
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram..."))
             .cancelable()
-            .execute(UIAccess.current(), () -> ReadLock.apply(o -> {
-                return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
-            }).toCoroutine());
+            .execute(UIAccess.current(), () -> ReadLock.apply(o -> DiagramVirtualFile.buildPath(provider, element)).toCoroutine());
 
         UIAccess uiAccess = UIAccess.current();
 
-        future.whenCompleteAsync((graphURL, throwable) -> {
-            VirtualFile file = DiagramVirtualFileSystem.getInstance().findFileByPath(graphURL);
+        future.whenCompleteAsync((path, throwable) -> {
+            if (path == null) {
+                return;
+            }
+
+            VirtualFile file = DiagramVirtualFileSystem.getInstance().findFileByPath(path);
             if (file != null) {
                 FileEditorManager.getInstance(project).openFile(file, true);
             }
@@ -101,15 +98,6 @@ public class ShowDiagramAction extends LegacyAnAction {
             return;
         }
 
-        Map.Entry<GraphProvider, Object> entry = myApplication.getExtensionPoint(GraphProvider.class)
-            .computeSafeIfAny(p -> {
-                Object element = p.findSupportedElement(e.getDataContext());
-                if (element == null) {
-                    return null;
-                }
-                return Map.entry(p, element);
-            });
-
-        presentation.setEnabledAndVisible(entry != null);
+        presentation.setEnabledAndVisible(DiagramProvider.findProvider(e.getDataContext()) != null);
     }
 }

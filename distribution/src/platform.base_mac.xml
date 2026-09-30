@@ -192,7 +192,6 @@
                 <include>consulo:consulo-search-everywhere-api</include>
                 <include>consulo:consulo-diagram-api</include>
                 <include>consulo:consulo-diagram-impl</include>
-                <include>consulo:consulo-language-editor-diagram-api</include>
                 <include>consulo:consulo-welcome-screen-impl</include>
                 <include>consulo:consulo-language-editor-problem-view-api</include>
                 <include>consulo:consulo-language-editor-problem-view-impl</include>

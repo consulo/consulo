@@ -25,6 +25,7 @@ module consulo.ui.api {
     exports consulo.ui.event;
     exports consulo.ui.event.details;
     exports consulo.ui.font;
+    exports consulo.ui.graph;
     exports consulo.ui.image;
     exports consulo.ui.image.canvas;
     exports consulo.ui.layout;

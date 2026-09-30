@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.impl.LoadingLayoutLoader;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.LoadingLayout;
@@ -53,16 +52,7 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
     @Override
     @RequiredUIAccess
     public <Value> Future<Value> startLoading(Supplier<Value> valueGetter, BiConsumer<L, Value> uiSetter) {
-        UIAccess uiAccess = UIAccess.current();
-
-        startLoading();
-
-        return AppExecutorUtil.getAppScheduledExecutorService().submit(() -> {
-            Value value = valueGetter.get();
-
-            uiAccess.give(() -> stopLoading(l -> uiSetter.accept(l, value)));
-            return value;
-        });
+        return LoadingLayoutLoader.startLoading(this, valueGetter, uiSetter);
     }
 
     @Override

@@ -144,18 +144,6 @@ import java.util.*;
 public class mxGraph extends mxEventSource {
 
   /**
-   * Adds required resources.
-   */
-  static {
-    try {
-      mxResources.add("com.mxgraph.resources.graph");
-    }
-    catch (Exception e) {
-      // ignore
-    }
-  }
-
-  /**
    * Holds the version number of this release. Current version
    * is 2.2.0.1.
    */

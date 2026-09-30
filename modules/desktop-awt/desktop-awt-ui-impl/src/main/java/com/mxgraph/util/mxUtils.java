@@ -1500,7 +1500,7 @@ public class mxUtils {
       if (url.startsWith("data:image/")) {
         try {
           int comma = url.indexOf(',');
-          byte[] data = mxBase64.decode(url.substring(comma + 1));
+          byte[] data = java.util.Base64.getMimeDecoder().decode(url.substring(comma + 1));
           ByteArrayInputStream is = new ByteArrayInputStream(data);
           img = ImageIO.read(is);
         }

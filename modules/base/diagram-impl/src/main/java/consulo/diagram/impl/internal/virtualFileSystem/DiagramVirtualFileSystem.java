@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -36,7 +37,7 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
     public static final String PROTOCOL = "diagram";
 
     public static DiagramVirtualFileSystem getInstance() {
-        return (DiagramVirtualFileSystem) VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
+        return (DiagramVirtualFileSystem) Objects.requireNonNull(VirtualFileManager.getInstance().getFileSystem(PROTOCOL));
     }
 
     @Override

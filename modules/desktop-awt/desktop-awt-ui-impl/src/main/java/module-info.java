@@ -95,31 +95,6 @@ open module consulo.desktop.awt.ui.impl {
     exports consulo.desktop.awt.ui.impl.plaf2.flat;
     exports consulo.desktop.awt.ui.impl.plaf2.flat.kde;
 
-    exports com.mxgraph.analysis;
-    exports com.mxgraph.canvas;
-    exports com.mxgraph.costfunction;
-    exports com.mxgraph.generatorfunction;
-    exports com.mxgraph.io;
-    exports com.mxgraph.io.graphml;
-    exports com.mxgraph.layout;
-    exports com.mxgraph.layout.hierarchical;
-    exports com.mxgraph.layout.hierarchical.model;
-    exports com.mxgraph.layout.hierarchical.stage;
-    exports com.mxgraph.layout.orthogonal;
-    exports com.mxgraph.layout.orthogonal.model;
-    exports com.mxgraph.model;
-    exports com.mxgraph.reader;
-    exports com.mxgraph.shape;
-    exports com.mxgraph.sharing;
-    exports com.mxgraph.swing;
-    exports com.mxgraph.swing.handler;
-    exports com.mxgraph.swing.util;
-    exports com.mxgraph.swing.view;
-    exports com.mxgraph.util;
-    exports com.mxgraph.util.png;
-    exports com.mxgraph.util.svg;
-    exports com.mxgraph.view;
-
     provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
     provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
     provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.impl.plaf2.flat.ConsuloFlatDefaultsAddon;

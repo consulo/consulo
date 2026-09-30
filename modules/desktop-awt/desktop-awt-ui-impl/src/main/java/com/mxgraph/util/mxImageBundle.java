@@ -34,8 +34,8 @@ import java.util.Map;
  * <code>
  * ByteArrayOutputStream bos = new ByteArrayOutputStream();
  * ImageIO.write(image, "png", bos);
- * System.out.println("base64=" + mxBase64.encodeToString(
- * bos.toByteArray(), false));
+ * System.out.println("base64=" + Base64.getEncoder().encodeToString(
+ * bos.toByteArray()));
  * </code>
  * <p/>
  * The value is decoded in mxUtils.loadImage. The keys for images are resolved

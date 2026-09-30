@@ -15,13 +15,12 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.impl.LoadingLayoutLoader;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LoadingLayout;
@@ -117,16 +116,7 @@ public class DesktopQtLoadingLayoutImpl<L extends Layout> extends DesktopQtLayou
     @Override
     @RequiredUIAccess
     public <Value> Future<Value> startLoading(Supplier<Value> valueGetter, BiConsumer<L, Value> uiSetter) {
-        UIAccess uiAccess = UIAccess.current();
-
-        startLoading();
-
-        return AppExecutorUtil.getAppScheduledExecutorService().submit(() -> {
-            Value value = valueGetter.get();
-
-            uiAccess.give(() -> stopLoading(l -> uiSetter.accept(l, value)));
-            return value;
-        });
+        return LoadingLayoutLoader.startLoading(this, valueGetter, uiSetter);
     }
 
     @Override

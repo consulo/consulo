@@ -447,9 +447,8 @@ public class mxGraphView extends mxEventSource {
           // Updates the cell state's bounds
           state.setX(scale * (translate.getX() + state.getOrigin().getX()));
           state.setY(scale * (translate.getY() + state.getOrigin().getY()));
-          Dimension dimension = calcCellDimension(state, scale);
-          state.setWidth(scale * dimension.getWidth());
-          state.setHeight(scale * dimension.getHeight());
+          state.setWidth(scale * geo.getWidth());
+          state.setHeight(scale * geo.getHeight());
 
           if (model.isVertex(cell)) {
             updateVertexLabelOffset(state);
@@ -477,13 +476,6 @@ public class mxGraphView extends mxEventSource {
         validateBounds(state, model.getChildAt(cell, i));
       }
     }
-  }
-
-  private Dimension calcCellDimension(mxCellState state, double scale) {
-    String label = graph.getLabel(state.getCell());
-
-    mxRectangle labelSize = mxUtils.getLabelSize(label, Collections.<String, Object> emptyMap(), scale);
-    return new Dimension((int)labelSize.getWidth() + 5, (int)labelSize.getHeight() + 3);
   }
 
   /**

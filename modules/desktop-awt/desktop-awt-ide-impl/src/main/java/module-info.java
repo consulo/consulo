@@ -32,7 +32,6 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.container.api;
     requires consulo.desktop.bootstrap;
     requires consulo.desktop.ide.impl;
-    requires consulo.diagram.api;
     requires consulo.diff.impl;
     requires consulo.execution.impl;
     requires consulo.external.service.impl;
