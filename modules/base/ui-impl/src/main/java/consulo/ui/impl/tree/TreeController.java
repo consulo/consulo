@@ -15,7 +15,6 @@
  */
 package consulo.ui.impl.tree;
 
-import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.Tree;
@@ -30,6 +29,7 @@ import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.ui.impl.TreeNodeSupport;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,9 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
@@ -302,7 +300,7 @@ public final class TreeController<E> implements Disposable {
         hideLoading(node);
 
         if (error != null || built == null) {
-            logBuildError(error);
+            TreeNodeSupport.logBuildError(LOG, error);
 
             synchronized (node) {
                 node.myChildrenFuture = node.myLoaded ? CompletableFuture.completedFuture(node.myChildren) : null;
@@ -601,7 +599,7 @@ public final class TreeController<E> implements Disposable {
             return null;
         }).whenComplete((ignored, error) -> runOnUI(() -> {
             if (error != null) {
-                logBuildError(error);
+                TreeNodeSupport.logBuildError(LOG, error);
             }
             else if (!myDisposed && !node.myRemoved) {
                 myWidget.update(node);
@@ -643,40 +641,11 @@ public final class TreeController<E> implements Disposable {
     }
 
     CompletableFuture<TreeNode<E>> findChild(TreeNodeImpl<E> node, Predicate<E> predicate) {
-        return loadChildren(node).<TreeNode<E>>thenApply(children -> {
-            for (TreeNodeImpl<E> child : children) {
-                if (predicate.test(child.myValue)) {
-                    return child;
-                }
-            }
-            return null;
-        });
+        return loadChildren(node).thenApply(children -> TreeNodeSupport.findFirst(children, predicate));
     }
 
     CompletableFuture<TreeNode<E>> findChildDeep(TreeNodeImpl<E> node, Predicate<E> predicate) {
-        return loadChildren(node).thenCompose(children -> findDeep(children, predicate, 0));
-    }
-
-    private CompletableFuture<TreeNode<E>> findDeep(List<TreeNodeImpl<E>> children, Predicate<E> predicate, int from) {
-        for (int index = from; index < children.size(); index++) {
-            TreeNodeImpl<E> child = children.get(index);
-            if (predicate.test(child.myValue)) {
-                return CompletableFuture.completedFuture(child);
-            }
-
-            CompletableFuture<TreeNode<E>> deep = findChildDeep(child, predicate);
-            if (deep.isDone() && !deep.isCompletedExceptionally()) {
-                TreeNode<E> found = deep.join();
-                if (found != null) {
-                    return CompletableFuture.completedFuture(found);
-                }
-                continue;
-            }
-
-            int next = index + 1;
-            return deep.thenCompose(found -> found != null ? CompletableFuture.completedFuture(found) : findDeep(children, predicate, next));
-        }
-        return CompletableFuture.completedFuture(null);
+        return loadChildren(node).thenCompose(children -> TreeNodeSupport.findDeep(children, predicate));
     }
 
     @RequiredUIAccess
@@ -920,22 +889,6 @@ public final class TreeController<E> implements Disposable {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void fireDoubleClick(TreeNodeImpl<E> node, InputDetails details) {
         myTree.getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(myTree, node, details));
-    }
-
-    private static Throwable unwrap(Throwable error) {
-        return error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
-    }
-
-    private static void logBuildError(@Nullable Throwable error) {
-        if (error == null) {
-            return;
-        }
-
-        Throwable cause = unwrap(error);
-        if (cause instanceof CancellationException || cause instanceof ProcessCanceledException) {
-            return;
-        }
-        LOG.error(cause);
     }
 
     @Override

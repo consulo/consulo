@@ -95,4 +95,14 @@ public class NioFileNode {
     boolean updateWritable(boolean writable) {
         return writable != myWritableRef.getAndSet(writable);
     }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        return o == this || o != null && o.getClass() == getClass() && Objects.equals(myPath, ((NioFileNode) o).myPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(myPath);
+    }
 }

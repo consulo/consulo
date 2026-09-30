@@ -350,5 +350,15 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
         UniversalFileChooserContributor.Root getContributorRoot() {
             return myContributorRoot;
         }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            return o == this || o instanceof VirtualRootNode node && myContributorRoot.id().equals(node.myContributorRoot.id());
+        }
+
+        @Override
+        public int hashCode() {
+            return myContributorRoot.id().hashCode();
+        }
     }
 }

@@ -24,7 +24,9 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel;
 import consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.*;
 import consulo.ui.Component;
 import consulo.ui.TransferHandler;
@@ -46,6 +48,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.tree.*;
 import consulo.ui.image.Image;
+import consulo.ui.impl.TreeNodeSupport;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import org.jspecify.annotations.Nullable;
@@ -71,6 +74,7 @@ import java.util.function.Predicate;
  */
 public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.MyTree>
     implements Tree<E>, PopupOwner, DesktopAWTTransferTarget<TreeNode<E>> {
+    private static final Logger LOG = Logger.getInstance(DesktopTreeImpl.class);
 
     @Override
     public @Nullable Point2D getBestPopupPosition() {
@@ -101,16 +105,17 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
 
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
-        private boolean myLeaf;
+        private volatile boolean myLeaf;
 
-        private K myValue;
+        private volatile K myValue;
         private final MyTreeNodeImpl<K> myParent;
         private final MyStructureWrapper<K> myStructure;
 
         private @Nullable List<MyTreeNodeImpl<K>> myChildren;
-        private boolean myChildrenOutdated;
+        private int myEpoch;
+        private int myChildrenEpoch;
 
-        private BiConsumer<K, TextItemPresentation> myRenderer = (e, t) -> t.append(e == null ? "null" : e.toString());
+        private volatile BiConsumer<K, TextItemPresentation> myRenderer = (e, t) -> t.append(e == null ? "null" : e.toString());
 
         private MyTreeNodeImpl(K value, MyTreeNodeImpl<K> parent, MyStructureWrapper<K> structure) {
             myValue = value;
@@ -123,21 +128,42 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
          * a level built anew on each call would give a caller nodes the tree does not hold, and selecting or
          * opening one of those finds nothing.
          */
-        private synchronized List<MyTreeNodeImpl<K>> getChildren() {
-            List<MyTreeNodeImpl<K>> children = myChildren;
-            if (children == null) {
-                children = myStructure.buildChildren(this);
-            }
-            else if (myChildrenOutdated) {
-                children = reuse(children, myStructure.buildChildren(this));
-            }
-            else {
-                return children;
+        private List<MyTreeNodeImpl<K>> getChildren() {
+            int epoch;
+            synchronized (this) {
+                List<MyTreeNodeImpl<K>> children = myChildren;
+                if (children != null && myChildrenEpoch == myEpoch) {
+                    return children;
+                }
+                epoch = myEpoch;
             }
 
-            myChildren = children;
-            myChildrenOutdated = false;
-            return children;
+            List<MyTreeNodeImpl<K>> built = myStructure.buildChildren(this);
+
+            synchronized (this) {
+                List<MyTreeNodeImpl<K>> current = myChildren;
+                if (current != null && epoch < myChildrenEpoch) {
+                    return current;
+                }
+
+                List<MyTreeNodeImpl<K>> children = List.copyOf(current == null ? built : reuse(current, built));
+                myChildren = children;
+                myChildrenEpoch = epoch;
+                return children;
+            }
+        }
+
+        private synchronized @Nullable List<MyTreeNodeImpl<K>> getKnownChildren() {
+            List<MyTreeNodeImpl<K>> children = myChildren;
+            if (children == null) {
+                return myLeaf ? List.of() : null;
+            }
+            return myChildrenEpoch == myEpoch ? children : null;
+        }
+
+        private synchronized List<MyTreeNodeImpl<K>> getBuiltChildren() {
+            List<MyTreeNodeImpl<K>> children = myChildren;
+            return children == null ? List.of() : children;
         }
 
         /**
@@ -174,43 +200,26 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
          * nodes which are on screen live until the model asks for them again.
          */
         private synchronized void outdateChildren() {
+            myEpoch++;
+
             List<MyTreeNodeImpl<K>> children = myChildren;
             if (children == null) {
                 return;
             }
 
-            myChildrenOutdated = true;
             for (MyTreeNodeImpl<K> child : children) {
                 child.outdateChildren();
             }
         }
 
-        /**
-         * The structure builds the level below on demand, so the children exist by the time they are walked.
-         */
         @Override
         public CompletableFuture<TreeNode<K>> findChild(Predicate<K> predicate) {
-            for (MyTreeNodeImpl<K> child : getChildren()) {
-                if (predicate.test(child.getValue())) {
-                    return CompletableFuture.completedFuture(child);
-                }
-            }
-            return CompletableFuture.completedFuture(null);
+            return myStructure.loadChildren(this).thenApply(children -> TreeNodeSupport.findFirst(children, predicate));
         }
 
         @Override
         public CompletableFuture<TreeNode<K>> findChildDeep(Predicate<K> predicate) {
-            for (MyTreeNodeImpl<K> child : getChildren()) {
-                if (predicate.test(child.getValue())) {
-                    return CompletableFuture.completedFuture(child);
-                }
-
-                TreeNode<K> found = child.findChildDeep(predicate).join();
-                if (found != null) {
-                    return CompletableFuture.completedFuture(found);
-                }
-            }
-            return CompletableFuture.completedFuture(null);
+            return myStructure.loadChildren(this).thenCompose(children -> TreeNodeSupport.findDeep(children, predicate));
         }
 
         @Override
@@ -300,11 +309,15 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     public static class MyStructureWrapper<K> extends AbstractTreeStructure {
         private final TreeModel<K> myModel;
+        private final TreeExecutor myExecutor;
+        private final DesktopTreeImpl<K> myTree;
 
         private final MyTreeNodeImpl<K> myRootNode;
 
-        public MyStructureWrapper(K rootValue, TreeModel<K> model) {
+        public MyStructureWrapper(K rootValue, TreeModel<K> model, TreeExecutor executor, DesktopTreeImpl<K> tree) {
             myModel = model;
+            myExecutor = executor;
+            myTree = tree;
             myRootNode = new MyTreeNodeImpl<>(rootValue, null, this);
         }
 
@@ -345,6 +358,31 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                 return LeafState.DEFAULT;
             }
             return node.isLeaf() ? LeafState.ALWAYS : LeafState.NEVER;
+        }
+
+        private CompletableFuture<List<MyTreeNodeImpl<K>>> loadChildren(MyTreeNodeImpl<K> node) {
+            if (Disposer.isDisposed(myTree.destroyHook())) {
+                return CompletableFuture.completedFuture(List.of());
+            }
+
+            List<MyTreeNodeImpl<K>> known = node.getKnownChildren();
+            if (known != null) {
+                return CompletableFuture.completedFuture(known);
+            }
+
+            CompletableFuture<List<MyTreeNodeImpl<K>>> result = new CompletableFuture<>();
+            myExecutor.execute(myTree, node::getChildren).whenComplete((children, error) -> myTree.getUIAccess().giveIfNeed(() -> {
+                if (children != null) {
+                    result.complete(children);
+                    return;
+                }
+
+                if (!Disposer.isDisposed(myTree.destroyHook())) {
+                    TreeNodeSupport.logBuildError(LOG, error);
+                }
+                result.complete(node.getBuiltChildren());
+            }));
+            return result;
         }
 
         private List<MyTreeNodeImpl<K>> buildChildren(MyTreeNodeImpl<K> parent) {
@@ -416,7 +454,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     public DesktopTreeImpl(E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myModel = model;
         myExecutor = executor;
-        myStructure = new MyStructureWrapper<>(rootValue, model);
+        myStructure = new MyStructureWrapper<>(rootValue, model, executor, this);
         myStructureTreeModel = new DesktopStructureTreeModel<>(myStructure, null, this, executor, myDestroyHook);
     }
 
