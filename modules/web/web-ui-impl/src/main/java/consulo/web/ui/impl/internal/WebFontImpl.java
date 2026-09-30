@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal;
 
 import consulo.ui.font.Font;
+import consulo.ui.impl.font.file.FontFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -29,16 +30,22 @@ public class WebFontImpl implements Font {
     private final String myFontName;
     private final int myFontSize;
     private final int myFontStyle;
+    private final @Nullable FontFile myFontFile;
 
     public WebFontImpl(String fontName, int fontSize, int fontStyle) {
         this(fontName, fontName, fontSize, fontStyle);
     }
 
     public WebFontImpl(String family, String fontName, int fontSize, int fontStyle) {
+        this(family, fontName, fontSize, fontStyle, null);
+    }
+
+    public WebFontImpl(String family, String fontName, int fontSize, int fontStyle, @Nullable FontFile fontFile) {
         myFamily = family;
         myFontName = fontName;
         myFontSize = fontSize;
         myFontStyle = fontStyle;
+        myFontFile = fontFile;
     }
 
     @Override
@@ -68,7 +75,12 @@ public class WebFontImpl implements Font {
 
     @Override
     public Font buildNewFont(int newSize) {
-        return new WebFontImpl(myFamily, myFontName, newSize, myFontStyle);
+        return new WebFontImpl(myFamily, myFontName, newSize, myFontStyle, myFontFile);
+    }
+
+    @Override
+    public boolean canDisplay(int codePoint) {
+        return myFontFile == null || myFontFile.canDisplay(codePoint);
     }
 
     @Override

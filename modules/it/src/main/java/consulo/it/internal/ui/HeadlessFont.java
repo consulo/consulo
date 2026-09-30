@@ -62,4 +62,9 @@ public class HeadlessFont implements Font {
     public Font buildNewFont(int newSize) {
         return new HeadlessFont(myName, newSize, myStyle);
     }
+
+    @Override
+    public boolean canDisplay(int codePoint) {
+        return false;
+    }
 }

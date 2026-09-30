@@ -90,7 +90,7 @@ public class DesktopQtFontManagerImpl implements FontManager {
         String style = rawFont.isValid() ? rawFont.styleName() : "";
         String fontName = style.isBlank() || style.equalsIgnoreCase("Regular") ? family : family + " " + style;
 
-        return new DesktopQtFontImpl(family, fontName, QApplication.font().pointSize(), Font.PLAIN);
+        return new DesktopQtFontImpl(family, fontName, QApplication.font().pointSize(), Font.PLAIN, rawFont.isValid() ? rawFont : null);
     }
 
     private static List<Typeface> readTypefaces() {

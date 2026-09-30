@@ -69,6 +69,9 @@ module consulo.ui.impl {
         consulo.web.ide,
         consulo.web.ui.impl;
 
+    exports consulo.ui.impl.font.file to
+        consulo.web.ui.impl;
+
     exports consulo.ui.impl.image to
         consulo.application.impl,
         consulo.desktop.awt.editor.impl,

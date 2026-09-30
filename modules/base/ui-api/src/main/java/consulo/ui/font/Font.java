@@ -40,4 +40,6 @@ public interface Font {
      * @return new font with newSize
      */
     Font buildNewFont(int newSize);
+
+    boolean canDisplay(int codePoint);
 }

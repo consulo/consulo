@@ -17,6 +17,8 @@ package consulo.desktop.qt.ui.impl.font;
 
 import consulo.ui.font.Font;
 import io.qt.gui.QFont;
+import io.qt.gui.QRawFont;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,15 +30,22 @@ public class DesktopQtFontImpl implements Font {
     private final int myFontSize;
     private final int myFontStyle;
 
+    private volatile @Nullable QRawFont myRawFont;
+
     public DesktopQtFontImpl(String fontName, int fontSize, int fontStyle) {
         this(fontName, fontName, fontSize, fontStyle);
     }
 
     public DesktopQtFontImpl(String family, String fontName, int fontSize, int fontStyle) {
+        this(family, fontName, fontSize, fontStyle, null);
+    }
+
+    public DesktopQtFontImpl(String family, String fontName, int fontSize, int fontStyle, @Nullable QRawFont rawFont) {
         myFamily = family;
         myFontName = fontName;
         myFontSize = fontSize;
         myFontStyle = fontStyle;
+        myRawFont = rawFont;
     }
 
     public QFont toQFont() {
@@ -76,6 +85,16 @@ public class DesktopQtFontImpl implements Font {
 
     @Override
     public Font buildNewFont(int newSize) {
-        return new DesktopQtFontImpl(myFamily, myFontName, newSize, myFontStyle);
+        return new DesktopQtFontImpl(myFamily, myFontName, newSize, myFontStyle, myRawFont);
+    }
+
+    @Override
+    public boolean canDisplay(int codePoint) {
+        QRawFont rawFont = myRawFont;
+        if (rawFont == null) {
+            rawFont = QRawFont.fromFont(toQFont());
+            myRawFont = rawFont;
+        }
+        return rawFont.isValid() && rawFont.supportsCharacter(codePoint);
     }
 }

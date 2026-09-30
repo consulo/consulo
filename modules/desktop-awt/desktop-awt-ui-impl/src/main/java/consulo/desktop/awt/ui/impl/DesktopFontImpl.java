@@ -88,6 +88,11 @@ public final class DesktopFontImpl implements Font {
     }
 
     @Override
+    public boolean canDisplay(int codePoint) {
+        return myFont.canDisplay(codePoint);
+    }
+
+    @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;

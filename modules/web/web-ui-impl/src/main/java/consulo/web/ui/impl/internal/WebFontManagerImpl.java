@@ -26,9 +26,11 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.font.Typeface;
 import consulo.ui.impl.font.TypefaceImpl;
+import consulo.ui.impl.font.file.FontFile;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.JsonNode;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -283,7 +285,8 @@ public class WebFontManagerImpl implements FontManager {
             String fileName = getFileName(url);
             String token = WebFontRegistry.registerTransientFont(data, getContentType(fileName));
             String family = "consulo-font-" + token;
-            String fontName = readFontName(data, fileName);
+            FontFile fontFile = readFontFile(data);
+            String fontName = fontFile == null || fontFile.getFullName().isEmpty() ? fileName : fontFile.getFullName();
             UI ui = ((WebUIAccessImpl) uiAccess).getUI();
 
             Disposer.register(parent, () -> {
@@ -294,7 +297,7 @@ public class WebFontManagerImpl implements FontManager {
             uiAccess.giveAsync(() -> ui.getPage()
                 .executeJs(REGISTER_FONT, family, WebFontRegistry.getTransientFontUrl(token))
                 .then(
-                    ignored -> result.complete(new WebFontImpl(family, fontName, DEFAULT_FONT_SIZE, Font.PLAIN)),
+                    ignored -> result.complete(new WebFontImpl(family, fontName, DEFAULT_FONT_SIZE, Font.PLAIN, fontFile)),
                     error -> result.completeExceptionally(new IllegalArgumentException("Cannot load font " + fileName + ": " + error))
                 )).whenComplete((ignored, e) -> {
                 if (e != null) {
@@ -315,12 +318,12 @@ public class WebFontManagerImpl implements FontManager {
         return ourFontContentTypes.getOrDefault(extension, "application/octet-stream");
     }
 
-    private static String readFontName(byte[] data, String fileName) {
+    private static @Nullable FontFile readFontFile(byte[] data) {
         try {
-            return java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new ByteArrayInputStream(data)).getFontName();
+            return FontFile.read(data);
         }
-        catch (Exception e) {
-            return fileName;
+        catch (IOException e) {
+            return null;
         }
     }
 }
