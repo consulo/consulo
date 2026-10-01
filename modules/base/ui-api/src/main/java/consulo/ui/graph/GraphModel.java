@@ -15,6 +15,8 @@
  */
 package consulo.ui.graph;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 
 /**
@@ -33,4 +35,8 @@ public interface GraphModel<E> {
      * Targets of the arrows which start at the node. A target which is not one of {@link #getNodes()} is skipped.
      */
     Collection<E> getArrows(E node);
+
+    default @Nullable GraphGroup getGroup(E node) {
+        return null;
+    }
 }

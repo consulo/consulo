@@ -15,6 +15,7 @@
  */
 package consulo.ui.graph;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.TextItemPresentation;
 
 /**
@@ -25,6 +26,8 @@ import consulo.ui.TextItemPresentation;
  */
 public interface GraphNodePresentation {
     TextItemPresentation header();
+
+    GraphNodePresentation withTooltip(LocalizeValue tooltip);
 
     TextItemPresentation addRow();
 

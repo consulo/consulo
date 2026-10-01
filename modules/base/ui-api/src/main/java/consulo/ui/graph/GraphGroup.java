@@ -16,26 +16,14 @@
 package consulo.ui.graph;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.color.ColorValue;
-import org.jspecify.annotations.Nullable;
 
 /**
+ * A named set of nodes of a {@link Graph}, drawn as a frame around them. Two nodes are in one group when their
+ * {@link GraphModel#getGroup} values are equal.
+ *
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-10-01
  */
-public interface GraphEdgePresentation {
-    GraphEdgePresentation withLineStyle(GraphLineStyle lineStyle);
-
-    GraphEdgePresentation withSourceArrow(GraphArrow arrow);
-
-    GraphEdgePresentation withTargetArrow(GraphArrow arrow);
-
-    GraphEdgePresentation withLabel(LocalizeValue label);
-
-    GraphEdgePresentation withTooltip(LocalizeValue tooltip);
-
-    /**
-     * @param color the colour of the line and its heads, or {@code null} for the colour the style gives an arrow
-     */
-    GraphEdgePresentation withColor(@Nullable ColorValue color);
+public interface GraphGroup {
+    LocalizeValue getName();
 }

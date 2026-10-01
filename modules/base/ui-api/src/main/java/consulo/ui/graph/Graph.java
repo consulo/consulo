@@ -18,6 +18,8 @@ package consulo.ui.graph;
 import consulo.ui.Component;
 import consulo.ui.internal.UIInternal;
 
+import java.util.List;
+
 /**
  * A directed graph over a {@link GraphModel}: every node is drawn as a box with the presentation of its
  * {@link GraphNodeRender}, and every arrow of the model as a line from its node to its target, styled by the
@@ -35,6 +37,12 @@ public interface Graph<E> extends Component {
     void setNodeRender(GraphNodeRender<E> render);
 
     void setEdgeRender(GraphEdgeRender<E> render);
+
+    /**
+     * The selected nodes, in the order they were selected. A right click selects the node under the pointer first, so a
+     * {@link consulo.ui.event.ContextMenuEvent} listener reads the nodes it was opened on here.
+     */
+    List<E> getSelectedValues();
 
     /**
      * Reads the model again and places every node anew.
